@@ -23,15 +23,15 @@ namespace Lexplosion.WPF.NewInterface.Controls
         #region Dependency Properties
 
 
-        public readonly DependencyProperty SearchCommandProperty
+        public static readonly DependencyProperty SearchCommandProperty
             = DependencyProperty.Register("SearchCommand", typeof(ICommand), typeof(SearchBox), 
                 new FrameworkPropertyMetadata());
 
-        public readonly DependencyProperty SearchCommandParameterProperty
+        public static readonly DependencyProperty SearchCommandParameterProperty
             = DependencyProperty.Register("SearchCommandParameter", typeof(object), typeof(SearchBox), 
                 new FrameworkPropertyMetadata(defaultValue: (object) null));
 
-        public readonly DependencyProperty PlaceholderProperty
+        public static readonly DependencyProperty PlaceholderProperty
             = DependencyProperty.Register("Placeholder", typeof(string), typeof(SearchBox), 
                 new FrameworkPropertyMetadata(defaultValue: string.Empty, propertyChangedCallback: OnPlaceholderChanged));
 

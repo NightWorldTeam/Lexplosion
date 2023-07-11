@@ -396,4 +396,51 @@
 
     <!--  Groups  -->
     <s:String x:Key="groupsManager">Groups Manager</s:String>
+
+
+    <!--
+        == NEW
+        == WPF
+        == INTERFACE
+        == TRANSLATE
+    -->
+
+
+    <s:String x:Key="GameProperties">Game Properties</s:String>
+    <s:String x:Key="JavaProperties">Java Properties</s:String>
+    <s:String x:Key="LauncherProperties">Launcher Properties</s:String>
+
+    <s:String x:Key="GamePropertiesDescription">Customizate all your games.</s:String>
+    <s:String x:Key="JavaPropertiesDescription">Customizate Java settings.</s:String>
+    <s:String x:Key="LauncherPropertiesDescription">Customizate Launcher settings.</s:String>
+
+    <!--  Game Properties  -->
+    <!--  Window Size  -->
+    <s:String x:Key="WindowSize">Window Size</s:String>
+    <s:String x:Key="WindowSizeDescription">Change Minecraft window size.</s:String>
+    <!--  Ram  -->
+    <s:String x:Key="Ram">RAM</s:String>
+    <s:String x:Key="RamDescription">This property can boost your game.</s:String>
+
+    <!--  Java Properties  -->
+    <!--  Java Path  -->
+    <s:String x:Key="JavaPath">Java Path</s:String>
+    <s:String x:Key="JavaPathDescription">Path to java directory for minecraft.</s:String>
+    <!--  Java Path for higher 1.16.5  -->
+    <s:String x:Key="JavaPathHigher">Path to Java for version 1.16.5</s:String>
+    <s:String x:Key="JavaPathHigherDescription">Path to java directory for minecraft for version 1.16.5 and higher.</s:String>
+    <!--  JVM Arguments  -->
+    <s:String x:Key="JVMArguments">JVM Arguments</s:String>
+    <s:String x:Key="JVMArgumentsDescription">Arguments for Java Virtual Machine.</s:String>
+
+    <!--  Launcher Properties  -->
+    <!--  Console  -->
+    <s:String x:Key="Console">Console</s:String>
+    <s:String x:Key="ConsoleDescription">Does show console when game runned?</s:String>
+    <!--  Hide Launcher  -->
+    <s:String x:Key="HideLauncher">Hide Launcher</s:String>
+    <s:String x:Key="HideLauncherDescription">Does hide launcher when game runned?</s:String>
+    <!--  Auto Instance Update  -->
+    <s:String x:Key="AutoInstanceUpdate">Auto Instance Update</s:String>
+    <s:String x:Key="AutoInstanceUpdateDescription">Update your library instance automatically?</s:String>
 </ResourceDictionary>

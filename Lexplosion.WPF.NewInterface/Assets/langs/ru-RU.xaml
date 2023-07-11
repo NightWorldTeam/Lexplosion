@@ -439,4 +439,52 @@
 
     <!--  Groups  -->
     <s:String x:Key="groupsManager">Менеджер групп</s:String>
+
+
+    <!--
+        == NEW
+        == WPF
+        == INTERFACE
+        == TRANSLATE
+    -->
+
+
+    <!--  General Settings -> General  -->
+    <s:String x:Key="GameProperties">Параметры игры</s:String>
+    <s:String x:Key="JavaProperties">Параметры Java</s:String>
+    <s:String x:Key="LauncherProperties">Параметры лаунчера</s:String>
+
+    <s:String x:Key="GamePropertiesDescription">Настройте вашу игру.</s:String>
+    <s:String x:Key="JavaPropertiesDescription">Настройте java для minecraft.</s:String>
+    <s:String x:Key="LauncherPropertiesDescription">Настройте лаунчер под себя.</s:String>
+
+    <!--  Game Properties  -->
+    <!--  Window Size  -->
+    <s:String x:Key="WindowSize">Размер окна</s:String>
+    <s:String x:Key="WindowSizeDescription">Настройка размера окна майнкрафта.</s:String>
+    <!--  Ram  -->
+    <s:String x:Key="Ram">ОЗУ</s:String>
+    <s:String x:Key="RamDescription">Это свойство повысит скорость работы.</s:String>
+
+    <!--  Java Properties  -->
+    <!--  Java Path  -->
+    <s:String x:Key="JavaPath">Путь до Java</s:String>
+    <s:String x:Key="JavaPathDescription">Путь до директории Java</s:String>
+    <!--  Java Path for higher 1.16.5  -->
+    <s:String x:Key="JavaPathHigher">Путь до Java для версий с 1.16.5</s:String>
+    <s:String x:Key="JavaPathHigherDescription">Путь до директории Java для версий с 1.16.5</s:String>
+    <!--  JVM Arguments  -->
+    <s:String x:Key="JVMArguments">Аргуметны JVM</s:String>
+    <s:String x:Key="JVMArgumentsDescription">Аргументы виртуальной Java машины</s:String>
+
+    <!--  Launcher Properties  -->
+    <!--  Console  -->
+    <s:String x:Key="Console">Консоль</s:String>
+    <s:String x:Key="ConsoleDescription">Запускает консоль при запуске игры.</s:String>
+    <!--  Hide Launcher  -->
+    <s:String x:Key="HideLauncher">Скрывать лаунчер</s:String>
+    <s:String x:Key="HideLauncherDescription">Скрывает лаунчер при запуске игры.</s:String>
+    <!--  Auto Instance Update  -->
+    <s:String x:Key="AutoInstanceUpdate">Автоматически обновлять сборки</s:String>
+    <s:String x:Key="AutoInstanceUpdateDescription">Сборки в вашей библиотеке обновляются автоматически.</s:String>
 </ResourceDictionary>

@@ -41,13 +41,15 @@
         ShowGridLines="False">
 
         <Border
+            Padding="1"
             Background="{DynamicResource PrimarySolidColorBrush}"
             BorderBrush="{DynamicResource SeparateSolidColorBrush}"
             BorderThickness="1"
             CornerRadius="5"
-            KeyboardNavigation.IsTabStop="False" />
+            KeyboardNavigation.IsTabStop="False">
 
-        <ContentControl Content="{Binding CurrentViewModel, Source={StaticResource MainViewModel}}" KeyboardNavigation.IsTabStop="False" />
+            <ContentControl Content="{Binding CurrentViewModel, Source={StaticResource MainViewModel}}" KeyboardNavigation.IsTabStop="False" />
+        </Border>
 
         <!--  Window State Control Buttons  -->
         <Grid

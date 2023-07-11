@@ -114,6 +114,7 @@
     <Compile Include="ViewModels\Authorization\AuthorizationMenuViewModel.cs" />
     <Compile Include="ViewModels\Authorization\BasicAuthorization\NightWorld\PasswordResetViewModel.cs" />
     <Compile Include="ViewModels\MainContent\MainMenu\Content\CatalogViewModel.cs" />
+    <Compile Include="ViewModels\MainContent\MainMenu\Content\GeneralSettings\GeneralSettingsViewModel.cs" />
     <Compile Include="ViewModels\MainContent\MainMenu\LeftPanel\LeftPanelViewModel.cs" />
     <Compile Include="ViewModels\MainContent\MainMenu\MainMenuLayoutViewModel.cs" />
     <Compile Include="Views\Pages\Authorization\AuthorizationMenuView.xaml.cs">
@@ -225,6 +226,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Pages\MainContent\MainMenu\Content\GeneralSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Pages\MainContent\MainMenu\LeftPanel\LeftPanelView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -245,6 +250,9 @@
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="Views\Pages\MainContent\MainMenu\Content\CatalogView.xaml.cs">
       <DependentUpon>CatalogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\MainContent\MainMenu\Content\GeneralSettingsView.xaml.cs">
+      <DependentUpon>GeneralSettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\MainContent\MainMenu\LeftPanel\LeftPanelView.xaml.cs">
       <DependentUpon>LeftPanelView.xaml</DependentUpon>

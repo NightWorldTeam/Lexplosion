@@ -19,7 +19,7 @@
                 IconHeight="{Binding IconHeight}"
                 IconKey="{Binding Icon}"
                 IconWidth="{Binding IconWidth}"
-                IsChecked="{Binding IsSelected}"
+                IsChecked="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"
                 TextKey="{Binding TextKey}" />
         </DataTemplate>
     </UserControl.Resources>

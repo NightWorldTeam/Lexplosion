@@ -1,6 +1,5 @@
 ﻿using Lexplosion.WPF.NewInterface.Stores;
 using Lexplosion.WPF.NewInterface.ViewModels.Authorization;
-using Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu;
 using System.Windows.Media;
 
 namespace Lexplosion.WPF.NewInterface.ViewModels

@@ -23,7 +23,11 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu
             get => _isSelected; set 
             {
                 _isSelected = value;
-                SelectedEvent?.Invoke(this);
+
+                if (_isSelected) 
+                { 
+                    SelectedEvent?.Invoke(this);
+                }
                 OnPropertyChanged();
             }
         }

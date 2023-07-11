@@ -1,0 +1,369 @@
+﻿<UserControl
+    x:Class="Lexplosion.WPF.NewInterface.Views.Pages.MainContent.MainMenu.GeneralSettingsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
+    xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Views.Pages.MainContent.MainMenu"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <Grid HorizontalAlignment="Stretch">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Border
+            Padding="45,32,45,0"
+            Background="{DynamicResource PrimarySolidColorBrush}"
+            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+            BorderThickness="0,0,0,2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <WrapPanel
+                    Margin="0,8,8,8"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center">
+                    <!--<Viewbox Height="20" Margin=0,0,8,0>
+                        <Path
+                            extensions:Path.StringKeyData="Settings"
+                            Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                            Stretch="Fill" />
+                    </Viewbox>-->
+
+                    <TextBlock
+                        extensions:TextBlock.TextByKey="settings"
+                        FontSize="20"
+                        FontWeight="Medium"
+                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                </WrapPanel>
+
+                <WrapPanel Grid.Row="1" Margin="0,8,0,0">
+                    <Border
+                        Padding="16,8"
+                        Background="Transparent"
+                        BorderBrush="{DynamicResource ActivitySolidColorBrush}"
+                        BorderThickness="0,0,0,4">
+                        <TextBlock
+                            extensions:TextBlock.TextByKey="general"
+                            FontSize="14"
+                            FontWeight="Medium"
+                            Foreground="{DynamicResource ActivitySolidColorBrush}" />
+                    </Border>
+
+                    <Border
+                        Padding="16,8"
+                        Background="Transparent"
+                        BorderBrush="Transparent"
+                        BorderThickness="0,0,0,4">
+                        <TextBlock
+                            extensions:TextBlock.TextByKey="appearance"
+                            FontSize="14"
+                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                    </Border>
+
+                    <Border
+                        Padding="16,8"
+                        Background="Transparent"
+                        BorderBrush="Transparent"
+                        BorderThickness="0,0,0,4">
+                        <TextBlock
+                            extensions:TextBlock.TextByKey="language"
+                            FontSize="14"
+                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                    </Border>
+
+                    <Border
+                        Padding="16,8"
+                        Background="Transparent"
+                        BorderBrush="Transparent"
+                        BorderThickness="0,0,0,4">
+                        <TextBlock
+                            extensions:TextBlock.TextByKey="account"
+                            FontSize="14"
+                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                    </Border>
+
+                    <Border
+                        Padding="16,8"
+                        Background="Transparent"
+                        BorderBrush="Transparent"
+                        BorderThickness="0,0,0,4">
+                        <TextBlock
+                            extensions:TextBlock.TextByKey="about"
+                            FontSize="14"
+                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                    </Border>
+                </WrapPanel>
+            </Grid>
+        </Border>
+        <ScrollViewer Grid.Row="1" CanContentScroll="False" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+
+            <Border Padding="45,32,45,8">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <!--  Game Settings  -->
+                    <StackPanel>
+                        <!--  Header  -->
+                        <Border
+                            Padding="0,0,0,8"
+                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                            BorderThickness="0,0,0,2">
+                            <StackPanel>
+                                <TextBlock
+                                    extensions:TextBlock.TextByKey="GameProperties"
+                                    FontSize="16"
+                                    FontWeight="Bold"
+                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                <TextBlock
+                                    extensions:TextBlock.TextByKey="GamePropertiesDescription"
+                                    FontSize="14"
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                            </StackPanel>
+                        </Border>
+
+                        <!--  Window Size  -->
+                        <Border
+                            Padding="0,16,0,8"
+                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                            BorderThickness="0,0,0,2">
+                            <Grid>
+
+                                <!--  Header  -->
+                                <StackPanel>
+                                    <TextBlock
+                                        extensions:TextBlock.TextByKey="WindowSize"
+                                        FontSize="14"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                    <TextBlock
+                                        extensions:TextBlock.TextByKey="WindowSizeDescription"
+                                        FontSize="14"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+
+                        <!--  Window Size  -->
+                        <Border
+                            Padding="0,16,0,8"
+                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                            BorderThickness="0,0,0,2">
+                            <Grid>
+
+                                <!--  Header  -->
+                                <StackPanel>
+                                    <TextBlock
+                                        extensions:TextBlock.TextByKey="Ram"
+                                        FontSize="14"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                    <TextBlock
+                                        extensions:TextBlock.TextByKey="RamDescription"
+                                        FontSize="14"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+
+                    <!--  Java Settings  -->
+                    <StackPanel Grid.Row="1" Margin="0,32,0,0">
+                        <!--  Header  -->
+                        <Border
+                            Padding="0,0,0,8"
+                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                            BorderThickness="0,0,0,2">
+                            <StackPanel>
+                                <TextBlock
+                                    extensions:TextBlock.TextByKey="JavaProperties"
+                                    FontSize="16"
+                                    FontWeight="Bold"
+                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                <TextBlock
+                                    extensions:TextBlock.TextByKey="JavaPropertiesDescription"
+                                    FontSize="14"
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                            </StackPanel>
+                        </Border>
+
+                        <!--  Java Path  -->
+                        <Border
+                            Padding="0,16,0,8"
+                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                            BorderThickness="0,0,0,2">
+                            <Grid>
+
+                                <!--  Header  -->
+                                <StackPanel>
+                                    <TextBlock
+                                        extensions:TextBlock.TextByKey="JavaPath"
+                                        FontSize="14"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                    <TextBlock
+                                        extensions:TextBlock.TextByKey="JavaPathDescription"
+                                        FontSize="14"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+
+                        <!--  Java Path 1.16.5 & Higher  -->
+                        <Border
+                            Padding="0,16,0,8"
+                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                            BorderThickness="0,0,0,2">
+                            <Grid>
+
+                                <!--  Header  -->
+                                <StackPanel>
+                                    <TextBlock
+                                        extensions:TextBlock.TextByKey="JavaPathHigher"
+                                        FontSize="14"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                    <TextBlock
+                                        extensions:TextBlock.TextByKey="JavaPathHigherDescription"
+                                        FontSize="14"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+
+                        <!--  JVMArguments  -->
+                        <Border
+                            Padding="0,16,0,8"
+                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                            BorderThickness="0,0,0,2">
+                            <Grid>
+
+                                <!--  Header  -->
+                                <StackPanel>
+                                    <TextBlock
+                                        extensions:TextBlock.TextByKey="JVMArguments"
+                                        FontSize="14"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                    <TextBlock
+                                        extensions:TextBlock.TextByKey="JVMArgumentsDescription"
+                                        FontSize="14"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="2" Margin="0,32,0,0">
+                        <!--  Header  -->
+                        <Border
+                            Padding="0,0,0,8"
+                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                            BorderThickness="0,0,0,2">
+                            <StackPanel>
+                                <TextBlock
+                                    extensions:TextBlock.TextByKey="LauncherProperties"
+                                    FontSize="16"
+                                    FontWeight="Bold"
+                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                <TextBlock
+                                    extensions:TextBlock.TextByKey="LauncherPropertiesDescription"
+                                    FontSize="14"
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                            </StackPanel>
+                        </Border>
+
+                        <!--  Java Path  -->
+                        <Border
+                            Padding="0,16,0,8"
+                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                            BorderThickness="0,0,0,2">
+                            <Grid>
+
+                                <!--  Header  -->
+                                <StackPanel>
+                                    <TextBlock
+                                        extensions:TextBlock.TextByKey="Console"
+                                        FontSize="14"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                    <TextBlock
+                                        extensions:TextBlock.TextByKey="ConsoleDescription"
+                                        FontSize="14"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+
+                        <!--  Java Path 1.16.5 & Higher  -->
+                        <Border
+                            Padding="0,16,0,8"
+                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                            BorderThickness="0,0,0,2">
+                            <Grid>
+
+                                <!--  Header  -->
+                                <StackPanel>
+                                    <TextBlock
+                                        extensions:TextBlock.TextByKey="HideLauncher"
+                                        FontSize="14"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                    <TextBlock
+                                        extensions:TextBlock.TextByKey="HideLauncherDescription"
+                                        FontSize="14"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+
+                        <!--  JVMArguments  -->
+                        <Border
+                            Padding="0,16,0,8"
+                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                            BorderThickness="0,0,0,0">
+                            <Grid>
+
+                                <!--  Header  -->
+                                <StackPanel>
+                                    <TextBlock
+                                        extensions:TextBlock.TextByKey="AutoInstanceUpdate"
+                                        FontSize="14"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                    <TextBlock
+                                        extensions:TextBlock.TextByKey="AutoInstanceUpdateDescription"
+                                        FontSize="14"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                </Grid>
+
+            </Border>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

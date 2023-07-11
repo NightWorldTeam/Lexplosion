@@ -33,10 +33,10 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu
             LeftPanel.SelectedItemChanged += OnLeftPanelSelectedItemChanged;
 
             LeftPanel.AddTabItem("catalog", "Catalog", new CatalogViewModel());
-            LeftPanel.AddTabItem("library", "Library", new CatalogViewModel());
-            LeftPanel.AddTabItem("multiplayer", "Multiplayer", new CatalogViewModel());
-            LeftPanel.AddTabItem("friends", "Friends", new CatalogViewModel(), 18, 20);
-            LeftPanel.AddTabItem("settings", "Settings", new CatalogViewModel());
+            LeftPanel.AddTabItem("library", "Library", null);
+            LeftPanel.AddTabItem("multiplayer", "Multiplayer", null);
+            LeftPanel.AddTabItem("friends", "Friends", null, 18, 20);
+            LeftPanel.AddTabItem("settings", "Settings", new GeneralSettingsViewModel());
             LeftPanel.SelectFirst();
         }
 
