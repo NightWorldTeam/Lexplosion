@@ -34,7 +34,7 @@
 
     <!--  Primary Color  -->
     <Color x:Key="PrimaryColor">
-        #0A0F1B
+        #0E1422
     </Color>
 
 
@@ -51,7 +51,7 @@
 
     <!--  Secondary Color  -->
     <Color x:Key="SecondaryColor">
-        #0E1422
+        #0A0F1B
     </Color>
 
     <sys:Double x:Key="SecondaryColorOpacity">

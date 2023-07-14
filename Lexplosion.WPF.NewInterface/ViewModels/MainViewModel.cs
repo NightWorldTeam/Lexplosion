@@ -1,5 +1,6 @@
 ﻿using Lexplosion.WPF.NewInterface.Stores;
 using Lexplosion.WPF.NewInterface.ViewModels.Authorization;
+using Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu;
 using System.Windows.Media;
 
 namespace Lexplosion.WPF.NewInterface.ViewModels
@@ -65,7 +66,8 @@ namespace Lexplosion.WPF.NewInterface.ViewModels
         public MainViewModel()
         {
             NavigationStore.CurrentViewModelChanged += NavigationStore_CurrentViewModelChanged;
-            NavigationStore.Content = new AuthorizationMenuViewModel(NavigationStore);
+            NavigationStore.Content = new MainMenuLayoutViewModel();
+            //NavigationStore.Content = new AuthorizationMenuViewModel(NavigationStore);
         }
 
         private void NavigationStore_CurrentViewModelChanged()

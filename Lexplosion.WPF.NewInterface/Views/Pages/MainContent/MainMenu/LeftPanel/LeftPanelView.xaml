@@ -13,15 +13,44 @@
     mc:Ignorable="d">
 
     <UserControl.Resources>
+        <Style x:Key="EveryPair" TargetType="{x:Type FrameworkElement}">
+            <Setter Property="Margin" Value="0,0,0,32" />
+        </Style>
+
+        <extensions:NthChildStyleSelector
+            x:Key="nthchild2n"
+            Expression="2n"
+            Style="{StaticResource EveryPair}" />
+
+
         <DataTemplate DataType="{x:Type localVM:LeftPanelMenuItem}">
-            <controls:DefaultMainMenuTabItem
-                GroupName="LeftPanelMainMenuItem"
-                IconHeight="{Binding IconHeight}"
-                IconKey="{Binding Icon}"
-                IconWidth="{Binding IconWidth}"
-                IsChecked="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"
-                TextKey="{Binding TextKey}" />
+            <Border>
+                <controls:DefaultMainMenuTabItem
+                    GroupName="LeftPanelMainMenuItem"
+                    IconHeight="{Binding IconHeight}"
+                    IconKey="{Binding Icon}"
+                    IconWidth="{Binding IconWidth}"
+                    IsChecked="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"
+                    TextKey="{Binding TextKey}" />
+                <Border.Style>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="BorderBrush" Value="Transparent" />
+                        <Setter Property="BorderThickness" Value="0" />
+                        <Style.Triggers>
+                            <!--  nth-child with alternative index  -->
+                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentPresenter}}, Path=(ItemsControl.AlternationIndex)}" Value="1">
+                                <Setter Property="Padding" Value="0,0,0,8" />
+                                <Setter Property="Margin" Value="0,0,0,8" />
+                                <Setter Property="BorderBrush" Value="{DynamicResource SeparateSolidColorBrush}" />
+                                <Setter Property="BorderThickness" Value="0,0,0,1" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+            </Border>
         </DataTemplate>
+
     </UserControl.Resources>
 
     <Grid>
@@ -79,6 +108,7 @@
                 <ItemsControl
                     Grid.Row="1"
                     Margin="0,32,0,0"
+                    AlternationCount="2"
                     ItemsSource="{Binding Items}"
                     KeyboardNavigation.IsTabStop="False" />
             </Grid>

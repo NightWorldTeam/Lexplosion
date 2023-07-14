@@ -40,6 +40,11 @@
     <DataTemplate DataType="{x:Type mainmenuvm:CatalogViewModel}">
         <mainmenuview:CatalogView />
     </DataTemplate>
+
+    <!--  General Settings  -->
+    <DataTemplate DataType="{x:Type mainmenuvm:GeneralSettingsLayoutViewModel}">
+        <mainmenuview:GeneralSettingsLayoutView />
+    </DataTemplate>
     <DataTemplate DataType="{x:Type mainmenuvm:GeneralSettingsViewModel}">
         <mainmenuview:GeneralSettingsView />
     </DataTemplate>

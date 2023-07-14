@@ -10,7 +10,6 @@
     xmlns:vm="clr-namespace:Lexplosion.WPF.NewInterface.ViewModels.Authorization"
     Width="350"
     Height="470"
-    d:DataContext="{d:DesignInstance vm:}"
     mc:Ignorable="d">
     <Grid>
         <Border Padding="50,32">

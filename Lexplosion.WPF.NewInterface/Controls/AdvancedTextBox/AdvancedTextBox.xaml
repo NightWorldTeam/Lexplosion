@@ -3,26 +3,25 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Controls">
 
-    <Style TargetType="{x:Type local:UpperPlaceholderTextBox}">
+    <Style TargetType="{x:Type local:AdvancedTextBox}">
         <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="Medium" />
+        <Setter Property="MinHeight" Value="32" />
         <Setter Property="SelectionBrush" Value="{DynamicResource ActivitySolidColorBrush}" />
         <Setter Property="Foreground" Value="{DynamicResource PrimaryForegroundSolidColorBrush}" />
         <Setter Property="CaretBrush" Value="{DynamicResource ActivitySolidColorBrush}" />
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="{x:Type local:UpperPlaceholderTextBox}">
+                <ControlTemplate TargetType="{x:Type local:AdvancedTextBox}">
 
                     <Grid Margin="0,0,0,0">
                         <Border
                             x:Name="Border"
-                            Height="46"
-                            MaxHeight="46"
-                            Padding="12,4,12,4"
                             Background="Transparent"
                             BorderBrush="{DynamicResource SeparateSolidColorBrush}"
                             BorderThickness="2"
@@ -30,9 +29,6 @@
 
                         <Border
                             x:Name="BorderError"
-                            Height="46"
-                            MaxHeight="46"
-                            Padding="12,4,12,4"
                             Background="Transparent"
                             BorderBrush="{DynamicResource ErrorSolidColorBrush}"
                             BorderThickness="2"
@@ -41,9 +37,6 @@
 
                         <Border
                             x:Name="BorderFocused"
-                            Height="46"
-                            MaxHeight="46"
-                            Padding="12,4,12,4"
                             Background="Transparent"
                             BorderBrush="{DynamicResource ActivitySolidColorBrush}"
                             BorderThickness="2"
@@ -52,29 +45,45 @@
 
                         <Border
                             x:Name="BorderMain"
-                            Height="46"
-                            MaxHeight="46"
-                            Padding="12,4,12,4"
+                            Height="32"
+                            Padding="8,4,8,4"
                             BorderBrush="Transparent"
                             BorderThickness="2"
                             CornerRadius="5">
                             <Grid>
-                                <Grid.Background>
-                                    <SolidColorBrush Opacity="0" Color="Blue" />
-                                </Grid.Background>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
 
+                                <!--  Icon  -->
+                                <Viewbox
+                                    x:Name="PART_IconViewBox"
+                                    Width="14"
+                                    Height="14"
+                                    Margin="0,0,4,0"
+                                    HorizontalAlignment="Left">
+                                    <Path
+                                        x:Name="PART_Icon"
+                                        Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                        Stretch="Fill" />
+                                </Viewbox>
+
+                                <!--  Placeholder  -->
                                 <TextBlock
-                                    Margin="0,-22,0,0"
+                                    Name="PART_Placeholder"
+                                    Grid.Column="1"
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Center"
                                     FontSize="12"
-                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
-                                    Text="{TemplateBinding Placeholder}" />
+                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
 
+                                <!--  Text  -->
                                 <ScrollViewer
                                     x:Name="PART_ContentHost"
-                                    Margin="0"
-                                    VerticalAlignment="Bottom"
+                                    Grid.Column="1"
+                                    Margin="0,-1,0,0"
+                                    VerticalAlignment="Center"
                                     VerticalScrollBarVisibility="Auto" />
                             </Grid>
                         </Border>
@@ -107,7 +116,7 @@
                             </Trigger.ExitActions>
                         </Trigger>
 
-                        <Trigger Property="IsError" Value="True">
+                        <!--<Trigger Property="IsError" Value="True">
 
                             <Setter TargetName="BorderFocused" Property="Visibility" Value="Collapsed" />
 
@@ -134,11 +143,11 @@
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.ExitActions>
-                        </Trigger>
+                        </Trigger>-->
 
-                        <Trigger Property="IsError" Value="False">
+                        <!--<Trigger Property="IsError" Value="False">
                             <Setter TargetName="BorderFocused" Property="Visibility" Value="Visible" />
-                        </Trigger>
+                        </Trigger>-->
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>

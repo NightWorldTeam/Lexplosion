@@ -85,15 +85,19 @@
     </Compile>
     <Compile Include="Controls\DefaultMainMenuTabItem\DefaultMainMenuTabItem.cs" />
     <Compile Include="Controls\DigitCodeBox\DigitCodeBox.cs" />
+    <Compile Include="Controls\AdvancedTextBox\AdvancedTextBox.cs" />
     <Compile Include="Controls\InstanceForm\InstanceForm.cs" />
     <Compile Include="Controls\Paginator\IPaginable.cs" />
     <Compile Include="Controls\Paginator\Paginator.cs" />
     <Compile Include="Controls\SearchBox\SearchBox.cs" />
+    <Compile Include="Controls\UIUnderlineTabControl\UIUnderlineTabControl.cs" />
     <Compile Include="Controls\UpperPlaceholderTextBox\UpperPlaceholderTextBox.cs" />
     <Compile Include="Core\INotifiable.cs" />
     <Compile Include="Core\ResourceGetter.cs" />
     <Compile Include="Extensions\Path.cs" />
     <Compile Include="Extensions\PathMarkupExtension.cs" />
+    <Compile Include="Extensions\StyleSelectors\LastChildStyleSelector.cs" />
+    <Compile Include="Extensions\StyleSelectors\NthChildStyleSelector.cs" />
     <Compile Include="Extensions\TextBlock.cs" />
     <Compile Include="Models\Authorization\AuthModelBase.cs" />
     <Compile Include="Models\Authorization\BasicAuthorization\NightWorld\DigitCodeConfimationModel.cs" />
@@ -114,6 +118,7 @@
     <Compile Include="ViewModels\Authorization\AuthorizationMenuViewModel.cs" />
     <Compile Include="ViewModels\Authorization\BasicAuthorization\NightWorld\PasswordResetViewModel.cs" />
     <Compile Include="ViewModels\MainContent\MainMenu\Content\CatalogViewModel.cs" />
+    <Compile Include="ViewModels\MainContent\MainMenu\Content\GeneralSettings\GeneralSettingsLayoutViewModel.cs" />
     <Compile Include="ViewModels\MainContent\MainMenu\Content\GeneralSettings\GeneralSettingsViewModel.cs" />
     <Compile Include="ViewModels\MainContent\MainMenu\LeftPanel\LeftPanelViewModel.cs" />
     <Compile Include="ViewModels\MainContent\MainMenu\MainMenuLayoutViewModel.cs" />
@@ -137,6 +142,10 @@
     <Page Include="Assets\langs\ru-RU.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\AdvancedTextBox\AdvancedTextBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\BindablePasswordBox\BindablePasswordBox.xaml">
       <SubType>Designer</SubType>
@@ -162,6 +171,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\UIUnderlineTabControl\UIUnderlineTabControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\UpperPlaceholderTextBox\UpperPlaceholderTextBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -174,7 +187,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Resources\Styles\Buttons.xaml">
+    <Page Include="Resources\Styles\Button.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -190,11 +203,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Resources\Styles\Slider.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Resources\Styles\TextBlock.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\Styles\TextBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Styles\ToggleButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -226,7 +247,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Pages\MainContent\MainMenu\Content\GeneralSettingsView.xaml">
+    <Page Include="Views\Pages\MainContent\MainMenu\Content\GeneralSettings\AboutUsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\MainContent\MainMenu\Content\GeneralSettings\AppearanceSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\MainContent\MainMenu\Content\GeneralSettings\GeneralSettingsLayoutView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\MainContent\MainMenu\Content\GeneralSettings\GeneralSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\MainContent\MainMenu\Content\GeneralSettings\LanguageSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -251,8 +288,20 @@
     <Compile Include="Views\Pages\MainContent\MainMenu\Content\CatalogView.xaml.cs">
       <DependentUpon>CatalogView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Pages\MainContent\MainMenu\Content\GeneralSettingsView.xaml.cs">
+    <Compile Include="Views\Pages\MainContent\MainMenu\Content\GeneralSettings\AboutUsView.xaml.cs">
+      <DependentUpon>AboutUsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\MainContent\MainMenu\Content\GeneralSettings\AppearanceSettingsView.xaml.cs">
+      <DependentUpon>AppearanceSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\MainContent\MainMenu\Content\GeneralSettings\GeneralSettingsLayoutView.xaml.cs">
+      <DependentUpon>GeneralSettingsLayoutView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\MainContent\MainMenu\Content\GeneralSettings\GeneralSettingsView.xaml.cs">
       <DependentUpon>GeneralSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\MainContent\MainMenu\Content\GeneralSettings\LanguageSettingsView.xaml.cs">
+      <DependentUpon>LanguageSettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\MainContent\MainMenu\LeftPanel\LeftPanelView.xaml.cs">
       <DependentUpon>LeftPanelView.xaml</DependentUpon>

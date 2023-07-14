@@ -32,7 +32,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
                 new FrameworkPropertyMetadata(defaultValue: (object) null));
 
         public static readonly DependencyProperty PlaceholderProperty
-            = DependencyProperty.Register("Placeholder", typeof(string), typeof(SearchBox), 
+            = DependencyProperty.Register("PlaceholderKey", typeof(string), typeof(SearchBox), 
                 new FrameworkPropertyMetadata(defaultValue: string.Empty, propertyChangedCallback: OnPlaceholderChanged));
 
         public ICommand SearchCommand 
@@ -99,7 +99,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
             if (_placeholderBlock == null) 
             {
-                new Exception("Placeholder is not exists");
+                new Exception("PlaceholderKey is not exists");
             }
 
             _searchButton.Click += searchButton_Click;
@@ -181,7 +181,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
         /// <summary>
         /// Проверяет, содержит ли TextBox текст.
-        /// Нужно, чтобы если TextBox содержит текст, то не показывать Placeholder.
+        /// Нужно, чтобы если TextBox содержит текст, то не показывать PlaceholderKey.
         /// </summary>
         private void UpdateIsEmpty()
         {

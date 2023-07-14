@@ -110,6 +110,11 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu
             _items[0].IsSelected = true;
         }
 
+        public void SelectLast() 
+        {
+            _items[_items.Count - 1].IsSelected = false;
+        }
+
 
         #endregion Public Methods
     }

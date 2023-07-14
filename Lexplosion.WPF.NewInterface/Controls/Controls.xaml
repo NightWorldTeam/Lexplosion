@@ -1,10 +1,12 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="AdvancedTextBox/AdvancedTextBox.xaml" />
         <ResourceDictionary Source="UpperPlaceholderTextBox/UpperPlaceholderTextBox.xaml" />
         <ResourceDictionary Source="DigitCodeBox/DigitCodeBox.xaml" />
         <ResourceDictionary Source="DefaultMainMenuTabItem/DefaultMainMenuTabItem.xaml" />
         <ResourceDictionary Source="SearchBox/SearchBox.xaml" />
+        <ResourceDictionary Source="UIUnderlineTabControl/UIUnderlineTabControl.xaml" />
 
 
         <ResourceDictionary Source="InstanceForm/InstanceForm.xaml" />

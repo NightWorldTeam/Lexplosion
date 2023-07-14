@@ -17,10 +17,12 @@
                 <ResourceDictionary Source="Controls/Controls.xaml" />
 
                 <ResourceDictionary Source="Resources/Styles/TextBlock.xaml" />
-                <ResourceDictionary Source="Resources/Styles/Buttons.xaml" />
+                <ResourceDictionary Source="Resources/Styles/Button.xaml" />
                 <ResourceDictionary Source="Resources/Styles/TextBox.xaml" />
                 <ResourceDictionary Source="Resources/Styles/CheckBox.xaml" />
                 <ResourceDictionary Source="Resources/Styles/PasswordBox.xaml" />
+                <ResourceDictionary Source="Resources/Styles/ToggleButton.xaml" />
+                <ResourceDictionary Source="Resources/Styles/Slider.xaml" />
 
                 <ResourceDictionary Source="DataTemplates.xaml" />
             </ResourceDictionary.MergedDictionaries>

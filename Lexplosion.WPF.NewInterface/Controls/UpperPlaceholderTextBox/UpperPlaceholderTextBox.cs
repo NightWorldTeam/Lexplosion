@@ -6,8 +6,6 @@ namespace Lexplosion.WPF.NewInterface.Controls
 {
     public class UpperPlaceholderTextBox : TextBox
     {
-        // TODO: сделать потом полную настройку placeholder. [margin, padding, foreground, etc].
-
         public static readonly DependencyProperty PlaceholderProperty
             = DependencyProperty.Register("Placeholder", typeof(string), typeof(UpperPlaceholderTextBox), new FrameworkPropertyMetadata(string.Empty));
 
@@ -49,9 +47,6 @@ namespace Lexplosion.WPF.NewInterface.Controls
         {
             UpdateIsEmpty();
             base.OnInitialized(e);
-
-            //var thisAdornerLayer = AdornerLayer.GetAdornerLayer(this);
-            //thisAdornerLayer.Add(new SimpleCircleAdorner(this));
         }
 
         protected override void OnTextChanged(TextChangedEventArgs e)
@@ -74,7 +69,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
         /// <summary>
         /// Проверяет, содержит ли TextBox текст.
-        /// Нужно, чтобы если TextBox содержит текст, то не показывать Placeholder.
+        /// Нужно, чтобы если TextBox содержит текст, то не показывать PlaceholderKey.
         /// </summary>
         private void UpdateIsEmpty()
         {
