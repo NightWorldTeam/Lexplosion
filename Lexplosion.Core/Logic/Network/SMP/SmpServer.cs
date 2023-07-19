@@ -79,17 +79,12 @@ namespace Lexplosion.Logic.Network.SMP
                 else
                 {
                     data = new byte[0];
-                    return ClientDesc.Empty;
-                }
-
-                if (client.Receive(out data))
-                {
                     return clientDesc;
                 }
-                else
-                {
-                    return ClientDesc.Empty;
-                }
+
+                client.Receive(out data);
+
+                return clientDesc;
             }
             else //буфер пуст
             {
@@ -104,14 +99,9 @@ namespace Lexplosion.Logic.Network.SMP
                         if (clients.ContainsKey(clientDesc))
                         {
                             SmpClient client = clients[clientDesc];
-                            if (client.Receive(out data))
-                            {
-                                return clientDesc;
-                            }
-                            else
-                            {
-                                return ClientDesc.Empty;
-                            }
+                            client.Receive(out data);
+
+                            return clientDesc;
                         }
                     }
                 }

@@ -635,6 +635,7 @@ namespace Lexplosion.Logic.Network.SMP
                     int delay = (int)(_rtt/* + _rtt / 10*/);
                     long lastTime = 0;
                     bool repeated = false;
+                    bool isTimeout = false;
 
                     // цикл отправки
                     while (IsConnected && attemptCount < 15)
@@ -645,8 +646,17 @@ namespace Lexplosion.Logic.Network.SMP
                             Runtime.DebugWrite("AXAXAXAXAXAX " + attemptCount + " " + lastPackageId + ", RTT " + _rtt + ", packages count: " + packages.Count);
                         }
 #endif
-                        foreach (ushort id in packages.Keys)
+                        if (!isTimeout)
                         {
+                            foreach (ushort id in packages.Keys)
+                            {
+                                packages[id][HeaderPositions.AttemptsCounts] = attemptCount; // увставляем номер попытки
+                                _socket.Send(packages[id], packages[id].Length);
+                            }
+                        }
+                        else // если в прошлый раз был тймаут, то отправляем только псоледний пакет. Хост потом просто отправит список нехватающих пакетов
+                        {
+                            ushort id = packages.Keys.Last();
                             packages[id][HeaderPositions.AttemptsCounts] = attemptCount; // увставляем номер попытки
                             _socket.Send(packages[id], packages[id].Length);
                         }
@@ -663,9 +673,11 @@ namespace Lexplosion.Logic.Network.SMP
                         {
                             delay *= _delayMultipliers[attemptCount];
                             attemptCount++;
+                            isTimeout = true;
                         }
                         else // либо пришло подтверждение доставки, либо пришел запрос на повторную доставку
                         {
+                            isTimeout = false;
                             _repeatDeliveryBlock.WaitOne();
                             if (_repeatDeliveryList == null) // пакеты удачно доставлены
                             {
