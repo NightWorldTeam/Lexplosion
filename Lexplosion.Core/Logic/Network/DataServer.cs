@@ -20,7 +20,7 @@ namespace Lexplosion.Logic.Network
         protected Dictionary<string, FileData> SFilesList = new(); // список всех FileStream и размеров файлов
 
         // первое значение - отправляемый файл, второе - офсет в отправляемом файле, третье - ключ ширования, четвертое - вектор инициализации
-        protected ConcurrentDictionary<ClientDesc, ReferenceTuple<string, int, byte[], byte[]>> ClientsData = new();
+        protected ConcurrentDictionary<ClientDesc, ReferenceTuple<string, long, byte[], byte[]>> ClientsData = new();
 
         protected List<ClientDesc> AuthorizedClients = new();
         protected List<ClientDesc> AvailableConnections = new();
@@ -78,7 +78,7 @@ namespace Lexplosion.Logic.Network
                     {
                         byte[] buffer = new byte[HEAP];
 
-                        ReferenceTuple<string, int, byte[], byte[]> clientData = ClientsData[clientPoint];
+                        ReferenceTuple<string, long, byte[], byte[]> clientData = ClientsData[clientPoint];
                         var fileData = SFilesList[clientData.Value1];
                         FileStream file = fileData.Stream; //получаем FileStream для этого клиента
                         long fileSize = fileData.FileSize;
@@ -210,7 +210,7 @@ namespace Lexplosion.Logic.Network
 
                                     if (SFilesList.ContainsKey(profileId))
                                     {
-                                        ClientsData[point] = new ReferenceTuple<string, int, byte[], byte[]>
+                                        ClientsData[point] = new ReferenceTuple<string, long, byte[], byte[]>
                                         {
                                             Value1 = profileId,
                                             Value2 = 0,
