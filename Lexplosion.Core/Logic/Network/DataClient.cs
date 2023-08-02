@@ -209,9 +209,13 @@ namespace Lexplosion.Logic.Network
 
         public void Close()
         {
-            _isManualClosed = true;
-            Close(null);
-            Bridge?.Close();
+            try
+            {
+                _isManualClosed = true;
+                Close(null);
+                Bridge?.Close();
+            } 
+            catch { }
         }
 
         public event Action<double> ProcentUpdate;

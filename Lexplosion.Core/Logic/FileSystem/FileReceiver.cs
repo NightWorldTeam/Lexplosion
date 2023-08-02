@@ -121,7 +121,12 @@ namespace Lexplosion.Logic.FileSystem
 
                 lock (_dataClientInitLocker)
                 {
-                    _dataClient.Initialization(GlobalData.User.UUID, GlobalData.User.SessionToken, _ownerUUID);
+                    bool result = _dataClient.Initialization(GlobalData.User.UUID, GlobalData.User.SessionToken, _ownerUUID);
+                    if (!result)
+                    {
+                        _dataClient.Close();
+                        return FileRecvResult.ConnectionClose;
+                    }
                 }
 
                 _state = DistributionState.InProcess;
