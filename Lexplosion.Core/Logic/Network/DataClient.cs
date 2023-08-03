@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using Lexplosion.Tools;
+using LumiSoft.Net.IO;
 
 namespace Lexplosion.Logic.Network
 {
@@ -109,22 +110,31 @@ namespace Lexplosion.Logic.Network
                 _calculateThread = new Thread(SpeedClaculate);
                 _calculateThread.Start();
 
-                long offset = 0;
-                while (offset < _fileSize && (_isWorking = Bridge.Receive(out data)) && data.Length > 0)
+                using (Aes aesAlg = Aes.Create())
                 {
-                    data = Cryptography.AesDecode(data, _aesKey, _aesIV);
+                    aesAlg.Key = _aesKey;
+                    aesAlg.IV = _aesIV;
 
-                    offset += data.Length;
-                    _dataCount += data.Length;
-                    try // чисто перестраховка на случай если в _fileSize как-то 0 попадёт
+                    ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
+
+                    long offset = 0;
+                    while (offset < _fileSize && (_isWorking = Bridge.Receive(out data)) && data.Length > 0)
                     {
-                        ProcentUpdate?.Invoke((offset / (double)_fileSize) * 100);
-                    }
-                    catch { }
+                        data = Cryptography.CryptoDecode(decryptor, data);
 
-                    _fstream.Write(data, 0, data.Length);
-                    _fstream.Seek(offset, SeekOrigin.Begin);
+                        offset += data.Length;
+                        _dataCount += data.Length;
+                        try // чисто перестраховка на случай если в _fileSize как-то 0 попадёт
+                        {
+                            ProcentUpdate?.Invoke((offset / (double)_fileSize) * 100);
+                        }
+                        catch { }
+
+                        _fstream.Write(data, 0, data.Length);
+                        _fstream.Seek(offset, SeekOrigin.Begin);
+                    }
                 }
+
 
                 Runtime.DebugWrite("End reading cycle");
             }

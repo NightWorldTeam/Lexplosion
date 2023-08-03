@@ -105,6 +105,20 @@ namespace Lexplosion.Logic
             }
         }
 
+        static public byte[] CryptoDecode(ICryptoTransform decryptor, byte[] data)
+        {
+            using (var memoryStream = new MemoryStream())
+            {
+                using (var cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Write))
+                {
+                    cryptoStream.Write(data, 0, data.Length);
+                    cryptoStream.FlushFinalBlock();
+
+                    return memoryStream.ToArray();
+                }
+            }
+        }
+
         static public byte[] AesEncode(string plainText, byte[] Key, byte[] IV)
         {
             return AesEncode(Encoding.UTF8.GetBytes(plainText), Key, IV);
