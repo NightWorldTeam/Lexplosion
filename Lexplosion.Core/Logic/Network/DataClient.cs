@@ -110,7 +110,7 @@ namespace Lexplosion.Logic.Network
                 _calculateThread = new Thread(SpeedClaculate);
                 _calculateThread.Start();
 
-                using (Aes aesAlg = Aes.Create())
+                using (AesCryptoServiceProvider aesAlg = new AesCryptoServiceProvider())
                 {
                     aesAlg.Key = _aesKey;
                     aesAlg.IV = _aesIV;

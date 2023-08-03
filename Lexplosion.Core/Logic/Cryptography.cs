@@ -112,10 +112,9 @@ namespace Lexplosion.Logic
                 using (var cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Write))
                 {
                     cryptoStream.Write(data, 0, data.Length);
-                    cryptoStream.FlushFinalBlock();
-
-                    return memoryStream.ToArray();
                 }
+
+                return memoryStream.ToArray();
             }
         }
 
