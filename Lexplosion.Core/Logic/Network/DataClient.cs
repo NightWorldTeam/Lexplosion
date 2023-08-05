@@ -131,7 +131,6 @@ namespace Lexplosion.Logic.Network
                         catch { }
 
                         _fstream.Write(data, 0, data.Length);
-                        _fstream.Seek(offset, SeekOrigin.Begin);
                     }
                 }
 
