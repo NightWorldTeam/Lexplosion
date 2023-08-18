@@ -191,7 +191,6 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer
                 NightWorldApi.AddFriend(GlobalData.User.UUID, GlobalData.User.SessionToken, user.Login);
                 Model.AddFriend(user);
                 // TODO: Friends Translate
-                DoNotification("Friends Changed", user.Login + " is your friend now(", 5, 0);
             }));
         }
 
