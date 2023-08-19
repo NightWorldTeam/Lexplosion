@@ -8,8 +8,7 @@
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Views.Pages.MainContent.MainMenu"
     xmlns:localVM="clr-namespace:Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    d:DesignHeight="528"
-    d:DesignWidth="250"
+    xmlns:objects="clr-namespace:Lexplosion.WPF.NewInterface.Core.Objects"
     mc:Ignorable="d">
 
     <UserControl.Resources>
@@ -23,7 +22,7 @@
             Style="{StaticResource EveryPair}" />
 
 
-        <DataTemplate DataType="{x:Type localVM:LeftPanelMenuItem}">
+        <DataTemplate DataType="{x:Type objects:LeftPanelMenuItem}">
             <Border>
                 <controls:DefaultMainMenuTabItem
                     GroupName="LeftPanelMainMenuItem"
@@ -59,16 +58,14 @@
             BorderBrush="{DynamicResource SeparateSolidColorBrush}"
             BorderThickness="0,0,2,0">
             <Grid Background="{DynamicResource PrimarySolidColorBrush}">
+
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
                 <!--  Header  -->
-                <Grid
-                    Width="220"
-                    Height="80"
-                    HorizontalAlignment="Center">
+                <Grid Height="80" HorizontalAlignment="Stretch">
                     <Border
                         Padding="20"
                         Background="{DynamicResource SecondarySolidColorBrush}"

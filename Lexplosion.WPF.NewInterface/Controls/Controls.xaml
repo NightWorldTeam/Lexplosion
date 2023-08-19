@@ -6,10 +6,19 @@
         <ResourceDictionary Source="DigitCodeBox/DigitCodeBox.xaml" />
         <ResourceDictionary Source="DefaultMainMenuTabItem/DefaultMainMenuTabItem.xaml" />
         <ResourceDictionary Source="SearchBox/SearchBox.xaml" />
+
+        <ResourceDictionary Source="AnimatedContentControl/AnimatedContentControl.xaml" />
         <ResourceDictionary Source="UIUnderlineTabControl/UIUnderlineTabControl.xaml" />
 
+        <ResourceDictionary Source="ModalControl/ModalControl.xaml" />
+
+
+
+        <ResourceDictionary Source="DropdownMenu/DropdownMenu.xaml" />
 
         <ResourceDictionary Source="InstanceForm/InstanceForm.xaml" />
+
+
 
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

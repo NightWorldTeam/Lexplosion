@@ -48,7 +48,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.Authorization
 
     public sealed class AuthorizationMenuViewModel : VMBase
     {
-        private readonly INavigationStore<VMBase> _navigationStore;
+        private readonly INavigationStore _navigationStore;
 
 
         #region Commands
@@ -59,7 +59,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.Authorization
         {
             get => _openAccountAuthFormCommand ?? (_openAccountAuthFormCommand = new RelayCommand(obj => 
             {
-                _navigationStore.Open(new NightWorldAuthorizationViewModel(_navigationStore));
+                _navigationStore.CurrentViewModel = new NightWorldAuthorizationViewModel(_navigationStore);
             }));
         }
 
@@ -69,7 +69,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.Authorization
         #region Constructors
 
 
-        public AuthorizationMenuViewModel(INavigationStore<VMBase> navigationStore) 
+        public AuthorizationMenuViewModel(INavigationStore navigationStore) 
         {
             _navigationStore = navigationStore;
         }

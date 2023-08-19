@@ -59,6 +59,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -80,22 +81,36 @@
     <Compile Include="Commands\CommandBase.cs" />
     <Compile Include="Commands\NavigationCommand.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="Controls\AnimatedContentControl\AnimatedContentControl.cs" />
     <Compile Include="Controls\BindablePasswordBox\BindablePasswordBox.xaml.cs">
       <DependentUpon>BindablePasswordBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\DefaultMainMenuTabItem\DefaultMainMenuTabItem.cs" />
     <Compile Include="Controls\DigitCodeBox\DigitCodeBox.cs" />
     <Compile Include="Controls\AdvancedTextBox\AdvancedTextBox.cs" />
+    <Compile Include="Controls\DropdownMenu\DropdownMenu.cs" />
     <Compile Include="Controls\InstanceForm\InstanceForm.cs" />
+    <Compile Include="Controls\InstanceForm\LowerMenuButton.cs" />
+    <Compile Include="Controls\ModalControl\ModalControl.cs" />
     <Compile Include="Controls\Paginator\IPaginable.cs" />
     <Compile Include="Controls\Paginator\Paginator.cs" />
     <Compile Include="Controls\SearchBox\SearchBox.cs" />
     <Compile Include="Controls\UIUnderlineTabControl\UIUnderlineTabControl.cs" />
     <Compile Include="Controls\UpperPlaceholderTextBox\UpperPlaceholderTextBox.cs" />
+    <Compile Include="Core\ContentLayoutViewModelBase.cs" />
+    <Compile Include="Core\ILayoutViewModel.cs" />
     <Compile Include="Core\INotifiable.cs" />
-    <Compile Include="Core\ResourceGetter.cs" />
+    <Compile Include="Core\Modal\IModalViewModel.cs" />
+    <Compile Include="Core\Modal\ModalViewModelBase.cs" />
+    <Compile Include="Core\Objects\ActivityColor.cs" />
+    <Compile Include="Core\Objects\LanguageModel.cs" />
+    <Compile Include="Core\Objects\ModalLeftMenuTabItem.cs" />
+    <Compile Include="Core\Objects\LeftPanelItemModel.cs" />
+    <Compile Include="Core\Objects\TabItemModel.cs" />
+    <Compile Include="Core\Objects\Theme.cs" />
+    <Compile Include="Core\Tools\WindowsResolutionTools.cs" />
     <Compile Include="Extensions\Path.cs" />
-    <Compile Include="Extensions\PathMarkupExtension.cs" />
     <Compile Include="Extensions\StyleSelectors\LastChildStyleSelector.cs" />
     <Compile Include="Extensions\StyleSelectors\NthChildStyleSelector.cs" />
     <Compile Include="Extensions\TextBlock.cs" />
@@ -107,21 +122,43 @@
     <Compile Include="Models\Authorization\BasicAuthorization\IBasicAuthModel.cs" />
     <Compile Include="Models\Authorization\OAuth2\IOAuth2Model.cs" />
     <Compile Include="Models\Authorization\OAuth2\MicrosoftAuthorizationModel.cs" />
+    <Compile Include="Models\InstanceModel\DownloadModel.cs" />
+    <Compile Include="Models\InstanceModel\InstanceModelBase.cs" />
+    <Compile Include="Models\InstanceModel\LaunchModel.cs" />
+    <Compile Include="Models\MainContent\Content\GeneralSettings\AppearanceSettingsModel.cs" />
     <Compile Include="Models\MainContent\Content\CatalogModel.cs" />
-    <Compile Include="Stores\INavigationStore.cs" />
-    <Compile Include="Stores\ModalNavigationStore.cs" />
-    <Compile Include="Stores\NavigationStore.cs" />
+    <Compile Include="Core\Stores\INavigationStore.cs" />
+    <Compile Include="Core\Stores\ModalNavigationStore.cs" />
+    <Compile Include="Core\Stores\NavigationStore.cs" />
+    <Compile Include="Models\MainContent\Content\GeneralSettings\LanguageSettingsModel.cs" />
     <Compile Include="Tools\ColorTools.cs" />
     <Compile Include="ViewModels\Authorization\AuthorizationViewModelBase.cs" />
     <Compile Include="ViewModels\Authorization\BasicAuthorization\NightWorld\DigitCodeConfirmationViewModel.cs" />
     <Compile Include="ViewModels\Authorization\BasicAuthorization\NightWorld\NightWorldAuthorizationViewModel.cs" />
     <Compile Include="ViewModels\Authorization\AuthorizationMenuViewModel.cs" />
     <Compile Include="ViewModels\Authorization\BasicAuthorization\NightWorld\PasswordResetViewModel.cs" />
+    <Compile Include="ViewModels\InstanceForm\InstanceFormViewModel.cs" />
     <Compile Include="ViewModels\MainContent\MainMenu\Content\CatalogViewModel.cs" />
+    <Compile Include="ViewModels\MainContent\MainMenu\Content\Friends\FriendsLayoutViewModel.cs" />
+    <Compile Include="ViewModels\MainContent\MainMenu\Content\Friends\FriendsRequestsViewModel.cs" />
+    <Compile Include="ViewModels\MainContent\MainMenu\Content\Friends\FriendsViewModel.cs" />
+    <Compile Include="ViewModels\MainContent\MainMenu\Content\GeneralSettings\AboutUsViewModel.cs" />
+    <Compile Include="ViewModels\MainContent\MainMenu\Content\GeneralSettings\AppearanceSettingsViewModel.cs" />
     <Compile Include="ViewModels\MainContent\MainMenu\Content\GeneralSettings\GeneralSettingsLayoutViewModel.cs" />
     <Compile Include="ViewModels\MainContent\MainMenu\Content\GeneralSettings\GeneralSettingsViewModel.cs" />
+    <Compile Include="ViewModels\MainContent\MainMenu\Content\GeneralSettings\LanguageSettingsViewModel.cs" />
+    <Compile Include="ViewModels\MainContent\MainMenu\Content\Multiplayer\MultiplayerLayoutViewModel.cs" />
+    <Compile Include="ViewModels\MainContent\MainMenu\Content\Multiplayer\MultiplayerViewModel.cs" />
     <Compile Include="ViewModels\MainContent\MainMenu\LeftPanel\LeftPanelViewModel.cs" />
     <Compile Include="ViewModels\MainContent\MainMenu\MainMenuLayoutViewModel.cs" />
+    <Compile Include="ViewModels\Modal\InstanceFactory\InstanceFactoryViewModel.cs" />
+    <Compile Include="ViewModels\Modal\LeftMenu\LeftMenuControl.cs" />
+    <Compile Include="Views\Modal\InstanceFactory\InstanceFactoryView.xaml.cs">
+      <DependentUpon>InstanceFactoryView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Modal\LeftMenu\LeftMenuControl.xaml.cs">
+      <DependentUpon>LeftMenuControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Pages\Authorization\AuthorizationMenuView.xaml.cs">
       <DependentUpon>AuthorizationMenuView.xaml</DependentUpon>
     </Compile>
@@ -134,7 +171,7 @@
     <Compile Include="Views\Pages\Authorization\PasswordResetView.xaml.cs">
       <DependentUpon>PasswordResetView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Core\VMBase.cs" />
+    <Compile Include="Core\ViewModelBase.cs" />
     <Page Include="Assets\langs\en-US.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -144,6 +181,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\AdvancedTextBox\AdvancedTextBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\AnimatedContentControl\AnimatedContentControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -163,7 +204,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\DropdownMenu\DropdownMenu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\InstanceForm\InstanceForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ModalControl\ModalControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -203,6 +252,18 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Resources\Styles\RadioButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Styles\ScrollBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Styles\ScrollViewer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Resources\Styles\Slider.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -227,6 +288,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Modal\InstanceFactory\InstanceFactoryView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Modal\LeftMenu\LeftMenuControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Pages\Authorization\AuthorizationMenuView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -247,6 +316,18 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Pages\MainContent\MainMenu\Content\Friends\FriendsLayoutViewModel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\MainContent\MainMenu\Content\Friends\FriendsRequestsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\MainContent\MainMenu\Content\Friends\FriendsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Pages\MainContent\MainMenu\Content\GeneralSettings\AboutUsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -264,6 +345,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Pages\MainContent\MainMenu\Content\GeneralSettings\LanguageSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\MainContent\MainMenu\Content\Multiplayer\MultiplayerLayoutView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\MainContent\MainMenu\Content\Multiplayer\MultiplayerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -288,6 +377,15 @@
     <Compile Include="Views\Pages\MainContent\MainMenu\Content\CatalogView.xaml.cs">
       <DependentUpon>CatalogView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Pages\MainContent\MainMenu\Content\Friends\FriendsLayoutViewModel.xaml.cs">
+      <DependentUpon>FriendsLayoutViewModel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\MainContent\MainMenu\Content\Friends\FriendsRequestsView.xaml.cs">
+      <DependentUpon>FriendsRequestsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\MainContent\MainMenu\Content\Friends\FriendsView.xaml.cs">
+      <DependentUpon>FriendsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Pages\MainContent\MainMenu\Content\GeneralSettings\AboutUsView.xaml.cs">
       <DependentUpon>AboutUsView.xaml</DependentUpon>
     </Compile>
@@ -302,6 +400,12 @@
     </Compile>
     <Compile Include="Views\Pages\MainContent\MainMenu\Content\GeneralSettings\LanguageSettingsView.xaml.cs">
       <DependentUpon>LanguageSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\MainContent\MainMenu\Content\Multiplayer\MultiplayerLayoutView.xaml.cs">
+      <DependentUpon>MultiplayerLayoutView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\MainContent\MainMenu\Content\Multiplayer\MultiplayerView.xaml.cs">
+      <DependentUpon>MultiplayerView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\MainContent\MainMenu\LeftPanel\LeftPanelView.xaml.cs">
       <DependentUpon>LeftPanelView.xaml</DependentUpon>
@@ -346,7 +450,6 @@
   <ItemGroup>
     <Folder Include="Models\MainContent\LeftPanel\" />
     <Folder Include="ViewModels\Authorization\OAuth2\" />
-    <Folder Include="Views\Modal\" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\images\background\authBG.png" />

@@ -5,6 +5,8 @@
     xmlns:authviews="clr-namespace:Lexplosion.WPF.NewInterface.Views.Pages.Authorization"
     xmlns:mainmenuview="clr-namespace:Lexplosion.WPF.NewInterface.Views.Pages.MainContent.MainMenu"
     xmlns:mainmenuvm="clr-namespace:Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu"
+    xmlns:modalviews="clr-namespace:Lexplosion.WPF.NewInterface.Views.Modal"
+    xmlns:modalvm="clr-namespace:Lexplosion.WPF.NewInterface.ViewModels.Modal"
     xmlns:viewmodels="clr-namespace:Lexplosion.WPF.NewInterface.ViewModels">
 
     <viewmodels:MainViewModel x:Key="MainViewModel" />
@@ -41,6 +43,27 @@
         <mainmenuview:CatalogView />
     </DataTemplate>
 
+    <!--  Multiplayer  -->
+    <DataTemplate DataType="{x:Type mainmenuvm:MultiplayerLayoutViewModel}">
+        <mainmenuview:MultiplayerLayoutView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type mainmenuvm:MultiplayerViewModel}">
+        <mainmenuview:MultiplayerView />
+    </DataTemplate>
+
+    <!--  Friends  -->
+    <DataTemplate DataType="{x:Type mainmenuvm:FriendsLayoutViewModel}">
+        <mainmenuview:FriendsLayoutViewModel />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type mainmenuvm:FriendsViewModel}">
+        <mainmenuview:FriendsViewModel />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type mainmenuvm:FriendsRequestsViewModel}">
+        <mainmenuview:FriendsRequestsView />
+    </DataTemplate>
+
+
     <!--  General Settings  -->
     <DataTemplate DataType="{x:Type mainmenuvm:GeneralSettingsLayoutViewModel}">
         <mainmenuview:GeneralSettingsLayoutView />
@@ -48,5 +71,21 @@
     <DataTemplate DataType="{x:Type mainmenuvm:GeneralSettingsViewModel}">
         <mainmenuview:GeneralSettingsView />
     </DataTemplate>
+    <DataTemplate DataType="{x:Type mainmenuvm:AppearanceSettingsViewModel}">
+        <mainmenuview:AppearanceSettingsView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type mainmenuvm:LanguageSettingsViewModel}">
+        <mainmenuview:LanguageSettingsView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type mainmenuvm:AboutUsViewModel}">
+        <mainmenuview:AboutUsView />
+    </DataTemplate>
 
+    <!--  Modal  -->
+    <DataTemplate DataType="{x:Type modalvm:LeftMenuControl}">
+        <modalviews:LeftMenuControl />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type modalvm:InstanceFactoryViewModel}">
+        <modalviews:InstanceFactoryView />
+    </DataTemplate>
 </ResourceDictionary>

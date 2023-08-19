@@ -147,7 +147,8 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
             _path.Visibility = Visibility;
             _viewBox.Visibility = Visibility.Visible;
-            _path.Data = Geometry.Parse((string)App.Current.Resources[newValue]);
+            // DP + Key -> Data ThemesResourcePath Key
+            _path.Data = Geometry.Parse((string)App.Current.Resources["PD" + newValue]);
         }
 
         private void UpdatePlaceholder(object newValue)
@@ -163,6 +164,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
             _placeholder.Visibility = Visibility.Visible;
             _placeholder.SetResourceReference(System.Windows.Controls.TextBlock.TextProperty, newValue);
         }
+
 
         #endregion Private Methods
     }

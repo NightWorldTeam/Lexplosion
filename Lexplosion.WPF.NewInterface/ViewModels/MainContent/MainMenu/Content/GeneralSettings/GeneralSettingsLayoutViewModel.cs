@@ -1,35 +1,26 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using Lexplosion.WPF.NewInterface.Core;
+using Lexplosion.WPF.NewInterface.Core.Objects;
 
 namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu
 {
-    public class TabItemModel : VMBase
+    public sealed class GeneralSettingsLayoutViewModel : ContentLayoutViewModelBase
     {
-        public string TextKey { get; set; }
-        public VMBase Content { get; set; }
+        private readonly ViewModelBase _generalSettingsViewModel = new GeneralSettingsViewModel();
+        private readonly ViewModelBase _appearanceViewModel = new AppearanceSettingsViewModel();
+        private readonly ViewModelBase _languageViewModel = new LanguageSettingsViewModel();
+        private readonly ViewModelBase _aboutViewModel = new AboutUsViewModel();
 
-        private bool _isSelected;
-        public bool IsSelected 
+        public GeneralSettingsLayoutViewModel() : base()
         {
-            get => _isSelected; set 
-            {
-                _isSelected = value;
-                OnPropertyChanged();
-            }
+            InitDefaultSettingsTabMenu();
         }
-    }
 
-    public class GeneralSettingsLayoutViewModel : VMBase
-    {
-        private ObservableCollection<TabItemModel> _tabs = new ObservableCollection<TabItemModel>();
-        public IEnumerable<TabItemModel> Tabs { get => _tabs; }
-
-        public GeneralSettingsLayoutViewModel()
+        private void InitDefaultSettingsTabMenu() 
         {
-            _tabs.Add(new TabItemModel { TextKey = "general", Content = new GeneralSettingsViewModel(), IsSelected = true });
-            _tabs.Add(new TabItemModel { TextKey = "appearance", Content = null });
-            _tabs.Add(new TabItemModel { TextKey = "language", Content = null });
-            _tabs.Add(new TabItemModel { TextKey = "about", Content = null });
+            _tabs.Add(new TabItemModel { TextKey = "General", Content = _generalSettingsViewModel, IsSelected = true });
+            _tabs.Add(new TabItemModel { TextKey = "Appearance", Content = _appearanceViewModel });
+            _tabs.Add(new TabItemModel { TextKey = "Language", Content = _languageViewModel });
+            _tabs.Add(new TabItemModel { TextKey = "About", Content = _aboutViewModel });
         }
     }
 }

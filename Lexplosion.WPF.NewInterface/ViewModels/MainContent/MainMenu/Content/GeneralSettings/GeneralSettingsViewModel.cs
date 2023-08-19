@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Lexplosion.WPF.NewInterface.Core;
 
 namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu
 {
-    public class GeneralSettingsViewModel : VMBase
+    public sealed class GeneralSettingsViewModel : ViewModelBase
     {
     }
 }

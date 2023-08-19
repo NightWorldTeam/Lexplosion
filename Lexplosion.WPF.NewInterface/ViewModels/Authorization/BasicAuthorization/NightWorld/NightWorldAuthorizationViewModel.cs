@@ -8,9 +8,9 @@ using Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu;
 
 namespace Lexplosion.WPF.NewInterface.ViewModels.Authorization
 {
-    public sealed class NightWorldAuthorizationViewModel : VMBase
+    public sealed class NightWorldAuthorizationViewModel : ViewModelBase
     {
-        private readonly INavigationStore<VMBase> _navigationStore;
+        private readonly INavigationStore _navigationStore;
 
         public IBasicAuthModel Model { get; }
 
@@ -24,7 +24,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.Authorization
             get => authorizationCommand ?? (authorizationCommand = new RelayCommand(obj => 
             {
                 Model.LogIn();
-                _navigationStore.Open(new MainMenuLayoutViewModel());
+                _navigationStore.CurrentViewModel = new MainMenuLayoutViewModel();
             }));
         }
 
@@ -44,7 +44,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.Authorization
         {
             get => _passwordResetCommand ?? (_passwordResetCommand = new RelayCommand(obj =>
             {
-                _navigationStore.Open(new PasswordResetViewModel(_navigationStore));
+                _navigationStore.CurrentViewModel = new PasswordResetViewModel(_navigationStore);
             }));
         }
 
@@ -55,7 +55,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.Authorization
         #region Constructors
 
 
-        public NightWorldAuthorizationViewModel(INavigationStore<VMBase> navigationStore, string loadedLogin = "")
+        public NightWorldAuthorizationViewModel(INavigationStore navigationStore, string loadedLogin = "")
         {
             Model = new NightWorldAuthorizationModel(null, loadedLogin);
             _navigationStore = navigationStore;

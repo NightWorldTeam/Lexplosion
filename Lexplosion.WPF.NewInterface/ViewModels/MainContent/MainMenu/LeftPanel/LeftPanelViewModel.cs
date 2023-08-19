@@ -1,49 +1,22 @@
-﻿using System;
+﻿using Lexplosion.WPF.NewInterface.Core;
+using Lexplosion.WPF.NewInterface.Core.Objects;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu
 {
-    public sealed class LeftPanelMenuItem : VMBase, IComparable<LeftPanelMenuItem>
+    public sealed class LeftPanelViewModel : ViewModelBase
     {
-        public event Action<LeftPanelMenuItem> SelectedEvent;
+        public event Action<ViewModelBase> SelectedItemChanged;
 
-        public uint Id { get; set; }
-        public string TextKey { get; set; }
-        public string Icon { get; set; }
 
-        public double IconWidth { get; set; }
-        public double IconHeight { get; set; }
+        #region Properties
 
-        public VMBase Content { get; set; }
-
-        private bool _isSelected;
-        public bool IsSelected 
-        { 
-            get => _isSelected; set 
-            {
-                _isSelected = value;
-
-                if (_isSelected) 
-                { 
-                    SelectedEvent?.Invoke(this);
-                }
-                OnPropertyChanged();
-            }
-        }
-
-        public int CompareTo(LeftPanelMenuItem other)
-        {
-            return Id.CompareTo(other.Id);
-        }
-    }
-
-    public sealed class LeftPanelViewModel : VMBase
-    {
-        public event Action<VMBase> SelectedItemChanged;
 
         private ObservableCollection<LeftPanelMenuItem> _items = new ObservableCollection<LeftPanelMenuItem>();
         public IEnumerable<LeftPanelMenuItem> Items { get => _items; }
+
 
         private LeftPanelMenuItem _selectedItem;
         public LeftPanelMenuItem SelectedItem 
@@ -55,6 +28,9 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu
                 OnPropertyChanged();
             }
         }
+
+
+        #endregion Properties
 
 
         #region Constructors
@@ -72,7 +48,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu
         #region Public Methods
 
 
-        public void AddTabItem(string name, string icon, VMBase content, int id = -1, double iconWidth = 20, double iconHeight = 20)
+        public void AddTabItem(string name, string icon, ViewModelBase content, int id = -1, double iconWidth = 20, double iconHeight = 20)
         {
             if (id == -1 || id < 0) 
             {
@@ -100,11 +76,6 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu
             _items.Add(tabItem);
         }
 
-        public void OnSelectedTabItemChanged(LeftPanelMenuItem instance) 
-        {
-            SelectedItem = instance;
-        }
-
         public void SelectFirst() 
         {
             _items[0].IsSelected = true;
@@ -117,5 +88,17 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu
 
 
         #endregion Public Methods
+
+
+        #region Private Methods
+
+
+        private void OnSelectedTabItemChanged(LeftPanelMenuItem instance)
+        {
+            SelectedItem = instance;
+        }
+
+
+        #endregion Private Methods
     }
 }

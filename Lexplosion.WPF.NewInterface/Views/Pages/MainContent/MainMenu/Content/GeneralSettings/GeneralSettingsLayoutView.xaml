@@ -12,143 +12,35 @@
     mc:Ignorable="d">
 
     <UserControl.Resources>
-        <!--<Style TargetType="{x:Type TabItem}">
-            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
-            <Setter Property="FontSize" Value="14" />
-            <Setter Property="TextBlock.FontWeight" Value="Medium" />
-            <Setter Property="TextBlock.Background" Value="Transparent" />
-            <Setter Property="TextBlock.Foreground" Value="{DynamicResource PrimaryForegroundSolidColorBrush}" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type TabItem}">
-                        <Grid x:Name="Root">
-                            <Border
-                                x:Name="Border"
-                                Margin="8,0"
-                                Background="{DynamicResource PrimarySolidColorBrush}"
-                                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                                BorderThickness="1,1,1,1">
-                                <ContentPresenter
-                                    x:Name="ContentSite"
-                                    Margin="0"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    extensions:TextBlock.TextByKey="{Binding Header}"
-                                    ContentSource="Header"
-                                    RecognizesAccessKey="True" />
-                            </Border>
-                        </Grid>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsSelected" Value="True">
-                                <Setter Property="TextBlock.Foreground" Value="{DynamicResource ActivitySolidColorBrush}" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>-->
-
-        <!--<DataTemplate DataType="{x:Type localVM:TabItemModel}">
-            <TabItem Header="{Binding TextKey}" IsSelected="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}" />
-        </DataTemplate>-->
-
-        <Style TargetType="{x:Type TabItem}">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type TabItem}">
-                        <Grid x:Name="Root">
-                            <Border
-                                x:Name="Spacer"
-                                Width="Auto"
-                                Height="Auto"
-                                Margin="0,0,0,0"
-                                Padding="8"
-                                BorderBrush="Transparent"
-                                BorderThickness="0">
-                                <Border
-                                    x:Name="Border"
-                                    Margin="0,0,0,0"
-                                    BorderThickness="1,1,1,1"
-                                    CornerRadius="0,0,0,0">
-                                    <ContentPresenter
-                                        x:Name="ContentSite"
-                                        Width="Auto"
-                                        Margin="0,0"
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center"
-                                        ContentSource="Header"
-                                        RecognizesAccessKey="True" />
-                                </Border>
-                            </Border>
-                        </Grid>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsSelected" Value="True">
-                                <Setter Property="Panel.ZIndex" Value="100" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
+        <!--    -->
     </UserControl.Resources>
 
 
-    <Border
-        Padding="45,32,45,0"
-        Background="{DynamicResource PrimarySolidColorBrush}"
-        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-        BorderThickness="0,0,0,2">
-        <Grid>
+    <Grid>
 
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
-            <WrapPanel Margin="0,0,0,32" HorizontalAlignment="Left">
+        <TextBlock
+            Margin="45,32,0,8"
+            extensions:TextBlock.TextByKey="Settings"
+            FontSize="20"
+            FontWeight="Bold"
+            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
 
-                <!--<Viewbox Height="20" Margin=0,0,8,0>
-                        <Path
-                            extensions:Path.StringKeyData="Settings"
-                            Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                            Stretch="Fill" />
-                    </Viewbox>-->
-
-
-                <TextBlock
-                    extensions:TextBlock.TextByKey="settings"
-                    FontSize="20"
-                    FontWeight="Medium"
-                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
-            </WrapPanel>
-
-            <!--  TabControl ItemsSource="{Binding Tabs}"  -->
-            <controls:UIUnderlineTabControl Grid.Row="1">
-                <TabItem>
-                    <TabItem.Header>
-                        <TextBlock
-                            extensions:TextBlock.TextByKey="general"
-                            FontSize="14"
-                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
-                    </TabItem.Header>
-                </TabItem>
-                <TabItem>
-                    <TabItem.Header>
-                        <TextBlock
-                            extensions:TextBlock.TextByKey="language"
-                            FontSize="14"
-                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
-                    </TabItem.Header>
-                </TabItem>
-                <TabItem>
-                    <TabItem.Header>
-                        <TextBlock
-                            extensions:TextBlock.TextByKey="about"
-                            FontSize="14"
-                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
-                    </TabItem.Header>
-                </TabItem>
-            </controls:UIUnderlineTabControl>
-        </Grid>
-    </Border>
+        <controls:UIUnderlineTabControl
+            Grid.Row="1"
+            Background="Transparent"
+            ItemsSource="{Binding Tabs}"
+            TabPanelPadding="45,16,45,0">
+            <controls:UIUnderlineTabControl.ItemContainerStyle>
+                <Style BasedOn="{StaticResource UITabItem}" TargetType="TabItem">
+                    <Setter Property="Header" Value="{Binding TextKey}" />
+                    <Setter Property="Content" Value="{Binding Content}" />
+                </Style>
+            </controls:UIUnderlineTabControl.ItemContainerStyle>
+        </controls:UIUnderlineTabControl>
+    </Grid>
 </UserControl>

@@ -1,13 +1,14 @@
 ﻿using Lexplosion.WPF.NewInterface.Commands;
+using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Models.Authorization.BasicAuthorization.NightWorld;
 using Lexplosion.WPF.NewInterface.Stores;
 using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.ViewModels.Authorization
 {
-    public class PasswordResetViewModel : VMBase
+    public class PasswordResetViewModel : ViewModelBase
     {
-        private readonly INavigationStore<VMBase> _navigationStore;
+        private readonly INavigationStore _navigationStore;
 
         public PasswordResetModel Model { get; }
 
@@ -21,7 +22,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.Authorization
             get => _continueCommand ?? (_continueCommand = new RelayCommand(obj =>
             {
                 Model.GetCode();
-                _navigationStore.Open(new DigitCodeConfirmationViewModel(_navigationStore));
+                _navigationStore.CurrentViewModel = new DigitCodeConfirmationViewModel(_navigationStore);
             }));
         }
 
@@ -32,7 +33,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.Authorization
         #region Constructors
 
 
-        public PasswordResetViewModel(INavigationStore<VMBase> navigationStore)
+        public PasswordResetViewModel(INavigationStore navigationStore)
         {
             Model = new PasswordResetModel();
             _navigationStore = navigationStore;

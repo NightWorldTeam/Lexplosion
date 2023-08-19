@@ -23,6 +23,9 @@
                 <ResourceDictionary Source="Resources/Styles/PasswordBox.xaml" />
                 <ResourceDictionary Source="Resources/Styles/ToggleButton.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Slider.xaml" />
+                <ResourceDictionary Source="Resources/Styles/RadioButton.xaml" />
+                <ResourceDictionary Source="Resources/Styles/ScrollViewer.xaml" />
+                <ResourceDictionary Source="Resources/Styles/ScrollBar.xaml" />
 
                 <ResourceDictionary Source="DataTemplates.xaml" />
             </ResourceDictionary.MergedDictionaries>

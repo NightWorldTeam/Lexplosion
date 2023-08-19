@@ -5,414 +5,424 @@
     xmlns:controls="clr-namespace:Lexplosion.WPF.NewInterface.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
-    xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Views.Pages.MainContent.MainMenu.Content.GeneralSettings"
+    xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Views.Pages.MainContent.MainMenu"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignWidth="694"
     mc:Ignorable="d">
 
-    <Grid>
-        <ScrollViewer
-            Grid.Row="1"
-            CanContentScroll="False"
-            ScrollViewer.VerticalScrollBarVisibility="Hidden">
+    <ScrollViewer
+        Grid.Row="1"
+        CanContentScroll="False"
+        ScrollViewer.VerticalScrollBarVisibility="Visible">
+        <Grid Margin="45,32,45,16">
 
-            <Border Padding="45,32,45,8">
-                <Grid>
+            <Grid>
 
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
 
-                    <!--  Game Settings  -->
-                    <StackPanel>
+                <!--  Game Settings  -->
+                <StackPanel>
 
-                        <!--  Header  -->
-                        <Border
-                            Padding="0,0,0,8"
-                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                            BorderThickness="0,0,0,2">
+                    <!--  Header  -->
+                    <Border
+                        Padding="0,0,0,8"
+                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                        BorderThickness="0,0,0,2">
+                        <StackPanel>
+                            <TextBlock
+                                extensions:TextBlock.TextByKey="GameProperties"
+                                FontSize="16"
+                                FontWeight="Bold"
+                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                            <TextBlock
+                                extensions:TextBlock.TextByKey="GamePropertiesDescription"
+                                FontSize="14"
+                                FontWeight="Medium"
+                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                        </StackPanel>
+                    </Border>
+
+
+                    <!--  Window Size  -->
+                    <Border
+                        Padding="0,16,0,8"
+                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                        BorderThickness="0,0,0,2">
+                        <Grid>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <!--  Header  -->
                             <StackPanel>
                                 <TextBlock
-                                    extensions:TextBlock.TextByKey="GameProperties"
-                                    FontSize="16"
-                                    FontWeight="Bold"
+                                    extensions:TextBlock.TextByKey="WindowSize"
+                                    FontSize="14"
+                                    FontWeight="Medium"
                                     Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
                                 <TextBlock
-                                    extensions:TextBlock.TextByKey="GamePropertiesDescription"
+                                    extensions:TextBlock.TextByKey="WindowSizeDescription"
                                     FontSize="14"
                                     FontWeight="Medium"
                                     Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
                             </StackPanel>
-                        </Border>
 
+                            <StackPanel
+                                Grid.Column="1"
+                                HorizontalAlignment="Right"
+                                Orientation="Horizontal">
+                                <Border
+                                    Width="32"
+                                    Height="32"
+                                    Margin="16,0,0,0"
+                                    Padding="3"
+                                    Background="{DynamicResource PrimarySolidColorBrush}"
+                                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                    BorderThickness="2"
+                                    CornerRadius="5">
+                                    <Viewbox Height="16">
+                                        <Path
+                                            extensions:Path.StringKeyData="Display"
+                                            Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                            Stretch="Fill" />
+                                    </Viewbox>
+                                </Border>
 
-                        <!--  Window Size  -->
-                        <Border
-                            Padding="0,16,0,8"
-                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                            BorderThickness="0,0,0,2">
-                            <Grid>
-
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-
-                                <!--  Header  -->
-                                <StackPanel>
-                                    <TextBlock
-                                        extensions:TextBlock.TextByKey="WindowSize"
-                                        FontSize="14"
-                                        FontWeight="Medium"
-                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
-                                    <TextBlock
-                                        extensions:TextBlock.TextByKey="WindowSizeDescription"
-                                        FontSize="14"
-                                        FontWeight="Medium"
-                                        Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
-                                </StackPanel>
-
-                                <StackPanel
-                                    Grid.Column="1"
+                                <controls:AdvancedTextBox
+                                    Width="75"
+                                    Height="32"
+                                    Margin="8,0,0,0"
                                     HorizontalAlignment="Right"
-                                    Orientation="Horizontal">
-                                    <Border
-                                        Width="32"
-                                        Height="32"
-                                        Margin="16,0,0,0"
-                                        Padding="3"
-                                        Background="{DynamicResource PrimarySolidColorBrush}"
-                                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                                        BorderThickness="2"
-                                        CornerRadius="5">
-                                        <Viewbox Height="16">
-                                            <Path
-                                                extensions:Path.StringKeyData="Display"
-                                                Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                                Stretch="Fill" />
-                                        </Viewbox>
-                                    </Border>
+                                    VerticalAlignment="Center"
+                                    IconKey="Width" />
 
-                                    <controls:AdvancedTextBox
-                                        Width="75"
-                                        Height="32"
-                                        Margin="8,0,0,0"
-                                        HorizontalAlignment="Right"
-                                        VerticalAlignment="Center"
-                                        IconKey="Width" />
-
-                                    <controls:AdvancedTextBox
-                                        Width="75"
-                                        Height="32"
-                                        Margin="8,0,0,0"
-                                        HorizontalAlignment="Right"
-                                        VerticalAlignment="Center"
-                                        IconKey="Height" />
-                                </StackPanel>
-                            </Grid>
-                        </Border>
+                                <controls:AdvancedTextBox
+                                    Width="75"
+                                    Height="32"
+                                    Margin="8,0,0,0"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center"
+                                    IconKey="Height" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
 
 
-                        <!--  Ram  -->
-                        <Border
-                            Padding="0,16,0,8"
-                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                            BorderThickness="0,0,0,2">
-                            <Grid>
+                    <!--  Ram  -->
+                    <Border
+                        Padding="0,16,0,8"
+                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                        BorderThickness="0,0,0,2">
+                        <Grid>
 
-                                <!--  Header  -->
-                                <StackPanel>
-                                    <TextBlock
-                                        extensions:TextBlock.TextByKey="Ram"
-                                        FontSize="14"
-                                        FontWeight="Medium"
-                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
-                                    <TextBlock
-                                        extensions:TextBlock.TextByKey="RamDescription"
-                                        FontSize="14"
-                                        FontWeight="Medium"
-                                        Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
-                                </StackPanel>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
 
-                                <!--  Content  -->
-                                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                                    <Slider
-                                        Width="222"
-                                        HorizontalAlignment="Center"
-                                        Maximum="16912"
-                                        Minimum="128"
-                                        Value="2048" />
-
-                                    <controls:AdvancedTextBox
-                                        Grid.Column="1"
-                                        Width="90"
-                                        Height="32"
-                                        Margin="16,0,0,0"
-                                        HorizontalAlignment="Right"
-                                        VerticalAlignment="Center"
-                                        IconKey="Memory" />
-                                </StackPanel>
-                            </Grid>
-                        </Border>
-                    </StackPanel>
-
-
-                    <!--  Java Settings  -->
-                    <StackPanel Grid.Row="1" Margin="0,32,0,0">
-
-                        <!--  Header  -->
-                        <Border
-                            Padding="0,0,0,8"
-                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                            BorderThickness="0,0,0,2">
+                            <!--  Header  -->
                             <StackPanel>
                                 <TextBlock
-                                    extensions:TextBlock.TextByKey="JavaProperties"
-                                    FontSize="16"
-                                    FontWeight="Bold"
+                                    extensions:TextBlock.TextByKey="Ram"
+                                    FontSize="14"
+                                    FontWeight="Medium"
                                     Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
                                 <TextBlock
-                                    extensions:TextBlock.TextByKey="JavaPropertiesDescription"
+                                    extensions:TextBlock.TextByKey="RamDescription"
                                     FontSize="14"
                                     FontWeight="Medium"
                                     Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
                             </StackPanel>
-                        </Border>
 
-                        <!--  Java Path  -->
-                        <Border
-                            Padding="0,16,0,8"
-                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                            BorderThickness="0,0,0,2">
-                            <Grid>
+                            <Slider
+                                x:Name="MemorySlider"
+                                Grid.Column="1"
+                                Margin="16,4,0,0"
+                                HorizontalAlignment="Stretch"
+                                AutoToolTipPlacement="TopLeft"
+                                AutoToolTipPrecision="0"
+                                IsSnapToTickEnabled="True"
+                                Maximum="64000"
+                                Minimum="128"
+                                TickFrequency="4096"
+                                TickPlacement="BottomRight"
+                                Value="2048" />
 
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-
-                                <!--  Header  -->
-                                <StackPanel>
-                                    <TextBlock
-                                        extensions:TextBlock.TextByKey="JavaPath"
-                                        FontSize="14"
-                                        FontWeight="Medium"
-                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
-                                    <TextBlock
-                                        extensions:TextBlock.TextByKey="JavaPathDescription"
-                                        FontSize="14"
-                                        FontWeight="Medium"
-                                        Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
-                                </StackPanel>
-
-                                <!--  Content  -->
-                                <controls:AdvancedTextBox
-                                    Grid.Column="1"
-                                    Width="300"
-                                    Height="32"
-                                    Margin="16,0,0,0"
-                                    HorizontalAlignment="Right" />
-                            </Grid>
-                        </Border>
+                            <!--  Content  -->
+                            <controls:AdvancedTextBox
+                                Grid.Column="2"
+                                Width="90"
+                                Height="32"
+                                Margin="16,0,0,0"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                IconKey="Memory"
+                                Text="{Binding Path=Value, ElementName=MemorySlider}" />
+                        </Grid>
+                    </Border>
+                </StackPanel>
 
 
-                        <!--  Java Path 1.16.5 & Higher  -->
-                        <Border
-                            Padding="0,16,0,8"
-                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                            BorderThickness="0,0,0,2">
-                            <Grid>
+                <!--  Java Settings  -->
+                <StackPanel Grid.Row="1" Margin="0,32,0,0">
 
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
+                    <!--  Header  -->
+                    <Border
+                        Padding="0,0,0,8"
+                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                        BorderThickness="0,0,0,2">
+                        <StackPanel>
+                            <TextBlock
+                                extensions:TextBlock.TextByKey="JavaProperties"
+                                FontSize="16"
+                                FontWeight="Bold"
+                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                            <TextBlock
+                                extensions:TextBlock.TextByKey="JavaPropertiesDescription"
+                                FontSize="14"
+                                FontWeight="Medium"
+                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                        </StackPanel>
+                    </Border>
 
-                                <!--  Header  -->
-                                <StackPanel>
-                                    <TextBlock
-                                        extensions:TextBlock.TextByKey="JavaPathHigher"
-                                        FontSize="14"
-                                        FontWeight="Medium"
-                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
-                                    <TextBlock
-                                        MaxWidth="280"
-                                        extensions:TextBlock.TextByKey="JavaPathHigherDescription"
-                                        FontSize="14"
-                                        FontWeight="Medium"
-                                        Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
-                                        TextWrapping="WrapWithOverflow" />
-                                </StackPanel>
+                    <!--  Java Path  -->
+                    <Border
+                        Padding="0,16,0,8"
+                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                        BorderThickness="0,0,0,2">
+                        <Grid>
 
-                                <!--  Content  -->
-                                <controls:AdvancedTextBox
-                                    Grid.Column="1"
-                                    Width="300"
-                                    Height="32"
-                                    Margin="16,0,0,0"
-                                    HorizontalAlignment="Right" />
-                            </Grid>
-                        </Border>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
 
-
-                        <!--  JVMArguments  -->
-                        <Border
-                            Padding="0,16,0,8"
-                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                            BorderThickness="0,0,0,2">
-                            <Grid>
-
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-
-                                <!--  Header  -->
-                                <StackPanel>
-                                    <TextBlock
-                                        extensions:TextBlock.TextByKey="JVMArguments"
-                                        FontSize="14"
-                                        FontWeight="Medium"
-                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
-                                    <TextBlock
-                                        extensions:TextBlock.TextByKey="JVMArgumentsDescription"
-                                        FontSize="14"
-                                        FontWeight="Medium"
-                                        Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
-                                </StackPanel>
-
-                                <!--  Content  -->
-                                <controls:AdvancedTextBox
-                                    Grid.Column="1"
-                                    Width="300"
-                                    Height="32"
-                                    Margin="16,0,0,0"
-                                    HorizontalAlignment="Right" />
-                            </Grid>
-                        </Border>
-                    </StackPanel>
-
-
-                    <!--  Launcher Settings  -->
-                    <StackPanel Grid.Row="2" Margin="0,32,0,0">
-
-                        <!--  Header  -->
-                        <Border
-                            Padding="0,0,0,8"
-                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                            BorderThickness="0,0,0,2">
+                            <!--  Header  -->
                             <StackPanel>
                                 <TextBlock
-                                    extensions:TextBlock.TextByKey="LauncherProperties"
-                                    FontSize="16"
-                                    FontWeight="Bold"
+                                    extensions:TextBlock.TextByKey="JavaPath"
+                                    FontSize="14"
+                                    FontWeight="Medium"
                                     Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
                                 <TextBlock
-                                    extensions:TextBlock.TextByKey="LauncherPropertiesDescription"
+                                    extensions:TextBlock.TextByKey="JavaPathDescription"
                                     FontSize="14"
                                     FontWeight="Medium"
                                     Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
                             </StackPanel>
-                        </Border>
+
+                            <!--  Content  -->
+                            <controls:AdvancedTextBox
+                                Grid.Column="1"
+                                Width="300"
+                                Height="32"
+                                Margin="16,0,0,0"
+                                HorizontalAlignment="Right" />
+                        </Grid>
+                    </Border>
 
 
-                        <!--  Java Path  -->
-                        <Border
-                            Padding="0,16,0,8"
-                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                            BorderThickness="0,0,0,2">
-                            <Grid>
+                    <!--  Java Path 1.16.5 & Higher  -->
+                    <Border
+                        Padding="0,16,0,8"
+                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                        BorderThickness="0,0,0,2">
+                        <Grid>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <!--  Header  -->
+                            <StackPanel>
+                                <TextBlock
+                                    extensions:TextBlock.TextByKey="JavaPathHigher"
+                                    FontSize="14"
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                <TextBlock
+                                    MaxWidth="280"
+                                    extensions:TextBlock.TextByKey="JavaPathHigherDescription"
+                                    FontSize="14"
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                    TextWrapping="WrapWithOverflow" />
+                            </StackPanel>
+
+                            <!--  Content  -->
+                            <controls:AdvancedTextBox
+                                Grid.Column="1"
+                                Width="300"
+                                Height="32"
+                                Margin="16,0,0,0"
+                                HorizontalAlignment="Right" />
+                        </Grid>
+                    </Border>
 
 
-                                <!--  Header  -->
-                                <StackPanel>
-                                    <TextBlock
-                                        extensions:TextBlock.TextByKey="Console"
-                                        FontSize="14"
-                                        FontWeight="Medium"
-                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
-                                    <TextBlock
-                                        extensions:TextBlock.TextByKey="ConsoleDescription"
-                                        FontSize="14"
-                                        FontWeight="Medium"
-                                        Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
-                                </StackPanel>
+                    <!--  JVMArguments  -->
+                    <Border
+                        Padding="0,16,0,8"
+                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                        BorderThickness="0,0,0,2">
+                        <Grid>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <!--  Header  -->
+                            <StackPanel>
+                                <TextBlock
+                                    extensions:TextBlock.TextByKey="JVMArguments"
+                                    FontSize="14"
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                <TextBlock
+                                    extensions:TextBlock.TextByKey="JVMArgumentsDescription"
+                                    FontSize="14"
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                            </StackPanel>
+
+                            <!--  Content  -->
+                            <controls:AdvancedTextBox
+                                Grid.Column="1"
+                                Width="300"
+                                Height="32"
+                                Margin="16,0,0,0"
+                                HorizontalAlignment="Right" />
+                        </Grid>
+                    </Border>
+                </StackPanel>
 
 
-                                <!--  Content  -->
-                                <ToggleButton HorizontalAlignment="Right" Style="{StaticResource SwitchButton}" />
-                            </Grid>
-                        </Border>
+                <!--  Launcher Settings  -->
+                <StackPanel Grid.Row="2" Margin="0,32,0,0">
+
+                    <!--  Header  -->
+                    <Border
+                        Padding="0,0,0,8"
+                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                        BorderThickness="0,0,0,2">
+                        <StackPanel>
+                            <TextBlock
+                                extensions:TextBlock.TextByKey="LauncherProperties"
+                                FontSize="16"
+                                FontWeight="Bold"
+                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                            <TextBlock
+                                extensions:TextBlock.TextByKey="LauncherPropertiesDescription"
+                                FontSize="14"
+                                FontWeight="Medium"
+                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                        </StackPanel>
+                    </Border>
 
 
-                        <!--  Java Path 1.16.5 & Higher  -->
-
-                        <Border
-                            Padding="0,16,0,8"
-                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                            BorderThickness="0,0,0,2">
-                            <Grid>
-
-
-                                <!--  Header  -->
-
-                                <StackPanel>
-                                    <TextBlock
-                                        extensions:TextBlock.TextByKey="HideLauncher"
-                                        FontSize="14"
-                                        FontWeight="Medium"
-                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
-                                    <TextBlock
-                                        extensions:TextBlock.TextByKey="HideLauncherDescription"
-                                        FontSize="14"
-                                        FontWeight="Medium"
-                                        Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
-                                </StackPanel>
+                    <!--  Java Path  -->
+                    <Border
+                        Padding="0,16,0,8"
+                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                        BorderThickness="0,0,0,2">
+                        <Grid>
 
 
-                                <!--  Content  -->
-
-                                <ToggleButton HorizontalAlignment="Right" Style="{StaticResource SwitchButton}" />
-                            </Grid>
-                        </Border>
-
-
-                        <!--  Auto Instance Update  -->
-
-                        <Border
-                            Padding="0,16,0,8"
-                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                            BorderThickness="0,0,0,0">
-                            <Grid>
-
-
-                                <!--  Header  -->
-
-                                <StackPanel>
-                                    <TextBlock
-                                        extensions:TextBlock.TextByKey="AutoInstanceUpdate"
-                                        FontSize="14"
-                                        FontWeight="Medium"
-                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
-                                    <TextBlock
-                                        extensions:TextBlock.TextByKey="AutoInstanceUpdateDescription"
-                                        FontSize="14"
-                                        FontWeight="Medium"
-                                        Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
-                                </StackPanel>
+                            <!--  Header  -->
+                            <StackPanel>
+                                <TextBlock
+                                    extensions:TextBlock.TextByKey="Console"
+                                    FontSize="14"
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                <TextBlock
+                                    extensions:TextBlock.TextByKey="ConsoleDescription"
+                                    FontSize="14"
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                            </StackPanel>
 
 
-                                <!--  Content  -->
+                            <!--  Content  -->
+                            <ToggleButton HorizontalAlignment="Right" Style="{StaticResource SwitchButton}" />
+                        </Grid>
+                    </Border>
 
-                                <ToggleButton HorizontalAlignment="Right" Style="{StaticResource SwitchButton}" />
-                            </Grid>
-                        </Border>
-                    </StackPanel>
-                </Grid>
-            </Border>
-        </ScrollViewer>
-    </Grid>
+
+                    <!--  Java Path 1.16.5 & Higher  -->
+
+                    <Border
+                        Padding="0,16,0,8"
+                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                        BorderThickness="0,0,0,2">
+                        <Grid>
+
+
+                            <!--  Header  -->
+
+                            <StackPanel>
+                                <TextBlock
+                                    extensions:TextBlock.TextByKey="HideLauncher"
+                                    FontSize="14"
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                <TextBlock
+                                    extensions:TextBlock.TextByKey="HideLauncherDescription"
+                                    FontSize="14"
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                            </StackPanel>
+
+
+                            <!--  Content  -->
+
+                            <ToggleButton HorizontalAlignment="Right" Style="{StaticResource SwitchButton}" />
+                        </Grid>
+                    </Border>
+
+
+                    <!--  Auto Instance Update  -->
+
+                    <Border
+                        Padding="0,16,0,8"
+                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                        BorderThickness="0,0,0,0">
+                        <Grid>
+
+
+                            <!--  Header  -->
+
+                            <StackPanel>
+                                <TextBlock
+                                    extensions:TextBlock.TextByKey="AutoInstanceUpdate"
+                                    FontSize="14"
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                <TextBlock
+                                    extensions:TextBlock.TextByKey="AutoInstanceUpdateDescription"
+                                    FontSize="14"
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                            </StackPanel>
+
+
+                            <!--  Content  -->
+
+                            <ToggleButton HorizontalAlignment="Right" Style="{StaticResource SwitchButton}" />
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </ScrollViewer>
 </UserControl>

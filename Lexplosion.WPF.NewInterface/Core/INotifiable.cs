@@ -9,15 +9,16 @@ namespace Lexplosion.WPF.NewInterface.Core
         Warning = 2,
     }
 
-    public delegate void DoNotificationCallback(string title, string message, uint time, NotificationType type);
+    public delegate void DoNotificationCallback(string titleKey, string messageKey, uint time, NotificationType type);
 
     public interface INotifiable
     {
         /// <summary>
-        /// <para>Header - first string arg</para>
-        /// <para>Message - second string arg</para>
-        /// <para>Time - uint arg (time in seconds)</para>
-        /// <para>Notification Type - byte arg (type of notification)</para>
+        /// <para><c>HeaderKey</c> - key of header in language resource dictionary.<br />
+        /// <c>MessageKey</c> - key of message in language resource dictionary.<br />
+        /// <c>Time</c> - uint (time in seconds)<br />
+        /// <c>Notification</c> Type - byte (type of notification)<br />
+        /// </para>
         /// </summary>
         DoNotificationCallback DoNotification { get; }
     }

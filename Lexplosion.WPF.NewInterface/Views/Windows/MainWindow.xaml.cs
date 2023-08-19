@@ -4,9 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Media.Imaging;
 
 namespace Lexplosion.WPF.NewInterface.Views.Windows
 {
@@ -16,12 +17,37 @@ namespace Lexplosion.WPF.NewInterface.Views.Windows
     public partial class MainWindow : Window
     {
         public string currentLang = "ru";
+        private bool _isScalled = false;
 
         public MainWindow()
         {
             InitializeComponent();
             MouseDown += delegate { try { DragMove(); } catch { } };
         }
+        private void Scalling()
+        {
+            double keff = 0.25;
+            var yScale = keff + 1;
+
+            if (_isScalled) 
+            {
+                keff *= -1;
+                yScale = 1;
+            }
+
+            ContainerGrid.LayoutTransform = new ScaleTransform(yScale, yScale);
+            this.Width += Width * keff;
+            this.Height += Height * keff;
+
+            // Bring window center screen
+            var screenHeight = System.Windows.SystemParameters.PrimaryScreenHeight;
+            var screenWidth = System.Windows.SystemParameters.PrimaryScreenWidth;
+            Top = (screenHeight - Height) / 2;
+            Left = (screenWidth - Width) / 2;
+            
+            _isScalled = !_isScalled;
+        }
+
 
         private void Grid_MouseEnter(object sender, MouseEventArgs e)
         {
@@ -33,15 +59,41 @@ namespace Lexplosion.WPF.NewInterface.Views.Windows
             }
         }
 
+
+        #region Window State Buttons
+
+
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             MainViewModel.ChangeColor(ColorTools.GetColorByHex("#167FFC"));
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void CloseWindow_Click(object sender, RoutedEventArgs e)
         {
             App.Current.MainWindow.Close();
         }
+
+        private void MaximazedWindow_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.WindowState == WindowState.Maximized)
+            {
+                this.WindowState = WindowState.Normal;
+                Runtime.DebugWrite(this.ActualWidth.ToString() + " x " + this.ActualHeight.ToString());
+            }
+            else
+            {
+                this.WindowState = WindowState.Maximized;
+            }
+        }
+
+        private void MinimazedWindow_Click(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
+        }
+
+
+        #endregion Window State
+
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
@@ -90,8 +142,40 @@ namespace Lexplosion.WPF.NewInterface.Views.Windows
             }
         }
 
-        private void Border_MouseDown(object sender, MouseButtonEventArgs e)
+
+        // TODO : Сделать для подобных махинаций отдельный класс
+        /// <summary>
+        /// Creates a brush based on the current appearance of a visual element. 
+        /// The brush is an ImageBrush and once created, won't update its look
+        /// </summary>
+        /// <param name="v">The visual element to take a snapshot of</param>
+        private Brush CreateBrushFromVisual(Visual v)
         {
+            if (v == null)
+                throw new ArgumentNullException("v");
+
+            var _dpi = System.Windows.Media.VisualTreeHelper.GetDpi(this);
+           
+            var target = new RenderTargetBitmap((int)(this.ActualWidth * _dpi.DpiScaleX), (int)(this.ActualHeight * _dpi.DpiScaleY),
+                                                _dpi.PixelsPerInchX, _dpi.PixelsPerInchY, PixelFormats.Default);
+            target.Render(v);
+            var brush = new ImageBrush(target);
+            brush.Freeze();
+            return brush;
+        }
+
+
+        private void ChangeTheme_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            var border = (Border)sender;
+            border.IsEnabled = false;
+
+            PaintArea.Opacity = 1;
+            PaintArea.Visibility = Visibility.Visible;
+            PaintArea.Background = CreateBrushFromVisual(this);
+
+            DoubleAnimation dba;
+
             var resourceDictionaries = new List<ResourceDictionary>();
 
             var currentThemeName = "";
@@ -124,15 +208,31 @@ namespace Lexplosion.WPF.NewInterface.Views.Windows
                     Source = new Uri("pack://application:,,,/Resources/Themes/LightColorTheme.xaml")
                 });
             }
+
+            dba = new DoubleAnimation()
+            {
+                From = 1700,
+                To = 0,
+                Duration = TimeSpan.FromSeconds(0.35 * 1.5),
+                EasingFunction = new SineEase
+                { EasingMode = EasingMode.EaseInOut }
+        };
+
+            dba.Completed += (s, e) => Dba_Completed(s, e, border);
+            //PaintArea.BeginAnimation(OpacityProperty, dba);
+            CircleReveal.BeginAnimation(EllipseGeometry.RadiusXProperty, dba);
+            CircleReveal.BeginAnimation(EllipseGeometry.RadiusYProperty, dba);
         }
 
-        private void Button_Click_3(object sender, RoutedEventArgs e)
+        private void Dba_Completed(object sender, EventArgs e, Border border)
         {
-            var sb = (Storyboard)this.Resources["SizeAnimationSB"];
-            sb.Begin(this);
+            PaintArea.Visibility = Visibility.Hidden;
+            border.IsEnabled = true;
+            // TODO: !IMPORTANT! Придумать как от этого избавиться. 
+            //GC.Collect();
         }
 
-        private void Border_MouseDown_1(object sender, MouseButtonEventArgs e)
+        private void ChangeLanguage_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (currentLang == "ru")
             {
@@ -154,19 +254,64 @@ namespace Lexplosion.WPF.NewInterface.Views.Windows
 
         private void Border_MouseDown_2(object sender, MouseButtonEventArgs e)
         {
-            if (WindowStateControlButtonsGrid.HorizontalAlignment == HorizontalAlignment.Left)
+            ChangeChangeWHPHorizontalOrintationAnimation();
+        }
+
+
+        private void ChangeChangeWHPHorizontalOrintationAnimation() 
+        {
+            var opacityHideAnimation = new DoubleAnimation()
             {
-                WindowStateControlButtonsGrid.HorizontalAlignment = HorizontalAlignment.Right;
+                Duration = TimeSpan.FromSeconds(0.35 / 2),
+                To = 0
+            };
+
+            var opacityShowAnimation = new DoubleAnimation()
+            {
+                Duration = TimeSpan.FromSeconds(0.35 / 2),
+                To = 1
+            };
+
+            // перемещаем кнопки и панель в нужную сторону.
+            opacityHideAnimation.Completed += (object sender, EventArgs e) =>
+            {
+                ChangeWHPHorizontalOrintation();
+                WindowHeaderPanelButtonsGrid.BeginAnimation(OpacityProperty, opacityShowAnimation);
+            };
+
+            // скрываем 
+            WindowHeaderPanelButtonsGrid.BeginAnimation(OpacityProperty, opacityHideAnimation);
+        }
+
+        private void ChangeWHPHorizontalOrintation() 
+        {
+            if (WindowHeaderPanelButtonsGrid.HorizontalAlignment == HorizontalAlignment.Left)
+            {
+                WindowHeaderPanelButtons.RenderTransform = new RotateTransform(180);
+                WindowHeaderPanelButtonsGrid.HorizontalAlignment = HorizontalAlignment.Right;
 
                 Grid.SetColumn(DebugPanel, 0);
-                Grid.SetColumn(WindowStateControlButtons, 1);
+                Grid.SetColumn(WindowHeaderPanelButtons, 1);
             }
-            else 
+            else
             {
-                WindowStateControlButtonsGrid.HorizontalAlignment = HorizontalAlignment.Left;
+                WindowHeaderPanelButtons.RenderTransform = new RotateTransform(360);
+                WindowHeaderPanelButtonsGrid.HorizontalAlignment = HorizontalAlignment.Left;
+
                 Grid.SetColumn(DebugPanel, 1);
-                Grid.SetColumn(WindowStateControlButtons, 0);
+                Grid.SetColumn(WindowHeaderPanelButtons, 0);
             }
+        }
+
+        private void ScaleFit_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Scalling();
+        }
+
+        private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            var grid = (Grid)sender;
+            Runtime.DebugWrite(grid.ActualWidth.ToString() + "x" + grid.ActualHeight.ToString());
         }
     }
 }

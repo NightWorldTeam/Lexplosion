@@ -1,0 +1,132 @@
+﻿<UserControl
+    x:Class="Lexplosion.WPF.NewInterface.Views.Modal.LeftMenuControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
+    xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Views.Modal"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:objects="clr-namespace:Lexplosion.WPF.NewInterface.Core.Objects"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style x:Key="TabRadioButton" TargetType="{x:Type RadioButton}">
+            <Setter Property="IsTabStop" Value="False" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RadioButton}">
+                        <Grid
+                            x:Name="Tab"
+                            Width="140"
+                            Height="30"
+                            Margin="0,0,0,5"
+                            HorizontalAlignment="Center"
+                            Background="Transparent">
+                            <Border
+                                x:Name="Border"
+                                Background="{DynamicResource PrimarySolidColorBrush}"
+                                CornerRadius="5">
+                                <Border.Effect>
+                                    <DropShadowEffect
+                                        BlurRadius="24"
+                                        ShadowDepth="0"
+                                        Color="{DynamicResource SeparateColor}" />
+                                </Border.Effect>
+                            </Border>
+
+                            <StackPanel Margin="10,0,0,0" Orientation="Horizontal">
+                                <Viewbox Width="16" Height="16">
+                                    <Path
+                                        x:Name="Path"
+                                        extensions:Path.StringKeyData="{Binding IconKey}"
+                                        Fill="{DynamicResource ActivitySolidColorBrush}"
+                                        SnapsToDevicePixels="True"
+                                        Stretch="Fill"
+                                        Stroke="{DynamicResource ActivitySolidColorBrush}"
+                                        StrokeThickness="1"
+                                        UseLayoutRounding="True" />
+                                </Viewbox>
+                                <TextBlock
+                                    x:Name="TextBlock"
+                                    Margin="10,0,0,0"
+                                    VerticalAlignment="Center"
+                                    extensions:TextBlock.TextByKey="{Binding TitleKey}"
+                                    FontSize="14"
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource ActivitySolidColorBrush}" />
+                            </StackPanel>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <!--<Setter TargetName="Path" Property="Stroke" Value="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                <Setter TargetName="Path" Property="Fill" Value="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                <Setter TargetName="TextBlock" Property="Foreground" Value="{DynamicResource PrimaryForegroundSolidColorBrush}" />-->
+                            </Trigger>
+
+                            <Trigger Property="IsChecked" Value="False">
+                                <Setter TargetName="Border" Property="Visibility" Value="Collapsed" />
+                                <Setter TargetName="Tab" Property="Opacity" Value="0.6" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <DataTemplate DataType="{x:Type objects:ModalLeftMenuTabItem}">
+            <RadioButton
+                GroupName="Tabs"
+                IsChecked="{Binding IsSelected}"
+                IsEnabled="{Binding IsEnable}"
+                Style="{StaticResource TabRadioButton}" />
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Grid>
+        <Border
+            Width="620"
+            Height="420"
+            Background="{DynamicResource PrimarySolidColorBrush}"
+            CornerRadius="10">
+            <Grid>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="160" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Border
+                    Padding="5,10,5,10"
+                    Background="{DynamicResource PrimarySolidColorBrush}"
+                    CornerRadius="10,0,0,10">
+                    <!--  Custom Tab Panel  -->
+                    <ItemsControl ItemsSource="{Binding TabItems}" />
+                </Border>
+                <ScrollViewer
+                    Grid.Column="1"
+                    HorizontalScrollBarVisibility="Disabled"
+                    VerticalScrollBarVisibility="Auto">
+
+                    <Border
+                        Padding="20,10,20,10"
+                        Background="{DynamicResource PrimarySolidColorBrush}"
+                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                        BorderThickness="1,0,0,0"
+                        CornerRadius="0,5,5,5">
+                        <Border BorderBrush="Transparent" BorderThickness="0.5">
+                            <Grid>
+                                <ContentControl Content="{Binding CurrentContent}" />
+                                <Button
+                                    Width="32"
+                                    Height="32"
+                                    Command="{Binding CloseCommand}"
+                                    IsCancel="True" />
+                            </Grid>
+                        </Border>
+                    </Border>
+                </ScrollViewer>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

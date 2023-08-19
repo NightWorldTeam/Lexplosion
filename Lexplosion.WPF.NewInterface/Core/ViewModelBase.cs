@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 
 namespace Lexplosion.WPF.NewInterface.Core
 {
-    public class VMBase : INotifyPropertyChanged
+    public class ViewModelBase : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 

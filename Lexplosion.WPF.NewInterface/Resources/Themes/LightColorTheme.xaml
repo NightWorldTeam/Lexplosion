@@ -4,13 +4,13 @@
     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
     <!--  Activity Colors  -->
-    <Color x:Key="ActivityColor">#167ffc</Color>
-    <Color x:Key="Color1">#8500fa</Color>
+    <Color x:Key="ActivityColor">#ff7601</Color>
+    <Color x:Key="Color1">#167FFC</Color>
+    <Color x:Key="Color2">#8500fa</Color>
 
     <sys:Double x:Key="ActivityColorOpacity">1</sys:Double>
     <SolidColorBrush
         x:Key="ActivitySolidColorBrush"
-        x:Shared="False"
         Opacity="{DynamicResource ActivityColorOpacity}"
         Color="{DynamicResource ActivityColor}" />
 
@@ -21,7 +21,7 @@
         x:Key="ErrorSolidColorBrush"
         x:Shared="False"
         Opacity="{DynamicResource ErrorColorOpacity}"
-        Color="{DynamicResource ErrorColor}" />
+        Color="{StaticResource ErrorColor}" />
 
     <!--  KeyboardNavigation Color  -->
     <sys:Double x:Key="KeyboardNavigationColorOpacity">0.4</sys:Double>
@@ -29,7 +29,7 @@
         x:Key="KeyboardNavigationSolidColorBrush"
         x:Shared="False"
         Opacity="{DynamicResource KeyboardNavigationColorOpacity}"
-        Color="{DynamicResource ActivityColor}" />
+        Color="{StaticResource ActivityColor}" />
 
     <!--  Primary Color  -->
     <Color x:Key="PrimaryColor">
@@ -44,7 +44,7 @@
         x:Key="PrimarySolidColorBrush"
         x:Shared="False"
         Opacity="{DynamicResource PrimaryColorOpacity}"
-        Color="{DynamicResource PrimaryColor}" />
+        Color="{StaticResource PrimaryColor}" />
 
 
     <!--  Secondary Color  -->
@@ -60,7 +60,7 @@
         x:Key="SecondarySolidColorBrush"
         x:Shared="False"
         Opacity="{DynamicResource SecondaryColorOpacity}"
-        Color="{DynamicResource SecondaryColor}" />
+        Color="{StaticResource SecondaryColor}" />
 
 
     <!--  Separate Color  -->
@@ -76,7 +76,7 @@
         x:Key="SeparateSolidColorBrush"
         x:Shared="False"
         Opacity="{DynamicResource SeparateColorOpacity}"
-        Color="{DynamicResource SeparateColor}" />
+        Color="{StaticResource SeparateColor}" />
 
     <!--  Foreground  -->
     <!--  Primary Foreground  -->
@@ -92,7 +92,7 @@
         x:Key="PrimaryForegroundSolidColorBrush"
         x:Shared="False"
         Opacity="{DynamicResource PrimaryForegroundColorOpacity}"
-        Color="{DynamicResource PrimaryForegroundColor}" />
+        Color="{StaticResource PrimaryForegroundColor}" />
 
     <!--  Secondary Foreground  -->
 
@@ -108,7 +108,7 @@
         x:Key="SecondaryForegroundSolidColorBrush"
         x:Shared="False"
         Opacity="{DynamicResource SecondaryForegroundColorOpacity}"
-        Color="{DynamicResource SecondaryForegroundColor}" />
+        Color="{StaticResource SecondaryForegroundColor}" />
 
 
     <!--  Latest Foreground  -->
@@ -125,7 +125,7 @@
         x:Key="LatestForegroundSolidColorBrush"
         x:Shared="False"
         Opacity="{DynamicResource LatestForegroundColorOpacity}"
-        Color="{DynamicResource LatestForegroundColor}" />
+        Color="{StaticResource LatestForegroundColor}" />
 
 
     <!--  Control Colors  -->
@@ -141,5 +141,20 @@
         x:Key="CheckBoxMarkSolidColorBrush"
         x:Shared="False"
         Opacity="{DynamicResource CheckBoxMarkColorOpacity}"
-        Color="{DynamicResource CheckBoxMarkColor}" />
+        Color="{StaticResource CheckBoxMarkColor}" />
+
+    <!--  Scroll Bar Thumb Color  -->
+    <Color x:Key="ScrollBarThumbColor">
+        #c1c1c1
+    </Color>
+
+    <sys:Double x:Key="ScrollBarThumbColorOpacity">
+        1
+    </sys:Double>
+
+    <SolidColorBrush
+        x:Key="ScrollBarThumbSolidColorBrush"
+        x:Shared="False"
+        Opacity="{DynamicResource ScrollBarThumbColorOpacity}"
+        Color="{StaticResource ScrollBarThumbColor}" />
 </ResourceDictionary>

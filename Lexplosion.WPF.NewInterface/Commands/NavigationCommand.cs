@@ -1,9 +1,10 @@
-﻿using Lexplosion.WPF.NewInterface.Stores;
+﻿using Lexplosion.WPF.NewInterface.Core;
+using Lexplosion.WPF.NewInterface.Stores;
 using System;
 
 namespace Lexplosion.WPF.NewInterface.Commands
 {
-    public sealed class NavigateCommand<T> : CommandBase where T : VMBase
+    public sealed class NavigateCommand<T> : CommandBase where T : ViewModelBase
     {
         private readonly NavigationStore _navigationStore;
         private readonly Func<T> _createViewModel;
@@ -16,7 +17,7 @@ namespace Lexplosion.WPF.NewInterface.Commands
 
         public override void Execute(object parameter)
         {
-            _navigationStore.Content = _createViewModel();
+            _navigationStore.CurrentViewModel = _createViewModel();
         }
     }
 }

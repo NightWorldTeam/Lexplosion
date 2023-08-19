@@ -1,14 +1,14 @@
 ﻿using Lexplosion.WPF.NewInterface.Commands;
+using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Models.Authorization.BasicAuthorization.NightWorld;
 using Lexplosion.WPF.NewInterface.Stores;
-using System;
 using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.ViewModels.Authorization
 {
-    public class DigitCodeConfirmationViewModel : VMBase
+    public class DigitCodeConfirmationViewModel : ViewModelBase
     {
-        private readonly INavigationStore<VMBase> _navigationStore;
+        private readonly INavigationStore _navigationStore;
 
         public DigitCodeConfimationModel Model { get; }
 
@@ -33,7 +33,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.Authorization
         #region Constuctors
 
 
-        public DigitCodeConfirmationViewModel(INavigationStore<VMBase> navigationStore)
+        public DigitCodeConfirmationViewModel(INavigationStore navigationStore)
         {
             _navigationStore = navigationStore;
         }

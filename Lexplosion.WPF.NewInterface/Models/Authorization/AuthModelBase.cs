@@ -1,8 +1,6 @@
 ﻿using Lexplosion.Global;
-using Lexplosion.Logic.Management.Authentication;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.ViewModels;
-using System;
 
 namespace Lexplosion.WPF.NewInterface.Models.Authorization
 {
@@ -31,27 +29,27 @@ namespace Lexplosion.WPF.NewInterface.Models.Authorization
                     }
                 case AuthCode.DataError:
                     {
-                        _doNotification(ResourceGetter.GetString("authError"), ResourceGetter.GetString("wrongLoginOrPassword"), 8, NotificationType.Error);
+                        _doNotification("authError", "wrongLoginOrPassword", 8, NotificationType.Error);
                         break;
                     }
                 case AuthCode.NoConnect:
                     {
-                        _doNotification(ResourceGetter.GetString("authError"), ResourceGetter.GetString("noConnectionsToTheServer"), 8, NotificationType.Error);
+                        _doNotification("authError", "noConnectionsToTheServer", 8, NotificationType.Error);
                         break;
                     }
                 case AuthCode.TokenError:
                     {
-                        _doNotification(ResourceGetter.GetString("authError"), ResourceGetter.GetString("tokenError"), 8, NotificationType.Error);
+                        _doNotification("authError", "tokenError", 8, NotificationType.Error);
                         break;
                     }
                 case AuthCode.SessionExpired:
                     {
-                        _doNotification(ResourceGetter.GetString("loginFailed"), ResourceGetter.GetString("sessionExpiredPleaseTryAgainFillPassword"), 8, NotificationType.Error);
+                        _doNotification("loginFailed", "sessionExpiredPleaseTryAgainFillPassword", 8, NotificationType.Error);
                         break;
                     }
                 default:
                     {
-                        _doNotification(ResourceGetter.GetString("someError"), authCode.ToString(), 8, NotificationType.Error);
+                        _doNotification("someError", authCode.ToString(), 8, NotificationType.Error);
                         break;
                     }
             }

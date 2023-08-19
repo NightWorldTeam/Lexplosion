@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using Lexplosion.WPF.NewInterface.Controls;
+using System.Windows.Controls;
 
 namespace Lexplosion.WPF.NewInterface.Views.Pages.MainContent.MainMenu
 {
@@ -10,6 +11,12 @@ namespace Lexplosion.WPF.NewInterface.Views.Pages.MainContent.MainMenu
         public CatalogView()
         {
             InitializeComponent();
+        }
+
+        private void InstanceForm_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            var if_ = (InstanceForm)sender;
+            Runtime.DebugWrite(if_.ActualWidth);
         }
     }
 }

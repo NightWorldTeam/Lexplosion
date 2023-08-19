@@ -1,15 +1,21 @@
-﻿using Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu;
-using Lexplosion.WPF.NewInterface.Views.Pages.MainContent.MainMenu;
+﻿using Lexplosion.WPF.NewInterface.Core;
 
 namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu
 {
-    public sealed class MainMenuLayoutViewModel : VMBase
+    public sealed class MainMenuLayoutViewModel : ViewModelBase, ILayoutViewModel
     {
+        private readonly ViewModelBase _catalogViewModel = new CatalogViewModel();
+        private readonly ViewModelBase _libraryViewModel = null;
+        private readonly ViewModelBase _multiplayerLayoutViewModel = new MultiplayerLayoutViewModel();
+        private readonly ViewModelBase _friendsLayoutViewModel = new FriendsLayoutViewModel();
+        private readonly ViewModelBase _generalSettingsLayoutViewModel = new GeneralSettingsLayoutViewModel();
+
+
         #region Properties
 
 
         private LeftPanelViewModel _leftPanel;
-        public LeftPanelViewModel LeftPanel 
+        public LeftPanelViewModel LeftPanel
         {
             get => _leftPanel; set 
             {
@@ -18,7 +24,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu
             }
         }
 
-        public VMBase Content { get; private set; } = new CatalogViewModel();
+        public ViewModelBase Content { get; private set; } = new CatalogViewModel();
 
 
         #endregion Properties
@@ -32,12 +38,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu
             LeftPanel = new LeftPanelViewModel();
             LeftPanel.SelectedItemChanged += OnLeftPanelSelectedItemChanged;
 
-            LeftPanel.AddTabItem("catalog", "Catalog", new CatalogViewModel());
-            LeftPanel.AddTabItem("library", "Library", null);
-            LeftPanel.AddTabItem("multiplayer", "Multiplayer", null);
-            LeftPanel.AddTabItem("friends", "Friends", null, 18, 20);
-            LeftPanel.AddTabItem("settings", "Settings", new GeneralSettingsLayoutViewModel());
-            LeftPanel.SelectFirst();
+            InitDefaultLeftPanelTabs();
         }
 
 
@@ -47,7 +48,17 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu
         #region Private Methods
 
 
-        private void OnLeftPanelSelectedItemChanged(VMBase content) 
+        private void InitDefaultLeftPanelTabs() 
+        {
+            LeftPanel.AddTabItem("Catalog", "Catalog", _catalogViewModel);
+            LeftPanel.AddTabItem("Library", "Library", _libraryViewModel);
+            LeftPanel.AddTabItem("Multiplayer", "Multiplayer", _multiplayerLayoutViewModel);
+            LeftPanel.AddTabItem("Friends", "Friends", _friendsLayoutViewModel, 18, 20);
+            LeftPanel.AddTabItem("Settings", "Settings", _generalSettingsLayoutViewModel);
+            LeftPanel.SelectFirst();
+        }
+
+        private void OnLeftPanelSelectedItemChanged(ViewModelBase content) 
         {
             Content = content;
             OnPropertyChanged(nameof(Content));

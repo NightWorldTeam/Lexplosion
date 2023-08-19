@@ -1,6 +1,10 @@
-﻿using Lexplosion.WPF.NewInterface.Stores;
-using Lexplosion.WPF.NewInterface.ViewModels.Authorization;
+﻿using Lexplosion.WPF.NewInterface.Core;
+using Lexplosion.WPF.NewInterface.Core.Modal;
+using Lexplosion.WPF.NewInterface.Core.Objects;
+using Lexplosion.WPF.NewInterface.Stores;
 using Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu;
+using Lexplosion.WPF.NewInterface.ViewModels.Modal;
+using System.Windows.Documents;
 using System.Windows.Media;
 
 namespace Lexplosion.WPF.NewInterface.ViewModels
@@ -57,17 +61,54 @@ namespace Lexplosion.WPF.NewInterface.ViewModels
 
     public sealed class MainViewModel : VMBase
     {
+        internal INavigationStore NavigationStore { get; } = new NavigationStore();
+        
+        public ViewModelBase CurrentViewModel => NavigationStore.CurrentViewModel;
+        public IModalViewModel CurrentModalViewModel => ModalNavigationStore.Instance.CurrentViewModel;
 
-
-        internal INavigationStore<VMBase> NavigationStore { get; } = new NavigationStore();
-        public VMBase CurrentViewModel => NavigationStore.Content;
-
+        public bool IsModalOpen { get => ModalNavigationStore.Instance.CurrentViewModel != null; }
 
         public MainViewModel()
         {
+            ModalNavigationStore.Instance.CurrentViewModelChanged += Instance_CurrentViewModelChanged;
+            ModalNavigationStore.Instance.Open(new LeftMenuControl(
+                new ModalLeftMenuTabItem[3]
+                {
+                    new ModalLeftMenuTabItem()
+                    {
+                        IconKey = "AddCircle",
+                        TitleKey = "Create",
+                        IsEnable = true,
+                        IsSelected = true
+                    },
+                    new ModalLeftMenuTabItem()
+                    {
+                        IconKey = "PlaceItem",
+                        TitleKey = "Import",
+                        IsEnable = true,
+                        IsSelected = true
+                    },
+                    new ModalLeftMenuTabItem()
+                    {
+                        IconKey = "DownloadCloud",
+                        TitleKey = "Distributions",
+                        IsEnable = true,
+                        IsSelected = true
+                    }
+                }
+                ));
+
+            ModalNavigationStore.Instance.Close();
+
             NavigationStore.CurrentViewModelChanged += NavigationStore_CurrentViewModelChanged;
-            NavigationStore.Content = new MainMenuLayoutViewModel();
+            NavigationStore.CurrentViewModel = new MainMenuLayoutViewModel();
             //NavigationStore.Content = new AuthorizationMenuViewModel(NavigationStore);
+        }
+
+        private void Instance_CurrentViewModelChanged()
+        {
+            OnPropertyChanged(nameof(CurrentModalViewModel));
+            OnPropertyChanged(nameof(IsModalOpen));
         }
 
         private void NavigationStore_CurrentViewModelChanged()
