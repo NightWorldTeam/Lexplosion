@@ -2,7 +2,6 @@
 using Lexplosion.Controls;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Tools;
-using System;
 
 namespace Lexplosion.Common.ViewModels.ShowCaseMenu
 {

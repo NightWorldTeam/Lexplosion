@@ -1,6 +1,4 @@
-﻿using Lexplosion.Common.ViewModels.ModalVMs;
-
-namespace Lexplosion.Common.Models.Objects
+﻿namespace Lexplosion.Common.Models.Objects
 {
     public sealed class ImportFile : VMBase
     {
@@ -19,9 +17,9 @@ namespace Lexplosion.Common.Models.Objects
         }
 
         private bool _isImportSuccessful = true;
-        public bool IsImportSuccessful 
+        public bool IsImportSuccessful
         {
-            get => _isImportSuccessful; set 
+            get => _isImportSuccessful; set
             {
                 _isImportSuccessful = value;
                 OnPropertyChanged();

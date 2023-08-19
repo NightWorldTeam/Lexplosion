@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Lexplosion.Controls
+﻿namespace Lexplosion.Controls
 {
     public delegate void DoNotificationCallback(string title, string message, uint time, byte type);
 

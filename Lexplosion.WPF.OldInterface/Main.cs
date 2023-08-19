@@ -152,7 +152,7 @@ namespace Lexplosion
 
             Runtime.ПереходВРежимЗавершения += CloseMainWindow;
             Runtime.OnExitEvent += ExitHandler;
-            Runtime.OnUpdateStart += () => 
+            Runtime.OnUpdateStart += () =>
             {
                 App.Current.Dispatcher.Invoke(() =>
                 {

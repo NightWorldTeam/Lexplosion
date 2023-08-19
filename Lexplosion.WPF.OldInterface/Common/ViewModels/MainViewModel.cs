@@ -169,7 +169,7 @@ namespace Lexplosion.Common.ViewModels
         }
 
         private RelayCommand _openMinecraftRu;
-        public ICommand OpenMinecraftRu 
+        public ICommand OpenMinecraftRu
         {
             get => _openMinecraftRu ?? (_openMinecraftRu = new RelayCommand(obj =>
             {

@@ -1,5 +1,4 @@
-﻿using Lexplosion.Common.ViewModels;
-using Lexplosion.Controls;
+﻿using Lexplosion.Controls;
 using Lexplosion.Logic.Management;
 using Lexplosion.Tools;
 using System;
@@ -28,22 +27,22 @@ namespace Lexplosion.Common.Models.Objects
 
         public string UUID { get => _player.UUID; }
 
-        public string Nickname 
+        public string Nickname
         {
-            get => _player.Nickname; private set 
+            get => _player.Nickname; private set
             {
                 _player.Nickname = value;
                 OnPropertyChanged();
             }
         }
 
-        public bool IsKicked 
-        { 
-            get => _player.IsKicked; private set 
+        public bool IsKicked
+        {
+            get => _player.IsKicked; private set
             {
                 _player.IsKicked = value;
                 OnPropertyChanged();
-            } 
+            }
         }
 
         public byte[] Skin
@@ -81,7 +80,7 @@ namespace Lexplosion.Common.Models.Objects
             get => new RelayCommand(obj =>
             {
                 var action = AccessChange();
-                if (action == UserAction.Unkick) 
+                if (action == UserAction.Unkick)
                 {
                     DoNotification(ResourceGetter.GetString("actionOnThePlayer"), String.Format(ResourceGetter.GetString("playerCanJoinToServerAgain"), Nickname), 5, 0);
                 }

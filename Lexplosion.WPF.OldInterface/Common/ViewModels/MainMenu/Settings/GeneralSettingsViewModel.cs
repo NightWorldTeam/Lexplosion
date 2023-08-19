@@ -4,7 +4,6 @@ using Lexplosion.Controls;
 using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Tools;
-using System;
 using System.Windows.Forms;
 
 namespace Lexplosion.Common.ViewModels.MainMenu.Settings
@@ -91,9 +90,9 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Settings
         }
 
         private RelayCommand _resetJava17Path;
-        public RelayCommand ResetJava17Path 
+        public RelayCommand ResetJava17Path
         {
-            get => _resetJava17Path ?? (_resetJava17Path = new RelayCommand(obj => 
+            get => _resetJava17Path ?? (_resetJava17Path = new RelayCommand(obj =>
             {
                 Model.ResetJava17Path();
             }));

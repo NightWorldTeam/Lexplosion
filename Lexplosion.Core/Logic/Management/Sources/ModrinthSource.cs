@@ -37,7 +37,7 @@ namespace Lexplosion.Logic.Management.Sources
             return categories;
         }
 
-        public List<InstanceInfo> GetCatalog(InstanceSource type, int pageSize, int pageIndex, IProjectCategory categoriy, string searchFilter, CfSortField sortField, string gameVersion)
+        public List<InstanceInfo> GetCatalog(InstanceSource type, int pageSize, int pageIndex, IEnumerable<IProjectCategory> categories, string searchFilter, CfSortField sortField, string gameVersion)
         {
             string sortFiled;
             switch (sortField)
@@ -53,18 +53,18 @@ namespace Lexplosion.Logic.Management.Sources
                     break;
             }
 
-            List<ModrinthCtalogUnit> curseforgeInstances = ModrinthApi.GetInstances(pageSize, pageIndex, categoriy, sortFiled, searchFilter, gameVersion);
-            var result = new List<InstanceInfo>();
+            List<ModrinthCtalogUnit> curseforgeInstances = ModrinthApi.GetInstances(pageSize, pageIndex, categories, sortFiled, searchFilter, gameVersion);
+            var result = new List<InstanceInfo>(pageSize);
 
             foreach (var instance in curseforgeInstances)
             {
-                var categories = ParseCategories(instance.Categories);
+                var _categories = ParseCategories(instance.Categories);
 
                 result.Add(new InstanceInfo()
                 {
                     Name = instance.Title,
                     Author = instance.Author,
-                    Categories = categories,
+                    Categories = _categories,
                     Summary = instance.Summary,
                     Description = instance.Summary,
                     GameVersion = instance.GameVersions[instance.GameVersions.Count - 1],

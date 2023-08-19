@@ -1,10 +1,7 @@
 ﻿using Lexplosion.Logic.Network;
-using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Lexplosion.Common.Models.GameExtensions
 {
@@ -205,7 +202,7 @@ namespace Lexplosion.Common.Models.GameExtensions
         #region Private Methods
 
 
-        private void OnPropertiesChanged() 
+        private void OnPropertiesChanged()
         {
             OnPropertyChanged(nameof(IsForgeAvaliable));
             OnPropertyChanged(nameof(IsFabricAvaliable));

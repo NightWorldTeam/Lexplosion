@@ -1,5 +1,4 @@
 ﻿using Lexplosion.Global;
-using Lexplosion.Logic.Network;
 using System.Diagnostics;
 using System.Reflection;
 using System.Windows.Controls;

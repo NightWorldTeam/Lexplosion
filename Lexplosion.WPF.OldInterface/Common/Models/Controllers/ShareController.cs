@@ -1,5 +1,4 @@
-﻿using DiscordRPC.Events;
-using Lexplosion.Common.Models.Objects;
+﻿using Lexplosion.Common.Models.Objects;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 

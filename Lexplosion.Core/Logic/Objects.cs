@@ -198,15 +198,7 @@ namespace Lexplosion.Logic.Objects
 
     public class SimpleCategory : CategoryBase
     {
-        public override string Id
-        {
-            //get
-            //{
-            //    return Name;
-            //}
-            //set { }
-            get; set;
-        }
+        public override string Id { get; set; }
         public override string Name { get; set; }
         public override string ClassId { get; set; }
         public override string ParentCategoryId { get; set; }

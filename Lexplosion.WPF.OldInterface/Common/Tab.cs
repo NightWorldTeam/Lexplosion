@@ -12,9 +12,9 @@ namespace Lexplosion.Common
         public T Content { get; set; }
 
         private bool _isSelected;
-        public bool IsSelected 
-        { 
-            get => _isSelected; set 
+        public bool IsSelected
+        {
+            get => _isSelected; set
             {
                 _isSelected = value;
                 IsSelectedChangedEvent?.Invoke(value);

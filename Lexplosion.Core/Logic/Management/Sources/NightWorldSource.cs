@@ -17,7 +17,7 @@ namespace Lexplosion.Logic.Management.Sources
             return new NightworldInstallManager(localId, updateOnlyBase, updateCancelToken);
         }
 
-        public List<Objects.InstanceInfo> GetCatalog(InstanceSource type, int pageSize, int pageIndex, IProjectCategory categoriy, string searchFilter, CfSortField sortField, string gameVersion)
+        public List<Objects.InstanceInfo> GetCatalog(InstanceSource type, int pageSize, int pageIndex, IEnumerable<IProjectCategory> categories, string searchFilter, CfSortField sortField, string gameVersion)
         {
             Dictionary<string, NightWorldApi.InstanceInfo> nwInstances = NightWorldApi.GetInstancesList();
             var result = new List<Objects.InstanceInfo>();

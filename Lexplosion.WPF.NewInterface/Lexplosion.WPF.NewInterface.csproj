@@ -132,6 +132,7 @@
     <Compile Include="Core\Stores\NavigationStore.cs" />
     <Compile Include="Models\MainContent\Content\GeneralSettings\LanguageSettingsModel.cs" />
     <Compile Include="Tools\ColorTools.cs" />
+    <Compile Include="ViewModels\AddonsRepositories\Modrinth\ModrinthModsViewModel.cs" />
     <Compile Include="ViewModels\Authorization\AuthorizationViewModelBase.cs" />
     <Compile Include="ViewModels\Authorization\BasicAuthorization\NightWorld\DigitCodeConfirmationViewModel.cs" />
     <Compile Include="ViewModels\Authorization\BasicAuthorization\NightWorld\NightWorldAuthorizationViewModel.cs" />

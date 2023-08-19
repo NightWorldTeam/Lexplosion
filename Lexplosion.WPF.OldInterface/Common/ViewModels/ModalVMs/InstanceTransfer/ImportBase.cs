@@ -1,5 +1,4 @@
 ﻿using Lexplosion.Common.ModalWindow;
-using Lexplosion.Common.Models.InstanceForm;
 using Lexplosion.Controls;
 using Lexplosion.Tools;
 
@@ -40,21 +39,21 @@ namespace Lexplosion.Common.ViewModels.ModalVMs.InstanceTransfer
             }
         }
 
-        public static string GetImportResultMessages(ImportResult importResult) 
+        public static string GetImportResultMessages(ImportResult importResult)
         {
-            switch (importResult) 
+            switch (importResult)
             {
-                case ImportResult.Successful:  return ResourceGetter.GetString("downloadSuccessfullyCompleted");
-                    
-                case ImportResult.ZipFileError:  return ResourceGetter.GetString("importResultZipFileError");
-                case ImportResult.GameVersionError:  return ResourceGetter.GetString("importResultGameVersionError");
-                case ImportResult.JavaDownloadError:  return ResourceGetter.GetString("importResultJavaDownloadError");
-                case ImportResult.IsOfflineMode:  return ResourceGetter.GetString("importResultIsOfflineMode");
+                case ImportResult.Successful: return ResourceGetter.GetString("downloadSuccessfullyCompleted");
 
-                case ImportResult.MovingFilesError:  return ResourceGetter.GetString("importResultMovingFilesError");
-                case ImportResult.DownloadError:  return ResourceGetter.GetString("importResultDownloadError");
-                case ImportResult.DirectoryCreateError:  return ResourceGetter.GetString("importResultDirectoryCreateError");
-                case ImportResult.Canceled:  return ResourceGetter.GetString("importResultCanceled");
+                case ImportResult.ZipFileError: return ResourceGetter.GetString("importResultZipFileError");
+                case ImportResult.GameVersionError: return ResourceGetter.GetString("importResultGameVersionError");
+                case ImportResult.JavaDownloadError: return ResourceGetter.GetString("importResultJavaDownloadError");
+                case ImportResult.IsOfflineMode: return ResourceGetter.GetString("importResultIsOfflineMode");
+
+                case ImportResult.MovingFilesError: return ResourceGetter.GetString("importResultMovingFilesError");
+                case ImportResult.DownloadError: return ResourceGetter.GetString("importResultDownloadError");
+                case ImportResult.DirectoryCreateError: return ResourceGetter.GetString("importResultDirectoryCreateError");
+                case ImportResult.Canceled: return ResourceGetter.GetString("importResultCanceled");
 
                 default: return "Неизвестная ошибка!! лол";
             }

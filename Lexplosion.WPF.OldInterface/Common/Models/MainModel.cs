@@ -64,7 +64,8 @@ namespace Lexplosion.Common.Models
             InstanceFormViewModel viewmodel;
             if (TryGetInstanceByInstanceClient(instanceClient, out viewmodel))
             {
-                App.Current.Dispatcher.Invoke(() => { 
+                App.Current.Dispatcher.Invoke(() =>
+                {
                     _instances.Remove(viewmodel);
                 });
             }

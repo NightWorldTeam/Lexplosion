@@ -73,7 +73,8 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
 
                 ExportResultHandler(result);
 
-                App.Current.Dispatcher.Invoke(() => {
+                App.Current.Dispatcher.Invoke(() =>
+                {
                     var wrapper = new FileDistributionWrapper(_instanceClient.Name, fileDistribution);
                     ShareController.Instance.AddActiveShareProcess(wrapper);
                     OnPropertyChanged(nameof(IsAlreadySharing));

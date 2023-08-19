@@ -12,7 +12,7 @@ using System.Text;
 
 namespace Lexplosion.Logic.Network.Web
 {
-    static class ModrinthApi
+    public static class ModrinthApi
     {
         public struct SearchFilters
         {
@@ -155,7 +155,7 @@ namespace Lexplosion.Logic.Network.Web
             return files;
         }
 
-        public static List<ModrinthCtalogUnit> GetInstances(int pageSize, int index, IProjectCategory category, string sortField, string searchFilter, string gameVersion)
+        public static List<ModrinthCtalogUnit> GetInstances(int pageSize, int index, IEnumerable<IProjectCategory> categories, string sortField, string searchFilter, string gameVersion)
         {
             string url = "https://api.modrinth.com/v2/search?facets=[[%22project_type:modpack%22]]&offset=" + (index * pageSize) + "&limit" + pageSize;
 
@@ -169,27 +169,49 @@ namespace Lexplosion.Logic.Network.Web
                 url += "&query=" + WebUtility.UrlEncode(searchFilter);
             }
 
-            if (category.Id != "-1")
+            if (categories != null)
             {
-                url += "&filters=categories=\"" + category.Id + "\"";
+                var isFiltersExists = false;
+                foreach (var category in categories)
+                {
+                    if (category == null || category.Id == "-1")
+                    {
+                        continue;
+                    }
+
+                    if (isFiltersExists)
+                    {
+                        url += " AND categories=\"" + category.Id + "\"";
+                    }
+                    else
+                    {
+                        url += "&filters=(categories=\"" + category.Id + "\"";
+                        isFiltersExists = true;
+                    }
+                }
+
+                if (isFiltersExists) 
+                { 
+                    url += ")";
+                }
             }
 
             return GetApiData<CtalogContainer>(url)?.hits ?? new List<ModrinthCtalogUnit>();
         }
 
-        public static List<ModrinthProjectInfo> GetAddonsList(int pageSize, int index, AddonType type, CategoryBase category, ClientType modloader, string searchFilter = "", string gameVersion = "")
+        public static List<ModrinthProjectInfo> GetAddonsList(int pageSize, int index, AddonType type, IEnumerable<IProjectCategory> categories, ClientType modloader, string searchFilter = "", string gameVersion = "")
         {
-            string typ = "";
+            string _type;
             switch (type)
             {
                 case AddonType.Mods:
-                    typ = "mod";
+                    _type = "mod";
                     break;
                 case AddonType.Resourcepacks:
-                    typ = "resourcepack";
+                    _type = "resourcepack";
                     break;
                 default:
-                    typ = "resourcepack";
+                    _type = "resourcepack";
                     break;
             }
 
@@ -199,27 +221,38 @@ namespace Lexplosion.Logic.Network.Web
                 gameVers = ",[\"versions: " + gameVersion + "\"]";
             }
 
-            string url = "https://api.modrinth.com/v2/search?facets=[[%22project_type:" + typ + "%22]" + gameVers + "]&offset=" + (index * pageSize) + "&limit" + pageSize;
+            string url = "https://api.modrinth.com/v2/search?facets=[[%22project_type:" + _type + "%22]" + gameVers + "]&offset=" + (index * pageSize) + "&limit" + pageSize;
 
-            bool filtersIsExists = false;
+            bool isFiltersExists = false;
             if (modloader != ClientType.Vanilla && type == AddonType.Mods)
             {
                 url += "&filters=(categories=" + modloader.ToString().ToLower();
-                filtersIsExists = true;
+                isFiltersExists = true;
             }
 
-            if (category.Id != "-1")
+
+            if (categories != null)
             {
-                if (filtersIsExists)
+                foreach (var category in categories) 
                 {
-                    url += " AND categories=\"" + category.Id + "\")";
-                }
-                else
-                {
-                    url += "&filters=(categories=\"" + category.Id + "\")";
+                    if (category == null || category.Id == "-1") 
+                    {
+                        continue;
+                    }
+
+                    if (isFiltersExists)
+                    {
+                        url += " AND categories=\"" + category.Id + "\"";
+                    }
+                    else
+                    {
+                        url += "&filters=(categories=\"" + category.Id + "\"";
+                        isFiltersExists = true;
+                    }
                 }
             }
-            else
+
+            if (isFiltersExists) 
             {
                 url += ")";
             }
@@ -397,7 +430,7 @@ namespace Lexplosion.Logic.Network.Web
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ModrinthProjectType StrProjectTypToEnum(string typeStr)
+        public static ModrinthProjectType StrProjectTypeToEnum(string typeStr)
         {
             ModrinthProjectType type;
             switch (typeStr)
@@ -422,7 +455,7 @@ namespace Lexplosion.Logic.Network.Web
         public static SetValues<InstalledAddonInfo, DownloadAddonRes> DownloadAddon(ModrinthProjectInfo addonInfo, string fileID, string path, TaskArgs taskArgs)
         {
             ModrinthProjectFile fileInfo = GetProjectFile(fileID);
-            return DownloadAddon(fileInfo, StrProjectTypToEnum(addonInfo.Type), path, taskArgs);
+            return DownloadAddon(fileInfo, StrProjectTypeToEnum(addonInfo.Type), path, taskArgs);
         }
     }
 }

@@ -49,7 +49,7 @@ namespace Lexplosion.Common.Models.Objects
         #region Public & Protected Methods
 
 
-        public void StopTimer() 
+        public void StopTimer()
         {
             _dispatcherTimer.Stop();
         }

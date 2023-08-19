@@ -50,9 +50,9 @@ namespace Lexplosion.Common.Models.Objects
         }
 
         private InstanceDistributionStates _instanceState = InstanceDistributionStates.InQuque;
-        public InstanceDistributionStates InstanceState 
+        public InstanceDistributionStates InstanceState
         {
-            get => _instanceState; private set 
+            get => _instanceState; private set
             {
                 _instanceState = value;
                 OnPropertyChanged();
@@ -78,7 +78,7 @@ namespace Lexplosion.Common.Models.Objects
 
 
         #endregion Constructors
-            
+
 
         #region Public Methods
 
@@ -86,13 +86,13 @@ namespace Lexplosion.Common.Models.Objects
         public void Download()
         {
             InstanceState = InstanceDistributionStates.Downloading;
-            _instanceClient = InstanceClient.Import(_receiver, (result) => 
+            _instanceClient = InstanceClient.Import(_receiver, (result) =>
                 {
                     if (result == ImportResult.Successful)
                     {
                         InstanceState = InstanceDistributionStates.DownloadComplitedSuccessful;
                     }
-                    else 
+                    else
                     {
                         _removeFileReceiver(this);
                     }
@@ -125,10 +125,10 @@ namespace Lexplosion.Common.Models.Objects
             Percentages = (byte)value;
         }
 
-        private void DownloadResultHandler(ImportResult result) 
+        private void DownloadResultHandler(ImportResult result)
         {
             _resultHandler.Invoke(result);
-            switch (result) 
+            switch (result)
             {
                 case ImportResult.Successful:
                     break;
@@ -138,7 +138,7 @@ namespace Lexplosion.Common.Models.Objects
             }
         }
 
-        private void OnDeletedInstance() 
+        private void OnDeletedInstance()
         {
             InstanceState = InstanceDistributionStates.InQuque;
             Percentages = 0;

@@ -145,7 +145,7 @@ namespace Lexplosion.Common.Models
             App.Current.Dispatcher.Invoke(() =>
             {
                 GameStatus = status;
-                if (GameStatus == OnlineGameStatus.None) 
+                if (GameStatus == OnlineGameStatus.None)
                 {
                     Players?.Clear();
                 }

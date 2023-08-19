@@ -16,9 +16,9 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer.Friends
         private CancellationTokenSource _cancellationToken;
 
         private bool _isLoading;
-        public bool IsLoading 
+        public bool IsLoading
         {
-            get => _isLoading; private set 
+            get => _isLoading; private set
             {
                 _isLoading = value;
                 OnPropertyChanged();

@@ -1,5 +1,4 @@
-﻿using DiscordRPC.Events;
-using Lexplosion.Common.Models;
+﻿using Lexplosion.Common.Models;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Objects;
@@ -326,7 +325,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu
                         SelectedInstanceSource,
                         _pageSize,
                         PaginatorVM.PageIndex - 1,
-                        SelectedCategory,
+                        new IProjectCategory[1] { SelectedCategory },
                         searchText == null ? _previousSearch : searchText,
                         SelectedCfSortBy,
                         (string)gameVersion

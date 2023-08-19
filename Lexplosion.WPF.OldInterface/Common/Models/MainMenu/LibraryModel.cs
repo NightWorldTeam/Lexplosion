@@ -54,7 +54,7 @@ namespace Lexplosion.Common.Models.MainMenu
             var factory = new FactoryGeneralViewModel(MainViewModel);
             var import = new ImportViewModel(MainViewModel, factory, MainViewModel.ShowToastMessage);
             var shares = new InstanceSharingListViewModel(MainViewModel.ShowToastMessage);
-            
+
             ModalWindowViewModelSingleton.Instance.Open(
                 new CustomTabsMenuViewModel(
                     new List<CustomTab>()

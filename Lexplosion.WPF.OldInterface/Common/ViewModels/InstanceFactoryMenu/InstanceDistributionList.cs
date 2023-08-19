@@ -88,7 +88,8 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
 
             foreach (var receiver in receivers)
             {
-                if (!ShareController.Instance.IsReceiverContains(receiver.Id)) { 
+                if (!ShareController.Instance.IsReceiverContains(receiver.Id))
+                {
                     ShareController.Instance.AddFileReceiver(
                         new InstanceDistribution(receiver, DownloadResultHandler, ShareController.Instance.RemoveFileReceiver)
                         );

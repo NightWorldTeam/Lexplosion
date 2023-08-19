@@ -74,7 +74,7 @@ namespace Lexplosion.Common.Views.CustomControls
                     new DoubleAnimation(0.5, 1, TimeSpan.FromMilliseconds(AnimationTime))
                 );
             }
-            else 
+            else
             {
                 UpperButtonBorder.BeginAnimation(Border.OpacityProperty,
                     new DoubleAnimation(1, 0.5, TimeSpan.FromMilliseconds(AnimationTime))

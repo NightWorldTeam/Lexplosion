@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Threading;
-using System.Windows.Input;
-using System.Windows.Threading;
-using Lexplosion.Common.Models.Objects;
+﻿using Lexplosion.Common.Models.Objects;
 using Lexplosion.Controls;
 using Lexplosion.Global;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects.Nightworld;
 using Lexplosion.Tools;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Threading;
+using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer
 {
@@ -41,7 +41,8 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer
                 var friendRequests = NightWorldApi.GetFriendRequests(GlobalData.User.UUID, GlobalData.User.SessionToken);
                 var friends = NightWorldApi.GetFriends(GlobalData.User.UUID, GlobalData.User.SessionToken, GlobalData.User.Login);
 
-                App.Current.Dispatcher?.Invoke(() => {
+                App.Current.Dispatcher?.Invoke(() =>
+                {
                     UpdateFriendRequestsOutcoming(friendRequests.Outgoing);
                     UpdateFriendRequestsIncoming(friendRequests.Incoming);
                     UpdateFriends(friends);
@@ -50,12 +51,12 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer
             _timer.Tick += timer_Tick;
         }
 
-        public void StartDataUpdate() 
+        public void StartDataUpdate()
         {
             _timer.Start();
         }
 
-        public void StopDataUpdate() 
+        public void StopDataUpdate()
         {
             _timer.Stop();
         }
@@ -67,7 +68,8 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer
                 var friendRequests = NightWorldApi.GetFriendRequests(GlobalData.User.UUID, GlobalData.User.SessionToken);
                 var friends = NightWorldApi.GetFriends(GlobalData.User.UUID, GlobalData.User.SessionToken, GlobalData.User.Login);
 
-                App.Current.Dispatcher?.Invoke(() => { 
+                App.Current.Dispatcher?.Invoke(() =>
+                {
                     UpdateFriendRequestsOutcoming(friendRequests.Outgoing);
                     UpdateFriendRequestsIncoming(friendRequests.Incoming);
                 });
@@ -87,7 +89,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer
             }
         }
 
-        private void UpdateFriendRequestsOutcoming(IEnumerable<NwUser> outgoingRequests) 
+        private void UpdateFriendRequestsOutcoming(IEnumerable<NwUser> outgoingRequests)
         {
             FriendRequestsOutgoing.Clear();
             foreach (var friendRequest in outgoingRequests)
@@ -96,7 +98,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer
             }
         }
 
-        private void UpdateFriendRequestsIncoming(IEnumerable<NwUser> incomingRequests) 
+        private void UpdateFriendRequestsIncoming(IEnumerable<NwUser> incomingRequests)
         {
             FriendRequestsIncoming.Clear();
             foreach (var friendRequest in incomingRequests)
@@ -126,7 +128,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer
             }
         }
 
-        public void AddFriend(NWUserWrapper user) 
+        public void AddFriend(NWUserWrapper user)
         {
             RemoveFriendRequest(user);
             Friends.Add(user);
@@ -156,9 +158,9 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer
 
 
         private RelayCommand _removeFriendCommand;
-        public ICommand RemoveFriendCommand 
+        public ICommand RemoveFriendCommand
         {
-            get => _removeFriendCommand ?? (_removeFriendCommand = new RelayCommand(obj => 
+            get => _removeFriendCommand ?? (_removeFriendCommand = new RelayCommand(obj =>
             {
                 var friend = (NWUserWrapper)obj;
                 NightWorldApi.RemoveFriend(GlobalData.User.UUID, GlobalData.User.SessionToken, friend.Login);

@@ -121,11 +121,11 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
             // Добавляем импортируемый файл в ObservableColletion для вывода загрузки.
             UploadedFilesChanged(importFile);
 
-            _instanceClient = InstanceClient.Import(path, (_result) => 
+            _instanceClient = InstanceClient.Import(path, (_result) =>
                 {
                     importFile.IsImportFinished = true;
                     DownloadResultHandler(_result);
-                    if (_result != ImportResult.Successful && _instanceClient != null) 
+                    if (_result != ImportResult.Successful && _instanceClient != null)
                     {
                         importFile.IsImportSuccessful = false;
                         MainModel.Instance.LibraryController.RemoveByInstanceClient(_instanceClient);

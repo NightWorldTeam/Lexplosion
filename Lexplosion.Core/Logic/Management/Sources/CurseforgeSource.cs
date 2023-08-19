@@ -10,6 +10,15 @@ namespace Lexplosion.Logic.Management.Sources
 {
     class CurseforgeSource : IInstanceSource
     {
+        // чтобы не создавать объект каждый вызов метода GetCatalog 
+        private readonly IProjectCategory _modpacksAllCategory = new SimpleCategory()
+        {
+            Id = "-1",
+            Name = "All",
+            ClassId = ((int)CfProjectType.Modpacks).ToString(),
+            ParentCategoryId = ((int)CfProjectType.Modpacks).ToString(),
+        };
+
         public PrototypeInstance ContentManager { get => new CurseforgeInstance(); }
 
         public IInstallManager GetInstaller(string localId, bool updateOnlyBase, CancellationToken updateCancelToken)
@@ -17,9 +26,21 @@ namespace Lexplosion.Logic.Management.Sources
             return new CurseforgeInstallManager(localId, updateOnlyBase, updateCancelToken);
         }
 
-        public List<InstanceInfo> GetCatalog(InstanceSource type, int pageSize, int pageIndex, IProjectCategory categoriy, string searchFilter, CfSortField sortField, string gameVersion)
+        public List<InstanceInfo> GetCatalog(InstanceSource type, int pageSize, int pageIndex, IEnumerable<IProjectCategory> categories, string searchFilter, CfSortField sortField, string gameVersion)
         {
-            List<CurseforgeInstanceInfo> curseforgeInstances = CurseforgeApi.GetInstances(pageSize, pageIndex * pageSize, categoriy.Id, sortField, searchFilter, gameVersion);
+            IProjectCategory category = _modpacksAllCategory;
+
+            if (categories == null)
+            {
+                // получаем первый элемент списка
+                using (var iter = categories.GetEnumerator()) 
+                {
+                    iter.MoveNext();
+                    category = (IProjectCategory)iter.Current;
+                }
+            }
+
+            var curseforgeInstances = CurseforgeApi.GetInstances(pageSize, pageIndex * pageSize, category.Id, sortField, searchFilter, gameVersion);
             var result = new List<InstanceInfo>();
 
             foreach (var instance in curseforgeInstances)

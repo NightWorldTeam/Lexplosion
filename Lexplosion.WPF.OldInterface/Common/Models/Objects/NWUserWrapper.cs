@@ -1,7 +1,6 @@
 ﻿using Lexplosion.Logic.Objects.Nightworld;
 using Lexplosion.Tools;
 using System;
-using System.CodeDom;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,9 +15,9 @@ namespace Lexplosion.Common.Models.Objects
         public string Login => _user.Login;
 
         private byte[] _logo;
-        public byte[] Logo 
-        { 
-            get => _logo; private set 
+        public byte[] Logo
+        {
+            get => _logo; private set
             {
                 _logo = value;
                 OnPropertyChanged();
@@ -59,14 +58,14 @@ namespace Lexplosion.Common.Models.Objects
             try
             {
                 using (var web = new WebClient())
-                { 
+                {
                     using (_cancellationToken.Register(web.CancelAsync))
                     {
                         Logo = await web.DownloadDataTaskAsync(new Uri(_user.AvatarUrl));
                     }
                 }
             }
-            catch 
+            catch
             {
                 Logo = new byte[0] { };
             }
@@ -89,7 +88,7 @@ namespace Lexplosion.Common.Models.Objects
                 case ActivityStatus.Online: return ResourceGetter.GetString("online");
                 case ActivityStatus.InGame:
                     var s = String.Format(ResourceGetter.GetString("playingIn"), _user.GameClientName);
-                    if (string.IsNullOrEmpty(_user.GameClientName)) 
+                    if (string.IsNullOrEmpty(_user.GameClientName))
                     {
                         s = ResourceGetter.GetString("playing");
                     }
@@ -99,7 +98,7 @@ namespace Lexplosion.Common.Models.Objects
             return "";
         }
 
-        public bool IsEqualsNWUser(NwUser user) 
+        public bool IsEqualsNWUser(NwUser user)
         {
             return Login == user.Login;
         }

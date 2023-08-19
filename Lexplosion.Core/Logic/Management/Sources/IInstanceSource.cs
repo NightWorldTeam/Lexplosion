@@ -10,7 +10,7 @@ namespace Lexplosion.Logic.Management.Sources
     {
         public PrototypeInstance ContentManager { get; }
         public IInstallManager GetInstaller(string localId, bool updateOnlyBase, CancellationToken updateCancelToken);
-        public List<InstanceInfo> GetCatalog(InstanceSource type, int pageSize, int pageIndex, IProjectCategory categoriy, string searchFilter, CfSortField sortField, string gameVersion);
+        public List<InstanceInfo> GetCatalog(InstanceSource type, int pageSize, int pageIndex, IEnumerable<IProjectCategory> categories, string searchFilter, CfSortField sortField, string gameVersion);
         public InstanceSource SourceType { get; }
     }
 }

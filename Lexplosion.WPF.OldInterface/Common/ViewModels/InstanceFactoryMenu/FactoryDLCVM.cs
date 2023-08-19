@@ -96,7 +96,7 @@ namespace Lexplosion.Common.ViewModels.FactoryMenu
                 var instanceAddon = (InstanceAddon)obj;
 
                 if (instanceAddon.IsInstalling)
-                { 
+                {
                     return;
                 }
 
@@ -147,7 +147,7 @@ namespace Lexplosion.Common.ViewModels.FactoryMenu
         private bool _isRefreshingDLC;
         public bool IsRefreshingDLC
         {
-            get => _isRefreshingDLC; private set 
+            get => _isRefreshingDLC; private set
             {
                 _isRefreshingDLC = value;
                 Runtime.DebugWrite(value);
@@ -157,11 +157,11 @@ namespace Lexplosion.Common.ViewModels.FactoryMenu
 
 
         private RelayCommand _refreshDLCDataCommand;
-        public RelayCommand RefreshDLCDataCommand 
+        public RelayCommand RefreshDLCDataCommand
         {
-            get => _refreshDLCDataCommand ?? (_refreshDLCDataCommand = new RelayCommand(obj => 
+            get => _refreshDLCDataCommand ?? (_refreshDLCDataCommand = new RelayCommand(obj =>
             {
-                if (IsRefreshingDLC) 
+                if (IsRefreshingDLC)
                 {
                     return;
                 }
@@ -176,8 +176,8 @@ namespace Lexplosion.Common.ViewModels.FactoryMenu
                         case CfProjectType.Mods:
                             {
                                 var addons = InstanceAddon.GetInstalledMods(_instanceClient.GetBaseData);
-                                App.Current.Dispatcher.Invoke(new Action(() => 
-                                { 
+                                App.Current.Dispatcher.Invoke(new Action(() =>
+                                {
                                     model.InstalledAddons = new ObservableCollection<InstanceAddon>(addons);
                                     IsRefreshingDLC = false;
                                 }));
@@ -205,13 +205,13 @@ namespace Lexplosion.Common.ViewModels.FactoryMenu
                             break;
                     }
                 });
-            })); 
+            }));
         }
 
 
-        private void RefreshDLCData(FactoryDLCModel model) 
+        private void RefreshDLCData(FactoryDLCModel model)
         {
-            
+
         }
 
 

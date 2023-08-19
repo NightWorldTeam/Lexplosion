@@ -128,9 +128,9 @@ namespace Lexplosion.Common.Models
         }
 
 
-        public string Java17Path 
+        public string Java17Path
         {
-            get => GlobalData.GeneralSettings.Java17Path; set 
+            get => GlobalData.GeneralSettings.Java17Path; set
             {
                 GlobalData.GeneralSettings.Java17Path = value;
                 OnPropertyChanged();
@@ -139,7 +139,7 @@ namespace Lexplosion.Common.Models
                 {
                     GlobalData.GeneralSettings.IsCustomJava17 = false;
                 }
-                else 
+                else
                 {
                     GlobalData.GeneralSettings.IsCustomJava17 = true;
                 }
@@ -159,13 +159,13 @@ namespace Lexplosion.Common.Models
         }
 
 
-        public void ResetJavaPath() 
+        public void ResetJavaPath()
         {
             JavaPath = "";
         }
 
 
-        public void ResetJava17Path() 
+        public void ResetJava17Path()
         {
             Java17Path = "";
         }

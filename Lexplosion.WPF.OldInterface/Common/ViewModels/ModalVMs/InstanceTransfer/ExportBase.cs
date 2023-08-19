@@ -1,9 +1,8 @@
 ﻿using Lexplosion.Common.ModalWindow;
-using Lexplosion.Logic.Management.Instances;
-using System;
-using System.Collections.Generic;
 using Lexplosion.Controls;
+using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Tools;
+using System.Collections.Generic;
 
 namespace Lexplosion.Common.ViewModels.ModalVMs.InstanceTransfer
 {
@@ -154,7 +153,7 @@ namespace Lexplosion.Common.ViewModels.ModalVMs.InstanceTransfer
             }));
         }
 
-        
+
         #endregion Commands
 
 
@@ -252,7 +251,7 @@ namespace Lexplosion.Common.ViewModels.ModalVMs.InstanceTransfer
         }
 
 
-        public static string GetExportResultMessage(ExportResult exportResult) 
+        public static string GetExportResultMessage(ExportResult exportResult)
         {
             switch (exportResult)
             {

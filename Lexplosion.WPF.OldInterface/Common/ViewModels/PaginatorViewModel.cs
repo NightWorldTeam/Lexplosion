@@ -74,11 +74,11 @@ namespace Lexplosion.Common.ViewModels
                 {
                     _pageIndex = 1;
                 }
-                else 
+                else
                 {
                     _pageIndex = value;
                 }
-                
+
                 PageChanged?.Invoke(null, true);
                 OnPropertyChanged();
             }
@@ -132,7 +132,7 @@ namespace Lexplosion.Common.ViewModels
             }
         }
 
-        public void ToGeneralPage() 
+        public void ToGeneralPage()
         {
             PageChanged?.Invoke("", false);
         }

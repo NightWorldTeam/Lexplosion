@@ -1,6 +1,5 @@
 ﻿using Lexplosion.Common.Models.GameExtensions;
 using Lexplosion.Common.ViewModels;
-using Lexplosion.Common.Views.Windows;
 using Lexplosion.Logic.Management.Instances;
 
 namespace Lexplosion.Common.Models.InstanceFactory
