@@ -711,10 +711,15 @@ namespace Lexplosion.Logic.FileSystem
                             //Скопировать все файлы. И перезаписать(если такие существуют)
                             foreach (string newPath in Directory.GetFiles(tempFolder, "*.*", SearchOption.AllDirectories))
                             {
-                                if (!newPath.Contains("META-INF"))
+                                string oldPath = newPath.Replace(tempFolder, DirectoryPath + "/natives/" + gameVersionName + "/");
+                                string oldPathDir = Path.GetDirectoryName(oldPath);
+
+                                if (!Directory.Exists(oldPathDir))
                                 {
-                                    File.Copy(newPath, newPath.Replace(tempFolder, DirectoryPath + "/natives/" + gameVersionName + "/"), true);
+                                    Directory.CreateDirectory(oldPathDir);
                                 }
+
+                                File.Copy(newPath, oldPath, true);
                             }
 
                             Directory.Delete(tempFolder, true);
