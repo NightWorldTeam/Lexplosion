@@ -49,13 +49,13 @@ namespace Lexplosion.WPF.NewInterface.Models.MainContent.Content
         #region Public & Properties Methods
 
 
-        public Tuple<IEnumerable<InstanceClient>, uint> GetInstanceClients(string searchInput, uint scrollTo, InstanceSource source, IProjectCategory selectedCategory, CfSortField sortBy, string gameVersion,  bool isPaginatorInvoke = false) 
+        public Tuple<IEnumerable<InstanceClient>, uint> GetInstanceClients(string searchInput, uint scrollTo, InstanceSource source, IEnumerable<IProjectCategory> selectedCategories, CfSortField sortBy, string gameVersion,  bool isPaginatorInvoke = false) 
         {
             var instanceClientList = InstanceClient.GetOutsideInstances(
                 source,
                 (int)ItemsPerPage,
                 (int)scrollTo,
-                selectedCategory,
+                selectedCategories,
                 searchInput,
                 sortBy,
                 gameVersion
@@ -66,7 +66,7 @@ namespace Lexplosion.WPF.NewInterface.Models.MainContent.Content
 
         public void Paginate(uint scrollTo)
         {
-            var tuple = GetInstanceClients("", scrollTo, InstanceSource.Nightworld, new SimpleCategory(), CfSortField.Popularity, "");
+            var tuple = GetInstanceClients("", scrollTo, InstanceSource.Nightworld, new IProjectCategory[] { new SimpleCategory() }, CfSortField.Popularity, "");
 
             IsEmptyPage = tuple.Item2 == 0;
             IsLastPage = tuple.Item2 < ItemsPerPage;

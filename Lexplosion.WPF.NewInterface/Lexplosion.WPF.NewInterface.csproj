@@ -132,7 +132,7 @@
     <Compile Include="Core\Stores\NavigationStore.cs" />
     <Compile Include="Models\MainContent\Content\GeneralSettings\LanguageSettingsModel.cs" />
     <Compile Include="Tools\ColorTools.cs" />
-    <Compile Include="ViewModels\AddonsRepositories\Modrinth\ModrinthModsViewModel.cs" />
+    <Compile Include="ViewModels\AddonsRepositories\Modrinth\ModrinthRepositoryViewModel.cs" />
     <Compile Include="ViewModels\Authorization\AuthorizationViewModelBase.cs" />
     <Compile Include="ViewModels\Authorization\BasicAuthorization\NightWorld\DigitCodeConfirmationViewModel.cs" />
     <Compile Include="ViewModels\Authorization\BasicAuthorization\NightWorld\NightWorldAuthorizationViewModel.cs" />
@@ -159,6 +159,9 @@
     </Compile>
     <Compile Include="Views\Modal\LeftMenu\LeftMenuControl.xaml.cs">
       <DependentUpon>LeftMenuControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\AddonsRepositories\Modrinth\ModrinthRepositoryView.xaml.cs">
+      <DependentUpon>ModrinthRepositoryView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\Authorization\AuthorizationMenuView.xaml.cs">
       <DependentUpon>AuthorizationMenuView.xaml</DependentUpon>
@@ -294,6 +297,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Modal\LeftMenu\LeftMenuControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\AddonsRepositories\Modrinth\ModrinthRepositoryView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -46,6 +46,36 @@
                     return ProjectSource.None;
             }
         }
+
+        public static AddonType ToAddonType(this CfProjectType cfProjectType) 
+        {
+            switch (cfProjectType) 
+            {
+                case CfProjectType.Mods:
+                    return AddonType.Mods;
+                case CfProjectType.Resourcepacks:
+                    return AddonType.Resourcepacks;
+                case CfProjectType.Maps:
+                    return AddonType.Maps;
+                default:
+                    return AddonType.Unknown;
+            }
+        }
+
+        public static CfProjectType ToCfProjectType(this AddonType cfProjectType)
+        {
+            switch (cfProjectType)
+            {
+                case AddonType.Mods:
+                    return CfProjectType.Mods;
+                case AddonType.Resourcepacks:
+                    return CfProjectType.Resourcepacks;
+                case AddonType.Maps:
+                    return CfProjectType.Maps;
+                default:
+                    return CfProjectType.Mods;
+            }
+        }
     }
 
     public enum InstanceSource

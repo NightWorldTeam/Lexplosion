@@ -1,6 +1,8 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:addonsrepositoriesviews="clr-namespace:Lexplosion.WPF.NewInterface.Views.Pages.AddonsRepositories"
+    xmlns:addonsrepositoriesvm="clr-namespace:Lexplosion.WPF.NewInterface.ViewModels.AddonsRepositories"
     xmlns:authviewmodels="clr-namespace:Lexplosion.WPF.NewInterface.ViewModels.Authorization"
     xmlns:authviews="clr-namespace:Lexplosion.WPF.NewInterface.Views.Pages.Authorization"
     xmlns:mainmenuview="clr-namespace:Lexplosion.WPF.NewInterface.Views.Pages.MainContent.MainMenu"
@@ -87,5 +89,10 @@
     </DataTemplate>
     <DataTemplate DataType="{x:Type modalvm:InstanceFactoryViewModel}">
         <modalviews:InstanceFactoryView />
+    </DataTemplate>
+
+    <!--  Addons Repository  -->
+    <DataTemplate DataType="{x:Type addonsrepositoriesvm:ModrinthRepositoryViewModel}">
+        <addonsrepositoriesviews:ModrinthRepositoryView />
     </DataTemplate>
 </ResourceDictionary>

@@ -141,12 +141,12 @@
                     <Button
                         Background="{DynamicResource ActivitySolidColorBrush}"
                         Content="AddPerson"
-                        Style="{StaticResource IconButtonx32ActivityColor}" />
+                        Style="{StaticResource x32IconButtonActivityColor}" />
                     <Button
                         Margin="8,0,0,0"
                         Background="{DynamicResource ActivitySolidColorBrush}"
                         Content="RemovePerson"
-                        Style="{StaticResource IconButtonx32ActivityColor}" />
+                        Style="{StaticResource x32IconButtonActivityColor}" />
                 </StackPanel>
             </Grid>
         </Border>

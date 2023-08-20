@@ -282,15 +282,18 @@
         </Setter>
     </Style>
 
-    <Style x:Key="IconButtonx32" TargetType="{x:Type Button}">
+    <Style x:Key="x32IconButton" TargetType="{x:Type Button}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
-                    <Border>
-                        <Viewbox Width="20" Height="20">
+                    <Border
+                        Padding="8"
+                        Background="{DynamicResource ActivitySolidColorBrush}"
+                        CornerRadius="5">
+                        <Viewbox Height="{TemplateBinding FontSize}">
                             <Path
                                 extensions:Path.StringKeyData="{TemplateBinding Content}"
-                                Fill="{TemplateBinding Background}"
+                                Fill="{TemplateBinding Foreground}"
                                 Stretch="Fill" />
                         </Viewbox>
                     </Border>
@@ -299,7 +302,7 @@
         </Setter>
     </Style>
 
-    <Style x:Key="IconButtonx32ActivityColor" TargetType="{x:Type Button}">
+    <Style x:Key="x32IconButtonActivityColor" TargetType="{x:Type Button}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
@@ -356,6 +359,21 @@
                             </Trigger.ExitActions>
                         </Trigger>
                     </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="x32DefaultIconButton" TargetType="{x:Type Button}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border
+                        Padding="8,8,16,8"
+                        Background="{DynamicResource ActivitySolidColorBrush}"
+                        CornerRadius="5">
+                        <ContentPresenter />
+                    </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
