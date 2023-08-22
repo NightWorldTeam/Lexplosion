@@ -7,6 +7,7 @@
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Views.Pages.AddonsRepositories"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:objects="clr-namespace:Lexplosion.WPF.NewInterface.Core.Objects"
     mc:Ignorable="d">
 
     <UserControl.Resources>
@@ -312,21 +313,26 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <DataTemplate DataType="{x:Type objects:CategoryWrapper}">
+            <CheckBox Margin="0,0,0,4" Content="{Binding Name}" />
+        </DataTemplate>
     </UserControl.Resources>
 
     <Grid Background="{DynamicResource Primary}">
+
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="250" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
+        <!--  Left Panel  -->
         <Border Background="{DynamicResource Secondary}">
             <Grid Margin="32,32,0,0">
+
                 <Grid.RowDefinitions>
                     <RowDefinition Height="64" />
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
                 <StackPanel Orientation="Horizontal">
@@ -366,17 +372,13 @@
                         Foreground="{DynamicResource ForegroundLighter}"
                         Text="Categories" />
 
-                    <StackPanel>
-                        <CheckBox Content="Tech" />
-                        <CheckBox Content="Magic" />
-                        <CheckBox Content="World" />
-                        <CheckBox Content="Adventure" />
-                    </StackPanel>
+                    <ItemsControl ItemsSource="{Binding Model.Categories}" />
                 </StackPanel>
             </Grid>
         </Border>
 
-        <ScrollViewer Grid.Column="1">
+        <!--  Main Content  -->
+        <ScrollViewer Grid.Column="1" Focusable="False">
             <Border Padding="16,45,16,0">
                 <Grid>
 
@@ -397,7 +399,7 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
                             <controls:SearchBox
@@ -429,7 +431,10 @@
                                 </ComboBox>
                             </StackPanel>
 
-                            <StackPanel Grid.Column="2" Orientation="Horizontal">
+                            <StackPanel
+                                Grid.Column="2"
+                                HorizontalAlignment="Right"
+                                Orientation="Horizontal">
                                 <TextBlock
                                     VerticalAlignment="Center"
                                     FontSize="14"
@@ -460,45 +465,160 @@
 
                     <StackPanel Grid.Row="2">
                         <Border
-                            Height="100"
+                            Height="120"
                             Margin="0,0,0,16"
-                            Background="{DynamicResource Secondary}" />
+                            Padding="16"
+                            Background="{DynamicResource Secondary}"
+                            CornerRadius="5">
+
+                            <Grid ShowGridLines="True">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+
+                                <!--  Logo  -->
+                                <Border
+                                    Width="88"
+                                    Background="{DynamicResource BrandColor}"
+                                    CornerRadius="5" />
+
+                                <!--  Info  -->
+                                <Grid Grid.Column="1" Margin="8,0,0,0">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+
+                                    <!--  Name & Author  -->
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock
+                                            FontSize="18"
+                                            FontWeight="Medium"
+                                            Foreground="{DynamicResource ForegroundLighter}"
+                                            Text="Apple Skin" />
+                                        <TextBlock
+                                            Margin="8,0,0,0"
+                                            Foreground="{DynamicResource Foreground}"
+                                            Text="by squeek502" />
+                                    </StackPanel>
+
+                                    <TextBlock
+                                        Grid.Row="1"
+                                        FontSize="14"
+                                        Foreground="{DynamicResource Foreground}"
+                                        Text="Take control over you inventory. Sort. Move matching Items. Throw all. Locked slots. Gear sets! And much more."
+                                        TextWrapping="WrapWithOverflow" />
+
+                                    <WrapPanel Grid.Row="2" Margin="0,10,0,0">
+                                        <TextBlock
+                                            FontSize="13"
+                                            Foreground="{DynamicResource Foreground}"
+                                            Text="Advanced" />
+                                        <TextBlock
+                                            Margin="4,0,0,0"
+                                            FontSize="13"
+                                            Foreground="{DynamicResource Foreground}"
+                                            Text="Fabric" />
+                                        <TextBlock
+                                            Margin="4,0,0,0"
+                                            FontSize="13"
+                                            Foreground="{DynamicResource Foreground}"
+                                            Text="Tech" />
+                                        <TextBlock
+                                            Margin="4,0,0,0"
+                                            FontSize="13"
+                                            Foreground="{DynamicResource Foreground}"
+                                            Text="Magic" />
+                                    </WrapPanel>
+                                </Grid>
+
+                                <Grid Grid.Column="2" VerticalAlignment="Stretch">
+                                    <StackPanel VerticalAlignment="Top" Orientation="Horizontal">
+                                        <Button
+                                            Height="32"
+                                            Margin="8,0,0,0"
+                                            Style="{StaticResource x32DefaultIconButton}">
+                                            <WrapPanel Orientation="Horizontal">
+                                                <Viewbox Width="20">
+                                                    <Path
+                                                        extensions:Path.StringKeyData="Download"
+                                                        Fill="{DynamicResource CheckBoxMarkSolidColorBrush}"
+                                                        Stretch="Fill" />
+                                                </Viewbox>
+
+                                                <TextBlock
+                                                    Margin="8,0,0,0"
+                                                    FontSize="14"
+                                                    Foreground="{DynamicResource CheckBoxMarkSolidColorBrush}"
+                                                    Text="Install" />
+                                            </WrapPanel>
+                                        </Button>
+
+                                        <Border
+                                            Width="32"
+                                            Height="32"
+                                            Margin="8,0,0,0"
+                                            Background="{DynamicResource ActivitySolidColorBrush}"
+                                            CornerRadius="5">
+                                            <controls:DropdownMenu />
+                                        </Border>
+                                    </StackPanel>
+
+                                    <StackPanel VerticalAlignment="Bottom">
+                                        <TextBlock
+                                            Grid.Row="1"
+                                            HorizontalAlignment="Right"
+                                            FontSize="14"
+                                            Foreground="{DynamicResource Foreground}"
+                                            Text="64.1k downloads" />
+                                        <TextBlock
+                                            Grid.Row="2"
+                                            Margin="0,4,0,0"
+                                            HorizontalAlignment="Right"
+                                            FontSize="14"
+                                            Foreground="{DynamicResource Foreground}"
+                                            Text="Updated 9 months ago" />
+                                    </StackPanel>
+                                </Grid>
+                            </Grid>
+
+                        </Border>
+
                         <Border
-                            Height="100"
+                            Height="120"
                             Margin="0,0,0,16"
-                            Background="{DynamicResource Secondary}" />
+                            Padding="8"
+                            Background="{DynamicResource Secondary}"
+                            CornerRadius="5" />
+
+
                         <Border
-                            Height="100"
+                            Height="120"
                             Margin="0,0,0,16"
-                            Background="{DynamicResource Secondary}" />
+                            Padding="8"
+                            Background="{DynamicResource Secondary}"
+                            CornerRadius="5" />
+
+
                         <Border
-                            Height="100"
+                            Height="120"
                             Margin="0,0,0,16"
-                            Background="{DynamicResource Secondary}" />
+                            Padding="8"
+                            Background="{DynamicResource Secondary}"
+                            CornerRadius="5" />
+
+
                         <Border
-                            Height="100"
+                            Height="120"
                             Margin="0,0,0,16"
-                            Background="{DynamicResource Secondary}" />
-                        <Border
-                            Height="100"
-                            Margin="0,0,0,16"
-                            Background="{DynamicResource Secondary}" />
-                        <Border
-                            Height="100"
-                            Margin="0,0,0,16"
-                            Background="{DynamicResource Secondary}" />
-                        <Border
-                            Height="100"
-                            Margin="0,0,0,16"
-                            Background="{DynamicResource Secondary}" />
-                        <Border
-                            Height="100"
-                            Margin="0,0,0,16"
-                            Background="{DynamicResource Secondary}" />
-                        <Border
-                            Height="100"
-                            Margin="0,0,0,16"
-                            Background="{DynamicResource Secondary}" />
+                            Padding="8"
+                            Background="{DynamicResource Secondary}"
+                            CornerRadius="5" />
+
                     </StackPanel>
                 </Grid>
             </Border>

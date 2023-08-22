@@ -42,13 +42,13 @@
                                 <!--  Status info  -->
                                 <StackPanel Height="90">
                                     <TextBlock
-                                        extensions:TextBlock.TextByKey="status"
+                                        extensions:TextBlock.TextByKey="Status"
                                         FontSize="16"
                                         FontWeight="Medium"
                                         Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
                                     <TextBlock
                                         Margin="0,8,0,0"
-                                        extensions:TextBlock.TextByKey="statusOpenWorld"
+                                        extensions:TextBlock.TextByKey="StatusOpenWorld"
                                         FontSize="14"
                                         FontWeight="Medium"
                                         Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
@@ -69,20 +69,21 @@
 
                         <!--  Connection Method Switch  -->
                         <StackPanel Grid.Row="1" Margin="0,32,0,0">
-                            <TextBlock Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                            <TextBlock
                                 extensions:TextBlock.TextByKey="priorityConnetionMethod"
                                 FontSize="16"
-                                FontWeight="Medium" />
+                                FontWeight="Medium"
+                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
 
                             <StackPanel Margin="0,16,0,0" Orientation="Horizontal">
                                 <!--  direct  -->
                                 <RadioButton Margin="0,0,32,0">
-                                    <TextBlock extensions:TextBlock.TextByKey="directConnection" FontSize="16" />
+                                    <TextBlock extensions:TextBlock.TextByKey="DirectConnection" FontSize="16" />
                                 </RadioButton>
 
                                 <!--  via repeater  -->
                                 <RadioButton>
-                                    <TextBlock extensions:TextBlock.TextByKey="viaRepeater" FontSize="16" />
+                                    <TextBlock extensions:TextBlock.TextByKey="ViaRepeater" FontSize="16" />
                                 </RadioButton>
                             </StackPanel>
                         </StackPanel>

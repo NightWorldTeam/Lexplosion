@@ -3,44 +3,13 @@ using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.Modrinth;
 using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
-using System;
+using Lexplosion.WPF.NewInterface.Core.Objects;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.ViewModels.AddonsRepositories
 {
-    public sealed class CategoryWrapper : ViewModelBase
-    {
-        public event Action<IProjectCategory, bool> SelectedEvent;
-
-        private IProjectCategory _category { get; }
-        public string Name { get => _category.Name; }
-
-
-        private bool _isSelected = false;
-        public bool IsSelected
-        {
-            get => _isSelected; set 
-            {
-                _isSelected = value;
-                OnPropertyChanged();
-                OnSelectedChanged(value);
-            }
-        }
-
-        public CategoryWrapper(IProjectCategory category)
-        {
-            _category = category;
-        }
-
-        private void OnSelectedChanged(bool value) 
-        {
-            SelectedEvent?.Invoke(_category, value);
-        }
-        
-    }
-
     public sealed class ModrinthRepositoryModel : ViewModelBase
     {
         private static readonly SimpleCategory AllCategory = new SimpleCategory()
@@ -92,14 +61,14 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.AddonsRepositories
             }
         }
 
-        private readonly ObservableCollection<CategoryWrapper> _categories;
+        private readonly ObservableCollection<CategoryWrapper> _categories = new ObservableCollection<CategoryWrapper>();
         public IEnumerable<CategoryWrapper> Categories { get => _categories; }
 
         private readonly ObservableCollection<IProjectCategory> _selectedCategories = new ObservableCollection<IProjectCategory>();
         public IEnumerable<IProjectCategory> SelectedCategories;
 
 
-        private ObservableCollection<ModrinthProjectInfo> _addonsList;
+        private ObservableCollection<ModrinthProjectInfo> _addonsList = new ObservableCollection<ModrinthProjectInfo>();
         public IEnumerable<ModrinthProjectInfo> AddonsList { get => _addonsList; }
 
 
@@ -128,7 +97,8 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.AddonsRepositories
                 AllCategory.ParentCategoryId = "";
             }
 
-            _categories = new ObservableCollection<CategoryWrapper>(PrepareCategories());
+            PrepareCategories();
+            LoadPage();
         }
 
         private void OnSelectedCategoriesCollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -148,10 +118,25 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.AddonsRepositories
 
         public void LoadPage()
         {
-            _addonsList = new ObservableCollection<ModrinthProjectInfo>(
-                ModrinthApi.GetAddonsList(
-                    PageSize, PageIndex, _addonType, SelectedCategories, _clientType, "", _gameVersion)
-                );
+            (IEnumerable<ModrinthProjectInfo>, int) hits;
+            if (_selectedCategories.Count > 0)
+            {
+                hits = ModrinthApi.GetAddonsList(
+                        PageSize, PageIndex, _addonType, SelectedCategories, _clientType, "", _gameVersion);
+                _addonsList = new ObservableCollection<ModrinthProjectInfo>(hits.Item1);
+            }
+            else 
+            {
+                hits = ModrinthApi.GetAddonsList(
+                    PageSize, PageIndex, _addonType, new IProjectCategory[] { AllCategory }, _clientType, "", _gameVersion);
+                _addonsList = new ObservableCollection<ModrinthProjectInfo>(hits.Item1);
+            }
+
+
+            //AllCategory.ClassId = ((int)_addonType.ToCfProjectType()).ToString();
+            //AllCategory.ParentCategoryId = ((int)_addonType.ToCfProjectType()).ToString();
+            var test = CurseforgeApi.GetInstances(10, 0, "all", CfSortField.Popularity, "", "1.19.2");
+            Runtime.DebugWrite("total hits count: "  + hits.Item2);    
         }
 
         public void ClearFilters() 
@@ -172,17 +157,17 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.AddonsRepositories
         #region Private Methods
 
 
-        private IEnumerable<CategoryWrapper> PrepareCategories()
+        private void PrepareCategories()
         {
             var categories = ModrinthApi.GetCategories();
-            yield return new CategoryWrapper(AllCategory);
+            
             foreach (var category in categories)
             {
                 if (category.ClassId == "mod")
                 {
                     var categoryWrapper = new CategoryWrapper(category);
                     categoryWrapper.SelectedEvent += OnSelectedCategoryChanged;
-                    yield return categoryWrapper;
+                    _categories.Add(categoryWrapper);
                 }
             }
         }

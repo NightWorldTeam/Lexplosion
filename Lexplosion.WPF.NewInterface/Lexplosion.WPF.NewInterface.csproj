@@ -51,12 +51,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject />
+    <StartupObject>Lexplosion.WPF.NewInterface.RuntimeApp</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Assets\images\icons\logo.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Windows.Forms" />
@@ -104,6 +105,7 @@
     <Compile Include="Core\Modal\IModalViewModel.cs" />
     <Compile Include="Core\Modal\ModalViewModelBase.cs" />
     <Compile Include="Core\Objects\ActivityColor.cs" />
+    <Compile Include="Core\Objects\CategoryWrapper.cs" />
     <Compile Include="Core\Objects\LanguageModel.cs" />
     <Compile Include="Core\Objects\ModalLeftMenuTabItem.cs" />
     <Compile Include="Core\Objects\LeftPanelItemModel.cs" />
@@ -114,6 +116,7 @@
     <Compile Include="Extensions\StyleSelectors\LastChildStyleSelector.cs" />
     <Compile Include="Extensions\StyleSelectors\NthChildStyleSelector.cs" />
     <Compile Include="Extensions\TextBlock.cs" />
+    <Compile Include="Main.cs" />
     <Compile Include="Models\Authorization\AuthModelBase.cs" />
     <Compile Include="Models\Authorization\BasicAuthorization\NightWorld\DigitCodeConfimationModel.cs" />
     <Compile Include="Models\Authorization\BasicAuthorization\NightWorld\NightWorldAuthorizationModel.cs" />
@@ -184,6 +187,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Assets\LanguagesRegister.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\AdvancedTextBox\AdvancedTextBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -237,6 +244,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\Icons.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\ResourcesRegister.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

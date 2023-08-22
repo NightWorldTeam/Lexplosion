@@ -77,7 +77,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Tools
             public int dmPanningHeight;
         }
 
-        public IEnumerable<string> GetAvaliableResolutionsToString() 
+        public static IEnumerable<string> GetAvaliableResolutionsToString() 
         {
             DEVMODE vDevMode = new DEVMODE();
             int i = 0;

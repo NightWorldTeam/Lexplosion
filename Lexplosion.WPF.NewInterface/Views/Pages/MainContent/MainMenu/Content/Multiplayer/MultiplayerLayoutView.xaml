@@ -19,7 +19,7 @@
 
         <TextBlock
             Margin="45,32,0,8"
-            extensions:TextBlock.TextByKey="settings"
+            extensions:TextBlock.TextByKey="Multiplayer"
             FontSize="20"
             FontWeight="Bold"
             Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />

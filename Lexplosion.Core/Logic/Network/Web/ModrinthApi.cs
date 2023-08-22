@@ -26,6 +26,9 @@ namespace Lexplosion.Logic.Network.Web
         private class CtalogContainer
         {
             public List<ModrinthCtalogUnit> hits;
+
+            [JsonProperty("total_hits")]
+            public int TotalHits;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -199,7 +202,7 @@ namespace Lexplosion.Logic.Network.Web
             return GetApiData<CtalogContainer>(url)?.hits ?? new List<ModrinthCtalogUnit>();
         }
 
-        public static List<ModrinthProjectInfo> GetAddonsList(int pageSize, int index, AddonType type, IEnumerable<IProjectCategory> categories, ClientType modloader, string searchFilter = "", string gameVersion = "")
+        public static (List<ModrinthProjectInfo>, int) GetAddonsList(int pageSize, int index, AddonType type, IEnumerable<IProjectCategory> categories, ClientType modloader, string searchFilter = "", string gameVersion = "")
         {
             string _type;
             switch (type)
@@ -261,7 +264,7 @@ namespace Lexplosion.Logic.Network.Web
             {
                 url += "&query=" + WebUtility.UrlEncode(searchFilter);
             }
-
+            Runtime.DebugWrite(url);
             CtalogContainer catalogList = GetApiData<CtalogContainer>(url);
             var result = new List<ModrinthProjectInfo>();
 
@@ -274,7 +277,7 @@ namespace Lexplosion.Logic.Network.Web
                 }
             }
 
-            return result;
+            return (result, catalogList.TotalHits);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

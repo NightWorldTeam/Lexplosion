@@ -12,11 +12,11 @@
     <s:String x:Key="en-US">English</s:String>
     <s:String x:Key="ru-RU">Russian</s:String>
 
+    <s:String x:Key="Default">Default</s:String>
+
     <!--    -->
     <!--  LeftPanel  -->
     <!--    -->
-
-
     <s:String x:Key="Catalog">Catalog</s:String>
     <s:String x:Key="Library">Library</s:String>
     <s:String x:Key="Friends">Friends</s:String>
@@ -24,11 +24,9 @@
     <s:String x:Key="Settings">Settings</s:String>
 
 
-
     <!--    -->
     <!--  Titles  -->
     <!--    -->
-
     <s:String x:Key="General">General</s:String>
 
     <!--  Friends  -->
@@ -39,7 +37,6 @@
     <s:String x:Key="Appearance">Appearance</s:String>
     <s:String x:Key="Language">Language</s:String>
     <s:String x:Key="About">About</s:String>
-
 
 
     <!--  Main Menu  -->
@@ -71,6 +68,11 @@
     <!--    -->
     <!--  Multiplayer  -->
     <!--    -->
+    <s:String x:Key="Status">Status</s:String>
+    <s:String x:Key="StatusOpenWorld">Open world</s:String>
+    <s:String x:Key="PriorityConnetionMethod">Priority Connetion Method</s:String>
+    <s:String x:Key="DirectConnection">Direct</s:String>
+    <s:String x:Key="ViaRepeater">Via Repeater</s:String>
 
 
     <!--    -->
@@ -93,6 +95,9 @@
     <!--  Ram  -->
     <s:String x:Key="Ram">RAM</s:String>
     <s:String x:Key="RamDescription">This property can boost your game.</s:String>
+    <!--  Game Directory  -->
+    <s:String x:Key="GameDirectory">Game Directory</s:String>
+    <s:String x:Key="GameDirectoryDescription">Select your game directory.</s:String>
 
     <!--  Java Properties  -->
     <!--  Java Path  -->

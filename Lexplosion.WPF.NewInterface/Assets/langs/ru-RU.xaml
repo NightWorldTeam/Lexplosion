@@ -12,11 +12,11 @@
     <s:String x:Key="en-US">Английский</s:String>
     <s:String x:Key="ru-RU">Русский</s:String>
 
+    <s:String x:Key="Default">По умолчанию</s:String>
+
     <!--    -->
     <!--  LeftPanel  -->
     <!--    -->
-
-
     <s:String x:Key="Catalog">Каталог</s:String>
     <s:String x:Key="Library">Библиотека</s:String>
     <s:String x:Key="Friends">Друзья</s:String>
@@ -24,11 +24,9 @@
     <s:String x:Key="Settings">Настройки</s:String>
 
 
-
     <!--    -->
     <!--  Titles  -->
     <!--    -->
-
     <s:String x:Key="General">Основное</s:String>
 
     <!--  Friends  -->
@@ -70,6 +68,11 @@
     <!--    -->
     <!--  Multiplayer  -->
     <!--    -->
+    <s:String x:Key="Status">Статус</s:String>
+    <s:String x:Key="StatusOpenWorld">Открыт для подключения</s:String>
+    <s:String x:Key="PriorityConnetionMethod">Приоритетный метод подключения</s:String>
+    <s:String x:Key="DirectConnection">Прямое</s:String>
+    <s:String x:Key="ViaRepeater">Через Ретранслятор</s:String>
 
 
     <!--    -->
@@ -92,6 +95,9 @@
     <!--  Ram  -->
     <s:String x:Key="Ram">ОЗУ</s:String>
     <s:String x:Key="RamDescription">Это свойство повысит скорость работы.</s:String>
+    <!--  Game Directory  -->
+    <s:String x:Key="GameDirectory">Папка с игрой</s:String>
+    <s:String x:Key="GameDirectoryDescription">Выберите место для папки с игрой.</s:String>
 
     <!--  Java Properties  -->
     <!--  Java Path  -->

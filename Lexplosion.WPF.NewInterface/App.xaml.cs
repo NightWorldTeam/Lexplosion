@@ -1,11 +1,4 @@
-﻿using Lexplosion.WPF.NewInterface.Tools;
-using Lexplosion.WPF.NewInterface.Views.Windows;
-using System;
-using System.Windows;
-using System.Windows.Media;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Collections.Generic;
+﻿using System.Windows;
 
 namespace Lexplosion.WPF.NewInterface
 {

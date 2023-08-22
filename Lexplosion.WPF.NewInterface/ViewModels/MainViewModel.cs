@@ -2,7 +2,7 @@
 using Lexplosion.WPF.NewInterface.Core.Modal;
 using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Stores;
-using Lexplosion.WPF.NewInterface.ViewModels.AddonsRepositories;
+using Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu;
 using Lexplosion.WPF.NewInterface.ViewModels.Modal;
 using System.Windows.Media;
 
@@ -100,7 +100,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels
             ModalNavigationStore.Instance.Close();
 
             NavigationStore.CurrentViewModelChanged += NavigationStore_CurrentViewModelChanged;
-            NavigationStore.CurrentViewModel = new ModrinthRepositoryViewModel(AddonType.Mods, ClientType.Fabric, "1.19.4");
+            NavigationStore.CurrentViewModel = new MainMenuLayoutViewModel(); //new ModrinthRepositoryViewModel(AddonType.Mods, ClientType.Fabric, "1.19.4");
             //NavigationStore.Content = new AuthorizationMenuViewModel(NavigationStore);
         }
 

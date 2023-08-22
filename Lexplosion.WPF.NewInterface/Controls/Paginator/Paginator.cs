@@ -15,21 +15,20 @@ namespace Lexplosion.WPF.NewInterface.Controls.Paginator
         private Button _previousPageButton;
         private Button _nextPageButton;
 
-        private uint _currentPageIndex = uint.MinValue;
-        private bool _isFirstPage = true;
+        private int _currentPageIndex = int.MinValue;
 
 
         #region Dependency Properties
 
 
-        public static readonly DependencyProperty PaginableProperty
-            = DependencyProperty.Register("Paginable", typeof(IPaginable), typeof(Paginator), 
-                new FrameworkPropertyMetadata(null));
+        public static readonly DependencyProperty NumberOfPagesProperty
+            = DependencyProperty.Register("NumberOfPages", typeof(int), typeof(Paginator),
+                new FrameworkPropertyMetadata(0));
 
-        public IPaginable Paginable 
+        public int NumberOfPages 
         {
-            get => (IPaginable)GetValue(PaginableProperty);
-            set => SetValue(PaginableProperty, value);
+            get => (int)GetValue(NumberOfPagesProperty);
+            set => SetValue(NumberOfPagesProperty, value);
         }
 
 
@@ -71,25 +70,12 @@ namespace Lexplosion.WPF.NewInterface.Controls.Paginator
 
         private void _nextPageButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!Paginable.IsLastPage) { 
-                _currentPageIndex++;
-                Paginable?.Paginate(_currentPageIndex);
-            }
+
         }
 
         private void _previousPageButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_currentPageIndex - 1 == uint.MinValue) 
-            {
-                _isFirstPage = true;
-            }
 
-            if (!_isFirstPage) { 
-                _currentPageIndex--;
-                Paginable.IsLastPage = false;
-            }
-
-            Paginable.Paginate(_currentPageIndex);
         }
 
 

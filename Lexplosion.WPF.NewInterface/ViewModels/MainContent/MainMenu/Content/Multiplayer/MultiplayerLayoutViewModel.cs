@@ -9,7 +9,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu
 
         public MultiplayerLayoutViewModel() :base()
         {
-            _tabs.Add(new TabItemModel { TextKey = "general", Content = _generalMultiplayerViewModel, IsSelected = true });
+            _tabs.Add(new TabItemModel { TextKey = "General", Content = _generalMultiplayerViewModel, IsSelected = true });
         }
     }
 }
