@@ -79,6 +79,9 @@
     <DataTemplate DataType="{x:Type mainmenuvm:LanguageSettingsViewModel}">
         <mainmenuview:LanguageSettingsView />
     </DataTemplate>
+    <DataTemplate DataType="{x:Type mainmenuvm:AccountsSettingsViewModel}">
+        <mainmenuview:AccountsSettingsView />
+    </DataTemplate>
     <DataTemplate DataType="{x:Type mainmenuvm:AboutUsViewModel}">
         <mainmenuview:AboutUsView />
     </DataTemplate>

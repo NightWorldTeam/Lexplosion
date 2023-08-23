@@ -138,6 +138,11 @@
 
 
     <!--    -->
+    <!--  Accounts  -->
+    <!--    -->
+    <s:String x:Key="Accounts">Учетные записи</s:String>
+
+    <!--    -->
     <!--  About  -->
     <!--    -->
     <s:String x:Key="Authors">Авторы</s:String>

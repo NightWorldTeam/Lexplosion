@@ -133,6 +133,7 @@
     <Compile Include="Core\Stores\INavigationStore.cs" />
     <Compile Include="Core\Stores\ModalNavigationStore.cs" />
     <Compile Include="Core\Stores\NavigationStore.cs" />
+    <Compile Include="Models\MainContent\Content\GeneralSettings\GeneralSettingsModel.cs" />
     <Compile Include="Models\MainContent\Content\GeneralSettings\LanguageSettingsModel.cs" />
     <Compile Include="Tools\ColorTools.cs" />
     <Compile Include="ViewModels\AddonsRepositories\Modrinth\ModrinthRepositoryViewModel.cs" />
@@ -147,6 +148,7 @@
     <Compile Include="ViewModels\MainContent\MainMenu\Content\Friends\FriendsRequestsViewModel.cs" />
     <Compile Include="ViewModels\MainContent\MainMenu\Content\Friends\FriendsViewModel.cs" />
     <Compile Include="ViewModels\MainContent\MainMenu\Content\GeneralSettings\AboutUsViewModel.cs" />
+    <Compile Include="ViewModels\MainContent\MainMenu\Content\GeneralSettings\AccountsSettingsViewModel.cs" />
     <Compile Include="ViewModels\MainContent\MainMenu\Content\GeneralSettings\AppearanceSettingsViewModel.cs" />
     <Compile Include="ViewModels\MainContent\MainMenu\Content\GeneralSettings\GeneralSettingsLayoutViewModel.cs" />
     <Compile Include="ViewModels\MainContent\MainMenu\Content\GeneralSettings\GeneralSettingsViewModel.cs" />
@@ -351,6 +353,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Pages\MainContent\MainMenu\Content\GeneralSettings\AccountsSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Pages\MainContent\MainMenu\Content\GeneralSettings\AppearanceSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -407,6 +413,9 @@
     </Compile>
     <Compile Include="Views\Pages\MainContent\MainMenu\Content\GeneralSettings\AboutUsView.xaml.cs">
       <DependentUpon>AboutUsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\MainContent\MainMenu\Content\GeneralSettings\AccountsSettingsView.xaml.cs">
+      <DependentUpon>AccountsSettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\MainContent\MainMenu\Content\GeneralSettings\AppearanceSettingsView.xaml.cs">
       <DependentUpon>AppearanceSettingsView.xaml</DependentUpon>

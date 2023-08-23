@@ -1,12 +1,6 @@
-﻿using Lexplosion.WPF.NewInterface.Properties;
-using Lexplosion.WPF.NewInterface.Views.Windows;
+﻿using Lexplosion.WPF.NewInterface.Views.Windows;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace Lexplosion.WPF.NewInterface
