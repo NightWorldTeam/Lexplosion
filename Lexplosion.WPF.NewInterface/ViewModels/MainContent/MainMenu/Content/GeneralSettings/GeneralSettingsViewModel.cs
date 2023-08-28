@@ -16,7 +16,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu
         private RelayCommand _openGameDirectoryFolderBrowserCommand;
         public ICommand OpenGameDirectoryFolderBrowserCommand
         {
-            get => _openGameDirectoryFolderBrowserCommand ?? (_openGameDirectoryFolderBrowserCommand = new RelayCommand(obj => 
+            get => _openGameDirectoryFolderBrowserCommand ?? (_openGameDirectoryFolderBrowserCommand = new RelayCommand(obj =>
             {
                 Model.OpenGameDirectoryFolderBrowser();
             }));

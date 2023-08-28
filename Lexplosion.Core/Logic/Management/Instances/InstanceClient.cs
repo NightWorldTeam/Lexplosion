@@ -80,6 +80,11 @@ namespace Lexplosion.Logic.Management.Instances
         public event Action DownloadStarted;
         public event Action DownloadCanceled;
         public static event Action Created;
+        /// <summary>
+        /// 
+        /// </summary>
+        public event Action NameChanged;
+        public event Action LogoChanged;
         #endregion
 
         #region info
@@ -113,6 +118,7 @@ namespace Lexplosion.Logic.Management.Instances
             get => _logo;
             private set
             {
+                Runtime.DebugWrite(_logo + " " + 123);
                 if (value != null)
                 {
                     _logo = ImageTools.ResizeImage(value, 120, 120);
@@ -121,7 +127,7 @@ namespace Lexplosion.Logic.Management.Instances
                 {
                     _logo = null;
                 }
-
+                LogoChanged?.Invoke();
                 OnPropertyChanged();
             }
         }

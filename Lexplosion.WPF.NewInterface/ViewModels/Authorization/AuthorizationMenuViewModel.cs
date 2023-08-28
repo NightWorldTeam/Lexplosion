@@ -2,7 +2,6 @@
 using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Stores;
 using System;
-using System.Collections.Generic;
 
 namespace Lexplosion.WPF.NewInterface.ViewModels.Authorization
 {
@@ -13,7 +12,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.Authorization
     }
 
 
-    public sealed class AuthorizationMenuModel 
+    public sealed class AuthorizationMenuModel
     {
         #region Constructors
 
@@ -57,7 +56,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.Authorization
         private RelayCommand _openAccountAuthFormCommand;
         public RelayCommand OpenAccountAuthFormCommand
         {
-            get => _openAccountAuthFormCommand ?? (_openAccountAuthFormCommand = new RelayCommand(obj => 
+            get => _openAccountAuthFormCommand ?? (_openAccountAuthFormCommand = new RelayCommand(obj =>
             {
                 _navigationStore.CurrentViewModel = new NightWorldAuthorizationViewModel(_navigationStore);
             }));
@@ -69,7 +68,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.Authorization
         #region Constructors
 
 
-        public AuthorizationMenuViewModel(INavigationStore navigationStore) 
+        public AuthorizationMenuViewModel(INavigationStore navigationStore)
         {
             _navigationStore = navigationStore;
         }

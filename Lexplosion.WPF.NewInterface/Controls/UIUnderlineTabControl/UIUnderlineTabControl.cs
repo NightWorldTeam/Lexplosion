@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -20,7 +19,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
         private TabPanel _tabPanel;
         private Border _header;
         private ContentPresenter _contentPresenter;
-        
+
         private Thickness _loadedTabPanelPadding = new Thickness();
 
         #region Dependency Properties
@@ -29,11 +28,11 @@ namespace Lexplosion.WPF.NewInterface.Controls
         public static readonly DependencyProperty TabPanelPaddingProperty
             = DependencyProperty.Register("TabPanelPadding", typeof(Thickness), typeof(UIUnderlineTabControl),
                 new FrameworkPropertyMetadata(
-                    defaultValue: new Thickness(), 
+                    defaultValue: new Thickness(),
                     FrameworkPropertyMetadataOptions.AffectsParentMeasure,
                     propertyChangedCallback: OnTabPanelPadding));
 
-        public Thickness TabPanelPadding 
+        public Thickness TabPanelPadding
         {
             get => (Thickness)GetValue(TabPanelPaddingProperty);
             set => SetValue(TabPanelPaddingProperty, value);
@@ -67,13 +66,13 @@ namespace Lexplosion.WPF.NewInterface.Controls
         public override void OnApplyTemplate()
         {
             SelectedIndex = 0;
-            
+
             _line = Template.FindName(PART_LINE_NAME, this) as Border;
             _tabPanel = Template.FindName("HeaderPanel", this) as TabPanel;
             _header = Template.FindName(PART_HEADER_NAME, this) as Border;
             //_contentPresenter = Template.FindName("PART_SelectedContentHost", this) as ContentPresenter; 
 
-            if (_header != null) 
+            if (_header != null)
             {
                 Runtime.DebugWrite(_header);
                 _header.Padding = _loadedTabPanelPadding;
@@ -95,7 +94,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
                 var selectedFE = ItemContainerGenerator.ContainerFromItem(SelectedValue) as TabItem;
                 var selectedTabPadding = GetTemplateBorderPadding(selectedFE);
 
-                if (selectedFE == null) 
+                if (selectedFE == null)
                 {
                     return;
                 }
@@ -135,7 +134,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
                 };
                 //_contentPresenter.BeginAnimation(OpacityProperty, dp);
             }
-            catch 
+            catch
             {
                 new Exception("Underline border doesn't exists.");
             }
@@ -156,7 +155,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
             if (e.NewValue == e.OldValue) return;
 
             var instance = (UIUnderlineTabControl)d;
-            if (instance._header == null) 
+            if (instance._header == null)
             {
                 instance._loadedTabPanelPadding = (Thickness)e.NewValue;
                 return;

@@ -54,7 +54,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
         }
     }
 
-    public partial class InstanceForm 
+    public partial class InstanceForm
     {
         public readonly struct MainActionButtonModel
         {
@@ -62,8 +62,6 @@ namespace Lexplosion.WPF.NewInterface.Controls
             public string TextKey { get; }
             public MainActionFunc Action { get; }
         }
-
-
     }
 
     [TemplatePart(Name = PART_LOGOBLOCK, Type = typeof(Grid))]
@@ -189,7 +187,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
                 _logoGridBlock.MouseLeftButtonDown += _logoGridBlock_MouseLeftButtonDown;
             }
 
-            if (_mainActionButton != null) 
+            if (_mainActionButton != null)
             {
                 _mainActionButton.Click += _mainActionButton_Click;
             }
@@ -198,11 +196,11 @@ namespace Lexplosion.WPF.NewInterface.Controls
             {
                 _dropdownMenuItemsControl.ItemsSource = LowerMenuButtons;
 
-                _lowerMenuButtons.Add(new LowerMenuButton(0, IK_DELETE, "DeleteInstance", () => { }));
+                _lowerMenuButtons.Add(new LowerMenuButton(0, IK_DELETE, "DeleteInstance", InstanceModel.Delete));
                 _lowerMenuButtons.Add(new LowerMenuButton(1, IK_EXPORT, "Export", () => { }));
-                _lowerMenuButtons.Add(new LowerMenuButton(2, IK_OPENFOLDER, "OpenFolder", () => { }));
+                _lowerMenuButtons.Add(new LowerMenuButton(2, IK_OPENFOLDER, "OpenFolder", InstanceModel.OpenFolder));
                 _lowerMenuButtons.Add(new LowerMenuButton(3, IK_DLC, "ExploreAddons", () => { }));
-                _lowerMenuButtons.Add(new LowerMenuButton(4, IK_LANG, "VisitNightWorld", () => { }));
+                _lowerMenuButtons.Add(new LowerMenuButton(4, IK_LANG, "VisitNightWorld", InstanceModel.GoToWebsite));
                 _lowerMenuButtons.Add(new LowerMenuButton(5, IK_REMOVE_FROM_LIBRARY, "RemoveFromLibrary", () => { }));
                 _lowerMenuButtons.Add(new LowerMenuButton(5, IK_ADD_TO_LIBRARY, "AddToLibrary", () => { }));
             }
@@ -211,6 +209,11 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
             base.OnApplyTemplate();
             ApplyTemplateExecuted?.Invoke();
+
+            InstanceModel.LogoChanged += () =>
+            {
+                SetLogo(InstanceModel.Logo);
+            };
         }
 
         private void _mainActionButton_Click(object sender, RoutedEventArgs e)
@@ -244,12 +247,14 @@ namespace Lexplosion.WPF.NewInterface.Controls
             }
         }
 
-        private void PercentageButtonFunc() 
+
+
+        private void PercentageButtonFunc()
         {
-            
+
         }
 
-        private void CloseButtonFunc() 
+        private void CloseButtonFunc()
         {
             State = InstanceFormState.Default;
             SetDefaultFormStyle();
@@ -277,7 +282,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
             }
         }
 
-        private void PlayButtonFunc() 
+        private void PlayButtonFunc()
         {
             if (Style != (Style)App.Current.Resources[LAUNCH_FORM_STYLE_KEY])
             {
@@ -300,10 +305,12 @@ namespace Lexplosion.WPF.NewInterface.Controls
         }
 
 
-        public static BitmapImage ToImage(byte[] imageBytes)
+        public static BitmapImage ToImage(string name, byte[] imageBytes)
         {
             if (imageBytes is null || imageBytes.Length == 0)
                 return new BitmapImage(new Uri("pack://application:,,,/assets/images/icons/non_image.png"));
+
+            Runtime.DebugWrite(name + " " + imageBytes.Length);
 
             using (var stream = new System.IO.MemoryStream(imageBytes))
             {
@@ -324,7 +331,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
         #region Private Methods
 
 
-        private void SetName(string value) 
+        private void SetName(string value)
         {
             if (_nameTextBlock == null)
                 return;
@@ -348,26 +355,27 @@ namespace Lexplosion.WPF.NewInterface.Controls
             _authorTextBlock.Text = "by " + value;
         }
 
-        private void SetCategories(IEnumerable<object> objects) 
+        private void SetCategories(IEnumerable<object> objects)
         {
             if (_tagsPanel == null)
                 return;
-            
+
             _tagsPanel.ItemsSource = objects;
         }
 
-        private void SetLogo(byte[] logo) 
+        private void SetLogo(byte[] logo)
         {
             if (_logoBorder == null)
                 return;
 
             _logoBorder.Background = new ImageBrush()
             {
-                ImageSource = ToImage(logo)
+                ImageSource = ToImage(InstanceModel?.Name, logo)
+
             };
         }
 
-        private void UpdateAllFields(InstanceModelBase model) 
+        private void UpdateAllFields(InstanceModelBase model)
         {
             SetName(model.Name);
             SetShortDescription(model.ShortDescription);
@@ -379,7 +387,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
         /// <summary>
         /// Устанавливает отображение загрузочной формы.
         /// </summary>
-        private void SetLoadingFormStyle() 
+        private void SetLoadingFormStyle()
         {
             Style = (Style)App.Current.Resources[LOADING_FORM_STYLE_KEY];
         }
@@ -387,7 +395,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
         /// <summary>
         /// Устанавливает отображение стандартной формы.
         /// </summary>
-        private void SetDefaultFormStyle() 
+        private void SetDefaultFormStyle()
         {
             Style = (Style)App.Current.Resources[DEFAULT_FORM_STYLE_KEY];
         }
@@ -395,7 +403,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
         /// <summary>
         /// Устанавливает отображение стандартной формы.
         /// </summary>
-        private void SetLaunchFormStyle() 
+        private void SetLaunchFormStyle()
         {
             Style = (Style)App.Current.Resources[LAUNCH_FORM_STYLE_KEY];
         }

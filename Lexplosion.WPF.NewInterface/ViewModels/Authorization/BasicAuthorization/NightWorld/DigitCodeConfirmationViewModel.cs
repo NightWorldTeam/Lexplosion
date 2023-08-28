@@ -16,12 +16,12 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.Authorization
         #region Commands
 
 
-        private RelayCommand _checkCodeCommand; 
-        public ICommand CheckCodeCommand 
+        private RelayCommand _checkCodeCommand;
+        public ICommand CheckCodeCommand
         {
             get => _checkCodeCommand ?? (_checkCodeCommand = new RelayCommand(obj =>
             {
-                
+
             }));
         }
 

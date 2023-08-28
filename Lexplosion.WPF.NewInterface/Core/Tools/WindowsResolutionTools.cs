@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 
 namespace Lexplosion.WPF.NewInterface.Core.Tools
 {
-    public readonly struct Resolution 
+    public readonly struct Resolution
     {
         public int Width { get; }
         public int Height { get; }
@@ -23,7 +23,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Tools
         /// Return string Width and Height
         /// </summary>
         /// <returns>Width and Height separated char 'x'</returns>
-        public string GetWidthXHeight() 
+        public string GetWidthXHeight()
         {
             return Width + "x" + Height;
         }
@@ -77,7 +77,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Tools
             public int dmPanningHeight;
         }
 
-        public static IEnumerable<string> GetAvaliableResolutionsToString() 
+        public static IEnumerable<string> GetAvaliableResolutionsToString()
         {
             DEVMODE vDevMode = new DEVMODE();
             int i = 0;

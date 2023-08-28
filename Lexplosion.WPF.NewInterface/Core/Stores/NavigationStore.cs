@@ -1,5 +1,4 @@
 ﻿using Lexplosion.WPF.NewInterface.Core;
-using System;
 
 namespace Lexplosion.WPF.NewInterface.Stores
 {

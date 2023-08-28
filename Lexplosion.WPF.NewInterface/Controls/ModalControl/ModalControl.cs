@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
-using System.Windows;
 
 namespace Lexplosion.WPF.NewInterface.Controls
 {
@@ -82,7 +82,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
                 throw new NullReferenceException("Template parts not available");
             }
 
-            if (IsOpen) 
+            if (IsOpen)
             {
                 ShowModalAnimation();
             }

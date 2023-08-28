@@ -1,15 +1,15 @@
 ﻿using System;
-using System.Windows.Media;
-using System.Windows;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
+using System.Windows.Media;
 
 namespace Lexplosion.WPF.NewInterface.Core.Objects
 {
     public struct Theme : INotifyPropertyChanged
     {
         public const string ThemesResourcePath = "pack://application:,,,/Resources/Themes/";
-        
+
         public event Action<Theme> SelectedEvent;
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -27,13 +27,13 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
         public SolidColorBrush SeparateBrush { get; }
 
         private SolidColorBrush _activityBrush;
-        public SolidColorBrush ActivityBrush 
-        { 
-            get => _activityBrush; private set 
+        public SolidColorBrush ActivityBrush
+        {
+            get => _activityBrush; private set
             {
                 _activityBrush = value;
                 OnPropertyChanged();
-            } 
+            }
         }
 
         public bool IsPresetColor { get; private set; } = false;
@@ -67,7 +67,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
             PrimaryBrush = (SolidColorBrush)Dictionary["PrimarySolidColorBrush"];
             SecondaryBrush = (SolidColorBrush)Dictionary["SecondarySolidColorBrush"];
             SeparateBrush = (SolidColorBrush)Dictionary["SeparateSolidColorBrush"];
-            
+
             if (!IsPresetColor)
             {
                 ActivityBrush = (SolidColorBrush)Dictionary["ActivitySolidColorBrush"];
@@ -90,7 +90,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
         #region Private Methods
 
 
-        private void OnSelectedChanged() 
+        private void OnSelectedChanged()
         {
             SelectedEvent?.Invoke(this);
         }

@@ -8,15 +8,15 @@ using System.Windows.Media;
 
 namespace Lexplosion.WPF.NewInterface.ViewModels
 {
-    public sealed class UserData : VMBase 
+    public sealed class UserData : VMBase
     {
         public static UserData Instance { get; } = new UserData();
 
 
         private bool _isAuthrized;
-        public bool IsAuthrized 
+        public bool IsAuthrized
         {
-            get => _isAuthrized; set 
+            get => _isAuthrized; set
             {
                 _isAuthrized = value;
                 OnPropertyChanged();
@@ -24,22 +24,22 @@ namespace Lexplosion.WPF.NewInterface.ViewModels
         }
 
         private AccountType _currentAccountType;
-        public AccountType CurrentAccountType 
+        public AccountType CurrentAccountType
         {
-            get => _currentAccountType; set 
+            get => _currentAccountType; set
             {
                 _currentAccountType = value;
                 OnPropertyChanged();
             }
-        } 
+        }
 
 
         private string _nickname;
-        public string Nickname 
+        public string Nickname
         {
-            get => _nickname; set 
+            get => _nickname; set
             {
-                _nickname= value;
+                _nickname = value;
                 OnPropertyChanged();
             }
         }
@@ -51,7 +51,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels
 
         private UserData()
         {
-            
+
         }
 
 
@@ -61,7 +61,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels
     public sealed class MainViewModel : VMBase
     {
         internal INavigationStore NavigationStore { get; } = new NavigationStore();
-        
+
         public ViewModelBase CurrentViewModel => NavigationStore.CurrentViewModel;
         public IModalViewModel CurrentModalViewModel => ModalNavigationStore.Instance.CurrentViewModel;
 
@@ -97,6 +97,8 @@ namespace Lexplosion.WPF.NewInterface.ViewModels
                 }
                 ));
 
+            ModalNavigationStore.Instance.Close();
+            ModalNavigationStore.Instance.Open(new DialogBoxViewModel("Library", "Protection", (obj) => { }, (obj) => { }));
             ModalNavigationStore.Instance.Close();
 
             NavigationStore.CurrentViewModelChanged += NavigationStore_CurrentViewModelChanged;

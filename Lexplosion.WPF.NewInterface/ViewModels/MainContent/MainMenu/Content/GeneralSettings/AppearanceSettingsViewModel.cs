@@ -1,8 +1,5 @@
 ﻿using Lexplosion.WPF.NewInterface.Core;
-using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Models.MainContent.Content;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
 namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu
 {

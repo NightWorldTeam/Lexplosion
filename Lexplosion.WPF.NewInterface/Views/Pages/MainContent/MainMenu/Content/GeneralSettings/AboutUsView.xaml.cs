@@ -1,9 +1,8 @@
-﻿using Lexplosion.Global;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Reflection;
 using System.Windows.Controls;
-using System.Windows.Media.Imaging;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace Lexplosion.WPF.NewInterface.Views.Pages.MainContent.MainMenu
 {

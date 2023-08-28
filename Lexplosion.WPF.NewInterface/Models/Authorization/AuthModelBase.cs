@@ -7,7 +7,7 @@ namespace Lexplosion.WPF.NewInterface.Models.Authorization
     public abstract class AuthModelBase : VMBase
     {
         private readonly DoNotificationCallback _doNotification = (header, message, time, type) => { };
-        
+
         protected AuthModelBase(DoNotificationCallback doNotification)
         {
             _doNotification = doNotification;
@@ -60,7 +60,7 @@ namespace Lexplosion.WPF.NewInterface.Models.Authorization
         /// </summary>
         /// <param name="name">Никнейм игрока</param>
         /// <param name="accountType">Тип аккаунта которым пользователь авторизировался</param>
-        private void SuccessfulAuthorization(string name, AccountType accountType) 
+        private void SuccessfulAuthorization(string name, AccountType accountType)
         {
             UserData.Instance.Nickname = name;
             UserData.Instance.IsAuthrized = true;

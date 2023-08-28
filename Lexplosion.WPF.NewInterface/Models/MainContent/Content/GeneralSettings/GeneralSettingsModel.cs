@@ -1,7 +1,7 @@
 ﻿using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
-using Lexplosion.WPF.NewInterface.Core.Tools;
 using Lexplosion.WPF.NewInterface.Core;
+using Lexplosion.WPF.NewInterface.Core.Tools;
 using Microsoft.VisualBasic.Devices;
 using System;
 using System.Collections.Generic;

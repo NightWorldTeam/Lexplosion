@@ -1,40 +1,38 @@
 ﻿using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Objects;
 using Lexplosion.WPF.NewInterface.Controls.Paginator;
+using Lexplosion.WPF.NewInterface.Models.InstanceModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Lexplosion.WPF.NewInterface.Models.MainContent.Content
+namespace Lexplosion.WPF.NewInterface.Models.MainContent
 {
-    public class CatalogModel : VMBase, IPaginable
+    public sealed class CatalogModel : VMBase, IPaginable
     {
         #region Properties
 
 
-        private ObservableCollection<object> _instanceFormVMs = new ObservableCollection<object>();
-        public IEnumerable<object> InstanceFormVMs { get => _instanceFormVMs; }
+        private ObservableCollection<InstanceModelBase> _instances = new ObservableCollection<InstanceModelBase>();
+        public IEnumerable<InstanceModelBase> Instances { get => _instances; }
 
 
         private bool _isEmptyPage;
-        public bool IsEmptyPage 
+        public bool IsEmptyPage
         {
-            get => _isEmptyPage; set 
+            get => _isEmptyPage; set
             {
-                _isEmptyPage= value;
+                _isEmptyPage = value;
                 OnPropertyChanged();
             }
         }
 
         private bool _isLastPage;
-        public bool IsLastPage 
+        public bool IsLastPage
         {
-            get => _isLastPage; set 
+            get => _isLastPage; set
             {
-                _isLastPage= value; 
+                _isLastPage = value;
                 OnPropertyChanged();
             }
         }
@@ -46,10 +44,45 @@ namespace Lexplosion.WPF.NewInterface.Models.MainContent.Content
         #endregion Properties
 
 
+        #region Constructors
+
+
+        public CatalogModel()
+        {
+            var instanceClientsTuple = GetInstanceClients("", 0, InstanceSource.Modrinth, new IProjectCategory[] { new SimpleCategory()
+            {
+                Id = "-1",
+                ClassId = "",
+                ParentCategoryId = "",
+                Name = "All"
+            }}, CfSortField.Featured, "1.19.2", false);
+
+
+            foreach (var instanceClient in instanceClientsTuple.Item1)
+            {
+                _instances.Add(new InstanceModelBase(instanceClient));
+            }
+            Runtime.DebugWrite(instanceClientsTuple.Item2);
+        }
+
+
+        #endregion Constructors
+
         #region Public & Properties Methods
 
 
-        public Tuple<IEnumerable<InstanceClient>, uint> GetInstanceClients(string searchInput, uint scrollTo, InstanceSource source, IEnumerable<IProjectCategory> selectedCategories, CfSortField sortBy, string gameVersion,  bool isPaginatorInvoke = false) 
+        /// <summary>
+        /// Return a list of instances from curseforge/modrinth
+        /// </summary>
+        /// <param name="searchInput">SearchBox text</param>
+        /// <param name="scrollTo">Page Index</param>
+        /// <param name="source">Curseforge/Modrinth/Nightworld</param>
+        /// <param name="selectedCategories">Selected Category(ies)</param>
+        /// <param name="sortBy">Sort by data</param>
+        /// <param name="gameVersion">version of minecraft</param>
+        /// <param name="isPaginatorInvoke">Is page index changed?</param>
+        /// <returns>Tuple[IEnumerable InstanceClient & InstanceClient count </returns>
+        public Tuple<IEnumerable<InstanceClient>, uint> GetInstanceClients(string searchInput, uint scrollTo, InstanceSource source, IEnumerable<IProjectCategory> selectedCategories, CfSortField sortBy, string gameVersion, bool isPaginatorInvoke = false)
         {
             var instanceClientList = InstanceClient.GetOutsideInstances(
                 source,

@@ -1,10 +1,10 @@
-﻿using Lexplosion.WPF.NewInterface.Core;
-using Lexplosion.WPF.NewInterface.Commands;
-using Lexplosion.WPF.NewInterface.Stores;
-using System.Windows.Input;
+﻿using Lexplosion.WPF.NewInterface.Commands;
+using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Models.Authorization;
 using Lexplosion.WPF.NewInterface.Models.Authorization.BasicAuthorization;
+using Lexplosion.WPF.NewInterface.Stores;
 using Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu;
+using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.ViewModels.Authorization
 {
@@ -19,9 +19,9 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.Authorization
 
 
         private RelayCommand authorizationCommand;
-        public ICommand AuthorizationCommand 
+        public ICommand AuthorizationCommand
         {
-            get => authorizationCommand ?? (authorizationCommand = new RelayCommand(obj => 
+            get => authorizationCommand ?? (authorizationCommand = new RelayCommand(obj =>
             {
                 Model.LogIn();
                 _navigationStore.CurrentViewModel = new MainMenuLayoutViewModel();
@@ -30,9 +30,9 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.Authorization
 
 
         private RelayCommand _changeAuthorizationFormCommand;
-        public ICommand ChangeAuthorizationFormCommand 
+        public ICommand ChangeAuthorizationFormCommand
         {
-            get => _changeAuthorizationFormCommand ?? (_changeAuthorizationFormCommand = new RelayCommand(obj => 
+            get => _changeAuthorizationFormCommand ?? (_changeAuthorizationFormCommand = new RelayCommand(obj =>
             {
 
             }));

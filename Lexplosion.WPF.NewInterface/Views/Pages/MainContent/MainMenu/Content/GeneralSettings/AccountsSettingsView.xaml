@@ -26,16 +26,19 @@
                 BorderThickness="0,0,0,2">
                 <StackPanel Orientation="Horizontal">
                     <Border
-                        Width="20"
-                        Height="20"
-                        Margin="0,0,8,0"
-                        Background="{DynamicResource ActivitySolidColorBrush}" />
+                        Width="28"
+                        Height="28"
+                        Margin="0,0,8,0">
+                        <Border.Background>
+                            <ImageBrush ImageSource="pack://application:,,,/assets/images/icons/logo.ico" />
+                        </Border.Background>
+                    </Border>
 
                     <TextBlock
                         FontSize="16"
                         FontWeight="Medium"
                         Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                        Text="Microsoft" />
+                        Text="NightWorld" />
                 </StackPanel>
             </Border>
 
@@ -48,11 +51,20 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
+                        <Border
+                            Width="32"
+                            Height="32"
+                            CornerRadius="5">
+                            <Border.Background>
+                                <ImageBrush ImageSource="pack://application:,,,/Assets/images/icons/hel2xhead.png" />
+                            </Border.Background>
+                        </Border>
 
-                        <StackPanel>
+                        <StackPanel Grid.Column="1" Margin="8,0,0,0">
                             <TextBlock
                                 FontSize="16"
                                 FontWeight="Medium"
@@ -66,7 +78,7 @@
                         </StackPanel>
 
                         <Border
-                            Grid.Column="1"
+                            Grid.Column="2"
                             Height="24"
                             Margin="16,0,0,0"
                             Padding="8,3,8,6"
@@ -76,16 +88,28 @@
                             CornerRadius="5">
                             <TextBlock
                                 VerticalAlignment="Center"
-                                FontWeight="Medium" FontSize="14"
+                                FontSize="14"
+                                FontWeight="Medium"
                                 Foreground="{DynamicResource CheckBoxMarkSolidColorBrush}"
                                 Text="Активно" />
                         </Border>
 
                         <controls:DropdownMenu
-                            Grid.Column="2"
+                            Grid.Column="3"
                             Width="32"
                             Height="32"
-                            HorizontalAlignment="Right" />
+                            HorizontalAlignment="Right"
+                            Background="{DynamicResource SecondarySolidColorBrush}"
+                            BorderBrush="{DynamicResource SeparateSolidColorBrush}">
+                            <StackPanel>
+                                <Border Padding="16,8">
+                                    <TextBlock Text="Change To" />
+                                </Border>
+                                <Border Padding="16,8">
+                                    <TextBlock Text="Log out" />
+                                </Border>
+                            </StackPanel>
+                        </controls:DropdownMenu>
                     </Grid>
                 </Border>
             </StackPanel>

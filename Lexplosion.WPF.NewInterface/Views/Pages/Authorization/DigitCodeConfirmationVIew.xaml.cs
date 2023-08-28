@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 
 namespace Lexplosion.WPF.NewInterface.Views.Pages.Authorization
 {

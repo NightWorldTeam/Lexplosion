@@ -16,7 +16,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu
             InitDefaultSettingsTabMenu();
         }
 
-        private void InitDefaultSettingsTabMenu() 
+        private void InitDefaultSettingsTabMenu()
         {
             _tabs.Add(new TabItemModel { TextKey = "General", Content = _generalSettingsViewModel, IsSelected = true });
             _tabs.Add(new TabItemModel { TextKey = "Appearance", Content = _appearanceViewModel });

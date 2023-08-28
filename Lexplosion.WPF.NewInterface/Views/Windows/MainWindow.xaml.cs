@@ -29,7 +29,7 @@ namespace Lexplosion.WPF.NewInterface.Views.Windows
             double keff = 0.25;
             var yScale = keff + 1;
 
-            if (_isScalled) 
+            if (_isScalled)
             {
                 keff *= -1;
                 yScale = 1;
@@ -44,7 +44,7 @@ namespace Lexplosion.WPF.NewInterface.Views.Windows
             var screenWidth = System.Windows.SystemParameters.PrimaryScreenWidth;
             Top = (screenHeight - Height) / 2;
             Left = (screenWidth - Width) / 2;
-            
+
             _isScalled = !_isScalled;
         }
 
@@ -53,7 +53,7 @@ namespace Lexplosion.WPF.NewInterface.Views.Windows
         {
             var grid = (Grid)sender;
 
-            for (int i = 0; i < grid.ColumnDefinitions.Count; i++) 
+            for (int i = 0; i < grid.ColumnDefinitions.Count; i++)
             {
                 Runtime.DebugWrite(i.ToString() + " " + grid.ColumnDefinitions[i].ActualWidth.ToString());
             }
@@ -133,7 +133,7 @@ namespace Lexplosion.WPF.NewInterface.Views.Windows
                     Source = new Uri("pack://application:,,,/Assets/langs/ru-RU.xaml")
                 });
             }
-            else 
+            else
             {
                 App.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
                 {
@@ -155,7 +155,7 @@ namespace Lexplosion.WPF.NewInterface.Views.Windows
                 throw new ArgumentNullException("v");
 
             var _dpi = System.Windows.Media.VisualTreeHelper.GetDpi(this);
-           
+
             var target = new RenderTargetBitmap((int)(this.ActualWidth * _dpi.DpiScaleX), (int)(this.ActualHeight * _dpi.DpiScaleY),
                                                 _dpi.PixelsPerInchX, _dpi.PixelsPerInchY, PixelFormats.Default);
             target.Render(v);
@@ -201,7 +201,7 @@ namespace Lexplosion.WPF.NewInterface.Views.Windows
                     Source = new Uri("pack://application:,,,/Resources/Themes/DarkColorTheme.xaml")
                 });
             }
-            else 
+            else
             {
                 App.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
                 {
@@ -216,7 +216,7 @@ namespace Lexplosion.WPF.NewInterface.Views.Windows
                 Duration = TimeSpan.FromSeconds(0.35 * 1.5),
                 EasingFunction = new SineEase
                 { EasingMode = EasingMode.EaseInOut }
-        };
+            };
 
             dba.Completed += (s, e) => Dba_Completed(s, e, border);
             //PaintArea.BeginAnimation(OpacityProperty, dba);
@@ -242,7 +242,7 @@ namespace Lexplosion.WPF.NewInterface.Views.Windows
                 });
                 currentLang = "en";
             }
-            else 
+            else
             {
                 App.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
                 {
@@ -258,7 +258,7 @@ namespace Lexplosion.WPF.NewInterface.Views.Windows
         }
 
 
-        private void ChangeChangeWHPHorizontalOrintationAnimation() 
+        private void ChangeChangeWHPHorizontalOrintationAnimation()
         {
             var opacityHideAnimation = new DoubleAnimation()
             {
@@ -283,7 +283,7 @@ namespace Lexplosion.WPF.NewInterface.Views.Windows
             WindowHeaderPanelButtonsGrid.BeginAnimation(OpacityProperty, opacityHideAnimation);
         }
 
-        private void ChangeWHPHorizontalOrintation() 
+        private void ChangeWHPHorizontalOrintation()
         {
             if (WindowHeaderPanelButtonsGrid.HorizontalAlignment == HorizontalAlignment.Left)
             {

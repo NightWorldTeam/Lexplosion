@@ -19,8 +19,8 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
             get => _isSelected; set
             {
                 _isSelected = value;
-                if (_isSelected) 
-                { 
+                if (_isSelected)
+                {
                     SelectedEvent?.Invoke(_cultureInfo.Name);
                 }
                 OnPropertyChanged();
@@ -40,7 +40,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
             LangLogoPath = "pack://application:,,,/Assets/images/icons/countries/" + _cultureInfo.Name + ".png";
             IsSelected = isSelected;
         }
-        
+
         public LanguageModel(string cultureId)
         {
             _cultureInfo = new CultureInfo(cultureId);

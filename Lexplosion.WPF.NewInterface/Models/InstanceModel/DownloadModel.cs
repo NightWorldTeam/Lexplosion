@@ -1,9 +1,4 @@
 ﻿using Lexplosion.Logic.Management.Instances;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Lexplosion.WPF.NewInterface.Models.InstanceModel
 {
@@ -30,7 +25,7 @@ namespace Lexplosion.WPF.NewInterface.Models.InstanceModel
         /// <summary>
         /// Запускает скачивание сборки.
         /// </summary>
-        public void Download(string version) 
+        public void Download(string version)
         {
             _instanceClient.Update();
         }
@@ -38,7 +33,7 @@ namespace Lexplosion.WPF.NewInterface.Models.InstanceModel
         /// <summary>
         /// Отменяет текущие скачивание
         /// </summary>
-        public void DownloadCancel() 
+        public void DownloadCancel()
         {
             _instanceClient.CancelDownload();
         }
@@ -50,7 +45,7 @@ namespace Lexplosion.WPF.NewInterface.Models.InstanceModel
         #region Private Methods
 
 
-        private void OnDownloadComplited() 
+        private void OnDownloadComplited()
         {
 
         }

@@ -61,7 +61,7 @@
                         Width="{TemplateBinding Width}"
                         Height="40"
                         Padding="16,10"
-                        Background="{DynamicResource SecondarySolidColorBrush}"
+                        Background="{DynamicResource PrimarySolidColorBrush}"
                         BorderBrush="{DynamicResource SeparateSolidColorBrush}"
                         CornerRadius="5">
                         <Grid>

@@ -125,6 +125,9 @@
     <Compile Include="Models\Authorization\BasicAuthorization\IBasicAuthModel.cs" />
     <Compile Include="Models\Authorization\OAuth2\IOAuth2Model.cs" />
     <Compile Include="Models\Authorization\OAuth2\MicrosoftAuthorizationModel.cs" />
+    <Compile Include="Models\InstanceCatalogControllers\CatalogController.cs" />
+    <Compile Include="Models\InstanceCatalogControllers\IInstanceCatalog.cs" />
+    <Compile Include="Models\InstanceCatalogControllers\LibraryController.cs" />
     <Compile Include="Models\InstanceModel\DownloadModel.cs" />
     <Compile Include="Models\InstanceModel\InstanceModelBase.cs" />
     <Compile Include="Models\InstanceModel\LaunchModel.cs" />
@@ -135,6 +138,8 @@
     <Compile Include="Core\Stores\NavigationStore.cs" />
     <Compile Include="Models\MainContent\Content\GeneralSettings\GeneralSettingsModel.cs" />
     <Compile Include="Models\MainContent\Content\GeneralSettings\LanguageSettingsModel.cs" />
+    <Compile Include="Models\MainContent\Content\LibraryModel.cs" />
+    <Compile Include="Models\MainModel.cs" />
     <Compile Include="Tools\ColorTools.cs" />
     <Compile Include="ViewModels\AddonsRepositories\Modrinth\ModrinthRepositoryViewModel.cs" />
     <Compile Include="ViewModels\Authorization\AuthorizationViewModelBase.cs" />
@@ -142,7 +147,6 @@
     <Compile Include="ViewModels\Authorization\BasicAuthorization\NightWorld\NightWorldAuthorizationViewModel.cs" />
     <Compile Include="ViewModels\Authorization\AuthorizationMenuViewModel.cs" />
     <Compile Include="ViewModels\Authorization\BasicAuthorization\NightWorld\PasswordResetViewModel.cs" />
-    <Compile Include="ViewModels\InstanceForm\InstanceFormViewModel.cs" />
     <Compile Include="ViewModels\MainContent\MainMenu\Content\CatalogViewModel.cs" />
     <Compile Include="ViewModels\MainContent\MainMenu\Content\Friends\FriendsLayoutViewModel.cs" />
     <Compile Include="ViewModels\MainContent\MainMenu\Content\Friends\FriendsRequestsViewModel.cs" />
@@ -153,12 +157,17 @@
     <Compile Include="ViewModels\MainContent\MainMenu\Content\GeneralSettings\GeneralSettingsLayoutViewModel.cs" />
     <Compile Include="ViewModels\MainContent\MainMenu\Content\GeneralSettings\GeneralSettingsViewModel.cs" />
     <Compile Include="ViewModels\MainContent\MainMenu\Content\GeneralSettings\LanguageSettingsViewModel.cs" />
+    <Compile Include="ViewModels\MainContent\MainMenu\Content\LibraryViewModel.cs" />
     <Compile Include="ViewModels\MainContent\MainMenu\Content\Multiplayer\MultiplayerLayoutViewModel.cs" />
     <Compile Include="ViewModels\MainContent\MainMenu\Content\Multiplayer\MultiplayerViewModel.cs" />
     <Compile Include="ViewModels\MainContent\MainMenu\LeftPanel\LeftPanelViewModel.cs" />
     <Compile Include="ViewModels\MainContent\MainMenu\MainMenuLayoutViewModel.cs" />
+    <Compile Include="ViewModels\Modal\DialogBox\DialogBoxViewModel.cs" />
     <Compile Include="ViewModels\Modal\InstanceFactory\InstanceFactoryViewModel.cs" />
     <Compile Include="ViewModels\Modal\LeftMenu\LeftMenuControl.cs" />
+    <Compile Include="Views\Modal\DialogBox\DialogBoxView.xaml.cs">
+      <DependentUpon>DialogBoxView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Modal\InstanceFactory\InstanceFactoryView.xaml.cs">
       <DependentUpon>InstanceFactoryView.xaml</DependentUpon>
     </Compile>
@@ -305,6 +314,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Modal\DialogBox\DialogBoxView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Modal\InstanceFactory\InstanceFactoryView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -373,6 +386,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Pages\MainContent\MainMenu\Content\LibraryView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Pages\MainContent\MainMenu\Content\Multiplayer\MultiplayerLayoutView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -429,6 +446,9 @@
     <Compile Include="Views\Pages\MainContent\MainMenu\Content\GeneralSettings\LanguageSettingsView.xaml.cs">
       <DependentUpon>LanguageSettingsView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Pages\MainContent\MainMenu\Content\LibraryView.xaml.cs">
+      <DependentUpon>LibraryView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Pages\MainContent\MainMenu\Content\Multiplayer\MultiplayerLayoutView.xaml.cs">
       <DependentUpon>MultiplayerLayoutView.xaml</DependentUpon>
     </Compile>
@@ -478,6 +498,7 @@
   <ItemGroup>
     <Folder Include="Models\MainContent\LeftPanel\" />
     <Folder Include="ViewModels\Authorization\OAuth2\" />
+    <Folder Include="ViewModels\InstanceForm\" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\images\background\authBG.png" />
@@ -505,6 +526,9 @@
       <Project>{bd1126b1-abbe-424f-bf0c-f6b3dc107bf6}</Project>
       <Name>Lexplosion.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\images\icons\hel2xhead.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

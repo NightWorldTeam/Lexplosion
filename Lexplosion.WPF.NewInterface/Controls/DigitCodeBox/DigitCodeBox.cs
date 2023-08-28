@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Windows.Controls;
-using System.Windows;
-using System.Windows.Input;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Controls
 {
@@ -27,7 +27,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
             = DependencyProperty.Register("IsFullCode", typeof(bool), typeof(DigitCodeBox), new FrameworkPropertyMetadata(false));
 
         public static readonly DependencyProperty CodeProperty
-            = DependencyProperty.Register("Code", typeof(string), typeof(DigitCodeBox), 
+            = DependencyProperty.Register("Code", typeof(string), typeof(DigitCodeBox),
                 new FrameworkPropertyMetadata(string.Empty));
 
         public static readonly DependencyProperty IsNumericOnlyProperty
@@ -49,7 +49,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
             set
             {
                 // Если код был значение для IsFullCode было изменено внутри класс элемента.
-                if (IsBoxChangeIsFullCode) 
+                if (IsBoxChangeIsFullCode)
                 {
                     SetValue(IsFullCodeProperty, value);
                     IsBoxChangeIsFullCode = false;
@@ -63,34 +63,35 @@ namespace Lexplosion.WPF.NewInterface.Controls
             set
             {
                 // Если код был значение для Code было изменено внутри класс элемента.
-                if (IsBoxChangeCode) { 
+                if (IsBoxChangeCode)
+                {
                     SetValue(CodeProperty, value);
                     IsBoxChangeCode = false;
                 }
             }
         }
 
-        public bool IsNumericOnly 
+        public bool IsNumericOnly
         {
             get => (bool)GetValue(IsNumericOnlyProperty);
             set => SetValue(IsNumericOnlyProperty, value);
         }
 
-        public Style TextBoxStyle 
+        public Style TextBoxStyle
         {
             get => (Style)GetValue(TextBoxStyleProperty);
             set => SetValue(TextBoxStyleProperty, value);
         }
 
-        
+
         #endregion Dependency Properties
 
 
         #region Properties
 
 
-        protected bool IsBoxChangeCode { get; set;}
-        protected bool IsBoxChangeIsFullCode { get; set;}
+        protected bool IsBoxChangeCode { get; set; }
+        protected bool IsBoxChangeIsFullCode { get; set; }
 
 
         #endregion Properties
@@ -131,7 +132,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
         #region Private Methods
 
 
-        private void InitializeInputFields() 
+        private void InitializeInputFields()
         {
             for (var i = 0; i < CodeSize; i++)
             {
@@ -169,7 +170,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
                     template.Text = string.Empty;
                 };
 
-                template.LostFocus += (e, a) => 
+                template.LostFocus += (e, a) =>
                 {
                     template.Text = CurrentInputFieldsValues[template];
                 };
@@ -180,7 +181,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
                 {
                     new Exception("Panel for input fields doesn't exists");
                 }
-                else 
+                else
                 {
                     _fieldsPanel.Children.Add(template);
                 }
@@ -189,7 +190,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
             _fieldsPanel.Children[0].Focus();
         }
 
-        private void InputFieldTextChanged(object sender, TextChangedEventArgs args, bool isBackspace=false) 
+        private void InputFieldTextChanged(object sender, TextChangedEventArgs args, bool isBackspace = false)
         {
             var currentTextBox = (TextBox)sender;
 
@@ -206,7 +207,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
             // Используем keyboard navigation, чтобы перемещаться между элементами внутри нашей панели.
             // после тогда как мы закончим обход всех textbox, следующий фокус будет падать на элемент с focusable = true;
             // Если был нажат backspace не переносим фокус на следующую ячейку, пока текущая не будет заполнена.
-            if (!isBackspace) 
+            if (!isBackspace)
             {
                 currentTextBox.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
             }
@@ -216,7 +217,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
         }
 
 
-        private void OnCodeChanged() 
+        private void OnCodeChanged()
         {
             IsBoxChangeCode = true;
             Code = string.Join("", CurrentInputFieldsValues.Keys.Select(textbox => textbox.Text));
@@ -226,10 +227,10 @@ namespace Lexplosion.WPF.NewInterface.Controls
         /// <summary>
         /// Если код отличается от суммы строк inputfields, то мы будем возвращать сумму строк inputfields
         /// </summary>
-        private string ValidCode(string value) 
+        private string ValidCode(string value)
         {
             // если код больше заявленной длины
-            if (value.Length > CodeSize) 
+            if (value.Length > CodeSize)
             {
                 OnCodeChanged();
                 return "";
@@ -242,7 +243,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
         // TODO: подумать над оптимизацией, если конечно это будет требоваться
         private void InputFieldValidation(object sender, TextCompositionEventArgs e)
         {
-            if (IsNumericOnly) 
+            if (IsNumericOnly)
             {
                 e.Handled = !Int32.TryParse(e.Text, out var _);
             }

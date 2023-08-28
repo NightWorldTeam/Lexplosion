@@ -19,9 +19,9 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu
 
 
         private LeftPanelMenuItem _selectedItem;
-        public LeftPanelMenuItem SelectedItem 
+        public LeftPanelMenuItem SelectedItem
         {
-            get => _selectedItem; set 
+            get => _selectedItem; set
             {
                 _selectedItem = value;
                 SelectedItemChanged?.Invoke(value.Content);
@@ -36,9 +36,9 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu
         #region Constructors
 
 
-        public LeftPanelViewModel() 
+        public LeftPanelViewModel()
         {
-            
+
         }
 
 
@@ -50,7 +50,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu
 
         public void AddTabItem(string name, string icon, ViewModelBase content, int id = -1, double iconWidth = 20, double iconHeight = 20)
         {
-            if (id == -1 || id < 0) 
+            if (id == -1 || id < 0)
             {
                 id = _items.Count + 1;
             }
@@ -70,18 +70,18 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu
             _items.Add(newTabItem);
         }
 
-        public void AddTabItem(LeftPanelMenuItem tabItem) 
+        public void AddTabItem(LeftPanelMenuItem tabItem)
         {
             tabItem.SelectedEvent += OnSelectedTabItemChanged;
             _items.Add(tabItem);
         }
 
-        public void SelectFirst() 
+        public void SelectFirst()
         {
             _items[0].IsSelected = true;
         }
 
-        public void SelectLast() 
+        public void SelectLast()
         {
             _items[_items.Count - 1].IsSelected = false;
         }

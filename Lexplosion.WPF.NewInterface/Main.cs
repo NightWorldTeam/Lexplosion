@@ -1,6 +1,8 @@
-﻿using Lexplosion.WPF.NewInterface.Views.Windows;
+﻿using Lexplosion.Global;
+using Lexplosion.WPF.NewInterface.Views.Windows;
 using System;
 using System.Reflection;
+using System.Threading;
 using System.Windows;
 
 namespace Lexplosion.WPF.NewInterface
@@ -11,7 +13,7 @@ namespace Lexplosion.WPF.NewInterface
         const string AssetsPath = "pack://application:,,,/Assets/";
         const string ControlsPath = "pack://application:,,,/Controls/";
 
-        private static event Action ResourceDictionariesLoaded; 
+        private static event Action ResourceDictionariesLoaded;
 
         private static App _app = new App();
 
@@ -20,7 +22,6 @@ namespace Lexplosion.WPF.NewInterface
 
         private static double _splashWindowLeft;
         private static double _splashWindowTop;
-
 
 
         [STAThread]
@@ -46,17 +47,15 @@ namespace Lexplosion.WPF.NewInterface
             ResourcesDictionariesRegister();
             SetMainWindow();
 
-           //Thread thread = new Thread(InitializedSystem);
-           // thread.SetApartmentState(ApartmentState.STA);
-           // thread.Start();
+            //Thread thread = new Thread(InitializedSystem);
+            // thread.SetApartmentState(ApartmentState.STA);
+            // thread.Start();
 
             //app.Run(_splashWindow);
         }
 
         private static void SetMainWindow()
         {
-            Runtime.DebugWrite("Testseklk;l");
-           
             _app.MainWindow = new MainWindow();
 
             _app.MainWindow.Show();
@@ -68,11 +67,34 @@ namespace Lexplosion.WPF.NewInterface
             Runtime.InitializedSystem((int)0, (int)0);
 
             ResourcesDictionariesRegister();
+            LoadCurrentLanguage();
 
             _app.Dispatcher.Invoke(SetMainWindow);
         }
 
-        private static void ResourcesDictionariesRegister() 
+        public static void LoadCurrentLanguage()
+        {
+            var selectedLangId = GlobalData.GeneralSettings.LanguageId;
+            var currentCultureName = Thread.CurrentThread.CurrentCulture.ToString();
+
+            if (selectedLangId.Length == 0)
+            {
+
+            }
+            else
+            {
+
+            }
+
+            Runtime.DebugWrite(currentCultureName);
+
+            App.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            {
+                Source = new Uri("pack://application:,,,/Assets/langs/" + GlobalData.GeneralSettings.LanguageId + ".xaml")
+            });
+        }
+
+        private static void ResourcesDictionariesRegister()
         {
             // Languages //
             _app.Resources.MergedDictionaries.Add(new ResourceDictionary()

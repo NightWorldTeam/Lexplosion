@@ -24,36 +24,36 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
 
         public static readonly DependencyProperty SearchCommandProperty
-            = DependencyProperty.Register(nameof(SearchCommand), typeof(ICommand), typeof(SearchBox), 
+            = DependencyProperty.Register(nameof(SearchCommand), typeof(ICommand), typeof(SearchBox),
                 new FrameworkPropertyMetadata());
 
         public static readonly DependencyProperty SearchCommandParameterProperty
-            = DependencyProperty.Register(nameof(SearchCommandParameter), typeof(object), typeof(SearchBox), 
-                new FrameworkPropertyMetadata(defaultValue: (object) null));
+            = DependencyProperty.Register(nameof(SearchCommandParameter), typeof(object), typeof(SearchBox),
+                new FrameworkPropertyMetadata(defaultValue: (object)null));
 
         public static readonly DependencyProperty PlaceholderProperty
-            = DependencyProperty.Register(nameof(Placeholder), typeof(string), typeof(SearchBox), 
+            = DependencyProperty.Register(nameof(Placeholder), typeof(string), typeof(SearchBox),
                 new FrameworkPropertyMetadata(defaultValue: string.Empty, propertyChangedCallback: OnPlaceholderChanged));
 
-        public ICommand SearchCommand 
+        public ICommand SearchCommand
         {
             get => (ICommand)GetValue(SearchCommandProperty);
             set => SetValue(SearchCommandProperty, value);
         }
 
-        public object SearchCommandParameter 
+        public object SearchCommandParameter
         {
             get => (object)GetValue(SearchCommandParameterProperty);
             set => SetValue(SearchCommandParameterProperty, value);
         }
 
-        public string Placeholder 
+        public string Placeholder
         {
             get => (string)GetValue(PlaceholderProperty);
             set => SetValue(PlaceholderProperty, value);
         }
 
-        protected bool IsEmpty 
+        protected bool IsEmpty
         {
             get; set;
         }
@@ -65,7 +65,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
         #region Consturctors
 
 
-        static SearchBox() 
+        static SearchBox()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(SearchBox), new FrameworkPropertyMetadata(typeof(SearchBox)));
         }
@@ -77,10 +77,10 @@ namespace Lexplosion.WPF.NewInterface.Controls
         #region Public & Protected Methods
 
 
-        protected void SetPlaceholderText(string placeholder) 
+        protected void SetPlaceholderText(string placeholder)
         {
-            if (_placeholderBlock != null) 
-            { 
+            if (_placeholderBlock != null)
+            {
                 _placeholderBlock.Text = placeholder;
             }
         }
@@ -92,12 +92,12 @@ namespace Lexplosion.WPF.NewInterface.Controls
             _placeholderBlock = Template.FindName(PART_PLACEHOLDER_NAME, this) as TextBlock;
 
 
-            if (_searchButton == null) 
+            if (_searchButton == null)
             {
                 new Exception("Search Button is not exists");
             }
 
-            if (_placeholderBlock == null) 
+            if (_placeholderBlock == null)
             {
                 new Exception("PlaceholderKey is not exists");
             }
@@ -158,7 +158,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
         }
 
 
-        private void ExecuteSearchCommand() 
+        private void ExecuteSearchCommand()
         {
             if (SearchCommand == null) return;
 
@@ -166,7 +166,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
             {
                 SearchCommand?.Execute(_lastRequests);
             }
-            else 
+            else
             {
                 SearchCommand?.Execute(new object[2] { _lastRequests, SearchCommandParameter });
             }
@@ -187,20 +187,20 @@ namespace Lexplosion.WPF.NewInterface.Controls
         {
             IsEmpty = string.IsNullOrEmpty(Text);
 
-            if (_placeholderBlock != null) 
-            { 
+            if (_placeholderBlock != null)
+            {
                 if (IsEmpty)
                 {
                     ShowPlaceholderBox();
                 }
-                else 
+                else
                 {
                     HidePlaceholderBox();
                 }
             }
         }
 
-        private void HidePlaceholderBox() 
+        private void HidePlaceholderBox()
         {
             DoubleAnimation dA = new DoubleAnimation()
             {

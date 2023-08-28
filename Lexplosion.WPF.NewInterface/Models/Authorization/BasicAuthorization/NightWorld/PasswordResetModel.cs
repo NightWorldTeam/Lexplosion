@@ -14,13 +14,13 @@ namespace Lexplosion.WPF.NewInterface.Models.Authorization.BasicAuthorization.Ni
             }
         }
 
-        public void GetCode() 
+        public void GetCode()
         {
             if (string.IsNullOrEmpty(_login))
             {
 
             }
-            else 
+            else
             {
                 new Exception("Code field is empty");
             }

@@ -5,7 +5,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu
     public sealed class MainMenuLayoutViewModel : ViewModelBase, ILayoutViewModel
     {
         private readonly ViewModelBase _catalogViewModel = new CatalogViewModel();
-        private readonly ViewModelBase _libraryViewModel = null;
+        private readonly ViewModelBase _libraryViewModel = new LibraryViewModel();
         private readonly ViewModelBase _multiplayerLayoutViewModel = new MultiplayerLayoutViewModel();
         private readonly ViewModelBase _friendsLayoutViewModel = new FriendsLayoutViewModel();
         private readonly ViewModelBase _generalSettingsLayoutViewModel = new GeneralSettingsLayoutViewModel();
@@ -17,7 +17,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu
         private LeftPanelViewModel _leftPanel;
         public LeftPanelViewModel LeftPanel
         {
-            get => _leftPanel; set 
+            get => _leftPanel; set
             {
                 _leftPanel = value;
                 OnPropertyChanged();
@@ -33,7 +33,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu
         #region Constructors
 
 
-        public MainMenuLayoutViewModel() 
+        public MainMenuLayoutViewModel()
         {
             LeftPanel = new LeftPanelViewModel();
             LeftPanel.SelectedItemChanged += OnLeftPanelSelectedItemChanged;
@@ -48,7 +48,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu
         #region Private Methods
 
 
-        private void InitDefaultLeftPanelTabs() 
+        private void InitDefaultLeftPanelTabs()
         {
             LeftPanel.AddTabItem("Catalog", "Catalog", _catalogViewModel);
             LeftPanel.AddTabItem("Library", "Library", _libraryViewModel);
@@ -58,7 +58,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu
             LeftPanel.SelectFirst();
         }
 
-        private void OnLeftPanelSelectedItemChanged(ViewModelBase content) 
+        private void OnLeftPanelSelectedItemChanged(ViewModelBase content)
         {
             Content = content;
             OnPropertyChanged(nameof(Content));

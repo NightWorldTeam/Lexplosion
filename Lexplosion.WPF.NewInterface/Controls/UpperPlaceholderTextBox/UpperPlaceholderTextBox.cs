@@ -32,7 +32,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
             private set => SetValue(IsEmptyPropertyKey, value);
         }
 
-        public bool IsError 
+        public bool IsError
         {
             get => (bool)GetValue(IsErrorProperty);
             set => SetValue(IsErrorProperty, value);

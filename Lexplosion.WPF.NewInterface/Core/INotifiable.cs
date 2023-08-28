@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace Lexplosion.WPF.NewInterface.Core
+﻿namespace Lexplosion.WPF.NewInterface.Core
 {
-    public enum NotificationType 
+    public enum NotificationType
     {
         Error = 0,
         Successful = 1,

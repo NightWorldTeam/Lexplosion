@@ -11,7 +11,7 @@
                 <ControlTemplate TargetType="{x:Type local:DefaultMainMenuTabItem}">
                     <Border
                         Height="40"
-                        Padding="16,10"
+                        Padding="16,8"
                         Background="Transparent">
                         <Grid>
                             <Grid.ColumnDefinitions>

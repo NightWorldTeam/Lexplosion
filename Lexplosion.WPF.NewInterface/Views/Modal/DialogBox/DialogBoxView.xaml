@@ -1,0 +1,119 @@
+﻿<UserControl
+    x:Class="Lexplosion.WPF.NewInterface.Views.Modal.DialogBoxView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extension="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
+    xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Views.Modal"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <Border
+        Width="450"
+        Height="300"
+        Padding="16"
+        Background="{DynamicResource PrimarySolidColorBrush}"
+        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+        BorderThickness="1"
+        CornerRadius="10">
+        <Grid ShowGridLines="False">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Viewbox Height="18" HorizontalAlignment="Right">
+                <Path extension:Path.StringKeyData="Close" Fill="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+            </Viewbox>
+
+            <TextBlock
+                Grid.Row="1"
+                Margin="0,0,0,16"
+                HorizontalAlignment="Center"
+                FontSize="20"
+                FontWeight="Medium"
+                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                Text="Удаление сборки" />
+            <TextBlock
+                Grid.Row="2"
+                FontSize="16"
+                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                TextAlignment="Center"
+                TextWrapping="WrapWithOverflow">
+                <Run Text="Are you sure you want to delete" />
+                <Run FontWeight="Bold" Text="Long Tech" />
+                <LineBreak />
+                <Run Text="You can't undo this action." />
+            </TextBlock>
+
+            <Border
+                Grid.Row="3"
+                Margin="0,16,0,0"
+                Padding="16,12"
+                BorderBrush="OrangeRed"
+                BorderThickness="4,0,0,0"
+                CornerRadius="5">
+
+                <Border.Background>
+                    <SolidColorBrush Opacity="0.2" Color="Red" />
+                </Border.Background>
+
+                <Grid ShowGridLines="False">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Viewbox
+                        Height="16"
+                        Margin="0,4,0,0"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top">
+                        <Path
+                            Data="m40-120 440-760 440 760H40Zm138-80h604L480-720 178-200Zm302-40q17 0 28.5-11.5T520-280q0-17-11.5-28.5T480-320q-17 0-28.5 11.5T440-280q0 17 11.5 28.5T480-240Zm-40-120h80v-200h-80v200Zm40-100Z"
+                            Fill="Red"
+                            Stretch="Fill" />
+                    </Viewbox>
+
+
+                    <StackPanel Margin="8,0,0,0" Grid.Column="1">
+                        <TextBlock
+                            Margin="0,0,0,4"
+                            FontSize="16"
+                            Foreground="PaleVioletRed"
+                            Text="Warning" />
+
+                        <TextBlock
+                            FontSize="14"
+                            Foreground="OrangeRed"
+                            Text="By deleting this media 8 connected hotspots will also be deleled."
+                            TextWrapping="WrapWithOverflow" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <StackPanel
+                Grid.Row="4"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                Orientation="Horizontal">
+                <Button
+                    Height="32"
+                    Margin="0,0,8,0"
+                    Content="Yes"
+                    FontWeight="Medium"
+                    Foreground="Black" />
+                <Button
+                    Height="32"
+                    Content="Nahh!"
+                    FontWeight="Medium"
+                    Style="{StaticResource x32DefaultIconButton}" />
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>

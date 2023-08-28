@@ -1,5 +1,5 @@
-﻿using Lexplosion.WPF.NewInterface.Core.Objects;
-using Lexplosion.WPF.NewInterface.Core;
+﻿using Lexplosion.WPF.NewInterface.Core;
+using Lexplosion.WPF.NewInterface.Core.Objects;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -34,7 +34,7 @@ namespace Lexplosion.WPF.NewInterface.Models.MainContent.Content
             _themes.Add(new Theme("Light Punch", "LightColorTheme.xaml"));
             _themes.Add(new Theme("Open Space", "DarkColorTheme.xaml"));
 
-            foreach (var theme in _themes) 
+            foreach (var theme in _themes)
             {
                 theme.SelectedEvent += SelectedThemeChanged;
             }
@@ -47,13 +47,13 @@ namespace Lexplosion.WPF.NewInterface.Models.MainContent.Content
             _colors.Add(new ActivityColor("#FFE600"));
             _colors.Add(new ActivityColor("#40A710"));
 
-            foreach (var color in _colors) 
+            foreach (var color in _colors)
             {
                 color.SelectedEvent += SelectedColorChanged;
             }
         }
 
-        private void SelectedColorChanged(ActivityColor color) 
+        private void SelectedColorChanged(ActivityColor color)
         {
             SelectedColor = color;
         }

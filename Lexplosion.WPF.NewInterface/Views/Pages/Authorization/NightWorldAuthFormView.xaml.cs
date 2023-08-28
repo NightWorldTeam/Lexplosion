@@ -1,7 +1,4 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media.Animation;
+﻿using System.Windows.Controls;
 
 namespace Lexplosion.WPF.NewInterface.Views.Pages.Authorization
 {

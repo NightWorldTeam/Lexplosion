@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Linq;
-using System.Windows.Controls;
-using System.Windows;
 using System.Data;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace Lexplosion.WPF.NewInterface.Extensions
 {
@@ -20,7 +20,7 @@ namespace Lexplosion.WPF.NewInterface.Extensions
         private string _expression;
         public string Expression
         {
-            get => _expression; set 
+            get => _expression; set
             {
                 _expression = value;
                 OnExpressionChanged();
@@ -28,9 +28,9 @@ namespace Lexplosion.WPF.NewInterface.Extensions
         }
 
         private Style _style;
-        public Style Style 
+        public Style Style
         {
-            get => _style; set 
+            get => _style; set
             {
                 _style = value;
             }
@@ -51,10 +51,10 @@ namespace Lexplosion.WPF.NewInterface.Extensions
             return base.SelectStyle(item, container);
         }
 
-        protected bool IsSelected(string expression, int itemIndex, out NthChildType type) 
+        protected bool IsSelected(string expression, int itemIndex, out NthChildType type)
         {
             type = NthChildType.NoExpression;
-            if (string.IsNullOrEmpty(expression)) 
+            if (string.IsNullOrEmpty(expression))
             {
                 return false;
             }
@@ -64,19 +64,19 @@ namespace Lexplosion.WPF.NewInterface.Extensions
                 type = NthChildType.Even;
                 return itemIndex % 2 == 0;
             }
-            else if (expression == "odd") 
+            else if (expression == "odd")
             {
                 type = NthChildType.Odd;
                 return itemIndex % 2 != 0;
             }
 
-            if (expression.All(char.IsDigit)) 
+            if (expression.All(char.IsDigit))
             {
                 type = NthChildType.IntOnly;
                 return Int32.Parse(expression) == itemIndex;
             }
 
-            if (expression.Contains('n')) 
+            if (expression.Contains('n'))
             {
                 type = NthChildType.N;
                 return NExpressionHandler(expression, itemIndex);
@@ -85,11 +85,11 @@ namespace Lexplosion.WPF.NewInterface.Extensions
             return false;
         }
 
-        private bool NExpressionHandler(string expression, int itemIndex) 
+        private bool NExpressionHandler(string expression, int itemIndex)
         {
             var nIndex = expression.IndexOf('n');
 
-            if (nIndex > 0 & char.IsDigit(expression[nIndex - 1])) 
+            if (nIndex > 0 & char.IsDigit(expression[nIndex - 1]))
             {
                 expression = expression.Replace("n", "*n");
             }
@@ -102,7 +102,7 @@ namespace Lexplosion.WPF.NewInterface.Extensions
         }
 
 
-        private void OnExpressionChanged() 
+        private void OnExpressionChanged()
         {
             _NValue = 0;
         }

@@ -1,8 +1,5 @@
 ﻿using Lexplosion.Logic.Management.Authentication;
 using Lexplosion.WPF.NewInterface.Core;
-using System;
-using System.Runtime.InteropServices;
-using System.Security;
 
 namespace Lexplosion.WPF.NewInterface.Models.Authorization.BasicAuthorization
 {
@@ -16,7 +13,7 @@ namespace Lexplosion.WPF.NewInterface.Models.Authorization.BasicAuthorization
         {
             get => _login; set
             {
-                _login= value;
+                _login = value;
                 OnPropertyChanged();
             }
         }
@@ -63,7 +60,7 @@ namespace Lexplosion.WPF.NewInterface.Models.Authorization.BasicAuthorization
             AuthCode authCode = Authentication.Instance.Auth(
                 AccountType.NightWorld,
                 Login?.Length == 0 ? null : Login,
-                Password?.Length == 0 ? null : Password, 
+                Password?.Length == 0 ? null : Password,
                 IsRememberMe
                 );
         }

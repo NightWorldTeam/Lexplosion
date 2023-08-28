@@ -5,14 +5,14 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
 {
     public struct ActivityColor
     {
-        public event Action<ActivityColor> SelectedEvent; 
+        public event Action<ActivityColor> SelectedEvent;
 
         public SolidColorBrush Brush { get; }
 
         private bool _isSelected;
-        public bool IsSelected 
+        public bool IsSelected
         {
-            get => _isSelected; set 
+            get => _isSelected; set
             {
                 _isSelected = value;
                 OnIsSelectedChanged();
@@ -31,7 +31,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
             IsSelected = isSelected;
         }
 
-        private void OnIsSelectedChanged() 
+        private void OnIsSelectedChanged()
         {
             SelectedEvent?.Invoke(this);
         }

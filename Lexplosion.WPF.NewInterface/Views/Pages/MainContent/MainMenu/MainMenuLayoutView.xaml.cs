@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 
 namespace Lexplosion.WPF.NewInterface.Views.Pages.MainContent.MainMenu
 {
@@ -21,7 +20,8 @@ namespace Lexplosion.WPF.NewInterface.Views.Pages.MainContent.MainMenu
             var grid = (Grid)sender;
 
 
-            foreach (var i in grid.ColumnDefinitions) { 
+            foreach (var i in grid.ColumnDefinitions)
+            {
                 Runtime.DebugWrite(i.ActualWidth);
             }
         }

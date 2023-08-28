@@ -23,21 +23,21 @@ namespace Lexplosion.WPF.NewInterface.Controls
             set => SetValue(IconKeyProperty, value);
         }
 
-        public string TextKey 
+        public string TextKey
         {
             get => (string)GetValue(IconKeyProperty);
             set => SetValue(TextKeyProperty, value);
         }
 
-        public double IconWidth 
+        public double IconWidth
         {
             get => (double)GetValue(IconWidthProperty);
             set => SetValue(IconWidthProperty, value);
         }
 
-        public double IconHeight 
+        public double IconHeight
         {
-            get => (double)GetValue(IconHeightProperty);    
+            get => (double)GetValue(IconHeightProperty);
             set => SetValue(IconHeightProperty, value);
         }
 

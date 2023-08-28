@@ -3,7 +3,6 @@ using Lexplosion.Logic.Objects;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 
 namespace Lexplosion.WPF.NewInterface.Models.InstanceModel
 {
@@ -16,6 +15,7 @@ namespace Lexplosion.WPF.NewInterface.Models.InstanceModel
 
 
         public event Action<string> NameChanged;
+        public event Action LogoChanged;
 
         public event Action<string> DownloadStartedEvent;
         public event Action<string> DownloadComplitedEvent;
@@ -36,9 +36,9 @@ namespace Lexplosion.WPF.NewInterface.Models.InstanceModel
 
 
         private string _name;
-        public string Name 
-        { 
-            get => _name; set 
+        public string Name
+        {
+            get => _name; set
             {
                 _name = value;
                 //NameChanged?.Invoke(value);
@@ -65,6 +65,8 @@ namespace Lexplosion.WPF.NewInterface.Models.InstanceModel
         public InstanceModelBase(InstanceClient instanceClient)
         {
             _instanceClient = instanceClient;
+            _instanceClient.LogoChanged += OnLogoChanged;
+
             Name = _instanceClient.Name;
             ShortDescription = _instanceClient.Summary;
             Author = _instanceClient.Author;
@@ -173,5 +175,18 @@ namespace Lexplosion.WPF.NewInterface.Models.InstanceModel
 
 
         #endregion Public Methods
+
+
+        #region Private Methods
+
+
+        private void OnLogoChanged()
+        {
+            Logo = _instanceClient.Logo;
+            LogoChanged?.Invoke();
+        }
+
+
+        #endregion Private Methods
     }
 }

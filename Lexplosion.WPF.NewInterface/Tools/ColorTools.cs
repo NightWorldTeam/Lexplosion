@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Windows.Media;
-using System.Text;
-using System.Diagnostics;
 
 namespace Lexplosion.WPF.NewInterface.Tools
 {
     public static class ColorTools
-    {   
-        public static Color GetColorByHex(string hexValue) 
+    {
+        public static Color GetColorByHex(string hexValue)
         {
             return (Color)ColorConverter.ConvertFromString(hexValue);
         }
 
-        public static string GetHexByColor(Color color) 
+        public static string GetHexByColor(Color color)
         {
             var stringHexR = color.R.ToString("X");
             var stringHexG = color.G.ToString("X");
@@ -21,7 +19,7 @@ namespace Lexplosion.WPF.NewInterface.Tools
             stringHexR = stringHexR == "0" ? "00" : stringHexR;
             stringHexG = stringHexG == "0" ? "00" : stringHexG;
             stringHexB = stringHexB == "0" ? "00" : stringHexB;
-            
+
             return "#" + stringHexR + stringHexG + stringHexB;
         }
 

@@ -132,9 +132,9 @@ namespace Lexplosion.WPF.NewInterface.Controls
             var instance = d as AdvancedTextBox;
             instance.UpdatePlaceholder(e.NewValue);
         }
-            
 
-        private void UpdatePath(object newValue) 
+
+        private void UpdatePath(object newValue)
         {
             if (_path == null || newValue == null) return;
 
@@ -155,9 +155,9 @@ namespace Lexplosion.WPF.NewInterface.Controls
         {
             if (_placeholder == null) return;
 
-            if (string.IsNullOrEmpty((string)newValue)) 
-            { 
-                _placeholder.Visibility= Visibility.Collapsed;
+            if (string.IsNullOrEmpty((string)newValue))
+            {
+                _placeholder.Visibility = Visibility.Collapsed;
                 return;
             }
 

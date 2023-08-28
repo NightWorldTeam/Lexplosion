@@ -11,7 +11,7 @@
     Height="528"
     MinWidth="944"
     MinHeight="528"
-    ResizeMode="NoResize" 
+    ResizeMode="NoResize"
     SnapsToDevicePixels="True"
     UseLayoutRounding="True"
     WindowStyle="SingleBorderWindow"
@@ -34,309 +34,276 @@
         Height="470"
     -->
 
-    <Grid
-        x:Name="ContainerGrid"
-        Background="{DynamicResource PrimarySolidColorBrush}"
-        KeyboardNavigation.IsTabStop="False"
-        MouseEnter="Grid_MouseEnter"
-        RenderTransformOrigin="0.5, 0.5">
+    <Grid>
 
-        <!--  Content  -->
-        <ContentControl Content="{Binding CurrentViewModel, Source={StaticResource MainViewModel}}" KeyboardNavigation.IsTabStop="False" />
+        <!--<Grid.RowDefinitions>
+            <RowDefinition Height="32" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
-        <!--  Modal Control  -->
-        <controls:ModalControl
-            Content="{Binding CurrentModalViewModel, Source={StaticResource MainViewModel}}"
-            IsOpen="{Binding IsModalOpen, Source={StaticResource MainViewModel}}"
-            KeyboardNavigation.IsTabStop="False" />
+        <Grid ShowGridLines="False">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
-        <Border Background="{DynamicResource PrimaryForegroundSolidColorBrush}" Visibility="Collapsed">
+            <Border
+                Grid.ColumnSpan="4"
+                Background="{DynamicResource PrimarySolidColorBrush}"
+                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                BorderThickness="0,0,0,1" />
 
-            <Grid HorizontalAlignment="Center">
+            <Grid Grid.ColumnSpan="2"
+                x:Name="WindowHeaderPanelButtonsGrid"
+                Margin="16,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                KeyboardNavigation.IsTabStop="False"
+                ShowGridLines="False">
+
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <Button
-                    Width="200"
-                    Height="124"
-                    Content="Some Button">
-                    <Button.ToolTip>
-                        <ToolTip
-                            Background="Transparent"
-                            BorderThickness="0"
-                            Placement="Center"
-                            PlacementRectangle="32,-22,0,0"
-                            PlacementTarget="{Binding ElementName=MainPanel}">
-                            <!--  Custom ToolTip  -->
-                            <Grid
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                MouseDown="Grid_MouseDown"
-                                Visibility="Visible">
+        -->
+        <!--  Close & Hide Buttons  -->
+        <!--
+                <StackPanel
+                    x:Name="WindowHeaderPanelButtons"
+                    Orientation="Horizontal"
+                    RenderTransformOrigin="0.5, 0.5">
 
-                                <!--  Top / Bottom -> 40  -->
-                                <!--  Left / Right -> 44  -->
+        -->
+        <!--  Close Button  -->
+        <!--
+                    <Button
+                        Width="15"
+                        Height="15"
+                        Margin="0,0,10,0"
+                        Background="#FF0B00"
+                        Click="CloseWindow_Click"
+                        Style="{StaticResource ColoredWindowsButton}" />
 
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
+        -->
+        <!--  Maximized Button  -->
+        <!--
+                    <Button
+                        Width="15"
+                        Height="15"
+                        Margin="0,0,10,0"
+                        Background="Orange"
+                        Click="MaximazedWindow_Click"
+                        Style="{StaticResource ColoredWindowsButton}" />
 
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
+        -->
+        <!--  Minimaze Button  -->
+        <!--
+                    <Button
+                        Width="15"
+                        Height="15"
+                        Margin="0,0,10,0"
+                        Background="#009DFF"
+                        Click="MinimazedWindow_Click"
+                        Style="{StaticResource ColoredWindowsButton}" />
+                </StackPanel>
 
-                                <Border
-                                    Height="32"
-                                    Background="Black"
-                                    CornerRadius="5">
-                                    <TextBlock
-                                        Padding="16"
-                                        VerticalAlignment="Center"
-                                        FontSize="13"
-                                        FontWeight="Medium"
-                                        Foreground="White"
-                                        Text="Direct Messages" />
-                                </Border>
+        -->
+        <!--  Debug Tools  -->
+        <!--
+                <StackPanel
+                    x:Name="DebugPanel"
+                    Grid.Column="1"
+                    Margin="0,0,8,0"
+                    Orientation="Horizontal">
 
-                                <Polygon
-                                    Grid.Row="1"
+        -->
+        <!--  Change Theme Color  -->
+        <!--
+                    <Border
+                        Width="20"
+                        Height="20"
+                        Background="{DynamicResource SeparateSolidColorBrush}"
+                        CornerRadius="2"
+                        MouseDown="ChangeTheme_MouseDown">
+                        <Viewbox Height="14">
+                            <Path
+                                x:Name="PalettPath"
+                                extensions:Path.StringKeyData="Palette"
+                                Fill="{DynamicResource ActivitySolidColorBrush}"
+                                Stretch="Fill" />
+                        </Viewbox>
+                    </Border>
+
+        -->
+        <!--  Translate Button  -->
+        <!--
+                    <Border
+                        Width="20"
+                        Height="20"
+                        Margin="8,0,0,0"
+                        Background="{DynamicResource SeparateSolidColorBrush}"
+                        CornerRadius="2"
+                        MouseDown="ChangeLanguage_MouseDown">
+                        <Viewbox Height="14">
+                            <Path
+                                extensions:Path.StringKeyData="Translate"
+                                Fill="{DynamicResource ActivitySolidColorBrush}"
+                                Stretch="Fill" />
+                        </Viewbox>
+                    </Border>
+
+        -->
+        <!--  Change Panel Orintation  -->
+        <!--
+                    <Border
+                        Width="20"
+                        Height="20"
+                        Margin="8,0,0,0"
+                        Padding="2"
+                        Background="{DynamicResource SeparateSolidColorBrush}"
+                        CornerRadius="2"
+                        MouseDown="Border_MouseDown_2"
+                        ToolTipService.BetweenShowDelay="0"
+                        ToolTipService.InitialShowDelay="0">
+                        <Viewbox Height="14">
+                            <Path
+                                extensions:Path.StringKeyData="IndentDecrease"
+                                Fill="{DynamicResource ActivitySolidColorBrush}"
+                                Stretch="Fill" />
+                        </Viewbox>
+
+                        <Border.ToolTip>
+                            <ToolTip
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Placement="Center"
+                                PlacementRectangle="7,40,0,0"
+                                PlacementTarget="{Binding ElementName=MainPanel}">
+        -->
+        <!--  Custom ToolTip  -->
+        <!--
+                                <Grid
                                     HorizontalAlignment="Center"
-                                    Fill="Black"
-                                    Points="10,0 5,5, 0,0" />
-                            </Grid>
-                        </ToolTip>
-                    </Button.ToolTip>
-                </Button>
-            </Grid>
-        </Border>
+                                    VerticalAlignment="Center"
+                                    MouseDown="Grid_MouseDown"
+                                    Visibility="Visible">
 
-        <!--  Window Header Panel  -->
-        <Grid
-            x:Name="WindowHeaderPanelButtonsGrid"
-            Margin="16,12"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top"
-            KeyboardNavigation.IsTabStop="False"
-            ShowGridLines="False">
+        -->
+        <!--  Top / Bottom -> 40  -->
+        <!--  Left / Right -> 44  -->
+        <!--
 
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
 
-            <!--  Close & Hide Buttons  -->
-            <StackPanel
-                x:Name="WindowHeaderPanelButtons"
-                Orientation="Horizontal"
-                RenderTransformOrigin="0.5, 0.5">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
 
-                <!--  Close Button  -->
-                <Button
-                    Width="15"
-                    Height="15"
-                    Margin="0,0,10,0"
-                    Background="#FF0B00"
-                    Click="CloseWindow_Click"
-                    Style="{StaticResource ColoredWindowsButton}" />
+                                    <Border
+                                        Grid.Row="1"
+                                        Height="32"
+                                        Background="Black"
+                                        CornerRadius="5">
+                                        <TextBlock
+                                            Padding="15,14,15,14"
+                                            VerticalAlignment="Center"
+                                            FontSize="12"
+                                            FontWeight="Medium"
+                                            Foreground="{DynamicResource CheckBoxMarkSolidColorBrush}"
+                                            Text="Изменить положение меню" />
+                                    </Border>
 
-                <!--  Maximized Button  -->
-                <Button
-                    Width="15"
-                    Height="15"
-                    Margin="0,0,10,0"
-                    Background="Orange"
-                    Click="MaximazedWindow_Click"
-                    Style="{StaticResource ColoredWindowsButton}" />
+                                    <Polygon
+                                        Grid.Row="0"
+                                        HorizontalAlignment="Center"
+                                        Fill="Black"
+                                        Points="5,10, 10, 5, 15,10" />
+                                </Grid>
+                            </ToolTip>
+                        </Border.ToolTip>
+                    </Border>
 
-                <!--  Minimaze Button  -->
-                <Button
-                    Width="15"
-                    Height="15"
-                    Margin="0,0,10,0"
-                    Background="#009DFF"
-                    Click="MinimazedWindow_Click"
-                    Style="{StaticResource ColoredWindowsButton}" />
-            </StackPanel>
+        -->
+        <!--  Change Scale  -->
+        <!--
+                    <Border
+                        Width="20"
+                        Height="20"
+                        Margin="8,0,0,0"
+                        Padding="2"
+                        Background="{DynamicResource SeparateSolidColorBrush}"
+                        CornerRadius="2"
+                        MouseDown="ScaleFit_MouseDown"
+                        ToolTipService.BetweenShowDelay="0"
+                        ToolTipService.InitialShowDelay="0">
 
-            <!--  Debug Tools  -->
-            <StackPanel
-                x:Name="DebugPanel"
-                Grid.Column="1"
-                Margin="0,0,8,0"
-                Orientation="Horizontal">
+                        <Viewbox Height="14">
+                            <Path
+                                extensions:Path.StringKeyData="ScaleFit"
+                                Fill="{DynamicResource ActivitySolidColorBrush}"
+                                Stretch="Fill" />
+                        </Viewbox>
 
-                <!--  Change Theme Color  -->
-                <Border
-                    Width="20"
-                    Height="20"
-                    Background="{DynamicResource SeparateSolidColorBrush}"
-                    CornerRadius="2"
-                    MouseDown="ChangeTheme_MouseDown">
-                    <Viewbox Height="14">
-                        <Path
-                            x:Name="PalettPath"
-                            extensions:Path.StringKeyData="Palette"
-                            Fill="{DynamicResource ActivitySolidColorBrush}"
-                            Stretch="Fill" />
-                    </Viewbox>
-                </Border>
-
-                <!--  Translate Button  -->
-                <Border
-                    Width="20"
-                    Height="20"
-                    Margin="8,0,0,0"
-                    Background="{DynamicResource SeparateSolidColorBrush}"
-                    CornerRadius="2"
-                    MouseDown="ChangeLanguage_MouseDown">
-                    <Viewbox Height="14">
-                        <Path
-                            extensions:Path.StringKeyData="Translate"
-                            Fill="{DynamicResource ActivitySolidColorBrush}"
-                            Stretch="Fill" />
-                    </Viewbox>
-                </Border>
-
-                <!--  Change Panel Orintation  -->
-                <Border
-                    Width="20"
-                    Height="20"
-                    Margin="8,0,0,0"
-                    Padding="2"
-                    Background="{DynamicResource SeparateSolidColorBrush}"
-                    CornerRadius="2"
-                    MouseDown="Border_MouseDown_2"
-                    ToolTipService.BetweenShowDelay="0"
-                    ToolTipService.InitialShowDelay="0">
-                    <Viewbox Height="14">
-                        <Path
-                            extensions:Path.StringKeyData="IndentDecrease"
-                            Fill="{DynamicResource ActivitySolidColorBrush}"
-                            Stretch="Fill" />
-                    </Viewbox>
-
-                    <Border.ToolTip>
-                        <ToolTip
-                            Background="Transparent"
-                            BorderThickness="0"
-                            Placement="Center"
-                            PlacementRectangle="7,40,0,0"
-                            PlacementTarget="{Binding ElementName=MainPanel}">
-                            <!--  Custom ToolTip  -->
-                            <Grid
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                MouseDown="Grid_MouseDown"
-                                Visibility="Visible">
-
-                                <!--  Top / Bottom -> 40  -->
-                                <!--  Left / Right -> 44  -->
-
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-
-                                <Border
-                                    Grid.Row="1"
-                                    Height="32"
-                                    Background="Black"
-                                    CornerRadius="5">
-                                    <TextBlock
-                                        Padding="15,14,15,14"
-                                        VerticalAlignment="Center"
-                                        FontSize="12"
-                                        FontWeight="Medium"
-                                        Foreground="{DynamicResource CheckBoxMarkSolidColorBrush}"
-                                        Text="Изменить положение меню" />
-                                </Border>
-
-                                <Polygon
-                                    Grid.Row="0"
+                        <Border.ToolTip>
+                            <ToolTip
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Placement="Center"
+                                PlacementRectangle="7,40,0,0"
+                                PlacementTarget="{Binding ElementName=MainPanel}">
+        -->
+        <!--  Custom ToolTip  -->
+        <!--
+                                <Grid
                                     HorizontalAlignment="Center"
-                                    Fill="Black"
-                                    Points="5,10, 10, 5, 15,10" />
-                            </Grid>
-                        </ToolTip>
-                    </Border.ToolTip>
-                </Border>
+                                    VerticalAlignment="Center"
+                                    MouseDown="Grid_MouseDown"
+                                    Visibility="Visible">
 
-                <!--  Change Scale  -->
-                <Border
-                    Width="20"
-                    Height="20"
-                    Margin="8,0,0,0"
-                    Padding="2"
-                    Background="{DynamicResource SeparateSolidColorBrush}"
-                    CornerRadius="2"
-                    MouseDown="ScaleFit_MouseDown"
-                    ToolTipService.BetweenShowDelay="0"
-                    ToolTipService.InitialShowDelay="0">
+        -->
+        <!--  Top / Bottom -> 40  -->
+        <!--  Left / Right -> 44  -->
+        <!--
 
-                    <Viewbox Height="14">
-                        <Path
-                            extensions:Path.StringKeyData="ScaleFit"
-                            Fill="{DynamicResource ActivitySolidColorBrush}"
-                            Stretch="Fill" />
-                    </Viewbox>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
 
-                    <Border.ToolTip>
-                        <ToolTip
-                            Background="Transparent"
-                            BorderThickness="0"
-                            Placement="Center"
-                            PlacementRectangle="7,40,0,0"
-                            PlacementTarget="{Binding ElementName=MainPanel}">
-                            <!--  Custom ToolTip  -->
-                            <Grid
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                MouseDown="Grid_MouseDown"
-                                Visibility="Visible">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
 
-                                <!--  Top / Bottom -> 40  -->
-                                <!--  Left / Right -> 44  -->
+                                    <Border
+                                        Grid.Row="1"
+                                        Height="32"
+                                        Background="Black"
+                                        CornerRadius="5">
+                                        <TextBlock
+                                            Padding="15,14,15,14"
+                                            VerticalAlignment="Center"
+                                            FontSize="12"
+                                            FontWeight="Medium"
+                                            Foreground="{DynamicResource CheckBoxMarkSolidColorBrush}"
+                                            Text="Увеличить интерфейс" />
+                                    </Border>
 
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
+                                    <Polygon
+                                        Grid.Row="0"
+                                        HorizontalAlignment="Center"
+                                        Fill="Black"
+                                        Points="5,10, 10, 5, 15,10" />
+                                </Grid>
+                            </ToolTip>
+                        </Border.ToolTip>
+                    </Border>
 
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-
-                                <Border
-                                    Grid.Row="1"
-                                    Height="32"
-                                    Background="Black"
-                                    CornerRadius="5">
-                                    <TextBlock
-                                        Padding="15,14,15,14"
-                                        VerticalAlignment="Center"
-                                        FontSize="12"
-                                        FontWeight="Medium"
-                                        Foreground="{DynamicResource CheckBoxMarkSolidColorBrush}"
-                                        Text="Увеличить интерфейс" />
-                                </Border>
-
-                                <Polygon
-                                    Grid.Row="0"
-                                    HorizontalAlignment="Center"
-                                    Fill="Black"
-                                    Points="5,10, 10, 5, 15,10" />
-                            </Grid>
-                        </ToolTip>
-                    </Border.ToolTip>
-                </Border>
-
-                <!--<ToggleButton
+        -->
+        <!--<ToggleButton
                     x:Name="TestTB"
                     Width="120"
                     Height="32" />
@@ -350,16 +317,365 @@
                         Background="Black"
                         CornerRadius="5" />
                 </Popup>-->
-            </StackPanel>
-        </Grid>
+        <!--
+                </StackPanel>
+            </Grid>
 
-        <Grid x:Name="PaintArea">
-            <Grid.RenderTransform>
-                <TranslateTransform X="0" Y="0" />
-            </Grid.RenderTransform>
-            <Grid.Clip>
-                <EllipseGeometry x:Name="CircleReveal" Center="101,22" />
-            </Grid.Clip>
+
+            <TextBlock
+                Grid.ColumnSpan="2"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="14"
+                FontWeight="Medium"
+                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                Text="Lexplosion" />
+        </Grid>-->
+
+        <Grid
+            x:Name="ContainerGrid"
+            Grid.Row="1"
+            Background="{DynamicResource SecondarySolidColorBrush}"
+            KeyboardNavigation.IsTabStop="False"
+            MouseEnter="Grid_MouseEnter"
+            RenderTransformOrigin="0.5, 0.5">
+
+            <!--  Content  -->
+            <ContentControl Content="{Binding CurrentViewModel, Source={StaticResource MainViewModel}}" KeyboardNavigation.IsTabStop="False" />
+
+            <!--  Modal Control  -->
+            <controls:ModalControl
+                Content="{Binding CurrentModalViewModel, Source={StaticResource MainViewModel}}"
+                IsOpen="{Binding IsModalOpen, Source={StaticResource MainViewModel}}"
+                KeyboardNavigation.IsTabStop="False" />
+
+            <Border Background="{DynamicResource PrimaryForegroundSolidColorBrush}" Visibility="Collapsed">
+
+                <Grid HorizontalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button
+                        Width="200"
+                        Height="124"
+                        Content="Some Button">
+                        <Button.ToolTip>
+                            <ToolTip
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Placement="Center"
+                                PlacementRectangle="32,-22,0,0"
+                                PlacementTarget="{Binding ElementName=MainPanel}">
+                                <!--  Custom ToolTip  -->
+                                <Grid
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    MouseDown="Grid_MouseDown"
+                                    Visibility="Visible">
+
+                                    <!--  Top / Bottom -> 40  -->
+                                    <!--  Left / Right -> 44  -->
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <Border
+                                        Height="32"
+                                        Background="Black"
+                                        CornerRadius="5">
+                                        <TextBlock
+                                            Padding="16"
+                                            VerticalAlignment="Center"
+                                            FontSize="13"
+                                            FontWeight="Medium"
+                                            Foreground="White"
+                                            Text="Direct Messages" />
+                                    </Border>
+
+                                    <Polygon
+                                        Grid.Row="1"
+                                        HorizontalAlignment="Center"
+                                        Fill="Black"
+                                        Points="10,0 5,5, 0,0" />
+                                </Grid>
+                            </ToolTip>
+                        </Button.ToolTip>
+                    </Button>
+                </Grid>
+            </Border>
+
+            <!--  Window Header Panel Margin="16,12"  -->
+            <Grid
+                x:Name="WindowHeaderPanelButtonsGrid"
+                Margin="16,12"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                KeyboardNavigation.IsTabStop="False"
+                ShowGridLines="False"
+                Visibility="Visible">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+
+                <!--  Close & Hide Buttons  -->
+
+                <StackPanel
+                    x:Name="WindowHeaderPanelButtons"
+                    Orientation="Horizontal"
+                    RenderTransformOrigin="0.5, 0.5">
+
+
+                    <!--  Close Button  -->
+
+                    <Button
+                        Width="15"
+                        Height="15"
+                        Margin="0,0,10,0"
+                        Background="#FF0B00"
+                        Click="CloseWindow_Click"
+                        Style="{StaticResource ColoredWindowsButton}" />
+
+
+                    <!--  Maximized Button  -->
+
+                    <Button
+                        Width="15"
+                        Height="15"
+                        Margin="0,0,10,0"
+                        Background="Orange"
+                        Click="MaximazedWindow_Click"
+                        Style="{StaticResource ColoredWindowsButton}" />
+
+
+                    <!--  Minimaze Button  -->
+
+                    <Button
+                        Width="15"
+                        Height="15"
+                        Margin="0,0,10,0"
+                        Background="#009DFF"
+                        Click="MinimazedWindow_Click"
+                        Style="{StaticResource ColoredWindowsButton}" />
+                </StackPanel>
+
+
+                <!--  Debug Tools  -->
+
+                <StackPanel
+                    x:Name="DebugPanel"
+                    Grid.Column="1"
+                    Margin="0,0,8,0"
+                    Orientation="Horizontal">
+
+
+                    <!--  Change Theme Color  -->
+
+                    <Border
+                        Width="20"
+                        Height="20"
+                        Background="{DynamicResource SeparateSolidColorBrush}"
+                        CornerRadius="2"
+                        MouseDown="ChangeTheme_MouseDown">
+                        <Viewbox Height="14">
+                            <Path
+                                x:Name="PalettPath"
+                                extensions:Path.StringKeyData="Palette"
+                                Fill="{DynamicResource ActivitySolidColorBrush}"
+                                Stretch="Fill" />
+                        </Viewbox>
+                    </Border>
+
+
+                    <!--  Translate Button  -->
+
+                    <Border
+                        Width="20"
+                        Height="20"
+                        Margin="8,0,0,0"
+                        Background="{DynamicResource SeparateSolidColorBrush}"
+                        CornerRadius="2"
+                        MouseDown="ChangeLanguage_MouseDown">
+                        <Viewbox Height="14">
+                            <Path
+                                extensions:Path.StringKeyData="Translate"
+                                Fill="{DynamicResource ActivitySolidColorBrush}"
+                                Stretch="Fill" />
+                        </Viewbox>
+                    </Border>
+
+
+                    <!--  Change Panel Orintation  -->
+
+                    <Border
+                        Width="20"
+                        Height="20"
+                        Margin="8,0,0,0"
+                        Padding="2"
+                        Background="{DynamicResource SeparateSolidColorBrush}"
+                        CornerRadius="2"
+                        MouseDown="Border_MouseDown_2"
+                        ToolTipService.BetweenShowDelay="0"
+                        ToolTipService.InitialShowDelay="0">
+                        <Viewbox Height="14">
+                            <Path
+                                extensions:Path.StringKeyData="IndentDecrease"
+                                Fill="{DynamicResource ActivitySolidColorBrush}"
+                                Stretch="Fill" />
+                        </Viewbox>
+
+                        <Border.ToolTip>
+                            <ToolTip
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Placement="Center"
+                                PlacementRectangle="7,40,0,0"
+                                PlacementTarget="{Binding ElementName=MainPanel}">
+
+                                <!--  Custom ToolTip  -->
+
+                                <Grid
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    MouseDown="Grid_MouseDown"
+                                    Visibility="Visible">
+
+
+                                    <!--
+                                        Top / Bottom -> 40
+                                        Left / Right -> 44
+                                    -->
+
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <Border
+                                        Grid.Row="1"
+                                        Height="32"
+                                        Background="Black"
+                                        CornerRadius="5">
+                                        <TextBlock
+                                            Padding="15,14,15,14"
+                                            VerticalAlignment="Center"
+                                            FontSize="12"
+                                            FontWeight="Medium"
+                                            Foreground="{DynamicResource CheckBoxMarkSolidColorBrush}"
+                                            Text="Изменить положение меню" />
+                                    </Border>
+
+                                    <Polygon
+                                        Grid.Row="0"
+                                        HorizontalAlignment="Center"
+                                        Fill="Black"
+                                        Points="5,10, 10, 5, 15,10" />
+                                </Grid>
+                            </ToolTip>
+                        </Border.ToolTip>
+                    </Border>
+
+
+                    <!--  Change Scale  -->
+
+                    <Border
+                        Width="20"
+                        Height="20"
+                        Margin="8,0,0,0"
+                        Padding="2"
+                        Background="{DynamicResource SeparateSolidColorBrush}"
+                        CornerRadius="2"
+                        MouseDown="ScaleFit_MouseDown"
+                        ToolTipService.BetweenShowDelay="0"
+                        ToolTipService.InitialShowDelay="0">
+
+                        <Viewbox Height="14">
+                            <Path
+                                extensions:Path.StringKeyData="ScaleFit"
+                                Fill="{DynamicResource ActivitySolidColorBrush}"
+                                Stretch="Fill" />
+                        </Viewbox>
+
+                        <Border.ToolTip>
+                            <ToolTip
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Placement="Center"
+                                PlacementRectangle="7,40,0,0"
+                                PlacementTarget="{Binding ElementName=MainPanel}">
+
+                                <!--  Custom ToolTip  -->
+
+                                <Grid
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    MouseDown="Grid_MouseDown"
+                                    Visibility="Visible">
+
+
+                                    <!--
+                                        Top / Bottom -> 40
+                                        Left / Right -> 44
+                                    -->
+
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <Border
+                                        Grid.Row="1"
+                                        Height="32"
+                                        Background="Black"
+                                        CornerRadius="5">
+                                        <TextBlock
+                                            Padding="15,14,15,14"
+                                            VerticalAlignment="Center"
+                                            FontSize="12"
+                                            FontWeight="Medium"
+                                            Foreground="{DynamicResource CheckBoxMarkSolidColorBrush}"
+                                            Text="Увеличить интерфейс" />
+                                    </Border>
+
+                                    <Polygon
+                                        Grid.Row="0"
+                                        HorizontalAlignment="Center"
+                                        Fill="Black"
+                                        Points="5,10, 10, 5, 15,10" />
+                                </Grid>
+                            </ToolTip>
+                        </Border.ToolTip>
+                    </Border>
+                </StackPanel>
+            </Grid>
+
+            <Grid x:Name="PaintArea">
+                <Grid.RenderTransform>
+                    <TranslateTransform X="0" Y="0" />
+                </Grid.RenderTransform>
+                <Grid.Clip>
+                    <EllipseGeometry x:Name="CircleReveal" Center="101,22" />
+                </Grid.Clip>
+            </Grid>
         </Grid>
     </Grid>
 </Window>

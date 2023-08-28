@@ -8,7 +8,7 @@
     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
     <DataTemplate DataType="{x:Type local:LowerMenuButton}">
-        <Button>
+        <Button Command="{Binding ExecuteAction}">
             <Button.Template>
                 <ControlTemplate TargetType="{x:Type Button}">
                     <Border
@@ -42,7 +42,6 @@
                             <TextBlock
                                 x:Name="TextBlock"
                                 Grid.Column="1"
-                                Height="20"
                                 Margin="7,0,5,0"
                                 extensions:TextBlock.TextByKey="{Binding TextKey}"
                                 FontSize="12pt"
@@ -78,8 +77,9 @@
                 <ControlTemplate TargetType="{x:Type local:InstanceForm}">
                     <Border
                         Height="120"
-                        Background="{DynamicResource SecondarySolidColorBrush}"
+                        Background="{DynamicResource PrimarySolidColorBrush}"
                         BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                        BorderThickness="1"
                         CornerRadius="5">
                         <Grid HorizontalAlignment="Stretch" ShowGridLines="True">
 
@@ -205,8 +205,7 @@
                                 <TextBlock
                                     x:Name="PART_Description"
                                     Grid.Row="1"
-                                    Height="20"
-                                    Margin="0,0,0,8"
+                                    Margin="0,0,0,4"
                                     FontSize="16"
                                     Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
                                     Text="Description"

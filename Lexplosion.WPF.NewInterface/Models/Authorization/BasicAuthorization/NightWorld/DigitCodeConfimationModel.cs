@@ -5,9 +5,9 @@ namespace Lexplosion.WPF.NewInterface.Models.Authorization.BasicAuthorization.Ni
     public class DigitCodeConfimationModel : VMBase
     {
         private string _code;
-        public string Code 
+        public string Code
         {
-            get => _code; set 
+            get => _code; set
             {
                 _code = value;
                 OnPropertyChanged();
@@ -25,21 +25,21 @@ namespace Lexplosion.WPF.NewInterface.Models.Authorization.BasicAuthorization.Ni
         }
 
         private string _codeEmail;
-        public string CodeEmail 
+        public string CodeEmail
         {
-            get => _codeEmail; set 
+            get => _codeEmail; set
             {
                 _codeEmail = value;
                 OnPropertyChanged();
-            }   
+            }
         }
 
-        public void Check() 
+        public void Check()
         {
             if (!string.IsNullOrEmpty(Code))
             {
             }
-            else 
+            else
             {
                 new Exception("is null");
             }

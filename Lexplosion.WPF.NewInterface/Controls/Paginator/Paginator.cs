@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Controls.Paginator
 {
@@ -25,7 +24,7 @@ namespace Lexplosion.WPF.NewInterface.Controls.Paginator
             = DependencyProperty.Register("NumberOfPages", typeof(int), typeof(Paginator),
                 new FrameworkPropertyMetadata(0));
 
-        public int NumberOfPages 
+        public int NumberOfPages
         {
             get => (int)GetValue(NumberOfPagesProperty);
             set => SetValue(NumberOfPagesProperty, value);
@@ -84,11 +83,11 @@ namespace Lexplosion.WPF.NewInterface.Controls.Paginator
         /// </summary>
         /// <param name="name">part name</param>
         /// <returns>object</returns>
-        private object GetPartHandler(string name) 
+        private object GetPartHandler(string name)
         {
             var part = Template.FindName(PART_PREVIOUS_PAGE_BUTTON, this);
 
-            if (part == null) 
+            if (part == null)
             {
                 new Exception(name + " doesn't exists");
             }

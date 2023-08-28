@@ -8,7 +8,7 @@ using System.Windows.Shapes;
 
 namespace Lexplosion.WPF.NewInterface.Controls
 {
-    public enum ContentControlAnimation 
+    public enum ContentControlAnimation
     {
         None,
         Fade,
@@ -26,11 +26,11 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
 
         public static readonly DependencyProperty AnimationTypeProperty
-            = DependencyProperty.Register(nameof(AnimationType), typeof(ContentControlAnimation), typeof(AnimatedContentControl), 
+            = DependencyProperty.Register(nameof(AnimationType), typeof(ContentControlAnimation), typeof(AnimatedContentControl),
                 new FrameworkPropertyMetadata(defaultValue: ContentControlAnimation.SlideToLeft));
 
 
-        public ContentControlAnimation AnimationType 
+        public ContentControlAnimation AnimationType
         {
             get => (ContentControlAnimation)GetValue(AnimationTypeProperty);
             set => SetValue(AnimationTypeProperty, value);
@@ -59,7 +59,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
             {
                 _paintArea.Fill = CreateBrushFromVisual(_contentPresenter);
 
-                switch (AnimationType) 
+                switch (AnimationType)
                 {
                     case ContentControlAnimation.SlideToLeft:
                         BeginXAnimateContentReplacement();
@@ -73,7 +73,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
                     default:
                         break;
                 }
-                
+
             }
             base.OnContentChanged(oldContent, newContent);
         }
@@ -88,7 +88,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
             if (v == null)
                 throw new ArgumentNullException("v");
             _dpi = System.Windows.Media.VisualTreeHelper.GetDpi(this);
-            
+
             var target = new RenderTargetBitmap((int)(this.ActualWidth * _dpi.DpiScaleX), (int)(this.ActualHeight * _dpi.DpiScaleY),
                                                 _dpi.PixelsPerInchX, _dpi.PixelsPerInchY, PixelFormats.Default);
             target.Render(v);
@@ -97,7 +97,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
             return brush;
         }
 
-        private void BeginFadeAnimationContentReplacement() 
+        private void BeginFadeAnimationContentReplacement()
         {
             _paintArea.Visibility = Visibility.Visible;
             _contentPresenter.Opacity = 0;
@@ -137,7 +137,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
             _paintArea.Visibility = Visibility.Visible;
 
             newContentTransform.BeginAnimation(
-                TranslateTransform.YProperty, 
+                TranslateTransform.YProperty,
                 CreateSlideAnimation(this.ActualHeight, 0));
 
             oldContentTransform.BeginAnimation(
@@ -145,16 +145,16 @@ namespace Lexplosion.WPF.NewInterface.Controls
                 CreateSlideAnimation(0, -this.ActualHeight, (s, e) => _paintArea.Visibility = Visibility.Hidden));
 
             _paintArea.BeginAnimation(
-                OpacityProperty, 
+                OpacityProperty,
                 CreateOpacityAnimation(1, 0, (s, e) => _paintArea.Opacity = 1));
 
             _contentPresenter.BeginAnimation(
-                OpacityProperty, 
+                OpacityProperty,
                 CreateOpacityAnimation(0, 1));
         }
 
 
-        private void BeginXAnimateContentReplacement() 
+        private void BeginXAnimateContentReplacement()
         {
             var newContentTransform = new TranslateTransform();
             var oldContentTransform = new TranslateTransform();
@@ -173,7 +173,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
                 CreateSlideAnimation(0, -this.ActualWidth, (s, e) => _paintArea.Visibility = Visibility.Hidden));
 
             _paintArea.BeginAnimation(
-                OpacityProperty, 
+                OpacityProperty,
                 CreateOpacityAnimation(1, 0, (s, e) => _paintArea.Opacity = 1));
             _contentPresenter.BeginAnimation(
                 OpacityProperty,

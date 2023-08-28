@@ -1,4 +1,6 @@
-﻿using Lexplosion.WPF.NewInterface.Core;
+﻿using Lexplosion.Global;
+using Lexplosion.Logic.FileSystem;
+using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Objects;
 using System;
 using System.Collections.Generic;
@@ -20,9 +22,9 @@ namespace Lexplosion.WPF.NewInterface.Models.MainContent.Content.GeneralSettings
 
         public LanguageSettingsModel()
         {
-            foreach (var al in AvaliableLanguages) 
+            foreach (var al in AvaliableLanguages)
             {
-                var languageModel = new LanguageModel(al, false);
+                var languageModel = new LanguageModel(al, al == GlobalData.GeneralSettings.LanguageId);
                 languageModel.SelectedEvent += OnLanguageModelChanged;
                 _languages.Add(languageModel);
             }
@@ -31,11 +33,11 @@ namespace Lexplosion.WPF.NewInterface.Models.MainContent.Content.GeneralSettings
         private void OnLanguageModelChanged(string cultureId)
         {
             ChangeLangauge(cultureId);
-            //GlobalData.GeneralSettings.LanguageId = cultureId;
-            //DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+            GlobalData.GeneralSettings.LanguageId = cultureId;
+            DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
         }
 
-        public void ChangeLangauge(string cultureId) 
+        public void ChangeLangauge(string cultureId)
         {
             App.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {

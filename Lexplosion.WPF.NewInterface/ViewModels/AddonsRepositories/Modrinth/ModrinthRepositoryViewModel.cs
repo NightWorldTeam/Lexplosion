@@ -32,9 +32,9 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.AddonsRepositories
         private bool _isClearFilters = false;
 
         private string _searchFilter = "";
-        public string SearchFilter 
+        public string SearchFilter
         {
-            get => _searchFilter; set 
+            get => _searchFilter; set
             {
                 _searchFilter = value;
                 OnSearchFilterChanged();
@@ -125,7 +125,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.AddonsRepositories
                         PageSize, PageIndex, _addonType, SelectedCategories, _clientType, "", _gameVersion);
                 _addonsList = new ObservableCollection<ModrinthProjectInfo>(hits.Item1);
             }
-            else 
+            else
             {
                 hits = ModrinthApi.GetAddonsList(
                     PageSize, PageIndex, _addonType, new IProjectCategory[] { AllCategory }, _clientType, "", _gameVersion);
@@ -136,13 +136,13 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.AddonsRepositories
             //AllCategory.ClassId = ((int)_addonType.ToCfProjectType()).ToString();
             //AllCategory.ParentCategoryId = ((int)_addonType.ToCfProjectType()).ToString();
             var test = CurseforgeApi.GetInstances(10, 0, "all", CfSortField.Popularity, "", "1.19.2");
-            Runtime.DebugWrite("total hits count: "  + hits.Item2);    
+            Runtime.DebugWrite("total hits count: " + hits.Item2);
         }
 
-        public void ClearFilters() 
+        public void ClearFilters()
         {
             _isClearFilters = true;
-            foreach (var category in Categories) 
+            foreach (var category in Categories)
             {
                 category.IsSelected = false;
             }
@@ -160,7 +160,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.AddonsRepositories
         private void PrepareCategories()
         {
             var categories = ModrinthApi.GetCategories();
-            
+
             foreach (var category in categories)
             {
                 if (category.ClassId == "mod")
@@ -185,17 +185,17 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.AddonsRepositories
             }
         }
 
-        private void OnSearchFilterChanged() 
+        private void OnSearchFilterChanged()
         {
             LoadPage();
         }
 
-        private void OnPageIndexChanged() 
+        private void OnPageIndexChanged()
         {
             LoadPage();
         }
 
-        private void OnPageSizeChanged() 
+        private void OnPageSizeChanged()
         {
             LoadPage();
         }
@@ -213,18 +213,18 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.AddonsRepositories
 
 
         private RelayCommand _clearFiltersCommand;
-        public ICommand ClearFiltersCommand 
+        public ICommand ClearFiltersCommand
         {
-            get => _clearFiltersCommand ?? (_clearFiltersCommand = new RelayCommand(obj => 
+            get => _clearFiltersCommand ?? (_clearFiltersCommand = new RelayCommand(obj =>
             {
                 Model.ClearFilters();
             }));
         }
 
         private RelayCommand _searchCommand;
-        public RelayCommand SearchCommand 
+        public RelayCommand SearchCommand
         {
-            get => _searchCommand ?? (_searchCommand = new RelayCommand(obj => 
+            get => _searchCommand ?? (_searchCommand = new RelayCommand(obj =>
             {
                 Model.SearchFilter = ((string)obj);
             }));

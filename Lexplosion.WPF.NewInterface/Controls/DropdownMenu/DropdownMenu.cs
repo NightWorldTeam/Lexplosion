@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Windows.Controls.Primitives;
-using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Controls
 {
@@ -52,11 +52,11 @@ namespace Lexplosion.WPF.NewInterface.Controls
                     new ValidateValueCallback(IsMaxWidthHeightValid));
 
         public static readonly DependencyProperty ButtonTemplateProperty
-            = DependencyProperty.Register(nameof(ButtonTemplate), typeof(ControlTemplate), typeof(DropdownMenu), 
+            = DependencyProperty.Register(nameof(ButtonTemplate), typeof(ControlTemplate), typeof(DropdownMenu),
                 new FrameworkPropertyMetadata());
 
         public static readonly DependencyProperty PopupPlacementProperty
-            = DependencyProperty.Register(nameof(PopupPlacement), typeof(PlacementMode), typeof(DropdownMenu), 
+            = DependencyProperty.Register(nameof(PopupPlacement), typeof(PlacementMode), typeof(DropdownMenu),
                 new FrameworkPropertyMetadata(defaultValue: PlacementMode.Left));
 
         public static readonly DependencyProperty PopupStaysOpenProperty
@@ -64,11 +64,11 @@ namespace Lexplosion.WPF.NewInterface.Controls
                 FrameworkPropertyMetadata(defaultValue: false));
 
         public static readonly DependencyProperty PopupVerticalOffsetProperty
-            = DependencyProperty.Register(nameof(PopupVerticalOffset), typeof(double), typeof(DropdownMenu), 
+            = DependencyProperty.Register(nameof(PopupVerticalOffset), typeof(double), typeof(DropdownMenu),
                 new FrameworkPropertyMetadata(defaultValue: -5d));
 
         public static readonly DependencyProperty PopupHorizontalOffsetProperty
-            = DependencyProperty.Register(nameof(PopupHorizontalOffset), typeof(double), typeof(DropdownMenu), 
+            = DependencyProperty.Register(nameof(PopupHorizontalOffset), typeof(double), typeof(DropdownMenu),
                 new FrameworkPropertyMetadata(defaultValue: 0d));
 
         public PlacementMode PopupPlacement

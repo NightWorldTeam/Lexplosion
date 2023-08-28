@@ -36,9 +36,9 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.Modal
         #endregion Constructors
 
 
-        public void AddTabItem(string titleKey, string iconKey, ViewModelBase content, bool isEnable = true) 
+        public void AddTabItem(string titleKey, string iconKey, ViewModelBase content, bool isEnable = true)
         {
-            _tabItems.Add(new ModalLeftMenuTabItem() 
+            _tabItems.Add(new ModalLeftMenuTabItem()
             {
                 Id = _tabItems.Count,
                 TitleKey = titleKey,
@@ -48,7 +48,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.Modal
             });
         }
 
-        private void OnCurrentContentChanged(ViewModelBase content) 
+        private void OnCurrentContentChanged(ViewModelBase content)
         {
             CurrentContent = content;
         }

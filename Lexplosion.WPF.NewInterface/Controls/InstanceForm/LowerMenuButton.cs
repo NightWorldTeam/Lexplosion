@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Lexplosion.WPF.NewInterface.Commands;
+using System;
 using System.Diagnostics;
+using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Controls
 {
@@ -10,10 +12,17 @@ namespace Lexplosion.WPF.NewInterface.Controls
     public struct LowerMenuButton : IEquatable<LowerMenuButton>
 #pragma warning restore U2U1004 // Public value types should implement equality
     {
-        public int Id;
+        public int Id { get; }
         public string IconKey { get; }
         public string TextKey { get; }
-        public Action Action;
+
+        private Action<object> _action;
+        private RelayCommand _executeAction;
+        public ICommand ExecuteAction
+        {
+            get => _executeAction ?? (_executeAction = new RelayCommand(_action));
+        }
+
 
 
         public LowerMenuButton(int id, string iconKey, string titleKey, Action action)
@@ -21,11 +30,11 @@ namespace Lexplosion.WPF.NewInterface.Controls
             Id = id;
             IconKey = iconKey;
             TextKey = titleKey;
-            Action = action;
+            _action = obj => { action(); };
         }
 
 
-#region Public Methods
+        #region Public Methods
 
 
         public override bool Equals(object obj)
@@ -35,7 +44,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
         public bool Equals(LowerMenuButton other)
         {
-            return other.Id == this.Id && other.TextKey == this.TextKey && other.IconKey == this.IconKey && other.Action == this.Action; 
+            return other.Id == this.Id && other.TextKey == this.TextKey && other.IconKey == this.IconKey;
         }
 
         public override int GetHashCode()
@@ -49,7 +58,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
         }
 
 
-#endregion Public Methods
+        #endregion Public Methods
 
 
 #if DEBUG
