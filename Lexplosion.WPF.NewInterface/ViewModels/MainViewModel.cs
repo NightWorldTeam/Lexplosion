@@ -1,9 +1,16 @@
-﻿using Lexplosion.WPF.NewInterface.Core;
+﻿using Lexplosion.Logic.Management.Instances;
+using Lexplosion.Logic.Network.Web;
+using Lexplosion.Logic.Objects;
+using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Modal;
 using Lexplosion.WPF.NewInterface.Core.Objects;
+using Lexplosion.WPF.NewInterface.Models.InstanceCatalogControllers;
+using Lexplosion.WPF.NewInterface.Models.InstanceModel;
 using Lexplosion.WPF.NewInterface.Stores;
+using Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile;
 using Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu;
 using Lexplosion.WPF.NewInterface.ViewModels.Modal;
+using System.Linq;
 using System.Windows.Media;
 
 namespace Lexplosion.WPF.NewInterface.ViewModels
@@ -102,7 +109,8 @@ namespace Lexplosion.WPF.NewInterface.ViewModels
             ModalNavigationStore.Instance.Close();
 
             NavigationStore.CurrentViewModelChanged += NavigationStore_CurrentViewModelChanged;
-            NavigationStore.CurrentViewModel = new MainMenuLayoutViewModel(); //new ModrinthRepositoryViewModel(AddonType.Mods, ClientType.Fabric, "1.19.4");
+            NavigationStore.CurrentViewModel = new InstanceProfileLayoutViewModel(LibraryController.Instance.Instances.First());
+                //new InstanceModelBase(InstanceClient.GetOutsideInstances( InstanceSource.Modrinth, 2, 0, new IProjectCategory[] { new SimpleCategory() { Name = "All", Id = "-1", ClassId = "", ParentCategoryId = "" }}, "", CfSortField.Featured, "1.19.4")[1])); //new MainMenuLayoutViewModel(); //new ModrinthRepositoryViewModel(AddonType.Mods, ClientType.Fabric, "1.19.4");
             //NavigationStore.Content = new AuthorizationMenuViewModel(NavigationStore);
         }
 

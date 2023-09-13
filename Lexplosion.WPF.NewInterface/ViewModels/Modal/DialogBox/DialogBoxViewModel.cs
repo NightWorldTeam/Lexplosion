@@ -33,19 +33,13 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.Modal
         private RelayCommand _yesAnswerCommand;
         public ICommand YesAnswerCommand
         {
-            get => _yesAnswerCommand ?? (_yesAnswerCommand = new RelayCommand(obj =>
-            {
-                Model.YesAction(obj);
-            }));
+            get => RelayCommand.GetCommand(ref _yesAnswerCommand, Model.YesAction);
         }
 
         private RelayCommand _noAnswerCommand;
         public ICommand NoAnswerCommand
         {
-            get => _noAnswerCommand ?? (_noAnswerCommand = new RelayCommand(obj =>
-            {
-                Model.NoAction(obj);
-            }));
+            get => RelayCommand.GetCommand(ref _noAnswerCommand, Model.NoAction);
         }
 
 

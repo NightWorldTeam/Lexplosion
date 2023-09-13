@@ -292,6 +292,8 @@ namespace Lexplosion.WPF.NewInterface.Views.Windows
 
                 Grid.SetColumn(DebugPanel, 0);
                 Grid.SetColumn(WindowHeaderPanelButtons, 1);
+
+                RuntimeApp.HeaderState = HeaderState.Right;
             }
             else
             {
@@ -300,6 +302,8 @@ namespace Lexplosion.WPF.NewInterface.Views.Windows
 
                 Grid.SetColumn(DebugPanel, 1);
                 Grid.SetColumn(WindowHeaderPanelButtons, 0);
+
+                RuntimeApp.HeaderState = HeaderState.Left;
             }
         }
 

@@ -191,4 +191,24 @@
     <!--  Instance Overview Menu  -->
     <!--    -->
     <s:String x:Key="Version">Версия</s:String>
+
+
+    <!--    -->
+    <!--  Instance Profile  -->
+    <!--    -->
+    <s:String x:Key="Overview">Overview</s:String>
+    <s:String x:Key="Addons">Addons</s:String>
+    <s:String x:Key="AboutInstance">About Instance</s:String>
+
+
+    <!--    -->
+    <!--  Instance Profile Addons  -->
+    <!--    -->
+    <s:String x:Key="Mods">Mods</s:String>
+    <s:String x:Key="Resourcepacks">Resourcepacks</s:String>
+    <s:String x:Key="Maps">Maps</s:String>
+    <s:String x:Key="Shaders">Shaders</s:String>
+
+    <s:String x:Key="Name">Name</s:String>
+    <s:String x:Key="Author">Author</s:String>
 </ResourceDictionary>

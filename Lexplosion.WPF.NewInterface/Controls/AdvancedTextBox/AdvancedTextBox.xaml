@@ -45,36 +45,39 @@
 
                         <Border
                             x:Name="BorderMain"
-                            Height="32"
-                            Padding="8,4,8,4"
+                            Padding="8,0,8,0"
                             BorderBrush="Transparent"
                             BorderThickness="2"
                             CornerRadius="5">
                             <Grid>
+
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
 
-                                <!--  Icon  -->
-                                <Viewbox
-                                    x:Name="PART_IconViewBox"
-                                    Width="14"
-                                    Height="14"
-                                    Margin="0,0,4,0"
-                                    HorizontalAlignment="Left">
-                                    <Path
-                                        x:Name="PART_Icon"
-                                        Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                        Stretch="Fill" />
-                                </Viewbox>
+                                <Border VerticalAlignment="Center" Background="Transparent">
+                                    <!--  Icon  -->
+                                    <Viewbox
+                                        x:Name="PART_IconViewBox"
+                                        Width="14"
+                                        Height="14"
+                                        Margin="0,0,4,0"
+                                        HorizontalAlignment="Center">
+                                        <Path
+                                            x:Name="PART_Icon"
+                                            Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                            Stretch="Fill" />
+                                    </Viewbox>
+                                </Border>
 
                                 <!--  Placeholder  -->
                                 <TextBlock
                                     Name="PART_Placeholder"
                                     Grid.Column="1"
+                                    Margin="0,6,0,0"
                                     HorizontalAlignment="Left"
-                                    VerticalAlignment="Center"
+                                    VerticalAlignment="Top"
                                     FontSize="12"
                                     Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
 
@@ -82,8 +85,8 @@
                                 <ScrollViewer
                                     x:Name="PART_ContentHost"
                                     Grid.Column="1"
-                                    Margin="0,-1,0,0"
-                                    VerticalAlignment="Center"
+                                    Margin="0,5,0,0"
+                                    VerticalAlignment="Top"
                                     VerticalScrollBarVisibility="Auto" />
                             </Grid>
                         </Border>

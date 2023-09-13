@@ -44,7 +44,7 @@
                             Background="{DynamicResource ActivitySolidColorBrush}"
                             CornerRadius="5" />
 
-                        <Border Padding="12,8">
+                        <Border>
                             <ContentPresenter
                                 HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                 VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
@@ -315,34 +315,37 @@
         <Setter Property="UseLayoutRounding" Value="True" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Foreground" Value="{DynamicResource ActivitySolidColorBrush}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
                     <Grid>
                         <Border
                             x:Name="Border"
-                            Padding="5"
-                            CornerRadius="5">
+                            Width="32"
+                            Height="32"
+                            Background="{TemplateBinding Foreground}"
+                            CornerRadius="5"
+                            Opacity="0.1" />
 
-                            <Border.Background>
-                                <SolidColorBrush Opacity="0.1" Color="{DynamicResource ActivityColor}" />
-                            </Border.Background>
-
-                            <Viewbox Height="{TemplateBinding FontSize}">
-                                <Path
-                                    extensions:Path.StringKeyData="{TemplateBinding Content}"
-                                    Fill="{DynamicResource ActivitySolidColorBrush}"
-                                    Stretch="Fill" />
-                            </Viewbox>
-                        </Border>
+                        <Viewbox Height="{TemplateBinding FontSize}">
+                            <Path
+                                extensions:Path.StringKeyData="{TemplateBinding Content}"
+                                Fill="{TemplateBinding Foreground}"
+                                Stretch="Fill" />
+                        </Viewbox>
 
                         <Border
                             x:Name="HoveredBorder"
-                            Background="Transparent"
-                            BorderBrush="{DynamicResource ActivitySolidColorBrush}"
+                            BorderBrush="{TemplateBinding Foreground}"
                             BorderThickness="1"
                             CornerRadius="5"
-                            Opacity="0" />
+                            Opacity="0">
+
+                            <Border.Background>
+                                <SolidColorBrush Opacity="0.4" Color="{TemplateBinding Foreground}" />
+                            </Border.Background>
+                        </Border>
                     </Grid>
 
                     <ControlTemplate.Triggers>

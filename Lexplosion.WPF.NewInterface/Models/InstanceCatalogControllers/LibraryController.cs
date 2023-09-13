@@ -21,6 +21,7 @@ namespace Lexplosion.WPF.NewInterface.Models.InstanceCatalogControllers
         {
             foreach (var instanceClient in InstanceClient.GetInstalledInstances())
             {
+                Runtime.DebugWrite("Library Item " + instanceClient.Name);
                 _instances.Add(new InstanceModelBase(instanceClient));
             }
         }

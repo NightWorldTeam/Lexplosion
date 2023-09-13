@@ -5,6 +5,8 @@
     xmlns:addonsrepositoriesvm="clr-namespace:Lexplosion.WPF.NewInterface.ViewModels.AddonsRepositories"
     xmlns:authviewmodels="clr-namespace:Lexplosion.WPF.NewInterface.ViewModels.Authorization"
     xmlns:authviews="clr-namespace:Lexplosion.WPF.NewInterface.Views.Pages.Authorization"
+    xmlns:instanceprofileview="clr-namespace:Lexplosion.WPF.NewInterface.Views.Pages.MainContent.InstanceProfile"
+    xmlns:instanceprofilevm="clr-namespace:Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile"
     xmlns:mainmenuview="clr-namespace:Lexplosion.WPF.NewInterface.Views.Pages.MainContent.MainMenu"
     xmlns:mainmenuvm="clr-namespace:Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu"
     xmlns:modalviews="clr-namespace:Lexplosion.WPF.NewInterface.Views.Modal"
@@ -103,5 +105,36 @@
     <!--  Addons Repository  -->
     <DataTemplate DataType="{x:Type addonsrepositoriesvm:ModrinthRepositoryViewModel}">
         <addonsrepositoriesviews:ModrinthRepositoryView />
+    </DataTemplate>
+
+
+    <!--  Instance Profile  -->
+    <DataTemplate DataType="{x:Type instanceprofilevm:InstanceProfileLeftPanelViewModel}">
+        <instanceprofileview:InstanceProfileLeftPanelView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type instanceprofilevm:InstanceProfileLayoutViewModel}">
+        <instanceprofileview:InstanceProfileLayoutView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type instanceprofilevm:InstanceProfileOverviewViewModel}">
+        <instanceprofileview:InstanceProfileOverviewView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type instanceprofilevm:InstanceAddonsContainerViewModel}">
+        <instanceprofileview:InstanceProfileAddonsView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type instanceprofilevm:InstanceProfileAddonsLayoutViewModel}">
+        <instanceprofileview:InstanceProfileAddonsLayoutView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type instanceprofilevm:InstanceProfileSettingsLayoutViewModel}">
+        <instanceprofileview:InstanceProfileSettingsLayoutView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type instanceprofilevm:InstanceProfileSettingsViewModel}">
+        <instanceprofileview:InstanceProfileSettingsView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type instanceprofilevm:InstanceProfileAboutViewModel}">
+        <instanceprofileview:InstanceProfileAboutView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type instanceprofilevm:InstanceProfileConfigurationViewModel}">
+        <instanceprofileview:InstanceProfileConfigurationView />
     </DataTemplate>
 </ResourceDictionary>

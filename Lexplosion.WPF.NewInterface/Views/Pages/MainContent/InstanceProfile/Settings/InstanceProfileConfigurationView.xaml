@@ -1,0 +1,182 @@
+﻿<UserControl
+    x:Class="Lexplosion.WPF.NewInterface.Views.Pages.MainContent.InstanceProfile.InstanceProfileConfigurationView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Lexplosion.WPF.NewInterface.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
+    xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Views.Pages.MainContent.InstanceProfile"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <UserControl.Resources />
+
+    <ScrollViewer
+        Background="{DynamicResource PrimarySolidColorBrush}"
+        CanContentScroll="False"
+        Focusable="False"
+        ScrollViewer.VerticalScrollBarVisibility="Visible">
+
+        <StackPanel Margin="32,16,32,16">
+
+            <!--  Versions  -->
+            <Border
+                Padding="0,16,0,8"
+                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                BorderThickness="0,0,0,2">
+                <Grid>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!--  Header  -->
+                    <StackPanel>
+                        <TextBlock
+                            extensions:TextBlock.TextByKey="Version"
+                            FontSize="14"
+                            FontWeight="Medium"
+                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                        <TextBlock
+                            extensions:TextBlock.TextByKey="WindowSizeDescription"
+                            FontSize="14"
+                            FontWeight="Medium"
+                            Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                    </StackPanel>
+
+                    <ComboBox
+                        Grid.Column="1"
+                        Width="215"
+                        HorizontalAlignment="Right">
+                        <ComboBoxItem IsSelected="True">0.0.1</ComboBoxItem>
+                        <ComboBoxItem>0.0.2</ComboBoxItem>
+                    </ComboBox>
+                </Grid>
+            </Border>
+
+            <!--  GameType  -->
+            <Border
+                Padding="0,16,0,8"
+                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                BorderThickness="0,0,0,2">
+                <Grid>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!--  Header  -->
+                    <StackPanel>
+                        <TextBlock
+                            extensions:TextBlock.TextByKey="GameType"
+                            FontSize="14"
+                            FontWeight="Medium"
+                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                        <TextBlock
+                            extensions:TextBlock.TextByKey="WindowSizeDescription"
+                            FontSize="14"
+                            FontWeight="Medium"
+                            Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                    </StackPanel>
+
+                    <StackPanel
+                        Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        Orientation="Horizontal">
+                        <RadioButton
+                            Content="Vanilla"
+                            GroupName="GameType"
+                            IsChecked="True"
+                            Style="{StaticResource HighlightRadioButton}" />
+                        <RadioButton
+                            Margin="8,0,0,0"
+                            Content="Forge"
+                            GroupName="GameType"
+                            Style="{StaticResource HighlightRadioButton}" />
+                        <RadioButton
+                            Margin="8,0,0,0"
+                            Content="Fabric"
+                            GroupName="GameType"
+                            Style="{StaticResource HighlightRadioButton}" />
+                        <RadioButton
+                            Margin="8,0,0,0"
+                            Content="Quilt"
+                            GroupName="GameType"
+                            Style="{StaticResource HighlightRadioButton}" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!--  Modloader Version  -->
+            <Border
+                Padding="0,16,0,8"
+                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                BorderThickness="0,0,0,2">
+                <Grid>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!--  Header  -->
+                    <StackPanel>
+                        <TextBlock
+                            extensions:TextBlock.TextByKey="ModloaderVersion"
+                            FontSize="14"
+                            FontWeight="Medium"
+                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                        <TextBlock
+                            extensions:TextBlock.TextByKey="WindowSizeDescription"
+                            FontSize="14"
+                            FontWeight="Medium"
+                            Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                    </StackPanel>
+
+                    <ComboBox
+                        Grid.Column="1"
+                        Width="215"
+                        HorizontalAlignment="Right">
+                        <ComboBoxItem IsSelected="True">0.0.1</ComboBoxItem>
+                        <ComboBoxItem>0.0.2</ComboBoxItem>
+                    </ComboBox>
+                </Grid>
+            </Border>
+
+            <!--  Optifine  -->
+            <Border
+                Padding="0,16,0,8"
+                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                BorderThickness="0,0,0,2">
+                <Grid>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!--  Header  -->
+                    <StackPanel>
+                        <TextBlock
+                            FontSize="14"
+                            FontWeight="Medium"
+                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                            Text="Optifine" />
+                        <TextBlock
+                            extensions:TextBlock.TextByKey="WindowSizeDescription"
+                            FontSize="14"
+                            FontWeight="Medium"
+                            Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                    </StackPanel>
+
+                    <ToggleButton
+                        Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        Style="{StaticResource SwitchButton}" />
+                </Grid>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

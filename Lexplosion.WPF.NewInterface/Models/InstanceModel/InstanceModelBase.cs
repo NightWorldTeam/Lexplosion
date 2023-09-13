@@ -1,8 +1,10 @@
-﻿using Lexplosion.Logic.Management.Instances;
+﻿using Lexplosion.Logic;
+using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Objects;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace Lexplosion.WPF.NewInterface.Models.InstanceModel
 {
@@ -35,6 +37,9 @@ namespace Lexplosion.WPF.NewInterface.Models.InstanceModel
         private DownloadModel _downloadModel;
 
 
+        public string LocalId { get; }
+
+
         private string _name;
         public string Name
         {
@@ -55,6 +60,9 @@ namespace Lexplosion.WPF.NewInterface.Models.InstanceModel
         public bool IsLaunched { get; private set; }
         public bool IsInstalled { get => _instanceClient.IsInstalled; }
 
+        public BaseInstanceData InstanceData { get => _instanceClient.GetBaseData; }
+
+        public IEnumerable<object> Test { get => InstanceAddon.GetInstalledMods(InstanceData); }
 
         #endregion Properties
 
@@ -171,6 +179,17 @@ namespace Lexplosion.WPF.NewInterface.Models.InstanceModel
         {
             _instanceClient.Delete();
             DeletedEvent?.Invoke(_instanceClient.LocalId);
+        }
+
+
+        public void SaveSettings(Settings settings) 
+        {
+            _instanceClient.SaveSettings(settings);
+        }
+
+        public Settings GetSettings() 
+        {
+            return _instanceClient.GetSettings();
         }
 
 

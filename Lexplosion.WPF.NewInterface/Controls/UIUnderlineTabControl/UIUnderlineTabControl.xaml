@@ -16,12 +16,12 @@
                             x:Name="Border"
                             Padding="0,8,32,8"
                             BorderBrush="{DynamicResource SeparateSolidColorBrush}">
-                            <TextBlock extensions:TextBlock.TextByKey="{TemplateBinding Header}" />
+                            <TextBlock x:Name="HeaderTB" extensions:TextBlock.TextByKey="{TemplateBinding Header}" />
                         </Border>
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="TextBlock.Foreground" Value="{DynamicResource ActivitySolidColorBrush}" />
+                            <Setter TargetName="HeaderTB" Property="Foreground" Value="{DynamicResource ActivitySolidColorBrush}" />
                             <Setter Property="Panel.ZIndex" Value="100" />
                         </Trigger>
                     </ControlTemplate.Triggers>

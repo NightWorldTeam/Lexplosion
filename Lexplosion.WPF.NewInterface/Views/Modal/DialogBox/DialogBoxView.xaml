@@ -27,9 +27,11 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <Viewbox Height="18" HorizontalAlignment="Right">
-                <Path extension:Path.StringKeyData="Close" Fill="{DynamicResource SecondaryForegroundSolidColorBrush}" />
-            </Viewbox>
+            <Button HorizontalAlignment="Right" Style="{StaticResource IconButton}" Command="{Binding CloseCommand}">
+                <Viewbox Height="18">
+                    <Path extension:Path.StringKeyData="Close" Fill="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                </Viewbox>
+            </Button>
 
             <TextBlock
                 Grid.Row="1"
@@ -64,6 +66,7 @@
                 </Border.Background>
 
                 <Grid ShowGridLines="False">
+                    
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
@@ -81,7 +84,7 @@
                     </Viewbox>
 
 
-                    <StackPanel Margin="8,0,0,0" Grid.Column="1">
+                    <StackPanel Grid.Column="1" Margin="8,0,0,0">
                         <TextBlock
                             Margin="0,0,0,4"
                             FontSize="16"
@@ -105,13 +108,16 @@
                 <Button
                     Height="32"
                     Margin="0,0,8,0"
+                    Command="{Binding YesAnswerCommand}"
                     Content="Yes"
                     FontWeight="Medium"
-                    Foreground="Black" />
+                    Foreground="{DynamicResource CheckBoxMarkSolidColorBrush}" />
                 <Button
                     Height="32"
+                    Command="{Binding NoAnswerCommand}"
                     Content="Nahh!"
                     FontWeight="Medium"
+                    Foreground="{DynamicResource CheckBoxMarkSolidColorBrush}"
                     Style="{StaticResource x32DefaultIconButton}" />
             </StackPanel>
         </Grid>

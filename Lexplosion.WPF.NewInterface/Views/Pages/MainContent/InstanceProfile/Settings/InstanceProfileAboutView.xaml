@@ -1,0 +1,208 @@
+﻿<UserControl
+    x:Class="Lexplosion.WPF.NewInterface.Views.Pages.MainContent.InstanceProfile.InstanceProfileAboutView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Lexplosion.WPF.NewInterface.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
+    xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Views.Pages.MainContent.InstanceProfile"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <ScrollViewer
+        Background="{DynamicResource PrimarySolidColorBrush}"
+        CanContentScroll="False"
+        Focusable="False"
+        ScrollViewer.VerticalScrollBarVisibility="Visible">
+        <Grid Margin="32,16,32,16">
+            <!--  Game Settings  -->
+            <StackPanel>
+
+                <!--  Logo  -->
+                <Border
+                    Padding="0,0,0,8"
+                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                    BorderThickness="0,0,0,2">
+
+                    <Grid ShowGridLines="False">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <!--  Header  -->
+                        <Grid Margin="0,0,0,8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="0.4*" />
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel>
+                                <TextBlock
+                                    extensions:TextBlock.TextByKey="Image"
+                                    FontSize="14"
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                <TextBlock
+                                    extensions:TextBlock.TextByKey="ImageDescription"
+                                    FontSize="14"
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                            </StackPanel>
+
+                            <Button
+                                Grid.Column="1"
+                                HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Center"
+                                Content="Load your Logo"
+                                FontSize="14"
+                                Foreground="{DynamicResource CheckBoxMarkSolidColorBrush}" />
+                        </Grid>
+
+                        <!--  Previews  -->
+                        <Grid Grid.Row="1" ShowGridLines="False">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Border
+                                Width="120"
+                                Height="120"
+                                Margin="0,0,8,0"
+                                VerticalAlignment="Bottom"
+                                Background="{DynamicResource ActivitySolidColorBrush}" />
+
+                            <Border
+                                Grid.Column="1"
+                                Width="90"
+                                Height="90"
+                                Margin="0,0,8,0"
+                                VerticalAlignment="Bottom"
+                                Background="{DynamicResource ActivitySolidColorBrush}" />
+                            <Border
+                                Grid.Column="2"
+                                Width="60"
+                                Height="60"
+                                VerticalAlignment="Bottom"
+                                Background="{DynamicResource ActivitySolidColorBrush}" />
+                        </Grid>
+                    </Grid>
+                </Border>
+
+                <!--  Name  -->
+                <Border
+                    Padding="0,16,0,8"
+                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                    BorderThickness="0,0,0,2">
+                    <Grid>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <!--  Header  -->
+                        <StackPanel>
+                            <TextBlock
+                                extensions:TextBlock.TextByKey="Name"
+                                FontSize="14"
+                                FontWeight="Medium"
+                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                            <TextBlock
+                                extensions:TextBlock.TextByKey="InstanceNameDescription"
+                                FontSize="14"
+                                FontWeight="Medium"
+                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                        </StackPanel>
+
+                        <!--  Content  -->
+                        <controls:AdvancedTextBox
+                            Grid.Column="1"
+                            Width="300"
+                            Height="32"
+                            Margin="16,0,0,0"
+                            HorizontalAlignment="Right"
+                            Text="RLCraft" />
+                    </Grid>
+                </Border>
+
+                <!--  Short Description  -->
+                <Border
+                    Padding="0,16,0,8"
+                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                    BorderThickness="0,0,0,2">
+                    <Grid>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <!--  Header  -->
+                        <StackPanel>
+                            <TextBlock
+                                extensions:TextBlock.TextByKey="Summary"
+                                FontSize="14"
+                                FontWeight="Medium"
+                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                            <TextBlock
+                                extensions:TextBlock.TextByKey="SummaryDescription"
+                                FontSize="14"
+                                FontWeight="Medium"
+                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                        </StackPanel>
+
+                        <!--  Content  -->
+                        <controls:AdvancedTextBox
+                            Grid.Row="1"
+                            Height="32"
+                            Margin="0,8,0,0"
+                            Text="Short Description" />
+                    </Grid>
+                </Border>
+
+                <!--  Description  -->
+                <Border
+                    Padding="0,16,0,8"
+                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                    BorderThickness="0,0,0,2">
+                    <Grid>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <!--  Header  -->
+                        <StackPanel>
+                            <TextBlock
+                                extensions:TextBlock.TextByKey="Description"
+                                FontSize="14"
+                                FontWeight="Medium"
+                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                            <TextBlock
+                                extensions:TextBlock.TextByKey="DescriptionAdditional"
+                                FontSize="14"
+                                FontWeight="Medium"
+                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                        </StackPanel>
+
+                        <!--  Content  -->
+                        <controls:AdvancedTextBox
+                            Grid.Row="1"
+                            Height="128"
+                            Margin="0,8,0,0"
+                            AcceptsReturn="True"
+                            Text="Description" />
+                    </Grid>
+                </Border>
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

@@ -1,0 +1,92 @@
+﻿<UserControl
+    x:Class="Lexplosion.WPF.NewInterface.Views.Pages.MainContent.InstanceProfile.InstanceProfileOverviewView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Views.Pages.MainContent.InstanceProfile"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <Grid Background="{DynamicResource SecondarySolidColorBrush}">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Margin="32" ShowGridLines="True">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Border
+                Height="128"
+                Background="{DynamicResource PrimarySolidColorBrush}"
+                BorderBrush="{DynamicResource ActivitySolidColorBrush}"
+                BorderThickness="1,1,1,4"
+                ClipToBounds="True"
+                CornerRadius="10">
+                <Border
+                    Height="128"
+                    ClipToBounds="True"
+                    CornerRadius="20,100,100,10">
+                    <Border.Background>
+                        <LinearGradientBrush Opacity="0.4" StartPoint="1,0" EndPoint="0,1">
+
+                            <GradientStop Offset="0.7" Color="{DynamicResource PrimaryColor}" />
+                            <GradientStop Offset="1" Color="{DynamicResource ActivityColor}" />
+                        </LinearGradientBrush>
+                    </Border.Background>
+                </Border>
+            </Border>
+
+            <Border
+                Grid.Column="1"
+                Height="128"
+                Margin="8,0,0,0"
+                Background="{DynamicResource PrimarySolidColorBrush}"
+                BorderBrush="{DynamicResource ActivitySolidColorBrush}"
+                BorderThickness="1,1,1,4"
+                ClipToBounds="True"
+                CornerRadius="10">
+                <Border
+                    Height="128"
+                    ClipToBounds="True"
+                    CornerRadius="10,100,100,0">
+                    <Border.Background>
+                        <LinearGradientBrush Opacity="0.4" StartPoint="1,0" EndPoint="0,1">
+
+                            <GradientStop Offset="0.7" Color="{DynamicResource PrimaryColor}" />
+                            <GradientStop Offset="1" Color="{DynamicResource ActivityColor}" />
+                        </LinearGradientBrush>
+                    </Border.Background>
+                </Border>
+            </Border>
+
+            <Border
+                Grid.Column="2"
+                Height="128"
+                Margin="8,0,0,0"
+                Background="{DynamicResource PrimarySolidColorBrush}"
+                BorderBrush="{DynamicResource ActivitySolidColorBrush}"
+                BorderThickness="1,1,1,4"
+                ClipToBounds="True"
+                CornerRadius="10">
+                <Border
+                    Height="128"
+                    ClipToBounds="True"
+                    CornerRadius="10,100,100,0">
+                    <Border.Background>
+                        <LinearGradientBrush Opacity="0.4" StartPoint="1,0" EndPoint="0,1">
+
+                            <GradientStop Offset="0.7" Color="{DynamicResource PrimaryColor}" />
+                            <GradientStop Offset="1" Color="{DynamicResource ActivityColor}" />
+                        </LinearGradientBrush>
+                    </Border.Background>
+                </Border>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

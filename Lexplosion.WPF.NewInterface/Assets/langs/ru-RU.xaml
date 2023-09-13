@@ -192,4 +192,41 @@
     <!--  Instance Overview Menu  -->
     <!--    -->
     <s:String x:Key="Version">Версия</s:String>
+
+
+    <!--    -->
+    <!--  Instance Profile  -->
+    <!--    -->
+    <s:String x:Key="Overview">Обзор</s:String>
+    <s:String x:Key="Addons">Дополнения</s:String>
+    <s:String x:Key="AboutInstance">О сборке</s:String>
+
+
+    <!--    -->
+    <!--  Instance Profile Addons  -->
+    <!--    -->
+    <s:String x:Key="Mods">Моды</s:String>
+    <s:String x:Key="Resourcepacks">Ресурспаки</s:String>
+    <s:String x:Key="Maps">Карты</s:String>
+    <s:String x:Key="Shaders">Шейдеры</s:String>
+
+    <s:String x:Key="Name">Название</s:String>
+    <s:String x:Key="Author">Автор</s:String>
+
+
+    <!--    -->
+    <!--  Instance Profile Settings  -->
+    <!--    -->
+    <s:String x:Key="Configuration">Конфигурация</s:String>
+    <s:String x:Key="InstanceNameDescription">Название данной сборки.</s:String>
+    <s:String x:Key="Summary">Краткое описание</s:String>
+    <s:String x:Key="SummaryDescription">Краткое описание для данной сборки.</s:String>
+    <s:String x:Key="Description">Описание</s:String>
+    <s:String x:Key="DescriptionAdditional">Описание для данной сборки.</s:String>
+
+    <!--    -->
+    <!--  Instance Profile Configuration  -->
+    <!--    -->
+    <s:String x:Key="GameType">Тип игры</s:String>
+    <s:String x:Key="ModloaderVersion">Версия модлоадера</s:String>
 </ResourceDictionary>

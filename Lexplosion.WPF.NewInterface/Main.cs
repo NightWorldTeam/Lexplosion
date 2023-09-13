@@ -7,6 +7,13 @@ using System.Windows;
 
 namespace Lexplosion.WPF.NewInterface
 {
+    public enum HeaderState 
+    {
+        Left,
+        Right,
+        Top,
+    }
+
     static class RuntimeApp
     {
         const string ResourcePath = "pack://application:,,,/Resources/";
@@ -22,6 +29,8 @@ namespace Lexplosion.WPF.NewInterface
 
         private static double _splashWindowLeft;
         private static double _splashWindowTop;
+
+        public static HeaderState HeaderState;
 
 
         [STAThread]

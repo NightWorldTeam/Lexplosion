@@ -111,6 +111,7 @@
     <Compile Include="Core\Objects\LeftPanelItemModel.cs" />
     <Compile Include="Core\Objects\TabItemModel.cs" />
     <Compile Include="Core\Objects\Theme.cs" />
+    <Compile Include="Core\Tools\ImageTools.cs" />
     <Compile Include="Core\Tools\WindowsResolutionTools.cs" />
     <Compile Include="Extensions\Path.cs" />
     <Compile Include="Extensions\StyleSelectors\LastChildStyleSelector.cs" />
@@ -147,6 +148,14 @@
     <Compile Include="ViewModels\Authorization\BasicAuthorization\NightWorld\NightWorldAuthorizationViewModel.cs" />
     <Compile Include="ViewModels\Authorization\AuthorizationMenuViewModel.cs" />
     <Compile Include="ViewModels\Authorization\BasicAuthorization\NightWorld\PasswordResetViewModel.cs" />
+    <Compile Include="ViewModels\MainContent\InstanceProfile\Settings\InstanceProfileAboutViewModel.cs" />
+    <Compile Include="ViewModels\MainContent\InstanceProfile\InstanceProfileLeftPanelViewModel.cs" />
+    <Compile Include="ViewModels\MainContent\InstanceProfile\Addons\InstanceProfileAddonsLayoutViewModel.cs" />
+    <Compile Include="ViewModels\MainContent\InstanceProfile\InstanceProfileLayoutViewModel.cs" />
+    <Compile Include="ViewModels\MainContent\InstanceProfile\InstanceProfileOverviewViewModel.cs" />
+    <Compile Include="ViewModels\MainContent\InstanceProfile\Settings\InstanceProfileConfigurationViewModel.cs" />
+    <Compile Include="ViewModels\MainContent\InstanceProfile\Settings\InstanceProfileSettingsLayoutViewModel.cs" />
+    <Compile Include="ViewModels\MainContent\InstanceProfile\Settings\InstanceProfileSettingsViewModel.cs" />
     <Compile Include="ViewModels\MainContent\MainMenu\Content\CatalogViewModel.cs" />
     <Compile Include="ViewModels\MainContent\MainMenu\Content\Friends\FriendsLayoutViewModel.cs" />
     <Compile Include="ViewModels\MainContent\MainMenu\Content\Friends\FriendsRequestsViewModel.cs" />
@@ -274,6 +283,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Resources\Styles\ComboBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Resources\Styles\PasswordBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -343,6 +356,42 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Pages\Authorization\PasswordResetView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\MainContent\InstanceProfile\Addons\InstanceProfileAddonsLayoutView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\MainContent\InstanceProfile\Addons\InstanceProfileAddonsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\MainContent\InstanceProfile\Settings\InstanceProfileAboutView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\MainContent\InstanceProfile\InstanceProfileLayoutView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\MainContent\InstanceProfile\InstanceProfileLeftPanelView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\MainContent\InstanceProfile\InstanceProfileOverviewView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\MainContent\InstanceProfile\Settings\InstanceProfileConfigurationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\MainContent\InstanceProfile\Settings\InstanceProfileSettingsLayoutView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\MainContent\InstanceProfile\Settings\InstanceProfileSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -416,6 +465,33 @@
     </Compile>
     <Compile Include="Extensions\Animations\SolidColorBrushAnimation.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="Views\Pages\MainContent\InstanceProfile\Addons\InstanceProfileAddonsLayoutView.xaml.cs">
+      <DependentUpon>InstanceProfileAddonsLayoutView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\MainContent\InstanceProfile\Addons\InstanceProfileAddonsView.xaml.cs">
+      <DependentUpon>InstanceProfileAddonsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\MainContent\InstanceProfile\Settings\InstanceProfileAboutView.xaml.cs">
+      <DependentUpon>InstanceProfileAboutView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\MainContent\InstanceProfile\InstanceProfileLayoutView.xaml.cs">
+      <DependentUpon>InstanceProfileLayoutView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\MainContent\InstanceProfile\InstanceProfileLeftPanelView.xaml.cs">
+      <DependentUpon>InstanceProfileLeftPanelView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\MainContent\InstanceProfile\InstanceProfileOverviewView.xaml.cs">
+      <DependentUpon>InstanceProfileOverviewView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\MainContent\InstanceProfile\Settings\InstanceProfileConfigurationView.xaml.cs">
+      <DependentUpon>InstanceProfileConfigurationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\MainContent\InstanceProfile\Settings\InstanceProfileSettingsLayoutView.xaml.cs">
+      <DependentUpon>InstanceProfileSettingsLayoutView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\MainContent\InstanceProfile\Settings\InstanceProfileSettingsView.xaml.cs">
+      <DependentUpon>InstanceProfileSettingsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Pages\MainContent\MainMenu\Content\CatalogView.xaml.cs">
       <DependentUpon>CatalogView.xaml</DependentUpon>
     </Compile>

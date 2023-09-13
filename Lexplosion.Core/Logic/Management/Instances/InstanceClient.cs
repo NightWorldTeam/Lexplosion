@@ -453,7 +453,7 @@ namespace Lexplosion.Logic.Management.Instances
                             if (data?.instanceVersion != null && data.id != null)
                             {
                                 externalID = data.id;
-                                instanceVersion = data.instanceVersion.ToString();
+                                instanceVersion = data.instanceVersion;
                                 _idsPairs[externalID] = localId;
                             }
                         }

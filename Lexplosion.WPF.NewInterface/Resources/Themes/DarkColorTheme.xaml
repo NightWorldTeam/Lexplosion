@@ -4,15 +4,15 @@
     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
     <!--  Activity Colors  -->
-    <Color x:Key="ActivityColor">#8500aa</Color>
-    <Color x:Key="Color1">#13f287</Color>
+    <Color x:Key="ActivityColor">#13f287</Color>
+    <Color x:Key="Color1">#8500aa</Color>
     <Color x:Key="Color2">#13f287</Color>
 
     <sys:Double x:Key="ActivityColorOpacity">1</sys:Double>
     <SolidColorBrush
         x:Key="ActivitySolidColorBrush"
         Opacity="{DynamicResource ActivityColorOpacity}"
-        Color="{DynamicResource Color1}" />
+        Color="{DynamicResource ActivityColor}" />
 
 
     <!--  Error Color  -->

@@ -3,10 +3,11 @@ using Lexplosion.WPF.NewInterface.Core.Objects;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows.Controls;
 
 namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu
 {
-    public sealed class LeftPanelViewModel : ViewModelBase
+    public class LeftPanelViewModel : ViewModelBase
     {
         public event Action<ViewModelBase> SelectedItemChanged;
 
@@ -74,6 +75,16 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu
         {
             tabItem.SelectedEvent += OnSelectedTabItemChanged;
             _items.Add(tabItem);
+        }
+
+        public void Clear() 
+        {
+            _items.Clear();
+        }
+
+        public void AddTabItems(IEnumerable<LeftPanelMenuItem> em) 
+        {
+            
         }
 
         public void SelectFirst()

@@ -475,7 +475,8 @@
                     x:Name="DebugPanel"
                     Grid.Column="1"
                     Margin="0,0,8,0"
-                    Orientation="Horizontal">
+                    Orientation="Horizontal"
+                    Visibility="Visible">
 
 
                     <!--  Change Theme Color  -->
