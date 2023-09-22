@@ -197,7 +197,7 @@
         <StackPanel Margin="32,16,32,16">
             <!--  Game Settings  -->
             <StackPanel Grid.Row="1">
-    
+
                 <!--  Header  -->
                 <Border
                     Padding="0,0,0,8"

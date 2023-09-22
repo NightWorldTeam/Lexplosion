@@ -383,7 +383,7 @@
                                         FontSize="16"
                                         Foreground="{DynamicResource CheckBoxMarkSolidColorBrush}"
                                         Style="{StaticResource x32IconButtonActivityColor}" />
-                                    <!--<Button
+                                    <!-- TODO: либо восстановить либо убрать кнопку <Button
                                         Margin="8,0,0,0"
                                         Content="Reload"
                                         FontSize="16" Command="{Binding }"

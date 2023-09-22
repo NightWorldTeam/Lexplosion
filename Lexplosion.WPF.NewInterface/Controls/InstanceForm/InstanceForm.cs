@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -277,7 +278,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
                 SetDefaultFormStyle();
                 ApplyTemplateExecuted += () =>
                 {
-                    SetShortDescription(InstanceModel.ShortDescription);
+                    SetShortDescription(InstanceModel.Summary);
                 };
             }
         }
@@ -299,7 +300,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
                 SetDefaultFormStyle();
                 ApplyTemplateExecuted += () =>
                 {
-                    SetShortDescription(InstanceModel.ShortDescription);
+                    SetShortDescription(InstanceModel.Summary);
                 };
             }
         }
@@ -336,7 +337,15 @@ namespace Lexplosion.WPF.NewInterface.Controls
             if (_nameTextBlock == null)
                 return;
 
-            _nameTextBlock.Text = value;
+
+            // todo: IMPORTANT сделать привязку свойств aka binding
+            //Binding binding = new Binding();
+            //binding.Source = InstanceModel;
+            //binding.Path = new PropertyPath("Text");
+            //_nameTextBlock.SetBinding(TextBlock.TextProperty, binding);
+
+
+            _nameTextBlock.Text = InstanceModel.Name;
         }
 
         private void SetShortDescription(string value)
@@ -378,7 +387,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
         private void UpdateAllFields(InstanceModelBase model)
         {
             SetName(model.Name);
-            SetShortDescription(model.ShortDescription);
+            SetShortDescription(model.Summary);
             SetCategories(model.Tags);
             SetAuthor(model.Author);
             SetLogo(model.Logo);
@@ -414,7 +423,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
             var instanceForm = d as InstanceForm;
             var instanceModelBase = ((InstanceModelBase)e.NewValue);
 
-            instanceModelBase.NameChanged += instanceForm.SetName;
+            //instanceModelBase.NameChanged += instanceForm.SetName;
 
             instanceForm.UpdateAllFields(instanceModelBase);
         }

@@ -79,6 +79,7 @@
                         BorderBrush="{DynamicResource ActivitySolidColorBrush}"
                         BorderThickness="1"
                         CornerRadius="5">
+                        <!--  TODO: Language Key Here  -->
                         <TextBlock
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
@@ -86,41 +87,6 @@
                             Foreground="{DynamicResource ActivitySolidColorBrush}"
                             Text="Back" />
                     </Border>
-
-                    <!--<StackPanel
-                        Grid.Column="1"
-                        Margin="16,0,0,0"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Center"
-                        Orientation="Horizontal">
-
-                        <Border
-                            Width="32"
-                            Height="32"
-                            BorderBrush="{DynamicResource ActivitySolidColorBrush}"
-                            BorderThickness="1"
-                            CornerRadius="5"
-                            RenderTransformOrigin="0.5 0.5">
-
-                            <Border.RenderTransform>
-                                <RotateTransform Angle="90" />
-                            </Border.RenderTransform>
-
-                            <Border.Background>
-                                <SolidColorBrush Opacity="0.1" Color="{DynamicResource ActivityColor}" />
-                            </Border.Background>
-
-                            <Viewbox
-                                Width="15"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center">
-                                <Path
-                                    extensions:Path.StringKeyData="More"
-                                    Fill="{DynamicResource ActivitySolidColorBrush}"
-                                    Stretch="Fill" />
-                            </Viewbox>
-                        </Border>
-                    </StackPanel>-->
                 </Grid>
 
                 <!--  Header  -->
@@ -149,7 +115,7 @@
                                     <Border
                                         Width="54"
                                         Height="54"
-                                        Background="{Binding InstanceImage}"
+                                        Background="{Binding InstanceImage, Mode=OneWay}"
                                         CornerRadius="5" />
 
                                     <StackPanel>
@@ -159,8 +125,9 @@
                                             FontWeight="Medium"
                                             Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
                                             TextWrapping="WrapWithOverflow">
+                                            <!--  TODO: Language Key Here  -->
                                             <Run Text="Версия игры:" />
-                                            <Run Foreground="{DynamicResource ActivitySolidColorBrush}" Text="{Binding InstanceVersion}" />
+                                            <Run Foreground="{DynamicResource ActivitySolidColorBrush}" Text="{Binding InstanceVersion, Mode=OneWay}" />
                                         </TextBlock>
 
                                         <TextBlock
@@ -169,8 +136,9 @@
                                             FontWeight="Medium"
                                             Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
                                             TextWrapping="WrapWithOverflow">
+                                            <!--  TODO: Language Key Here  -->
                                             <Run Text="Модлоадер:" />
-                                            <Run Foreground="{DynamicResource ActivitySolidColorBrush}" Text="{Binding InstanceModloader}" />
+                                            <Run Foreground="{DynamicResource ActivitySolidColorBrush}" Text="{Binding InstanceModloader, Mode=OneWay}" />
                                         </TextBlock>
 
                                         <TextBlock
@@ -179,8 +147,9 @@
                                             FontWeight="Medium"
                                             Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
                                             TextWrapping="WrapWithOverflow">
+                                            <!--  TODO: Language Key Here  -->
                                             <Run Text="Наиграно:" />
-                                            <Run Foreground="{DynamicResource ActivitySolidColorBrush}" Text="10ч" />
+                                            <Run Foreground="{DynamicResource ActivitySolidColorBrush}" Text="{Binding PlayerPlayedTime, Mode=OneWay}" />
                                         </TextBlock>
                                     </StackPanel>
                                 </StackPanel>

@@ -1,6 +1,7 @@
 ﻿using Lexplosion.Logic;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Objects;
+using Lexplosion.WPF.NewInterface.Core;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,7 +9,7 @@ using System.Runtime.CompilerServices;
 
 namespace Lexplosion.WPF.NewInterface.Models.InstanceModel
 {
-    public class InstanceModelBase
+    public class InstanceModelBase : ViewModelBase
     {
         private InstanceClient _instanceClient;
 
@@ -16,8 +17,12 @@ namespace Lexplosion.WPF.NewInterface.Models.InstanceModel
         #region Events
 
 
-        public event Action<string> NameChanged;
+        public event Action NameChanged;
+        public event Action GameVersionChanged;
+        public event Action ModloaderChanged;
         public event Action LogoChanged;
+        public event Action SummaryChanged;
+        public event Action DescriptionChanged;
 
         public event Action<string> DownloadStartedEvent;
         public event Action<string> DownloadComplitedEvent;
@@ -37,24 +42,14 @@ namespace Lexplosion.WPF.NewInterface.Models.InstanceModel
         private DownloadModel _downloadModel;
 
 
-        public string LocalId { get; }
+        public string LocalId { get => _instanceClient.LocalId; }
 
-
-        private string _name;
-        public string Name
-        {
-            get => _name; set
-            {
-                _name = value;
-                //NameChanged?.Invoke(value);
-            }
-        }
-
-        public string Author { get; protected set; }
-        public string ShortDescription { get; protected set; }
-        public string Description { get; protected set; }
-        public byte[] Logo { get; protected set; }
-        public IEnumerable<IProjectCategory> Tags { get; protected set; }
+        public string Name { get => _instanceClient.Name; }
+        public string Author { get => _instanceClient.Author; }
+        public string Summary { get => _instanceClient.Summary; }
+        public string Description { get => _instanceClient.Description; }
+        public byte[] Logo { get; }
+        public IEnumerable<IProjectCategory> Tags { get; }
 
 
         public bool IsLaunched { get; private set; }
@@ -62,7 +57,6 @@ namespace Lexplosion.WPF.NewInterface.Models.InstanceModel
 
         public BaseInstanceData InstanceData { get => _instanceClient.GetBaseData; }
 
-        public IEnumerable<object> Test { get => InstanceAddon.GetInstalledMods(InstanceData); }
 
         #endregion Properties
 
@@ -73,12 +67,10 @@ namespace Lexplosion.WPF.NewInterface.Models.InstanceModel
         public InstanceModelBase(InstanceClient instanceClient)
         {
             _instanceClient = instanceClient;
+            _instanceClient.NameChanged += OnNameChanged;
             _instanceClient.LogoChanged += OnLogoChanged;
 
-            Name = _instanceClient.Name;
-            ShortDescription = _instanceClient.Summary;
-            Author = _instanceClient.Author;
-            Description = _instanceClient.Description;
+
             Logo = _instanceClient.Logo;
             Runtime.DebugWrite(Logo == null ? "Null" : Logo.Length.ToString());
             Tags = _instanceClient.Categories;
@@ -182,16 +174,29 @@ namespace Lexplosion.WPF.NewInterface.Models.InstanceModel
         }
 
 
-        public void SaveSettings(Settings settings) 
+        public void SaveSettings(Settings settings)
         {
             _instanceClient.SaveSettings(settings);
         }
 
-        public Settings GetSettings() 
+        public Settings GetSettings()
         {
             return _instanceClient.GetSettings();
         }
 
+
+        // GamePropeties
+
+        public void DisableOptifine()
+        {
+
+        }
+
+
+        public void ChangeOverviewParameters(BaseInstanceData baseInstance, string logoPath)
+        {
+            _instanceClient.ChangeParameters(baseInstance, logoPath);
+        }
 
         #endregion Public Methods
 
@@ -199,12 +204,29 @@ namespace Lexplosion.WPF.NewInterface.Models.InstanceModel
         #region Private Methods
 
 
+        private void OnNameChanged()
+        {
+            OnPropertyChanged(nameof(Name));
+            NameChanged?.Invoke();
+        }
+
         private void OnLogoChanged()
         {
-            Logo = _instanceClient.Logo;
+            OnPropertyChanged(nameof(Logo));
             LogoChanged?.Invoke();
         }
 
+        private void OnSummaryChanged() 
+        {
+            OnPropertyChanged(nameof(Summary));
+            SummaryChanged?.Invoke();
+        }
+
+        private void OnDescriptionChanged() 
+        {
+            OnPropertyChanged(nameof(Description));
+            DescriptionChanged?.Invoke();
+        }
 
         #endregion Private Methods
     }

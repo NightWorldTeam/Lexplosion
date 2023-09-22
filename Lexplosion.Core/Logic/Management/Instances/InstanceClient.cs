@@ -84,7 +84,10 @@ namespace Lexplosion.Logic.Management.Instances
         /// 
         /// </summary>
         public event Action NameChanged;
+        public event Action SummaryChanged;
+        public event Action DescriptionChanged;
         public event Action LogoChanged;
+        public event Action GameVersionChanged;
         #endregion
 
         #region info
@@ -97,6 +100,7 @@ namespace Lexplosion.Logic.Management.Instances
             private set
             {
                 _name = value;
+                NameChanged?.Invoke();
                 OnPropertyChanged();
             }
         }
@@ -118,7 +122,6 @@ namespace Lexplosion.Logic.Management.Instances
             get => _logo;
             private set
             {
-                Runtime.DebugWrite(_logo + " " + 123);
                 if (value != null)
                 {
                     _logo = ImageTools.ResizeImage(value, 120, 120);
@@ -141,6 +144,7 @@ namespace Lexplosion.Logic.Management.Instances
             private set
             {
                 _gameVersion = value;
+                GameVersionChanged?.Invoke();
                 OnPropertyChanged();
             }
         }
@@ -153,6 +157,7 @@ namespace Lexplosion.Logic.Management.Instances
             {
                 _summary = value;
                 OnPropertyChanged();
+                SummaryChanged?.Invoke();
                 StateChanged?.Invoke();
             }
         }

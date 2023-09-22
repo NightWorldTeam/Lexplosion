@@ -13,7 +13,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
 {
     public sealed class InstanceAddonsContainerModel 
     {
-        public AddonType Type { get; }
+        public AddonType Type { get; } 
 
         private ObservableCollection<InstanceAddon> _addonsList = new ObservableCollection<InstanceAddon>();
         public IEnumerable<InstanceAddon> AddonsList { get => _addonsList; }

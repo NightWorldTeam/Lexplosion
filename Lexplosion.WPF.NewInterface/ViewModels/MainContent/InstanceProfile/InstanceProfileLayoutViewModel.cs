@@ -55,18 +55,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
         public InstanceProfileLayoutViewModel(InstanceModelBase instanceModelBase)
         {
             _instanceModel = instanceModelBase;
-            LeftPanel = new InstanceProfileLeftPanelViewModel();
-            _instanceModel.LogoChanged += () =>
-            {
-                App.Current.Dispatcher.Invoke(() => { 
-                    LeftPanel.InstanceImage = new ImageBrush(ImageTools.ToImage(_instanceModel.Logo));
-                });
-            };
-            LeftPanel.InstanceName = _instanceModel.Name;
-            LeftPanel.InstanceImage = new ImageBrush(ImageTools.ToImage(_instanceModel.Logo));
-            LeftPanel.InstanceVersion = _instanceModel.InstanceData.GameVersion;
-            LeftPanel.InstanceModloader = _instanceModel.InstanceData.Modloader.ToString();
-
+            LeftPanel = new InstanceProfileLeftPanelViewModel(_instanceModel);
             LeftPanel.SelectedItemChanged += OnLeftPanelSelectedItemChanged;
 
             InitDefaultLeftPanelTabs();

@@ -7,7 +7,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Tools
     {
         public static BitmapImage ToImage(byte[] imageBytes)
         {
-            if (imageBytes?.Length == 0)
+            if (imageBytes == null || imageBytes.Length == 0)
                 return new BitmapImage(new Uri("pack://application:,,,/assets/images/icons/non_image.png"));
 
             using (var stream = new System.IO.MemoryStream(imageBytes))

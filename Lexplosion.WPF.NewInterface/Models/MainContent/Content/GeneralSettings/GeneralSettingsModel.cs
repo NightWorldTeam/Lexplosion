@@ -100,16 +100,6 @@ namespace Lexplosion.WPF.NewInterface.Models.MainContent.Content
             }
         }
 
-        public string GameArgs
-        {
-            get => GlobalData.GeneralSettings.GameArgs; set
-            {
-                GlobalData.GeneralSettings.GameArgs = value;
-                OnPropertyChanged();
-                DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
-            }
-        }
-
         public bool? IsShowConsole
         {
             get => GlobalData.GeneralSettings.IsShowConsole; set

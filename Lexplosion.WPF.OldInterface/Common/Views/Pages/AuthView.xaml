@@ -494,9 +494,6 @@
                             <TextBlock Text="{DynamicResource accountNightWorld}" />
                         </ComboBoxItem>
                         <ComboBoxItem Margin="2,0" FontSize="14">
-                            <TextBlock Text="{DynamicResource accountMojang}" />
-                        </ComboBoxItem>
-                        <ComboBoxItem Margin="2,0" FontSize="14">
                             <TextBlock Text="{DynamicResource accountMicrosoft}" />
                         </ComboBoxItem>
                         <!--<ComboBoxItem>

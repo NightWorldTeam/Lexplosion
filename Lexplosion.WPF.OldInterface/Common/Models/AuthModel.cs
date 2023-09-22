@@ -112,14 +112,18 @@ namespace Lexplosion.Common.Models
             {
                 _accountTypeSelectedIndex = value;
                 OnPropertyChanged();
-                if (_accountTypeSelectedIndex == 3)
+                Console.WriteLine(value);
+                if (_accountTypeSelectedIndex == 2)
                 {
                     LoadSavedAccount(AccountType.Microsoft);
                     if (_isSavedAccountOAuth2)
                         IsMicrosoftAccountManager = true;
                     else FollowToMicrosoft();
                 }
-                LoadSavedAccount((AccountType)_accountTypeSelectedIndex);
+                else
+                { 
+                    LoadSavedAccount((AccountType)_accountTypeSelectedIndex);
+                }
                 OnPropertyChanged(nameof(NoAccountAuth));
             }
         }

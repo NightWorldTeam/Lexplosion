@@ -34,5 +34,13 @@ namespace Lexplosion.WPF.NewInterface.Commands
         {
             return variable ?? (variable = new RelayCommand(action));
         }
+
+        public static ICommand GetCommand<T>(ref RelayCommand variable, Action<T> action) 
+        {
+            return variable ?? (variable = new RelayCommand((obj) =>
+            {
+                action((T)obj);
+            }));
+        }
     }
 }

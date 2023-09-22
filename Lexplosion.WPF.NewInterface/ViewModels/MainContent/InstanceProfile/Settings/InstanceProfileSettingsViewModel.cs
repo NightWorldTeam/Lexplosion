@@ -22,10 +22,21 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
 
         private readonly ComputerInfo ci = new ComputerInfo();
 
-        public IEnumerable<string> Resolutions { get; }
+
+        #region Properties
 
 
-        #region Resolution
+        public Settings InstanceSettings
+        {
+            get => _instanceSettings; set
+            {
+                _instanceSettings = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+        #region WindowProperties
 
 
         private string _selectedResolution;
@@ -39,32 +50,8 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
             }
         }
 
+        public IEnumerable<string> Resolutions { get; }
 
-        #endregion Resolution
-
-
-        #region Ram
-
-
-        public ulong TotalPhysicalMemoryMb { get; }
-
-        public ulong RamStep { get; }
-
-
-        #endregion Ram
-
-
-        #region Properties
-
-
-        public Settings InstanceSettings
-        {
-            get => _instanceSettings; set
-            {
-                _instanceSettings = value;
-                OnPropertyChanged();
-            }
-        }
 
         public uint WindowHeight
         {
@@ -99,6 +86,18 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
             }
         }
 
+
+        #endregion WindowProperties
+
+
+        #region RamProperties
+
+
+        public ulong TotalPhysicalMemoryMb { get; }
+
+        public ulong RamStep { get; }
+
+
         public uint Xmx
         {
             get => (uint)InstanceSettings.Xmx; set
@@ -121,27 +120,12 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
             }
         }
 
-        public string GameArgs
-        {
-            get => InstanceSettings.GameArgs; set
-            {
-                InstanceSettings.GameArgs = value;
-                _instanceSettingsCopy.GameArgs = value;
-                OnPropertyChanged();
-                _instanceModel.SaveSettings(_instanceSettingsCopy);
-            }
-        }
 
-        public bool IsAutoUpdate
-        {
-            get => (bool)InstanceSettings.IsAutoUpdate; set
-            {
-                InstanceSettings.IsAutoUpdate = value;
-                _instanceSettingsCopy.IsAutoUpdate = value;
-                OnPropertyChanged();
-                _instanceModel.SaveSettings(_instanceSettingsCopy);
-            }
-        }
+        #endregion RamProperties
+
+
+        #region Java Properties
+
 
         public string JavaPath
         {
@@ -171,16 +155,12 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
             }
         }
 
-        public bool IsHiddenMode
-        {
-            get => (bool)InstanceSettings.IsHiddenMode; set
-            {
-                InstanceSettings.IsHiddenMode = value;
-                _instanceSettingsCopy.IsHiddenMode = value;
-                OnPropertyChanged();
-                _instanceModel.SaveSettings(_instanceSettingsCopy);
-            }
-        }
+
+        #endregion Java Properties
+
+
+        #region Launcher Properties
+
 
         public bool IsShowConsole
         {
@@ -194,6 +174,31 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
                 ConsoleParameterChanged?.Invoke(value == true, _instanceModel.LocalId);
             }
         }
+
+        public bool IsHiddenMode
+        {
+            get => (bool)InstanceSettings.IsHiddenMode; set
+            {
+                InstanceSettings.IsHiddenMode = value;
+                _instanceSettingsCopy.IsHiddenMode = value;
+                OnPropertyChanged();
+                _instanceModel.SaveSettings(_instanceSettingsCopy);
+            }
+        }
+
+        public bool IsAutoUpdate
+        {
+            get => (bool)InstanceSettings.IsAutoUpdate; set
+            {
+                InstanceSettings.IsAutoUpdate = value;
+                _instanceSettingsCopy.IsAutoUpdate = value;
+                OnPropertyChanged();
+                _instanceModel.SaveSettings(_instanceSettingsCopy);
+            }
+        }
+
+
+        #endregion Launcher Properties
 
 
         #endregion Properties

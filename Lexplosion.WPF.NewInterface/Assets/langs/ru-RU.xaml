@@ -228,5 +228,16 @@
     <!--  Instance Profile Configuration  -->
     <!--    -->
     <s:String x:Key="GameType">Тип игры</s:String>
+    <s:String x:Key="GameTypeDescription">Тип игры описание.</s:String>
+
+    <s:String x:Key="VersionDescription">Версия описание.</s:String>
+
     <s:String x:Key="ModloaderVersion">Версия модлоадера</s:String>
+    <s:String x:Key="ModloaderVersionDescription">Выбор версии для выбраного модлоадера.</s:String>
+
+    <s:String x:Key="IsShowSnapshots">Показывать снапшоты?</s:String>
+    <s:String x:Key="IsShowSnapshotsDescription">Показывает снапшоты в выпадающим меню с версиями игры.</s:String>
+
+    <s:String x:Key="Optifine">Оптифайн</s:String>
+    <s:String x:Key="OptifineDescription">Устанавливает оптифайн на данную сборку.</s:String>
 </ResourceDictionary>
