@@ -199,8 +199,8 @@
     {
         NoAuth,
         NightWorld,
-        Mojang,
-        Microsoft
+        Microsoft,
+        Mojang
     }
 
     public enum InstanceChangelog
