@@ -195,8 +195,8 @@
                             Grid.Column="1"
                             Width="215"
                             HorizontalAlignment="Right"
-                            ItemsSource="{Binding Model.ModloaderModel.Versions}"
-                            SelectedItem="{Binding Model.ModloaderModel.Version}" />
+                            ItemsSource="{Binding Model.ModloaderModel.Versions}" />
+                        <!--  SelectedItem="{Binding Model.ModloaderModel.Version}"  -->
                     </Grid>
                 </Border>
 

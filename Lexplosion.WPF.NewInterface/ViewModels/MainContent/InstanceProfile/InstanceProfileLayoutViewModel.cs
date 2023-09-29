@@ -74,10 +74,12 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
             _settingsLayoutViewModel = new InstanceProfileSettingsLayoutViewModel(_instanceModel);
             _addonsViewModel = new InstanceProfileAddonsLayoutViewModel(_instanceModel);
 
-            LeftPanel.AddTabItem("Overview", "Services", _overviewViewModel);
-            LeftPanel.AddTabItem("Addons", "Addons", _addonsViewModel);
-            LeftPanel.AddTabItem("Settings", "Settings", _settingsLayoutViewModel);
-            LeftPanel.SelectFirst();
+            Lexplosion.Runtime.TaskRun(() => { 
+                LeftPanel.AddTabItem("Overview", "Services", _overviewViewModel);
+                LeftPanel.AddTabItem("Addons", "Addons", _addonsViewModel);
+                LeftPanel.AddTabItem("Settings", "Settings", _settingsLayoutViewModel);
+                LeftPanel.SelectFirst();
+            });
         }
 
         private void OnLeftPanelSelectedItemChanged(ViewModelBase content)

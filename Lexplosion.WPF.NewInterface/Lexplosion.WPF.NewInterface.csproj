@@ -114,6 +114,7 @@
     <Compile Include="Core\Objects\LeftPanelItemModel.cs" />
     <Compile Include="Core\Objects\TabItemModel.cs" />
     <Compile Include="Core\Objects\Theme.cs" />
+    <Compile Include="Core\Tools\HashCodeHelper.cs" />
     <Compile Include="Core\Tools\ImageTools.cs" />
     <Compile Include="Core\Tools\WindowsResolutionTools.cs" />
     <Compile Include="Extensions\Path.cs" />

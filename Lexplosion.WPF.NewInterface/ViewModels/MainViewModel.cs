@@ -2,12 +2,16 @@
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Modal;
 using Lexplosion.WPF.NewInterface.Core.Objects;
+using Lexplosion.WPF.NewInterface.Core.Tools;
 using Lexplosion.WPF.NewInterface.Models.InstanceCatalogControllers;
 using Lexplosion.WPF.NewInterface.Stores;
 using Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile;
 using Lexplosion.WPF.NewInterface.ViewModels.Modal;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
+using System.Windows.Forms.VisualStyles;
 using System.Windows.Media;
 
 namespace Lexplosion.WPF.NewInterface.ViewModels
@@ -63,7 +67,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels
     }
 
 
-    public struct MinecraftVersion
+    public readonly struct MinecraftVersion : IComparable<MinecraftVersion>, IEquatable<MinecraftVersion>
     {
         public enum VersionType
         {
@@ -74,13 +78,60 @@ namespace Lexplosion.WPF.NewInterface.ViewModels
         public string Id { get; }
         public VersionType Type { get; }
 
-        public string FullId { get => Type.ToString() + " " + Id; }
+
+        #region Constructors
+
 
         public MinecraftVersion(string id, VersionType versionType)
         {
             Id = id;
             Type = versionType;
         }
+
+
+        #endregion Constructors
+
+
+        #region Public Methods
+
+
+        public static MinecraftVersion Parse(string str) 
+        {
+
+
+            return new MinecraftVersion();
+        }
+
+        public override string ToString()
+        {
+            return Type.ToString() + " " + Id;
+        }
+
+        public int CompareTo(MinecraftVersion other)
+        {
+            return (Id, Type).CompareTo((other.Id, other.Type));
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCodeHelper.CombineHashCodes(Id.GetHashCode(), Type.GetHashCode());
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || !(obj is MinecraftVersion)) 
+                return false;
+
+            return Equals((MinecraftVersion)obj);
+        }
+
+        public bool Equals(MinecraftVersion other)
+        {
+            return this.Id == other.Id && this.Type == other.Type;
+        }
+
+
+        #endregion Public Methods
     }
 
 
@@ -132,7 +183,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels
         public MainViewModel()
         {
             PreLoadGameVersions();
-            //PreLoadGameVersionsStructs();
+            PreLoadGameVersionsStructs();
 
             ModalNavigationStore.Instance.CurrentViewModelChanged += Instance_CurrentViewModelChanged;
             ModalNavigationStore.Instance.Open(new LeftMenuControl(
@@ -168,7 +219,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels
 
             NavigationStore.CurrentViewModelChanged += NavigationStore_CurrentViewModelChanged;
             //NavigationStore.CurrentViewModel = new MainMenuLayoutViewModel(); 
-            NavigationStore.CurrentViewModel = new InstanceProfileLayoutViewModel(LibraryController.Instance.Instances.First());
+            NavigationStore.CurrentViewModel = new InstanceProfileLayoutViewModel(LibraryController.Instance.Instances.Last());
                 //new InstanceModelBase(InstanceClient.GetOutsideInstances( InstanceSource.Modrinth, 2, 0, new IProjectCategory[] { new SimpleCategory() { Name = "All", Id = "-1", ClassId = "", ParentCategoryId = "" }}, "", CfSortField.Featured, "1.19.4")[1])); //new MainMenuLayoutViewModel(); //new ModrinthRepositoryViewModel(AddonType.Mods, ClientType.Fabric, "1.19.4");
             //NavigationStore.Content = new AuthorizationMenuViewModel(NavigationStore);
         }
@@ -225,29 +276,29 @@ namespace Lexplosion.WPF.NewInterface.ViewModels
 
         private static void PreLoadGameVersionsStructs()
         {
-            //var releaseOnlyVersions = new List<MinecraftVersion>();
-            //var allVersions = new List<MinecraftVersion>();
+            var releaseOnlyVersions = new List<MinecraftVersion>();
+            var allVersions = new List<MinecraftVersion>();
 
-            //Lexplosion.Runtime.TaskRun(() =>
-            //{
-            //    foreach (var v in ToServer.GetVersionsList())
-            //    {
-            //        if (v.type == "release")
-            //        {
-            //            releaseOnlyVersions.Add(new MinecraftVersion(v.id, MinecraftVersion.VersionType.Release));
-            //            allVersions.Add(new MinecraftVersion(v.id, MinecraftVersion.VersionType.Release));
-            //        }
-            //        else
-            //        {
-            //            allVersions.Add(new MinecraftVersion(v.id, MinecraftVersion.VersionType.Snapshot));
-            //        }
+            Lexplosion.Runtime.TaskRun(() =>
+            {
+                foreach (var v in ToServer.GetVersionsList())
+                {
+                    if (v.type == "release")
+                    {
+                        releaseOnlyVersions.Add(new MinecraftVersion(v.id, MinecraftVersion.VersionType.Release));
+                        allVersions.Add(new MinecraftVersion(v.id, MinecraftVersion.VersionType.Release));
+                    }
+                    else
+                    {
+                        allVersions.Add(new MinecraftVersion(v.id, MinecraftVersion.VersionType.Snapshot));
+                    }
 
-            //    }
-            //    ReleaseGameVersions1 = releaseOnlyVersions.ToArray();
-            //    AllGameVersions1 = allVersions.ToArray();
-            //    releaseOnlyVersions.Clear();
-            //    allVersions.Clear();
-            //});
+                }
+                ReleaseGameVersions1 = releaseOnlyVersions.ToArray();
+                AllGameVersions1 = allVersions.ToArray();
+                releaseOnlyVersions.Clear();
+                allVersions.Clear();
+            });
         }
 
 

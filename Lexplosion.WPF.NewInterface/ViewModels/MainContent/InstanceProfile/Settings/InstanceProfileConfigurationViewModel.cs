@@ -1,7 +1,6 @@
 ﻿using Lexplosion.Logic.Management.Instances;
 using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
-using Lexplosion.WPF.NewInterface.Core.GameExtensions;
 using Lexplosion.WPF.NewInterface.Models.InstanceModel;
 using System.Windows.Input;
 
@@ -30,28 +29,19 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
             get => HasVersionChanged();
         }
 
-
         /// <summary>
         /// Список версий майнкрафта
         /// </summary>
-        public string[] GameVersions 
+        public MinecraftVersion[] GameVersions
         {
-            get => IsShowSnapshots ? MainViewModel.AllGameVersions : MainViewModel.ReleaseGameVersions;
+            get => IsShowSnapshots ? MainViewModel.AllGameVersions1 : MainViewModel.ReleaseGameVersions1;
         }
-
-        /// <summary>
-        /// Список версий майнкрафта
-        /// </summary>
-        //public MinecraftVersion[] GameVersions1
-        //{
-        //    get => IsShowSnapshots ? MainViewModel.AllGameVersions1 : MainViewModel.ReleaseGameVersions1;
-        //}
 
         /// <summary>
         /// Версия сборки
         /// </summary>
-        private string _version;
-        public string Version 
+        private MinecraftVersion _version;
+        public MinecraftVersion Version 
         {
             get => _version; set
             {
@@ -70,7 +60,10 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
                 OnPropertyChanged();
 
                 // Убираем пролаг при клике
-                Lexplosion.Runtime.TaskRun(() => OnPropertyChanged(nameof(GameVersions)));
+                Lexplosion.Runtime.TaskRun(() =>
+                {
+                    OnPropertyChanged(nameof(GameVersions));
+                });
             }
         }
 
@@ -88,8 +81,10 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
 
             InstanceData = instanceModelBase.InstanceData;
             OldInstanceData = instanceModelBase.InstanceData;
-            
-            Version = InstanceData.GameVersion ?? GameVersions[0];
+
+
+            var s = InstanceData.GameVersion;
+            Version = new MinecraftVersion("1.20.1", MinecraftVersion.VersionType.Release);
         }
 
 
@@ -112,7 +107,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
 
         private bool HasVersionChanged() 
         {
-            return OldInstanceData.GameVersion != Version?.Replace("snapshot ", "").Replace("release ", "");
+            return OldInstanceData.GameVersion != Version.Id.ToString();
         }
 
 
