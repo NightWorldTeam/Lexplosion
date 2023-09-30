@@ -17,6 +17,7 @@
         <ResourceDictionary Source="DropdownMenu/DropdownMenu.xaml" />
 
         <ResourceDictionary Source="InstanceForm/InstanceForm.xaml" />
+        <ResourceDictionary Source="Loader/Loader.xaml" />
 
 
 

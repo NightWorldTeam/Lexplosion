@@ -93,6 +93,7 @@
     <Compile Include="Controls\DropdownMenu\DropdownMenu.cs" />
     <Compile Include="Controls\InstanceForm\InstanceForm.cs" />
     <Compile Include="Controls\InstanceForm\LowerMenuButton.cs" />
+    <Compile Include="Controls\Loader\Loader.cs" />
     <Compile Include="Controls\ModalControl\ModalControl.cs" />
     <Compile Include="Controls\Paginator\IPaginable.cs" />
     <Compile Include="Controls\Paginator\Paginator.cs" />
@@ -244,6 +245,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\InstanceForm\InstanceForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Loader\Loader.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

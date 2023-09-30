@@ -10,8 +10,6 @@ using Lexplosion.WPF.NewInterface.ViewModels.Modal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Policy;
-using System.Windows.Forms.VisualStyles;
 using System.Windows.Media;
 
 namespace Lexplosion.WPF.NewInterface.ViewModels
@@ -219,7 +217,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels
 
             NavigationStore.CurrentViewModelChanged += NavigationStore_CurrentViewModelChanged;
             //NavigationStore.CurrentViewModel = new MainMenuLayoutViewModel(); 
-            NavigationStore.CurrentViewModel = new InstanceProfileLayoutViewModel(LibraryController.Instance.Instances.Last());
+            NavigationStore.CurrentViewModel = new InstanceProfileLayoutViewModel(LibraryController.Instance.Instances.First());
                 //new InstanceModelBase(InstanceClient.GetOutsideInstances( InstanceSource.Modrinth, 2, 0, new IProjectCategory[] { new SimpleCategory() { Name = "All", Id = "-1", ClassId = "", ParentCategoryId = "" }}, "", CfSortField.Featured, "1.19.4")[1])); //new MainMenuLayoutViewModel(); //new ModrinthRepositoryViewModel(AddonType.Mods, ClientType.Fabric, "1.19.4");
             //NavigationStore.Content = new AuthorizationMenuViewModel(NavigationStore);
         }

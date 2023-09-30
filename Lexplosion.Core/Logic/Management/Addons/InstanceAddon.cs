@@ -1005,7 +1005,26 @@ namespace Lexplosion.Logic.Management.Instances
         }
 
         /// <summary>
-        /// Возвращает список модов. При вызове так же сохраняет спсиок модов, 
+        /// Возвращает список аддонов. 
+        /// </summary>
+        /// <param name="type">Тип аддонов</param>
+        /// <param name="baseInstanceData">Информация о модпаке аддоны которого нужно получить</param>
+        /// <returns>Лист адднов определенного типа указанной сборки</returns>
+        /// <exception cref="ArgumentException">Сообщает о том, что был передан тип аддонов который не рассматривается в методе.</exception>
+        public static IList<InstanceAddon> GetInstalledAddons(AddonType type, BaseInstanceData baseInstanceData)
+        {
+            return type switch
+            {
+                AddonType.Mods => GetInstalledMods(baseInstanceData),
+                AddonType.Maps => GetInstalledWorlds(baseInstanceData),
+                AddonType.Resourcepacks => GetInstalledResourcepacks(baseInstanceData),
+                AddonType.Shaders => GetInstalledMods(baseInstanceData),
+                _ => throw new ArgumentException("Ты передал мне тип который тут не расматривается")
+            };
+        }
+
+        /// <summary>
+        /// Возвращает список модов. При вызове так же сохраняет список модов, 
         /// анализирует папку mods и пихает в список моды которые были в папке, но которых не было в списке.
         /// </summary>
         /// <param name="modpackInfo">Инфа о модпаке с которого нужно получить список модов</param>
