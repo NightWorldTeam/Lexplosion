@@ -1,0 +1,82 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Lexplosion.Logic.Management
+{
+    public sealed class MinecraftVersion : IComparable<MinecraftVersion>, IEquatable<MinecraftVersion>
+    {
+        public enum VersionType
+        {
+            Release,
+            Snapshot
+        }
+
+        public string Id { get; }
+        public VersionType Type { get; }
+
+        public bool IsNan { get => Id == null; }
+
+
+        #region Constructors
+
+
+        public MinecraftVersion()
+        {
+            Id = null;
+            Type = VersionType.Release;
+        }
+
+
+        public MinecraftVersion(string id, VersionType versionType)
+        {
+            Id = id;
+            Type = versionType;
+        }
+
+
+        #endregion Constructors
+
+
+        #region Public Methods
+
+
+        public override string ToString()
+        {
+            return Type.ToString() + " " + Id;
+        }
+
+        public int CompareTo(MinecraftVersion other)
+        {
+            return (Id, Type).CompareTo((other.Id, other.Type));
+        }
+
+        public override int GetHashCode()
+        {
+            return CombineHashCodes(Id.GetHashCode(), Type.GetHashCode());
+        }
+
+        private static int CombineHashCodes(int hash1, int hash2)
+        {
+            return ((hash1 << 5) + hash1) ^ hash2;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || !(obj is MinecraftVersion))
+                return false;
+
+            return Equals((MinecraftVersion)obj);
+        }
+
+        public bool Equals(MinecraftVersion other)
+        {
+            return this.Id == other.Id && this.Type == other.Type;
+        }
+
+
+        #endregion Public Methods
+    }
+}

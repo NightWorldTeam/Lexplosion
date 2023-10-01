@@ -196,7 +196,7 @@ namespace Lexplosion.Logic.Management.Instances
             _addonPrototype = addonPrototype;
             _projectId = addonPrototype.ProjectId;
             _modpackInfo = modpackInfo;
-            _gameVersion = modpackInfo.GameVersion;
+            _gameVersion = modpackInfo.GameVersion.Id;
 
             Author = addonPrototype.AuthorName;
             Description = addonPrototype.Description;
@@ -219,7 +219,7 @@ namespace Lexplosion.Logic.Management.Instances
             _addonPrototype = null;
             _projectId = projectId;
             _modpackInfo = modpackInfo;
-            _gameVersion = modpackInfo.GameVersion;
+            _gameVersion = modpackInfo.GameVersion.Id;
         }
 
         /// <summary>
@@ -286,7 +286,7 @@ namespace Lexplosion.Logic.Management.Instances
             var addons = new List<InstanceAddon>();
 
             // получаем спсиок всех аддонов с курсфорджа
-            List<CurseforgeAddonInfo> addonsList = CurseforgeApi.GetAddonsList(pageSize, index * pageSize, type, category, modpackInfo.Modloader, searchFilter, modpackInfo.GameVersion);
+            List<CurseforgeAddonInfo> addonsList = CurseforgeApi.GetAddonsList(pageSize, index * pageSize, type, category, modpackInfo.Modloader, searchFilter, modpackInfo.GameVersion.Id);
 
             // получаем список установленных аддонов
             using (InstalledAddons installedAddons = InstalledAddons.Get(modpackInfo.LocalId))

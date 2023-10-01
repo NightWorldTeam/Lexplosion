@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Lexplosion.Logic.Management;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 
@@ -256,6 +257,24 @@ namespace Lexplosion.Logic.Objects.CommonClientData
         public string jvmArguments;
         public DefaultMinecraftArguments defaultArguments;
         public string gameVersion;
+
+        private MinecraftVersion _gameVersionInfo;
+        public MinecraftVersion gameVersionInfo
+        {
+            get
+            {
+                return _gameVersionInfo;
+            }
+            set
+            {
+                _gameVersionInfo = value;
+                if (!string.IsNullOrWhiteSpace(value?.Id))
+                {
+                    gameVersion = value.Id;
+                }
+            }
+        }
+
         public string assetsVersion;
         public string assetsIndexes;
         public string mainClass;

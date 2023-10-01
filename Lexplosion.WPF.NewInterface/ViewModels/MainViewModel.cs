@@ -95,8 +95,6 @@ namespace Lexplosion.WPF.NewInterface.ViewModels
 
         public static MinecraftVersion Parse(string str) 
         {
-
-
             return new MinecraftVersion();
         }
 

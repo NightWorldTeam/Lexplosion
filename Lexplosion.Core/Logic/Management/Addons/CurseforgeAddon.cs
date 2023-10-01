@@ -145,8 +145,8 @@ namespace Lexplosion.Logic.Management.Addons
 
             var modloader = (_addonInfo.classId == 6) ? _instanceData.Modloader : ClientType.Vanilla; // если это мод (_addonInfo.classId == 6), то передаем модлоадер. Иначе ставим Vanilla
 
-            var files = CurseforgeApi.GetProjectFiles(_addonInfo.id, _instanceData.GameVersion, modloader);
-            _versionInfo = GetLastFile(_instanceData.GameVersion, files, null, (AddonType)_addonInfo?.classId);
+            var files = CurseforgeApi.GetProjectFiles(_addonInfo.id, _instanceData.GameVersion.Id, modloader);
+            _versionInfo = GetLastFile(_instanceData.GameVersion.Id, files, null, (AddonType)_addonInfo?.classId);
         }
 
         public void DefineDefaultVersion()
@@ -240,7 +240,7 @@ namespace Lexplosion.Logic.Management.Addons
 
                 //md будет true, если тип аддона НЕ мод, если клиент без модлоадера или же тип модлоадера клиента совпадает с типом модлоадера мода.
                 bool md = (_addonInfo.classId != 6 || _instanceData.Modloader == ClientType.Vanilla || file.ModloaderType == _instanceData.Modloader);
-                if (file.gameVersion == _instanceData.GameVersion && md && file.fileId > currenId)
+                if (file.gameVersion == _instanceData.GameVersion.Id && md && file.fileId > currenId)
                 {
                     actionIfTrue();
                     return;

@@ -87,6 +87,7 @@
     <Compile Include="Logic\Management\Authentication\NightWorldAuth.cs" />
     <Compile Include="Logic\Management\CategoriesManager.cs" />
     <Compile Include="Logic\Management\Delegates.cs" />
+    <Compile Include="Logic\Management\MinecraftVersion.cs" />
     <Compile Include="Logic\Management\Sources\CurseforgeSource.cs" />
     <Compile Include="Logic\Management\Sources\IInstanceSource.cs" />
     <Compile Include="Logic\Management\InstalledAddons.cs" />

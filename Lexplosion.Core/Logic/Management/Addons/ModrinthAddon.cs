@@ -172,7 +172,7 @@ namespace Lexplosion.Logic.Management.Addons
         private void DefaineLatesVersion_()
         {
             ClientType modloader = (_addonInfo.Type == "mod") ? _instanceData.Modloader : ClientType.Vanilla; // если это мод, то передаем модлоадер. Иначе ставим Vanilla
-            var files = ModrinthApi.GetProjectFiles(_projectId, modloader, _instanceData.GameVersion);
+            var files = ModrinthApi.GetProjectFiles(_projectId, modloader, _instanceData.GameVersion.Id);
 
             if (files.Count > 0 && files[0] != null)
             {
@@ -241,7 +241,7 @@ namespace Lexplosion.Logic.Management.Addons
                     ThreadPool.QueueUserWorkItem((object o) =>
                     {
                         ClientType modloader = ((addonInfo.Type == "mod") ? _instanceData?.Modloader : ClientType.Vanilla) ?? ClientType.Vanilla;
-                        var files = ModrinthApi.GetProjectFiles(ProjectId, modloader, _instanceData?.GameVersion ?? "");
+                        var files = ModrinthApi.GetProjectFiles(ProjectId, modloader, _instanceData?.GameVersion?.Id ?? "");
 
                         if (files.Count > 0 && files[0] != null && files[0].FileId != addonFileId)
                         {

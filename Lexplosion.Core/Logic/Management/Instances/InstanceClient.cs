@@ -389,12 +389,22 @@ namespace Lexplosion.Logic.Management.Instances
             {
                 VersionManifest manifest = DataFilesManager.GetManifest(_localId, false);
 
+                MinecraftVersion versionInfo;
+                if (manifest?.version?.gameVersionInfo?.IsNan != false)
+                {
+                    versionInfo = new MinecraftVersion(GameVersion, MinecraftVersion.VersionType.Release);
+                }
+                else
+                {
+                    versionInfo = manifest.version.gameVersionInfo;
+                }
+
                 return new BaseInstanceData
                 {
                     LocalId = _localId,
                     ExternalId = _externalId,
                     Type = Type,
-                    GameVersion = GameVersion,
+                    GameVersion = versionInfo,
                     InLibrary = InLibrary,
                     Author = Author,
                     Categories = Categories,
@@ -686,7 +696,7 @@ namespace Lexplosion.Logic.Management.Instances
             {
                 manifest.version.modloaderType = data.Modloader;
                 manifest.version.modloaderVersion = data.ModloaderVersion;
-                manifest.version.gameVersion = data.GameVersion;
+                manifest.version.gameVersionInfo = data.GameVersion;
 
                 if (manifest.version.modloaderType == ClientType.Vanilla && data.OptifineVersion != null)
                 {
@@ -715,7 +725,7 @@ namespace Lexplosion.Logic.Management.Instances
             catch { }
 
             Description = data.Description;
-            GameVersion = data.GameVersion;
+            GameVersion = data.GameVersion.Id;
             Summary = data.Summary;
             Categories = data.Categories;
             SaveAssets();

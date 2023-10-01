@@ -95,7 +95,7 @@ namespace Lexplosion.Logic.Management.Instances
     public class BaseInstanceData
     {
         public InstanceSource Type { get; set; }
-        public string GameVersion { get; set; }
+        public MinecraftVersion GameVersion { get; set; }
         public string LocalId { get; set; }
         public string ExternalId { get; set; }
         public bool InLibrary { get; set; }
