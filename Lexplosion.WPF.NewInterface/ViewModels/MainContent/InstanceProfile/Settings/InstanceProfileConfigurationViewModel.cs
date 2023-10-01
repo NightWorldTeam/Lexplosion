@@ -107,7 +107,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
 
         private bool HasVersionChanged() 
         {
-            return OldInstanceData.GameVersion != Version.Id.ToString();
+            return !OldInstanceData.GameVersion.Equals(Version);
         }
 
 

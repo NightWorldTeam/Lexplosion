@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Common.Models.GameExtensions;
 using Lexplosion.Common.ViewModels;
+using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Tools;
 
@@ -12,7 +13,7 @@ namespace Lexplosion.Common.Models.ShowCaseMenu
             CurrentInstanceClient = instanceClient;
             BaseInstanceData = CurrentInstanceClient.GetBaseData;
             UpdateVersions();
-            Version = BaseInstanceData.GameVersion ?? GameVersions[0];
+            Version = BaseInstanceData.GameVersion?.Id ?? GameVersions[0];
             OptifineModel = new OptifineModel(GameExtension.Optifine, Version);
 
             if (BaseInstanceData.Modloader != ClientType.Vanilla)
@@ -83,7 +84,10 @@ namespace Lexplosion.Common.Models.ShowCaseMenu
         {
             get => _version; set
             {
-                _version = BaseInstanceData.GameVersion = value;
+                // TODO: !!! IMPORTANT !!! ~~~ ПЕРЕДАВАТЬ СЮДА КОНКРЕТНЫЙ ТИП ВЕРСИИ
+                // сейчас только release.
+                BaseInstanceData.GameVersion = new MinecraftVersion(value, MinecraftVersion.VersionType.Release);
+                _version = BaseInstanceData.GameVersion.Id;
                 if (ModloaderModel != null)
                 {
                     ModloaderModel = new ModloaderModel(ModloaderModel.GameExtension, _version);

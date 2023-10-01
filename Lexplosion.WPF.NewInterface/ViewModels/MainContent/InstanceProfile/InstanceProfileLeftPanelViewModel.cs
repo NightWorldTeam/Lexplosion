@@ -18,7 +18,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
         }
 
         public string InstanceName { get => _instanceModel.Name; }
-        public string InstanceVersion { get => _instanceModel.InstanceData.GameVersion; }
+        public string InstanceVersion { get => _instanceModel.InstanceData.GameVersion.Id; }
         public string InstanceModloader { get => _instanceModel.InstanceData.Modloader.ToString(); }
         public string PlayerPlayedTime { get => "10ч"; }
 
