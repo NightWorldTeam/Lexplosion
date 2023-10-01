@@ -78,7 +78,12 @@
         Opacity="{DynamicResource SeparateColorOpacity}"
         Color="{StaticResource SeparateColor}" />
 
+
+    <!--    -->
     <!--  Foreground  -->
+    <!--    -->
+
+
     <!--  Primary Foreground  -->
     <Color x:Key="PrimaryForegroundColor">
         #202020
@@ -95,7 +100,6 @@
         Color="{StaticResource PrimaryForegroundColor}" />
 
     <!--  Secondary Foreground  -->
-
     <Color x:Key="SecondaryForegroundColor">
         #666666
     </Color>
@@ -112,7 +116,6 @@
 
 
     <!--  Latest Foreground  -->
-
     <Color x:Key="LatestForegroundColor">
         #B3B3B3
     </Color>
@@ -127,8 +130,27 @@
         Opacity="{DynamicResource LatestForegroundColorOpacity}"
         Color="{StaticResource LatestForegroundColor}" />
 
+    <!--  Brand Color Foreground  -->
+    <Color x:Key="BrandColorForegroundColor">
+        #fff
+    </Color>
 
+    <sys:Double x:Key="BrandColorForegroundColorOpacity">
+        1
+    </sys:Double>
+
+    <SolidColorBrush
+        x:Key="BrandColorForegroundSolidColorBrush"
+        x:Shared="False"
+        Opacity="{DynamicResource BrandColorForegroundColorOpacity}"
+        Color="{StaticResource BrandColorForegroundColor}" />
+
+
+    <!--    -->
     <!--  Control Colors  -->
+    <!--    -->
+
+
     <Color x:Key="CheckBoxMarkColor">
         #ededed
     </Color>

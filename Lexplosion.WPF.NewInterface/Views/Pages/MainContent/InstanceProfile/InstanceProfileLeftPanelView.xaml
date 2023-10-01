@@ -181,18 +181,12 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <Border
-                                Height="32"
-                                Padding="16,8"
+                            <Button
                                 HorizontalAlignment="Stretch"
-                                Background="{DynamicResource ActivitySolidColorBrush}"
-                                CornerRadius="5">
-                                <TextBlock
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    FontWeight="Medium"
-                                    Text="Играть" />
-                            </Border>
+                                HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Center">
+                                <TextBlock extensions:TextBlock.TextByKey="Play" FontWeight="Medium" />
+                            </Button>
 
                             <Border
                                 Grid.Column="1"
@@ -204,23 +198,69 @@
                                 CornerRadius="5"
                                 RenderTransformOrigin="0.5 0.5">
 
-                                <Border.RenderTransform>
-                                    <RotateTransform Angle="90" />
-                                </Border.RenderTransform>
-
                                 <Border.Background>
                                     <SolidColorBrush Opacity="0.1" Color="{DynamicResource ActivityColor}" />
                                 </Border.Background>
 
-                                <Viewbox
-                                    Width="15"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center">
-                                    <Path
-                                        extensions:Path.StringKeyData="More"
-                                        Fill="{DynamicResource ActivitySolidColorBrush}"
-                                        Stretch="Fill" />
-                                </Viewbox>
+                                <controls:DropdownMenu
+                                    Background="{DynamicResource PrimarySolidColorBrush}"
+                                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                    BorderThickness="1"
+                                    PopupPlacement="Bottom"
+                                    PopupVerticalOffset="5">
+                                    <StackPanel>
+                                        <Border Padding="8,8">
+                                            <Grid Grid.IsSharedSizeScope="True" ShowGridLines="True">
+
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" SharedSizeGroup="Icon" />
+                                                    <ColumnDefinition Width="*" SharedSizeGroup="Text" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <Viewbox Height="16">
+                                                    <Path
+                                                        extensions:Path.StringKeyData="Folder"
+                                                        Fill="{DynamicResource LatestForegroundSolidColorBrush}"
+                                                        Stretch="Fill" />
+                                                </Viewbox>
+
+                                                <TextBlock
+                                                    Grid.Column="1"
+                                                    Margin="8,0,0,0"
+                                                    FontWeight="Medium"
+                                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                                    Text="Open Folder" />
+                                            </Grid>
+                                        </Border>
+                                        <Border Padding="8,8" CornerRadius="5">
+
+                                            <Border.Background>
+                                                <SolidColorBrush Opacity="0.1" Color="{DynamicResource ActivityColor}" />
+                                            </Border.Background>
+
+                                            <Grid Grid.IsSharedSizeScope="True" ShowGridLines="True">
+
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" SharedSizeGroup="Icon" />
+                                                    <ColumnDefinition Width="*" SharedSizeGroup="Text" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <Viewbox Height="16">
+                                                    <Path
+                                                        extensions:Path.StringKeyData="Delete"
+                                                        Fill="{DynamicResource ActivitySolidColorBrush}"
+                                                        Stretch="Fill" />
+                                                </Viewbox>
+                                                <TextBlock
+                                                    Grid.Column="1"
+                                                    Margin="8,0,0,0"
+                                                    FontWeight="Medium"
+                                                    Foreground="{DynamicResource ActivitySolidColorBrush}"
+                                                    Text="Delete" />
+                                            </Grid>
+                                        </Border>
+                                    </StackPanel>
+                                </controls:DropdownMenu>
                             </Border>
                         </Grid>
                     </Grid>

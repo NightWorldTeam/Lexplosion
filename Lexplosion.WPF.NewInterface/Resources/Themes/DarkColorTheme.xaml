@@ -81,7 +81,11 @@
         Color="{StaticResource SeparateColor}" />
 
 
+    <!--    -->
     <!--  Foreground  -->
+    <!--    -->
+
+    <!--  Primary Foreground  -->
     <Color x:Key="PrimaryForegroundColor">
         #ededed
     </Color>
@@ -97,7 +101,6 @@
         Color="{StaticResource PrimaryForegroundColor}" />
 
     <!--  Secondary Foreground  -->
-
     <Color x:Key="SecondaryForegroundColor">
         #bebebe
     </Color>
@@ -114,7 +117,6 @@
 
 
     <!--  Latest Foreground  -->
-
     <Color x:Key="LatestForegroundColor">
         #8e8e8e
     </Color>
@@ -144,6 +146,21 @@
         x:Shared="False"
         Opacity="{DynamicResource CheckBoxMarkColorOpacity}"
         Color="{StaticResource CheckBoxMarkColor}" />
+
+    <!--  Brand Color Foreground  -->
+    <Color x:Key="BrandColorForegroundColor">
+        #000
+    </Color>
+
+    <sys:Double x:Key="BrandColorForegroundColorOpacity">
+        1
+    </sys:Double>
+
+    <SolidColorBrush
+        x:Key="BrandColorForegroundSolidColorBrush"
+        x:Shared="False"
+        Opacity="{DynamicResource BrandColorForegroundColorOpacity}"
+        Color="{StaticResource BrandColorForegroundColor}" />
 
 
     <!--  Scroll Bar Thumb Color  -->

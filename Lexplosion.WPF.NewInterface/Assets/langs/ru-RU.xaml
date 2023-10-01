@@ -173,6 +173,10 @@
     <!--  Logo  -->
     <s:String x:Key="More">Больше</s:String>
 
+    <!--  Upper Buttons  -->
+    <s:String x:Key="Play">Играть</s:String>
+    <s:String x:Key="Launch">Запустить</s:String>
+
     <!--  LowerButtons  -->
     <s:String x:Key="DeleteInstance">Удалить сборку</s:String>
     <s:String x:Key="Export">Экспорт</s:String>

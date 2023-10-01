@@ -28,7 +28,7 @@
         x:Key="{x:Type Button}"
         BasedOn="{StaticResource ButtonBasedStyle}"
         TargetType="{x:Type Button}">
-        <Setter Property="TextBlock.Foreground" Value="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+        <Setter Property="TextBlock.Foreground" Value="{DynamicResource BrandColorForegroundSolidColorBrush}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
@@ -119,6 +119,8 @@
                                 <SolidColorBrush Opacity="0.1" Color="{TemplateBinding Background}" />
                             </Ellipse.Stroke>
                         </Ellipse>
+
+                        <ContentPresenter />
                     </Grid>
 
                     <ControlTemplate.Resources>
