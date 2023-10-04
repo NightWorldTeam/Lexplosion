@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using Lexplosion.Logic.Management;
 using Newtonsoft.Json;
 
 //тут хранятся всякие лайтовые классы, в основном нужные для передачи данных и для декодирования JSON
@@ -35,10 +36,10 @@ namespace Lexplosion.Logic.Objects
         public IEnumerable<CategoryBase> Categories;
         public string Summary;
         public string Description;
-        public string GameVersion;
         public string WebsiteUrl;
         public string LogoUrl;
         public string ExternalId;
+        public MinecraftVersion GameVersion;
     }
 
     /// <summary>

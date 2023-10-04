@@ -17,7 +17,7 @@ namespace Lexplosion.Logic.Management
         public string Id { get; }
         public VersionType Type { get; }
 
-        public bool IsNan { get => Id == null; }
+        public bool IsNan { get => string.IsNullOrWhiteSpace(Id); }
 
 
         #region Constructors
@@ -29,11 +29,36 @@ namespace Lexplosion.Logic.Management
             Type = VersionType.Release;
         }
 
-
         public MinecraftVersion(string id, VersionType versionType)
         {
             Id = id;
             Type = versionType;
+        }
+
+        public MinecraftVersion(string id)
+        {
+            Type = VersionType.Release;
+            if (!string.IsNullOrWhiteSpace(id))
+            {
+                string[] parts = id.Split('.');
+                if (parts.Length < 1)
+                {
+                    Type = VersionType.Snapshot;
+                }
+                else
+                {
+                    foreach (string part in parts)
+                    {
+                        if (!Int32.TryParse(part, out _))
+                        {
+                            Type = VersionType.Snapshot;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            Id = id;
         }
 
 

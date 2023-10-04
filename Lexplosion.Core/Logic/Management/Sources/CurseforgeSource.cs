@@ -61,7 +61,7 @@ namespace Lexplosion.Logic.Management.Sources
                         Categories = instance.categories,
                         Summary = instance.summary,
                         Description = instance.summary,
-                        GameVersion = instance.latestFilesIndexes[0].gameVersion,
+                        GameVersion = new MinecraftVersion(instance.latestFilesIndexes[0].gameVersion),
                         WebsiteUrl = instance.links?.websiteUrl,
                         LogoUrl = instance.logo?.url,
                         ExternalId = instance.id

@@ -37,7 +37,7 @@ namespace Lexplosion.Logic.Management.Sources
                             Categories = nwInstances[nwModpack].Categories,
                             Summary = nwInstances[nwModpack].Summary,
                             Description = nwInstances[nwModpack].Description,
-                            GameVersion = nwInstances[nwModpack].GameVersion,
+                            GameVersion = new MinecraftVersion(nwInstances[nwModpack].GameVersion),
                             WebsiteUrl = LaunсherSettings.URL.Base + "modpacks/" + nwModpack,
                             LogoUrl = nwInstances[nwModpack].LogoUrl,
                             ExternalId = nwModpack

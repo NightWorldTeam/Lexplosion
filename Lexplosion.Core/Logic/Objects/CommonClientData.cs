@@ -256,13 +256,25 @@ namespace Lexplosion.Logic.Objects.CommonClientData
         /// </summary>
         public string jvmArguments;
         public DefaultMinecraftArguments defaultArguments;
+        /// <summary>
+        /// Версия игры в виде строки
+        /// </summary>
         public string gameVersion;
 
         private MinecraftVersion _gameVersionInfo;
+
+        /// <summary>
+        /// Вся информация о версии игры
+        /// </summary>
         public MinecraftVersion gameVersionInfo
         {
             get
             {
+                if (_gameVersionInfo?.IsNan != false)
+                {
+                    _gameVersionInfo = new MinecraftVersion(gameVersion);
+                }
+
                 return _gameVersionInfo;
             }
             set

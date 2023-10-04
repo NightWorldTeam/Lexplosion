@@ -67,7 +67,7 @@ namespace Lexplosion.Logic.Management.Sources
                     Categories = _categories,
                     Summary = instance.Summary,
                     Description = instance.Summary,
-                    GameVersion = instance.GameVersions[instance.GameVersions.Count - 1],
+                    GameVersion = new MinecraftVersion(instance.GameVersions[instance.GameVersions.Count - 1]),
                     WebsiteUrl = "https://modrinth.com/modpack/" + instance.Slug,
                     LogoUrl = instance.LogoUrl,
                     ExternalId = instance.ProjectId

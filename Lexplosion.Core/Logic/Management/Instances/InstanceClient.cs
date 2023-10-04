@@ -37,6 +37,32 @@ namespace Lexplosion.Logic.Management.Instances
             //TODO: public List<ICategory> Categories;
             public string Summary;
             public string LogoFileName;
+
+            private MinecraftVersion _gameVersionInfo;
+
+            /// <summary>
+            /// Вся информация о версии игры
+            /// </summary>
+            public MinecraftVersion GameVersionInfo
+            {
+                get
+                {
+                    if (_gameVersionInfo?.IsNan != false)
+                    {
+                        _gameVersionInfo = new MinecraftVersion(GameVersion);
+                    }
+
+                    return _gameVersionInfo;
+                }
+                set
+                {
+                    _gameVersionInfo = value;
+                    if (value?.IsNan == false)
+                    {
+                        GameVersion = value.Id;
+                    }
+                }
+            }
         }
 
         public readonly InstanceSource Type;
@@ -137,8 +163,8 @@ namespace Lexplosion.Logic.Management.Instances
 
         public IEnumerable<CategoryBase> Categories { get; private set; }
 
-        private string _gameVersion;
-        public string GameVersion
+        private MinecraftVersion _gameVersion;
+        public MinecraftVersion GameVersion
         {
             get => _gameVersion;
             private set
@@ -294,7 +320,7 @@ namespace Lexplosion.Logic.Management.Instances
         /// <param name="name">Название сборки</param>
         /// <param name="source">Источник модпака</param>
         /// <param name="gameVersion">Версия игры</param>
-        private InstanceClient(string name, IInstanceSource source, string gameVersion) : this(source)
+        private InstanceClient(string name, IInstanceSource source, MinecraftVersion gameVersion) : this(source)
         {
             Name = name;
             GameVersion = gameVersion;
@@ -329,7 +355,7 @@ namespace Lexplosion.Logic.Management.Instances
         /// <param name="modloaderVersion">Версия модлоадера. Это поле необходимо только если есть модлоадер</param>
         /// <param name="optifineVersion">Версия оптифайна. Если оптифайн не нужен - то null.</param>
         /// <param name="sodium">Устанавливать ли sodium</param>
-        public static InstanceClient CreateClient(string name, InstanceSource type, string gameVersion, ClientType modloader, string logoPath, string modloaderVersion = null, string optifineVersion = null, bool sodium = false)
+        public static InstanceClient CreateClient(string name, InstanceSource type, MinecraftVersion gameVersion, ClientType modloader, string logoPath, string modloaderVersion = null, string optifineVersion = null, bool sodium = false)
         {
             if (modloaderVersion == null) modloader = ClientType.Vanilla;
 
@@ -389,22 +415,12 @@ namespace Lexplosion.Logic.Management.Instances
             {
                 VersionManifest manifest = DataFilesManager.GetManifest(_localId, false);
 
-                MinecraftVersion versionInfo;
-                if (manifest?.version?.gameVersionInfo?.IsNan != false)
-                {
-                    versionInfo = new MinecraftVersion(GameVersion, MinecraftVersion.VersionType.Release);
-                }
-                else
-                {
-                    versionInfo = manifest.version.gameVersionInfo;
-                }
-
                 return new BaseInstanceData
                 {
                     LocalId = _localId,
                     ExternalId = _externalId,
                     Type = Type,
-                    GameVersion = versionInfo,
+                    GameVersion = manifest?.version?.gameVersionInfo,
                     InLibrary = InLibrary,
                     Author = Author,
                     Categories = Categories,
@@ -499,7 +515,7 @@ namespace Lexplosion.Logic.Management.Instances
                                 Author = assetsData.Author ?? UnknownAuthor,
                                 Description = assetsData.Description ?? NoDescription,
                                 Categories = assetsData.Categories ?? new List<SimpleCategory>(),
-                                GameVersion = instanceManifest.version?.gameVersion,
+                                GameVersion = instanceManifest.version?.gameVersionInfo,
                                 Logo = logo,
                                 _profileVersion = instanceVersion
                             };
@@ -513,7 +529,7 @@ namespace Lexplosion.Logic.Management.Instances
                                 Author = UnknownAuthor,
                                 Description = NoDescription,
                                 Categories = new List<CategoryBase>(),
-                                GameVersion = instanceManifest.version?.gameVersion,
+                                GameVersion = instanceManifest.version?.gameVersionInfo,
                                 Logo = logo,
                                 _profileVersion = instanceVersion
                             };
@@ -644,7 +660,7 @@ namespace Lexplosion.Logic.Management.Instances
                         Name = instance.Name ?? UnknownName,
                         Logo = null,
                         Categories = instance.Categories,
-                        GameVersion = instance.GameVersion,
+                        GameVersion = new MinecraftVersion(instance.GameVersion),
                         Summary = instance.Summary ?? NoDescription,
                         Description = instance.Description ?? NoDescription,
                         Author = instance.Author,
@@ -725,7 +741,7 @@ namespace Lexplosion.Logic.Management.Instances
             catch { }
 
             Description = data.Description;
-            GameVersion = data.GameVersion.Id;
+            GameVersion = data.GameVersion;
             Summary = data.Summary;
             Categories = data.Categories;
             SaveAssets();
@@ -1004,7 +1020,7 @@ namespace Lexplosion.Logic.Management.Instances
             {
                 version = new VersionInfo
                 {
-                    gameVersion = GameVersion,
+                    gameVersionInfo = GameVersion,
                     modloaderVersion = modloaderVersion,
                     modloaderType = modloader
                 }
@@ -1217,7 +1233,7 @@ namespace Lexplosion.Logic.Management.Instances
             {
                 Author = Author,
                 Description = Description,
-                GameVersion = instanceManifest?.version?.gameVersion,
+                GameVersionInfo = instanceManifest?.version?.gameVersionInfo,
                 ModloaderType = instanceManifest?.version?.modloaderType ?? ClientType.Vanilla,
                 ModloaderVersion = instanceManifest?.version?.modloaderVersion,
                 Name = name ?? Name,
@@ -1260,7 +1276,7 @@ namespace Lexplosion.Logic.Management.Instances
                     }
 
                     client.Name = parameters.Name;
-                    client.GameVersion = parameters.GameVersion;
+                    client.GameVersion = parameters.GameVersionInfo;
                     client.Author = parameters.Author ?? UnknownAuthor;
                     client.Description = parameters.Description;
                     client.Summary = parameters.Summary;
