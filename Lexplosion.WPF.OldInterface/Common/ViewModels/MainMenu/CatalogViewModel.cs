@@ -319,7 +319,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu
             {
                 lock (_locker)
                 {
-                    var gameVersion = SelectedVersionIndex == 0 ? "" : MainViewModel.ReleaseGameVersions[SelectedVersionIndex + 1];
+                    var gameVersion = SelectedVersionIndex == 0 ? "" : MainViewModel.ReleaseGameVersions[SelectedVersionIndex + 1].Id;
                     Debug.WriteLine(SelectedInstanceSource);
                     var instances = InstanceClient.GetOutsideInstances(
                         SelectedInstanceSource,

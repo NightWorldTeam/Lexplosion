@@ -13,17 +13,17 @@ namespace Lexplosion.Common.Models.ShowCaseMenu
             CurrentInstanceClient = instanceClient;
             BaseInstanceData = CurrentInstanceClient.GetBaseData;
             UpdateVersions();
-            Version = BaseInstanceData.GameVersion?.Id ?? GameVersions[0];
-            OptifineModel = new OptifineModel(GameExtension.Optifine, Version);
+            Version = BaseInstanceData.GameVersion ?? GameVersions[0];
+            OptifineModel = new OptifineModel(GameExtension.Optifine, Version.Id);
 
             if (BaseInstanceData.Modloader != ClientType.Vanilla)
             {
-                ModloaderModel = new ModloaderModel((GameExtension)BaseInstanceData.Modloader, Version);
+                ModloaderModel = new ModloaderModel((GameExtension)BaseInstanceData.Modloader, Version.Id);
                 OptifineModel.IsEnable = false;
             }
             else
             {
-                ModloaderModel = new ModloaderModel(GameExtension.Forge, Version);
+                ModloaderModel = new ModloaderModel(GameExtension.Forge, Version.Id);
                 OptifineModel.IsEnable = BaseInstanceData.OptifineVersion != null;
             }
 
@@ -79,22 +79,22 @@ namespace Lexplosion.Common.Models.ShowCaseMenu
         /// <summary>
         /// Версия игры.
         /// </summary>
-        private string _version;
-        public string Version
+        private MinecraftVersion _version;
+        public MinecraftVersion Version
         {
             get => _version; set
             {
                 // TODO: !!! IMPORTANT !!! ~~~ ПЕРЕДАВАТЬ СЮДА КОНКРЕТНЫЙ ТИП ВЕРСИИ
                 // сейчас только release.
-                BaseInstanceData.GameVersion = new MinecraftVersion(value, MinecraftVersion.VersionType.Release);
-                _version = BaseInstanceData.GameVersion.Id;
+                BaseInstanceData.GameVersion = value;
+                _version = value;
                 if (ModloaderModel != null)
                 {
-                    ModloaderModel = new ModloaderModel(ModloaderModel.GameExtension, _version);
+                    ModloaderModel = new ModloaderModel(ModloaderModel.GameExtension, _version.Id);
                 }
                 if (OptifineModel != null)
                 {
-                    OptifineModel = new OptifineModel(GameExtension.Optifine, _version);
+                    OptifineModel = new OptifineModel(GameExtension.Optifine, _version.Id);
                 }
 
                 OnPropertyChanged();
@@ -115,8 +115,8 @@ namespace Lexplosion.Common.Models.ShowCaseMenu
         /// <summary>
         /// Массив с версиями игры
         /// </summary>
-        private string[] _gameVersions;
-        public string[] GameVersions
+        private MinecraftVersion[] _gameVersions;
+        public MinecraftVersion[] GameVersions
         {
             get => _gameVersions; set
             {
@@ -208,7 +208,7 @@ namespace Lexplosion.Common.Models.ShowCaseMenu
 
             if (extension != GameExtension.Optifine)
             {
-                ModloaderModel = new ModloaderModel(extension, Version);
+                ModloaderModel = new ModloaderModel(extension, Version.Id);
             }
         }
 
@@ -256,13 +256,7 @@ namespace Lexplosion.Common.Models.ShowCaseMenu
 
         private void UpdateVersions()
         {
-            string[] gameVersions;
-            if (IsShowSnapshots)
-            {
-                gameVersions = MainViewModel.AllGameVersions;
-            }
-            else gameVersions = MainViewModel.ReleaseGameVersions;
-            GameVersions = gameVersions;
+            GameVersions = IsShowSnapshots ? MainViewModel.AllGameVersions : MainViewModel.ReleaseGameVersions;
         }
 
         #endregion Private Methods

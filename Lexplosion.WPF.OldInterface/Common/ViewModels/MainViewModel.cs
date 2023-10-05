@@ -35,8 +35,8 @@ namespace Lexplosion.Common.ViewModels
         /// Является static, т.к эксемпляр MainViewModel создаётся в единственном эксемляре, в начале запуска лаунчер, до появляния начального окна.
         /// </summary>
 
-        public static string[] ReleaseGameVersions { get; private set; }
-        public static string[] AllGameVersions { get; private set; }
+        public static MinecraftVersion[] ReleaseGameVersions { get; private set; }
+        public static MinecraftVersion[] AllGameVersions { get; private set; }
 
         #endregion Static Properties and Fields
 
@@ -317,20 +317,21 @@ namespace Lexplosion.Common.ViewModels
         /// </summary>
         private static void PreLoadGameVersions()
         {
-            var releaseOnlyVersions = new List<string>();
-            var allVersions = new List<string>();
+            var releaseOnlyVersions = new List<MinecraftVersion>();
+            var allVersions = new List<MinecraftVersion>();
+
             Lexplosion.Runtime.TaskRun(() =>
             {
                 foreach (var v in ToServer.GetVersionsList())
                 {
                     if (v.type == "release")
                     {
-                        releaseOnlyVersions.Add(v.id);
-                        allVersions.Add("release " + v.id);
+                        releaseOnlyVersions.Add(new MinecraftVersion(v.id, MinecraftVersion.VersionType.Release));
+                        allVersions.Add(new MinecraftVersion(v.id, MinecraftVersion.VersionType.Release));
                     }
                     else
                     {
-                        allVersions.Add("snapshot " + v.id);
+                        allVersions.Add(new MinecraftVersion(v.id, MinecraftVersion.VersionType.Snapshot));
                     }
 
                 }

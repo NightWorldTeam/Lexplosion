@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Common.Models.GameExtensions;
 using Lexplosion.Common.ViewModels;
+using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Instances;
 
 namespace Lexplosion.Common.Models.InstanceFactory
@@ -10,6 +11,7 @@ namespace Lexplosion.Common.Models.InstanceFactory
 
 
         #region Properties
+
 
         /// <summary>
         /// Название сборки.
@@ -47,8 +49,8 @@ namespace Lexplosion.Common.Models.InstanceFactory
         /// <summary>
         /// Версия игры.
         /// </summary>
-        private string _version;
-        public string Version
+        private MinecraftVersion _version;
+        public MinecraftVersion Version
         {
             get => _version; set
             {
@@ -56,17 +58,15 @@ namespace Lexplosion.Common.Models.InstanceFactory
                 _version = value;
                 if (ModloaderModel != null)
                 {
-                    ModloaderModel = new ModloaderModel(GameExtension.Fabric, Version);
-                    ModloaderModel = new ModloaderModel(GameExtension.Quilt, Version);
-                    ModloaderModel = new ModloaderModel(GameExtension.Forge, Version);
-                    ModloaderModel = new ModloaderModel(ModloaderModel.GameExtension, _version);
+                    ModloaderModel = new ModloaderModel(GameExtension.Fabric, Version.Id);
+                    ModloaderModel = new ModloaderModel(GameExtension.Quilt, Version.Id);
+                    ModloaderModel = new ModloaderModel(GameExtension.Forge, Version.Id);
+                    ModloaderModel = new ModloaderModel(ModloaderModel.GameExtension, _version.Id);
                 }
                 if (OptifineModel != null)
                 {
-                    OptifineModel = new OptifineModel(GameExtension.Optifine, _version);
+                    OptifineModel = new OptifineModel(GameExtension.Optifine, _version.Id);
                 }
-
-                var splitedValue = value.Split('.');
 
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(Placeholder));
@@ -169,8 +169,8 @@ namespace Lexplosion.Common.Models.InstanceFactory
         /// <summary>
         /// Массив с версиями игры
         /// </summary>
-        private string[] _gameVersions;
-        public string[] GameVersions
+        private MinecraftVersion[] _gameVersions;
+        public MinecraftVersion[] GameVersions
         {
             get => _gameVersions; set
             {
@@ -189,10 +189,10 @@ namespace Lexplosion.Common.Models.InstanceFactory
         {
             _mainViewModel = mainViewModel;
             UpdateVersions();
-            OptifineModel = new OptifineModel(GameExtension.Optifine, Version);
-            ModloaderModel = new ModloaderModel(GameExtension.Fabric, Version);
-            ModloaderModel = new ModloaderModel(GameExtension.Quilt, Version);
-            ModloaderModel = new ModloaderModel(GameExtension.Forge, Version);
+            OptifineModel = new OptifineModel(GameExtension.Optifine, Version.Id);
+            ModloaderModel = new ModloaderModel(GameExtension.Fabric, Version.Id);
+            ModloaderModel = new ModloaderModel(GameExtension.Quilt, Version.Id);
+            ModloaderModel = new ModloaderModel(GameExtension.Forge, Version.Id);
             ModloaderModel.IsEnable = false;
             OptifineModel.IsEnable = false;
         }
@@ -204,15 +204,9 @@ namespace Lexplosion.Common.Models.InstanceFactory
 
         private void UpdateVersions()
         {
-            string[] gameVersions;
-            if (IsShowSnapshots)
-            {
-                gameVersions = MainViewModel.AllGameVersions;
-            }
-            else gameVersions = MainViewModel.ReleaseGameVersions;
-            Version = gameVersions != null && gameVersions.Length != 0 ? gameVersions[0] : "1.19.2";
-            GameVersions = gameVersions;
-            Version = gameVersions[0];
+            GameVersions = IsShowSnapshots ? MainViewModel.AllGameVersions : MainViewModel.ReleaseGameVersions;
+
+            Version = GameVersions[0];
         }
 
         #endregion Private Methods
@@ -232,7 +226,7 @@ namespace Lexplosion.Common.Models.InstanceFactory
 
             if (extension != GameExtension.Optifine)
             {
-                ModloaderModel = new ModloaderModel(extension, Version);
+                ModloaderModel = new ModloaderModel(extension, Version.Id);
             }
         }
 
@@ -263,7 +257,7 @@ namespace Lexplosion.Common.Models.InstanceFactory
         #region Public Static Methods
 
 
-        public static void CreateLocalInstance(MainViewModel mainViewModel, string name, string version, string logoPath,
+        public static void CreateLocalInstance(MainViewModel mainViewModel, string name, MinecraftVersion version, string logoPath,
             ClientType modloaderType, string modloaderVersion = null, string optifineVersion = null, bool isSodium = false
             )
         {
@@ -283,14 +277,12 @@ namespace Lexplosion.Common.Models.InstanceFactory
 
         public static void CreateLocalInstance(MainViewModel mainViewModel, InstanceFactoryModel model)
         {
-            var instanceVersion = model.Version.Replace("snapshot ", "").Replace("release ", "");
-
             if (model.GameType == GameType.Vanilla)
             {
                 CreateLocalInstance(
                     mainViewModel,
-                    name: model.Name ?? model.Version,
-                    version: instanceVersion,
+                    name: model.Name ?? model.Version.ToString(),
+                    version: model.Version,
                     logoPath: model.LogoPath,
                     ClientType.Vanilla,
                     //modloaderVersion: model.ModloaderVersion,
@@ -301,8 +293,8 @@ namespace Lexplosion.Common.Models.InstanceFactory
             {
                 CreateLocalInstance(
                     mainViewModel,
-                    name: model.Name ?? model.Version + " " + model.ModloaderModel.GameExtension,
-                    version: instanceVersion,
+                    name: model.Name ?? model.Version.ToString() + " " + model.ModloaderModel.GameExtension,
+                    version: model.Version,
                     logoPath: model.LogoPath,
                     (ClientType)model.ModloaderModel.GameExtension,
                     modloaderVersion: model.ModloaderModel.Version,
