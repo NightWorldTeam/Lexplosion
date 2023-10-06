@@ -1,7 +1,9 @@
 ﻿using Lexplosion.Common.Models.GameExtensions;
 using Lexplosion.Common.ViewModels;
+using Lexplosion.Common.Views.Windows;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Instances;
+using System.Linq;
 
 namespace Lexplosion.Common.Models.InstanceFactory
 {
@@ -55,6 +57,7 @@ namespace Lexplosion.Common.Models.InstanceFactory
             get => _version; set
             {
                 _version = value ?? GameVersions[0];
+               
                 if (ModloaderModel != null)
                 {
                     ModloaderModel = new ModloaderModel(GameExtension.Fabric, Version.Id);
@@ -174,6 +177,7 @@ namespace Lexplosion.Common.Models.InstanceFactory
             get => _gameVersions; set
             {
                 _gameVersions = value;
+                Version = value?[0];
                 OnPropertyChanged();
             }
         }
