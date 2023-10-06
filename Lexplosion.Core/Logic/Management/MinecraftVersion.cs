@@ -98,6 +98,11 @@ namespace Lexplosion.Logic.Management
 
         public bool Equals(MinecraftVersion other)
         {
+            if (other == null) 
+            {
+                return false;
+            }
+
             return this.Id == other.Id && this.Type == other.Type;
         }
 

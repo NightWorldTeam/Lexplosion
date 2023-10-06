@@ -1,136 +1,18 @@
-﻿using Lexplosion.Logic.Network;
+﻿using Lexplosion.Logic.Management;
+using Lexplosion.Logic.Network;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Modal;
 using Lexplosion.WPF.NewInterface.Core.Objects;
-using Lexplosion.WPF.NewInterface.Core.Tools;
 using Lexplosion.WPF.NewInterface.Models.InstanceCatalogControllers;
 using Lexplosion.WPF.NewInterface.Stores;
 using Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile;
 using Lexplosion.WPF.NewInterface.ViewModels.Modal;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Media;
 
 namespace Lexplosion.WPF.NewInterface.ViewModels
 {
-    public sealed class UserData : VMBase
-    {
-        public static UserData Instance { get; } = new UserData();
-
-
-        private bool _isAuthrized;
-        public bool IsAuthrized
-        {
-            get => _isAuthrized; set
-            {
-                _isAuthrized = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private AccountType _currentAccountType;
-        public AccountType CurrentAccountType
-        {
-            get => _currentAccountType; set
-            {
-                _currentAccountType = value;
-                OnPropertyChanged();
-            }
-        }
-
-
-        private string _nickname;
-        public string Nickname
-        {
-            get => _nickname; set
-            {
-                _nickname = value;
-                OnPropertyChanged();
-            }
-        }
-
-
-
-        #region Constructors
-
-
-        private UserData()
-        {
-
-        }
-
-
-        #endregion Constructors
-    }
-
-
-    public readonly struct MinecraftVersion : IComparable<MinecraftVersion>, IEquatable<MinecraftVersion>
-    {
-        public enum VersionType
-        {
-            Release,
-            Snapshot
-        }
-
-        public string Id { get; }
-        public VersionType Type { get; }
-
-
-        #region Constructors
-
-
-        public MinecraftVersion(string id, VersionType versionType)
-        {
-            Id = id;
-            Type = versionType;
-        }
-
-
-        #endregion Constructors
-
-
-        #region Public Methods
-
-
-        public static MinecraftVersion Parse(string str) 
-        {
-            return new MinecraftVersion();
-        }
-
-        public override string ToString()
-        {
-            return Type.ToString() + " " + Id;
-        }
-
-        public int CompareTo(MinecraftVersion other)
-        {
-            return (Id, Type).CompareTo((other.Id, other.Type));
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCodeHelper.CombineHashCodes(Id.GetHashCode(), Type.GetHashCode());
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj == null || !(obj is MinecraftVersion)) 
-                return false;
-
-            return Equals((MinecraftVersion)obj);
-        }
-
-        public bool Equals(MinecraftVersion other)
-        {
-            return this.Id == other.Id && this.Type == other.Type;
-        }
-
-
-        #endregion Public Methods
-    }
-
-
     public sealed class MainViewModel : VMBase
     {
         #region Properties
@@ -164,14 +46,12 @@ namespace Lexplosion.WPF.NewInterface.ViewModels
         /// <summary>
         /// Все версии без снапшотов.
         /// </summary>
-        public static string[] ReleaseGameVersions { get; private set; }
-        public static MinecraftVersion[] ReleaseGameVersions1 { get; private set; }
+        public static MinecraftVersion[] ReleaseGameVersions { get; private set; }
 
         /// <summary>
         /// Все версии включая снапшоты.
         /// </summary>
-        public static string[] AllGameVersions { get; private set; }
-        public static MinecraftVersion[] AllGameVersions1 { get; private set; }
+        public static MinecraftVersion[] AllGameVersions { get; private set; }
 
 
         #endregion Properties
@@ -179,7 +59,6 @@ namespace Lexplosion.WPF.NewInterface.ViewModels
         public MainViewModel()
         {
             PreLoadGameVersions();
-            PreLoadGameVersionsStructs();
 
             ModalNavigationStore.Instance.CurrentViewModelChanged += Instance_CurrentViewModelChanged;
             ModalNavigationStore.Instance.Open(new LeftMenuControl(
@@ -215,7 +94,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels
 
             NavigationStore.CurrentViewModelChanged += NavigationStore_CurrentViewModelChanged;
             //NavigationStore.CurrentViewModel = new MainMenuLayoutViewModel(); 
-            NavigationStore.CurrentViewModel = new InstanceProfileLayoutViewModel(LibraryController.Instance.Instances.First());
+            NavigationStore.CurrentViewModel = new InstanceProfileLayoutViewModel(LibraryController.Instance.Instances.Last());
                 //new InstanceModelBase(InstanceClient.GetOutsideInstances( InstanceSource.Modrinth, 2, 0, new IProjectCategory[] { new SimpleCategory() { Name = "All", Id = "-1", ClassId = "", ParentCategoryId = "" }}, "", CfSortField.Featured, "1.19.4")[1])); //new MainMenuLayoutViewModel(); //new ModrinthRepositoryViewModel(AddonType.Mods, ClientType.Fabric, "1.19.4");
             //NavigationStore.Content = new AuthorizationMenuViewModel(NavigationStore);
         }
@@ -245,55 +124,29 @@ namespace Lexplosion.WPF.NewInterface.ViewModels
         /// </summary>
         private static void PreLoadGameVersions()
         {
-            var releaseOnlyVersions = new List<string>();
-            var allVersions = new List<string>();
-
             Lexplosion.Runtime.TaskRun(() =>
             {
-                foreach (var v in ToServer.GetVersionsList())
+                var versionsList = ToServer.GetVersionsList();
+                var releaseOnlyVersions = new List<MinecraftVersion>();
+                var allVersions = new MinecraftVersion[versionsList.Count];
+                var i = 0;
+                foreach (var version in versionsList)
                 {
-                    if (v.type == "release")
+                    if (version.type == "release")
                     {
-                        releaseOnlyVersions.Add(v.id);
-                        allVersions.Add("release " + v.id);
+                        var minecraftVersion = new MinecraftVersion(version.id, MinecraftVersion.VersionType.Release);
+                        allVersions[i] = minecraftVersion;
+                        releaseOnlyVersions.Add(minecraftVersion);
                     }
                     else
                     {
-                        allVersions.Add("snapshot " + v.id);
+                        allVersions[i] = new MinecraftVersion(version.id, MinecraftVersion.VersionType.Snapshot);
                     }
+                    i++;
 
                 }
                 ReleaseGameVersions = releaseOnlyVersions.ToArray();
-                AllGameVersions = allVersions.ToArray();
-                releaseOnlyVersions.Clear();
-                allVersions.Clear();
-            });
-        }
-
-        private static void PreLoadGameVersionsStructs()
-        {
-            var releaseOnlyVersions = new List<MinecraftVersion>();
-            var allVersions = new List<MinecraftVersion>();
-
-            Lexplosion.Runtime.TaskRun(() =>
-            {
-                foreach (var v in ToServer.GetVersionsList())
-                {
-                    if (v.type == "release")
-                    {
-                        releaseOnlyVersions.Add(new MinecraftVersion(v.id, MinecraftVersion.VersionType.Release));
-                        allVersions.Add(new MinecraftVersion(v.id, MinecraftVersion.VersionType.Release));
-                    }
-                    else
-                    {
-                        allVersions.Add(new MinecraftVersion(v.id, MinecraftVersion.VersionType.Snapshot));
-                    }
-
-                }
-                ReleaseGameVersions1 = releaseOnlyVersions.ToArray();
-                AllGameVersions1 = allVersions.ToArray();
-                releaseOnlyVersions.Clear();
-                allVersions.Clear();
+                AllGameVersions = allVersions;
             });
         }
 

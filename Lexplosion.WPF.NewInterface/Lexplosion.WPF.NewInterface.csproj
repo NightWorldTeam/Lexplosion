@@ -110,6 +110,7 @@
     <Compile Include="Core\Modal\ModalViewModelBase.cs" />
     <Compile Include="Core\Objects\ActivityColor.cs" />
     <Compile Include="Core\Objects\CategoryWrapper.cs" />
+    <Compile Include="Core\Objects\FrameworkElementModel.cs" />
     <Compile Include="Core\Objects\LanguageModel.cs" />
     <Compile Include="Core\Objects\ModalLeftMenuTabItem.cs" />
     <Compile Include="Core\Objects\LeftPanelItemModel.cs" />
@@ -137,15 +138,17 @@
     <Compile Include="Models\InstanceModel\DownloadModel.cs" />
     <Compile Include="Models\InstanceModel\InstanceModelBase.cs" />
     <Compile Include="Models\InstanceModel\LaunchModel.cs" />
-    <Compile Include="Models\MainContent\Content\GeneralSettings\AppearanceSettingsModel.cs" />
-    <Compile Include="Models\MainContent\Content\CatalogModel.cs" />
+    <Compile Include="Models\MainContent\InstanceProfile\Settings\InstanceProfileConfigurationModel.cs" />
+    <Compile Include="Models\MainContent\MainMenu\GeneralSettings\AppearanceSettingsModel.cs" />
+    <Compile Include="Models\MainContent\MainMenu\CatalogModel.cs" />
     <Compile Include="Core\Stores\INavigationStore.cs" />
     <Compile Include="Core\Stores\ModalNavigationStore.cs" />
     <Compile Include="Core\Stores\NavigationStore.cs" />
-    <Compile Include="Models\MainContent\Content\GeneralSettings\GeneralSettingsModel.cs" />
-    <Compile Include="Models\MainContent\Content\GeneralSettings\LanguageSettingsModel.cs" />
-    <Compile Include="Models\MainContent\Content\LibraryModel.cs" />
+    <Compile Include="Models\MainContent\MainMenu\GeneralSettings\GeneralSettingsModel.cs" />
+    <Compile Include="Models\MainContent\MainMenu\GeneralSettings\LanguageSettingsModel.cs" />
+    <Compile Include="Models\MainContent\MainMenu\LibraryModel.cs" />
     <Compile Include="Models\MainModel.cs" />
+    <Compile Include="Models\UserData.cs" />
     <Compile Include="Tools\ColorTools.cs" />
     <Compile Include="ViewModels\AddonsRepositories\Modrinth\ModrinthRepositoryViewModel.cs" />
     <Compile Include="ViewModels\Authorization\AuthorizationViewModelBase.cs" />
@@ -581,7 +584,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Models\MainContent\LeftPanel\" />
     <Folder Include="ViewModels\Authorization\OAuth2\" />
     <Folder Include="ViewModels\InstanceForm\" />
   </ItemGroup>

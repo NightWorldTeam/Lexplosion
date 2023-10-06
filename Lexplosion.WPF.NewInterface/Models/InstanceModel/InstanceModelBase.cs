@@ -17,6 +17,8 @@ namespace Lexplosion.WPF.NewInterface.Models.InstanceModel
         #region Events
 
 
+        public event Action StageChanged;
+
         public event Action NameChanged;
         public event Action GameVersionChanged;
         public event Action ModloaderChanged;
@@ -50,10 +52,12 @@ namespace Lexplosion.WPF.NewInterface.Models.InstanceModel
         public string Description { get => _instanceClient.Description; }
         public byte[] Logo { get; }
         public IEnumerable<IProjectCategory> Tags { get; }
+        public InstanceSource Type { get => _instanceClient.Type; }
 
 
         public bool IsLaunched { get; private set; }
         public bool IsInstalled { get => _instanceClient.IsInstalled; }
+        public bool InLibrary { get => _instanceClient.InLibrary; }
 
         public BaseInstanceData InstanceData { get => _instanceClient.GetBaseData; }
 
@@ -67,8 +71,10 @@ namespace Lexplosion.WPF.NewInterface.Models.InstanceModel
         public InstanceModelBase(InstanceClient instanceClient)
         {
             _instanceClient = instanceClient;
+            _launchModel = new LaunchModel(instanceClient);
             _instanceClient.NameChanged += OnNameChanged;
             _instanceClient.LogoChanged += OnLogoChanged;
+            _instanceClient.StateChanged += OnStateChanged;
 
 
             Logo = _instanceClient.Logo;
@@ -86,7 +92,7 @@ namespace Lexplosion.WPF.NewInterface.Models.InstanceModel
         /// <summary>
         /// Запускает сборку. При успешном выполнении отрабатывает эвент Launched.
         /// </summary>
-        public void Run()
+        public void Run() 
         {
             _launchModel.Run();
             GameLaunchedEvent?.Invoke(_instanceClient.LocalId);
@@ -162,10 +168,15 @@ namespace Lexplosion.WPF.NewInterface.Models.InstanceModel
             }
         }
 
+        public void Export() 
+        {
+            
+        }
+
         /// <summary>
         /// Удаляет сборку.
-        /// Если сборка только добавлена в библиотеку (не установлена), то сборка будет удалена из библиотеке.
-        /// Иначе если сборка установлена, то она будет удалена полностью.
+        /// Если сборка только добавлена в библиотеку (не установлена), то сборка будет удалена из библиотеки.
+        /// Если сборка установлена, то она будет удалена полностью.
         /// </summary>
         public void Delete()
         {
@@ -184,19 +195,16 @@ namespace Lexplosion.WPF.NewInterface.Models.InstanceModel
             return _instanceClient.GetSettings();
         }
 
-
-        // GamePropeties
-
         public void DisableOptifine()
         {
 
         }
 
-
         public void ChangeOverviewParameters(BaseInstanceData baseInstance, string logoPath)
         {
             _instanceClient.ChangeParameters(baseInstance, logoPath);
         }
+
 
         #endregion Public Methods
 
@@ -227,6 +235,12 @@ namespace Lexplosion.WPF.NewInterface.Models.InstanceModel
             OnPropertyChanged(nameof(Description));
             DescriptionChanged?.Invoke();
         }
+
+        private void OnStateChanged() 
+        {
+            StageChanged?.Invoke();
+        }
+
 
         #endregion Private Methods
     }

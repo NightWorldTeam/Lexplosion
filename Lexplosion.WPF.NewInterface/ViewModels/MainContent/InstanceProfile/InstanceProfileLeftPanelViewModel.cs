@@ -1,16 +1,22 @@
-﻿using Lexplosion.WPF.NewInterface.Core.Tools;
+﻿using Lexplosion.WPF.NewInterface.Commands;
+using Lexplosion.WPF.NewInterface.Core.Objects;
+using Lexplosion.WPF.NewInterface.Core.Tools;
 using Lexplosion.WPF.NewInterface.Models.InstanceModel;
 using Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
 {
     public class InstanceProfileLeftPanelViewModel : LeftPanelViewModel
     {
+        private InstanceModelBase _instanceModel;
+
+
         #region Properties
 
-
-        private InstanceModelBase _instanceModel;
 
         public ImageBrush InstanceImage
         {
@@ -23,7 +29,24 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
         public string PlayerPlayedTime { get => "10ч"; }
 
 
+        private ObservableCollection<FrameworkElementModel> _instanceActions = new ObservableCollection<FrameworkElementModel>();
+        public IEnumerable<FrameworkElementModel> InstanceActions { get => _instanceActions; }
+
+
         #endregion Properties
+
+
+        #region Commands
+
+
+        private RelayCommand _playCommand;
+        public ICommand PlayCommand 
+        {
+            get => RelayCommand.GetCommand(ref _playCommand, (obj) => { _instanceModel.Run(); });
+        }
+
+
+        #endregion Commands
 
 
         #region Contructors
@@ -35,28 +58,79 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
             _instanceModel.NameChanged += OnNameChanged;
             _instanceModel.GameVersionChanged += OnVersionChanged;
             _instanceModel.ModloaderChanged += OnModloaderChanged;
+            _instanceModel.StageChanged += OnStateChanged;
+
+            UpdateFrameworkElementModels();
         }
 
 
         #endregion Constructors
 
 
+        #region Public Methods
+
+
+        
+
+
+        #endregion Public Methods
+
+
+
         #region Private Methods
 
 
-        private void OnNameChanged() 
+        private void OnNameChanged()
         {
             OnPropertyChanged(nameof(InstanceName));
         }
 
-        private void OnVersionChanged() 
+        private void OnVersionChanged()
         {
             OnPropertyChanged(nameof(InstanceVersion));
         }
 
-        private void OnModloaderChanged() 
+        private void OnModloaderChanged()
         {
             OnPropertyChanged(nameof(InstanceModloader));
+        }
+
+
+        private void OnStateChanged() 
+        {
+            UpdateFrameworkElementModels();
+        }
+
+        private void UpdateFrameworkElementModels() 
+        {
+            _instanceActions.Clear();
+            // 1. Website
+            // 2. AddToLibrary
+            // 2. OpenFolder
+            // 3. Export
+            // 4. RemoveFromLibrary / Delete
+
+            if (_instanceModel.Type != InstanceSource.Local)
+            {
+                _instanceActions.Add(new FrameworkElementModel("VisitCurseforge", _instanceModel.GoToWebsite, "Curseforge", 20, 20));
+            }
+
+            if (!_instanceModel.IsInstalled && !_instanceModel.InLibrary)
+            {
+                _instanceActions.Add(new FrameworkElementModel("AddToLibrary", _instanceModel.AddToLibrary, "AddToLibrary"));
+            }
+
+            _instanceActions.Add(new FrameworkElementModel("OpenFolder", _instanceModel.OpenFolder, "Folder"));
+            _instanceActions.Add(new FrameworkElementModel("Export", _instanceModel.Export, "Export"));
+
+            if (!_instanceModel.IsInstalled && _instanceModel.InLibrary)
+            {
+                _instanceActions.Add(new FrameworkElementModel("RemoveFromLibrary", _instanceModel.Delete, "Delete"));
+            }
+            else if (_instanceModel.IsInstalled)
+            {
+                _instanceActions.Add(new FrameworkElementModel("DeleteInstance", _instanceModel.Delete, "Delete"));
+            }
         }
 
 

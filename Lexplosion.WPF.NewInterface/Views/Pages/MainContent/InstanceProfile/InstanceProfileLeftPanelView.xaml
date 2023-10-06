@@ -22,6 +22,66 @@
             Style="{StaticResource EveryPair}" />
 
 
+        <DataTemplate DataType="{x:Type objects:FrameworkElementModel}">
+            <Button Command="{Binding ExecuteAction}">
+                <Button.Template>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border
+                            x:Name="Body"
+                            Padding="8,8,16,8"
+                            CornerRadius="5">
+                            <Grid
+                                VerticalAlignment="Center"
+                                Background="Transparent"
+                                Grid.IsSharedSizeScope="True"
+                                ShowGridLines="False">
+
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="Icon" />
+                                    <ColumnDefinition Width="*" SharedSizeGroup="Text" />
+                                </Grid.ColumnDefinitions>
+
+                                <Viewbox
+                                    Width="{Binding Width}"
+                                    Height="{Binding Height}"
+                                    VerticalAlignment="Center">
+                                    <Path
+                                        x:Name="Icon"
+                                        HorizontalAlignment="Center"
+                                        extensions:Path.StringKeyData="{Binding IconKey}"
+                                        Fill="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                        Stretch="Fill" />
+                                </Viewbox>
+
+                                <TextBlock
+                                    x:Name="Text"
+                                    Grid.Column="1"
+                                    Margin="16,0,0,0"
+                                    VerticalAlignment="Center"
+                                    extensions:TextBlock.TextByKey="{Binding TextKey}"
+                                    FontSize="13"
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                            </Grid>
+
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Text" Property="TextBlock.Foreground" Value="{DynamicResource ActivitySolidColorBrush}" />
+                                <Setter TargetName="Body" Property="Background">
+                                    <Setter.Value>
+                                        <SolidColorBrush Opacity="0.1" Color="{DynamicResource ActivityColor}" />
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter TargetName="Icon" Property="Fill" Value="{DynamicResource ActivitySolidColorBrush}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+        </DataTemplate>
+
         <DataTemplate DataType="{x:Type objects:LeftPanelMenuItem}">
             <Border>
                 <controls:DefaultMainMenuTabItem
@@ -184,7 +244,8 @@
                             <Button
                                 HorizontalAlignment="Stretch"
                                 HorizontalContentAlignment="Center"
-                                VerticalContentAlignment="Center">
+                                VerticalContentAlignment="Center"
+                                Command="{Binding PlayCommand}">
                                 <TextBlock extensions:TextBlock.TextByKey="Play" FontWeight="Medium" />
                             </Button>
 
@@ -208,58 +269,7 @@
                                     BorderThickness="1"
                                     PopupPlacement="Bottom"
                                     PopupVerticalOffset="5">
-                                    <StackPanel>
-                                        <Border Padding="8,8">
-                                            <Grid Grid.IsSharedSizeScope="True" ShowGridLines="True">
-
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="Auto" SharedSizeGroup="Icon" />
-                                                    <ColumnDefinition Width="*" SharedSizeGroup="Text" />
-                                                </Grid.ColumnDefinitions>
-
-                                                <Viewbox Height="16">
-                                                    <Path
-                                                        extensions:Path.StringKeyData="Folder"
-                                                        Fill="{DynamicResource LatestForegroundSolidColorBrush}"
-                                                        Stretch="Fill" />
-                                                </Viewbox>
-
-                                                <TextBlock
-                                                    Grid.Column="1"
-                                                    Margin="8,0,0,0"
-                                                    FontWeight="Medium"
-                                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                                    Text="Open Folder" />
-                                            </Grid>
-                                        </Border>
-                                        <Border Padding="8,8" CornerRadius="5">
-
-                                            <Border.Background>
-                                                <SolidColorBrush Opacity="0.1" Color="{DynamicResource ActivityColor}" />
-                                            </Border.Background>
-
-                                            <Grid Grid.IsSharedSizeScope="True" ShowGridLines="True">
-
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="Auto" SharedSizeGroup="Icon" />
-                                                    <ColumnDefinition Width="*" SharedSizeGroup="Text" />
-                                                </Grid.ColumnDefinitions>
-
-                                                <Viewbox Height="16">
-                                                    <Path
-                                                        extensions:Path.StringKeyData="Delete"
-                                                        Fill="{DynamicResource ActivitySolidColorBrush}"
-                                                        Stretch="Fill" />
-                                                </Viewbox>
-                                                <TextBlock
-                                                    Grid.Column="1"
-                                                    Margin="8,0,0,0"
-                                                    FontWeight="Medium"
-                                                    Foreground="{DynamicResource ActivitySolidColorBrush}"
-                                                    Text="Delete" />
-                                            </Grid>
-                                        </Border>
-                                    </StackPanel>
+                                    <ItemsControl ItemsSource="{Binding InstanceActions}" />
                                 </controls:DropdownMenu>
                             </Border>
                         </Grid>

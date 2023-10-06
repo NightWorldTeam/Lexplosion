@@ -62,10 +62,8 @@
                                     Grid.Column="1"
                                     Width="215"
                                     HorizontalAlignment="Right"
-                                    ItemsSource="{Binding Model.GameVersions1}" />
-                                <!--
-                                    SelectedValue="{Binding Model.Version}"
-                                -->
+                                    ItemsSource="{Binding Model.GameVersions}" 
+                                    SelectedValue="{Binding Model.Version, UpdateSourceTrigger=PropertyChanged}" />
                             </Grid>
                         </Border>
 
