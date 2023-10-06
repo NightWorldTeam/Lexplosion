@@ -185,6 +185,7 @@
                                     <ComboBox
                                         x:Name="VersionBox"
                                         Margin="0,3,0,0"
+                                        DisplayMemberPath="Id"
                                         IsSynchronizedWithCurrentItem="True"
                                         SelectedIndex="{Binding SelectedVersionIndex}"
                                         SelectionChanged="Filter_SelectionChanged">

@@ -54,8 +54,7 @@ namespace Lexplosion.Common.Models.InstanceFactory
         {
             get => _version; set
             {
-                _version = value;
-                _version = value;
+                _version = value ?? GameVersions[0];
                 if (ModloaderModel != null)
                 {
                     ModloaderModel = new ModloaderModel(GameExtension.Fabric, Version.Id);
