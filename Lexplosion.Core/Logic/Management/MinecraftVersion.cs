@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Lexplosion.Logic.Management
 {
@@ -17,6 +18,7 @@ namespace Lexplosion.Logic.Management
         public string Id { get; }
         public VersionType Type { get; }
 
+        [JsonIgnore]
         public bool IsNan { get => string.IsNullOrWhiteSpace(Id); }
 
 
