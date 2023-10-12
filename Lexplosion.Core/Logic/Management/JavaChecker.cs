@@ -201,7 +201,7 @@ namespace Lexplosion.Logic.Management
                     {
                         PercentHandler = delegate (int value)
                         {
-                            percentHandler((int)((float)(file / filesCount) * 100), file, filesCount, fileName);
+                            percentHandler((int)(((decimal)file / (decimal)filesCount) * 100), file, filesCount, fileName);
                         },
                         CancelToken = _cancelToken
                     };
