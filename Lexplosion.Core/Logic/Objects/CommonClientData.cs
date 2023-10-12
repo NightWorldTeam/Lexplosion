@@ -247,6 +247,7 @@ namespace Lexplosion.Logic.Objects.CommonClientData
         public FileInfo minecraftJar;
         public bool isStatic;
         public long releaseIndex;
+        public string javaVersionName;
         /// <summary>
         /// Аргументы игры
         /// </summary>

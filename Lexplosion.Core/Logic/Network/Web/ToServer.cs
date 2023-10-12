@@ -14,12 +14,12 @@ namespace Lexplosion.Logic.Network
 {
     public static class ToServer
     {
-        public static List<JavaVersion> GetJavaVersions()
+        public static JavaVersionManifest GetJavaVersions()
         {
             try
             {
                 string answer = HttpGet(LaunсherSettings.URL.JavaData);
-                return JsonConvert.DeserializeObject<List<JavaVersion>>(answer);
+                return JsonConvert.DeserializeObject<JavaVersionManifest>(answer);
             }
             catch
             {

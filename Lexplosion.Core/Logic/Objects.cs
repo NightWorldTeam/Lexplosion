@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Lexplosion.Logic.Management;
 using Newtonsoft.Json;
@@ -119,10 +120,22 @@ namespace Lexplosion.Logic.Objects
     /// </summary>
     public class JavaVersion
     {
-        public long LastReleaseIndex;
         public string JavaName;
         public long LastUpdate;
         public string ExecutableFile = "/bin/javaw.exe";
+        public string ManifestUrl;
+
+        public JavaVersion(string name, JavaVersionManifest.JavaVersionDesc javaManifest)
+        {
+            JavaName = name;
+
+            if (javaManifest?.VersionInfo?.Released != null)
+                LastUpdate = DateTimeOffset.Parse(javaManifest.VersionInfo.Released).ToUnixTimeSeconds();
+
+            ManifestUrl = javaManifest?.Manifest?.Url;
+        }
+
+        public JavaVersion() { }
     }
 
     public class InstanceData
@@ -213,6 +226,136 @@ namespace Lexplosion.Logic.Objects
             ClassId = category.ClassId;
             ParentCategoryId = category.ParentCategoryId;
         }
+    }
+
+    /// <summary>
+    /// Манифест джава версий, который мы получаем от моджанга
+    /// Используется только для получения данных с сервера
+    /// </summary>
+    public class JavaVersionManifest
+    {
+        private Dictionary<string, JavaVersionDesc> SeterValueParser(Dictionary<string, List<JavaVersionDesc>> value)
+        {
+            Dictionary<string, JavaVersionDesc> result = new();
+            if (value != null)
+            {
+                foreach (var key in value.Keys)
+                {
+                    if (value[key] != null && value[key].Count > 0)
+                    {
+                        result[key] = value[key][0];
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        [JsonProperty("windows-x64")]
+        public Dictionary<string, List<JavaVersionDesc>> Windows_x64_Setter
+        {
+            set => _windows_x64 = SeterValueParser(value);
+        }
+
+        [JsonProperty("windows-x86")]
+        public Dictionary<string, List<JavaVersionDesc>> Windows_x86_Setter
+        {
+            set => _windows_x86 = SeterValueParser(value);
+        }
+
+        private Dictionary<string, JavaVersionDesc> _windows_x64;
+        private Dictionary<string, JavaVersionDesc> _windows_x86;
+
+        [JsonIgnore]
+        public Dictionary<string, JavaVersionDesc> Windows_x64
+        {
+            get => _windows_x64;
+        }
+
+        [JsonIgnore]
+        public Dictionary<string, JavaVersionDesc> Windows_x84
+        {
+            get => _windows_x86;
+        }
+
+        [JsonIgnore]
+        public Dictionary<string, JavaVersionDesc> GetWindowsActual
+        {
+            get
+            {
+                return System.Environment.Is64BitOperatingSystem ? _windows_x64 : _windows_x86;
+            }
+        }
+
+        public class JavaVersionDesc
+        {
+            public class JavaManifest
+            {
+                [JsonProperty("url")]
+                public string Url;
+                [JsonProperty("sha1")]
+                public string Sha1;
+            }
+
+            public class JavaVersionInfo
+            {
+                [JsonProperty("name")]
+                public string SimpleName;
+                [JsonProperty("released")]
+                public string Released;
+            }
+
+            [JsonProperty("manifest")]
+            public JavaManifest Manifest;
+
+            [JsonProperty("version")]
+            public JavaVersionInfo VersionInfo;
+        }
+    }
+
+    public class JavaFiles
+    {
+        public enum UnitType
+        {
+            [JsonProperty("directory")]
+            Directory,
+            [JsonProperty("file")]
+            File
+        }
+
+        public class Unit 
+        {
+            public class DownloadsWays
+            {
+                [JsonProperty("lzma")]
+                public DownloadWay Lzma;
+                [JsonProperty("raw")]
+                public DownloadWay Raw;
+            }
+
+            public class DownloadWay
+            {
+                [JsonProperty("sha1")]
+                public string Sha1;
+                [JsonProperty("size")]
+                public string Size;
+                [JsonProperty("url")]
+                public string DownloadUrl;
+            }
+
+            [JsonProperty("type")]
+            public UnitType Type;
+
+            [JsonProperty("executable")]
+            public bool Executable;
+
+            [JsonProperty("downloads")]
+            public DownloadsWays Downloads;
+        }
+
+        [JsonProperty("files")]
+        public Dictionary<string, Unit> Files;
+
     }
 
 }

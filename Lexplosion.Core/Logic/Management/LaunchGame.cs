@@ -493,7 +493,7 @@ namespace Lexplosion.Logic.Management
             instance.FileDownloadEvent += fileDownloadHandler;
             instance.DownloadStarted += downloadStarted;
 
-            InstanceInit result = instance.Check(out long releaseIndex, version);
+            InstanceInit result = instance.Check(out string javaVersionName, version);
 
             if (_updateCancelToken.IsCancellationRequested)
             {
@@ -524,7 +524,7 @@ namespace Lexplosion.Logic.Management
                 }
                 else
                 {
-                    string javaPath = JavaChecker.DefinePath(_settings.JavaPath, _settings.Java17Path, releaseIndex);
+                    string javaPath = JavaChecker.DefinePath(_settings.JavaPath, _settings.Java17Path, javaVersionName);
                     if (!string.IsNullOrWhiteSpace(javaPath))
                     {
                         _javaPath = javaPath;
@@ -535,7 +535,7 @@ namespace Lexplosion.Logic.Management
 
             if (javaIsNotDefined)
             {
-                using (JavaChecker javaCheck = new JavaChecker(releaseIndex, _updateCancelToken))
+                using (JavaChecker javaCheck = new JavaChecker(javaVersionName, _updateCancelToken))
                 {
                     if (javaCheck.Check(out JavaChecker.CheckResult checkResult, out JavaVersion javaVersion))
                     {
@@ -548,15 +548,15 @@ namespace Lexplosion.Logic.Management
                             TotalFilesCount = 1
                         });
 
-                        bool downloadResult = javaCheck.Update(delegate (int percent, string fileName)
+                        bool downloadResult = javaCheck.Update(delegate (int percent, int file, int filesCount, string fileName)
                         {
                             progressHandler?.Invoke(StageType.Java, new ProgressHandlerArguments()
                             {
                                 StagesCount = 0,
                                 Stage = 0,
                                 Procents = percent,
-                                FilesCount = 0,
-                                TotalFilesCount = 1
+                                FilesCount = file,
+                                TotalFilesCount = filesCount
                             });
 
                             fileDownloadHandler?.Invoke(fileName, percent, DownloadFileProgress.PercentagesChanged);
@@ -590,7 +590,7 @@ namespace Lexplosion.Logic.Management
 
                     if (checkResult == JavaChecker.CheckResult.Successful)
                     {
-                        _javaPath = WithDirectory.DirectoryPath + "/java/" + javaVersion.JavaName + javaVersion.ExecutableFile;
+                        _javaPath = WithDirectory.DirectoryPath + "/java/versions/" + javaVersion.JavaName + javaVersion.ExecutableFile;
                     }
                     else
                     {
@@ -641,7 +641,7 @@ namespace Lexplosion.Logic.Management
                             }
                             else
                             {
-                                string javaPath = JavaChecker.DefinePath(_settings.JavaPath, _settings.Java17Path, files.version.releaseIndex);
+                                string javaPath = JavaChecker.DefinePath(_settings.JavaPath, _settings.Java17Path, files.version.javaVersionName);
                                 if (!string.IsNullOrWhiteSpace(javaPath))
                                 {
                                     _javaPath = javaPath;
@@ -652,7 +652,7 @@ namespace Lexplosion.Logic.Management
 
                         if (javaIsNotDefined)
                         {
-                            using (JavaChecker javaCheck = new JavaChecker(files.version.releaseIndex, _updateCancelToken, true))
+                            using (JavaChecker javaCheck = new JavaChecker(files.version.javaVersionName, _updateCancelToken, true))
                             {
                                 JavaVersion javaInfo = javaCheck.GetJavaInfo();
                                 if (javaInfo?.JavaName == null || javaInfo.ExecutableFile == null)

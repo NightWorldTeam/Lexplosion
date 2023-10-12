@@ -64,9 +64,9 @@ namespace Lexplosion.Logic.Management.Installers
                 DownloadStarted?.Invoke();
         }
 
-        public InstanceInit Check(out long releaseIndex, string instanceVersion)
+        public InstanceInit Check(out string javaVersionName, string instanceVersion)
         {
-            releaseIndex = 0;
+            javaVersionName = "";
             InfoData = DataFilesManager.GetFile<NwInstancePlatformData>(WithDirectory.DirectoryPath + "/instances/" + InstanceId + "/instancePlatformData.json");
 
             if (InfoData == null || InfoData.id == null)
@@ -224,7 +224,7 @@ namespace Lexplosion.Logic.Management.Installers
                     _requiresUpdates = true;
                 }
 
-                releaseIndex = manifest.version.releaseIndex;
+                javaVersionName = manifest.version.javaVersionName;
 
                 if (actualVersion == -1)
                 {

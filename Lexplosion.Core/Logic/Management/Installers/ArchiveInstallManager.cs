@@ -91,9 +91,9 @@ namespace Lexplosion.Logic.Management.Installers
                 DownloadStarted?.Invoke();
         }
 
-        public InstanceInit Check(out long releaseIndex, string instanceVersion)
+        public InstanceInit Check(out string javaVersionName, string instanceVersion)
         {
-            releaseIndex = 0;
+            javaVersionName = "";
 
             Manifest = DataFilesManager.GetManifest(InstanceId, false);
             InfoData = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.DirectoryPath + "/instances/" + InstanceId + "/instancePlatformData.json");
@@ -154,7 +154,7 @@ namespace Lexplosion.Logic.Management.Installers
 
             DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/instances/" + InstanceId + "/instancePlatformData.json", JsonConvert.SerializeObject(InfoData));
 
-            releaseIndex = Manifest.version.releaseIndex;
+            javaVersionName = Manifest.version.javaVersionName;
             return InstanceInit.Successful;
         }
 

@@ -34,7 +34,7 @@ namespace Lexplosion.Global
             public const string ModpacksData = "https://night-world.org/minecraft/modpacks/";
             public const string VersionsData = "https://night-world.org/minecraft/versions/";
             public const string InstallersData = "https://night-world.org/minecraft/additionalInstallers/";
-            public const string JavaData = "https://night-world.org/minecraft/java/";
+            public const string JavaData = "https://launchermeta.mojang.com/v1/products/java-runtime/2ec0cc96c44e5a76b9c8b7c39df7210883d12871/all.json";
             public const string Upload = "https://night-world.org/minecraft/upload/";
             public const string LauncherParts = "https://night-world.org/assets/launcher/windows/";
             public const string UserApi = "https://night-world.org/api/user/";

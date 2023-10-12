@@ -15,7 +15,7 @@ namespace Lexplosion.Logic.Management.Installers
         /// Если параметр нулл, то он будет проигнорирован.
         /// </param>
         /// <returns>Результат проверки.</returns>
-        InstanceInit Check(out long releaseIndex, string instanceVersion);
+        InstanceInit Check(out string javaVersionName, string instanceVersion);
 
         InitData Update(string javaPath, ProgressHandlerCallback progressHandler); // TODO: сделать так, чтобы при неудачном скачивании некоторых файлов он сохранял результат работы, чтобы не перекачивать всё снова
 

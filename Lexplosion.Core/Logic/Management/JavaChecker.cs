@@ -7,10 +7,11 @@ using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Tools;
+using Lexplosion.Logic.Objects.CommonClientData;
 
 namespace Lexplosion.Logic.Management
 {
-    using JavaVersionsFile = Dictionary<string, JavaVersion>;
+    using JavaVersionsFile = List<JavaVersion>;
 
     class JavaChecker : IDisposable
     {
@@ -20,162 +21,210 @@ namespace Lexplosion.Logic.Management
             DefinitionError
         }
 
-        private static readonly KeySemaphore<string> _downloadSemaphore = new KeySemaphore<string>();
+        private static readonly KeySemaphore<string> _downloadSemaphore = new();
+        private static readonly object _versionsManifestLock = new object();
 
         private bool _semIsReleased = false;
-        private long _releaseIndex;
+        private string _javaName;
         private JavaVersion _thisJava = null;
         private JavaVersionsFile _versionsFile;
         private CancellationToken _cancelToken;
+        private Dictionary<string, JavaFiles.Unit> _updateList = new();
 
-        public JavaChecker(long releaseIndex, CancellationToken cancelToken, bool isReleased = false)
+        private const string MANIFEST_FILE = "/java/javaVersionsManifest.json";
+        private const string FILES_DIR = "/java/versions/";
+        private const string VERSIONS_MANIFEST_DIR = "/java/versionsManifests/";
+
+        public JavaChecker(string javaName, CancellationToken cancelToken, bool isReleased = false)
         {
-            _releaseIndex = releaseIndex;
+            _javaName = !string.IsNullOrWhiteSpace(javaName) ? javaName : "jre-legacy";
             _cancelToken = cancelToken;
             _semIsReleased = isReleased;
         }
 
         public JavaVersion GetJavaInfo()
         {
-            // получаем файл с версиями джавы
-            _versionsFile = DataFilesManager.GetFile<JavaVersionsFile>(WithDirectory.DirectoryPath + "/java/javaVersions.json");
-
-            JavaVersion javaInfo = null;
-
-            //ищем нужную версию джавы
-            foreach (JavaVersion javaVer in _versionsFile.Values)
+            try
             {
-                if (javaVer.LastReleaseIndex >= _releaseIndex)
+                // получаем файл с версиями джавы
+                lock (_versionsManifestLock)
                 {
-                    javaInfo = javaVer;
-                    break;
+                    _versionsFile = DataFilesManager.GetFile<JavaVersionsFile>(WithDirectory.DirectoryPath + MANIFEST_FILE);
                 }
-            }
 
-            return javaInfo;
+                if (_versionsFile == null)
+                {
+                    return null;
+                }
+
+                JavaVersion javaInfo = null;
+
+                //ищем нужную версию джавы
+                foreach (JavaVersion javaVer in _versionsFile)
+                {
+                    if (javaVer.JavaName == _javaName)
+                    {
+                        javaInfo = javaVer;
+                        break;
+                    }
+                }
+
+                return javaInfo;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         /// <summary>
-        /// Определяет путь до джавы для этой версии майкрафта. 
+        /// Определяет путь до джавы для этой версии майкрафта (по имени джавы, которую эта версия использует)
         /// Метод произведет проверку версии и вернет либо path1 либо path2.
         /// </summary>
         /// <param name="path1">Путь до старой джавы</param>
         /// <param name="path2">Путь до новой джавы</param>
         /// <returns>Для старых версий будет возвращен path1, для новых - path2</returns>
-        public static string DefinePath(string path1, string path2, long releaseIndex)
+        public static string DefinePath(string path1, string path2, string javaName)
         {
-            return (releaseIndex <= 410640332) ? path1 : path2;
+            return (javaName == "jre-legacy") ? path1 : path2;
         }
 
         public bool Check(out CheckResult result, out JavaVersion java)
         {
-            List<JavaVersion> versions = ToServer.GetJavaVersions(); // получамем данные с сервера
+            // для начала в локальном списке ищем нужную нам джаву
+            _thisJava = GetJavaInfo();
 
-            if (versions == null) //данные получены не были. пытаемся выехать на том, что есть на диске
+            if (_thisJava?.JavaName != null) //нашли
             {
-                _thisJava = GetJavaInfo();
+                result = CheckResult.Successful;
+            }
+            else //не нашли, получаем данные с сервера
+            {
+                JavaVersionManifest versions = ToServer.GetJavaVersions();
 
-                if (_thisJava?.JavaName != null) //нашли
-                {
-                    java = _thisJava;
-                    result = CheckResult.Successful;
-                }
-                else //не нашли
+                if (versions == null)
                 {
                     java = null;
                     result = CheckResult.DefinitionError;
+                    return false;
                 }
 
-                return false;
-            }
+                _versionsFile = new JavaVersionsFile();
 
-            //данне с сервера нормально получили. ищем нужную дажву
-            foreach (JavaVersion javaVer in versions)
-            {
-                if (javaVer.LastReleaseIndex >= _releaseIndex)
+                //ищем нужную дажву
+                foreach (string javaVerName in versions.GetWindowsActual.Keys)
                 {
-                    _thisJava = javaVer;
-                    break;
+                    if (javaVerName == _javaName)
+                    {
+                        _thisJava = new JavaVersion(javaVerName, versions.GetWindowsActual[javaVerName]);
+                        _versionsFile.Add(_thisJava);
+                    }
+                    else
+                    {
+                        _versionsFile.Add(new JavaVersion(javaVerName, versions.GetWindowsActual[javaVerName]));
+                    }
+                }
+
+                lock (_versionsManifestLock)
+                {
+                    DataFilesManager.SaveFile(WithDirectory.DirectoryPath + MANIFEST_FILE, JsonConvert.SerializeObject(_versionsFile));
                 }
             }
 
+            java = _thisJava;
             if (_thisJava?.JavaName == null)
             {
-                java = null;
                 result = CheckResult.DefinitionError;
                 return false;
             }
 
             _downloadSemaphore.WaitOne(_thisJava.JavaName);
 
-            _versionsFile = DataFilesManager.GetFile<JavaVersionsFile>(WithDirectory.DirectoryPath + "/java/javaVersions.json");
-            if (_versionsFile != null && _versionsFile.ContainsKey(_thisJava.JavaName) && _versionsFile[_thisJava.JavaName] != null)
+            var fileDir = WithDirectory.DirectoryPath + VERSIONS_MANIFEST_DIR + _thisJava.JavaName + ".json";
+            var javaFiles = DataFilesManager.GetFile<JavaFiles>(fileDir);
+
+            if (javaFiles?.Files == null || javaFiles.Files.Count < 1)
             {
-                //проверяем версию
-                if (_versionsFile[_thisJava.JavaName].LastUpdate < _thisJava.LastUpdate)
-                {   //версия старая, нужно обновить
-                    java = _thisJava;
-                    result = CheckResult.Successful;
-                    return true;
-                }
-                else // с версией все нормально. проверяем наличие на диске
+                string manifestString = ToServer.HttpGet(_thisJava.ManifestUrl);
+                try
                 {
-                    if (!File.Exists(WithDirectory.DirectoryPath + "/java/" + _thisJava.JavaName + "/" + _thisJava.ExecutableFile))
+                    javaFiles = JsonConvert.DeserializeObject<JavaFiles>(manifestString);
+                }
+                catch { }
+
+                if (javaFiles?.Files == null || javaFiles.Files.Count < 1)
+                {
+                    result = CheckResult.DefinitionError;
+                    return false;
+                }
+
+                DataFilesManager.SaveFile(fileDir, manifestString);
+            }
+
+            string javaBaseDir = WithDirectory.DirectoryPath + FILES_DIR + _thisJava.JavaName + "/";
+            foreach (var fileName in javaFiles.Files.Keys)
+            {
+                var unit = javaFiles.Files[fileName];
+                if (!string.IsNullOrWhiteSpace(unit?.Downloads?.Raw?.DownloadUrl) && unit.Type == JavaFiles.UnitType.File)
+                {
+                    var filePath = javaBaseDir + fileName;
+                    try
                     {
-                        java = _thisJava;
-                        result = CheckResult.Successful;
-                        return true;
+                        if (!File.Exists(filePath))
+                        {
+                            _updateList[fileName] = unit;
+                        }
                     }
-                    else
+                    catch { }
+                }
+            }
+
+            result = CheckResult.Successful;
+            return _updateList.Count != 0;
+        }
+
+        public bool Update(Action<int, int, int, string> percentHandler)
+        {
+            int filesCount = _updateList.Count;
+            int file = 0;
+
+            string javaPath = FILES_DIR + _thisJava.JavaName + "/";
+
+            foreach (var unitName in _updateList.Keys)
+            {
+                try
+                {
+                    string path = Path.GetDirectoryName(unitName);
+                    string fileName = Path.GetFileName(unitName);
+
+                    var taskArgs = new TaskArgs
                     {
-                        java = _versionsFile[_thisJava.JavaName];
-                        result = CheckResult.Successful;
+                        PercentHandler = delegate (int value)
+                        {
+                            percentHandler((int)((float)(file / filesCount) * 100), file, filesCount, fileName);
+                        },
+                        CancelToken = _cancelToken
+                    };
+
+                    if (!WithDirectory.InstallFile(_updateList[unitName].Downloads.Raw.DownloadUrl, fileName, javaPath + path, taskArgs))
+                    {
+                        _semIsReleased = true;
+                        _downloadSemaphore.Release(_thisJava.JavaName);
                         return false;
                     }
                 }
-            }
-            else
-            {
-                java = _thisJava;
-                result = CheckResult.Successful;
-                return true;
-            }
-        }
-
-        public bool Update(Action<int, string> percentHandler)
-        {
-            if (_versionsFile == null)
-            {
-                _versionsFile = new JavaVersionsFile();
-            }
-
-            string filename = _thisJava.JavaName + ".zip";
-
-            var taskArgs = new TaskArgs
-            {
-                PercentHandler = delegate (int value)
+                catch
                 {
-                    percentHandler(value, filename);
-                },
-                CancelToken = _cancelToken
-            };
+                    _semIsReleased = true;
+                    _downloadSemaphore.Release(_thisJava.JavaName);
+                    return false;
+                }
 
-            string bitDepth = Environment.Is64BitOperatingSystem ? "x64" : "x32";
-            if (WithDirectory.DonwloadJava(_thisJava.JavaName, bitDepth, taskArgs))
-            {
-                _versionsFile[_thisJava.JavaName] = _thisJava;
-                DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/java/javaVersions.json", JsonConvert.SerializeObject(_versionsFile));
+                file++;
+            }
 
-                _semIsReleased = true;
-                _downloadSemaphore.Release(_thisJava.JavaName);
-                return true;
-            }
-            else
-            {
-                _semIsReleased = true;
-                _downloadSemaphore.Release(_thisJava.JavaName);
-                return false;
-            }
+            _downloadSemaphore.Release(_thisJava.JavaName);
+            return true;
         }
 
         public void Dispose()

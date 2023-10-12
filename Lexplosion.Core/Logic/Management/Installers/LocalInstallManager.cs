@@ -39,9 +39,9 @@ namespace Lexplosion.Logic.Management.Installers
             installer = new InstanceInstaller(instanceid);
         }
 
-        public InstanceInit Check(out long releaseIndex, string instanceVersion)
+        public InstanceInit Check(out string javaVersionName, string instanceVersion)
         {
-            releaseIndex = 0;
+            javaVersionName = "";
 
             //модпак локальный. получем его версию, отправляем её в ToServer.GetFilesList. Метод ToServer.GetFilesList получит список именно для этой версии, а не для модпака
             Manifest = DataFilesManager.GetManifest(InstanceId, false);
@@ -74,7 +74,7 @@ namespace Lexplosion.Logic.Management.Installers
                     DownloadStarted?.Invoke();
                 }
 
-                releaseIndex = Manifest.version.releaseIndex;
+                javaVersionName = Manifest.version.javaVersionName;
                 return InstanceInit.Successful;
             }
             else
