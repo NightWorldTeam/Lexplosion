@@ -164,7 +164,7 @@ namespace Lexplosion.Common.Models.InstanceForm
                     );
                 }
 
-                if (DownloadModel.IsDownloadInProgress && !MainModel.Instance.IsInstanceRunning)
+                if (DownloadModel.IsDownloadInProgress && (!MainModel.Instance.IsInstanceRunning || DownloadModel.IsJavaInstalling))
                 {
                     LowerButtons.Add(
                         new LowerButton(ResourceGetter.GetString("cancelDownload"), MultiButtonProperties.GeometryCancelIcon, LowerButtonFunc.CancelDownload)
@@ -248,6 +248,7 @@ namespace Lexplosion.Common.Models.InstanceForm
                 }
             );
         }
+
 
         #endregion Private Methods
     }

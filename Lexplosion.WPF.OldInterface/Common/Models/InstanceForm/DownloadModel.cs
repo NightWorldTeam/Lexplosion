@@ -149,6 +149,18 @@ namespace Lexplosion.Common.Models.InstanceForm
             get => String.Format(ResourceGetter.GetString("downloadFilesCountNof"), DownloadingFilesCount, TotalDownloadingFilesCount);
         }
 
+        private bool _isJaveInstaing;
+        public bool IsJavaInstalling 
+        {
+            get => _isJaveInstaing; private set 
+            {
+                if (_isJaveInstaing != value)
+                {
+                    _isJaveInstaing = value;
+                    _instanceFormModel.UpdateLowerButton();
+                };
+            }
+        }
 
         #endregion Properties
 
@@ -215,6 +227,7 @@ namespace Lexplosion.Common.Models.InstanceForm
         /// <param name="procent">Процетны</param>
         public void Download(StageType downloadStageType, ProgressHandlerArguments progressHandlerArguments)
         {
+            IsDownloadInProgress = true;
             App.Current.Dispatcher.Invoke(() =>
             {
                 StagesCount = progressHandlerArguments.StagesCount;
@@ -227,18 +240,21 @@ namespace Lexplosion.Common.Models.InstanceForm
 
                 if (downloadStageType != StageType.Prepare)
                 {
+                    IsJavaInstalling = true;
                     IsPrepareOnly = false;
                     IsPrepare = false;
                 }
 
                 if (downloadStageType == StageType.Java)
                 {
+                    IsJavaInstalling = true;
                     _instanceFormModel.OverviewField = ResourceGetter.GetString("javaInstalling");
                     HasProcents = false;
                     IsFilesDownload = true;
                 }
                 else if (downloadStageType == StageType.Prepare)
                 {
+                    IsJavaInstalling = true;
                     _instanceFormModel.OverviewField = ResourceGetter.GetString("checkLocalFiles");
                     IsPrepare = true;
                     HasProcents = true;
@@ -246,6 +262,7 @@ namespace Lexplosion.Common.Models.InstanceForm
                 }
                 else
                 {
+                    IsJavaInstalling = true;
                     _instanceFormModel.OverviewField = ResourceGetter.GetString("instanceLoading") + " " + Stage + '/' + StagesCount;
                     HasProcents = false;
                     IsFilesDownload = true;
