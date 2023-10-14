@@ -72,7 +72,12 @@ namespace Lexplosion.Logic.Management
 
         public override string ToString()
         {
-            return Type.ToString() + " " + Id;
+            return Type == VersionType.Snapshot ? Type + " " + Id : Id;
+        }
+
+        public string ToFullString() 
+        {
+            return Type + " " + Id;
         }
 
         public int CompareTo(MinecraftVersion other)
