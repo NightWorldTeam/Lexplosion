@@ -14,8 +14,8 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
 
         private string _logoPath;
 
-        private BaseInstanceData InstanceData { get; }
-        private BaseInstanceData OldInstanceData { get; set; }
+        private BaseInstanceData _instanceData;
+        private BaseInstanceData _oldInstanceData;
 
 
         #region Properties
@@ -23,7 +23,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
 
         public bool HasChanges 
         {
-            get => OldInstanceData.Name != Name || OldInstanceData.Summary != Summary || OldInstanceData.Description != Description;
+            get => OnHasChanges();
         }
 
 
@@ -40,9 +40,9 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
 
         public string Name 
         {
-            get => InstanceData.Name; set 
+            get => _instanceData.Name; set 
             {
-                InstanceData.Name = value;
+                _instanceData.Name = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(HasChanges));
             }
@@ -50,9 +50,9 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
 
         public string Summary 
         {
-            get => InstanceData.Summary; set 
+            get => _instanceData.Summary; set 
             {
-                InstanceData.Summary = value;
+                _instanceData.Summary = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(HasChanges));
             }
@@ -60,9 +60,9 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
 
         public string Description 
         {
-            get => InstanceData.Description; set 
+            get => _instanceData.Description; set 
             {
-                InstanceData.Description = value;
+                _instanceData.Description = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(HasChanges));
             }
@@ -78,12 +78,12 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
         public InstanceProfileAboutModel(InstanceModelBase instanceModel)
         {
             _instanceModel = instanceModel;
-            InstanceData = instanceModel.InstanceData;
-            OldInstanceData = instanceModel.InstanceData;
+            _instanceData = instanceModel.InstanceData;
+            _oldInstanceData = instanceModel.InstanceData;
             LogoBytes = ImageTools.ToImage(instanceModel.Logo);
-            Name = InstanceData.Name;
-            Summary = InstanceData.Summary;
-            Description = InstanceData.Description;
+            Name = _instanceData.Name;
+            Summary = _instanceData.Summary;
+            Description = _instanceData.Description;
         }
 
 
@@ -92,20 +92,56 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
 
         #region Public Methods
 
+
         public void SetLogoPath(string path) 
         {
             _logoPath = path;
         }
 
-        public void SaveChanges() 
+        /// <summary>
+        /// Сохраняет промежуточные изменения.
+        /// </summary>
+        public void SaveData()
         {
-            _instanceModel.ChangeOverviewParameters(InstanceData, _logoPath);
-            OldInstanceData = _instanceModel.InstanceData;
+            _instanceModel.ChangeOverviewParameters(_instanceData, _logoPath);
+            _oldInstanceData = _instanceModel.InstanceData;
+            OnPropertyChanged(nameof(HasChanges));
+        }
+
+        /// <summary>
+        /// Отменяет промежуточные изменения изменения.
+        /// </summary>
+        public void ResetChanges()
+        {
+            _instanceData = _instanceModel.InstanceData;
+            Name = _instanceData.Name;
+            Summary = _instanceData.Summary;
+            Description = _instanceData.Description;
+
+            _oldInstanceData = _instanceModel.InstanceData;
             OnPropertyChanged(nameof(HasChanges));
         }
 
 
         #endregion Public Methods
+
+
+        #region Private Methods
+
+
+        public bool OnHasChanges() 
+        {
+            if (!_oldInstanceData.Name.Equals(Name))
+                return true;
+            if (!_oldInstanceData.Summary.Equals(Summary))
+                return true;
+            if (!_oldInstanceData.Description.Equals(Description))
+                return true;
+            return false;
+        }
+
+
+        #endregion Private Methods
     }
 
     public sealed class InstanceProfileAboutViewModel : ViewModelBase
@@ -119,13 +155,13 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
         private RelayCommand _rebootChangesCommand;
         public ICommand RebootChangesCommand 
         {
-            get => RelayCommand.GetCommand(ref _rebootChangesCommand, (obj) => { });
+            get => RelayCommand.GetCommand(ref _rebootChangesCommand, (obj) => { Model.ResetChanges(); });
         }
 
         private RelayCommand _saveChangesCommand;
         public ICommand SaveChangesCommand
         {
-            get => RelayCommand.GetCommand(ref _saveChangesCommand, (obj) => { Model.SaveChanges(); });
+            get => RelayCommand.GetCommand(ref _saveChangesCommand, (obj) => { Model.SaveData(); });
         }
 
         private RelayCommand _setLogoPathCommand;
