@@ -16,13 +16,15 @@ namespace Lexplosion.Logic.Network
     {
         public static JavaVersionManifest GetJavaVersions()
         {
+            string answer = null;
             try
             {
-                string answer = HttpGet(LaunсherSettings.URL.JavaData);
+                answer = HttpGet(LaunсherSettings.URL.JavaData);
                 return JsonConvert.DeserializeObject<JavaVersionManifest>(answer);
             }
-            catch
+            catch (Exception ex)
             {
+                Runtime.DebugWrite("answer is null " + (answer == null) + " exception: " + ex);
                 return null;
             }
         }
@@ -409,8 +411,9 @@ namespace Lexplosion.Logic.Network
 
                 return answer;
             }
-            catch
+            catch (Exception ex)
             {
+                Runtime.DebugWrite("url: " + url + ", Exception: " + ex);
                 return null;
             }
         }

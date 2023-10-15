@@ -389,6 +389,8 @@ namespace Lexplosion.Logic.Management
             _processDataReceived?.Invoke("Выполняется запуск игры...");
             _processDataReceived?.Invoke(command);
 
+            Runtime.DebugWrite("Run javaPath " + _javaPath);
+
             bool gameVisible = false;
 
             try
@@ -477,10 +479,11 @@ namespace Lexplosion.Logic.Management
 
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
                 _processIsWork = false;
                 ComplitedLaunch(_instanceId, false);
+                Runtime.DebugWrite(ex);
 
                 return false;
             }
@@ -591,6 +594,7 @@ namespace Lexplosion.Logic.Management
                     if (checkResult == JavaChecker.CheckResult.Successful)
                     {
                         _javaPath = WithDirectory.DirectoryPath + "/java/versions/" + javaVersion.JavaName + javaVersion.ExecutableFile;
+                        Runtime.DebugWrite("JavaPath " + _javaPath);
                     }
                     else
                     {

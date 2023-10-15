@@ -222,7 +222,7 @@ namespace Lexplosion.Common.Models.InstanceForm
             App.Current.Dispatcher.Invoke(() =>
             {
                 Categories.Clear();
-                Categories.Add(new SimpleCategory { Name = InstanceClient.GameVersion.Id });
+                Categories.Add(new SimpleCategory { Name = InstanceClient?.GameVersion?.Id ?? "" });
 
                 if (categories != null)
                 {

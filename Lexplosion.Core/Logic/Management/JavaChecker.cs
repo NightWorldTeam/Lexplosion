@@ -94,6 +94,9 @@ namespace Lexplosion.Logic.Management
             // для начала в локальном списке ищем нужную нам джаву
             _thisJava = GetJavaInfo();
 
+            Runtime.DebugWrite("javaName: " + _javaName + ", _thisJava is null " + (_thisJava == null));
+
+
             if (_thisJava?.JavaName != null) //нашли
             {
                 result = CheckResult.Successful;
@@ -104,6 +107,7 @@ namespace Lexplosion.Logic.Management
 
                 if (versions == null)
                 {
+                    Runtime.DebugWrite("versions list is null");
                     java = null;
                     result = CheckResult.DefinitionError;
                     return false;
@@ -134,6 +138,7 @@ namespace Lexplosion.Logic.Management
             java = _thisJava;
             if (_thisJava?.JavaName == null)
             {
+                Runtime.DebugWrite("_thisJava is null " + (_thisJava == null));
                 result = CheckResult.DefinitionError;
                 return false;
             }
@@ -223,15 +228,17 @@ namespace Lexplosion.Logic.Management
                 file++;
             }
 
+            _semIsReleased = true;
             _downloadSemaphore.Release(_thisJava.JavaName);
             return true;
         }
 
         public void Dispose()
         {
-            if (!_semIsReleased)
+            string javaName = _thisJava?.JavaName;
+            if (javaName != null && !_semIsReleased)
             {
-                _downloadSemaphore.Release(_thisJava.JavaName);
+                _downloadSemaphore.Release(javaName);
             }
         }
     }
