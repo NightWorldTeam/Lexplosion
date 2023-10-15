@@ -41,7 +41,7 @@ namespace Lexplosion
 
         private static App app = new App();
         private static SplashWindow _splashWindow;
-        private static NotificationWindow _notificationWindow;
+        //private static NotificationWindow _notificationWindow;
         private static TaskbarIcon _nofityIcon;
 
         public static event Action TrayMenuElementClicked;
@@ -86,29 +86,29 @@ namespace Lexplosion
 
         private static void InitializeNotificationWindow()
         {
-            App.Current.Dispatcher.Invoke(() =>
-            {
-                _notificationWindow = new NotificationWindow();
-                var desktopWorkingArea = System.Windows.SystemParameters.WorkArea;
-                _notificationWindow.Left = desktopWorkingArea.Right - _notificationWindow.MaxWidth;
-                _notificationWindow.Top = desktopWorkingArea.Bottom - 20;
-            });
+            //App.Current.Dispatcher.Invoke(() =>
+            //{
+            //    _notificationWindow = new NotificationWindow();
+            //    var desktopWorkingArea = System.Windows.SystemParameters.WorkArea;
+            //    _notificationWindow.Left = desktopWorkingArea.Right - _notificationWindow.MaxWidth;
+            //    _notificationWindow.Top = desktopWorkingArea.Bottom - 20;
+            //});
         }
 
         internal static void OpenNotificationWindow()
         {
-            App.Current.Dispatcher.Invoke(() =>
-            {
-                _notificationWindow.Show();
-            });
+            //App.Current.Dispatcher.Invoke(() =>
+            //{
+            //    _notificationWindow.Show();
+            //});
         }
 
         internal static void CloseNotificationWindow()
         {
-            App.Current.Dispatcher.Invoke(() =>
-            {
-                _notificationWindow.Hide();
-            });
+            //App.Current.Dispatcher.Invoke(() =>
+            //{
+            //    _notificationWindow.Hide();
+            //});
         }
 
 
