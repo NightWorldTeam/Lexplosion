@@ -76,7 +76,6 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
         #endregion Public Methods
 
 
-
         #region Private Methods
 
 
@@ -95,7 +94,6 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
             OnPropertyChanged(nameof(InstanceModloader));
         }
 
-
         private void OnStateChanged() 
         {
             UpdateFrameworkElementModels();
@@ -110,7 +108,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
             // 3. Export
             // 4. RemoveFromLibrary / Delete
 
-            if (_instanceModel.Type != InstanceSource.Local)
+            if (_instanceModel.Source != InstanceSource.Local)
             {
                 _instanceActions.Add(new FrameworkElementModel("VisitCurseforge", _instanceModel.GoToWebsite, "Curseforge", 20, 20));
             }

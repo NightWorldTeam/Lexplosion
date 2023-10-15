@@ -169,7 +169,7 @@ namespace Lexplosion
             app.Dispatcher.Invoke(StylesInit);
 
             // инициализация окна уведомлений
-            InitializeNotificationWindow();
+            // InitializeNotificationWindow();
 
             var discordClient = InitDiscordApp();
 

@@ -14,7 +14,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
         public InstanceProfileConfigurationModel Model { get; }
 
 
-        private bool _isVanilla = true;
+        private bool _isVanilla;
         public bool IsVanilla
         {
             get => _isVanilla; set
@@ -64,19 +64,26 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
         public InstanceProfileConfigurationViewModel(InstanceModelBase instanceModelBase)
         {
             Model = new InstanceProfileConfigurationModel(instanceModelBase);
+            Model.GameTypeChanged += UpdateSelectedGameType;
+            UpdateSelectedGameType(instanceModelBase.InstanceData.Modloader);
+            // устанавливаем кнопку с типом игры в активное положение.
 
-            //switch (Model.GetInstanceExtenstion())
-            //{
-            //    case ClientType.Vanilla: IsVanilla = true; break;
-            //    case ClientType.Forge: IsForge = true; break;
-            //    case ClientType.Fabric: IsFabric = true; break;
-            //    case ClientType.Quilt: IsQuilt = true; break;
-            //}
         }
 
 
         #endregion Constructors
 
+
+        private void UpdateSelectedGameType(ClientType clientType) 
+        {
+            switch (clientType)
+            {
+                case ClientType.Vanilla: IsVanilla = true; break;
+                case ClientType.Forge: IsForge = true; break;
+                case ClientType.Fabric: IsFabric = true; break;
+                case ClientType.Quilt: IsQuilt = true; break;
+            }
+        }
 
         #region Commands
 
@@ -84,16 +91,19 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
         private RelayCommand _saveChangesCommand;
         public ICommand SaveChangesCommand
         {
-            get => RelayCommand.GetCommand(ref _saveChangesCommand, (obj) => 
-            { 
-                //Model.SaveData(); 
-            });
+            get => RelayCommand.GetCommand(ref _saveChangesCommand, Model.SaveData);
         }
 
         private RelayCommand _rebootChangesCommand;
         public ICommand RebootChangesCommand
         {
-            get => RelayCommand.GetCommand(ref _rebootChangesCommand, (obj) => { });
+            get => RelayCommand.GetCommand(ref _rebootChangesCommand, Model.ResetChanges);
+        }
+
+        private RelayCommand _changeInstanceClientTypeCommand;
+        public ICommand ChangeInstanceClientTypeCommand
+        {
+            get => RelayCommand.GetCommand(ref _changeInstanceClientTypeCommand, Model.ChangeGameType);
         }
 
 

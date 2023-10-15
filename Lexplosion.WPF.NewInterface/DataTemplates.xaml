@@ -5,6 +5,7 @@
     xmlns:addonsrepositoriesvm="clr-namespace:Lexplosion.WPF.NewInterface.ViewModels.AddonsRepositories"
     xmlns:authviewmodels="clr-namespace:Lexplosion.WPF.NewInterface.ViewModels.Authorization"
     xmlns:authviews="clr-namespace:Lexplosion.WPF.NewInterface.Views.Pages.Authorization"
+    xmlns:converters="clr-namespace:Lexplosion.WPF.NewInterface.Core.Converters"
     xmlns:instanceprofileview="clr-namespace:Lexplosion.WPF.NewInterface.Views.Pages.MainContent.InstanceProfile"
     xmlns:instanceprofilevm="clr-namespace:Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile"
     xmlns:mainmenuview="clr-namespace:Lexplosion.WPF.NewInterface.Views.Pages.MainContent.MainMenu"
@@ -12,6 +13,8 @@
     xmlns:modalviews="clr-namespace:Lexplosion.WPF.NewInterface.Views.Modal"
     xmlns:modalvm="clr-namespace:Lexplosion.WPF.NewInterface.ViewModels.Modal"
     xmlns:viewmodels="clr-namespace:Lexplosion.WPF.NewInterface.ViewModels">
+
+    <converters:NegativeBooleanToVisibilityConverter x:Key="NegativeBooleanToVisibilityConverter" />
 
     <viewmodels:MainViewModel x:Key="MainViewModel" />
 

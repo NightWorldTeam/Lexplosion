@@ -7,6 +7,7 @@
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Views.Pages.MainContent.InstanceProfile"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:objects="clr-namespace:Lexplosion;assembly=Lexplosion.Core"
     mc:Ignorable="d">
 
     <UserControl.Resources>
@@ -58,12 +59,28 @@
                                         Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
                                 </StackPanel>
 
-                                <ComboBox
-                                    Grid.Column="1"
-                                    Width="215"
-                                    HorizontalAlignment="Right"
-                                    ItemsSource="{Binding Model.GameVersions}" 
-                                    SelectedValue="{Binding Model.Version, UpdateSourceTrigger=PropertyChanged}" />
+                                <Grid Grid.Column="1">
+                                    <ComboBox
+                                        Width="215"
+                                        HorizontalAlignment="Right"
+                                        IsSynchronizedWithCurrentItem="True"
+                                        ItemsSource="{Binding Model.GameVersions}"
+                                        SelectedValue="{Binding Model.Version, UpdateSourceTrigger=PropertyChanged}"
+                                        Visibility="{Binding Model.IsGameVersionsAvaliable, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+                                    <!--  Only version when GameVersions count = 0  -->
+                                    <Border
+                                        Width="215"
+                                        Padding="8"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Center"
+                                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                        BorderThickness="1"
+                                        CornerRadius="5"
+                                        Visibility="{Binding Model.IsGameVersionsAvaliable, Converter={StaticResource NegativeBooleanToVisibilityConverter}}">
+                                        <TextBlock FontWeight="Medium" Text="1.20.2" />
+                                    </Border>
+                                </Grid>
                             </Grid>
                         </Border>
 
@@ -128,34 +145,38 @@
                             HorizontalAlignment="Right"
                             Orientation="Horizontal">
                             <RadioButton
-                                Command="{Binding SwitchClientType}"
+                                Command="{Binding ChangeInstanceClientTypeCommand, Mode=OneWay}"
+                                CommandParameter="{x:Static objects:ClientType.Vanilla}"
                                 Content="Vanilla"
                                 GroupName="GameType"
                                 IsChecked="{Binding IsVanilla}"
                                 Style="{StaticResource HighlightRadioButton}" />
                             <RadioButton
                                 Margin="8,0,0,0"
-                                Command="{Binding SwitchClientType}"
+                                Command="{Binding ChangeInstanceClientTypeCommand, Mode=OneWay}"
+                                CommandParameter="{x:Static objects:ClientType.Forge}"
                                 Content="Forge"
                                 GroupName="GameType"
                                 IsChecked="{Binding IsForge}"
-                                IsEnabled="{Binding Model.ModloaderModel.IsAvaliable}"
+                                IsEnabled="{Binding Model.ModloaderManager.IsForgeAvaliable}"
                                 Style="{StaticResource HighlightRadioButton}" />
                             <RadioButton
                                 Margin="8,0,0,0"
-                                Command="{Binding SwitchClientType}"
+                                Command="{Binding ChangeInstanceClientTypeCommand, Mode=OneWay}"
+                                CommandParameter="{x:Static objects:ClientType.Fabric}"
                                 Content="Fabric"
                                 GroupName="GameType"
                                 IsChecked="{Binding IsFabric}"
-                                IsEnabled="{Binding Model.ModloaderModel.IsAvaliable}"
+                                IsEnabled="{Binding Model.ModloaderManager.IsFabricAvaliable}"
                                 Style="{StaticResource HighlightRadioButton}" />
                             <RadioButton
                                 Margin="8,0,0,0"
-                                Command="{Binding SwitchClientType}"
+                                Command="{Binding ChangeInstanceClientTypeCommand, Mode=OneWay}"
+                                CommandParameter="{x:Static objects:ClientType.Quilt}"
                                 Content="Quilt"
                                 GroupName="GameType"
                                 IsChecked="{Binding IsQuilt}"
-                                IsEnabled="{Binding Model.ModloaderModel.IsAvaliable}"
+                                IsEnabled="{Binding Model.ModloaderManager.IsQuiltAvaliable}"
                                 Style="{StaticResource HighlightRadioButton}" />
                         </StackPanel>
                     </Grid>
@@ -166,7 +187,7 @@
                     Padding="0,16,0,8"
                     BorderBrush="{DynamicResource SeparateSolidColorBrush}"
                     BorderThickness="0,0,0,2"
-                    Visibility="{Binding Model.ModloaderModel.IsEnable, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    Visibility="{Binding IsVanilla, Converter={StaticResource NegativeBooleanToVisibilityConverter}}">
 
                     <Grid>
 
@@ -189,84 +210,105 @@
                                 Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
                         </StackPanel>
 
-                        <ComboBox
-                            Grid.Column="1"
-                            Width="215"
-                            HorizontalAlignment="Right"
-                            ItemsSource="{Binding Model.ModloaderModel.Versions}" />
-                        <!--  SelectedItem="{Binding Model.ModloaderModel.Version}"  -->
+
+                        <Grid Grid.Column="1">
+                            <ComboBox
+                                Width="215"
+                                HorizontalAlignment="Right"
+                                IsSynchronizedWithCurrentItem="True"
+                                ItemsSource="{Binding Model.ModloaderManager.CurrentMinecraftExtension.Versions}"
+                                SelectedValue="{Binding Model.ModloaderVersion, UpdateSourceTrigger=PropertyChanged}"
+                                Visibility="{Binding Model.ModloaderManager.IsCurrentAvaliable, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+                            <!--  Only version when GameVersions count = 0  -->
+                            <Border
+                                Width="215"
+                                Padding="8"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                BorderThickness="1"
+                                CornerRadius="5"
+                                Visibility="{Binding Model.ModloaderManager.IsCurrentAvaliable, Mode=OneWay, Converter={StaticResource NegativeBooleanToVisibilityConverter}}">
+                                <TextBlock FontWeight="Medium" Text="{Binding Model.ModloaderVersion}" />
+                            </Border>
+                        </Grid>
                     </Grid>
                 </Border>
 
-                <!--  Optifine  -->
-                <Border
-                    Padding="0,16,0,8"
-                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                    BorderThickness="0,0,0,2">
-                    <Grid>
+                <StackPanel Visibility="{Binding Model.OptimizationModManager.IsAvaliable, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <!--  Optifine  -->
+                    <Border
+                        Padding="0,16,0,8"
+                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                        BorderThickness="0,0,0,2"
+                        Visibility="{Binding IsVanilla, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <Grid>
 
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
 
-                        <!--  Header  -->
-                        <StackPanel>
-                            <TextBlock
-                                FontSize="14"
-                                FontWeight="Medium"
-                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                Text="Optifine" />
-                            <TextBlock
-                                extensions:TextBlock.TextByKey="OptifineDescription"
-                                FontSize="14"
-                                FontWeight="Medium"
-                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
-                        </StackPanel>
+                            <!--  Header  -->
+                            <StackPanel>
+                                <TextBlock
+                                    FontSize="14"
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                    Text="Optifine" />
+                                <TextBlock
+                                    extensions:TextBlock.TextByKey="OptifineDescription"
+                                    FontSize="14"
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                            </StackPanel>
 
-                        <ToggleButton
-                            Grid.Column="1"
-                            HorizontalAlignment="Right"
-                            IsChecked="{Binding Model.IsOptifineEnabled}"
-                            Style="{StaticResource SwitchButton}" />
-                    </Grid>
-                </Border>
+                            <ToggleButton
+                                Grid.Column="1"
+                                HorizontalAlignment="Right"
+                                IsChecked="{Binding Model.IsOptifine}"
+                                Style="{StaticResource SwitchButton}" />
+                        </Grid>
+                    </Border>
 
-                <!--  Optifine Version  -->
-                <Border
-                    Padding="0,16,0,8"
-                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                    BorderThickness="0,0,0,2"
-                    Visibility="{Binding Model.ModloaderModel.IsEnable, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <Grid>
+                    <!--  Optifine Version  -->
+                    <Border
+                        Padding="0,16,0,8"
+                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                        BorderThickness="0,0,0,2"
+                        Visibility="{Binding Model.IsOptifine, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <Grid>
 
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
 
-                        <!--  Header  -->
-                        <StackPanel>
-                            <TextBlock
-                                extensions:TextBlock.TextByKey="ModloaderVersion"
-                                FontSize="14"
-                                FontWeight="Medium"
-                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
-                            <TextBlock
-                                extensions:TextBlock.TextByKey="ModloaderVersionDescription"
-                                FontSize="14"
-                                FontWeight="Medium"
-                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
-                        </StackPanel>
+                            <!--  Header  -->
+                            <StackPanel>
+                                <TextBlock
+                                    extensions:TextBlock.TextByKey="ModloaderVersion"
+                                    FontSize="14"
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                <TextBlock
+                                    extensions:TextBlock.TextByKey="ModloaderVersionDescription"
+                                    FontSize="14"
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                            </StackPanel>
 
-                        <ComboBox
-                            Grid.Column="1"
-                            Width="215"
-                            HorizontalAlignment="Right"
-                            ItemsSource="{Binding Model.OptifineModel.Versions}"
-                            SelectedItem="{Binding Model.OptifineModel.Version}" />
-                    </Grid>
-                </Border>
+                            <ComboBox
+                                Grid.Column="1"
+                                Width="215"
+                                HorizontalAlignment="Right"
+                                IsSynchronizedWithCurrentItem="True"
+                                ItemsSource="{Binding Model.OptimizationModManager.CurrentMinecraftExtension.Versions}"
+                                SelectedItem="{Binding Model.OptifineVersion}" />
+                        </Grid>
+                    </Border>
+                </StackPanel>
             </StackPanel>
         </ScrollViewer>
 

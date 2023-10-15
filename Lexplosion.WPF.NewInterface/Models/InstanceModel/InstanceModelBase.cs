@@ -5,7 +5,6 @@ using Lexplosion.WPF.NewInterface.Core;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
 
 namespace Lexplosion.WPF.NewInterface.Models.InstanceModel
 {
@@ -52,14 +51,22 @@ namespace Lexplosion.WPF.NewInterface.Models.InstanceModel
         public string Description { get => _instanceClient.Description; }
         public byte[] Logo { get; }
         public IEnumerable<IProjectCategory> Tags { get; }
-        public InstanceSource Type { get => _instanceClient.Type; }
+        public InstanceSource Source { get => _instanceClient.Type; }
 
 
         public bool IsLaunched { get; private set; }
         public bool IsInstalled { get => _instanceClient.IsInstalled; }
         public bool InLibrary { get => _instanceClient.InLibrary; }
 
-        public BaseInstanceData InstanceData { get => _instanceClient.GetBaseData; }
+        public BaseInstanceData InstanceData
+        {
+            get
+            {
+                var s = _instanceClient.GetBaseData;
+                Runtime.DebugWrite(s.GetHashCode());
+                return s;
+            }
+        }
 
 
         #endregion Properties
@@ -200,7 +207,7 @@ namespace Lexplosion.WPF.NewInterface.Models.InstanceModel
 
         }
 
-        public void ChangeOverviewParameters(BaseInstanceData baseInstance, string logoPath)
+        public void ChangeOverviewParameters(BaseInstanceData baseInstance, string logoPath = null)
         {
             _instanceClient.ChangeParameters(baseInstance, logoPath);
         }

@@ -26,7 +26,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
             _tabs.Add(new TabItemModel { TextKey = "General", Content = _settingsViewModel, IsSelected = true });
 
             // Если сборка создана через лаунчер, включаем вкладки.
-            if (instanceModelBase.Type == InstanceSource.Local) 
+            if (instanceModelBase.Source == InstanceSource.Local) 
             {
                 _aboutViewModel = new InstanceProfileAboutViewModel(instanceModelBase);
                 _configurationViewModel = new InstanceProfileConfigurationViewModel(instanceModelBase);

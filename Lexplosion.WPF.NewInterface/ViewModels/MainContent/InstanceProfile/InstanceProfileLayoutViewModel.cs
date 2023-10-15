@@ -1,10 +1,7 @@
-﻿using Lexplosion.Logic.Network;
-using Lexplosion.WPF.NewInterface.Commands;
+﻿using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
-using Lexplosion.WPF.NewInterface.Core.Tools;
 using Lexplosion.WPF.NewInterface.Models.InstanceModel;
 using System.Windows.Input;
-using System.Windows.Media;
 
 namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
 {
@@ -42,7 +39,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
         private RelayCommand _backCommand;
         public ICommand BackCoommand 
         {
-            get => RelayCommand.GetCommand(ref _backCommand, null);
+            get => RelayCommand.GetCommand(ref _backCommand, () => { });
         }
 
 

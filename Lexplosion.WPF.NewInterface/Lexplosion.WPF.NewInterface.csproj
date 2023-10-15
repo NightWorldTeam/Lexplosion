@@ -101,9 +101,11 @@
     <Compile Include="Controls\UIUnderlineTabControl\UIUnderlineTabControl.cs" />
     <Compile Include="Controls\UpperPlaceholderTextBox\UpperPlaceholderTextBox.cs" />
     <Compile Include="Core\ContentLayoutViewModelBase.cs" />
-    <Compile Include="Core\GameExtensions\ExtensionModel.cs" />
-    <Compile Include="Core\GameExtensions\ModloaderModel.cs" />
-    <Compile Include="Core\GameExtensions\OptifineModel.cs" />
+    <Compile Include="Core\Converters\NegativeBooleanToVisibilityConverter.cs" />
+    <Compile Include="Core\GameExtensions\MinecraftExtension.cs" />
+    <Compile Include="Core\GameExtensions\ExtensionManagerBase.cs" />
+    <Compile Include="Core\GameExtensions\ModloaderManager.cs" />
+    <Compile Include="Core\GameExtensions\OptimizationModManager.cs" />
     <Compile Include="Core\ILayoutViewModel.cs" />
     <Compile Include="Core\INotifiable.cs" />
     <Compile Include="Core\Modal\IModalViewModel.cs" />

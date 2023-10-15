@@ -138,8 +138,7 @@ namespace Lexplosion.Common.Models.GameExtensions
 
         public static bool CheckExistsOnVersion(string gameVersion, GameExtension extension)
         {
-            uint[] version = new uint[] { 0, 0, 0 };
-            var splitedVersion = gameVersion.Split('.');
+            ushort[] version = gameVersion.Split('.').Select(ushort.Parse).ToArray<ushort>();
 
             switch (extension)
             {

@@ -723,7 +723,7 @@ namespace Lexplosion.Logic.Management.Instances
                     };
                 }
 
-                if (data.OptifineVersion == null)
+                if (string.IsNullOrWhiteSpace(data.OptifineVersion))
                 {
                     manifest.version.additionalInstaller = null;
                 }
