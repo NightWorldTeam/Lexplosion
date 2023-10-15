@@ -439,4 +439,12 @@
 
     <!--  Groups  -->
     <s:String x:Key="groupsManager">Менеджер групп</s:String>
+
+
+    <!--  Java Errors  -->
+    <s:String x:Key="javaPathSelectError">Неверный формат пути до Java</s:String>
+    <s:String x:Key="emptyOrNull">Выбранный путь не должен быть пустым!</s:String>
+    <s:String x:Key="javeExeDoesNotExists">Файл java.exe или javaw.exe не существует в данном выбранном пути!</s:String>
+    <s:String x:Key="wrongExe">Выбранный путь указывает на неправильный .exe файл!</s:String>
+    <s:String x:Key="pathDoesNotExists">Выбранный путь не существует!</s:String>
 </ResourceDictionary>

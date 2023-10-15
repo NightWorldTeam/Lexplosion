@@ -152,6 +152,7 @@
     <Compile Include="Tools\DynamicStateData.cs" />
     <Compile Include="Tools\IListExtensions.cs" />
     <Compile Include="Tools\ImageTools.cs" />
+    <Compile Include="Tools\JavaHelper.cs" />
     <Compile Include="Tools\KeySemaphore.cs" />
     <Compile Include="Tools\NativeMethods.cs" />
     <Compile Include="Tools\Pointer.cs" />

@@ -1,6 +1,10 @@
-﻿using Lexplosion.Global;
+﻿using Lexplosion.Controls;
+using Lexplosion.Core.Tools;
+using Lexplosion.Global;
 using Lexplosion.Logic;
+using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Management.Instances;
+using Lexplosion.Tools;
 using System;
 
 namespace Lexplosion.Common.Models.ShowCaseMenu
@@ -12,6 +16,11 @@ namespace Lexplosion.Common.Models.ShowCaseMenu
         private Settings _instanceSettingsCopy;
 
         public static event Action<bool, string> ConsoleParameterChanged;
+
+        public DoNotificationCallback _doNotificationCallback = (a, a1, a2, a3) => { };
+
+        #region Properties
+
 
         public Settings InstanceSettings
         {
@@ -48,7 +57,7 @@ namespace Lexplosion.Common.Models.ShowCaseMenu
         {
             get => WindowWidth.ToString() + "x" + WindowHeight.ToString(); set
             {
-                var resolution = value.ToString().Split('x');
+                var resolution = value.Split('x');
 
                 WindowWidth = uint.Parse(resolution[0]);
                 WindowHeight = uint.Parse(resolution[1]);
@@ -103,16 +112,23 @@ namespace Lexplosion.Common.Models.ShowCaseMenu
         {
             get => InstanceSettings.JavaPath; set
             {
-                InstanceSettings.JavaPath = value;
-                _instanceSettingsCopy.JavaPath = value;
+                var javaPathResult = JavaHelper.TryValidateJavaPath(value, out var correctPath);
+
+                if (javaPathResult == JavaHelper.JavaPathCheckResult.Success)
+                {
+                    InstanceSettings.JavaPath = correctPath;
+                    InstanceSettings.IsCustomJava = true;
+                }
+                else
+                {
+                    DoErrorNotification(javaPathResult);
+                    InstanceSettings.JavaPath = string.Empty;
+                    InstanceSettings.IsCustomJava = false;
+                }
+
                 OnPropertyChanged();
 
-                if (value.Length == 0)
-                    InstanceSettings.IsCustomJava = false;
-                else
-                    InstanceSettings.IsCustomJava = true;
-
-                _instanceClient.SaveSettings(_instanceSettingsCopy);
+                DataFilesManager.SaveSettings(InstanceSettings);
             }
         }
 
@@ -151,12 +167,57 @@ namespace Lexplosion.Common.Models.ShowCaseMenu
             }
         }
 
-        public InstanceSettingsModel(InstanceClient instanceClient)
+
+        #endregion Properties
+
+
+        #region Constructors
+
+
+        public InstanceSettingsModel(InstanceClient instanceClient, DoNotificationCallback doNotificationCallback)
         {
+            _doNotificationCallback = doNotificationCallback ?? _doNotificationCallback;
             _instanceClient = instanceClient;
             _instanceSettings = instanceClient.GetSettings();
             _instanceSettingsCopy = _instanceSettings.Copy();
             InstanceSettings.Merge(GlobalData.GeneralSettings, true);
         }
+
+
+        #endregion Constructors
+
+
+        #region Private Methods
+
+
+        private void DoErrorNotification(JavaHelper.JavaPathCheckResult javaPathCheckResult)
+        {
+            switch (javaPathCheckResult)
+            {
+                case JavaHelper.JavaPathCheckResult.EmptyOrNull:
+                    {
+                        _doNotificationCallback(ResourceGetter.GetString("javaPathSelectError"), ResourceGetter.GetString("emptyOrNull"), 10, 0);
+                        break;
+                    }
+                case JavaHelper.JavaPathCheckResult.JaveExeDoesNotExists:
+                    {
+                        _doNotificationCallback(ResourceGetter.GetString("javaPathSelectError"), ResourceGetter.GetString("javeExeDoesNotExists"), 10, 0);
+                        break;
+                    }
+                case JavaHelper.JavaPathCheckResult.WrongExe:
+                    {
+                        _doNotificationCallback(ResourceGetter.GetString("javaPathSelectError"), ResourceGetter.GetString("wrongExe"), 10, 0);
+                        break;
+                    }
+                case JavaHelper.JavaPathCheckResult.PathDoesNotExists:
+                    {
+                        _doNotificationCallback(ResourceGetter.GetString("javaPathSelectError"), ResourceGetter.GetString("pathDoesNotExists"), 10, 0);
+                        break;
+                    }
+            }
+        }
+
+
+        #endregion Private Methods
     }
 }

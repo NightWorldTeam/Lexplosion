@@ -1,5 +1,8 @@
-﻿using Lexplosion.Global;
+﻿using Lexplosion.Controls;
+using Lexplosion.Core.Tools;
+using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
+using Lexplosion.Tools;
 using System;
 
 namespace Lexplosion.Common.Models
@@ -7,6 +10,12 @@ namespace Lexplosion.Common.Models
     public sealed class GeneralSettingsModel : VMBase
     {
         public static event Action<bool> ConsoleParameterChanged;
+
+        private readonly DoNotificationCallback _doNotification = (header, message, time, type) => { };
+
+
+        #region Public Methods
+
 
         public string SystemPath
         {
@@ -115,13 +124,21 @@ namespace Lexplosion.Common.Models
         {
             get => GlobalData.GeneralSettings.JavaPath; set
             {
-                GlobalData.GeneralSettings.JavaPath = value;
-                OnPropertyChanged();
+                var javaPathResult = JavaHelper.TryValidateJavaPath(value, out var correctPath);
 
-                if (value.Length == 0)
-                    GlobalData.GeneralSettings.IsCustomJava = false;
-                else
+                if (javaPathResult == JavaHelper.JavaPathCheckResult.Success)
+                {
+                    GlobalData.GeneralSettings.JavaPath = correctPath;
                     GlobalData.GeneralSettings.IsCustomJava = true;
+                }
+                else 
+                {
+                    DoErrorNotification(javaPathResult);
+                    GlobalData.GeneralSettings.JavaPath = string.Empty;
+                    GlobalData.GeneralSettings.IsCustomJava = false;
+                }
+
+                OnPropertyChanged();
 
                 DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
             }
@@ -132,17 +149,21 @@ namespace Lexplosion.Common.Models
         {
             get => GlobalData.GeneralSettings.Java17Path; set
             {
-                GlobalData.GeneralSettings.Java17Path = value;
-                OnPropertyChanged();
+                var javaPathResult = JavaHelper.TryValidateJavaPath(value, out var correctPath);
 
-                if (value.Length == 0)
+                if (javaPathResult == JavaHelper.JavaPathCheckResult.Success)
                 {
-                    GlobalData.GeneralSettings.IsCustomJava17 = false;
+                    GlobalData.GeneralSettings.Java17Path = correctPath;
+                    GlobalData.GeneralSettings.IsCustomJava = true;
                 }
                 else
                 {
-                    GlobalData.GeneralSettings.IsCustomJava17 = true;
+                    DoErrorNotification(javaPathResult);
+                    GlobalData.GeneralSettings.Java17Path = string.Empty;
+                    GlobalData.GeneralSettings.IsCustomJava = false;
                 }
+
+                OnPropertyChanged();
 
                 DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
             }
@@ -169,5 +190,54 @@ namespace Lexplosion.Common.Models
         {
             Java17Path = "";
         }
+
+
+        #endregion Public Methods
+
+
+        #region Constructors
+
+
+        public GeneralSettingsModel(DoNotificationCallback doNotificationCallback)
+        {
+            _doNotification = doNotificationCallback;
+        }
+
+
+        #endregion Constructors
+
+
+        #region Private Methods
+
+
+        private void DoErrorNotification(JavaHelper.JavaPathCheckResult javaPathCheckResult) 
+        {
+            switch (javaPathCheckResult) 
+            {
+                case JavaHelper.JavaPathCheckResult.EmptyOrNull:
+                    {
+                        _doNotification(ResourceGetter.GetString("javaPathSelectError"), ResourceGetter.GetString("emptyOrNull"), 10, 0);
+                        break;
+                    }
+                case JavaHelper.JavaPathCheckResult.JaveExeDoesNotExists:
+                {
+                    _doNotification(ResourceGetter.GetString("javaPathSelectError"), ResourceGetter.GetString("javeExeDoesNotExists"), 10, 0);
+                    break;
+                }
+                case JavaHelper.JavaPathCheckResult.WrongExe:
+                    {
+                        _doNotification(ResourceGetter.GetString("javaPathSelectError"), ResourceGetter.GetString("wrongExe"), 10, 0);
+                        break;
+                    }
+                case JavaHelper.JavaPathCheckResult.PathDoesNotExists:
+                    {
+                        _doNotification(ResourceGetter.GetString("javaPathSelectError"), ResourceGetter.GetString("pathDoesNotExists"), 10, 0);
+                        break;
+                    }
+            }
+        }
+
+
+        #endregion Private Methods
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Lexplosion.Common.Models.ShowCaseMenu;
+using Lexplosion.Controls;
 using Lexplosion.Logic.Management.Instances;
 using System.Windows.Forms;
 
@@ -14,7 +15,7 @@ namespace Lexplosion.Common.ViewModels.ShowCaseMenu
                 using (FolderBrowserDialog dialog = new FolderBrowserDialog())
                 {
                     dialog.SelectedPath = InstanceSettings.JavaPath;
-                    if (dialog.ShowDialog() == DialogResult.OK)
+                    if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                     {
                         InstanceSettings.JavaPath = dialog.SelectedPath;
                     }
@@ -28,8 +29,8 @@ namespace Lexplosion.Common.ViewModels.ShowCaseMenu
             {
                 using (FolderBrowserDialog dialog = new FolderBrowserDialog())
                 {
-                    dialog.SelectedPath = InstanceSettings.JavaPath.Replace("/", @"\");
-                    if (dialog.ShowDialog() == DialogResult.OK)
+                    dialog.SelectedPath = InstanceSettings.JavaPath.Replace('/', '\\');
+                    if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                     {
                         InstanceSettings.JavaPath = dialog.SelectedPath;
                     }
@@ -45,9 +46,9 @@ namespace Lexplosion.Common.ViewModels.ShowCaseMenu
             });
         }
 
-        public InstanceSettingsViewModel(InstanceClient instanceClient)
+        public InstanceSettingsViewModel(InstanceClient instanceClient, DoNotificationCallback doNotificationCallback = null)
         {
-            InstanceSettings = new InstanceSettingsModel(instanceClient);
+            InstanceSettings = new InstanceSettingsModel(instanceClient, doNotificationCallback);
         }
     }
 }

@@ -108,7 +108,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Settings
         public GeneralSettingsViewModel(DoNotificationCallback doNotification)
         {
             _doNotification = doNotification ?? _doNotification;
-            Model = new GeneralSettingsModel();
+            Model = new GeneralSettingsModel(doNotification);
         }
 
 

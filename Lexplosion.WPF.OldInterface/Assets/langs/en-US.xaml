@@ -396,4 +396,11 @@
 
     <!--  Groups  -->
     <s:String x:Key="groupsManager">Groups Manager</s:String>
+
+    <!--  Java Errors  -->
+    <s:String x:Key="javaPathSelectError">Wrong Java path format.</s:String>
+    <s:String x:Key="emptyOrNull">Selected java Path was empty</s:String>
+    <s:String x:Key="javeExeDoesNotExists">Selected java path had not jave.exe or javaw.exe does not exist</s:String>
+    <s:String x:Key="wrongExe">Selected java Path had wrong ".exe". Java path must be contains java.exe or javaw.exe</s:String>
+    <s:String x:Key="pathDoesNotExists">Selected java path does not exist</s:String>
 </ResourceDictionary>
