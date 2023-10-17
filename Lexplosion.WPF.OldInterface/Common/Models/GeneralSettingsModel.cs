@@ -4,6 +4,7 @@ using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Tools;
 using System;
+using System.Diagnostics.Eventing.Reader;
 
 namespace Lexplosion.Common.Models
 {
@@ -13,6 +14,7 @@ namespace Lexplosion.Common.Models
 
         private readonly DoNotificationCallback _doNotification = (header, message, time, type) => { };
 
+        private bool _isJavaPathWasReseted;
 
         #region Public Methods
 
@@ -124,18 +126,25 @@ namespace Lexplosion.Common.Models
         {
             get => GlobalData.GeneralSettings.JavaPath; set
             {
-                var javaPathResult = JavaHelper.TryValidateJavaPath(value, out var correctPath);
+                if (!_isJavaPathWasReseted)
+                {
+                    var javaPathResult = JavaHelper.TryValidateJavaPath(value, out value);
 
-                if (javaPathResult == JavaHelper.JavaPathCheckResult.Success)
-                {
-                    GlobalData.GeneralSettings.JavaPath = correctPath;
-                    GlobalData.GeneralSettings.IsCustomJava = true;
+                    if (javaPathResult == JavaHelper.JavaPathCheckResult.Success)
+                    {
+                        GlobalData.GeneralSettings.JavaPath = value;
+                        GlobalData.GeneralSettings.IsCustomJava = true;
+                    }
+                    else
+                    {
+                        DoErrorNotification(javaPathResult);
+                        GlobalData.GeneralSettings.JavaPath = string.Empty;
+                        GlobalData.GeneralSettings.IsCustomJava = false;
+                    }
                 }
-                else 
+                else
                 {
-                    DoErrorNotification(javaPathResult);
-                    GlobalData.GeneralSettings.JavaPath = string.Empty;
-                    GlobalData.GeneralSettings.IsCustomJava = false;
+                    GlobalData.GeneralSettings.JavaPath = value;
                 }
 
                 OnPropertyChanged();
@@ -149,18 +158,25 @@ namespace Lexplosion.Common.Models
         {
             get => GlobalData.GeneralSettings.Java17Path; set
             {
-                var javaPathResult = JavaHelper.TryValidateJavaPath(value, out var correctPath);
+                if (!_isJavaPathWasReseted)
+                {
+                    var javaPathResult = JavaHelper.TryValidateJavaPath(value, out value);
 
-                if (javaPathResult == JavaHelper.JavaPathCheckResult.Success)
-                {
-                    GlobalData.GeneralSettings.Java17Path = correctPath;
-                    GlobalData.GeneralSettings.IsCustomJava = true;
+                    if (javaPathResult == JavaHelper.JavaPathCheckResult.Success)
+                    {
+                        GlobalData.GeneralSettings.Java17Path = value;
+                        GlobalData.GeneralSettings.IsCustomJava17 = true;
+                    }
+                    else
+                    {
+                        DoErrorNotification(javaPathResult);
+                        GlobalData.GeneralSettings.Java17Path = string.Empty;
+                        GlobalData.GeneralSettings.IsCustomJava17 = false;
+                    }
                 }
-                else
+                else 
                 {
-                    DoErrorNotification(javaPathResult);
-                    GlobalData.GeneralSettings.Java17Path = string.Empty;
-                    GlobalData.GeneralSettings.IsCustomJava = false;
+                    GlobalData.GeneralSettings.Java17Path = value;
                 }
 
                 OnPropertyChanged();
@@ -182,13 +198,17 @@ namespace Lexplosion.Common.Models
 
         public void ResetJavaPath()
         {
+            _isJavaPathWasReseted = true;
             JavaPath = "";
+            _isJavaPathWasReseted = false;
         }
 
 
         public void ResetJava17Path()
         {
+            _isJavaPathWasReseted = true;
             Java17Path = "";
+            _isJavaPathWasReseted = false;
         }
 
 
