@@ -1,7 +1,7 @@
 ﻿using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Models.InstanceModel;
-using Lexplosion.WPF.NewInterface.Models.MainContent.InstanceProfile.Settings;
+using Lexplosion.WPF.NewInterface.Models.MainContent.InstanceProfile;
 using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile

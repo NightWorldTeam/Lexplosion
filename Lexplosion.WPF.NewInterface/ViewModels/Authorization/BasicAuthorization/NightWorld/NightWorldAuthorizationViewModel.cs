@@ -24,7 +24,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.Authorization
             get => authorizationCommand ?? (authorizationCommand = new RelayCommand(obj =>
             {
                 Model.LogIn();
-                _navigationStore.CurrentViewModel = new MainMenuLayoutViewModel();
+                _navigationStore.CurrentViewModel = new MainMenuLayoutViewModel(_navigationStore);
             }));
         }
 

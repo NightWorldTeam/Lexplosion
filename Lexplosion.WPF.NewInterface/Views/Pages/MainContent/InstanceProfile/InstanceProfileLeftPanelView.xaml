@@ -133,20 +133,10 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <Border
-                        Height="32"
-                        HorizontalAlignment="Stretch"
-                        BorderBrush="{DynamicResource ActivitySolidColorBrush}"
-                        BorderThickness="1"
-                        CornerRadius="5">
-                        <!--  TODO: Language Key Here  -->
-                        <TextBlock
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            FontWeight="Medium"
-                            Foreground="{DynamicResource ActivitySolidColorBrush}"
-                            Text="Back" />
-                    </Border>
+                    <Button
+                        Command="{Binding BackCommand}"
+                        Content="Back"
+                        Style="{DynamicResource GhostButton}" />
                 </Grid>
 
                 <!--  Header  -->

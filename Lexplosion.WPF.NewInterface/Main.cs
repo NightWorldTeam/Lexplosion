@@ -1,6 +1,10 @@
-﻿using Lexplosion.Global;
+﻿using Lexplosion.Core.Tools.Notification;
+using Lexplosion.Global;
+using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Views.Windows;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Reflection;
 using System.Threading;
 using System.Windows;
@@ -14,11 +18,19 @@ namespace Lexplosion.WPF.NewInterface
         Top,
     }
 
-    static class RuntimeApp
+    public class NotificationManager : INotificationManager
     {
-        const string ResourcePath = "pack://application:,,,/Resources/";
-        const string AssetsPath = "pack://application:,,,/Assets/";
-        const string ControlsPath = "pack://application:,,,/Controls/";
+        public void Show(INotificable notifiable)
+        {
+            RuntimeApp.Notification.Add(notifiable);
+        }
+    }
+
+    internal static class RuntimeApp
+    {
+        internal const string ResourcePath = "pack://application:,,,/Resources/";
+        internal const string AssetsPath = "pack://application:,,,/Assets/";
+        internal const string ControlsPath = "pack://application:,,,/Controls/";
 
         private static event Action ResourceDictionariesLoaded;
 
@@ -32,10 +44,15 @@ namespace Lexplosion.WPF.NewInterface
 
         public static HeaderState HeaderState;
 
+        public static ICollection<INotificable> Notification = new ObservableCollection<INotificable>();
 
         [STAThread]
         static void Main()
         {
+            var title = "TKESKLTSRLK ALLALA";
+            var message = "Действие фильма будет происходить после событий, рассказанных в фильме «Миссия невыполнима: Последствия». В центре истории новые приключения агента Итана Ханта.";
+
+            Notification.Add(new InstanceNotification(title, message, NotificationType.Info, TimeSpan.MaxValue));
             // Подписываемся на эвент для загрузки всех строенных dll'ников
             AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
 

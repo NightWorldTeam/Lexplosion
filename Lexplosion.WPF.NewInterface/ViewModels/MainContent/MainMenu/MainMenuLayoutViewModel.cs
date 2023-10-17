@@ -1,11 +1,15 @@
-﻿using Lexplosion.WPF.NewInterface.Core;
+﻿using Lexplosion.WPF.NewInterface.Commands;
+using Lexplosion.WPF.NewInterface.Core;
+using Lexplosion.WPF.NewInterface.Stores;
+using System;
+using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu
 {
     public sealed class MainMenuLayoutViewModel : ViewModelBase, ILayoutViewModel
     {
-        private readonly ViewModelBase _catalogViewModel = new CatalogViewModel();
-        private readonly ViewModelBase _libraryViewModel = new LibraryViewModel();
+        private readonly ViewModelBase _catalogViewModel;
+        private readonly ViewModelBase _libraryViewModel;
         private readonly ViewModelBase _multiplayerLayoutViewModel = new MultiplayerLayoutViewModel();
         private readonly ViewModelBase _friendsLayoutViewModel = new FriendsLayoutViewModel();
         private readonly ViewModelBase _generalSettingsLayoutViewModel = new GeneralSettingsLayoutViewModel();
@@ -24,7 +28,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu
             }
         }
 
-        public ViewModelBase Content { get; private set; } = new CatalogViewModel();
+        public ViewModelBase Content { get; private set; }
 
 
         #endregion Properties
@@ -33,8 +37,16 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu
         #region Constructors
 
 
-        public MainMenuLayoutViewModel()
+        public MainMenuLayoutViewModel(INavigationStore navigationStore)
         {
+            Func<ViewModelBase> s = () => this;
+            var ToMainMenuLayoutCommand = new NavigateCommand<ViewModelBase>(navigationStore, s);
+
+            _catalogViewModel = new CatalogViewModel(navigationStore, ToMainMenuLayoutCommand);
+            _libraryViewModel = new LibraryViewModel(navigationStore, ToMainMenuLayoutCommand);
+
+            Content = _catalogViewModel;
+
             LeftPanel = new LeftPanelViewModel();
             LeftPanel.SelectedItemChanged += OnLeftPanelSelectedItemChanged;
 

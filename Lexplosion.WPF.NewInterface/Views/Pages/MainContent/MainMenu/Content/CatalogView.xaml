@@ -59,6 +59,8 @@
                                     <controls:InstanceForm
                                         Margin="0,0,0,16"
                                         InstanceModel="{Binding}"
+                                        LogoButtonCommand="{Binding DataContext.OpenInstanceProfileMenu, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                        LogoButtonCommandParameter="{Binding}"
                                         MouseDown="InstanceForm_MouseDown" />
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>

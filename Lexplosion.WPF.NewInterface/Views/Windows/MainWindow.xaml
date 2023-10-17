@@ -6,6 +6,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:objects="clr-namespace:Lexplosion.WPF.NewInterface.Core.Objects"
+    xmlns:runtime="clr-namespace:Lexplosion.WPF.NewInterface"
     Title="Lexplosion New Interface Debug"
     Width="944"
     Height="528"
@@ -28,6 +30,62 @@
             UseAeroCaptionButtons="False" />
     </WindowChrome.WindowChrome>
 
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type objects:InstanceNotification}">
+            <Border
+                Padding="16,8,8,8"
+                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                BorderThickness="0,1,0,1">
+                <Grid HorizontalAlignment="Left">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!--  Logo or Icon  -->
+                    <Border
+                        Width="40"
+                        Height="40"
+                        VerticalAlignment="Top"
+                        Background="{DynamicResource ActivitySolidColorBrush}"
+                        CornerRadius="5" />
+
+                    <StackPanel Grid.Column="1" Margin="16,0,0,0">
+                        <!--  Title  -->
+                        <TextBlock
+                            FontSize="14"
+                            FontWeight="Medium"
+                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                            Text="{Binding Title}" />
+
+                        <!--  Content  -->
+                        <TextBlock
+                            Margin="0,4,0,0"
+                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                            Text="{Binding Content}"
+                            TextWrapping="WrapWithOverflow" />
+
+                        <!--  Time  -->
+                        <Grid Margin="0,5,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="{Binding Time}" />
+
+                            <TextBlock
+                                Grid.Column="1"
+                                Margin="8,0,0,0"
+                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                Text="{Binding InstanceName, StringFormat=(in {0})}" />
+                        </Grid>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </DataTemplate>
+    </Window.Resources>
 
     <!--
         Width="350"
@@ -351,7 +409,8 @@
 
             <Border Background="{DynamicResource PrimaryForegroundSolidColorBrush}" Visibility="Collapsed">
 
-                <Grid HorizontalAlignment="Center">
+                <Grid HorizontalAlignment="Center" ShowGridLines="True">
+
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
@@ -418,7 +477,7 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 KeyboardNavigation.IsTabStop="False"
-                ShowGridLines="False"
+                ShowGridLines="True"
                 Visibility="Visible">
 
                 <Grid.ColumnDefinitions>
@@ -482,6 +541,7 @@
                     <!--  Change Theme Color  -->
 
                     <Border
+                        x:Name="ChangeColorThemeButton"
                         Width="20"
                         Height="20"
                         Background="{DynamicResource SeparateSolidColorBrush}"
@@ -668,6 +728,146 @@
                     </Border>
                 </StackPanel>
             </Grid>
+
+            <Grid
+                x:Name="AddtionalFuncs"
+                Margin="16,12"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top">
+
+                <StackPanel HorizontalAlignment="{Binding HorizontalAlignment, ElementName=AddtionalFuncs}" Orientation="Horizontal">
+                    <!--  Notifications  -->
+                    <ToggleButton x:Name="notify" Margin="8,0,0,0">
+                        <ToggleButton.Template>
+                            <ControlTemplate>
+                                <Border
+                                    Width="20"
+                                    Height="20"
+                                    Padding="2"
+                                    VerticalAlignment="Top"
+                                    Background="{DynamicResource SeparateSolidColorBrush}"
+                                    CornerRadius="2">
+
+                                    <Viewbox Height="14">
+                                        <Path
+                                            Data="M160-200v-80h80v-280q0-83 50-147.5T420-792v-28q0-25 17.5-42.5T480-880q25 0 42.5 17.5T540-820v28q80 20 130 84.5T720-560v280h80v80H160Zm320-300Zm0 420q-33 0-56.5-23.5T400-160h160q0 33-23.5 56.5T480-80ZM320-280h320v-280q0-66-47-113t-113-47q-66 0-113 47t-47 113v280Z"
+                                            Fill="{DynamicResource ActivitySolidColorBrush}"
+                                            Stretch="Fill" />
+                                    </Viewbox>
+
+                                    <Border.ToolTip>
+                                        <ToolTip
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            Placement="Right"
+                                            PlacementRectangle="20,-10,0,0"
+                                            PlacementTarget="{Binding ElementName=MainPanel}">
+
+                                            <!--  Custom ToolTip  -->
+                                            <Grid
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                MouseDown="Grid_MouseDown"
+                                                ShowGridLines="False"
+                                                Visibility="Visible">
+
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <Border
+                                                    Grid.Column="1"
+                                                    Height="32"
+                                                    Background="Black"
+                                                    CornerRadius="5">
+                                                    <TextBlock
+                                                        Padding="15,14,15,14"
+                                                        VerticalAlignment="Center"
+                                                        FontSize="12"
+                                                        FontWeight="Medium"
+                                                        Foreground="{DynamicResource CheckBoxMarkSolidColorBrush}"
+                                                        Text="Уведомления" />
+                                                </Border>
+
+                                                <Viewbox
+                                                    Height="5"
+                                                    Margin="0,0,-3,0"
+                                                    RenderTransformOrigin="0.5, 0.5">
+                                                    <Path
+                                                        Data="M480-360 280-560h400L480-360Z"
+                                                        Fill="Black"
+                                                        Stretch="Fill" />
+                                                    <Viewbox.RenderTransform>
+                                                        <RotateTransform Angle="90" />
+                                                    </Viewbox.RenderTransform>
+                                                </Viewbox>
+                                            </Grid>
+                                        </ToolTip>
+                                    </Border.ToolTip>
+                                </Border>
+                            </ControlTemplate>
+                        </ToggleButton.Template>
+                    </ToggleButton>
+
+                </StackPanel>
+
+                <!--  Notification Window  -->
+                <Border
+                    Width="350"
+                    Height="300"
+                    Margin="0,24,0,0"
+                    Background="{DynamicResource PrimarySolidColorBrush}"
+                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                    BorderThickness="1"
+                    CornerRadius="5"
+                    Visibility="{Binding IsChecked, ElementName=notify, Converter={StaticResource NegativeBooleanToVisibilityConverter}}">
+
+                    <Border.Effect>
+                        <DropShadowEffect Opacity="0.1" Color="Black" />
+                    </Border.Effect>
+
+                    <Grid>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <Grid Margin="16,8">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                FontSize="16"
+                                FontWeight="Medium"
+                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                Text="Your Notification" />
+                        </Grid>
+
+                        <ScrollViewer Grid.Row="1" Margin="0,0,0,0">
+                            <ItemsControl
+                                Margin="0,0,0,0"
+                                Background="Transparent"
+                                ItemsSource="{x:Static runtime:RuntimeApp.Notification}" />
+                        </ScrollViewer>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <ItemsControl
+                Width="300"
+                Height="300"
+                Margin="0,40,0,0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Background="Transparent"
+                ItemsSource="{x:Static runtime:RuntimeApp.Notification}"
+                Visibility="Collapsed" />
 
             <Grid x:Name="PaintArea">
                 <Grid.RenderTransform>

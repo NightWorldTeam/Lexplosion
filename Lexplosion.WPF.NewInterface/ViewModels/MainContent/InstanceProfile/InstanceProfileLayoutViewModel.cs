@@ -1,6 +1,7 @@
 ﻿using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Models.InstanceModel;
+using Lexplosion.WPF.NewInterface.Stores;
 using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
@@ -49,10 +50,10 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
         #region Constructors
 
 
-        public InstanceProfileLayoutViewModel(InstanceModelBase instanceModelBase)
+        public InstanceProfileLayoutViewModel(INavigationStore navigationStore, NavigateCommand<ViewModelBase> toMainMenuLayoutCommand, InstanceModelBase instanceModelBase)
         {
             _instanceModel = instanceModelBase;
-            LeftPanel = new InstanceProfileLeftPanelViewModel(_instanceModel);
+            LeftPanel = new InstanceProfileLeftPanelViewModel(navigationStore, toMainMenuLayoutCommand, _instanceModel);
             LeftPanel.SelectedItemChanged += OnLeftPanelSelectedItemChanged;
 
             InitDefaultLeftPanelTabs();
@@ -68,13 +69,20 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
         private void InitDefaultLeftPanelTabs()
         {
             _overviewViewModel = new InstanceProfileOverviewViewModel();
-            _settingsLayoutViewModel = new InstanceProfileSettingsLayoutViewModel(_instanceModel);
-            _addonsViewModel = new InstanceProfileAddonsLayoutViewModel(_instanceModel);
+
+            if (_instanceModel.IsInstalled) 
+            { 
+
+                _settingsLayoutViewModel = new InstanceProfileSettingsLayoutViewModel(_instanceModel);
+                _addonsViewModel = new InstanceProfileAddonsLayoutViewModel(_instanceModel);
+            }
 
             Lexplosion.Runtime.TaskRun(() => { 
                 LeftPanel.AddTabItem("Overview", "Services", _overviewViewModel);
-                LeftPanel.AddTabItem("Addons", "Addons", _addonsViewModel);
-                LeftPanel.AddTabItem("Settings", "Settings", _settingsLayoutViewModel);
+                if (_instanceModel.IsInstalled) { 
+                    LeftPanel.AddTabItem("Addons", "Addons", _addonsViewModel);
+                    LeftPanel.AddTabItem("Settings", "Settings", _settingsLayoutViewModel);
+                }
                 LeftPanel.SelectFirst();
             });
         }

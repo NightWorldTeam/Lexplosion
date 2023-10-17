@@ -60,6 +60,7 @@
                                     Grid.Column="1"
                                     HorizontalContentAlignment="Center"
                                     VerticalContentAlignment="Center"
+                                    Command="{Binding SetLogoPathCommand}"
                                     Content="Load your Logo"
                                     FontSize="14"
                                     Foreground="{DynamicResource CheckBoxMarkSolidColorBrush}" />

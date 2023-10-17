@@ -7,7 +7,7 @@ using Lexplosion.WPF.NewInterface.ViewModels;
 using System;
 using System.Threading;
 
-namespace Lexplosion.WPF.NewInterface.Models.MainContent.InstanceProfile.Settings
+namespace Lexplosion.WPF.NewInterface.Models.MainContent.InstanceProfile
 {
     public sealed class InstanceProfileConfigurationModel : ViewModelBase
     {

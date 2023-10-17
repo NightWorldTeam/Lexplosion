@@ -428,4 +428,31 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+
+
+    <!--  Ghost Button  -->
+
+    <!--  TODO: Hover Animation  -->
+    <Style x:Key="GhostButton" TargetType="{x:Type Button}">
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="FontWeight" Value="Medium" />
+        <Setter Property="Foreground" Value="{DynamicResource ActivitySolidColorBrush}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border
+                        Height="32"
+                        HorizontalAlignment="Stretch"
+                        Background="Transparent"
+                        BorderBrush="{DynamicResource ActivitySolidColorBrush}"
+                        BorderThickness="1"
+                        CornerRadius="5">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

@@ -3,6 +3,8 @@ using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Tools;
 using Lexplosion.WPF.NewInterface.Models.InstanceModel;
+using System;
+using System.IO;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 
@@ -95,6 +97,10 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
 
         public void SetLogoPath(string path) 
         {
+            using (var stream = new FileStream(path, FileMode.Open))
+            {
+                
+            }
             _logoPath = path;
         }
 
@@ -142,6 +148,31 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
 
 
         #endregion Private Methods
+
+
+        public void OpenFileDialog() {
+            // Create OpenFileDialog 
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+
+
+
+            // Set filter for file extension and default file extension 
+            dlg.DefaultExt = ".png";
+            dlg.Filter = "PNG Files (*.png)|*.png|JPG Files (*.jpg)|*.jpg|JPEG Files (*.jpeg)|*.jpeg|GIF Files (*.gif)|*.gif";
+
+
+            // Display OpenFileDialog by calling ShowDialog method 
+            Nullable<bool> result = dlg.ShowDialog();
+
+
+            // Get the selected file name and display in a TextBox 
+            if (result == true)
+            {
+                // Open document 
+                string filename = dlg.FileName;
+                SetLogoPath(filename);
+            }
+        }
     }
 
     public sealed class InstanceProfileAboutViewModel : ViewModelBase
@@ -167,7 +198,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
         private RelayCommand _setLogoPathCommand;
         public ICommand SetLogoPathCommand 
         {
-            get => RelayCommand.GetCommand<string>(ref _setLogoPathCommand, Model.SetLogoPath);
+            get => RelayCommand.GetCommand<object>(ref _setLogoPathCommand, (obj) => { Model.OpenFileDialog(); });
         }
 
 

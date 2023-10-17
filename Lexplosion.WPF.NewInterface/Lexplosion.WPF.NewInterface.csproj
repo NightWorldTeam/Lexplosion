@@ -80,7 +80,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Commands\CommandBase.cs" />
-    <Compile Include="Commands\NavigationCommand.cs" />
+    <Compile Include="Commands\NavigateCommand.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Controls\AnimatedContentControl\AnimatedContentControl.cs" />
@@ -116,6 +116,7 @@
     <Compile Include="Core\Objects\LanguageModel.cs" />
     <Compile Include="Core\Objects\ModalLeftMenuTabItem.cs" />
     <Compile Include="Core\Objects\LeftPanelItemModel.cs" />
+    <Compile Include="Core\Objects\Notification.cs" />
     <Compile Include="Core\Objects\TabItemModel.cs" />
     <Compile Include="Core\Objects\Theme.cs" />
     <Compile Include="Core\Tools\HashCodeHelper.cs" />
@@ -141,6 +142,7 @@
     <Compile Include="Models\InstanceModel\InstanceModelBase.cs" />
     <Compile Include="Models\InstanceModel\LaunchModel.cs" />
     <Compile Include="Models\MainContent\InstanceProfile\Settings\InstanceProfileConfigurationModel.cs" />
+    <Compile Include="Models\MainContent\InstanceProfile\Settings\InstanceProfileSettingsModel.cs" />
     <Compile Include="Models\MainContent\MainMenu\GeneralSettings\AppearanceSettingsModel.cs" />
     <Compile Include="Models\MainContent\MainMenu\CatalogModel.cs" />
     <Compile Include="Core\Stores\INavigationStore.cs" />

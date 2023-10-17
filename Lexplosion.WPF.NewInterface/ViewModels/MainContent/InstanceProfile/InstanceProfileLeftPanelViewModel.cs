@@ -1,7 +1,9 @@
 ﻿using Lexplosion.WPF.NewInterface.Commands;
+using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Core.Tools;
 using Lexplosion.WPF.NewInterface.Models.InstanceModel;
+using Lexplosion.WPF.NewInterface.Stores;
 using Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -13,7 +15,8 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
     public class InstanceProfileLeftPanelViewModel : LeftPanelViewModel
     {
         private InstanceModelBase _instanceModel;
-
+        private INavigationStore _navigationStore;
+        private NavigateCommand<ViewModelBase> _toMainMenuLayoutCommand;
 
         #region Properties
 
@@ -24,7 +27,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
         }
 
         public string InstanceName { get => _instanceModel.Name; }
-        public string InstanceVersion { get => _instanceModel.InstanceData.GameVersion.Id; }
+        public string InstanceVersion { get => _instanceModel.InstanceData.GameVersion?.Id; }
         public string InstanceModloader { get => _instanceModel.InstanceData.Modloader.ToString(); }
         public string PlayerPlayedTime { get => "10ч"; }
 
@@ -45,6 +48,15 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
             get => RelayCommand.GetCommand(ref _playCommand, (obj) => { _instanceModel.Run(); });
         }
 
+        private RelayCommand _backCommand;
+        public ICommand BackCommand 
+        {
+            get => RelayCommand.GetCommand(ref _backCommand, () =>
+            {
+                _toMainMenuLayoutCommand.Execute(null);
+            });
+        }
+
 
         #endregion Commands
 
@@ -52,8 +64,11 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
         #region Contructors
 
 
-        public InstanceProfileLeftPanelViewModel(InstanceModelBase instanceModelBase)
+        public InstanceProfileLeftPanelViewModel(INavigationStore navigationStore, NavigateCommand<ViewModelBase> toMainMenuLayoutCommand, InstanceModelBase instanceModelBase)
         {
+            _toMainMenuLayoutCommand = toMainMenuLayoutCommand;
+            _navigationStore = navigationStore;
+
             _instanceModel = instanceModelBase;
             _instanceModel.NameChanged += OnNameChanged;
             _instanceModel.GameVersionChanged += OnVersionChanged;

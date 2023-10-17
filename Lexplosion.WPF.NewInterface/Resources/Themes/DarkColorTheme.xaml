@@ -67,7 +67,7 @@
 
     <!--  Separate Color  -->
     <Color x:Key="SeparateColor">
-        #141A27
+        #303030
     </Color>
 
     <sys:Double x:Key="SeparateColorOpacity">
