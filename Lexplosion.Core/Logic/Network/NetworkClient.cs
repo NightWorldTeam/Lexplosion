@@ -38,14 +38,14 @@ namespace Lexplosion.Logic.Network
                 {
                     //подключаемся к управляющему серверу
                     TcpClient client = new TcpClient();
-                    Runtime.DebugWrite("CONNECT Initialization");
+                    Runtime.DebugConsoleWrite("CONNECT Initialization");
                     client.Connect(ControlServer.HandshakeServerPoint);
 
                     NetworkStream stream = client.GetStream();
                     var st = "{\"UUID-server\" : \"" + serverUUID + "\", \"type\": \"" + ClientType + "\", \"UUID\": \"" + UUID + "\", \"sessionToken\": \"" + sessionToken + "\"}";
                     byte[] sendData = Encoding.UTF8.GetBytes(st);
                     stream.Write(sendData, 0, sendData.Length); //авторизируемся на управляющем сервере
-                    Runtime.DebugWrite("Server uuid: " + serverUUID);
+                    Runtime.DebugConsoleWrite("Server uuid: " + serverUUID);
 
                     {
                         byte[] buf = new byte[2];
@@ -69,11 +69,11 @@ namespace Lexplosion.Logic.Network
                                         {
                                             directConnectPossible = false;
                                             dataToSend = Encoding.UTF8.GetBytes(myExternalPort + ",proxy");
-                                            Runtime.DebugWrite("Nat type " + result.NetType);
+                                            Runtime.DebugConsoleWrite("Nat type " + result.NetType);
                                         }
                                         else
                                         {
-                                            Runtime.DebugWrite("My EndPoint " + result.PublicEndPoint.ToString() + " Nat type " + result.NetType);
+                                            Runtime.DebugConsoleWrite("My EndPoint " + result.PublicEndPoint.ToString() + " Nat type " + result.NetType);
 
                                             dataToSend = Encoding.UTF8.GetBytes(myExternalPort);
                                         }
@@ -83,7 +83,7 @@ namespace Lexplosion.Logic.Network
                                         directConnectPossible = false;
                                         myExternalPort = ((IPEndPoint)udpSocket.LocalEndPoint).Port.ToString(); // в этом случае он нихуя не external
                                         dataToSend = Encoding.UTF8.GetBytes(myExternalPort + ",proxy");
-                                        Runtime.DebugWrite("STUN_Result is null");
+                                        Runtime.DebugConsoleWrite("STUN_Result is null");
                                     }
                                 }
                                 else
@@ -111,7 +111,7 @@ namespace Lexplosion.Logic.Network
                         }
                         else
                         {
-                            Runtime.DebugWrite("Bytes count: " + bytes + ", buf[0]=" + buf[0] + ", buf[1]=" + buf[1]);
+                            Runtime.DebugConsoleWrite("Bytes count: " + bytes + ", buf[0]=" + buf[0] + ", buf[1]=" + buf[1]);
                             return false;
                         }
                     }
@@ -132,7 +132,7 @@ namespace Lexplosion.Logic.Network
                             {
                                 if (hostPointData.EndsWith(",proxy"))
                                 {
-                                    Runtime.DebugWrite("The server requires udp proxy");
+                                    Runtime.DebugConsoleWrite("The server requires udp proxy");
                                     directConnectPossible = false;
                                     hostPointData = hostPointData.Replace(",proxy", "");
                                 }
@@ -140,21 +140,21 @@ namespace Lexplosion.Logic.Network
                                 hostPort = hostPointData.Substring(hostPointData.IndexOf(":") + 1, hostPointData.Length - hostPointData.IndexOf(":") - 1).Trim();
                                 var strCode = serverUUID + "," + UUID + "," + hostPort + "," + myExternalPort;
                                 connectionCode = sha.ComputeHash(Encoding.UTF8.GetBytes(strCode));
-                                Runtime.DebugWrite("Connection code: " + strCode);
+                                Runtime.DebugConsoleWrite("Connection code: " + strCode);
                             }
 
                             IPEndPoint hostPoint;
                             if (directConnectPossible)
                             {
-                                Runtime.DebugWrite("Udp direct connection");
+                                Runtime.DebugConsoleWrite("Udp direct connection");
                                 string hostIp = hostPointData.Replace(":" + hostPort, "");
-                                Runtime.DebugWrite("Host EndPoint " + new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort)));
+                                Runtime.DebugConsoleWrite("Host EndPoint " + new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort)));
 
                                 hostPoint = new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort));
                             }
                             else
                             {
-                                Runtime.DebugWrite("UDP connect through proxy");
+                                Runtime.DebugConsoleWrite("UDP connect through proxy");
                                 hostPoint = ControlServer.SmpProxyPoint;
                             }
 
@@ -167,7 +167,7 @@ namespace Lexplosion.Logic.Network
                     }
                     else
                     {
-                        Runtime.DebugWrite("Tcp proxy");
+                        Runtime.DebugConsoleWrite("Tcp proxy");
                         isConected = ((TurnBridgeClient)Bridge).Connect(serverUUID);
                     }
 
@@ -190,7 +190,7 @@ namespace Lexplosion.Logic.Network
                         // то выходим из этого цикла и сигнализируем о неудаче. Иначе мы перейдем на вторую итерацию
                         if (!(SmpConnection && directConnectPossible))
                         {
-                            Runtime.DebugWrite("пиздец");
+                            Runtime.DebugConsoleWrite("пиздец");
                             return false;
                         }
                         else
@@ -203,7 +203,7 @@ namespace Lexplosion.Logic.Network
             }
             catch (Exception ex)
             {
-                Runtime.DebugWrite("NetworkClient Init exception " + ex);
+                Runtime.DebugConsoleWrite("NetworkClient Init exception " + ex);
                 return false;
             }
         }

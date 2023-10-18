@@ -105,13 +105,13 @@ namespace Lexplosion.Logic.Network
                         //файл передан, удаляем клиента
                         if (clientData.Value2 >= fileSize)
                         {
-                            Runtime.DebugWrite("END SEND. Bytes count " + clientData.Value2);
+                            Runtime.DebugConsoleWrite("END SEND. Bytes count " + clientData.Value2);
                             toDisconect.Add(clientPoint);
                         }
                     }
                     catch (Exception ex)
                     {
-                        Runtime.DebugWrite("Sending exception " + ex);
+                        Runtime.DebugConsoleWrite("Sending exception " + ex);
                         toDisconect.Add(clientPoint);
                         continue;
                         // TODO: че-то мутить
@@ -228,11 +228,11 @@ namespace Lexplosion.Logic.Network
                                         Server.Send(Cryptography.AesEncode(fileSize, aesKey, aesIV), point); // отправляем размер файла
 
                                         WaitClient.Set();
-                                        Runtime.DebugWrite("Авторизировал");
+                                        Runtime.DebugConsoleWrite("Авторизировал");
                                     }
                                     else
                                     {
-                                        Runtime.DebugWrite("PARASHA");
+                                        Runtime.DebugConsoleWrite("PARASHA");
 
                                         connectionStages.Remove(point);
                                         Server.Close(point);
@@ -265,7 +265,7 @@ namespace Lexplosion.Logic.Network
                 {
                     AcceptingBlock.WaitOne();
                     SendingBlock.WaitOne();
-                    Runtime.DebugWrite("ClientAbort. StackTrace: " + new System.Diagnostics.StackTrace());
+                    Runtime.DebugConsoleWrite("ClientAbort. StackTrace: " + new System.Diagnostics.StackTrace());
 
                     AvailableConnections.Remove(clientData);
                     AuthorizedClients.Remove(clientData);

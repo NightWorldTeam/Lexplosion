@@ -287,7 +287,7 @@ namespace Lexplosion.Logic.Network.SMP
                                             remoteIp = senderPoint;
                                             pointDefined = true;
                                             _hostSessionId = buffer[dataLength - 1]; // устанавливаем id сессии хоста
-                                            Runtime.DebugWrite("_hostSessionId " + _hostSessionId);
+                                            Runtime.DebugConsoleWrite("_hostSessionId " + _hostSessionId);
                                             connectionWait.Set();
                                         }
 
@@ -321,16 +321,16 @@ namespace Lexplosion.Logic.Network.SMP
 
             if (!successfulConnect)
             {
-                Runtime.DebugWrite("Point error");
+                Runtime.DebugConsoleWrite("Point error");
                 return false;
             }
-            Runtime.DebugWrite("Point is defined");
+            Runtime.DebugConsoleWrite("Point is defined");
 
             _socket.Connect(remoteIp);
 
             _rtt = CalculateRTT(); //измеряем rtt
             _rttCalculator = new RttCalculator(_rtt);
-            Runtime.DebugWrite("RTT " + _rtt);
+            Runtime.DebugConsoleWrite("RTT " + _rtt);
 
             if (_rtt != -1) // если -1, значит ответные пакеты не дошли. Соединение установить не удалось
             {
@@ -377,7 +377,7 @@ namespace Lexplosion.Logic.Network.SMP
                     }
                     catch { }
 
-                    Runtime.DebugWrite("MTU " + _mtu);
+                    Runtime.DebugConsoleWrite("MTU " + _mtu);
                 });
 
                 return true;
@@ -479,7 +479,7 @@ namespace Lexplosion.Logic.Network.SMP
                     while (!successful && i < 20)
                     {
                         _times[i] = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-                        Runtime.DebugWrite("SEND");
+                        Runtime.DebugConsoleWrite("SEND");
                         _socket.Send(new byte[2] { PackgeCodes.PingRequest, i }, 2, SocketFlags.None);
                         i++;
 
@@ -499,7 +499,7 @@ namespace Lexplosion.Logic.Network.SMP
                 return -1;
             }
 
-            Runtime.DebugWrite("RTT " + ((rttSum / 5) + 1));
+            Runtime.DebugConsoleWrite("RTT " + ((rttSum / 5) + 1));
 
             // вычиляем среднее значение и возвращаем его
             return (rttSum / 5) + 1;
@@ -524,7 +524,7 @@ namespace Lexplosion.Logic.Network.SMP
                 {
                     if (CalculateRTT() == -1) //проверяем ответил ли хост
                     {
-                        Runtime.DebugWrite("Connection is dead");
+                        Runtime.DebugConsoleWrite("Connection is dead");
                         ThreadPool.QueueUserWorkItem(delegate (object state)
                         {
                             StopWork();
@@ -647,7 +647,7 @@ namespace Lexplosion.Logic.Network.SMP
 #if DEBUG
                         if (attemptCount > 0)
                         {
-                            Runtime.DebugWrite("AXAXAXAXAXAX " + attemptCount + " " + lastPackageId + ", RTT " + _rtt + ", packages count: " + packages.Count);
+                            Runtime.DebugConsoleWrite("AXAXAXAXAXAX " + attemptCount + " " + lastPackageId + ", RTT " + _rtt + ", packages count: " + packages.Count);
                         }
 #endif
                         if (!isTimeout)
@@ -734,7 +734,7 @@ namespace Lexplosion.Logic.Network.SMP
 
                     if (attemptCount == 15)
                     {
-                        Runtime.DebugWrite("PIZDETS!!!!");
+                        Runtime.DebugConsoleWrite("PIZDETS!!!!");
                         ThreadPool.QueueUserWorkItem(delegate (object state)
                         {
                             Close();
@@ -1032,10 +1032,10 @@ namespace Lexplosion.Logic.Network.SMP
                             }
                             break;
                         case PackgeCodes.ConnectionClose: // обрыв соединения
-                            Runtime.DebugWrite("StopWork!!!!");
+                            Runtime.DebugConsoleWrite("StopWork!!!!");
                             if (dataLength == 2 && buffer[1] == _hostSessionId)
                             {
-                                Runtime.DebugWrite("StopWork, _hostSessionId: " + _hostSessionId);
+                                Runtime.DebugConsoleWrite("StopWork, _hostSessionId: " + _hostSessionId);
                                 ThreadPool.QueueUserWorkItem(delegate (object state)
                                 {
                                     StopWork();
@@ -1293,14 +1293,14 @@ namespace Lexplosion.Logic.Network.SMP
                 }
             }
 
-            Runtime.DebugWrite("SMP CLIENT STOP WORK");
+            Runtime.DebugConsoleWrite("SMP CLIENT STOP WORK");
             data = new byte[0];
             return false;
         }
 
         private void StopWork()
         {
-            Runtime.DebugWrite("StopWork() SMP CLIENT");
+            Runtime.DebugConsoleWrite("StopWork() SMP CLIENT");
             IsConnected = false;
             SafeThreadAbort(_connectionControl);
             //serviceReceive.Abort();
@@ -1321,7 +1321,7 @@ namespace Lexplosion.Logic.Network.SMP
             }
             catch (Exception ex)
             {
-                Runtime.DebugWrite("Exception " + ex);
+                Runtime.DebugConsoleWrite("Exception " + ex);
             }
         }
 
@@ -1342,7 +1342,7 @@ namespace Lexplosion.Logic.Network.SMP
                         _sendingCycleDetector.WaitOne();
                     }
 
-                    Runtime.DebugWrite("_sendingBuffer.Count " + _sendingBuffer.Count);
+                    Runtime.DebugConsoleWrite("_sendingBuffer.Count " + _sendingBuffer.Count);
 
                     try
                     {

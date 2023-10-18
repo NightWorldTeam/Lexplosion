@@ -107,7 +107,7 @@ namespace Lexplosion.Logic.Network.SMP
                 }
             }
 
-            Runtime.DebugWrite("SMP SERVER STOP WORK");
+            Runtime.DebugConsoleWrite("SMP SERVER STOP WORK");
             data = new byte[0];
             return ClientDesc.Empty;
         }
@@ -127,7 +127,7 @@ namespace Lexplosion.Logic.Network.SMP
             cloaseBlock.WaitOne();
             if (clients.ContainsKey(point))
             {
-                Runtime.DebugWrite("SmpServer client close " + point + " " + new System.Diagnostics.StackTrace());
+                Runtime.DebugConsoleWrite("SmpServer client close " + point + " " + new System.Diagnostics.StackTrace());
                 clients.TryRemove(point, out SmpClient client);
                 client.Close();
             }

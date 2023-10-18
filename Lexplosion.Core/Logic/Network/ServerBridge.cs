@@ -36,11 +36,11 @@ namespace Lexplosion.Logic.Network
         {
             lock (_abortLoocker)
             {
-                Runtime.DebugWrite("ClientAbort start. clientData: " + clientData);
-                Runtime.DebugWrite(String.Join(", ", Connections) + " " + Connections.ContainsKey(clientData));
+                Runtime.DebugConsoleWrite("ClientAbort start. clientData: " + clientData);
+                Runtime.DebugConsoleWrite(String.Join(", ", Connections) + " " + Connections.ContainsKey(clientData));
                 if (Connections.ContainsKey(clientData)) // может произойти хуйня, что этот метод будет вызван 2 раза для одного хоста, поэтому проверим не удалили ли мы его уже
                 {
-                    Runtime.DebugWrite("clientAbort. StackTrace: " + new System.Diagnostics.StackTrace());
+                    Runtime.DebugConsoleWrite("clientAbort. StackTrace: " + new System.Diagnostics.StackTrace());
 
                     AcceptingBlock.WaitOne();
                     Connections.TryRemove(clientData, out Socket sock);
@@ -54,14 +54,14 @@ namespace Lexplosion.Logic.Network
 
                     AcceptingBlock.Release();
                     SendingBlock.Release();
-                    Runtime.DebugWrite("clientAbort end, sock: " + sock.GetHashCode() + " " + clientData);
+                    Runtime.DebugConsoleWrite("clientAbort end, sock: " + sock.GetHashCode() + " " + clientData);
                 }
             }
         }
 
         protected override bool AfterConnect(ClientDesc clientData)
         {
-            Runtime.DebugWrite("Before connect method");
+            Runtime.DebugConsoleWrite("Before connect method");
 
             bool value = true;
             Socket bridge = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -81,9 +81,9 @@ namespace Lexplosion.Logic.Network
                     ClientsPoints.TryRemove(bridge, out _);
             }
 
-            Runtime.DebugWrite("Before connect method 1");
+            Runtime.DebugConsoleWrite("Before connect method 1");
             base.AfterConnect(clientData);
-            Runtime.DebugWrite("Before connect method 2");
+            Runtime.DebugConsoleWrite("Before connect method 2");
 
             if (value)
             {
@@ -91,13 +91,13 @@ namespace Lexplosion.Logic.Network
                 ConnectSemaphore.WaitOne();
                 Sockets.Add(bridge);
                 ConnectSemaphore.Release();
-                Runtime.DebugWrite("sock " + bridge.GetHashCode() + ", point " + clientData);
+                Runtime.DebugConsoleWrite("sock " + bridge.GetHashCode() + ", point " + clientData);
             }
 
             SendingWait.Set(); // если это первый клиент, то сейчас читающий поток будет запущен
             ReadingWait.Set();
 
-            Runtime.DebugWrite("Before connect method end");
+            Runtime.DebugConsoleWrite("Before connect method end");
 
             return value;
         }
@@ -122,25 +122,25 @@ namespace Lexplosion.Logic.Network
                 }
                 catch (ArgumentNullException)
                 {
-                    Runtime.DebugWrite("SendingWait Start");
+                    Runtime.DebugConsoleWrite("SendingWait Start");
 
                     SendingWait.WaitOne(); //ждём первого подключения
                     SendingBlock.Release();
 
-                    Runtime.DebugWrite("SendingWait End");
+                    Runtime.DebugConsoleWrite("SendingWait End");
 
                     continue;
                 }
                 catch (SocketException e)
                 {
                     // TODO: тут что-то придумать
-                    Runtime.DebugWrite("Sending exeption " + e);
+                    Runtime.DebugConsoleWrite("Sending exeption " + e);
                     SendingBlock.Release();
                     continue;
                 }
                 catch (Exception e)
                 {
-                    Runtime.DebugWrite("Sending exeption " + e);
+                    Runtime.DebugConsoleWrite("Sending exeption " + e);
                     // TODO: какое-то странное исключение, выходим
                     SendingBlock.Release();
                     continue;
@@ -156,7 +156,7 @@ namespace Lexplosion.Logic.Network
 
                         if (bytes == 0)
                         {
-                            Runtime.DebugWrite("BYTES 0. listeningSokets Count " + listeningSokets.Count + ", Sockets count " + Sockets.Count);
+                            Runtime.DebugConsoleWrite("BYTES 0. listeningSokets Count " + listeningSokets.Count + ", Sockets count " + Sockets.Count);
                             isDisconected.Add(ClientsPoints[sock]); //добавляем клиента в список чтобы потом отключить
                             continue;
                         }
@@ -173,7 +173,7 @@ namespace Lexplosion.Logic.Network
                     }
                     catch (Exception e)
                     {
-                        Runtime.DebugWrite("sending1. sock " + sock.GetHashCode() + " listeningSokets Count " + listeningSokets.Count + ", Sockets count " + Sockets.Count + ", Exception: " + e);
+                        Runtime.DebugConsoleWrite("sending1. sock " + sock.GetHashCode() + " listeningSokets Count " + listeningSokets.Count + ", Sockets count " + Sockets.Count + ", Exception: " + e);
                         isDisconected.Add(ClientsPoints[sock]); //добавляем клиента в список чтобы потом отключить
                     }
                 }
@@ -184,7 +184,7 @@ namespace Lexplosion.Logic.Network
                     // отключаем клиентов которые попали в isDisconected
                     foreach (ClientDesc client in isDisconected)
                     {
-                        Runtime.DebugWrite("DISCONECTED");
+                        Runtime.DebugConsoleWrite("DISCONECTED");
                         Server.Close(client);
                         ClientAbort(client);
                     }
@@ -216,7 +216,7 @@ namespace Lexplosion.Logic.Network
                             }
                             catch (KeyNotFoundException) // point отсуствует, пробуем повторить дождавшись окончания работы метода подключения
                             {
-                                Runtime.DebugWrite("KeyNotFoundException");
+                                Runtime.DebugConsoleWrite("KeyNotFoundException");
                                 AcceptingBlock.Release();
                                 ConnectionWait.WaitOne(); // если метод подключения в процессе работы, то мы тут остановимся
 
@@ -230,14 +230,14 @@ namespace Lexplosion.Logic.Network
                         }
                         else // Количество байт 0 - значит соединение было оборвано
                         {
-                            Runtime.DebugWrite("SERVER CLOSE 2");
+                            Runtime.DebugConsoleWrite("SERVER CLOSE 2");
                             Server.Close(client);
                             ClientAbort(client);
                         }
                     }
                     catch (Exception e) // Обрываем соединение с этми клиентом нахуй
                     {
-                        Runtime.DebugWrite("SERVER CLOSE 3 " + e);
+                        Runtime.DebugConsoleWrite("SERVER CLOSE 3 " + e);
                         Server.Close(client);
                         ClientAbort(client);
                     }
@@ -245,7 +245,7 @@ namespace Lexplosion.Logic.Network
             }
             catch { }
 
-            Runtime.DebugWrite("READING METHOD END");
+            Runtime.DebugConsoleWrite("READING METHOD END");
         }
 
         public override void StopWork()
@@ -254,7 +254,7 @@ namespace Lexplosion.Logic.Network
             {
                 if (_isWork)
                 {
-                    Runtime.DebugWrite("SERVER STOP WORK METHOD");
+                    Runtime.DebugConsoleWrite("SERVER STOP WORK METHOD");
                     base.StopWork();
 
                     foreach (Socket sock in Sockets)

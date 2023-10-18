@@ -35,8 +35,6 @@ namespace Lexplosion
 
         private static Mutex? InstanceCheckMutex;
 
-        public static bool IsDebugMode { get; set; }
-
         /// <summary>
         /// Проверяет запущен ли уже лаунчер.
         /// </summary>

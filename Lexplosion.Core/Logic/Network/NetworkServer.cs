@@ -95,7 +95,7 @@ namespace Lexplosion.Logic.Network
                 {
                     // TODO: сделать получения списка stun серверов с нашего сервера
                     result = STUN_Client.Query("stun.l.google.com", 19305, new IPEndPoint(IPAddress.Any, 0)); //получем наш внешний адрес
-                    Runtime.DebugWrite("NatType " + result.NetType.ToString());
+                    Runtime.DebugConsoleWrite("NatType " + result.NetType.ToString());
                 }
                 catch { }
 
@@ -142,7 +142,7 @@ namespace Lexplosion.Logic.Network
 
             _controlConnection = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-            Runtime.DebugWrite("Repeat connection to control server");
+            Runtime.DebugConsoleWrite("Repeat connection to control server");
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -150,7 +150,7 @@ namespace Lexplosion.Logic.Network
         {
             for (int i = 0; i < 5; i++)
             {
-                Runtime.DebugWrite("Сonnection attempt " + i);
+                Runtime.DebugConsoleWrite("Сonnection attempt " + i);
 
                 //подключаемся к управляющему серверу
                 try
@@ -160,9 +160,9 @@ namespace Lexplosion.Logic.Network
                 catch (Exception ex)
                 {
                     //при ошибке ждем 30 секунд и пытаемся повторить
-                    Runtime.DebugWrite("Сonnection to control server error: " + ex);
+                    Runtime.DebugConsoleWrite("Сonnection to control server error: " + ex);
                     Thread.Sleep(10000);
-                    Runtime.DebugWrite("Repeat connection");
+                    Runtime.DebugConsoleWrite("Repeat connection");
 
                     try
                     {
@@ -187,14 +187,14 @@ namespace Lexplosion.Logic.Network
                 }
                 catch (Exception ex)
                 {
-                    Runtime.DebugWrite("Сonnection to control server error: " + ex);
+                    Runtime.DebugConsoleWrite("Сonnection to control server error: " + ex);
                     Thread.Sleep(3000);
                     PrepeareRepeat();
                     continue;
                 }
 
                 MaintainingThread.Start();
-                Runtime.DebugWrite("ASZSAFDSDFAFSADSAFDFSDSD");
+                Runtime.DebugConsoleWrite("ASZSAFDSDFAFSADSAFDFSDSD");
 
                 return true;
             }
@@ -213,7 +213,7 @@ namespace Lexplosion.Logic.Network
             {
                 if (Server is SmpServer)
                 {
-                    Runtime.DebugWrite("Udp connection");
+                    Runtime.DebugConsoleWrite("Udp connection");
 
                     using (SHA1 sha = new SHA1Managed())
                     {
@@ -221,21 +221,21 @@ namespace Lexplosion.Logic.Network
                         string hostPort;
                         if (!directConnectPossible || hostPointData.EndsWith(",proxy"))
                         {
-                            Runtime.DebugWrite("Udp proxy (" + directConnectPossible + ", " + hostPointData.EndsWith(",proxy") + ")");
+                            Runtime.DebugConsoleWrite("Udp proxy (" + directConnectPossible + ", " + hostPointData.EndsWith(",proxy") + ")");
                             point = ControlServer.SmpProxyPoint;
                             hostPointData = hostPointData.Replace(",proxy", "");
                             hostPort = hostPointData.Substring(hostPointData.IndexOf(":") + 1, hostPointData.Length - hostPointData.IndexOf(":") - 1).Trim();
                         }
                         else
                         {
-                            Runtime.DebugWrite("Udp direct connection");
+                            Runtime.DebugConsoleWrite("Udp direct connection");
                             hostPort = hostPointData.Substring(hostPointData.IndexOf(":") + 1, hostPointData.Length - hostPointData.IndexOf(":") - 1).Trim();
                             string hostIp = hostPointData.Replace(":" + hostPort, "");
                             point = new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort));
                         }
 
                         var strCode = UUID + "," + clientUUID + "," + myPort + "," + hostPort;
-                        Runtime.DebugWrite("Connection code: " + strCode);
+                        Runtime.DebugConsoleWrite("Connection code: " + strCode);
                         connectionCode = sha.ComputeHash(Encoding.UTF8.GetBytes(strCode));
 
                         var localPoint = (IPEndPoint)udpSocket.LocalEndPoint;
@@ -245,7 +245,7 @@ namespace Lexplosion.Logic.Network
                 }
                 else
                 {
-                    Runtime.DebugWrite("Tcp Proxy");
+                    Runtime.DebugConsoleWrite("Tcp Proxy");
                     isConected = ((TurnBridgeServer)Server).Connect(clientUUID, out ClientDesc clientDesc);
                     point = clientDesc.Point;
                 }
@@ -253,14 +253,14 @@ namespace Lexplosion.Logic.Network
             catch (Exception ex)
             {
                 isConected = false;
-                Runtime.DebugWrite("Connect exception " + ex);
+                Runtime.DebugConsoleWrite("Connect exception " + ex);
             }
 
             AcceptingBlock.WaitOne();
 
             if (isConected)
             {
-                Runtime.DebugWrite("КОННЕКТ!!!");
+                Runtime.DebugConsoleWrite("КОННЕКТ!!!");
                 if (AfterConnect(new ClientDesc(clientUUID, point)))
                 {
                     _uuidPointPair[clientUUID] = point;
@@ -274,13 +274,13 @@ namespace Lexplosion.Logic.Network
                 }
                 else
                 {
-                    Runtime.DebugWrite("Пиздец");
+                    Runtime.DebugConsoleWrite("Пиздец");
                     AcceptingBlock.Release();
                 }
             }
             else
             {
-                Runtime.DebugWrite("Пиздец1");
+                Runtime.DebugConsoleWrite("Пиздец1");
                 AcceptingBlock.Release();
             }
 
@@ -303,7 +303,7 @@ namespace Lexplosion.Logic.Network
 
                         byte[] data = new byte[33];
 
-                        Runtime.DebugWrite("ControlServerRecv");
+                        Runtime.DebugConsoleWrite("ControlServerRecv");
                         _controlConnectionBlock.Set(); // освобождаем семафор переда как начать слушать сокет. Ждать мы на Receive можем долго
                         _controlConnection.ReceiveTimeout = -1; // делаем бесконечное ожидание
 
@@ -321,7 +321,7 @@ namespace Lexplosion.Logic.Network
                         {
                             _controlConnectionBlock.WaitOne(); // блочим семофор
                             _controlConnection.ReceiveTimeout = 10000; //огрниччиваем ожидание до 10 секунд
-                            Runtime.DebugWrite("ControlServerEndRecv");
+                            Runtime.DebugConsoleWrite("ControlServerEndRecv");
                         }
 
                         bool directConnectPossible = true;
@@ -366,7 +366,7 @@ namespace Lexplosion.Logic.Network
                                     {
                                         // TODO: сделать получения списка stun серверов с нашего сервера
                                         result = STUN_Client.Query("stun.l.google.com", 19305, udpSocket); //получем наш внешний адрес
-                                        Runtime.DebugWrite("NatType " + result.NetType.ToString());
+                                        Runtime.DebugConsoleWrite("NatType " + result.NetType.ToString());
                                     }
                                     catch { }
 
@@ -376,11 +376,11 @@ namespace Lexplosion.Logic.Network
                                         myPort = result.PublicEndPoint.Port.ToString();
                                         portData = Encoding.UTF8.GetBytes(myPort.ToString());
 
-                                        Runtime.DebugWrite("My EndPoint " + result.PublicEndPoint.ToString());
+                                        Runtime.DebugConsoleWrite("My EndPoint " + result.PublicEndPoint.ToString());
                                     }
                                     else // какая-то хуйня. будем устанавливать соединение через ретранслятор
                                     {
-                                        Runtime.DebugWrite("My EndPoint error");
+                                        Runtime.DebugConsoleWrite("My EndPoint error");
                                         var localPoint = (IPEndPoint)udpSocket.LocalEndPoint;
                                         portData = Encoding.UTF8.GetBytes(localPoint.Port + ",proxy");
                                         myPort = localPoint.Port.ToString();
@@ -397,14 +397,14 @@ namespace Lexplosion.Logic.Network
                             }
                             else
                             {
-                                Runtime.DebugWrite("Repeat 1");
+                                Runtime.DebugConsoleWrite("Repeat 1");
                                 needRepeat = true;
                                 break;
                             }
                         }
                         else
                         {
-                            Runtime.DebugWrite("Repeat 2");
+                            Runtime.DebugConsoleWrite("Repeat 2");
                             needRepeat = true;
                             break;
                         }

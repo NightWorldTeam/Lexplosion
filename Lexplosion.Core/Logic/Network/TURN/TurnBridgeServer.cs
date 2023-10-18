@@ -92,7 +92,7 @@ namespace Lexplosion.Logic.Network.TURN
 
                 _waitConnections.Set();
 
-                Runtime.DebugWrite("CONNECTED FGDSGFSD");
+                Runtime.DebugConsoleWrite("CONNECTED FGDSGFSD");
             }
             catch
             {
@@ -128,7 +128,7 @@ namespace Lexplosion.Logic.Network.TURN
                 }
                 catch (Exception ex)
                 {
-                    Runtime.DebugWrite("ServiceSend Exception " + ex);
+                    Runtime.DebugConsoleWrite("ServiceSend Exception " + ex);
                     ThreadPool.QueueUserWorkItem(delegate (object state)
                     {
                         Close(point);
@@ -137,7 +137,7 @@ namespace Lexplosion.Logic.Network.TURN
                 }
             }
 
-            Runtime.DebugWrite("ServiceSend end");
+            Runtime.DebugConsoleWrite("ServiceSend end");
         }
 
         public ClientDesc Receive(out byte[] data)
@@ -166,7 +166,7 @@ namespace Lexplosion.Logic.Network.TURN
                 }
                 catch (Exception e)
                 {
-                    Runtime.DebugWrite("Turn Receive exception " + e);
+                    Runtime.DebugConsoleWrite("Turn Receive exception " + e);
                     continue;
                 }
 
@@ -177,14 +177,14 @@ namespace Lexplosion.Logic.Network.TURN
                 }
                 catch (Exception e)
                 {
-                    Runtime.DebugWrite("Turn Receive exception " + e);
+                    Runtime.DebugConsoleWrite("Turn Receive exception " + e);
                     data = new byte[0];
                 }
 
                 return point;
             }
 
-            Runtime.DebugWrite("Turn Receive stop");
+            Runtime.DebugConsoleWrite("Turn Receive stop");
             data = new byte[0];
             return ClientDesc.Empty;
         }
@@ -233,13 +233,13 @@ namespace Lexplosion.Logic.Network.TURN
 
         public bool Close(ClientDesc clientDesc)
         {
-            Runtime.DebugWrite("TURN CLOSE ");
+            Runtime.DebugConsoleWrite("TURN CLOSE ");
             lock (_waitDeletingLoocker)
             {
                 // может произойти хуйня, что этот метод будет вызван 2 раза для одного хоста, поэтому проверим не удалили ли мы его уже
                 if (IsWork && _clients.ContainsKey(clientDesc))
                 {
-                    Runtime.DebugWrite("TRUN CLOSE GSFSDGF");
+                    Runtime.DebugConsoleWrite("TRUN CLOSE GSFSDGF");
                     _clients.TryRemove(clientDesc, out ClientData clientData);
                     _sockets.Remove(clientData.Sock);
 
@@ -257,7 +257,7 @@ namespace Lexplosion.Logic.Network.TURN
                     clientData.Sock.Close();
                 }
             }
-            Runtime.DebugWrite("TURN END CLOSE ");
+            Runtime.DebugConsoleWrite("TURN END CLOSE ");
 
             return true;
         }

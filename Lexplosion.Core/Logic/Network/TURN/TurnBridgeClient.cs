@@ -38,13 +38,13 @@ namespace Lexplosion.Logic.Network.TURN
             Buffer.BlockCopy(_selfTurnId, 0, data, 0, _selfTurnId.Length);
             Buffer.BlockCopy(bhostUUID, 0, data, 33, bhostUUID.Length);
 
-            Runtime.DebugWrite(Encoding.UTF8.GetString(data));
+            Runtime.DebugConsoleWrite(Encoding.UTF8.GetString(data));
 
             _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             _socket.Connect(_serverPoint);
             _socket.Send(data);
 
-            Runtime.DebugWrite("CONNECTED FDHSGFHDFH");
+            Runtime.DebugConsoleWrite("CONNECTED FDHSGFHDFH");
             return true;
         }
 
@@ -65,7 +65,7 @@ namespace Lexplosion.Logic.Network.TURN
             }
             catch (Exception e)
             {
-                Runtime.DebugWrite("Turn Receive exception " + e);
+                Runtime.DebugConsoleWrite("Turn Receive exception " + e);
                 data = new byte[0];
                 return false;
             }

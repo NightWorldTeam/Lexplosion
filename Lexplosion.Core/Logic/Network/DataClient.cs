@@ -79,7 +79,7 @@ namespace Lexplosion.Logic.Network
 
                 if (!_confirmWord.SequenceEqual(Cryptography.AesDecode(data, _aesKey, _aesIV)))
                 {
-                    Runtime.DebugWrite("Confirm word error");
+                    Runtime.DebugConsoleWrite("Confirm word error");
                     _isWorking = false;
                     goto EndPoint;
                 }
@@ -92,7 +92,7 @@ namespace Lexplosion.Logic.Network
                 data = Cryptography.AesDecode(data, _aesKey, _aesIV);
                 if (data.Length != 8) // размер файла должен быть типа long, то есть 8 байт. если нет - выходим
                 {
-                    Runtime.DebugWrite("data.Length != 8");
+                    Runtime.DebugConsoleWrite("data.Length != 8");
                     _isWorking = false;
                     goto EndPoint;
                 }
@@ -135,11 +135,11 @@ namespace Lexplosion.Logic.Network
                 }
 
 
-                Runtime.DebugWrite("End reading cycle");
+                Runtime.DebugConsoleWrite("End reading cycle");
             }
             catch (Exception ex)
             {
-                Runtime.DebugWrite("Exception " + ex);
+                Runtime.DebugConsoleWrite("Exception " + ex);
                 _isWorking = false;
             }
 
@@ -150,7 +150,7 @@ namespace Lexplosion.Logic.Network
             Close(null);
 
             _calculateThread?.Abort();
-            Runtime.DebugWrite("EndPoint");
+            Runtime.DebugConsoleWrite("EndPoint");
         }
 
         private void SpeedClaculate()
@@ -189,7 +189,7 @@ namespace Lexplosion.Logic.Network
             {
                 if (!_isClosed)
                 {
-                    Runtime.DebugWrite("Close start. StackTrace: " + new System.Diagnostics.StackTrace());
+                    Runtime.DebugConsoleWrite("Close start. StackTrace: " + new System.Diagnostics.StackTrace());
                     _isClosed = true;
 
                     try
@@ -199,19 +199,19 @@ namespace Lexplosion.Logic.Network
                         {
                             string fileSha256 = Cryptography.Sha256(fstream);
                             _successfulTransfer = (fstream.Length == _fileSize) && (_fileId == fileSha256);
-                            Runtime.DebugWrite("fstream.Length " + fstream.Length + ", _fileSize " + _fileSize + ", _fileId " + _fileId + ", fileSha256 " + fileSha256);
+                            Runtime.DebugConsoleWrite("fstream.Length " + fstream.Length + ", _fileSize " + _fileSize + ", _fileId " + _fileId + ", fileSha256 " + fileSha256);
                         }
                     }
                     catch (Exception ex)
                     {
-                        Runtime.DebugWrite("Exception " + ex);
+                        Runtime.DebugConsoleWrite("Exception " + ex);
                         _successfulTransfer = false;
                     }
 
                     _fstream.Close();
                     _workWait.Set();
 
-                    Runtime.DebugWrite("Close end");
+                    Runtime.DebugConsoleWrite("Close end");
                 }
             }
         }
