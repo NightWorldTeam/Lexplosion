@@ -216,7 +216,7 @@
                         FontSize="20"
                         Foreground="#ffffff"
                         Text="{Binding Model.InstanceClient.Name}"
-                        TextWrapping="WrapWithOverflow">
+                        TextTrimming="CharacterEllipsis">
                         <TextBlock.ToolTip>
                             <ToolTip
                                 Background="Black"
