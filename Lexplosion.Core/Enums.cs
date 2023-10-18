@@ -166,7 +166,7 @@
         Mods = 6,
         Resourcepacks = 12,
         Maps = 17,
-        Shaders = 4546
+        Shaders = 6552
     }
 
     /// <summary>

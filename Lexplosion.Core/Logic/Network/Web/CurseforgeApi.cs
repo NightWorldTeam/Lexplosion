@@ -315,6 +315,9 @@ namespace Lexplosion.Logic.Network.Web
                     case AddonType.Resourcepacks:
                         folderName = "resourcepacks";
                         break;
+                    case AddonType.Shaders:
+                        folderName = "shaderpacks";
+                        break;
                     default:
                         return new SetValues<InstalledAddonInfo, DownloadAddonRes>
                         {
@@ -418,6 +421,9 @@ namespace Lexplosion.Logic.Network.Web
                         break;
                     case AddonType.Resourcepacks:
                         folderName = "resourcepacks";
+                        break;
+                    case AddonType.Shaders:
+                        folderName = "shaderpacks";
                         break;
                     default:
                         return new SetValues<InstalledAddonInfo, DownloadAddonRes>
