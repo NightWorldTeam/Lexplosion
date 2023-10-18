@@ -4,6 +4,7 @@ using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Models.InstanceModel;
 using Lexplosion.WPF.NewInterface.Stores;
+using Lexplosion.WPF.NewInterface.ViewModels.AddonsRepositories;
 using Lexplosion.WPF.NewInterface.ViewModels.Modal;
 using System;
 using System.Collections.Generic;
@@ -309,17 +310,31 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
 
     public sealed class InstanceAddonsContainerViewModel : ViewModelBase
     {
-        public InstanceAddonsContainerModel Model { get; private set; }
+        private readonly INavigationStore _navigationStore;
+        private readonly NavigateCommand<ViewModelBase> _navigateCommand;
 
         private readonly InstanceModelBase _instanceModelBase;
+
+        public InstanceAddonsContainerModel Model { get; private set; }
+
 
         #region Commands
 
 
+        // TODO: Rename to Repository
         private RelayCommand _openMarketCommand;
         public ICommand OpenMarketCommand
         {
-            get => RelayCommand.GetCommand(ref _openMarketCommand, (obj) => { });
+            get => RelayCommand.GetCommand(ref _openMarketCommand, (obj) => 
+            {
+                var currentViewModel = _navigationStore.CurrentViewModel;
+                var navCommand = new NavigateCommand<ViewModelBase>(_navigationStore, () => currentViewModel);
+                _navigationStore.CurrentViewModel = new ModrinthRepositoryViewModel(
+                    navCommand, 
+                    Model.Type, 
+                    _instanceModelBase.InstanceData.Modloader, 
+                    _instanceModelBase.InstanceData.GameVersion);
+            });
         }
 
         private RelayCommand _reloadCommand;
@@ -358,8 +373,9 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
         #endregion Commands
 
 
-        public InstanceAddonsContainerViewModel(AddonType addonType, InstanceModelBase instanceModelBase)
+        public InstanceAddonsContainerViewModel(INavigationStore navigationStore, AddonType addonType, InstanceModelBase instanceModelBase)
         {
+            _navigationStore = navigationStore;
             _instanceModelBase = instanceModelBase;
             Model = new InstanceAddonsContainerModel(addonType, instanceModelBase);
         }
@@ -372,13 +388,13 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
         private readonly ViewModelBase _mapsViewModel;
         private readonly ViewModelBase _shadersViewModel;
 
-        public InstanceProfileAddonsLayoutViewModel(InstanceModelBase instanceModelBase) : base()
+        public InstanceProfileAddonsLayoutViewModel(INavigationStore navigationStore, InstanceModelBase instanceModelBase) : base()
         {
             HeaderKey = "Addons";
-            _modsViewModel = new InstanceAddonsContainerViewModel(AddonType.Mods, instanceModelBase);
-            _resourcepacksViewModel = new InstanceAddonsContainerViewModel(AddonType.Resourcepacks, instanceModelBase);
-            _mapsViewModel = new InstanceAddonsContainerViewModel(AddonType.Maps, instanceModelBase);
-            _shadersViewModel = new InstanceAddonsContainerViewModel(AddonType.Shaders, instanceModelBase);
+            _modsViewModel = new InstanceAddonsContainerViewModel(navigationStore, AddonType.Mods, instanceModelBase);
+            _resourcepacksViewModel = new InstanceAddonsContainerViewModel(navigationStore, AddonType.Resourcepacks, instanceModelBase);
+            _mapsViewModel = new InstanceAddonsContainerViewModel(navigationStore, AddonType.Maps, instanceModelBase);
+            _shadersViewModel = new InstanceAddonsContainerViewModel(navigationStore, AddonType.Shaders, instanceModelBase);
             InitAddonsTabMenu(instanceModelBase);
         }
 

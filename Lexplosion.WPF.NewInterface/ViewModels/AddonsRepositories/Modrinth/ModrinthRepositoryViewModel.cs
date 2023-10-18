@@ -1,4 +1,5 @@
-﻿using Lexplosion.Logic.Network.Web;
+﻿using Lexplosion.Logic.Management;
+using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.Modrinth;
 using Lexplosion.WPF.NewInterface.Commands;
@@ -6,6 +7,7 @@ using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Objects;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.ViewModels.AddonsRepositories
@@ -23,7 +25,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.AddonsRepositories
 
         private readonly AddonType _addonType;
         private readonly ClientType _clientType;
-        private readonly string _gameVersion;
+        private readonly MinecraftVersion _minecraftVersion;
 
 
         #region Properties
@@ -78,11 +80,11 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.AddonsRepositories
         #region Constructors
 
 
-        public ModrinthRepositoryModel(AddonType addonType, ClientType clientType, string gameVersion)
+        public ModrinthRepositoryModel(AddonType addonType, ClientType clientType, MinecraftVersion minecraftVersion)
         {
             _addonType = addonType;
             _clientType = clientType;
-            _gameVersion = gameVersion;
+            _minecraftVersion = minecraftVersion;
 
             _selectedCategories.CollectionChanged += OnSelectedCategoriesCollectionChanged;
 
@@ -122,13 +124,19 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.AddonsRepositories
             if (_selectedCategories.Count > 0)
             {
                 hits = ModrinthApi.GetAddonsList(
-                        PageSize, PageIndex, _addonType, SelectedCategories, _clientType, "", _gameVersion);
+                        PageSize,
+                        PageIndex,
+                        _addonType,
+                        SelectedCategories,
+                        _clientType,
+                        "",
+                        _minecraftVersion.Id);
                 _addonsList = new ObservableCollection<ModrinthProjectInfo>(hits.Item1);
             }
             else
             {
                 hits = ModrinthApi.GetAddonsList(
-                    PageSize, PageIndex, _addonType, new IProjectCategory[] { AllCategory }, _clientType, "", _gameVersion);
+                    PageSize, PageIndex, _addonType, new IProjectCategory[] { AllCategory }, _clientType, "", _minecraftVersion.Id);
                 _addonsList = new ObservableCollection<ModrinthProjectInfo>(hits.Item1);
             }
 
@@ -206,6 +214,8 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.AddonsRepositories
 
     public sealed class ModrinthRepositoryViewModel : ViewModelBase
     {
+        private readonly NavigateCommand<ViewModelBase> _backToInstanceProfile;
+
         public ModrinthRepositoryModel Model { get; }
 
 
@@ -230,6 +240,12 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.AddonsRepositories
             }));
         }
 
+        private RelayCommand _backToInstanceProfileCommand;
+        public ICommand BackToInstanceProfileCommand 
+        {
+            get => RelayCommand.GetCommand(ref _backToInstanceProfileCommand, (obj) => { _backToInstanceProfile.Execute(obj); });
+        }
+
 
         #endregion Commands
 
@@ -237,8 +253,9 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.AddonsRepositories
         #region Constructors
 
 
-        public ModrinthRepositoryViewModel(AddonType addonType, ClientType clientType, string gameVersion)
+        public ModrinthRepositoryViewModel(NavigateCommand<ViewModelBase> backCommand, AddonType addonType, ClientType clientType, MinecraftVersion gameVersion)
         {
+            _backToInstanceProfile = backCommand;
             Model = new ModrinthRepositoryModel(addonType, clientType, gameVersion);
         }
 

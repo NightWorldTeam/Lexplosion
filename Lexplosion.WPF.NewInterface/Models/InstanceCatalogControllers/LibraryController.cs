@@ -35,6 +35,14 @@ namespace Lexplosion.WPF.NewInterface.Models.InstanceCatalogControllers
             _instances.Add(instanceModelBase);
         }
 
+        /// <summary>
+        /// Удаляет сборку из библиотеки.
+        /// </summary>
+        public void Remove(InstanceModelBase instanceModelBase) 
+        {
+            _instances.Remove(instanceModelBase);
+        }
+
         public InstanceModelBase GetInstance(InstanceClient instanceClient)
         {
             return null;

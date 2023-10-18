@@ -9,6 +9,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
     public class InstanceProfileLayoutViewModel : ViewModelBase, ILayoutViewModel
     {
         private readonly InstanceModelBase _instanceModel;
+        private readonly INavigationStore _navigationStore;
 
         private ViewModelBase _overviewViewModel = null;
         private ViewModelBase _settingsLayoutViewModel = null;
@@ -53,6 +54,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
         public InstanceProfileLayoutViewModel(INavigationStore navigationStore, NavigateCommand<ViewModelBase> toMainMenuLayoutCommand, InstanceModelBase instanceModelBase)
         {
             _instanceModel = instanceModelBase;
+            _navigationStore = navigationStore;
             LeftPanel = new InstanceProfileLeftPanelViewModel(navigationStore, toMainMenuLayoutCommand, _instanceModel);
             LeftPanel.SelectedItemChanged += OnLeftPanelSelectedItemChanged;
 
@@ -68,13 +70,13 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
 
         private void InitDefaultLeftPanelTabs()
         {
-            _overviewViewModel = new InstanceProfileOverviewViewModel();
+            _overviewViewModel = new InstanceProfileOverviewViewModel(_instanceModel);
 
             if (_instanceModel.IsInstalled) 
             { 
 
                 _settingsLayoutViewModel = new InstanceProfileSettingsLayoutViewModel(_instanceModel);
-                _addonsViewModel = new InstanceProfileAddonsLayoutViewModel(_instanceModel);
+                _addonsViewModel = new InstanceProfileAddonsLayoutViewModel(_navigationStore, _instanceModel);
             }
 
             Lexplosion.Runtime.TaskRun(() => { 

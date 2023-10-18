@@ -1,4 +1,5 @@
-﻿using Lexplosion.WPF.NewInterface.Models.InstanceModel;
+﻿using Lexplosion.WPF.NewInterface.Core.Objects;
+using Lexplosion.WPF.NewInterface.Models.InstanceModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -197,13 +198,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
             {
                 _dropdownMenuItemsControl.ItemsSource = LowerMenuButtons;
 
-                _lowerMenuButtons.Add(new LowerMenuButton(0, IK_DELETE, "DeleteInstance", InstanceModel.Delete));
-                _lowerMenuButtons.Add(new LowerMenuButton(1, IK_EXPORT, "Export", () => { }));
-                _lowerMenuButtons.Add(new LowerMenuButton(2, IK_OPENFOLDER, "OpenFolder", InstanceModel.OpenFolder));
-                _lowerMenuButtons.Add(new LowerMenuButton(3, IK_DLC, "ExploreAddons", () => { }));
-                _lowerMenuButtons.Add(new LowerMenuButton(4, IK_LANG, "VisitNightWorld", InstanceModel.GoToWebsite));
-                _lowerMenuButtons.Add(new LowerMenuButton(5, IK_REMOVE_FROM_LIBRARY, "RemoveFromLibrary", () => { }));
-                _lowerMenuButtons.Add(new LowerMenuButton(5, IK_ADD_TO_LIBRARY, "AddToLibrary", () => { }));
+                LoadButtons();
             }
 
             UpdateAllFields(InstanceModel);
@@ -215,6 +210,49 @@ namespace Lexplosion.WPF.NewInterface.Controls
             {
                 SetLogo(InstanceModel.Logo);
             };
+
+            InstanceModel.StageChanged += () =>
+            {
+                LoadButtons();
+            };
+        }
+
+        private void LoadButtons()
+        {
+            _lowerMenuButtons.Clear();
+            // 1. Website
+            // 2. AddToLibrary
+            // 2. OpenFolder
+            // 3. Export
+            // 4. RemoveFromLibrary / Delete
+
+            if (InstanceModel.Source != InstanceSource.Local)
+            {
+                _lowerMenuButtons.Add(new LowerMenuButton(0, InstanceModel.Source.ToString(), "Visit" + InstanceModel.Source.ToString(), InstanceModel.GoToWebsite));
+            }
+
+            if (!InstanceModel.IsInstalled && !InstanceModel.InLibrary)
+            {
+                _lowerMenuButtons.Add(new LowerMenuButton(1, "AddToLibrary", "AddToLibrary", InstanceModel.AddToLibrary));
+            }
+
+            if (InstanceModel.InLibrary)
+            {
+                _lowerMenuButtons.Add(new LowerMenuButton(2, "Folder", "OpenFolder", InstanceModel.OpenFolder));
+                if (InstanceModel.IsInstalled)
+                {
+                    _lowerMenuButtons.Add(new LowerMenuButton(3, "Export", "Export", InstanceModel.Export));
+                }
+            }
+
+            if (!InstanceModel.IsInstalled && InstanceModel.InLibrary)
+            {
+                _lowerMenuButtons.Add(new LowerMenuButton(4, "Delete", "RemoveFromLibrary", InstanceModel.Delete));
+            }
+            else if (InstanceModel.IsInstalled)
+            {
+                _lowerMenuButtons.Add(new LowerMenuButton(4, "Delete", "DeleteInstance", InstanceModel.Delete));
+            }
         }
 
         private void _mainActionButton_Click(object sender, RoutedEventArgs e)

@@ -173,8 +173,8 @@
     <s:String x:Key="More">More</s:String>
 
     <!--  Upper Buttons  -->
-    <s:String x:Key="Play">Играть</s:String>
-    <s:String x:Key="Launch">Запустить</s:String>
+    <s:String x:Key="Play">Play</s:String>
+    <s:String x:Key="Launch">Launch</s:String>
 
     <!--  LowerButtons  -->
     <s:String x:Key="DeleteInstance">Delete Instance</s:String>
@@ -203,6 +203,15 @@
     <s:String x:Key="Overview">Overview</s:String>
     <s:String x:Key="Addons">Addons</s:String>
     <s:String x:Key="AboutInstance">About Instance</s:String>
+
+
+    <!--    -->
+    <!--  Instance Profile Left Panel  -->
+    <!--    -->
+    <s:String x:Key="Back">Back</s:String>
+    <s:String x:Key="Version:">Version:</s:String>
+    <s:String x:Key="GameType:">Game Type:</s:String>
+    <s:String x:Key="PlayedTime:">Played Time:</s:String>
 
 
     <!--    -->

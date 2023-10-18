@@ -339,16 +339,18 @@
                     <Button
                         Width="32"
                         Height="32"
+                        Command="{Binding DataContext.BackToInstanceProfileCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                         Content="Close"
                         FontSize="12"
                         Foreground="{DynamicResource CheckBoxMarkSolidColorBrush}"
                         Style="{StaticResource x32IconButton}" />
+
                     <Button
                         Height="32"
                         Margin="8,0,0,0"
                         Style="{StaticResource x32DefaultIconButton}">
                         <WrapPanel Orientation="Horizontal">
-                            <Viewbox Width="20">
+                            <Viewbox Height="10">
                                 <Path
                                     extensions:Path.StringKeyData="Curseforge"
                                     Fill="{DynamicResource CheckBoxMarkSolidColorBrush}"
@@ -357,6 +359,7 @@
 
                             <TextBlock
                                 Margin="8,0,0,0"
+                                VerticalAlignment="Center"
                                 FontSize="14"
                                 Foreground="{DynamicResource CheckBoxMarkSolidColorBrush}"
                                 Text="Curseforge" />

@@ -29,7 +29,8 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
         public string InstanceName { get => _instanceModel.Name; }
         public string InstanceVersion { get => _instanceModel.InstanceData.GameVersion?.Id; }
         public string InstanceModloader { get => _instanceModel.InstanceData.Modloader.ToString(); }
-        public string PlayerPlayedTime { get => "10ч"; }
+        public string PlayerPlayedTime { get => _instanceModel.IsInstalled ? "10ч" : DownloadCount; }
+        public string DownloadCount { get => _instanceModel.TotalDonwloads; }
 
 
         private ObservableCollection<FrameworkElementModel> _instanceActions = new ObservableCollection<FrameworkElementModel>();
@@ -125,7 +126,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
 
             if (_instanceModel.Source != InstanceSource.Local)
             {
-                _instanceActions.Add(new FrameworkElementModel("VisitCurseforge", _instanceModel.GoToWebsite, "Curseforge", 20, 20));
+                _instanceActions.Add(new FrameworkElementModel("Visit" + _instanceModel.Source.ToString(), _instanceModel.GoToWebsite, _instanceModel.Source.ToString(), 20, 20));
             }
 
             if (!_instanceModel.IsInstalled && !_instanceModel.InLibrary)
@@ -133,8 +134,14 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
                 _instanceActions.Add(new FrameworkElementModel("AddToLibrary", _instanceModel.AddToLibrary, "AddToLibrary"));
             }
 
-            _instanceActions.Add(new FrameworkElementModel("OpenFolder", _instanceModel.OpenFolder, "Folder"));
-            _instanceActions.Add(new FrameworkElementModel("Export", _instanceModel.Export, "Export"));
+            if (_instanceModel.InLibrary) 
+            {
+                _instanceActions.Add(new FrameworkElementModel("OpenFolder", _instanceModel.OpenFolder, "Folder"));
+                if (_instanceModel.IsInstalled) 
+                { 
+                    _instanceActions.Add(new FrameworkElementModel("Export", _instanceModel.Export, "Export"));
+                }
+            }
 
             if (!_instanceModel.IsInstalled && _instanceModel.InLibrary)
             {

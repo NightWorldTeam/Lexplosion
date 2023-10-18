@@ -2,6 +2,7 @@
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Objects;
 using Lexplosion.WPF.NewInterface.Core;
+using Lexplosion.WPF.NewInterface.Models.InstanceCatalogControllers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -47,12 +48,12 @@ namespace Lexplosion.WPF.NewInterface.Models.InstanceModel
 
         public string Name { get => _instanceClient.Name; }
         public string Author { get => _instanceClient.Author; }
-        public string Summary { get => _instanceClient.Summary; }
+        public string Summary { get => _instanceClient.Summary.Replace('\n', ' '); }
         public string Description { get => _instanceClient.Description; }
         public byte[] Logo { get; }
         public IEnumerable<IProjectCategory> Tags { get; }
         public InstanceSource Source { get => _instanceClient.Type; }
-
+        public string TotalDonwloads { get => _instanceClient.GetFullInfo().TotalDownloads.ToString(); }
 
         public bool IsLaunched { get; private set; }
         public bool IsInstalled { get => _instanceClient.IsInstalled; }
@@ -189,6 +190,7 @@ namespace Lexplosion.WPF.NewInterface.Models.InstanceModel
         {
             _instanceClient.Delete();
             DeletedEvent?.Invoke(_instanceClient.LocalId);
+            LibraryController.Instance.Remove(this);
         }
 
 

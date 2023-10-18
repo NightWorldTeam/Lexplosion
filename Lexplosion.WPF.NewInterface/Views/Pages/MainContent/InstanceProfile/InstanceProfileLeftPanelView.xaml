@@ -135,7 +135,7 @@
 
                     <Button
                         Command="{Binding BackCommand}"
-                        Content="Back"
+                        Content="{DynamicResource Back}"
                         Style="{DynamicResource GhostButton}" />
                 </Grid>
 
@@ -176,7 +176,7 @@
                                             Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
                                             TextWrapping="WrapWithOverflow">
                                             <!--  TODO: Language Key Here  -->
-                                            <Run Text="Версия игры:" />
+                                            <Run Text="{DynamicResource Version:}" />
                                             <Run Foreground="{DynamicResource ActivitySolidColorBrush}" Text="{Binding InstanceVersion, Mode=OneWay}" />
                                         </TextBlock>
 
@@ -187,10 +187,11 @@
                                             Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
                                             TextWrapping="WrapWithOverflow">
                                             <!--  TODO: Language Key Here  -->
-                                            <Run Text="Модлоадер:" />
+                                            <Run Text="{DynamicResource GameType:}" />
                                             <Run Foreground="{DynamicResource ActivitySolidColorBrush}" Text="{Binding InstanceModloader, Mode=OneWay}" />
                                         </TextBlock>
 
+                                        <!--  TODO: Hide when instance is not installed  -->
                                         <TextBlock
                                             Margin="8,0,0,0"
                                             FontSize="13"
@@ -198,7 +199,7 @@
                                             Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
                                             TextWrapping="WrapWithOverflow">
                                             <!--  TODO: Language Key Here  -->
-                                            <Run Text="Наиграно:" />
+                                            <Run Text="{DynamicResource PlayedTime:}" />
                                             <Run Foreground="{DynamicResource ActivitySolidColorBrush}" Text="{Binding PlayerPlayedTime, Mode=OneWay}" />
                                         </TextBlock>
                                     </StackPanel>
@@ -250,7 +251,7 @@
                                 RenderTransformOrigin="0.5 0.5">
 
                                 <Border.Background>
-                                    <SolidColorBrush Opacity="0.1" Color="{DynamicResource ActivityColor}" />
+                                    <SolidColorBrush Opacity="0" Color="{DynamicResource ActivityColor}" />
                                 </Border.Background>
 
                                 <controls:DropdownMenu
@@ -259,7 +260,7 @@
                                     BorderThickness="1"
                                     PopupPlacement="Bottom"
                                     PopupVerticalOffset="5">
-                                    <ItemsControl ItemsSource="{Binding InstanceActions}" />
+                                    <ItemsControl x:Name="Buttons" ItemsSource="{Binding InstanceActions}" />
                                 </controls:DropdownMenu>
                             </Border>
                         </Grid>
