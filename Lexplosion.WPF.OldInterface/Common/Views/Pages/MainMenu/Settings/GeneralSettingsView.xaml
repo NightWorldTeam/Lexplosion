@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extension="clr-namespace:Lexplosion.Common.Extension"
     xmlns:gui="clr-namespace:Lexplosion.Common"
+    xmlns:lexplosion="clr-namespace:Lexplosion;assembly=Lexplosion.Core"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="450"
     d:DesignWidth="800"
@@ -15,6 +16,8 @@
         <Style TargetType="{x:Type Grid}">
             <Setter Property="Focusable" Value="False" />
         </Style>
+
+        <lexplosion:Runtime x:Key="CoreRuntime" />
     </UserControl.Resources>
 
     <Grid>
@@ -427,6 +430,11 @@
                             Margin="0,0,0,5"
                             Content="{DynamicResource showConsole}"
                             IsChecked="{Binding Model.IsShowConsole}" />
+
+                        <CheckBox
+                            Margin="0,0,0,5"
+                            Content="{DynamicResource loggingMode}"
+                            IsChecked="{Binding Path=(lexplosion:Runtime.IsDebugMode)}" />
                     </StackPanel>
 
                     <Button

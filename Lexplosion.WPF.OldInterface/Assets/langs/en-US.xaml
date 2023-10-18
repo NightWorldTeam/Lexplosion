@@ -403,4 +403,6 @@
     <s:String x:Key="javeExeDoesNotExists">Selected java path had not jave.exe or javaw.exe does not exist</s:String>
     <s:String x:Key="wrongExe">Selected java Path had wrong ".exe". Java path must be contains java.exe or javaw.exe</s:String>
     <s:String x:Key="pathDoesNotExists">Selected java path does not exist</s:String>
+
+    <s:String x:Key="loggingMode">Logging Mode</s:String>
 </ResourceDictionary>

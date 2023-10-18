@@ -12,7 +12,7 @@ using Lexplosion.Logic.Management.Instances;
 
 namespace Lexplosion
 {
-    static partial class Runtime
+    public static partial class Runtime
     {
         public static Process CurrentProcess { get; private set; }
 
