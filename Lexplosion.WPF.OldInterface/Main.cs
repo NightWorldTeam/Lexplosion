@@ -339,8 +339,15 @@ namespace Lexplosion
 
             if (cultureName.Length != 0 && isRestart)
             {
-                Process.Start(Application.ResourceAssembly.Location);
-                Runtime.KillApp();
+                try
+                {
+                    Process.Start(Application.ResourceAssembly.Location);
+                    Runtime.KillApp();
+                }
+                catch (Exception e)
+                {
+                    throw new Exception("Restart Launcher Error. " + e);
+                }
             }
         }
 
