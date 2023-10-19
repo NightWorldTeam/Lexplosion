@@ -177,7 +177,10 @@ namespace Lexplosion.Common.Models.InstanceFactory
             get => _gameVersions; set
             {
                 _gameVersions = value;
-                Version = value?[0];
+                if (value.Length > 0) 
+                { 
+                    Version = value?[0];
+                }
                 OnPropertyChanged();
             }
         }
@@ -208,8 +211,10 @@ namespace Lexplosion.Common.Models.InstanceFactory
         private void UpdateVersions()
         {
             GameVersions = IsShowSnapshots ? MainViewModel.AllGameVersions : MainViewModel.ReleaseGameVersions;
-
-            Version = GameVersions[0];
+            if (GameVersions.Length > 0) 
+            { 
+                Version = GameVersions[0];
+            }
         }
 
         #endregion Private Methods
