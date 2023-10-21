@@ -224,4 +224,14 @@
 
     <s:String x:Key="Name">Name</s:String>
     <s:String x:Key="Author">Author</s:String>
+
+    <!--    -->
+    <!--  Addons Repository  -->
+    <!--    -->
+    <s:String x:Key="Install">Install</s:String>
+    <s:String x:Key="Categories">Categories</s:String>
+    <s:String x:Key="Search...">Search...</s:String>
+    <s:String x:Key="SortBy">Sort By</s:String>
+    <s:String x:Key="ShowPerPage">Show per page</s:String>
+    <s:String x:Key="Accept">Accept</s:String>
 </ResourceDictionary>

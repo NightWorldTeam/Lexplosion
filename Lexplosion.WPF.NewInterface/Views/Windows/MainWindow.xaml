@@ -13,7 +13,7 @@
     Height="528"
     MinWidth="944"
     MinHeight="528"
-    ResizeMode="NoResize"
+    ResizeMode="CanResize"
     SnapsToDevicePixels="True"
     UseLayoutRounding="True"
     WindowStyle="SingleBorderWindow"

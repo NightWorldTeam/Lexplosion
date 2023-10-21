@@ -214,6 +214,11 @@ namespace Lexplosion.WPF.NewInterface.Models.InstanceModel
             _instanceClient.ChangeParameters(baseInstance, logoPath);
         }
 
+        public void InstallAddon() 
+        {
+            
+        }
+
 
         #endregion Public Methods
 

@@ -330,10 +330,10 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile
                 var currentViewModel = _navigationStore.CurrentViewModel;
                 var navCommand = new NavigateCommand<ViewModelBase>(_navigationStore, () => currentViewModel);
                 _navigationStore.CurrentViewModel = new ModrinthRepositoryViewModel(
-                    navCommand, 
-                    Model.Type, 
-                    _instanceModelBase.InstanceData.Modloader, 
-                    _instanceModelBase.InstanceData.GameVersion);
+                    navCommand,
+                    Model.Type,
+                    _instanceModelBase
+                    );
             });
         }
 

@@ -251,4 +251,14 @@
 
     <s:String x:Key="Optifine">Оптифайн</s:String>
     <s:String x:Key="OptifineDescription">Устанавливает оптифайн на данную сборку.</s:String>
+
+    <!--    -->
+    <!--  Addons Repository  -->
+    <!--    -->
+    <s:String x:Key="Install">Установить</s:String>
+    <s:String x:Key="Categories">Категории</s:String>
+    <s:String x:Key="Search...">Поиск...</s:String>
+    <s:String x:Key="SortBy">Сортировать по</s:String>
+    <s:String x:Key="ShowPerPage">Показать на странице</s:String>
+    <s:String x:Key="Accept">Принять</s:String>
 </ResourceDictionary>

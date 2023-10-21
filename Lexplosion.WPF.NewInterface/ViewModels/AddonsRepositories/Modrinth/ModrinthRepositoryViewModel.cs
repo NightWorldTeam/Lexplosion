@@ -1,215 +1,52 @@
 ﻿using Lexplosion.Logic.Management;
+using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.Modrinth;
 using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Objects;
+using Lexplosion.WPF.NewInterface.Models.AddonsRepositories.Modrinth;
+using Lexplosion.WPF.NewInterface.Models.InstanceModel;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Security.Policy;
 using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.ViewModels.AddonsRepositories
 {
-    public sealed class ModrinthRepositoryModel : ViewModelBase
+    public class ModrinthAddon 
     {
-        private static readonly SimpleCategory AllCategory = new SimpleCategory()
+        private readonly InstanceAddon _instanceAddon;
+
+        private ObservableCollection<FrameworkElementModel> _buttons = new ObservableCollection<FrameworkElementModel>();
+        public IEnumerable<FrameworkElementModel> Buttons { get => _buttons; }
+
+
+        public ModrinthAddon(InstanceAddon instanceAddon)
         {
-            Id = "-1",
-            Name = "All",
-            ClassId = "",
-            ParentCategoryId = ""
-        };
-
-
-        private readonly AddonType _addonType;
-        private readonly ClientType _clientType;
-        private readonly MinecraftVersion _minecraftVersion;
-
-
-        #region Properties
-
-
-        private bool _isClearFilters = false;
-
-        private string _searchFilter = "";
-        public string SearchFilter
-        {
-            get => _searchFilter; set
-            {
-                _searchFilter = value;
-                OnSearchFilterChanged();
-            }
+            _instanceAddon = instanceAddon;
         }
 
-        private int _pageSize = 10;
-        public int PageSize
+        public void LoadButtons() 
         {
-            get => _pageSize; set
+            if (_instanceAddon.IsUrlExist) 
             {
-                _pageSize = value;
-                OnPageSizeChanged();
-            }
-        }
-
-        private int _pageIndex = 0;
-        public int PageIndex
-        {
-            get => _pageIndex; set
-            {
-                _pageIndex = value;
-                OnPageIndexChanged();
-            }
-        }
-
-        private readonly ObservableCollection<CategoryWrapper> _categories = new ObservableCollection<CategoryWrapper>();
-        public IEnumerable<CategoryWrapper> Categories { get => _categories; }
-
-        private readonly ObservableCollection<IProjectCategory> _selectedCategories = new ObservableCollection<IProjectCategory>();
-        public IEnumerable<IProjectCategory> SelectedCategories;
-
-
-        private ObservableCollection<ModrinthProjectInfo> _addonsList = new ObservableCollection<ModrinthProjectInfo>();
-        public IEnumerable<ModrinthProjectInfo> AddonsList { get => _addonsList; }
-
-
-        #endregion Properties
-
-
-        #region Constructors
-
-
-        public ModrinthRepositoryModel(AddonType addonType, ClientType clientType, MinecraftVersion minecraftVersion)
-        {
-            _addonType = addonType;
-            _clientType = clientType;
-            _minecraftVersion = minecraftVersion;
-
-            _selectedCategories.CollectionChanged += OnSelectedCategoriesCollectionChanged;
-
-            if (_clientType == ClientType.Forge)
-            {
-                AllCategory.ClassId = ((int)_addonType.ToCfProjectType()).ToString();
-                AllCategory.ParentCategoryId = ((int)_addonType.ToCfProjectType()).ToString();
-            }
-            else if (_clientType == ClientType.Fabric)
-            {
-                AllCategory.ClassId = "";
-                AllCategory.ParentCategoryId = "";
+                _buttons.Add(new FrameworkElementModel("VisitModrinth", () => { try { Process.Start(_instanceAddon.WebsiteUrl); } catch { // todo: прибраться и уведомления выводить
+                                                                                                                                          } }, "Modrinth"));
             }
 
-            PrepareCategories();
-            LoadPage();
-        }
-
-        private void OnSelectedCategoriesCollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            if (_isClearFilters)
-                return;
-
-            LoadPage();
-        }
-
-
-        #endregion Constructors
-
-
-        #region Public Methods
-
-
-        public void LoadPage()
-        {
-            (IEnumerable<ModrinthProjectInfo>, int) hits;
-            if (_selectedCategories.Count > 0)
+            if (_instanceAddon.UpdateAvailable) 
             {
-                hits = ModrinthApi.GetAddonsList(
-                        PageSize,
-                        PageIndex,
-                        _addonType,
-                        SelectedCategories,
-                        _clientType,
-                        "",
-                        _minecraftVersion.Id);
-                _addonsList = new ObservableCollection<ModrinthProjectInfo>(hits.Item1);
-            }
-            else
-            {
-                hits = ModrinthApi.GetAddonsList(
-                    PageSize, PageIndex, _addonType, new IProjectCategory[] { AllCategory }, _clientType, "", _minecraftVersion.Id);
-                _addonsList = new ObservableCollection<ModrinthProjectInfo>(hits.Item1);
+                _buttons.Add(new FrameworkElementModel("Update", () => { _instanceAddon.Update(); }, "Update"));
             }
 
-
-            //AllCategory.ClassId = ((int)_addonType.ToCfProjectType()).ToString();
-            //AllCategory.ParentCategoryId = ((int)_addonType.ToCfProjectType()).ToString();
-            var test = CurseforgeApi.GetInstances(10, 0, "all", CfSortField.Popularity, "", "1.19.2");
-            Runtime.DebugWrite("total hits count: " + hits.Item2);
-        }
-
-        public void ClearFilters()
-        {
-            _isClearFilters = true;
-            foreach (var category in Categories)
+            if (_instanceAddon.IsInstalled) 
             {
-                category.IsSelected = false;
-            }
-            _isClearFilters = false;
-            LoadPage();
-        }
-
-
-        #endregion Public Methods
-
-
-        #region Private Methods
-
-
-        private void PrepareCategories()
-        {
-            var categories = ModrinthApi.GetCategories();
-
-            foreach (var category in categories)
-            {
-                if (category.ClassId == "mod")
-                {
-                    var categoryWrapper = new CategoryWrapper(category);
-                    categoryWrapper.SelectedEvent += OnSelectedCategoryChanged;
-                    _categories.Add(categoryWrapper);
-                }
+                _buttons.Add(new FrameworkElementModel("Delete", _instanceAddon.Delete, "Delete"));
             }
         }
-
-
-        private void OnSelectedCategoryChanged(IProjectCategory category, bool isSelected)
-        {
-            if (isSelected)
-            {
-                _selectedCategories.Add(category);
-            }
-            else
-            {
-                _selectedCategories.Remove(category);
-            }
-        }
-
-        private void OnSearchFilterChanged()
-        {
-            LoadPage();
-        }
-
-        private void OnPageIndexChanged()
-        {
-            LoadPage();
-        }
-
-        private void OnPageSizeChanged()
-        {
-            LoadPage();
-        }
-
-
-        #endregion Private Methods
     }
 
     public sealed class ModrinthRepositoryViewModel : ViewModelBase
@@ -241,9 +78,21 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.AddonsRepositories
         }
 
         private RelayCommand _backToInstanceProfileCommand;
-        public ICommand BackToInstanceProfileCommand 
+        public ICommand BackToInstanceProfileCommand
         {
             get => RelayCommand.GetCommand(ref _backToInstanceProfileCommand, (obj) => { _backToInstanceProfile.Execute(obj); });
+        }
+
+        private RelayCommand _installAddonCommand;
+        public ICommand InstallAddonCommand
+        {
+            get => RelayCommand.GetCommand(ref _installAddonCommand, (obj) => { Model.InstallAddon((InstanceAddon)obj); });
+        }
+
+        private RelayCommand _searchBoxCommand;
+        public ICommand SearchBoxCommand
+        {
+            get => RelayCommand.GetCommand(ref _searchBoxCommand, (obj) => { Model.SearchFilter = (string)obj; });
         }
 
 
@@ -253,10 +102,10 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.AddonsRepositories
         #region Constructors
 
 
-        public ModrinthRepositoryViewModel(NavigateCommand<ViewModelBase> backCommand, AddonType addonType, ClientType clientType, MinecraftVersion gameVersion)
+        public ModrinthRepositoryViewModel(NavigateCommand<ViewModelBase> backCommand, AddonType addonType, InstanceModelBase instanceModelBase)
         {
             _backToInstanceProfile = backCommand;
-            Model = new ModrinthRepositoryModel(addonType, clientType, gameVersion);
+            Model = new ModrinthRepositoryModel(instanceModelBase, addonType);
         }
 
 

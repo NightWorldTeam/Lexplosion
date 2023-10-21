@@ -68,7 +68,8 @@ namespace Lexplosion.Logic.Management.Instances
         public string Description { get; private set; } = "";
         public string Version { get; private set; } = "";
         public int DownloadCount { get; private set; } = 0;
-        public string LastUpdated { get; private set; } = "";
+        private string s;
+        public string LastUpdated { get => "Updated 20 days ago"; private set { s = value; Console.WriteLine(s); } }
 
         private bool _updateAvailable = false;
         public bool UpdateAvailable
@@ -268,6 +269,15 @@ namespace Lexplosion.Logic.Management.Instances
             return new InstanceAddon(addonPrototype, modpackInfo);
         }
 
+        public static IList<InstanceAddon> GetAddonsCatalog(InstanceSource instanceSource, BaseInstanceData modpackInfo, int pageSize, int index, AddonType type, CategoryBase category, string searchFilter) 
+        {
+            return instanceSource switch
+            {
+                InstanceSource.Curseforge => GetAddonsCatalog(modpackInfo, pageSize, index, type, category, searchFilter),
+                _ => null
+            };
+        }
+
         /// <summary>
         /// Возвращает список аддонов с курсфорджа.
         /// </summary>
@@ -365,108 +375,110 @@ namespace Lexplosion.Logic.Management.Instances
             return addons;
         }
 
-        //public static List<InstanceAddon> GetAddonsCatalog(BaseInstanceData modpackInfo, int pageSize, int index, AddonType type, CategoryBase category, string searchFilter = "")
-        //{
-        //    _addonsCatalogChache = new Dictionary<string, InstanceAddon>();
+        public static List<InstanceAddon> GetModrinthAddonsCatalog(BaseInstanceData modpackInfo, int pageSize, int index, AddonType type, CategoryBase category, string searchFilter = "")
+        {
+            _addonsCatalogChache = new Dictionary<string, InstanceAddon>();
 
-        //    string instanceId = modpackInfo.LocalId;
-        //    var addons = new List<InstanceAddon>();
+            string instanceId = modpackInfo.LocalId;
+            var addons = new List<InstanceAddon>();
 
-        //    // получаем спсиок всех аддонов с курсфорджа
-        //    List<ModrinthProjectInfo> addonsList = ModrinthApi.GetAddonsList(pageSize, index * pageSize, type, category, modpackInfo.Modloader, searchFilter, modpackInfo.GameVersion);
+            // получаем спсиок всех аддонов с курсфорджа
+            var categories = new List<IProjectCategory>() { category };
+            (List<ModrinthProjectInfo>, int) addonsList1 = ModrinthApi.GetAddonsList(pageSize, index, type, categories, modpackInfo.Modloader, searchFilter, modpackInfo.GameVersion.Id);
 
-        //    // получаем список установленных аддонов
-        //    using (InstalledAddons installedAddons = InstalledAddons.Get(modpackInfo.LocalId))
-        //    {
-        //        // проходимся по аддонам с курсфорджа
-        //        int i = 0;
-        //        foreach (ModrinthProjectInfo addon in addonsList)
-        //        {
-        //            if (addon == null) continue;
+            var addonsList = addonsList1.Item1;
+            // получаем список установленных аддонов
+            using (InstalledAddons installedAddons = InstalledAddons.Get(modpackInfo.LocalId))
+            {
+                // проходимся по аддонам с курсфорджа
+                int i = 0;
+                foreach (ModrinthProjectInfo addon in addonsList)
+                {
+                    if (addon == null) continue;
 
-        //            string addonId = addon.ProjectId;
-        //            bool isInstalled = (installedAddons.ContainsKey(addonId) && installedAddons[addonId].IsExists(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/"));
+                    string addonId = addon.ProjectId;
+                    bool isInstalled = (installedAddons.ContainsKey(addonId) && installedAddons[addonId].IsExists(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/"));
 
-        //            InstanceAddon instanceAddon;
-        //            string addonKey = GetAddonKey(modpackInfo, addonId);
-        //            _installingSemaphore.WaitOne(addonKey);
-        //            if (_installingAddons.ContainsKey(addonKey))
-        //            {
-        //                if (_installingAddons[addonKey].Point == null)
-        //                {
-        //                    string date = "";
-        //                    try
-        //                    {
-        //                        date = DateTime.Parse(addon.Updated).ToString("dd MMM yyyy");
-        //                    }
-        //                    catch { }
+                    InstanceAddon instanceAddon;
+                    string addonKey = GetAddonKey(modpackInfo, addonId);
+                    _installingSemaphore.WaitOne(addonKey);
+                    if (_installingAddons.ContainsKey(addonKey))
+                    {
+                        if (_installingAddons[addonKey].Point == null)
+                        {
+                            string date = "";
+                            try
+                            {
+                                date = DateTime.Parse(addon.Updated).ToString("dd MMM yyyy");
+                            }
+                            catch { }
 
-        //                    IPrototypeAddon prototypeAddon = new ModrinthAddon(modpackInfo, addon);
-        //                    instanceAddon = new InstanceAddon(prototypeAddon, modpackInfo)
-        //                    {
-        //                        IsInstalled = isInstalled,
-        //                        DownloadCount = addon.Downloads,
-        //                        LastUpdated = date
-        //                    };
+                            IPrototypeAddon prototypeAddon = new ModrinthAddon(modpackInfo, addon);
+                            instanceAddon = new InstanceAddon(prototypeAddon, modpackInfo)
+                            {
+                                IsInstalled = isInstalled,
+                                DownloadCount = addon.Downloads,
+                                LastUpdated = date
+                            };
 
-        //                    if (installedAddons.ContainsKey(addonId))
-        //                    {
-        //                        prototypeAddon.CompareVersions(installedAddons[addonId].FileID, () =>
-        //                        {
-        //                            instanceAddon.UpdateAvailable = true;
-        //                        });
-        //                    }
+                            if (installedAddons.ContainsKey(addonId))
+                            {
+                                prototypeAddon.CompareVersions(installedAddons[addonId].FileID, () =>
+                                {
+                                    instanceAddon.UpdateAvailable = true;
+                                });
+                            }
 
-        //                    _installingAddons[addonKey].Point = instanceAddon;
-        //                    instanceAddon.IsInstalling = true;
-        //                }
-        //                else
-        //                {
-        //                    instanceAddon = _installingAddons[addonKey].Point;
-        //                    instanceAddon.DownloadLogo(addon.LogoUrl);
-        //                }
-        //            }
-        //            else
-        //            {
-        //                string date = "";
-        //                try
-        //                {
-        //                    date = DateTime.Parse(addon.Updated).ToString("dd MMM yyyy");
-        //                }
-        //                catch { }
+                            _installingAddons[addonKey].Point = instanceAddon;
+                            instanceAddon.IsInstalling = true;
+                        }
+                        else
+                        {
+                            instanceAddon = _installingAddons[addonKey].Point;
+                            instanceAddon.DownloadLogo(addon.LogoUrl);
+                        }
+                    }
+                    else
+                    {
+                        string date = "";
+                        try
+                        {
+                            date = DateTime.Parse(addon.Updated).ToString("dd MMM yyyy");
+                        }
+                        catch { }
 
-        //                IPrototypeAddon prototypeAddon = new ModrinthAddon(modpackInfo, addon);
-        //                instanceAddon = new InstanceAddon(prototypeAddon, modpackInfo)
-        //                {
-        //                    IsInstalled = isInstalled,
-        //                    DownloadCount = addon.Downloads,
-        //                    LastUpdated = date
-        //                };
+                        IPrototypeAddon prototypeAddon = new ModrinthAddon(modpackInfo, addon);
+                        instanceAddon = new InstanceAddon(prototypeAddon, modpackInfo)
+                        {
+                            IsInstalled = isInstalled,
+                            DownloadCount = addon.Downloads,
+                            LastUpdated = date
+                        };
 
-        //                if (installedAddons.ContainsKey(addonId))
-        //                {
-        //                    prototypeAddon.CompareVersions(installedAddons[addonId].FileID, () =>
-        //                    {
-        //                        instanceAddon.UpdateAvailable = true;
-        //                    });
-        //                }
-        //            }
-        //            _installingSemaphore.Release(addonKey);
+                        if (installedAddons.ContainsKey(addonId))
+                        {
+                            prototypeAddon.CompareVersions(installedAddons[addonId].FileID, () =>
+                            {
+                                instanceAddon.UpdateAvailable = true;
+                            });
+                        }
+                    }
+                    _installingSemaphore.Release(addonKey);
 
-        //            addons.Add(instanceAddon);
-        //            _chacheSemaphore.WaitOne();
-        //            if (_addonsCatalogChache != null)
-        //            {
-        //                _addonsCatalogChache[addonId] = instanceAddon;
-        //            }
-        //            _chacheSemaphore.Release();
+                    addons.Add(instanceAddon);
+                    _chacheSemaphore.WaitOne();
+                    if (_addonsCatalogChache != null)
+                    {
+                        _addonsCatalogChache[addonId] = instanceAddon;
+                    }
+                    _chacheSemaphore.Release();
 
-        //            i++;
-        //        }
-        //    }
+                    i++;
+                }
+            }
 
-        //    return addons;
-        //}
+            return addons;
+        }
 
         public void Delete()
         {

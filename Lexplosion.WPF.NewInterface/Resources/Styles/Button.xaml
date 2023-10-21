@@ -390,10 +390,10 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
                     <Border
-                        Padding="8,8,16,8"
+                        Padding="8,6,16,6"
                         Background="{DynamicResource ActivitySolidColorBrush}"
                         CornerRadius="5">
-                        <ContentPresenter />
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
