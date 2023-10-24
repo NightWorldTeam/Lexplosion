@@ -152,7 +152,7 @@
                                 VerticalAlignment="Top"
                                 FontSize="14"
                                 FontWeight="Medium"
-                                ItemsSource="{Binding Model.GameVersions}"
+                                ItemsSource="{Binding Model.GameVersions, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                                 Opacity="0.8"
                                 SelectedValue="{Binding Model.Version, UpdateSourceTrigger=PropertyChanged}"
                                 Style="{StaticResource LighterDefaultComboBox}" />
