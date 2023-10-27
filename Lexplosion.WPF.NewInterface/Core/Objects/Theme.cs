@@ -10,8 +10,8 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
     {
         public const string ThemesResourcePath = "pack://application:,,,/Resources/Themes/";
 
-        public event Action<Theme> SelectedEvent;
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event Action<Theme> SelectedEvent = null;
+        public event PropertyChangedEventHandler PropertyChanged = null;
 
 
         #region Properties
@@ -26,7 +26,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
         public SolidColorBrush SecondaryBrush { get; }
         public SolidColorBrush SeparateBrush { get; }
 
-        private SolidColorBrush _activityBrush;
+        private SolidColorBrush _activityBrush = null;
         public SolidColorBrush ActivityBrush
         {
             get => _activityBrush; private set
@@ -39,7 +39,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
         public bool IsPresetColor { get; private set; } = false;
 
 
-        private bool _isSelected;
+        private bool _isSelected = false;
         public bool IsSelected
         {
             get => _isSelected; set

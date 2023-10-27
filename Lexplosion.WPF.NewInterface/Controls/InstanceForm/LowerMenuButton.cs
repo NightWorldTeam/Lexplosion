@@ -17,7 +17,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
         public string TextKey { get; }
 
         private Action<object> _action;
-        private RelayCommand _executeAction;
+        private RelayCommand _executeAction = null;
         public ICommand ExecuteAction
         {
             get => _executeAction ?? (_executeAction = new RelayCommand(_action));

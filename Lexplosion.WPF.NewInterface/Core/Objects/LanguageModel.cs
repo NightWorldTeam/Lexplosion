@@ -8,12 +8,12 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
 {
     public struct LanguageModel : INotifyPropertyChanged
     {
-        public readonly CultureInfo _cultureInfo;
+        public readonly CultureInfo _cultureInfo = null;
 
-        public event Action<string> SelectedEvent;
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event Action<string> SelectedEvent = null;
+        public event PropertyChangedEventHandler PropertyChanged = null;
 
-        private bool _isSelected;
+        private bool _isSelected = false;
         public bool IsSelected
         {
             get => _isSelected; set
