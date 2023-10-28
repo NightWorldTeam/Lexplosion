@@ -1,18 +1,18 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:addonsrepositoriesviews="clr-namespace:Lexplosion.WPF.NewInterface.Views.Pages.AddonsRepositories"
-    xmlns:addonsrepositoriesvm="clr-namespace:Lexplosion.WPF.NewInterface.ViewModels.AddonsRepositories"
-    xmlns:authviewmodels="clr-namespace:Lexplosion.WPF.NewInterface.ViewModels.Authorization"
-    xmlns:authviews="clr-namespace:Lexplosion.WPF.NewInterface.Views.Pages.Authorization"
+    xmlns:addonsrepositoriesviews="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.AddonsRepositories"
+    xmlns:addonsrepositoriesvm="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories"
+    xmlns:authviewmodels="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Authorization"
+    xmlns:authviews="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.Authorization"
     xmlns:converters="clr-namespace:Lexplosion.WPF.NewInterface.Core.Converters"
-    xmlns:instanceprofileview="clr-namespace:Lexplosion.WPF.NewInterface.Views.Pages.MainContent.InstanceProfile"
-    xmlns:instanceprofilevm="clr-namespace:Lexplosion.WPF.NewInterface.ViewModels.MainContent.InstanceProfile"
-    xmlns:mainmenuview="clr-namespace:Lexplosion.WPF.NewInterface.Views.Pages.MainContent.MainMenu"
-    xmlns:mainmenuvm="clr-namespace:Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu"
-    xmlns:modalviews="clr-namespace:Lexplosion.WPF.NewInterface.Views.Modal"
-    xmlns:modalvm="clr-namespace:Lexplosion.WPF.NewInterface.ViewModels.Modal"
-    xmlns:viewmodels="clr-namespace:Lexplosion.WPF.NewInterface.ViewModels">
+    xmlns:instanceprofileview="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.InstanceProfile"
+    xmlns:instanceprofilevm="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile"
+    xmlns:mainmenuview="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu"
+    xmlns:mainmenuvm="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu"
+    xmlns:modalviews="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Modal"
+    xmlns:modalvm="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal"
+    xmlns:viewmodels="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels">
 
     <converters:NegativeBooleanToVisibilityConverter x:Key="NegativeBooleanToVisibilityConverter" />
 

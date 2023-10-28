@@ -1,6 +1,4 @@
 ﻿using Lexplosion.Logic.Management;
-using System.Collections;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -61,14 +59,14 @@ namespace Lexplosion.WPF.NewInterface.Core.GameExtensions
         /// <returns></returns>
         public static bool CheckExistsOnVersion(MinecraftVersion minecraftVersion, GameExtension extension)
         {
-            if (minecraftVersion?.Id == null) 
+            if (minecraftVersion?.Id == null)
             {
                 return false;
             }
 
             if (minecraftVersion?.Type == MinecraftVersion.VersionType.Snapshot)
                 return true;
-            
+
             ushort[] version = minecraftVersion.Id.Split('.').Select(ushort.Parse).ToArray<ushort>();
 
             switch (extension)

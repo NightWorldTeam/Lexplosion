@@ -17,7 +17,7 @@ namespace Lexplosion.WPF.NewInterface.Tools
         /// <param name="number">Число</param>
         /// <param name="wordForms">Формы слова с числами</param>
         /// <returns>Правильную форму слова из представленных.</returns>
-        public static string GetWordWithRightEndingForNumber(int number, string[] wordForms) 
+        public static string GetWordWithRightEndingForNumber(int number, string[] wordForms)
         {
             if (wordForms.Length != 3)
                 throw new ArgumentException("Размер массива с формами слова должен быть равен 3");
@@ -37,7 +37,7 @@ namespace Lexplosion.WPF.NewInterface.Tools
         /// <param name="wordForms">Ключи формы слова с числами</param>
         /// <returns>Правильную форму слова из представленных.</returns>
         /// <exception cref="ArgumentException"></exception>
-        public static string GetWordKeyWithRightEndingForNumber(int number, string[] wordKeys) 
+        public static string GetWordKeyWithRightEndingForNumber(int number, string[] wordKeys)
         {
             if (wordKeys.Length != 3)
                 throw new ArgumentException("Размер массива с ключами слова должен быть равен 3");

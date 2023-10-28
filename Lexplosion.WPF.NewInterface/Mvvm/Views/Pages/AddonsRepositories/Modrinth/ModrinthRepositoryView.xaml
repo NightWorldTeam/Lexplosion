@@ -1,0 +1,769 @@
+﻿<UserControl
+    x:Class="Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.AddonsRepositories.ModrinthRepositoryView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Lexplosion.WPF.NewInterface.Controls"
+    xmlns:coreInstances="clr-namespace:Lexplosion.Logic.Management.Instances;assembly=Lexplosion.Core"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
+    xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.AddonsRepositories"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:objects="clr-namespace:Lexplosion.WPF.NewInterface.Core.Objects"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="Primary" Color="#16181C" />
+        <SolidColorBrush x:Key="Secondary" Color="#26292F" />
+        <SolidColorBrush x:Key="Foreground" Color="#B0BAC5" />
+        <SolidColorBrush x:Key="ForegroundLighter" Color="#ECF9FB" />
+        <SolidColorBrush x:Key="ButtonColor" Color="#434956" />
+        <SolidColorBrush x:Key="ActiveButtonColor" Color="#616570" />
+        <SolidColorBrush x:Key="BrandColor" Color="#1BD96A" />
+
+
+        <!--  Search Box  -->
+        <Style TargetType="{x:Type controls:SearchBox}">
+            <Setter Property="MinHeight" Value="32" />
+            <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
+            <Setter Property="Foreground" Value="{DynamicResource Foreground}" />
+            <Setter Property="CaretBrush" Value="{DynamicResource BrandColor}" />
+            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type controls:SearchBox}">
+                        <Border
+                            x:Name="Border"
+                            Width="{TemplateBinding Width}"
+                            Height="32"
+                            Padding="8,4"
+                            Background="{DynamicResource ButtonColor}"
+                            BorderBrush="{DynamicResource ButtonColor}"
+                            CornerRadius="5">
+                            <Grid>
+
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <Button x:Name="PART_Search_Button" Style="{StaticResource IconButton}">
+                                    <Viewbox Height="16">
+                                        <Path
+                                            x:Name="Path"
+                                            extensions:Path.StringKeyData="Search"
+                                            Fill="{DynamicResource Foreground}"
+                                            Stretch="Fill" />
+                                    </Viewbox>
+                                </Button>
+
+                                <TextBlock
+                                    Name="PART_Placeholder"
+                                    Grid.Column="1"
+                                    Margin="12,0,0,0"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    FontSize="14"
+                                    Foreground="{DynamicResource Foreground}" />
+
+                                <ScrollViewer
+                                    x:Name="PART_ContentHost"
+                                    Grid.Column="1"
+                                    Margin="12,0,0,0"
+                                    VerticalAlignment="Center"
+                                    VerticalScrollBarVisibility="Auto" />
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource BrandColor}" />
+                                <Setter TargetName="Border" Property="BorderThickness" Value="2" />
+                                <Setter TargetName="Path" Property="Fill" Value="{DynamicResource ForegroundLighter}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!--  ComboBox  -->
+
+        <ControlTemplate x:Key="ComboBoxToggleButton" TargetType="{x:Type ToggleButton}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="20" />
+                </Grid.ColumnDefinitions>
+
+                <Border
+                    x:Name="Border"
+                    Grid.ColumnSpan="2"
+                    Background="{DynamicResource ButtonColor}"
+                    CornerRadius="5" />
+
+                <Viewbox
+                    x:Name="ArrowViewBox"
+                    Grid.Column="1"
+                    Height="8"
+                    Margin="0,0,8,0">
+                    <Path
+                        x:Name="ArrowIcon"
+                        extensions:Path.StringKeyData="ArrowDown"
+                        Fill="{DynamicResource Foreground}"
+                        RenderTransformOrigin="0.5, 0.5"
+                        Stretch="Fill">
+                        <Path.RenderTransform>
+                            <RotateTransform Angle="0" />
+                        </Path.RenderTransform>
+                    </Path>
+                </Viewbox>
+            </Grid>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsChecked" Value="True">
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard Storyboard.TargetName="ArrowIcon" Storyboard.TargetProperty="(Path.RenderTransform).(RotateTransform.Angle)">
+                                <DoubleAnimation
+                                    From="0"
+                                    To="180"
+                                    Duration="0:0:0.25" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard Storyboard.TargetName="ArrowIcon" Storyboard.TargetProperty="(Path.RenderTransform).(RotateTransform.Angle)">
+                                <DoubleAnimation
+                                    From="180"
+                                    To="0"
+                                    Duration="0:0:0.25" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+
+        <ControlTemplate x:Key="ComboBoxTextBox" TargetType="{x:Type TextBox}">
+            <Border
+                x:Name="PART_ContentHost"
+                Background="{TemplateBinding Background}"
+                Focusable="False" />
+        </ControlTemplate>
+
+        <Style x:Key="{x:Type ComboBox}" TargetType="{x:Type ComboBox}">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+            <Setter Property="ScrollViewer.CanContentScroll" Value="true" />
+            <Setter Property="MinWidth" Value="50" />
+            <Setter Property="MinHeight" Value="32" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ComboBox}">
+                        <Grid>
+                            <ToggleButton
+                                x:Name="ToggleButton"
+                                Grid.Column="2"
+                                ClickMode="Press"
+                                Focusable="false"
+                                IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                Template="{StaticResource ComboBoxToggleButton}" />
+                            <ContentPresenter
+                                x:Name="ContentSite"
+                                Margin="8,0,0,0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Content="{TemplateBinding SelectionBoxItem}"
+                                ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                IsHitTestVisible="False"
+                                TextBlock.FontSize="16"
+                                TextBlock.Foreground="{DynamicResource Foreground}" />
+                            <TextBox
+                                x:Name="PART_EditableTextBox"
+                                Margin="3,3,23,3"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Bottom"
+                                Background="Transparent"
+                                Focusable="True"
+                                IsReadOnly="{TemplateBinding IsReadOnly}"
+                                Style="{x:Null}"
+                                Template="{StaticResource ComboBoxTextBox}"
+                                Visibility="Hidden" />
+                            <Popup
+                                x:Name="Popup"
+                                AllowsTransparency="True"
+                                Focusable="False"
+                                IsOpen="{TemplateBinding IsDropDownOpen}"
+                                Placement="Bottom"
+                                PopupAnimation="Slide">
+                                <Grid
+                                    x:Name="DropDown"
+                                    MinWidth="{TemplateBinding ActualWidth}"
+                                    MaxHeight="{TemplateBinding MaxDropDownHeight}"
+                                    SnapsToDevicePixels="True">
+                                    <Border
+                                        x:Name="DropDownBorder"
+                                        Background="{DynamicResource ButtonColor}"
+                                        BorderThickness="1" />
+
+                                    <ScrollViewer SnapsToDevicePixels="True">
+                                        <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                                    </ScrollViewer>
+                                </Grid>
+                            </Popup>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="HasItems" Value="false">
+                                <Setter TargetName="DropDownBorder" Property="MinHeight" Value="95" />
+                            </Trigger>
+                            <Trigger Property="IsGrouping" Value="true">
+                                <Setter Property="ScrollViewer.CanContentScroll" Value="false" />
+                            </Trigger>
+                            <Trigger SourceName="Popup" Property="AllowsTransparency" Value="true">
+                                <Setter TargetName="DropDownBorder" Property="CornerRadius" Value="4" />
+                                <Setter TargetName="DropDownBorder" Property="Margin" Value="0,2,0,0" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="{x:Type ComboBoxItem}" TargetType="{x:Type ComboBoxItem}">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="TextBlock.Foreground" Value="{DynamicResource Foreground}" />
+            <Setter Property="TextBlock.FontSize" Value="16" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ComboBoxItem}">
+                        <Border
+                            x:Name="Border"
+                            Padding="8"
+                            Background="Transparent"
+                            SnapsToDevicePixels="true">
+                            <ContentPresenter />
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="{DynamicResource ActiveButtonColor}" />
+                                <Setter Property="TextBlock.Foreground" Value="{DynamicResource ForegroundLighter}" />
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="{DynamicResource BrandColor}" />
+                                <Setter Property="TextBlock.Foreground" Value="{DynamicResource Primary}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+        <!--  ComboBox End  -->
+
+        <!--  CheckBox  -->
+        <Style x:Key="{x:Type CheckBox}" TargetType="{x:Type CheckBox}">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+            <Setter Property="TextBlock.Foreground" Value="{DynamicResource Foreground}" />
+            <Setter Property="TextBlock.FontSize" Value="16" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type CheckBox}">
+                        <BulletDecorator Background="Transparent">
+                            <BulletDecorator.Bullet>
+                                <Border
+                                    x:Name="Border"
+                                    Width="16"
+                                    Height="16"
+                                    Background="{DynamicResource ButtonColor}"
+                                    BorderThickness="1"
+                                    CornerRadius="2">
+                                    <Grid>
+                                        <Viewbox Height="7">
+                                            <Path
+                                                x:Name="CheckMarkIcon"
+                                                extensions:Path.StringKeyData="CheckMark"
+                                                Fill="Black"
+                                                SnapsToDevicePixels="False"
+                                                Stretch="Fill"
+                                                Visibility="Hidden" />
+                                        </Viewbox>
+                                    </Grid>
+                                </Border>
+                            </BulletDecorator.Bullet>
+                            <ContentPresenter
+                                Margin="4,0,0,0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                RecognizesAccessKey="True" />
+                        </BulletDecorator>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="{DynamicResource BrandColor}" />
+                                <Setter TargetName="CheckMarkIcon" Property="Visibility" Value="Visible" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+        <DataTemplate DataType="{x:Type objects:CategoryWrapper}">
+            <CheckBox Margin="0,0,0,4" Content="{Binding Name}" />
+        </DataTemplate>
+
+
+        <!--  Scroll Bar  -->
+
+        <!--  TODO: Do thumb width some more  -->
+
+        <Style x:Key="ScrollBarThumb" TargetType="{x:Type Thumb}">
+            <Setter Property="KeyboardNavigation.TabNavigation" Value="None" />
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+            <Setter Property="UseLayoutRounding" Value="True" />
+            <Setter Property="Background" Value="Red" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Grid
+                            x:Name="Border"
+                            Width="10"
+                            Background="Transparent">
+                            <Rectangle
+                                x:Name="ThumbRect"
+                                Width="6"
+                                HorizontalAlignment="Right"
+                                Fill="{DynamicResource ButtonColor}"
+                                RadiusX="4"
+                                RadiusY="4" />
+                        </Grid>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation
+                                                Storyboard.TargetName="ThumbRect"
+                                                Storyboard.TargetProperty="Width"
+                                                To="10"
+                                                Duration="0:0:0.15" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation
+                                                Storyboard.TargetName="ThumbRect"
+                                                Storyboard.TargetProperty="Width"
+                                                To="6"
+                                                Duration="0:0:0.15" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                                <!--<Setter TargetName="ThumbRect" Property="Fill" Value="#454545" />
+                            <Setter TargetName="Border" Property="Background" Value="#454545" />-->
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="ThumbRect" Property="Opacity" Value="0.72" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <ControlTemplate x:Key="VerticalScrollBar" TargetType="{x:Type ScrollBar}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.00001*" />
+                </Grid.RowDefinitions>
+
+                <Border
+                    Grid.RowSpan="3"
+                    Background="Transparent"
+                    CornerRadius="2" />
+
+                <Track
+                    x:Name="PART_Track"
+                    Grid.Row="1"
+                    IsDirectionReversed="True">
+                    <Track.Thumb>
+                        <Thumb Style="{StaticResource ScrollBarThumb}" />
+                    </Track.Thumb>
+                </Track>
+            </Grid>
+        </ControlTemplate>
+
+        <Style x:Key="{x:Type ScrollBar}" TargetType="{x:Type ScrollBar}">
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Style.Triggers>
+                <!--<Trigger Property="Orientation" Value="Horizontal">
+                <Setter Property="Width" Value="Auto" />
+                <Setter Property="Height" Value="18" />
+                <Setter Property="Template" Value="{StaticResource HorizontalScrollBar}" />
+            </Trigger>-->
+                <Trigger Property="Orientation" Value="Vertical">
+                    <Setter Property="Width" Value="Auto" />
+                    <Setter Property="Height" Value="Auto" />
+                    <Setter Property="Template" Value="{StaticResource VerticalScrollBar}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!--  Scroll Bar End  -->
+
+        <DataTemplate DataType="{x:Type coreInstances:InstanceAddon}">
+            <Border
+                MinHeight="120"
+                Margin="0,0,0,16"
+                Padding="16"
+                VerticalAlignment="Stretch"
+                Background="{DynamicResource Secondary}"
+                CornerRadius="5">
+
+                <Grid ShowGridLines="False">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+
+                    <!--  Logo  -->
+                    <Border
+                        Width="90"
+                        Height="90"
+                        CornerRadius="5">
+                        <Border.Background>
+                            <ImageBrush ImageSource="{Binding Logo, Mode=OneWay}" />
+                        </Border.Background>
+                    </Border>
+
+                    <!--  Info  -->
+                    <Grid
+                        Grid.Column="1"
+                        Margin="8,0,0,0"
+                        ShowGridLines="False">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <!--  Name & Author  -->
+                        <TextBlock VerticalAlignment="Top" TextWrapping="Wrap">
+                            <Run
+                                FontSize="18"
+                                FontWeight="Medium"
+                                Foreground="{DynamicResource ForegroundLighter}"
+                                Text="{Binding Name, Mode=OneWay}" />
+                            <Run Foreground="{DynamicResource Foreground}" Text="{Binding Author, Mode=OneWay, StringFormat={}  by {0}}" />
+                        </TextBlock>
+
+                        <!--  Summary  -->
+                        <TextBlock
+                            Grid.Row="1"
+                            FontSize="14"
+                            Foreground="{DynamicResource Foreground}"
+                            Text="{Binding Description, Mode=OneWay}"
+                            TextTrimming="CharacterEllipsis"
+                            TextWrapping="Wrap" />
+
+                        <!--  Tags  -->
+                        <Border
+                            Grid.Row="2"
+                            Margin="0,8,0,0"
+                            BorderBrush="{DynamicResource ButtonColor}"
+                            BorderThickness="0,0,0,0">
+                            <WrapPanel Grid.Row="2">
+                                <TextBlock
+                                    FontSize="14"
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource Foreground}"
+                                    Text="Client or server   Optimization   Fabric"
+                                    TextWrapping="WrapWithOverflow" />
+                            </WrapPanel>
+                        </Border>
+                    </Grid>
+
+                    <!--  Right Side  -->
+                    <Grid Grid.Column="2" VerticalAlignment="Stretch">
+                        <!--  Buttons  -->
+                        <StackPanel
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            Orientation="Horizontal">
+                            <Button
+                                Height="32"
+                                Margin="8,0,0,0"
+                                HorizontalAlignment="Stretch"
+                                Background="{DynamicResource BrandColor}"
+                                Foreground="Black"
+                                Style="{StaticResource x32DefaultIconButton}">
+                                <WrapPanel Orientation="Horizontal">
+                                    <Viewbox
+                                        Height="13"
+                                        Margin="4,1,0,0"
+                                        VerticalAlignment="Center">
+                                        <Path
+                                            extensions:Path.StringKeyData="Download"
+                                            Fill="Black"
+                                            Stretch="Fill" />
+                                    </Viewbox>
+
+                                    <TextBlock
+                                        Margin="8,0,0,0" FontWeight="Medium"
+                                        extensions:TextBlock.TextByKey="Install"
+                                        FontSize="12"
+                                        Foreground="Black" />
+                                </WrapPanel>
+                            </Button>
+
+                            <Border
+                                Width="32"
+                                Height="32"
+                                Margin="8,0,0,0"
+                                Background="{DynamicResource BrandColor}"
+                                CornerRadius="5">
+                                <controls:DropdownMenu />
+                            </Border>
+                        </StackPanel>
+
+                        <StackPanel VerticalAlignment="Bottom">
+                            <TextBlock
+                                Grid.Row="1"
+                                HorizontalAlignment="Right"
+                                FontSize="14"
+                                FontWeight="Medium"
+                                Foreground="{DynamicResource Foreground}"
+                                Text="{Binding Path=DownloadCount, StringFormat={}{0} downloads, Mode=OneWay}" />
+                            <TextBlock
+                                Grid.Row="2"
+                                Margin="0,4,0,0"
+                                HorizontalAlignment="Right"
+                                FontSize="14"
+                                FontWeight="Medium"
+                                Foreground="{DynamicResource Foreground}"
+                                Text="{Binding LastUpdated, Mode=OneWay}" />
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </Border>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Grid Background="{DynamicResource Primary}">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!--  Left Panel  -->
+        <Border Background="{DynamicResource Secondary}">
+            <Grid Margin="32,55,32,16">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!--  Buttons  -->
+                <Grid>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button
+                        Width="32"
+                        Height="32"
+                        Background="#f16436"
+                        Command="{Binding DataContext.BackToInstanceProfileCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                        Content="Close"
+                        FontSize="12"
+                        Foreground="White"
+                        Style="{StaticResource x32IconButton}" />
+
+                    <Button
+                        Grid.Column="1"
+                        Height="32"
+                        Margin="8,0,0,0"
+                        Background="#f16436"
+                        Style="{StaticResource x32DefaultIconButton}">
+                        <WrapPanel Orientation="Horizontal">
+                            <Viewbox Height="10" Margin="0,1,0,0">
+                                <Path
+                                    extensions:Path.StringKeyData="Curseforge"
+                                    Fill="White"
+                                    Stretch="Fill" />
+                            </Viewbox>
+
+                            <TextBlock
+                                Margin="8,0,0,0"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontSize="12"
+                                FontWeight="Medium"
+                                Foreground="White"
+                                Text="Curseforge" />
+                        </WrapPanel>
+                    </Button>
+                </Grid>
+
+                <Grid
+                    Grid.Row="2"
+                    Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Window}}"
+                    Margin="0,16,0,0"
+                    ShowGridLines="False">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <!--<RowDefinition Height="370" />-->
+                        <RowDefinition Height="1.95*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock
+                        Margin="0,0,0,8"
+                        extensions:TextBlock.TextByKey="Categories"
+                        FontSize="18"
+                        FontWeight="Medium"
+                        Foreground="{DynamicResource ForegroundLighter}" />
+
+                    <ScrollViewer
+                        x:Name="CategoriesScrollViewer"
+                        Grid.Row="1"
+                        HorizontalScrollBarVisibility="Disabled">
+                        <ItemsControl
+                            x:Name="CategoriesList"
+                            Background="Transparent"
+                            ItemsSource="{Binding Model.Categories}"
+                            MouseEnter="CategoriesList_MouseEnter"
+                            MouseLeave="CategoriesList_MouseLeave"
+                            ScrollViewer.CanContentScroll="True" />
+                    </ScrollViewer>
+
+                    <Button
+                        Grid.Row="2"
+                        Height="32"
+                        Margin="0,16,0,0"
+                        VerticalAlignment="Top"
+                        HorizontalContentAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        Background="{DynamicResource BrandColor}"
+                        Content="{DynamicResource Accept}"
+                        FontWeight="Medium"
+                        Foreground="Black" />
+                </Grid>
+            </Grid>
+        </Border>
+
+        <!--  Main Content  -->
+        <ScrollViewer
+            x:Name="AddonsListScrollBar"
+            Grid.Column="1"
+            Margin="0,45,0,0"
+            Focusable="False"
+            ScrollChanged="AddonsListScrollBar_ScrollChanged">
+            <Border Padding="16,0,16,0">
+                <Grid>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <Border
+                        MinHeight="50"
+                        Margin="0,0,0,16"
+                        Padding="8"
+                        Background="{DynamicResource Secondary}"
+                        CornerRadius="5">
+                        <WrapPanel>
+                            <!--  ShowGridLines="False">  -->
+
+                            <!--<Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>-->
+
+                            <controls:SearchBox
+                                Width="635"
+                                Height="32"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Center"
+                                Placeholder="{DynamicResource Search...}"
+                                SearchCommand="{Binding SearchBoxCommand}" />
+
+                            <WrapPanel
+                                Grid.Column="1"
+                                Margin="0,0,16,0"
+                                HorizontalAlignment="Center">
+                                <TextBlock
+                                    Margin="8,0,0,0"
+                                    VerticalAlignment="Center"
+                                    extensions:TextBlock.TextByKey="SortBy"
+                                    FontSize="14"
+                                    Foreground="{DynamicResource Foreground}" />
+                                <ComboBox
+                                    Height="32"
+                                    MinWidth="200"
+                                    Margin="8,4,0,0"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Center"
+                                    IsSynchronizedWithCurrentItem="True"
+                                    ItemsSource="{Binding Model.SortByItems}"
+                                    SelectedValue="{Binding Model.SelectedSortBy}" />
+                            </WrapPanel>
+
+                            <WrapPanel Grid.Column="2" HorizontalAlignment="Right">
+                                <TextBlock
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center"
+                                    extensions:TextBlock.TextByKey="ShowPerPage"
+                                    FontSize="14"
+                                    Foreground="{DynamicResource Foreground}" />
+                                <ComboBox
+                                    Height="32"
+                                    MinWidth="120"
+                                    Margin="8,4,0,0"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center"
+                                    IsSynchronizedWithCurrentItem="True"
+                                    ItemsSource="{Binding Model.PageSizes}"
+                                    SelectedValue="{Binding Model.PageSize}" />
+                            </WrapPanel>
+                        </WrapPanel>
+                    </Border>
+
+                    <!--  Paginator  -->
+                    <Border
+                        Grid.Row="1"
+                        Height="38"
+                        Margin="0,0,0,16"
+                        Background="{DynamicResource Secondary}" />
+
+                    <!--  Addons  -->
+                    <ItemsControl Grid.Row="2" ItemsSource="{Binding Model.AddonsList}" />
+                </Grid>
+            </Border>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

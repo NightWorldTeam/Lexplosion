@@ -11,7 +11,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
 
         public string IconKey { get; }
         public string TextKey { get; }
-        
+
         private Action _action;
         private RelayCommand _executeAction;
         public ICommand ExecuteAction

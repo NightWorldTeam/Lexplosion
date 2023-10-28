@@ -1,0 +1,69 @@
+﻿<UserControl
+    x:Class="Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.Authorization.DigitCodeConfirmationVIew"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:authViewModels="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Authorization"
+    xmlns:controls="clr-namespace:Lexplosion.WPF.NewInterface.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
+    xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.Authorization"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DataContext="{d:DesignInstance Type=authViewModels:DigitCodeConfirmationViewModel}"
+    mc:Ignorable="d">
+
+    <UserControl.Resources />
+
+    <Border Padding="32,70">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TextBlock
+                Grid.Row="1"
+                FontSize="20"
+                FontWeight="Medium"
+                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                Text="6-digit code" />
+            <TextBlock
+                Grid.Row="2"
+                Margin="0,8,0,0"
+                FontSize="14"
+                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                Text="Please enter the code we’ve sent to hel***on@gmail.com"
+                TextWrapping="WrapWithOverflow" />
+
+            <StackPanel
+                Grid.Row="3"
+                Margin="0,32,0,0"
+                Orientation="Horizontal">
+                <controls:DigitCodeBox Code="{Binding Model.Code, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}" IsFullCode="{Binding Model.IsFullCode, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}" />
+            </StackPanel>
+
+            <TextBlock
+                Grid.Row="4"
+                Margin="0,16,0,0"
+                FontSize="14"
+                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                Text="Resend code in 0:59"
+                TextWrapping="WrapWithOverflow" />
+
+            <Button
+                Grid.Row="5"
+                Width="270"
+                Margin="0,32,0,0"
+                HorizontalContentAlignment="CENTER"
+                Click="Button_Click"
+                Content="Подтвердить"
+                FontSize="16"
+                FontWeight="Medium"
+                Foreground="White"
+                IsEnabled="{Binding Model.IsFullCode, Mode=OneWay}" />
+        </Grid>
+    </Border>
+</UserControl>

@@ -27,7 +27,7 @@ namespace Lexplosion.WPF.NewInterface.Core.GameExtensions
 
 
         public ModloaderManager(GameExtension extension, MinecraftVersion gameVersion) : base(extension, gameVersion)
-        {   
+        {
             _minecraftVersion = gameVersion;
             _gameExtension = extension;
         }
@@ -47,7 +47,7 @@ namespace Lexplosion.WPF.NewInterface.Core.GameExtensions
             OnPropertyChanged(nameof(IsCurrentAvaliable));
         }
 
-        public void UpdateAllProperties() 
+        public void UpdateAllProperties()
         {
             OnPropertiesChanged();
         }

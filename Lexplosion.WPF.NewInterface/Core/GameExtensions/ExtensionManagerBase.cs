@@ -33,13 +33,13 @@ namespace Lexplosion.WPF.NewInterface.Core.GameExtensions
             _extensionVersions = new Dictionary<GameExtension, ConcurrentDictionary<MinecraftVersion, MinecraftExtension>>();
 
             // заполняем словарь всеми возможными типами расширения.
-            foreach (GameExtension value in Enum.GetValues(typeof(GameExtension))) 
+            foreach (GameExtension value in Enum.GetValues(typeof(GameExtension)))
             {
                 _extensionVersions.Add(value, new ConcurrentDictionary<MinecraftVersion, MinecraftExtension>());
             }
         }
 
-        protected ExtensionManagerBase(GameExtension gameExtension, MinecraftVersion minecraftVersion, bool isEnable = true) 
+        protected ExtensionManagerBase(GameExtension gameExtension, MinecraftVersion minecraftVersion, bool isEnable = true)
         {
             CurrentMinecraftExtension = new MinecraftExtension(new ReadOnlyCollection<string>(new List<string>()), gameExtension);
             if (MinecraftExtension.CheckExistsOnVersion(minecraftVersion, gameExtension))
@@ -58,8 +58,8 @@ namespace Lexplosion.WPF.NewInterface.Core.GameExtensions
                         });
                         // load extensions versions and select first version
                     }
-                    else 
-                    { 
+                    else
+                    {
                         Lexplosion.Runtime.TaskRun(() =>
                         {
                             LoadExtensionVersions((GameExtension)enumValue, minecraftVersion);
@@ -106,7 +106,7 @@ namespace Lexplosion.WPF.NewInterface.Core.GameExtensions
                     extensionVersion = ToServer.GetOptifineVersions(minecraftVersion.Id);
                 else
                     extensionVersion = ToServer.GetModloadersList(minecraftVersion.Id, (ClientType)extension);
-                
+
                 _extensionVersions[extension].TryAdd(minecraftVersion, new MinecraftExtension(new ReadOnlyCollection<string>(extensionVersion), extension));
             }
             return _extensionVersions[extension][minecraftVersion];
@@ -118,9 +118,9 @@ namespace Lexplosion.WPF.NewInterface.Core.GameExtensions
         /// <param name="gameExtension">Тип расширения</param>
         /// <param name="minecraftVersion">Версия игры</param>
         /// <returns>True/False</returns>
-        public static bool IsExtensionLoaded(GameExtension gameExtension, MinecraftVersion minecraftVersion) 
+        public static bool IsExtensionLoaded(GameExtension gameExtension, MinecraftVersion minecraftVersion)
         {
-            return _extensionVersions[gameExtension].ContainsKey(minecraftVersion) ? 
+            return _extensionVersions[gameExtension].ContainsKey(minecraftVersion) ?
                 _extensionVersions[gameExtension][minecraftVersion].IsAvaliable : false;
         }
 

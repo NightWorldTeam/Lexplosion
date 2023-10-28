@@ -1,7 +1,7 @@
 ﻿using Lexplosion.Core.Tools.Notification;
 using Lexplosion.Global;
 using Lexplosion.WPF.NewInterface.Core.Objects;
-using Lexplosion.WPF.NewInterface.Views.Windows;
+using Lexplosion.WPF.NewInterface.Mvvm.Views.Windows;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,7 +11,7 @@ using System.Windows;
 
 namespace Lexplosion.WPF.NewInterface
 {
-    public enum HeaderState 
+    public enum HeaderState
     {
         Left,
         Right,

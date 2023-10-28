@@ -1,5 +1,4 @@
 ﻿using Lexplosion.Logic.Management;
-using System.Windows.Media.Animation;
 
 namespace Lexplosion.WPF.NewInterface.Core.GameExtensions
 {

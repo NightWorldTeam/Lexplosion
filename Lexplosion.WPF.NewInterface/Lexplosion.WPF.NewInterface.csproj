@@ -80,9 +80,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Commands\CommandBase.cs" />
-    <Compile Include="Commands\NavigateCommand.cs" />
-    <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="Core\Commands\CommandBase.cs" />
+    <Compile Include="Core\Commands\NavigateCommand.cs" />
+    <Compile Include="Core\Commands\RelayCommand.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Controls\AnimatedContentControl\AnimatedContentControl.cs" />
     <Compile Include="Controls\BindablePasswordBox\BindablePasswordBox.xaml.cs">
@@ -101,14 +101,14 @@
     <Compile Include="Controls\SearchBox\SearchBox.cs" />
     <Compile Include="Controls\UIUnderlineTabControl\UIUnderlineTabControl.cs" />
     <Compile Include="Controls\UpperPlaceholderTextBox\UpperPlaceholderTextBox.cs" />
-    <Compile Include="Core\ContentLayoutViewModelBase.cs" />
+    <Compile Include="Core\Paginator\IPaginator.cs" />
+    <Compile Include="Core\ViewModel\ContentLayoutViewModelBase.cs" />
     <Compile Include="Core\Converters\NegativeBooleanToVisibilityConverter.cs" />
     <Compile Include="Core\GameExtensions\MinecraftExtension.cs" />
     <Compile Include="Core\GameExtensions\ExtensionManagerBase.cs" />
     <Compile Include="Core\GameExtensions\ModloaderManager.cs" />
     <Compile Include="Core\GameExtensions\OptimizationModManager.cs" />
-    <Compile Include="Core\ILayoutViewModel.cs" />
-    <Compile Include="Core\INotifiable.cs" />
+    <Compile Include="Core\ViewModel\ILayoutViewModel.cs" />
     <Compile Include="Core\Modal\IModalViewModel.cs" />
     <Compile Include="Core\Modal\ModalViewModelBase.cs" />
     <Compile Include="Core\Objects\ActivityColor.cs" />
@@ -120,110 +120,110 @@
     <Compile Include="Core\Objects\Notification.cs" />
     <Compile Include="Core\Objects\TabItemModel.cs" />
     <Compile Include="Core\Objects\Theme.cs" />
-    <Compile Include="Core\Tools\HashCodeHelper.cs" />
-    <Compile Include="Core\Tools\ImageTools.cs" />
-    <Compile Include="Core\Tools\WindowsResolutionTools.cs" />
+    <Compile Include="Tools\HashCodeHelper.cs" />
+    <Compile Include="Tools\ImageTools.cs" />
+    <Compile Include="Tools\WindowsResolutionTools.cs" />
     <Compile Include="Extensions\Path.cs" />
     <Compile Include="Extensions\StyleSelectors\LastChildStyleSelector.cs" />
     <Compile Include="Extensions\StyleSelectors\NthChildStyleSelector.cs" />
     <Compile Include="Extensions\TextBlock.cs" />
     <Compile Include="Main.cs" />
-    <Compile Include="Models\AddonsRepositories\Curseforge\CurseforgeRepositoryModel.cs" />
-    <Compile Include="Models\AddonsRepositories\Modrinth\ModrinthAddonPageModel.cs" />
-    <Compile Include="Models\AddonsRepositories\Modrinth\ModrinthRepositoryModel.cs" />
-    <Compile Include="Models\Authorization\AuthModelBase.cs" />
-    <Compile Include="Models\Authorization\BasicAuthorization\NightWorld\DigitCodeConfimationModel.cs" />
-    <Compile Include="Models\Authorization\BasicAuthorization\NightWorld\NightWorldAuthorizationModel.cs" />
-    <Compile Include="Models\Authorization\BasicAuthorization\NightWorld\PasswordResetModel.cs" />
-    <Compile Include="Models\Authorization\IAuthModel.cs" />
-    <Compile Include="Models\Authorization\BasicAuthorization\IBasicAuthModel.cs" />
-    <Compile Include="Models\Authorization\OAuth2\IOAuth2Model.cs" />
-    <Compile Include="Models\Authorization\OAuth2\MicrosoftAuthorizationModel.cs" />
-    <Compile Include="Models\InstanceCatalogControllers\CatalogController.cs" />
-    <Compile Include="Models\InstanceCatalogControllers\IInstanceCatalog.cs" />
-    <Compile Include="Models\InstanceCatalogControllers\LibraryController.cs" />
-    <Compile Include="Models\InstanceModel\DownloadModel.cs" />
-    <Compile Include="Models\InstanceModel\InstanceModelBase.cs" />
-    <Compile Include="Models\InstanceModel\LaunchModel.cs" />
-    <Compile Include="Models\MainContent\InstanceProfile\Settings\InstanceProfileConfigurationModel.cs" />
-    <Compile Include="Models\MainContent\InstanceProfile\Settings\InstanceProfileSettingsModel.cs" />
-    <Compile Include="Models\MainContent\MainMenu\GeneralSettings\AppearanceSettingsModel.cs" />
-    <Compile Include="Models\MainContent\MainMenu\CatalogModel.cs" />
+    <Compile Include="Mvvm\Models\AddonsRepositories\Curseforge\CurseforgeRepositoryModel.cs" />
+    <Compile Include="Mvvm\Models\AddonsRepositories\Modrinth\ModrinthAddonPageModel.cs" />
+    <Compile Include="Mvvm\Models\AddonsRepositories\Modrinth\ModrinthRepositoryModel.cs" />
+    <Compile Include="Mvvm\Models\Authorization\AuthModelBase.cs" />
+    <Compile Include="Mvvm\Models\Authorization\BasicAuthorization\NightWorld\DigitCodeConfimationModel.cs" />
+    <Compile Include="Mvvm\Models\Authorization\BasicAuthorization\NightWorld\NightWorldAuthorizationModel.cs" />
+    <Compile Include="Mvvm\Models\Authorization\BasicAuthorization\NightWorld\PasswordResetModel.cs" />
+    <Compile Include="Mvvm\Models\Authorization\IAuthModel.cs" />
+    <Compile Include="Mvvm\Models\Authorization\BasicAuthorization\IBasicAuthModel.cs" />
+    <Compile Include="Mvvm\Models\Authorization\OAuth2\IOAuth2Model.cs" />
+    <Compile Include="Mvvm\Models\Authorization\OAuth2\MicrosoftAuthorizationModel.cs" />
+    <Compile Include="Mvvm\Models\InstanceCatalogControllers\CatalogController.cs" />
+    <Compile Include="Mvvm\Models\InstanceCatalogControllers\IInstanceCatalog.cs" />
+    <Compile Include="Mvvm\Models\InstanceCatalogControllers\LibraryController.cs" />
+    <Compile Include="Mvvm\Models\InstanceModel\DownloadModel.cs" />
+    <Compile Include="Mvvm\Models\InstanceModel\InstanceModelBase.cs" />
+    <Compile Include="Mvvm\Models\InstanceModel\LaunchModel.cs" />
+    <Compile Include="Mvvm\Models\MainContent\InstanceProfile\Settings\InstanceProfileConfigurationModel.cs" />
+    <Compile Include="Mvvm\Models\MainContent\InstanceProfile\Settings\InstanceProfileSettingsModel.cs" />
+    <Compile Include="Mvvm\Models\MainContent\MainMenu\GeneralSettings\AppearanceSettingsModel.cs" />
+    <Compile Include="Mvvm\Models\MainContent\MainMenu\CatalogModel.cs" />
     <Compile Include="Core\Stores\INavigationStore.cs" />
     <Compile Include="Core\Stores\ModalNavigationStore.cs" />
     <Compile Include="Core\Stores\NavigationStore.cs" />
-    <Compile Include="Models\MainContent\MainMenu\GeneralSettings\GeneralSettingsModel.cs" />
-    <Compile Include="Models\MainContent\MainMenu\GeneralSettings\LanguageSettingsModel.cs" />
-    <Compile Include="Models\MainContent\MainMenu\LibraryModel.cs" />
-    <Compile Include="Models\MainModel.cs" />
-    <Compile Include="Models\UserData.cs" />
+    <Compile Include="Mvvm\Models\MainContent\MainMenu\GeneralSettings\GeneralSettingsModel.cs" />
+    <Compile Include="Mvvm\Models\MainContent\MainMenu\GeneralSettings\LanguageSettingsModel.cs" />
+    <Compile Include="Mvvm\Models\MainContent\MainMenu\LibraryModel.cs" />
+    <Compile Include="Mvvm\Models\MainModel.cs" />
+    <Compile Include="Mvvm\Models\UserData.cs" />
     <Compile Include="Tools\ColorTools.cs" />
     <Compile Include="Tools\WordHelper.cs" />
-    <Compile Include="ViewModels\AddonsRepositories\Curseforge\CurseforgeRepositoryViewModel.cs" />
-    <Compile Include="ViewModels\AddonsRepositories\Modrinth\ModrinthAddonPageViewModel.cs" />
-    <Compile Include="ViewModels\AddonsRepositories\Modrinth\ModrinthRepositoryViewModel.cs" />
-    <Compile Include="ViewModels\Authorization\AuthorizationViewModelBase.cs" />
-    <Compile Include="ViewModels\Authorization\BasicAuthorization\NightWorld\DigitCodeConfirmationViewModel.cs" />
-    <Compile Include="ViewModels\Authorization\BasicAuthorization\NightWorld\NightWorldAuthorizationViewModel.cs" />
-    <Compile Include="ViewModels\Authorization\AuthorizationMenuViewModel.cs" />
-    <Compile Include="ViewModels\Authorization\BasicAuthorization\NightWorld\PasswordResetViewModel.cs" />
-    <Compile Include="ViewModels\MainContent\InstanceProfile\Settings\InstanceProfileAboutViewModel.cs" />
-    <Compile Include="ViewModels\MainContent\InstanceProfile\InstanceProfileLeftPanelViewModel.cs" />
-    <Compile Include="ViewModels\MainContent\InstanceProfile\Addons\InstanceProfileAddonsLayoutViewModel.cs" />
-    <Compile Include="ViewModels\MainContent\InstanceProfile\InstanceProfileLayoutViewModel.cs" />
-    <Compile Include="ViewModels\MainContent\InstanceProfile\InstanceProfileOverviewViewModel.cs" />
-    <Compile Include="ViewModels\MainContent\InstanceProfile\Settings\InstanceProfileConfigurationViewModel.cs" />
-    <Compile Include="ViewModels\MainContent\InstanceProfile\Settings\InstanceProfileSettingsLayoutViewModel.cs" />
-    <Compile Include="ViewModels\MainContent\InstanceProfile\Settings\InstanceProfileSettingsViewModel.cs" />
-    <Compile Include="ViewModels\MainContent\MainMenu\Content\CatalogViewModel.cs" />
-    <Compile Include="ViewModels\MainContent\MainMenu\Content\Friends\FriendsLayoutViewModel.cs" />
-    <Compile Include="ViewModels\MainContent\MainMenu\Content\Friends\FriendsRequestsViewModel.cs" />
-    <Compile Include="ViewModels\MainContent\MainMenu\Content\Friends\FriendsViewModel.cs" />
-    <Compile Include="ViewModels\MainContent\MainMenu\Content\GeneralSettings\AboutUsViewModel.cs" />
-    <Compile Include="ViewModels\MainContent\MainMenu\Content\GeneralSettings\AccountsSettingsViewModel.cs" />
-    <Compile Include="ViewModels\MainContent\MainMenu\Content\GeneralSettings\AppearanceSettingsViewModel.cs" />
-    <Compile Include="ViewModels\MainContent\MainMenu\Content\GeneralSettings\GeneralSettingsLayoutViewModel.cs" />
-    <Compile Include="ViewModels\MainContent\MainMenu\Content\GeneralSettings\GeneralSettingsViewModel.cs" />
-    <Compile Include="ViewModels\MainContent\MainMenu\Content\GeneralSettings\LanguageSettingsViewModel.cs" />
-    <Compile Include="ViewModels\MainContent\MainMenu\Content\LibraryViewModel.cs" />
-    <Compile Include="ViewModels\MainContent\MainMenu\Content\Multiplayer\MultiplayerLayoutViewModel.cs" />
-    <Compile Include="ViewModels\MainContent\MainMenu\Content\Multiplayer\MultiplayerViewModel.cs" />
-    <Compile Include="ViewModels\MainContent\MainMenu\LeftPanel\LeftPanelViewModel.cs" />
-    <Compile Include="ViewModels\MainContent\MainMenu\MainMenuLayoutViewModel.cs" />
-    <Compile Include="ViewModels\Modal\DialogBox\DialogBoxViewModel.cs" />
-    <Compile Include="ViewModels\Modal\InstanceFactory\InstanceFactoryViewModel.cs" />
-    <Compile Include="ViewModels\Modal\LeftMenu\LeftMenuControl.cs" />
-    <Compile Include="Views\Modal\DialogBox\DialogBoxView.xaml.cs">
+    <Compile Include="Mvvm\ViewModels\AddonsRepositories\Curseforge\CurseforgeRepositoryViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\AddonsRepositories\Modrinth\ModrinthAddonPageViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\AddonsRepositories\Modrinth\ModrinthRepositoryViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\Authorization\AuthorizationViewModelBase.cs" />
+    <Compile Include="Mvvm\ViewModels\Authorization\BasicAuthorization\NightWorld\DigitCodeConfirmationViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\Authorization\BasicAuthorization\NightWorld\NightWorldAuthorizationViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\Authorization\AuthorizationMenuViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\Authorization\BasicAuthorization\NightWorld\PasswordResetViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\MainContent\InstanceProfile\Settings\InstanceProfileAboutViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\MainContent\InstanceProfile\InstanceProfileLeftPanelViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\MainContent\InstanceProfile\Addons\InstanceProfileAddonsLayoutViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\MainContent\InstanceProfile\InstanceProfileLayoutViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\MainContent\InstanceProfile\InstanceProfileOverviewViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\MainContent\InstanceProfile\Settings\InstanceProfileConfigurationViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\MainContent\InstanceProfile\Settings\InstanceProfileSettingsLayoutViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\MainContent\InstanceProfile\Settings\InstanceProfileSettingsViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\MainContent\MainMenu\Content\CatalogViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\MainContent\MainMenu\Content\Friends\FriendsLayoutViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\MainContent\MainMenu\Content\Friends\FriendsRequestsViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\MainContent\MainMenu\Content\Friends\FriendsViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\MainContent\MainMenu\Content\GeneralSettings\AboutUsViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\MainContent\MainMenu\Content\GeneralSettings\AccountsSettingsViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\MainContent\MainMenu\Content\GeneralSettings\AppearanceSettingsViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\MainContent\MainMenu\Content\GeneralSettings\GeneralSettingsLayoutViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\MainContent\MainMenu\Content\GeneralSettings\GeneralSettingsViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\MainContent\MainMenu\Content\GeneralSettings\LanguageSettingsViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\MainContent\MainMenu\Content\LibraryViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\MainContent\MainMenu\Content\Multiplayer\MultiplayerLayoutViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\MainContent\MainMenu\Content\Multiplayer\MultiplayerViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\MainContent\MainMenu\LeftPanel\LeftPanelViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\MainContent\MainMenu\MainMenuLayoutViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\Modal\DialogBox\DialogBoxViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\Modal\InstanceFactory\InstanceFactoryViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\Modal\LeftMenu\LeftMenuControl.cs" />
+    <Compile Include="Mvvm\Views\Modal\DialogBox\DialogBoxView.xaml.cs">
       <DependentUpon>DialogBoxView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Modal\InstanceFactory\InstanceFactoryView.xaml.cs">
+    <Compile Include="Mvvm\Views\Modal\InstanceFactory\InstanceFactoryView.xaml.cs">
       <DependentUpon>InstanceFactoryView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Modal\LeftMenu\LeftMenuControl.xaml.cs">
+    <Compile Include="Mvvm\Views\Modal\LeftMenu\LeftMenuControl.xaml.cs">
       <DependentUpon>LeftMenuControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Pages\AddonsRepositories\Curseforge\CurseforgeRepositoryView.xaml.cs">
+    <Compile Include="Mvvm\Views\Pages\AddonsRepositories\Curseforge\CurseforgeRepositoryView.xaml.cs">
       <DependentUpon>CurseforgeRepositoryView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Pages\AddonsRepositories\Modrinth\ModrinthAddonPageView.xaml.cs">
+    <Compile Include="Mvvm\Views\Pages\AddonsRepositories\Modrinth\ModrinthAddonPageView.xaml.cs">
       <DependentUpon>ModrinthAddonPageView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Pages\AddonsRepositories\Modrinth\ModrinthRepositoryView.xaml.cs">
+    <Compile Include="Mvvm\Views\Pages\AddonsRepositories\Modrinth\ModrinthRepositoryView.xaml.cs">
       <DependentUpon>ModrinthRepositoryView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Pages\Authorization\AuthorizationMenuView.xaml.cs">
+    <Compile Include="Mvvm\Views\Pages\Authorization\AuthorizationMenuView.xaml.cs">
       <DependentUpon>AuthorizationMenuView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Pages\Authorization\DigitCodeConfirmationVIew.xaml.cs">
+    <Compile Include="Mvvm\Views\Pages\Authorization\DigitCodeConfirmationVIew.xaml.cs">
       <DependentUpon>DigitCodeConfirmationVIew.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Pages\Authorization\NightWorldAuthFormView.xaml.cs">
+    <Compile Include="Mvvm\Views\Pages\Authorization\NightWorldAuthFormView.xaml.cs">
       <DependentUpon>NightWorldAuthFormView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Pages\Authorization\PasswordResetView.xaml.cs">
+    <Compile Include="Mvvm\Views\Pages\Authorization\PasswordResetView.xaml.cs">
       <DependentUpon>PasswordResetView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Core\ViewModelBase.cs" />
+    <Compile Include="Core\ViewModel\ViewModelBase.cs" />
     <Page Include="Assets\langs\en-US.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -356,143 +356,143 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Modal\DialogBox\DialogBoxView.xaml">
+    <Page Include="Mvvm\Views\Modal\DialogBox\DialogBoxView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Modal\InstanceFactory\InstanceFactoryView.xaml">
+    <Page Include="Mvvm\Views\Modal\InstanceFactory\InstanceFactoryView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Modal\LeftMenu\LeftMenuControl.xaml">
+    <Page Include="Mvvm\Views\Modal\LeftMenu\LeftMenuControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Pages\AddonsRepositories\Curseforge\CurseforgeRepositoryView.xaml">
+    <Page Include="Mvvm\Views\Pages\AddonsRepositories\Curseforge\CurseforgeRepositoryView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Pages\AddonsRepositories\Modrinth\ModrinthAddonPageView.xaml">
+    <Page Include="Mvvm\Views\Pages\AddonsRepositories\Modrinth\ModrinthAddonPageView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Pages\AddonsRepositories\Modrinth\ModrinthRepositoryView.xaml">
+    <Page Include="Mvvm\Views\Pages\AddonsRepositories\Modrinth\ModrinthRepositoryView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Pages\Authorization\AuthorizationMenuView.xaml">
+    <Page Include="Mvvm\Views\Pages\Authorization\AuthorizationMenuView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Pages\Authorization\DigitCodeConfirmationVIew.xaml">
+    <Page Include="Mvvm\Views\Pages\Authorization\DigitCodeConfirmationVIew.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Pages\Authorization\NightWorldAuthFormView.xaml">
+    <Page Include="Mvvm\Views\Pages\Authorization\NightWorldAuthFormView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Pages\Authorization\PasswordResetView.xaml">
+    <Page Include="Mvvm\Views\Pages\Authorization\PasswordResetView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Pages\MainContent\InstanceProfile\Addons\InstanceProfileAddonsLayoutView.xaml">
+    <Page Include="Mvvm\Views\Pages\MainContent\InstanceProfile\Addons\InstanceProfileAddonsLayoutView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Pages\MainContent\InstanceProfile\Addons\InstanceProfileAddonsView.xaml">
+    <Page Include="Mvvm\Views\Pages\MainContent\InstanceProfile\Addons\InstanceProfileAddonsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Pages\MainContent\InstanceProfile\Settings\InstanceProfileAboutView.xaml">
+    <Page Include="Mvvm\Views\Pages\MainContent\InstanceProfile\Settings\InstanceProfileAboutView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Pages\MainContent\InstanceProfile\InstanceProfileLayoutView.xaml">
+    <Page Include="Mvvm\Views\Pages\MainContent\InstanceProfile\InstanceProfileLayoutView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Pages\MainContent\InstanceProfile\InstanceProfileLeftPanelView.xaml">
+    <Page Include="Mvvm\Views\Pages\MainContent\InstanceProfile\InstanceProfileLeftPanelView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Pages\MainContent\InstanceProfile\InstanceProfileOverviewView.xaml">
+    <Page Include="Mvvm\Views\Pages\MainContent\InstanceProfile\InstanceProfileOverviewView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Pages\MainContent\InstanceProfile\Settings\InstanceProfileConfigurationView.xaml">
+    <Page Include="Mvvm\Views\Pages\MainContent\InstanceProfile\Settings\InstanceProfileConfigurationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Pages\MainContent\InstanceProfile\Settings\InstanceProfileSettingsLayoutView.xaml">
+    <Page Include="Mvvm\Views\Pages\MainContent\InstanceProfile\Settings\InstanceProfileSettingsLayoutView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Pages\MainContent\InstanceProfile\Settings\InstanceProfileSettingsView.xaml">
+    <Page Include="Mvvm\Views\Pages\MainContent\InstanceProfile\Settings\InstanceProfileSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Pages\MainContent\MainMenu\Content\CatalogView.xaml">
+    <Page Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\CatalogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Pages\MainContent\MainMenu\Content\Friends\FriendsLayoutViewModel.xaml">
+    <Page Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\Friends\FriendsLayoutViewModel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Pages\MainContent\MainMenu\Content\Friends\FriendsRequestsView.xaml">
+    <Page Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\Friends\FriendsRequestsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Pages\MainContent\MainMenu\Content\Friends\FriendsView.xaml">
+    <Page Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\Friends\FriendsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Pages\MainContent\MainMenu\Content\GeneralSettings\AboutUsView.xaml">
+    <Page Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\GeneralSettings\AboutUsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Pages\MainContent\MainMenu\Content\GeneralSettings\AccountsSettingsView.xaml">
+    <Page Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\GeneralSettings\AccountsSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Pages\MainContent\MainMenu\Content\GeneralSettings\AppearanceSettingsView.xaml">
+    <Page Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\GeneralSettings\AppearanceSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Pages\MainContent\MainMenu\Content\GeneralSettings\GeneralSettingsLayoutView.xaml">
+    <Page Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\GeneralSettings\GeneralSettingsLayoutView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Pages\MainContent\MainMenu\Content\GeneralSettings\GeneralSettingsView.xaml">
+    <Page Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\GeneralSettings\GeneralSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Pages\MainContent\MainMenu\Content\GeneralSettings\LanguageSettingsView.xaml">
+    <Page Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\GeneralSettings\LanguageSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Pages\MainContent\MainMenu\Content\LibraryView.xaml">
+    <Page Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\LibraryView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Pages\MainContent\MainMenu\Content\Multiplayer\MultiplayerLayoutView.xaml">
+    <Page Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\Multiplayer\MultiplayerLayoutView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Pages\MainContent\MainMenu\Content\Multiplayer\MultiplayerView.xaml">
+    <Page Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\Multiplayer\MultiplayerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Pages\MainContent\MainMenu\LeftPanel\LeftPanelView.xaml">
+    <Page Include="Mvvm\Views\Pages\MainContent\MainMenu\LeftPanel\LeftPanelView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Pages\MainContent\MainMenu\MainMenuLayoutView.xaml">
+    <Page Include="Mvvm\Views\Pages\MainContent\MainMenu\MainMenuLayoutView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Windows\MainWindow.xaml">
+    <Page Include="Mvvm\Views\Windows\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -501,80 +501,80 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Extensions\Animations\SolidColorBrushAnimation.cs" />
-    <Compile Include="ViewModels\MainViewModel.cs" />
-    <Compile Include="Views\Pages\MainContent\InstanceProfile\Addons\InstanceProfileAddonsLayoutView.xaml.cs">
+    <Compile Include="Mvvm\ViewModels\MainViewModel.cs" />
+    <Compile Include="Mvvm\Views\Pages\MainContent\InstanceProfile\Addons\InstanceProfileAddonsLayoutView.xaml.cs">
       <DependentUpon>InstanceProfileAddonsLayoutView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Pages\MainContent\InstanceProfile\Addons\InstanceProfileAddonsView.xaml.cs">
+    <Compile Include="Mvvm\Views\Pages\MainContent\InstanceProfile\Addons\InstanceProfileAddonsView.xaml.cs">
       <DependentUpon>InstanceProfileAddonsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Pages\MainContent\InstanceProfile\Settings\InstanceProfileAboutView.xaml.cs">
+    <Compile Include="Mvvm\Views\Pages\MainContent\InstanceProfile\Settings\InstanceProfileAboutView.xaml.cs">
       <DependentUpon>InstanceProfileAboutView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Pages\MainContent\InstanceProfile\InstanceProfileLayoutView.xaml.cs">
+    <Compile Include="Mvvm\Views\Pages\MainContent\InstanceProfile\InstanceProfileLayoutView.xaml.cs">
       <DependentUpon>InstanceProfileLayoutView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Pages\MainContent\InstanceProfile\InstanceProfileLeftPanelView.xaml.cs">
+    <Compile Include="Mvvm\Views\Pages\MainContent\InstanceProfile\InstanceProfileLeftPanelView.xaml.cs">
       <DependentUpon>InstanceProfileLeftPanelView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Pages\MainContent\InstanceProfile\InstanceProfileOverviewView.xaml.cs">
+    <Compile Include="Mvvm\Views\Pages\MainContent\InstanceProfile\InstanceProfileOverviewView.xaml.cs">
       <DependentUpon>InstanceProfileOverviewView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Pages\MainContent\InstanceProfile\Settings\InstanceProfileConfigurationView.xaml.cs">
+    <Compile Include="Mvvm\Views\Pages\MainContent\InstanceProfile\Settings\InstanceProfileConfigurationView.xaml.cs">
       <DependentUpon>InstanceProfileConfigurationView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Pages\MainContent\InstanceProfile\Settings\InstanceProfileSettingsLayoutView.xaml.cs">
+    <Compile Include="Mvvm\Views\Pages\MainContent\InstanceProfile\Settings\InstanceProfileSettingsLayoutView.xaml.cs">
       <DependentUpon>InstanceProfileSettingsLayoutView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Pages\MainContent\InstanceProfile\Settings\InstanceProfileSettingsView.xaml.cs">
+    <Compile Include="Mvvm\Views\Pages\MainContent\InstanceProfile\Settings\InstanceProfileSettingsView.xaml.cs">
       <DependentUpon>InstanceProfileSettingsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Pages\MainContent\MainMenu\Content\CatalogView.xaml.cs">
+    <Compile Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\CatalogView.xaml.cs">
       <DependentUpon>CatalogView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Pages\MainContent\MainMenu\Content\Friends\FriendsLayoutViewModel.xaml.cs">
+    <Compile Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\Friends\FriendsLayoutViewModel.xaml.cs">
       <DependentUpon>FriendsLayoutViewModel.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Pages\MainContent\MainMenu\Content\Friends\FriendsRequestsView.xaml.cs">
+    <Compile Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\Friends\FriendsRequestsView.xaml.cs">
       <DependentUpon>FriendsRequestsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Pages\MainContent\MainMenu\Content\Friends\FriendsView.xaml.cs">
+    <Compile Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\Friends\FriendsView.xaml.cs">
       <DependentUpon>FriendsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Pages\MainContent\MainMenu\Content\GeneralSettings\AboutUsView.xaml.cs">
+    <Compile Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\GeneralSettings\AboutUsView.xaml.cs">
       <DependentUpon>AboutUsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Pages\MainContent\MainMenu\Content\GeneralSettings\AccountsSettingsView.xaml.cs">
+    <Compile Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\GeneralSettings\AccountsSettingsView.xaml.cs">
       <DependentUpon>AccountsSettingsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Pages\MainContent\MainMenu\Content\GeneralSettings\AppearanceSettingsView.xaml.cs">
+    <Compile Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\GeneralSettings\AppearanceSettingsView.xaml.cs">
       <DependentUpon>AppearanceSettingsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Pages\MainContent\MainMenu\Content\GeneralSettings\GeneralSettingsLayoutView.xaml.cs">
+    <Compile Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\GeneralSettings\GeneralSettingsLayoutView.xaml.cs">
       <DependentUpon>GeneralSettingsLayoutView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Pages\MainContent\MainMenu\Content\GeneralSettings\GeneralSettingsView.xaml.cs">
+    <Compile Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\GeneralSettings\GeneralSettingsView.xaml.cs">
       <DependentUpon>GeneralSettingsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Pages\MainContent\MainMenu\Content\GeneralSettings\LanguageSettingsView.xaml.cs">
+    <Compile Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\GeneralSettings\LanguageSettingsView.xaml.cs">
       <DependentUpon>LanguageSettingsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Pages\MainContent\MainMenu\Content\LibraryView.xaml.cs">
+    <Compile Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\LibraryView.xaml.cs">
       <DependentUpon>LibraryView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Pages\MainContent\MainMenu\Content\Multiplayer\MultiplayerLayoutView.xaml.cs">
+    <Compile Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\Multiplayer\MultiplayerLayoutView.xaml.cs">
       <DependentUpon>MultiplayerLayoutView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Pages\MainContent\MainMenu\Content\Multiplayer\MultiplayerView.xaml.cs">
+    <Compile Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\Multiplayer\MultiplayerView.xaml.cs">
       <DependentUpon>MultiplayerView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Pages\MainContent\MainMenu\LeftPanel\LeftPanelView.xaml.cs">
+    <Compile Include="Mvvm\Views\Pages\MainContent\MainMenu\LeftPanel\LeftPanelView.xaml.cs">
       <DependentUpon>LeftPanelView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Pages\MainContent\MainMenu\MainMenuLayoutView.xaml.cs">
+    <Compile Include="Mvvm\Views\Pages\MainContent\MainMenu\MainMenuLayoutView.xaml.cs">
       <DependentUpon>MainMenuLayoutView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Windows\MainWindow.xaml.cs">
+    <Compile Include="Mvvm\Views\Windows\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
@@ -609,8 +609,8 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="ViewModels\Authorization\OAuth2\" />
-    <Folder Include="ViewModels\InstanceForm\" />
+    <Folder Include="Mvvm\ViewModels\Authorization\OAuth2\" />
+    <Folder Include="Mvvm\ViewModels\InstanceForm\" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\images\background\authBG.png" />
