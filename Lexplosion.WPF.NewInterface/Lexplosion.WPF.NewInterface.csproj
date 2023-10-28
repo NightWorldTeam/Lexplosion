@@ -128,6 +128,7 @@
     <Compile Include="Extensions\StyleSelectors\NthChildStyleSelector.cs" />
     <Compile Include="Extensions\TextBlock.cs" />
     <Compile Include="Main.cs" />
+    <Compile Include="Models\AddonsRepositories\Curseforge\CurseforgeRepositoryModel.cs" />
     <Compile Include="Models\AddonsRepositories\Modrinth\ModrinthAddonPageModel.cs" />
     <Compile Include="Models\AddonsRepositories\Modrinth\ModrinthRepositoryModel.cs" />
     <Compile Include="Models\Authorization\AuthModelBase.cs" />
@@ -157,6 +158,8 @@
     <Compile Include="Models\MainModel.cs" />
     <Compile Include="Models\UserData.cs" />
     <Compile Include="Tools\ColorTools.cs" />
+    <Compile Include="Tools\WordHelper.cs" />
+    <Compile Include="ViewModels\AddonsRepositories\Curseforge\CurseforgeRepositoryViewModel.cs" />
     <Compile Include="ViewModels\AddonsRepositories\Modrinth\ModrinthAddonPageViewModel.cs" />
     <Compile Include="ViewModels\AddonsRepositories\Modrinth\ModrinthRepositoryViewModel.cs" />
     <Compile Include="ViewModels\Authorization\AuthorizationViewModelBase.cs" />
@@ -198,6 +201,9 @@
     </Compile>
     <Compile Include="Views\Modal\LeftMenu\LeftMenuControl.xaml.cs">
       <DependentUpon>LeftMenuControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\AddonsRepositories\Curseforge\CurseforgeRepositoryView.xaml.cs">
+      <DependentUpon>CurseforgeRepositoryView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\AddonsRepositories\Modrinth\ModrinthAddonPageView.xaml.cs">
       <DependentUpon>ModrinthAddonPageView.xaml</DependentUpon>
@@ -359,6 +365,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Modal\LeftMenu\LeftMenuControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\AddonsRepositories\Curseforge\CurseforgeRepositoryView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

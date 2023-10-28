@@ -24,10 +24,14 @@
 
         <!--  Icons  -->
         <s:String x:Key="PDModrinthHeart">M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z</s:String>
+
+
+        <!--  TODO: TabControl  -->
     </UserControl.Resources>
 
     <ScrollViewer Margin="0,40,0,0">
         <Grid Background="{DynamicResource Primary}" ShowGridLines="False">
+
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="0.37*" />
                 <ColumnDefinition Width="*" />
@@ -57,6 +61,7 @@
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
 
+                        <!--  Logo  -->
                         <Border
                             Width="90"
                             Height="90"
@@ -66,6 +71,7 @@
                             Background="{DynamicResource ButtonColor}"
                             CornerRadius="5" />
 
+                        <!--  Name  -->
                         <TextBlock
                             Grid.Row="1"
                             Margin="0,0,0,8"
@@ -75,6 +81,7 @@
                             Text="Concurrent Chunk Management Engine (Fabric) "
                             TextWrapping="WrapWithOverflow" />
 
+                        <!--  Summary  -->
                         <TextBlock
                             Grid.Row="2"
                             Margin="0,0,0,8"
@@ -84,7 +91,7 @@
                             TextWrapping="WrapWithOverflow" />
 
 
-                        <!--  First Three Categories  -->
+                        <!--  Categories  -->
                         <WrapPanel Grid.Row="3" Margin="0,0,0,8">
                             <TextBlock
                                 Margin="0,0,8,0"
@@ -136,10 +143,11 @@
                                             FontWeight="Bold"
                                             Foreground="{DynamicResource ForegroundLighter}"
                                             Text="7.12M" />
+
                                         <Run
+                                            extension:TextBlock.RunByKey="{Binding Model.DownloadsKey}"
                                             FontSize="14"
-                                            Foreground="{DynamicResource Foreground}"
-                                            Text="downloads" />
+                                            Foreground="{DynamicResource Foreground}" />
                                     </TextBlock>
                                 </StackPanel>
                                 <StackPanel Margin="0,0,0,8" Orientation="Horizontal">
@@ -158,9 +166,9 @@
                                             Foreground="{DynamicResource ForegroundLighter}"
                                             Text="6,177" />
                                         <Run
+                                            extension:TextBlock.RunByKey="{Binding Model.FollowersKey}"
                                             FontSize="14"
-                                            Foreground="{DynamicResource Foreground}"
-                                            Text="followers" />
+                                            Foreground="{DynamicResource Foreground}" />
                                     </TextBlock>
                                 </StackPanel>
 
@@ -174,10 +182,10 @@
                                             StrokeThickness="2" />
                                     </Viewbox>
 
-                                    <TextBlock
-                                        FontSize="14"
-                                        Foreground="{DynamicResource Foreground}"
-                                        Text="Created 3 years ago" />
+                                    <TextBlock FontSize="14" Foreground="{DynamicResource Foreground}">
+                                        <Run Text="{DynamicResource Created}" />
+                                        <Run Text="3 years ago" />
+                                    </TextBlock>
                                 </StackPanel>
 
 
@@ -191,10 +199,10 @@
                                             StrokeThickness="2" />
                                     </Viewbox>
 
-                                    <TextBlock
-                                        FontSize="14"
-                                        Foreground="{DynamicResource Foreground}"
-                                        Text="Updated 2 days ago " />
+                                    <TextBlock FontSize="14" Foreground="{DynamicResource Foreground}">
+                                        <Run Text="{DynamicResource Updated}" />
+                                        <Run Text="2 days ago" />
+                                    </TextBlock>
                                 </StackPanel>
                             </StackPanel>
                         </Border>
@@ -204,6 +212,7 @@
                 <!--  External Resources & Project Members  -->
                 <Border
                     Grid.Row="1"
+                    Margin="0,0,0,8"
                     Padding="0,8"
                     Background="{DynamicResource Secondary}"
                     CornerRadius="5">
@@ -216,7 +225,7 @@
 
                         <!--  External Links  -->
                         <Border
-                            Margin="0,0,0,16"
+                            Margin="0,0,0,8"
                             Padding="0,16"
                             BorderBrush="{DynamicResource ButtonColor}"
                             BorderThickness="0,0,0,2">
@@ -230,10 +239,10 @@
                                 <!--  Header  -->
                                 <TextBlock
                                     Margin="0,0,0,4"
+                                    extension:TextBlock.TextByKey="ExternalResources"
                                     FontSize="18"
                                     FontWeight="Medium"
-                                    Foreground="{DynamicResource ForegroundLighter}"
-                                    Text="External resources" />
+                                    Foreground="{DynamicResource ForegroundLighter}" />
 
                                 <!--  External Links  -->
                                 <WrapPanel Grid.Row="1">
@@ -309,7 +318,7 @@
                         <Border
                             Grid.Row="1"
                             Margin="0,0,0,16"
-                            Padding="0,16"
+                            Padding="0,8,0,16"
                             BorderBrush="{DynamicResource ButtonColor}"
                             BorderThickness="0,0,0,2">
                             <Grid>
@@ -322,10 +331,10 @@
                                 <!--  Header  -->
                                 <TextBlock
                                     Margin="0,0,0,8"
+                                    extension:TextBlock.TextByKey="ProjectMembers"
                                     FontSize="18"
                                     FontWeight="Medium"
-                                    Foreground="{DynamicResource ForegroundLighter}"
-                                    Text="Project members" />
+                                    Foreground="{DynamicResource ForegroundLighter}" />
 
                                 <!--  Members List  -->
                                 <ItemsControl />
@@ -363,7 +372,7 @@
                         </Border>
 
                         <!--  Technical information  -->
-                        <Grid Grid.Row="2">
+                        <Grid Grid.Row="2" Margin="0,0,0,8">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
@@ -372,10 +381,10 @@
                             <!--  Header  -->
                             <TextBlock
                                 Margin="0,0,0,4"
+                                extension:TextBlock.TextByKey="TechnicalInformation"
                                 FontSize="18"
                                 FontWeight="Medium"
-                                Foreground="{DynamicResource ForegroundLighter}"
-                                Text="Technical information" />
+                                Foreground="{DynamicResource ForegroundLighter}" />
 
                             <Grid Grid.Row="1">
                                 <Grid.RowDefinitions>
@@ -395,7 +404,7 @@
                                     FontSize="16"
                                     FontWeight="Medium"
                                     Foreground="{DynamicResource Foreground}"
-                                    Text="License" />
+                                    Text="{DynamicResource License}" />
 
                                 <TextBlock
                                     Grid.Column="1"
@@ -409,14 +418,15 @@
                                     FontSize="16"
                                     FontWeight="Medium"
                                     Foreground="{DynamicResource Foreground}"
-                                    Text="Client side" />
+                                    Text="{DynamicResource ClientSide}"
+                                    TextWrapping="WrapWithOverflow" />
 
                                 <TextBlock
                                     Grid.Row="1"
                                     Grid.Column="1"
                                     FontSize="14"
                                     Foreground="{DynamicResource Foreground}"
-                                    Text="Required" />
+                                    Text="{DynamicResource Required}" />
 
                                 <!--  Server side  -->
                                 <TextBlock
@@ -424,14 +434,16 @@
                                     FontSize="16"
                                     FontWeight="Medium"
                                     Foreground="{DynamicResource Foreground}"
-                                    Text="Server side" />
+                                    Text="{DynamicResource ServerSide}"
+                                    TextWrapping="WrapWithOverflow" />
 
                                 <TextBlock
                                     Grid.Row="2"
                                     Grid.Column="1"
                                     FontSize="14"
                                     Foreground="{DynamicResource Foreground}"
-                                    Text="Required" />
+                                    Text="{DynamicResource Unsupported}"
+                                    TextWrapping="WrapWithOverflow" />
 
                                 <!--  Project Id  -->
                                 <TextBlock
@@ -439,7 +451,7 @@
                                     FontSize="16"
                                     FontWeight="Medium"
                                     Foreground="{DynamicResource Foreground}"
-                                    Text="Project ID" />
+                                    Text="{DynamicResource ProjectId}" />
 
                                 <TextBlock
                                     Grid.Row="3"
@@ -476,7 +488,7 @@
                             FontSize="16"
                             FontWeight="Medium"
                             Foreground="{DynamicResource Foreground}"
-                            Text="Description">
+                            Text="{DynamicResource Description}">
                             <TextBlock.TextDecorations>
                                 <TextDecoration Location="Underline">
                                     <TextDecoration.Pen>
@@ -491,7 +503,14 @@
                             FontSize="16"
                             FontWeight="Medium"
                             Foreground="{DynamicResource Foreground}"
-                            Text="Changelog" />
+                            Text="{DynamicResource Gallery}" />
+
+                        <TextBlock
+                            Margin="0,0,16,0"
+                            FontSize="16"
+                            FontWeight="Medium"
+                            Foreground="{DynamicResource Foreground}"
+                            Text="{DynamicResource Changelog}" />
 
 
                         <TextBlock
@@ -499,7 +518,7 @@
                             FontSize="16"
                             FontWeight="Medium"
                             Foreground="{DynamicResource Foreground}"
-                            Text="Versions" />
+                            Text="{DynamicResource Versions}" />
                     </WrapPanel>
                 </Border>
 

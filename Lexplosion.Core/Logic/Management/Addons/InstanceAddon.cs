@@ -68,9 +68,7 @@ namespace Lexplosion.Logic.Management.Instances
         public string Description { get; private set; } = "";
         public string Version { get; private set; } = "";
         public int DownloadCount { get; private set; } = 0;
-        private string s;
-        public string LastUpdated { get => "Updated 20 days ago"; private set { s = value; Console.WriteLine(s); } }
-
+        public string LastUpdated { get; private set; } = "";
         private bool _updateAvailable = false;
         public bool UpdateAvailable
         {

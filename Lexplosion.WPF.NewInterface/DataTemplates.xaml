@@ -113,6 +113,9 @@
     <DataTemplate DataType="{x:Type addonsrepositoriesvm:ModrinthAddonPageViewModel}">
         <addonsrepositoriesviews:ModrinthAddonPageView />
     </DataTemplate>
+    <DataTemplate DataType="{x:Type addonsrepositoriesvm:CurseforgeRepositoryViewModel}">
+        <addonsrepositoriesviews:CurseforgeRepositoryView />
+    </DataTemplate>
 
 
     <!--  Instance Profile  -->

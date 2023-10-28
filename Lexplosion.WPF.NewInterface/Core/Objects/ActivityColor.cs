@@ -22,7 +22,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
         public ActivityColor(SolidColorBrush brush, bool isSelected = false)
         {
             Brush = brush;
-            IsSelected = IsSelected;
+            IsSelected = isSelected;
         }
 
         public ActivityColor(string hexColor, bool isSelected = false)

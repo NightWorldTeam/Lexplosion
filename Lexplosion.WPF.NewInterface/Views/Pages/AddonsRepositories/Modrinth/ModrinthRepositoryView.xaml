@@ -510,6 +510,8 @@
                                 Height="32"
                                 Margin="8,0,0,0"
                                 HorizontalAlignment="Stretch"
+                                Background="{DynamicResource BrandColor}"
+                                Foreground="Black"
                                 Style="{StaticResource x32DefaultIconButton}">
                                 <WrapPanel Orientation="Horizontal">
                                     <Viewbox
@@ -518,15 +520,15 @@
                                         VerticalAlignment="Center">
                                         <Path
                                             extensions:Path.StringKeyData="Download"
-                                            Fill="{DynamicResource BrandColorForegroundSolidColorBrush}"
+                                            Fill="Black"
                                             Stretch="Fill" />
                                     </Viewbox>
 
                                     <TextBlock
-                                        Margin="8,0,0,0"
+                                        Margin="8,0,0,0" FontWeight="Medium"
                                         extensions:TextBlock.TextByKey="Install"
-                                        FontSize="14"
-                                        Foreground="{DynamicResource BrandColorForegroundSolidColorBrush}" />
+                                        FontSize="12"
+                                        Foreground="Black" />
                                 </WrapPanel>
                             </Button>
 
@@ -534,7 +536,7 @@
                                 Width="32"
                                 Height="32"
                                 Margin="8,0,0,0"
-                                Background="{DynamicResource ActivitySolidColorBrush}"
+                                Background="{DynamicResource BrandColor}"
                                 CornerRadius="5">
                                 <controls:DropdownMenu />
                             </Border>
@@ -590,32 +592,34 @@
                     <Button
                         Width="32"
                         Height="32"
+                        Background="#f16436"
                         Command="{Binding DataContext.BackToInstanceProfileCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                         Content="Close"
                         FontSize="12"
-                        Foreground="{DynamicResource BrandColorForegroundSolidColorBrush}"
+                        Foreground="White"
                         Style="{StaticResource x32IconButton}" />
 
                     <Button
                         Grid.Column="1"
                         Height="32"
                         Margin="8,0,0,0"
+                        Background="#f16436"
                         Style="{StaticResource x32DefaultIconButton}">
                         <WrapPanel Orientation="Horizontal">
-                            <Viewbox Height="10" Margin="0,2,0,0">
+                            <Viewbox Height="10" Margin="0,1,0,0">
                                 <Path
                                     extensions:Path.StringKeyData="Curseforge"
-                                    Fill="{DynamicResource BrandColorForegroundSolidColorBrush}"
+                                    Fill="White"
                                     Stretch="Fill" />
                             </Viewbox>
 
                             <TextBlock
-                                Margin="8,1,0,0"
+                                Margin="8,0,0,0"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 FontSize="12"
                                 FontWeight="Medium"
-                                Foreground="{DynamicResource BrandColorForegroundSolidColorBrush}"
+                                Foreground="White"
                                 Text="Curseforge" />
                         </WrapPanel>
                     </Button>
@@ -661,8 +665,10 @@
                         VerticalAlignment="Top"
                         HorizontalContentAlignment="Center"
                         VerticalContentAlignment="Center"
+                        Background="{DynamicResource BrandColor}"
                         Content="{DynamicResource Accept}"
-                        FontWeight="Medium" />
+                        FontWeight="Medium"
+                        Foreground="Black" />
                 </Grid>
             </Grid>
         </Border>

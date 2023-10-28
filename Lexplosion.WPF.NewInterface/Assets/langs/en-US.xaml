@@ -225,6 +225,35 @@
     <s:String x:Key="Name">Name</s:String>
     <s:String x:Key="Author">Author</s:String>
 
+
+    <!--    -->
+    <!--  Instance Profile Settings  -->
+    <!--    -->
+    <s:String x:Key="Configuration">Configuration</s:String>
+    <s:String x:Key="InstanceNameDescription">Название данной сборки.</s:String>
+    <s:String x:Key="Summary">Summary</s:String>
+    <s:String x:Key="SummaryDescription">Summary for this instance.</s:String>
+    <s:String x:Key="Description">Description</s:String>
+    <s:String x:Key="DescriptionAdditional">Description for this instance.</s:String>
+
+    <!--    -->
+    <!--  Instance Profile Configuration  -->
+    <!--    -->
+    <s:String x:Key="GameType">Game Type</s:String>
+    <s:String x:Key="GameTypeDescription">Тип игры описание.</s:String>
+
+    <s:String x:Key="VersionDescription">Версия описание.</s:String>
+
+    <s:String x:Key="ModloaderVersion">Modloader Version</s:String>
+    <s:String x:Key="ModloaderVersionDescription">Выбор версии для выбраного модлоадера.</s:String>
+
+    <s:String x:Key="IsShowSnapshots">Show snapshots?</s:String>
+    <s:String x:Key="IsShowSnapshotsDescription">Snapshots are shown in the drop-down menu with game versions..</s:String>
+
+    <s:String x:Key="Optifine">Optifine</s:String>
+    <s:String x:Key="OptifineDescription">Устанавливает оптифайн на данную сборку.</s:String>
+
+
     <!--    -->
     <!--  Addons Repository  -->
     <!--    -->
@@ -234,4 +263,32 @@
     <s:String x:Key="SortBy">Sort By</s:String>
     <s:String x:Key="ShowPerPage">Show per page</s:String>
     <s:String x:Key="Accept">Accept</s:String>
+
+
+    <!--    -->
+    <!--  Modrinth Addon Page  -->
+    <!--    -->
+    <s:String x:Key="ProjectMembers">Project members</s:String>
+    <s:String x:Key="TechnicalInformation">Technical information</s:String>
+    <s:String x:Key="ExternalResources">External resources</s:String>
+    <s:String x:Key="Created">Created</s:String>
+    <s:String x:Key="Updated">Updated</s:String>
+    <s:String x:Key="License">License</s:String>
+    <s:String x:Key="ClientSide">Client side</s:String>
+    <s:String x:Key="ServerSide">Server side</s:String>
+    <s:String x:Key="ProjectId">Project ID</s:String>
+    <s:String x:Key="Required">Required</s:String>
+    <s:String x:Key="Unsupported">Unsupported</s:String>
+
+    <s:String x:Key="Downloads1">downloads</s:String>
+    <s:String x:Key="Downloads2">downloads</s:String>
+    <s:String x:Key="Downloads3">downloads</s:String>
+
+    <s:String x:Key="Followers1">followers</s:String>
+    <s:String x:Key="Followers2">followers</s:String>
+    <s:String x:Key="Followers3">followers</s:String>
+
+    <s:String x:Key="Gallery">Gallery</s:String>
+    <s:String x:Key="Changelog">Changelog</s:String>
+    <s:String x:Key="Versions">Versions</s:String>
 </ResourceDictionary>

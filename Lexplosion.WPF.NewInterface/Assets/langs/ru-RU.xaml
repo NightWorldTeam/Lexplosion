@@ -261,4 +261,32 @@
     <s:String x:Key="SortBy">Сортировать по</s:String>
     <s:String x:Key="ShowPerPage">Показать на странице</s:String>
     <s:String x:Key="Accept">Принять</s:String>
+
+
+    <!--    -->
+    <!--  Modrinth Addon Page  -->
+    <!--    -->
+    <s:String x:Key="ProjectMembers">Учасники проекта</s:String>
+    <s:String x:Key="TechnicalInformation">Техническая информация</s:String>
+    <s:String x:Key="ExternalResources">Внешние данные</s:String>
+    <s:String x:Key="Created">Создано</s:String>
+    <s:String x:Key="Updated">Обновлено</s:String>
+    <s:String x:Key="License">Лицензия</s:String>
+    <s:String x:Key="ClientSide">Сторона клиента</s:String>
+    <s:String x:Key="ServerSide">Сторона сервера</s:String>
+    <s:String x:Key="ProjectId">Id проекта</s:String>
+    <s:String x:Key="Required">Необходимый</s:String>
+    <s:String x:Key="Unsupported">Не поддерживается</s:String>
+
+    <s:String x:Key="Downloads1">скачивание</s:String>
+    <s:String x:Key="Downloads2">скачивания</s:String>
+    <s:String x:Key="Downloads3">скачиваний</s:String>
+
+    <s:String x:Key="Followers1">подписан</s:String>
+    <s:String x:Key="Followers2">подписаны</s:String>
+    <s:String x:Key="Followers3">подписанных</s:String>
+
+    <s:String x:Key="Gallery">Галерея</s:String>
+    <s:String x:Key="Changelog">Журнал изменений</s:String>
+    <s:String x:Key="Versions">Версии</s:String>
 </ResourceDictionary>
