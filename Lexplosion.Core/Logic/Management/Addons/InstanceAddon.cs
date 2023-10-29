@@ -51,6 +51,8 @@ namespace Lexplosion.Logic.Management.Instances
 
         #region info
 
+        public event Action LoadLoaded;
+
         private string _author = "";
         public string Author
         {
@@ -122,6 +124,7 @@ namespace Lexplosion.Logic.Management.Instances
             {
                 _logo = value;
                 OnPropertyChanged();
+                LoadLoaded?.Invoke();
             }
         }
 

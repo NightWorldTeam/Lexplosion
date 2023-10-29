@@ -289,4 +289,16 @@
     <s:String x:Key="Gallery">Галерея</s:String>
     <s:String x:Key="Changelog">Журнал изменений</s:String>
     <s:String x:Key="Versions">Версии</s:String>
+
+    <s:String x:Key="Update">Обновить</s:String>
+    <s:String x:Key="Delete">Удалить</s:String>
+
+    <s:String x:Key="Relevancy">Релевантности</s:String>
+    <s:String x:Key="Popularity">Популярности</s:String>
+    <s:String x:Key="LatestUpdate">Последнему обновлению</s:String>
+    <s:String x:Key="CreationDate">Дате создания</s:String>
+    <s:String x:Key="TotalDownloads">Количеству скачиваний</s:String>
+    <s:String x:Key="A-Z">A-Z</s:String>
+
+    <s:String x:Key="ProjectFound">проектов найдено</s:String>
 </ResourceDictionary>

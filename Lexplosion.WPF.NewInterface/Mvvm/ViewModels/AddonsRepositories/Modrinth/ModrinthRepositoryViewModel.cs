@@ -30,7 +30,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
             {
                 _buttons.Add(new FrameworkElementModel("VisitModrinth", () =>
                 {
-                    try { Process.Start(_instanceAddon.WebsiteUrl); }
+                    try 
+                    { 
+                        Process.Start(_instanceAddon.WebsiteUrl); 
+                    }
                     catch
                     { // todo: прибраться и уведомления выводить
                     }
@@ -83,16 +86,22 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
             get => RelayCommand.GetCommand(ref _backToInstanceProfileCommand, (obj) => { _backToInstanceProfile.Execute(obj); });
         }
 
+        private RelayCommand _searchBoxCommand;
+        public ICommand SearchBoxCommand
+        {
+            get => RelayCommand.GetCommand(ref _searchBoxCommand, (obj) => { Model.SearchFilter = (string)obj; });
+        }
+
         private RelayCommand _installAddonCommand;
         public ICommand InstallAddonCommand
         {
             get => RelayCommand.GetCommand(ref _installAddonCommand, (obj) => { Model.InstallAddon((InstanceAddon)obj); });
         }
 
-        private RelayCommand _searchBoxCommand;
-        public ICommand SearchBoxCommand
+        private RelayCommand _uninstallAddonCommand;
+        public ICommand UninstallAddonCommand 
         {
-            get => RelayCommand.GetCommand(ref _searchBoxCommand, (obj) => { Model.SearchFilter = (string)obj; });
+            get => RelayCommand.GetCommand(ref _uninstallAddonCommand, () => { });
         }
 
 

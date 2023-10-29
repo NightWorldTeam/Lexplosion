@@ -1,8 +1,13 @@
-﻿using Lexplosion.Global;
+﻿using Lexplosion;
+using Lexplosion.Core.Tools.Notification;
+using Lexplosion.Global;
 using Lexplosion.WPF.NewInterface.Core;
+using System;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization
 {
+    public delegate void DoNotificationCallback(string titleKey, string messageKey, uint time, NotificationType type);
+
     public abstract class AuthModelBase : VMBase
     {
         private readonly DoNotificationCallback _doNotification = (header, message, time, type) => { };

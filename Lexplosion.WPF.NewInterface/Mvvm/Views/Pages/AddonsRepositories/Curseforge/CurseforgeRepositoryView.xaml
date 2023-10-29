@@ -7,6 +7,8 @@
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
     xmlns:instances="clr-namespace:Lexplosion.Logic.Management.Instances;assembly=Lexplosion.Core"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:model="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories"
+    xmlns:objects="clr-namespace:Lexplosion.WPF.NewInterface.Core.Objects"
     d:DesignHeight="450"
     d:DesignWidth="800"
     Background="{DynamicResource Primary}"
@@ -326,6 +328,91 @@
             </Setter>
         </Style>
 
+        <Style x:Key="ComboBoxTextOnly" TargetType="{x:Type ComboBox}">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+            <Setter Property="ItemContainerStyle" Value="{StaticResource ComboBoxItemTextOnly}" />
+            <Setter Property="ScrollViewer.CanContentScroll" Value="true" />
+            <Setter Property="MinWidth" Value="50" />
+            <Setter Property="MinHeight" Value="32" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ComboBox}">
+                        <Grid>
+                            <ToggleButton
+                                x:Name="ToggleButton"
+                                Grid.Column="2"
+                                Width="{Binding ActualWidth, ElementName=Translated}"
+                                ClickMode="Press"
+                                Focusable="false"
+                                IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                Template="{StaticResource ComboBoxToggleButton}" />
+                            <ContentPresenter
+                                x:Name="ContentSite"
+                                Margin="12,0,35,0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                extensions:ResourceKeyBinding.ResourceKey="{TemplateBinding SelectionBoxItem}"
+                                Content="{Binding Path=(extensions:ResourceKeyBinding.ResourceValue), RelativeSource={RelativeSource Self}}"
+                                ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                IsHitTestVisible="False"
+                                TextBlock.FontSize="16"
+                                TextBlock.Foreground="{DynamicResource Foreground}"
+                                Visibility="Visible" />
+                            <TextBox
+                                x:Name="PART_EditableTextBox"
+                                Margin="3,3,23,3"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Bottom"
+                                Background="Transparent"
+                                Focusable="True"
+                                IsReadOnly="{TemplateBinding IsReadOnly}"
+                                Style="{x:Null}"
+                                Template="{StaticResource ComboBoxTextBox}"
+                                Visibility="Hidden" />
+                            <Popup
+                                x:Name="Popup"
+                                AllowsTransparency="True"
+                                Focusable="False"
+                                IsOpen="{TemplateBinding IsDropDownOpen}"
+                                Placement="Bottom"
+                                PopupAnimation="Slide">
+                                <Grid
+                                    x:Name="DropDown"
+                                    MinWidth="{TemplateBinding ActualWidth}"
+                                    MaxHeight="{TemplateBinding MaxDropDownHeight}"
+                                    SnapsToDevicePixels="True">
+                                    <Border
+                                        x:Name="DropDownBorder"
+                                        Background="{DynamicResource Secondary}"
+                                        BorderThickness="0,1,0,0" />
+
+                                    <ScrollViewer SnapsToDevicePixels="True">
+                                        <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                                    </ScrollViewer>
+                                </Grid>
+                            </Popup>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="HasItems" Value="false">
+                                <Setter TargetName="DropDownBorder" Property="MinHeight" Value="95" />
+                            </Trigger>
+                            <Trigger Property="IsGrouping" Value="true">
+                                <Setter Property="ScrollViewer.CanContentScroll" Value="false" />
+                            </Trigger>
+                            <!--<Trigger SourceName="Popup" Property="AllowsTransparency" Value="true">
+                                <Setter TargetName="DropDownBorder" Property="CornerRadius" Value="0" />
+                                <Setter TargetName="DropDownBorder" Property="Margin" Value="0,0,0,0" />
+                            </Trigger>-->
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <Style x:Key="{x:Type ComboBoxItem}" TargetType="{x:Type ComboBoxItem}">
             <Setter Property="SnapsToDevicePixels" Value="true" />
             <Setter Property="OverridesDefaultStyle" Value="true" />
@@ -376,13 +463,67 @@
             </Setter>
         </Style>
 
+        <Style x:Key="ComboBoxItemTextOnly" TargetType="{x:Type ComboBoxItem}">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="TextBlock.Foreground" Value="{DynamicResource Foreground}" />
+            <Setter Property="TextBlock.FontSize" Value="16" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ComboBoxItem}">
+                        <Border
+                            x:Name="Border"
+                            Padding="12,8"
+                            Background="Transparent"
+                            SnapsToDevicePixels="true">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Viewbox
+                                    x:Name="SelectionIcon"
+                                    Grid.Column="1"
+                                    Height="10"
+                                    HorizontalAlignment="Right"
+                                    Visibility="Collapsed">
+                                    <Path
+                                        Data="M13.6 5.20006C16.0418 5.53143 16.1314 6.15823 15.8 6.60006L9.8 14.6001C9.62607 14.832 9.36005 14.977 9.07089 14.9975C8.78173 15.0181 8.49788 14.9122 8.29289 14.7072L5.29289 11.7072C4.90237 11.3166 4.90237 10.6835 5.29289 10.293C5.68342 9.90243 6.31658 9.90243 6.70711 10.293L8.89181 12.4777L14.2 5.40006C14.5314 4.95823 15.1582 4.86869 15.6 5.20006Z"
+                                        Fill="{DynamicResource ForegroundLighter}"
+                                        Stretch="Fill" />
+                                </Viewbox>
+
+                                <TextBlock
+                                    Margin="0,0,12,0"
+                                    HorizontalAlignment="Left"
+                                    extensions:TextBlock.TextByKey="{TemplateBinding Content}" />
+                            </Grid>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="{DynamicResource SelectedColor}" />
+                                <Setter Property="TextBlock.Foreground" Value="{DynamicResource Foreground}" />
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="SelectionIcon" Property="Visibility" Value="Visible" />
+                                <Setter Property="TextBlock.Foreground" Value="{DynamicResource ForegroundLighter}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
 
         <!--  ComboBox End  -->
 
 
-        <DataTemplate DataType="{x:Type instances:InstanceAddon}">
+        <DataTemplate DataType="{x:Type model:CurseforgeAddon}">
             <Border
-                Grid.Row="3" Margin="0,0,0,24"
+                Grid.Row="3"
+                Margin="0,0,0,24"
                 Padding="16,16,16,8"
                 HorizontalAlignment="Stretch"
                 Background="{DynamicResource FormColor}">
@@ -408,7 +549,7 @@
                         Height="98"
                         Margin="0,0,16,0">
                         <Border.Background>
-                            <ImageBrush ImageSource="{Binding Logo, Mode=OneWay}" />
+                            <ImageBrush ImageSource="{Binding Logo, Mode=OneWay, IsAsync=True}" />
                         </Border.Background>
                     </Border>
 
@@ -433,7 +574,7 @@
                                 FontSize="14"
                                 Foreground="{DynamicResource Foreground}">
                                 <Run Text=" | " />
-                                <Run Text="{Binding Author}" />
+                                <Run Text="{Binding Author, Mode=OneWay}" />
                             </TextBlock>
                         </WrapPanel>
                     </Grid>
@@ -481,7 +622,7 @@
                             <TextBlock
                                 FontSize="14"
                                 Foreground="{DynamicResource Foreground}"
-                                Text="{Binding LastUpdated}" />
+                                Text="{Binding LatestUpdated}" />
                         </StackPanel>
 
                         <!--  Date created  -->
@@ -496,7 +637,7 @@
                             <TextBlock
                                 FontSize="14"
                                 Foreground="{DynamicResource Foreground}"
-                                Text="{Binding LastUpdated}" />
+                                Text="{Binding LatestUpdated}" />
                         </StackPanel>
 
                         <!--  File size  -->
@@ -578,7 +719,58 @@
                                 Margin="8,0,0,0"
                                 Background="{DynamicResource BrandColor}"
                                 CornerRadius="5">
-                                <controls:DropdownMenu Foreground="{DynamicResource ForegroundLighter}" />
+                                <controls:DropdownMenu
+                                    Foreground="{DynamicResource ForegroundLighter}"
+                                    PopupHorizontalOffset="34"
+                                    PopupVerticalOffset="32">
+                                    <ItemsControl ItemsSource="{Binding Buttons}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate DataType="{x:Type objects:FrameworkElementModel}">
+                                                <Button Command="{Binding ExecuteAction}">
+                                                    <Button.Template>
+                                                        <ControlTemplate>
+                                                            <Border
+                                                                x:Name="Border"
+                                                                Padding="16,8"
+                                                                Background="{DynamicResource Secondary}">
+                                                                <Grid ShowGridLines="False">
+
+                                                                    <Grid.ColumnDefinitions>
+                                                                        <ColumnDefinition Width="34" />
+                                                                        <ColumnDefinition Width="*" />
+                                                                    </Grid.ColumnDefinitions>
+
+
+                                                                    <Viewbox
+                                                                        Width="{Binding Width}"
+                                                                        Height="{Binding Height}"
+                                                                        Margin="0,0,8,0">
+                                                                        <Path
+                                                                            extensions:Path.StringKeyData="{Binding IconKey}"
+                                                                            Fill="{DynamicResource Foreground}"
+                                                                            Stretch="Fill" />
+                                                                    </Viewbox>
+
+                                                                    <TextBlock
+                                                                        Grid.Column="1"
+                                                                        VerticalAlignment="Center"
+                                                                        extensions:TextBlock.TextByKey="{Binding TextKey}"
+                                                                        FontSize="15"
+                                                                        Foreground="{DynamicResource Foreground}" />
+                                                                </Grid>
+                                                            </Border>
+                                                            <ControlTemplate.Triggers>
+                                                                <Trigger Property="IsMouseOver" Value="True">
+                                                                    <Setter TargetName="Border" Property="Background" Value="{DynamicResource SelectedColor}" />
+                                                                </Trigger>
+                                                            </ControlTemplate.Triggers>
+                                                        </ControlTemplate>
+                                                    </Button.Template>
+                                                </Button>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </controls:DropdownMenu>
                             </Border>
                         </StackPanel>
                     </Grid>
@@ -699,7 +891,7 @@
                             Margin="0,0,0,16"
                             FontSize="16"
                             Foreground="{DynamicResource ForegroundLighter}"
-                            Text="Categories" />
+                            Text="{DynamicResource Categories}" />
 
                         <!--  Categories  -->
                         <!--  ScrollViewer Grid.Row="1"  -->
@@ -734,8 +926,10 @@
                         <TextBlock
                             Margin="0,0,0,16"
                             FontSize="18"
-                            Foreground="{DynamicResource ForegroundLighter}"
-                            Text="1 Projects found" />
+                            Foreground="{DynamicResource ForegroundLighter}">
+                            <Run Text="1" />
+                            <Run Text="{DynamicResource ProjectFound}" />
+                        </TextBlock>
 
                         <!--  Selected Categories  -->
                         <ItemsControl
@@ -790,7 +984,7 @@
                                 Background="Transparent"
                                 ShowGridLines="False">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
 
@@ -806,9 +1000,11 @@
                                         Foreground="{DynamicResource Foreground}"
                                         Text="{DynamicResource SortBy}" />
                                     <ComboBox
-                                        Width="172"
+                                        HorizontalAlignment="Stretch"
+                                        ItemContainerStyle="{StaticResource ComboBoxItemTextOnly}"
                                         ItemsSource="{Binding Model.SortByArgs}"
-                                        SelectedIndex="0" />
+                                        SelectedIndex="0"
+                                        Style="{StaticResource ComboBoxTextOnly}" />
                                 </StackPanel>
 
                                 <!--  Show Per Page  -->

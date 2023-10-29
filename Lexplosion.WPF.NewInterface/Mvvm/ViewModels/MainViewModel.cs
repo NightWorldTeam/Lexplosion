@@ -1,14 +1,15 @@
 ﻿using Lexplosion.Logic.Management;
-using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Modal;
 using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Stores;
-using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal;
 using System.Collections.Generic;
 using System.Windows.Media;
+using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu;
+using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories;
+using Lexplosion.Logic.Management.Instances;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
 {

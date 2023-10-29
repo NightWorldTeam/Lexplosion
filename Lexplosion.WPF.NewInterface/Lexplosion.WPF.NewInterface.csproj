@@ -102,6 +102,7 @@
     <Compile Include="Controls\UIUnderlineTabControl\UIUnderlineTabControl.cs" />
     <Compile Include="Controls\UpperPlaceholderTextBox\UpperPlaceholderTextBox.cs" />
     <Compile Include="Core\Paginator\IPaginator.cs" />
+    <Compile Include="Core\Paginator\Paginator.cs" />
     <Compile Include="Core\ViewModel\ContentLayoutViewModelBase.cs" />
     <Compile Include="Core\Converters\NegativeBooleanToVisibilityConverter.cs" />
     <Compile Include="Core\GameExtensions\MinecraftExtension.cs" />
@@ -120,6 +121,8 @@
     <Compile Include="Core\Objects\Notification.cs" />
     <Compile Include="Core\Objects\TabItemModel.cs" />
     <Compile Include="Core\Objects\Theme.cs" />
+    <Compile Include="Core\ViewModel\ObservableObject.cs" />
+    <Compile Include="Extensions\ResourceKeyBinding.cs" />
     <Compile Include="Tools\HashCodeHelper.cs" />
     <Compile Include="Tools\ImageTools.cs" />
     <Compile Include="Tools\WindowsResolutionTools.cs" />
