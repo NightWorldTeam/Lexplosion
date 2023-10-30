@@ -667,7 +667,7 @@ namespace Lexplosion.Logic.Management
                                     };
                                 }
 
-                                _javaPath = WithDirectory.DirectoryPath + "/java/" + javaInfo.JavaName + javaInfo.ExecutableFile;
+                                _javaPath = WithDirectory.DirectoryPath + "/java/versions/" + javaInfo.JavaName + javaInfo.ExecutableFile;
                             }
                         }
 

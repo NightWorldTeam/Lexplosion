@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace Lexplosion.Logic.Management
@@ -75,7 +71,7 @@ namespace Lexplosion.Logic.Management
             return Type == VersionType.Snapshot ? Type + " " + Id : Id;
         }
 
-        public string ToFullString() 
+        public string ToFullString()
         {
             return Type + " " + Id;
         }
@@ -105,7 +101,7 @@ namespace Lexplosion.Logic.Management
 
         public bool Equals(MinecraftVersion other)
         {
-            if (other == null) 
+            if (other == null)
             {
                 return false;
             }

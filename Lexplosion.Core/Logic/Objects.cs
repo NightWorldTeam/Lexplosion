@@ -323,7 +323,7 @@ namespace Lexplosion.Logic.Objects
             File
         }
 
-        public class Unit 
+        public class Unit
         {
             public class DownloadsWays
             {

@@ -2,7 +2,6 @@
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects;
-using Lexplosion.Logic.Objects.Curseforge;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -33,7 +32,7 @@ namespace Lexplosion.Logic.Management.Sources
             if (categories == null)
             {
                 // получаем первый элемент списка
-                using (var iter = categories.GetEnumerator()) 
+                using (var iter = categories.GetEnumerator())
                 {
                     iter.MoveNext();
                     category = (IProjectCategory)iter.Current;

@@ -7,7 +7,6 @@ using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Tools;
-using Lexplosion.Logic.Objects.CommonClientData;
 
 namespace Lexplosion.Logic.Management
 {

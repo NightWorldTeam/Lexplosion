@@ -6,7 +6,6 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using Lexplosion.Tools;
-using LumiSoft.Net.IO;
 
 namespace Lexplosion.Logic.Network
 {
@@ -223,7 +222,7 @@ namespace Lexplosion.Logic.Network
                 _isManualClosed = true;
                 Close(null);
                 Bridge?.Close();
-            } 
+            }
             catch { }
         }
 

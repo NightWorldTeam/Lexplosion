@@ -193,8 +193,8 @@ namespace Lexplosion.Logic.Network.Web
                     }
                 }
 
-                if (isFiltersExists) 
-                { 
+                if (isFiltersExists)
+                {
                     url += ")";
                 }
             }
@@ -236,9 +236,9 @@ namespace Lexplosion.Logic.Network.Web
 
             if (categories != null)
             {
-                foreach (var category in categories) 
+                foreach (var category in categories)
                 {
-                    if (category == null || category.Id == "-1") 
+                    if (category == null || category.Id == "-1")
                     {
                         continue;
                     }
@@ -255,7 +255,7 @@ namespace Lexplosion.Logic.Network.Web
                 }
             }
 
-            if (isFiltersExists) 
+            if (isFiltersExists)
             {
                 url += ")";
             }

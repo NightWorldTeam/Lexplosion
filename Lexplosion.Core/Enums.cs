@@ -47,9 +47,9 @@
             }
         }
 
-        public static AddonType ToAddonType(this CfProjectType cfProjectType) 
+        public static AddonType ToAddonType(this CfProjectType cfProjectType)
         {
-            switch (cfProjectType) 
+            switch (cfProjectType)
             {
                 case CfProjectType.Mods:
                     return AddonType.Mods;
