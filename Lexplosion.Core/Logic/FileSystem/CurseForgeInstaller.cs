@@ -23,22 +23,31 @@ namespace Lexplosion.Logic.FileSystem
 
             // тут переосим нужные файлы из этого архива
 
-            string SourcePath = unzupArchivePath + "overrides/";
-            string DestinationPath = DirectoryPath + "/instances/" + instanceId + "/";
+            string sourcePath = unzupArchivePath + "overrides/";
+            string destinationPath = DirectoryPath + "/instances/" + instanceId + "/";
 
-            foreach (string dirPath in Directory.GetDirectories(SourcePath, "*", SearchOption.AllDirectories))
+            //если архив нового типа, то папки overrides не будет. Все папки сборки будут храниться рядом с манифестом 
+            if (!Directory.Exists(sourcePath))
             {
-                string dir = dirPath.Replace(SourcePath, DestinationPath);
+                sourcePath = unzupArchivePath;
+            }
+
+            foreach (string dirPath in Directory.GetDirectories(sourcePath, "*", SearchOption.AllDirectories))
+            {
+                string dir = dirPath.Replace(sourcePath, destinationPath);
                 if (!Directory.Exists(dir))
                 {
                     Directory.CreateDirectory(dir);
                 }
             }
 
-            foreach (string newPath in Directory.GetFiles(SourcePath, "*.*", SearchOption.AllDirectories))
+            foreach (string path in Directory.GetFiles(sourcePath, "*.*", SearchOption.AllDirectories))
             {
-                File.Copy(newPath, newPath.Replace(SourcePath, DestinationPath), true);
-                files.Add(newPath.Replace(SourcePath, "/").Replace("\\", "/"));
+                if (Path.GetFileName(path) != "manifest.jaon")
+                {
+                    File.Copy(path, path.Replace(sourcePath, destinationPath), true);
+                    files.Add(path.Replace(sourcePath, "/").Replace("\\", "/"));
+                }
             }
 
             return data;

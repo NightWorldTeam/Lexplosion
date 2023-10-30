@@ -205,8 +205,9 @@ namespace Lexplosion.Logic.FileSystem
 
                 return manifest;
             }
-            catch
+            catch (Exception ex)
             {
+                Runtime.DebugWrite("Exception " + ex);
                 return default;
             }
         }
