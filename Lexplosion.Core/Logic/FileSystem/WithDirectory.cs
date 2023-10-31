@@ -207,12 +207,17 @@ namespace Lexplosion.Logic.FileSystem
 
         public static bool DownloadFile(string url, string fileName, string tempDir, TaskArgs taskArgs)
         {
-            using (var webClient = new WebClient())
+            WebClient webClient;
+            using (webClient = new WebClient())
             {
                 DelFile(tempDir + fileName);
                 bool result = true;
 
-                taskArgs.CancelToken.Register(webClient.CancelAsync);
+                taskArgs.CancelToken.Register(delegate ()
+                {
+                    webClient?.CancelAsync();
+                });
+
                 webClient.DownloadProgressChanged += (sender, e) =>
                 {
                     taskArgs.PercentHandler(e.ProgressPercentage);
@@ -234,6 +239,10 @@ namespace Lexplosion.Logic.FileSystem
                 {
                     Runtime.DebugWrite("Downloading error " + fileName + " " + url + " " + ex);
                     return false;
+                }
+                finally
+                {
+                    webClient = null;
                 }
             }
         }

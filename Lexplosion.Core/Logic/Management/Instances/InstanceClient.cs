@@ -802,6 +802,7 @@ namespace Lexplosion.Logic.Management.Instances
             Runtime.DebugWrite("UpdateInstance-end " + data.InitResult);
 
             _cancelTokenSource = null;
+            _gameManager?.DeleteCancellationToken();
         }
 
         /// <summary>
@@ -844,6 +845,7 @@ namespace Lexplosion.Logic.Management.Instances
             Runtime.DebugWrite("Run-end " + data.InitResult);
 
             _cancelTokenSource = null;
+            _gameManager?.DeleteCancellationToken();
         }
 
         /// <summary>

@@ -699,6 +699,11 @@ namespace Lexplosion.Logic.Management
             }
         }
 
+        public void DeleteCancellationToken()
+        {
+            _updateCancelToken = new CancellationToken();
+        }
+
         public void Stop()
         {
             _classInstance = null;
