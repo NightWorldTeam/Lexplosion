@@ -957,13 +957,21 @@ namespace Lexplosion.Logic.FileSystem
                             if (!File.Exists(DirectoryPath + "/assets/objects/" + assetPath + "/" + assetHash))
                             {
                                 bool flag = false;
-                                for (int i = 0; i < 4; i++) // 4 попытки делаем
+                                for (int i = 0; i < 3; i++) // 3 попытки делаем
                                 {
                                     if (InstallFile("https://resources.download.minecraft.net" + assetPath + "/" + assetHash, assetHash, "/assets/objects/" + assetPath, taskArgs))
                                     {
                                         flag = true;
                                         break;
                                     }
+                                }
+
+                                if (cancelToken.IsCancellationRequested) return;
+
+                                // если не скачалось, то пробуем сделать еще одну попытку через прокси
+                                if (!flag && InstallFile("https://night-world.org/mirror/resources.download.minecraft.net" + assetPath + "/" + assetHash, assetHash, "/assets/objects/" + assetPath, taskArgs)) 
+                                {
+                                    flag = true;
                                 }
 
                                 if (cancelToken.IsCancellationRequested) return;
