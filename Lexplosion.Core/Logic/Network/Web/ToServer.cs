@@ -195,9 +195,10 @@ namespace Lexplosion.Logic.Network
         /// </summary>
         /// <param name="version">Версия майнкрафта</param>
         /// <param name="clientType">тип клиента</param>
+        /// <param name="isNwClient">Включен ли NightWorldClient</param>
         /// <param name="modloaderVersion">Версия модлоадера, если он передан в clientType</param>
         /// <param name="optifineVersion">Версия оптифайна, если он не нужен то null</param>
-        public static VersionManifest GetVersionManifest(string version, ClientType clientType, string modloaderVersion = null, string optifineVersion = null)
+        public static VersionManifest GetVersionManifest(string version, ClientType clientType, bool isNwClient, string modloaderVersion = null, string optifineVersion = null)
         {
             try
             {
@@ -212,8 +213,13 @@ namespace Lexplosion.Logic.Network
                 }
 
                 var filesData = ProtectedRequest<ProtectedVersionManifest>(LaunсherSettings.URL.VersionsData + WebUtility.UrlEncode(version) + modloaderUrl);
-                if (filesData != null)
+                if (filesData?.version != null)
                 {
+                    if (isNwClient && filesData.version.NightWorldClientData != null)
+                    {
+                        filesData.version.IsNightWorldClient = true;
+                    }
+
                     Dictionary<string, LibInfo> libraries = new Dictionary<string, LibInfo>();
                     foreach (string lib in filesData.libraries.Keys)
                     {
@@ -244,7 +250,7 @@ namespace Lexplosion.Logic.Network
                             }
 
                             optifineData.version.installerVersion = optifineVersion;
-                            manifest.version.additionalInstaller = optifineData.version;
+                            manifest.version.AdditionalInstaller = optifineData.version;
                         }
                     }
 

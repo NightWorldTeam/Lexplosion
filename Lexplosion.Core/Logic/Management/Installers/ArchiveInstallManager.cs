@@ -104,16 +104,17 @@ namespace Lexplosion.Logic.Management.Installers
             }
 
             // TODO: думаю, если манифест равен null, вполне можно продолжить работу скачав всё заново 
-            if (Manifest == null || Manifest.version == null || Manifest.version.gameVersion == null)
+            if (Manifest == null || Manifest.version == null || Manifest.version.GameVersion == null)
             {
                 return InstanceInit.VersionError;
             }
 
-            if (!string.IsNullOrWhiteSpace(Manifest.version.modloaderVersion) && Manifest.version.modloaderType != ClientType.Vanilla)
+            if (!string.IsNullOrWhiteSpace(Manifest.version.ModloaderVersion) && Manifest.version.ModloaderType != ClientType.Vanilla)
             {
                 BaseFilesIsCheckd = true;
 
-                Manifest = ToServer.GetVersionManifest(Manifest.version.gameVersion, Manifest.version.modloaderType, Manifest.version.modloaderVersion);
+                var ver = Manifest.version;
+                Manifest = ToServer.GetVersionManifest(ver.GameVersion, ver.ModloaderType, ver.IsNightWorldClient, ver.ModloaderVersion);
 
                 if (Manifest != null)
                 {
@@ -154,7 +155,7 @@ namespace Lexplosion.Logic.Management.Installers
 
             DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/instances/" + InstanceId + "/instancePlatformData.json", JsonConvert.SerializeObject(InfoData));
 
-            javaVersionName = Manifest.version.javaVersionName;
+            javaVersionName = Manifest.version.JavaVersionName;
             return InstanceInit.Successful;
         }
 
@@ -232,14 +233,15 @@ namespace Lexplosion.Logic.Management.Installers
                 Runtime.DebugWrite("modLoaderVersion " + modLoaderVersion);
 
                 var versionData = Manifest?.version;
-                bool baseFFilesIsUpdates = modLoaderVersion != versionData?.modloaderVersion || gameType != versionData?.modloaderType || DetermineGameVersion(manifest) != versionData?.gameVersion;
+                bool baseFFilesIsUpdates = modLoaderVersion != versionData?.ModloaderVersion || gameType != versionData?.ModloaderType || DetermineGameVersion(manifest) != versionData?.GameVersion;
 
                 // Скачиваем основные файлы майкнрафта
 
                 // если BaseFilesIsCheckd равно true, то это значит что в манифесте уже была версия форджа
                 if (!BaseFilesIsCheckd || baseFFilesIsUpdates) // в данном случае в манифесте версии форджа не была и нам надо её получить. Или же были измнения в модлоадере или версии игры
                 {
-                    Manifest = ToServer.GetVersionManifest(DetermineGameVersion(manifest), gameType, modLoaderVersion);
+                    bool isNwClient = versionData?.IsNightWorldClient == true;
+                    Manifest = ToServer.GetVersionManifest(DetermineGameVersion(manifest), gameType, isNwClient, modLoaderVersion);
 
                     if (Manifest != null)
                     {

@@ -69,7 +69,7 @@ namespace Lexplosion.Logic.Management.Installers
             javaVersionName = "";
             InfoData = DataFilesManager.GetFile<NwInstancePlatformData>(WithDirectory.DirectoryPath + "/instances/" + InstanceId + "/instancePlatformData.json");
 
-            if (InfoData == null || InfoData.id == null)
+            if (InfoData?.id == null)
             {
                 return InstanceInit.NightworldIdError;
             }
@@ -89,7 +89,7 @@ namespace Lexplosion.Logic.Management.Installers
             if (!_requiresUpdates)
             {
                 VersionManifest manifest_ = DataFilesManager.GetManifest(InstanceId, false);
-                if (manifest_ == null || manifest_.version == null || manifest_.version.gameVersion == null || manifest_.version.gameVersion == "")
+                if (string.IsNullOrWhiteSpace(manifest_?.version?.GameVersion))
                 {
                     nightworldManifest = NightWorldApi.GetInstanceManifest(InfoData.id);
                     if (nightworldManifest == null)
@@ -105,8 +105,9 @@ namespace Lexplosion.Logic.Management.Installers
                     }
                     else
                     {
+                        bool isNwClient = manifest_?.version?.IsNightWorldClient == true;
                         var versionInfo = nightworldManifest.version;
-                        manifest = ToServer.GetVersionManifest(versionInfo.gameVersion, versionInfo.modloaderType, versionInfo.modloaderVersion);
+                        manifest = ToServer.GetVersionManifest(versionInfo.gameVersion, versionInfo.modloaderType, isNwClient, versionInfo.modloaderVersion);
                     }
 
                     if (manifest == null)
@@ -119,11 +120,12 @@ namespace Lexplosion.Logic.Management.Installers
                     var versionInfo = manifest_.version;
                     if (InfoData.CustomVersion)
                     {
+                        // TODO: здесь надо учитывать NightWorldClient. Он сейчас всегда выключаться будет
                         manifest = NightWorldApi.GetVersionManifest(InfoData.id);
                     }
                     else
                     {
-                        manifest = ToServer.GetVersionManifest(versionInfo.gameVersion, versionInfo.modloaderType, versionInfo.modloaderVersion);
+                        manifest = ToServer.GetVersionManifest(versionInfo.GameVersion, versionInfo.ModloaderType, versionInfo.IsNightWorldClient, versionInfo.ModloaderVersion);
                     }
 
                     if (manifest == null)
@@ -143,7 +145,8 @@ namespace Lexplosion.Logic.Management.Installers
                         else
                         {
                             var mcVersion = nightworldManifest.version;
-                            manifest = ToServer.GetVersionManifest(mcVersion.gameVersion, mcVersion.modloaderType, mcVersion.modloaderVersion);
+                            bool isNwClient = versionInfo.IsNightWorldClient == true;
+                            manifest = ToServer.GetVersionManifest(mcVersion.gameVersion, mcVersion.modloaderType, isNwClient, mcVersion.modloaderVersion);
                         }
 
                         if (manifest == null)
@@ -156,13 +159,16 @@ namespace Lexplosion.Logic.Management.Installers
             else
             {
                 nightworldManifest = NightWorldApi.GetInstanceManifest(InfoData.id);
-                if (nightworldManifest == null || nightworldManifest.version == null)
+                if (nightworldManifest?.version == null)
                 {
                     return InstanceInit.ServerError;
                 }
 
+                VersionManifest manifest_ = DataFilesManager.GetManifest(InstanceId, false);
+                bool isNwClient = manifest_?.version?.IsNightWorldClient == true;
                 if (nightworldManifest.CustomVersion)
                 {
+                    // TODO: аналогично подобному месту вышле. Учитывать NightWorldClient
                     InfoData.CustomVersion = true;
                     DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/instances/" + InstanceId + "/instancePlatformData.json", JsonConvert.SerializeObject(InfoData));
                     manifest = NightWorldApi.GetVersionManifest(InfoData.id);
@@ -170,7 +176,7 @@ namespace Lexplosion.Logic.Management.Installers
                 else
                 {
                     var versionInfo = nightworldManifest.version;
-                    manifest = ToServer.GetVersionManifest(versionInfo.gameVersion, versionInfo.modloaderType, versionInfo.modloaderVersion);
+                    manifest = ToServer.GetVersionManifest(versionInfo.gameVersion, versionInfo.modloaderType, isNwClient, versionInfo.modloaderVersion);
                 }
 
                 if (manifest == null)
@@ -224,7 +230,7 @@ namespace Lexplosion.Logic.Management.Installers
                     _requiresUpdates = true;
                 }
 
-                javaVersionName = manifest.version.javaVersionName;
+                javaVersionName = manifest.version.JavaVersionName;
 
                 if (actualVersion == -1)
                 {

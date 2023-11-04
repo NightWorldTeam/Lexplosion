@@ -420,16 +420,16 @@ namespace Lexplosion.Logic.Management.Instances
                     LocalId = _localId,
                     ExternalId = _externalId,
                     Type = Type,
-                    GameVersion = manifest?.version?.gameVersionInfo,
+                    GameVersion = manifest?.version?.GameVersionInfo,
                     InLibrary = InLibrary,
                     Author = Author,
                     Categories = Categories,
                     Description = Description,
                     Name = _name,
                     Summary = _summary,
-                    ModloaderVersion = manifest?.version?.modloaderVersion ?? "",
-                    Modloader = manifest?.version.modloaderType ?? ClientType.Vanilla,
-                    OptifineVersion = manifest?.version?.additionalInstaller?.installerVersion
+                    ModloaderVersion = manifest?.version?.ModloaderVersion ?? "",
+                    Modloader = manifest?.version.ModloaderType ?? ClientType.Vanilla,
+                    OptifineVersion = manifest?.version?.AdditionalInstaller?.installerVersion
                 };
             }
         }
@@ -468,7 +468,7 @@ namespace Lexplosion.Logic.Management.Instances
                 {
                     VersionManifest instanceManifest = DataFilesManager.GetManifest(localId, false);
                     bool manifestIsCorrect =
-                        (instanceManifest != null && instanceManifest.version != null && instanceManifest.version.gameVersion != null);
+                        (instanceManifest != null && instanceManifest.version != null && instanceManifest.version.GameVersion != null);
 
                     //проверяем имеется ли манифест, не содержит ли его id запрещенных символов
                     if (manifestIsCorrect && !ForbiddenIsCharsExists(localId))
@@ -515,7 +515,7 @@ namespace Lexplosion.Logic.Management.Instances
                                 Author = assetsData.Author ?? UnknownAuthor,
                                 Description = assetsData.Description ?? NoDescription,
                                 Categories = assetsData.Categories ?? new List<SimpleCategory>(),
-                                GameVersion = instanceManifest.version?.gameVersionInfo,
+                                GameVersion = instanceManifest.version?.GameVersionInfo,
                                 Logo = logo,
                                 _profileVersion = instanceVersion
                             };
@@ -529,7 +529,7 @@ namespace Lexplosion.Logic.Management.Instances
                                 Author = UnknownAuthor,
                                 Description = NoDescription,
                                 Categories = new List<CategoryBase>(),
-                                GameVersion = instanceManifest.version?.gameVersionInfo,
+                                GameVersion = instanceManifest.version?.GameVersionInfo,
                                 Logo = logo,
                                 _profileVersion = instanceVersion
                             };
@@ -710,13 +710,13 @@ namespace Lexplosion.Logic.Management.Instances
             VersionManifest manifest = DataFilesManager.GetManifest(_localId, false);
             if (manifest != null)
             {
-                manifest.version.modloaderType = data.Modloader;
-                manifest.version.modloaderVersion = data.ModloaderVersion;
-                manifest.version.gameVersionInfo = data.GameVersion;
+                manifest.version.ModloaderType = data.Modloader;
+                manifest.version.ModloaderVersion = data.ModloaderVersion;
+                manifest.version.GameVersionInfo = data.GameVersion;
 
-                if (manifest.version.modloaderType == ClientType.Vanilla && data.OptifineVersion != null)
+                if (manifest.version.ModloaderType == ClientType.Vanilla && data.OptifineVersion != null)
                 {
-                    manifest.version.additionalInstaller = new AdditionalInstaller()
+                    manifest.version.AdditionalInstaller = new AdditionalInstaller()
                     {
                         type = AdditionalInstallerType.Optifine,
                         installerVersion = data.OptifineVersion
@@ -725,7 +725,7 @@ namespace Lexplosion.Logic.Management.Instances
 
                 if (string.IsNullOrWhiteSpace(data.OptifineVersion))
                 {
-                    manifest.version.additionalInstaller = null;
+                    manifest.version.AdditionalInstaller = null;
                 }
 
                 DataFilesManager.SaveManifest(_localId, manifest);
@@ -1022,15 +1022,15 @@ namespace Lexplosion.Logic.Management.Instances
             {
                 version = new VersionInfo
                 {
-                    gameVersionInfo = GameVersion,
-                    modloaderVersion = modloaderVersion,
-                    modloaderType = modloader
+                    GameVersionInfo = GameVersion,
+                    ModloaderVersion = modloaderVersion,
+                    ModloaderType = modloader
                 }
             };
 
             if (additionalInstaller != null && additionalInstallerVer != null)
             {
-                manifest.version.additionalInstaller = new AdditionalInstaller()
+                manifest.version.AdditionalInstaller = new AdditionalInstaller()
                 {
                     type = additionalInstaller ?? AdditionalInstallerType.Optifine,
                     installerVersion = additionalInstallerVer
@@ -1235,15 +1235,15 @@ namespace Lexplosion.Logic.Management.Instances
             {
                 Author = Author,
                 Description = Description,
-                GameVersionInfo = instanceManifest?.version?.gameVersionInfo,
-                ModloaderType = instanceManifest?.version?.modloaderType ?? ClientType.Vanilla,
-                ModloaderVersion = instanceManifest?.version?.modloaderVersion,
+                GameVersionInfo = instanceManifest?.version?.GameVersionInfo,
+                ModloaderType = instanceManifest?.version?.ModloaderType ?? ClientType.Vanilla,
+                ModloaderVersion = instanceManifest?.version?.ModloaderVersion,
                 Name = name ?? Name,
                 //Categories = Categories,
                 Summary = Summary,
                 LogoFileName = (logoPath != null ? LogoFileName : null),
-                AdditionalInstallerType = instanceManifest?.version?.additionalInstaller?.type,
-                AdditionalInstallerVersion = instanceManifest?.version?.additionalInstaller?.installerVersion,
+                AdditionalInstallerType = instanceManifest?.version?.AdditionalInstaller?.type,
+                AdditionalInstallerVersion = instanceManifest?.version?.AdditionalInstaller?.installerVersion,
 
             };
 

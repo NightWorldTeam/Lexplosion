@@ -24,9 +24,9 @@ namespace Lexplosion.Logic.Management.Instances
                 Description = assetsData?.Description,
                 Summary = assetsData?.Summary,
                 TotalDownloads = 0,
-                GameVersion = instanceManifest?.version?.gameVersion,
+                GameVersion = instanceManifest?.version?.GameVersion,
                 LastUpdate = null,
-                Modloader = instanceManifest?.version?.modloaderType ?? ClientType.Vanilla,
+                Modloader = instanceManifest?.version?.ModloaderType ?? ClientType.Vanilla,
                 Images = WithDirectory.LoadMcScreenshots(localId)
             };
         }

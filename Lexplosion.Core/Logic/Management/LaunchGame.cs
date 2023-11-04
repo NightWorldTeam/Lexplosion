@@ -221,7 +221,7 @@ namespace Lexplosion.Logic.Management
         {
             string gamePath = _settings.GamePath.Replace('\\', '/') + "/";
             gamePath = gamePath.Replace("//", "/");
-            string versionPath = gamePath + "instances/" + _instanceId + "/version/" + data.VersionFile.minecraftJar.name;
+            string versionPath = gamePath + "instances/" + _instanceId + "/version/" + data.VersionFile.MinecraftJar.name;
 
             if (_settings.GameArgs.Length > 0 && _settings.GameArgs[_settings.GameArgs.Length - 1] != ' ')
                 _settings.GameArgs += " ";
@@ -231,7 +231,13 @@ namespace Lexplosion.Logic.Management
             foreach (string lib in data.Libraries.Keys)
             {
                 var activation = data.Libraries[lib].activationConditions;
-                if ((activation?.accountTypes == null || activation.accountTypes.Contains(accountType)) && !data.Libraries[lib].notLaunch)
+                
+
+                bool byAccountType = (activation?.accountTypes == null || activation.accountTypes.Contains(accountType));
+                bool byNwClient = activation?.nightWorldClient == null || (activation.nightWorldClient == data.VersionFile.IsNightWorldClient);
+                bool byModloader = (activation?.clientTypes == null || activation.clientTypes.Contains(data.VersionFile.ModloaderType.ToString()));
+
+                if (byAccountType && byNwClient && byModloader &&!data.Libraries[lib].notLaunch)
                 {
                     libs += "\"" + gamePath + "libraries/" + lib + "\";";
                 }
@@ -239,12 +245,12 @@ namespace Lexplosion.Logic.Management
 
             libs += "\"" + versionPath + "\" ";
 
-            string mainClass = data.VersionFile.mainClass;
+            string mainClass = data.VersionFile.MainClass;
 
             string additionalInstallerArgumentsBefore = "";
             string additionalInstallerArgumentsAfter = " ";
 
-            var installer = data.VersionFile.additionalInstaller;
+            var installer = data.VersionFile.AdditionalInstaller;
             if (installer != null)
             {
                 if (!string.IsNullOrWhiteSpace(installer.jvmArguments))
@@ -260,15 +266,15 @@ namespace Lexplosion.Logic.Management
                 mainClass = installer.mainClass;
             }
 
-            string jvmArgs = data.VersionFile.jvmArguments ?? "";
-            jvmArgs = jvmArgs.Replace("${version_file}", data.VersionFile.minecraftJar.name);
+            string jvmArgs = data.VersionFile.JvmArguments ?? "";
+            jvmArgs = jvmArgs.Replace("${version_file}", data.VersionFile.MinecraftJar.name);
             jvmArgs = jvmArgs.Replace("${library_directory}", gamePath + "libraries");
 
             string command;
-            if (data.VersionFile.defaultArguments != null)
+            if (data.VersionFile.DefaultArguments != null)
             {
                 command = "";
-                foreach (MinecraftArgument arg in data.VersionFile.defaultArguments.Jvm)
+                foreach (MinecraftArgument arg in data.VersionFile.DefaultArguments.Jvm)
                 {
                     string param = ParseCommandArgument(arg);
                     if (!string.IsNullOrWhiteSpace(param))
@@ -285,7 +291,7 @@ namespace Lexplosion.Logic.Management
                 command += " -Xmx" + _settings.Xmx + "M -Xms" + _settings.Xms + "M " + _settings.GameArgs;
                 command += mainClass + " ";
 
-                foreach (MinecraftArgument arg in data.VersionFile.defaultArguments.Game)
+                foreach (MinecraftArgument arg in data.VersionFile.DefaultArguments.Game)
                 {
                     string param = ParseCommandArgument(arg);
                     if (!string.IsNullOrWhiteSpace(param))
@@ -294,27 +300,27 @@ namespace Lexplosion.Logic.Management
                     }
                 }
 
-                command += " " + data.VersionFile.arguments;
+                command += " " + data.VersionFile.Arguments;
                 command += " --width " + _settings.WindowWidth + " --height " + _settings.WindowHeight;
                 command += additionalInstallerArgumentsAfter;
 
                 command = command.Replace("${auth_player_name}", GlobalData.User.Login);
-                command = command.Replace("${version_name}", data.VersionFile.gameVersion);
+                command = command.Replace("${version_name}", data.VersionFile.GameVersion);
                 command = command.Replace("${game_directory}", "\"" + gamePath + "instances/" + _instanceId + "\"");
                 command = command.Replace("${assets_root}", "\"" + gamePath + "assets" + "\"");
-                command = command.Replace("${assets_index_name}", data.VersionFile.assetsVersion);
+                command = command.Replace("${assets_index_name}", data.VersionFile.AssetsVersion);
                 command = command.Replace("${auth_uuid}", GlobalData.User.UUID);
                 command = command.Replace("${auth_access_token}", GlobalData.User.AccessToken);
                 command = command.Replace("${user_type}", "legacy");
                 command = command.Replace("${version_type}", "release");
-                command = command.Replace("${natives_directory}", "\"" + gamePath + "natives/" + (data.VersionFile.CustomVersionName ?? data.VersionFile.gameVersion) + "\"");
+                command = command.Replace("${natives_directory}", "\"" + gamePath + "natives/" + (data.VersionFile.CustomVersionName ?? data.VersionFile.GameVersion) + "\"");
                 command = command.Replace("${launcher_name}", "nw-lexplosion");
                 command = command.Replace("${launcher_version}", "0.7.9");
                 command = command.Replace("${classpath}", " " + libs);
             }
             else
             {
-                command = " -Djava.library.path=\"" + gamePath + "natives/" + (data.VersionFile.CustomVersionName ?? data.VersionFile.gameVersion) + "\" -cp ";
+                command = " -Djava.library.path=\"" + gamePath + "natives/" + (data.VersionFile.CustomVersionName ?? data.VersionFile.GameVersion) + "\" -cp ";
                 command += libs;
                 command += additionalInstallerArgumentsBefore;
 
@@ -323,12 +329,12 @@ namespace Lexplosion.Logic.Management
                 command += " -Dhttp.agent=\"Mozilla/5.0\"";
                 command += " -Djava.net.preferIPv4Stack=true";
                 command += " -Xmx" + _settings.Xmx + "M -Xms" + _settings.Xms + "M " + _settings.GameArgs;
-                command += mainClass + " --username " + GlobalData.User.Login + " --version " + data.VersionFile.gameVersion;
+                command += mainClass + " --username " + GlobalData.User.Login + " --version " + data.VersionFile.GameVersion;
                 command += " --gameDir \"" + gamePath + "instances/" + _instanceId + "\"";
                 command += " --assetsDir \"" + gamePath + "assets" + "\"";
-                command += " --assetIndex " + data.VersionFile.assetsVersion;
+                command += " --assetIndex " + data.VersionFile.AssetsVersion;
                 command += " --uuid " + GlobalData.User.UUID + " --accessToken " + GlobalData.User.AccessToken + " --userProperties [] --userType legacy ";
-                command += data.VersionFile.arguments;
+                command += data.VersionFile.Arguments;
                 command += " --width " + _settings.WindowWidth + " --height " + _settings.WindowHeight;
                 command += additionalInstallerArgumentsAfter;
             }
@@ -341,7 +347,7 @@ namespace Lexplosion.Logic.Management
         public bool Run(InitData data, LaunchComplitedCallback ComplitedLaunch, GameExitedCallback GameExited, string gameClientName, bool onlineGame)
         {
             GameClientName = gameClientName;
-            GameVersion = data?.VersionFile?.gameVersion;
+            GameVersion = data?.VersionFile?.GameVersion;
 
             string command = CreateCommand(data);
 
@@ -625,7 +631,7 @@ namespace Lexplosion.Logic.Management
                 }
 
                 VersionManifest files = DataFilesManager.GetManifest(_instanceId, true);
-                bool versionIsStatic = files?.version?.isStatic == true;
+                bool versionIsStatic = files?.version?.IsStatic == true;
 
                 if (!versionIsStatic && ToServer.ServerIsOnline())
                 {
@@ -645,7 +651,7 @@ namespace Lexplosion.Logic.Management
                             }
                             else
                             {
-                                string javaPath = JavaChecker.DefinePath(_settings.JavaPath, _settings.Java17Path, files.version.javaVersionName);
+                                string javaPath = JavaChecker.DefinePath(_settings.JavaPath, _settings.Java17Path, files.version.JavaVersionName);
                                 if (!string.IsNullOrWhiteSpace(javaPath))
                                 {
                                     _javaPath = javaPath;
@@ -656,7 +662,7 @@ namespace Lexplosion.Logic.Management
 
                         if (javaIsNotDefined)
                         {
-                            using (JavaChecker javaCheck = new JavaChecker(files.version.javaVersionName, _updateCancelToken, true))
+                            using (JavaChecker javaCheck = new JavaChecker(files.version.JavaVersionName, _updateCancelToken, true))
                             {
                                 JavaVersion javaInfo = javaCheck.GetJavaInfo();
                                 if (javaInfo?.JavaName == null || javaInfo.ExecutableFile == null)

@@ -46,17 +46,18 @@ namespace Lexplosion.Logic.Management.Installers
             //модпак локальный. получем его версию, отправляем её в ToServer.GetFilesList. Метод ToServer.GetFilesList получит список именно для этой версии, а не для модпака
             Manifest = DataFilesManager.GetManifest(InstanceId, false);
 
-            if (Manifest == null || Manifest.version == null || Manifest.version.gameVersion == null)
+            if (Manifest == null || Manifest.version == null || Manifest.version.GameVersion == null)
             {
                 return InstanceInit.ManifestError;
             }
 
-            var gameVersion = Manifest.version.gameVersion;
-            var modloaderType = Manifest.version.modloaderType;
-            var modloaderVersion = Manifest.version.modloaderVersion;
-            var optifineVersion = Manifest.version.additionalInstaller?.installerVersion;
+            var gameVersion = Manifest.version.GameVersion;
+            var modloaderType = Manifest.version.ModloaderType;
+            var modloaderVersion = Manifest.version.ModloaderVersion;
+            var optifineVersion = Manifest.version.AdditionalInstaller?.installerVersion;
+            var isNwClient = Manifest.version.IsNightWorldClient;
 
-            Manifest = ToServer.GetVersionManifest(gameVersion, modloaderType, modloaderVersion, optifineVersion);
+            Manifest = ToServer.GetVersionManifest(gameVersion, modloaderType, isNwClient, modloaderVersion, optifineVersion);
 
             if (Manifest != null)
             {
@@ -74,7 +75,7 @@ namespace Lexplosion.Logic.Management.Installers
                     DownloadStarted?.Invoke();
                 }
 
-                javaVersionName = Manifest.version.javaVersionName;
+                javaVersionName = Manifest.version.JavaVersionName;
                 return InstanceInit.Successful;
             }
             else

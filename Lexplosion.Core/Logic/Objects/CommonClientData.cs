@@ -18,6 +18,8 @@ namespace Lexplosion.Logic.Objects.CommonClientData
         public class ActivationConditions
         {
             public List<string> accountTypes = null;
+            public bool? nightWorldClient = null;
+            public List<string> clientTypes = null;
         }
 
         public bool notArchived;
@@ -239,41 +241,87 @@ namespace Lexplosion.Logic.Objects.CommonClientData
         }
     }
 
+    public class NightWorldClientData
+    {
+        public class Arguments
+        {
+            [JsonProperty("jvm")]
+            public string Jvm;
+
+            [JsonProperty("minecraft")]
+            public string Minecraft;
+        }
+
+        [JsonProperty("forgeArgs")]
+        public Arguments ForgeArg;
+
+        [JsonProperty("fabricArgs")]
+        public Arguments FabricArgs;
+
+        [JsonProperty("vanillaArgs")]
+        public Arguments VanillaArgs;
+
+        [JsonProperty("mainClass")]
+        public string MainClass;
+    }
+
     /// <summary>
     /// Основная часть манифеста клиента
     /// </summary>
     public class VersionInfo
     {
-        public FileInfo minecraftJar;
-        public bool isStatic;
-        public long releaseIndex;
-        public string javaVersionName;
+        [JsonProperty("minecraftJar")]
+        public FileInfo MinecraftJar;
+
+        [JsonProperty("isNightWorldClient")]
+        public bool IsNightWorldClient;
+
+        [JsonProperty("nightWorldClientData")]
+        public NightWorldClientData NightWorldClientData;
+
+        [JsonProperty("isStatic")]
+        public bool IsStatic;
+
+        [JsonProperty("releaseIndex")]
+        public long ReleaseIndex;
+
+        [JsonProperty("javaVersionName")]
+        public string JavaVersionName;
+
+        [JsonProperty("arguments")]
         /// <summary>
         /// Аргументы игры
         /// </summary>
-        public string arguments;
+        public string Arguments;
+
+        [JsonProperty("jvmArguments")]
         /// <summary>
         /// Аргументы для java
         /// </summary>
-        public string jvmArguments;
-        public DefaultMinecraftArguments defaultArguments;
+        public string JvmArguments;
+
+        [JsonProperty("defaultArguments")]
+        public DefaultMinecraftArguments DefaultArguments;
+
+        [JsonProperty("gameVersion")]
         /// <summary>
         /// Версия игры в виде строки
         /// </summary>
-        public string gameVersion;
+        public string GameVersion;
 
         private MinecraftVersion _gameVersionInfo;
 
+        [JsonProperty("gameVersionInfo")]
         /// <summary>
         /// Вся информация о версии игры
         /// </summary>
-        public MinecraftVersion gameVersionInfo
+        public MinecraftVersion GameVersionInfo
         {
             get
             {
                 if (_gameVersionInfo?.IsNan != false)
                 {
-                    _gameVersionInfo = new MinecraftVersion(gameVersion);
+                    _gameVersionInfo = new MinecraftVersion(GameVersion);
                 }
 
                 return _gameVersionInfo;
@@ -283,20 +331,36 @@ namespace Lexplosion.Logic.Objects.CommonClientData
                 _gameVersionInfo = value;
                 if (!string.IsNullOrWhiteSpace(value?.Id))
                 {
-                    gameVersion = value.Id;
+                    GameVersion = value.Id;
                 }
             }
         }
 
-        public string assetsVersion;
-        public string assetsIndexes;
-        public string mainClass;
-        public string modloaderVersion;
-        public ClientType modloaderType;
-        public AdditionalInstaller additionalInstaller;
+        [JsonProperty("assetsVersion")]
+        public string AssetsVersion;
+
+        [JsonProperty("assetsIndexes")]
+        public string AssetsIndexes;
+
+        [JsonProperty("mainClass")]
+        public string MainClass;
+
+        [JsonProperty("modloaderVersion")]
+        public string ModloaderVersion;
+
+        [JsonProperty("modloaderType")]
+        public ClientType ModloaderType;
+
+        [JsonProperty("additionalInstaller")]
+        public AdditionalInstaller AdditionalInstaller;
+
         public string CustomVersionName;
-        public bool security;
-        public long librariesLastUpdate;
+
+        [JsonProperty("security")]
+        public bool Security;
+
+        [JsonProperty("librariesLastUpdate")]
+        public long LibrariesLastUpdate;
 
         /// <summary>
         /// Это свойство возвращает имя для файла либрариесов (файлы .lver, что хранят версию либрариесов и файлы .json, которые хранят список либрариесов для конкретной версии игры).
@@ -311,12 +375,12 @@ namespace Lexplosion.Logic.Objects.CommonClientData
                     return CustomVersionName;
 
                 string endName = "";
-                if (modloaderType != ClientType.Vanilla)
+                if (ModloaderType != ClientType.Vanilla)
                 {
-                    endName = "-" + modloaderType.ToString() + "-" + modloaderVersion;
+                    endName = "-" + ModloaderType.ToString() + "-" + ModloaderVersion;
                 }
 
-                return gameVersion + endName;
+                return GameVersion + endName;
             }
         }
 

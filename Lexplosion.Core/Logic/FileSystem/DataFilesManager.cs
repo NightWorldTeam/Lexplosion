@@ -274,7 +274,7 @@ namespace Lexplosion.Logic.FileSystem
             SaveFile(DirectoryPath + "/instances/" + instanceId + "/" + "manifest.json", JsonConvert.SerializeObject(data));
             if (data.libraries != null)
             {
-                if (data.version.additionalInstaller != null)
+                if (data.version.AdditionalInstaller != null)
                 {
                     var baseLibs = new Dictionary<string, LibInfo>();
                     var additionalLibs = new Dictionary<string, LibInfo>();
@@ -297,7 +297,7 @@ namespace Lexplosion.Logic.FileSystem
 
                     if (additionalLibs != null && additionalLibs.Count > 0)
                     {
-                        SaveFile(DirectoryPath + "/versions/additionalLibraries/" + data.version.additionalInstaller.GetLibName + ".json", JsonConvert.SerializeObject(additionalLibs));
+                        SaveFile(DirectoryPath + "/versions/additionalLibraries/" + data.version.AdditionalInstaller.GetLibName + ".json", JsonConvert.SerializeObject(additionalLibs));
                     }
                 }
                 else
@@ -319,7 +319,7 @@ namespace Lexplosion.Logic.FileSystem
             {
                 var librariesData = GetFile<Dictionary<string, LibInfo>>(DirectoryPath + "/versions/libraries/" + data.version.GetLibName + ".json") ?? new Dictionary<string, LibInfo>();
 
-                var installer = data.version?.additionalInstaller;
+                var installer = data.version?.AdditionalInstaller;
                 if (installer != null)
                 {
                     var additionallibrarieData = GetFile<Dictionary<string, LibInfo>>(DirectoryPath + "/versions/additionalLibraries/" + installer?.GetLibName + ".json");
