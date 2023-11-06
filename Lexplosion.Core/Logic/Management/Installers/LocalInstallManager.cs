@@ -48,6 +48,7 @@ namespace Lexplosion.Logic.Management.Installers
 
             if (Manifest == null || Manifest.version == null || Manifest.version.GameVersion == null)
             {
+                Runtime.DebugWrite("Manifest is null (" + (Manifest == null) + ", " + (Manifest?.version == null) + ")");
                 return InstanceInit.ManifestError;
             }
 
@@ -80,6 +81,7 @@ namespace Lexplosion.Logic.Management.Installers
             }
             else
             {
+                Runtime.DebugWrite("Manifest is null");
                 return InstanceInit.ManifestError;
             }
         }

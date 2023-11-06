@@ -231,13 +231,13 @@ namespace Lexplosion.Logic.Management
             foreach (string lib in data.Libraries.Keys)
             {
                 var activation = data.Libraries[lib].activationConditions;
-                
+
 
                 bool byAccountType = (activation?.accountTypes == null || activation.accountTypes.Contains(accountType));
                 bool byNwClient = activation?.nightWorldClient == null || (activation.nightWorldClient == data.VersionFile.IsNightWorldClient);
                 bool byModloader = (activation?.clientTypes == null || activation.clientTypes.Contains(data.VersionFile.ModloaderType.ToString()));
 
-                if (byAccountType && byNwClient && byModloader &&!data.Libraries[lib].notLaunch)
+                if (byAccountType && byNwClient && byModloader && !data.Libraries[lib].notLaunch)
                 {
                     libs += "\"" + gamePath + "libraries/" + lib + "\";";
                 }
@@ -622,8 +622,10 @@ namespace Lexplosion.Logic.Management
                 WithDirectory.Create(_settings.GamePath);
                 InitData data = null;
                 // Было измененно с !_settings.GamePath.Contains(":") - -на)--> !(_settings.GamePath.IndexOf(':') >= 0) 
-                if (!Directory.Exists(_settings.GamePath) || !(_settings.GamePath.IndexOf(':') >= 0))
+                bool pathIsExists = Directory.Exists(_settings.GamePath);
+                if (!pathIsExists || !(_settings.GamePath.IndexOf(':') >= 0))
                 {
+                    Runtime.DebugWrite("GamePathError. Path: " + _settings.GamePath + ", is exists " + pathIsExists);
                     return new InitData
                     {
                         InitResult = InstanceInit.GamePathError
@@ -687,6 +689,7 @@ namespace Lexplosion.Logic.Management
                     }
                     else
                     {
+                        Runtime.DebugWrite("Minifest error " + (files?.version != null) + " " + (files.libraries != null));
                         return new InitData
                         {
                             InitResult = InstanceInit.ManifestError
@@ -696,8 +699,9 @@ namespace Lexplosion.Logic.Management
 
                 return data;
             }
-            catch
+            catch (Exception ex)
             {
+                Runtime.DebugWrite("UnknownError. Exception " + ex);
                 return new InitData
                 {
                     InitResult = InstanceInit.UnknownError

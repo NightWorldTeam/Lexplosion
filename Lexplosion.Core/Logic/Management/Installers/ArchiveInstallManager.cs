@@ -214,6 +214,7 @@ namespace Lexplosion.Logic.Management.Installers
 
                 if (!ManifestIsValid(manifest))
                 {
+                    Runtime.DebugWrite("Manifest is invalid");
                     return new InitData
                     {
                         InitResult = InstanceInit.ManifestError,

@@ -35,9 +35,15 @@ namespace Lexplosion.Logic.FileSystem
                     DirectoryPath.TrimEnd('/');
                 }
 
+                Runtime.DebugWrite("DirectoryPath: " + DirectoryPath);
+
                 Directory.CreateDirectory(DirectoryPath + "/temp");
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Runtime.DebugWrite("path: " + path);
+                Runtime.DebugWrite("Exception: " + ex);
+            }
         }
 
         public static void SetNewDirectory(string path)
