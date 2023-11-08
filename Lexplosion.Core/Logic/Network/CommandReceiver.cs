@@ -41,9 +41,16 @@ namespace Lexplosion.Logic.Network
             {
                 if (_openModpackPage != null)
                 {
-                    string modpackId = text.Replace("$openModpackPage:", "");
-                    _openModpackPage(modpackId);
-                    return "OK";
+                    try
+                    {
+                        string modpackId = text.Replace("$openModpackPage:", "");
+                        _openModpackPage(modpackId);
+                        return "OK";
+                    }
+                    catch
+                    {
+                        return "NO_AUTH";
+                    }
                 }
                 else
                 {
