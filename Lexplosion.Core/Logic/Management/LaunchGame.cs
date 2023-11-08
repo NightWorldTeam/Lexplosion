@@ -11,6 +11,8 @@ using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Management.Installers;
 using Lexplosion.Logic.Management.Sources;
+using System.Net;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Lexplosion.Logic.Management
 {
@@ -38,6 +40,7 @@ namespace Lexplosion.Logic.Management
         private CancellationToken _updateCancelToken;
 
         private string _customJavaPath = null;
+        private string _keyStorePath;
 
         #region events
         /// <summary>
@@ -285,6 +288,10 @@ namespace Lexplosion.Logic.Management
 
                 command += additionalInstallerArgumentsBefore;
                 command += jvmArgs;
+                if (_keyStorePath != null)
+                {
+                    command += " -Djavax.net.ssl.trustStore=\"" + _keyStorePath + "\"";
+                }
                 command += @" -Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true -XX:TargetSurvivorRatio=90";
                 command += " -Dhttp.agent=\"Mozilla/5.0\"";
                 command += " -Djava.net.preferIPv4Stack=true";
@@ -325,6 +332,10 @@ namespace Lexplosion.Logic.Management
                 command += additionalInstallerArgumentsBefore;
 
                 command += jvmArgs;
+                if (_keyStorePath != null)
+                {
+                    command += " -Djavax.net.ssl.trustStore=\"" + _keyStorePath + "\"";
+                }
                 command += @" -Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true -XX:TargetSurvivorRatio=90";
                 command += " -Dhttp.agent=\"Mozilla/5.0\"";
                 command += " -Djava.net.preferIPv4Stack=true";
@@ -342,6 +353,78 @@ namespace Lexplosion.Logic.Management
             //TODO: сделать функционал для автоматического коннекта - command += "--server 192.168.1.114 --port 55538";
 
             return command;
+        }
+
+        private string DownloadCertificate()
+        {
+            string certFile = _settings.GamePath + "/java/keystore/night-world.org.crt";
+            Runtime.DebugWrite("certFile: " + certFile);
+
+            if (!File.Exists(certFile))
+            {
+                Runtime.DebugWrite("Download certificate");
+                string dir = Path.GetDirectoryName(certFile);
+                if (!Directory.Exists(dir))
+                {
+                    Directory.CreateDirectory(dir);
+                }
+
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Global.LaunсherSettings.URL.Base);
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                response.Close();
+
+                X509Certificate2 cert = new X509Certificate2(request.ServicePoint.Certificate);
+                byte[] certData = cert.Export(X509ContentType.Cert);
+
+                File.WriteAllBytes(certFile, certData);
+            }
+
+            return certFile;
+        }
+
+        private void CreateJavaKeyStore(string javaPath)
+        {
+            try
+            {
+                javaPath = javaPath.Replace("//", "/").Replace("/", "\\");
+
+                javaPath = Path.GetDirectoryName(javaPath);
+                if (javaPath.EndsWith("bin"))
+                {
+                    javaPath = Path.GetDirectoryName(javaPath);
+                }
+
+                string keyStorePath = _settings.GamePath + "/java/keystore/" + Cryptography.Sha256(javaPath);
+                string keyStoreFile = (keyStorePath + "/cacerts");
+                keyStoreFile = keyStoreFile.Replace("//", "/");
+
+                if (!File.Exists(keyStoreFile))
+                {
+                    Runtime.DebugWrite("Keystore is not exists");
+                    if (!Directory.Exists(keyStorePath))
+                    {
+                        Directory.CreateDirectory(keyStorePath);
+                    }
+
+                    string baseKeyStoreFile = javaPath.Replace("/", "\\") + "\\lib\\security\\cacerts";
+                    File.Copy(baseKeyStoreFile, keyStoreFile.Replace("/", "\\"));
+
+                    string certFile = DownloadCertificate();
+
+                    string command = "keytool -import -noprompt -trustcacerts -alias nightworld_cer -file \"" + certFile + "\" -keystore \"" + keyStoreFile + "\" -storepass changeit";
+                    if (Utils.StartProcess(command, Utils.ProcessExecutor.Cmd))
+                    {
+                        _keyStorePath = keyStoreFile;
+                    }
+                }
+
+                Runtime.DebugWrite("Keystore file: " + keyStoreFile);
+                _keyStorePath = keyStoreFile;
+            }
+            catch (Exception ex)
+            {
+                Runtime.DebugWrite("Exception " + ex);
+            }
         }
 
         public bool Run(InitData data, LaunchComplitedCallback ComplitedLaunch, GameExitedCallback GameExited, string gameClientName, bool onlineGame)
@@ -612,6 +695,7 @@ namespace Lexplosion.Logic.Management
                 }
             }
 
+            CreateJavaKeyStore(_javaPath);
             return instance.Update(_javaPath, progressHandler);
         }
 
@@ -678,6 +762,8 @@ namespace Lexplosion.Logic.Management
                                 _javaPath = WithDirectory.DirectoryPath + "/java/versions/" + javaInfo.JavaName + javaInfo.ExecutableFile;
                             }
                         }
+
+                        CreateJavaKeyStore(_javaPath);
 
                         data = new InitData
                         {

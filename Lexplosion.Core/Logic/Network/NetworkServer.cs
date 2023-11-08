@@ -289,6 +289,7 @@ namespace Lexplosion.Logic.Network
 
         protected void Accepting(string serverType)
         {
+            // TODO: если управляющий есрерв откажет в подключении, то эта поябень будет его постоянно долбить запросами, пытаясь подключиться
             bool contolServerExists = true;
             while (IsWork && contolServerExists)
             {

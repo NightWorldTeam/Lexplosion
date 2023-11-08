@@ -50,9 +50,11 @@ namespace Lexplosion.Logic.Network
                     {
                         byte[] buf = new byte[2];
                         int bytes = stream.Read(buf, 0, buf.Length);
+                        Runtime.DebugConsoleWrite("Data recieved");
 
                         if (buf[0] == ControlSrverCodes.B) // сервер согласился, а управляющий сервер запрашивает порт
                         {
+                            Runtime.DebugConsoleWrite("ControlSrverCodes.B");
                             byte[] dataToSend;
                             if (buf[1] == 1) //Определяем по какому методу работает сервер. 1 - прямое подключение. 0 - через TURN
                             {
@@ -104,6 +106,8 @@ namespace Lexplosion.Logic.Network
                                 dataToSend = Encoding.UTF8.GetBytes(" "); // если мы работает с TURN, то нам поебать на порт. Отправляем простой пробел
                                 SmpConnection = false;
                             }
+
+                            Runtime.DebugConsoleWrite("Send port to server");
 
                             stream.Write(dataToSend, 0, dataToSend.Length); //отправяем управляющему серверу наш порт
 
