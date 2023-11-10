@@ -104,7 +104,16 @@ namespace Lexplosion.Common.ViewModels
 
 
         public ICommand NavigationShowCaseCommand { get; private set; }
-        public MainMenuViewModel MainMenuVM { get; private set; }
+
+        private MainMenuViewModel _mainMenuVM;
+        public MainMenuViewModel MainMenuVM
+        {
+            get => _mainMenuVM; private set
+            {
+                _mainMenuVM = value;
+                SubscribeToOpenModpackEvent();
+            }
+        }
 
         private MainModel Model { get => MainModel.Instance; }
         public VMBase CurrentViewModel => NavigationStore.CurrentViewModel;
@@ -201,7 +210,6 @@ namespace Lexplosion.Common.ViewModels
             RuntimeApp.TrayMenuElementClicked += InitTrayComponents;
 
             InitTrayComponents();
-            SubscribeToOpenModpackEvent();
         }
 
 

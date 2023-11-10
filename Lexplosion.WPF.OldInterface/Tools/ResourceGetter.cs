@@ -28,7 +28,7 @@ namespace Lexplosion.Tools
         /// <returns>Текст на выброном языке</returns>
         public static string GetString(string key)
         {
-            return (string)Application.Current.Resources[key] ?? "Не удалось найти значение";
+            return (string)Application.Current.Resources[key] ?? key;
         }
 
         public static string GetCurrentLangString(string lang, string key)
@@ -43,7 +43,7 @@ namespace Lexplosion.Tools
             {
 
             }
-            return "Не удалось найти значение";
+            return key;
         }
     }
 }
