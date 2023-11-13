@@ -313,6 +313,11 @@
     <s:String x:Key="error">Error</s:String>
     <s:String x:Key="noUrl">Site link missing</s:String>
 
+    <!--  Errors  -->
+    <s:String x:Key="authError">Authorization Error</s:String>
+    <s:String x:Key="loginFailed">Login Failed</s:String>
+    <s:String x:Key="tokenError">Token Error</s:String>
+    <s:String x:Key="someError">Some Error</s:String>
 
     <!--  General Settings  -->
     <s:String x:Key="directoryTransfer">Directory transfer</s:String>
