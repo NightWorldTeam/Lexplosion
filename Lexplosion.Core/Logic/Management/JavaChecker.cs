@@ -7,6 +7,7 @@ using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Tools;
+using Lexplosion.Global;
 
 namespace Lexplosion.Logic.Management
 {
@@ -53,6 +54,7 @@ namespace Lexplosion.Logic.Management
 
                 if (_versionsFile == null)
                 {
+                    Runtime.DebugWrite("_versionsFile is null");
                     return null;
                 }
 
@@ -63,6 +65,7 @@ namespace Lexplosion.Logic.Management
                 {
                     if (javaVer.JavaName == _javaName)
                     {
+                        Runtime.DebugWrite("Java found");
                         javaInfo = javaVer;
                         break;
                     }
@@ -70,8 +73,9 @@ namespace Lexplosion.Logic.Management
 
                 return javaInfo;
             }
-            catch
+            catch (Exception ex)
             {
+                Runtime.DebugWrite("Exception " + ex);
                 return null;
             }
         }
@@ -94,7 +98,6 @@ namespace Lexplosion.Logic.Management
             _thisJava = GetJavaInfo();
 
             Runtime.DebugWrite("javaName: " + _javaName + ", _thisJava is null " + (_thisJava == null));
-
 
             if (_thisJava?.JavaName != null) //нашли
             {
@@ -212,9 +215,16 @@ namespace Lexplosion.Logic.Management
 
                     if (!WithDirectory.InstallFile(_updateList[unitName].Downloads.Raw.DownloadUrl, fileName, javaPath + path, taskArgs))
                     {
-                        _semIsReleased = true;
-                        _downloadSemaphore.Release(_thisJava.JavaName);
-                        return false;
+                        string url = _updateList[unitName].Downloads.Raw.DownloadUrl.Replace("https://", "");
+                        url = LaunсherSettings.URL.MirrorUrl + url;
+                        Runtime.DebugWrite("Download error, try mirror. Url " + url);
+
+                        if (!WithDirectory.InstallFile(url, fileName, javaPath + path, taskArgs))
+                        {
+                            _semIsReleased = true;
+                            _downloadSemaphore.Release(_thisJava.JavaName);
+                            return false;
+                        }
                     }
                 }
                 catch

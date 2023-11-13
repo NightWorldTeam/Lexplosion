@@ -303,6 +303,35 @@ namespace Lexplosion.Logic.FileSystem
             return _updatesCount;
         }
 
+        protected bool TryDownloadFile(string url, string file, string temp, TaskArgs taskArgs)
+        {
+            int i = 0;
+            while (!DownloadFile(url, file, temp, taskArgs) && i < 3 && !taskArgs.CancelToken.IsCancellationRequested)
+            {
+                Thread.Sleep(1500);
+                i++;
+            }
+
+            //успех если попыток было меньше трёх и скачивнаие не было отменено
+            return i <= 2 && !taskArgs.CancelToken.IsCancellationRequested;
+        }
+
+        protected bool TryDownloadWithMirror(string url, string file, string temp, TaskArgs taskArgs)
+        {
+            if (!TryDownloadFile(url, file, temp, taskArgs))
+            {
+                if (!url.StartsWith("https://") || taskArgs.CancelToken.IsCancellationRequested) return false;
+
+                url = url.Replace("https://", "");
+                url = LaunсherSettings.URL.MirrorUrl + url;
+
+                Runtime.DebugWrite("Try mirror, url " + url);
+                return DownloadFile(url, file, temp, taskArgs);
+            }
+
+            return true;
+        }
+
         /// <summary>
         /// Ффункция для скачивания файлов клиента в zip формате, без проверки хеша
         /// </summary>
@@ -346,8 +375,9 @@ namespace Lexplosion.Logic.FileSystem
 
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
+                Runtime.DebugWrite("Exception " + ex);
                 DelFile(temp + file);
                 DelFile(temp + zipFile);
 
@@ -420,8 +450,9 @@ namespace Lexplosion.Logic.FileSystem
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                Runtime.DebugWrite("Exception " + ex);
                 DelFile(temp + file);
                 DelFile(temp + zipFile);
 
@@ -439,7 +470,7 @@ namespace Lexplosion.Logic.FileSystem
         /// <param name="temp">Временная директория (тоже без имени файла). Должно заканчиваться слешем.</param>
         /// <param name="taskArgs">аргументы задачи</param>
         /// <returns>Охуенно или пиздец</returns>
-        protected bool UnsafeDownloadJar(string url, string to, string file, string temp, TaskArgs taskArgs)
+        protected bool UnsafeDownloadJar(string url, string to, string file, string temp, TaskArgs taskArgs, bool mirrorIfError = false)
         {
             try
             {
@@ -448,16 +479,11 @@ namespace Lexplosion.Logic.FileSystem
                     Directory.CreateDirectory(to);
                 }
 
-                //пробуем скачать 4 раза
-                int i = 0;
-                while (!DownloadFile(url, file, temp, taskArgs) && i < 4 && !taskArgs.CancelToken.IsCancellationRequested)
+                if (mirrorIfError && !TryDownloadWithMirror(url, file, temp, taskArgs))
                 {
-                    Thread.Sleep(1500);
-                    i++;
+                    return false;
                 }
-
-                // все попытки неувенчались успехом
-                if (i > 3 || taskArgs.CancelToken.IsCancellationRequested)
+                else if (!mirrorIfError && !TryDownloadFile(url, file, temp, taskArgs))
                 {
                     return false;
                 }
@@ -467,8 +493,9 @@ namespace Lexplosion.Logic.FileSystem
 
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
+                Runtime.DebugWrite("Exception " + ex);
                 DelFile(temp + file);
                 return false;
             }
@@ -485,7 +512,7 @@ namespace Lexplosion.Logic.FileSystem
         /// <param name="size">Размер файла</param>
         /// <param name="taskArgs">аргументы задачи</param>
         /// <returns></returns>
-        protected bool SaveDownloadJar(string url, string file, string to, string temp, string sha1, long size, TaskArgs taskArgs)
+        protected bool SaveDownloadJar(string url, string file, string to, string temp, string sha1, long size, TaskArgs taskArgs, bool mirrorIfError = false)
         {
             try
             {
@@ -494,16 +521,11 @@ namespace Lexplosion.Logic.FileSystem
                     Directory.CreateDirectory(to);
                 }
 
-                //пробуем скачать 4 раза
-                int i = 0;
-                while (!DownloadFile(url, file, temp, taskArgs) && i < 4 && !taskArgs.CancelToken.IsCancellationRequested)
+                if (mirrorIfError && !TryDownloadWithMirror(url, file, temp, taskArgs))
                 {
-                    Thread.Sleep(1500);
-                    i++;
+                    return false;
                 }
-
-                // все попытки неувенчались успехом
-                if (i > 3 || taskArgs.CancelToken.IsCancellationRequested)
+                else if (!mirrorIfError && !TryDownloadFile(url, file, temp, taskArgs))
                 {
                     return false;
                 }
@@ -538,8 +560,9 @@ namespace Lexplosion.Logic.FileSystem
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                Runtime.DebugWrite("Exception " + ex);
                 DelFile(temp + file);
                 return false;
             }
@@ -585,13 +608,14 @@ namespace Lexplosion.Logic.FileSystem
                 };
 
                 bool isDownload;
+                string to = DirectoryPath + "/instances/" + instanceId + "/version/";
                 if (minecraftJar.notArchived)
                 {
-                    isDownload = SaveDownloadJar(addr, minecraftJar.name, DirectoryPath + "/instances/" + instanceId + "/version/", temp, minecraftJar.sha1, minecraftJar.size, taskArgs);
+                    isDownload = SaveDownloadJar(addr, minecraftJar.name, to, temp, minecraftJar.sha1, minecraftJar.size, taskArgs, true);
                 }
                 else
                 {
-                    isDownload = SaveDownloadZip(addr, minecraftJar.name, DirectoryPath + "/instances/" + instanceId + "/version/", temp, minecraftJar.sha1, minecraftJar.size, taskArgs);
+                    isDownload = SaveDownloadZip(addr, minecraftJar.name, to, temp, minecraftJar.sha1, minecraftJar.size, taskArgs);
                 }
 
                 DownloadFileProgress downloadResult;
@@ -684,7 +708,7 @@ namespace Lexplosion.Logic.FileSystem
 
                     if (_libraries[lib].notArchived)
                     {
-                        isDownload = UnsafeDownloadJar(addr, fileDir, name, tempDir, taskArgs);
+                        isDownload = UnsafeDownloadJar(addr, fileDir, name, tempDir, taskArgs, true);
                     }
                     else
                     {
@@ -969,7 +993,7 @@ namespace Lexplosion.Logic.FileSystem
                                 if (cancelToken.IsCancellationRequested) return;
 
                                 // если не скачалось, то пробуем сделать еще одну попытку через прокси
-                                if (!flag && InstallFile("https://night-world.org/mirror/resources.download.minecraft.net" + assetPath + "/" + assetHash, assetHash, "/assets/objects/" + assetPath, taskArgs)) 
+                                if (!flag && InstallFile(LaunсherSettings.URL.MirrorUrl + "resources.download.minecraft.net" + assetPath + "/" + assetHash, assetHash, "/assets/objects/" + assetPath, taskArgs))
                                 {
                                     flag = true;
                                 }
@@ -1027,7 +1051,13 @@ namespace Lexplosion.Logic.FileSystem
                         CancelToken = cancelToken
                     };
 
-                    InstallFile(manifest.version.AssetsIndexes, filename, "/assets/indexes/", taskArgs);
+                    if (!InstallFile(manifest.version.AssetsIndexes, filename, "/assets/indexes/", taskArgs))
+                    {
+                        string url = manifest.version.AssetsIndexes.Replace("https://", "");
+                        url = LaunсherSettings.URL.MirrorUrl + url;
+
+                        InstallFile(url, filename, "/assets/indexes/", taskArgs);
+                    }
 
                     _fileDownloadHandler?.Invoke(filename, 100, DownloadFileProgress.Successful);
                     // TODO: я на ошибки тут не проверяю то ли потмоу что мне лень было, толи просто не хотел делать так, чтобы от одного этогоф айла клиент не запускался

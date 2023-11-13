@@ -24,7 +24,7 @@ namespace Lexplosion.Logic.Management
         private string _instanceId;
         private Settings _settings;
         private IInstanceSource _source;
-        private string _javaPath = "";
+        private string _javaPath = string.Empty;
         private bool _processIsWork;
 
         private static LaunchGame _classInstance = null;
@@ -33,7 +33,7 @@ namespace Lexplosion.Logic.Management
         private object _removeImportantTaskLocker = new object();
 
         public string GameVersion { get; private set; } = null;
-        public string GameClientName { get; private set; } = "";
+        public string GameClientName { get; private set; } = string.Empty;
 
         private static object loocker = new object();
 
@@ -148,13 +148,13 @@ namespace Lexplosion.Logic.Management
 
         private string ParseCommandArgument(MinecraftArgument argument)
         {
-            if (argument == null) return "";
+            if (argument == null) return string.Empty;
 
             string strValue = argument.GetSting;
             if (strValue != null) return strValue;
 
             MinecraftArgumentObject obj = argument.GetObject;
-            if (obj?.Value == null || obj.Value.Length < 1) return "";
+            if (obj?.Value == null || obj.Value.Length < 1) return string.Empty;
             if (obj.Rules == null || obj.Rules.Count < 1) return string.Join(" ", obj.Value);
 
             bool isAllowed = false;
@@ -229,18 +229,19 @@ namespace Lexplosion.Logic.Management
             if (_settings.GameArgs.Length > 0 && _settings.GameArgs[_settings.GameArgs.Length - 1] != ' ')
                 _settings.GameArgs += " ";
 
+            bool isNwClient = !string.IsNullOrWhiteSpace(data.VersionFile?.NightWorldClientData?.MainClass) && data.VersionFile.IsNightWorldClient;
+
             string accountType = GlobalData.User.AccountType.ToString();
-            string libs = "";
+            string libs = string.Empty;
             foreach (string lib in data.Libraries.Keys)
             {
                 var activation = data.Libraries[lib].activationConditions;
 
-
                 bool byAccountType = (activation?.accountTypes == null || activation.accountTypes.Contains(accountType));
-                bool byNwClient = activation?.nightWorldClient == null || (activation.nightWorldClient == data.VersionFile.IsNightWorldClient);
-                bool byModloader = (activation?.clientTypes == null || activation.clientTypes.Contains(data.VersionFile.ModloaderType.ToString()));
+                bool byNwClient = activation?.nightWorldClient == null || (activation.nightWorldClient == isNwClient);
+                bool byClientType = (activation?.clientTypes == null || activation.clientTypes.Contains(data.VersionFile.ModloaderType.ToString()));
 
-                if (byAccountType && byNwClient && byModloader && !data.Libraries[lib].notLaunch)
+                if (byAccountType && byNwClient && byClientType && !data.Libraries[lib].notLaunch)
                 {
                     libs += "\"" + gamePath + "libraries/" + lib + "\";";
                 }
@@ -250,7 +251,7 @@ namespace Lexplosion.Logic.Management
 
             string mainClass = data.VersionFile.MainClass;
 
-            string additionalInstallerArgumentsBefore = "";
+            string additionalInstallerArgumentsBefore = string.Empty;
             string additionalInstallerArgumentsAfter = " ";
 
             var installer = data.VersionFile.AdditionalInstaller;
@@ -269,14 +270,48 @@ namespace Lexplosion.Logic.Management
                 mainClass = installer.mainClass;
             }
 
-            string jvmArgs = data.VersionFile.JvmArguments ?? "";
+            string jvmArgs = data.VersionFile.JvmArguments ?? string.Empty;
             jvmArgs = jvmArgs.Replace("${version_file}", data.VersionFile.MinecraftJar.name);
             jvmArgs = jvmArgs.Replace("${library_directory}", gamePath + "libraries");
+
+            string nwClientMinecraftArgs = string.Empty;
+            string nwClientJvmArgs = string.Empty;
+            if (isNwClient)
+            {
+                var nwClientData = data.VersionFile.NightWorldClientData;
+
+                switch (data.VersionFile.ModloaderType)
+                {
+                    case ClientType.Vanilla:
+                        nwClientMinecraftArgs = nwClientData.VanillaArgs.Minecraft ?? string.Empty;
+                        nwClientJvmArgs = nwClientData.VanillaArgs.Jvm ?? string.Empty;
+                        break;
+                    case ClientType.Quilt:
+                    case ClientType.Fabric:
+                        nwClientMinecraftArgs = nwClientData.FabricArgs.Minecraft ?? string.Empty;
+                        nwClientJvmArgs = nwClientData.FabricArgs.Jvm ?? string.Empty;
+                        break;
+                    case ClientType.Forge:
+                        nwClientMinecraftArgs = nwClientData.ForgeArg.Minecraft ?? string.Empty;
+                        nwClientJvmArgs = nwClientData.ForgeArg.Jvm ?? string.Empty;
+                        break;
+                    default:
+                        nwClientMinecraftArgs = string.Empty;
+                        nwClientJvmArgs = string.Empty;
+                        break;
+                }
+
+                nwClientMinecraftArgs = nwClientMinecraftArgs.Replace("${mainClass}", mainClass);
+                nwClientMinecraftArgs = nwClientMinecraftArgs.Replace("${appearanceElementsDir}", gamePath + "appearanceElements");
+
+                nwClientJvmArgs = nwClientJvmArgs.Replace("${mainClass}", mainClass);
+                nwClientJvmArgs = nwClientJvmArgs.Replace("${appearanceElementsDir}", gamePath + "appearanceElements");
+            }
 
             string command;
             if (data.VersionFile.DefaultArguments != null)
             {
-                command = "";
+                command = string.Empty;
                 foreach (MinecraftArgument arg in data.VersionFile.DefaultArguments.Jvm)
                 {
                     string param = ParseCommandArgument(arg);
@@ -296,7 +331,9 @@ namespace Lexplosion.Logic.Management
                 command += " -Dhttp.agent=\"Mozilla/5.0\"";
                 command += " -Djava.net.preferIPv4Stack=true";
                 command += " -Xmx" + _settings.Xmx + "M -Xms" + _settings.Xms + "M " + _settings.GameArgs;
-                command += mainClass + " ";
+                command += nwClientJvmArgs + " ";
+                command += (isNwClient ? data.VersionFile.NightWorldClientData.MainClass : mainClass) + " ";
+                command += nwClientMinecraftArgs;
 
                 foreach (MinecraftArgument arg in data.VersionFile.DefaultArguments.Game)
                 {
@@ -310,7 +347,6 @@ namespace Lexplosion.Logic.Management
                 command += " " + data.VersionFile.Arguments;
                 command += " --width " + _settings.WindowWidth + " --height " + _settings.WindowHeight;
                 command += additionalInstallerArgumentsAfter;
-
                 command = command.Replace("${auth_player_name}", GlobalData.User.Login);
                 command = command.Replace("${version_name}", data.VersionFile.GameVersion);
                 command = command.Replace("${game_directory}", "\"" + gamePath + "instances/" + _instanceId + "\"");
@@ -329,9 +365,11 @@ namespace Lexplosion.Logic.Management
             {
                 command = " -Djava.library.path=\"" + gamePath + "natives/" + (data.VersionFile.CustomVersionName ?? data.VersionFile.GameVersion) + "\" -cp ";
                 command += libs;
-                command += additionalInstallerArgumentsBefore;
 
-                command += jvmArgs;
+                command += additionalInstallerArgumentsBefore;
+                command += jvmArgs + " ";
+                command += nwClientJvmArgs;
+
                 if (_keyStorePath != null)
                 {
                     command += " -Djavax.net.ssl.trustStore=\"" + _keyStorePath + "\"";
@@ -340,7 +378,9 @@ namespace Lexplosion.Logic.Management
                 command += " -Dhttp.agent=\"Mozilla/5.0\"";
                 command += " -Djava.net.preferIPv4Stack=true";
                 command += " -Xmx" + _settings.Xmx + "M -Xms" + _settings.Xms + "M " + _settings.GameArgs;
-                command += mainClass + " --username " + GlobalData.User.Login + " --version " + data.VersionFile.GameVersion;
+                command += (isNwClient ? data.VersionFile.NightWorldClientData.MainClass : mainClass) + " ";
+                command += nwClientMinecraftArgs;
+                command += " --username " + GlobalData.User.Login + " --version " + data.VersionFile.GameVersion;
                 command += " --gameDir \"" + gamePath + "instances/" + _instanceId + "\"";
                 command += " --assetsDir \"" + gamePath + "assets" + "\"";
                 command += " --assetIndex " + data.VersionFile.AssetsVersion;
@@ -821,7 +861,7 @@ namespace Lexplosion.Logic.Management
                     _gameGateway?.StopWork();
                     _gameGateway = null;
                 }
-                StateChanged?.Invoke(OnlineGameStatus.None, "");
+                StateChanged?.Invoke(OnlineGameStatus.None, string.Empty);
             }
             catch { }
 
@@ -854,7 +894,7 @@ namespace Lexplosion.Logic.Management
                         _classInstance._gameGateway.Initialization(_classInstance._process.Id);
                     }
                 }
-                StateChanged?.Invoke(OnlineGameStatus.None, "");
+                StateChanged?.Invoke(OnlineGameStatus.None, string.Empty);
             }
 
         }

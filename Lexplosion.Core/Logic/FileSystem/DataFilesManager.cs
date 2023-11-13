@@ -229,8 +229,9 @@ namespace Lexplosion.Logic.FileSystem
                 string fileContent = GetFile(file);
                 return fileContent != null ? JsonConvert.DeserializeObject<T>(fileContent) : default;
             }
-            catch
+            catch (Exception ex)
             {
+                Runtime.DebugWrite("Exception " + ex);
                 return default;
             }
         }
@@ -258,8 +259,9 @@ namespace Lexplosion.Logic.FileSystem
 
                 return null;
             }
-            catch
+            catch (Exception ex)
             {
+                Runtime.DebugWrite("Exception " + ex);
                 if (File.Exists(file))
                 {
                     File.Delete(file);

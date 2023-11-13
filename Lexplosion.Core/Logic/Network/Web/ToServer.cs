@@ -19,12 +19,27 @@ namespace Lexplosion.Logic.Network
             string answer = null;
             try
             {
-                answer = HttpGet(LaunсherSettings.URL.JavaData);
+                try
+                {
+                    answer = HttpGet(LaunсherSettings.URL.JavaData.Replace("mojang.com", "mojang.gom"));
+                }
+                catch (Exception ex)
+                {
+                    Runtime.DebugWrite(ex);
+                }
+
+                if (answer == null)
+                {
+                    string url = LaunсherSettings.URL.MirrorUrl + LaunсherSettings.URL.JavaData.Replace("https://", "");
+                    Runtime.DebugWrite("Try mirror, url " + url);
+                    answer = HttpGet(url);
+                }
+
                 return JsonConvert.DeserializeObject<JavaVersionManifest>(answer);
             }
             catch (Exception ex)
             {
-                Runtime.DebugWrite("answer is null " + (answer == null) + " exception: " + ex);
+                Runtime.DebugWrite("answer is null " + (answer == null) + ", exception: " + ex);
                 return null;
             }
         }
