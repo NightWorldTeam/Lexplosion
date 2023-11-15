@@ -272,7 +272,10 @@ namespace Lexplosion.Logic.Network
                     return manifest;
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Runtime.DebugWrite("Exception " + ex);
+            }
 
             return null;
         }

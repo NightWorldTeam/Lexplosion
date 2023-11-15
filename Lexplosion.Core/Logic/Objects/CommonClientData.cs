@@ -454,7 +454,7 @@ namespace Lexplosion.Logic.Objects.CommonClientData
         public VersionInfo VersionFile;
         public Dictionary<string, LibInfo> Libraries;
         public bool UpdatesAvailable;
-        public string ClientVersion = "";
+        public string ClientVersion = string.Empty;
     }
 
     public struct MCVersionInfo

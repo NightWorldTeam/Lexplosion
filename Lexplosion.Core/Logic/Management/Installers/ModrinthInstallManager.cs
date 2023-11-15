@@ -13,7 +13,14 @@ namespace Lexplosion.Logic.Management.Installers
         { }
         protected override ModrinthProjectFile GetProjectInfo(string projectId, string projectVersion)
         {
-            return ModrinthApi.GetProjectFile(projectVersion);
+            var data = ModrinthApi.GetProjectFile(projectVersion);
+
+            if (string.IsNullOrWhiteSpace(data.FileId))
+            {
+                return null;
+            }
+
+            return data;
         }
 
         protected override bool LocalInfoIsValid(InstancePlatformData data)
@@ -77,7 +84,7 @@ namespace Lexplosion.Logic.Management.Installers
             return manifest.dependencies["minecraft"] ?? "";
         }
 
-        public override string ProjectId { get => ProjectInfo?.ProjectId ?? ""; }
+        public override string ProjectId { get => ProjectInfo?.ProjectId ?? string.Empty; }
 
         protected override bool ProfectInfoIsValid
         {

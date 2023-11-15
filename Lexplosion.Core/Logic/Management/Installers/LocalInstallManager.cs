@@ -41,15 +41,15 @@ namespace Lexplosion.Logic.Management.Installers
 
         public InstanceInit Check(out string javaVersionName, string instanceVersion)
         {
-            javaVersionName = "";
+            javaVersionName = string.Empty;
 
             //модпак локальный. получем его версию, отправляем её в ToServer.GetFilesList. Метод ToServer.GetFilesList получит список именно для этой версии, а не для модпака
             Manifest = DataFilesManager.GetManifest(InstanceId, false);
 
-            if (Manifest == null || Manifest.version == null || Manifest.version.GameVersion == null)
+            if (string.IsNullOrWhiteSpace(Manifest?.version?.GameVersion))
             {
                 Runtime.DebugWrite("Manifest is null (" + (Manifest == null) + ", " + (Manifest?.version == null) + ")");
-                return InstanceInit.ManifestError;
+                return InstanceInit.VersionError;
             }
 
             var gameVersion = Manifest.version.GameVersion;
@@ -81,8 +81,17 @@ namespace Lexplosion.Logic.Management.Installers
             }
             else
             {
-                Runtime.DebugWrite("Manifest is null");
-                return InstanceInit.ManifestError;
+                Runtime.DebugWrite("Manifest from server is null. Load local manifest");
+                Manifest = DataFilesManager.GetManifest(InstanceId, true);
+
+                if (string.IsNullOrWhiteSpace(Manifest?.version?.GameVersion))
+                {
+                    Runtime.DebugWrite("Local manifest is null (" + (Manifest == null) + ", " + (Manifest?.version == null) + ")");
+                    return InstanceInit.VersionError;
+                }
+
+                javaVersionName = Manifest.version.JavaVersionName ?? string.Empty;
+                return InstanceInit.Successful;
             }
         }
 
@@ -135,8 +144,18 @@ namespace Lexplosion.Logic.Management.Installers
                 };
             }
 
-            List<string> errors = installer.UpdateBaseFiles(Manifest, ref Updates, javaPath, _cancelToken);
-            DataFilesManager.SaveManifest(InstanceId, Manifest);
+            List<string> errors = null;
+
+            if (Updates != null)
+            {
+                errors = installer.UpdateBaseFiles(Manifest, ref Updates, javaPath, _cancelToken);
+                DataFilesManager.SaveManifest(InstanceId, Manifest);
+            }
+            else
+            {
+                errors = new List<string>();
+            }
+
 
             if (_cancelToken.IsCancellationRequested)
             {

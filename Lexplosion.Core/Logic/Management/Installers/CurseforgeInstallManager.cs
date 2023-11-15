@@ -16,7 +16,14 @@ namespace Lexplosion.Logic.Management.Installers
 
         protected override CurseforgeFileInfo GetProjectInfo(string projectId, string projectVersion)
         {
-            return CurseforgeApi.GetProjectFile(projectId, projectVersion);
+            var data = CurseforgeApi.GetProjectFile(projectId, projectVersion);
+
+            if (data.id < 1)
+            {
+                return null;
+            }
+
+            return data;
         }
 
         protected override bool LocalInfoIsValid(InstancePlatformData data)
@@ -96,7 +103,7 @@ namespace Lexplosion.Logic.Management.Installers
 
         protected override bool ProfectInfoIsValid
         {
-            get => ProjectInfo?.downloadUrl != null && ProjectInfo.fileName != null;
+            get => !string.IsNullOrWhiteSpace(ProjectInfo?.downloadUrl) && !string.IsNullOrWhiteSpace(ProjectInfo.fileName);
         }
 
         protected override string ArchiveDownloadUrl

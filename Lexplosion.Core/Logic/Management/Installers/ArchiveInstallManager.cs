@@ -24,6 +24,8 @@ namespace Lexplosion.Logic.Management.Installers
 
         private int updatesCount = 0;
 
+        private bool _serverManifestIsNull = false;
+
         public event Action<string, int, DownloadFileProgress> FileDownloadEvent
         {
             add
@@ -93,7 +95,7 @@ namespace Lexplosion.Logic.Management.Installers
 
         public InstanceInit Check(out string javaVersionName, string instanceVersion)
         {
-            javaVersionName = "";
+            javaVersionName = string.Empty;
 
             Manifest = DataFilesManager.GetManifest(InstanceId, false);
             InfoData = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.DirectoryPath + "/instances/" + InstanceId + "/instancePlatformData.json");
@@ -104,7 +106,7 @@ namespace Lexplosion.Logic.Management.Installers
             }
 
             // TODO: думаю, если манифест равен null, вполне можно продолжить работу скачав всё заново 
-            if (Manifest == null || Manifest.version == null || Manifest.version.GameVersion == null)
+            if (string.IsNullOrWhiteSpace(Manifest?.version?.GameVersion))
             {
                 return InstanceInit.VersionError;
             }
@@ -132,7 +134,18 @@ namespace Lexplosion.Logic.Management.Installers
                 }
                 else
                 {
-                    return InstanceInit.ServerError;
+                    Runtime.DebugWrite("Manifest from server is null. Load local manifest");
+                    _serverManifestIsNull = true;
+                    Manifest = DataFilesManager.GetManifest(InstanceId, true);
+
+                    if (string.IsNullOrWhiteSpace(Manifest?.version?.GameVersion))
+                    {
+                        Runtime.DebugWrite("Local manifest is null (" + (Manifest == null) + ", " + (Manifest?.version == null) + ")");
+                        return InstanceInit.VersionError;
+                    }
+
+                    javaVersionName = Manifest.version.JavaVersionName ?? string.Empty;
+                    return InstanceInit.Successful;
                 }
             }
 
@@ -155,12 +168,24 @@ namespace Lexplosion.Logic.Management.Installers
 
             DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/instances/" + InstanceId + "/instancePlatformData.json", JsonConvert.SerializeObject(InfoData));
 
-            javaVersionName = Manifest.version.JavaVersionName;
+            javaVersionName = Manifest.version.JavaVersionName ?? string.Empty;
             return InstanceInit.Successful;
         }
 
         public InitData Update(string javaPath, ProgressHandlerCallback progressHandler)
         {
+            if (_serverManifestIsNull)
+            {
+                return new InitData
+                {
+                    InitResult = InstanceInit.Successful,
+                    VersionFile = Manifest.version,
+                    Libraries = Manifest.libraries,
+                    UpdatesAvailable = false,
+                    ClientVersion = ProjectId ?? string.Empty
+                };
+            }
+
             var localFiles = _installer.GetInstanceContent(); //получем список всех файлов модпака
 
             //нашелся id, который больше id установленной версии. Значит доступно обновление. Или же отсуствуют некоторые файлы модпака. Обновляем
@@ -491,7 +516,7 @@ namespace Lexplosion.Logic.Management.Installers
                 VersionFile = Manifest.version,
                 Libraries = Manifest.libraries,
                 UpdatesAvailable = false,
-                ClientVersion = ProjectId ?? ""
+                ClientVersion = ProjectId ?? String.Empty
             };
         }
     }

@@ -107,7 +107,7 @@ namespace Lexplosion.Logic.FileSystem
         /// </summary>
         public bool InvalidStruct(InstanceContent localFiles)
         {
-            if (localFiles.Files == null || localFiles.InstalledAddons == null || !localFiles.FullClient)
+            if (localFiles == null || localFiles.Files == null || localFiles.InstalledAddons == null || !localFiles.FullClient)
             {
                 return true;
             }
