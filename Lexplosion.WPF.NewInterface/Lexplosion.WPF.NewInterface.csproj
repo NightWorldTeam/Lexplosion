@@ -96,7 +96,6 @@
     <Compile Include="Controls\InstanceForm\LowerMenuButton.cs" />
     <Compile Include="Controls\Loader\Loader.cs" />
     <Compile Include="Controls\ModalControl\ModalControl.cs" />
-    <Compile Include="Controls\Paginator\IPaginable.cs" />
     <Compile Include="Controls\Paginator\Paginator.cs" />
     <Compile Include="Controls\SearchBox\SearchBox.cs" />
     <Compile Include="Controls\UIUnderlineTabControl\UIUnderlineTabControl.cs" />
@@ -276,6 +275,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\ModalControl\ModalControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Paginator\Paginator.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

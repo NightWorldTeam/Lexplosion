@@ -5,15 +5,15 @@ namespace Lexplosion.WPF.NewInterface.Core.Paginator
 {
     public sealed class Paginator<T> : IPaginator<T>
     {
-        private readonly Func<int, IEnumerable<T>> _paginate;
+        private readonly Func<uint, IEnumerable<T>> _paginate;
 
 
         #region Properties
 
 
-        public int CurrentPageIndex { get; private set; } = 1;
-        public int PageSize { get; } = 0;
-        public int PageCount { get; } = 0;
+        public uint CurrentPageIndex { get; private set; } = 1;
+        public uint PageSize { get; } = 0;
+        public uint PageCount { get; } = 0;
 
         public bool IsFirst => CurrentPageIndex == 1;
         public bool IsLast => CurrentPageIndex == PageCount;
@@ -24,12 +24,13 @@ namespace Lexplosion.WPF.NewInterface.Core.Paginator
 
         #region Constructors
 
+
         /// <summary>
         /// Конструктор класса paginator
         /// </summary>
         /// <param name="pageCount">Количество элементов на странице</param>
         /// <param name="paginate">Функция принимающая индекс выбранной страницы, возвращает IEnumerable элементов на странице.</param>
-        public Paginator(int pageCount, int pageSize, Func<int, IEnumerable<T>> paginate)
+        public Paginator(uint pageCount, uint pageSize, Func<uint, IEnumerable<T>> paginate)
         {
             PageCount = pageCount;
             _paginate += paginate;
@@ -51,6 +52,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Paginator
 
         public IEnumerable<T> Prev()
         {
+            // TODO: индекс нужно считать как index-- или как просто index;
             if (CurrentPageIndex - 1 > 0)
                 CurrentPageIndex--;
             return _paginate.Invoke(CurrentPageIndex - 1);
@@ -98,6 +100,15 @@ namespace Lexplosion.WPF.NewInterface.Core.Paginator
         {
             CurrentPageIndex = PageCount - 1;
             return _paginate.Invoke(CurrentPageIndex);
+        }
+
+        public IEnumerable<T> To(uint pageIndex) 
+        {
+            if (!(pageIndex - 1 > 0 && CurrentPageIndex + 1 <= PageCount))             
+                throw new ArgumentException($"{pageIndex} out of range max page index {PageCount}");
+
+            CurrentPageIndex = pageIndex;
+            return _paginate.Invoke(CurrentPageIndex - 1);
         }
 
 

@@ -16,7 +16,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
     {
         private InstanceModelBase _instanceModel;
         private INavigationStore _navigationStore;
-        private NavigateCommand<ViewModelBase> _toMainMenuLayoutCommand;
+
 
         #region Properties
 
@@ -46,17 +46,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         private RelayCommand _playCommand;
         public ICommand PlayCommand
         {
-            get => RelayCommand.GetCommand(ref _playCommand, (obj) => { _instanceModel.Run(); });
+            get => RelayCommand.GetCommand(ref _playCommand, _instanceModel.Run);
         }
 
-        private RelayCommand _backCommand;
-        public ICommand BackCommand
-        {
-            get => RelayCommand.GetCommand(ref _backCommand, () =>
-            {
-                _toMainMenuLayoutCommand.Execute(null);
-            });
-        }
+        public ICommand BackCommand { get; }
 
 
         #endregion Commands
@@ -65,9 +58,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         #region Contructors
 
 
-        public InstanceProfileLeftPanelViewModel(INavigationStore navigationStore, NavigateCommand<ViewModelBase> toMainMenuLayoutCommand, InstanceModelBase instanceModelBase)
+        public InstanceProfileLeftPanelViewModel(INavigationStore navigationStore, ICommand toMainMenuLayoutCommand, InstanceModelBase instanceModelBase)
         {
-            _toMainMenuLayoutCommand = toMainMenuLayoutCommand;
+            BackCommand = toMainMenuLayoutCommand;
             _navigationStore = navigationStore;
 
             _instanceModel = instanceModelBase;
@@ -81,15 +74,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
 
 
         #endregion Constructors
-
-
-        #region Public Methods
-
-
-
-
-
-        #endregion Public Methods
 
 
         #region Private Methods

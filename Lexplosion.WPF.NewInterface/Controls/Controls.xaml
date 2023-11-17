@@ -18,6 +18,7 @@
 
         <ResourceDictionary Source="InstanceForm/InstanceForm.xaml" />
         <ResourceDictionary Source="Loader/Loader.xaml" />
+        <ResourceDictionary Source="Paginator/Paginator.xaml" />
 
 
 

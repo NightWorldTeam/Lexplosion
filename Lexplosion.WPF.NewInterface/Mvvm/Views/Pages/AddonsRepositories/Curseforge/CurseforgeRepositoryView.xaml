@@ -857,6 +857,7 @@
                             <Button
                                 Height="32"
                                 Background="#1bd96a"
+                                Command="{Binding BackToInstanceProfileCommand}"
                                 Content="{DynamicResource Back}"
                                 Style="{StaticResource GhostButton}" />
 
@@ -865,6 +866,7 @@
                                 Height="32"
                                 Margin="8,0,0,0"
                                 Background="#1bd96a"
+                                Command="{Binding ToModrinthCommand}"
                                 Style="{StaticResource x32DefaultIconButton}">
                                 <WrapPanel Orientation="Horizontal">
                                     <Viewbox Height="16" Margin="0,0,0,0">
@@ -1004,6 +1006,7 @@
                                         ItemContainerStyle="{StaticResource ComboBoxItemTextOnly}"
                                         ItemsSource="{Binding Model.SortByArgs}"
                                         SelectedIndex="0"
+                                        SelectedValue="{Binding Model.SelectedSortByArg}"
                                         Style="{StaticResource ComboBoxTextOnly}" />
                                 </StackPanel>
 
@@ -1022,61 +1025,18 @@
                                     <ComboBox
                                         Width="64"
                                         ItemsSource="{Binding Model.ShowPerPageList}"
-                                        SelectedIndex="0" />
+                                        SelectedIndex="0"
+                                        SelectedValue="{Binding Model.PageSize}" />
                                 </StackPanel>
                             </Grid>
 
-                            <!--  Paginator  -->
-                            <StackPanel
-                                Grid.Column="2"
-                                HorizontalAlignment="Right"
-                                VerticalAlignment="Center"
-                                Orientation="Horizontal">
-                                <TextBlock
-                                    Margin="0,0,16,0"
-                                    FontSize="16"
-                                    Foreground="{DynamicResource Foreground}"
-                                    Text="&lt;" />
-                                <TextBlock
-                                    Margin="0,0,16,0"
-                                    FontSize="16"
-                                    Foreground="{DynamicResource Foreground}"
-                                    Text="1" />
-                                <TextBlock
-                                    Margin="0,0,16,0"
-                                    FontSize="16"
-                                    Foreground="{DynamicResource Foreground}"
-                                    Text="..." />
-                                <TextBlock
-                                    Margin="0,0,16,0"
-                                    FontSize="16"
-                                    Foreground="{DynamicResource Foreground}"
-                                    Text="3" />
-                                <TextBlock
-                                    Margin="0,0,16,0"
-                                    FontSize="16"
-                                    Foreground="{DynamicResource ForegroundLighter}"
-                                    Text="4" />
-                                <TextBlock
-                                    Margin="0,0,16,0"
-                                    FontSize="16"
-                                    Foreground="{DynamicResource Foreground}"
-                                    Text="5" />
-                                <TextBlock
-                                    Margin="0,0,16,0"
-                                    FontSize="16"
-                                    Foreground="{DynamicResource Foreground}"
-                                    Text="..." />
-                                <TextBlock
-                                    Margin="0,0,16,0"
-                                    FontSize="16"
-                                    Foreground="{DynamicResource Foreground}"
-                                    Text="500" />
-                                <TextBlock
-                                    FontSize="16"
-                                    Foreground="{DynamicResource Foreground}"
-                                    Text="&gt;" />
-                            </StackPanel>
+
+                            <controls:Paginator
+                                CurrentPageIndex="{Binding Model.CurrentPageIndex}"
+                                NextCommand="{Binding NextPageCommand}"
+                                PageCount="500"
+                                PrevCommand="{Binding PreviousPageCommand}"
+                                ToCommand="{Binding ToPageCommand}" />
                         </WrapPanel>
 
                         <!--  Empty Page Content  -->
@@ -1116,6 +1076,14 @@
 
                         <!--  Addon Form  -->
                         <ItemsControl Grid.Row="3" ItemsSource="{Binding Model.AddonList}" />
+
+                        <controls:Paginator
+                            Grid.Row="4"
+                            CurrentPageIndex="{Binding Model.CurrentPageIndex}"
+                            NextCommand="{Binding NextPageCommand}"
+                            PageCount="500"
+                            PrevCommand="{Binding PreviousPageCommand}"
+                            ToCommand="{Binding ToPageCommand}" />
                     </Grid>
                 </Grid>
             </Grid>

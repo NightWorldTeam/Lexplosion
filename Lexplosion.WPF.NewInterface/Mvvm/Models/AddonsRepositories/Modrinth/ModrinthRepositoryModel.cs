@@ -19,15 +19,16 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
             ParentCategoryId = ""
         };
 
-        public int[] PageSizes { get; } = new int[]
+        public ReadOnlyCollection<uint> PageSizes { get; } = new ReadOnlyCollection<uint>(new uint[]
         {
             6, 10, 16, 20, 50, 100
-        };
+        });
 
-        public string[] SortByItems { get; } = new string[]
+        public ReadOnlyCollection<string> SortByItems { get; } = new ReadOnlyCollection<string>(new string[]
         {
             "Relevance", "Donwload count", "Follow count", "Recently published", "Recently updated"
-        };
+        });
+
 
         private readonly InstanceModelBase _instanceModelBase;
         private readonly AddonType _addonType;
@@ -49,16 +50,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
             }
         }
 
-        private int _pageIndex = 0;
-        public int PageIndex
-        {
-            get => _pageIndex; set
-            {
-                _pageIndex = value;
-                OnPageIndexChanged();
-            }
-        }
-
         private string _selectedSortBy = "Relevance";
         public string SelectedSortBy
         {
@@ -69,8 +60,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
             }
         }
 
-        private int _pageSize = 10;
-        public int PageSize
+        private uint _pageSize = 10;
+        public uint PageSize
         {
             get => _pageSize; set
             {
@@ -79,6 +70,15 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
             }
         }
 
+        private uint _currentPageIndex;
+        public uint CurrentPageIndex 
+        {
+            get => _currentPageIndex; set 
+            {
+                _currentPageIndex = value;
+                OnPropertyChanged();
+            }
+        }
 
         private readonly ObservableCollection<CategoryWrapper> _categories = new ObservableCollection<CategoryWrapper>();
         public IEnumerable<CategoryWrapper> Categories { get => _categories; }
@@ -153,7 +153,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
             //var s = InstanceAddon.GetAddonsCatalog(null, PageSize, PageIndex, _addonType, SelectedCategories, "");
 
             _addonsList.Clear();
-            foreach (var i in InstanceAddon.GetModrinthAddonsCatalog(_instanceModelBase.InstanceData, PageSize, PageIndex, _addonType, AllCategory, SearchFilter))
+            foreach (var i in InstanceAddon.GetModrinthAddonsCatalog(_instanceModelBase.InstanceData, (int)PageSize, (int)CurrentPageIndex, _addonType, AllCategory, SearchFilter))
             {
                 _addonsList.Add(i);
             }
@@ -227,9 +227,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
             LoadPage();
         }
 
-        private void OnPageIndexChanged()
+        private void OnCurrentPageIndexChanged()
         {
-            OnPropertyChanged(nameof(PageIndex));
+            OnPropertyChanged(nameof(CurrentPageIndex));
             LoadPage();
         }
 

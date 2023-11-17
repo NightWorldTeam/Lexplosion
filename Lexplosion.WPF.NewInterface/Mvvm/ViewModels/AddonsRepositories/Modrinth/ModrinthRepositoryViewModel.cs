@@ -7,6 +7,7 @@ using Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using Lexplosion.WPF.NewInterface.Stores;
 using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
@@ -54,7 +55,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
 
     public sealed class ModrinthRepositoryViewModel : ViewModelBase
     {
-        private readonly NavigateCommand<ViewModelBase> _backToInstanceProfile;
+        private readonly INavigationStore _navigationStore;
+        private readonly ICommand _backToInstanceProfile;
+        private readonly ICommand _toCurseforge;
 
         public ModrinthRepositoryModel Model { get; }
 
@@ -62,28 +65,46 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
         #region Commands
 
 
+        public ICommand ToCurseforgeCommand
+        {
+            get => _toCurseforge;
+        }
+
+        public ICommand BackToInstanceProfileCommand
+        {
+            get => _backToInstanceProfile;
+        }
+
+        // paginator
+        private RelayCommand _nextPageCommand;
+        public ICommand NextPageCommand
+        {
+            get => RelayCommand.GetCommand(ref _nextPageCommand, () => { });
+        }
+
+        private RelayCommand _prevPageCommand;
+        public ICommand PrevPageCommand
+        {
+            get => RelayCommand.GetCommand(ref _prevPageCommand, () => { });
+        }
+
+        private RelayCommand _ToPageCommand;
+        public ICommand ToPageCommand
+        {
+            get => RelayCommand.GetCommand(ref _nextPageCommand, () => { });
+        }
+
+        // filters
         private RelayCommand _clearFiltersCommand;
         public ICommand ClearFiltersCommand
         {
-            get => _clearFiltersCommand ?? (_clearFiltersCommand = new RelayCommand(obj =>
-            {
-                Model.ClearFilters();
-            }));
+            get => RelayCommand.GetCommand(ref _clearFiltersCommand, Model.ClearFilters);
         }
 
         private RelayCommand _searchCommand;
-        public RelayCommand SearchCommand
+        public ICommand SearchCommand
         {
-            get => _searchCommand ?? (_searchCommand = new RelayCommand(obj =>
-            {
-                Model.SearchFilter = ((string)obj);
-            }));
-        }
-
-        private RelayCommand _backToInstanceProfileCommand;
-        public ICommand BackToInstanceProfileCommand
-        {
-            get => RelayCommand.GetCommand(ref _backToInstanceProfileCommand, (obj) => { _backToInstanceProfile.Execute(obj); });
+            get => RelayCommand.GetCommand(ref _searchCommand, (obj) => { Model.SearchFilter = obj.ToString(); });
         }
 
         private RelayCommand _searchBoxCommand;
@@ -92,6 +113,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
             get => RelayCommand.GetCommand(ref _searchBoxCommand, (obj) => { Model.SearchFilter = (string)obj; });
         }
 
+        // instance manipulate
         private RelayCommand _installAddonCommand;
         public ICommand InstallAddonCommand
         {
@@ -111,9 +133,16 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
         #region Constructors
 
 
-        public ModrinthRepositoryViewModel(NavigateCommand<ViewModelBase> backCommand, AddonType addonType, InstanceModelBase instanceModelBase)
+        public ModrinthRepositoryViewModel(InstanceModelBase instanceModelBase, AddonType addonType, ICommand backCommand, INavigationStore navigationStore)
         {
             _backToInstanceProfile = backCommand;
+            _navigationStore = navigationStore;
+
+            var toModrinthNavCommand = new NavigateCommand<ViewModelBase>(_navigationStore, () => this);
+            var curseforgeRepository = new CurseforgeRepositoryViewModel(instanceModelBase, addonType, backCommand, toModrinthNavCommand);
+
+            _toCurseforge = new NavigateCommand<ViewModelBase>(_navigationStore, () => curseforgeRepository);
+
             Model = new ModrinthRepositoryModel(instanceModelBase, addonType);
         }
 

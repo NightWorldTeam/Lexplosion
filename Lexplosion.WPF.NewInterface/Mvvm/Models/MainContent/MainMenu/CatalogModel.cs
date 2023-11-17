@@ -1,6 +1,5 @@
 ﻿using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Objects;
-using Lexplosion.WPF.NewInterface.Controls.Paginator;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using System;
 using System.Collections.Generic;
@@ -8,7 +7,7 @@ using System.Collections.ObjectModel;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
 {
-    public sealed class CatalogModel : VMBase, IPaginable
+    public sealed class CatalogModel : VMBase
     {
         #region Properties
 
