@@ -72,21 +72,21 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         {
             _overviewViewModel = new InstanceProfileOverviewViewModel(_instanceModel);
 
-            if (_instanceModel.IsInstalled)
-            {
-
-                _settingsLayoutViewModel = new InstanceProfileSettingsLayoutViewModel(_instanceModel);
+            if (_instanceModel.InstanceData.Modloader != ClientType.Vanilla)
                 _addonsViewModel = new InstanceProfileAddonsLayoutViewModel(_navigationStore, _instanceModel);
-            }
+
+            if (_instanceModel.IsInstalled)
+                _settingsLayoutViewModel = new InstanceProfileSettingsLayoutViewModel(_instanceModel);
 
             Lexplosion.Runtime.TaskRun(() =>
             {
                 LeftPanel.AddTabItem("Overview", "Services", _overviewViewModel);
-                if (_instanceModel.IsInstalled)
-                {
+
+                if (_instanceModel.InstanceData.Modloader != ClientType.Vanilla)
                     LeftPanel.AddTabItem("Addons", "Addons", _addonsViewModel);
+
+                if (_instanceModel.IsInstalled)
                     LeftPanel.AddTabItem("Settings", "Settings", _settingsLayoutViewModel);
-                }
                 LeftPanel.SelectFirst();
             });
         }

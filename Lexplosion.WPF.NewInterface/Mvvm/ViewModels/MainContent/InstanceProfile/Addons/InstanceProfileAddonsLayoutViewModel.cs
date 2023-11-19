@@ -311,8 +311,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
     public sealed class InstanceAddonsContainerViewModel : ViewModelBase
     {
         private readonly INavigationStore _navigationStore;
-        private readonly NavigateCommand<ViewModelBase> _navigateCommand;
-
         private readonly InstanceModelBase _instanceModelBase;
 
         public InstanceAddonsContainerModel Model { get; private set; }
@@ -328,12 +326,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             get => RelayCommand.GetCommand(ref _openMarketCommand, (obj) =>
             {
                 var currentViewModel = _navigationStore.CurrentViewModel;
-                var navCommand = new NavigateCommand<ViewModelBase>(_navigationStore, () => currentViewModel);
-                _navigationStore.CurrentViewModel = new ModrinthRepositoryViewModel(
-                    navCommand,
-                    Model.Type,
-                    _instanceModelBase
-                    );
+                var backNavCommand = new NavigateCommand<ViewModelBase>(_navigationStore, () => currentViewModel);
+                _navigationStore.CurrentViewModel = new ModrinthRepositoryViewModel(_instanceModelBase, Model.Type, backNavCommand, _navigationStore);
             });
         }
 
@@ -346,7 +340,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         private RelayCommand _openFolderCommand;
         public ICommand OpenFolderCommand
         {
-            get => RelayCommand.GetCommand(ref _openFolderCommand, (obj) => { _instanceModelBase.OpenFolder(); });
+            get => RelayCommand.GetCommand(ref _openFolderCommand, _instanceModelBase.OpenFolder);
         }
 
         private RelayCommand _updateCommand;

@@ -93,9 +93,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
             ModalNavigationStore.Instance.Close();
 
             NavigationStore.CurrentViewModelChanged += NavigationStore_CurrentViewModelChanged;
-            //NavigationStore.CurrentViewModel = new MainMenuLayoutViewModel(NavigationStore);
+            NavigationStore.CurrentViewModel = new MainMenuLayoutViewModel(NavigationStore);
             //NavigationStore.CurrentViewModel = new ModrinthAddonPageViewModel(null);
-            NavigationStore.CurrentViewModel = new CurseforgeRepositoryViewModel(InstanceClient.GetInstalledInstances()[0].GetBaseData);
+            //NavigationStore.CurrentViewModel = new CurseforgeRepositoryViewModel(InstanceClient.GetInstalledInstances()[0].GetBaseData);
             //new MainMenuLayoutViewModel(NavigationStore); 
             //NavigationStore.CurrentViewModel = new InstanceProfileLayoutViewModel(LibraryController.Instance.Instances.Last());
             //new InstanceModelBase(InstanceClient.GetOutsideInstances( InstanceSource.Modrinth, 2, 0, new IProjectCategory[] { new SimpleCategory() { Name = "All", Id = "-1", ClassId = "", ParentCategoryId = "" }}, "", CfSortField.Featured, "1.19.4")[1])); //new MainMenuLayoutViewModel(); //new ModrinthRepositoryViewModel(AddonType.Mods, ClientType.Fabric, "1.19.4");

@@ -1,33 +1,91 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Input;
 
-namespace Lexplosion.WPF.NewInterface.Controls.Paginator
+namespace Lexplosion.WPF.NewInterface.Controls
 {
     [TemplatePart(Name = PART_PREVIOUS_PAGE_BUTTON, Type = typeof(Button))]
     [TemplatePart(Name = PART_NEXT_PAGE_BUTTON, Type = typeof(Button))]
-    public class Paginator : Control
+    [TemplatePart(Name = PART_NUMBERS_PANEL, Type = typeof(Panel))]
+    public sealed class Paginator : Control
     {
         private const string PART_PREVIOUS_PAGE_BUTTON = "PART_PreviousPageButton";
         private const string PART_NEXT_PAGE_BUTTON = "PART_NextPageButton";
+        private const string PART_NUMBERS_PANEL = "PART_NumbersPanel";
 
         private Button _previousPageButton;
         private Button _nextPageButton;
+        private TextBlock _currentIndexValueTextBlock;
+        private Panel _numbersPanel;
 
-        private int _currentPageIndex = int.MinValue;
+
+        private bool _isFirst;
+        private bool _isLast;
 
 
         #region Dependency Properties
 
 
-        public static readonly DependencyProperty NumberOfPagesProperty
-            = DependencyProperty.Register("NumberOfPages", typeof(int), typeof(Paginator),
-                new FrameworkPropertyMetadata(0));
+        public static readonly DependencyProperty PrevCommandProperty
+            = DependencyProperty.Register(nameof(PrevCommand), typeof(ICommand), typeof(Paginator),
+                new FrameworkPropertyMetadata(null));
 
-        public int NumberOfPages
+        public static readonly DependencyProperty NextCommandProperty
+            = DependencyProperty.Register(nameof(NextCommand), typeof(ICommand), typeof(Paginator),
+                new FrameworkPropertyMetadata(null));
+
+        public static readonly DependencyProperty ToCommandProperty
+            = DependencyProperty.Register(nameof(ToCommand), typeof(ICommand), typeof(Paginator), 
+                new FrameworkPropertyMetadata(null));
+
+        public static readonly DependencyProperty PageCountProperty
+            = DependencyProperty.Register(nameof(PageCount), typeof(uint), typeof(Paginator),
+                new FrameworkPropertyMetadata(defaultValue: (uint)0));
+
+        public static readonly DependencyProperty CurrentPageIndexProperty
+            = DependencyProperty.Register(nameof(CurrentPageIndex), typeof(uint), typeof(Paginator),
+                new FrameworkPropertyMetadata(defaultValue: (uint)0, propertyChangedCallback: OnCurrentPageIndexChanged));
+
+        public static readonly DependencyProperty PageNumberStyleProperty
+            = DependencyProperty.Register(nameof(PageNumberStyle), typeof(Style), typeof(Paginator), 
+                new FrameworkPropertyMetadata(null));
+
+        public ICommand PrevCommand
         {
-            get => (int)GetValue(NumberOfPagesProperty);
-            set => SetValue(NumberOfPagesProperty, value);
+            get => (ICommand)GetValue(NextCommandProperty);
+            set => SetValue(NextCommandProperty, value);
+        }
+
+        public ICommand NextCommand 
+        {
+            get => (ICommand)GetValue(NextCommandProperty);
+            set => SetValue(NextCommandProperty, value);
+        }
+
+        public ICommand ToCommand 
+        {
+            get => (ICommand)GetValue(ToCommandProperty);
+            set => SetValue(ToCommandProperty, value);
+        }
+
+        public uint PageCount 
+        {
+            get => (uint)GetValue(PageCountProperty);
+            set => SetValue(PageCountProperty, value);
+        }
+
+        public uint CurrentPageIndex
+        {
+            get => (uint)GetValue(CurrentPageIndexProperty);
+            set => SetValue(CurrentPageIndexProperty, value);
+        }
+
+        public Style PageNumberStyle 
+        {
+            set => SetValue(PageNumberStyleProperty, value);
+            get => (Style)GetValue(PageNumberStyleProperty);
         }
 
 
@@ -53,6 +111,10 @@ namespace Lexplosion.WPF.NewInterface.Controls.Paginator
         {
             _previousPageButton = GetPartHandler(PART_PREVIOUS_PAGE_BUTTON) as Button;
             _nextPageButton = GetPartHandler(PART_NEXT_PAGE_BUTTON) as Button;
+            _currentIndexValueTextBlock = GetPartHandler("CurrentIndexValueTextBlock") as TextBlock;
+            _numbersPanel = GetPartHandler(PART_NUMBERS_PANEL) as Panel;
+            _currentIndexValueTextBlock.Text = 1.ToString();
+            //var binding = BindingOperations.GetBinding(_currentIndexValueTextBlock, TextBlock.TextProperty);
 
             _previousPageButton.Click += _previousPageButton_Click;
             _nextPageButton.Click += _nextPageButton_Click;
@@ -69,12 +131,29 @@ namespace Lexplosion.WPF.NewInterface.Controls.Paginator
 
         private void _nextPageButton_Click(object sender, RoutedEventArgs e)
         {
-
+            if (CurrentPageIndex + 1 <= PageCount) 
+            {
+                CurrentPageIndex++;
+                NextCommand?.Execute(CurrentPageIndex);
+            }
         }
 
         private void _previousPageButton_Click(object sender, RoutedEventArgs e)
         {
+            if (CurrentPageIndex - 1 > 0) 
+            { 
+                CurrentPageIndex--;
+                PrevCommand?.Execute(CurrentPageIndex);
+            }
+        }
 
+        private void _pageIndex_Click() 
+        {
+            if (CurrentPageIndex - 1 > 0 && CurrentPageIndex + 1 <= PageCount) 
+            {
+                CurrentPageIndex++;
+                ToCommand?.Execute(CurrentPageIndex);
+            }
         }
 
 
@@ -85,16 +164,25 @@ namespace Lexplosion.WPF.NewInterface.Controls.Paginator
         /// <returns>object</returns>
         private object GetPartHandler(string name)
         {
-            var part = Template.FindName(PART_PREVIOUS_PAGE_BUTTON, this);
+            var part = Template.FindName(name, this);
 
             if (part == null)
             {
-                new Exception(name + " doesn't exists");
+                throw new Exception($"{name} doesn't exists");
             }
 
             return part;
         }
 
+
+        private static void OnCurrentPageIndexChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is Paginator) 
+            {
+                var paginator = (Paginator)d;
+                paginator._currentIndexValueTextBlock.Text = e.NewValue.ToString();
+            }
+        }
 
         #endregion Private Methods
     }

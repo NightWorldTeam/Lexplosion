@@ -11,15 +11,15 @@ namespace Lexplosion.WPF.NewInterface.Core.Paginator
         /// <summary>
         /// Количество страниц.
         /// </summary>
-        int PageCount { get; }
+        uint PageCount { get; }
         /// <summary>
         /// Количество элементов на странице.
         /// </summary>
-        int PageSize { get; }
+        uint PageSize { get; }
         /// <summary>
         /// Индекс выбранной страницы.
         /// </summary>
-        int CurrentPageIndex { get; }
+        uint CurrentPageIndex { get; }
         /// <summary>
         /// Является ли выбранная страница первой.
         /// </summary>
@@ -44,5 +44,10 @@ namespace Lexplosion.WPF.NewInterface.Core.Paginator
         /// Перейти на последнюю страницу.
         /// </summary>
         IEnumerable<T> ToLast();
+        /// <summary>
+        /// Перейти на страницу с номером pageIndex;
+        /// </summary>
+        /// <param name="pageIndex">Номер страницы на которую нужно перейти</param>
+        IEnumerable<T> To(uint pageIndex);
     }
 }
