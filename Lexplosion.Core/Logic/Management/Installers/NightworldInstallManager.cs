@@ -94,6 +94,7 @@ namespace Lexplosion.Logic.Management.Installers
                     nightworldManifest = NightWorldApi.GetInstanceManifest(InfoData.id);
                     if (nightworldManifest == null)
                     {
+                        // TODO: сделать как с локлаьными и курсфорджевкими сборками, чтобы при ошибке сеервера загружался локальный манифест
                         return InstanceInit.ServerError;
                     }
 

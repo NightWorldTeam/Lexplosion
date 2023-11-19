@@ -23,20 +23,20 @@ namespace Lexplosion.Logic.FileSystem
         {
             try
             {
-                DirectoryPath = path.Replace(@"\", "/");
+                path = path.Replace(@"\", "/");
+                if (path[path.Length - 1] == '/')
+                {
+                    path = path.TrimEnd('/');
+                }
+
+                DirectoryPath = path;
 
                 if (Directory.Exists(DirectoryPath + "/temp"))
                 {
                     Directory.Delete(DirectoryPath + "/temp", true);
                 }
 
-                if (DirectoryPath[DirectoryPath.Length - 1] == '/')
-                {
-                    DirectoryPath.TrimEnd('/');
-                }
-
                 Runtime.DebugWrite("DirectoryPath: " + DirectoryPath);
-
                 Directory.CreateDirectory(DirectoryPath + "/temp");
             }
             catch (Exception ex)

@@ -516,7 +516,10 @@ namespace Lexplosion.Logic.Network.SMP
             }
         }
 
-        private void ConnectionControl() //метод работающий всегда. контролирует доставку пакетов
+        /// <summary>
+        /// Метод работающий всегда, поддерживает соединение, если данные не отправляются 10 и более секунд
+        /// </summary>
+        protected void ConnectionControl()
         { // TODO: потом на сервере этот метод как-то занести в один поток для всех клиентов
             while (IsConnected)
             {
