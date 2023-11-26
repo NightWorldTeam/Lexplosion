@@ -180,7 +180,9 @@ namespace Lexplosion.WPF.NewInterface.Controls
             if (d is Paginator) 
             {
                 var paginator = (Paginator)d;
-                paginator._currentIndexValueTextBlock.Text = e.NewValue.ToString();
+                if (paginator._currentIndexValueTextBlock != null) { 
+                    paginator._currentIndexValueTextBlock.Text = e.NewValue.ToString();
+                }
             }
         }
 

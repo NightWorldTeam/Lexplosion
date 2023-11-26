@@ -10,36 +10,49 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
+    <Grid>
 
-    <ScrollViewer
-        Margin="0,40,0,0"
-        KeyboardNavigation.IsTabStop="False"
-        KeyboardNavigation.TabNavigation="None">
-        <Grid>
 
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="0.0715*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="0.0715*" />
-            </Grid.ColumnDefinitions>
+        <ScrollViewer
+            Margin="0,40,0,0"
+            KeyboardNavigation.IsTabStop="False"
+            KeyboardNavigation.TabNavigation="None">
+            <Grid>
 
-            <ItemsControl
-                Grid.Column="1"
-                ItemsSource="{Binding Model.Instances}"
-                KeyboardNavigation.IsTabStop="False"
-                KeyboardNavigation.TabNavigation="None">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.0715*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="0.0715*" />
+                </Grid.ColumnDefinitions>
 
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate DataType="{x:Type instanceModel:InstanceModelBase}">
-                        <controls:InstanceForm
-                            Margin="0,0,0,16"
-                            InstanceModel="{Binding}"
-                            LogoButtonCommand="{Binding DataContext.OpenInstanceProfileMenu, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
-                            LogoButtonCommandParameter="{Binding}" />
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
+                <ItemsControl
+                    Grid.Column="1"
+                    ItemsSource="{Binding Model.Instances}"
+                    KeyboardNavigation.IsTabStop="False"
+                    KeyboardNavigation.TabNavigation="None">
 
-            </ItemsControl>
-        </Grid>
-    </ScrollViewer>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type instanceModel:InstanceModelBase}">
+                            <controls:InstanceForm
+                                Margin="0,0,0,16"
+                                InstanceModel="{Binding}"
+                                LogoButtonCommand="{Binding DataContext.OpenInstanceProfileMenu, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
+                                LogoButtonCommandParameter="{Binding}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+
+                </ItemsControl>
+            </Grid>
+        </ScrollViewer>
+
+        <Button
+            Grid.Column="2"
+            Width="32"
+            Height="32"
+            Margin="0,0,16,16"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
+            Background="{DynamicResource SecondaryForegroundSolidColorBrush}"
+            Command="{Binding OpenInstanceFactory}" />
+    </Grid>
 </UserControl>

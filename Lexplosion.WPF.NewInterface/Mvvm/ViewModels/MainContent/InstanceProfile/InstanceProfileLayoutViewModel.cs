@@ -51,7 +51,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         #region Constructors
 
 
-        public InstanceProfileLayoutViewModel(INavigationStore navigationStore, NavigateCommand<ViewModelBase> toMainMenuLayoutCommand, InstanceModelBase instanceModelBase)
+        public InstanceProfileLayoutViewModel(INavigationStore navigationStore, ICommand toMainMenuLayoutCommand, InstanceModelBase instanceModelBase)
         {
             _instanceModel = instanceModelBase;
             _navigationStore = navigationStore;

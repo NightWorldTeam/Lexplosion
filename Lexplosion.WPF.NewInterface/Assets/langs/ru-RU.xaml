@@ -229,7 +229,7 @@
     <!--  Instance Profile Settings  -->
     <!--    -->
     <s:String x:Key="Configuration">Конфигурация</s:String>
-    <s:String x:Key="InstanceNameDescription">Название данной сборки.</s:String>
+    <s:String x:Key="InstanceNameDescription">Так ваша сборка будет называется в библиотеке</s:String>
     <s:String x:Key="Summary">Краткое описание</s:String>
     <s:String x:Key="SummaryDescription">Краткое описание для данной сборки.</s:String>
     <s:String x:Key="Description">Описание</s:String>
@@ -301,4 +301,9 @@
     <s:String x:Key="A-Z">A-Z</s:String>
 
     <s:String x:Key="ProjectFound">проектов найдено</s:String>
+
+
+    <!--  Instance Factory  -->
+    <s:String x:Key="InstanceName">Название сборки</s:String>
+    <s:String x:Key="CreateInstance">Создать сборку</s:String>
 </ResourceDictionary>

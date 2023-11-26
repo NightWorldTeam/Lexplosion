@@ -67,6 +67,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
 
         #endregion Constructors
 
+
         #region Public & Properties Methods
 
 

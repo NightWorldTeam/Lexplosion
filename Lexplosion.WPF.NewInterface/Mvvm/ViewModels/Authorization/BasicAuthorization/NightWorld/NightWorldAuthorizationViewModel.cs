@@ -11,6 +11,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Authorization
     public sealed class NightWorldAuthorizationViewModel : ViewModelBase
     {
         private readonly INavigationStore _navigationStore;
+        private readonly ICommand _toMainMenu;
 
         public IBasicAuthModel Model { get; }
 
@@ -24,7 +25,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Authorization
             get => authorizationCommand ?? (authorizationCommand = new RelayCommand(obj =>
             {
                 Model.LogIn();
-                _navigationStore.CurrentViewModel = new MainMenuLayoutViewModel(_navigationStore);
+                _toMainMenu?.Execute(null);
             }));
         }
 
@@ -55,10 +56,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Authorization
         #region Constructors
 
 
-        public NightWorldAuthorizationViewModel(INavigationStore navigationStore, string loadedLogin = "")
+        public NightWorldAuthorizationViewModel(string loadedLogin = "")
         {
             Model = new NightWorldAuthorizationModel(null, loadedLogin);
-            _navigationStore = navigationStore;
         }
 
 

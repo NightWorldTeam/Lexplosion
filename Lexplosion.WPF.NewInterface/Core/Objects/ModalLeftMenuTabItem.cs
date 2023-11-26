@@ -4,7 +4,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
 {
     public struct ModalLeftMenuTabItem
     {
-        public event Action<ViewModelBase> SelectedEvent;
+        public event Action<ModalLeftMenuTabItem> SelectedEvent;
 
         public int Id { get; set; }
         public string TitleKey { get; set; }
@@ -19,13 +19,13 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
             get => _isSelected; set
             {
                 _isSelected = value;
-                OnIsSelectedChanged(Content);
+                OnIsSelectedChanged();
             }
         }
 
-        private void OnIsSelectedChanged(ViewModelBase content)
+        private void OnIsSelectedChanged()
         {
-            SelectedEvent?.Invoke(content);
+            SelectedEvent?.Invoke(this);
         }
     }
 }

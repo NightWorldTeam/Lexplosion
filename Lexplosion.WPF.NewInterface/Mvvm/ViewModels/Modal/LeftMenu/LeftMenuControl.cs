@@ -12,7 +12,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
         public IEnumerable<ModalLeftMenuTabItem> TabItems { get => _tabItems; }
 
 
-        public ViewModelBase CurrentContent { get; private set; }
+        public ViewModelBase SelectedContent { get; private set; }
+        public string TitleKey { get; private set; }
 
 
         #region Constructors
@@ -29,6 +30,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
             {
                 item.SelectedEvent += OnCurrentContentChanged;
                 _tabItems.Add(item);
+            }
+            if (_tabItems.Count > 0) 
+            {
+                OnCurrentContentChanged(_tabItems[0]);
             }
         }
 
@@ -48,9 +53,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
             });
         }
 
-        private void OnCurrentContentChanged(ViewModelBase content)
+        private void OnCurrentContentChanged(ModalLeftMenuTabItem tabItem)
         {
-            CurrentContent = content;
+            SelectedContent = tabItem.Content;
+            TitleKey = tabItem.TitleKey;
+            OnPropertyChanged(nameof(SelectedContent));
+            OnPropertyChanged(nameof(TitleKey));
         }
     }
 }

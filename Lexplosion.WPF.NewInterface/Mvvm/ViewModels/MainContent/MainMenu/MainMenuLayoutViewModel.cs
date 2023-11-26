@@ -1,7 +1,10 @@
 ﻿using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
+using Lexplosion.WPF.NewInterface.Mvvm.Models;
+using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using Lexplosion.WPF.NewInterface.Stores;
 using System;
+using System.Collections;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 {
@@ -36,13 +39,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         #region Constructors
 
 
-        public MainMenuLayoutViewModel(INavigationStore navigationStore)
+        public MainMenuLayoutViewModel(INavigationStore navigationStore, ModalNavigationStore modalNavStore, MainModel mainModel)
         {
             Func<ViewModelBase> s = () => this;
             var ToMainMenuLayoutCommand = new NavigateCommand<ViewModelBase>(navigationStore, s);
 
             _catalogViewModel = new CatalogViewModel(navigationStore, ToMainMenuLayoutCommand);
-            _libraryViewModel = new LibraryViewModel(navigationStore, ToMainMenuLayoutCommand);
+            _libraryViewModel = new LibraryViewModel(navigationStore, ToMainMenuLayoutCommand, modalNavStore, () => mainModel.LibraryInstances);
 
             Content = _catalogViewModel;
 

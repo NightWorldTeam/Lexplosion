@@ -70,8 +70,8 @@ namespace Lexplosion.WPF.NewInterface
 
             InitializedSystem();
 
-            ResourcesDictionariesRegister();
-            SetMainWindow();
+            //ResourcesDictionariesRegister();
+            //SetMainWindow();
 
             //Thread thread = new Thread(InitializedSystem);
             // thread.SetApartmentState(ApartmentState.STA);

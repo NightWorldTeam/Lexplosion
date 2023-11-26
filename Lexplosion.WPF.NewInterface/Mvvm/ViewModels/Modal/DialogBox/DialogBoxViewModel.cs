@@ -5,7 +5,7 @@ using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
 {
-    public sealed class DialogBoxModel : ModalViewModelBase
+    public sealed class DialogBoxModel
     {
         public string TitleKey { get; }
         public string DescriptionKey { get; }

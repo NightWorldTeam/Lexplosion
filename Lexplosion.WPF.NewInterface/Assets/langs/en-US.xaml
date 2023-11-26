@@ -230,7 +230,7 @@
     <!--  Instance Profile Settings  -->
     <!--    -->
     <s:String x:Key="Configuration">Configuration</s:String>
-    <s:String x:Key="InstanceNameDescription">Название данной сборки.</s:String>
+    <s:String x:Key="InstanceNameDescription">Your instance would call so in the library.</s:String>
     <s:String x:Key="Summary">Summary</s:String>
     <s:String x:Key="SummaryDescription">Summary for this instance.</s:String>
     <s:String x:Key="Description">Description</s:String>
@@ -303,4 +303,15 @@
     <s:String x:Key="A-Z">A-Z</s:String>
 
     <s:String x:Key="ProjectFound">Project Found</s:String>
+
+
+    <!--  Instance Factory  -->
+    <s:String x:Key="InstanceProperties">Instance Properties</s:String>
+    <s:String x:Key="MinecraftVersion">Minecraft Version</s:String>
+    <s:String x:Key="ShowSnaphosts">Minecraft Version</s:String>
+
+
+    <!--  Instance Factory  -->
+    <s:String x:Key="InstanceName">Instance Name</s:String>
+    <s:String x:Key="CreateInstance">Create Instance</s:String>
 </ResourceDictionary>

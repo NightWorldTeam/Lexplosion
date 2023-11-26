@@ -29,8 +29,8 @@
                                 CornerRadius="5">
                                 <Border.Effect>
                                     <DropShadowEffect
-                                        BlurRadius="24"
-                                        ShadowDepth="0"
+                                        BlurRadius="100"
+                                        ShadowDepth="10"
                                         Color="{DynamicResource SeparateColor}" />
                                 </Border.Effect>
                             </Border>
@@ -58,12 +58,6 @@
                             </StackPanel>
                         </Grid>
                         <ControlTemplate.Triggers>
-                            <Trigger Property="IsEnabled" Value="False">
-                                <!--<Setter TargetName="Path" Property="Stroke" Value="{DynamicResource PrimaryForegroundSolidColorBrush}" />
-                                <Setter TargetName="Path" Property="Fill" Value="{DynamicResource PrimaryForegroundSolidColorBrush}" />
-                                <Setter TargetName="TextBlock" Property="Foreground" Value="{DynamicResource PrimaryForegroundSolidColorBrush}" />-->
-                            </Trigger>
-
                             <Trigger Property="IsChecked" Value="False">
                                 <Setter TargetName="Border" Property="Visibility" Value="Collapsed" />
                                 <Setter TargetName="Tab" Property="Opacity" Value="0.6" />
@@ -85,8 +79,8 @@
 
     <Grid>
         <Border
-            Width="620"
-            Height="420"
+            Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={StaticResource WindowWidthToXProcentWidth}, ConverterParameter=65}"
+            Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={StaticResource WindowHeightToXProcentHeight}, ConverterParameter=80}"
             Background="{DynamicResource PrimarySolidColorBrush}"
             CornerRadius="10">
             <Grid>
@@ -103,29 +97,70 @@
                     <!--  Custom Tab Panel  -->
                     <ItemsControl ItemsSource="{Binding TabItems}" />
                 </Border>
-                <ScrollViewer
-                    Grid.Column="1"
-                    HorizontalScrollBarVisibility="Disabled"
-                    VerticalScrollBarVisibility="Auto">
 
+                <Grid Grid.Column="1" Margin="0,10,0,0">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <!--  Header  -->
                     <Border
-                        Padding="20,10,20,10"
-                        Background="{DynamicResource PrimarySolidColorBrush}"
+                        Margin="10,0,10,0"
+                        Padding="0,0,0,10"
+                        VerticalAlignment="Top"
                         BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                        BorderThickness="1,0,0,0"
-                        CornerRadius="0,5,5,5">
-                        <Border BorderBrush="Transparent" BorderThickness="0.5">
-                            <Grid>
-                                <ContentControl Content="{Binding CurrentContent}" />
-                                <Button
-                                    Width="32"
-                                    Height="32"
-                                    Command="{Binding CloseCommand}"
-                                    IsCancel="True" />
-                            </Grid>
-                        </Border>
+                        BorderThickness="0,0,0,1">
+                        <Grid>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <!--  Selected Page Title  -->
+                            <TextBlock
+                                VerticalAlignment="Top"
+                                extensions:TextBlock.TextByKey="{Binding TitleKey}"
+                                FontSize="20"
+                                FontWeight="Medium"
+                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+
+                            <!--  Close Button  -->
+                            <Button
+                                Grid.Column="1"
+                                Width="20"
+                                Height="20"
+                                Command="{Binding CloseCommand}"
+                                IsCancel="True">
+
+                                <Button.Template>
+                                    <ControlTemplate>
+                                        <Grid Background="Transparent">
+                                            <Viewbox Height="16">
+                                                <Path
+                                                    extensions:Path.StringKeyData="Close"
+                                                    Fill="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                                    Stretch="Fill" />
+                                            </Viewbox>
+                                        </Grid>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                        </Grid>
                     </Border>
-                </ScrollViewer>
+
+                    <!--  Content  -->
+                    <ScrollViewer
+                        Grid.Row="1"
+                        CanContentScroll="True"
+                        HorizontalScrollBarVisibility="Disabled"
+                        VerticalScrollBarVisibility="Auto">
+                        <!--  Content  -->
+                        <ContentControl Margin="10,0,10,0" Content="{Binding SelectedContent}" />
+                    </ScrollViewer>
+                </Grid>
             </Grid>
         </Border>
     </Grid>

@@ -5,13 +5,19 @@ using Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent;
 using Lexplosion.WPF.NewInterface.Stores;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile;
 using System.Windows.Input;
+using Lexplosion.WPF.NewInterface.Core.Objects;
+using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal;
+using System.Collections.Generic;
+using System;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 {
     public sealed class LibraryViewModel : ViewModelBase
     {
         private readonly INavigationStore _navigationStore;
-        private readonly NavigateCommand<ViewModelBase> _toMainMenuLayoutCommand;
+        private readonly ICommand _toMainMenuLayoutCommand;
+        private readonly ModalNavigationStore _modalNavigationStore;
+        private readonly Func<IEnumerable<InstanceModelBase>> _getInstances;
 
         public LibraryModel Model { get; }
 
@@ -31,14 +37,25 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         }
 
 
+        private RelayCommand _openInstanceFactory;
+        public ICommand OpenInstanceFactory
+        {
+            get => RelayCommand.GetCommand(ref _openInstanceFactory, () => 
+            {
+                _modalNavigationStore.OpenModalPageByType(ModalAbstractFactory.ModalPage.InstanceFactory);
+            });
+        }
+
+
         #endregion Commands
 
-
-        public LibraryViewModel(INavigationStore navigationStore, NavigateCommand<ViewModelBase> toMainMenuLayoutCommand)
+        // TODO: думаю делегат с инстансами это костыль ченить другое надо придумать
+        public LibraryViewModel(INavigationStore navigationStore, ICommand toMainMenuLayoutCommand, ModalNavigationStore modalNavigationStore, Func<IEnumerable<InstanceModelBase>> getInstances)
         {
-            Model = new LibraryModel();
+            Model = new LibraryModel(getInstances);
             _navigationStore = navigationStore;
             _toMainMenuLayoutCommand = toMainMenuLayoutCommand;
+            _modalNavigationStore = modalNavigationStore;
         }
     }
 }

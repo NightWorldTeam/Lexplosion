@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 
 namespace Lexplosion.WPF.NewInterface.Controls
@@ -212,6 +213,11 @@ namespace Lexplosion.WPF.NewInterface.Controls
             InstanceModel.StageChanged += () =>
             {
                 LoadButtons();
+            };
+
+            InstanceModel.DeletedEvent += (s) =>
+            {
+                DeleteAnimation();
             };
         }
 
@@ -488,6 +494,31 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
 
         #endregion Logo Grid Block
+
+
+        private void DeleteAnimation()
+        {
+            var doubleAnim = new DoubleAnimation()
+            {
+                From = 1,
+                To = 0,
+                Duration = TimeSpan.FromSeconds(0.20)
+            };
+
+            doubleAnim.Completed += (e, e1) =>
+            {
+                var doubleAnim1 = new DoubleAnimation()
+                {
+                    From = this.ActualHeight,
+                    To = 0,
+                    Duration = TimeSpan.FromSeconds(0.10)
+                };
+                this.BeginAnimation(HeightProperty, doubleAnim1);
+            };
+
+            this.BeginAnimation(OpacityProperty, doubleAnim);
+
+    }
 
 
         #endregion Private Methods

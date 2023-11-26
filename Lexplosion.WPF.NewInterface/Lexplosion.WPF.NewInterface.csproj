@@ -6,7 +6,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{C7328845-AB10-4FAC-99D8-F52FE705B628}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <RootNamespace>Lexplosion.WPF.NewInterface</RootNamespace>
     <AssemblyName>Lexplosion.WPF.NewInterface</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
@@ -100,6 +100,8 @@
     <Compile Include="Controls\SearchBox\SearchBox.cs" />
     <Compile Include="Controls\UIUnderlineTabControl\UIUnderlineTabControl.cs" />
     <Compile Include="Controls\UpperPlaceholderTextBox\UpperPlaceholderTextBox.cs" />
+    <Compile Include="Core\Converters\WindowHeightToXProcentHeight.cs" />
+    <Compile Include="Core\Converters\WindowWidthToXProcentWidth.cs" />
     <Compile Include="Core\Paginator\IPaginator.cs" />
     <Compile Include="Core\Paginator\Paginator.cs" />
     <Compile Include="Core\ViewModel\ContentLayoutViewModelBase.cs" />

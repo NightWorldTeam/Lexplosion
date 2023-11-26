@@ -7,16 +7,78 @@ using Lexplosion.WPF.NewInterface.Stores;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal;
 using System.Collections.Generic;
 using System.Windows.Media;
+using System.Linq;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories;
 using Lexplosion.Logic.Management.Instances;
+using Lexplosion.WPF.NewInterface.Commands;
+using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Authorization;
+using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile;
+using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceCatalogControllers;
+using Lexplosion.WPF.NewInterface.Mvvm.Models;
+using System;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
 {
+    public abstract class ModalAbstractFactory 
+    {
+        public enum ModalPage
+        {
+            InstanceFactory,
+            InstanceExport
+        }
+
+        public abstract IModalViewModel Create();
+    }
+
+    public sealed class ModalInstanceCreatorFactory : ModalAbstractFactory
+    {
+        private readonly Action<InstanceClient> _addToLibrary;
+
+        public ModalInstanceCreatorFactory(Action<InstanceClient> addToLibrary)
+        {
+            _addToLibrary = addToLibrary;
+        }
+
+        public override IModalViewModel Create()
+        {
+            return new LeftMenuControl(
+                new ModalLeftMenuTabItem[3]
+                {
+                    new ModalLeftMenuTabItem()
+                    {
+                        IconKey = "AddCircle",
+                        TitleKey = "Create",
+                        IsEnable = true,
+                        IsSelected = true,
+                        Content = new InstanceFactoryViewModel(_addToLibrary)
+                    },
+                    new ModalLeftMenuTabItem()
+                    {
+                        IconKey = "PlaceItem",
+                        TitleKey = "Import",
+                        IsEnable = true,
+                        IsSelected = false
+                    },
+                    new ModalLeftMenuTabItem()
+                    {
+                        IconKey = "DownloadCloud",
+                        TitleKey = "Distributions",
+                        IsEnable = true,
+                        IsSelected = false
+                    }
+                }
+                );
+        }
+    }
+
+
     public sealed class MainViewModel : VMBase
     {
         #region Properties
 
+
+        public MainModel Model { get; }
 
         /// <summary>
         /// Навигационное хранилище, хранит активный viewmodel для окна.
@@ -28,15 +90,17 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
         /// </summary>
         public ViewModelBase CurrentViewModel => NavigationStore.CurrentViewModel;
 
+        internal ModalNavigationStore ModalNavigationStore { get; } = new ModalNavigationStore();
+
         /// <summary>
         /// Выбранный в данный момент viewmodel для модального окна.
         /// </summary>
-        public IModalViewModel CurrentModalViewModel => ModalNavigationStore.Instance.CurrentViewModel;
+        public IModalViewModel CurrentModalViewModel => ModalNavigationStore.CurrentViewModel;
 
         /// <summary>
         /// Открыто ли модальное окно.
         /// </summary>
-        public bool IsModalOpen { get => ModalNavigationStore.Instance.CurrentViewModel != null; }
+        public bool IsModalOpen { get => ModalNavigationStore.CurrentViewModel != null; }
 
 
 
@@ -56,51 +120,49 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
 
         #endregion Properties
 
-        public MainViewModel()
+
+        #region Constructors
+
+
+        static MainViewModel()
         {
             PreLoadGameVersions();
+        }
 
-            ModalNavigationStore.Instance.CurrentViewModelChanged += Instance_CurrentViewModelChanged;
-            ModalNavigationStore.Instance.Open(new LeftMenuControl(
-                new ModalLeftMenuTabItem[3]
-                {
-                    new ModalLeftMenuTabItem()
-                    {
-                        IconKey = "AddCircle",
-                        TitleKey = "Create",
-                        IsEnable = true,
-                        IsSelected = true
-                    },
-                    new ModalLeftMenuTabItem()
-                    {
-                        IconKey = "PlaceItem",
-                        TitleKey = "Import",
-                        IsEnable = true,
-                        IsSelected = true
-                    },
-                    new ModalLeftMenuTabItem()
-                    {
-                        IconKey = "DownloadCloud",
-                        TitleKey = "Distributions",
-                        IsEnable = true,
-                        IsSelected = true
-                    }
-                }
-                ));
-
-            ModalNavigationStore.Instance.Close();
-            ModalNavigationStore.Instance.Open(new DialogBoxViewModel("Library", "Protection", (obj) => { }, (obj) => { }));
-            ModalNavigationStore.Instance.Close();
-
+        public MainViewModel()
+        {
+            Model = new MainModel();
+            // так как грузится в отдельном потоке, может загрузится позже чем создатся экземпляр класса InstanceFactory!!!
+            ModalNavigationStore.CurrentViewModelChanged += Instance_CurrentViewModelChanged;
             NavigationStore.CurrentViewModelChanged += NavigationStore_CurrentViewModelChanged;
-            NavigationStore.CurrentViewModel = new MainMenuLayoutViewModel(NavigationStore);
+
+
+            // Register Modal Window Contents
+            ModalNavigationStore.RegisterAbstractFactory(ModalAbstractFactory.ModalPage.InstanceFactory, new ModalInstanceCreatorFactory(Model.AddToLibrary));
+
+
+            //ModalNavigationStore.Close();
+            //ModalNavigationStore.Open(new DialogBoxViewModel("Library", "Protection", (obj) => { }, (obj) => { }));
+            //ModalNavigationStore.Close();
+
+            var mainMenuLayout = new MainMenuLayoutViewModel(NavigationStore, ModalNavigationStore, Model);
+            var toMainMenu = new NavigateCommand<ViewModelBase>(NavigationStore, () => mainMenuLayout);
+            toMainMenu?.Execute(null);
+            //var toAuthForms = new NavigateCommand<ViewModelBase>(NavigationStore, () => new AuthorizationMenuViewModel(NavigationStore, toMainMenu));
+
+            //toAuthForms.Execute(null);
+
             //NavigationStore.CurrentViewModel = new ModrinthAddonPageViewModel(null);
             //NavigationStore.CurrentViewModel = new CurseforgeRepositoryViewModel(InstanceClient.GetInstalledInstances()[0].GetBaseData);
             //new MainMenuLayoutViewModel(NavigationStore); 
-            //NavigationStore.CurrentViewModel = new InstanceProfileLayoutViewModel(LibraryController.Instance.Instances.Last());
+            //NavigationStore.CurrentViewModel = new InstanceProfileLayoutViewModel(null, null, LibraryController.Instance.Instances.Last());
             //new InstanceModelBase(InstanceClient.GetOutsideInstances( InstanceSource.Modrinth, 2, 0, new IProjectCategory[] { new SimpleCategory() { Name = "All", Id = "-1", ClassId = "", ParentCategoryId = "" }}, "", CfSortField.Featured, "1.19.4")[1])); //new MainMenuLayoutViewModel(); //new ModrinthRepositoryViewModel(AddonType.Mods, ClientType.Fabric, "1.19.4");
             //NavigationStore.Content = new AuthorizationMenuViewModel(NavigationStore);
         }
+
+
+        #endregion Constructors
+
 
         private void Instance_CurrentViewModelChanged()
         {
@@ -133,6 +195,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
                 var releaseOnlyVersions = new List<MinecraftVersion>();
                 var allVersions = new MinecraftVersion[versionsList.Count];
                 var i = 0;
+
                 foreach (var version in versionsList)
                 {
                     if (version.type == "release")

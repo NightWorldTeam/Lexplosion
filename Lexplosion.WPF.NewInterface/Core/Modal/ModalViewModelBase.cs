@@ -1,47 +1,63 @@
 ﻿using Lexplosion.WPF.NewInterface.Commands;
-using Lexplosion.WPF.NewInterface.Stores;
 using System;
 using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Core.Modal
 {
-    public abstract class ModalViewModelBase : ViewModelBase, IModalViewModel
+    public abstract class ActionModalViewModelBase : ViewModelBase, IActionModelViewModel
     {
-        public bool IsCloseWhenActionCommandExecuted { get; set; } = true;
+        public event Action<object> CloseCommandExecutedEvent;
+        public event Action<object> ActionCommandExecutedEvent;
 
-        /// <summary>
-        /// Делегат который выполниться после вызова CloseCommand
-        /// </summary>
-        public Action CloseCommandAction;
+
+        #region Commands
+
 
         private RelayCommand _closeCommand;
         public ICommand CloseCommand
         {
-            get => _closeCommand ?? (_closeCommand = new RelayCommand(obj =>
+            get => RelayCommand.GetCommand(ref _closeCommand, (obj) =>
             {
-                ModalNavigationStore.Instance.Close();
-                CloseCommandAction?.Invoke();
-            }));
+                CloseCommandExecutedEvent?.Invoke(obj);
+            });
         }
-
-        /// <summary>
-        /// Делегат который выполниться после вызова ActionCommand
-        /// </summary>
-        public Action<object> ActionCommandAction;
 
         private RelayCommand _actionCommand;
         public ICommand ActionCommand
         {
-            get => _actionCommand ?? (_actionCommand = new RelayCommand(obj =>
+            get => RelayCommand.GetCommand(ref _actionCommand, (obj) =>
             {
-                ActionCommandAction?.Invoke(obj);
-                if (IsCloseWhenActionCommandExecuted)
-                {
-                    ModalNavigationStore.Instance.Close();
-                }
-            }));
+                ActionCommandExecutedEvent?.Invoke(obj);
+                if (IsCloseAfterCommandExecuted)
+                    CloseCommand.Execute(obj);
+            });
         }
 
-        public virtual ICommand HideCommand { get; }
+
+        #endregion Commands
+
+
+        public bool IsCloseAfterCommandExecuted { get; set; } = true;
+    }
+
+    public abstract class ModalViewModelBase : ViewModelBase, IModalViewModel
+    {
+        public event Action<object> CloseCommandExecutedEvent;
+
+
+        #region Commands
+
+
+        private RelayCommand _closeCommand;
+        public ICommand CloseCommand
+        {
+            get => RelayCommand.GetCommand(ref _closeCommand, (obj) => 
+            {
+                CloseCommandExecutedEvent?.Invoke(obj);
+            });
+        }
+
+
+        #endregion Commands
     }
 }

@@ -358,8 +358,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
                 (obj) =>
                 {
                     Model.UninstallAddon(obj);
-                }, (obj) => { ModalNavigationStore.Instance.Close(); });
-                ModalNavigationStore.Instance.Open(dialogViewModel);
+                }, (obj) => { //ModalNavigationStore.Close();
+                });
+                //ModalNavigationStore.Instance.Open(dialogViewModel);
             });
         }
 

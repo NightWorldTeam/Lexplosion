@@ -1,7 +1,9 @@
 ﻿using Lexplosion.Logic.Management.Authentication;
 using Lexplosion.WPF.NewInterface.Commands;
+using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Stores;
 using System;
+using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Authorization
 {
@@ -45,22 +47,35 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Authorization
         #endregion Public & Protected Methods
     }
 
-    public sealed class AuthorizationMenuViewModel : VMBase
+    public sealed class AuthorizationMenuViewModel : ViewModelBase
     {
         private readonly INavigationStore _navigationStore;
+        private readonly ICommand _toMainMenu;
+
+        private readonly ViewModelBase _microsoft;
+        private readonly ViewModelBase _nightWorld;
+        private readonly ViewModelBase _withoutAccount;
 
 
         #region Commands
 
 
         private RelayCommand _openAccountAuthFormCommand;
-        public RelayCommand OpenAccountAuthFormCommand
+        public ICommand OpenAccountAuthFormCommand
         {
-            get => _openAccountAuthFormCommand ?? (_openAccountAuthFormCommand = new RelayCommand(obj =>
+            get => RelayCommand.GetCommand(ref _openAccountAuthFormCommand, () => 
             {
-                _navigationStore.CurrentViewModel = new NightWorldAuthorizationViewModel(_navigationStore);
-            }));
+                _navigationStore.CurrentViewModel = new NightWorldAuthorizationViewModel();
+            });
         }
+
+        private RelayCommand _toNightWorldCommand;
+        public ICommand ToNightWorldCommand 
+        {
+            get => RelayCommand.GetCommand(ref _toNightWorldCommand, () => { });
+        }
+
+
 
         #endregion Commands
 
@@ -68,9 +83,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Authorization
         #region Constructors
 
 
-        public AuthorizationMenuViewModel(INavigationStore navigationStore)
+        public AuthorizationMenuViewModel(INavigationStore navigationStore, ICommand toMainMenu)
         {
             _navigationStore = navigationStore;
+            _toMainMenu = toMainMenu;
         }
 
 

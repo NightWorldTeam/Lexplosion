@@ -95,9 +95,12 @@
                     <Grid Grid.Row="1" Margin="0,16,0,0">
                         <StackPanel>
                             <Button
+                                Height="32"
                                 HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Center"
                                 Command="{Binding AuthorizationCommand}"
                                 Content="Log In Now"
+                                FontWeight="Medium"
                                 Foreground="White" />
 
                             <WrapPanel Margin="0,12,0,0" HorizontalAlignment="Center">

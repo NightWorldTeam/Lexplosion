@@ -362,7 +362,7 @@ namespace Lexplosion.Logic.Management.Instances
             var client = new InstanceClient(name, CreateSourceFactory(type), gameVersion)
             {
                 InLibrary = true,
-                Author = GlobalData.User.Login,
+                Author = GlobalData.User == null ? "Editor" : GlobalData.User.Login,
                 Description = NoDescription,
                 Summary = NoDescription
             };

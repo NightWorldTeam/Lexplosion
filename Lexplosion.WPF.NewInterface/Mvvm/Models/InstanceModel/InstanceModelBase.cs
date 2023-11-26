@@ -6,6 +6,8 @@ using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceCatalogControllers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
+using System.Windows.Threading;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 {
@@ -31,7 +33,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         public event Action<string> DownloadCanceledEvent;
         public event Action<string> GameLaunchedEvent;
         public event Action<string> GameClosedEvent;
-        public event Action<string> DeletedEvent;
+        public event Action<InstanceModelBase> DeletedEvent;
 
 
         #endregion Events
@@ -189,8 +191,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         public void Delete()
         {
             _instanceClient.Delete();
-            DeletedEvent?.Invoke(_instanceClient.LocalId);
-            LibraryController.Instance.Remove(this);
+            // TODO: ПОДПИСАТЬСЯ НА эвент и удалять через него.
+            DeletedEvent?.Invoke(this);
         }
 
 
