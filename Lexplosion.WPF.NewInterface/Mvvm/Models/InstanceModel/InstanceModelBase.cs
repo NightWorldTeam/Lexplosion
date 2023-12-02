@@ -52,7 +52,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         public string Author { get => _instanceClient.Author; }
         public string Summary { get => _instanceClient.Summary.Replace('\n', ' '); }
         public string Description { get => _instanceClient.Description; }
-        public byte[] Logo { get; }
+        public byte[] Logo { get; private set; }
         public IEnumerable<IProjectCategory> Tags { get; }
         public InstanceSource Source { get => _instanceClient.Type; }
         public string TotalDonwloads { get => _instanceClient.GetFullInfo().TotalDownloads.ToString(); }
@@ -236,6 +236,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 
         private void OnLogoChanged()
         {
+            Logo = _instanceClient.Logo;
             OnPropertyChanged(nameof(Logo));
             LogoChanged?.Invoke();
         }

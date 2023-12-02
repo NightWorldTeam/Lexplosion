@@ -18,6 +18,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
         private Button _previousPageButton;
         private Button _nextPageButton;
         private TextBlock _currentIndexValueTextBlock;
+        private TextBlock s;
         private Panel _numbersPanel;
 
 
@@ -42,7 +43,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
         public static readonly DependencyProperty PageCountProperty
             = DependencyProperty.Register(nameof(PageCount), typeof(uint), typeof(Paginator),
-                new FrameworkPropertyMetadata(defaultValue: (uint)0));
+                new FrameworkPropertyMetadata(defaultValue: (uint)0, propertyChangedCallback: OnPageCountPropertyChanged));
 
         public static readonly DependencyProperty CurrentPageIndexProperty
             = DependencyProperty.Register(nameof(CurrentPageIndex), typeof(uint), typeof(Paginator),
@@ -112,8 +113,10 @@ namespace Lexplosion.WPF.NewInterface.Controls
             _previousPageButton = GetPartHandler(PART_PREVIOUS_PAGE_BUTTON) as Button;
             _nextPageButton = GetPartHandler(PART_NEXT_PAGE_BUTTON) as Button;
             _currentIndexValueTextBlock = GetPartHandler("CurrentIndexValueTextBlock") as TextBlock;
+            s = GetPartHandler("MaxPage") as TextBlock;
             _numbersPanel = GetPartHandler(PART_NUMBERS_PANEL) as Panel;
             _currentIndexValueTextBlock.Text = 1.ToString();
+            s.Text = 1.ToString();
             //var binding = BindingOperations.GetBinding(_currentIndexValueTextBlock, TextBlock.TextProperty);
 
             _previousPageButton.Click += _previousPageButton_Click;
@@ -185,6 +188,19 @@ namespace Lexplosion.WPF.NewInterface.Controls
                 }
             }
         }
+
+        private static void OnPageCountPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is Paginator) 
+            {
+                var paginator = (Paginator)d;
+                if (paginator.s != null) 
+                {
+                    paginator.s.Text = e.NewValue.ToString();
+                }
+            }
+        }
+
 
         #endregion Private Methods
     }

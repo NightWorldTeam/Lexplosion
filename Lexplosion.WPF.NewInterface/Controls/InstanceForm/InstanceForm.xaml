@@ -327,6 +327,7 @@
                                 </Button>
 
                                 <controls:DropdownMenu
+                                    x:Name="PART_DropDownMenu"
                                     Grid.Row="1"
                                     Background="{DynamicResource PrimarySolidColorBrush}"
                                     BorderBrush="{DynamicResource SeparateSolidColorBrush}"
@@ -356,8 +357,8 @@
                 <ControlTemplate TargetType="{x:Type local:InstanceForm}">
                     <Border
                         Height="120"
-                        Background="{DynamicResource SecondarySolidColorBrush}"
-                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                        Background="{DynamicResource PrimarySolidColorBrush}"
+                        BorderBrush="{DynamicResource PrimarySolidColorBrush}"
                         CornerRadius="5">
 
                         <Grid ShowGridLines="False">

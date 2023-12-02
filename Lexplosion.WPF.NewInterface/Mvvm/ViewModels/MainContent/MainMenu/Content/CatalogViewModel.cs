@@ -18,6 +18,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
         #region Commands
 
+
         private RelayCommand _openInstanceProfileMenu;
         public ICommand OpenInstanceProfileMenu
         {
@@ -27,6 +28,30 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
                 _navigationStore.CurrentViewModel = new InstanceProfileLayoutViewModel(_navigationStore, _navigationCommand, ins);
             });
+        }
+
+        private RelayCommand _searchCommand;
+        public ICommand SearchCommand 
+        {
+            get => RelayCommand.GetCommand(ref _searchCommand, (obj) => Model.SearchFilterChanged(obj.ToString()));
+        }
+
+        private RelayCommand _nextPageCommand;
+        public ICommand NextPageCommand 
+        {
+            get => RelayCommand.GetCommand<uint>(ref _nextPageCommand, Model.Paginate);
+        }
+
+        private RelayCommand _prevPageCommand;
+        public ICommand PrevPageCommand 
+        {
+            get => RelayCommand.GetCommand<uint>(ref _prevPageCommand, Model.Paginate);
+        }
+
+        private RelayCommand _toCurrentPageIndexCommand;
+        public ICommand ToCurrentPageIndexCommand
+        {
+            get => RelayCommand.GetCommand<uint>(ref _toCurrentPageIndexCommand, Model.Paginate);
         }
 
         #endregion Commands

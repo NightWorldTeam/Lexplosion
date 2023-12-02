@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Threading;
+using Lexplosion.WPF.NewInterface.Controls;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile
 {
@@ -102,11 +104,14 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         private void UpdateFrameworkElementModels()
         {
             _instanceActions.Clear();
+            if (!_instanceModel.IsInstalled && !_instanceModel.InLibrary)
+                return;
+
             // 1. Website
             // 2. AddToLibrary
             // 2. OpenFolder
             // 3. Export
-            // 4. RemoveFromLibrary / Delete
+            // 4. RemoveFromLibrary / Delete (Перед удаление переводим пользователя в обратно библиотеку.)
 
             if (_instanceModel.Source != InstanceSource.Local)
             {
@@ -129,12 +134,30 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
 
             if (!_instanceModel.IsInstalled && _instanceModel.InLibrary)
             {
-                _instanceActions.Add(new FrameworkElementModel("RemoveFromLibrary", _instanceModel.Delete, "Delete"));
+                _instanceActions.Add(new FrameworkElementModel("RemoveFromLibrary", DeleteInstance, "Delete"));
             }
             else if (_instanceModel.IsInstalled)
             {
-                _instanceActions.Add(new FrameworkElementModel("DeleteInstance", _instanceModel.Delete, "Delete"));
+                _instanceActions.Add(new FrameworkElementModel("DeleteInstance", DeleteInstance, "Delete"));
             }
+        }
+
+
+        private void DeleteInstance() 
+        {
+            // возвращаем пользователя обратно на страницу библиотеки, потом проиграываем задержку, после чего вызываем удаление.
+            // P.S задержка нужна, чтобы анимация проигрывалась без косяков.
+            BackCommand?.Execute(null);
+            // запускаем задержку и удаляем сборку.
+            Runtime.TaskRun(() => 
+            {
+                // TODO: поработать на задержкой.
+                Thread.Sleep(10);
+                App.Current.Dispatcher?.Invoke(() => 
+                { 
+                    _instanceModel.Delete();
+                });
+            });
         }
 
 

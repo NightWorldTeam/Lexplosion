@@ -234,7 +234,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         public AddonType Type { get; }
 
         private ObservableCollection<InstanceAddon> _addonsList = new ObservableCollection<InstanceAddon>();
-        public IEnumerable<InstanceAddon> AddonsList { get => _addonsList; }
+        public IReadOnlyCollection<InstanceAddon> AddonsList { get => _addonsList; }
 
 
         private bool _isAddonsLoaded = true;

@@ -15,12 +15,18 @@
 
             <ScrollViewer KeyboardNavigation.IsTabStop="False" KeyboardNavigation.TabNavigation="None">
                 <StackPanel>
+
+                    <!--  Search Box & Filters  -->
                     <StackPanel
                         HorizontalAlignment="Center"
                         VerticalAlignment="Top"
                         Orientation="Horizontal">
 
-                        <controls:SearchBox MinWidth="320" Placeholder="{DynamicResource Search}" />
+                        <controls:SearchBox
+                            MinWidth="320"
+                            Placeholder="{DynamicResource Search}"
+                            SearchCommand="{Binding SearchCommand}"
+                            Text="{Binding Model.SearchFilter, UpdateSourceTrigger=PropertyChanged}" />
 
                         <Border
                             Width="40"
@@ -39,13 +45,18 @@
                             CornerRadius="5" />
                     </StackPanel>
 
-
+                    <!--  Instance Clients List  -->
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="0.0715*" />
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="0.0715*" />
                         </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
 
                         <ItemsControl
                             Grid.Column="1"
@@ -64,9 +75,19 @@
                                         MouseDown="InstanceForm_MouseDown" />
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
-
                         </ItemsControl>
+
+                        <controls:Paginator
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Margin="0,16,0,32"
+                            CurrentPageIndex="{Binding Model.CurrentPageIndex}"
+                            NextCommand="{Binding NextPageCommand}"
+                            PageCount="{Binding Model.PageCount}"
+                            PrevCommand="{Binding PrevPageCommand}"
+                            ToCommand="{Binding ToCurrentPageIndexCommand}" />
                     </Grid>
+
                 </StackPanel>
             </ScrollViewer>
 

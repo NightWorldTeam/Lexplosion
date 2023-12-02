@@ -22,11 +22,20 @@
                         <StackPanel
                             x:Name="PART_NumbersPanel"
                             Grid.Column="1"
-                            VerticalAlignment="Center">
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Orientation="Horizontal">
                             <TextBlock
                                 x:Name="CurrentIndexValueTextBlock"
                                 VerticalAlignment="Center"
-                                Foreground="White" />
+                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+
+                            <TextBlock Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" Text=" | " />
+
+                            <TextBlock
+                                x:Name="MaxPage"
+                                VerticalAlignment="Center"
+                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
                         </StackPanel>
 
                         <Button

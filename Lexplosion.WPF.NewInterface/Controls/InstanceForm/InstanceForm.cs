@@ -28,6 +28,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
         // Buttons
         private const string PART_MAIN_ACTION_BUTTON = "PART_MainActionButton";
+        private const string PART_DROPDOWNMENU = "PART_DropDownMenu";
         private const string PART_DROPDOWNMENU_CONTENT = "PART_DropdownMenuContent";
 
         // Icon Keys
@@ -72,6 +73,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
     [TemplatePart(Name = PART_SHORT_DESCRIPTION, Type = typeof(TextBlock))]
     [TemplatePart(Name = PART_TAGS_PANEL, Type = typeof(ItemsControl))]
     [TemplatePart(Name = PART_MAIN_ACTION_BUTTON, Type = typeof(Button))]
+    [TemplatePart(Name = PART_DROPDOWNMENU, Type = typeof(DropdownMenu))]
     [TemplatePart(Name = PART_DROPDOWNMENU_CONTENT, Type = typeof(ItemsControl))]
     public sealed partial class InstanceForm : Control
     {
@@ -83,6 +85,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
         private ItemsControl _tagsPanel;
 
         private Button _mainActionButton;
+        private DropdownMenu _dropdownMenu;
         private ItemsControl _dropdownMenuItemsControl;
 
         /// <summary>
@@ -93,6 +96,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
         // -- State -- //
 
         public event Action<InstanceFormState> StateChanged;
+        public event Action LowerButtonClicked;
 
         private InstanceFormState _state;
         public InstanceFormState State
@@ -180,6 +184,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
             _authorTextBlock = Template.FindName(PART_AUTHOR, this) as TextBlock;
             _shortDescriptionTextBlock = Template.FindName(PART_SHORT_DESCRIPTION, this) as TextBlock;
             _tagsPanel = Template.FindName(PART_TAGS_PANEL, this) as ItemsControl;
+            _dropdownMenu = Template.FindName(PART_DROPDOWNMENU, this) as DropdownMenu;
             _dropdownMenuItemsControl = Template.FindName(PART_DROPDOWNMENU_CONTENT, this) as ItemsControl;
             _mainActionButton = Template.FindName(PART_MAIN_ACTION_BUTTON, this) as Button;
 
@@ -191,6 +196,14 @@ namespace Lexplosion.WPF.NewInterface.Controls
             if (_mainActionButton != null)
             {
                 _mainActionButton.Click += _mainActionButton_Click;
+            }
+
+            if (_dropdownMenu != null)
+            {
+                LowerButtonClicked += () =>
+                {
+                    _dropdownMenu.IsOpen = false;
+                };
             }
 
             if (_dropdownMenuItemsControl != null)
@@ -224,6 +237,9 @@ namespace Lexplosion.WPF.NewInterface.Controls
         private void LoadButtons()
         {
             _lowerMenuButtons.Clear();
+
+            if (!InstanceModel.IsInstalled && !InstanceModel.InLibrary)
+                return;
             // 1. Website
             // 2. AddToLibrary
             // 2. OpenFolder
@@ -232,30 +248,30 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
             if (InstanceModel.Source != InstanceSource.Local)
             {
-                _lowerMenuButtons.Add(new LowerMenuButton(0, InstanceModel.Source.ToString(), "Visit" + InstanceModel.Source.ToString(), InstanceModel.GoToWebsite));
+                _lowerMenuButtons.Add(new LowerMenuButton(0, InstanceModel.Source.ToString(), "Visit" + InstanceModel.Source.ToString(), InstanceModel.GoToWebsite, LowerButtonClicked));
             }
 
             if (!InstanceModel.IsInstalled && !InstanceModel.InLibrary)
             {
-                _lowerMenuButtons.Add(new LowerMenuButton(1, "AddToLibrary", "AddToLibrary", InstanceModel.AddToLibrary));
+                _lowerMenuButtons.Add(new LowerMenuButton(1, "AddToLibrary", "AddToLibrary", InstanceModel.AddToLibrary, LowerButtonClicked));
             }
 
             if (InstanceModel.InLibrary)
             {
-                _lowerMenuButtons.Add(new LowerMenuButton(2, "Folder", "OpenFolder", InstanceModel.OpenFolder));
+                _lowerMenuButtons.Add(new LowerMenuButton(2, "Folder", "OpenFolder", InstanceModel.OpenFolder, LowerButtonClicked));
                 if (InstanceModel.IsInstalled)
                 {
-                    _lowerMenuButtons.Add(new LowerMenuButton(3, "Export", "Export", InstanceModel.Export));
+                    _lowerMenuButtons.Add(new LowerMenuButton(3, "Export", "Export", InstanceModel.Export, LowerButtonClicked));
                 }
             }
 
             if (!InstanceModel.IsInstalled && InstanceModel.InLibrary)
             {
-                _lowerMenuButtons.Add(new LowerMenuButton(4, "Delete", "RemoveFromLibrary", InstanceModel.Delete));
+                _lowerMenuButtons.Add(new LowerMenuButton(4, "Delete", "RemoveFromLibrary", InstanceModel.Delete, LowerButtonClicked));
             }
             else if (InstanceModel.IsInstalled)
             {
-                _lowerMenuButtons.Add(new LowerMenuButton(4, "Delete", "DeleteInstance", InstanceModel.Delete));
+                _lowerMenuButtons.Add(new LowerMenuButton(4, "Delete", "DeleteInstance", InstanceModel.Delete, LowerButtonClicked));
             }
         }
 
@@ -458,7 +474,6 @@ namespace Lexplosion.WPF.NewInterface.Controls
         {
             Style = (Style)App.Current.Resources[LAUNCH_FORM_STYLE_KEY];
         }
-
 
         private static void OnInstanceModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {

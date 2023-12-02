@@ -4,16 +4,40 @@ using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
 {
     public sealed class CatalogModel : VMBase
     {
+        private static readonly SimpleCategory AllCategory = new SimpleCategory()
+        {
+            Id = "-1",
+            ClassId = "",
+            ParentCategoryId = "",
+            Name = "All"
+        };
+
         #region Properties
 
 
         private ObservableCollection<InstanceModelBase> _instances = new ObservableCollection<InstanceModelBase>();
         public IEnumerable<InstanceModelBase> Instances { get => _instances; }
+
+
+        public uint ItemsPerPage { get; set; } = 10;
+
+
+        private string _searchFilter = string.Empty;
+        public string SearchFilter
+        {
+            get => _searchFilter; set
+            {
+                _searchFilter = value;
+                OnPropertyChanged();
+            }
+        }
+
 
 
         private bool _isEmptyPage;
@@ -26,18 +50,25 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
             }
         }
 
-        private bool _isLastPage;
-        public bool IsLastPage
+        private uint _currentPageIndex = 0;
+        public uint CurrentPageIndex
         {
-            get => _isLastPage; set
+            get => _currentPageIndex; set
             {
-                _isLastPage = value;
+                _currentPageIndex = value;
                 OnPropertyChanged();
             }
         }
 
-
-        public uint ItemsPerPage { get; set; } = 10;
+        private uint _pageCount = 500;
+        public uint PageCount
+        {
+            get => _pageCount; set 
+            {
+                _pageCount = value;
+                OnPropertyChanged();
+            }
+        }
 
 
         #endregion Properties
@@ -48,20 +79,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
 
         public CatalogModel()
         {
-            var instanceClientsTuple = GetInstanceClients("", 0, InstanceSource.Modrinth, new IProjectCategory[] { new SimpleCategory()
-            {
-                Id = "-1",
-                ClassId = "",
-                ParentCategoryId = "",
-                Name = "All"
-            }}, CfSortField.Featured, "1.19.2", false);
-
-
-            foreach (var instanceClient in instanceClientsTuple.Item1)
-            {
-                _instances.Add(new InstanceModelBase(instanceClient));
-            }
-            Runtime.DebugWrite(instanceClientsTuple.Item2);
+            LoadPageContent();
         }
 
 
@@ -69,8 +87,38 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
 
 
         #region Public & Properties Methods
+        
+        
+        public void Paginate(uint scrollTo)
+        {
+            CurrentPageIndex = scrollTo;
+            LoadPageContent();
+        }
+
+        public void SearchFilterChanged(string searchFilter) 
+        {
+            SearchFilter = searchFilter;
+            LoadPageContent();
+        }
+
+        private void LoadPageContent() 
+        {
+            Runtime.TaskRun(() => 
+            {
+                var instanceClientsTuple = GetInstanceClients(SearchFilter, CurrentPageIndex, InstanceSource.Modrinth, new IProjectCategory[] { AllCategory }, CfSortField.Featured, "1.19.2", false);
+
+                IsEmptyPage = instanceClientsTuple.Item2 == 0;
+
+                if (PageCount != instanceClientsTuple.Item2)
+                    PageCount = instanceClientsTuple.Item2;
+
+                _instances = new ObservableCollection<InstanceModelBase>(instanceClientsTuple.Item1.Select(i => new InstanceModelBase(i)));
+                OnPropertyChanged(nameof(Instances));
+            });
+        }
 
 
+        /// TODO: Сделать метод приватным
         /// <summary>
         /// Return a list of instances from curseforge/modrinth
         /// </summary>
@@ -95,14 +143,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
                 );
 
             return new Tuple<IEnumerable<InstanceClient>, uint>(instanceClientList, (uint)instanceClientList.Count);
-        }
-
-        public void Paginate(uint scrollTo)
-        {
-            var tuple = GetInstanceClients("", scrollTo, InstanceSource.Nightworld, new IProjectCategory[] { new SimpleCategory() }, CfSortField.Popularity, "");
-
-            IsEmptyPage = tuple.Item2 == 0;
-            IsLastPage = tuple.Item2 < ItemsPerPage;
         }
 
 

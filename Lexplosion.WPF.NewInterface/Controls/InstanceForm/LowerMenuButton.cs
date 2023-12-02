@@ -1,6 +1,7 @@
 ﻿using Lexplosion.WPF.NewInterface.Commands;
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Controls
@@ -25,12 +26,18 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
 
 
-        public LowerMenuButton(int id, string iconKey, string titleKey, Action action)
+        public LowerMenuButton(int id, string iconKey, string titleKey, params Action[] action)
         {
             Id = id;
             IconKey = iconKey;
             TextKey = titleKey;
-            _action = obj => { action(); };
+            _action = obj => 
+            {
+                foreach (var i in action) 
+                {
+                    i?.Invoke();
+                }
+            };
         }
 
 
