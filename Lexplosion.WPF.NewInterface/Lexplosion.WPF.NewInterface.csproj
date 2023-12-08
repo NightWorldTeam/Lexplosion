@@ -124,6 +124,10 @@
     <Compile Include="Core\Objects\Theme.cs" />
     <Compile Include="Core\ViewModel\ObservableObject.cs" />
     <Compile Include="Extensions\ResourceKeyBinding.cs" />
+    <Compile Include="Mvvm\Models\MainContent\MainMenu\Friends\Friend.cs" />
+    <Compile Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\Friends\Friend.xaml.cs">
+      <DependentUpon>Friend.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Tools\HashCodeHelper.cs" />
     <Compile Include="Tools\ImageTools.cs" />
     <Compile Include="Tools\WindowsResolutionTools.cs" />
@@ -297,6 +301,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="DataTemplates.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\Friends\Friend.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
