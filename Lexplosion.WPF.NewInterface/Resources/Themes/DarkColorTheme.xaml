@@ -3,6 +3,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
+    <Duration x:Key="SlowAnimationSpeed">0:0:0.35</Duration>
+    <Duration x:Key="MediumAnimationSpeed">0:0:0.25</Duration>
+    <Duration x:Key="FastAnimationSpeed">0:0:0.15</Duration>
+
     <!--  Activity Colors  -->
     <Color x:Key="ActivityColor">#13f287</Color>
     <Color x:Key="Color1">#8500aa</Color>
