@@ -434,16 +434,35 @@ namespace Lexplosion.Logic.Management
                     javaPath = Path.GetDirectoryName(javaPath);
                 }
 
-                string keyStorePath = _settings.GamePath + "/java/keystore/" + Cryptography.Sha256(javaPath);
+                string keyStoreRoot = _settings.GamePath + "/java/keystore/";
+                string fileWithVersion = keyStoreRoot + LaunсherSettings.version;
+                string keyStorePath = keyStoreRoot + Cryptography.Sha256(javaPath);
                 string keyStoreFile = (keyStorePath + "/cacerts");
                 keyStoreFile = keyStoreFile.Replace("//", "/");
 
-                if (!File.Exists(keyStoreFile))
+                bool toUpdate = false;
+                // еси в корне кейстора нет файла с версией лаунчера, то удалем папку полностью, чтобы потом всё перекачать
+                if (!File.Exists(fileWithVersion))
+                {
+                    Runtime.DebugWrite("File with version not exists");
+                    if (Directory.Exists(keyStoreRoot))
+                    {
+                        Directory.Delete(keyStoreRoot, true);
+                        toUpdate = true;
+                    }
+                }
+
+                if (toUpdate || !File.Exists(keyStoreFile))
                 {
                     Runtime.DebugWrite("Keystore is not exists");
-                    if (!Directory.Exists(keyStorePath))
+                    if (toUpdate || !Directory.Exists(keyStorePath))
                     {
                         Directory.CreateDirectory(keyStorePath);
+                    }
+
+                    if (toUpdate || !File.Exists(fileWithVersion))
+                    {
+                        File.Create(fileWithVersion);
                     }
 
                     string baseKeyStoreFile = javaPath.Replace("/", "\\") + "\\lib\\security\\cacerts";

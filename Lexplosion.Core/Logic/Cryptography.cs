@@ -27,6 +27,22 @@ namespace Lexplosion.Logic
             return Sb.ToString();
         }
 
+        public static string FileSha256(string filePath)
+        {
+            try
+            {
+                using (FileStream fs = File.OpenRead(filePath))
+                {
+                    return Sha256(filePath);
+                }
+            }
+            catch (Exception ex)
+            {
+                Runtime.DebugWrite("Exception " + ex);
+                return string.Empty;
+            }
+        }
+
         public static string Sha256(Stream value)
         {
             StringBuilder Sb = new StringBuilder();
