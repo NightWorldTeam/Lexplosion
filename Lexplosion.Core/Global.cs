@@ -24,6 +24,7 @@ namespace Lexplosion.Global
         {
             GeneralSettings = Settings.GetDefault();
             GeneralSettings.Merge(DataFilesManager.GetSettings());
+            Runtime.DebugWrite("GamePath " + GlobalData.GeneralSettings?.GamePath);
         }
     }
 

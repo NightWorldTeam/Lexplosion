@@ -85,7 +85,8 @@ namespace Lexplosion.Logic.FileSystem
                     FullClient = content.FullClient,
                     Files = content.Files,
                     InstalledAddons = new List<string>(content.InstalledAddons.Keys.ToArray())
-                }));
+                })
+            );
 
             using (InstalledAddons installedAddons = InstalledAddons.Get(instanceId))
             {

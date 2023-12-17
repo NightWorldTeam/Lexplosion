@@ -150,7 +150,15 @@ namespace Lexplosion.Logic.Network.SMP
 
             public long GetRtt
             {
-                get => _rtt;
+                get
+                {
+                    if (_rtt < 1)
+                    {
+                        return 1;
+                    }
+
+                    return _rtt;
+                }
             }
         }
 
@@ -650,7 +658,7 @@ namespace Lexplosion.Logic.Network.SMP
 #if DEBUG
                         if (attemptCount > 0)
                         {
-                            Runtime.DebugConsoleWrite("AXAXAXAXAXAX " + attemptCount + " " + lastPackageId + ", RTT " + _rtt + ", packages count: " + packages.Count);
+                            Runtime.DebugConsoleWrite("AXAXAXAXAXAX " + attemptCount + " " + lastPackageId + ", RTT " + _rtt + ", packages count: " + packages.Count + ", delay " + delay);
                         }
 #endif
                         if (!isTimeout)
@@ -849,66 +857,60 @@ namespace Lexplosion.Logic.Network.SMP
                         attemptSendCounts = -1;
                         waitingLastPackage = -1;
                     }
-                    else
-                    {
-                        bool needRepeat = false;
+                    else if (_receivingPointer != id + 1)
+                    {  
+                        var package = new List<byte>
+                        {
+                            PackgeCodes.FailedList,
+                            buffer[HeaderPositions.LastId_1],
+                            buffer[HeaderPositions.LastId_2]
+                        };
+
+                        List<int> xer = new();
+
+                        bool flag = true;
+                        bool needRepeat = true;
                         for (int i = _receivingPointer; i <= lastId; i++)
                         {
-                            if (_packagesBuffer.ContainsKey((ushort)i))
+                            if (!_packagesBuffer.ContainsKey((ushort)i))
                             {
-                                needRepeat = true;
-                                break;
+                                if (i == lastMissedPacket && buffer[HeaderPositions.AttemptsCounts] <= attemptSendCounts)
+                                {
+                                    needRepeat = false;
+                                    break;
+                                }
+
+                                if (flag)
+                                {
+                                    lastMissedPacket = (ushort)i;
+                                    flag = false;
+                                }
+
+                                xer.Add(i);
+
+                                byte[] packageId = BitConverter.GetBytes((ushort)i);
+                                package.Add(packageId[0]);
+                                package.Add(packageId[1]);
                             }
                         }
 
                         if (needRepeat)
                         {
-                            var package = new List<byte>
-                            {
-                                PackgeCodes.FailedList,
-                                buffer[HeaderPositions.LastId_1],
-                                buffer[HeaderPositions.LastId_2]
-                            };
+                            //Runtime.DebugWrite("FailedList. _receivingPointer: " + _receivingPointer + ", lastId: " + lastId + ", list " + String.Join(", ", xer));
 
-                            bool flag = true;
-                            for (int i = _receivingPointer; i <= lastId; i++)
+                            byte[] array = package.ToArray();
+                            _socket.Send(array, array.Length, SocketFlags.None);
+                            for (int h = 3; h < array.Length - 1; h += 2)
                             {
-                                if (!_packagesBuffer.ContainsKey((ushort)i))
+                                var idg = BitConverter.ToUInt16(new byte[2] 
                                 {
-                                    if (i == lastMissedPacket && buffer[HeaderPositions.AttemptsCounts] <= attemptSendCounts)
-                                    {
-                                        needRepeat = false;
-                                        break;
-                                    }
-
-                                    if (flag)
-                                    {
-                                        lastMissedPacket = (ushort)i;
-                                        flag = false;
-                                    }
-
-                                    byte[] packageId = BitConverter.GetBytes((ushort)i);
-                                    package.Add(packageId[0]);
-                                    package.Add(packageId[1]);
-                                }
+                                    array[h],
+                                    array[h + 1]
+                                }, 0);
                             }
-
-                            if (needRepeat)
-                            {
-                                byte[] array = package.ToArray();
-                                _socket.Send(array, array.Length, SocketFlags.None);
-                                for (int h = 3; h < array.Length - 1; h += 2)
-                                {
-                                    var idg = BitConverter.ToUInt16(new byte[2] {
-                                        array[h],
-                                        array[h + 1]
-                                    },
-                                    0);
-                                }
-                            }
-
-                            attemptSendCounts = buffer[HeaderPositions.AttemptsCounts];
                         }
+
+                        attemptSendCounts = buffer[HeaderPositions.AttemptsCounts];
                     }
                 }
                 else
@@ -934,6 +936,7 @@ namespace Lexplosion.Logic.Network.SMP
 
                         if (package.Count > 3)
                         {
+                            Runtime.DebugWrite("FailedList. _receivingPointer: " + _receivingPointer + ", lastId: " + lastId);
                             byte[] array = package.ToArray();
                             _socket.Send(array, array.Length, SocketFlags.None);
                         }
@@ -1054,6 +1057,7 @@ namespace Lexplosion.Logic.Network.SMP
                                 ushort packageId = BitConverter.ToUInt16(new byte[2] { buffer[1], buffer[2] }, 0);
                                 if (packageId == _lastPackage) // проверяем не старый ли это запрос на повторную отправку
                                 {
+                                    Runtime.DebugWrite("Recv FailedList, " + _lastPackage);
                                     List<ushort> ids = new List<ushort>();
                                     int i = 3;
                                     while (i < dataLength)

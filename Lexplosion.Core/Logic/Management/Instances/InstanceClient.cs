@@ -362,7 +362,7 @@ namespace Lexplosion.Logic.Management.Instances
             var client = new InstanceClient(name, CreateSourceFactory(type), gameVersion)
             {
                 InLibrary = true,
-                Author = GlobalData.User == null ? "Editor" : GlobalData.User.Login,
+                Author = GlobalData.User?.Login,
                 Description = NoDescription,
                 Summary = NoDescription
             };
@@ -427,7 +427,7 @@ namespace Lexplosion.Logic.Management.Instances
                     Description = Description,
                     Name = _name,
                     Summary = _summary,
-                    ModloaderVersion = manifest?.version?.ModloaderVersion ?? "",
+                    ModloaderVersion = manifest?.version?.ModloaderVersion ?? string.Empty,
                     Modloader = manifest?.version.ModloaderType ?? ClientType.Vanilla,
                     OptifineVersion = manifest?.version?.AdditionalInstaller?.installerVersion
                 };
@@ -856,7 +856,7 @@ namespace Lexplosion.Logic.Management.Instances
             if (!InLibrary)
             {
                 GenerateInstanceId();
-                CreateFileStruct(ClientType.Vanilla, "");
+                CreateFileStruct(ClientType.Vanilla, string.Empty);
                 _installedInstances[_localId] = this;
                 _idsPairs[_externalId] = _localId;
                 SaveInstalledInstancesList();
@@ -1016,6 +1016,8 @@ namespace Lexplosion.Logic.Management.Instances
         /// <param name="additionalInstallerVer">Версия оптифайна. null если не нужен</param>
         private void CreateFileStruct(ClientType modloader, string modloaderVersion, AdditionalInstallerType? additionalInstaller = null, string additionalInstallerVer = null)
         {
+            // TODO: тут надо трай. И если будет исключение надо передавать ошибку
+
             Directory.CreateDirectory(WithDirectory.DirectoryPath + "/instances/" + _localId);
 
             VersionManifest manifest = new VersionManifest
@@ -1316,7 +1318,7 @@ namespace Lexplosion.Logic.Management.Instances
                 Name = "Importing...",
                 InLibrary = true,
                 Author = UnknownAuthor,
-                Summary = "",
+                Summary = string.Empty,
                 IsComplete = false,
                 IsUpdating = true
             };
@@ -1337,7 +1339,7 @@ namespace Lexplosion.Logic.Management.Instances
                 Name = reciver.Name,
                 InLibrary = true,
                 Author = UnknownAuthor,
-                Summary = "",
+                Summary = string.Empty,
                 IsComplete = false,
                 IsUpdating = true
             };

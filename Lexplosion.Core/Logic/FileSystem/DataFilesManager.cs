@@ -128,8 +128,9 @@ namespace Lexplosion.Logic.FileSystem
                     return settings ?? new Settings();
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                Runtime.DebugWrite("Exception " + ex);
                 return new Settings();
             }
         }

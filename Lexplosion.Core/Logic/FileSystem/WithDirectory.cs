@@ -266,7 +266,10 @@ namespace Lexplosion.Logic.FileSystem
                     File.Delete(file);
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Runtime.DebugWrite("Exception: " + ex);
+            }
         }
 
         public static LastUpdates GetLastUpdates(string instanceId)

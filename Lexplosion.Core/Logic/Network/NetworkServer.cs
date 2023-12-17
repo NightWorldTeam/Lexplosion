@@ -371,6 +371,8 @@ namespace Lexplosion.Logic.Network
                                     }
                                     catch { }
 
+                                    //result = null;
+
                                     //парсим порт
                                     if (result?.PublicEndPoint != null)
                                     {
