@@ -451,7 +451,8 @@ namespace Lexplosion.Logic.Management
 
                     string certFile = DownloadCertificate();
 
-                    string command = "keytool -import -noprompt -trustcacerts -alias nightworld_cer -file \"" + certFile + "\" -keystore \"" + keyStoreFile + "\" -storepass changeit";
+                    string keyTool = "\"" + javaPath + "/bin/keytool.exe\"";
+                    string command = keyTool + " -import -noprompt -trustcacerts -alias nightworld_cer -file \"" + certFile + "\" -keystore \"" + keyStoreFile + "\" -storepass changeit";
                     if (Utils.StartProcess(command, Utils.ProcessExecutor.Cmd))
                     {
                         _keyStorePath = keyStoreFile;

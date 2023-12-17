@@ -866,8 +866,6 @@ namespace Lexplosion.Logic.Network.SMP
                             buffer[HeaderPositions.LastId_2]
                         };
 
-                        List<int> xer = new();
-
                         bool flag = true;
                         bool needRepeat = true;
                         for (int i = _receivingPointer; i <= lastId; i++)
@@ -886,8 +884,6 @@ namespace Lexplosion.Logic.Network.SMP
                                     flag = false;
                                 }
 
-                                xer.Add(i);
-
                                 byte[] packageId = BitConverter.GetBytes((ushort)i);
                                 package.Add(packageId[0]);
                                 package.Add(packageId[1]);
@@ -896,8 +892,6 @@ namespace Lexplosion.Logic.Network.SMP
 
                         if (needRepeat)
                         {
-                            //Runtime.DebugWrite("FailedList. _receivingPointer: " + _receivingPointer + ", lastId: " + lastId + ", list " + String.Join(", ", xer));
-
                             byte[] array = package.ToArray();
                             _socket.Send(array, array.Length, SocketFlags.None);
                             for (int h = 3; h < array.Length - 1; h += 2)
@@ -936,7 +930,6 @@ namespace Lexplosion.Logic.Network.SMP
 
                         if (package.Count > 3)
                         {
-                            Runtime.DebugWrite("FailedList. _receivingPointer: " + _receivingPointer + ", lastId: " + lastId);
                             byte[] array = package.ToArray();
                             _socket.Send(array, array.Length, SocketFlags.None);
                         }
