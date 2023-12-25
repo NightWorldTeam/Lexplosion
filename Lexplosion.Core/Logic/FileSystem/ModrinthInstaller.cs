@@ -241,7 +241,7 @@ namespace Lexplosion.Logic.FileSystem
 
                     TasksPerfomer perfomer = null;
                     if (filesCount > 0)
-                        perfomer = new TasksPerfomer(10, filesCount);
+                        perfomer = new TasksPerfomer(3, filesCount);
 
                     var noDownloaded = new List<SetValues<ModrinthProjectFile, AddonInstallingInfo>>();
 

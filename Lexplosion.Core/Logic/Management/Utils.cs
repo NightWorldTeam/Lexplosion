@@ -229,7 +229,19 @@ namespace Lexplosion.Logic.Management
                 process.StartInfo.CreateNoWindow = true;
                 process.StartInfo.WorkingDirectory = GlobalData.GeneralSettings.GamePath;
                 process.StartInfo.UseShellExecute = false;
+                //process.StartInfo.RedirectStandardOutput = true;
+                //process.StartInfo.RedirectStandardError = true;
+                //process.ErrorDataReceived += delegate (object sender, DataReceivedEventArgs e)
+                //{
+                //    Runtime.DebugWrite("Process error: " + e.Data);
+                //};
+                //process.OutputDataReceived += delegate(object sender, DataReceivedEventArgs e)
+                //{
+                //    Runtime.DebugWrite("Process output: " + e.Data);
+                //};
                 process.Start();
+                //process.BeginOutputReadLine();
+                //process.BeginErrorReadLine();
                 return process.WaitForExit(300000); // ждём 5 минут
             }
             catch (Exception ex)

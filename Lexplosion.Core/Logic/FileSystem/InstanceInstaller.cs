@@ -961,7 +961,7 @@ namespace Lexplosion.Logic.FileSystem
 
                 TasksPerfomer perfomer = null;
                 if (assetsCount > 0)
-                    perfomer = new TasksPerfomer(15, assetsCount);
+                    perfomer = new TasksPerfomer(3, assetsCount);
 
                 var taskArgs = new TaskArgs
                 {
