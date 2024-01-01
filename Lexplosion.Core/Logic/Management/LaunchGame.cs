@@ -217,7 +217,7 @@ namespace Lexplosion.Logic.Management
 
             if (isAllowed) return string.Join(" ", obj.Value);
 
-            return "";
+            return string.Empty;
         }
 
         private string CreateCommand(InitData data)
@@ -422,6 +422,28 @@ namespace Lexplosion.Logic.Management
             return certFile;
         }
 
+        private byte[] LoadCertificate()
+        {
+            Runtime.DebugWrite("Load certificate");
+
+            try
+            {
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Global.LaunсherSettings.URL.Base);
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                response.Close();
+
+                X509Certificate2 cert = new X509Certificate2(request.ServicePoint.Certificate);
+                byte[] certData = cert.Export(X509ContentType.Cert);
+
+                return certData;
+            }
+            catch (Exception ex)
+            {
+                Runtime.DebugWrite("Exception " + ex);
+                return null;
+            }
+        }
+
         private void CreateJavaKeyStore(string javaPath)
         {
             try
@@ -435,40 +457,38 @@ namespace Lexplosion.Logic.Management
                 }
 
                 string keyStoreRoot = _settings.GamePath + "/java/keystore/";
-                string fileWithVersion = keyStoreRoot + LaunсherSettings.version;
                 string keyStorePath = keyStoreRoot + Cryptography.Sha256(javaPath);
                 string keyStoreFile = (keyStorePath + "/cacerts");
                 keyStoreFile = keyStoreFile.Replace("//", "/");
+                string certFile = _settings.GamePath + "/java/keystore/night-world.org.crt";
+                Runtime.DebugWrite("certFile: " + certFile);
 
-                bool toUpdate = false;
-                // еси в корне кейстора нет файла с версией лаунчера, то удалем папку полностью, чтобы потом всё перекачать
-                if (!File.Exists(fileWithVersion))
+
+                bool keyStoreToUpdate = false;
+                byte[] certificate = LoadCertificate();
+                if (!File.Exists(certFile) || (certificate != null && Cryptography.Sha256(certificate) != Cryptography.FileSha256(certFile)))
                 {
-                    Runtime.DebugWrite("File with version not exists");
+                    Runtime.DebugWrite("Certificate is not valid");
+                    keyStoreToUpdate = true;
                     if (Directory.Exists(keyStoreRoot))
                     {
                         Directory.Delete(keyStoreRoot, true);
-                        toUpdate = true;
+                        Directory.CreateDirectory(keyStoreRoot);
                     }
+
+                    File.WriteAllBytes(certFile, certificate);
                 }
 
-                if (toUpdate || !File.Exists(keyStoreFile))
+                if (keyStoreToUpdate || !File.Exists(keyStoreFile))
                 {
                     Runtime.DebugWrite("Keystore is not exists");
-                    if (toUpdate || !Directory.Exists(keyStorePath))
+                    if (keyStoreToUpdate || !Directory.Exists(keyStorePath))
                     {
                         Directory.CreateDirectory(keyStorePath);
                     }
 
-                    if (toUpdate || !File.Exists(fileWithVersion))
-                    {
-                        File.Create(fileWithVersion);
-                    }
-
                     string baseKeyStoreFile = javaPath.Replace("/", "\\") + "\\lib\\security\\cacerts";
                     File.Copy(baseKeyStoreFile, keyStoreFile.Replace("/", "\\"));
-
-                    string certFile = DownloadCertificate();
 
                     string keyTool = javaPath + "/bin/keytool.exe";
                     string command = "-import -noprompt -trustcacerts -alias nightworld_cer -file \"" + certFile + "\" -keystore \"" + keyStoreFile + "\" -storepass changeit";
@@ -487,6 +507,7 @@ namespace Lexplosion.Logic.Management
                 Runtime.DebugWrite("Exception " + ex);
             }
         }
+
 
         public bool Run(InitData data, LaunchComplitedCallback ComplitedLaunch, GameExitedCallback GameExited, string gameClientName, bool onlineGame)
         {

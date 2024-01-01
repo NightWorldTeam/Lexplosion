@@ -33,7 +33,7 @@ namespace Lexplosion.Logic
             {
                 using (FileStream fs = File.OpenRead(filePath))
                 {
-                    return Sha256(filePath);
+                    return Sha256(fs);
                 }
             }
             catch (Exception ex)
