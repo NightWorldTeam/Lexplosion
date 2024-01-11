@@ -1,4 +1,5 @@
 ﻿using Lexplosion.Logic.Network;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -140,12 +141,27 @@ namespace Lexplosion.Common.Models.GameExtensions
         {
             ushort[] version = gameVersion.Split('.').Select(ushort.Parse).ToArray<ushort>();
 
-            switch (extension)
+            // TODO: Сделать unit тестирование
+            try
             {
-                case GameExtension.Forge: return version[0] >= 1 && version[1] >= 1;
-                case GameExtension.Fabric: return version[0] >= 1 && version[1] >= 13;
-                case GameExtension.Quilt: return version[0] >= 1 && version[1] >= 14 && version[2] >= 4;
-                default: return true;
+                switch (extension)
+                {
+                    case GameExtension.Forge: return version[0] >= 1 && version[1] >= 1;
+                    case GameExtension.Fabric: return version[0] >= 1 && version[1] >= 13;
+                    case GameExtension.Quilt:
+                        {
+                            if (version.Length > 2)
+                                return version[0] >= 1 && version[1] >= 14 && version[2] >= 4;
+                            else if (version.Length > 1) return version[0] >= 1 && version[1] >= 15;
+                            throw new Exception("Wrong Version Length");
+                        }
+                    default: return true;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return false;
             }
         }
 
