@@ -258,7 +258,7 @@ namespace Lexplosion.Logic.Network
                 Runtime.DebugConsoleWrite("Reading exception " + ex);
             }
 
-            Runtime.DebugConsoleWrite("Reading " + Bridge.IsConnected);
+            Runtime.DebugConsoleWrite("Reading " + Bridge.IsConnected + " " + isWorking + ", buffer.Length " + buffer?.Length);
 
             Close(null);
             sendingThread.Abort();

@@ -85,19 +85,38 @@ namespace Lexplosion.Logic.Network
             ReadingThread.Start();
         }
 
+        protected static readonly (string, int)[] StunServers = new (string, int)[]
+        {
+            new ("stun.l.google.com", 19305),
+            new ("194.61.2.176", 3478),
+            new ("stun.webcalldirect.com", 3478)
+        };
+
+        protected (string, int) SelectedStunServer = StunServers[0];
+
         private void TransmitterPrepear(bool directConnectionIsPriority, string serverType)
         {
             // если стоит парметр установки прямого соединения, то проверяем, возможно ли его вообще установить. если нет - переходим на TURN
             if (directConnectionIsPriority)
             {
                 STUN_Result result = null;
-                try
+                foreach (var stunServ in StunServers)
                 {
-                    // TODO: сделать получения списка stun серверов с нашего сервера
-                    result = STUN_Client.Query("stun.l.google.com", 19305, new IPEndPoint(IPAddress.Any, 0)); //получем наш внешний адрес
-                    Runtime.DebugConsoleWrite("NatType " + result.NetType.ToString());
+                    Runtime.DebugConsoleWrite("Check stun server: " + stunServ);
+                    try
+                    {
+                        result = STUN_Client.Query(stunServ.Item1, stunServ.Item2, new IPEndPoint(IPAddress.Any, 0)); //получем наш внешний адрес
+                        Runtime.DebugConsoleWrite("NatType " + result?.NetType.ToString());
+
+                        if (result != null && result.NetType != STUN_NetType.UdpBlocked)
+                        {
+                            Runtime.DebugConsoleWrite("Selected stun server: " + stunServ);
+                            SelectedStunServer = stunServ;
+                            break;
+                        }
+                    }
+                    catch { }
                 }
-                catch { }
 
                 if (result != null && result.NetType != STUN_NetType.UdpBlocked && result.NetType != STUN_NetType.Symmetric && result.NetType != STUN_NetType.SymmetricUdpFirewall)
                 {
@@ -366,7 +385,7 @@ namespace Lexplosion.Logic.Network
                                     try
                                     {
                                         // TODO: сделать получения списка stun серверов с нашего сервера
-                                        result = STUN_Client.Query("stun.l.google.com", 19305, udpSocket); //получем наш внешний адрес
+                                        result = STUN_Client.Query(SelectedStunServer.Item1, SelectedStunServer.Item2, udpSocket); //получем наш внешний адрес
                                         Runtime.DebugConsoleWrite("NatType " + result.NetType.ToString());
                                     }
                                     catch { }

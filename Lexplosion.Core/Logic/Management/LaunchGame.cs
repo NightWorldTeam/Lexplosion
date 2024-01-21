@@ -475,6 +475,10 @@ namespace Lexplosion.Logic.Management
                         Directory.Delete(keyStoreRoot, true);
                         Directory.CreateDirectory(keyStoreRoot);
                     }
+                    else
+                    {
+                        Directory.CreateDirectory(keyStoreRoot);
+                    }
 
                     File.WriteAllBytes(certFile, certificate);
                 }

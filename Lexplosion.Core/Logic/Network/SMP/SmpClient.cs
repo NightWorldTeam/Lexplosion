@@ -1050,7 +1050,6 @@ namespace Lexplosion.Logic.Network.SMP
                                 ushort packageId = BitConverter.ToUInt16(new byte[2] { buffer[1], buffer[2] }, 0);
                                 if (packageId == _lastPackage) // проверяем не старый ли это запрос на повторную отправку
                                 {
-                                    Runtime.DebugWrite("Recv FailedList, " + _lastPackage);
                                     List<ushort> ids = new List<ushort>();
                                     int i = 3;
                                     while (i < dataLength)

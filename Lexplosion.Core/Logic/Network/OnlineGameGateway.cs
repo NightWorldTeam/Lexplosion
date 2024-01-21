@@ -177,12 +177,13 @@ namespace Lexplosion.Logic.Network
                     }
                 });
 
-                InformingThread.Start();
                 Server = new ServerBridge(UUID, sessionToken, port, _directConnection, _controlServer);
 
                 Server.ConnectingUser += ConnectingUser;
                 Server.DisconnectedUser += DisconnectedUser;
                 StatusChanged?.Invoke(OnlineGameStatus.OpenWorld, "");
+
+                InformingThread.Start();
 
                 while (true)
                 {
