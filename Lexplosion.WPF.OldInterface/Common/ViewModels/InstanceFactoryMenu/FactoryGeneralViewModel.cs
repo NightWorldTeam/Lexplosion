@@ -120,10 +120,28 @@ namespace Lexplosion.Common.ViewModels.FactoryMenu
 
         public FactoryGeneralViewModel(MainViewModel mainViewModel)
         {
-            Model = new InstanceFactoryModel(mainViewModel);
+            Model = new InstanceFactoryModel(mainViewModel, ChangeSelectedClientType);
         }
 
 
         #endregion Constructors
+
+
+        #region Private Methods
+
+
+        private void ChangeSelectedClientType(ClientType clientType)
+        {
+            switch (clientType)
+            {
+                case ClientType.Vanilla: IsVanilla = true; break;
+                case ClientType.Forge: IsForge = true; break;
+                case ClientType.Fabric: IsFabric = true; break;
+                case ClientType.Quilt: IsQuilt = true; break;
+            }
+        }
+
+
+        #endregion Private Methods
     }
 }

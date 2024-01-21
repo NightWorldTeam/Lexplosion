@@ -2,12 +2,14 @@
 using Lexplosion.Common.ViewModels;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Instances;
+using System;
 
 namespace Lexplosion.Common.Models.InstanceFactory
 {
     public class InstanceFactoryModel : VMBase
     {
         private readonly MainViewModel _mainViewModel;
+        private readonly Action<ClientType> _changeSelectedClientType;
 
 
         #region Properties
@@ -58,10 +60,10 @@ namespace Lexplosion.Common.Models.InstanceFactory
                
                 if (ModloaderModel != null)
                 {
-                    ModloaderModel = new ModloaderModel(GameExtension.Fabric, Version.Id);
-                    ModloaderModel = new ModloaderModel(GameExtension.Quilt, Version.Id);
-                    ModloaderModel = new ModloaderModel(GameExtension.Forge, Version.Id);
-                    ModloaderModel = new ModloaderModel(ModloaderModel.GameExtension, _version.Id);
+                    ModloaderModel = new ModloaderModel(GameExtension.Fabric, Version.Id, OnAvailiableChanged);
+                    ModloaderModel = new ModloaderModel(GameExtension.Quilt, Version.Id, OnAvailiableChanged);
+                    ModloaderModel = new ModloaderModel(GameExtension.Forge, Version.Id, OnAvailiableChanged);
+                    ModloaderModel = new ModloaderModel(ModloaderModel.GameExtension, _version.Id, OnAvailiableChanged);
                 }
                 if (OptifineModel != null)
                 {
@@ -70,6 +72,15 @@ namespace Lexplosion.Common.Models.InstanceFactory
 
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(Placeholder));
+            }
+        }
+
+        private void OnAvailiableChanged(bool value)
+        {
+            if (!value)
+            {
+                ChangeClientType(GameType.Vanilla, GameExtension.Optifine);
+                _changeSelectedClientType(ClientType.Vanilla);
             }
         }
 
@@ -189,17 +200,21 @@ namespace Lexplosion.Common.Models.InstanceFactory
 
         #region Constructors
 
-        public InstanceFactoryModel(MainViewModel mainViewModel)
+        public InstanceFactoryModel(MainViewModel mainViewModel, Action<ClientType> changeSelectedClientType)
         {
             _mainViewModel = mainViewModel;
+            _changeSelectedClientType = changeSelectedClientType;
+
             UpdateVersions();
+
             if (Version != null) 
-            { 
+            {
                 OptifineModel = new OptifineModel(GameExtension.Optifine, Version.Id);
-                ModloaderModel = new ModloaderModel(GameExtension.Fabric, Version.Id);
-                ModloaderModel = new ModloaderModel(GameExtension.Quilt, Version.Id);
-                ModloaderModel = new ModloaderModel(GameExtension.Forge, Version.Id);
+                ModloaderModel = new ModloaderModel(GameExtension.Fabric, Version.Id, OnAvailiableChanged);
+                ModloaderModel = new ModloaderModel(GameExtension.Quilt, Version.Id, OnAvailiableChanged);
+                ModloaderModel = new ModloaderModel(GameExtension.Forge, Version.Id, OnAvailiableChanged);
             }
+
             ModloaderModel.IsEnable = false;
             OptifineModel.IsEnable = false;
         }
@@ -235,7 +250,7 @@ namespace Lexplosion.Common.Models.InstanceFactory
 
             if (extension != GameExtension.Optifine)
             {
-                ModloaderModel = new ModloaderModel(extension, Version.Id);
+                ModloaderModel = new ModloaderModel(extension, Version.Id, OnAvailiableChanged);
             }
         }
 

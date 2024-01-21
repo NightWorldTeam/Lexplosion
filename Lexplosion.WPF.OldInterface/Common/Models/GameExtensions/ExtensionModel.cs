@@ -9,6 +9,9 @@ namespace Lexplosion.Common.Models.GameExtensions
     public abstract class ExtensionModel : VMBase, IExtensionModel
     {
         private static readonly IDictionary<GameExtension, ConcurrentDictionary<string, (bool, IEnumerable<string>)>> _extensionVersions;
+        
+        public event Action<bool> AvailiableChanged;
+
 
         #region Properties
 
@@ -32,12 +35,13 @@ namespace Lexplosion.Common.Models.GameExtensions
         /// <summary>
         /// Доступно ли расшерение на эту версию игры.
         /// </summary>
-        private bool _isAvaliable;
-        public bool IsAvaliable
+        private bool _isAvailable;
+        public bool IsAvailable
         {
-            get => _isAvaliable; private set
+            get => _isAvailable; private set
             {
-                _isAvaliable = value;
+                _isAvailable = value;
+                AvailiableChanged?.Invoke(value);
                 OnPropertyChanged();
             }
         }
@@ -69,18 +73,18 @@ namespace Lexplosion.Common.Models.GameExtensions
         }
 
 
-        public bool IsForgeAvaliable
+        public bool IsForgeAvailable
         {
             get => _extensionVersions[GameExtension.Forge].ContainsKey(GameVersion) ? _extensionVersions[GameExtension.Forge][GameVersion].Item1 : false;
         }
 
 
-        public bool IsFabricAvaliable
+        public bool IsFabricAvailable
         {
             get => _extensionVersions[GameExtension.Fabric].ContainsKey(GameVersion) ? _extensionVersions[GameExtension.Fabric][GameVersion].Item1 : false;
         }
 
-        public bool IsQuiltAvaliable
+        public bool IsQuiltAvailable
         {
             get => _extensionVersions[GameExtension.Quilt].ContainsKey(GameVersion) ? _extensionVersions[GameExtension.Quilt][GameVersion].Item1 : false;
         }
@@ -108,7 +112,7 @@ namespace Lexplosion.Common.Models.GameExtensions
             GameVersion = GetCorrectGameVersion(gameVersion);
             GameExtension = extension;
 
-            IsAvaliable = CheckExistsOnVersion(GameVersion, extension);
+            IsAvailable = CheckExistsOnVersion(GameVersion, extension);
 
             Lexplosion.Runtime.TaskRun(() =>
             {
@@ -117,12 +121,12 @@ namespace Lexplosion.Common.Models.GameExtensions
                 if (versionList.Count > 0)
                 {
                     Version = versionList[0];
-                    IsAvaliable = true;
+                    IsAvailable = true;
                     OnPropertiesChanged();
                 }
                 else
                 {
-                    IsAvaliable = false;
+                    IsAvailable = false;
                     OnPropertiesChanged();
                 }
             });
@@ -219,9 +223,9 @@ namespace Lexplosion.Common.Models.GameExtensions
 
         private void OnPropertiesChanged()
         {
-            OnPropertyChanged(nameof(IsForgeAvaliable));
-            OnPropertyChanged(nameof(IsFabricAvaliable));
-            OnPropertyChanged(nameof(IsQuiltAvaliable));
+            OnPropertyChanged(nameof(IsForgeAvailable));
+            OnPropertyChanged(nameof(IsFabricAvailable));
+            OnPropertyChanged(nameof(IsQuiltAvailable));
         }
 
 

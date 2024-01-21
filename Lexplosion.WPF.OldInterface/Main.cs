@@ -30,7 +30,7 @@ namespace Lexplosion
 {
     static class RuntimeApp
     {
-        public static readonly string[] AvaliableLanguages = new string[]
+        public static readonly string[] AvailableLanguages = new string[]
         {
             "ru-RU", "en-US"
         };

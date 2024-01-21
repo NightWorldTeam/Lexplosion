@@ -334,7 +334,7 @@
     <s:String x:Key="share">Share</s:String>
     <s:String x:Key="exportProperties">Export Properties</s:String>
     <s:String x:Key="shares">Shares</s:String>
-    <s:String x:Key="noAvaliableShares">There are no shares available</s:String>
+    <s:String x:Key="noAvailableShares">There are no shares available</s:String>
 
     <!--  Factory DLC  -->
     <s:String x:Key="refreshDLCList">Refresh DLC List</s:String>

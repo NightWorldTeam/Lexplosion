@@ -125,14 +125,8 @@ namespace Lexplosion.Common.ViewModels.ShowCaseMenu
         public InstanceProfileViewModel(InstanceClient instanceClient, DoNotificationCallback doNotification = null)
         {
             _doNotification = doNotification ?? _doNotification;
-            Model = new InstanceProfileModel(instanceClient);
-            switch (Model.GetInstanceExtenstion())
-            {
-                case ClientType.Vanilla: IsVanilla = true; break;
-                case ClientType.Forge: IsForge = true; break;
-                case ClientType.Fabric: IsFabric = true; break;
-                case ClientType.Quilt: IsQuilt = true; break;
-            }
+            Model = new InstanceProfileModel(instanceClient, ChangeSelectedClientType);
+            ChangeSelectedClientType(Model.GetInstanceExtenstion());
         }
 
 
@@ -159,5 +153,23 @@ namespace Lexplosion.Common.ViewModels.ShowCaseMenu
 
 
         #endregion Public & Protected Methods
+
+
+        #region Private Methods
+
+
+        private void ChangeSelectedClientType(ClientType clientType) 
+        {
+            switch (clientType)
+            {
+                case ClientType.Vanilla: IsVanilla = true; break;
+                case ClientType.Forge: IsForge = true; break;
+                case ClientType.Fabric: IsFabric = true; break;
+                case ClientType.Quilt: IsQuilt = true; break;
+            }
+        }
+
+
+        #endregion Private Methods
     }
 }

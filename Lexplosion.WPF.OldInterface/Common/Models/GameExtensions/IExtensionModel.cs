@@ -6,7 +6,7 @@ namespace Lexplosion.Common.Models.GameExtensions
     {
         public string GameVersion { get; }
         public GameExtension GameExtension { get; }
-        public bool IsAvaliable { get; }
+        public bool IsAvailable { get; }
         public string Version { get; set; }
         public IEnumerable<string> Versions { get; }
     }

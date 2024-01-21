@@ -175,7 +175,7 @@
                                             Content="Forge"
                                             GroupName="ClientType"
                                             IsChecked="{Binding IsForge}"
-                                            IsEnabled="{Binding Model.ModloaderModel.IsAvaliable}"
+                                            IsEnabled="{Binding Model.ModloaderModel.IsAvailable}"
                                             Style="{StaticResource HighlightRadioButton}" />
                                         <RadioButton
                                             Margin="3,0,0,0"
@@ -184,7 +184,7 @@
                                             Content="Fabric"
                                             GroupName="ClientType"
                                             IsChecked="{Binding IsFabric}"
-                                            IsEnabled="{Binding Model.ModloaderModel.IsAvaliable}"
+                                            IsEnabled="{Binding Model.ModloaderModel.IsAvailable}"
                                             Style="{StaticResource HighlightRadioButton}" />
                                         <RadioButton
                                             Margin="3,0,0,0"
@@ -193,7 +193,7 @@
                                             Content="Quilt"
                                             GroupName="ClientType"
                                             IsChecked="{Binding IsQuilt}"
-                                            IsEnabled="{Binding Model.ModloaderModel.IsAvaliable}"
+                                            IsEnabled="{Binding Model.ModloaderModel.IsAvailable}"
                                             Style="{StaticResource HighlightRadioButton}" />
                                     </StackPanel>
 
@@ -206,7 +206,7 @@
                                                     <MultiDataTrigger>
                                                         <MultiDataTrigger.Conditions>
                                                             <Condition Binding="{Binding Model.GameType}" Value="{x:Static lexplosion:GameType.Modded}" />
-                                                            <Condition Binding="{Binding Model.ModloaderModel.IsAvaliable}" Value="True" />
+                                                            <Condition Binding="{Binding Model.ModloaderModel.IsAvailable}" Value="True" />
                                                         </MultiDataTrigger.Conditions>
                                                         <MultiDataTrigger.Setters>
                                                             <Setter Property="Visibility" Value="Visible" />
@@ -251,7 +251,7 @@
                                                 <MultiDataTrigger>
                                                     <MultiDataTrigger.Conditions>
                                                         <Condition Binding="{Binding Model.GameType}" Value="{x:Static lexplosion:GameType.Vanilla}" />
-                                                        <Condition Binding="{Binding Model.OptifineModel.IsAvaliable}" Value="True" />
+                                                        <Condition Binding="{Binding Model.OptifineModel.IsAvailable}" Value="True" />
                                                     </MultiDataTrigger.Conditions>
                                                     <MultiDataTrigger.Setters>
                                                         <Setter Property="Visibility" Value="Visible" />

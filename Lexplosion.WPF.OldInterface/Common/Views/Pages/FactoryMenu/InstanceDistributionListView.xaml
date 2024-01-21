@@ -217,7 +217,7 @@
                         HorizontalAlignment="Center"
                         FontSize="16"
                         Foreground="White"
-                        Text="{DynamicResource noAvaliableShares}">
+                        Text="{DynamicResource noAvailableShares}">
                         <TextBlock.Style>
                             <Style TargetType="{x:Type TextBlock}">
                                 <Setter Property="Visibility" Value="Collapsed" />

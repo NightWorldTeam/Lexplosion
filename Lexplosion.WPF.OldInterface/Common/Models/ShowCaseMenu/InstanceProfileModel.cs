@@ -3,14 +3,19 @@ using Lexplosion.Common.ViewModels;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Tools;
+using System;
 
 namespace Lexplosion.Common.Models.ShowCaseMenu
 {
     public class InstanceProfileModel : VMBase
     {
-        public InstanceProfileModel(InstanceClient instanceClient)
+        private readonly Action<ClientType> _changeSelectedClientType;
+
+        public InstanceProfileModel(InstanceClient instanceClient, Action<ClientType> changeSelectedClientType)
         {
             CurrentInstanceClient = instanceClient;
+            _changeSelectedClientType = changeSelectedClientType;
+
             BaseInstanceData = CurrentInstanceClient.GetBaseData;
             UpdateVersions();
             Version = BaseInstanceData.GameVersion ?? GameVersions[0];
@@ -18,12 +23,12 @@ namespace Lexplosion.Common.Models.ShowCaseMenu
 
             if (BaseInstanceData.Modloader != ClientType.Vanilla)
             {
-                ModloaderModel = new ModloaderModel((GameExtension)BaseInstanceData.Modloader, Version.Id);
+                ModloaderModel = new ModloaderModel((GameExtension)BaseInstanceData.Modloader, Version.Id, OnAvailiableChanged);
                 OptifineModel.IsEnable = false;
             }
             else
             {
-                ModloaderModel = new ModloaderModel(GameExtension.Forge, Version.Id);
+                ModloaderModel = new ModloaderModel(GameExtension.Forge, Version.Id, OnAvailiableChanged);
                 OptifineModel.IsEnable = BaseInstanceData.OptifineVersion != null;
             }
 
@@ -90,7 +95,7 @@ namespace Lexplosion.Common.Models.ShowCaseMenu
                 _version = value;
                 if (ModloaderModel != null)
                 {
-                    ModloaderModel = new ModloaderModel(ModloaderModel.GameExtension, _version.Id);
+                    ModloaderModel = new ModloaderModel(ModloaderModel.GameExtension, _version.Id, OnAvailiableChanged);
                 }
                 if (OptifineModel != null)
                 {
@@ -194,6 +199,15 @@ namespace Lexplosion.Common.Models.ShowCaseMenu
         #endregion Properties
 
 
+        private void OnAvailiableChanged(bool value)
+        {
+            if (!value)
+            {
+                ChangeClientType(GameType.Vanilla, GameExtension.Optifine);
+                _changeSelectedClientType(ClientType.Vanilla);
+            }  
+        }
+
         #region Public & Protected Methods
 
 
@@ -208,7 +222,7 @@ namespace Lexplosion.Common.Models.ShowCaseMenu
 
             if (extension != GameExtension.Optifine)
             {
-                ModloaderModel = new ModloaderModel(extension, Version.Id);
+                ModloaderModel = new ModloaderModel(extension, Version.Id, OnAvailiableChanged);
             }
         }
 

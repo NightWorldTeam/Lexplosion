@@ -190,7 +190,7 @@
                                     Content="Forge"
                                     GroupName="ClientType"
                                     IsChecked="{Binding IsForge}"
-                                    IsEnabled="{Binding Model.ModloaderModel.IsForgeAvaliable, UpdateSourceTrigger=PropertyChanged}"
+                                    IsEnabled="{Binding Model.ModloaderModel.IsForgeAvailable, UpdateSourceTrigger=PropertyChanged}"
                                     Style="{StaticResource HighlightRadioButton}" />
                                 <RadioButton
                                     Margin="3,0,0,0"
@@ -199,7 +199,7 @@
                                     Content="Fabric"
                                     GroupName="ClientType"
                                     IsChecked="{Binding IsFabric}"
-                                    IsEnabled="{Binding Model.ModloaderModel.IsFabricAvalialbe, UpdateSourceTrigger=PropertyChanged}"
+                                    IsEnabled="{Binding Model.ModloaderModel.IsFabricAvailable, UpdateSourceTrigger=PropertyChanged}"
                                     Style="{StaticResource HighlightRadioButton}" />
                                 <RadioButton
                                     Margin="3,0,0,0"
@@ -208,7 +208,7 @@
                                     Content="Quilt"
                                     GroupName="ClientType"
                                     IsChecked="{Binding IsQuilt}"
-                                    IsEnabled="{Binding Model.ModloaderModel.IsQuiltAvaliable, UpdateSourceTrigger=PropertyChanged}"
+                                    IsEnabled="{Binding Model.ModloaderModel.IsQuiltAvailable, UpdateSourceTrigger=PropertyChanged}"
                                     Style="{StaticResource HighlightRadioButton}" />
                             </StackPanel>
                         </Grid>
@@ -221,7 +221,7 @@
                                         <MultiDataTrigger>
                                             <MultiDataTrigger.Conditions>
                                                 <Condition Binding="{Binding Model.GameType}" Value="{x:Static enum:GameType.Modded}" />
-                                                <Condition Binding="{Binding Model.ModloaderModel.IsAvaliable}" Value="True" />
+                                                <Condition Binding="{Binding Model.ModloaderModel.IsAvailable}" Value="True" />
                                             </MultiDataTrigger.Conditions>
                                             <MultiDataTrigger.Setters>
                                                 <Setter Property="Visibility" Value="Visible" />
@@ -258,7 +258,7 @@
                                         <MultiDataTrigger>
                                             <MultiDataTrigger.Conditions>
                                                 <Condition Binding="{Binding Model.GameType}" Value="{x:Static enum:GameType.Vanilla}" />
-                                                <Condition Binding="{Binding Model.OptifineModel.IsAvaliable}" Value="True" />
+                                                <Condition Binding="{Binding Model.OptifineModel.IsAvailable}" Value="True" />
                                             </MultiDataTrigger.Conditions>
                                             <MultiDataTrigger.Setters>
                                                 <Setter Property="Visibility" Value="Visible" />
