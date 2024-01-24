@@ -3,6 +3,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace Lexplosion.Common.Models.GameExtensions
 {
@@ -12,6 +13,7 @@ namespace Lexplosion.Common.Models.GameExtensions
         
         public event Action<bool> AvailiableChanged;
 
+        private static readonly object _locker = new(); 
 
         #region Properties
 
@@ -112,26 +114,24 @@ namespace Lexplosion.Common.Models.GameExtensions
             GameVersion = GetCorrectGameVersion(gameVersion);
             GameExtension = extension;
 
-            IsAvailable = CheckExistsOnVersion(GameVersion, extension);
-
-            Lexplosion.Runtime.TaskRun(() =>
+            ThreadPool.QueueUserWorkItem((state) =>
             {
-                Versions = LoadExtensionVersions(extension, GameVersion);
-                var versionList = Versions.ToList();
-                if (versionList.Count > 0)
-                {
-                    Version = versionList[0];
-                    IsAvailable = true;
-                    OnPropertiesChanged();
-                }
-                else
-                {
-                    IsAvailable = false;
+                lock (_locker) 
+                { 
+                    Versions = LoadExtensionVersions(extension, GameVersion);
+                    var versionList = Versions.ToList();
+                    if (versionList.Count > 0)
+                    {
+                        Version = versionList[0];
+                        IsAvailable = true;
+                    }
+                    else
+                    {
+                        IsAvailable = false;
+                    }
                     OnPropertiesChanged();
                 }
             });
-
-            OnPropertiesChanged();
         }
 
 
@@ -140,34 +140,6 @@ namespace Lexplosion.Common.Models.GameExtensions
 
         #region Private Methods
 
-
-        public static bool CheckExistsOnVersion(string gameVersion, GameExtension extension)
-        {
-            ushort[] version = gameVersion.Split('.').Select(ushort.Parse).ToArray<ushort>();
-
-            // TODO: Сделать unit тестирование
-            try
-            {
-                switch (extension)
-                {
-                    case GameExtension.Forge: return version[0] >= 1 && version[1] >= 1;
-                    case GameExtension.Fabric: return version[0] >= 1 && version[1] >= 13;
-                    case GameExtension.Quilt:
-                        {
-                            if (version.Length > 2)
-                                return version[0] >= 1 && version[1] >= 14 && version[2] >= 4;
-                            else if (version.Length > 1) return version[0] >= 1 && version[1] >= 15;
-                            throw new Exception("Wrong Version Length");
-                        }
-                    default: return true;
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-                return false;
-            }
-        }
 
         public static string GetCorrectGameVersion(string gameVersion)
         {
