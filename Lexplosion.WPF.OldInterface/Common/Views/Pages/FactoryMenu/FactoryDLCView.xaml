@@ -259,17 +259,35 @@
                 </Grid.ColumnDefinitions>
 
                 <!--  Logo  -->
-                <Border
+                <Grid
                     Grid.Column="0"
                     Width="40"
-                    Height="40"
-                    CornerRadius="5">
+                    Height="40">
+                    <Border
+                        Grid.Column="0"
+                        Width="40"
+                        Height="40"
+                        CornerRadius="5">
 
-                    <Border.Background>
-                        <ImageBrush ImageSource="{Binding Logo, Converter={StaticResource BytesToBitmapImageConverter}, IsAsync=True}" />
-                    </Border.Background>
+                        <Border.Background>
+                            <ImageBrush ImageSource="pack://Application:,,,/Assets/images/icons/non_image.png" />
+                        </Border.Background>
 
-                </Border>
+                    </Border>
+
+                    <Border
+                        Grid.Column="0"
+                        Width="40"
+                        Height="40"
+                        CornerRadius="5">
+
+                        <Border.Background>
+                            <ImageBrush ImageSource="{Binding Logo, Converter={StaticResource BytesToBitmapImageConverter}}" />
+                        </Border.Background>
+
+                    </Border>
+                </Grid>
+
 
                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
                     <!--  Name  -->
