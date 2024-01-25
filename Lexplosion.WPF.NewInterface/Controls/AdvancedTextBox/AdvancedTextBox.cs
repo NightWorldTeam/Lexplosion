@@ -84,6 +84,9 @@ namespace Lexplosion.WPF.NewInterface.Controls
             _path = Template.FindName(PART_ICON_NAME, this) as Path;
             _placeholder = Template.FindName(PART_PLACEHOLDER_NAME, this) as TextBlock;
 
+            UpdateIsEmpty();
+            IsIconKeyEmpty = string.IsNullOrEmpty(IconKey);
+
             UpdatePath(IconKey);
             UpdatePlaceholder(PlaceholderKey);
 
@@ -92,8 +95,6 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
         protected override void OnInitialized(EventArgs e)
         {
-            UpdateIsEmpty();
-            IsIconKeyEmpty = string.IsNullOrEmpty(IconKey);
             base.OnInitialized(e);
         }
 
@@ -109,6 +110,12 @@ namespace Lexplosion.WPF.NewInterface.Controls
             base.OnLostFocus(e);
         }
 
+        protected override void OnTextChanged(TextChangedEventArgs e)
+        {
+            UpdateIsEmpty();
+            base.OnTextChanged(e);
+        }
+
 
         #endregion Public & Protected Methods
 
@@ -119,6 +126,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
         private void UpdateIsEmpty()
         {
             IsEmpty = string.IsNullOrEmpty(Text);
+            _placeholder.Visibility = IsEmpty ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private static void OnIsIconKeyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

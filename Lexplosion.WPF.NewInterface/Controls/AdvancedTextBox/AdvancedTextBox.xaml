@@ -85,7 +85,7 @@
                                 <ScrollViewer
                                     x:Name="PART_ContentHost"
                                     Grid.Column="1"
-                                    Margin="0,-2,0,0"
+                                    Margin="0,-1,0,0"
                                     VerticalAlignment="Top"
                                     VerticalScrollBarVisibility="Auto" />
                             </Grid>
