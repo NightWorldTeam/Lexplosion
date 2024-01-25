@@ -16,6 +16,8 @@ namespace Lexplosion.Common.Models.ShowCaseMenu
             CurrentInstanceClient = instanceClient;
             _changeSelectedClientType = changeSelectedClientType;
 
+            IsShowSnapshots = instanceClient?.GameVersion.Type == MinecraftVersion.VersionType.Snapshot;
+
             BaseInstanceData = CurrentInstanceClient.GetBaseData;
             UpdateVersions();
             Version = BaseInstanceData.GameVersion ?? GameVersions[0];
