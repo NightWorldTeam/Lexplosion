@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Common.Models.ShowCaseMenu;
 using Lexplosion.Controls;
+using Lexplosion.Global;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Tools;
 
@@ -14,6 +15,9 @@ namespace Lexplosion.Common.ViewModels.ShowCaseMenu
 
 
         public InstanceProfileModel Model { get; }
+
+
+        public bool IsVersionReadonly { get; }
 
 
         private bool _isSavedProperties;
@@ -125,6 +129,11 @@ namespace Lexplosion.Common.ViewModels.ShowCaseMenu
         public InstanceProfileViewModel(InstanceClient instanceClient, DoNotificationCallback doNotification = null)
         {
             _doNotification = doNotification ?? _doNotification;
+
+            IsVersionReadonly = MainViewModel.AllGameVersions.Length == 0;
+            Runtime.DebugWrite(IsVersionReadonly);
+            OnPropertyChanged(nameof(IsVersionReadonly));
+
             Model = new InstanceProfileModel(instanceClient, ChangeSelectedClientType);
             ChangeSelectedClientType(Model.GetInstanceExtenstion());
         }

@@ -1,6 +1,7 @@
 ﻿using Lexplosion.Global;
 using System.Diagnostics;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -21,17 +22,32 @@ namespace Lexplosion.Common.Views.Pages.MainMenu.Settings
             DenialOfResponsibilityTextBlock.Text = GlobalData.GeneralSettings.LanguageId == "ru-RU" ? "НЕ ЯВЛЯЕТСЯ ОФИЦИАЛЬНЫМ [ПРОДУКТОМ/УСЛУГОЙ/СОБЫТИЕМ И т. п.] MINECRAFT. НЕ ОДОБРЕНО И НЕ СВЯЗАНО С КОМПАНИЕЙ MOJANG ИЛИ MICROSOFT" : "NOT AN OFFICIAL MINECRAFT [PRODUCT/SERVICE/EVENT/etc.]. NOT APPROVED BY OR ASSOCIATED WITH MOJANG OR MICROSOFT";
 
             VersionTextBlock.Text = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            var hel2xBitmap = new BitmapImage();
-            hel2xBitmap.BeginInit();
-            hel2xBitmap.UriSource = new System.Uri("https://night-world.org/requestProcessing/getUserImage.php?user_login=_Hel2x_");
-            hel2xBitmap.EndInit();
-            Hel2xHead.Background = new ImageBrush(hel2xBitmap);
+            LoadSkins();
+        }
 
-            var sklaipBitmap = new BitmapImage();
-            sklaipBitmap.BeginInit();
-            sklaipBitmap.UriSource = new System.Uri("https://night-world.org/requestProcessing/getUserImage.php?user_login=Sklaip");
-            sklaipBitmap.EndInit();
-            SklaipHead.Background = new ImageBrush(sklaipBitmap);
+        private async void LoadSkins() 
+        {
+            await new Task(() =>
+            {
+                try
+                {
+                    var hel2xBitmap = new BitmapImage();
+                    hel2xBitmap.BeginInit();
+                    hel2xBitmap.UriSource = new System.Uri("https://night-world.org/requestProcessing/getUserImage.php?user_login=_Hel2x_");
+                    hel2xBitmap.EndInit();
+                    Hel2xHead.Background = new ImageBrush(hel2xBitmap);
+
+                    var sklaipBitmap = new BitmapImage();
+                    sklaipBitmap.BeginInit();
+                    sklaipBitmap.UriSource = new System.Uri("https://night-world.org/requestProcessing/getUserImage.php?user_login=Sklaip");
+                    sklaipBitmap.EndInit();
+                    SklaipHead.Background = new ImageBrush(sklaipBitmap);
+                }
+                catch
+                {
+
+                }
+            });
         }
 
         private void IgorVK_Click(object sender, System.Windows.RoutedEventArgs e)

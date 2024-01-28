@@ -11,14 +11,10 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
 {
     public sealed class ImportViewModel : ImportBase
     {
-        private readonly MainViewModel _mainViewModel;
-
         private InstanceClient _instanceClient;
 
         #region Properties
 
-
-        public FactoryGeneralViewModel FactoryGeneralViewModel { get; }
 
         /// <summary>
         /// Коллекция с испортируемыми файлами.
@@ -92,11 +88,8 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
         #region Construcotors
 
 
-        public ImportViewModel(MainViewModel mainViewModel, FactoryGeneralViewModel factoryGeneralViewModel, DoNotificationCallback doNotification = null) : base(doNotification)
+        public ImportViewModel(DoNotificationCallback doNotification = null) : base(doNotification)
         {
-            _mainViewModel = mainViewModel;
-            FactoryGeneralViewModel = factoryGeneralViewModel;
-
             ImportAction = (string[] files) =>
             {
                 foreach (var file in files)

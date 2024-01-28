@@ -58,53 +58,15 @@
                         </Grid>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsEnabled" Value="False">
-                                <Setter TargetName="Path" Property="Stroke" Value="{DynamicResource TextBoxSolidColorBrush}" />
-                                <Setter TargetName="Path" Property="Fill" Value="{DynamicResource TextBoxSolidColorBrush}" />
-                                <Setter TargetName="TextBlock" Property="Foreground" Value="{DynamicResource TextBoxSolidColorBrush}" />
+                                <Setter TargetName="Path" Property="Stroke" Value="Gray" />
+                                <Setter TargetName="Path" Property="Fill" Value="Gray" />
+                                <Setter TargetName="TextBlock" Property="Foreground" Value="Gray" />
                             </Trigger>
 
                             <Trigger Property="IsChecked" Value="False">
-                                <!--<Trigger.EnterActions>
-                                    <BeginStoryboard>
-                                        <Storyboard>
-                                            <DoubleAnimation
-                                                Storyboard.TargetName="Border"
-                                                Storyboard.TargetProperty="Opacity"
-                                                From="1"
-                                                To="0"
-                                                Duration="00:00:00.2" />
-                                            <DoubleAnimation
-                                                Storyboard.TargetName="Tab"
-                                                Storyboard.TargetProperty="Opacity"
-                                                To="0.6"
-                                                Duration="00:00:00.5" />
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </Trigger.EnterActions>-->
                                 <Setter TargetName="Border" Property="Visibility" Value="Collapsed" />
                                 <Setter TargetName="Tab" Property="Opacity" Value="0.6" />
                             </Trigger>
-
-                            <!--<Trigger Property="IsChecked" Value="True">
-                                <Trigger.EnterActions>
-                                    <BeginStoryboard>
-                                        <Storyboard>
-                                            <DoubleAnimation
-                                                Storyboard.TargetName="Border"
-                                                Storyboard.TargetProperty="Opacity"
-                                                From="0"
-                                                To="1"
-                                                Duration="00:00:00.3" />
-                                            <DoubleAnimation
-                                                Storyboard.TargetName="Tab"
-                                                Storyboard.TargetProperty="Opacity"
-                                                From="0.6"
-                                                To="0.8"
-                                                Duration="00:00:00.5" />
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </Trigger.EnterActions>
-                            </Trigger>-->
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>

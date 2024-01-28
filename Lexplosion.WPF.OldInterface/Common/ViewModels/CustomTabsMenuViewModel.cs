@@ -51,10 +51,13 @@ namespace Lexplosion.Common.ViewModels
     {
         #region ModalProperties
 
+
         public override double Width => 620;
         public override double Height => 420;
 
+
         #endregion ModalProperties
+
 
         public List<CustomTab> Tabs { get; } = new List<CustomTab>();
 
@@ -68,13 +71,13 @@ namespace Lexplosion.Common.ViewModels
             }
         }
 
-        public CustomTabsMenuViewModel(List<CustomTab> tabs)
+        public CustomTabsMenuViewModel(List<CustomTab> tabs, int selectedItemIndex = 0)
         {
             foreach (var tab in tabs)
             {
                 Tabs.Add(new CustomTab(tab, this));
             }
-            Tabs[0].IsSelected = true;
+            Tabs[selectedItemIndex].IsSelected = true;
         }
     }
 }

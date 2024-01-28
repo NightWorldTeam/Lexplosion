@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Common.Models.MainMenu;
 using Lexplosion.Common.ViewModels.ModalVMs;
+using Lexplosion.Global;
 
 namespace Lexplosion.Common.ViewModels.MainMenu
 {

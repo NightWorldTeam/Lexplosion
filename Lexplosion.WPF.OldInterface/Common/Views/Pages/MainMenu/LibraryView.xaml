@@ -83,89 +83,6 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-
-            <StackPanel
-                x:Name="FloatingMultiButtonContent"
-                Margin="0,0,0,16"
-                Background="Transparent"
-                Opacity="0"
-                Visibility="Collapsed">
-                <!--  Button 1 #21ad7c  -->
-
-
-                <!--  Create Instance  -->
-                <Button
-                    x:Name="Button2"
-                    Margin="0,12,0,0"
-                    Command="{Binding DataContext.OpenInstanceFactoryCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
-                    Style="{StaticResource IconicButton}">
-                    <Border
-                        Width="36"
-                        Height="36"
-                        Background="#3a5ff9"
-                        BorderThickness="0"
-                        CornerRadius="50">
-                        <Viewbox Height="16">
-                            <Path
-                                extension:PathExtension.StringData="{StaticResource AddInstance}"
-                                Fill="White"
-                                Stretch="Fill" />
-                        </Viewbox>
-                    </Border>
-                    <Button.ToolTip>
-                        <ToolTip
-                            Background="Black"
-                            BorderThickness="0"
-                            FontFamily="pack://application:,,,/assets/fonts/#Casper Bold"
-                            HorizontalOffset="-110"
-                            Placement="Relative"
-                            VerticalOffset="0">
-                            <TextBlock
-                                MaxWidth="400"
-                                Foreground="White"
-                                Text="{DynamicResource addInstance}"
-                                TextWrapping="WrapWithOverflow" />
-                        </ToolTip>
-                    </Button.ToolTip>
-                </Button>
-
-                <!--  Button 3  -->
-                <!--<Button
-                    x:Name="Button3"
-                    Margin="0,12,0,0"
-                    Click="GroupsManagerOpen_Click"
-                    Command="{Binding DataContext.OpenGroupsManagerCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
-                    Style="{StaticResource IconicButton}">
-                    <Border
-                        Width="36"
-                        Height="36"
-                        Background="#5d36b1"
-                        BorderThickness="0"
-                        CornerRadius="50">
-                        <Viewbox Height="16">
-                            <Path
-                                extension:PathExtension.StringData="{StaticResource GroupManager}"
-                                Fill="White"
-                                Stretch="Fill" />
-                        </Viewbox>
-                    </Border>
-                    <Button.ToolTip>
-                        <ToolTip
-                            Background="Black"
-                            BorderThickness="0"
-                            FontFamily="pack://application:,,,/assets/fonts/#Casper Bold"
-                            HorizontalOffset="-110"
-                            Placement="Relative">
-                            <TextBlock
-                                MaxWidth="400"
-                                Foreground="White"
-                                Text="{DynamicResource groupsManager}"
-                                TextWrapping="WrapWithOverflow" />
-                        </ToolTip>
-                    </Button.ToolTip>
-                </Button>-->
-            </StackPanel>
-
             <StackPanel Grid.Row="1">
                 <Button
                     x:Name="FloatingMultiButton"
@@ -174,34 +91,68 @@
                     RenderTransformOrigin="0.5, 0.5"
                     Style="{StaticResource IconicButton}">
 
-                    <!--  Click="FloatingMultiButton_Click"  -->
-
                     <Button.RenderTransform>
                         <RotateTransform x:Name="rtAngel" Angle="0" />
                     </Button.RenderTransform>
 
-                    <Border
-                        Width="40"
-                        Height="40"
-                        Background="#131313"
-                        BorderThickness="0"
-                        CornerRadius="50">
-                        <Border.Effect>
-                            <DropShadowEffect
-                                BlurRadius="10"
-                                ShadowDepth="0"
-                                Color="{DynamicResource ActivityColor}" />
-                        </Border.Effect>
-                        <Viewbox
-                            Width="20"
-                            Height="20"
-                            Stretch="Fill">
-                            <Path
-                                Data="M22.5 38V25.5H10v-3h12.5V10h3v12.5H38v3H25.5V38Z"
-                                Fill="{DynamicResource BrandSolidColorBrush}"
-                                Stretch="Fill" />
-                        </Viewbox>
-                    </Border>
+                    <Button.Template>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border
+                                x:Name="BorderShadowEffect"
+                                Width="40"
+                                Height="40"
+                                Background="#131313"
+                                BorderThickness="0"
+                                CornerRadius="50">
+                                <Border.Effect>
+                                    <DropShadowEffect
+                                        x:Name="BorderShadow"
+                                        BlurRadius="10"
+                                        ShadowDepth="0"
+                                        Color="{DynamicResource ActivityColor}" />
+                                </Border.Effect>
+                                <Viewbox
+                                    Width="20"
+                                    Height="20"
+                                    Stretch="Fill">
+                                    <Path
+                                        x:Name="Icon"
+                                        Data="M22.5 38V25.5H10v-3h12.5V10h3v12.5H38v3H25.5V38Z"
+                                        Fill="{DynamicResource BrandSolidColorBrush}"
+                                        Stretch="Fill" />
+                                </Viewbox>
+                            </Border>
+
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Trigger.EnterActions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation
+                                                    Storyboard.TargetName="BorderShadow"
+                                                    Storyboard.TargetProperty="BlurRadius"
+                                                    From="10"
+                                                    To="25"
+                                                    Duration="0:0:0.10" />
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </Trigger.EnterActions>
+                                    <Trigger.ExitActions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation
+                                                    Storyboard.TargetName="BorderShadow"
+                                                    Storyboard.TargetProperty="BlurRadius"
+                                                    From="25"
+                                                    To="10"
+                                                    Duration="0:0:0.10" />
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </Trigger.ExitActions>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
                     <Button.ToolTip>
                         <ToolTip
                             Background="Black"
@@ -217,6 +168,7 @@
                                 TextWrapping="WrapWithOverflow" />
                         </ToolTip>
                     </Button.ToolTip>
+
                 </Button>
 
                 <!--  Up Button  -->
