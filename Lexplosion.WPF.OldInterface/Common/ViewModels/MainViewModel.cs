@@ -182,7 +182,7 @@ namespace Lexplosion.Common.ViewModels
         {
             get => _openMinecraftRu ?? (_openMinecraftRu = new RelayCommand(obj =>
             {
-                Process.Start(Constants.MCRUDiscordUrl);
+                Process.Start(Constants.DiscordServerUrl);
             }));
         }
 

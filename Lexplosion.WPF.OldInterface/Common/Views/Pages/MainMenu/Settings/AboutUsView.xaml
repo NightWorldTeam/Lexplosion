@@ -222,6 +222,34 @@
                                             </ToolTip>
                                         </Button.ToolTip>
                                     </Button>
+
+                                    <Button
+                                        Margin="8,0,0,0"
+                                        HorizontalAlignment="Center"
+                                        Click="ServerDiscord_Click"
+                                        Style="{StaticResource IconicButton}">
+                                        <Viewbox Height="24">
+                                            <Path
+                                                extension:PathExtension.StringData="{StaticResource DiscordLogo}"
+                                                Fill="LightGray"
+                                                Stretch="Fill" />
+                                        </Viewbox>
+
+                                        <Button.ToolTip>
+                                            <ToolTip
+                                                Background="Black"
+                                                BorderThickness="0"
+                                                FontFamily="pack://application:,,,/assets/fonts/#Casper Bold"
+                                                Placement="Relative"
+                                                VerticalOffset="-30">
+                                                <TextBlock
+                                                    MaxWidth="400"
+                                                    Foreground="White"
+                                                    Text="{DynamicResource ourDiscordServer}"
+                                                    TextWrapping="WrapWithOverflow" />
+                                            </ToolTip>
+                                        </Button.ToolTip>
+                                    </Button>
                                 </StackPanel>
                             </StackPanel>
                         </StackPanel>

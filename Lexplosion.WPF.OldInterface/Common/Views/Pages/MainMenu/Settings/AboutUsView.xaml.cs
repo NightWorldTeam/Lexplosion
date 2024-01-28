@@ -64,5 +64,10 @@ namespace Lexplosion.Common.Views.Pages.MainMenu.Settings
         {
             Process.Start(Constants.VKDefaultUrl + "nightworld_offical");
         }
+
+        private void ServerDiscord_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            Process.Start(Constants.DiscordServerUrl);
+        }
     }
 }

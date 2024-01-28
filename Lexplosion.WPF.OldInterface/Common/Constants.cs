@@ -9,8 +9,7 @@ namespace Lexplosion.Common
         public const string VKGroupToChatUrl = VKDefaultUrl + "im?media=&sel=-155979422";
 
         public const string DiscordDefaultUrl = @"https://dicord.com/";
-        public const string MCRUDiscordUrl = "https://discord.gg/eW24EnkDB7";
-        //public const string DiscordServerInviteUrl = "https://discord.gg/FfSWhMWxsj";
+        public const string DiscordServerUrl = @"https://discord.gg/M6v8Xdh3E4";
 
         public const string BoostyUrl = "";
         public const string NightWorldOfficalWebsiteUrl = "https://night-world.org/";
