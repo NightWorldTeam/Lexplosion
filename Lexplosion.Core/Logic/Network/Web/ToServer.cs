@@ -198,8 +198,9 @@ namespace Lexplosion.Logic.Network
                         return default;
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
+                    Runtime.DebugWrite(ex);
                     return default;
                 }
             }

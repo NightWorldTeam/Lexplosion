@@ -922,8 +922,9 @@ namespace Lexplosion.Logic.FileSystem
                             SaveFile(downloadedLibsAddr, JsonConvert.SerializeObject(downloadedLibs));
                         }
                     }
-                    catch
+                    catch (Exception ex)
                     {
+                        Runtime.DebugWrite("Obtainig method exception " + ex);
                         errors.Add("libraries/" + lib);
                     }
 

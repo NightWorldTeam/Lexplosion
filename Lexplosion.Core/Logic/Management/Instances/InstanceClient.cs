@@ -1361,5 +1361,10 @@ namespace Lexplosion.Logic.Management.Instances
 
             return client;
         }
+
+        public static void AddGameServer(MinecraftServerInstance server)
+        {
+
+        }
     }
 }
