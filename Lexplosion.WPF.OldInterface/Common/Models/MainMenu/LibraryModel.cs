@@ -56,11 +56,15 @@ namespace Lexplosion.Common.Models.MainMenu
             ImportViewModel import;
             InstanceSharingListViewModel shares = null;
 
-            if (GlobalData.User.AccountType != AccountType.NoAuth) 
+            var isOnlineMode = MainViewModel.AllGameVersions?.Length > 0;
+            var isNightWorldAccount = GlobalData.User.AccountType == AccountType.NightWorld;
+            if (isOnlineMode) 
             { 
                 factory = new FactoryGeneralViewModel(MainViewModel);
-                shares = new InstanceSharingListViewModel(MainViewModel.ShowToastMessage);
+                if (isNightWorldAccount)
+                    shares = new InstanceSharingListViewModel(MainViewModel.ShowToastMessage);
             }
+
             import = new ImportViewModel(MainViewModel.ShowToastMessage);
             
             ModalWindowViewModelSingleton.Instance.Open(
@@ -70,7 +74,7 @@ namespace Lexplosion.Common.Models.MainMenu
                         new CustomTab(
                             ResourceGetter.GetString("creation"),
                             "M22.65 34h3v-8.3H34v-3h-8.35V14h-3v8.7H14v3h8.65ZM24 44q-4.1 0-7.75-1.575-3.65-1.575-6.375-4.3-2.725-2.725-4.3-6.375Q4 28.1 4 23.95q0-4.1 1.575-7.75 1.575-3.65 4.3-6.35 2.725-2.7 6.375-4.275Q19.9 4 24.05 4q4.1 0 7.75 1.575 3.65 1.575 6.35 4.275 2.7 2.7 4.275 6.35Q44 19.85 44 24q0 4.1-1.575 7.75-1.575 3.65-4.275 6.375t-6.35 4.3Q28.15 44 24 44Zm.05-3q7.05 0 12-4.975T41 23.95q0-7.05-4.95-12T24 7q-7.05 0-12.025 4.95Q7 16.9 7 24q0 7.05 4.975 12.025Q16.95 41 24.05 41ZM24 24Z",
-                            factory, GlobalData.User.AccountType != AccountType.NoAuth
+                            factory, MainViewModel.AllGameVersions.Length > 0
                         ),
                         new CustomTab(
                             ResourceGetter.GetString("import"),
@@ -81,10 +85,10 @@ namespace Lexplosion.Common.Models.MainMenu
                             ResourceGetter.GetString("sharingList"),
                             "M80 856v-60h400v60H80Zm0-210v-60h200v60H80Zm0-210v-60h200v60H80Zm758 420L678 696q-26 20-56 30t-62 10q-83 0-141.5-58.5T360 536q0-83 58.5-141.5T560 336q83 0 141.5 58.5T760 536q0 32-10 62t-30 56l160 160-42 42ZM559.765 676Q618 676 659 635.235q41-40.764 41-99Q700 478 659.235 437q-40.764-41-99-41Q502 396 461 436.765q-41 40.764-41 99Q420 594 460.765 635q40.764 41 99 41Z",
                             shares,
-                            Global.GlobalData.User.AccountType == AccountType.NightWorld
+                            isNightWorldAccount
                             )
                     },
-                    GlobalData.User.AccountType != AccountType.NoAuth ? 0 : 1
+                    isOnlineMode ? 0 : 1
                 )
             );
         }
