@@ -187,7 +187,8 @@
                                         Margin="0,3,0,0"
                                         IsSynchronizedWithCurrentItem="True"
                                         SelectedIndex="{Binding SelectedVersionIndex}"
-                                        SelectionChanged="Filter_SelectionChanged">
+                                        SelectionChanged="Filter_SelectionChanged"
+                                        Style="{StaticResource LighterDefaultComboBox}">
                                         <ComboBox.ItemsSource>
                                             <CompositeCollection>
                                                 <ComboBoxItem Content="{DynamicResource allVersions}" />
@@ -213,7 +214,8 @@
                                         Background="{DynamicResource SepSolidColorBrush}"
                                         ItemsSource="{Binding CfSortToString}"
                                         SelectedValue="{Binding SelectedCfSortByString}"
-                                        SelectionChanged="Filter_SelectionChanged" />
+                                        SelectionChanged="Filter_SelectionChanged"
+                                        Style="{StaticResource LighterDefaultComboBox}" />
 
                                 </StackPanel>
 

@@ -284,6 +284,7 @@
                             <ComboBox
                                 ItemsSource="{Binding Model.OptifineModel.Versions}"
                                 SelectedItem="{Binding Model.OptifineModel.Version}"
+                                Style="{StaticResource LighterDefaultComboBox}"
                                 Visibility="{Binding Model.OptifineModel.IsEnable, Converter={StaticResource ConvertBoolToVisibility}}" />
                         </StackPanel>
 

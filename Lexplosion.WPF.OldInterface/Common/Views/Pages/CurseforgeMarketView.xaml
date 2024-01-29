@@ -480,9 +480,11 @@
                                         Text="{DynamicResource categories}" />
                                     <ComboBox
                                         Height="30"
+                                        MinWidth="200"
                                         Margin="10,5,0,0"
                                         ItemsSource="{Binding CfCategories}"
-                                        SelectedItem="{Binding SelectedCategory, Mode=TwoWay}">
+                                        SelectedItem="{Binding SelectedCategory, Mode=TwoWay}"
+                                        Style="{StaticResource LighterDefaultComboBox}">
                                         <ComboBox.ItemTemplate>
                                             <DataTemplate DataType="{x:Type wpfObjects:CfCategory}">
                                                 <TextBlock Text="{Binding Name}" />
