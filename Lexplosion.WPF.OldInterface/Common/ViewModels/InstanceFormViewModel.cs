@@ -309,6 +309,8 @@ namespace Lexplosion.Common.ViewModels
                 case LowerButtonFunc.AddToLibrary:
                     {
                         Client.AddToLibrary();
+                        if (!MainModel.Instance.LibraryController.IsLibraryContainsInstance(Client))
+                            MainModel.Instance.LibraryController.AddInstance(this);
                         break;
                     }
                 case LowerButtonFunc.DeleteFromLibrary:

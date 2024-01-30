@@ -165,6 +165,11 @@ namespace Lexplosion.Common.Models
         public LibraryController LibraryController { get; } = new LibraryController();
         public CatalogController CatalogController { get; } = new CatalogController();
 
+        public void OnUpdateCollection() 
+        {
+
+        }
+
         private MainModel()
         {
         }
