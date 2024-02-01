@@ -100,8 +100,12 @@
     <Compile Include="Controls\SearchBox\SearchBox.cs" />
     <Compile Include="Controls\UIUnderlineTabControl\UIUnderlineTabControl.cs" />
     <Compile Include="Controls\UpperPlaceholderTextBox\UpperPlaceholderTextBox.cs" />
+    <Compile Include="Core\Converters\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Core\Converters\ConverterBase.cs" />
+    <Compile Include="Core\Converters\NegativeBooleanValueConverter.cs" />
     <Compile Include="Core\Converters\WindowHeightToXProcentHeight.cs" />
     <Compile Include="Core\Converters\WindowWidthToXProcentWidth.cs" />
+    <Compile Include="Core\If.cs" />
     <Compile Include="Core\Paginator\IPaginator.cs" />
     <Compile Include="Core\Paginator\Paginator.cs" />
     <Compile Include="Core\ViewModel\ContentLayoutViewModelBase.cs" />
@@ -124,6 +128,9 @@
     <Compile Include="Core\Objects\Theme.cs" />
     <Compile Include="Core\ViewModel\ObservableObject.cs" />
     <Compile Include="Extensions\ResourceKeyBinding.cs" />
+    <Compile Include="Mvvm\Models\InstanceControllers\CatalogController.cs" />
+    <Compile Include="Mvvm\Models\InstanceControllers\IInstanceController.cs" />
+    <Compile Include="Mvvm\Models\InstanceControllers\LibraryController.cs" />
     <Compile Include="Mvvm\Models\MainContent\MainMenu\Friends\Friend.cs" />
     <Compile Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\Friends\Friend.xaml.cs">
       <DependentUpon>Friend.xaml</DependentUpon>
@@ -147,9 +154,6 @@
     <Compile Include="Mvvm\Models\Authorization\BasicAuthorization\IBasicAuthModel.cs" />
     <Compile Include="Mvvm\Models\Authorization\OAuth2\IOAuth2Model.cs" />
     <Compile Include="Mvvm\Models\Authorization\OAuth2\MicrosoftAuthorizationModel.cs" />
-    <Compile Include="Mvvm\Models\InstanceCatalogControllers\CatalogController.cs" />
-    <Compile Include="Mvvm\Models\InstanceCatalogControllers\IInstanceCatalog.cs" />
-    <Compile Include="Mvvm\Models\InstanceCatalogControllers\LibraryController.cs" />
     <Compile Include="Mvvm\Models\InstanceModel\DownloadModel.cs" />
     <Compile Include="Mvvm\Models\InstanceModel\InstanceModelBase.cs" />
     <Compile Include="Mvvm\Models\InstanceModel\LaunchModel.cs" />
