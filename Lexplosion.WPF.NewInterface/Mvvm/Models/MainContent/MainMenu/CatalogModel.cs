@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Objects;
+using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using System;
 using System.Collections.Generic;
@@ -18,12 +19,14 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
             Name = "All"
         };
 
+
+        private readonly IInstanceController _instanceController;
+
+
         #region Properties
 
 
-        private ObservableCollection<InstanceModelBase> _instances = new ObservableCollection<InstanceModelBase>();
-        public IEnumerable<InstanceModelBase> Instances { get => _instances; }
-
+        public IEnumerable<InstanceModelBase> Instances { get => _instanceController.Instances; }
 
         public uint ItemsPerPage { get; set; } = 10;
 
@@ -77,8 +80,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
         #region Constructors
 
 
-        public CatalogModel()
+        public CatalogModel(IInstanceController instanceController)
         {
+            _instanceController = instanceController;
             LoadPageContent();
         }
 
@@ -112,7 +116,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
                 if (PageCount != instanceClientsTuple.Item2)
                     PageCount = instanceClientsTuple.Item2;
 
-                _instances = new ObservableCollection<InstanceModelBase>(instanceClientsTuple.Item1.Select(i => new InstanceModelBase(i)));
+                foreach (var i in instanceClientsTuple.Item1)
+                    _instanceController.Add(i);
                 OnPropertyChanged(nameof(Instances));
             });
         }

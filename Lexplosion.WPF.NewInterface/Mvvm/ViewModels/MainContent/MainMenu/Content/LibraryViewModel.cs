@@ -5,10 +5,9 @@ using Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent;
 using Lexplosion.WPF.NewInterface.Stores;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile;
 using System.Windows.Input;
-using Lexplosion.WPF.NewInterface.Core.Objects;
-using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal;
 using System.Collections.Generic;
 using System;
+using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 {
@@ -49,10 +48,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
         #endregion Commands
 
+
         // TODO: думаю делегат с инстансами это костыль ченить другое надо придумать
-        public LibraryViewModel(INavigationStore navigationStore, ICommand toMainMenuLayoutCommand, ModalNavigationStore modalNavigationStore, Func<IEnumerable<InstanceModelBase>> getInstances)
+        public LibraryViewModel(INavigationStore navigationStore, ICommand toMainMenuLayoutCommand, ModalNavigationStore modalNavigationStore, IInstanceController instanceController)
         {
-            Model = new LibraryModel(getInstances);
+            Model = new LibraryModel(instanceController);
             _navigationStore = navigationStore;
             _toMainMenuLayoutCommand = toMainMenuLayoutCommand;
             _modalNavigationStore = modalNavigationStore;

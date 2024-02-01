@@ -1,10 +1,9 @@
 ﻿using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Mvvm.Models;
-using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
+using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers;
 using Lexplosion.WPF.NewInterface.Stores;
 using System;
-using System.Collections;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 {
@@ -44,8 +43,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             Func<ViewModelBase> s = () => this;
             var ToMainMenuLayoutCommand = new NavigateCommand<ViewModelBase>(navigationStore, s);
 
-            _catalogViewModel = new CatalogViewModel(navigationStore, ToMainMenuLayoutCommand);
-            _libraryViewModel = new LibraryViewModel(navigationStore, ToMainMenuLayoutCommand, modalNavStore, () => mainModel.LibraryInstances);
+            _catalogViewModel = new CatalogViewModel(navigationStore, ToMainMenuLayoutCommand, mainModel.CatalogController);
+            _libraryViewModel = new LibraryViewModel(navigationStore, ToMainMenuLayoutCommand, modalNavStore, mainModel.LibraryController);
 
             Content = _catalogViewModel;
 

@@ -5,6 +5,7 @@ using Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent;
 using Lexplosion.WPF.NewInterface.Stores;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile;
 using System.Windows.Input;
+using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 {
@@ -60,9 +61,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         #region Constructors
 
 
-        public CatalogViewModel(INavigationStore navigationStore, NavigateCommand<ViewModelBase> navigationCommand)
+        public CatalogViewModel(INavigationStore navigationStore, NavigateCommand<ViewModelBase> navigationCommand, IInstanceController instanceController)
         {
-            Model = new CatalogModel();
+            Model = new CatalogModel(instanceController);
             _navigationCommand = navigationCommand;
             _navigationStore = navigationStore;
         }
