@@ -4,21 +4,17 @@ using System.Windows.Data;
 
 namespace Lexplosion.WPF.NewInterface.Core.Converters
 {
-    public class WindowHeightToXProcentHeight : IValueConverter
+    public sealed class WindowHeightToXProcentHeight : ConverterBase<WindowHeightToXProcentHeight>
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            Runtime.DebugWrite(targetType);
             if (value is double) 
             {
                 var height = (double)value;
                 return (height / 100) * int.Parse(parameter.ToString());
             }
             return 620;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
         }
     }
 }
