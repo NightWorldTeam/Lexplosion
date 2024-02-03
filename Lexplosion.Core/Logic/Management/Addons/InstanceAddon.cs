@@ -270,7 +270,7 @@ namespace Lexplosion.Logic.Management.Instances
             return new InstanceAddon(addonPrototype, modpackInfo);
         }
 
-        public static IList<InstanceAddon> GetAddonsCatalog(InstanceSource instanceSource, BaseInstanceData modpackInfo, int pageSize, int index, AddonType type, CategoryBase category, string searchFilter) 
+        public static IList<InstanceAddon> GetAddonsCatalog(InstanceSource instanceSource, BaseInstanceData modpackInfo, int pageSize, int index, AddonType type, CategoryBase category, string searchFilter)
         {
             return instanceSource switch
             {

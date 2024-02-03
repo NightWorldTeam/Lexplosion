@@ -858,7 +858,7 @@ namespace Lexplosion.Logic.Network.SMP
                         waitingLastPackage = -1;
                     }
                     else if (_receivingPointer != id + 1)
-                    {  
+                    {
                         var package = new List<byte>
                         {
                             PackgeCodes.FailedList,
@@ -896,7 +896,7 @@ namespace Lexplosion.Logic.Network.SMP
                             _socket.Send(array, array.Length, SocketFlags.None);
                             for (int h = 3; h < array.Length - 1; h += 2)
                             {
-                                var idg = BitConverter.ToUInt16(new byte[2] 
+                                var idg = BitConverter.ToUInt16(new byte[2]
                                 {
                                     array[h],
                                     array[h + 1]

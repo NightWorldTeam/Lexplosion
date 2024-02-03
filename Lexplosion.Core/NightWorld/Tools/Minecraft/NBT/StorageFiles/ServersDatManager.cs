@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NightWorld.Tools.Minecraft.NBT.StorageFiles
 {
@@ -60,7 +56,7 @@ namespace NightWorld.Tools.Minecraft.NBT.StorageFiles
                 byte[] fileBytes = File.ReadAllBytes(_filePath);
                 loadData(fileBytes);
             }
-            catch 
+            catch
             {
                 _data = DefaultStruct();
             }
