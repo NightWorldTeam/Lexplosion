@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 
 namespace Lexplosion.Logic.Management
 {
+    //TODO: перенести в пространсво имён Lexplosion.Logic.Objects
     public sealed class MinecraftVersion : IComparable<MinecraftVersion>, IEquatable<MinecraftVersion>
     {
         public enum VersionType
@@ -107,6 +108,29 @@ namespace Lexplosion.Logic.Management
             }
 
             return this.Id == other.Id && this.Type == other.Type;
+        }
+
+        public static bool IsValidRelease(string gameVersion)
+        {
+            if (string.IsNullOrWhiteSpace(gameVersion)) return false;
+
+            string[] parts = gameVersion.Split('.');
+            if (parts.Length >= 1)
+            {
+                foreach (string part in parts)
+                {
+                    if (!Int32.TryParse(part, out _))
+                    {
+                        return false;
+                    }
+                }
+            }
+            else
+            {
+                return false;
+            }
+
+            return true;
         }
 
 

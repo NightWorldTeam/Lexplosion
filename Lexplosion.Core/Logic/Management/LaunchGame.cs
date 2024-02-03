@@ -308,6 +308,23 @@ namespace Lexplosion.Logic.Management
                 nwClientJvmArgs = nwClientJvmArgs.Replace("${appearanceElementsDir}", gamePath + "appearanceElements");
             }
 
+            string autologin = string.Empty;
+            if (!string.IsNullOrWhiteSpace(_settings.AutoLoginServer))
+            {
+                if (_settings.AutoLoginServer.Contains(":"))
+                {
+                    string[] parts = _settings.AutoLoginServer.Split(':');
+                    string ip = parts[0];
+                    string port = parts[1];
+
+                    autologin = " --server \"" + ip + "\" --port \"" + port + "\" --quickPlayMultiplayer \"" + _settings.AutoLoginServer + "\"";
+                }
+                else
+                {
+                    autologin = " --server \"" + _settings.AutoLoginServer + "\" --quickPlayMultiplayer \"" + _settings.AutoLoginServer + "\"";
+                }
+            }
+
             string command;
             if (data.VersionFile.DefaultArguments != null)
             {
@@ -346,6 +363,7 @@ namespace Lexplosion.Logic.Management
 
                 command += " " + data.VersionFile.Arguments;
                 command += " --width " + _settings.WindowWidth + " --height " + _settings.WindowHeight;
+                command += autologin;
                 command += additionalInstallerArgumentsAfter;
                 command = command.Replace("${auth_player_name}", GlobalData.User.Login);
                 command = command.Replace("${version_name}", data.VersionFile.GameVersion);
@@ -387,10 +405,11 @@ namespace Lexplosion.Logic.Management
                 command += " --uuid " + GlobalData.User.UUID + " --accessToken " + GlobalData.User.AccessToken + " --userProperties [] --userType legacy ";
                 command += data.VersionFile.Arguments;
                 command += " --width " + _settings.WindowWidth + " --height " + _settings.WindowHeight;
+                command += autologin;
                 command += additionalInstallerArgumentsAfter;
             }
 
-            //TODO: сделать функционал для автоматического коннекта - command += "--server 192.168.1.114 --port 55538";
+            //TODO: сделать функционал для автоматического коннекта - --server 192.168.1.114 --port 55538 --quickPlayMultiplayer "192.168.1.114:55538";
 
             return command;
         }

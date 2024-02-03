@@ -219,6 +219,8 @@ namespace Lexplosion.Logic.FileSystem
                 DelFile(tempDir + fileName);
                 bool result = true;
 
+                webClient.Proxy = null;
+
                 taskArgs.CancelToken.Register(delegate ()
                 {
                     webClient?.CancelAsync();

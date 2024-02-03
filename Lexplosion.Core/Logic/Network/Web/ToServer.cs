@@ -21,7 +21,7 @@ namespace Lexplosion.Logic.Network
             {
                 try
                 {
-                    answer = HttpGet(LaunсherSettings.URL.JavaData.Replace("mojang.com", "mojang.gom"));
+                    answer = HttpGet(LaunсherSettings.URL.JavaData);
                 }
                 catch (Exception ex)
                 {
@@ -124,6 +124,30 @@ namespace Lexplosion.Logic.Network
             catch
             {
                 return new List<string>();
+            }
+        }
+
+        public static List<MinecraftServerInstance> GetMinecraftServersList()
+        {
+            string result = HttpGet(LaunсherSettings.URL.Base + "/minecraft/gameServers");
+
+            if (result == null) return new List<MinecraftServerInstance>();
+
+            try
+            {
+                var data = JsonConvert.DeserializeObject<List<MinecraftServerInstance>>(result);
+
+                for (int i = 0; i < data.Count; i++)
+                {
+                    MinecraftServerInstance element = data[i];
+                    if (!element.IsValid()) data.Remove(element);
+                }
+
+                return data;
+            }
+            catch
+            {
+                return new List<MinecraftServerInstance>();
             }
         }
 

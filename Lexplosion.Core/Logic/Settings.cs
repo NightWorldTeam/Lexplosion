@@ -52,7 +52,19 @@ namespace Lexplosion.Logic
         public bool NetworkDirectConnection = true;
         public string LanguageId = "";
         public string AccentColor = "";
+        /// <summary>
+        /// Адрес сервера для автовхода при запуске майкрафта.
+        /// Параметр только для настроек конкретного клиента. 
+        /// </summary>
+        public string AutoLoginServer = null;
 
+        /// <summary>
+        /// Выполняет слияние с другим экземпляром настроек.
+        /// Если режим приоритетный, то в данном экземпляре будут заменены только пустые поля на поля из settings,
+        /// Если режим не приоритетный, то в дааном экземпляре будут заменены все поля, которые в settings не пустые.
+        /// </summary>
+        /// <param name="settings">Экземпляр, с которым нужно выполнить слияние</param>
+        /// <param name="priority">Приоритетный ли режим</param>
         public void Merge(Settings settings, bool priority = false)
         {
             if (priority)
@@ -70,6 +82,7 @@ namespace Lexplosion.Logic
                 if (IsHiddenMode == null) IsHiddenMode = settings.IsHiddenMode;
                 if (IsAutoUpdate == null) IsAutoUpdate = settings.IsAutoUpdate;
                 if (GameArgs == null) GameArgs = settings.GameArgs;
+                if (string.IsNullOrWhiteSpace(AutoLoginServer)) AutoLoginServer = settings.AutoLoginServer;
             }
             else
             {
@@ -86,6 +99,7 @@ namespace Lexplosion.Logic
                 if (settings.IsHiddenMode != null) IsHiddenMode = settings.IsHiddenMode;
                 if (settings.IsAutoUpdate != null) IsAutoUpdate = settings.IsAutoUpdate;
                 if (settings.GameArgs != null) GameArgs = settings.GameArgs;
+                if (!string.IsNullOrWhiteSpace(settings.AutoLoginServer)) AutoLoginServer = settings.AutoLoginServer;
             }
 
             NetworkDirectConnection = settings.NetworkDirectConnection;

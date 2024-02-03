@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
+using NightWorld.Tools.Minecraft.NBT.StorageFiles;
 using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Tools;
@@ -275,6 +276,8 @@ namespace Lexplosion.Logic.Management.Instances
 
         public bool IsInstalled { get; private set; } = false;
 
+        public string FolderPath { get => WithDirectory.DirectoryPath + "/instances/" + _localId; }
+
         #endregion
 
         /// <summary>
@@ -355,7 +358,7 @@ namespace Lexplosion.Logic.Management.Instances
         /// <param name="modloaderVersion">Версия модлоадера. Это поле необходимо только если есть модлоадер</param>
         /// <param name="optifineVersion">Версия оптифайна. Если оптифайн не нужен - то null.</param>
         /// <param name="sodium">Устанавливать ли sodium</param>
-        public static InstanceClient CreateClient(string name, InstanceSource type, MinecraftVersion gameVersion, ClientType modloader, string logoPath, string modloaderVersion = null, string optifineVersion = null, bool sodium = false)
+        public static InstanceClient CreateClient(string name, InstanceSource type, MinecraftVersion gameVersion, ClientType modloader, string logoPath = null, string modloaderVersion = null, string optifineVersion = null, bool sodium = false)
         {
             if (modloaderVersion == null) modloader = ClientType.Vanilla;
 
@@ -402,6 +405,21 @@ namespace Lexplosion.Logic.Management.Instances
             }
 
             Created?.Invoke();
+
+            return client;
+        }
+
+        public static InstanceClient CreateClient(MinecraftServerInstance server, bool autoLogin)
+        {
+            string name = server.Name;
+            var minecraftVersion = new MinecraftVersion(server.GameVersion);
+            var client = CreateClient(name, InstanceSource.Local, minecraftVersion, ClientType.Vanilla);
+            client.AddGameServer(server, autoLogin);
+
+            if (!string.IsNullOrWhiteSpace(server.IconUrl))
+            {
+                client.DownloadLogo(server.IconUrl, client.SaveAssets);
+            }
 
             return client;
         }
@@ -776,7 +794,7 @@ namespace Lexplosion.Logic.Management.Instances
 
             IsUpdating = true;
 
-            Settings instanceSettings = DataFilesManager.GetSettings(_localId);
+            Settings instanceSettings = GetSettings();
             instanceSettings.Merge(GlobalData.GeneralSettings, true);
 
             LaunchGame launchGame = new LaunchGame(_localId, instanceSettings, _instanceSource, _cancelTokenSource.Token);
@@ -816,7 +834,7 @@ namespace Lexplosion.Logic.Management.Instances
 
             IsUpdating = true;
 
-            Settings instanceSettings = DataFilesManager.GetSettings(_localId);
+            Settings instanceSettings = GetSettings();
             instanceSettings.Merge(GlobalData.GeneralSettings, true);
 
             _gameManager = new LaunchGame(_localId, instanceSettings, _instanceSource, _cancelTokenSource.Token);
@@ -867,7 +885,7 @@ namespace Lexplosion.Logic.Management.Instances
 
         private void CheckUpdates()
         {
-            var infoData = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.DirectoryPath + "/instances/" + _localId + "/instancePlatformData.json");
+            var infoData = DataFilesManager.GetFile<InstancePlatformData>(FolderPath + "/instancePlatformData.json");
             if (infoData == null || infoData.id == null)
             {
                 UpdateAvailable = false;
@@ -1018,7 +1036,7 @@ namespace Lexplosion.Logic.Management.Instances
         {
             // TODO: тут надо трай. И если будет исключение надо передавать ошибку
 
-            Directory.CreateDirectory(WithDirectory.DirectoryPath + "/instances/" + _localId);
+            Directory.CreateDirectory(FolderPath);
 
             VersionManifest manifest = new VersionManifest
             {
@@ -1048,7 +1066,7 @@ namespace Lexplosion.Logic.Management.Instances
                     id = _externalId
                 };
 
-                DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/instances/" + _localId + "/instancePlatformData.json", JsonConvert.SerializeObject(instanceData));
+                DataFilesManager.SaveFile(FolderPath + "/instancePlatformData.json", JsonConvert.SerializeObject(instanceData));
             }
         }
 
@@ -1095,7 +1113,7 @@ namespace Lexplosion.Logic.Management.Instances
         public Dictionary<string, PathLevel> GetPathContent(string path = "/", PathLevel parentUnit = null)
         {
             Dictionary<string, PathLevel> pathContent = new Dictionary<string, PathLevel>();
-            string dirPath = WithDirectory.DirectoryPath + "/instances/" + _localId;
+            string dirPath = FolderPath;
 
             try
             {
@@ -1181,7 +1199,7 @@ namespace Lexplosion.Logic.Management.Instances
         /// <returns>Результат экспорта.</returns>
         public ExportResult Export(Dictionary<string, PathLevel> exportList, string exportFile, string name)
         {
-            string dirPath = WithDirectory.DirectoryPath + "/instances/" + _localId;
+            string dirPath = FolderPath;
 
             void ParsePathLevel(ref List<string> list, Dictionary<string, PathLevel> levelsList)
             {
@@ -1362,9 +1380,19 @@ namespace Lexplosion.Logic.Management.Instances
             return client;
         }
 
-        public static void AddGameServer(MinecraftServerInstance server)
+        public void AddGameServer(MinecraftServerInstance server, bool autoLogin)
         {
+            ServersDatManager serversDat = new ServersDatManager(FolderPath + "/servers.dat");
 
+            serversDat.AddServer(new ServersDatManager.ServerData(server.Name, server.Address));
+            serversDat.SaveFile();
+
+            if (autoLogin)
+            {
+                Settings settings = GetSettings();
+                settings.AutoLoginServer = server.Address;
+                SaveSettings(settings);
+            }
         }
     }
 }

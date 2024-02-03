@@ -117,6 +117,7 @@ namespace Lexplosion
                 // скачивание и проверка версии UpgradeTool.exe
                 using (WebClient wc = new WebClient())
                 {
+                    wc.Proxy = null;
                     if (DataFilesManager.GetUpgradeToolVersion() < upgradeToolVersion && File.Exists(gamePath + "/UpgradeTool.exe"))
                     {
                         File.Delete(gamePath + "/UpgradeTool.exe");
