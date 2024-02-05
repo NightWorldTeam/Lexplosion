@@ -9,29 +9,59 @@ namespace Lexplosion.Logic.Objects
         public class Tag
         {
             [JsonProperty("name")]
-            public string Name;
+            public string Name { get; }
             [JsonProperty("id")]
-            public string Id;
+            public string Id { get; }
+
+            [JsonConstructor]
+            public Tag(string name, string id)
+            {
+                Name = name;
+                Id = id;
+            }
         }
 
+
+        #region Properties
+
+
         [JsonProperty("address")]
-        public string Address;
+        public string Address { get; }
         [JsonProperty("name")]
-        public string Name;
+        public string Name { get; }
         [JsonProperty("description")]
-        public string Description;
+        public string Description { get; }
         [JsonProperty("id")]
-        public string Id;
+        public string Id { get; }
         [JsonProperty("tags")]
-        public List<Tag> Tags;
+        public List<Tag> Tags { get; }
         [JsonProperty("gameVersion")]
-        public string GameVersion;
+        public string GameVersion { get; }
         [JsonProperty("bgUrl")]
-        public string BgUrl;
+        public string BgUrl { get; }
         [JsonProperty("iconUrl")]
-        public string IconUrl;
+        public string IconUrl { get; }
         [JsonProperty("imagesUrls")]
-        public List<string> ImagesUrls;
+        public List<string> ImagesUrls { get; }
+
+
+        #endregion Properties
+
+
+        [JsonConstructor]
+        public MinecraftServerInstance(string address, string name, string description, string id, List<Tag> tags, string gameVersion, string bgUrl, string iconUrl, List<string> imagesUrls)
+        {
+            Address = address;
+            Name = name;
+            Description = description;
+            Id = id;
+            Tags = tags;
+            GameVersion = gameVersion;
+            BgUrl = bgUrl;
+            IconUrl = iconUrl;
+            ImagesUrls = imagesUrls;
+        }
+
 
         public bool IsValid()
         {
