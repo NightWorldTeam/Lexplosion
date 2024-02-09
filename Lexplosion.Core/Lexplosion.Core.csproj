@@ -63,6 +63,7 @@
   <ItemGroup>
     <Compile Include="Enums.cs" />
     <Compile Include="Global.cs" />
+    <Compile Include="Logic\FileSystem\FreeSourceInstanceInstaller.cs" />
     <Compile Include="Logic\FileSystem\StandartInstanceInstaller.cs" />
     <Compile Include="Logic\FileSystem\IArchivedInstanceInstaller.cs" />
     <Compile Include="Logic\FileSystem\CurseforgeInstaller.cs" />
@@ -87,8 +88,11 @@
     <Compile Include="Logic\Management\Authentication\NightWorldAuth.cs" />
     <Compile Include="Logic\Management\CategoriesManager.cs" />
     <Compile Include="Logic\Management\Delegates.cs" />
+    <Compile Include="Logic\Management\Installers\FreeSourceInstanceInstallManager.cs" />
+    <Compile Include="Logic\Management\Instances\FreeInstance.cs" />
     <Compile Include="Logic\Management\MinecraftVersion.cs" />
     <Compile Include="Logic\Management\Sources\CurseforgeSource.cs" />
+    <Compile Include="Logic\Management\Sources\FreeSource.cs" />
     <Compile Include="Logic\Management\Sources\IInstanceSource.cs" />
     <Compile Include="Logic\Management\InstalledAddons.cs" />
     <Compile Include="Logic\Management\Installers\ArchiveInstallManager.cs" />
@@ -106,6 +110,7 @@
     <Compile Include="Logic\Management\Instances\PrototypeInstance.cs" />
     <Compile Include="Logic\Management\JavaChecker.cs" />
     <Compile Include="Logic\Management\LaunchGame.cs" />
+    <Compile Include="Logic\Objects\FreeSource.cs" />
     <Compile Include="Logic\Objects\MinecraftServerInstance.cs" />
     <Compile Include="Logic\Management\Player.cs" />
     <Compile Include="Logic\FileSystem\ProcentUpdateDelegate.cs" />

@@ -25,47 +25,6 @@ namespace Lexplosion.Logic.Management.Instances
     /// </summary>
     public class InstanceClient : VMBase
     {
-        private class ArchivedClientData
-        {
-            public string GameVersion;
-            public string Name;
-            public string Description;
-            public string Author;
-            public ClientType ModloaderType;
-            public string ModloaderVersion;
-            public AdditionalInstallerType? AdditionalInstallerType;
-            public string AdditionalInstallerVersion;
-            //TODO: public List<ICategory> Categories;
-            public string Summary;
-            public string LogoFileName;
-
-            private MinecraftVersion _gameVersionInfo;
-
-            /// <summary>
-            /// Вся информация о версии игры
-            /// </summary>
-            public MinecraftVersion GameVersionInfo
-            {
-                get
-                {
-                    if (_gameVersionInfo?.IsNan != false)
-                    {
-                        _gameVersionInfo = new MinecraftVersion(GameVersion);
-                    }
-
-                    return _gameVersionInfo;
-                }
-                set
-                {
-                    _gameVersionInfo = value;
-                    if (value?.IsNan == false)
-                    {
-                        GameVersion = value.Id;
-                    }
-                }
-            }
-        }
-
         public readonly InstanceSource Type;
         private string _externalId = null;
         private string _localId = null;
@@ -343,6 +302,8 @@ namespace Lexplosion.Logic.Management.Instances
                     return new CurseforgeSource();
                 case InstanceSource.Modrinth:
                     return new ModrinthSource();
+                case InstanceSource.FreeSource:
+                    return new FreeSource();
                 default:
                     return null;
             }

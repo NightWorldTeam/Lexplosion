@@ -6,6 +6,7 @@ using System.Text;
 
 namespace Lexplosion.Logic
 {
+    // TODO: вынести в tools
     static class Cryptography
     {
         public static string Sha256(string value)

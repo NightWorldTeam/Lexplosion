@@ -176,9 +176,9 @@ namespace Lexplosion.Logic.Objects
 
     /// <summary>
     /// Структура файла, в котором хранятся установленные аддоны (installedAddons.json)
-    /// Ключ - курсфордж id.
+    /// Ключ - id.
     /// </summary>
-    public class InstalledAddonsFormat : Dictionary<string, InstalledAddonInfo> { }
+    public class InstalledAddonsFormat : Dictionary<string, InstalledAddonInfo> { } // TODO: перенести в CommonClientData
 
     public class DistributionData
     {

@@ -235,7 +235,10 @@ namespace Lexplosion.Logic.Network.Web
                     AccesToken = token
                 };
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Runtime.DebugWrite(ex);
+            }
 
 
             return new MojangAuthResult

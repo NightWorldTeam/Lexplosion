@@ -473,12 +473,52 @@ namespace Lexplosion.Logic.Objects.CommonClientData
     /// <summary>
     /// Используется для хранения класса InstanceContent в файле. 
     /// Нужно это чтобы не хранить в файле информацию из InstanceContent, которая нужна только в рантайме.
-    /// Есть толь ко у сборок Curseforge и Modrinth
     /// </summary>
     public class InstanceContentFile
     {
         public List<string> InstalledAddons;
         public List<string> Files { get; set; }
         public bool FullClient = false;
+    }
+
+    public class ArchivedClientData
+    {
+        public string GameVersion;
+        public string Name;
+        public string Description;
+        public string Author;
+        public ClientType ModloaderType;
+        public string ModloaderVersion;
+        public AdditionalInstallerType? AdditionalInstallerType;
+        public string AdditionalInstallerVersion;
+        //TODO: public List<ICategory> Categories;
+        public string Summary;
+        public string LogoFileName;
+
+        private MinecraftVersion _gameVersionInfo;
+
+        /// <summary>
+        /// Вся информация о версии игры
+        /// </summary>
+        public MinecraftVersion GameVersionInfo
+        {
+            get
+            {
+                if (_gameVersionInfo?.IsNan != false)
+                {
+                    _gameVersionInfo = new MinecraftVersion(GameVersion);
+                }
+
+                return _gameVersionInfo;
+            }
+            set
+            {
+                _gameVersionInfo = value;
+                if (value?.IsNan == false)
+                {
+                    GameVersion = value.Id;
+                }
+            }
+        }
     }
 }

@@ -414,33 +414,6 @@ namespace Lexplosion.Logic.Management
             return command;
         }
 
-        private string DownloadCertificate()
-        {
-            string certFile = _settings.GamePath + "/java/keystore/night-world.org.crt";
-            Runtime.DebugWrite("certFile: " + certFile);
-
-            if (!File.Exists(certFile))
-            {
-                Runtime.DebugWrite("Download certificate");
-                string dir = Path.GetDirectoryName(certFile);
-                if (!Directory.Exists(dir))
-                {
-                    Directory.CreateDirectory(dir);
-                }
-
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Global.LaunсherSettings.URL.Base);
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                response.Close();
-
-                X509Certificate2 cert = new X509Certificate2(request.ServicePoint.Certificate);
-                byte[] certData = cert.Export(X509ContentType.Cert);
-
-                File.WriteAllBytes(certFile, certData);
-            }
-
-            return certFile;
-        }
-
         private byte[] LoadCertificate()
         {
             Runtime.DebugWrite("Load certificate");
@@ -530,7 +503,6 @@ namespace Lexplosion.Logic.Management
                 Runtime.DebugWrite("Exception " + ex);
             }
         }
-
 
         public bool Run(InitData data, LaunchComplitedCallback ComplitedLaunch, GameExitedCallback GameExited, string gameClientName, bool onlineGame)
         {

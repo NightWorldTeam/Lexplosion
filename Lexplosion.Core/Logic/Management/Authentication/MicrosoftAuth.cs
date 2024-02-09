@@ -22,6 +22,8 @@ namespace Lexplosion.Logic.Management.Authentication
                 return new User(response.Login, response.UUID, response.AccesToken, null, AccountType.Microsoft, ActivityStatus.Online);
             }
 
+            Runtime.DebugWrite("MicrosoftAuth code: " + response?.Status);
+
             code = AuthCode.NoConnect;
             return null;
         }

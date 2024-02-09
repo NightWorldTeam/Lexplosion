@@ -84,6 +84,7 @@
         Curseforge,
         Local,
         Modrinth,
+        FreeSource,
         None = 255
     }
 
