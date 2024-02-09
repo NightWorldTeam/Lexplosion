@@ -1,23 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
-using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Objects.FreeSource;
 
 namespace Lexplosion.Logic.Management.Installers
 {
-    class FreeSourceInstanceInstallManager : ArchiveInstallManager<FreeSourceInstanceInstaller, InstanceManifest, ModpackVersion>
+    class FreeSourceInstanceInstallManager : ArchiveInstallManager<FreeSourceInstanceInstaller, InstanceManifest, ModpackVersion, FreeSourcePlatformData>
     {
         private SourceMap _urlsMap;
 
-        public FreeSourceInstanceInstallManager(SourceMap urlsMap, string instanceid, bool onlyBase, CancellationToken cancelToken) : base(new FreeSourceInstanceInstaller(instanceid, urlsMap?.SourceId), instanceid, onlyBase, cancelToken)
+        public FreeSourceInstanceInstallManager(SourceMap urlsMap, string instanceid, bool onlyBase, CancellationToken cancelToken) : base(new FreeSourceInstanceInstaller(instanceid), instanceid, onlyBase, cancelToken)
         {
             _urlsMap = urlsMap;
         }
@@ -60,7 +55,7 @@ namespace Lexplosion.Logic.Management.Installers
 
         protected override ModpackVersion GetProjectDefaultInfo(string projectId, string actualInstanceVersion)
         {
-            string url = _urlsMap?.ModpackVersionsListUrl?.Replace("${modpackId}", LocalIdData.Load(projectId).Id);
+            string url = _urlsMap?.ModpackVersionsListUrl?.Replace("${modpackId}", projectId);
             if (url == null)
             {
                 return null;
@@ -96,7 +91,7 @@ namespace Lexplosion.Logic.Management.Installers
                 return null;
             }
 
-            url = url.Replace("${modpackId}", LocalIdData.Load(projectId).Id).Replace("${modpackVersion}", projectVersion);
+            url = url.Replace("${modpackId}", projectId).Replace("${modpackVersion}", projectVersion);
 
             string result = ToServer.HttpPost(url);
             if (result == null)
@@ -125,10 +120,9 @@ namespace Lexplosion.Logic.Management.Installers
             return projectData?.Version;
         }
 
-        protected override bool LocalInfoIsValid(InstancePlatformData data)
+        protected override bool LocalInfoIsValid(FreeSourcePlatformData data)
         {
-            var idData = LocalIdData.Load(data?.id);
-            return !string.IsNullOrWhiteSpace(idData?.Id) && !string.IsNullOrWhiteSpace(idData?.SourceUrl);
+            return data?.IsValid() == true;
         }
 
         protected override bool ManifestIsValid(InstanceManifest manifest)

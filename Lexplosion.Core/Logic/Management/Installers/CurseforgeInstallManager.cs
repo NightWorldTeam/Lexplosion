@@ -9,7 +9,7 @@ using Lexplosion.Tools;
 
 namespace Lexplosion.Logic.Management.Installers
 {
-    class CurseforgeInstallManager : ArchiveInstallManager<CurseforgeInstaller, InstanceManifest, CurseforgeFileInfo>
+    class CurseforgeInstallManager : ArchiveInstallManager<CurseforgeInstaller, InstanceManifest, CurseforgeFileInfo, InstancePlatformData>
     {
         public CurseforgeInstallManager(string instanceid, bool onlyBase, CancellationToken cancelToken) : base(new CurseforgeInstaller(instanceid), instanceid, onlyBase, cancelToken)
         { }

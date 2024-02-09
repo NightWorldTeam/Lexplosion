@@ -12,8 +12,14 @@ namespace Lexplosion.Logic.Management.Instances
 {
     class CurseforgeInstance : PrototypeInstance
     {
-        public override bool CheckUpdates(InstancePlatformData infoData, string localId)
+        public override bool CheckUpdates(string localId)
         {
+            var infoData = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.DirectoryPath + "/instances/" + localId + "/instancePlatformData.json");
+            if (string.IsNullOrWhiteSpace(infoData?.id))
+            {
+                return false;
+            }
+
             var content = DataFilesManager.GetFile<InstanceContentFile>(WithDirectory.DirectoryPath + "/instances/" + localId + "/instanceContent.json");
             if (content != null && !content.FullClient)
             {

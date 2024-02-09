@@ -452,6 +452,12 @@ namespace Lexplosion.Logic.Management.Instances
                     //проверяем имеется ли манифест, не содержит ли его id запрещенных символов
                     if (manifestIsCorrect && !ForbiddenIsCharsExists(localId))
                     {
+                        IInstanceSource sourceFactory = CreateSourceFactory(list[localId].Type);
+                        if (sourceFactory == null)
+                        {
+                            continue;
+                        }
+
                         string externalID = null;
                         string instanceVersion = null;
                         byte[] logo = null;
@@ -487,7 +493,7 @@ namespace Lexplosion.Logic.Management.Instances
                         InstanceClient instance;
                         if (assetsData != null)
                         {
-                            instance = new InstanceClient(CreateSourceFactory(list[localId].Type), externalID, localId)
+                            instance = new InstanceClient(sourceFactory, externalID, localId)
                             {
                                 Name = list[localId].Name ?? UnknownName,
                                 Summary = assetsData.Summary ?? NoDescription,
@@ -501,7 +507,7 @@ namespace Lexplosion.Logic.Management.Instances
                         }
                         else
                         {
-                            instance = new InstanceClient(CreateSourceFactory(list[localId].Type), externalID, localId)
+                            instance = new InstanceClient(sourceFactory, externalID, localId)
                             {
                                 Name = list[localId].Name ?? UnknownName,
                                 Summary = NoDescription,
@@ -846,15 +852,7 @@ namespace Lexplosion.Logic.Management.Instances
 
         private void CheckUpdates()
         {
-            var infoData = DataFilesManager.GetFile<InstancePlatformData>(FolderPath + "/instancePlatformData.json");
-            if (infoData == null || infoData.id == null)
-            {
-                UpdateAvailable = false;
-                return;
-            }
-
-            UpdateAvailable = _dataManager.CheckUpdates(infoData, _localId);
-            return;
+            UpdateAvailable = _dataManager.CheckUpdates(_localId);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

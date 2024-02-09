@@ -1,5 +1,4 @@
 ﻿using Lexplosion.Logic.Objects;
-using Lexplosion.Logic.Objects.CommonClientData;
 using System.Collections.Generic;
 
 namespace Lexplosion.Logic.Management.Instances
@@ -19,7 +18,7 @@ namespace Lexplosion.Logic.Management.Instances
             public string ExternalId;
         }
 
-        public abstract bool CheckUpdates(InstancePlatformData infoData, string localId);
+        public abstract bool CheckUpdates(string localId);
 
         public abstract InstanceData GetFullInfo(string localId, string externalId);
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using Lexplosion.Global;
+using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
@@ -11,8 +12,14 @@ namespace Lexplosion.Logic.Management.Instances
 {
     class NightworldInstance : PrototypeInstance
     {
-        public override bool CheckUpdates(InstancePlatformData infoData, string localId)
+        public override bool CheckUpdates(string localId)
         {
+            var infoData = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.DirectoryPath + "/instances/" + localId + "/instancePlatformData.json");
+            if (string.IsNullOrWhiteSpace(infoData?.id))
+            {
+                return false;
+            }
+
             int version = NightWorldApi.GetInstanceVersion(infoData.id);
             return (infoData.instanceVersion.ToInt32() < version);
         }

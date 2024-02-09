@@ -2,15 +2,37 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Lexplosion.Logic.Objects.FreeSource
 {
     public class InstanceManifest : ArchivedClientData
     {
         public InstalledAddonsFormat Addons;
+    }
+
+    public class FreeSourcePlatformData : InstancePlatformData
+    {
+        [JsonIgnore]
+        public bool SourceUrlIsExists { get; private set; } = false;
+        [JsonIgnore]
+        private string _sourceUrl;
+
+        public string sourceUrl
+        {
+            get => _sourceUrl;
+            set
+            {
+                _sourceUrl = value;
+                SourceUrlIsExists = !string.IsNullOrWhiteSpace(value);
+            }
+        }
+        public string sourceId;
+
+        public bool IsValid()
+        {
+            return !string.IsNullOrWhiteSpace(id) && !string.IsNullOrWhiteSpace(instanceVersion) &&
+                (SourceUrlIsExists || !string.IsNullOrWhiteSpace(sourceId));
+        }
     }
 
     public class FileDesc
@@ -67,9 +89,6 @@ namespace Lexplosion.Logic.Objects.FreeSource
 
         [JsonProperty("modpackVersionManifestUrl")]
         public string ModpackVersionManifestUrl;
-
-        [JsonIgnore]
-        public string SourceId;
     }
 
     public class SourceManifest
@@ -142,29 +161,6 @@ namespace Lexplosion.Logic.Objects.FreeSource
 
         [JsonProperty("images")]
         public List<string> Images;
-    }
-
-    public class LocalIdData
-    {
-        public string Id;
-        public string SourceUrl;
-
-        public static LocalIdData Load(string idData)
-        {
-            try
-            {
-                return JsonConvert.DeserializeObject<LocalIdData>(idData);
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        public string EncodeToJson()
-        {
-            return JsonConvert.SerializeObject(this);
-        }
     }
 
 }

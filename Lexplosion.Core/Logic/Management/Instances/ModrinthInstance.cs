@@ -1,4 +1,5 @@
-﻿using Lexplosion.Logic.Network.Web;
+﻿using Lexplosion.Logic.FileSystem;
+using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Objects.Modrinth;
@@ -11,8 +12,14 @@ namespace Lexplosion.Logic.Management.Instances
 {
     class ModrinthInstance : PrototypeInstance
     {
-        public override bool CheckUpdates(InstancePlatformData infoData, string localId)
+        public override bool CheckUpdates(string localId)
         {
+            var infoData = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.DirectoryPath + "/instances/" + localId + "/instancePlatformData.json");
+            if (string.IsNullOrWhiteSpace(infoData?.id))
+            {
+                return false;
+            }
+
             ModrinthProjectInfo info = ModrinthApi.GetProject(infoData.id);
 
             var lastElem = info.Versions.GetLastElement();

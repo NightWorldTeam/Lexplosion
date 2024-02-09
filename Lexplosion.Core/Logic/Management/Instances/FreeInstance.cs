@@ -1,33 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
-using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Objects.FreeSource;
 using Lexplosion.Tools;
-using Newtonsoft.Json;
 
 namespace Lexplosion.Logic.Management.Instances
 {
     class FreeInstance : PrototypeInstance
     {
-        private Func<InstancePlatformData, SourceMap> _urlGetter;
+        private Func<FreeSourcePlatformData, SourceMap> _urlGetter;
 
-        public FreeInstance(Func<InstancePlatformData, SourceMap> urlGetter)
+        public FreeInstance(Func<FreeSourcePlatformData, SourceMap> urlGetter)
         {
             _urlGetter = urlGetter;
         }
 
-        public override bool CheckUpdates(InstancePlatformData infoData, string localId)
+        public override bool CheckUpdates(string localId)
         {
             try
             {
-                string url = _urlGetter(infoData)?.ModpackVersionsListUrl?.Replace("${modpackId}", LocalIdData.Load(infoData?.id).Id);
+                var infoData = DataFilesManager.GetFile<FreeSourcePlatformData>(WithDirectory.DirectoryPath + "/instances/" + localId + "/instancePlatformData.json");
+                if (infoData == null || !infoData.IsValid())
+                {
+                    return false;
+                }
+
+                string url = _urlGetter(infoData)?.ModpackVersionsListUrl?.Replace("${modpackId}", infoData.id);
                 if (url == null)
                 {
                     return false;
@@ -55,16 +57,13 @@ namespace Lexplosion.Logic.Management.Instances
 
         public override InstanceData GetFullInfo(string localId, string externalId)
         {
-            var idData = LocalIdData.Load(externalId);
-
-            var content = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.DirectoryPath + "/instances/" + localId + "/instancePlatformData.json");
-
+            var content = DataFilesManager.GetFile<FreeSourcePlatformData>(WithDirectory.DirectoryPath + "/instances/" + localId + "/instancePlatformData.json");
             string url = _urlGetter(content)?.ModpackManifestUrl;
 
             ModpackManifest manifest = null;
             try
             {
-                string result = ToServer.HttpGet(url.Replace("${modpackId}", idData?.Id));
+                string result = ToServer.HttpGet(url.Replace("${modpackId}", externalId));
                 manifest = JsonConvert.DeserializeObject<ModpackManifest>(result);
             }
             catch { }

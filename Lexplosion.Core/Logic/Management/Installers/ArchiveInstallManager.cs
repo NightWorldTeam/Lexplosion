@@ -1,21 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using Newtonsoft.Json;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects.CommonClientData;
-using Newtonsoft.Json;
 
 namespace Lexplosion.Logic.Management.Installers
 {
-    abstract class ArchiveInstallManager<TInstaller, UManifest, BProjectInfo> : IInstallManager where TInstaller : InstanceInstaller, IArchivedInstanceInstaller<UManifest>
+    /// <summary>
+    /// Описывает менеджер установки для инсталлеров, работающими со сборками в формате архивов.
+    /// В таких сборках основные данные (модлоадер, версия игры и тп) хранятся в манифесете, который находится внутри архива. 
+    /// И чтобы эти данные определить, нужно сначала скачать архив.
+    /// </summary>
+    /// <typeparam name="TInstaller">Тип инсталлера сборки</typeparam>
+    /// <typeparam name="UManifest">Тип манифеста, который содержится в архиве</typeparam>
+    /// <typeparam name="BProjectInfo">Тип, описывающий информацию о сборки, получаемую с сервера</typeparam>
+    /// <typeparam name="CPlatformData">Тип, описывающий данные, которые будут храниться в файле instancePlatformData.json</typeparam>
+    abstract class ArchiveInstallManager<TInstaller, UManifest, BProjectInfo, CPlatformData> : IInstallManager where TInstaller : InstanceInstaller, IArchivedInstanceInstaller<UManifest> where CPlatformData : InstancePlatformData
     {
         private VersionManifest Manifest;
         private LastUpdates Updates;
         private TInstaller _installer;
 
         private string InstanceId;
-        private InstancePlatformData InfoData;
+        private CPlatformData InfoData;
         protected BProjectInfo ProjectInfo;
 
         private bool BaseFilesIsCheckd = false;
@@ -54,13 +63,16 @@ namespace Lexplosion.Logic.Management.Installers
         /// <param name="projectId">ID проекта</param>
         /// <param name="projectVersion">Версия проекта</param>
         /// <returns>
-        /// Объект, содержащий нужную инфу о пректе.
+        /// Объект, содержащий нужную инфу о пректе. Если ничего не найдено, то null.
         /// </returns>
         protected abstract BProjectInfo GetProjectInfo(string projectId, string projectVersion);
 
         /// <summary>
         /// Аналогично GetProjectInfo, за исключением того, что он должнн возвращать версию по умочланию (обычно последнюю)
         /// </summary>
+        /// /// <returns>
+        /// Объект, содержащий нужную инфу о пректе. Если ничего не найдено, то null.
+        /// </returns>
         protected abstract BProjectInfo GetProjectDefaultInfo(string projectId, string actualInstanceVersion);
 
         /// <summary>
@@ -79,7 +91,7 @@ namespace Lexplosion.Logic.Management.Installers
 
         protected abstract string DetermineGameVersion(UManifest manifest);
 
-        protected abstract bool LocalInfoIsValid(InstancePlatformData data);
+        protected abstract bool LocalInfoIsValid(CPlatformData data);
 
         public abstract string ProjectId { get; }
         protected abstract bool ProfectInfoIsValid { get; }
@@ -98,7 +110,7 @@ namespace Lexplosion.Logic.Management.Installers
             javaVersionName = string.Empty;
 
             Manifest = DataFilesManager.GetManifest(InstanceId, false);
-            InfoData = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.DirectoryPath + "/instances/" + InstanceId + "/instancePlatformData.json");
+            InfoData = DataFilesManager.GetFile<CPlatformData>(WithDirectory.DirectoryPath + "/instances/" + InstanceId + "/instancePlatformData.json");
 
             if (!LocalInfoIsValid(InfoData))
             {

@@ -28,12 +28,6 @@ namespace Lexplosion.Logic.FileSystem
         /// <returns>Манифест</returns>
         protected abstract TManifest ArchiveHadnle(string unzupArchivePath, out List<string> files);
 
-        /// <summary>
-        /// Скачивает все аддоны модпака из спика
-        /// </summary>
-        /// <returns>
-        /// Возвращает список ошибок.
-        /// </returns>
         public abstract List<string> InstallInstance(TManifest data, InstanceContent localFiles, CancellationToken cancelToken);
 
         protected void AddonsDownloadEventInvoke(int totalDataCount, int nowDataCount)
@@ -103,9 +97,6 @@ namespace Lexplosion.Logic.FileSystem
             }
         }
 
-        /// <summary>
-        /// Проверяет все ли файлы клиента присутсвуют
-        /// </summary>
         public bool InvalidStruct(InstanceContent localFiles)
         {
             if (localFiles == null || localFiles.Files == null || localFiles.InstalledAddons == null || !localFiles.FullClient)
@@ -139,12 +130,6 @@ namespace Lexplosion.Logic.FileSystem
             return false;
         }
 
-        /// <summary>
-        /// Скачивает архив с модпаком.
-        /// </summary>
-        /// <returns>
-        /// Возвращает манифест, полученный из архива.
-        /// </returns>
         public TManifest DownloadInstance(string downloadUrl, string fileName, ref InstanceContent localFiles, CancellationToken cancelToken)
         {
             try

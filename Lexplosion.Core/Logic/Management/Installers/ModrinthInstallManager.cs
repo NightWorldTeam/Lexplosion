@@ -7,7 +7,7 @@ using Lexplosion.Logic.Objects.Modrinth;
 
 namespace Lexplosion.Logic.Management.Installers
 {
-    class ModrinthInstallManager : ArchiveInstallManager<ModrinthInstaller, InstanceManifest, ModrinthProjectFile>
+    class ModrinthInstallManager : ArchiveInstallManager<ModrinthInstaller, InstanceManifest, ModrinthProjectFile, InstancePlatformData>
     {
         public ModrinthInstallManager(string instanceid, bool onlyBase, CancellationToken cancelToken) : base(new ModrinthInstaller(instanceid), instanceid, onlyBase, cancelToken)
         { }

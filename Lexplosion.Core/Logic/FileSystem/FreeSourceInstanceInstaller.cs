@@ -18,11 +18,8 @@ namespace Lexplosion.Logic.FileSystem
 {
     class FreeSourceInstanceInstaller : InstanceInstaller, IArchivedInstanceInstaller<InstanceManifest>
     {
-        private string _sourceId;
-
-        public FreeSourceInstanceInstaller(string instanceID, string sourceId) : base(instanceID)
+        public FreeSourceInstanceInstaller(string instanceID) : base(instanceID)
         {
-            _sourceId = sourceId;
         }
 
         public event Action<int> MainFileDownloadEvent;
@@ -88,28 +85,21 @@ namespace Lexplosion.Logic.FileSystem
 
                 //определяем белый список файлов
                 HashSet<FileDesc> files = null;
-                if (_sourceId != null)
+                var content = DataFilesManager.GetFile<FreeSourcePlatformData>(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/instancePlatformData.json");
+                if (content != null && content.IsValid())
                 {
-                    var content = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/instancePlatformData.json");
-                    if (content != null)
+                    string result = ToServer.HttpGet("http://192.168.0.110/api/freeSources/" + content.sourceId + "/modpacks/" + content.id + "/exutableFilesWhiteList");
+                    if (result != null)
                     {
-                        var idData = LocalIdData.Load(content.id);
-                        if (!string.IsNullOrWhiteSpace(idData?.Id))
+                        try
                         {
-                            string result = ToServer.HttpGet("http://192.168.0.110/api/freeSources/" + _sourceId + "/modpacks/" + idData + "/exutableFilesWhiteList");
-                            if (result != null)
+                            var data = JsonConvert.DeserializeObject<WhiteListManifest>(result);
+                            if (data != null && data.WhiteListExists)
                             {
-                                try
-                                {
-                                    var data = JsonConvert.DeserializeObject<WhiteListManifest>(result);
-                                    if (data != null && data.WhiteListExists)
-                                    {
-                                        files = data.WhiteList;
-                                    }
-                                }
-                                catch { }
+                                files = data.WhiteList;
                             }
                         }
+                        catch { }
                     }
                 }
 
