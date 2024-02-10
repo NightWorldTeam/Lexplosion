@@ -222,7 +222,7 @@ namespace Lexplosion.Logic.Objects
         public SimpleCategory(string id, string name) 
         {
             Id = id;
-            Name = name
+            Name = name;
         }
 
         public SimpleCategory(CategoryBase category)
