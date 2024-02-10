@@ -62,7 +62,6 @@ namespace Lexplosion.Logic.Objects
             ImagesUrls = imagesUrls;
         }
 
-
         public bool IsValid()
         {
             return !string.IsNullOrWhiteSpace(Name)
@@ -71,5 +70,19 @@ namespace Lexplosion.Logic.Objects
                 && !Address.Contains(" ")
                 && MinecraftVersion.IsValidRelease(GameVersion);
         }
+    }
+
+    public class McServerOnlineData
+    {
+        public class PalyersCount
+        {
+            [JsonProperty("online")]
+            public int Online;
+            [JsonProperty("max")]
+            public int Max;
+        }
+
+        [JsonProperty("players")]
+        public PalyersCount Players;
     }
 }

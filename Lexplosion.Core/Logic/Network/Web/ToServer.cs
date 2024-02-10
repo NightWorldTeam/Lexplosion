@@ -9,6 +9,7 @@ using Lexplosion.Global;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Tools;
+using System.Threading.Tasks;
 
 namespace Lexplosion.Logic.Network
 {
@@ -125,6 +126,28 @@ namespace Lexplosion.Logic.Network
             {
                 return new List<string>();
             }
+        }
+
+        public static async Task<int> GetMcServerOnline(MinecraftServerInstance server)
+        {
+            int count = -1;
+            await Task.Run(() =>
+            {
+                string result = ToServer.HttpGet($"https://api.mcsrvstat.us/3/{server.Address}");
+                if (result == null) return;
+
+                try
+                {
+                    var data = JsonConvert.DeserializeObject<McServerOnlineData>(result);
+                    if (data?.Players != null)
+                    {
+                        count = data.Players.Online;
+                    }
+                }
+                catch { }
+            });
+
+            return count;
         }
 
         public static List<MinecraftServerInstance> GetMinecraftServersList()
