@@ -14,6 +14,8 @@ namespace Lexplosion.Logic.Management.Instances
 
         public override InstanceData GetFullInfo(string localId, string externalId)
         {
+            if (localId == null) return null;
+
             VersionManifest instanceManifest = DataFilesManager.GetManifest(localId, false);
             InstanceAssets assetsData = DataFilesManager.GetFile<InstanceAssets>(WithDirectory.DirectoryPath + "/instances-assets/" + localId + "/assets.json");
 

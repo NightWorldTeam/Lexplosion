@@ -211,10 +211,20 @@ namespace Lexplosion.Logic.Management.Installers
 
                     if (!ProfectInfoIsValid)
                     {
-                        return new InitData
+                        // возможно эта версия была удалена на сервере. Пробуем получить версию по умолчанию
+                        ProjectInfo = GetProjectDefaultInfo(InfoData.id, InfoData.instanceVersion);
+                        if (ProfectInfoIsValid)
                         {
-                            InitResult = InstanceInit.CurseforgeIdError,
-                        };
+                            InfoData.instanceVersion = GetProjectVersion(ProjectInfo);
+                            DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/instances/" + InstanceId + "/instancePlatformData.json", JsonConvert.SerializeObject(InfoData));
+                        }
+                        else
+                        {
+                            return new InitData
+                            {
+                                InitResult = InstanceInit.CurseforgeIdError,
+                            };
+                        }
                     }
                 }
 

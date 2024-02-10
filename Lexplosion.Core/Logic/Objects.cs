@@ -219,6 +219,12 @@ namespace Lexplosion.Logic.Objects
 
         public SimpleCategory() { }
 
+        public SimpleCategory(string id, string name) 
+        {
+            Id = id;
+            Name = name
+        }
+
         public SimpleCategory(CategoryBase category)
         {
             Id = category.Id;

@@ -14,6 +14,7 @@ using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Management.Sources;
 using Lexplosion.Logic.Network.Web;
+using System.Linq;
 
 namespace Lexplosion.Logic.Management.Instances
 {
@@ -374,8 +375,20 @@ namespace Lexplosion.Logic.Management.Instances
         {
             string name = server.Name;
             var minecraftVersion = new MinecraftVersion(server.GameVersion);
+
             var client = CreateClient(name, InstanceSource.Local, minecraftVersion, ClientType.Vanilla);
             client.AddGameServer(server, autoLogin);
+
+            if (server.Tags != null)
+            {
+                client.Categories = server.Tags.Select((x) => new SimpleCategory(x.Id, x.Name));
+            }
+
+            if (server.Description != null)
+            {
+                client.Description = server.Description;
+                client.Summary = server.Description;
+            }
 
             if (!string.IsNullOrWhiteSpace(server.IconUrl))
             {

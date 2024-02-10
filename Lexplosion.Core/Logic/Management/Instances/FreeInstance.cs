@@ -57,6 +57,8 @@ namespace Lexplosion.Logic.Management.Instances
 
         public override InstanceData GetFullInfo(string localId, string externalId)
         {
+            if (localId == null) return null;
+
             var content = DataFilesManager.GetFile<FreeSourcePlatformData>(WithDirectory.DirectoryPath + "/instances/" + localId + "/instancePlatformData.json");
             string url = _urlGetter(content)?.ModpackManifestUrl;
 
@@ -92,7 +94,7 @@ namespace Lexplosion.Logic.Management.Instances
 
             return new InstanceData
             {
-                Source = InstanceSource.Local,
+                Source = InstanceSource.FreeSource,
                 Categories = new List<IProjectCategory>(),
                 Description = manifest?.Description,
                 Summary = manifest?.Summary,
