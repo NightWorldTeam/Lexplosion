@@ -226,7 +226,6 @@
     </ControlTemplate>
 
     <Style TargetType="{x:Type ComboBox}">
-        <Setter Property="MinWidth" Value="140" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ComboBox}">
@@ -524,4 +523,110 @@
         </Setter>
     </Style>
 
+
+    <ControlTemplate x:Key="ComboBoxToggleButtonNoContent" TargetType="{x:Type ToggleButton}">
+        <Grid>
+            <Border
+                x:Name="HoverBorder"
+                Margin="4,0,0,0"
+                BorderThickness="0.1"
+                CornerRadius="0,5,5,0" />
+
+            <Border
+                x:Name="Border"
+                Margin="4,0,0,0"
+                Padding="4,8,8,8"
+                Background="Transparent"
+                BorderBrush="White"
+                BorderThickness="0.1"
+                CornerRadius="0,5,5,0">
+                <Viewbox
+                    x:Name="ArrowIcon"
+                    Width="20"
+                    Height="16"
+                    Margin="-2,-6,0,0"
+                    Stretch="Fill">
+                    <Path
+                        x:Name="Arrow"
+                        Data="m24 30.75-12-12 2.15-2.15L24 26.5l9.85-9.85L36 18.8Z"
+                        Fill="White"
+                        SnapsToDevicePixels="False" />
+                </Viewbox>
+            </Border>
+        </Grid>
+
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsChecked" Value="True">
+                <Setter TargetName="Arrow" Property="Path.Data" Value="M14.15 30.75 12 28.6l12-12 12 11.95-2.15 2.15L24 20.85Z" />
+                <Setter Property="Path.Fill" Value="#167FFC" />
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="HoverBorder" Property="Background" Value="#252525" />
+                <Setter TargetName="HoverBorder" Property="Opacity" Value="0.4" />
+            </Trigger>
+
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter TargetName="ArrowIcon" Property="Visibility" Value="Collapsed" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+
+    </ControlTemplate>
+
+    <Style x:Key="ComboBoxToggleButtonOnly" TargetType="{x:Type ComboBox}">
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ComboBox}">
+                    <Border>
+                        <Grid>
+                            <ToggleButton
+                                Name="ToggleButton"
+                                ClickMode="Press"
+                                Foreground="#b9b7b7"
+                                IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                IsEnabled="{TemplateBinding IsReadOnly,
+                                                            Converter={StaticResource InverseBooleanConverter1}}"
+                                IsTabStop="False"
+                                Template="{StaticResource ComboBoxToggleButtonNoContent}">
+                                <ToggleButton.Style>
+                                    <Style TargetType="{x:Type ToggleButton}">
+                                        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                                    </Style>
+                                </ToggleButton.Style>
+                            </ToggleButton>
+                            <!--  None, Fade, Scroll, Slide  -->
+                            <Popup
+                                Name="Popup"
+                                AllowsTransparency="True"
+                                Focusable="False"
+                                HorizontalOffset="{Binding ActualWidth, ElementName=ToggleButton}"
+                                IsOpen="{TemplateBinding IsDropDownOpen}"
+                                Placement="Left"
+                                PopupAnimation="Scroll"
+                                VerticalOffset="{Binding ActualHeight, ElementName=ToggleButton}">
+                                <Grid
+                                    Name="DropDown"
+                                    MinWidth="140"
+                                    MaxHeight="{TemplateBinding MaxDropDownHeight}"
+                                    SnapsToDevicePixels="True">
+                                    <Border
+                                        x:Name="DropDownBorder"
+                                        Background="#1f1f1f"
+                                        BorderBrush="{DynamicResource BrandSolidColorBrush}"
+                                        BorderThickness="2"
+                                        CornerRadius="2" />
+                                    <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
+                                        <StackPanel
+                                            IsItemsHost="True"
+                                            KeyboardNavigation.DirectionalNavigation="Contained"
+                                            TextBlock.FontSize="14" />
+                                    </ScrollViewer>
+                                </Grid>
+                            </Popup>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

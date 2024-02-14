@@ -14,8 +14,14 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
-                        <Border Background="{TemplateBinding Background}" CornerRadius="5" Padding="10,5,10,5">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0"/>
+                        <Border
+                            Padding="10,5,10,5"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="5">
+                            <ContentPresenter
+                                Margin="0"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center" />
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
@@ -29,8 +35,8 @@
     </UserControl.Resources>
 
     <Border
-        Width="300"
-        Height="200"
+        Width="{Binding Width}"
+        Height="{Binding Height}"
         Padding="16"
         Background="#131313"
         CornerRadius="5">
@@ -38,11 +44,12 @@
         <Grid>
             <StackPanel>
                 <TextBlock
-                    Margin="0,0,0,5"
+                    Margin="0,0,0,8"
                     FontSize="20"
                     FontWeight="Medium"
                     Foreground="White"
-                    Text="{Binding Title}" />
+                    Text="{Binding Title}"
+                    TextWrapping="WrapWithOverflow" />
                 <TextBlock
                     FontSize="14"
                     Foreground="#fdfdfd"
@@ -51,6 +58,7 @@
             </StackPanel>
 
             <StackPanel
+                Margin="0,8,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Bottom"
                 Orientation="Horizontal">
@@ -63,7 +71,8 @@
                     IsDefault="True"
                     Style="{StaticResource OkeyButton}" />
                 <Button
-                    Height="30" Width="70"
+                    Width="70"
+                    Height="30"
                     Margin="10,0,0,0"
                     Background="Transparent"
                     Command="{Binding CloseModalWindowCommand}"

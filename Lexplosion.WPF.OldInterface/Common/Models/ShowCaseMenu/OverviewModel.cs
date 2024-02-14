@@ -44,7 +44,9 @@ namespace Lexplosion.Common.Models.ShowCaseMenu
             InstanceData = instanceClient.GetFullInfo();
             overviewViewModel.IsLoadedFailed = InstanceData == null ? true : false;
             IsLocalInstance = (InstanceData != null && InstanceData.TotalDownloads != 0);
-            GalleryVM = new GalleryViewModel(InstanceData?.Images ?? new List<byte[]>(), submenuViewModel);
+            GalleryVM = new GalleryViewModel(InstanceData?.Images ?? new List<byte[]>());
+
+            submenuViewModel.NavigationToMainMenu += GalleryVM.ClearGallery;
         }
 
 

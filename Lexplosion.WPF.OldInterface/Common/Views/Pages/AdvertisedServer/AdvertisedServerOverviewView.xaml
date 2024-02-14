@@ -1,0 +1,229 @@
+﻿<UserControl
+    x:Class="Lexplosion.Common.Views.Pages.AdvertisedServer.AdvertisedServerOverviewView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Lexplosion.Controls"
+    xmlns:customcontrols="clr-namespace:Lexplosion.Common.Views.CustomControls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="clr-namespace:Lexplosion.Common.Extension"
+    xmlns:local="clr-namespace:Lexplosion.Common.Views.Pages.AdvertisedServer"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:Lexplosion.Common.ViewModels.AdvertisedServer"
+    d:DataContext="{d:DesignInstance vm:AdServerOverviewViewModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+
+    <ScrollViewer>
+        <Border Padding="24,24,20,0">
+
+            <Grid ShowGridLines="False">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="210" />
+                </Grid.ColumnDefinitions>
+
+
+                <!--  Left Part  -->
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <!--  Width="450" Height="240"  -->
+                    <controls:SimpleGallery Margin="0,0,8,16" ItemsSource="{Binding Model.Images}" />
+
+                    <Border
+                        x:Name="LoadingGallery"
+                        Margin="0,0,8,16"
+                        Padding="8"
+                        Background="#101010"
+                        CornerRadius="8"
+                        Visibility="{Binding Model.IsStatusLoaded, Converter={StaticResource NegativeConvertBoolToVisibility}}" />
+
+                    <!--  Tag Panel  -->
+                    <Grid
+                        Grid.Row="1"
+                        Margin="0,0,0,16"
+                        VerticalAlignment="Top">
+
+                        <Border
+                            Padding="8,4,0,4"
+                            BorderBrush="{DynamicResource BrandSolidColorBrush}"
+                            BorderThickness="2,0,0,0"
+                            Visibility="{Binding Model.IsStatusLoaded, Converter={StaticResource ConvertBoolToVisibility}}">
+                            <StackPanel>
+
+                                <TextBlock
+                                    Margin="0,0,0,6"
+                                    FontSize="14"
+                                    FontWeight="Medium"
+                                    Foreground="#ababab"
+                                    Text="{DynamicResource categories}" />
+
+                                <ItemsControl Margin="0,0,16,0" ItemsSource="{Binding Model.Tags}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock
+                                                Margin="0,0,8,0"
+                                                FontWeight="Medium"
+                                                Foreground="{DynamicResource ForegroundSolidBrush}"
+                                                Text="{Binding Name}" />
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel Margin="0,0,16,0" IsItemsHost="True" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                </ItemsControl>
+                            </StackPanel>
+                        </Border>
+
+                        <Border
+                            Height="48"
+                            Margin="0,0,8,0"
+                            Padding="8"
+                            Background="#101010"
+                            CornerRadius="0"
+                            Visibility="{Binding Model.IsStatusLoaded, Converter={StaticResource NegativeConvertBoolToVisibility}}" />
+
+                    </Grid>
+                </Grid>
+
+                <!--  Right Part  -->
+                <!--  Logo & Addtional Info  -->
+                <Border
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Padding="0,16"
+                    VerticalAlignment="Top"
+                    BorderBrush="{DynamicResource SepSolidColorBrush}"
+                    BorderThickness="1">
+                    <StackPanel>
+                        <Border
+                            Width="160"
+                            Height="160"
+                            Margin="0,0,0,8"
+                            CornerRadius="5">
+                            <Border.Background>
+                                <ImageBrush ImageSource="pack://application:,,,/assets/images/icons/logo.ico" />
+                            </Border.Background>
+                        </Border>
+
+
+                        <Grid Margin="24,0,24,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+
+                            <!--  Current Online  -->
+
+                            <TextBlock
+                                Margin="0,0,16,0"
+                                FontSize="14"
+                                Foreground="{DynamicResource ForegroundSolidBrush}"
+                                Text="Текущий онлайн" />
+
+                            <TextBlock
+                                Grid.Column="1"
+                                HorizontalAlignment="Right"
+                                FontSize="14"
+                                Foreground="{DynamicResource ForegroundSolidBrush}"
+                                Text="{Binding Model.OnlineCount}" />
+
+                            <!--  Version  -->
+                            <TextBlock
+                                Grid.Row="1"
+                                Margin="0,0,16,0"
+                                FontSize="14"
+                                Foreground="{DynamicResource ForegroundSolidBrush}"
+                                Text="{DynamicResource version}" />
+
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                HorizontalAlignment="Right"
+                                FontSize="14"
+                                Foreground="{DynamicResource ForegroundSolidBrush}"
+                                Text="{Binding Model.GameVersion}" />
+
+
+                            <!--  Status  -->
+
+                            <TextBlock
+                                Grid.Row="2"
+                                Margin="0,0,16,0"
+                                FontSize="14"
+                                Foreground="{DynamicResource ForegroundSolidBrush}"
+                                Text="{DynamicResource status}" />
+
+                            <TextBlock
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                HorizontalAlignment="Right"
+                                FontSize="14"
+                                Foreground="{DynamicResource ForegroundSolidBrush}"
+                                Text="{Binding Model.OnlineCount}" />
+
+                            <Border
+                                Grid.RowSpan="3"
+                                Grid.ColumnSpan="2"
+                                Padding="8"
+                                Background="#101010"
+                                CornerRadius="5"
+                                Visibility="{Binding Model.IsStatusLoaded, Converter={StaticResource NegativeConvertBoolToVisibility}}" />
+                        </Grid>
+
+                        <!--  Buttons  -->
+                        <StackPanel />
+                    </StackPanel>
+                </Border>
+
+                <!--  Bottom Part  -->
+                <!--  Overview  -->
+                <Grid
+                    Grid.Row="2"
+                    Grid.ColumnSpan="2"
+                    Margin="0,0,0,8">
+                    <StackPanel Visibility="{Binding Model.IsStatusLoaded, Converter={StaticResource ConvertBoolToVisibility}}">
+                        <TextBlock
+                            Margin="0,0,0,8"
+                            FontSize="15"
+                            FontWeight="Medium"
+                            Foreground="#ababab"
+                            Text="{DynamicResource overview}" />
+                        <TextBlock
+                            FontSize="14"
+                            Foreground="{DynamicResource ForegroundSolidBrush}"
+                            Text="{Binding Model.Description}"
+                            TextWrapping="WrapWithOverflow" />
+                    </StackPanel>
+
+                    <Border
+                        Height="32"
+                        Padding="8"
+                        Background="#101010"
+                        CornerRadius="5"
+                        Visibility="{Binding Model.IsStatusLoaded, Converter={StaticResource NegativeConvertBoolToVisibility}}" />
+                </Grid>
+            </Grid>
+        </Border>
+    </ScrollViewer>
+</UserControl>

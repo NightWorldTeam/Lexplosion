@@ -7,7 +7,7 @@
     xmlns:local="clr-namespace:Lexplosion.Common.Views.Pages.MainMenu.Multiplayer"
     xmlns:localVM="clr-namespace:Lexplosion.Common.ViewModels.MainMenu.Multiplayer"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:objects="clr-namespace:Lexplosion.Common.Models.Objects"
+    xmlns:objects="clr-namespace:Lexplosion.Logic.Objects;assembly=Lexplosion.Core"
     d:DataContext="{d:DesignInstance localVM:AdServersListTabViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
@@ -18,64 +18,183 @@
             <Setter Property="Margin" Value="0,8,0,0" />
         </Style>
 
-        <DataTemplate DataType="{x:Type objects:AdServer}">
-            <Border
-                Padding="0"
-                Background="{DynamicResource SepSolidColorBrush}"
-                CornerRadius="5">
-                <Grid ShowGridLines="True">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="100" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
+        <DataTemplate DataType="{x:Type objects:MinecraftServerInstance}">
 
-
-                    <StackPanel Margin="8,8,0,0">
-                        <TextBlock Foreground="White" Text="{Binding Name}" />
-                        <TextBlock Foreground="White" Text="{Binding OnlineCount, StringFormat='Online: {0}'}" />
-                    </StackPanel>
-
-                    <!--  Buttons  -->
-
-                    <StackPanel Grid.Column="2" HorizontalAlignment="Right">
-                        <Button
-                            Width="32"
-                            Height="32"
-                            Style="{StaticResource IconicButton}">
+            <Button
+                HorizontalAlignment="Stretch"
+                Command="{Binding DataContext.OpenServerPageCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                CommandParameter="{Binding}">
+                <Button.Template>
+                    <ControlTemplate>
+                        <Grid Margin="0,0,8,0" HorizontalAlignment="Stretch">
                             <Border
-                                Width="32"
-                                Height="32"
-                                Background="{DynamicResource SepSolidColorBrush}"
-                                CornerRadius="0,5,0,0">
-                                <Viewbox Width="20" Height="20">
-                                    <Path
-                                        extension:PathExtension.StringData="{StaticResource Play}"
-                                        Fill="White"
-                                        Stretch="Fill" />
-                                </Viewbox>
-                            </Border>
-                        </Button>
-                        <Button
-                            Width="32"
-                            Height="32"
-                            Style="{StaticResource IconicButton}">
-                            <Border
-                                Width="32"
-                                Height="32"
-                                Background="{DynamicResource SepSolidColorBrush}"
-                                CornerRadius="0,0,5,0">
-                                <Viewbox Width="20" Height="20">
-                                    <Path
-                                        extension:PathExtension.StringData="{StaticResource Copy}"
-                                        Fill="White"
-                                        Stretch="Fill" />
-                                </Viewbox>
-                            </Border>
-                        </Button>
-                    </StackPanel>
-                </Grid>
-            </Border>
+                                x:Name="AncestorBorder"
+                                HorizontalAlignment="Stretch"
+                                Background="{DynamicResource BrandSolidColorBrush}"
+                                BorderThickness="0,0,0,0"
+                                CornerRadius="6" />
+
+                            <Grid
+                                MinWidth="300"
+                                MinHeight="150"
+                                MaxHeight="200"
+                                HorizontalAlignment="Stretch"
+                                Background="Transparent">
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+
+                                <!--  Image Block  -->
+                                <!--  Grid.RowSpan="1"  -->
+                                <!--  Grid.RowSpan="2"  -->
+                                <Border Grid.RowSpan="1" CornerRadius="5,5,0,0">
+                                    <Border.Background>
+                                        <ImageBrush ImageSource="pack://Application:,,,/Assets/images/background/mainBG.png" />
+                                    </Border.Background>
+                                </Border>
+
+                                <!--  Content Border  -->
+                                <Border
+                                    x:Name="ContentBorder"
+                                    Grid.Row="2"
+                                    Padding="12,20,8,8"
+                                    Background="{DynamicResource SepSolidColorBrush}"
+                                    CornerRadius="0,0,5,5">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="*" />
+                                        </Grid.RowDefinitions>
+
+                                        <TextBlock
+                                            FontSize="16"
+                                            FontWeight="Bold"
+                                            Foreground="White"
+                                            Text="{Binding Name}" />
+                                        <TextBlock
+                                            Grid.Row="1"
+                                            Margin="0,2,0,0"
+                                            HorizontalAlignment="Left"
+                                            FontSize="14"
+                                            Foreground="White"
+                                            Text="{Binding OnlineCount, StringFormat='{}Online: {0}'}" />
+
+                                        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                                            <Button
+                                                Width="20"
+                                                Height="20"
+                                                Margin="0,0,8,0"
+                                                Command="{Binding DataContext.ConnectToServerCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                CommandParameter="{Binding}"
+                                                Cursor="Hand"
+                                                Style="{DynamicResource IconicButton}">
+                                                <Viewbox Width="16" Height="16">
+                                                    <Path
+                                                        extension:PathExtension.StringData="{StaticResource Play}"
+                                                        Fill="White"
+                                                        Stretch="Fill" />
+                                                </Viewbox>
+                                            </Button>
+
+                                            <Button
+                                                Width="20"
+                                                Height="20"
+                                                Margin="0,0,8,0"
+                                                Command="{Binding DataContext.CopyAddressCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                CommandParameter="{Binding}"
+                                                Cursor="Hand"
+                                                Style="{DynamicResource IconicButton}">
+                                                <Viewbox Width="16" Height="16">
+                                                    <Path
+                                                        extension:PathExtension.StringData="{StaticResource Copy}"
+                                                        Fill="White"
+                                                        Stretch="Fill" />
+                                                </Viewbox>
+                                            </Button>
+                                        </StackPanel>
+
+                                        <ItemsControl
+                                            Grid.Row="2"
+                                            Margin="0,8,0,0"
+                                            ItemsSource="{Binding Tags}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border
+                                                        Margin="0,0,8,0"
+                                                        Padding="8,4"
+                                                        Background="#101010"
+                                                        CornerRadius="5">
+                                                        <TextBlock Foreground="#ededed" Text="{Binding Name}" />
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <WrapPanel IsItemsHost="True" Orientation="Horizontal" />
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                        </ItemsControl>
+                                    </Grid>
+                                </Border>
+
+                                <!--  Main Tags  -->
+                                <Grid
+                                    Grid.RowSpan="2"
+                                    VerticalAlignment="Center"
+                                    Background="Transparent">
+                                    <Border
+                                        Margin="12,0,0,0"
+                                        Padding="8,4"
+                                        HorizontalAlignment="Left"
+                                        Background="{DynamicResource BrandSolidColorBrush}"
+                                        CornerRadius="5">
+                                        <TextBlock
+                                            VerticalAlignment="Center"
+                                            FontWeight="Medium"
+                                            Foreground="{DynamicResource BrandColorForegroundBrush}"
+                                            Text="Vanilla" />
+                                    </Border>
+                                    <Border
+                                        Margin="0,0,12,0"
+                                        Padding="8,4"
+                                        HorizontalAlignment="Right"
+                                        Background="{DynamicResource BrandSolidColorBrush}"
+                                        CornerRadius="5">
+                                        <TextBlock
+                                            VerticalAlignment="Center"
+                                            FontWeight="Medium"
+                                            Foreground="{DynamicResource BrandColorForegroundBrush}"
+                                            Text="{Binding GameVersion}" />
+                                    </Border>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="AncestorBorder" Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect ShadowDepth="0" Color="{DynamicResource ActivityColor}" />
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+
+            <!--<DataTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter TargetName="AncestorBorder" Property="Effect">
+                        <Setter.Value>
+                            <DropShadowEffect ShadowDepth="0" Color="{DynamicResource ActivityColor}" />
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </DataTemplate.Triggers>-->
         </DataTemplate>
     </UserControl.Resources>
 
@@ -83,7 +202,49 @@
         <ScrollViewer>
             <Border Padding="16,8" CornerRadius="5">
 
-                <ItemsControl ItemContainerStyleSelector="{StaticResource NotLastItemStyleSelector}" ItemsSource="{Binding Servers}" />
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+
+                    <StackPanel Margin="16,0,0,4" Orientation="Horizontal">
+
+                        <Border
+                            Width="120"
+                            Height="32"
+                            Margin="0,0,16,0"
+                            Background="{DynamicResource SepSolidColorBrush}"
+                            CornerRadius="5" />
+                        <Border
+                            Width="120"
+                            Height="32"
+                            Margin="0,0,16,0"
+                            Background="{DynamicResource SepSolidColorBrush}"
+                            CornerRadius="5" />
+                        <Border
+                            Width="120"
+                            Height="32"
+                            Margin="0,0,16,0"
+                            Background="{DynamicResource SepSolidColorBrush}"
+                            CornerRadius="5" />
+
+                    </StackPanel>
+
+                    <!--  ItemContainerStyleSelector="{StaticResource NotLastItemStyleSelector}"  -->
+                    <ItemsControl
+                        Grid.Row="1"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Left"
+                        ItemsSource="{Binding Servers}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel IsItemsHost="True" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </Grid>
             </Border>
         </ScrollViewer>
     </Grid>

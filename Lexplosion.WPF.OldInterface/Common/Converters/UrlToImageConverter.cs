@@ -2,10 +2,11 @@
 using System;
 using System.Globalization;
 using System.Windows.Data;
+using System.Windows.Markup;
 
 namespace Lexplosion.Common.Converters
 {
-    public sealed class UrlToImageConveter : IValueConverter
+    internal class UrlToImageConverter : MarkupExtension, IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -21,6 +22,11 @@ namespace Lexplosion.Common.Converters
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
+        }
+
+        public override object ProvideValue(IServiceProvider serviceProvider)
+        {
+            return this;
         }
     }
 }

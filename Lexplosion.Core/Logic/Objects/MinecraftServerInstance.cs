@@ -44,12 +44,20 @@ namespace Lexplosion.Logic.Objects
         [JsonProperty("imagesUrls")]
         public List<string> ImagesUrls { get; }
 
+        [JsonProperty("instanceId")]
+        public string InstanceId { get; }
+        [JsonProperty("instanceName")]
+        public string InstanceName { get; }
+        [JsonProperty("instanceSource")]
+        public InstanceSource InstanceSource { get; }
+
 
         #endregion Properties
 
 
         [JsonConstructor]
-        public MinecraftServerInstance(string address, string name, string description, string id, List<Tag> tags, string gameVersion, string bgUrl, string iconUrl, List<string> imagesUrls)
+        public MinecraftServerInstance(string address, string name, string description, string id, List<Tag> tags, string gameVersion, string bgUrl, string iconUrl, List<string> imagesUrls, 
+            string instanceId, string instanceName, InstanceSource instanceSource)
         {
             Address = address;
             Name = name;
@@ -60,6 +68,9 @@ namespace Lexplosion.Logic.Objects
             BgUrl = bgUrl;
             IconUrl = iconUrl;
             ImagesUrls = imagesUrls;
+            InstanceId = instanceId;
+            InstanceName = instanceName;
+            InstanceSource = instanceSource;
         }
 
         public bool IsValid()

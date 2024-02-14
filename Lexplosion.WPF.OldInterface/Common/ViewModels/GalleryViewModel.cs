@@ -118,9 +118,8 @@ namespace Lexplosion.Common.ViewModels
         #region Constructors
 
 
-        public GalleryViewModel(List<byte[]> images, ISubmenu submenuViewModel)
+        public GalleryViewModel(List<byte[]> images)
         {
-            submenuViewModel.NavigationToMainMenu += ClearGallery;
             App.Current.Dispatcher.Invoke(() =>
             {
                 foreach (var i in images)

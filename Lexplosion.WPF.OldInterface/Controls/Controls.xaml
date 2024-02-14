@@ -11,5 +11,6 @@
         <ResourceDictionary Source="SearchBox/SearchBox.xaml" />
         <ResourceDictionary Source="DownloadButton/DownloadButton.xaml" />
         <ResourceDictionary Source="Curtains/Curtains.xaml" />
+        <ResourceDictionary Source="SimpleGallery/SimpleGallery.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

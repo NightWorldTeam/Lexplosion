@@ -1,6 +1,8 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:advertisedServerVM="clr-namespace:Lexplosion.Common.ViewModels.AdvertisedServer"
+    xmlns:advertisedServerView="clr-namespace:Lexplosion.Common.Views.Pages.AdvertisedServer"
     xmlns:common="clr-namespace:Lexplosion.Common"
     xmlns:customcontrols="clr-namespace:Lexplosion.Common.Views.CustomControls"
     xmlns:factorymenu="clr-namespace:Lexplosion.Common.Views.Pages.FactoryMenu"
@@ -41,7 +43,7 @@
     <сonverters:NotEqualZeroConverter x:Key="NotEqualZeroConverter" />
     <сonverters:EnumToStringConverter x:Key="EnumToStringConverter" />
     <сonverters:SolidColorBrushToColorConverter x:Key="SolidColorBrushToColorConverter" />
-    <сonverters:UrlToImageConveter x:Key="UrlToImageConveter" />
+    <сonverters:UrlToImageConverter x:Key="UrlToImageConveter" />
 
     <common:Constants x:Key="Const" />
 
@@ -171,6 +173,21 @@
     <DataTemplate DataType="{x:Type vmmultiplayer:AdServersListTabViewModel}">
         <pagemultiplayer:AdServersListTabView />
     </DataTemplate>
+
+
+    <!--  Advertised Server  -->
+    <DataTemplate DataType="{x:Type advertisedServerVM:AdServerOverviewViewModel}">
+        <advertisedServerView:AdvertisedServerOverviewView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type advertisedServerVM:AdvertisedServerLayoutViewModel}">
+        <advertisedServerView:AdvertisedServerLayoutView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type modalvm:SelectMenuInstanceForServerViewModel}">
+        <modalviews:SelectMenuInstanceForServerView />
+    </DataTemplate>
+
 
     <tb:TaskbarIcon
         x:Key="NofityIcon"

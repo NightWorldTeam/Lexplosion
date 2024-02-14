@@ -450,4 +450,7 @@
     <s:String x:Key="pathDoesNotExists">Выбранный путь не существует!</s:String>
 
     <s:String x:Key="loggingMode">Режим логирования</s:String>
+
+    <s:String x:Key="inv">Инвентарь</s:String>
+    <s:String x:Key="servers">Сервера</s:String>
 </ResourceDictionary>

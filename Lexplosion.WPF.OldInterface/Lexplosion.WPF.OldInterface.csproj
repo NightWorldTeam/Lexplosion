@@ -97,18 +97,27 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.xaml.cs" />
+    <Compile Include="Common\Converters\UrlToImageConverter.cs" />
     <Compile Include="Common\Models\Controllers\ShareController.cs" />
-    <Compile Include="Common\Models\Objects\AdServer.cs" />
     <Compile Include="Common\Models\Objects\FileDistributionWrapper.cs" />
     <Compile Include="Common\Models\Objects\ImportFile.cs" />
     <Compile Include="Common\Models\Objects\InstanceDistribution.cs" />
     <Compile Include="Common\Models\Objects\NWUserWrapper.cs" />
     <Compile Include="Common\StyleSelectors\NotLastItemStyleSelector.cs" />
+    <Compile Include="Common\ViewModels\AdvertisedServer\AdServerOverviewViewModel.cs" />
+    <Compile Include="Common\ViewModels\AdvertisedServer\AdvertisedServerLayoutViewModel.cs" />
     <Compile Include="Common\ViewModels\MainMenu\Multiplayer\AdServersListTabViewModel.cs" />
     <Compile Include="Common\ViewModels\MainMenu\Multiplayer\Friends\FindFriendsTabViewModel.cs" />
     <Compile Include="Common\ViewModels\MainMenu\Multiplayer\GeneralMultiplayerViewModel.cs" />
     <Compile Include="Common\ViewModels\ModalVMs\InstanceGroupsManagerViewModel.cs" />
     <Compile Include="Common\ViewModels\ModalVMs\InstanceTransfer\ImportBase.cs" />
+    <Compile Include="Common\ViewModels\ModalVMs\SelectMenuInstanceForServerViewModel.cs" />
+    <Compile Include="Common\Views\Pages\AdvertisedServer\AdvertisedServerLayoutView.xaml.cs">
+      <DependentUpon>AdvertisedServerLayoutView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Common\Views\Pages\AdvertisedServer\AdvertisedServerOverviewView.xaml.cs">
+      <DependentUpon>AdvertisedServerOverviewView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Common\Views\Pages\MainMenu\Multiplayer\AdServersListTabView.xaml.cs">
       <DependentUpon>AdServersListTabView.xaml</DependentUpon>
     </Compile>
@@ -118,13 +127,18 @@
     <Compile Include="Common\Views\Pages\ModalViews\InstanceGroupsManagerView.xaml.cs">
       <DependentUpon>InstanceGroupsManagerView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Common\Views\Pages\ModalViews\SelectMenuInstanceForServerView.xaml.cs">
+      <DependentUpon>SelectMenuInstanceForServerView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ChangelogItem\ChangelogItem.cs" />
+    <Compile Include="Controls\ComboBoxButton\ComboBoxButton.cs" />
     <Compile Include="Controls\Curtains\Curtains.cs" />
     <Compile Include="Controls\DialogMessage\DialogMessage.cs" />
     <Compile Include="Controls\DialogMessage\DialogMessageModel.cs" />
     <Compile Include="Controls\DownloadButton\DownloadButton.cs" />
     <Compile Include="Controls\DragDropBoard\DragDropBoard.cs" />
     <Compile Include="Controls\DropdownMenu\DropdownMenu.cs" />
+    <Compile Include="Controls\SimpleGallery\SimpleGallery.cs" />
     <Compile Include="Controls\LoadingBoard\LoadingBoard.cs" />
     <Compile Include="Controls\MessageModel.cs" />
     <Compile Include="Controls\ModalControl\Modal.cs" />
@@ -154,7 +168,6 @@
     <Compile Include="Common\ControlsExtension\TreeViewItem.cs" />
     <Compile Include="Common\Converters\NotEqualZeroConverter.cs" />
     <Compile Include="Common\Converters\SolidColorBrushToColorConverter.cs" />
-    <Compile Include="Common\Converters\UrlToImageConveter.cs" />
     <Compile Include="Common\ModalWindow\IModal.cs" />
     <Compile Include="Common\IPaginable.cs" />
     <Compile Include="Common\ISubmenu.cs" />
@@ -360,6 +373,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Common\Views\Pages\AdvertisedServer\AdvertisedServerLayoutView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Common\Views\Pages\AdvertisedServer\AdvertisedServerOverviewView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Common\Views\Pages\MainMenu\Multiplayer\AdServersListTabView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -372,7 +393,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Common\Views\Pages\ModalViews\SelectMenuInstanceForServerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\ChangelogItem\ChangelogItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ComboBoxButton\ComboBoxButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -413,6 +442,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\SearchBox\SearchBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SimpleGallery\SimpleGallery.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

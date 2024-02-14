@@ -207,6 +207,8 @@ namespace Lexplosion.Common.Models.InstanceFactory
 
             UpdateVersions();
 
+            Console.WriteLine(Version.Id);
+
             if (Version != null) 
             {
                 OptifineModel = new OptifineModel(GameExtension.Optifine, Version.Id);

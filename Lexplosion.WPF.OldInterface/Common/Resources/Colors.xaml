@@ -8,6 +8,14 @@
     <Color x:Key="AccentColor5">#5a10ea</Color>
     <Color x:Key="AccentColor6">#ebbe11</Color>
 
+    <Color x:Key="BrandColorForeground">#fff</Color>
+    <Color x:Key="BrandColorForeground1">#fff</Color>
+    <Color x:Key="BrandColorForeground2">#fff</Color>
+    <Color x:Key="BrandColorForeground3">#000</Color>
+    <Color x:Key="BrandColorForeground4">#fff</Color>
+    <Color x:Key="BrandColorForeground5">#fff</Color>
+    <Color x:Key="BrandColorForeground6">#fff</Color>
+    <SolidColorBrush x:Key="BrandColorForegroundBrush" Color="{DynamicResource BrandColorForeground}" />
 
     <Color x:Key="ActivityColor">#167FFC</Color>
     <SolidColorBrush x:Key="BrandSolidColorBrush" Color="{DynamicResource ActivityColor}" />

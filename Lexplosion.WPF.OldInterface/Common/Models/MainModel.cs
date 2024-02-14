@@ -1,8 +1,11 @@
 ﻿using Lexplosion.Common.Models.Objects;
 using Lexplosion.Common.ViewModels;
+using Lexplosion.Common.Views.CustomControls;
 using Lexplosion.Logic.Management.Instances;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace Lexplosion.Common.Models
 {
@@ -70,6 +73,24 @@ namespace Lexplosion.Common.Models
                 });
             }
         }
+
+        public IEnumerable<InstanceFormViewModel> GetInstances(Func<InstanceClient, bool> predicate = null) 
+        {
+            if (predicate == null)
+                return _instances;
+
+            var result = new List<InstanceFormViewModel>(_instances.Count);
+
+            foreach (var instance in _instances) 
+            {
+                Console.WriteLine(predicate(instance.Model.InstanceClient) + " " + instance.Model.InstanceClient.Name);
+                if (predicate(instance.Model.InstanceClient)) 
+                {
+                    result.Add(instance);
+                }
+            }
+            return result;
+        }
     }
 
     public sealed class CatalogController
@@ -127,7 +148,18 @@ namespace Lexplosion.Common.Models
 
         public void AddInstanceForm(InstanceClient instanceClient)
         {
-            LibraryController.AddInstance(new InstanceFormViewModel(_mainViewModel, instanceClient));
+            LibraryController.AddInstance(
+                CreateInstanceForm(instanceClient));
+        }
+
+        public void AddInstanceForm(InstanceFormViewModel instanceFormViewModel) 
+        {
+            LibraryController.AddInstance(instanceFormViewModel);
+        }
+
+        public InstanceFormViewModel CreateInstanceForm(InstanceClient instanceClient)
+        {
+            return new InstanceFormViewModel(_mainViewModel, instanceClient);
         }
 
         public InstanceFormViewModel AddInstanceForm(InstanceClient instanceClient, InstanceDistribution instanceDistribution)

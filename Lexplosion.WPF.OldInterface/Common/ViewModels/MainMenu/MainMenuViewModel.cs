@@ -200,11 +200,11 @@ namespace Lexplosion.Common.ViewModels.MainMenu
 
             return new List<Tab<VMBase>>()
             {
-                //new Tab<VMBase>
-                //{
-                //    Header = "Cервера партнёров",
-                //    Content = new AdServersListTabViewModel()
-                //},
+                new Tab<VMBase>
+                {
+                    Header = "Cервера партнёров",
+                    Content = new AdServersListTabViewModel(_mainViewModel)
+                },
                 new Tab<VMBase>
                 {
                     Header = ResourceGetter.GetString("general"),
