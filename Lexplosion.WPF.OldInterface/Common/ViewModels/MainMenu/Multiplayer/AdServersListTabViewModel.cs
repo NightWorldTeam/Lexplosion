@@ -77,13 +77,23 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer
 
             var s = ToServer.GetMinecraftServersList();
 
-            foreach (var i in s) 
+            foreach (var i in s)
             {
                 GetOnline(i);
             }
 
             Servers = new(s);
             OnPropertyChanged(nameof(Servers));
+
+#if DEBUG
+            var g = new MinecraftServerInstance("", "ASD", "", "", new System.Collections.Generic.List<MinecraftServerInstance.Tag>(), "1.20.2", "", "", new System.Collections.Generic.List<string>(), "", "", InstanceSource.Local);
+            Servers.Add(g);
+            Servers.Add(g);
+            Servers.Add(g);
+            Servers.Add(g);
+            Servers.Add(g);
+            Servers.Add(g);
+#endif
         }
 
 
