@@ -296,7 +296,7 @@
                         <ItemsControl HorizontalContentAlignment="Left" ItemsSource="{Binding Servers}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <WrapPanel IsItemsHost="True" Orientation="Horizontal" />
+                                    <WrapPanel IsItemsHost="True" Orientation="Vertical" />
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                         </ItemsControl>
