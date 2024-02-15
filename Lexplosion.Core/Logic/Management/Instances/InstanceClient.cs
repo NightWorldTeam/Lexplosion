@@ -427,6 +427,10 @@ namespace Lexplosion.Logic.Management.Instances
                 client.DownloadLogo(server.IconUrl, client.SaveAssets);
             }
 
+            Settings settings = client.GetSettings();
+            settings.IsAutoUpdate = true;
+            client.SaveSettings(settings);
+
             return client;
         }
 
