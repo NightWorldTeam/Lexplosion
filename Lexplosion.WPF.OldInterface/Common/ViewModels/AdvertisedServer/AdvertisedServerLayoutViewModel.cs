@@ -47,20 +47,20 @@ namespace Lexplosion.Common.ViewModels.AdvertisedServer
         public AdvertisedServerLayoutModel(MinecraftServerInstance minecraftServerInstance)
         {
             _minecraftServerInstance = minecraftServerInstance;
-            _availableInstances = new ObservableCollection<RunInstanceParameters>(
-                MainModel.Instance.LibraryController
-                    .GetInstances(ic => ic.GameVersion.ToString() == _minecraftServerInstance.GameVersion)
-                    .Select(i => new RunInstanceParameters(i))
-            );
+            //_availableInstances = new ObservableCollection<RunInstanceParameters>(
+            //    MainModel.Instance.LibraryController
+            //        .GetInstances(ic => ic.GameVersion.ToString() == _minecraftServerInstance.GameVersion)
+            //        .Select(i => new RunInstanceParameters(i))
+            //);
 
-            var newInstanceForm = MainModel.Instance.CreateInstanceForm(
-                InstanceClient.CreateClient(_minecraftServerInstance, false)
-                );
+            //var newInstanceForm = MainModel.Instance.CreateInstanceForm(
+            //    InstanceClient.CreateClient(_minecraftServerInstance, false)
+            //    );
 
-            _availableInstances.Insert(0, new RunInstanceParameters(newInstanceForm, true));
+            //_availableInstances.Insert(0, new RunInstanceParameters(newInstanceForm, true));
 
-            SelectedRunInstanceParameters = _availableInstances[0];
-            OnPropertyChanged(nameof(AvailableInstances));
+            //SelectedRunInstanceParameters = _availableInstances[0];
+            //OnPropertyChanged(nameof(AvailableInstances));
         }
 
         public void SetIpAddressToClipboard() 
@@ -122,16 +122,12 @@ namespace Lexplosion.Common.ViewModels.AdvertisedServer
             get => _copyAddressCommand ?? (_copyAddressCommand = new RelayCommand(obj =>
             {
                 Model.SetIpAddressToClipboard();
-                // TODO Translate
-                MainViewModel.ShowToastMessage("Копирование", "Ip address успешно был скопирован", 3, 0);
+                MainViewModel.ShowToastMessage(ResourceGetter.GetString("coping"), ResourceGetter.GetString("ipAddressCopiedSuccessfully"), 3, 0);
             }));
         }
 
 
-
         #endregion Commands
-
-
 
 
         public AdvertisedServerLayoutViewModel(MainViewModel mainViewModel, MinecraftServerInstance adServer)
@@ -150,7 +146,7 @@ namespace Lexplosion.Common.ViewModels.AdvertisedServer
 
             Model = new AdvertisedServerLayoutModel(adServer);
 
-            Tabs.Add(new Tab<VMBase> { Header = ResourceGetter.GetString("overview"), Content = new TabMenuViewModel(_showCaseTabMenu, adServer.InstanceName, 0, null) });
+            Tabs.Add(new Tab<VMBase> { Header = ResourceGetter.GetString("overview"), Content = new TabMenuViewModel(_showCaseTabMenu, adServer.Name, 0, null) });
             Tabs.Add(new Tab<VMBase> { Header = ResourceGetter.GetString("back"), Content = null, Command = BackToMainMenu });
 
             SelectedTab = Tabs[0];
@@ -163,8 +159,8 @@ namespace Lexplosion.Common.ViewModels.AdvertisedServer
 
             _showCaseTabMenu.Add(new Tab<VMBase>() { Header = ResourceGetter.GetString("general"), Content = new AdServerOverviewViewModel(adServer) });
 
-            if (adServer.InstanceSource != InstanceSource.Local)
-                _showCaseTabMenu.Add(new Tab<VMBase>() { Header = ResourceGetter.GetString("mods"), Content = null });
+            //if (adServer.InstanceSource != InstanceSource.Local)
+            //    _showCaseTabMenu.Add(new Tab<VMBase>() { Header = ResourceGetter.GetString("mods"), Content = null });
         }
     }
 }

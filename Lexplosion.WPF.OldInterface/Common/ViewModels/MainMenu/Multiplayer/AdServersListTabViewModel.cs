@@ -1,10 +1,9 @@
-﻿using Lexplosion.Common.Models;
-using Lexplosion.Common.Models.Objects;
-using Lexplosion.Common.ViewModels.AdvertisedServer;
+﻿using Lexplosion.Common.ViewModels.AdvertisedServer;
 using Lexplosion.Common.ViewModels.ModalVMs;
+using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
-using System.Collections.Generic;
+using Lexplosion.Tools;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
@@ -13,13 +12,11 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer
 {
     public class AdServersListTabViewModel : VMBase
     {
-        public ObservableCollection<MinecraftServerInstance> Servers { get; } = new();
-
         private readonly MainViewModel _mainViewModel;
 
-        private readonly ObservableCollection<Tab<VMBase>> _showCaseTabMenu = new ObservableCollection<Tab<VMBase>>();
+        public ObservableCollection<MinecraftServerInstance> Servers { get; } = new();
 
-
+        
         #region Commands
 
 
@@ -47,10 +44,10 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer
                 }
                 else // modded
                 {
-                    // TODO: Translate
-                    new DialogViewModel().ShowDialog("Установка сборки сервера.", $"Для игры на данном сервере требуется установить сборку {server.InstanceName}, желаете установить данную сборку?", () => 
+                    // TODO: Auto COnnect
+                    new DialogViewModel().ShowDialog(ResourceGetter.GetString("serverInstanceInstallingTitle"), string.Format(ResourceGetter.GetString("serverInstanceInstallingDescription"), server.InstanceName), () => 
                     {
-                        
+                        InstanceClient.CreateClient(server, false);
                     });  
                 }
             }));
@@ -64,7 +61,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer
             {
                 Clipboard.SetText((obj as MinecraftServerInstance).Address);
                 // TODO
-                MainViewModel.ShowToastMessage("Копирование", "Ip address успешно был скопирован", 3, 0);
+                MainViewModel.ShowToastMessage(ResourceGetter.GetString("coping"), ResourceGetter.GetString("ipAddressCopiedSuccessfully"), 3, 0);
             }));
         }
 
@@ -76,11 +73,25 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer
         {
             _mainViewModel = mainViewModel;
 
-            Servers = new(ToServer.GetMinecraftServersList());
+            var s = ToServer.GetMinecraftServersList();
+
+            foreach (var i in s) 
+            {
+                GetOnline(i);
+            }
+
+            Servers = new(s);
             OnPropertyChanged(nameof(Servers));
         }
 
+
         #region Private Methods
+
+
+        private async void GetOnline(MinecraftServerInstance minecraftServerInstance)
+        {
+            minecraftServerInstance.OnlineCount = await ToServer.GetMcServerOnline(minecraftServerInstance);
+        }
 
 
         #endregion Private Methods

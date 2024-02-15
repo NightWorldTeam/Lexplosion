@@ -23,8 +23,9 @@ namespace Lexplosion.Common.ViewModels.AdvertisedServer
         public IEnumerable<MinecraftServerInstance.Tag> Tags { get => _tags; }
         public string Description { get => _minecraftServerInstance.Description; }
         public string GameVersion { get => _minecraftServerInstance.GameVersion; }
+        public string IconUrl { get => _minecraftServerInstance.IconUrl; }
 
-        public string OnlineCount { get; private set; } = null;
+        public int OnlineCount { get; private set; }
         public bool IsOnline { get; private set; }
         public bool IsStatusLoaded { get => _isImagesLoaded && _isOnlineLoaded; }
 
@@ -50,9 +51,8 @@ namespace Lexplosion.Common.ViewModels.AdvertisedServer
 
         private async void GetOnline() 
         {
-            var online = await ToServer.GetMcServerOnline(_minecraftServerInstance);
-            OnlineCount = online.ToString();
-            IsOnline = online > 0;
+            OnlineCount = await ToServer.GetMcServerOnline(_minecraftServerInstance); ;
+            IsOnline = OnlineCount > 0;
             OnPropertyChanged(nameof(OnlineCount));
             OnPropertyChanged(nameof(IsOnline));
 

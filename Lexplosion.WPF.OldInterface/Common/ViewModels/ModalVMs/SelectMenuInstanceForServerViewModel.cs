@@ -62,7 +62,7 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
                 {
                     continue;
                 }
-                Console.WriteLine(instance.InstanceFormViewModel.Client.Name + " " + instance.IsAutoConnect);
+
                 instance.InstanceFormViewModel.Client.AddGameServer(_minecraftServerInstance, instance.IsAutoConnect);
             }
         }

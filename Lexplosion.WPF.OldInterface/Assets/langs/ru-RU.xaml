@@ -453,4 +453,28 @@
 
     <s:String x:Key="inv">Инвентарь</s:String>
     <s:String x:Key="servers">Сервера</s:String>
+
+
+    <!--  Servers Monitoring  -->
+    <s:String x:Key="partnerServers">Сервера партнёров</s:String>
+
+    <s:String x:Key="coping">Копирование</s:String>
+    <s:String x:Key="ipAddressCopiedSuccessfully">Ip address успешно был скопирован</s:String>
+    <s:String x:Key="serverInstanceInstallingTitle">Установка сборки сервера</s:String>
+    <s:String x:Key="serverInstanceInstallingDescription">"Для игры на данном сервере требуется установить сборку {0}, желаете установить данную сборку?"</s:String>
+
+    <s:String x:Key="currentServerOnline">Текущий онлайн</s:String>
+
+    <s:String x:Key="selectClientsForAddServer">Выберите клиенты для добавления сервера</s:String>
+
+    <s:String x:Key="selectInstanceHelpMessage1">1. Для выбора желаемой сборки, кликните по ней.</s:String>
+    <s:String x:Key="selectInstanceHelpMessage2">2. Если желаете, чтобы после запуска, выполнялся автоматический вход поставте флаг 'Автоматически заходить на сервер'.</s:String>
+
+    <s:String x:Key="acceptParameters">Подтвердить выбор</s:String>
+    <s:String x:Key="createNewClientForServer">Создать новый клиент для сервера</s:String>
+
+    <s:String x:Key="autoConnectToServer">Автоматически заходить на сервер</s:String>
+
+    <s:String x:Key="add">Добавить</s:String>
+    <s:String x:Key="moreDetails">Подробнее</s:String>
 </ResourceDictionary>

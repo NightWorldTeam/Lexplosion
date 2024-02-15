@@ -410,4 +410,27 @@
     <s:String x:Key="pathDoesNotExists">Selected java path does not exist</s:String>
 
     <s:String x:Key="loggingMode">Logging Mode</s:String>
+
+    <!--  Servers Monitoring  -->
+    <s:String x:Key="partnerServers">Server Paramenters</s:String>
+
+    <s:String x:Key="coping">Copy</s:String>
+    <s:String x:Key="ipAddressCopiedSuccessfully">Ip address copied successful</s:String>
+    <s:String x:Key="serverInstanceInstallingTitle">Server need to Instance</s:String>
+    <s:String x:Key="serverInstanceInstallingDescription">To play on this server you need to install build {0}, would you like to install this build?</s:String>
+
+    <s:String x:Key="currentServerOnline">Online Count</s:String>
+
+    <s:String x:Key="selectClientsForAddServer">Select clients to add a server</s:String>
+
+    <s:String x:Key="selectInstanceHelpMessage1">1. To select the desired instance, click on it.</s:String>
+    <s:String x:Key="selectInstanceHelpMessage2">2. If you want automatic login after startup, check the 'Automatically connect to server' checkbox.</s:String>
+
+    <s:String x:Key="acceptParameters">Confirm selection</s:String>
+    <s:String x:Key="createNewClientForServer">Create a new client for the server</s:String>
+
+    <s:String x:Key="autoConnectToServer">Automatically connect to the server</s:String>
+
+    <s:String x:Key="add">Add</s:String>
+    <s:String x:Key="moreDetails">More Details</s:String>
 </ResourceDictionary>

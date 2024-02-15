@@ -33,9 +33,12 @@
         </TabControl>
 
         <Button
-            Height="32" VerticalAlignment="Top"
-            Margin="0,48,32,0" Cursor="Hand"
-            HorizontalAlignment="Right" Command="{Binding CopyAddressCommand}" CommandParameter="{Binding }"
+            Height="32"
+            Margin="0,48,32,0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Command="{Binding CopyAddressCommand}"
+            Cursor="Hand"
             Style="{StaticResource IconicButton}">
             <Border
                 Padding="8"

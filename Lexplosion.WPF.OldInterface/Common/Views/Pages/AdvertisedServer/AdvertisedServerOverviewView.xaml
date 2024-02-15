@@ -109,16 +109,26 @@
                     BorderBrush="{DynamicResource SepSolidColorBrush}"
                     BorderThickness="1">
                     <StackPanel>
-                        <Border
-                            Width="160"
-                            Height="160"
-                            Margin="0,0,0,8"
-                            CornerRadius="5">
-                            <Border.Background>
-                                <ImageBrush ImageSource="pack://application:,,,/assets/images/icons/logo.ico" />
-                            </Border.Background>
-                        </Border>
+                        <Grid>
+                            <Border
+                                Width="160"
+                                Height="160"
+                                Margin="0,0,0,8"
+                                CornerRadius="5"
+                                DataContext="{Binding Model.IconUrl, Converter={StaticResource UrlToImageConveter}}">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="{Binding AsyncValue}" />
+                                </Border.Background>
+                            </Border>
 
+                            <Border
+                                Width="160"
+                                Height="160"
+                                Margin="0,0,0,8"
+                                Background="#101010"
+                                CornerRadius="4"
+                                Visibility="{Binding Model.IsStatusLoaded, Converter={StaticResource NegativeConvertBoolToVisibility}}" />
+                        </Grid>
 
                         <Grid Margin="24,0,24,0">
                             <Grid.ColumnDefinitions>
@@ -136,17 +146,31 @@
                             <!--  Current Online  -->
 
                             <TextBlock
-                                Margin="0,0,16,0"
+                                Margin="0,0,0,0"
                                 FontSize="14"
                                 Foreground="{DynamicResource ForegroundSolidBrush}"
-                                Text="Текущий онлайн" />
+                                Text="{DynamicResource currentServerOnline}" />
 
                             <TextBlock
                                 Grid.Column="1"
                                 HorizontalAlignment="Right"
                                 FontSize="14"
-                                Foreground="{DynamicResource ForegroundSolidBrush}"
-                                Text="{Binding Model.OnlineCount}" />
+                                Foreground="{DynamicResource ForegroundSolidBrush}">
+                                <Run FontWeight="Medium">
+                                    <Run.Style>
+                                        <Style TargetType="{x:Type Run}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Model.OnlineCount}" Value="-1">
+                                                    <Setter Property="Text" Value="0" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                            <Style.Setters>
+                                                <Setter Property="Text" Value="{Binding Model.OnlineCount, Mode=OneWay}" />
+                                            </Style.Setters>
+                                        </Style>
+                                    </Run.Style>
+                                </Run>
+                            </TextBlock>
 
                             <!--  Version  -->
                             <TextBlock
@@ -161,6 +185,7 @@
                                 Grid.Column="1"
                                 HorizontalAlignment="Right"
                                 FontSize="14"
+                                FontWeight="Medium"
                                 Foreground="{DynamicResource ForegroundSolidBrush}"
                                 Text="{Binding Model.GameVersion}" />
 
@@ -179,8 +204,24 @@
                                 Grid.Column="1"
                                 HorizontalAlignment="Right"
                                 FontSize="14"
-                                Foreground="{DynamicResource ForegroundSolidBrush}"
-                                Text="{Binding Model.OnlineCount}" />
+                                Foreground="{DynamicResource ForegroundSolidBrush}">
+                                <Run FontWeight="Medium">
+                                    <Run.Style>
+                                        <Style TargetType="{x:Type Run}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Model.OnlineCount}" Value="-1">
+                                                    <Setter Property="Text" Value="Offline" />
+                                                    <Setter Property="Foreground" Value="Red" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                            <Style.Setters>
+                                                <Setter Property="Text" Value="Online" />
+                                                <Setter Property="Foreground" Value="Green" />
+                                            </Style.Setters>
+                                        </Style>
+                                    </Run.Style>
+                                </Run>
+                            </TextBlock>
 
                             <Border
                                 Grid.RowSpan="3"

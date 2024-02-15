@@ -76,7 +76,7 @@
                                     VerticalAlignment="Bottom">
                                     <CheckBox
                                         Background="Transparent"
-                                        Content="Автоматически заходить на сервер"
+                                        Content="{DynamicResource autoConnectToServer}"
                                         IsChecked="{Binding IsAutoConnect}" />
                                 </StackPanel>
                             </Grid>
@@ -113,7 +113,7 @@
                             FontWeight="Medium"
                             Foreground="White"
                             Opacity="0.9"
-                            Text="Выберите клиенты для добавления сервера" />
+                            Text="{DynamicResource selectClientsForAddServer}" />
 
                         <Border Margin="8,0,0,2" Background="Transparent">
                             <Viewbox Width="16" Height="16">
@@ -133,10 +133,10 @@
                                             MaxWidth="300"
                                             FontWeight="Medium"
                                             TextWrapping="WrapWithOverflow">
-                                            <Run>1. Для выбора желаемой сборки, кликните по ней.</Run>
+                                            <Run Text="{DynamicResource selectInstanceHelpMessage1}" />
                                             <LineBreak />
                                             <LineBreak />
-                                            <Run>2. Если желаете, чтобы после запуска, выполнялся автоматический вход поставте флаг 'Автоматически заходить на сервер'.</Run>
+                                            <Run Text="{DynamicResource selectInstanceHelpMessage2}" />
                                         </TextBlock>
                                     </Border>
                                 </ToolTip>
@@ -215,7 +215,7 @@
                     <TextBlock
                         FontWeight="Medium"
                         Foreground="{DynamicResource BrandColorForegroundBrush}"
-                        Text="Подтвердить выбор" />
+                        Text="{DynamicResource acceptParameters}" />
                 </Button>
 
                 <!--  Action Button  -->
@@ -229,7 +229,7 @@
                     <TextBlock
                         FontWeight="Medium"
                         Foreground="{DynamicResource BrandSolidColorBrush}"
-                        Text="Создать новый клиент для сервера" />
+                        Text="{DynamicResource createNewClientForServer}" />
                 </Button>
             </Grid>
         </Grid>

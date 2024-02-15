@@ -1,11 +1,14 @@
 ﻿using Lexplosion.Logic.Management;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace Lexplosion.Logic.Objects
 {
-    public class MinecraftServerInstance
+    public class MinecraftServerInstance : VMBase
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public class Tag
         {
             [JsonProperty("name")]
@@ -51,6 +54,30 @@ namespace Lexplosion.Logic.Objects
         [JsonProperty("instanceSource")]
         public InstanceSource InstanceSource { get; }
 
+        // not loaded = -2
+        private int _onlineCount = -2;
+        [JsonIgnore]
+        public int OnlineCount 
+        { 
+            get => _onlineCount; set 
+            {
+                _onlineCount = value;
+                IsOnline = _onlineCount > -1;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _isOnline;
+        [JsonIgnore]
+        public bool IsOnline 
+        { 
+            get => _isOnline; set 
+            {
+                _isOnline = value;
+                OnPropertyChanged();
+            } 
+        }
+
 
         #endregion Properties
 
@@ -73,6 +100,7 @@ namespace Lexplosion.Logic.Objects
             InstanceSource = instanceSource;
         }
 
+        
         public bool IsValid()
         {
             return !string.IsNullOrWhiteSpace(Name)

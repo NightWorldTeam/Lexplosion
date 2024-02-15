@@ -202,7 +202,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu
             {
                 new Tab<VMBase>
                 {
-                    Header = "Cервера партнёров",
+                    Header = ResourceGetter.GetString("partnerServers"),
                     Content = new AdServersListTabViewModel(_mainViewModel)
                 },
                 new Tab<VMBase>

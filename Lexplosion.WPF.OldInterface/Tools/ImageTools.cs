@@ -4,6 +4,8 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Net.Http;
+using System.Threading.Tasks;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace Lexplosion.Tools
@@ -121,9 +123,19 @@ namespace Lexplosion.Tools
             return imageBytes;
         }
 
+        public static byte[] GetImageBytesByUrlAsync(string url)
+        {
+            byte[] imageBytes = null;
+            using (var httpClient = new HttpClient())
+            {
+                imageBytes = httpClient.GetByteArrayAsync(url).Result;
+            }
+            return imageBytes;
+        }
+
         public static BitmapImage GetImageByUrl(string url)
         {
-            return ToImage(GetImageBytesByUrl(url));
+            return ToImage(GetImageBytesByUrlAsync(url));
         }
     }
 }
