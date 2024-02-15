@@ -38,17 +38,17 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer
                 //server.ConnectTo();
                 var server = obj as MinecraftServerInstance;
                 // vanilla
-                if (server.InstanceSource == InstanceSource.Local)
+                if (server.InstanceSource == InstanceSource.None || server.InstanceSource == InstanceSource.Local)
                 {
                     _mainViewModel.ModalWindowVM.Open(new SelectMenuInstanceForServerViewModel(server));
                 }
                 else // modded
                 {
                     // TODO: Auto COnnect
-                    new DialogViewModel().ShowDialog(ResourceGetter.GetString("serverInstanceInstallingTitle"), string.Format(ResourceGetter.GetString("serverInstanceInstallingDescription"), server.InstanceName), () => 
+                    new DialogViewModel().ShowDialog(ResourceGetter.GetString("serverInstanceInstallingTitle"), string.Format(ResourceGetter.GetString("serverInstanceInstallingDescription"), server.InstanceName), () =>
                     {
                         InstanceClient.CreateClient(server, false);
-                    });  
+                    });
                 }
             }));
         }
