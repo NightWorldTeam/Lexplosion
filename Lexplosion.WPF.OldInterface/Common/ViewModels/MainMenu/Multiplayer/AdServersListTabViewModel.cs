@@ -1,4 +1,5 @@
-﻿using Lexplosion.Common.ViewModels.AdvertisedServer;
+﻿using Lexplosion.Common.Models;
+using Lexplosion.Common.ViewModels.AdvertisedServer;
 using Lexplosion.Common.ViewModels.ModalVMs;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network;
@@ -47,7 +48,8 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer
                     // TODO: Auto COnnect
                     new DialogViewModel().ShowDialog(ResourceGetter.GetString("serverInstanceInstallingTitle"), string.Format(ResourceGetter.GetString("serverInstanceInstallingDescription"), server.InstanceName), () =>
                     {
-                        InstanceClient.CreateClient(server, false);
+                        var ic = InstanceClient.CreateClient(server, false);
+                        MainModel.Instance.AddInstanceForm(ic);
                     });
                 }
             }));
