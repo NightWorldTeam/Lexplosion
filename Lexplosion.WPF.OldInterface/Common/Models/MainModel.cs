@@ -83,7 +83,7 @@ namespace Lexplosion.Common.Models
 
             foreach (var instance in _instances) 
             {
-                Console.WriteLine(predicate(instance.Model.InstanceClient) + " " + instance.Model.InstanceClient.Name);
+                Runtime.DebugWrite(predicate(instance.Model.InstanceClient) + " " + instance.Model.InstanceClient.Name);
                 if (predicate(instance.Model.InstanceClient)) 
                 {
                     result.Add(instance);

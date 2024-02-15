@@ -112,7 +112,7 @@ namespace Lexplosion.Common.Models
             {
                 _accountTypeSelectedIndex = value;
                 OnPropertyChanged();
-                Console.WriteLine(value);
+                Runtime.DebugWrite(value);
                 if (_accountTypeSelectedIndex == 2)
                 {
                     LoadSavedAccount(AccountType.Microsoft);

@@ -300,7 +300,7 @@ namespace Lexplosion.Controls
             var oldValue = (IEnumerable<ImageSource>)e.OldValue;
             var newValue = (IEnumerable<ImageSource>)e.NewValue;
 
-            Console.WriteLine(newValue?.Count());
+            Runtime.DebugWrite(newValue?.Count());
 
             if (newValue != null) 
             {

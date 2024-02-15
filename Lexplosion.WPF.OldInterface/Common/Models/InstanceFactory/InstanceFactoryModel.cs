@@ -207,7 +207,7 @@ namespace Lexplosion.Common.Models.InstanceFactory
 
             UpdateVersions();
 
-            Console.WriteLine(Version.Id);
+            Runtime.DebugWrite(Version.Id);
 
             if (Version != null) 
             {
