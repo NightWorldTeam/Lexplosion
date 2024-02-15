@@ -30,8 +30,7 @@ namespace Lexplosion.Logic.Objects.FreeSource
 
         public bool IsValid()
         {
-            return !string.IsNullOrWhiteSpace(id) && !string.IsNullOrWhiteSpace(instanceVersion) &&
-                (SourceUrlIsExists || !string.IsNullOrWhiteSpace(sourceId));
+            return !string.IsNullOrWhiteSpace(id) && (SourceUrlIsExists || !string.IsNullOrWhiteSpace(sourceId));
         }
     }
 

@@ -1,6 +1,7 @@
 ﻿using Lexplosion.Logic.Management.Installers;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Objects;
+using Lexplosion.Logic.Objects.CommonClientData;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -16,6 +17,11 @@ namespace Lexplosion.Logic.Management.Sources
         }
 
         public List<InstanceInfo> GetCatalog(InstanceSource type, int pageSize, int pageIndex, IEnumerable<IProjectCategory> categories, string searchFilter, CfSortField sortField, string gameVersion)
+        {
+            return null;
+        }
+
+        public InstancePlatformData CreateInstancePlatformData(string externalId, string localId, string instanceVersion)
         {
             return null;
         }

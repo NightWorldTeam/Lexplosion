@@ -6,6 +6,7 @@ using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.FreeSource;
+using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.FileSystem;
 
 namespace Lexplosion.Logic.Management.Sources
@@ -14,6 +15,16 @@ namespace Lexplosion.Logic.Management.Sources
     {
         private static object _locker = new();
         private static Dictionary<string, SourceMap> _maps = new();
+
+        public string SourceId = null;
+        public string SourceUrl = null;
+
+        public FreeSource() { }
+        public FreeSource(string sourceId, string sourceUrl)
+        {
+            SourceId = sourceId;
+            SourceUrl = sourceUrl;
+        }
 
         private static SourceMap GetSourceMap(FreeSourcePlatformData infoData)
         {
@@ -80,6 +91,17 @@ namespace Lexplosion.Logic.Management.Sources
         {
             var content = DataFilesManager.GetFile<FreeSourcePlatformData>(WithDirectory.DirectoryPath + "/instances/" + localId + "/instancePlatformData.json");
             return new FreeSourceInstanceInstallManager(GetSourceMap(content), localId, updateOnlyBase, updateCancelToken);
+        }
+
+        public InstancePlatformData CreateInstancePlatformData(string externalId, string localId, string instanceVersion)
+        {
+            return new FreeSourcePlatformData
+            {
+                id = externalId,
+                sourceId = SourceId,
+                sourceUrl = SourceUrl,
+                instanceVersion = instanceVersion,
+            };
         }
     }
 }

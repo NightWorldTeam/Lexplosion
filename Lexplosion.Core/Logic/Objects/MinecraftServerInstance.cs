@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Logic.Management;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 
@@ -21,6 +22,33 @@ namespace Lexplosion.Logic.Objects
             {
                 Name = name;
                 Id = id;
+            }
+        }
+
+        public class ModpackData
+        {
+            /// <summary>
+            /// Нужен только если только сборка из кастомного источника. Указывет id источника. 
+            /// Если курсфордж или модринф, то тут будет null
+            /// </summary>
+            [JsonProperty("sourceId")]
+            public string SourceId;
+
+            /// <summary>
+            /// id модпака
+            /// </summary>
+            [JsonProperty("modpackId")]
+            public string ModpackId;
+
+            /// <summary>
+            /// версия модпака
+            /// </summary>
+            [JsonProperty("version")]
+            public string Version;
+
+            public bool IsValid()
+            {
+                return !string.IsNullOrWhiteSpace(SourceId) && !string.IsNullOrWhiteSpace(ModpackId);
             }
         }
 
@@ -51,15 +79,37 @@ namespace Lexplosion.Logic.Objects
         public string InstanceId { get; }
         [JsonProperty("instanceName")]
         public string InstanceName { get; }
+
+        private InstanceSource _instanceSource;
+
         [JsonProperty("instanceSource")]
-        public InstanceSource InstanceSource { get; }
+        public InstanceSource InstanceSource
+        {
+            get => _instanceSource;
+            set
+            {
+                if (value == InstanceSource.None)
+                {
+                    _instanceSource = InstanceSource.Local;
+                    return;
+                }
+
+                _instanceSource = Enum.IsDefined(typeof(InstanceSource), (int)value) ? value : InstanceSource.Local;
+            }
+        }
+
+        /// <summary>
+        /// Если сервер ванильный, тут будет null
+        /// </summary>
+        [JsonProperty("modpackInfo")]
+        public ModpackData ModpackInfo { get; set; }
 
         // not loaded = -2
         private int _onlineCount = -2;
         [JsonIgnore]
-        public int OnlineCount 
-        { 
-            get => _onlineCount; set 
+        public int OnlineCount
+        {
+            get => _onlineCount; set
             {
                 _onlineCount = value;
                 IsOnline = _onlineCount > -1;
@@ -69,13 +119,13 @@ namespace Lexplosion.Logic.Objects
 
         private bool _isOnline;
         [JsonIgnore]
-        public bool IsOnline 
-        { 
-            get => _isOnline; set 
+        public bool IsOnline
+        {
+            get => _isOnline; set
             {
                 _isOnline = value;
                 OnPropertyChanged();
-            } 
+            }
         }
 
 
@@ -83,7 +133,7 @@ namespace Lexplosion.Logic.Objects
 
 
         [JsonConstructor]
-        public MinecraftServerInstance(string address, string name, string description, string id, List<Tag> tags, string gameVersion, string bgUrl, string iconUrl, List<string> imagesUrls, 
+        public MinecraftServerInstance(string address, string name, string description, string id, List<Tag> tags, string gameVersion, string bgUrl, string iconUrl, List<string> imagesUrls,
             string instanceId, string instanceName, InstanceSource instanceSource)
         {
             Address = address;
@@ -100,14 +150,15 @@ namespace Lexplosion.Logic.Objects
             InstanceSource = instanceSource;
         }
 
-        
+
         public bool IsValid()
         {
             return !string.IsNullOrWhiteSpace(Name)
                 && !string.IsNullOrWhiteSpace(Id)
                 && !string.IsNullOrWhiteSpace(Address)
                 && !Address.Contains(" ")
-                && MinecraftVersion.IsValidRelease(GameVersion);
+                && MinecraftVersion.IsValidRelease(GameVersion)
+                && (InstanceSource == InstanceSource.Local || (ModpackInfo != null && ModpackInfo.IsValid()));
         }
     }
 

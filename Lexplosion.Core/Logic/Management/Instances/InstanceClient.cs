@@ -31,7 +31,6 @@ namespace Lexplosion.Logic.Management.Instances
         private string _localId = null;
         private readonly PrototypeInstance _dataManager;
         private readonly IInstanceSource _instanceSource;
-        private HashSet<MinecraftServerInstance> _minecraftServers;
 
         private CancellationTokenSource _cancelTokenSource = null;
         private LaunchGame _gameManager = null;
@@ -185,6 +184,9 @@ namespace Lexplosion.Logic.Management.Instances
         }
 
         private string _profileVersion = null;
+        /// <summary>
+        /// Описывает версию установленное сборки. Нужен только для того, чтобы снаружи можно было получить версию
+        /// </summary>
         public string ProfileVersion
         {
             get => _profileVersion;
@@ -241,6 +243,13 @@ namespace Lexplosion.Logic.Management.Instances
         #endregion
 
         /// <summary>
+        /// Если нужно скачать какую-то определенную версию клиента при первом вызове Update, то её присваивать сюда.
+        /// Если результат работаты будет удачным, то сюда присвоится значение null чтобы не произошло повторное перекачивание.
+        /// Null означает что методу Update нужно действовать как обычно.
+        /// </summary>
+        private string _instanceVersionToDownload = null;
+
+        /// <summary>
         /// Базовый конструктор, от него должны наследоваться все остальные
         /// </summary>
         /// <param name="source">Источник модпака</param>
@@ -283,7 +292,7 @@ namespace Lexplosion.Logic.Management.Instances
         /// <param name="name">Название сборки</param>
         /// <param name="source">Источник модпака</param>
         /// <param name="gameVersion">Версия игры</param>
-        private InstanceClient(string name, IInstanceSource source, MinecraftVersion gameVersion) : this(source)
+        private InstanceClient(string name, IInstanceSource source, MinecraftVersion gameVersion, string externalID) : this(source, externalID)
         {
             Name = name;
             GameVersion = gameVersion;
@@ -306,7 +315,10 @@ namespace Lexplosion.Logic.Management.Instances
                 case InstanceSource.FreeSource:
                     return new FreeSource();
                 default:
-                    return null;
+                    {
+                        Runtime.DebugWrite("CreateSourceFactory error. type: " + type);
+                        return new LocalSource();
+                    }
             }
         }
 
@@ -322,9 +334,14 @@ namespace Lexplosion.Logic.Management.Instances
         /// <param name="sodium">Устанавливать ли sodium</param>
         public static InstanceClient CreateClient(string name, InstanceSource type, MinecraftVersion gameVersion, ClientType modloader, string logoPath = null, string modloaderVersion = null, string optifineVersion = null, bool sodium = false)
         {
+            return CreateClient(CreateSourceFactory(type), name, type, gameVersion, modloader, logoPath: logoPath, modloaderVersion: modloaderVersion, optifineVersion: optifineVersion, sodium: sodium);
+        }
+
+        private static InstanceClient CreateClient(IInstanceSource source, string name, InstanceSource type, MinecraftVersion gameVersion, ClientType modloader, string logoPath = null, string modloaderVersion = null, string optifineVersion = null, bool sodium = false, string externalId = null)
+        {
             if (modloaderVersion == null) modloader = ClientType.Vanilla;
 
-            var client = new InstanceClient(name, CreateSourceFactory(type), gameVersion)
+            var client = new InstanceClient(name, source, gameVersion, externalId)
             {
                 InLibrary = true,
                 Author = GlobalData.User?.Login,
@@ -376,8 +393,23 @@ namespace Lexplosion.Logic.Management.Instances
             string name = server.Name;
             var minecraftVersion = new MinecraftVersion(server.GameVersion);
 
-            var client = CreateClient(name, InstanceSource.Local, minecraftVersion, ClientType.Vanilla);
+            IInstanceSource source;
+            string externalId = null;
+            string modpackVersion = null;
+            if (server.InstanceSource == InstanceSource.FreeSource)
+            {
+                source = new FreeSource(server.ModpackInfo.SourceId, null);
+                externalId = server.ModpackInfo.ModpackId;
+                modpackVersion = server.ModpackInfo.Version;
+            }
+            else
+            {
+                source = CreateSourceFactory(server.InstanceSource);
+            }
+
+            var client = CreateClient(source, name, server.InstanceSource, minecraftVersion, ClientType.Vanilla, externalId: externalId);
             client.AddGameServer(server, autoLogin);
+            client._instanceVersionToDownload = modpackVersion;
 
             if (server.Tags != null)
             {
@@ -777,6 +809,8 @@ namespace Lexplosion.Logic.Management.Instances
             Settings instanceSettings = GetSettings();
             instanceSettings.Merge(GlobalData.GeneralSettings, true);
 
+            instanceVersion ??= _instanceVersionToDownload;
+
             LaunchGame launchGame = new LaunchGame(_localId, instanceSettings, _instanceSource, _cancelTokenSource.Token);
             InitData data = launchGame.Update(ProgressHandler, FileDownloadEvent, DownloadStarted, instanceVersion);
 
@@ -786,6 +820,7 @@ namespace Lexplosion.Logic.Management.Instances
             if (data.InitResult == InstanceInit.Successful)
             {
                 IsInstalled = (data.InitResult == InstanceInit.Successful);
+                _instanceVersionToDownload = null;
 
                 SaveInstalledInstancesList(); // чтобы если сборка установилась то флаг IsInstalled сохранился
             }
@@ -1031,7 +1066,15 @@ namespace Lexplosion.Logic.Management.Instances
 
             DataFilesManager.SaveManifest(_localId, manifest);
 
-            if (Type != InstanceSource.Local)
+            if (_instanceSource != null)
+            {
+                InstancePlatformData instanceData = _instanceSource.CreateInstancePlatformData(_externalId, _localId, null);
+                if (instanceData != null)
+                {
+                    DataFilesManager.SaveFile(FolderPath + "/instancePlatformData.json", JsonConvert.SerializeObject(instanceData));
+                }
+            }
+            else if (Type != InstanceSource.Local)
             {
                 var instanceData = new InstancePlatformData
                 {
@@ -1356,15 +1399,16 @@ namespace Lexplosion.Logic.Management.Instances
         {
             ServersDatManager serversDat = new ServersDatManager(FolderPath + "/servers.dat");
 
-            serversDat.AddServer(new ServersDatManager.ServerData(server.Name, server.Address));
-            serversDat.SaveFile();
-
-            if (autoLogin)
+            if (!serversDat.ContsainsServer(server.Name, server.Address))
             {
-                Settings settings = GetSettings();
-                settings.AutoLoginServer = server.Address;
-                SaveSettings(settings);
+                serversDat.AddServer(new ServersDatManager.ServerData(server.Name, server.Address));
+                serversDat.SaveFile();
             }
+
+            Settings settings = GetSettings();
+            settings.AutoLoginServer = autoLogin ? server.Address : null;
+
+            SaveSettings(settings);
         }
     }
 }

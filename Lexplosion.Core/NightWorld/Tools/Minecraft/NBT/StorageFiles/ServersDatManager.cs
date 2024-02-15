@@ -37,6 +37,19 @@ namespace NightWorld.Tools.Minecraft.NBT.StorageFiles
 
         public IEnumerable<ServerData> Servers { get { return _servers; } }
 
+        public bool ContsainsServer(string name, string ip)
+        {
+            foreach (var server in _servers)
+            {
+                if (server.Name == name && server.Ip == ip)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public ServersDatManager()
         {
             _data = DefaultStruct();
