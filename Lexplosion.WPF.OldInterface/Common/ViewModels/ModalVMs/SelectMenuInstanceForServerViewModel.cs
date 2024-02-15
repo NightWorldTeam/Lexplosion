@@ -51,7 +51,10 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
             var ifvm = MainModel.Instance.CreateInstanceForm(ic);
             MainModel.Instance.AddInstanceForm(ifvm);
 
-            _availableInstances.Insert(0, new InstanceForServer(ifvm));
+            var ifs = new InstanceForServer(ifvm);
+            ifs.IsAutoConnect = true;
+            ifs.IsSelected = true;
+            _availableInstances.Insert(0, ifs);
         }
 
         public void Apply() 
