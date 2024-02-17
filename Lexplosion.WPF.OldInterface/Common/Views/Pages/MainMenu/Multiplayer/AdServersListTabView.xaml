@@ -55,7 +55,9 @@
                                 <!--  Grid.RowSpan="2"  -->
                                 <Border
                                     Grid.RowSpan="2"
-                                    CornerRadius="5,5,10,10"
+                                    Height="60"
+                                    VerticalAlignment="Top"
+                                    CornerRadius="5,5,0,0"
                                     DataContext="{Binding BgUrl, Converter={StaticResource UrlToImageConveter}}">
                                     <Border.Background>
                                         <ImageBrush ImageSource="{Binding AsyncValue}" />
