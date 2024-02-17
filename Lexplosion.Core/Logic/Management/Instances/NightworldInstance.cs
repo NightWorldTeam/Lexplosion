@@ -35,6 +35,7 @@ namespace Lexplosion.Logic.Management.Instances
                 {
                     using (var webClient = new WebClient())
                     {
+                        webClient.Proxy = null;
                         foreach (var item in data.Images)
                         {
                             try

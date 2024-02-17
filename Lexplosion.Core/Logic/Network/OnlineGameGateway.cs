@@ -226,7 +226,7 @@ namespace Lexplosion.Logic.Network
             }
             catch (Exception ex)
             {
-                Runtime.DebugWrite("mu;ticast error: " + ex);
+                Runtime.DebugWrite("multicast error: " + ex);
             }
 
             while (true)

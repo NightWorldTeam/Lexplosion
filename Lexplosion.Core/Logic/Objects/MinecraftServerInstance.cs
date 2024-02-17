@@ -25,6 +25,18 @@ namespace Lexplosion.Logic.Objects
             }
         }
 
+        public struct Links
+        {
+            [JsonProperty("discord")]
+            public readonly string Discord;
+            [JsonProperty("vk")]
+            public readonly string VK;
+            [JsonProperty("youtube")]
+            public readonly string YouTube;
+            [JsonProperty("telegram")]
+            public readonly string Telegram;
+        }
+
         public class ModpackData
         {
             /// <summary>
@@ -58,22 +70,34 @@ namespace Lexplosion.Logic.Objects
 
         [JsonProperty("address")]
         public string Address { get; }
+
         [JsonProperty("name")]
         public string Name { get; }
+
         [JsonProperty("description")]
         public string Description { get; }
+
         [JsonProperty("id")]
         public string Id { get; }
+
         [JsonProperty("tags")]
         public List<Tag> Tags { get; }
+
         [JsonProperty("gameVersion")]
         public string GameVersion { get; }
+
         [JsonProperty("bgUrl")]
         public string BgUrl { get; }
+
         [JsonProperty("iconUrl")]
         public string IconUrl { get; }
+
         [JsonProperty("imagesUrls")]
         public List<string> ImagesUrls { get; }
+
+        [JsonProperty("socialLinks")]
+        public Links SocialLinks { get; set; }
+
 
         [JsonProperty("instanceId")]
         public string InstanceId { get; }

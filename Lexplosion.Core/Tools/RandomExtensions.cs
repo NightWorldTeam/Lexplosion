@@ -1,7 +1,7 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Lexplosion.Tools
+namespace System
 {
     static class RandomExtensions
     {
@@ -9,8 +9,7 @@ namespace Lexplosion.Tools
 
         public static string GenerateString(this Random random, int length)
         {
-            return new string(Enumerable.Repeat(chars, length)
-                .Select(s => s[random.Next(s.Length)]).ToArray());
+            return new string(Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray());
         }
 
         public static byte[] GenerateBytes(this Random random, int lenght)
@@ -22,6 +21,18 @@ namespace Lexplosion.Tools
             }
 
             return bytes;
+        }
+
+        public static void Shuffle<T>(this Random random, IList<T> collection)
+        {
+            for (int i = 0; i < collection.Count; i++)
+            {
+                int targetIndex = random.Next(collection.Count);
+
+                T temp = collection[i];
+                collection[i] = collection[targetIndex];
+                collection[targetIndex] = temp;
+            }
         }
     }
 }

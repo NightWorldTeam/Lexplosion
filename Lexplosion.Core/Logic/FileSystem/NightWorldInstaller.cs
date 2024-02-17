@@ -288,7 +288,7 @@ namespace Lexplosion.Logic.FileSystem
         public List<string> UpdateInstance(NightWorldManifest filesList, string externalId, ref LastUpdates updates, Dictionary<string, string> content, CancellationToken cancelToken)
         {
             int updated = 0;
-            WebClient wc = new WebClient();
+
             string tempDir = CreateTempDir();
 
             string addr;
@@ -374,8 +374,6 @@ namespace Lexplosion.Logic.FileSystem
                         SaveFile(instancePath + "lastUpdates.json", JsonConvert.SerializeObject(updates));
                     }
                 }
-
-                wc.Dispose();
 
                 //удаляем старые файлы
                 foreach (string file in oldFiles)

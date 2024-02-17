@@ -8,6 +8,7 @@ using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.FreeSource;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.FileSystem;
+using Lexplosion.Global;
 
 namespace Lexplosion.Logic.Management.Sources
 {
@@ -47,7 +48,7 @@ namespace Lexplosion.Logic.Management.Sources
                 }
                 else
                 {
-                    sourceUrl = ToServer.HttpGet("http://192.168.0.110/api/freeSources/" + infoData.sourceId + "/mapUrl");
+                    sourceUrl = ToServer.HttpGet(LaunсherSettings.URL.Base + "api/freeSources/" + infoData.sourceId + "/mapUrl");
                     if (string.IsNullOrWhiteSpace(sourceUrl))
                     {
                         return null;

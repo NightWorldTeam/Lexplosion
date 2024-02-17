@@ -13,6 +13,7 @@ using Modrinth = Lexplosion.Logic.Objects.Modrinth;
 using Lexplosion.Tools;
 using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Network;
+using Lexplosion.Global;
 
 namespace Lexplosion.Logic.FileSystem
 {
@@ -31,7 +32,6 @@ namespace Lexplosion.Logic.FileSystem
             public bool WhiteListExists = false;
             [JsonProperty("whiteList")]
             public HashSet<FileDesc> WhiteList;
-
         }
 
         public InstanceManifest DownloadInstance(string downloadUrl, string fileName, ref InstanceContent localFiles, CancellationToken cancelToken)
@@ -44,6 +44,7 @@ namespace Lexplosion.Logic.FileSystem
                     foreach (string file in localFiles.Files)
                     {
                         WithDirectory.DelFile(WithDirectory.DirectoryPath + "/instances/" + instanceId + file);
+                        if (cancelToken.IsCancellationRequested) return null;
                     }
                 }
 
@@ -88,7 +89,7 @@ namespace Lexplosion.Logic.FileSystem
                 var content = DataFilesManager.GetFile<FreeSourcePlatformData>(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/instancePlatformData.json");
                 if (content != null && content.IsValid())
                 {
-                    string result = ToServer.HttpGet("http://192.168.0.110/api/freeSources/" + content.sourceId + "/modpacks/" + content.id + "/exutableFilesWhiteList");
+                    string result = ToServer.HttpGet(LaunсherSettings.URL.Base + "api/freeSources/" + content.sourceId + "/modpacks/" + content.id + "/exutableFilesWhiteList"); ; ;
                     if (result != null)
                     {
                         try
@@ -110,6 +111,8 @@ namespace Lexplosion.Logic.FileSystem
                     {
                         foreach (ZipArchiveEntry entry in zip.Entries)
                         {
+                            if (cancelToken.IsCancellationRequested) return null;
+
                             string entryPath = entry.FullName.Replace("\\", "/");
                             bool isModsFolder = entryPath.StartsWith("/files/mods/") || entryPath.StartsWith("files/mods/");
 
@@ -245,7 +248,7 @@ namespace Lexplosion.Logic.FileSystem
                         {
                             if (addon.Source == ProjectSource.Curseforge)
                             {
-                                localAddon.RemoveFromDir(instanceFolder);
+                                localAddon.RemoveFromDir(instanceFolder); // TODO: если скачивания будет уотменено, а мод уже удален, то сборка будет сломана, и такой косяк не только здесь
                                 cursefrogeAddons.Add(addon);
                             }
                             else if (addon.Source == ProjectSource.Modrinth)
@@ -271,6 +274,8 @@ namespace Lexplosion.Logic.FileSystem
                             modrinthAddons.Add(addon);
                         }
                     }
+
+                    if (cancelToken.IsCancellationRequested) goto End;
                 }
             }
             else
@@ -322,7 +327,7 @@ namespace Lexplosion.Logic.FileSystem
 
                 nowDataCount++;
 
-                if (cancelToken.IsCancellationRequested) break;
+                if (cancelToken.IsCancellationRequested) goto End;
             }
 
             foreach (InstalledAddonInfo addon in modrinthAddons)
@@ -362,6 +367,7 @@ namespace Lexplosion.Logic.FileSystem
                 compliteDownload.FullClient = true;
             }
 
+        End:
             SaveInstanceContent(compliteDownload);
             Runtime.DebugWrite("END INSTALL INSTANCE");
 

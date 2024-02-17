@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Lexplosion.Tools
+﻿namespace System
 {
     static class StringExtensions
     {
@@ -19,6 +17,16 @@ namespace Lexplosion.Tools
             }
 
             return text.Substring(0, pos) + replace + text.Substring(pos + search.Length);
+        }
+
+        public static string Truncate(this string value, int maxLength, string truncationSuffix = "…")
+        {
+            return value.Length > maxLength ? value.Substring(0, maxLength) + truncationSuffix : value;
+        }
+
+        public static string TruncateWithoutSuffix(this string value, int maxLength)
+        {
+            return value.Length > maxLength ? value.Substring(0, maxLength) : value;
         }
     }
 }

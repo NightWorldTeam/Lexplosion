@@ -5,6 +5,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Runtime.CompilerServices;
+using System.Linq;
 using Newtonsoft.Json;
 using NightWorld.Tools.Minecraft.NBT.StorageFiles;
 using Lexplosion.Global;
@@ -14,7 +15,6 @@ using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Management.Sources;
 using Lexplosion.Logic.Network.Web;
-using System.Linq;
 
 namespace Lexplosion.Logic.Management.Instances
 {
@@ -419,7 +419,7 @@ namespace Lexplosion.Logic.Management.Instances
             if (server.Description != null)
             {
                 client.Description = server.Description;
-                client.Summary = server.Description;
+                client.Summary = server.Description.Truncate(45);
             }
 
             if (!string.IsNullOrWhiteSpace(server.IconUrl))
@@ -985,6 +985,7 @@ namespace Lexplosion.Logic.Management.Instances
                 {
                     using (var webClient = new WebClient())
                     {
+                        webClient.Proxy = null;
                         Logo = webClient.DownloadData(url);
                         callback();
                     }

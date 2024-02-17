@@ -1250,6 +1250,7 @@ namespace Lexplosion.Logic.Management.Instances
                     {
                         using (var webClient = new WebClient())
                         {
+                            webClient.Proxy = null;
                             Logo = ImageTools.ResizeImage(webClient.DownloadData(url), 80, 80);
                         }
                     }

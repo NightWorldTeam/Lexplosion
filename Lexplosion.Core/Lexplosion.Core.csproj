@@ -110,6 +110,7 @@
     <Compile Include="Logic\Management\Instances\PrototypeInstance.cs" />
     <Compile Include="Logic\Management\JavaChecker.cs" />
     <Compile Include="Logic\Management\LaunchGame.cs" />
+    <Compile Include="Logic\Network\SMP\Synchronizer.cs" />
     <Compile Include="Logic\Objects\FreeSource.cs" />
     <Compile Include="Logic\Objects\MinecraftServerInstance.cs" />
     <Compile Include="Logic\Management\Player.cs" />

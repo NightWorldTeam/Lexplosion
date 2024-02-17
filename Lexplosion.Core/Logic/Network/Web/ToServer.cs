@@ -166,6 +166,8 @@ namespace Lexplosion.Logic.Network
                     if (!element.IsValid()) data.Remove(element);
                 }
 
+                Random rand = new Random();
+                rand.Shuffle(data);
                 return data;
             }
             catch

@@ -66,6 +66,7 @@ namespace Lexplosion.Logic.Management.Instances
                         {
                             try
                             {
+                                webClient.Proxy = null;
                                 images.Add(webClient.DownloadData(item.url));
                             }
                             catch { }

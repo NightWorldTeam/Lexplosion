@@ -73,12 +73,23 @@ namespace Lexplosion.Logic.Network
         {
             try
             {
+                int i = 1;
+
+                string fileppfds = @"D:\ABOBA2\client.txt";
+                if (File.Exists(fileppfds))
+                {
+                    File.Delete(fileppfds);
+                }
+
+                Runtime.DebugWrite("Create debug file");
+                FileStream logFile = File.OpenWrite(fileppfds);
+
                 // получаем кодовое слово
                 Bridge.Receive(out byte[] data);
 
                 if (!_confirmWord.SequenceEqual(Cryptography.AesDecode(data, _aesKey, _aesIV)))
                 {
-                    Runtime.DebugConsoleWrite("Confirm word error");
+                    Runtime.DebugWrite("Confirm word error");
                     _isWorking = false;
                     goto EndPoint;
                 }
@@ -119,6 +130,11 @@ namespace Lexplosion.Logic.Network
                     long offset = 0;
                     while (offset < _fileSize && (_isWorking = Bridge.Receive(out data)) && data.Length > 0)
                     {
+                        string xer = i + ")s:" + data.Length + ";c:" + string.Join(",", data) + "\n";
+                        i++;
+                        byte[] logContent = Encoding.UTF8.GetBytes(xer);
+                        logFile.Write(logContent, 0, logContent.Length);
+
                         data = Cryptography.CryptoDecode(decryptor, data);
 
                         offset += data.Length;
