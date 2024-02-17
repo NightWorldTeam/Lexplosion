@@ -125,17 +125,33 @@ namespace Lexplosion.Tools
 
         public static byte[] GetImageBytesByUrlAsync(string url)
         {
-            byte[] imageBytes = null;
-            using (var httpClient = new HttpClient())
+            try
             {
-                imageBytes = httpClient.GetByteArrayAsync(url).Result;
+                byte[] imageBytes = null;
+                using (var httpClient = new HttpClient())
+                {
+                    imageBytes = httpClient.GetByteArrayAsync(url).Result;
+                }
+                return imageBytes;
             }
-            return imageBytes;
+            catch (Exception ex)
+            {
+                Runtime.DebugWrite("Exception " + ex);
+                return null;
+            }
         }
 
         public static BitmapImage GetImageByUrl(string url)
         {
-            return ToImage(GetImageBytesByUrlAsync(url));
+            try
+            {
+                return ToImage(GetImageBytesByUrlAsync(url));
+            }
+            catch (Exception ex)
+            {
+                Runtime.DebugWrite("Exception " + ex);
+                return null;
+            }
         }
     }
 }

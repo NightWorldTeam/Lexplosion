@@ -422,6 +422,8 @@ namespace Lexplosion.Logic.Management.Instances
                 client.Summary = server.Description.Truncate(45);
             }
 
+            client.SaveAssets();
+
             if (!string.IsNullOrWhiteSpace(server.IconUrl))
             {
                 client.DownloadLogo(server.IconUrl, client.SaveAssets);

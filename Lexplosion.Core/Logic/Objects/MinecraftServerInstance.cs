@@ -35,6 +35,8 @@ namespace Lexplosion.Logic.Objects
             public readonly string YouTube;
             [JsonProperty("telegram")]
             public readonly string Telegram;
+            [JsonProperty("website")]
+            public readonly string Website;
         }
 
         public class ModpackData
