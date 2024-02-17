@@ -5,7 +5,6 @@ using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Objects.Curseforge;
-using Lexplosion.Tools;
 
 namespace Lexplosion.Logic.Management.Installers
 {

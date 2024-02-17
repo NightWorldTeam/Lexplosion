@@ -5,7 +5,6 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
-using Lexplosion.Tools;
 
 namespace Lexplosion.Logic.Network
 {

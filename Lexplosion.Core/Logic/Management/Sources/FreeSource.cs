@@ -9,6 +9,7 @@ using Lexplosion.Logic.Objects.FreeSource;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Global;
+using System;
 
 namespace Lexplosion.Logic.Management.Sources
 {
@@ -68,6 +69,9 @@ namespace Lexplosion.Logic.Management.Sources
 
                     var map = data.sourceMap;
                     if (map == null) return null;
+
+                    Uri uri = new Uri(sourceUrl);
+                    map.BaseUrl = sourceUrl.ReplaceLast(uri.AbsolutePath, string.Empty);
 
                     _maps[sourceUrl] = map;
                     return map;

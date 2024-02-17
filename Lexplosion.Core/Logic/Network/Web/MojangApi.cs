@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Net;
 using Newtonsoft.Json;
-using Lexplosion.Tools;
 
 namespace Lexplosion.Logic.Network.Web
 {

@@ -55,7 +55,7 @@ namespace Lexplosion.Logic.Management.Installers
 
         protected override ModpackVersion GetProjectDefaultInfo(string projectId, string actualInstanceVersion)
         {
-            string url = _urlsMap?.ModpackVersionsListUrl?.Replace("${modpackId}", projectId);
+            string url = _urlsMap?.GetModpackVersionsListUrl(projectId);
             if (url == null)
             {
                 return null;
@@ -85,13 +85,11 @@ namespace Lexplosion.Logic.Management.Installers
 
         protected override ModpackVersion GetProjectInfo(string projectId, string projectVersion)
         {
-            string url = _urlsMap?.ModpackVersionManifestUrl;
+            string url = _urlsMap?.GetModpackVersionManifestUrl(projectId, projectVersion);
             if (url == null)
             {
                 return null;
             }
-
-            url = url.Replace("${modpackId}", projectId).Replace("${modpackVersion}", projectVersion);
 
             string result = ToServer.HttpPost(url);
             if (result == null)

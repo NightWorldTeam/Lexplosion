@@ -19,6 +19,16 @@
             return text.Substring(0, pos) + replace + text.Substring(pos + search.Length);
         }
 
+        public static string ReplaceLast(this string value, string search, string replace)
+        {
+            int place = value.LastIndexOf(search);
+
+            if (place == -1)
+                return value;
+
+            return value.Remove(place, search.Length).Insert(place, replace);
+        }
+
         public static string Truncate(this string value, int maxLength, string truncationSuffix = "…")
         {
             return value.Length > maxLength ? value.Substring(0, maxLength) + truncationSuffix : value;

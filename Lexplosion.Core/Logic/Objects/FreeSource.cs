@@ -77,17 +77,60 @@ namespace Lexplosion.Logic.Objects.FreeSource
 
     public class SourceMap
     {
+        private string _baseUrl;
+        [JsonIgnore]
+        public string BaseUrl
+        {
+            get => _baseUrl;
+            set
+            {
+                _baseUrl = value.TrimEnd('/');
+
+                ModpacksListUrl = ValidateUrl(ModpacksListUrl);
+                ModpackManifestUrl = ValidateUrl(ModpackManifestUrl);
+                ModpackVersionsListUrl = ValidateUrl(ModpackVersionsListUrl);
+                ModpackVersionManifestUrl = ValidateUrl(ModpackVersionManifestUrl);
+            }
+        }
+
         [JsonProperty("modpacksListUrl")]
-        public string ModpacksListUrl;
+        public string ModpacksListUrl { get; set; }
 
         [JsonProperty("modpackManifestUrl")]
-        public string ModpackManifestUrl;
+        public string ModpackManifestUrl { get; set; }
 
         [JsonProperty("modpackVersionsListUrl")]
-        public string ModpackVersionsListUrl;
+        public string ModpackVersionsListUrl { get; set; }
 
         [JsonProperty("modpackVersionManifestUrl")]
-        public string ModpackVersionManifestUrl;
+        public string ModpackVersionManifestUrl { get; set; }
+
+        public string GetModpackVersionsListUrl(string modpackId)
+        {
+            return ModpackVersionsListUrl?.Replace("${modpackId}", modpackId);
+        }
+
+        public string GetModpackManifestUrl(string modpackId)
+        {
+            return ModpackManifestUrl?.Replace("${modpackId}", modpackId);
+        }
+
+        public string GetModpackVersionManifestUrl(string modpackId, string modpackVersion)
+        {
+            if (ModpackVersionManifestUrl == null) return null;
+            return ModpackVersionManifestUrl.Replace("${modpackId}", modpackId).Replace("${modpackVersion}", modpackVersion);
+        }
+
+        private string ValidateUrl(string url)
+        {
+            if (string.IsNullOrWhiteSpace(url)) return null;
+            if (url.StartsWith("https://") || url.StartsWith("http://")) return url;
+
+            string _url = _baseUrl;
+            if (!url.StartsWith("/")) _url += "/";
+
+            return _url + url;
+        }
     }
 
     public class SourceManifest

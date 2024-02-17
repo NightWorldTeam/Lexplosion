@@ -4,7 +4,6 @@ using System.Security.Cryptography;
 using System;
 using System.Threading;
 using Newtonsoft.Json;
-using Lexplosion.Tools;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Network;
 using Lexplosion.Global;

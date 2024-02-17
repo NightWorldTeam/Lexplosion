@@ -29,7 +29,7 @@ namespace Lexplosion.Logic.Management.Instances
                     return false;
                 }
 
-                string url = _urlGetter(infoData)?.ModpackVersionsListUrl?.Replace("${modpackId}", infoData.id);
+                string url = _urlGetter(infoData)?.GetModpackVersionsListUrl(infoData.id);
                 if (url == null)
                 {
                     return false;
@@ -60,12 +60,12 @@ namespace Lexplosion.Logic.Management.Instances
             if (localId == null) return null;
 
             var content = DataFilesManager.GetFile<FreeSourcePlatformData>(WithDirectory.DirectoryPath + "/instances/" + localId + "/instancePlatformData.json");
-            string url = _urlGetter(content)?.ModpackManifestUrl;
+            string url = _urlGetter(content)?.GetModpackManifestUrl(externalId);
 
             ModpackManifest manifest = null;
             try
             {
-                string result = ToServer.HttpGet(url.Replace("${modpackId}", externalId));
+                string result = ToServer.HttpGet(url);
                 manifest = JsonConvert.DeserializeObject<ModpackManifest>(result);
             }
             catch { }
