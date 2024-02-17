@@ -37,9 +37,6 @@ namespace Lexplosion.Logic.Network
         private object _abortLoocker = new object();
         private object _authorizeLocker = new object();
 
-        FileStream logFile = File.OpenWrite(@"D:\ABOBA2\server.txt");
-        long i = 1;
-
         public DataServer(RSAParameters privateRsaKey, string confirmWord, string uuid, string sessionToken, ControlServerData server) : base(uuid, sessionToken, SERVER_TYPE, true, server)
         {
             _сonfirmWord = Encoding.UTF8.GetBytes(confirmWord);
@@ -103,10 +100,6 @@ namespace Lexplosion.Logic.Network
 
                         // TODO: тут трай надо        -- 09.07.2023 А нахуя тут трай?
                         byte[] payload = Cryptography.AesEncode(buffer_, clientData.Value3, clientData.Value4);
-                        string xer = i + ")s:" + payload.Length + ";c:" + string.Join(",", payload) + "\n";
-                        i++;
-                        byte[] logContent = Encoding.UTF8.GetBytes(xer);
-                        logFile.Write(logContent, 0, logContent.Length);
                         Server.Send(payload, clientPoint); //отправляем
 
                         //файл передан, удаляем клиента
@@ -231,7 +224,7 @@ namespace Lexplosion.Logic.Network
                                             AuthorizedClients.Add(point);
                                         }
 
-                                        byte[] fileSize = BitConverter.GetBytes(SFilesList[profileId].FileSize);                                    
+                                        byte[] fileSize = BitConverter.GetBytes(SFilesList[profileId].FileSize);
                                         Server.Send(Cryptography.AesEncode(fileSize, aesKey, aesIV), point); // отправляем размер файла
 
                                         WaitClient.Set();

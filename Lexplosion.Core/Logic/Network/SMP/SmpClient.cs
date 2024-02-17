@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -163,26 +162,13 @@ namespace Lexplosion.Logic.Network.SMP
             }
         }
 
-
-        FileStream logSendFile;
-        FileStream logRecvFile;
-        private void WriteToLog(byte[] bytes, int buffetSize, int id, FileStream fstream)
-        {
-            string xer = id + ")s:" + buffetSize + ";c:" + string.Join(",", new ArraySegment<byte>(bytes, 0, buffetSize)) + "\n";
-            byte[] data = System.Text.Encoding.UTF8.GetBytes(xer);
-            fstream.Write(data, 0, data.Length);
-        }
-
-
-
-
         private readonly ConcurrentQueue<List<Package>> _sendingBuffer = new ConcurrentQueue<List<Package>>(); // Буфер пакетов на отправку
         private readonly ConcurrentQueue<Message> _receivingBuffer = new ConcurrentQueue<Message>();
         private readonly ConcurrentDictionary<ushort, byte[]> _packagesBuffer = new ConcurrentDictionary<ushort, byte[]>(); //буфер принятых пакетов
 
         private readonly object _sendLocker = new object();
         private readonly AutoResetEvent _waitSendData = new AutoResetEvent(false);
-        private readonly Synchronizer _deliveryWait = new Synchronizer(false);
+        private readonly AutoResetEvent _deliveryWait = new AutoResetEvent(false);
         private readonly Semaphore _repeatDeliveryBlock = new Semaphore(1, 1);
         private readonly Semaphore _closeBlock = new Semaphore(1, 1);
         private readonly AutoResetEvent _receiveWait = new AutoResetEvent(false);
@@ -250,9 +236,6 @@ namespace Lexplosion.Logic.Network.SMP
             var inValue = new byte[] { 0 };
             var outValue = new byte[] { 0 };
             _socket.IOControl(sioUdpConnectionReset, inValue, outValue);
-
-            logSendFile = File.OpenWrite(@"D:\ABOBA2\send-" + point.Port + "-" + GetHashCode() + ".txt");
-            logRecvFile = File.OpenWrite(@"D:\ABOBA2\recv-" + point.Port + "-" + GetHashCode() + ".txt");
         }
 
         public bool Connect(IPEndPoint remoteIp, byte[] connectCode)
@@ -684,7 +667,6 @@ namespace Lexplosion.Logic.Network.SMP
                             {
                                 packages[id][HeaderPositions.AttemptsCounts] = attemptCount; // увставляем номер попытки
                                 _socket.Send(packages[id], packages[id].Length, SocketFlags.None);
-                                WriteToLog(packages[id], packages[id].Length, id, logSendFile);
                             }
                         }
                         else // если в прошлый раз был тймаут, то отправляем только псоледний пакет. Хост потом просто отправит список нехватающих пакетов
@@ -692,7 +674,6 @@ namespace Lexplosion.Logic.Network.SMP
                             ushort id = packages.Keys.Last();
                             packages[id][HeaderPositions.AttemptsCounts] = attemptCount; // увставляем номер попытки
                             _socket.Send(packages[id], packages[id].Length, SocketFlags.None);
-                            WriteToLog(packages[id], packages[id].Length, id, logSendFile);
                         }
 
                         _lastTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
@@ -703,10 +684,8 @@ namespace Lexplosion.Logic.Network.SMP
                         }
 
                     Begin:
-                        bool isSignal = _deliveryWait.IsSignal;
                         if (!_deliveryWait.WaitOne(delay)) // истекло время ожидания
                         {
-                            Runtime.DebugWrite("No signal, isSignal:" + isSignal + ", IsSignal: " + _deliveryWait.IsSignal + ", ResetCalled: " + _deliveryWait.ResetCalled);
                             delay *= _delayMultipliers[attemptCount];
                             attemptCount++;
                             isTimeout = true;
@@ -827,18 +806,11 @@ namespace Lexplosion.Logic.Network.SMP
                     buffer[HeaderPositions.Id_2]
                 }, 0);
 
-                WriteToLog(buffer, dataLength, id, logRecvFile);
-
                 ushort lastId = BitConverter.ToUInt16(new byte[2]
                 {
                     buffer[HeaderPositions.LastId_1],
                     buffer[HeaderPositions.LastId_2]
                 }, 0);
-
-                if (buffer[HeaderPositions.AttemptsCounts] > 1)
-                {
-                    Runtime.DebugWrite("id " + id + ", lastId " + lastId);
-                }
 
                 if (id >= _receivingPointer && id - _receivingPointer < _maxPackagesCount)
                 {
@@ -884,13 +856,8 @@ namespace Lexplosion.Logic.Network.SMP
                         }, 3, SocketFlags.None);
                         attemptSendCounts = -1;
                         waitingLastPackage = -1;
-
-                        if (buffer[HeaderPositions.AttemptsCounts] > 1)
-                        {
-                            Runtime.DebugWrite("ConfirmDataDelivery lastId " + lastId);
-                        }
                     }
-                    else if (_receivingPointer != (ushort)(id + 1))
+                    else if (_receivingPointer != id + 1)
                     {
                         var package = new List<byte>
                         {
@@ -925,10 +892,6 @@ namespace Lexplosion.Logic.Network.SMP
 
                         if (needRepeat)
                         {
-                            if (buffer[HeaderPositions.AttemptsCounts] > 1)
-                            {
-                                Runtime.DebugWrite("FailedList lastId " + lastId);
-                            }
                             byte[] array = package.ToArray();
                             _socket.Send(array, array.Length, SocketFlags.None);
                             for (int h = 3; h < array.Length - 1; h += 2)
@@ -948,7 +911,6 @@ namespace Lexplosion.Logic.Network.SMP
                 {
                     if (waitingLastPackage == lastId && buffer[HeaderPositions.AttemptsCounts] > attemptSendCounts)
                     {
-                        // TODO: это оптимизировать. Я по сути впустую формирую failedList
                         var package = new List<byte>
                         {
                             PackgeCodes.FailedList,
@@ -970,10 +932,6 @@ namespace Lexplosion.Logic.Network.SMP
                         {
                             byte[] array = package.ToArray();
                             _socket.Send(array, array.Length, SocketFlags.None);
-                            if (buffer[HeaderPositions.AttemptsCounts] > 1)
-                            {
-                                Runtime.DebugWrite("FailedList lastId " + lastId);
-                            }
                         }
                         else
                         {
@@ -984,38 +942,21 @@ namespace Lexplosion.Logic.Network.SMP
                                 neEbyKakNazvat[0],
                                 neEbyKakNazvat[1]
                             }, 3, SocketFlags.None);
-                            if (buffer[HeaderPositions.AttemptsCounts] > 1)
-                            {
-                                Runtime.DebugWrite("ConfirmDataDelivery lastId " + lastId);
-                            }
                         }
 
                         attemptSendCounts = buffer[HeaderPositions.AttemptsCounts];
                     }
                     else if (id == lastId || buffer[HeaderPositions.Flag] == Flags.NeedConfirm)
                     {
-                        if (lastId != waitingLastPackage && (id < _receivingPointer || id - _receivingPointer >= _maxPackagesCount))
+                        byte[] neEbyKakNazvat = BitConverter.GetBytes(lastId);
+                        _socket.Send(new byte[3]
                         {
-                            byte[] neEbyKakNazvat = BitConverter.GetBytes(lastId);
-                            _socket.Send(new byte[3]
-                            {
-                                PackgeCodes.ConfirmDataDelivery,
-                                neEbyKakNazvat[0],
-                                neEbyKakNazvat[1]
-                            }, 3, SocketFlags.None);
-
-                            if (buffer[HeaderPositions.AttemptsCounts] > 1)
-                            {
-                                Runtime.DebugWrite("ConfirmDataDelivery lastId " + lastId);
-                            }
-                        }
+                            PackgeCodes.ConfirmDataDelivery,
+                            neEbyKakNazvat[0],
+                            neEbyKakNazvat[1]
+                        }, 3, SocketFlags.None);
                     }
                 }
-            }
-            else
-            {
-                byte[] xer = System.Text.Encoding.UTF8.GetBytes("lenght < 5, " + dataLength + "\n");
-                logRecvFile.Write(xer, 0, xer.Length);
             }
         }
 
@@ -1119,14 +1060,9 @@ namespace Lexplosion.Logic.Network.SMP
                                     }
 
                                     _repeatDeliveryList = ids;
-                                    bool test = _deliveryWait.Set();
-                                    Runtime.DebugWrite("packageId " + packageId + " " + _lastPackage + " " + test + ", IsSignal: " + _deliveryWait.IsSignal + ", ResetCalled: " + _deliveryWait.ResetCalled);
+                                    _deliveryWait.Set();
                                 }
                                 _repeatDeliveryBlock.Release();
-                            }
-                            else
-                            {
-                                Runtime.DebugWrite("Ivalid FailedList " + String.Join(",", buffer));
                             }
                             break;
                         case PackgeCodes.MtuResponse: // пришел ответ на вычисление mtu
