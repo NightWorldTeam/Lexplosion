@@ -435,4 +435,5 @@
     <s:String x:Key="moreDetails">More Details</s:String>
 
     <s:String x:Key="autoConnectIp">Server ip for auto connect</s:String>
+    <s:String x:Key="notAvailableClients">No suitable clients found</s:String>
 </ResourceDictionary>

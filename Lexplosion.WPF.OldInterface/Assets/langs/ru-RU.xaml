@@ -479,4 +479,5 @@
     <s:String x:Key="moreDetails">Подробнее</s:String>
 
     <s:String x:Key="autoConnectIp">IP сервера для автоподключения</s:String>
+    <s:String x:Key="notAvailableClients">Подходящих клиентов не найдено</s:String>
 </ResourceDictionary>
