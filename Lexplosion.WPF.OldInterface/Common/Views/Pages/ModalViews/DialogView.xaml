@@ -42,6 +42,13 @@
         CornerRadius="5">
 
         <Grid>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
             <StackPanel>
                 <TextBlock
                     Margin="0,0,0,8"
@@ -57,8 +64,35 @@
                     TextWrapping="WrapWithOverflow" />
             </StackPanel>
 
-            <StackPanel
+            <Border
+                Grid.Row="1"
                 Margin="0,8,0,0"
+                Padding="0,8,0,8"
+                BorderBrush="#252525"
+                BorderThickness="0,1,0,1"
+                Visibility="{Binding IsShowCheckBox, Converter={StaticResource ConvertBoolToVisibility}}">
+                <Grid Background="Transparent">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontWeight="Medium"
+                        Foreground="White"
+                        Text="{DynamicResource autoConnectToServer}" />
+                    <CheckBox
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        IsChecked="{Binding IsCheckBoxChecked}"
+                        Style="{StaticResource ToggleSwitch}" />
+                </Grid>
+            </Border>
+
+            <StackPanel
+                Grid.Row="2"
+                Margin="0,16,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Bottom"
                 Orientation="Horizontal">

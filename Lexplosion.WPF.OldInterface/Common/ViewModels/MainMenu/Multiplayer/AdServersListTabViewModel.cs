@@ -45,10 +45,10 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer
                 }
                 else // modded
                 {
-                    // TODO: Auto COnnect
-                    new DialogViewModel().ShowDialog(ResourceGetter.GetString("serverInstanceInstallingTitle"), string.Format(ResourceGetter.GetString("serverInstanceInstallingDescription"), server.InstanceName), () =>
+                    var dialog = new DialogViewModel(350, 220, true);
+                    dialog.ShowDialog(ResourceGetter.GetString("serverInstanceInstallingTitle"), string.Format(ResourceGetter.GetString("serverInstanceInstallingDescription"), server.InstanceName), () =>
                     {
-                        var ic = InstanceClient.CreateClient(server, false);
+                        var ic = InstanceClient.CreateClient(server, dialog.IsCheckBoxChecked);
                         MainModel.Instance.AddInstanceForm(ic);
                     });
                 }
