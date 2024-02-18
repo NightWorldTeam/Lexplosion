@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 
 namespace Lexplosion.Logic.Objects
 {
@@ -25,18 +26,29 @@ namespace Lexplosion.Logic.Objects
             }
         }
 
-        public struct Links
+        public readonly struct Links
         {
             [JsonProperty("discord")]
-            public readonly string Discord;
+            public string Discord { get; }
             [JsonProperty("vk")]
-            public readonly string VK;
+            public string Vk { get; }
             [JsonProperty("youtube")]
-            public readonly string YouTube;
+            public string Youtube { get; }
             [JsonProperty("telegram")]
-            public readonly string Telegram;
+            public string Telegram { get; }
             [JsonProperty("website")]
-            public readonly string Website;
+            public string Website { get; }
+
+
+            [JsonConstructor]
+            public Links(string discord, string vk, string youTube, string telegram, string website)
+            {
+                Discord = discord;
+                Vk = vk;
+                Youtube = youTube;
+                Telegram = telegram;
+                Website = website;
+            }
         }
 
         public class ModpackData

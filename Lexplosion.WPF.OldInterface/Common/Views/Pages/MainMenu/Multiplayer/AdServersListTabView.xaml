@@ -167,12 +167,12 @@
                                                 Command="{Binding DataContext.CopyAddressCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                 CommandParameter="{Binding}"
                                                 Cursor="Hand"
-                                                Style="{DynamicResource IconicButton}">
+                                                Style="{StaticResource IconicButton}">
                                                 <Border
                                                     Width="32"
                                                     Height="32"
                                                     Padding="4"
-                                                    BorderBrush="{DynamicResource BrandSolidColorBrush}"
+                                                    BorderBrush="{StaticResource BrandSolidColorBrush}"
                                                     BorderThickness="1"
                                                     CornerRadius="5">
                                                     <Viewbox Width="16" Height="16">
@@ -238,21 +238,56 @@
                                             Foreground="{DynamicResource BrandColorForegroundBrush}"
                                             Text="{Binding Name}" />
                                     </Border>
-                                    <!--<Border
-                                        Margin="0,0,16,0"
-                                        Padding="16,8"
-                                        HorizontalAlignment="Right"
-                                        Background="{DynamicResource SepSolidColorBrush}"
-                                        CornerRadius="5">
-                                        <TextBlock
-                                            VerticalAlignment="Center"
-                                            FontSize="14"
-                                            FontWeight="Medium"
-                                            Foreground="{DynamicResource BrandColorForegroundBrush}"
-                                            Text="{Binding GameVersion}" />
-                                    </Border>-->
                                 </Grid>
                             </Grid>
+
+                            <!--<Border
+                                Margin="12,0,0,0"
+                                Padding="4,4,2,4"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top"
+                                CornerRadius="10">
+
+                                <Border.Background>
+                                    <SolidColorBrush Opacity="0.3" Color="{DynamicResource PrimaryColor}" />
+                                </Border.Background>
+
+                                <StackPanel
+                                    Margin="0,0,8,0"
+                                    HorizontalAlignment="Right"
+                                    Orientation="Horizontal">
+
+                                    <Button Style="{DynamicResource IconicButton}">
+                                        <Viewbox
+                                            Width="18"
+                                            Height="18"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center">
+                                            <Path extension:PathExtension.StringData="{StaticResource VKontakteLogo}" Fill="White" />
+                                        </Viewbox>
+                                    </Button>
+
+                                    <Button Margin="8,0,0,0" Style="{DynamicResource IconicButton}">
+                                        <Viewbox
+                                            Width="16"
+                                            Height="16"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center">
+                                            <Path extension:PathExtension.StringData="{StaticResource TelegramLogo}" Fill="White" />
+                                        </Viewbox>
+                                    </Button>
+
+                                    <Button Margin="8,0,0,0" Style="{DynamicResource IconicButton}">
+                                        <Viewbox
+                                            Width="18"
+                                            Height="18"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Top">
+                                            <Path extension:PathExtension.StringData="{StaticResource DiscordLogo}" Fill="White" />
+                                        </Viewbox>
+                                    </Button>
+                                </StackPanel>
+                            </Border>-->
                         </Grid>
 
                         <ControlTemplate.Triggers>
