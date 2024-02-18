@@ -39,6 +39,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu
             }));
         }
 
+
         #endregion Commands
 
 
