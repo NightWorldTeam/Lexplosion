@@ -13,10 +13,10 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
         private readonly double _width = 300;
         private readonly double _height = 200;
 
-        public bool IsCheckBoxChecked 
+        public bool IsCheckBoxChecked
         {
             get; set;
-        }
+        } = true;
 
 
         #region Properties

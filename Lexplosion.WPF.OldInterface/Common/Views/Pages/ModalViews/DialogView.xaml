@@ -85,6 +85,7 @@
                     <CheckBox
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
+                        IsChecked="{Binding IsCheckBoxChecked}"
                         Style="{StaticResource ToggleSwitch}" />
                 </Grid>
             </Border>
