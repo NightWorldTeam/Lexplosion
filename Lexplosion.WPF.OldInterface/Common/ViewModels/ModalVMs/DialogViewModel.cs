@@ -13,6 +13,11 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
         private readonly double _width = 300;
         private readonly double _height = 200;
 
+        public bool IsCheckBoxChecked 
+        {
+            get; set;
+        }
+
 
         #region Properties
 
@@ -37,6 +42,9 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
                 OnPropertyChanged();
             }
         }
+
+        public bool IsShowCheckBox { get; }
+
 
         #endregion Properties
 
@@ -66,10 +74,11 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
         #endregion Commands
 
 
-        public DialogViewModel(double modalWidth = 300, double modalHeight = 200)
+        public DialogViewModel(double modalWidth = 300, double modalHeight = 200, bool isShowCheckBox = false)
         {
             _width = modalWidth;
             _height = modalHeight;
+            IsShowCheckBox = isShowCheckBox;
         }
 
         /// <summary>
