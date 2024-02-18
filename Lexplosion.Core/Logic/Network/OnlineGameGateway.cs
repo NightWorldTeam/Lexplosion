@@ -121,9 +121,19 @@ namespace Lexplosion.Logic.Network
         {
             UdpClient client = new UdpClient();
             client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-
             client.Client.Bind(new IPEndPoint(IPAddress.Any, 4445));
-            client.JoinMulticastGroup(IPAddress.Parse("224.0.2.60")); // TODO: try пихнуть
+
+            try
+            {
+                //присоединяемся к мультикасту для Loopback адаптера
+                var optionValue = new MulticastOption(IPAddress.Parse("224.0.2.60"), NetworkInterface.LoopbackInterfaceIndex);
+                client.Client.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, optionValue);
+            }
+            catch (Exception ex)
+            {
+                Runtime.DebugWrite("multicast error: " + ex);
+            }
+
             client.Client.ReceiveTimeout = -1; // убираем таймоут, чтобы этот метод мог ждать бесконечно
 
             string _name = null;
