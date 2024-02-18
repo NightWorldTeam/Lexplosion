@@ -477,4 +477,6 @@
 
     <s:String x:Key="add">Добавить</s:String>
     <s:String x:Key="moreDetails">Подробнее</s:String>
+
+    <s:String x:Key="autoConnectIp">IP сервера для автоподключения</s:String>
 </ResourceDictionary>

@@ -19,6 +19,7 @@ namespace Lexplosion.Common.Models.ShowCaseMenu
 
         public DoNotificationCallback _doNotificationCallback = (a, a1, a2, a3) => { };
 
+
         #region Properties
 
 
@@ -167,6 +168,16 @@ namespace Lexplosion.Common.Models.ShowCaseMenu
             }
         }
 
+        public string AutoConnectIp 
+        {
+            get => InstanceSettings.AutoLoginServer; set 
+            {
+                InstanceSettings.AutoLoginServer = value;
+                _instanceSettingsCopy.AutoLoginServer = value;
+                OnPropertyChanged();
+                _instanceClient.SaveSettings(_instanceSettingsCopy);
+            }
+        }
 
         #endregion Properties
 
