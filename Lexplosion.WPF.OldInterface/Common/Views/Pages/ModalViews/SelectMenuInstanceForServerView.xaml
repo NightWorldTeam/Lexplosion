@@ -181,6 +181,29 @@
                 </Grid>
             </Border>
 
+            <TextBlock
+                Grid.Row="1"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="20"
+                Foreground="LightGray"
+                Text="{DynamicResource notAvailableClients}">
+                <TextBlock>
+                    <TextBlock.Style>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Model.AvailableInstances.Count}" Value="0">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                            <Style.Setters>
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </Style.Setters>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </TextBlock>
+
             <StackPanel
                 x:Name="InstancesListStackPanel"
                 Grid.Row="1"
