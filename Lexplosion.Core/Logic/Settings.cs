@@ -99,7 +99,7 @@ namespace Lexplosion.Logic
                 if (settings.IsHiddenMode != null) IsHiddenMode = settings.IsHiddenMode;
                 if (settings.IsAutoUpdate != null) IsAutoUpdate = settings.IsAutoUpdate;
                 if (settings.GameArgs != null) GameArgs = settings.GameArgs;
-                if (!string.IsNullOrWhiteSpace(settings.AutoLoginServer)) AutoLoginServer = settings.AutoLoginServer;
+                AutoLoginServer = settings.AutoLoginServer;
             }
 
             NetworkDirectConnection = settings.NetworkDirectConnection;
