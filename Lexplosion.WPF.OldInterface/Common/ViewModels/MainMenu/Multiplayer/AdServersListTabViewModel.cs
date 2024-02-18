@@ -55,7 +55,6 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer
             }));
         }
 
-
         private RelayCommand _copyAddressCommand;
         public ICommand CopyAddressCommand
         {
@@ -70,7 +69,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer
 
         #endregion Commands
 
-        
+
         public AdServersListTabViewModel(MainViewModel mainViewModel)
         {
             _mainViewModel = mainViewModel;

@@ -1,14 +1,10 @@
 ﻿using Lexplosion.Common.ModalWindow;
 using Lexplosion.Common.Models;
-using Lexplosion.Common.ViewModels.AdvertisedServer;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Objects;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Lexplosion.Common.ViewModels.ModalVMs

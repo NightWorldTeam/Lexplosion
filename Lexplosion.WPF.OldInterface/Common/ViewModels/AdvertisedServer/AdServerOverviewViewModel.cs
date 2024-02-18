@@ -25,6 +25,8 @@ namespace Lexplosion.Common.ViewModels.AdvertisedServer
         public string GameVersion { get => _minecraftServerInstance.GameVersion; }
         public string IconUrl { get => _minecraftServerInstance.IconUrl; }
 
+        public MinecraftServerInstance.Links ExternalLinks { get => _minecraftServerInstance.SocialLinks; }
+
         public int OnlineCount { get; private set; }
         public bool IsOnline { get; private set; }
         public bool IsStatusLoaded { get => _isImagesLoaded && _isOnlineLoaded; }
@@ -78,6 +80,15 @@ namespace Lexplosion.Common.ViewModels.AdvertisedServer
             get => _copyIpAddress ?? (_copyIpAddress = new RelayCommand(obj => 
             {
                 Model.CopyIpToClipboard();
+            }));
+        }
+
+        private RelayCommand _goToExternalLinkCommand;
+        public ICommand GoToExternalLinkCommand
+        {
+            get => _goToExternalLinkCommand ?? (_goToExternalLinkCommand = new RelayCommand(obj =>
+            {
+                System.Diagnostics.Process.Start(obj as string);
             }));
         }
 
