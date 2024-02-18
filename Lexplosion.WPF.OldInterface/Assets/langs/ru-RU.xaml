@@ -477,4 +477,6 @@
 
     <s:String x:Key="add">Добавить</s:String>
     <s:String x:Key="moreDetails">Подробнее</s:String>
+
+    <s:String x:Key="notAvailableClients">Подходящих клиентов не найдено</s:String>
 </ResourceDictionary>
