@@ -412,7 +412,7 @@
     <s:String x:Key="loggingMode">Logging Mode</s:String>
 
     <!--  Servers Monitoring  -->
-    <s:String x:Key="partnerServers">Server Paramenters</s:String>
+    <s:String x:Key="partnerServers">Partner Servers</s:String>
 
     <s:String x:Key="coping">Copy</s:String>
     <s:String x:Key="ipAddressCopiedSuccessfully">Ip address copied successful</s:String>
