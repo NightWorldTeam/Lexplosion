@@ -1,66 +1,20 @@
 ﻿using Lexplosion.Common.Commands;
-using Lexplosion.Common.Models;
 using Lexplosion.Common.ViewModels.MainMenu;
-using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Tools;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 
 namespace Lexplosion.Common.ViewModels.AdvertisedServer
 {
-    public struct RunInstanceParameters
-    {
-        public string Name { get; }
-
-        public InstanceFormViewModel InstanceFormViewModel { get; }
-
-        public RunInstanceParameters(InstanceFormViewModel instanceFormViewModel, bool isNew = false)
-        {
-            InstanceFormViewModel = instanceFormViewModel;
-
-            Name = isNew ? "Создать новую сборку" : instanceFormViewModel.Client.Name;
-        }
-    }
-
     public sealed class AdvertisedServerLayoutModel : VMBase
     {
         private readonly MinecraftServerInstance _minecraftServerInstance;
 
-        private ObservableCollection<RunInstanceParameters> _availableInstances;
-        public IEnumerable<RunInstanceParameters> AvailableInstances { get => _availableInstances; }
-
-
-        private RunInstanceParameters _selectedRunInstanceParameters;
-        public RunInstanceParameters SelectedRunInstanceParameters
-        {
-            get => _selectedRunInstanceParameters; set
-            {
-                _selectedRunInstanceParameters = value;
-                OnPropertyChanged();
-            }
-        }
-
         public AdvertisedServerLayoutModel(MinecraftServerInstance minecraftServerInstance)
         {
             _minecraftServerInstance = minecraftServerInstance;
-            //_availableInstances = new ObservableCollection<RunInstanceParameters>(
-            //    MainModel.Instance.LibraryController
-            //        .GetInstances(ic => ic.GameVersion.ToString() == _minecraftServerInstance.GameVersion)
-            //        .Select(i => new RunInstanceParameters(i))
-            //);
-
-            //var newInstanceForm = MainModel.Instance.CreateInstanceForm(
-            //    InstanceClient.CreateClient(_minecraftServerInstance, false)
-            //    );
-
-            //_availableInstances.Insert(0, new RunInstanceParameters(newInstanceForm, true));
-
-            //SelectedRunInstanceParameters = _availableInstances[0];
-            //OnPropertyChanged(nameof(AvailableInstances));
         }
 
         public void SetIpAddressToClipboard() 

@@ -29,10 +29,8 @@ namespace Lexplosion.Common.ViewModels.AdvertisedServer
 
         public int OnlineCount { get; private set; }
         public bool IsOnline { get; private set; }
-        public bool IsStatusLoaded { get => _isImagesLoaded && _isOnlineLoaded; }
-
-        private bool _isOnlineLoaded;
-        private bool _isImagesLoaded;
+        public bool IsImagesLoading { get; private set; } = true;
+        public bool IsOnlineLoading { get; private set; } = true;
 
         public AdServerOverviewModel(MinecraftServerInstance minecraftServerInstance)
         {
@@ -46,8 +44,8 @@ namespace Lexplosion.Common.ViewModels.AdvertisedServer
             Runtime.TaskRun(() => {
                 _imageSources = new(minecraftServerInstance.ImagesUrls.Select(i => ImageTools.GetImageByUrl(i)));
                 OnPropertyChanged(nameof(Images));
-                _isImagesLoaded = true;
-                OnPropertyChanged(nameof(IsStatusLoaded));
+                IsImagesLoading = false;
+                OnPropertyChanged(nameof(IsImagesLoading));
             });
         }
 
@@ -57,9 +55,8 @@ namespace Lexplosion.Common.ViewModels.AdvertisedServer
             IsOnline = OnlineCount > 0;
             OnPropertyChanged(nameof(OnlineCount));
             OnPropertyChanged(nameof(IsOnline));
-
-            _isOnlineLoaded = true;
-            OnPropertyChanged(nameof(IsStatusLoaded));
+            IsOnlineLoading = false;
+            OnPropertyChanged(nameof(IsOnlineLoading));
         }
 
         public void CopyIpToClipboard() 

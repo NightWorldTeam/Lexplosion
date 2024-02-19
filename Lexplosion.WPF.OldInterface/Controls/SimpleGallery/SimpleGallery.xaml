@@ -40,6 +40,12 @@
                                 Text="Нет изображений" />
                         </Border>
 
+                        <local:LoadingBoard
+                            x:Name="PART_LoadingBoard"
+                            Grid.ColumnSpan="3"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" />
+
                         <!--  Prev Button  -->
                         <Border x:Name="PART_PreviousButton" VerticalAlignment="Stretch">
 
