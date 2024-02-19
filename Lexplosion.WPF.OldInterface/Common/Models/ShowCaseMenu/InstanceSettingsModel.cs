@@ -138,7 +138,7 @@ namespace Lexplosion.Common.Models.ShowCaseMenu
             get => InstanceSettings.GameArgs; set
             {
                 InstanceSettings.GameArgs = value;
-                _instanceSettingsCopy.JavaPath = value;
+                _instanceSettingsCopy.GameArgs = value;
                 OnPropertyChanged();
                 _instanceClient.SaveSettings(_instanceSettingsCopy);
             }
