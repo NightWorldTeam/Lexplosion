@@ -16,6 +16,7 @@ namespace Lexplosion.Controls
     [TemplatePart(Name = PART_NEXT_IMAGE, Type = typeof(Border))]
     [TemplatePart(Name = PART_NONE_IMAGE_BLOCK, Type = typeof(Border))]
     [TemplatePart(Name = PART_NONE_IMAGE_TITLE, Type = typeof(TextBlock))]
+    [TemplatePart(Name = PART_LOADING_BOARD, Type = typeof(FrameworkElement))]
     public class SimpleGallery : ContentControl
     {
         const string PART_CURRENT_IMAGE = "PART_CurrertImage";
@@ -23,6 +24,7 @@ namespace Lexplosion.Controls
         const string PART_NEXT_IMAGE = "PART_NextButton";
         const string PART_NONE_IMAGE_BLOCK = "PART_NoneImageBlock";
         const string PART_NONE_IMAGE_TITLE = "PART_NoneImageTitle";
+        const string PART_LOADING_BOARD = "PART_LoadingBoard";
 
 
         private Border _currentImageBorder;
@@ -30,6 +32,7 @@ namespace Lexplosion.Controls
         private Border _nextImageBorder;
         private Border _noneImageBlock;
         private TextBlock _noneImageTitle;
+        private FrameworkElement _loadingBoard;
 
         private int _itemsCount;
         private int _selectedIndex;
@@ -43,6 +46,11 @@ namespace Lexplosion.Controls
                 new FrameworkPropertyMetadata(
                     (IEnumerable<ImageSource>)null,
                     new PropertyChangedCallback(OnItemsSourceChanged)));
+
+
+        public static readonly DependencyProperty IsContentLoadingProperty
+            = DependencyProperty.Register(nameof(IsContentLoading), typeof(bool), typeof(SimpleGallery),
+                new FrameworkPropertyMetadata(false, new PropertyChangedCallback(OnIsLoadingChangedFlagChanged)));
 
 
         #region Next Command Property
@@ -107,6 +115,12 @@ namespace Lexplosion.Controls
             get { return (IEnumerable<ImageSource>)GetValue(ItemsSourceProperty); }
             set { SetValue(ItemsSourceProperty, value); }
         }
+
+        public bool IsContentLoading
+        {
+            get { return (bool)GetValue(IsContentLoadingProperty); }
+            set { SetValue(IsContentLoadingProperty, value); }
+        } 
 
         public ICommand NextButtonCommand
         {
@@ -195,6 +209,7 @@ namespace Lexplosion.Controls
             _nextImageBorder = Template.FindName(PART_NEXT_IMAGE, this) as Border;
             _noneImageBlock = Template.FindName(PART_NONE_IMAGE_BLOCK, this) as Border;
             _noneImageTitle = Template.FindName(PART_NONE_IMAGE_TITLE, this) as TextBlock;
+            _loadingBoard = Template.FindName(PART_LOADING_BOARD, this) as FrameworkElement;
 
             if (_currentImageBorder == null) 
             {
@@ -210,7 +225,6 @@ namespace Lexplosion.Controls
             {
                 _nextImageBorder.MouseLeftButtonDown += _nextImageBorder_MouseDown;
             }
-
 
             base.OnApplyTemplate();
         }
@@ -320,14 +334,36 @@ namespace Lexplosion.Controls
                 new BitmapImage(new Uri("pack://Application:,,,/Assets/Images/background/authBG.png"))
                 );
 
-            // set blue effect
+            // set blur effect
             ic._currentImageBorder.Effect = new BlurEffect();
 
-            ic.IsEmpty = true;
+            ic.IsEmpty = false;
             ic.IsRightBorder = true;
             ic.IsLeftBorder = true;
         }
 
+        private static void OnIsLoadingChangedFlagChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var simpleGallery = (SimpleGallery)d;
+
+            if (simpleGallery._loadingBoard == null)
+                return;
+
+            var newValue = (bool)e.NewValue;
+
+            if (newValue)
+                simpleGallery._loadingBoard.Visibility = Visibility.Visible;
+            else
+                simpleGallery._loadingBoard.Visibility = Visibility.Collapsed;
+
+            Console.WriteLine(simpleGallery._loadingBoard.GetType());
+
+            if (simpleGallery._loadingBoard is LoadingBoard) 
+            {
+                var lb = simpleGallery._loadingBoard as LoadingBoard;
+                lb.IsLoadingFinished = !newValue;
+            }
+        }
 
         private static void OnNextButtonCommandChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
