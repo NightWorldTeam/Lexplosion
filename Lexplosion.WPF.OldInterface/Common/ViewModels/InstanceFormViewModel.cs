@@ -213,7 +213,7 @@ namespace Lexplosion.Common.ViewModels
                 message = String.Format(ResourceGetter.GetString("wantDeleteInstance"), Model.InstanceClient.Name);
             }
 
-            dialog.ShowDialog(ResourceGetter.GetString("wantDeleteInstance"), message, RemoveInstance);
+            dialog.ShowDialog(ResourceGetter.GetString("deleteInstance"), message, RemoveInstance);
         }
 
         /// <summary>

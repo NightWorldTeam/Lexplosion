@@ -38,15 +38,10 @@
                     </Grid.RowDefinitions>
 
                     <!--  Width="450" Height="240"  -->
-                    <controls:SimpleGallery Margin="0,0,8,16" ItemsSource="{Binding Model.Images}" />
-
-                    <Border
-                        x:Name="LoadingGallery"
+                    <controls:SimpleGallery
                         Margin="0,0,8,16"
-                        Padding="8"
-                        Background="#101010"
-                        CornerRadius="8"
-                        Visibility="{Binding Model.IsStatusLoaded, Converter={StaticResource NegativeConvertBoolToVisibility}}" />
+                        IsContentLoading="{Binding Model.IsImagesLoading}"
+                        ItemsSource="{Binding Model.Images}" />
 
                     <!--  Tag Panel  -->
                     <Grid
@@ -57,8 +52,7 @@
                         <Border
                             Padding="8,4,0,4"
                             BorderBrush="{DynamicResource BrandSolidColorBrush}"
-                            BorderThickness="2,0,0,0"
-                            Visibility="{Binding Model.IsStatusLoaded, Converter={StaticResource ConvertBoolToVisibility}}">
+                            BorderThickness="2,0,0,0">
                             <StackPanel>
 
                                 <TextBlock
@@ -87,15 +81,6 @@
                                 </ItemsControl>
                             </StackPanel>
                         </Border>
-
-                        <Border
-                            Height="48"
-                            Margin="0,0,8,0"
-                            Padding="8"
-                            Background="#101010"
-                            CornerRadius="0"
-                            Visibility="{Binding Model.IsStatusLoaded, Converter={StaticResource NegativeConvertBoolToVisibility}}" />
-
                     </Grid>
                 </Grid>
 
@@ -120,14 +105,6 @@
                                     <ImageBrush ImageSource="{Binding AsyncValue}" />
                                 </Border.Background>
                             </Border>
-
-                            <Border
-                                Width="160"
-                                Height="160"
-                                Margin="0,0,0,8"
-                                Background="#101010"
-                                CornerRadius="4"
-                                Visibility="{Binding Model.IsStatusLoaded, Converter={StaticResource NegativeConvertBoolToVisibility}}" />
                         </Grid>
 
                         <Grid Margin="24,0,24,0">
@@ -160,9 +137,23 @@
                                     <Run.Style>
                                         <Style TargetType="{x:Type Run}">
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding Model.OnlineCount}" Value="-1">
+                                                <MultiDataTrigger>
+                                                    <MultiDataTrigger.Conditions>
+                                                        <Condition Binding="{Binding Model.OnlineCount}" Value="-1" />
+                                                        <Condition Binding="{Binding Model.IsOnlineLoading}" Value="true" />
+                                                    </MultiDataTrigger.Conditions>
+
+                                                    <Setter Property="Text" Value="..." />
+                                                </MultiDataTrigger>
+
+                                                <MultiDataTrigger>
+                                                    <MultiDataTrigger.Conditions>
+                                                        <Condition Binding="{Binding Model.OnlineCount}" Value="-1" />
+                                                        <Condition Binding="{Binding Model.IsOnlineLoading}" Value="false" />
+                                                    </MultiDataTrigger.Conditions>
+
                                                     <Setter Property="Text" Value="0" />
-                                                </DataTrigger>
+                                                </MultiDataTrigger>
                                             </Style.Triggers>
                                             <Style.Setters>
                                                 <Setter Property="Text" Value="{Binding Model.OnlineCount, Mode=OneWay}" />
@@ -191,7 +182,6 @@
 
 
                             <!--  Status  -->
-
                             <TextBlock
                                 Grid.Row="2"
                                 Margin="0,0,16,0"
@@ -222,18 +212,150 @@
                                     </Run.Style>
                                 </Run>
                             </TextBlock>
-
-                            <Border
-                                Grid.RowSpan="3"
-                                Grid.ColumnSpan="2"
-                                Padding="8"
-                                Background="#101010"
-                                CornerRadius="5"
-                                Visibility="{Binding Model.IsStatusLoaded, Converter={StaticResource NegativeConvertBoolToVisibility}}" />
                         </Grid>
 
-                        <!--  Buttons  -->
-                        <StackPanel />
+                        <!--  Social Media  -->
+                        <StackPanel
+                            Margin="0,16,0,0"
+                            HorizontalAlignment="Center"
+                            Orientation="Horizontal">
+
+                            <!--  Discord  -->
+                            <Button
+                                Width="32"
+                                Height="32"
+                                VerticalAlignment="Center"
+                                Command="{Binding DataContext.GoToExternalLinkCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                CommandParameter="{Binding DataContext.Model.ExternalLinks.Discord, RelativeSource={RelativeSource AncestorType=UserControl}}">
+
+                                <Button.Style>
+                                    <Style BasedOn="{StaticResource IconicButton}" TargetType="{x:Type Button}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding DataContext.Model.ExternalLinks.Discord, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="{x:Null}">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                        <Style.Setters>
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </Style.Setters>
+                                    </Style>
+                                </Button.Style>
+
+                                <Viewbox Height="16">
+                                    <Path
+                                        extensions:PathExtension.StringData="{StaticResource DiscordLogo}"
+                                        Fill="White"
+                                        Stretch="Fill" />
+                                </Viewbox>
+                            </Button>
+
+                            <!--  Vk  -->
+                            <Button
+                                Width="32"
+                                Height="32"
+                                VerticalAlignment="Center"
+                                Command="{Binding DataContext.GoToExternalLinkCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                CommandParameter="{Binding DataContext.Model.ExternalLinks.Vk, RelativeSource={RelativeSource AncestorType=UserControl}}">
+
+                                <Button.Style>
+                                    <Style BasedOn="{StaticResource IconicButton}" TargetType="{x:Type Button}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding DataContext.Model.ExternalLinks.Vk, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="{x:Null}">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                        <Style.Setters>
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </Style.Setters>
+                                    </Style>
+                                </Button.Style>
+
+                                <Viewbox Height="20">
+                                    <Path extensions:PathExtension.StringData="{StaticResource VKontakteLogo}" Fill="White" />
+                                </Viewbox>
+                            </Button>
+
+                            <!--  Telegram  -->
+                            <Button
+                                Width="32"
+                                Height="32"
+                                VerticalAlignment="Center"
+                                Command="{Binding DataContext.GoToExternalLinkCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                CommandParameter="{Binding DataContext.Model.ExternalLinks.Telegram, RelativeSource={RelativeSource AncestorType=UserControl}}">
+
+                                <Button.Style>
+                                    <Style BasedOn="{StaticResource IconicButton}" TargetType="{x:Type Button}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding DataContext.Model.ExternalLinks.Telegram, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="{x:Null}">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                        <Style.Setters>
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </Style.Setters>
+                                    </Style>
+                                </Button.Style>
+
+                                <Viewbox Height="18">
+                                    <Path extensions:PathExtension.StringData="{StaticResource TelegramLogo}" Fill="White" />
+                                </Viewbox>
+                            </Button>
+
+                            <!--  Youtube  -->
+                            <Button
+                                Width="32"
+                                Height="32"
+                                VerticalAlignment="Center"
+                                Command="{Binding DataContext.GoToExternalLinkCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                CommandParameter="{Binding DataContext.Model.ExternalLinks.Youtube, RelativeSource={RelativeSource AncestorType=UserControl}}">
+
+                                <Button.Style>
+                                    <Style BasedOn="{StaticResource IconicButton}" TargetType="{x:Type Button}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding DataContext.Model.ExternalLinks.Youtube, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="{x:Null}">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                        <Style.Setters>
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </Style.Setters>
+                                    </Style>
+                                </Button.Style>
+
+                                <Viewbox Height="16">
+                                    <Path extensions:PathExtension.StringData="{StaticResource YoutubeLogo}" Fill="White" />
+                                </Viewbox>
+                            </Button>
+
+                            <!--  Website  -->
+                            <Button
+                                Width="32"
+                                Height="32"
+                                VerticalAlignment="Center"
+                                Command="{Binding DataContext.GoToExternalLinkCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                CommandParameter="{Binding DataContext.Model.ExternalLinks.Website, RelativeSource={RelativeSource AncestorType=UserControl}}">
+
+                                <Button.Style>
+                                    <Style BasedOn="{StaticResource IconicButton}" TargetType="{x:Type Button}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding DataContext.Model.ExternalLinks.Website, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="{x:Null}">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                        <Style.Setters>
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </Style.Setters>
+                                    </Style>
+                                </Button.Style>
+
+                                <Viewbox Height="16">
+                                    <Path
+                                        extensions:PathExtension.StringData="{StaticResource WebPage}"
+                                        Fill="White"
+                                        Stretch="Fill" />
+                                </Viewbox>
+                            </Button>
+                        </StackPanel>
                     </StackPanel>
                 </Border>
 
@@ -243,7 +365,7 @@
                     Grid.Row="2"
                     Grid.ColumnSpan="2"
                     Margin="0,0,0,8">
-                    <StackPanel Visibility="{Binding Model.IsStatusLoaded, Converter={StaticResource ConvertBoolToVisibility}}">
+                    <StackPanel>
                         <TextBlock
                             Margin="0,0,0,8"
                             FontSize="15"
@@ -256,13 +378,6 @@
                             Text="{Binding Model.Description}"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
-
-                    <Border
-                        Height="32"
-                        Padding="8"
-                        Background="#101010"
-                        CornerRadius="5"
-                        Visibility="{Binding Model.IsStatusLoaded, Converter={StaticResource NegativeConvertBoolToVisibility}}" />
                 </Grid>
             </Grid>
         </Border>
