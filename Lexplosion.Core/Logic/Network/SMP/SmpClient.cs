@@ -857,7 +857,7 @@ namespace Lexplosion.Logic.Network.SMP
                         attemptSendCounts = -1;
                         waitingLastPackage = -1;
                     }
-                    else if (_receivingPointer != id + 1)
+                    else if (_receivingPointer != (ushort)(id + 1))
                     {
                         var package = new List<byte>
                         {
@@ -911,6 +911,7 @@ namespace Lexplosion.Logic.Network.SMP
                 {
                     if (waitingLastPackage == lastId && buffer[HeaderPositions.AttemptsCounts] > attemptSendCounts)
                     {
+                        // TODO: это оптимизировать. Я по сути впустую формирую failedList
                         var package = new List<byte>
                         {
                             PackgeCodes.FailedList,
@@ -948,13 +949,16 @@ namespace Lexplosion.Logic.Network.SMP
                     }
                     else if (id == lastId || buffer[HeaderPositions.Flag] == Flags.NeedConfirm)
                     {
-                        byte[] neEbyKakNazvat = BitConverter.GetBytes(lastId);
-                        _socket.Send(new byte[3]
+                        if (lastId != waitingLastPackage && (id < _receivingPointer || id - _receivingPointer >= _maxPackagesCount))
                         {
-                            PackgeCodes.ConfirmDataDelivery,
-                            neEbyKakNazvat[0],
-                            neEbyKakNazvat[1]
-                        }, 3, SocketFlags.None);
+                            byte[] neEbyKakNazvat = BitConverter.GetBytes(lastId);
+                            _socket.Send(new byte[3]
+                            {
+                                PackgeCodes.ConfirmDataDelivery,
+                                neEbyKakNazvat[0],
+                                neEbyKakNazvat[1]
+                            }, 3, SocketFlags.None);
+                        }
                     }
                 }
             }
@@ -1060,7 +1064,6 @@ namespace Lexplosion.Logic.Network.SMP
                                     }
 
                                     _repeatDeliveryList = ids;
-                                    _deliveryWait.Set();
                                 }
                                 _repeatDeliveryBlock.Release();
                             }

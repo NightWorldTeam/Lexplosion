@@ -75,7 +75,12 @@ namespace Lexplosion.Logic.Management.Installers
                     return null;
                 }
 
-                return version.AllVersions[version.LatestVersion];
+                if (version.AllVersions[version.LatestVersion].Version != actualInstanceVersion)
+                {
+                    return version.AllVersions[version.LatestVersion];
+                }
+
+                return null;
             }
             catch
             {
