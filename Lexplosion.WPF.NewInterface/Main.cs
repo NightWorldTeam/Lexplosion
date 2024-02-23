@@ -1,10 +1,13 @@
 ﻿using Lexplosion.Core.Tools.Notification;
 using Lexplosion.Global;
+using Lexplosion.Logic;
 using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Mvvm.Views.Windows;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Windows;
@@ -49,6 +52,8 @@ namespace Lexplosion.WPF.NewInterface
         [STAThread]
         static void Main()
         {
+            GlobalData.SetUser(new User("Hel2x", "d66ec2c0-7a35-4e8a-a3d8-d1cb913fa71c", "", "", AccountType.NoAuth, ActivityStatus.Online));
+
             var title = "TKESKLTSRLK ALLALA";
             var message = "Действие фильма будет происходить после событий, рассказанных в фильме «Миссия невыполнима: Последствия». В центре истории новые приключения агента Итана Ханта.";
 
@@ -86,6 +91,8 @@ namespace Lexplosion.WPF.NewInterface
 
             _app.MainWindow.Show();
             _app.Run(_app.MainWindow);
+
+            Runtime.DebugWrite("SetMainWindow");
         }
 
         private static void InitializedSystem()
@@ -94,7 +101,6 @@ namespace Lexplosion.WPF.NewInterface
 
             ResourcesDictionariesRegister();
             LoadCurrentLanguage();
-
             _app.Dispatcher.Invoke(SetMainWindow);
         }
 

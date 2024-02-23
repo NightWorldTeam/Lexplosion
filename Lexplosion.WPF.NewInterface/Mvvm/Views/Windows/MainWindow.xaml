@@ -821,7 +821,7 @@
                     BorderBrush="{DynamicResource SeparateSolidColorBrush}"
                     BorderThickness="1"
                     CornerRadius="5"
-                    Visibility="{Binding IsChecked, ElementName=notify, Converter={StaticResource NegativeBooleanToVisibilityConverter}}">
+                    Visibility="{Binding IsChecked, ElementName=notify, Converter={StaticResource BooleanToVisibilityConverter}}">
 
                     <Border.Effect>
                         <DropShadowEffect Opacity="0.1" Color="Black" />

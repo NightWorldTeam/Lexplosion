@@ -306,4 +306,10 @@
     <!--  Instance Factory  -->
     <s:String x:Key="InstanceName">Название сборки</s:String>
     <s:String x:Key="CreateInstance">Создать сборку</s:String>
+
+
+    <!--  Instance Form Download Process  -->
+    <s:String x:Key="DownloadPreparing">Идет подготовка к скачиванию...</s:String>
+    <s:String x:Key="JavaInstalling">Идет процесс установки Java</s:String>
+    <s:String x:Key="InstanceDownloading">Instance is downloading... Stage {0}/{1}</s:String>
 </ResourceDictionary>
