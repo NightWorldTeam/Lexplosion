@@ -25,12 +25,12 @@ namespace Lexplosion.WPF.NewInterface.Extensions
 
         public static void SetStringData(DependencyObject dp, string value)
         {
-            dp.SetValue(StringDataProperty, value);
+            dp?.SetValue(StringDataProperty, value);
         }
 
         public static string GetStringData(DependencyObject dp)
         {
-            return (string)dp.GetValue(StringDataProperty);
+            return (string)dp?.GetValue(StringDataProperty);
         }
 
 
@@ -62,7 +62,7 @@ namespace Lexplosion.WPF.NewInterface.Extensions
 
         public static string GetStringKeyData(DependencyObject dp)
         {
-            return (string)dp.GetValue(StringKeyDataProperty);
+            return (string)dp?.GetValue(StringKeyDataProperty);
         }
 
 
