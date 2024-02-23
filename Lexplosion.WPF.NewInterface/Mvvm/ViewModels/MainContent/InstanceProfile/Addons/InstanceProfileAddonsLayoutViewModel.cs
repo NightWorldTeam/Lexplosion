@@ -386,10 +386,14 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         public InstanceProfileAddonsLayoutViewModel(INavigationStore navigationStore, InstanceModelBase instanceModelBase) : base()
         {
             HeaderKey = "Addons";
-            _modsViewModel = new InstanceAddonsContainerViewModel(navigationStore, AddonType.Mods, instanceModelBase);
+            if (instanceModelBase.InstanceData.Modloader != ClientType.Vanilla) 
+            {
+                _modsViewModel = new InstanceAddonsContainerViewModel(navigationStore, AddonType.Mods, instanceModelBase);
+                _shadersViewModel = new InstanceAddonsContainerViewModel(navigationStore, AddonType.Shaders, instanceModelBase);
+            }
             _resourcepacksViewModel = new InstanceAddonsContainerViewModel(navigationStore, AddonType.Resourcepacks, instanceModelBase);
             _mapsViewModel = new InstanceAddonsContainerViewModel(navigationStore, AddonType.Maps, instanceModelBase);
-            _shadersViewModel = new InstanceAddonsContainerViewModel(navigationStore, AddonType.Shaders, instanceModelBase);
+            
             InitAddonsTabMenu(instanceModelBase);
         }
 

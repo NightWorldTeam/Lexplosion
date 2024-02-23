@@ -69,7 +69,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             _instanceModel.NameChanged += OnNameChanged;
             _instanceModel.GameVersionChanged += OnVersionChanged;
             _instanceModel.ModloaderChanged += OnModloaderChanged;
-            _instanceModel.StageChanged += OnStateChanged;
+            _instanceModel.StateChanged += OnStateChanged;
 
             UpdateFrameworkElementModels();
         }
