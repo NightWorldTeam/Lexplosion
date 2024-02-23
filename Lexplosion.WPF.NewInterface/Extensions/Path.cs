@@ -57,7 +57,7 @@ namespace Lexplosion.WPF.NewInterface.Extensions
 
         public static void SetStringKeyData(DependencyObject dp, string value)
         {
-            dp.SetValue(StringKeyDataProperty, value);
+            dp?.SetValue(StringKeyDataProperty, value);
         }
 
         public static string GetStringKeyData(DependencyObject dp)
