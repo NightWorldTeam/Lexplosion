@@ -83,12 +83,12 @@ namespace Lexplosion
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static string FormDebugString(object line, string memberName, string sourceFilePath, int sourceLineNumber)
         {
-            string prefix = string.Concat("[", Path.GetFileName(sourceFilePath), ":", memberName, ":", sourceLineNumber, "]");
-            var nowTime = DateTimeOffset.Now;
-            string time = string.Concat(" [", nowTime.Hour, ":", nowTime.Minute, ":", nowTime.Second, ".", nowTime.Millisecond, "] ");
-            string str = string.Concat(prefix, time, line);
+            string prefix = $"[{Path.GetFileName(sourceFilePath)}:{memberName}:{sourceLineNumber}]";
 
-            return str;
+            var nowTime = DateTimeOffset.Now;
+            string time = $"[{nowTime.Hour}:{nowTime.Minute}:{nowTime.Second}.{nowTime.Millisecond}]";
+
+            return $"{time} {prefix} {line}";
         }
 
         [Conditional("DEBUG")]
