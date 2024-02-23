@@ -126,7 +126,8 @@ namespace Lexplosion.WPF.NewInterface.Controls
         private void UpdateIsEmpty()
         {
             IsEmpty = string.IsNullOrEmpty(Text);
-            _placeholder.Visibility = IsEmpty ? Visibility.Visible : Visibility.Collapsed;
+            if (_placeholder != null)
+                _placeholder.Visibility = IsEmpty ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private static void OnIsIconKeyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
