@@ -182,8 +182,12 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
         private AnimationTimeline CreateSlideAnimation(double from, double to, EventHandler whenDone = null)
         {
-            var duration = new Duration(TimeSpan.FromSeconds(0.35 * 1.5));
+            var duration = new Duration(TimeSpan.FromSeconds(0.50));
             var anim = new DoubleAnimation(from, to, duration);
+            anim.EasingFunction = new CircleEase()
+            {
+                EasingMode = EasingMode.EaseInOut
+            };
             if (whenDone != null)
                 anim.Completed += whenDone;
             anim.Freeze();
