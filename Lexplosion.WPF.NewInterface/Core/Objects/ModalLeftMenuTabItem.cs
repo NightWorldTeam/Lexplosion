@@ -6,6 +6,10 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
     {
         public event Action<ModalLeftMenuTabItem> SelectedEvent;
 
+
+        #region Properties
+
+
         public int Id { get; set; }
         public string TitleKey { get; set; }
         public string IconKey { get; set; }
@@ -23,9 +27,36 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
             }
         }
 
+
+        #endregion Properties
+
+
+        #region Constructors
+
+
+        public ModalLeftMenuTabItem(int id, string titleKey, string iconKey, ViewModelBase content, bool isEnable = true, bool isSelected = false)
+        {
+            Id = id;
+            TitleKey = titleKey;
+            IconKey = iconKey;
+            Content = content;
+            IsEnable = isEnable;
+            IsSelected = isSelected;
+        }
+
+
+        #endregion Constructors
+
+
+        #region Private Methods
+
+
         private void OnIsSelectedChanged()
         {
             SelectedEvent?.Invoke(this);
         }
+
+
+        #endregion Private Methods
     }
 }

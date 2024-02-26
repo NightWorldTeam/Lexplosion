@@ -14,7 +14,28 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
 
         public ViewModelBase SelectedContent { get; private set; }
         public string TitleKey { get; private set; }
-        
+
+
+        private string _loaderPlaceholderKey;
+        public string LoaderPlaceholderKey 
+        {
+            get => _loaderPlaceholderKey; set 
+            {
+                _loaderPlaceholderKey = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _isProcessActive;
+        public bool IsProcessActive
+        {
+            get => _isProcessActive; set
+            {
+                _isProcessActive = value;
+                OnPropertyChanged();
+            }
+        }
+
 
         #region Constructors
 
@@ -41,6 +62,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
         #endregion Constructors
 
 
+        #region Public Methods
+
+
         public void AddTabItem(string titleKey, string iconKey, ViewModelBase content, bool isEnable = true)
         {
             _tabItems.Add(new ModalLeftMenuTabItem()
@@ -53,6 +77,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
             });
         }
 
+
+        #endregion Public Methods
+
+
+        #region Private Methods
+
+
         private void OnCurrentContentChanged(ModalLeftMenuTabItem tabItem)
         {
             SelectedContent = tabItem.Content;
@@ -60,5 +91,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
             OnPropertyChanged(nameof(SelectedContent));
             OnPropertyChanged(nameof(TitleKey));
         }
+
+
+        #endregion Private Methods
     }
 }
