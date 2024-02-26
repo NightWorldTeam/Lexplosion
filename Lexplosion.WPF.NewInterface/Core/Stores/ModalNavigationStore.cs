@@ -7,7 +7,18 @@ namespace Lexplosion.WPF.NewInterface.Stores
 {
     public sealed class ModalNavigationStore
     {
-        private static readonly Dictionary<ModalAbstractFactory.ModalPage, ModalAbstractFactory> _modalAbstractFactoriesByType = new Dictionary<ModalAbstractFactory.ModalPage, ModalAbstractFactory>();
+        private static ModalNavigationStore _modalNavigationStore;
+        public static ModalNavigationStore Instance { get => _modalNavigationStore ?? new ModalNavigationStore(); }
+
+
+
+        private ModalNavigationStore()
+        {
+            _modalNavigationStore = this;
+        }
+
+
+        private static readonly Dictionary<Type, Func<IModalViewModel>> _modalAbstractFactoriesByType = new();
 
 
         public event CurrentViewModelChangedEventHandler CurrentViewModelChanged;
@@ -29,7 +40,15 @@ namespace Lexplosion.WPF.NewInterface.Stores
             CurrentViewModel.CloseCommandExecutedEvent += Close;
         }
 
-        public void RegisterAbstractFactory(ModalAbstractFactory.ModalPage type, ModalAbstractFactory factory) 
+        public void RegisterAbstractFactory(Type type, ModalAbstractFactory factory) 
+        {
+            if (_modalAbstractFactoriesByType.ContainsKey(type))
+                throw new ArgumentException($"{type.ToString()} уже существует в словаре абстрактных фабрик модального окна");
+
+            _modalAbstractFactoriesByType.Add(type, factory.Create);
+        }
+
+        public void RegisterAbstractFactory(Type type, Func<IModalViewModel> factory)
         {
             if (_modalAbstractFactoriesByType.ContainsKey(type))
                 throw new ArgumentException($"{type.ToString()} уже существует в словаре абстрактных фабрик модального окна");
@@ -37,12 +56,12 @@ namespace Lexplosion.WPF.NewInterface.Stores
             _modalAbstractFactoriesByType.Add(type, factory);
         }
 
-        public void OpenModalPageByType(ModalAbstractFactory.ModalPage type) 
+        public void OpenModalPageByType(Type type) 
         {
             if (!_modalAbstractFactoriesByType.ContainsKey(type))
                 throw new ArgumentException($"{type.ToString()} не существует в словаре абстрактных фабрик модального окна");
 
-            Open(_modalAbstractFactoriesByType[type].Create());
+            Open(_modalAbstractFactoriesByType[type]?.Invoke());
         }
 
         public void Close(object obj)

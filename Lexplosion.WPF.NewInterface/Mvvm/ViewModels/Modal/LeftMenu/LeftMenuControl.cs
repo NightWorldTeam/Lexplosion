@@ -14,7 +14,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
 
         public ViewModelBase SelectedContent { get; private set; }
         public string TitleKey { get; private set; }
-
+        
 
         #region Constructors
 

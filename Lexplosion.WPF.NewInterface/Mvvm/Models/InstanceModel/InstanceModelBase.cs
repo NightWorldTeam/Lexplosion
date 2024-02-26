@@ -3,6 +3,9 @@ using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Objects;
 using Lexplosion.WPF.NewInterface.Core;
+using Lexplosion.WPF.NewInterface.Core.Objects;
+using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal;
+using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer;
 using Lexplosion.WPF.NewInterface.Properties;
 using Lexplosion.WPF.NewInterface.Stores;
 using System;
@@ -296,7 +299,20 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         /// </summary>
         public void Export()
         {
-            new ModalNavigationStore().OpenModalPageByType(ViewModels.ModalAbstractFactory.ModalPage.InstanceExport);
+            ModalNavigationStore.Instance.Open(
+                            new LeftMenuControl(
+                new ModalLeftMenuTabItem[]
+                {
+                    new ModalLeftMenuTabItem()
+                    {
+                        IconKey = "Download",
+                        TitleKey = "Export",
+                        IsEnable = true,
+                        IsSelected = true,
+                        Content = new InstanceExportViewModel(_instanceClient)
+                    }
+                }
+                ));
         }
 
         /// <summary>
