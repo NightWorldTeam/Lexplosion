@@ -1,12 +1,10 @@
-﻿using Lexplosion.Logic;
-using Lexplosion.Logic.Management;
+﻿using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Objects;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer;
-using Lexplosion.WPF.NewInterface.Properties;
 using Lexplosion.WPF.NewInterface.Stores;
 using System;
 using System.Collections.Generic;
@@ -25,7 +23,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         private readonly InstanceClient _instanceClient;
         private readonly LaunchModel LaunchModel;
         private readonly DownloadModel DownloadModel;
-
+        private readonly Action<InstanceClient> _exportFunc;
 
         /// <summary>
         /// Перечисление состояний формы.
@@ -174,9 +172,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         #region Constructors
 
 
-        public InstanceModelBase(InstanceClient instanceClient)
+        public InstanceModelBase(InstanceClient instanceClient, Action<InstanceClient> exportFunc)
         {
             _instanceClient = instanceClient;
+            _exportFunc = exportFunc;
             LaunchModel = new LaunchModel(instanceClient);
 
             LaunchModel.LaunchStarted += OnLaunchStarted;
@@ -299,16 +298,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         /// </summary>
         public void Export()
         {
-            var exportVM = new InstanceExportViewModel(_instanceClient);
-
-            var leftmenu = new LeftMenuControl(new ModalLeftMenuTabItem[]
-                {
-                    new ModalLeftMenuTabItem(0, "Export", "Download", exportVM, true, true)
-                });
-            leftmenu.LoaderPlaceholderKey = "ExportProcessActive";
-            exportVM.Model.ExportStatusChanged += (isExporting) => leftmenu.IsProcessActive = isExporting;
-
-            ModalNavigationStore.Instance.Open(leftmenu);
+            _exportFunc(_instanceClient);
         }
 
         /// <summary>

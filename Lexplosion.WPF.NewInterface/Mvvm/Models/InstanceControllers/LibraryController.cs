@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Logic.Management.Instances;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading;
@@ -8,6 +9,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
 {
     public sealed class LibraryController : IInstanceController
     {
+        private readonly Action<InstanceClient> _exportFunc;
+
         private ObservableCollection<InstanceModelBase> _instances = new ObservableCollection<InstanceModelBase>();
         public IReadOnlyCollection<InstanceModelBase> Instances { get => _instances; }
 
@@ -15,10 +18,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
         #region Constructors
 
 
-        public LibraryController()
+        public LibraryController(Action<InstanceClient> export)
         {
             InstanceModelBase.GlobalAddedToLibrary += Add;
             InstanceModelBase.GlobalDeletedEvent += Remove;
+
+            _exportFunc = export;
 
             foreach (var ic in InstanceClient.GetInstalledInstances()) 
             {
@@ -45,7 +50,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
         {
             App.Current.Dispatcher.Invoke(() =>
             {
-                _instances.Add(new InstanceModelBase(instanceClient));
+                _instances.Add(new InstanceModelBase(instanceClient, _exportFunc));
             });
         }
 
