@@ -315,7 +315,7 @@
 
     <!--  Export  -->
     <s:String x:Key="ExportProperties">Свойства экспорт</s:String>
-    <s:String x:Key="ExportInstanceNameDescription">Введите название которое хотите видеть после экспорта в библиотеке.</s:String>
+    <s:String x:Key="ExportInstanceNameDescription">Будет отображаться после экспорта в библиотеке.</s:String>
     <s:String x:Key="FoldersAndFiles">Папки и файлы</s:String>
     <s:String x:Key="FoldersAndFilesDescription">Выберите папки и файлы которые хотите экспортировать.</s:String>
     <s:String x:Key="FullExport">Полный экспорт</s:String>

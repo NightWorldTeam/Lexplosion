@@ -19,6 +19,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer
 {
     public sealed class InstanceExportModel : ViewModelBase 
     {
+        // true - exporting | false - nothing
+        public event Action<bool> ExportStatusChanged;
+
+
         private readonly InstanceClient _instanceClient;
 
 
@@ -52,6 +56,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer
             {
                 _isExportStarted = value;
                 OnPropertyChanged();
+                ExportStatusChanged?.Invoke(value);
             }
         }
 
@@ -87,9 +92,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer
 
             return await Task.Run(() =>
             {
-                var res = _instanceClient.Export(InstanceFileTree.UnitsList, fileName, InstanceName); 
+                var exportResult = _instanceClient.Export(InstanceFileTree.UnitsList, fileName, InstanceName); 
                 IsExportActive = false;
-                return res;
+                return exportResult;
             });
         }
 

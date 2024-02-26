@@ -299,20 +299,16 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         /// </summary>
         public void Export()
         {
-            ModalNavigationStore.Instance.Open(
-                            new LeftMenuControl(
-                new ModalLeftMenuTabItem[]
+            var exportVM = new InstanceExportViewModel(_instanceClient);
+
+            var leftmenu = new LeftMenuControl(new ModalLeftMenuTabItem[]
                 {
-                    new ModalLeftMenuTabItem()
-                    {
-                        IconKey = "Download",
-                        TitleKey = "Export",
-                        IsEnable = true,
-                        IsSelected = true,
-                        Content = new InstanceExportViewModel(_instanceClient)
-                    }
-                }
-                ));
+                    new ModalLeftMenuTabItem(0, "Export", "Download", exportVM, true, true)
+                });
+            leftmenu.LoaderPlaceholderKey = "ExportProcessActive";
+            exportVM.Model.ExportStatusChanged += (isExporting) => leftmenu.IsProcessActive = isExporting;
+
+            ModalNavigationStore.Instance.Open(leftmenu);
         }
 
         /// <summary>
