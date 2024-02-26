@@ -4,7 +4,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
 {
     public struct ModalLeftMenuTabItem
     {
-        public event Action<ModalLeftMenuTabItem> SelectedEvent;
+        public event Action<ModalLeftMenuTabItem> SelectedEvent = null;
 
 
         #region Properties
@@ -17,7 +17,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
         public bool IsEnable { get; set; }
 
 
-        private bool _isSelected;
+        private bool _isSelected = false;
         public bool IsSelected
         {
             get => _isSelected; set
