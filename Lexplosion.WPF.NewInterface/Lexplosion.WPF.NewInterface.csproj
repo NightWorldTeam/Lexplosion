@@ -81,6 +81,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Controls\AdvancedToolTip\AdvancedToolTip.cs" />
+    <Compile Include="Controls\DragDropBoard\DragDropBoard.cs" />
     <Compile Include="Controls\LoadingBoard\LoadingBoard.cs" />
     <Compile Include="Core\Commands\CommandBase.cs" />
     <Compile Include="Core\Commands\NavigateCommand.cs" />
@@ -136,11 +137,17 @@
     <Compile Include="Mvvm\Models\InstanceControllers\CatalogController.cs" />
     <Compile Include="Mvvm\Models\InstanceControllers\IInstanceController.cs" />
     <Compile Include="Mvvm\Models\InstanceControllers\LibraryController.cs" />
+    <Compile Include="Mvvm\Models\InstanceTransfer\ImportProcess.cs" />
     <Compile Include="Mvvm\Models\InstanceTransfer\InstanceFileTree.cs" />
+    <Compile Include="Mvvm\Models\InstanceTransfer\InstanceImportModel.cs" />
     <Compile Include="Mvvm\Models\MainContent\MainMenu\Friends\Friend.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\InstanceExportViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\InstanceImportViewModel.cs" />
     <Compile Include="Mvvm\Views\Modal\InstanceTransfer\InstanceExportView.xaml.cs">
       <DependentUpon>InstanceExportView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Views\Modal\InstanceTransfer\InstanceImportView.xaml.cs">
+      <DependentUpon>InstanceImportView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\Friends\Friend.xaml.cs">
       <DependentUpon>Friend.xaml</DependentUpon>
@@ -286,6 +293,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\DragDropBoard\DragDropBoard.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\DropdownMenu\DropdownMenu.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -327,6 +338,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Mvvm\Views\Modal\InstanceTransfer\InstanceExportView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Mvvm\Views\Modal\InstanceTransfer\InstanceImportView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

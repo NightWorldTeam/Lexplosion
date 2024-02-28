@@ -240,7 +240,10 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
             InstanceModel.LogoChanged += () =>
             {
-                SetLogo(InstanceModel.Logo);
+                App.Current.Dispatcher.Invoke((() => 
+                {
+                    SetLogo(InstanceModel.Logo);
+                }));
             };
 
             InstanceModel.StateChanged += OnInstanceModelStateChanged;
@@ -430,7 +433,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
             if (objects != null)
                 c = new List<object>(objects);
 
-            c.Insert(0, new SimpleCategory("", InstanceModel.GameVersion.ToString()));
+            c.Insert(0, new SimpleCategory("", InstanceModel.GameVersion?.ToString()));
 
             //c.Sort((i1, i2) => i1.ToString().Length.CompareTo(i2.ToString().Length));
 
@@ -458,11 +461,14 @@ namespace Lexplosion.WPF.NewInterface.Controls
         /// <param name="model">InstanceModelBase информацию которого мы используем</param>
         private void UpdateAllFields(InstanceModelBase model)
         {
-            SetName(model.Name);
-            SetShortDescription(model.Summary);
-            SetCategories(model.Tags);
-            SetAuthor(model.Author);
-            SetLogo(model.Logo);
+            App.Current.Dispatcher?.Invoke(() => 
+            { 
+                SetName(model.Name);
+                SetShortDescription(model.Summary);
+                SetCategories(model.Tags);
+                SetAuthor(model.Author);
+                SetLogo(model.Logo);
+            });
         }
 
 

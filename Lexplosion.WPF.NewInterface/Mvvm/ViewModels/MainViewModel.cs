@@ -12,7 +12,6 @@ using Lexplosion.Logic.Management.Instances;
 using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Mvvm.Models;
 using System;
-using Lexplosion.WPF.NewInterface.Mvvm.Views.Modal.InstanceTransfer;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
@@ -25,10 +24,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
     public sealed class ModalInstanceCreatorFactory : ModalAbstractFactory
     {
         private readonly Action<InstanceClient> _addToLibrary;
+        private readonly Action<InstanceClient> _removeFromLibrary;
 
-        public ModalInstanceCreatorFactory(Action<InstanceClient> addToLibrary)
+        public ModalInstanceCreatorFactory(Action<InstanceClient> addToLibrary, Action<InstanceClient> removeFromLibrary)
         {
             _addToLibrary = addToLibrary;
+            _removeFromLibrary = removeFromLibrary;
         }
 
         public override IModalViewModel Create()
@@ -49,7 +50,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
                         IconKey = "PlaceItem",
                         TitleKey = "Import",
                         IsEnable = true,
-                        IsSelected = false
+                        IsSelected = false,
+                        Content = new InstanceImportViewModel(_addToLibrary, _removeFromLibrary)
                     },
                     new ModalLeftMenuTabItem()
                     {
@@ -129,7 +131,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
 
 
             // Register Modal Window Contents
-            ModalNavigationStore.Instance.RegisterAbstractFactory(typeof(InstanceFactoryViewModel), new ModalInstanceCreatorFactory(Model.LibraryController.Add));
+            ModalNavigationStore.Instance.RegisterAbstractFactory(typeof(InstanceFactoryViewModel), new ModalInstanceCreatorFactory(Model.LibraryController.Add, Model.LibraryController.Remove));
 
 
             //ModalNavigationStore.Close();

@@ -205,6 +205,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         #region Public Methods
 
 
+        public bool CheckInstanceClient(InstanceClient instanceClient) 
+        {
+            return _instanceClient == instanceClient;
+        }
+
+
         /// <summary>
         /// Запускает сборку. При успешном выполнении отрабатывает эвент Launched.
         /// </summary>

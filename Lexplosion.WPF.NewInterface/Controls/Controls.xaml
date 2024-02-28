@@ -22,7 +22,7 @@
         <ResourceDictionary Source="Loader/Loader.xaml" />
         <ResourceDictionary Source="LoadingBoard/LoadingBoard.xaml" />
         <ResourceDictionary Source="Paginator/Paginator.xaml" />
-
+        <ResourceDictionary Source="DragDropBoard/DragDropBoard.xaml" />
 
 
     </ResourceDictionary.MergedDictionaries>

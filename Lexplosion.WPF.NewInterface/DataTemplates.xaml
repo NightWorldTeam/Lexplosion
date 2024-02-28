@@ -158,4 +158,8 @@
     <DataTemplate DataType="{x:Type instanceTransferViewModel:InstanceExportViewModel}">
         <instanceTransferView:InstanceExportView />
     </DataTemplate>
+
+    <DataTemplate DataType="{x:Type instanceTransferViewModel:InstanceImportViewModel}">
+        <instanceTransferView:InstanceImportView />
+    </DataTemplate>
 </ResourceDictionary>

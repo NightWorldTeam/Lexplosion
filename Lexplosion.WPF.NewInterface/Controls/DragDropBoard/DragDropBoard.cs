@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Lexplosion.Controls
+namespace Lexplosion.WPF.NewInterface.Controls
 {
     public class DragDropBoard : ContentControl
     {
@@ -24,11 +24,12 @@ namespace Lexplosion.Controls
         static DragDropBoard()
         {
             AllowDropProperty.OverrideMetadata(typeof(DragDropBoard), new FrameworkPropertyMetadata(true));
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(DragDropBoard), new FrameworkPropertyMetadata(typeof(DragDropBoard)));
         }
 
         public DragDropBoard()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(DragDropBoard), new FrameworkPropertyMetadata(typeof(DragDropBoard)));
+            
         }
 
 

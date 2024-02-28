@@ -3,6 +3,7 @@ using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
@@ -52,6 +53,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
             {
                 _instances.Add(new InstanceModelBase(instanceClient, _exportFunc));
             });
+        }
+
+        public void Remove(InstanceClient instanceClient)
+        {
+            var i = Instances.Where(i => i.CheckInstanceClient(instanceClient)).ToArray()[0];
+            Remove(i);
         }
 
         public void Remove(InstanceModelBase instanceModelBase)

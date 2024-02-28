@@ -15,10 +15,14 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models
         
     }
 
+    public sealed class ImportController 
+    {
+
+    }
+
     public sealed class MainModel : ViewModelBase
     {
         private HashSet<object> ExportingInstances { get; } = new HashSet<object>();
-
 
         public IInstanceController CatalogController { get; }
         public IInstanceController LibraryController { get; }
