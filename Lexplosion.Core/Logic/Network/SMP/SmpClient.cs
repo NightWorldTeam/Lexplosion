@@ -684,8 +684,10 @@ namespace Lexplosion.Logic.Network.SMP
                         }
 
                     Begin:
+                        //bool isSignal = _deliveryWait.IsSignal;
                         if (!_deliveryWait.WaitOne(delay)) // истекло время ожидания
                         {
+                            //Runtime.DebugWrite("No signal, isSignal:" + isSignal + ", IsSignal: " + _deliveryWait.IsSignal + ", ResetCalled: " + _deliveryWait.ResetCalled);
                             delay *= _delayMultipliers[attemptCount];
                             attemptCount++;
                             isTimeout = true;
@@ -1064,6 +1066,8 @@ namespace Lexplosion.Logic.Network.SMP
                                     }
 
                                     _repeatDeliveryList = ids;
+                                    _deliveryWait.Set();
+                                    //Runtime.DebugWrite("packageId " + packageId + " " + _lastPackage + " " + test + ", IsSignal: " + _deliveryWait.IsSignal + ", ResetCalled: " + _deliveryWait.ResetCalled);
                                 }
                                 _repeatDeliveryBlock.Release();
                             }
