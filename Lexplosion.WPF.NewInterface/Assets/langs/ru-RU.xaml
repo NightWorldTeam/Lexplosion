@@ -306,4 +306,25 @@
     <!--  Instance Factory  -->
     <s:String x:Key="InstanceName">Название сборки</s:String>
     <s:String x:Key="CreateInstance">Создать сборку</s:String>
+
+
+    <!--  Instance Form Download Process  -->
+    <s:String x:Key="DownloadPreparing">Идет подготовка к скачиванию...</s:String>
+    <s:String x:Key="JavaInstalling">Идет процесс установки Java</s:String>
+    <s:String x:Key="InstanceDownloading">Instance is downloading... Stage {0}/{1}</s:String>
+
+    <!--  Export  -->
+    <s:String x:Key="ExportProperties">Свойства экспорт</s:String>
+    <s:String x:Key="ExportInstanceNameDescription">Будет отображаться после экспорта в библиотеке.</s:String>
+    <s:String x:Key="FoldersAndFiles">Папки и файлы</s:String>
+    <s:String x:Key="FoldersAndFilesDescription">Выберите папки и файлы которые хотите экспортировать.</s:String>
+    <s:String x:Key="FullExport">Полный экспорт</s:String>
+    <s:String x:Key="InstanceExport">Экспорт сборки</s:String>
+    <s:String x:Key="ExportProcessActive">Процесс экспорта сборки</s:String>
+
+
+    <!--  Import  -->
+    <s:String x:Key="ImportDragDropFieldDescription">Перетащите архив со сборкой, чтобы начать загрузку.</s:String>
+    <s:String x:Key="Review">Обзор</s:String>
+
 </ResourceDictionary>

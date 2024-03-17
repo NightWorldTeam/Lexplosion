@@ -181,4 +181,35 @@
         x:Shared="False"
         Opacity="{DynamicResource ScrollBarThumbColorOpacity}"
         Color="{StaticResource ScrollBarThumbColor}" />
+
+    <!--  Import  -->
+    <!--  Cancel Color  -->
+    <Color x:Key="ImportCancelColor">
+        #FF7575
+    </Color>
+
+    <sys:Double x:Key="ImportCancelColorOpacity">
+        1
+    </sys:Double>
+
+    <SolidColorBrush
+        x:Key="ImportCancelSolidColorBrush"
+        x:Shared="False"
+        Opacity="{DynamicResource ImportCancelColorOpacity}"
+        Color="{StaticResource ImportCancelColor}" />
+
+    <!--  Success Color  -->
+    <Color x:Key="ImportSuccessColor">
+        #00C2FF
+    </Color>
+
+    <sys:Double x:Key="ImportSuccessColorOpacity">
+        1
+    </sys:Double>
+
+    <SolidColorBrush
+        x:Key="ImportSuccessSolidColorBrush"
+        x:Shared="False"
+        Opacity="{DynamicResource ImportSuccessColorOpacity}"
+        Color="{StaticResource ImportSuccessColor}" />
 </ResourceDictionary>

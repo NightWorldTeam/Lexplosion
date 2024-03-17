@@ -7,37 +7,29 @@ using Lexplosion.WPF.NewInterface.Stores;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal;
 using System.Collections.Generic;
 using System.Windows.Media;
-using System.Linq;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu;
-using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.WPF.NewInterface.Commands;
-using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Authorization;
-using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile;
-using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceCatalogControllers;
 using Lexplosion.WPF.NewInterface.Mvvm.Models;
 using System;
+using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
 {
     public abstract class ModalAbstractFactory 
     {
-        public enum ModalPage
-        {
-            InstanceFactory,
-            InstanceExport
-        }
-
         public abstract IModalViewModel Create();
     }
 
     public sealed class ModalInstanceCreatorFactory : ModalAbstractFactory
     {
         private readonly Action<InstanceClient> _addToLibrary;
+        private readonly Action<InstanceClient> _removeFromLibrary;
 
-        public ModalInstanceCreatorFactory(Action<InstanceClient> addToLibrary)
+        public ModalInstanceCreatorFactory(Action<InstanceClient> addToLibrary, Action<InstanceClient> removeFromLibrary)
         {
             _addToLibrary = addToLibrary;
+            _removeFromLibrary = removeFromLibrary;
         }
 
         public override IModalViewModel Create()
@@ -58,7 +50,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
                         IconKey = "PlaceItem",
                         TitleKey = "Import",
                         IsEnable = true,
-                        IsSelected = false
+                        IsSelected = false,
+                        Content = new InstanceImportViewModel(_addToLibrary, _removeFromLibrary)
                     },
                     new ModalLeftMenuTabItem()
                     {
@@ -90,7 +83,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
         /// </summary>
         public ViewModelBase CurrentViewModel => NavigationStore.CurrentViewModel;
 
-        internal ModalNavigationStore ModalNavigationStore { get; } = new ModalNavigationStore();
+        internal ModalNavigationStore ModalNavigationStore { get => ModalNavigationStore.Instance; }
 
         /// <summary>
         /// Выбранный в данный момент viewmodel для модального окна.
@@ -133,12 +126,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
         {
             Model = new MainModel();
             // так как грузится в отдельном потоке, может загрузится позже чем создатся экземпляр класса InstanceFactory!!!
-            ModalNavigationStore.CurrentViewModelChanged += Instance_CurrentViewModelChanged;
+            ModalNavigationStore.Instance.CurrentViewModelChanged += Instance_CurrentViewModelChanged;
             NavigationStore.CurrentViewModelChanged += NavigationStore_CurrentViewModelChanged;
 
 
             // Register Modal Window Contents
-            ModalNavigationStore.RegisterAbstractFactory(ModalAbstractFactory.ModalPage.InstanceFactory, new ModalInstanceCreatorFactory(Model.AddToLibrary));
+            ModalNavigationStore.Instance.RegisterAbstractFactory(typeof(InstanceFactoryViewModel), new ModalInstanceCreatorFactory(Model.LibraryController.Add, Model.LibraryController.Remove));
 
 
             //ModalNavigationStore.Close();

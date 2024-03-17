@@ -18,5 +18,6 @@
         <ResourceDictionary Source="Styles/ScrollViewer.xaml" />
         <ResourceDictionary Source="Styles/ScrollBar.xaml" />
         <ResourceDictionary Source="Styles/ComboBox.xaml" />
+        <ResourceDictionary Source="Styles/TreeViewItem.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

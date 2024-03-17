@@ -4,6 +4,12 @@ using System.Windows.Data;
 
 namespace Lexplosion.WPF.NewInterface.Core.Converters
 {
+    // Height="{
+    //  Binding ActualHeight,
+    //  RelativeSource={RelativeSource AncestorType={x:Type Window}},
+    //  Converter={StaticResource WindowHeightToXProcentHeight}, ConverterParameter=80
+    // }"
+            
     public sealed class WindowHeightToXProcentHeight : ConverterBase<WindowHeightToXProcentHeight>
     {
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)

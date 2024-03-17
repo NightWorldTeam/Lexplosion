@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Collections.Generic;
 using System;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers;
+using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 {
@@ -41,7 +42,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         {
             get => RelayCommand.GetCommand(ref _openInstanceFactory, () => 
             {
-                _modalNavigationStore.OpenModalPageByType(ModalAbstractFactory.ModalPage.InstanceFactory);
+                _modalNavigationStore.OpenModalPageByType(typeof(InstanceFactoryViewModel));
             });
         }
 

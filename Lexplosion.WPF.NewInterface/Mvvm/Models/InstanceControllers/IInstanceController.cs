@@ -11,6 +11,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
         public void Add(InstanceModelBase instanceModelBase);
         public void Add(InstanceClient instanceClient);
         public void Remove(InstanceModelBase instanceModelBase);
+        public void Remove(InstanceClient instanceClient);
         public void Clear();
     }
 }

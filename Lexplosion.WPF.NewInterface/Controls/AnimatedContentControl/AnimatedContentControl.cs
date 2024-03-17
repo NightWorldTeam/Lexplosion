@@ -182,8 +182,13 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
         private AnimationTimeline CreateSlideAnimation(double from, double to, EventHandler whenDone = null)
         {
-            var duration = new Duration(TimeSpan.FromSeconds(0.35 * 1.5));
+            var duration = new Duration(TimeSpan.FromSeconds(0.55));
             var anim = new DoubleAnimation(from, to, duration);
+            //anim.EasingFunction = new TestAnim();
+            anim.EasingFunction = new CircleEase()
+            {
+                EasingMode = EasingMode.EaseInOut
+            };
             if (whenDone != null)
                 anim.Completed += whenDone;
             anim.Freeze();
@@ -198,6 +203,17 @@ namespace Lexplosion.WPF.NewInterface.Controls
                 anim.Completed += whenDone;
             anim.Freeze();
             return anim;
+        }
+    }
+
+    public class TestAnim : IEasingFunction
+    {
+        public double Ease(double normalizedTime)
+        {
+            //Runtime.DebugWrite(normalizedTime);
+            //return Math.Sqrt(Math.Sin(normalizedTime * (Math.PI / 2.2)));
+            //return Math.Sqrt(Math.Log10((normalizedTime + 1) * (normalizedTime + 1))) / 0.78;
+            return 1;
         }
     }
 }

@@ -314,4 +314,20 @@
     <!--  Instance Factory  -->
     <s:String x:Key="InstanceName">Instance Name</s:String>
     <s:String x:Key="CreateInstance">Create Instance</s:String>
+
+
+    <!--  Instance Form Download Process  -->
+    <s:String x:Key="DownloadPreparing">Download preparing...</s:String>
+    <s:String x:Key="JavaInstalling">Java downloading...</s:String>
+    <s:String x:Key="InstanceDownloading">Instance is downloading... Stage {0}/{1}</s:String>
+
+
+    <!--  Export  -->
+    <s:String x:Key="ExportProperties">Export Properties</s:String>
+    <s:String x:Key="ExportInstanceNameDescription">Write name which you want to see after export in library.</s:String>
+    <s:String x:Key="FoldersAndFiles">Folders And Files</s:String>
+    <s:String x:Key="FoldersAndFilesDescription">Select folders and files which you want to export.</s:String>
+    <s:String x:Key="FullExport">Full Export</s:String>
+    <s:String x:Key="InstanceExport">Instance Export</s:String>
+    <s:String x:Key="ExportProcessActive">Export Process is active</s:String>
 </ResourceDictionary>

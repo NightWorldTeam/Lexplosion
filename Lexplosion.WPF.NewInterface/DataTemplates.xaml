@@ -6,6 +6,8 @@
     xmlns:authviewmodels="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Authorization"
     xmlns:authviews="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.Authorization"
     xmlns:converters="clr-namespace:Lexplosion.WPF.NewInterface.Core.Converters"
+    xmlns:instanceTransferView="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Modal.InstanceTransfer"
+    xmlns:instanceTransferViewModel="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer"
     xmlns:instanceprofileview="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.InstanceProfile"
     xmlns:instanceprofilevm="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile"
     xmlns:mainmenuview="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu"
@@ -149,5 +151,15 @@
     </DataTemplate>
     <DataTemplate DataType="{x:Type instanceprofilevm:InstanceProfileConfigurationViewModel}">
         <instanceprofileview:InstanceProfileConfigurationView />
+    </DataTemplate>
+
+
+    <!--  Instance Transfer  -->
+    <DataTemplate DataType="{x:Type instanceTransferViewModel:InstanceExportViewModel}">
+        <instanceTransferView:InstanceExportView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type instanceTransferViewModel:InstanceImportViewModel}">
+        <instanceTransferView:InstanceImportView />
     </DataTemplate>
 </ResourceDictionary>

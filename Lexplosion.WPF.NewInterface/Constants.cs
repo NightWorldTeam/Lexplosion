@@ -11,5 +11,9 @@
 
         public const string BoostyUrl = "";
         public const string NightWorldOfficalWebsiteUrl = "https://night-world.org/";
+
+
+        public const string ImportFileExtension = ".zip";
+        public const string ImportFileDialogFilters = "Acrhives files (.zip)|*.zip";
     }
 }

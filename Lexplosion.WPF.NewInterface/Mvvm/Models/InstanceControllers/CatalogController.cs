@@ -1,7 +1,9 @@
 ﻿using Lexplosion.Logic.Management.Instances;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
@@ -12,13 +14,18 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
         public IReadOnlyCollection<InstanceModelBase> Instances { get => _instances; }
 
 
+        private Action<InstanceClient> _exportFunc;
+
+
         #region Constructors
 
 
-        public CatalogController()
+        public CatalogController(Action<InstanceClient> exportFunc)
         {
             InstanceModelBase.GlobalAddedToLibrary += Add;
             InstanceModelBase.GlobalDeletedEvent += Remove;
+
+            _exportFunc = exportFunc;
         }
 
 
@@ -40,8 +47,14 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
         {
             App.Current.Dispatcher.Invoke(() =>
             {
-                _instances.Add(new InstanceModelBase(instanceClient));
+                _instances.Add(new InstanceModelBase(instanceClient, _exportFunc));
             });
+        }
+
+        public void Remove(InstanceClient instanceClient)
+        {
+            var i = Instances.Where(i => i.CheckInstanceClient(instanceClient)).ToArray()[0];
+            Remove(i);
         }
 
         public void Remove(InstanceModelBase instanceModelBase)
