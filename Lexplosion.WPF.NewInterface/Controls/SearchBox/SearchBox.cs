@@ -142,17 +142,19 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
         private void searchButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_lastRequests == this.Text) return;
+            if (_lastRequests == Text) 
+                return;
 
-            _lastRequests = this.Text;
+            _lastRequests = Text;
             ExecuteSearchCommand();
         }
 
         private void inputField_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            if (e.Key != Key.Enter || _lastRequests == this.Text) return;
+            if (e.Key != Key.Enter || _lastRequests == Text) 
+                return;
 
-            _lastRequests = this.Text;
+            _lastRequests = Text;
             ExecuteSearchCommand();
             e.Handled = true;
         }

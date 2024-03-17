@@ -7,7 +7,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
     {
         private readonly ViewModelBase _friendsViewModel = new FriendsViewModel();
         private readonly ViewModelBase _friendsRequestsViewModel = new FriendsRequestsViewModel();
-        private readonly ViewModelBase _findFriendsViewModel = null;
+        private readonly ViewModelBase _findFriendsViewModel = new FindFriendsViewModel();
 
         public FriendsLayoutViewModel() : base()
         {

@@ -1,6 +1,7 @@
 ﻿using Lexplosion.Core.Tools.Notification;
 using Lexplosion.Global;
 using Lexplosion.Logic;
+using Lexplosion.Logic.Management.Authentication;
 using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Mvvm.Views.Windows;
 using System;
@@ -52,7 +53,13 @@ namespace Lexplosion.WPF.NewInterface
         [STAThread]
         static void Main()
         {
-            GlobalData.SetUser(new User("Hel2x", "d66ec2c0-7a35-4e8a-a3d8-d1cb913fa71c", "", "", AccountType.NoAuth, ActivityStatus.Online));
+            //GlobalData.SetUser(new User("Hel2x", "d66ec2c0-7a35-4e8a-a3d8-d1cb913fa71c", "", "", AccountType.NoAuth, ActivityStatus.Online));
+
+                AuthCode authCode = Authentication.Instance.Auth(
+                    AccountType.NightWorld,
+                    "Editor",
+                    "1",
+                    true);
 
             var title = "TKESKLTSRLK ALLALA";
             var message = "Действие фильма будет происходить после событий, рассказанных в фильме «Миссия невыполнима: Последствия». В центре истории новые приключения агента Итана Ханта.";
@@ -97,7 +104,7 @@ namespace Lexplosion.WPF.NewInterface
 
         private static void InitializedSystem()
         {
-            Runtime.InitializedSystem((int)0, (int)0);
+            Runtime.InitializedSystem((int)0, (int)0, false);
 
             ResourcesDictionariesRegister();
             LoadCurrentLanguage();
