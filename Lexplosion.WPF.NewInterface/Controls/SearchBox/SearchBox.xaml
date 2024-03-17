@@ -53,6 +53,8 @@
         <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
         <Setter Property="CaretBrush" Value="{DynamicResource ActivitySolidColorBrush}" />
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Background" Value="{DynamicResource PrimarySolidColorBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource SeparateSolidColorBrush}" />
         <Setter Property="FontSize" Value="14" />
         <Setter Property="Template">
             <Setter.Value>
@@ -61,8 +63,9 @@
                         Width="{TemplateBinding Width}"
                         Height="40"
                         Padding="16,10"
-                        Background="{DynamicResource PrimarySolidColorBrush}"
-                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="1"
                         CornerRadius="5">
                         <Grid>
                             <Grid.ColumnDefinitions>
