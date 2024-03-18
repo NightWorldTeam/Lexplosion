@@ -72,8 +72,8 @@ namespace Lexplosion.WPF.NewInterface.Controls
             _line = Template.FindName(PART_LINE_NAME, this) as Border;
             _tabPanel = Template.FindName("HeaderPanel", this) as TabPanel;
             _header = Template.FindName(PART_HEADER_NAME, this) as Border;
-            //_contentPresenter = Template.FindName("PART_SelectedContentHost", this) as ContentPresenter; 
             _selectedTabItem = ItemContainerGenerator.ContainerFromItem(SelectedValue) as TabItem;
+            
             if (_header != null)
             {
                 Runtime.DebugWrite(_header);
@@ -112,30 +112,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
                 // чтобы изменять размер underline, когда был изменен размер контента или язык.
                 _selectedTabItem.SizeChanged += OnTabItemSizeChanged;
 
-                var sumWidth = selectedTabPadding.Left;
-                var iterCount = 0;
-                foreach (var obj in ItemContainerGenerator.Items)
-                {
-                    FrameworkElement element;
-                    if (!(obj is FrameworkElement))
-                    {
-                        element = ItemContainerGenerator.ContainerFromItem(obj) as FrameworkElement;
-                    }
-                    else
-                    {
-                        element = obj as FrameworkElement;
-                    }
-
-                    if (iterCount == SelectedIndex)
-                    {
-                        break;
-                    }
-
-                    sumWidth += element.ActualWidth;
-                    iterCount++;
-                }
-
-                SmoothMoveLine(_line, sumWidth);
+                MoveLine(selectedTabPadding.Left);
 
                 var dp = new DoubleAnimation()
                 {
@@ -160,17 +137,52 @@ namespace Lexplosion.WPF.NewInterface.Controls
         #region Private Methods
 
 
-        public void OnTabItemSizeChanged(object sender, SizeChangedEventArgs e)
+        /// <summary>
+        /// Вызывается при изменении размера TabItem.
+        /// </summary>
+        private void OnTabItemSizeChanged(object sender, SizeChangedEventArgs e)
         {
             var tabItem = sender as TabItem;
             var tabItemPadding = GetTemplateBorderPadding(tabItem);
-            Console.WriteLine(tabItem.ActualWidth + " " + tabItemPadding.Left + " " + tabItemPadding.Right);
 
             SmoothChangeWidth(_line, tabItem.ActualWidth - (tabItemPadding.Left + tabItemPadding.Right));
+            // перемещаем линию
+            MoveLine(tabItemPadding.Left);
         }
 
 
-    private static void OnTabPanelPadding(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        /// <summary>
+        /// Перемещает линию позиционируя её центрально относительно выбранной вкладки
+        /// </summary>
+        private void MoveLine(double tabPaddingLeft)
+        {
+            var sumWidth = tabPaddingLeft;
+            var iterCount = 0;
+            foreach (var obj in ItemContainerGenerator.Items)
+            {
+                FrameworkElement element;
+                if (!(obj is FrameworkElement))
+                {
+                    element = ItemContainerGenerator.ContainerFromItem(obj) as FrameworkElement;
+                }
+                else
+                {
+                    element = obj as FrameworkElement;
+                }
+
+                if (iterCount == SelectedIndex)
+                {
+                    break;
+                }
+
+                sumWidth += element.ActualWidth;
+                iterCount++;
+            }
+
+            SmoothMoveLine(_line, sumWidth);
+        }
+
+        private static void OnTabPanelPadding(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (e.NewValue == e.OldValue) return;
 
