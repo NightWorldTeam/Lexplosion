@@ -120,6 +120,9 @@
     <!--  Auto Instance Update  -->
     <s:String x:Key="AutoInstanceUpdate">Auto Instance Update</s:String>
     <s:String x:Key="AutoInstanceUpdateDescription">Update your library instance automatically?</s:String>
+    <!--  NightWorld Skins  -->
+    <s:String x:Key="NightWorldSkins">NightWorld Skins</s:String>
+    <s:String x:Key="NightWorldSkinsDescription">In Minecraft, the skin setted in the profile will be displayed.</s:String>
 
     <!--    -->
     <!--  Appearance  -->
