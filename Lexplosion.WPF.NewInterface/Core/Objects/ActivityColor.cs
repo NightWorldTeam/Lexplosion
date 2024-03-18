@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Lexplosion.WPF.NewInterface.Core.ViewModel;
+using System;
 using System.Windows.Media;
 
 namespace Lexplosion.WPF.NewInterface.Core.Objects
 {
-    public struct ActivityColor
+    public class ActivityColor : ObservableObject
     {
-        public event Action<ActivityColor> SelectedEvent = null;
+        public event Action<ActivityColor, bool> SelectedEvent = null;
 
         public SolidColorBrush Brush { get; }
 
@@ -16,24 +17,34 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
             {
                 _isSelected = value;
                 OnIsSelectedChanged();
+                OnPropertyChanged();
             }
         }
 
-        public ActivityColor(SolidColorBrush brush, bool isSelected = false)
+        public ActivityColor(SolidColorBrush brush, bool isSelected = false) : this(isSelected)
         {
             Brush = brush;
-            IsSelected = isSelected;
         }
 
-        public ActivityColor(string hexColor, bool isSelected = false)
+        public ActivityColor(Color color, bool isSelected) : this(isSelected) 
+        {
+            Brush = new SolidColorBrush(color);
+        }
+
+        public ActivityColor(string hexColor, bool isSelected = false) : this(isSelected)
         {
             Brush = (SolidColorBrush)new BrushConverter().ConvertFrom(hexColor);
+        }
+
+        protected ActivityColor(bool isSelected = false)
+        {
             IsSelected = isSelected;
         }
 
         private void OnIsSelectedChanged()
         {
-            SelectedEvent?.Invoke(this);
+            SelectedEvent?.Invoke(this, IsSelected);
+            OnPropertyChanged();
         }
     }
 }

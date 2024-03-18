@@ -8,13 +8,14 @@
     <Duration x:Key="FastAnimationSpeed">0:0:0.15</Duration>
 
     <!--  Activity Colors  -->
-    <Color x:Key="ActivityColor">#13f287</Color>
+    <Color x:Key="ActivityColor" x:Shared="True">#13f287</Color>
     <Color x:Key="Color1">#8500aa</Color>
     <Color x:Key="Color2">#13f287</Color>
 
     <sys:Double x:Key="ActivityColorOpacity">1</sys:Double>
     <SolidColorBrush
         x:Key="ActivitySolidColorBrush"
+        x:Shared="True"
         Opacity="{DynamicResource ActivityColorOpacity}"
         Color="{DynamicResource ActivityColor}" />
 

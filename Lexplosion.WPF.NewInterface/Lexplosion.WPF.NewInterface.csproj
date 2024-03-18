@@ -114,6 +114,7 @@
     <Compile Include="Core\If.cs" />
     <Compile Include="Core\Paginator\IPaginator.cs" />
     <Compile Include="Core\Paginator\Paginator.cs" />
+    <Compile Include="Core\Services\AppColorThemeService.cs" />
     <Compile Include="Core\ViewModel\ContentLayoutViewModelBase.cs" />
     <Compile Include="Core\GameExtensions\MinecraftExtension.cs" />
     <Compile Include="Core\GameExtensions\ExtensionManagerBase.cs" />

@@ -2,13 +2,14 @@
 using Lexplosion.WPF.NewInterface.Core.Objects;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows.Media;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSettings
 {
     public sealed class AppearanceSettingsModel : ViewModelBase
     {
-        public Theme SelectedTheme { get; set; }
-        public ActivityColor SelectedColor { get; private set; }
+        public Theme SelectedTheme { get => RuntimeApp.AppColorThemeService.SelectedTheme; }
+        public ActivityColor SelectedColor { get => RuntimeApp.AppColorThemeService.SelectedActivityColor; }
 
 
         private ObservableCollection<ActivityColor> _colors = new ObservableCollection<ActivityColor>();
@@ -38,6 +39,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
             {
                 theme.SelectedEvent += SelectedThemeChanged;
             }
+
+            _themes[0].IsSelected = true;
         }
 
         private void LoadActivityColors()
@@ -46,6 +49,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
             _colors.Add(new ActivityColor("#A020F0"));
             _colors.Add(new ActivityColor("#FFE600"));
             _colors.Add(new ActivityColor("#40A710"));
+            _colors.Add(new ActivityColor("#FF0000"));
 
             foreach (var color in _colors)
             {
@@ -53,14 +57,20 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
             }
         }
 
-        private void SelectedColorChanged(ActivityColor color)
+        private void SelectedColorChanged(ActivityColor color, bool isSelected)
         {
-            SelectedColor = color;
+            if (isSelected)
+            {
+                RuntimeApp.AppColorThemeService.ChangeActivityColor(color.Brush.Color);
+            }
         }
 
-        private void SelectedThemeChanged(Theme theme)
+        private void SelectedThemeChanged(Theme theme, bool isSelected)
         {
-            SelectedTheme = theme;
+            if (isSelected) 
+            {
+                RuntimeApp.AppColorThemeService.ChangeTheme(theme);
+            }
         }
 
 

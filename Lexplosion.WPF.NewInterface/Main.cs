@@ -2,6 +2,7 @@
 using Lexplosion.Global;
 using Lexplosion.Logic;
 using Lexplosion.WPF.NewInterface.Core.Objects;
+using Lexplosion.WPF.NewInterface.Core.Services;
 using Lexplosion.WPF.NewInterface.Mvvm.Views.Windows;
 using System;
 using System.Collections.Generic;
@@ -35,6 +36,8 @@ namespace Lexplosion.WPF.NewInterface
         internal const string AssetsPath = "pack://application:,,,/Assets/";
         internal const string ControlsPath = "pack://application:,,,/Controls/";
 
+        internal static event Action MainWindowShowed;
+
         private static event Action ResourceDictionariesLoaded;
 
         private static App _app = new App();
@@ -45,6 +48,8 @@ namespace Lexplosion.WPF.NewInterface
         private static double _splashWindowLeft;
         private static double _splashWindowTop;
 
+        internal static AppColorThemeService AppColorThemeService;
+
         public static HeaderState HeaderState;
 
         public static ICollection<INotificable> Notification = new ObservableCollection<INotificable>();
@@ -52,6 +57,8 @@ namespace Lexplosion.WPF.NewInterface
         [STAThread]
         static void Main()
         {
+            AppColorThemeService = new AppColorThemeService();
+
             GlobalData.SetUser(new User("Hel2x", "d66ec2c0-7a35-4e8a-a3d8-d1cb913fa71c", "", "", AccountType.NoAuth, ActivityStatus.Online));
 
             var title = "TKESKLTSRLK ALLALA";
@@ -88,7 +95,6 @@ namespace Lexplosion.WPF.NewInterface
         private static void SetMainWindow()
         {
             _app.MainWindow = new MainWindow();
-
             _app.MainWindow.Show();
             _app.Run(_app.MainWindow);
 
