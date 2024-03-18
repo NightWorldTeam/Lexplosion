@@ -20,6 +20,8 @@ namespace Lexplosion.WPF.NewInterface.Controls
         private Border _header;
         private ContentPresenter _contentPresenter;
 
+        private TabItem _selectedTabItem;
+
         private Thickness _loadedTabPanelPadding = new Thickness();
 
         #region Dependency Properties
@@ -71,7 +73,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
             _tabPanel = Template.FindName("HeaderPanel", this) as TabPanel;
             _header = Template.FindName(PART_HEADER_NAME, this) as Border;
             //_contentPresenter = Template.FindName("PART_SelectedContentHost", this) as ContentPresenter; 
-
+            _selectedTabItem = ItemContainerGenerator.ContainerFromItem(SelectedValue) as TabItem;
             if (_header != null)
             {
                 Runtime.DebugWrite(_header);
@@ -91,15 +93,24 @@ namespace Lexplosion.WPF.NewInterface.Controls
         {
             try
             {
-                var selectedFE = ItemContainerGenerator.ContainerFromItem(SelectedValue) as TabItem;
-                var selectedTabPadding = GetTemplateBorderPadding(selectedFE);
+                // отписываемся, чтобы не вызывать метод, когда TabItem больше не выбран.
+                if (_selectedTabItem != null)
+                    _selectedTabItem.SizeChanged -= OnTabItemSizeChanged;
 
-                if (selectedFE == null)
+                _selectedTabItem = ItemContainerGenerator.ContainerFromItem(SelectedValue) as TabItem;
+
+                var selectedTabPadding = GetTemplateBorderPadding(_selectedTabItem);
+
+                if (_selectedTabItem == null)
                 {
                     return;
                 }
 
-                SmoothChangeWidth(_line, selectedFE.ActualWidth - (selectedTabPadding.Left + selectedTabPadding.Right));
+                SmoothChangeWidth(_line, _selectedTabItem.ActualWidth - (selectedTabPadding.Left + selectedTabPadding.Right));
+
+                // Подписываемся на изменение размера TabItem, для того,
+                // чтобы изменять размер underline, когда был изменен размер контента или язык.
+                _selectedTabItem.SizeChanged += OnTabItemSizeChanged;
 
                 var sumWidth = selectedTabPadding.Left;
                 var iterCount = 0;
@@ -149,8 +160,17 @@ namespace Lexplosion.WPF.NewInterface.Controls
         #region Private Methods
 
 
+        public void OnTabItemSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            var tabItem = sender as TabItem;
+            var tabItemPadding = GetTemplateBorderPadding(tabItem);
+            Console.WriteLine(tabItem.ActualWidth + " " + tabItemPadding.Left + " " + tabItemPadding.Right);
 
-        private static void OnTabPanelPadding(DependencyObject d, DependencyPropertyChangedEventArgs e)
+            SmoothChangeWidth(_line, tabItem.ActualWidth - (tabItemPadding.Left + tabItemPadding.Right));
+        }
+
+
+    private static void OnTabPanelPadding(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (e.NewValue == e.OldValue) return;
 
