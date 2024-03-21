@@ -120,6 +120,9 @@
     <!--  Auto Instance Update  -->
     <s:String x:Key="AutoInstanceUpdate">Автоматически обновлять сборки</s:String>
     <s:String x:Key="AutoInstanceUpdateDescription">Сборки в вашей библиотеке обновляются автоматически.</s:String>
+    <!--  NightWorld Skins  -->
+    <s:String x:Key="NightWorldSkins">Система скинов NightWorld</s:String>
+    <s:String x:Key="NightWorldSkinsDescription">В игре будет отображаться скин поставленный в профиле.</s:String>
 
 
     <!--    -->

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lexplosion.WPF.NewInterface.Core.ViewModel;
+using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
@@ -6,20 +7,20 @@ using System.Windows.Media;
 
 namespace Lexplosion.WPF.NewInterface.Core.Objects
 {
-    public struct Theme : INotifyPropertyChanged
+    public class Theme : ObservableObject
     {
         public const string ThemesResourcePath = "pack://application:,,,/Resources/Themes/";
 
-        public event Action<Theme> SelectedEvent = null;
-        public event PropertyChangedEventHandler PropertyChanged = null;
+        public event Action<Theme, bool> SelectedEvent = null;
 
 
         #region Properties
 
 
-        private ResourceDictionary Dictionary { get; }
+        private ResourceDictionary _dictionary;
 
         public string Name { get; private set; }
+        public Uri DictionaryUri { get; private set; }
 
         // colors
         public SolidColorBrush PrimaryBrush { get; }
@@ -45,12 +46,13 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
             get => _isSelected; set
             {
                 _isSelected = value;
-                OnSelectedChanged();
+                OnSelectedChanged(value);
+                OnPropertyChanged();
             }
         }
 
 
-        #endregion  Properties
+        #endregion Properties
 
 
         #region Constructors
@@ -59,19 +61,21 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
         public Theme(string name, string fileName)
         {
             Name = name;
-            Dictionary = new ResourceDictionary()
+            _dictionary = new ResourceDictionary()
             {
                 Source = new Uri(ThemesResourcePath + fileName),
             };
 
-            PrimaryBrush = (SolidColorBrush)Dictionary["PrimarySolidColorBrush"];
-            SecondaryBrush = (SolidColorBrush)Dictionary["SecondarySolidColorBrush"];
-            SeparateBrush = (SolidColorBrush)Dictionary["SeparateSolidColorBrush"];
+            PrimaryBrush = (SolidColorBrush)_dictionary["PrimarySolidColorBrush"];
+            SecondaryBrush = (SolidColorBrush)_dictionary["SecondarySolidColorBrush"];
+            SeparateBrush = (SolidColorBrush)_dictionary["SeparateSolidColorBrush"];
 
             if (!IsPresetColor)
             {
-                ActivityBrush = (SolidColorBrush)Dictionary["ActivitySolidColorBrush"];
+                ActivityBrush = (SolidColorBrush)_dictionary["ActivitySolidColorBrush"];
             }
+
+            DictionaryUri = new Uri(ThemesResourcePath + fileName);
         }
 
 
@@ -90,14 +94,9 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
         #region Private Methods
 
 
-        private void OnSelectedChanged()
+        private void OnSelectedChanged(bool val)
         {
-            SelectedEvent?.Invoke(this);
-        }
-
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            SelectedEvent?.Invoke(this, val);
         }
 
 
