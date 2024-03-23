@@ -112,9 +112,11 @@
     <Compile Include="Core\Converters\ValueConverters\WindowHeightToXProcentHeight.cs" />
     <Compile Include="Core\Converters\ValueConverters\WindowWidthToXProcentWidth.cs" />
     <Compile Include="Core\If.cs" />
+    <Compile Include="Core\Objects\PlayerWrapper.cs" />
     <Compile Include="Core\Paginator\IPaginator.cs" />
     <Compile Include="Core\Paginator\Paginator.cs" />
     <Compile Include="Core\Services\AppColorThemeService.cs" />
+    <Compile Include="Core\Services\NotificationService.cs" />
     <Compile Include="Core\ViewModel\ContentLayoutViewModelBase.cs" />
     <Compile Include="Core\GameExtensions\MinecraftExtension.cs" />
     <Compile Include="Core\GameExtensions\ExtensionManagerBase.cs" />
@@ -142,6 +144,7 @@
     <Compile Include="Mvvm\Models\InstanceTransfer\InstanceFileTree.cs" />
     <Compile Include="Mvvm\Models\InstanceTransfer\InstanceImportModel.cs" />
     <Compile Include="Mvvm\Models\MainContent\MainMenu\Friends\Friend.cs" />
+    <Compile Include="Mvvm\Models\MainContent\MainMenu\Multiplayer\MultiplayerModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\InstanceExportViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\InstanceImportViewModel.cs" />
     <Compile Include="Mvvm\Views\Modal\InstanceTransfer\InstanceExportView.xaml.cs">
