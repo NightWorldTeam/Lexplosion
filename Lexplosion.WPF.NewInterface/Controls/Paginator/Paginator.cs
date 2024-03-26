@@ -55,8 +55,8 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
         public ICommand PrevCommand
         {
-            get => (ICommand)GetValue(NextCommandProperty);
-            set => SetValue(NextCommandProperty, value);
+            get => (ICommand)GetValue(PrevCommandProperty);
+            set => SetValue(PrevCommandProperty, value);
         }
 
         public ICommand NextCommand 

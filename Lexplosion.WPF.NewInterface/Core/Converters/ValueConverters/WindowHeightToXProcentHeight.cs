@@ -14,11 +14,10 @@ namespace Lexplosion.WPF.NewInterface.Core.Converters
     {
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            Runtime.DebugWrite(targetType);
             if (value is double) 
             {
                 var height = (double)value;
-                return (height / 100) * int.Parse(parameter.ToString());
+                return (height / 100) * double.Parse(parameter.ToString(), CultureInfo.InvariantCulture);
             }
             return 620;
         }

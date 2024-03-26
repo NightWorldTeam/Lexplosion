@@ -13,6 +13,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
         public FriendsViewModel()
         {
+
+
             for (var i = 0; i < 3; i++) 
             {
                 _friends.Add(new Friend($"Person {i}", "Online", (Friend.FriendState)i));
