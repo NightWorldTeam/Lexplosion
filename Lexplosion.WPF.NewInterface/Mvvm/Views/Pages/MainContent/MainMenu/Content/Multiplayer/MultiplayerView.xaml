@@ -51,7 +51,10 @@
                     </StackPanel>
 
                     <!--  Buttons  -->
-                    <Button Grid.Column="2" Cursor="Hand">
+                    <Button
+                        Grid.Column="2"
+                        Command="{Binding AccessChangeAction}"
+                        Cursor="Hand">
                         <Button.Template>
                             <ControlTemplate TargetType="{x:Type Button}">
                                 <Grid>

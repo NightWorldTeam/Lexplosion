@@ -1,5 +1,6 @@
 ﻿using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
+using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu;
 using System.Windows.Input;
 
@@ -14,7 +15,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
 
         private RelayCommand _rebootCommand;
-        public ICommand RebootCommand 
+        public ICommand RebootCommand
         {
             get => RelayCommand.GetCommand(ref _rebootCommand, Model.Reboot);
         }
