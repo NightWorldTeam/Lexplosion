@@ -69,10 +69,14 @@
     <!--  Multiplayer  -->
     <!--    -->
     <s:String x:Key="Status">Статус</s:String>
-    <s:String x:Key="StatusOpenWorld">Открыт для подключения</s:String>
     <s:String x:Key="PriorityConnetionMethod">Приоритетный метод подключения</s:String>
     <s:String x:Key="DirectConnection">Прямое</s:String>
     <s:String x:Key="ViaRepeater">Через Ретранслятор</s:String>
+
+    <!--  Status  -->
+    <s:String x:Key="StatusNone">Нет открытых миров</s:String>
+    <s:String x:Key="StatusOpenWorld">Открыт для подключения</s:String>
+    <s:String x:Key="StatusConnectedToUser">Подключен к серверу</s:String>
 
 
     <!--    -->

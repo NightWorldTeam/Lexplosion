@@ -30,9 +30,9 @@ namespace Lexplosion.WPF.NewInterface.Core.Converters
 
 
         public abstract object Convert(object value, Type targetType, object parameter, CultureInfo culture);
-        public virtual object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public virtual object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) 
         {
-            throw new NotImplementedException();
+            return default(object);
         }
 
         public override object ProvideValue(IServiceProvider serviceProvider)

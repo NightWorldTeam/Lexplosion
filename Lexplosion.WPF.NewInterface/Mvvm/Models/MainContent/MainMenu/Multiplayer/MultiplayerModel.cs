@@ -10,22 +10,26 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu
 {
     public sealed class MultiplayerModel : ViewModelBase
     {
-        #region Properties
-
-
-        private ObservableCollection<PlayerWrapper> _players = new ObservableCollection<PlayerWrapper>() 
+        private ObservableCollection<PlayerWrapper> _players = new ObservableCollection<PlayerWrapper>()
         {
-            new PlayerWrapper("Editor"), new PlayerWrapper("Tester"),
-            new PlayerWrapper("Editor1"), new PlayerWrapper("Tester1"),
-            new PlayerWrapper("Editor2"), new PlayerWrapper("Tester2"),
-            new PlayerWrapper("Editor3"), new PlayerWrapper("Tester3"),
+            //new PlayerWrapper("Editor"), new PlayerWrapper("Tester"),
+            //new PlayerWrapper("Editor1"), new PlayerWrapper("Tester1"),
+            //new PlayerWrapper("Editor2")
         };
 
 
+        #region Properties
+
+        /// <summary>
+        /// Список подключенных игроков.
+        /// </summary>
         public IEnumerable<PlayerWrapper> Players { get => _players; }
 
 
         private OnlineGameStatus _gameStatus = OnlineGameStatus.None;
+        /// <summary>
+        /// Статус сетевой игры. 
+        /// </summary>
         public OnlineGameStatus GameStatus 
         {
             get => _gameStatus; set 
@@ -36,6 +40,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu
         }
 
         private bool _isPlayersListEmpty = true;
+        /// <summary>
+        /// Пуст ли список подключенных игроков.
+        /// </summary>
         public bool IsPlayersListEmpty
         {
             get => _isPlayersListEmpty; private set
@@ -45,7 +52,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu
             }
         }
 
-        public bool DirectConnetion
+        /// <summary>
+        /// Используется прямое соединение.
+        /// </summary>
+        public bool IsDirectConnection
         {
             get => GlobalData.GeneralSettings.NetworkDirectConnection; set
             {
@@ -53,12 +63,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu
                 OnPropertyChanged();
                 DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
             }
-        }
-
-
-        public string StrGameStatus
-        {
-            get => "status" + _gameStatus.ToString();
         }
 
 
@@ -80,6 +84,21 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu
         #endregion Constructors
 
 
+        #region Public Methods
+
+
+        /// <summary>
+        /// Перезапускает сетевую игру.
+        /// </summary>
+        public void Reboot() 
+        {
+            LaunchGame.RebootOnlineGame();
+        }
+
+
+        #endregion Public Methods
+
+
         #region Private Methods
 
 
@@ -93,6 +112,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu
             _players.Remove(wrapper);
         }
 
+        /// <summary>
+        /// Пользователь отключился от сервера.
+        /// </summary>
+        /// <param name="player"></param>
         private void LaunchGame_UserDisconnected(Player player)
         {
             App.Current.Dispatcher.Invoke(() =>
@@ -107,6 +130,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu
             });
         }
 
+
+        /// <summary>
+        /// Пользователь подключился к серверу.
+        /// </summary>
+        /// <param name="player"></param>
         private void LaunchGame_UserConnected(Player player)
         {
             App.Current.Dispatcher.Invoke(delegate ()
@@ -124,6 +152,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu
             });
         }
 
+        /// <summary>
+        /// Состояния сервера изменилось.
+        /// </summary>
+        /// <param name="status">Новое значение статуса сервера</param>
+        /// <param name="arg2"></param>
         private void LaunchGame_StateChanged(OnlineGameStatus status, string arg2)
         {
             App.Current.Dispatcher.Invoke(() =>
