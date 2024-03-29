@@ -1,4 +1,6 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media.Imaging;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu
 {
@@ -10,6 +12,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu
         public AppearanceSettingsView()
         {
             InitializeComponent();
+        }
+
+        private void Border_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            var border = (Border)sender;
+            Point s = e.GetPosition(e.Device.Target);
         }
     }
 }

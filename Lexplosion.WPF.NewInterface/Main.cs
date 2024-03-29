@@ -3,6 +3,7 @@ using Lexplosion.Global;
 using Lexplosion.Logic;
 using Lexplosion.Logic.Management.Authentication;
 using Lexplosion.WPF.NewInterface.Core.Objects;
+using Lexplosion.WPF.NewInterface.Core.Services;
 using Lexplosion.WPF.NewInterface.Mvvm.Views.Windows;
 using System;
 using System.Collections.Generic;
@@ -36,6 +37,8 @@ namespace Lexplosion.WPF.NewInterface
         internal const string AssetsPath = "pack://application:,,,/Assets/";
         internal const string ControlsPath = "pack://application:,,,/Controls/";
 
+        internal static event Action MainWindowShowed;
+
         private static event Action ResourceDictionariesLoaded;
 
         private static App _app = new App();
@@ -46,6 +49,8 @@ namespace Lexplosion.WPF.NewInterface
         private static double _splashWindowLeft;
         private static double _splashWindowTop;
 
+        internal static AppColorThemeService AppColorThemeService;
+
         public static HeaderState HeaderState;
 
         public static ICollection<INotificable> Notification = new ObservableCollection<INotificable>();
@@ -54,12 +59,12 @@ namespace Lexplosion.WPF.NewInterface
         static void Main()
         {
             //GlobalData.SetUser(new User("Hel2x", "d66ec2c0-7a35-4e8a-a3d8-d1cb913fa71c", "", "", AccountType.NoAuth, ActivityStatus.Online));
-
-                AuthCode authCode = Authentication.Instance.Auth(
-                    AccountType.NightWorld,
-                    "Editor",
-                    "1",
-                    true);
+            AuthCode authCode = Authentication.Instance.Auth(
+              AccountType.NightWorld,
+              "Editor",
+              "1",
+              true);
+            AppColorThemeService = new AppColorThemeService();
 
             var title = "TKESKLTSRLK ALLALA";
             var message = "Действие фильма будет происходить после событий, рассказанных в фильме «Миссия невыполнима: Последствия». В центре истории новые приключения агента Итана Ханта.";
@@ -95,7 +100,6 @@ namespace Lexplosion.WPF.NewInterface
         private static void SetMainWindow()
         {
             _app.MainWindow = new MainWindow();
-
             _app.MainWindow.Show();
             _app.Run(_app.MainWindow);
 

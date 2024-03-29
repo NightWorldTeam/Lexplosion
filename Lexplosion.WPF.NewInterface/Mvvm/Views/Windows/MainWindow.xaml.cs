@@ -19,9 +19,38 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
         public string currentLang = "ru";
         private bool _isScalled = false;
 
+        private readonly DoubleAnimation _defaultChangeThemeAnimation = new DoubleAnimation()
+        {
+            From = 1700,
+            To = 0,
+            Duration = TimeSpan.FromSeconds(0.35 * 3),
+            EasingFunction = new SineEase
+            { EasingMode = EasingMode.EaseInOut }
+        };
+
         public MainWindow()
         {
             InitializeComponent();
+
+            _defaultChangeThemeAnimation.Completed += (sender, e) => 
+            {
+                PaintArea.Visibility = Visibility.Hidden;
+            };
+
+            RuntimeApp.AppColorThemeService.BeforeAnimations.Add(() => 
+            {
+                PaintArea.Opacity = 1;
+                PaintArea.Visibility = Visibility.Visible;
+                PaintArea.Background = CreateBrushFromVisual(this);
+            });
+
+            RuntimeApp.AppColorThemeService.Animations.Add(() => 
+            {
+                PaintArea.BeginAnimation(OpacityProperty, _defaultChangeThemeAnimation);
+                CircleReveal.BeginAnimation(EllipseGeometry.RadiusXProperty, _defaultChangeThemeAnimation);
+                CircleReveal.BeginAnimation(EllipseGeometry.RadiusYProperty, _defaultChangeThemeAnimation);
+            });
+
             MouseDown += delegate { try { DragMove(); } catch { } };
         }
         private void Scalling()

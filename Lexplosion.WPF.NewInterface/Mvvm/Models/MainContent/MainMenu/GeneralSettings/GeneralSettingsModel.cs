@@ -132,6 +132,17 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
             }
         }
 
+        public bool? IsNightWorldEnable
+        {
+            get => true; set
+            {
+                // TODO: Когда будет функционал подрубить его сюда
+                //GlobalData.GeneralSettings.IsAutoUpdate = value;
+                OnPropertyChanged();
+                //DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+            }
+        }
+
         public string JavaPath
         {
             get => GlobalData.GeneralSettings.JavaPath; set
