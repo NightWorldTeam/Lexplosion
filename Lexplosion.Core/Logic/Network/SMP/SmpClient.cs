@@ -168,7 +168,7 @@ namespace Lexplosion.Logic.Network.SMP
 
         private readonly object _sendLocker = new object();
         private readonly AutoResetEvent _waitSendData = new AutoResetEvent(false);
-        private readonly AutoResetEvent _deliveryWait = new AutoResetEvent(false);
+        private readonly Synchronizer _deliveryWait = new Synchronizer(false);
         private readonly Semaphore _repeatDeliveryBlock = new Semaphore(1, 1);
         private readonly Semaphore _closeBlock = new Semaphore(1, 1);
         private readonly AutoResetEvent _receiveWait = new AutoResetEvent(false);
@@ -684,10 +684,10 @@ namespace Lexplosion.Logic.Network.SMP
                         }
 
                     Begin:
-                        //bool isSignal = _deliveryWait.IsSignal;
+                        bool isSignal = _deliveryWait.IsSignal;
                         if (!_deliveryWait.WaitOne(delay)) // истекло время ожидания
                         {
-                            //Runtime.DebugWrite("No signal, isSignal:" + isSignal + ", IsSignal: " + _deliveryWait.IsSignal + ", ResetCalled: " + _deliveryWait.ResetCalled);
+                            Runtime.DebugWrite("No signal, isSignal:" + isSignal + ", IsSignal: " + _deliveryWait.IsSignal + ", ResetCalled: " + _deliveryWait.ResetCalled);
                             delay *= _delayMultipliers[attemptCount];
                             attemptCount++;
                             isTimeout = true;
@@ -1066,8 +1066,8 @@ namespace Lexplosion.Logic.Network.SMP
                                     }
 
                                     _repeatDeliveryList = ids;
-                                    _deliveryWait.Set();
-                                    //Runtime.DebugWrite("packageId " + packageId + " " + _lastPackage + " " + test + ", IsSignal: " + _deliveryWait.IsSignal + ", ResetCalled: " + _deliveryWait.ResetCalled);
+                                    bool test = _deliveryWait.Set();
+                                    Runtime.DebugWrite("packageId " + packageId + " " + _lastPackage + " " + test + ", IsSignal: " + _deliveryWait.IsSignal + ", ResetCalled: " + _deliveryWait.ResetCalled);
                                 }
                                 _repeatDeliveryBlock.Release();
                             }
