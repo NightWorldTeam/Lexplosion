@@ -160,10 +160,10 @@
                         <Grid>
                             <StackPanel Height="90">
                                 <TextBlock
-                                    extensions:TextBlock.TextByKey="Status"
                                     FontSize="16"
                                     FontWeight="Medium"
-                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                    Text="{DynamicResource Status}" />
 
                                 <!--  Multiplayer Status  -->
                                 <TextBlock
@@ -208,6 +208,53 @@
                                             Stretch="Fill" />
                                     </Viewbox>
                                 </Border>
+
+                                <Button.ToolTip>
+                                    <ToolTip
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Placement="Top"
+                                        PlacementRectangle="-54.5,0,0,0"
+                                        PlacementTarget="{Binding ElementName=MainPanel}">
+                                        <!--  Custom ToolTip  -->
+                                        <Grid
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Visibility="Visible">
+
+                                            <!--  Top / Bottom -> 40  -->
+                                            <!--  Left / Right -> 44  -->
+
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+
+                                            <Border
+                                                Height="32"
+                                                Background="Black"
+                                                CornerRadius="5">
+                                                <TextBlock
+                                                    Padding="16"
+                                                    VerticalAlignment="Center"
+                                                    FontSize="13"
+                                                    FontWeight="Medium"
+                                                    Foreground="White"
+                                                    Text="{DynamicResource ReloadMutlplayer}" />
+                                            </Border>
+
+                                            <Polygon
+                                                Grid.Row="1"
+                                                HorizontalAlignment="Center"
+                                                Fill="Black"
+                                                Points="10,0 5,5, 0,0" />
+                                        </Grid>
+                                    </ToolTip>
+                                </Button.ToolTip>
                             </Button>
                         </Grid>
 
@@ -262,7 +309,7 @@
                                 BorderBrush="{DynamicResource ActivitySolidColorBrush}"
                                 GroupName="ConnectionType"
                                 IsChecked="{Binding Model.IsDirectConnection, Converter={converters:NegativeBooleanValueConverter}}">
-                                <TextBlock extensions:TextBlock.TextByKey="DirectConnection" FontSize="16" />
+                                <TextBlock FontSize="16" Text="{DynamicResource DirectConnection}" />
                             </RadioButton>
 
                             <!--  via repeater  -->
@@ -270,7 +317,7 @@
                                 Margin="0,4,0,0"
                                 GroupName="ConnectionType"
                                 IsChecked="{Binding Model.IsDirectConnection}">
-                                <TextBlock extensions:TextBlock.TextByKey="ViaRepeater" FontSize="16" />
+                                <TextBlock FontSize="16" Text="{DynamicResource ViaRepeater}" />
                             </RadioButton>
                         </StackPanel>
                     </StackPanel>
@@ -299,7 +346,8 @@
                             FontSize="16"
                             FontWeight="Medium"
                             Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                            Text="Подключённые игроки" />
+                            Text="{DynamicResource ConnectedPlayers}"
+                            Visibility="{Binding Model.IsPlayersListEmpty, Converter={converters:NegativeBooleanToVisibilityConverter}}" />
 
                         <ScrollViewer
                             Grid.Row="1"
@@ -321,8 +369,8 @@
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             FontSize="18"
-                            Opacity="0"
-                            Text="Отсутсвуют подключённые игроки"
+                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                            Text="{DynamicResource NoConnectedPlayers}"
                             Visibility="{Binding Model.IsPlayersListEmpty, Converter={converters:BooleanToVisibilityConverter}}" />
                     </Grid>
                 </Border>
