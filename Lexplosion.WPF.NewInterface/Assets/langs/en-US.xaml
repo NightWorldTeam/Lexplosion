@@ -69,10 +69,17 @@
     <!--  Multiplayer  -->
     <!--    -->
     <s:String x:Key="Status">Status</s:String>
-    <s:String x:Key="StatusOpenWorld">Open world</s:String>
     <s:String x:Key="PriorityConnetionMethod">Priority Connetion Method</s:String>
     <s:String x:Key="DirectConnection">Direct</s:String>
     <s:String x:Key="ViaRepeater">Via Repeater</s:String>
+    <s:String x:Key="ConnectedPlayers">Подключенные игроки</s:String>
+    <s:String x:Key="NoConnectedPlayers">Отсутствуют подключенные игроки</s:String>
+    <s:String x:Key="ReloadMutlplayer">Reload Multiplayer</s:String>
+
+    <!--  Status  -->
+    <s:String x:Key="StatusNone">No open worlds</s:String>
+    <s:String x:Key="StatusOpenWorld">Open for connection</s:String>
+    <s:String x:Key="StatusConnectedToUser">Playing on the server</s:String>
 
 
     <!--    -->

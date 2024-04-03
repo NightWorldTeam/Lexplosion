@@ -41,6 +41,10 @@ namespace Lexplosion.Logic.Management
         /// </summary>
         public bool IsKicked { get; set; } = false;
 
+        public Player(string uuid)
+        {
+            UUID = uuid;
+        }
 
         public Player(string uuid, Action kickMethod, Action unkickMethod)
         {

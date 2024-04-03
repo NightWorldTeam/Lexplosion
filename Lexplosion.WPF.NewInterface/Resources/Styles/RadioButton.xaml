@@ -3,7 +3,7 @@
         <Setter Property="SnapsToDevicePixels" Value="true" />
         <Setter Property="OverridesDefaultStyle" Value="true" />
         <Setter Property="Foreground" Value="{DynamicResource PrimaryForegroundSolidColorBrush}" />
-        <!--<Setter Property="FocusVisualStyle" Value="{DynamicResource RadioButtonFocusVisual}" />-->
+        <Setter Property="FocusVisualStyle" Value="{DynamicResource RadioButtonFocusVisual}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type RadioButton}">
