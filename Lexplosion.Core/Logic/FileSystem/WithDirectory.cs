@@ -6,11 +6,15 @@ using System.Net;
 using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Net.Http;
+using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Global;
 using Lexplosion.Tools;
+
 using static Lexplosion.Logic.FileSystem.DataFilesManager;
+using Lexplosion.Logic.Objects;
 
 namespace Lexplosion.Logic.FileSystem
 {
@@ -80,6 +84,66 @@ namespace Lexplosion.Logic.FileSystem
             catch { }
         }
 
+        /// <summary>
+        /// Определяет допустимую директорию для хранения файлов, на основе директори path.
+        /// </summary>
+        /// <param name="path">Директория, в которой должна быть создана папка для хранения файлов</param>
+        /// <returns>
+        /// Если внутри path нету папки lexplosion, то будет возвращена path/lexplosion.
+        /// Если есть, то будет добавлена номерная метка (например path/lexplosion_1)
+        /// </returns>
+        private static string CreateValidPath(string path)
+        {
+            path += "/" + LaunсherSettings.GAME_FOLDER_NAME;
+            string path_ = path;
+            int i = 1;
+            while (Directory.Exists(path_))
+            {
+                path_ = path + "_" + i;
+                i++;
+            }
+
+            return path_;
+        }
+
+        public static string ValidateGamePath(string path, out bool newDirIsEmpty)
+        {
+            try
+            {
+                newDirIsEmpty = true;
+
+                // заменяем обратный слеш на нормальный слеш
+                path = path.Replace('\\', '/');
+                // сокращаем n-ное количество слешей до 1
+                path = Regex.Replace(path, @"\/+", "/").Trim();
+                // убираем слеш в конце
+                path = path.TrimEnd('/');
+
+                if (!Directory.Exists(path) || IsDirectoryEmpty(path)) return path;
+
+                string instancesPath = path + "/instances";
+                if (!Directory.Exists(instancesPath)) return CreateValidPath(path);
+
+                int directoryCount = Directory.GetDirectories(instancesPath).Length;
+                if (directoryCount < 1) return CreateValidPath(path);
+
+                if (!File.Exists(path + "/instanesList.json")) return CreateValidPath(path);
+
+                var data = GetFile<InstalledInstancesFormat>(path + "/instanesList.json");
+                if (data == null) return CreateValidPath(path);
+
+                newDirIsEmpty = false;
+                return path;
+            }
+            catch (Exception ex)
+            {
+                newDirIsEmpty = true;
+                Runtime.DebugWrite("Exception " + ex);
+
+                return CreateValidPath(path);
+            }
+        }
+
         private static Random random = new Random();
 
         public static string CreateTempDir() // TODO: пр использовании этого метода разными потоками может создаться одна папка на два вызова. Так же сделать try
@@ -123,6 +187,15 @@ namespace Lexplosion.Logic.FileSystem
             catch
             {
                 return null;
+            }
+        }
+
+        public static bool IsDirectoryEmpty(string path)
+        {
+            IEnumerable<string> items = Directory.EnumerateFileSystemEntries(path);
+            using (IEnumerator<string> en = items.GetEnumerator())
+            {
+                return !en.MoveNext();
             }
         }
 
@@ -211,119 +284,119 @@ namespace Lexplosion.Logic.FileSystem
             }
         }
 
-        //private static async Task<bool> DownloadFileAsync(string url, string savePath, TaskArgs taskArgs)
-        //{
-        //    HttpClient client;
-        //    using (client = new HttpClient())
-        //    {
-        //        try
-        //        {
-        //            taskArgs.CancelToken.Register(delegate ()
-        //            {
-        //                client?.CancelPendingRequests();
-        //            });
-
-        //            using (HttpResponseMessage response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead))
-        //            {
-        //                response.EnsureSuccessStatusCode();
-
-        //                long? contentLength = response.Content.Headers.ContentLength;
-
-        //                using (var stream = await response.Content.ReadAsStreamAsync())
-        //                {
-        //                    using (var fileStream = File.Create(savePath))
-        //                    {
-        //                        byte[] buffer = new byte[8192];
-        //                        long bytesRead = 0;
-        //                        int bytesReadTotal = 0;
-
-        //                        int bytesReadThisTime;
-        //                        while ((bytesReadThisTime = await stream.ReadAsync(buffer, 0, buffer.Length)) != 0)
-        //                        {
-        //                            await fileStream.WriteAsync(buffer, 0, bytesReadThisTime);
-        //                            bytesRead += bytesReadThisTime;
-        //                            bytesReadTotal += bytesReadThisTime;
-
-        //                            if (contentLength.HasValue)
-        //                            {
-        //                                double percentage = ((double)bytesRead) / contentLength.Value * 100;
-        //                                taskArgs.PercentHandler((int)percentage);
-        //                            }
-        //                        }
-
-        //                        taskArgs.PercentHandler(100);
-
-        //                        fileStream.Close();
-        //                    }
-
-        //                    stream.Close();
-        //                    return true;
-        //                }
-        //            }
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            Runtime.DebugWrite("Downloading error " + savePath + " " + url + " " + ex);
-        //            return false;
-        //        }
-        //        finally
-        //        {
-        //            client = null;
-        //        }
-        //    }
-        //}
-
-        //public static bool DownloadFile(string url, string fileName, string tempDir, TaskArgs taskArgs)
-        //{
-        //    DelFile(tempDir + fileName);
-        //    var task = DownloadFileAsync(url, tempDir + fileName, taskArgs);
-        //    task.Wait();
-        //    return task.Result;
-        //}
-
-        public static bool DownloadFile(string url, string fileName, string tempDir, TaskArgs taskArgs)
+        private static async Task<bool> DownloadFileAsync(string url, string savePath, TaskArgs taskArgs)
         {
-            WebClient webClient;
-            using (webClient = new WebClient())
+            HttpClient client;
+            using (client = new HttpClient())
             {
-                DelFile(tempDir + fileName);
-                bool result = true;
-
-                webClient.Proxy = null;
-
-                taskArgs.CancelToken.Register(delegate ()
-                {
-                    webClient?.CancelAsync();
-                });
-
-                webClient.DownloadProgressChanged += (sender, e) =>
-                {
-                    taskArgs.PercentHandler(e.ProgressPercentage);
-                };
-
-                webClient.DownloadFileCompleted += (sender, e) =>
-                {
-                    result = (e.Error == null);
-                };
-
                 try
                 {
-                    Task task = webClient.DownloadFileTaskAsync(url, tempDir + fileName);
-                    task.Wait();
+                    taskArgs.CancelToken.Register(delegate ()
+                    {
+                        client?.CancelPendingRequests();
+                    });
 
-                    return result;
+                    using (HttpResponseMessage response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead))
+                    {
+                        response.EnsureSuccessStatusCode();
+
+                        long? contentLength = response.Content.Headers.ContentLength;
+
+                        using (var stream = await response.Content.ReadAsStreamAsync())
+                        {
+                            using (var fileStream = File.Create(savePath))
+                            {
+                                byte[] buffer = new byte[8192];
+                                long bytesRead = 0;
+                                int bytesReadTotal = 0;
+
+                                int bytesReadThisTime;
+                                while ((bytesReadThisTime = await stream.ReadAsync(buffer, 0, buffer.Length)) != 0)
+                                {
+                                    await fileStream.WriteAsync(buffer, 0, bytesReadThisTime);
+                                    bytesRead += bytesReadThisTime;
+                                    bytesReadTotal += bytesReadThisTime;
+
+                                    if (contentLength.HasValue)
+                                    {
+                                        double percentage = ((double)bytesRead) / contentLength.Value * 100;
+                                        taskArgs.PercentHandler((int)percentage);
+                                    }
+                                }
+
+                                taskArgs.PercentHandler(100);
+
+                                fileStream.Close();
+                            }
+
+                            stream.Close();
+                            return true;
+                        }
+                    }
                 }
                 catch (Exception ex)
                 {
-                    Runtime.DebugWrite("Downloading error " + fileName + " " + url + " " + ex);
+                    Runtime.DebugWrite("Downloading error " + savePath + " " + url + " " + ex);
                     return false;
                 }
                 finally
                 {
-                    webClient = null;
+                    client = null;
                 }
             }
         }
+
+        public static bool DownloadFile(string url, string fileName, string tempDir, TaskArgs taskArgs)
+        {
+            DelFile(tempDir + fileName);
+            var task = DownloadFileAsync(url, tempDir + fileName, taskArgs);
+            task.Wait();
+            return task.Result;
+        }
+
+        //public static bool DownloadFile(string url, string fileName, string tempDir, TaskArgs taskArgs)
+        //{
+        //    WebClient webClient;
+        //    using (webClient = new WebClient())
+        //    {
+        //        DelFile(tempDir + fileName);
+        //        bool result = true;
+
+        //        webClient.Proxy = null;
+
+        //        taskArgs.CancelToken.Register(delegate ()
+        //        {
+        //            webClient?.CancelAsync();
+        //        });
+
+        //        webClient.DownloadProgressChanged += (sender, e) =>
+        //        {
+        //            taskArgs.PercentHandler(e.ProgressPercentage);
+        //        };
+
+        //        webClient.DownloadFileCompleted += (sender, e) =>
+        //        {
+        //            result = (e.Error == null);
+        //        };
+
+        //        try
+        //        {
+        //            Task task = webClient.DownloadFileTaskAsync(url, tempDir + fileName);
+        //            task.Wait();
+
+        //            return result;
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            Runtime.DebugWrite("Downloading error " + fileName + " " + url + " " + ex);
+        //            return false;
+        //        }
+        //        finally
+        //        {
+        //            webClient = null;
+        //        }
+        //    }
+        //}
 
         /// <summary>
         /// Удаляет файл, если он существует.

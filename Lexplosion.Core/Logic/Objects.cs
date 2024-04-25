@@ -7,6 +7,18 @@ using Newtonsoft.Json;
 //тут хранятся всякие лайтовые классы, в основном нужные для передачи данных и для декодирования JSON
 namespace Lexplosion.Logic.Objects
 {
+    public class InstalledInstance
+    {
+        public string Name;
+        public bool IsInstalled;
+        public InstanceSource Type;
+    }
+
+    /// <summary>
+    /// Структура файла с установленными модпаками (instanesList.json)
+    /// </summary>
+    public class InstalledInstancesFormat : Dictionary<string, InstalledInstance> { }
+
     public abstract class InstanceAssetsBase
     {
         public string Description { get; set; }

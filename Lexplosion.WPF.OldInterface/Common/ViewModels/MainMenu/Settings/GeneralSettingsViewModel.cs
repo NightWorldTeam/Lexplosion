@@ -120,23 +120,25 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Settings
 
         private void ChangedDirectory(string newPath)
         {
-            newPath = newPath + "/" + LaunсherSettings.GAME_FOLDER_NAME;
-            Model.SystemPath = newPath;
+            Model.SystemPath = WithDirectory.ValidateGamePath(newPath, out bool newDirIsEmpty);
 
-            var dialogModal = new DialogViewModel();
-            dialogModal.ShowDialog(ResourceGetter.GetString("directoryTransfer"), ResourceGetter.GetString("doYouWantToFullDirectoryTransfer"), () =>
+            if (newDirIsEmpty)
             {
-                IsDirectoryChanged = false;
-                Lexplosion.Runtime.TaskRun(() =>
+                var dialogModal = new DialogViewModel();
+                dialogModal.ShowDialog(ResourceGetter.GetString("directoryTransfer"), ResourceGetter.GetString("doYouWantToFullDirectoryTransfer"), () =>
                 {
-                    WithDirectory.SetNewDirectory(Model.SystemPath);
-                    App.Current.Dispatcher.Invoke(() =>
+                    IsDirectoryChanged = false;
+                    Lexplosion.Runtime.TaskRun(() =>
                     {
-                        _doNotification(ResourceGetter.GetString("settingsChanged"), ResourceGetter.GetString("directoryWasTransfered"), 2, 0);
-                        IsDirectoryChanged = true;
+                        WithDirectory.SetNewDirectory(Model.SystemPath);
+                        App.Current.Dispatcher.Invoke(() =>
+                        {
+                            _doNotification(ResourceGetter.GetString("settingsChanged"), ResourceGetter.GetString("directoryWasTransfered"), 2, 0);
+                            IsDirectoryChanged = true;
+                        });
                     });
                 });
-            });
+            }      
         }
 
 

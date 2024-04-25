@@ -3,13 +3,6 @@ using Lexplosion.Logic.Objects;
 
 namespace Lexplosion.Logic.Management.Instances
 {
-    class InstalledInstance
-    {
-        public string Name;
-        public bool IsInstalled;
-        public InstanceSource Type;
-    }
-
     /// <summary>
     /// Нужен для экспорта сборки. Содержит описание элемента директории модпака (папки или файла)
     /// </summary>

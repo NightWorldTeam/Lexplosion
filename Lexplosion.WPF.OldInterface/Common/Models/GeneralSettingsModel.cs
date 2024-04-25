@@ -23,7 +23,7 @@ namespace Lexplosion.Common.Models
         {
             get => GlobalData.GeneralSettings.GamePath.Replace('\\', '/'); set
             {
-                GlobalData.GeneralSettings.GamePath = value.Replace('\\', '/');
+                GlobalData.GeneralSettings.GamePath = WithDirectory.ValidateGamePath(value, out _);
                 OnPropertyChanged();
                 DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
             }

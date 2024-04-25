@@ -18,9 +18,6 @@ using Lexplosion.Logic.Network.Web;
 
 namespace Lexplosion.Logic.Management.Instances
 {
-    // Структура файла с установленными модпаками (instanesList.json)
-    using InstalledInstancesFormat = Dictionary<string, InstalledInstance>;
-
     /// <summary>
     /// Филиал ада в c#.
     /// </summary>

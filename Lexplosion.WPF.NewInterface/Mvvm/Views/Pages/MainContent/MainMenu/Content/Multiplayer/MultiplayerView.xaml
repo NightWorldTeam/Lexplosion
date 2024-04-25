@@ -27,7 +27,6 @@
                 BorderThickness="1"
                 CornerRadius="5">
                 <Grid HorizontalAlignment="Stretch" ShowGridLines="False">
-
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />

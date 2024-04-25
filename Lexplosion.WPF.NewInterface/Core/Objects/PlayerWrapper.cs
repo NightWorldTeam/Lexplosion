@@ -87,8 +87,6 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
         {
             if (_unkickedAction != null)
                 return;
-
-
             _unkickedAction = action;
         }
 
