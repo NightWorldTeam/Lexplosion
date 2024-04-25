@@ -9,38 +9,21 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
 {
     public class PlayerWrapper : ObservableObject
     {
-        private readonly Player _player;
-        private Action<Player> _unkickedAction = null;
+        private Action<Player> _unkickedAction;
+
+        public Player Player { get; }
 
 
         #region Properties
 
 
-        public string UUID { get => _player.UUID; }
-
-        public string Nickname
-        {
-            get => _player.Nickname; private set
-            {
-                _player.Nickname = value;
-                OnPropertyChanged();
-            }
-        }
+        public string UUID { get => Player.UUID; }
 
         public bool IsKicked
         {
-            get => _player.IsKicked; private set
+            get => Player.IsKicked; private set
             {
-                _player.IsKicked = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public byte[] Skin
-        {
-            get => _player.Skin; private set
-            {
-                _player.Skin = value;
+                Player.IsKicked = value;
                 OnPropertyChanged();
             }
         }
@@ -54,13 +37,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
 
         public PlayerWrapper(Player player)
         {
-            _player = player;
-        }
-
-        public PlayerWrapper(string name)
-        {
-            _player = new Player("sdf"); 
-            _player.Nickname = name;
+            Player = player;
         }
 
 
@@ -89,7 +66,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
         /// </summary>
         private UserAction AccessChange()
         {
-            if (_player.IsKicked)
+            if (Player.IsKicked)
             {
                 Unkick();
                 return UserAction.Unkick;
@@ -110,19 +87,18 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
         {
             if (_unkickedAction != null)
                 return;
-
             _unkickedAction = action;
         }
 
         public override bool Equals(object obj)
         {
             PlayerWrapper wrapperObj = obj as PlayerWrapper;
-            return wrapperObj?._player.Equals(_player) ?? false;
+            return wrapperObj?.Player.Nickname.Equals(Player.Nickname) ?? false;
         }
 
         public override int GetHashCode()
         {
-            return _player.GetHashCode();
+            return Player.GetHashCode();
         }
 
 
@@ -138,7 +114,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
         private void Kick()
         {
             IsKicked = true;
-            _player._kickMethod();
+            Player._kickMethod();
         }
 
         /// <summary>
@@ -146,8 +122,15 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
         /// </summary>
         private void Unkick()
         {
-            _player._unkickMethod();
-            _unkickedAction?.Invoke(_player);
+            Player._unkickMethod();
+
+#if DEBUG
+            if (_unkickedAction == null) 
+            {
+                Runtime.DebugWrite("Unkicked Action is null");      
+            }
+#endif
+            _unkickedAction?.Invoke(Player);
             IsKicked = false;
         }
 

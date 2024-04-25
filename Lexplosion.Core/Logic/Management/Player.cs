@@ -59,6 +59,7 @@ namespace Lexplosion.Logic.Management
                 {
                     Nickname = data.Nickname;
                     ProfileUrl = data.ProfileUrl;
+                    OnPropertyChanged(nameof(Nickname));
                 }
 
                 try
@@ -66,6 +67,7 @@ namespace Lexplosion.Logic.Management
                     using (var httpClient = new HttpClient())
                     {
                         Skin = httpClient.GetByteArrayAsync(data.AvatarUrl).Result;
+                        OnPropertyChanged(nameof(Skin));
                     }
                 }
                 catch { }
