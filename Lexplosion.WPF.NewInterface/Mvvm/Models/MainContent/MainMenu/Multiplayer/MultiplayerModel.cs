@@ -5,17 +5,13 @@ using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Objects;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu
 {
     public sealed class MultiplayerModel : ViewModelBase
     {
-        private ObservableCollection<PlayerWrapper> _players = new ObservableCollection<PlayerWrapper>()
-        {
-            //new PlayerWrapper("Editor"), new PlayerWrapper("Tester"),
-            //new PlayerWrapper("Editor1"), new PlayerWrapper("Tester1"),
-            //new PlayerWrapper("Editor2")
-        };
+        private ObservableCollection<PlayerWrapper> _players = new ObservableCollection<PlayerWrapper>();
 
 
         #region Properties
@@ -69,7 +65,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu
         #endregion Properties
 
 
-
         #region Constructors
 
 
@@ -105,11 +100,15 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu
         /// <summary>
         /// Удаляет игрока из списка.
         /// </summary>
-        /// <param name="player"></param>
+        /// <param name="player">Игрок которого нужно удалить из списка</param>
         private void RemovePlayerFromList(Player player)
         {
-            var wrapper = new PlayerWrapper(player);
-            _players.Remove(wrapper);
+            var playerWrapper = _players.Where(p => p.Player.Nickname == player.Nickname).First();
+
+            if (playerWrapper != null) 
+            {
+                _players.Remove(playerWrapper);
+            }
         }
 
         /// <summary>
@@ -122,9 +121,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu
             {
                 if (player != null)
                 {
-                    var wrapper = new PlayerWrapper(player);
+                    var wrapper = _players.Where(p => p.Player.Nickname == player.Nickname).First();
 
-                    wrapper.SetUnkickedAction(RemovePlayerFromList);
+                    if (!player.IsKicked)
+                        RemovePlayerFromList(player);
+
+                    wrapper?.SetUnkickedAction(RemovePlayerFromList);
                     IsPlayersListEmpty = _players.Count == 0 && !player.IsKicked;
                 }
             });
