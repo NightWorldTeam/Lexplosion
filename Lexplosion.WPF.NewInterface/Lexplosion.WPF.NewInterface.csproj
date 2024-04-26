@@ -110,6 +110,8 @@
     <Compile Include="Core\Converters\ValueConverters\ConverterBase.cs" />
     <Compile Include="Core\Converters\ValueConverters\NegativeBooleanToVisibilityConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\NegativeBooleanValueConverter.cs" />
+    <Compile Include="Core\Converters\ValueConverters\IsValueNullConverter.cs" />
+    <Compile Include="Core\Converters\ValueConverters\ImageSourceNullValidateConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\WindowHeightToXProcentHeight.cs" />
     <Compile Include="Core\Converters\ValueConverters\WindowWidthToXProcentWidth.cs" />
     <Compile Include="Core\If.cs" />
