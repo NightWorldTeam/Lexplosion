@@ -147,8 +147,10 @@
     <Compile Include="Mvvm\Models\InstanceTransfer\ImportProcess.cs" />
     <Compile Include="Mvvm\Models\InstanceTransfer\InstanceFileTree.cs" />
     <Compile Include="Mvvm\Models\InstanceTransfer\InstanceImportModel.cs" />
+    <Compile Include="Mvvm\Models\MainContent\InstanceProfile\Addons\InstanceAddonsContainerModel.cs" />
     <Compile Include="Mvvm\Models\MainContent\MainMenu\Friends\Friend.cs" />
     <Compile Include="Mvvm\Models\MainContent\MainMenu\Multiplayer\MultiplayerModel.cs" />
+    <Compile Include="Mvvm\ViewModels\MainContent\InstanceProfile\Addons\InstanceAddonsContainerViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\MainContent\MainMenu\Content\Friends\FindFriendsViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\InstanceExportViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\InstanceImportViewModel.cs" />

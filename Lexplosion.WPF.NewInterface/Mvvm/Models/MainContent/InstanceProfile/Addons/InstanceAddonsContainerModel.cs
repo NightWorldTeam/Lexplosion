@@ -1,0 +1,144 @@
+﻿using Lexplosion.Logic.Management.Instances;
+using Lexplosion.WPF.NewInterface.Core;
+using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+
+namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
+{
+    public sealed class InstanceAddonsContainerModel : ViewModelBase
+    {
+        private readonly BaseInstanceData _baseInstanceData;
+        private readonly InstanceModelBase _instanceModelBase;
+
+        private ObservableCollection<InstanceAddon> _addonsList = new ObservableCollection<InstanceAddon>();
+
+
+        #region Properties
+
+
+        /// <summary>
+        /// Тип аддонов.
+        /// </summary>
+        public AddonType Type { get; }
+        /// <summary>
+        /// Список установленных аддонов.
+        /// </summary>
+        public IReadOnlyCollection<InstanceAddon> AddonsList { get => _addonsList; }
+        /// <summary>
+        /// Количетсво установленных адднов.
+        /// </summary>
+        public int AddonsCount => AddonsList.Count;
+        /// <summary>
+        /// Является ли лист пустым.
+        /// Пустым - AddonsCount = 0, IsAddonsLoading = false. 
+        /// </summary>
+        public bool IsEmptyAddonsList { get => AddonsCount == 0 && !IsAddonsLoading; }
+        /// <summary>
+        /// Идет ли процесс загрузки аддонов.
+        /// </summary>
+        private bool _isAddonsLoaded = true;
+        public bool IsAddonsLoading
+        {
+            get => _isAddonsLoaded; private set
+            {
+                _isAddonsLoaded = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool IsSearchEnabled { get; private set; } = false;
+
+
+        #endregion Properties
+
+
+        #region Constructors
+
+
+        public InstanceAddonsContainerModel(AddonType type, InstanceModelBase instanceModelBase)
+        {
+            Type = type;
+            _instanceModelBase = instanceModelBase;
+            _baseInstanceData = instanceModelBase.InstanceData;
+
+            Runtime.TaskRun(() => {
+
+                var instanceAddons = InstanceAddon.GetInstalledAddons(type, _baseInstanceData);
+
+                App.Current.Dispatcher.Invoke(() => {
+                    _addonsList = new ObservableCollection<InstanceAddon>(instanceAddons);
+                    OnPropertyChanged(nameof(AddonsList));
+                    IsAddonsLoading = false;
+                    OnPropertyChanged(nameof(AddonsCount));
+                });
+            });
+        }
+
+
+        #endregion Constructors
+
+
+        #region Public Methods
+
+
+        /// <summary>
+        /// Добавляет новый аддон в конец списка.
+        /// </summary>
+        /// <param name="addon">Аддон которые мы желаем добавить.</param>
+        public void SetAddon(InstanceAddon addon)
+        {
+            _addonsList.Add(addon);
+        }
+
+        /// <summary>
+        /// Добавляет новые аддоны в конец списка.
+        /// </summary>
+        /// <param name="addons">Коллекция с аддонами</param>
+        public void SetAddons(IEnumerable<InstanceAddon> addons)
+        {
+            App.Current.Dispatcher?.Invoke(() =>
+            {
+                foreach (var addon in addons)
+                {
+                    _addonsList.Add(addon);
+                }
+                //IsAddonsLoaded = !true;
+            });
+        }
+
+        public void Reload()
+        {
+            var installedAddons = InstanceAddon.GetInstalledAddons(Type, _baseInstanceData);
+            _addonsList.Clear();
+            //IsAddonsLoaded = !false;
+            SetAddons(installedAddons);
+        }
+
+        public void UpdateAddon(object instanceAddon)
+        {
+            if (instanceAddon is InstanceAddon)
+                ((InstanceAddon)instanceAddon).Update();
+        }
+
+        public void UninstallAddon(object instanceAddon)
+        {
+            if (instanceAddon is InstanceAddon)
+                ((InstanceAddon)instanceAddon).Delete();
+        }
+
+
+        /// <summary>
+        /// Включает/Выключает поиск
+        /// </summary>
+        /// <param name="state"></param>
+        public void SetSearchState(bool state) 
+        {
+            IsSearchEnabled = state;
+            OnPropertyChanged(nameof(IsSearchEnabled));
+        }
+
+
+        #endregion Public Methods
+    }
+}
