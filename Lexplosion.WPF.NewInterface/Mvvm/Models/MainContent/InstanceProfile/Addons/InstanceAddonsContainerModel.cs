@@ -1,8 +1,11 @@
 ﻿using Lexplosion.Logic.Management.Instances;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Windows.Data;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
 {
@@ -10,10 +13,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
     {
         private readonly BaseInstanceData _baseInstanceData;
         private readonly InstanceModelBase _instanceModelBase;
-
-        private ObservableCollection<InstanceAddon> _addonsList = new ObservableCollection<InstanceAddon>();
-
-
+        private ObservableCollection<InstanceAddon> _addonsList = [];
+        
+        
         #region Properties
 
 
@@ -26,6 +28,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
         /// </summary>
         public IReadOnlyCollection<InstanceAddon> AddonsList { get => _addonsList; }
         /// <summary>
+        /// Прокси-сервер для CollectionView класса
+        /// </summary>
+        public CollectionViewSource InstanceAddonCollectionViewSource { get; } = new();
+        /// <summary>
         /// Количетсво установленных адднов.
         /// </summary>
         public int AddonsCount => AddonsList.Count;
@@ -34,6 +40,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
         /// Пустым - AddonsCount = 0, IsAddonsLoading = false. 
         /// </summary>
         public bool IsEmptyAddonsList { get => AddonsCount == 0 && !IsAddonsLoading; }
+
         /// <summary>
         /// Идет ли процесс загрузки аддонов.
         /// </summary>
@@ -47,7 +54,23 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
             }
         }
 
+        /// <summary>
+        /// Включен ли поиск.
+        /// </summary>
         public bool IsSearchEnabled { get; private set; } = false;
+        /// <summary>
+        /// Текст в поле поиска.
+        /// </summary>
+        private string _searchBoxText;
+        public string SearchBoxText 
+        {
+            get => _searchBoxText; set 
+            {
+                _searchBoxText = value;
+                OnPropertyChanged();
+                OnSearchBoxTextChanged(value);
+            }
+        }
 
 
         #endregion Properties
@@ -68,9 +91,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
 
                 App.Current.Dispatcher.Invoke(() => {
                     _addonsList = new ObservableCollection<InstanceAddon>(instanceAddons);
+                    InstanceAddonCollectionViewSource.Source = _addonsList;
                     OnPropertyChanged(nameof(AddonsList));
                     IsAddonsLoading = false;
                     OnPropertyChanged(nameof(AddonsCount));
+
+                    Runtime.DebugWrite(AddonsCount);
                 });
             });
         }
@@ -107,6 +133,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
             });
         }
 
+        /// <summary>
+        /// Перезагружает данные для AddonsList.
+        /// </summary>
         public void Reload()
         {
             var installedAddons = InstanceAddon.GetInstalledAddons(Type, _baseInstanceData);
@@ -115,23 +144,31 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
             SetAddons(installedAddons);
         }
 
+        /// <summary>
+        /// Обновляет addon.
+        /// </summary>
+        /// <param name="instanceAddon">Addon который нужно обновить</param>
         public void UpdateAddon(object instanceAddon)
         {
             if (instanceAddon is InstanceAddon)
-                ((InstanceAddon)instanceAddon).Update();
+                (instanceAddon as InstanceAddon).Update();
         }
 
+        /// <summary>
+        /// Удаляет addon.
+        /// </summary>
+        /// <param name="instanceAddon">Addon который нужно удалить</param>
         public void UninstallAddon(object instanceAddon)
         {
             if (instanceAddon is InstanceAddon)
-                ((InstanceAddon)instanceAddon).Delete();
+                (instanceAddon as InstanceAddon).Delete();
         }
 
 
         /// <summary>
         /// Включает/Выключает поиск
         /// </summary>
-        /// <param name="state"></param>
+        /// <param name="state">Состояние работы True/False</param>
         public void SetSearchState(bool state) 
         {
             IsSearchEnabled = state;
@@ -140,5 +177,21 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
 
 
         #endregion Public Methods
+
+
+        #region Private Methods
+
+
+        /// <summary>
+        /// Обновляется при изменении текста в searchbox. При выполнении фильтрует значение имени.
+        /// </summary>
+        /// <param name="value"></param
+        private void OnSearchBoxTextChanged(string value) 
+        {
+            InstanceAddonCollectionViewSource.View.Filter = (m => (m as InstanceAddon).Name.IndexOf(value, System.StringComparison.InvariantCultureIgnoreCase) > -1);
+        }
+
+
+        #endregion Private Methods
     }
 }

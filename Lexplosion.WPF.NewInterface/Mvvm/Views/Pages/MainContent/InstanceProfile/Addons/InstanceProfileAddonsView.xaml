@@ -166,6 +166,7 @@
                     VerticalAlignment="Center"
                     Orientation="Horizontal">
 
+                    <!--  Addon reload  -->
                     <Viewbox Height="16" Margin="4,0,0,0">
                         <Path
                             extension:Path.StringKeyData="Reload"
@@ -173,11 +174,13 @@
                             Stretch="Fill" />
                     </Viewbox>
 
+                    <!--  Addon Switch Enable  -->
                     <ToggleButton
                         Margin="8,0,0,0"
                         IsChecked="{Binding IsEnable}"
                         Style="{StaticResource EllipseToggleButton}" />
 
+                    <!--  Addon External Link  -->
                     <Button Margin="8,0,0,0" Style="{StaticResource IconButton}">
                         <Viewbox Height="12">
                             <Path
@@ -187,6 +190,7 @@
                         </Viewbox>
                     </Button>
 
+                    <!--  Addon Uninstall  -->
                     <Button
                         Margin="8,0,0,0"
                         Command="{Binding DataContext.UninstallCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
@@ -280,20 +284,17 @@
                                             Width="32"
                                             Height="32"
                                             Command="{Binding DataContext.EnableSearchBoxCommand, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
-                                            CommandParameter="{Binding ElementName=SearchToggleButton, Path=IsChecked}">
-                                            <Viewbox Height="16">
-                                                <Path
-                                                    extension:Path.StringKeyData="Search"
-                                                    Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                                    Stretch="Fill" />
-                                            </Viewbox>
-                                        </ToggleButton>
+                                            CommandParameter="{Binding ElementName=SearchToggleButton, Path=IsChecked}"
+                                            Content="Search"
+                                            Cursor="Hand"
+                                            Style="{StaticResource IconToggleButton}" />
 
                                         <!--  Add  -->
                                         <Button
                                             Width="32"
                                             Height="32"
                                             Command="{Binding DataContext.OpenMarketCommand, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                            Cursor="Hand"
                                             Style="{StaticResource IconButton}">
                                             <Viewbox Height="20">
                                                 <Path
@@ -308,6 +309,7 @@
                                             Width="32"
                                             Height="32"
                                             Command="{Binding DataContext.OpenFolderCommand, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                            Cursor="Hand"
                                             Style="{StaticResource IconButton}">
                                             <Viewbox Height="18">
                                                 <Path
@@ -322,6 +324,7 @@
                                             Width="32"
                                             Height="32"
                                             Command="{Binding DataContext.ReloadCommand, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                            Cursor="Hand"
                                             Style="{StaticResource IconButton}">
                                             <Viewbox Height="18">
                                                 <Path
@@ -336,6 +339,7 @@
                         </Grid>
                     </Border>
 
+
                     <controls:Loader IsActive="{Binding DataContext.Model.IsAddonsLoading, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}">
                         <ScrollViewer>
                             <ItemsPresenter
@@ -345,7 +349,6 @@
                         </ScrollViewer>
                     </controls:Loader>
                 </DockPanel>
-
             </Border>
         </ControlTemplate>
     </UserControl.Resources>
@@ -356,17 +359,22 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <controls:SearchBox Margin="4,4,4,0" Visibility="{Binding Model.IsSearchEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" />
+        <controls:SearchBox
+            x:Name="SearchBox"
+            Margin="4,4,4,0"
+            Text="{Binding Model.SearchBoxText, UpdateSourceTrigger=PropertyChanged}"
+            Visibility="{Binding Model.IsSearchEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
         <ListBox
             Grid.Row="1"
             Margin="4,8,4,8"
-            ItemsSource="{Binding Model.AddonsList}"
+            ItemsSource="{Binding Model.InstanceAddonCollectionViewSource.View}"
             MouseEnter="ListBox_MouseEnter"
             Template="{StaticResource DLCHeaderControlTemplate}"
             VirtualizingPanel.ScrollUnit="Pixel"
             VirtualizingStackPanel.IsVirtualizing="True"
             VirtualizingStackPanel.VirtualizationMode="Recycling" />
+
 
         <TextBlock
             Grid.RowSpan="2"

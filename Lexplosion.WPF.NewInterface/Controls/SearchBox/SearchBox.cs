@@ -53,9 +53,9 @@ namespace Lexplosion.WPF.NewInterface.Controls
             set => SetValue(PlaceholderProperty, value);
         }
 
-        protected bool IsEmpty
+        public bool IsEmpty
         {
-            get; set;
+            get => (bool)string.IsNullOrEmpty(Text);
         }
 
 
@@ -187,8 +187,6 @@ namespace Lexplosion.WPF.NewInterface.Controls
         /// </summary>
         private void UpdateIsEmpty()
         {
-            IsEmpty = string.IsNullOrEmpty(Text);
-
             if (_placeholderBlock != null)
             {
                 if (IsEmpty)
