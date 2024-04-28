@@ -213,4 +213,19 @@
         x:Shared="False"
         Opacity="{DynamicResource ImportSuccessColorOpacity}"
         Color="{StaticResource ImportSuccessColor}" />
+
+    <!--  Disable Control Icon  -->
+    <Color x:Key="DisableControlIconColor">
+        Gray
+    </Color>
+
+    <sys:Double x:Key="DisableControlIconColorOpacity">
+        1
+    </sys:Double>
+
+    <SolidColorBrush
+        x:Key="DisableControlIconSolidColorBrush"
+        x:Shared="False"
+        Opacity="{DynamicResource DisableControlIconColorOpacity}"
+        Color="{StaticResource DisableControlIconColor}" />
 </ResourceDictionary>

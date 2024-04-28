@@ -20,13 +20,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         #region Commands
 
 
-        private RelayCommand _enableSeachBoxCommand;
-        public ICommand EnableSearchBoxCommand
-        {
-            get => RelayCommand.GetCommand<bool>(ref _enableSeachBoxCommand, Model.SetSearchState);
-        }
-
-
         // TODO: Rename to Repository
         private RelayCommand _openMarketCommand;
         public ICommand OpenMarketCommand

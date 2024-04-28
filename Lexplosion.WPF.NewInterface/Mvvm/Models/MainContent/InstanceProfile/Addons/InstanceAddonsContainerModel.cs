@@ -57,7 +57,15 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
         /// <summary>
         /// Включен ли поиск.
         /// </summary>
-        public bool IsSearchEnabled { get; private set; } = false;
+        private bool _isSearchEnabled = false;
+        public bool IsSearchEnabled
+        { 
+            get => _isSearchEnabled; set 
+            {
+                _isSearchEnabled = value;
+                OnPropertyChanged();
+            }
+        }
         /// <summary>
         /// Текст в поле поиска.
         /// </summary>
@@ -162,17 +170,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
         {
             if (instanceAddon is InstanceAddon)
                 (instanceAddon as InstanceAddon).Delete();
-        }
-
-
-        /// <summary>
-        /// Включает/Выключает поиск
-        /// </summary>
-        /// <param name="state">Состояние работы True/False</param>
-        public void SetSearchState(bool state) 
-        {
-            IsSearchEnabled = state;
-            OnPropertyChanged(nameof(IsSearchEnabled));
         }
 
 

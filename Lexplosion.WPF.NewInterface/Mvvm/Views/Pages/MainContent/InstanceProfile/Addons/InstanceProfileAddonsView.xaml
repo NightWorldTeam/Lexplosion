@@ -166,7 +166,7 @@
                     VerticalAlignment="Center"
                     Orientation="Horizontal">
 
-                    <!--  Addon reload  -->
+                    <!--  Addon update  -->
                     <Viewbox Height="16" Margin="4,0,0,0">
                         <Path
                             extension:Path.StringKeyData="Reload"
@@ -283,10 +283,10 @@
                                             x:Name="SearchToggleButton"
                                             Width="32"
                                             Height="32"
-                                            Command="{Binding DataContext.EnableSearchBoxCommand, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
-                                            CommandParameter="{Binding ElementName=SearchToggleButton, Path=IsChecked}"
                                             Content="Search"
                                             Cursor="Hand"
+                                            IsChecked="{Binding DataContext.Model.IsSearchEnabled, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                            IsEnabled="{Binding DataContext.Model.IsAddonsLoading, Converter={valueconverters:NegativeBooleanValueConverter}, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
                                             Style="{StaticResource IconToggleButton}" />
 
                                         <!--  Add  -->
@@ -354,6 +354,7 @@
     </UserControl.Resources>
 
     <Grid>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -363,7 +364,7 @@
             x:Name="SearchBox"
             Margin="4,4,4,0"
             Text="{Binding Model.SearchBoxText, UpdateSourceTrigger=PropertyChanged}"
-            Visibility="{Binding Model.IsSearchEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" />
+            Visibility="{Binding Model.IsSearchEnabled, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
         <ListBox
             Grid.Row="1"
