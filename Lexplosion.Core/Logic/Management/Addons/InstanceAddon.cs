@@ -1031,7 +1031,7 @@ namespace Lexplosion.Logic.Management.Instances
                 AddonType.Mods => GetInstalledMods(baseInstanceData),
                 AddonType.Maps => GetInstalledWorlds(baseInstanceData),
                 AddonType.Resourcepacks => GetInstalledResourcepacks(baseInstanceData),
-                AddonType.Shaders => GetInstalledMods(baseInstanceData),
+                AddonType.Shaders => new(),
                 _ => throw new ArgumentException("Ты передал мне тип который тут не расматривается")
             };
         }

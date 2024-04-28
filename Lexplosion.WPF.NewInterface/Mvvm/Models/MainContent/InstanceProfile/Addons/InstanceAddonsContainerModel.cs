@@ -13,7 +13,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
     {
         private readonly BaseInstanceData _baseInstanceData;
         private readonly InstanceModelBase _instanceModelBase;
-        private ObservableCollection<InstanceAddon> _addonsList = [];
+        private ObservableCollection<InstanceAddon> _addonsList = new();
         
         
         #region Properties
