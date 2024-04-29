@@ -262,6 +262,8 @@ namespace Lexplosion.Common.Models.InstanceFactory
             {
                 if (OptifineModel.IsEnable && string.IsNullOrEmpty(OptifineModel.Version))
                 {
+                    OptifineModel.IsEnable = false;
+                    CreateLocalInstance(_mainViewModel, this);
                     return;
                 }
             }
