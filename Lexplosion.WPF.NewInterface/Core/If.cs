@@ -64,7 +64,7 @@ namespace Lexplosion.WPF.NewInterface.Core
             }
             else 
             {
-                Content = false;
+                Content = False;
             }
         }
     }
