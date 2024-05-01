@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows.Data;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
@@ -129,15 +130,20 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
         /// Добавляет новые аддоны в конец списка.
         /// </summary>
         /// <param name="addons">Коллекция с аддонами</param>
-        public void SetAddons(IEnumerable<InstanceAddon> addons)
+        public void SetAddons(IEnumerable<InstanceAddon> addons, bool isClearCollection = false, bool isDisableLoading = false)
         {
             App.Current.Dispatcher?.Invoke(() =>
             {
+                if (isClearCollection)
+                    _addonsList.Clear();
+
                 foreach (var addon in addons)
                 {
                     _addonsList.Add(addon);
                 }
-                //IsAddonsLoaded = !true;
+
+                if (isDisableLoading)
+                    IsAddonsLoading = false;
             });
         }
 
@@ -146,10 +152,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
         /// </summary>
         public void Reload()
         {
-            var installedAddons = InstanceAddon.GetInstalledAddons(Type, _baseInstanceData);
-            _addonsList.Clear();
-            //IsAddonsLoaded = !false;
-            SetAddons(installedAddons);
+            IsAddonsLoading = true;
+            Runtime.TaskRun(() =>
+            {
+                var installedAddons = InstanceAddon.GetInstalledAddons(Type, _baseInstanceData);
+                //IsAddonsLoaded = !false;
+                SetAddons(installedAddons, true, true);
+            });
         }
 
         /// <summary>
@@ -172,6 +181,17 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
                 (instanceAddon as InstanceAddon).Delete();
         }
 
+
+        public void OpenExternalResource(InstanceAddon addon) 
+        {
+            try 
+            {
+                Process.Start(addon.WebsiteUrl);
+            }
+            catch (Exception ex) 
+            {
+            }
+        }
 
         #endregion Public Methods
 

@@ -1,48 +1,53 @@
-﻿using Lexplosion.WPF.NewInterface.Commands;
+﻿using Lexplosion.Logic.Management.Instances;
+using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories;
+using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile.Addons;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal;
 using Lexplosion.WPF.NewInterface.Stores;
+using System;
 using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile
 {
-    public sealed class InstanceAddonsContainerViewModel : ViewModelBase
+    public interface IInstanceAddonContainerActions 
+    {
+        public void SearchStateChanged(bool state);
+        public void OpenAddonRepository();
+        public void OpenFolder();
+        public void Reload();
+    }
+
+    public sealed class InstanceAddonsContainerViewModel : ViewModelBase, IVisualFormat<VisualFormat>, IInstanceAddonContainerActions
     {
         private readonly INavigationStore _navigationStore;
         private readonly InstanceModelBase _instanceModelBase;
 
+
+        #region Properties
+
+
         public InstanceAddonsContainerModel Model { get; private set; }
+
+        public VisualFormat CurrentFormat { get; private set; }
+
+        public bool IsCurrentFormatBlock { get => CurrentFormat == VisualFormat.Block; }
+
+
+        #endregion Properties
 
 
         #region Commands
 
 
-        // TODO: Rename to Repository
-        private RelayCommand _openMarketCommand;
-        public ICommand OpenMarketCommand
+        private RelayCommand _openExternalResourceCommand;
+        public ICommand OpenExternalResourceCommand
         {
-            get => RelayCommand.GetCommand(ref _openMarketCommand, (obj) =>
-            {
-                var currentViewModel = _navigationStore.CurrentViewModel;
-                var backNavCommand = new NavigateCommand<ViewModelBase>(_navigationStore, () => currentViewModel);
-                _navigationStore.CurrentViewModel = new ModrinthRepositoryViewModel(_instanceModelBase, Model.Type, backNavCommand, _navigationStore);
-            });
+            get => RelayCommand.GetCommand<InstanceAddon>(ref _openExternalResourceCommand, Model.OpenExternalResource);
         }
 
-        private RelayCommand _reloadCommand;
-        public ICommand ReloadCommand
-        {
-            get => RelayCommand.GetCommand(ref _reloadCommand, (obj) => { });
-        }
-
-        private RelayCommand _openFolderCommand;
-        public ICommand OpenFolderCommand
-        {
-            get => RelayCommand.GetCommand(ref _openFolderCommand, _instanceModelBase.OpenFolder);
-        }
 
         private RelayCommand _updateCommand;
         public ICommand UpdateCommand
@@ -69,11 +74,67 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         #endregion Commands
 
 
+        #region Constructors
+
+
         public InstanceAddonsContainerViewModel(INavigationStore navigationStore, AddonType addonType, InstanceModelBase instanceModelBase)
         {
             _navigationStore = navigationStore;
             _instanceModelBase = instanceModelBase;
             Model = new InstanceAddonsContainerModel(addonType, instanceModelBase);
         }
+
+
+        #endregion Constructors
+
+
+        #region Public Methods
+
+
+        public void ChangeVisualFormat(VisualFormat format)
+        {
+            CurrentFormat = CurrentFormat == VisualFormat.Block ? VisualFormat.Line : VisualFormat.Block;
+            OnPropertyChanged(nameof(CurrentFormat));
+            OnPropertyChanged(nameof(IsCurrentFormatBlock));
+        }
+
+        /// <summary>
+        /// Включает/Выключает поиск.
+        /// </summary>
+        /// <param name="state"></param>
+        public void SearchStateChanged(bool state)
+        {
+            Model.IsSearchEnabled = state;
+        }
+
+        /// <summary>
+        /// Открывает Curseforge/Modrinth
+        /// </summary>
+        public void OpenAddonRepository()
+        {
+            var currentViewModel = _navigationStore.CurrentViewModel;
+            var backNavCommand = new NavigateCommand<ViewModelBase>(_navigationStore, () => currentViewModel);
+            _navigationStore.CurrentViewModel = new ModrinthRepositoryViewModel(_instanceModelBase, Model.Type, backNavCommand, _navigationStore);
+        }
+
+        /// <summary>
+        /// Открывает папку с игрой
+        /// </summary>
+        public void OpenFolder()
+        {
+            _instanceModelBase.OpenFolder();
+        }
+
+        /// <summary>
+        /// Обновляет список аддонов.
+        /// </summary>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public void Reload()
+        {
+            Model.Reload();
+        }
+
+
+        #endregion Public Methods
     }
 }

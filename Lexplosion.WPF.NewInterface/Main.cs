@@ -113,7 +113,7 @@ namespace Lexplosion.WPF.NewInterface
 
             ResourcesDictionariesRegister();
             LoadCurrentLanguage();
-            _app.Dispatcher.Invoke(SetMainWindow);
+            _app.Dispatcher?.Invoke(SetMainWindow);
         }
 
         public static void LoadCurrentLanguage()
