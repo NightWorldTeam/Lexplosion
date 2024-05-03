@@ -429,9 +429,41 @@
 
         <controls:SearchBox
             x:Name="SearchBox"
+            Height="0"
             Margin="4,4,4,0"
-            Text="{Binding Model.SearchBoxText, UpdateSourceTrigger=PropertyChanged}"
-            Visibility="{Binding Model.IsSearchEnabled, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToVisibilityConverter}}" />
+            Text="{Binding Model.SearchBoxText, UpdateSourceTrigger=PropertyChanged}">
+
+            <controls:SearchBox.Style>
+                <Style BasedOn="{StaticResource {x:Type controls:SearchBox}}" TargetType="{x:Type controls:SearchBox}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Model.IsSearchEnabled, UpdateSourceTrigger=PropertyChanged}" Value="True">
+                            <Setter Property="Visibility" Value="Visible" />
+                            <DataTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard Storyboard.TargetProperty="Height">
+                                        <DoubleAnimation
+                                            From="0"
+                                            To="40"
+                                            Duration="0:0:0.24" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.EnterActions>
+                            <DataTrigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard Storyboard.TargetProperty="Height">
+                                        <DoubleAnimation
+                                            From="40"
+                                            To="0"
+                                            Duration="0:0:0.24" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.ExitActions>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </controls:SearchBox.Style>
+
+        </controls:SearchBox>
 
         <!--  TODO: Scrool To Start  -->
         <!--  TODO: IconButton MouseOver fill Activity Color  -->
