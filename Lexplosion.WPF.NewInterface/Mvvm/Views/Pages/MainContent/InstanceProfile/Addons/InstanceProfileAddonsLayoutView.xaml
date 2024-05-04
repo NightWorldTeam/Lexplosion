@@ -55,9 +55,9 @@
                     Width="32"
                     Height="32"
                     Command="{Binding SearchStateChangedCommand, UpdateSourceTrigger=PropertyChanged}"
-                    CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Mode=Self}}"
                     Content="Search"
                     Cursor="Hand"
+                    IsChecked="{Binding IsSearchEnable, UpdateSourceTrigger=PropertyChanged}"
                     Style="{StaticResource IconToggleButton}" />
 
                 <!--

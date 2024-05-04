@@ -167,8 +167,24 @@
             </Setter>
         </Style>
 
+        <Storyboard x:Key="ItemAnimation" AutoReverse="False">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="MyGrid" Storyboard.TargetProperty="(UIElement.Opacity)">
+                <EasingDoubleKeyFrame KeyTime="0" Value="0.5" />
+                <EasingDoubleKeyFrame KeyTime="0:0:0.34" Value="1" />
+            </DoubleAnimationUsingKeyFrames>
+            <!--<DoubleAnimationUsingKeyFrames Storyboard.TargetName="MyGrid" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
+                <EasingDoubleKeyFrame KeyTime="0" Value="0" />
+                <EasingDoubleKeyFrame KeyTime="0:0:0.34" Value="1" />
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="MyGrid" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
+                <EasingDoubleKeyFrame KeyTime="0" Value="0" />
+                <EasingDoubleKeyFrame KeyTime="0:0:0.34" Value="1" />
+            </DoubleAnimationUsingKeyFrames>-->
+        </Storyboard>
+
         <DataTemplate x:Key="RectInstanceAddon" DataType="{x:Type logicInstances:InstanceAddon}">
             <Border
+                x:Name="MyGrid"
                 Width="217"
                 Height="200"
                 Margin="0,8,8,0"
@@ -178,6 +194,19 @@
                 BorderBrush="{DynamicResource SeparateSolidColorBrush}"
                 BorderThickness="1"
                 CornerRadius="10">
+
+                <Border.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform />
+                    </TransformGroup>
+                </Border.RenderTransform>
+
+                <!--<Border.Triggers>
+                    <EventTrigger RoutedEvent="Loaded">
+                        <BeginStoryboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Border.Triggers>-->
 
                 <Grid>
                     <Grid.RowDefinitions>
@@ -273,6 +302,12 @@
                     </Border>
                 </Grid>
             </Border>
+
+            <DataTemplate.Triggers>
+                <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                    <BeginStoryboard Storyboard="{StaticResource ItemAnimation}" />
+                </EventTrigger>
+            </DataTemplate.Triggers>
         </DataTemplate>
 
         <ControlTemplate x:Key="DLCHeaderControlTemplate">
@@ -427,23 +462,39 @@
         </Grid.RowDefinitions>
 
 
-        <controls:SearchBox
-            x:Name="SearchBox"
-            Height="0"
-            Margin="4,4,4,0"
-            Text="{Binding Model.SearchBoxText, UpdateSourceTrigger=PropertyChanged}">
+        <Grid Margin="8,4,8,0">
 
-            <controls:SearchBox.Style>
-                <Style BasedOn="{StaticResource {x:Type controls:SearchBox}}" TargetType="{x:Type controls:SearchBox}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <controls:SearchBox
+                x:Name="SearchBox"
+                Height="40"
+                Margin="0,0,4,0"
+                Text="{Binding Model.SearchBoxText, UpdateSourceTrigger=PropertyChanged}" />
+
+            <ComboBox
+                Grid.Column="1"
+                Width="120"
+                Height="40"
+                ItemsSource="{Binding Model.SortByList}"
+                SelectedIndex="0"
+                SelectedValue="{Binding Model.SelectedSortByParam, UpdateSourceTrigger=PropertyChanged}" />
+
+            <Grid.Style>
+                <Style TargetType="{x:Type Grid}">
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding Model.IsSearchEnabled, UpdateSourceTrigger=PropertyChanged}" Value="True">
                             <Setter Property="Visibility" Value="Visible" />
+                            <Setter Property="FocusManager.FocusedElement" Value="{Binding ElementName=SearchBox}" />
                             <DataTrigger.EnterActions>
                                 <BeginStoryboard>
                                     <Storyboard Storyboard.TargetProperty="Height">
                                         <DoubleAnimation
                                             From="0"
-                                            To="40"
+                                            To="44"
                                             Duration="0:0:0.24" />
                                     </Storyboard>
                                 </BeginStoryboard>
@@ -452,7 +503,7 @@
                                 <BeginStoryboard>
                                     <Storyboard Storyboard.TargetProperty="Height">
                                         <DoubleAnimation
-                                            From="40"
+                                            From="44"
                                             To="0"
                                             Duration="0:0:0.24" />
                                     </Storyboard>
@@ -461,9 +512,8 @@
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
-            </controls:SearchBox.Style>
-
-        </controls:SearchBox>
+            </Grid.Style>
+        </Grid>
 
         <!--  TODO: Scrool To Start  -->
         <!--  TODO: IconButton MouseOver fill Activity Color  -->

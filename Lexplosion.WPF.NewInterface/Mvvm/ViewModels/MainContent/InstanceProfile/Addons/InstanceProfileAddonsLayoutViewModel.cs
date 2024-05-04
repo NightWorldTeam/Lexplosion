@@ -7,6 +7,7 @@ using Lexplosion.WPF.NewInterface.Stores;
 using Microsoft.VisualBasic;
 using System;
 using System.Windows.Input;
+using static System.Windows.Forms.AxHost;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile
 {
@@ -39,6 +40,16 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             }
         }
 
+        private bool _isSearchEnable = true;
+        public bool IsSearchEnable 
+        {
+            get => _isSearchEnable; set 
+            {
+                _isSearchEnable = value;
+                OnPropertyChanged();
+            }
+        }
+
 
         #region Commands
 
@@ -46,9 +57,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         private RelayCommand _searchStateChanged;
         public ICommand SearchStateChangedCommand
         {
-            get => RelayCommand.GetCommand<bool>(ref _searchStateChanged, (state) => 
+            get => RelayCommand.GetCommand(ref _searchStateChanged, () => 
             {
-                (SelectedItem.Content as IInstanceAddonContainerActions).SearchStateChanged(state);
+                (SelectedItem.Content as IInstanceAddonContainerActions).SearchStateChanged(IsSearchEnable);
             });
         }
 
@@ -117,6 +128,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             _tabs.Add(new TabItemModel { Id = 2, TextKey = "Resourcepacks", Content = _resourcepacksViewModel });
             _tabs.Add(new TabItemModel { Id = 3, TextKey = "Maps", Content = _mapsViewModel });
             _tabs[0].IsSelected = true;
+
+            (_tabs[0].Content as IInstanceAddonContainerActions).SearchStateChanged(IsSearchEnable);
         }
     }
 }

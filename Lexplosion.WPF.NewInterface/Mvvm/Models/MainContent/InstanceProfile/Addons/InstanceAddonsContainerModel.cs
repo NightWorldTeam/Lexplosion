@@ -15,8 +15,16 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
         private readonly BaseInstanceData _baseInstanceData;
         private readonly InstanceModelBase _instanceModelBase;
         private ObservableCollection<InstanceAddon> _addonsList = new();
-        
-        
+
+
+        private static string[] _sortByList =
+        {
+            "name", "author"
+        };
+
+        public string[] SortByList => _sortByList;
+
+
         #region Properties
 
 
@@ -58,7 +66,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
         /// <summary>
         /// Включен ли поиск.
         /// </summary>
-        private bool _isSearchEnabled = false;
+        private bool _isSearchEnabled = true;
         public bool IsSearchEnabled
         { 
             get => _isSearchEnabled; set 
@@ -81,6 +89,17 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
             }
         }
 
+        private string _selectedSortByParam;
+        public string SelectedSortByParam
+        {
+            get => _selectedSortByParam; set 
+            {
+                _selectedSortByParam = value;
+                OnPropertyChanged();
+                OnSearchBoxTextChanged(_searchBoxText);
+            }
+        }
+
 
         #endregion Properties
 
@@ -91,6 +110,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
         public InstanceAddonsContainerModel(AddonType type, InstanceModelBase instanceModelBase)
         {
             Type = type;
+            _selectedSortByParam = SortByList[0];
             _instanceModelBase = instanceModelBase;
             _baseInstanceData = instanceModelBase.InstanceData;
 
@@ -205,7 +225,18 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
         /// <param name="value"></param
         private void OnSearchBoxTextChanged(string value) 
         {
-            InstanceAddonCollectionViewSource.View.Filter = (m => (m as InstanceAddon).Name.IndexOf(value, System.StringComparison.InvariantCultureIgnoreCase) > -1);
+            if (InstanceAddonCollectionViewSource.View == null)
+                return;
+
+            value ??= string.Empty;
+            if (SelectedSortByParam == "name")
+            {
+                InstanceAddonCollectionViewSource.View.Filter = (m => (m as InstanceAddon).Name?.IndexOf(value, System.StringComparison.InvariantCultureIgnoreCase) > -1);
+            }
+            else if (SelectedSortByParam == "author") 
+            {
+                InstanceAddonCollectionViewSource.View.Filter = (m => (m as InstanceAddon).Author?.IndexOf(value, System.StringComparison.InvariantCultureIgnoreCase) > -1);
+            }
         }
 
 
