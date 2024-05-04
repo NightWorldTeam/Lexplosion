@@ -406,6 +406,7 @@
                         Orientation="Horizontal">
 
                         <!--  Addon update  -->
+                        <!--  TODO: Анимация при кнопке обновления.  -->
                         <Button
                             Command="{Binding DataContext.UpdateCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
                             CommandParameter="{Binding}"
