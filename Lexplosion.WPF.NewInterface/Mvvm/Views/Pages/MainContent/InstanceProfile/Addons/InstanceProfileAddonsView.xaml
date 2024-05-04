@@ -406,10 +406,13 @@
                         Orientation="Horizontal">
 
                         <!--  Addon update  -->
-                        <Button Command="{Binding DataContext.UpdateCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Visibility="{Binding UpdateAvailable, UpdateSourceTrigger=PropertyChanged, Converter={valueconverters:BooleanToVisibilityConverter}}">
-                            <Viewbox Height="16" Margin="4,0,0,0">
+                        <Button
+                            Command="{Binding DataContext.UpdateCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                            CommandParameter="{Binding}"
+                            Style="{StaticResource IconButton}">
+                            <Viewbox Height="18" Margin="4,0,0,0">
                                 <Path
-                                    extension:Path.StringKeyData="Reload"
+                                    extension:Path.StringKeyData="Update"
                                     Fill="{DynamicResource SecondaryForegroundSolidColorBrush}"
                                     Stretch="Fill" />
                             </Viewbox>
@@ -422,7 +425,11 @@
                             Style="{StaticResource EllipseToggleButton}" />
 
                         <!--  Addon External Link  -->
-                        <Button Margin="8,0,0,0" Style="{StaticResource IconButton}">
+                        <Button
+                            Margin="8,0,0,0"
+                            Command="{Binding DataContext.OpenExternalResourceCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                            CommandParameter="{Binding}"
+                            Style="{StaticResource IconButton}">
                             <Viewbox Height="12">
                                 <Path
                                     extension:Path.StringKeyData="Curseforge"
@@ -435,6 +442,7 @@
                         <Button
                             Margin="8,0,0,0"
                             Command="{Binding DataContext.UninstallCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                            CommandParameter="{Binding}"
                             Content="Delete"
                             Foreground="Red"
                             Style="{StaticResource x32IconButtonActivityColor}" />

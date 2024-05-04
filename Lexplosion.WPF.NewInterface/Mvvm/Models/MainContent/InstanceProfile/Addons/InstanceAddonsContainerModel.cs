@@ -4,7 +4,6 @@ using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Data;
 
@@ -187,8 +186,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
         /// <param name="instanceAddon">Addon который нужно обновить</param>
         public void UpdateAddon(object instanceAddon)
         {
-            if (instanceAddon is InstanceAddon)
-                (instanceAddon as InstanceAddon).Update();
+            if (instanceAddon is InstanceAddon) {
+                Runtime.TaskRun(() => {
+                    Console.WriteLine((instanceAddon as InstanceAddon).Update());
+                });
+            }
         }
 
         /// <summary>
@@ -197,8 +199,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
         /// <param name="instanceAddon">Addon который нужно удалить</param>
         public void UninstallAddon(object instanceAddon)
         {
-            if (instanceAddon is InstanceAddon)
-                (instanceAddon as InstanceAddon).Delete();
+            if (instanceAddon is InstanceAddon) 
+            {
+                Runtime.TaskRun(() => {
+                    (instanceAddon as InstanceAddon).Delete();
+                });
+            }
         }
 
 
