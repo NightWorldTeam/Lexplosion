@@ -15,6 +15,8 @@ using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Management.Sources;
 using Lexplosion.Logic.Network.Web;
+using Lexplosion.Logic.Network;
+using Newtonsoft.Json.Linq;
 
 namespace Lexplosion.Logic.Management.Instances
 {
@@ -1393,6 +1395,90 @@ namespace Lexplosion.Logic.Management.Instances
                     callback(result == FileRecvResult.Canceled ? ImportResult.Canceled : ImportResult.DownloadError);
                 }
 
+                client.IsUpdating = false;
+            });
+
+            return client;
+        }
+
+        public static InstanceClient Import(Uri fileURL, Action<ImportResult> callback)
+        {
+            var client = new InstanceClient(CreateSourceFactory(InstanceSource.Local))
+            {
+                Name = "Importing...",
+                InLibrary = true,
+                Author = UnknownAuthor,
+                Summary = string.Empty,
+                IsComplete = false,
+                IsUpdating = true
+            };
+
+            Lexplosion.Runtime.TaskRun(delegate ()
+            {
+                string downloadUrl = null;
+                try
+                {
+                    if (fileURL.Host == "drive.google.com")
+                    {
+                        string[] parts = fileURL.PathAndQuery.Split('/');
+                        if (parts.Length < 4 || string.IsNullOrWhiteSpace(parts[3]))
+                        {
+                            callback(ImportResult.WrongUrl);
+                            return;
+                        }
+
+                        downloadUrl = "https://drive.google.com/uc?export=download&id=" + parts[3];
+                    }
+                    else if (fileURL.Host == "yadi.sk" || fileURL.Host == "disk.yandex.ru" || fileURL.Host == "disk.yandex.com" || fileURL.Host == "disk.yandex.by")
+                    {
+                        string queryUrl = "https://cloud-api.yandex.net/v1/disk/public/resources/download?public_key=" + Uri.EscapeDataString(fileURL.ToString());
+
+                        string result = ToServer.HttpGet(queryUrl);
+                        if (result == null)
+                        {
+                            callback(ImportResult.WrongUrl);
+                            return;
+                        }
+
+                        var data = JsonConvert.DeserializeObject<JToken>(result);
+                        downloadUrl = data["href"].ToString();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Runtime.DebugWrite("Exception " + ex);
+                    callback(ImportResult.WrongUrl);
+                    return;
+                }
+
+                string tempDir = WithDirectory.CreateTempDir();
+                bool res = WithDirectory.DownloadFile(downloadUrl, "instance_file", tempDir, new TaskArgs
+                {
+                    CancelToken = (new CancellationTokenSource()).Token,
+                    PercentHandler = (int pr) => { }
+                });
+
+                if (!res)
+                {
+                    callback(ImportResult.DownloadError);
+                    return;
+                }
+
+                ImportResult impurtRes = Import(client, tempDir + "instance_file");
+
+                try
+                {
+                    if (Directory.Exists(tempDir))
+                    {
+                        Directory.Delete(tempDir, true);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Runtime.DebugWrite("Exception " + ex);
+                }
+
+                callback(impurtRes);
                 client.IsUpdating = false;
             });
 

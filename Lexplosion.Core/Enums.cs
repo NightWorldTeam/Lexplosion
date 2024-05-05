@@ -10,6 +10,7 @@
         MovingFilesError,
         DownloadError,
         DirectoryCreateError,
+        WrongUrl,
         Canceled
     }
 
