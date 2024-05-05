@@ -1,5 +1,4 @@
 ﻿using Lexplosion.WPF.NewInterface.Commands;
-using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Core.Tools;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
@@ -10,7 +9,6 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Threading;
-using Lexplosion.WPF.NewInterface.Controls;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile
 {
@@ -33,6 +31,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         public string InstanceModloader { get => _instanceModel.InstanceData.Modloader.ToString(); }
         public string PlayerPlayedTime { get => _instanceModel.IsInstalled ? "10ч" : DownloadCount; }
         public string DownloadCount { get => _instanceModel.TotalDonwloads; }
+        public bool IsInstalled { get => _instanceModel.IsInstalled; }
 
 
         private ObservableCollection<FrameworkElementModel> _instanceActions = new ObservableCollection<FrameworkElementModel>();
@@ -46,9 +45,21 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
 
 
         private RelayCommand _playCommand;
+        /// <summary>
+        /// Устанавливает клиент, если клиент требуется докачать, докачивает.
+        /// </summary>
         public ICommand PlayCommand
         {
             get => RelayCommand.GetCommand(ref _playCommand, _instanceModel.Run);
+        }
+
+        private RelayCommand _installCommand;
+        /// <summary>
+        /// Устанавливает клиент, если клиент не добавлен в библиотеку добавляет.
+        /// </summary>
+        public ICommand InstallCommand 
+        {
+            get => RelayCommand.GetCommand(ref _installCommand, _instanceModel.Download);
         }
 
         public ICommand BackCommand { get; }
@@ -70,6 +81,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             _instanceModel.GameVersionChanged += OnVersionChanged;
             _instanceModel.ModloaderChanged += OnModloaderChanged;
             _instanceModel.StateChanged += OnStateChanged;
+
+            _instanceModel.DataChanged += OnInstanceModelDataChanged;
 
             UpdateFrameworkElementModels();
         }
@@ -158,6 +171,15 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
                     _instanceModel.Delete();
                 });
             });
+        }
+
+
+        private void OnInstanceModelDataChanged() 
+        {
+            OnPropertyChanged(nameof(InstanceName));
+            OnPropertyChanged(nameof(InstanceVersion));
+            OnPropertyChanged(nameof(InstanceModloader));
+            OnPropertyChanged(nameof(IsInstalled));
         }
 
 

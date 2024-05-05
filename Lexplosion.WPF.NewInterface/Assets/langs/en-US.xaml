@@ -204,8 +204,8 @@
     <!--    -->
     <!--  Instance Overview Menu  -->
     <!--    -->
-    <s:String x:Key="Version">Версия</s:String>
-
+    <s:String x:Key="Version">Version</s:String>
+    <s:String x:Key="Download">Download</s:String>
 
     <!--    -->
     <!--  Instance Profile  -->

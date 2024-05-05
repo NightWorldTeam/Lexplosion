@@ -206,7 +206,7 @@
     <!--  Instance Overview Menu  -->
     <!--    -->
     <s:String x:Key="Version">Версия</s:String>
-
+    <s:String x:Key="Download">Скачать</s:String>
 
     <!--    -->
     <!--  Instance Profile  -->

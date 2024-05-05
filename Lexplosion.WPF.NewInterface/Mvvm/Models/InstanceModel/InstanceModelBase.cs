@@ -2,10 +2,6 @@
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Objects;
 using Lexplosion.WPF.NewInterface.Core;
-using Lexplosion.WPF.NewInterface.Core.Objects;
-using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal;
-using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer;
-using Lexplosion.WPF.NewInterface.Stores;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -16,6 +12,20 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
     public class InstancePresentationInfo 
     {
         
+    }
+
+    public enum InstanceModelStateProperty
+    {
+        Name,
+        GameVersion,
+        Modloader,
+        Logo,
+        Summary,
+        Description,
+        IsInstalled,
+        IsDownloading,
+        InLibrary,
+        State
     }
 
     public class InstanceModelBase : ViewModelBase
@@ -53,6 +63,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 
 
         public event Action StateChanged;
+        public event Action DataChanged;
+        public event Action<InstanceModelStateProperty> PropertyStateChanged;
 
         public event Action NameChanged;
         public event Action GameVersionChanged;
@@ -60,6 +72,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         public event Action LogoChanged;
         public event Action SummaryChanged;
         public event Action DescriptionChanged;
+        public event Action IsInstalledChanged;
+        public event Action InLibraryChanged;
 
 
         // < -- Эвенты процесса скачивания -- > //
@@ -218,6 +232,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         {
             LaunchModel.Run();
             GameLaunched?.Invoke();
+            DataChanged?.Invoke();
         }
 
         /// <summary>
@@ -227,6 +242,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         {
             LaunchModel.Close();
             GameClosed?.Invoke();
+            DataChanged?.Invoke();
         }
 
 
@@ -243,6 +259,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             }
 
             DownloadModel.Download();
+            DataChanged?.Invoke();
         }
 
         /// <summary>
@@ -255,6 +272,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
                 SetState(InstanceState.DownloadCanceling);
 
             DownloadCanceled?.Invoke();
+            DataChanged?.Invoke();
         }
 
         /// <summary>
@@ -263,6 +281,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         public void Update()
         {
             _instanceClient.Update();
+            DataChanged?.Invoke();
         }
 
 
@@ -274,6 +293,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             _instanceClient.AddToLibrary();
             GlobalAddedToLibrary?.Invoke(this);
             AddedToLibraryEvent?.Invoke(this);
+            DataChanged?.Invoke();
         }
 
         /// <summary>
@@ -353,6 +373,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         public void ChangeOverviewParameters(BaseInstanceData baseInstance, string logoPath = null)
         {
             _instanceClient.ChangeParameters(baseInstance, logoPath);
+            DataChanged?.Invoke();
         }
 
         /// <summary>
@@ -373,6 +394,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         private void OnDownloadStarted()
         {
             DownloadStarted?.Invoke();
+            DataChanged?.Invoke();
         }
 
 
@@ -391,12 +413,14 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             }
 
             DownloadProgressChanged?.Invoke(stageType, progressHandlerArguments);
+            DataChanged?.Invoke();
         }
 
         private void OnDownloadCanceled()
         {
             SetState(InstanceState.Default);
             DownloadCanceled?.Invoke();
+            DataChanged?.Invoke();
         }
 
         private void OnDownloadCompleted(InstanceInit init, IEnumerable<string> errors, bool isRun)
@@ -411,12 +435,14 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             }
 
             DownloadComplited?.Invoke(init, errors, isRun);
+            DataChanged?.Invoke();
         }
 
 
         private void OnLaunchStarted()
         {
             GameLaunched?.Invoke();
+            DataChanged?.Invoke();
         }
 
         private void OnLaunchCompleted(bool isSuccessful)
@@ -426,6 +452,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
                 SetState(InstanceState.Running);
             }
             GameLaunchCompleted?.Invoke(isSuccessful);
+            DataChanged?.Invoke();
         }
 
         private void OnGameClosed()
@@ -433,6 +460,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             GameClosed?.Invoke();
             Runtime.DebugWrite("Game Closed");
             SetState(InstanceState.Default);
+            DataChanged?.Invoke();
         }
 
 
@@ -445,6 +473,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         {
             OnPropertyChanged(nameof(Name));
             NameChanged?.Invoke();
+            DataChanged?.Invoke();
         }
 
         private void OnLogoChanged()
@@ -452,18 +481,21 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             Logo = _instanceClient.Logo;
             OnPropertyChanged(nameof(Logo));
             LogoChanged?.Invoke();
+            DataChanged?.Invoke();
         }
 
         private void OnSummaryChanged()
         {
             OnPropertyChanged(nameof(Summary));
             SummaryChanged?.Invoke();
+            DataChanged?.Invoke();
         }
 
         private void OnDescriptionChanged()
         {
             OnPropertyChanged(nameof(Description));
             DescriptionChanged?.Invoke();
+            DataChanged?.Invoke();
         }
 
         private void OnStateClientChanged()

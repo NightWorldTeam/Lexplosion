@@ -2,6 +2,7 @@
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using Lexplosion.WPF.NewInterface.Stores;
+using System;
 using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile
@@ -72,14 +73,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         {
             _overviewViewModel = new InstanceProfileOverviewViewModel(_instanceModel);
 
-            if (_instanceModel.IsInstalled) 
-            { 
+            if (_instanceModel.IsInstalled)
+            {
                 _addonsViewModel = new InstanceProfileAddonsLayoutViewModel(_navigationStore, _instanceModel);
                 _settingsLayoutViewModel = new InstanceProfileSettingsLayoutViewModel(_instanceModel);
             }
 
-            //if (_instanceModel.IsInstalled)
-            
             Lexplosion.Runtime.TaskRun(() =>
             {
                 LeftPanel.AddTabItem("Overview", "Services", _overviewViewModel);
