@@ -1071,8 +1071,7 @@ namespace Lexplosion.Logic.Network.SMP
                                     _repeatDeliveryList = ids;
                                     bool test = _deliveryWait.Set();
 #if DEBUG
-                                    // TODO: надо будет убрать этот вывод
-                                    Runtime.DebugWrite("packageId " + packageId + " " + _lastPackage + " " + test + ", IsSignal: " + _deliveryWait.IsSignal + ", ResetCalled: " + _deliveryWait.ResetCalled);
+                                    //Runtime.DebugWrite("packageId " + packageId + " " + _lastPackage + " " + test + ", IsSignal: " + _deliveryWait.IsSignal + ", ResetCalled: " + _deliveryWait.ResetCalled);
 #endif
                                 }
                                 _repeatDeliveryBlock.Release();

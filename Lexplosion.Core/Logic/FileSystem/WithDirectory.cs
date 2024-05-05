@@ -615,9 +615,14 @@ namespace Lexplosion.Logic.FileSystem
                     File.Copy(fileName, targetFileName);
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                Directory.Delete(unzipPath, true);
+                try
+                {
+                    Directory.Delete(unzipPath, true);
+                }
+                catch { }
+                Runtime.DebugWrite("Exception " + ex);
 
                 return ImportResult.MovingFilesError;
             }
