@@ -440,4 +440,5 @@
     <s:String x:Key="everythingIsExcellent">Everything is excellent)</s:String>
     <s:String x:Key="somethingIsWrong">Something went wrong during import.</s:String>
     <s:String x:Key="importWrongUrl">The URL to import the file is incorrect. We currently only support Yandex Disk and Google Drive for now.</s:String>
+    <s:String x:Key="importFromYandexOrGooglePlaceholder">Or Google Drive or Yandex Disk url</s:String>
 </ResourceDictionary>

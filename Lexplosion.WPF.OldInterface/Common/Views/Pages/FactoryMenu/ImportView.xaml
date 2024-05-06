@@ -301,11 +301,12 @@
                         </Grid.ColumnDefinitions>
 
                         <controls:PlaceholderTextBox
-                            Height="32" Foreground="White"
+                            Height="32"
                             Padding="8,0"
                             HorizontalContentAlignment="Left"
                             VerticalContentAlignment="Center"
-                            Placeholder="Ссылка на гугл или яндекс диск"
+                            Foreground="White"
+                            Placeholder="{StaticResource importFromYandexOrGooglePlaceholder}"
                             Text="{Binding ImportURL, UpdateSourceTrigger=PropertyChanged}" />
 
                         <Button
@@ -314,7 +315,7 @@
                             Margin="16,0,0,0"
                             Padding="16,8"
                             Command="{Binding ImportFromYandexOrGoogleDiskCommand}"
-                            Content="Import"
+                            Content="{StaticResource import}"
                             Style="{StaticResource DefaultBrandColorButton}" />
                     </Grid>
                 </StackPanel>
