@@ -491,6 +491,14 @@ namespace Lexplosion.Logic.Network
             }
         }
 
+        public static bool IsHtmlPage(string url)
+        {
+            var request = HttpWebRequest.Create(url);
+            request.Method = "HEAD";
+
+            return (request.GetResponse().ContentType.StartsWith("text/html"));
+        }
+
         public static string HttpPostJson(string url, string data, out HttpStatusCode? httpStatus, Dictionary<string, string> headers = null)
         {
             httpStatus = null;

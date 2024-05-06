@@ -1427,7 +1427,63 @@ namespace Lexplosion.Logic.Management.Instances
                             return;
                         }
 
-                        downloadUrl = "https://drive.google.com/uc?export=download&id=" + parts[3];
+                        downloadUrl = "https://drive.google.com/uc?export=download&confirm=no_antivirus&id=" + parts[3];
+
+                        if (ToServer.IsHtmlPage(downloadUrl))
+                        {
+                            string data = ToServer.HttpGet(downloadUrl);
+                            if (string.IsNullOrWhiteSpace(data))
+                            {
+                                callback(ImportResult.WrongUrl);
+                                return;
+                            }
+
+                            IEnumerable<string> GetSubStrings(string input, string start, string end)
+                            {
+                                Regex r = new Regex(Regex.Escape(start) + "(.*?)" + Regex.Escape(end));
+                                MatchCollection matches = r.Matches(input);
+                                foreach (Match match in matches)
+                                    yield return match.Groups[1].Value;
+                            }
+
+                            string GetStrBetweenStrings(string input, string start, string end)
+                            {
+                                return Regex.Match(input, Regex.Escape(start) + "(.*?)" + Regex.Escape(end)).Groups[1].Value;
+                            }
+
+                            string urlBase = null;
+                            string formHead = null;
+                            foreach (string pageForm in GetSubStrings(data, "<form", ">"))
+                            {
+                                if (pageForm.Contains("id=\"download-form\"") && pageForm.Contains("action=\""))
+                                {
+                                    urlBase = GetStrBetweenStrings(pageForm, "action=\"", "\"");
+                                    formHead = "<form" + pageForm + ">";
+                                    break;
+                                }
+                            }
+
+                            if (urlBase == null)
+                            {
+                                callback(ImportResult.WrongUrl);
+                                return;
+                            }
+
+                            urlBase += "?";
+                            data = GetStrBetweenStrings(data, formHead, "</form>");
+                            foreach (string htmlInput in GetSubStrings(data, "<input", ">"))
+                            {
+                                Runtime.DebugWrite(htmlInput);
+                                if (htmlInput.Contains("name=\"") && htmlInput.Contains("value=\""))
+                                {
+                                    string name = GetStrBetweenStrings(htmlInput, "name=\"", "\"");
+                                    string value = GetStrBetweenStrings(htmlInput, "value=\"", "\"");
+                                    urlBase += Uri.EscapeDataString(name) + "=" + Uri.EscapeDataString(value) + "&";
+                                }
+                            }
+
+                            downloadUrl = urlBase;
+                        }
                     }
                     else if (fileURL.Host == "yadi.sk" || fileURL.Host == "disk.yandex.ru" || fileURL.Host == "disk.yandex.com" || fileURL.Host == "disk.yandex.by")
                     {
