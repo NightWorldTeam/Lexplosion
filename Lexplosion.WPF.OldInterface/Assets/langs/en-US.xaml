@@ -436,4 +436,8 @@
 
     <s:String x:Key="autoConnectIp">Server ip for auto connect</s:String>
     <s:String x:Key="notAvailableClients">No suitable clients found</s:String>
+
+    <s:String x:Key="everythingIsExcellent">Everything is excellent)</s:String>
+    <s:String x:Key="somethingIsWrong">Something went wrong during import.</s:String>
+    <s:String x:Key="importWrongUrl">The URL to import the file is incorrect. We currently only support Yandex Disk and Google Drive for now.</s:String>
 </ResourceDictionary>

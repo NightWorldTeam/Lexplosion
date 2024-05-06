@@ -480,4 +480,8 @@
 
     <s:String x:Key="autoConnectIp">IP сервера для автоподключения</s:String>
     <s:String x:Key="notAvailableClients">Подходящих клиентов не найдено</s:String>
+
+    <s:String x:Key="everythingIsExcellent">Всё прекрасно)</s:String>
+    <s:String x:Key="somethingIsWrong">Мы не знаем, как так получилось, но</s:String>
+    <s:String x:Key="importWrongUrl">URL-адрес для импорта файла неверен. На данный момент мы поддерживаем только Яндекс Диск и Google Диск.</s:String>
 </ResourceDictionary>

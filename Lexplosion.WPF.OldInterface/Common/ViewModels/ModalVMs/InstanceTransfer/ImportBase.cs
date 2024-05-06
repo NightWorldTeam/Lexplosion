@@ -28,12 +28,12 @@ namespace Lexplosion.Common.ViewModels.ModalVMs.InstanceTransfer
                 // todo: translate
                 case ImportResult.Successful:
                     {
-                        DoNotification("Все прекрасно)", message, 5, 0);
+                        DoNotification(ResourceGetter.GetString("everythingIsExcellent"), message, 5, 0);
                     }
-                    break;
+                    break; 
                 default:
                     {
-                        DoNotification("Мы не знаем, как так получилось, но", message, 5, 1);
+                        DoNotification(ResourceGetter.GetString("somethingIsWrong"), message, 5, 1);
                     }
                     break;
             }
@@ -54,7 +54,7 @@ namespace Lexplosion.Common.ViewModels.ModalVMs.InstanceTransfer
                 case ImportResult.DownloadError: return ResourceGetter.GetString("importResultDownloadError");
                 case ImportResult.DirectoryCreateError: return ResourceGetter.GetString("importResultDirectoryCreateError");
                 case ImportResult.Canceled: return ResourceGetter.GetString("importResultCanceled");
-
+                case ImportResult.WrongUrl: return ResourceGetter.GetString("importWrongUrl");
                 default: return "Неизвестная ошибка!! лол";
             }
         }

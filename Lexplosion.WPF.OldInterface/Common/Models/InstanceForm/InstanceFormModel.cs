@@ -198,7 +198,7 @@ namespace Lexplosion.Common.Models.InstanceForm
 
         public void StopDownloadShareInstance()
         {
-            InstanceDistribution.CancelDownload();
+            InstanceDistribution?.CancelDownload();
         }
 
 

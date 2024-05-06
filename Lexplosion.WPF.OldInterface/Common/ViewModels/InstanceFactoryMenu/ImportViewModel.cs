@@ -13,6 +13,7 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
     {
         private InstanceClient _instanceClient;
 
+
         #region Properties
 
 
@@ -37,6 +38,9 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
         /// Проходится по массиву и для каждого элемента начинает импорт.
         /// </summary>
         public Action<string[]> ImportAction { get; }
+
+
+        public string ImportURL { get; set; }
 
 
         #endregion Properties
@@ -82,6 +86,17 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
             }));
         }
 
+
+        private RelayCommand _importFromYandexOrGoogleDiskCommand;
+        public RelayCommand ImportFromYandexOrGoogleDiskCommand
+        {
+            get => _importFromYandexOrGoogleDiskCommand ?? (_importFromYandexOrGoogleDiskCommand ?? new RelayCommand(obj =>
+            {
+                Import();
+            }));
+        }
+
+
         #endregion Commands
 
 
@@ -106,7 +121,34 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
         #region Public & Protected Methods
 
 
-        public async void Import(string path)
+        public void Import() 
+        {
+            if (string.IsNullOrEmpty(ImportURL)) 
+            {
+                DownloadResultHandler(ImportResult.WrongUrl);
+                return;
+            }
+
+            var uri = new Uri(ImportURL);
+            var importFile = new ImportFile(uri);
+
+            // Добавляем импортируемый файл в ObservableColletion для вывода загрузки.
+            UploadedFilesChanged(importFile);
+
+            _instanceClient = InstanceClient.Import(uri, (r) => 
+            {
+                importFile.IsImportFinished = true;
+                DownloadResultHandler(r);
+                if (r != ImportResult.Successful && _instanceClient != null)
+                {
+                    importFile.IsImportSuccessful = false;
+                    MainModel.Instance.LibraryController.RemoveByInstanceClient(_instanceClient);
+                }
+            });
+            MainModel.Instance.AddInstanceForm(_instanceClient);
+        }
+
+        public void Import(string path)
         {
 #nullable enable
             var importFile = new ImportFile(path);
