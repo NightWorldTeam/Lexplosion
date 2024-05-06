@@ -1473,7 +1473,6 @@ namespace Lexplosion.Logic.Management.Instances
                             data = GetStrBetweenStrings(data, formHead, "</form>");
                             foreach (string htmlInput in GetSubStrings(data, "<input", ">"))
                             {
-                                Runtime.DebugWrite(htmlInput);
                                 if (htmlInput.Contains("name=\"") && htmlInput.Contains("value=\""))
                                 {
                                     string name = GetStrBetweenStrings(htmlInput, "name=\"", "\"");
