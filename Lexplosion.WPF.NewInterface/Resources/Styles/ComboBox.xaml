@@ -32,7 +32,7 @@
     <ControlTemplate x:Key="ComboBoxTextBox" TargetType="{x:Type TextBox}">
         <Border
             x:Name="PART_ContentHost"
-            Background="{TemplateBinding Background}"
+            Background="Transparent"
             Focusable="False" />
     </ControlTemplate>
 
@@ -69,15 +69,15 @@
                             IsHitTestVisible="False" />
                         <TextBox
                             x:Name="PART_EditableTextBox"
-                            Margin="3,3,23,3"
+                            Margin="8,3,23,3"
                             HorizontalAlignment="Left"
-                            VerticalAlignment="Bottom"
-                            Background="Transparent"
+                            VerticalAlignment="Center"
                             Focusable="True"
+                            Foreground="{TemplateBinding Foreground}"
+                            IsEnabled="False"
                             IsReadOnly="{TemplateBinding IsReadOnly}"
                             Style="{x:Null}"
-                            Template="{StaticResource ComboBoxTextBox}"
-                            Visibility="Hidden" />
+                            Template="{StaticResource ComboBoxTextBox}" />
                         <Popup
                             x:Name="Popup"
                             AllowsTransparency="True"

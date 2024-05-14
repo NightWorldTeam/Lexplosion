@@ -84,6 +84,7 @@
     <Compile Include="Controls\AdvancedToolTip\AdvancedToolTip.cs" />
     <Compile Include="Controls\DragDropBoard\DragDropBoard.cs" />
     <Compile Include="Controls\LoadingBoard\LoadingBoard.cs" />
+    <Compile Include="Controls\TextSwitcherButton\TextSwitcherButton.cs" />
     <Compile Include="Core\Commands\CommandBase.cs" />
     <Compile Include="Core\Commands\NavigateCommand.cs" />
     <Compile Include="Core\Commands\RelayCommand.cs" />
@@ -110,11 +111,14 @@
     <Compile Include="Core\Converters\ValueConverters\ConverterBase.cs" />
     <Compile Include="Core\Converters\ValueConverters\NegativeBooleanToVisibilityConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\NegativeBooleanValueConverter.cs" />
+    <Compile Include="Core\Converters\ValueConverters\ToStringConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\WindowHeightToXProcentHeight.cs" />
     <Compile Include="Core\Converters\ValueConverters\WindowWidthToXProcentWidth.cs" />
     <Compile Include="Core\If.cs" />
     <Compile Include="Core\Objects\PlayerWrapper.cs" />
     <Compile Include="Core\Objects\NightWorldUser.cs" />
+    <Compile Include="Core\Objects\TranslatableObjects\InstanceSourceObject.cs" />
+    <Compile Include="Core\Objects\TranslatableObjects\ITranslatableObject.cs" />
     <Compile Include="Core\Paginator\IPaginator.cs" />
     <Compile Include="Core\Paginator\Paginator.cs" />
     <Compile Include="Core\Services\AppColorThemeService.cs" />
@@ -145,6 +149,7 @@
     <Compile Include="Mvvm\Models\InstanceTransfer\ImportProcess.cs" />
     <Compile Include="Mvvm\Models\InstanceTransfer\InstanceFileTree.cs" />
     <Compile Include="Mvvm\Models\InstanceTransfer\InstanceImportModel.cs" />
+    <Compile Include="Mvvm\Models\MainContent\MainMenu\FilterPanel.cs" />
     <Compile Include="Mvvm\Models\MainContent\MainMenu\Friends\Friend.cs" />
     <Compile Include="Mvvm\Models\MainContent\MainMenu\Multiplayer\MultiplayerModel.cs" />
     <Compile Include="Mvvm\ViewModels\MainContent\MainMenu\Content\Friends\FindFriendsViewModel.cs" />
@@ -332,6 +337,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\SearchBox\SearchBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\TextSwitcherButton\TextSwitcherButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

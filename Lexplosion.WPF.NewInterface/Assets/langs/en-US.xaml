@@ -340,4 +340,17 @@
     <s:String x:Key="FullExport">Full Export</s:String>
     <s:String x:Key="InstanceExport">Instance Export</s:String>
     <s:String x:Key="ExportProcessActive">Export Process is active</s:String>
+
+
+    <!--  Sources  -->
+    <s:String x:Key="Source">Source</s:String>
+    <s:String x:Key="AllSource">All sources</s:String>
+    <s:String x:Key="LocalSource">Lexplosion</s:String>
+    <s:String x:Key="Curseforge">Curseforge</s:String>
+    <s:String x:Key="Modrinth">Modrinth</s:String>
+    <s:String x:Key="NightWorld">NightWorld</s:String>
+
+
+    <s:String x:Key="Or">Or</s:String>
+    <s:String x:Key="And">And</s:String>
 </ResourceDictionary>
