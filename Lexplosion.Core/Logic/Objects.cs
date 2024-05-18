@@ -177,6 +177,19 @@ namespace Lexplosion.Logic.Objects
         public Dictionary<AccountType, Profile> Profiles;
     }
 
+    public class Test
+    {
+        public class Profile
+        {
+            public string Login;
+            public string AccessData;
+            public AccountType Type;
+            public bool IsSelected;
+        }
+
+        public List<Profile> Profiles;
+    }
+
     public class InstanceVersion
     {
         public string FileName { get; set; }

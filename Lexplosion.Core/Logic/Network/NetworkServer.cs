@@ -392,6 +392,8 @@ namespace Lexplosion.Logic.Network
 
                                     //result = null;
 
+                                    // TODO: наверное тут надо сделать проверку типа NAT.
+
                                     //парсим порт
                                     if (result?.PublicEndPoint != null)
                                     {
