@@ -172,31 +172,28 @@ namespace Lexplosion.Logic.Network.Web
                 url += "&query=" + WebUtility.UrlEncode(searchFilter);
             }
 
-            if (categories != null)
+            var isFiltersExists = false;
+            foreach (var category in categories)
             {
-                var isFiltersExists = false;
-                foreach (var category in categories)
+                if (category == null || category.Id == "-1")
                 {
-                    if (category == null || category.Id == "-1")
-                    {
-                        continue;
-                    }
-
-                    if (isFiltersExists)
-                    {
-                        url += " AND categories=\"" + category.Id + "\"";
-                    }
-                    else
-                    {
-                        url += "&filters=(categories=\"" + category.Id + "\"";
-                        isFiltersExists = true;
-                    }
+                    continue;
                 }
 
                 if (isFiltersExists)
                 {
-                    url += ")";
+                    url += " AND categories=\"" + category.Id + "\"";
                 }
+                else
+                {
+                    url += "&filters=(categories=\"" + category.Id + "\"";
+                    isFiltersExists = true;
+                }
+            }
+
+            if (isFiltersExists)
+            {
+                url += ")";
             }
 
             return GetApiData<CtalogContainer>(url)?.hits ?? new List<ModrinthCtalogUnit>();

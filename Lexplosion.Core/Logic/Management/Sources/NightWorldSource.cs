@@ -18,7 +18,7 @@ namespace Lexplosion.Logic.Management.Sources
             return new NightworldInstallManager(localId, updateOnlyBase, updateCancelToken);
         }
 
-        public List<Objects.InstanceInfo> GetCatalog(InstanceSource type, int pageSize, int pageIndex, IEnumerable<IProjectCategory> categories, string searchFilter, CfSortField sortField, string gameVersion)
+        public List<Objects.InstanceInfo> GetCatalog(InstanceSource type, ISearchParams searchParams)
         {
             Dictionary<string, NightWorldApi.InstanceInfo> nwInstances = NightWorldApi.GetInstancesList();
             var result = new List<Objects.InstanceInfo>();
@@ -26,7 +26,7 @@ namespace Lexplosion.Logic.Management.Sources
             var i = 0;
             foreach (string nwModpack in nwInstances.Keys)
             {
-                if (i < pageSize * (pageIndex + 1))
+                if (i < searchParams.PageSize * (searchParams.PageIndex + 1))
                 {
                     // проверяем версию игры
                     if (nwInstances[nwModpack].GameVersion != null)

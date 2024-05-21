@@ -87,7 +87,7 @@ namespace Lexplosion.Logic.Management.Sources
 
         public InstanceSource SourceType => InstanceSource.FreeSource;
 
-        public List<InstanceInfo> GetCatalog(InstanceSource type, int pageSize, int pageIndex, IEnumerable<IProjectCategory> categories, string searchFilter, CfSortField sortField, string gameVersion)
+        public List<InstanceInfo> GetCatalog(InstanceSource type, ISearchParams searchParams)
         {
             return new List<InstanceInfo>();
         }

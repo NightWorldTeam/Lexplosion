@@ -16,9 +16,9 @@ namespace Lexplosion.Logic.Management.Sources
             return new LocalInstallManager(localId, updateCancelToken);
         }
 
-        public List<InstanceInfo> GetCatalog(InstanceSource type, int pageSize, int pageIndex, IEnumerable<IProjectCategory> categories, string searchFilter, CfSortField sortField, string gameVersion)
+        public List<InstanceInfo> GetCatalog(InstanceSource type, ISearchParams searchParams)
         {
-            return null;
+            return new List<InstanceInfo>();
         }
 
         public InstancePlatformData CreateInstancePlatformData(string externalId, string localId, string instanceVersion)
