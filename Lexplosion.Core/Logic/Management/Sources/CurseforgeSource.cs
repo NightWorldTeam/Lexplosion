@@ -43,8 +43,10 @@ namespace Lexplosion.Logic.Management.Sources
             // получаем первый элемент списка
             using (var iter = searchParams.Categories.GetEnumerator())
             {
-                iter.MoveNext();
-                category = (IProjectCategory)iter.Current;
+                if (iter.MoveNext())
+                {
+                    category = (IProjectCategory)iter.Current;
+                }       
             }
 
             var curseforgeInstances = CurseforgeApi.GetInstances(sParams.PageSize, sParams.LastIndexInPage, category.Id, sParams.SortField, sParams.SearchFilter, sParams.GameVersion);

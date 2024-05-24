@@ -283,7 +283,7 @@ namespace Lexplosion.Logic.Management.Instances
         /// Возвращает список аддонов с курсфорджа.
         /// </summary>
         /// <param name="modpackInfo">Класс BaseInstanceData, описывающий модпак, для которого нужно получить каталог адднов.</param>
-        /// <param name="pageSize"Размер страницы></param>
+        /// <param name="pageSize">Размер страницы></param>
         /// <param name="index">Индекс</param>
         /// <param name="type">Тип аддона</param>
         /// <param name="category">Категория. По умолчанию -1 (при -1 все категории)</param>
@@ -291,22 +291,58 @@ namespace Lexplosion.Logic.Management.Instances
         /// <returns>Собстна список аддонов.</returns>
         public static List<InstanceAddon> GetAddonsCatalog(BaseInstanceData modpackInfo, int pageSize, int index, AddonType type, CategoryBase category, string searchFilter = "")
         {
+            ISearchParams searchParams = new CurseforgeSearchParams(searchFilter, modpackInfo.GameVersion.Id, new List<CategoryBase>() { category }, pageSize, index, CfSortField.Popularity, new List<ClientType>() { modpackInfo.Modloader } );
+            return GetAddonsCatalog(modpackInfo, type, searchParams);
+        }
+
+        public static List<InstanceAddon> GetAddonsCatalog(BaseInstanceData modpackInfo, AddonType type, ISearchParams searchParams)
+        {
+            CurseforgeSearchParams sParams;
+            if (searchParams is CurseforgeSearchParams)
+            {
+                sParams = (CurseforgeSearchParams)searchParams;
+            }
+            else
+            {
+                sParams = new CurseforgeSearchParams();
+            }
+
+            Func<List<CurseforgeAddonInfo>> getCatalog = () =>
+            {
+                return CurseforgeApi.GetAddonsList(sParams.PageSize, sParams.LastIndexInPage, type, sParams.Categories, sParams.Modloaders, sParams.SearchFilter, sParams.GameVersion);
+            };
+
+            Func<CurseforgeAddonInfo, IPrototypeAddon> addonPrototypeCreate = (CurseforgeAddonInfo addonInfo) =>
+            {
+                return new CurseforgeAddon(modpackInfo, addonInfo);
+            };
+
+            Func<CurseforgeAddonInfo, string> getAddonId = (CurseforgeAddonInfo addonInfo) => addonInfo.id;
+            Func<CurseforgeAddonInfo, int> getDownloadCounts = (CurseforgeAddonInfo addonInfo) => (int)addonInfo.downloadCount;
+            Func<CurseforgeAddonInfo, string> getLastUpdate = (CurseforgeAddonInfo addonInfo) => DateTime.Parse(addonInfo.dateModified).ToString("dd MMM yyyy");
+            Func<CurseforgeAddonInfo, string> getLogoUrl = (CurseforgeAddonInfo addonInfo) => addonInfo.logo?.url;
+
+            return GetAddonsCatalog(modpackInfo, type, searchParams, getCatalog, addonPrototypeCreate, getAddonId, getDownloadCounts, getLastUpdate, getLogoUrl);
+        }
+
+        private static List<InstanceAddon> GetAddonsCatalog<TAddonInfo>(BaseInstanceData modpackInfo, AddonType type, ISearchParams searchParams, Func<List<TAddonInfo>> getCatalog, Func<TAddonInfo, IPrototypeAddon> addonPrototypeCreate, Func<TAddonInfo, string> getAddonId, Func<TAddonInfo, int> getDownloadCounts, Func<TAddonInfo, string> getLastUpdate, Func<TAddonInfo, string> getLogoUrl)
+        {
             _addonsCatalogChache = new Dictionary<string, InstanceAddon>();
 
             string instanceId = modpackInfo.LocalId;
             var addons = new List<InstanceAddon>();
 
             // получаем спсиок всех аддонов с курсфорджа
-            List<CurseforgeAddonInfo> addonsList = CurseforgeApi.GetAddonsList(pageSize, index * pageSize, type, category, modpackInfo.Modloader, searchFilter, modpackInfo.GameVersion.Id);
+            List<TAddonInfo> addonsList = getCatalog();
 
             // получаем список установленных аддонов
             using (InstalledAddons installedAddons = InstalledAddons.Get(modpackInfo.LocalId))
             {
                 // проходимся по аддонам с курсфорджа
                 int i = 0;
-                foreach (CurseforgeAddonInfo addon in addonsList)
+                foreach (TAddonInfo addon in addonsList)
                 {
-                    string addonId = addon.id;
+                    string addonId = getAddonId(addon);
                     bool isInstalled = (installedAddons.ContainsKey(addonId) && installedAddons[addonId].IsExists(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/"));
 
                     InstanceAddon instanceAddon;
@@ -316,12 +352,12 @@ namespace Lexplosion.Logic.Management.Instances
                     {
                         if (_installingAddons[addonKey].Point == null)
                         {
-                            IPrototypeAddon prototypeAddon = new CurseforgeAddon(modpackInfo, addon);
+                            IPrototypeAddon prototypeAddon = addonPrototypeCreate(addon);
                             instanceAddon = new InstanceAddon(prototypeAddon, modpackInfo)
                             {
                                 IsInstalled = isInstalled,
-                                DownloadCount = (int)addon.downloadCount,
-                                LastUpdated = DateTime.Parse(addon.dateModified).ToString("dd MMM yyyy")
+                                DownloadCount = getDownloadCounts(addon),
+                                LastUpdated = getLastUpdate(addon)
                             };
 
                             if (installedAddons.ContainsKey(addonId))
@@ -338,17 +374,17 @@ namespace Lexplosion.Logic.Management.Instances
                         else
                         {
                             instanceAddon = _installingAddons[addonKey].Point;
-                            instanceAddon.DownloadLogo(addon.logo?.url);
+                            instanceAddon.DownloadLogo(getLogoUrl(addon));
                         }
                     }
                     else
                     {
-                        IPrototypeAddon prototypeAddon = new CurseforgeAddon(modpackInfo, addon);
-                        instanceAddon = new InstanceAddon(new CurseforgeAddon(modpackInfo, addon), modpackInfo)
+                        IPrototypeAddon prototypeAddon = addonPrototypeCreate(addon);
+                        instanceAddon = new InstanceAddon(prototypeAddon, modpackInfo)
                         {
                             IsInstalled = isInstalled,
-                            DownloadCount = (int)addon.downloadCount,
-                            LastUpdated = DateTime.Parse(addon.dateModified).ToString("dd MMM yyyy")
+                            DownloadCount = getDownloadCounts(addon),
+                            LastUpdated = getLastUpdate(addon)
                         };
 
                         if (installedAddons.ContainsKey(addonId))
