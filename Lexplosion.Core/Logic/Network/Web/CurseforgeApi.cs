@@ -119,16 +119,18 @@ namespace Lexplosion.Logic.Network.Web
                 gameVersion = "&gameVersion=" + gameVersion;
             }
 
-            string categoryStr = "";
-            if (category.Id != "-1")
+            string ctrs = string.Empty;
+            foreach (var ct in category)
             {
                 categoryStr = "&categoryId=" + category.Id;
             }
 
-            string _modloader = "";
+            string categoryStr = "&categoryIds=" + WebUtility.UrlEncode("[" + ctrs.RemoveLastChars(1) + "]");
+
+            string _modloader = string.Empty;
             if (type == AddonType.Mods)
             {
-                _modloader = "&modLoaderType=" + (int)modloader;
+                _modloader = "&modLoaderTypes=" + WebUtility.UrlEncode("[" + string.Join(",", modloaders) + "]");
             }
 
             string url = "https://api.curseforge.com/v1/mods/search?gameId=432&sortField=1&sortOrder=desc&classId=" + (int)type + "&pageSize=" + pageSize + "&index=" + index + gameVersion + categoryStr + _modloader + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);
