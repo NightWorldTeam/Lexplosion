@@ -1,14 +1,15 @@
-﻿using Lexplosion.Logic.FileSystem;
-using Lexplosion.Logic.Objects;
-using Lexplosion.Logic.Objects.Modrinth;
-using Lexplosion.Tools;
-using Newtonsoft.Json;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Runtime.CompilerServices;
 using System.Text;
+using Newtonsoft.Json;
+using Lexplosion.Logic.FileSystem;
+using Lexplosion.Logic.Objects;
+using Lexplosion.Logic.Objects.Modrinth;
+using Lexplosion.Tools;
 
 namespace Lexplosion.Logic.Network.Web
 {
@@ -93,10 +94,10 @@ namespace Lexplosion.Logic.Network.Web
 
         public static List<ModrinthProjectFile> GetProjectFiles(string projectId, ClientType modloader, string gameVersion)
         {
-            string param = "?game_versions=[\"" + gameVersion + "\"]";
+            string param = "?game_versions=" + WebUtility.UrlEncode($"[\"{gameVersion}\"]");
             if (modloader != ClientType.Vanilla)
             {
-                param += "&loaders=[\"" + modloader.ToString().ToLower() + "\"]";
+                param += "&loaders=" + WebUtility.UrlEncode($"[\"{modloader.ToString().ToLower()}\"]");
             }
             string url = "https://api.modrinth.com/v2/project/" + projectId + "/version" + param;
             return GetApiData<List<ModrinthProjectFile>>(url);
@@ -134,24 +135,33 @@ namespace Lexplosion.Logic.Network.Web
 
         public static List<ModrinthProjectInfo> GetProjects(string[] ids)
         {
+            // не понятно на кой хуй modrinth сделал это через get запрос. Максимальные размер url 1024,
+            // в него все айдишники могут не вместится поэтому мутим костыли.
+            // Если айдишников слишком много, то делаем несколько запросов.
             var files = new List<ModrinthProjectInfo>();
 
-            StringBuilder str = new StringBuilder(1950);
+            var str = new StringBuilder(950);
+            str.Append("%22"); // это "
             for (int i = 0; i < ids.Length; i++)
             {
-                str.Append(ids[i]);
+                str.Append(WebUtility.UrlEncode(ids[i]));
 
-                if (i == ids.Length - 1 || str.Length + 3 + ids[i + 1].Length > 1950)
+                // Если это последний элемент, или если при добавлении еще одного id строка будет длиннее 950, то отправляем запрос.
+                // На учитывание дополнительных символов кладем хуй, ибо максимальная длинна url 1024, минус 47 символов начало ссылки
+                // это будет 977. Мы с запасом взяли 950.
+                if (i == ids.Length - 1 || str.Length + ids[i + 1].Length > 950)
                 {
-                    var data = GetApiData<List<ModrinthProjectInfo>>("https://api.modrinth.com/v2/projects?ids=[\"" + str.ToString() + "\"]");
-                    var tes = "https://api.modrinth.com/v2/projects?ids=[\"" + str.ToString() + "\"]";
+                    str.Append("%22");
+                    string url = $"https://api.modrinth.com/v2/projects?ids=%5B{str.ToString()}%5D";
+                    var data = GetApiData<List<ModrinthProjectInfo>>(url);
                     files.AddRange(data);
 
-                    str = new StringBuilder(1950);
+                    str = new StringBuilder(950);
+                    str.Append("%22");
                 }
                 else
                 {
-                    str.Append("\",\"");
+                    str.Append("%22%2C%22"); // это "," 
                 }
             }
 
@@ -199,7 +209,7 @@ namespace Lexplosion.Logic.Network.Web
             return GetApiData<CtalogContainer>(url)?.hits ?? new List<ModrinthCtalogUnit>();
         }
 
-        public static (List<ModrinthProjectInfo>, int) GetAddonsList(int pageSize, int index, AddonType type, IEnumerable<IProjectCategory> categories, ClientType modloader, string searchFilter = "", string gameVersion = "")
+        public static (List<ModrinthProjectInfo>, int) GetAddonsList(int pageSize, int index, AddonType type, IEnumerable<IProjectCategory> categories, IEnumerable<string> modloaders, string searchFilter = "", string gameVersion = "")
         {
             string _type;
             switch (type)
@@ -215,52 +225,49 @@ namespace Lexplosion.Logic.Network.Web
                     break;
             }
 
-            string gameVers = "";
+            string url = "https://api.modrinth.com/v2/search?facets=";
+            string facets = $"[[\"project_type:{_type}\"]";
+
             if (!string.IsNullOrWhiteSpace(gameVersion))
             {
-                gameVers = ",[\"versions: " + gameVersion + "\"]";
+                facets += $",[\"versions:{gameVersion}\"]";
             }
 
-            string url = "https://api.modrinth.com/v2/search?facets=[[%22project_type:" + _type + "%22]" + gameVers + "]&offset=" + (index * pageSize) + "&limit" + pageSize;
-
-            bool isFiltersExists = false;
-            if (modloader != ClientType.Vanilla && type == AddonType.Mods)
+            if (type == AddonType.Mods)
             {
-                url += "&filters=(categories=" + modloader.ToString().ToLower();
-                isFiltersExists = true;
-            }
-
-
-            if (categories != null)
-            {
-                foreach (var category in categories)
+                string modloadersFilter = string.Join(",", modloaders.Select(x => ($"\"categories:{x}\"")));
+                if (modloadersFilter != string.Empty)
                 {
-                    if (category == null || category.Id == "-1")
-                    {
-                        continue;
-                    }
-
-                    if (isFiltersExists)
-                    {
-                        url += " AND categories=\"" + category.Id + "\"";
-                    }
-                    else
-                    {
-                        url += "&filters=(categories=\"" + category.Id + "\"";
-                        isFiltersExists = true;
-                    }
+                    facets += $",[{modloadersFilter}]";
                 }
             }
 
-            if (isFiltersExists)
+            string ctrs = string.Empty;
+            foreach (var category in categories)
             {
-                url += ")";
+                if (category.Id == "-1")
+                {
+                    ctrs = string.Empty;
+                    break;
+                }
+
+                ctrs += $"\"categories:{category.Id}\",";
             }
+
+            if (ctrs != string.Empty)
+            {
+                facets += $",[{ctrs.RemoveLastChars(1)}]";
+            }
+
+            facets += "]";
+
+            url += WebUtility.UrlEncode(facets) + "&offset=" + (index * pageSize) + "&limit" + pageSize;
 
             if (!string.IsNullOrWhiteSpace(searchFilter))
             {
                 url += "&query=" + WebUtility.UrlEncode(searchFilter);
             }
+
             Runtime.DebugWrite(url);
             CtalogContainer catalogList = GetApiData<CtalogContainer>(url);
             var result = new List<ModrinthProjectInfo>();

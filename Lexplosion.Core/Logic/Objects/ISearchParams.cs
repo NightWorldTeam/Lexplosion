@@ -45,12 +45,12 @@ namespace Lexplosion.Logic.Objects
 
         public ModrinthSearchParams(string searchFilter, string gameVersion, IEnumerable<IProjectCategory> categories, int pageSize, int pageIndex, ModrinthSortField sortField, IEnumerable<Modloader> modloaders)
             : this(searchFilter, gameVersion, categories, pageSize, pageIndex, sortField,
-                  modloaders?.Select(x => x.ToString()) ?? DefaultSearchParams.EmptyModloadersList)
+                  modloaders?.Select(x => x.ToString().ToLower()) ?? DefaultSearchParams.EmptyModloadersList)
         { }
 
         public ModrinthSearchParams(string searchFilter, string gameVersion, IEnumerable<IProjectCategory> categories, int pageSize, int pageIndex, ModrinthSortField sortField, IEnumerable<ClientType> clientTypes)
             : this(searchFilter, gameVersion, categories, pageSize, pageIndex, sortField,
-                   clientTypes?.Where(x => x != ClientType.Vanilla)?.Select(x => x.ToString()) ?? DefaultSearchParams.EmptyModloadersList)
+                   clientTypes?.Where(x => x != ClientType.Vanilla)?.Select(x => x.ToString().ToLower()) ?? DefaultSearchParams.EmptyModloadersList)
         { }
 
         public ModrinthSearchParams(string searchFilter, string gameVersion, IEnumerable<IProjectCategory> categories, int pageSize, int pageIndex, ModrinthSortField sortField)

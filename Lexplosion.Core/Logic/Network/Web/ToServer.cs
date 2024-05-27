@@ -4,11 +4,11 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Lexplosion.Global;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
-using System.Threading.Tasks;
 
 namespace Lexplosion.Logic.Network
 {

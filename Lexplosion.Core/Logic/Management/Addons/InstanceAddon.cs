@@ -331,6 +331,8 @@ namespace Lexplosion.Logic.Management.Instances
         {
             var searchParams = new CurseforgeSearchParams(searchFilter, modpackInfo.GameVersion.Id, new List<CategoryBase>() { category }, pageSize, index, CfSortField.Popularity, new List<ClientType>() { modpackInfo.Modloader });
             return GetCurseforgeAddonsCatalog(modpackInfo, type, searchParams);
+            //var searchParams = new ModrinthSearchParams(searchFilter, modpackInfo.GameVersion.Id, new List<CategoryBase>() { category }, pageSize, index, ModrinthSortField.Relevance, new List<ClientType>() { modpackInfo.Modloader });
+            //return GetModrinthAddonsCatalog(modpackInfo, type, searchParams);
         }
 
         private static List<InstanceAddon> GetCurseforgeAddonsCatalog(BaseInstanceData modpackInfo, AddonType type, CurseforgeSearchParams sParams)
@@ -367,7 +369,7 @@ namespace Lexplosion.Logic.Management.Instances
         {
             Func<List<ModrinthProjectInfo>> getCatalog = () =>
             {
-                (List<ModrinthProjectInfo>, int) addonsList1 = ModrinthApi.GetAddonsList(sParams.PageSize, sParams.PageIndex, type, sParams.Categories, modpackInfo.Modloader, sParams.SearchFilter, modpackInfo.GameVersion.Id);
+                (List<ModrinthProjectInfo>, int) addonsList1 = ModrinthApi.GetAddonsList(sParams.PageSize, sParams.PageIndex, type, sParams.Categories, sParams.Modloaders, sParams.SearchFilter, modpackInfo.GameVersion.Id);
                 return addonsList1.Item1;
             };
 
