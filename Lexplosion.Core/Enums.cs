@@ -156,7 +156,8 @@
         Optifine,
         Forge,
         Fabric = 4,
-        Quilt
+        Quilt,
+        Neoforged
     }
 
     /// <summary>

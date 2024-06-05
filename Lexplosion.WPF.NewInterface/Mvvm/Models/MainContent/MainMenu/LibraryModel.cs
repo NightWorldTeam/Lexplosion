@@ -2,7 +2,6 @@
 using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Data;
@@ -27,7 +26,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
         }
 
 
-        public FilterPanel FilterPanel { get; } = new FilterPanel();
+        public LibraryFilterPanel FilterPanel { get; }
 
 
         #region Constructors
@@ -38,24 +37,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
             _instanceController = instanceController;
             InstancesCollectionViewSource.Source = _instanceController.Instances;
 
-            foreach (var instance in instanceController.Instances) 
-            {
-                if (!FilterPanel.Versions.Contains(instance.GameVersion))
-                    FilterPanel.Versions.Add(instance.GameVersion);
-
-                foreach (var cat in instance.InstanceData.Categories.Skip(0)) 
-                {
-                    if (!FilterPanel.AvailableCategories.Contains(cat)) 
-                    {
-                        FilterPanel.AvailableCategories.Add(cat);
-                    }
-                }
-            }
-
-            foreach (var cat in FilterPanel.AvailableCategories) 
-            {
-                Runtime.DebugWrite($"{cat.Id} {cat.Name} {cat.ParentCategoryId} {cat.ClassId}");
-            }
+            FilterPanel = new(instanceController);
 
             FilterPanel.FilterChanged += OnFilterChanged;
         }
@@ -72,12 +54,18 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
             InstancesCollectionViewSource.View.Filter = (i =>
             {
                 var instanceModelBase = i as InstanceModelBase;
-
                 var searchBoxRes = string.IsNullOrEmpty(SearchText) ? true : instanceModelBase.Name.IndexOf(SearchText, System.StringComparison.InvariantCultureIgnoreCase) > -1;
                 var selectedVersionRes = false;
 
 
                 // check versions
+                if (FilterPanel.SelectedVersion == null) 
+                {
+                    FilterPanel.SelectedVersion = FilterPanel.Versions[0];
+                    FilterPanel.SelectedIndex = 0;
+                    OnPropertyChanged(nameof(FilterPanel.SelectedIndex));
+                }
+
                 if (FilterPanel.SelectedVersion.Id == "All" || FilterPanel.SelectedVersion.Id == instanceModelBase.GameVersion.Id)
                 {
                     selectedVersionRes = true;
@@ -100,6 +88,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
                 }
 
                 // categories with or/and operators
+
+                // skip first element because its version.
                 var categories = instanceModelBase.InstanceData.Categories.Skip(0);
                 
                 var selectedCategoriesRes = false;

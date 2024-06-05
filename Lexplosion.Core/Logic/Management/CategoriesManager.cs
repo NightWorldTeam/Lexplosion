@@ -17,6 +17,7 @@ namespace Lexplosion.Logic.Management
                     {
                         var result = new List<CategoryBase>();
                         List<ModrinthCategory> categories = ModrinthApi.GetCategories();
+
                         result.Add(new SimpleCategory
                         {
                             Id = "-1",

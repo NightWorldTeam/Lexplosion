@@ -84,6 +84,7 @@
     <Compile Include="Controls\AdvancedToolTip\AdvancedToolTip.cs" />
     <Compile Include="Controls\DragDropBoard\DragDropBoard.cs" />
     <Compile Include="Controls\LoadingBoard\LoadingBoard.cs" />
+    <Compile Include="Controls\MultiselectComboBox\MultiselectComboBox.cs" />
     <Compile Include="Controls\TextSwitcherButton\TextSwitcherButton.cs" />
     <Compile Include="Core\Commands\CommandBase.cs" />
     <Compile Include="Core\Commands\NavigateCommand.cs" />
@@ -119,6 +120,7 @@
     <Compile Include="Core\Objects\NightWorldUser.cs" />
     <Compile Include="Core\Objects\TranslatableObjects\InstanceSourceObject.cs" />
     <Compile Include="Core\Objects\TranslatableObjects\ITranslatableObject.cs" />
+    <Compile Include="Core\Objects\TranslatableObjects\SortByParamObject.cs" />
     <Compile Include="Core\Paginator\IPaginator.cs" />
     <Compile Include="Core\Paginator\Paginator.cs" />
     <Compile Include="Core\Services\AppColorThemeService.cs" />
@@ -149,7 +151,8 @@
     <Compile Include="Mvvm\Models\InstanceTransfer\ImportProcess.cs" />
     <Compile Include="Mvvm\Models\InstanceTransfer\InstanceFileTree.cs" />
     <Compile Include="Mvvm\Models\InstanceTransfer\InstanceImportModel.cs" />
-    <Compile Include="Mvvm\Models\MainContent\MainMenu\FilterPanel.cs" />
+    <Compile Include="Mvvm\Models\MainContent\MainMenu\FIlterPanel\CatalogFilterPanel.cs" />
+    <Compile Include="Mvvm\Models\MainContent\MainMenu\FIlterPanel\LibraryFilterPanel.cs" />
     <Compile Include="Mvvm\Models\MainContent\MainMenu\Friends\Friend.cs" />
     <Compile Include="Mvvm\Models\MainContent\MainMenu\Multiplayer\MultiplayerModel.cs" />
     <Compile Include="Mvvm\ViewModels\MainContent\MainMenu\Content\Friends\FindFriendsViewModel.cs" />
@@ -166,6 +169,9 @@
     </Compile>
     <Compile Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\Friends\Friend.xaml.cs">
       <DependentUpon>Friend.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Views\Windows\TestWindow.xaml.cs">
+      <DependentUpon>TestWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Tools\HashCodeHelper.cs" />
     <Compile Include="Tools\ImageTools.cs" />
@@ -332,6 +338,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\MultiselectComboBox\MultiselectComboBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Paginator\Paginator.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -369,6 +379,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\Friends\Friend.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Mvvm\Views\Windows\TestWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

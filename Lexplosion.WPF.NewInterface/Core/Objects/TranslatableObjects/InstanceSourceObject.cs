@@ -10,5 +10,10 @@
             TranslateKey = translateKey;
             Value = instanceSource;
         }
+
+        public override string ToString()
+        {
+            return Value.ToString();
+        }
     }
 }

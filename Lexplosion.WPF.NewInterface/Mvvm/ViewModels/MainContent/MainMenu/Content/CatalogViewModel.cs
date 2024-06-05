@@ -6,6 +6,7 @@ using Lexplosion.WPF.NewInterface.Stores;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile;
 using System.Windows.Input;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers;
+using Lexplosion.Logic.Objects;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 {
@@ -15,6 +16,17 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         private readonly NavigateCommand<ViewModelBase> _navigationCommand;
 
         public CatalogModel Model { get; }
+
+
+        private bool _isCategoriesListOpen;
+        public bool IsCategoriesListOpen 
+        {
+            get => _isCategoriesListOpen; set 
+            {
+                _isCategoriesListOpen = value;
+                OnPropertyChanged();
+            }
+        }
 
 
         #region Commands
@@ -54,6 +66,26 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         {
             get => RelayCommand.GetCommand<uint>(ref _toCurrentPageIndexCommand, Model.Paginate);
         }
+
+
+        private RelayCommand _selectCategoryCommand;
+        public ICommand SelectCategoryCommand
+        {
+            get => RelayCommand.GetCommand<CategoryBase>(ref _selectCategoryCommand, (category) =>
+            {
+                if (Model.FilterPanel.SelectedCategories.Contains(category))
+                {
+                    Model.FilterPanel.SelectedCategories.Remove(category);
+                }
+                else 
+                {
+                    Model.FilterPanel.SelectedCategories.Add(category);
+                }
+
+                Model.FilterPanel.FilterChangedExecuteEvent();
+            });
+        }
+
 
         #endregion Commands
 

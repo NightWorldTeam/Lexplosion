@@ -88,23 +88,29 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
                     <!--  SearchBox  -->
                     <controls:SearchBox
+                        Grid.Column="1"
+                        Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={StaticResource WindowWidthToXProcentWidth}, ConverterParameter=40}"
                         HorizontalAlignment="Stretch"
-                        Placeholder="Instance Name"
+                        Placeholder="{DynamicResource Search}"
                         Text="{Binding Model.SearchText, UpdateSourceTrigger=PropertyChanged}" />
 
                     <!--  Filters open button  -->
                     <ToggleButton
                         x:Name="FiltersButton"
-                        Grid.Column="1"
-                        Width="32"
-                        Height="32"
-                        Margin="8,0,0,0" />
+                        Grid.Column="2"
+                        Width="40"
+                        Height="40"
+                        Margin="8,0,0,0"
+                        Style="{StaticResource FilterIconToggleButton}" />
                 </Grid>
 
+                <!--  Filter Panel  -->
                 <Border
                     Grid.Row="1"
                     Grid.Column="1"
@@ -318,9 +324,8 @@
                             </Grid>
                         </Border>
 
+
                         <!--  Todo: для библиотеки пробежаться и получить список всех доступных версий  -->
-
-
                         <!--  Version  -->
                         <Border
                             Grid.Row="2"
@@ -345,7 +350,8 @@
                                 <ComboBox
                                     Grid.Row="1"
                                     ItemsSource="{Binding Model.FilterPanel.Versions}"
-                                    SelectedValue="{Binding Model.FilterPanel.SelectedVersion}" />
+                                    SelectedIndex="{Binding Model.FilterPanel.SelectedIndex, UpdateSourceTrigger=PropertyChanged}"
+                                    SelectedValue="{Binding Model.FilterPanel.SelectedVersion, UpdateSourceTrigger=PropertyChanged}" />
                             </Grid>
                         </Border>
 
@@ -360,9 +366,8 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
-
-
                             <Grid Margin="0,0,0,8">
+
                                 <TextBlock
                                     FontSize="14"
                                     FontWeight="Medium"
@@ -375,12 +380,8 @@
                                     FontSize="14"
                                     IsChecked="{Binding Model.FilterPanel.IsOperatorAnd}"
                                     SecondText="{DynamicResource And}" />
-                                <!--<TextBlock
-                                    HorizontalAlignment="Right"
-                                    FontSize="14"
-                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                    Text="or/and" />-->
                             </Grid>
+
                             <Grid Grid.Row="1">
 
                                 <Grid.RowDefinitions>
@@ -390,38 +391,8 @@
 
                                 <!--  categories list  -->
 
-                                <!--  Select a tag to filter...  -->
-                                <Grid Grid.Row="0" Margin="0,0,0,8">
-                                    <controls:AdvancedTextBox x:Name="CategoriesSearch" PlaceholderKey="NightWorld" />
-
-                                    <ToggleButton
-                                        x:Name="CategoriesListSwitcher"
-                                        Width="32"
-                                        Height="32"
-                                        HorizontalAlignment="Right"
-                                        IsChecked="{Binding IsCategoriesListOpen, UpdateSourceTrigger=PropertyChanged}" />
-                                </Grid>
-
-                                <Popup IsOpen="{Binding IsCategoriesListOpen}" PlacementTarget="{Binding ElementName=CategoriesSearch}">
-                                    <Border
-                                        Padding="8"
-                                        Background="Gray"
-                                        CornerRadius="5">
-                                        <ItemsControl ItemsSource="{Binding Model.FilterPanel.AvailableCategoriesViewSource.View}">
-                                            <ItemsControl.ItemTemplate>
-                                                <DataTemplate DataType="{x:Type objects:CategoryBase}">
-                                                    <Button
-                                                        Command="{Binding DataContext.SelectCategoryCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                        CommandParameter="{Binding}"
-                                                        Content="{Binding Name}" />
-                                                </DataTemplate>
-                                            </ItemsControl.ItemTemplate>
-                                        </ItemsControl>
-                                    </Border>
-                                </Popup>
-
                                 <!--  selected categories  -->
-                                <ItemsControl Grid.Row="1" ItemsSource="{Binding Model.FilterPanel.SelectedCategories}">
+                                <ItemsControl Grid.Row="1" ItemsSource="{Binding Model.FilterPanel.AvailableCategories}">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
                                             <WrapPanel IsItemsHost="true" />
@@ -429,37 +400,22 @@
                                     </ItemsControl.ItemsPanel>
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate DataType="{x:Type objects:CategoryBase}">
-                                            <Button
-                                                Command="{Binding DataContext.UnselectCategoryCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            <ToggleButton
+                                                Margin="0,4,4,0"
+                                                Command="{Binding DataContext.SelectCategoryCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
                                                 CommandParameter="{Binding}"
-                                                Content="{Binding Name}" />
+                                                Content="{Binding Name}"
+                                                Style="{StaticResource CategoryToggleButton}" />
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
-
-                                <WrapPanel Grid.Row="1" Visibility="Collapsed">
-                                    <Border
-                                        Margin="0,0,4,4"
-                                        Padding="4"
-                                        Background="Black"
-                                        CornerRadius="5">
-                                        <StackPanel Orientation="Horizontal">
-                                            <Viewbox Height="8">
-                                                <Path
-                                                    extensions:Path.StringKeyData="Close"
-                                                    Fill="{DynamicResource PrimarySolidColorBrush}"
-                                                    Stretch="Fill" />
-                                            </Viewbox>
-
-                                            <TextBlock
-                                                Margin="4,0,0,0"
-                                                Foreground="White"
-                                                Text="Adventure" />
-                                        </StackPanel>
-                                    </Border>
-                                </WrapPanel>
                             </Grid>
                         </Grid>
+
+
+
+
+
                     </Grid>
                 </Border>
 

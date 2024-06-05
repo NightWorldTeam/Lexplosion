@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal;
-using Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu;
 using Lexplosion.WPF.NewInterface.Core.Objects.TranslatableObjects;
 using Lexplosion.Logic.Objects;
 
@@ -78,26 +77,20 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         {
             get => RelayCommand.GetCommand<CategoryBase>(ref _selectCategoryCommand, (category) => 
             {
-                Model.FilterPanel.SelectedCategories.Add(category);
+                if (Model.FilterPanel.SelectedCategories.Contains(category))
+                { 
+                    Model.FilterPanel.SelectedCategories.Remove(category);
+                }
+                else
+                { 
+                    Model.FilterPanel.SelectedCategories.Add(category);
+                }
 
-                Model.FilterPanel.AvailableCategories.Remove(category);
-                Model.FilterPanel.FilterChangedExecuteEvent();
-                IsCategoriesListOpen = false;
-            });
-        }
-
-        private RelayCommand _unselectCategoryCommand;
-        public ICommand UnselectCategoryCommand
-        {
-            get => RelayCommand.GetCommand<CategoryBase>(ref _unselectCategoryCommand, (category) =>
-            {
-                Model.FilterPanel.SelectedCategories.Remove(category);
-                Model.FilterPanel.AvailableCategories.Add(category);
                 Model.FilterPanel.FilterChangedExecuteEvent();
             });
         }
-                
 
+   
         #endregion Commands
 
 

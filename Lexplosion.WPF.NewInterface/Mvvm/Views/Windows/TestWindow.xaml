@@ -1,0 +1,52 @@
+﻿<Window
+    x:Class="Lexplosion.WPF.NewInterface.Mvvm.Views.Windows.TestWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Lexplosion.WPF.NewInterface.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Windows"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="TestWindow"
+    Width="800"
+    Height="450"
+    mc:Ignorable="d">
+    <Grid Margin="16">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <controls:MultiselectComboBox
+            x:Name="CategoriesList"
+            Placeholder="{DynamicResource CategoriesSearchBoxPlaceholder}"
+            Visibility="Collapsed" />
+
+        <ItemsControl
+            Grid.Row="1"
+            ItemsSource="{Binding SelectedItems, ElementName=CategoriesList}"
+            Visibility="Collapsed" />
+
+        <ListBox
+            x:Name="ListBox1"
+            Grid.Row="1"
+            Grid.Column="1"
+            SelectionChanged="ListBox1_SelectionChanged"
+            SelectionMode="Multiple"
+            Visibility="Collapsed" />
+
+
+        <ComboBox
+            x:Name="multiSelectComboBox"
+            IsEditable="True"
+            IsTextSearchCaseSensitive="False"
+            IsTextSearchEnabled="False"
+            StaysOpenOnEdit="True"
+            TextSearch.TextPath="Name" />
+    </Grid>
+</Window>

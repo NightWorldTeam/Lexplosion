@@ -195,7 +195,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 
             Logo = _instanceClient.Logo;
             Runtime.DebugWrite(Logo == null ? "Null" : Logo.Length.ToString());
-            Tags = _instanceClient.Categories;
+            Tags = _instanceClient.Categories ?? new List<CategoryBase>();
         }
 
 

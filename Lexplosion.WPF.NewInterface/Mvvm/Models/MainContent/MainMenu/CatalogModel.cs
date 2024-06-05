@@ -1,11 +1,11 @@
-﻿using Lexplosion.Logic.Management.Instances;
+﻿using Lexplosion.Logic.Management;
+using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Objects;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers;
+using Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.FIlterPanel;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
 {
@@ -31,6 +31,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
         public uint ItemsPerPage { get; set; } = 10;
 
 
+        public CatalogFilterPanel FilterPanel { get; }
+
+
         private string _searchFilter = string.Empty;
         public string SearchFilter
         {
@@ -40,8 +43,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
                 OnPropertyChanged();
             }
         }
-
-
 
         private bool _isEmptyPage;
         public bool IsEmptyPage
@@ -83,6 +84,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
         public CatalogModel(IInstanceController instanceController)
         {
             _instanceController = instanceController;
+            FilterPanel = new CatalogFilterPanel();
+            FilterPanel.FilterChanged += OnFilterChanged;
             LoadPageContent();
         }
 
@@ -92,6 +95,33 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
 
         #region Public & Properties Methods
         
+
+        private void OnFilterChanged() 
+        {
+            Runtime.TaskRun(() =>
+            {
+                var instanceClientsTuple = GetInstanceClients(
+                    SearchFilter, 
+                    CurrentPageIndex,
+                    FilterPanel.SelectedSource.Value, 
+                    FilterPanel.SelectedCategories.Count == 0 ? new IProjectCategory[] { AllCategory } : FilterPanel.SelectedCategories, 
+                    CfSortField.Featured, 
+                    FilterPanel.SelectedVersion, 
+                    false);
+
+                IsEmptyPage = instanceClientsTuple.Item2 == 0;
+
+                if (PageCount != instanceClientsTuple.Item2)
+                    PageCount = instanceClientsTuple.Item2;
+
+                _instanceController.Clear();
+
+                foreach (var i in instanceClientsTuple.Item1)
+                    _instanceController.Add(i);
+                OnPropertyChanged(nameof(Instances));
+            });
+        }
+
         
         public void Paginate(uint scrollTo)
         {
@@ -109,7 +139,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
         {
             Runtime.TaskRun(() => 
             {
-                var instanceClientsTuple = GetInstanceClients(SearchFilter, CurrentPageIndex, InstanceSource.Modrinth, new IProjectCategory[] { AllCategory }, CfSortField.Featured, "1.19.2", false);
+                var instanceClientsTuple = GetInstanceClients(SearchFilter, CurrentPageIndex, InstanceSource.Modrinth, new IProjectCategory[] { AllCategory }, CfSortField.Featured, new MinecraftVersion(), false);
 
                 IsEmptyPage = instanceClientsTuple.Item2 == 0;
 
@@ -135,8 +165,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
         /// <param name="gameVersion">version of minecraft</param>
         /// <param name="isPaginatorInvoke">Is page index changed?</param>
         /// <returns>Tuple[IEnumerable InstanceClient & InstanceClient count </returns>
-        public Tuple<IEnumerable<InstanceClient>, uint> GetInstanceClients(string searchInput, uint scrollTo, InstanceSource source, IEnumerable<IProjectCategory> selectedCategories, CfSortField sortBy, string gameVersion, bool isPaginatorInvoke = false)
+        public Tuple<IEnumerable<InstanceClient>, uint> GetInstanceClients(string searchInput, uint scrollTo, InstanceSource source, IEnumerable<IProjectCategory> selectedCategories, CfSortField sortBy, MinecraftVersion gameVersion, bool isPaginatorInvoke = false)
         {
+            Console.WriteLine(source);
             var instanceClientList = InstanceClient.GetOutsideInstances(
                 source,
                 (int)ItemsPerPage,
@@ -144,7 +175,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
                 selectedCategories,
                 searchInput,
                 sortBy,
-                gameVersion
+                gameVersion.Id == "All" ? "" : gameVersion.Id
                 );
 
             return new Tuple<IEnumerable<InstanceClient>, uint>(instanceClientList, (uint)instanceClientList.Count);

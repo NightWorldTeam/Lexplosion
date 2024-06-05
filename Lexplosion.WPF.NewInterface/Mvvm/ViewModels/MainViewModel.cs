@@ -68,6 +68,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
 
     public sealed class MainViewModel : VMBase
     {
+        public static event Action AllVersionsLoaded;
+
         #region Properties
 
 
@@ -206,6 +208,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
                 }
                 ReleaseGameVersions = releaseOnlyVersions.ToArray();
                 AllGameVersions = allVersions;
+
+                AllVersionsLoaded?.Invoke();
             });
         }
 

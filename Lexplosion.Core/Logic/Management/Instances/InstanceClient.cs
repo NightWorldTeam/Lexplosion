@@ -452,7 +452,7 @@ namespace Lexplosion.Logic.Management.Instances
                     GameVersion = manifest?.version?.GameVersionInfo,
                     InLibrary = InLibrary,
                     Author = Author,
-                    Categories = Categories,
+                    Categories = Categories ?? new List<CategoryBase>(),
                     Description = Description,
                     Name = _name,
                     Summary = _summary,
