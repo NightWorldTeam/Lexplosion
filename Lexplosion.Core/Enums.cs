@@ -77,6 +77,21 @@
                     return CfProjectType.Mods;
             }
         }
+
+        public static Modloader ToModloader(this ClientType cfProjectType)
+        {
+            switch (cfProjectType)
+            {
+                case ClientType.Forge:
+                    return Modloader.Forge;
+                case ClientType.Fabric:
+                    return Modloader.Fabric;
+                case ClientType.Quilt:
+                    return Modloader.Quilt;
+                default:
+                    return Modloader.Forge;
+            }
+        }
     }
 
     public enum InstanceSource
@@ -106,6 +121,15 @@
         TotalDownloads,
         Category,
         GameVersion
+    }
+
+    public enum ModrinthSortField
+    {
+        Relevance,
+        Downloads,
+        Newest,
+        Updated, 
+        Follows
     }
 
     public enum InstanceInit
@@ -148,7 +172,7 @@
     {
         Forge = 1,
         Fabric = 4,
-        Quilt = 3
+        Quilt
     }
 
     public enum GameExtension

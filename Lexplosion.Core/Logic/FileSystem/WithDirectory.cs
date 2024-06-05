@@ -296,6 +296,8 @@ namespace Lexplosion.Logic.FileSystem
                         client?.CancelPendingRequests();
                     });
 
+                    client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0");
+
                     using (HttpResponseMessage response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead))
                     {
                         response.EnsureSuccessStatusCode();
