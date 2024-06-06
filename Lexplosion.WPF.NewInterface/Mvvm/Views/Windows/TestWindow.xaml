@@ -22,11 +22,6 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <controls:MultiselectComboBox
-            x:Name="CategoriesList"
-            Placeholder="{DynamicResource CategoriesSearchBoxPlaceholder}"
-            Visibility="Collapsed" />
-
         <ItemsControl
             Grid.Row="1"
             ItemsSource="{Binding SelectedItems, ElementName=CategoriesList}"

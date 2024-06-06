@@ -84,7 +84,6 @@
     <Compile Include="Controls\AdvancedToolTip\AdvancedToolTip.cs" />
     <Compile Include="Controls\DragDropBoard\DragDropBoard.cs" />
     <Compile Include="Controls\LoadingBoard\LoadingBoard.cs" />
-    <Compile Include="Controls\MultiselectComboBox\MultiselectComboBox.cs" />
     <Compile Include="Controls\TextSwitcherButton\TextSwitcherButton.cs" />
     <Compile Include="Core\Commands\CommandBase.cs" />
     <Compile Include="Core\Commands\NavigateCommand.cs" />
@@ -335,10 +334,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\ModalControl\ModalControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\MultiselectComboBox\MultiselectComboBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
