@@ -62,7 +62,7 @@ namespace Lexplosion.Logic.Management.Accounts
                 {
                     if (AccountType == AccountType.NightWorld)
                     {
-                        ActiveAccount.IsActive = false;
+                        if (ActiveAccount != null) ActiveAccount.IsActive = false;
                         ActiveAccount = this;
                         TryInitNwServices();
                     }
@@ -84,13 +84,13 @@ namespace Lexplosion.Logic.Management.Accounts
         /// </summary>
         public bool IsLaunched
         {
-            get => _isLaunched; 
+            get => _isLaunched;
             set
             {
                 _isLaunched = value;
                 if (_isLaunched)
                 {
-                    LaunchedAccount.IsLaunched = false;
+                    if (LaunchedAccount != null) LaunchedAccount.IsLaunched = false;
                     LaunchedAccount = this;
                     if (AccountType == AccountType.NightWorld)
                     {
