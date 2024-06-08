@@ -50,6 +50,7 @@ namespace Lexplosion.Logic.Management.Accounts
         /// Является ли аккаунт активным. 
         /// Если установить true, то IsActive другого аккаунта, который был запускаемым изменится на false.
         /// При установки true, статичное свойство ActiveAccount примет значение в виде этого аккаунта.
+        /// Значение true могут иметь только аккаунты NightWorld, если попытаться установить IsActive = true другому типу аккаунта, то ничего не произойдет.
         /// </summary>
         public bool IsActive
         {
@@ -59,9 +60,12 @@ namespace Lexplosion.Logic.Management.Accounts
                 _isActive = value;
                 if (_isActive)
                 {
-                    ActiveAccount.IsActive = false;
-                    ActiveAccount = this;
-                    TryInitNwServices();
+                    if (AccountType == AccountType.NightWorld)
+                    {
+                        ActiveAccount.IsActive = false;
+                        ActiveAccount = this;
+                        TryInitNwServices();
+                    }
                 }
                 else
                 {
@@ -75,17 +79,23 @@ namespace Lexplosion.Logic.Management.Accounts
         /// <summary>
         /// Является ли аккаунт запускаемым. 
         /// Если установить true, то IsLaunched другого аккаунта, который был запускаемым изменится на false.
-        /// При установки true, статичное свойство LaunchedAccount примет значение в виде этого аккаунта.
+        /// При установке true, статичное свойство LaunchedAccount примет значение в виде этого аккаунта.
+        /// Так же, если установить true аккаунту NightWorld, то IsActive у этого аккаунта тоже примет значение true.
         /// </summary>
         public bool IsLaunched
         {
-            get => _isLaunched; private set
+            get => _isLaunched; 
+            set
             {
                 _isLaunched = value;
                 if (_isLaunched)
                 {
                     LaunchedAccount.IsLaunched = false;
                     LaunchedAccount = this;
+                    if (AccountType == AccountType.NightWorld)
+                    {
+                        IsActive = true;
+                    }
                 }
                 else
                 {
@@ -102,8 +112,17 @@ namespace Lexplosion.Logic.Management.Accounts
 
         public bool IsAuthed { get; private set; } = false;
 
+        /// <summary>
+        /// Список сохраненных акаунтов
+        /// </summary>
         public static IEnumerable<Account> List { get => _accounts; }
+        /// <summary>
+        /// Количество сохраненных аккаунтов
+        /// </summary>
         public static int ListCount { get => _accounts.Count; }
+        /// <summary>
+        /// Аккаунт, который активен
+        /// </summary>
         public static Account ActiveAccount { get; private set; }
 
         /// <summary>
@@ -142,7 +161,7 @@ namespace Lexplosion.Logic.Management.Accounts
             _listToSave[account] = account.GetAccountSummary();
         }
 
-        public static void SaveSummaryList()
+        private static void SaveSummaryList()
         {
             DataFilesManager.SaveFile(LaunсherSettings.LauncherDataPath + "/accounts.json", JsonConvert.SerializeObject(_listToSave.Values));
         }
