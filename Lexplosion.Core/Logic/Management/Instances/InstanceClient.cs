@@ -599,42 +599,11 @@ namespace Lexplosion.Logic.Management.Instances
         }
 
 
-        // TODO: потом выпилить этот метод. Он сейчас нужен чисто для работы старого кода
-        public static List<InstanceClient> GetOutsideInstances(InstanceSource type, int pageSize, int pageIndex, IEnumerable<IProjectCategory> categories, string searchFilter = "", CfSortField sortField = CfSortField.Featured, string gameVersion = "")
-        {
-            ISearchParams searchParams;
-            if (type == InstanceSource.Curseforge)
-            {
-                searchParams = new CurseforgeSearchParams(searchFilter, gameVersion, categories, pageSize, pageIndex, sortField);
-            }
-            else
-            {
-                ModrinthSortField sortFiled;
-                switch (sortField)
-                {
-                    case CfSortField.TotalDownloads:
-                        sortFiled = ModrinthSortField.Downloads;
-                        break;
-                    case CfSortField.LastUpdated:
-                        sortFiled = ModrinthSortField.Updated;
-                        break;
-                    default:
-                        sortFiled = ModrinthSortField.Relevance;
-                        break;
-                }
-
-
-                searchParams = new ModrinthSearchParams(searchFilter, gameVersion, categories, pageSize, pageIndex, sortFiled);
-            }
-
-            return GetOutsideInstances(type, searchParams);
-        }
-
         /// <summary>
         /// Возвращает список модпаков для каталога.
         /// </summary>
         /// <returns>Список внешних модпаков.</returns>
-        public static List<InstanceClient> GetOutsideInstances(InstanceSource type, ISearchParams searchParams)
+        public static (List<InstanceClient>, uint) GetOutsideInstances(InstanceSource type, ISearchParams searchParams)
         {
             Runtime.DebugWrite("UploadInstances " + searchParams.PageIndex);
 
@@ -686,7 +655,40 @@ namespace Lexplosion.Logic.Management.Instances
                 instances.Add(instanceClient);
             }
 
-            return instances;
+            return (instances, (uint)100);
+        }
+
+
+        // TODO: потом выпилить этот метод. Он сейчас нужен чисто для работы старого кода
+        [Obsolete("Данный метод является устаревшим, пожалуйста используйте перегрузку данного метода.")]
+        public static (List<InstanceClient>, uint) GetOutsideInstances(InstanceSource type, int pageSize, int pageIndex, IEnumerable<IProjectCategory> categories, string searchFilter = "", CfSortField sortField = CfSortField.Featured, string gameVersion = "")
+        {
+            ISearchParams searchParams;
+            if (type == InstanceSource.Curseforge)
+            {
+                searchParams = new CurseforgeSearchParams(searchFilter, gameVersion, categories, pageSize, pageIndex, sortField);
+            }
+            else
+            {
+                ModrinthSortField sortFiled;
+                switch (sortField)
+                {
+                    case CfSortField.TotalDownloads:
+                        sortFiled = ModrinthSortField.Downloads;
+                        break;
+                    case CfSortField.LastUpdated:
+                        sortFiled = ModrinthSortField.Updated;
+                        break;
+                    default:
+                        sortFiled = ModrinthSortField.Relevance;
+                        break;
+                }
+
+
+                searchParams = new ModrinthSearchParams(searchFilter, gameVersion, categories, pageSize, pageIndex, sortFiled);
+            }
+
+            return GetOutsideInstances(type, searchParams);
         }
 
         /// <summary>

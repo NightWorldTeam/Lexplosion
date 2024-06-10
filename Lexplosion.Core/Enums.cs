@@ -117,11 +117,11 @@
         Popularity,
         LastUpdated,
         Name,
-        Author,
-        TotalDownloads,
-        Category,
-        GameVersion
-    }
+        //Author,
+        TotalDownloads = 6,
+        //Category,
+        //GameVersion
+    }   
 
     public enum ModrinthSortField
     {

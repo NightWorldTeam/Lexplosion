@@ -353,15 +353,28 @@
     <s:String x:Key="CategoriesSearchBoxPlaceholder">Select a tag to filter...</s:String>
 
     <!--  Modrinth  -->
-    <s:String x:Key="DownloadCount">Download Count</s:String>
-    <s:String x:Key="FollowCount">Follow Count</s:String>
-    <s:String x:Key="RecentlyUpdated">Recently Updated</s:String>
-    <s:String x:Key="RecentlyPublished">Recently Published</s:String>
+    <s:String x:Key="ModrinthRelevance">Relevancy</s:String>
+    <s:String x:Key="ModrinthDownloads">Download Count</s:String>
+    <s:String x:Key="ModrinthFollows">Follow Count</s:String>
+    <s:String x:Key="ModrinthUpdated">Recently Updated</s:String>
+    <s:String x:Key="ModrinthNewest">Recently Published</s:String>
     <!--  Curseforge  -->
-    <s:String x:Key="Relevance">Relevancy</s:String>
-    <s:String x:Key="Popularity">Popularity</s:String>
-    <s:String x:Key="LatestUpdate">LatestUpdate</s:String>
-    <s:String x:Key="CreationDate">CreationDate</s:String>
-    <s:String x:Key="TotalDownloads">TotalDownloads</s:String>
-    <s:String x:Key="A-Z">A-Z</s:String>
+    <s:String x:Key="CurseforgeRelevance">Relevancy</s:String>
+    <s:String x:Key="CurseforgeFeatured">Featured</s:String>
+    <s:String x:Key="CurseforgePopularity">Popularity</s:String>
+    <s:String x:Key="CurseforgeLastUpdated">Last Updated</s:String>
+    <s:String x:Key="CurseforgeCreationDate">CreationDate</s:String>
+    <s:String x:Key="CurseforgeTotalDownloads">TotalDownloads</s:String>
+    <s:String x:Key="CurseforgeName">A-Z</s:String>
+
+    <!--
+        Featured = 1,
+        Popularity,
+        LastUpdated,
+        Name,
+        Author,
+        TotalDownloads,
+        Category,
+        GameVersion
+    -->
 </ResourceDictionary>

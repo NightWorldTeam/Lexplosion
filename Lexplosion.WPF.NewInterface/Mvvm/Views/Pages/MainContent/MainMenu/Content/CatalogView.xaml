@@ -18,6 +18,7 @@
     <UserControl.Resources>
         <Style x:Key="FilterIconRadioButton" TargetType="{x:Type ListViewItem}">
             <Setter Property="DataContext" Value="{Binding}" />
+            <Setter Property="Content" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ListViewItem}">
@@ -32,7 +33,7 @@
                                 <Viewbox Width="24" Height="20">
                                     <Path
                                         x:Name="path"
-                                        extensions:Path.StringKeyData="{Binding Value, Converter={converters:ToStringConverter}}"
+                                        extensions:Path.StringKeyData="{TemplateBinding Content}"
                                         Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
                                         Stretch="Fill" />
                                 </Viewbox>
@@ -166,9 +167,14 @@
                                             <ListView
                                                 Background="Transparent"
                                                 BorderThickness="0"
-                                                ItemContainerStyle="{StaticResource FilterIconRadioButton}"
                                                 ItemsSource="{Binding Model.FilterPanel.Sources}"
                                                 SelectedItem="{Binding Model.FilterPanel.SelectedSource}">
+
+                                                <ListView.ItemContainerStyle>
+                                                    <Style BasedOn="{StaticResource FilterIconRadioButton}" TargetType="{x:Type ListViewItem}">
+                                                        <Setter Property="Content" Value="{Binding Value, Converter={converters:ToStringConverter}}" />
+                                                    </Style>
+                                                </ListView.ItemContainerStyle>
 
                                                 <ListView.ItemsPanel>
                                                     <ItemsPanelTemplate>
@@ -184,8 +190,7 @@
                                 <Border
                                     Grid.Row="1"
                                     BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                                    BorderThickness="0,0,1,1"
-                                    Visibility="Visible">
+                                    BorderThickness="0,0,1,1">
                                     <Grid Margin="8">
 
                                         <Grid.RowDefinitions>
@@ -215,9 +220,14 @@
                                             <ListView
                                                 Background="Transparent"
                                                 BorderThickness="0"
-                                                ItemContainerStyle="{StaticResource FilterIconRadioButton}"
                                                 ItemsSource="{Binding Model.FilterPanel.SortByParams}"
                                                 SelectedItem="{Binding Model.FilterPanel.SelectedSortByParam}">
+
+                                                <ListView.ItemContainerStyle>
+                                                    <Style BasedOn="{StaticResource FilterIconRadioButton}" TargetType="{x:Type ListViewItem}">
+                                                        <Setter Property="Content" Value="{Binding TranslateKey}" />
+                                                    </Style>
+                                                </ListView.ItemContainerStyle>
 
                                                 <ListView.ItemsPanel>
                                                     <ItemsPanelTemplate>

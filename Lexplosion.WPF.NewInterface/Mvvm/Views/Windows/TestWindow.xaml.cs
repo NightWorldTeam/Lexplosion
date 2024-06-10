@@ -43,13 +43,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
             multiSelectComboBox.ItemsSource = TestItems;
             ListBox1.ItemsSource = TestItems;
             _collectionViewSource.Source = TestItems;
-            CategoriesList.SearchInCollection = (str) => 
-            {
-                _collectionViewSource.View.Filter += (item) => ((str.Length == 0 ||
-                    (item as string).IndexOf(str, System.StringComparison.InvariantCultureIgnoreCase) > -1)); //&& !CategoriesList.SelectedItems.Contains(item));
-            };
-            //SelectedItems = CategoriesList.SelectedItems;
-            CategoriesList.ItemsSource = _collectionViewSource.View;
         }
 
         private void ListBox1_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)

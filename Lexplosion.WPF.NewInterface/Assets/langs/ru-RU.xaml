@@ -348,15 +348,17 @@
     <s:String x:Key="CategoriesSearchBoxPlaceholder">Выберите категорию для фильтрации...</s:String>
 
     <!--  Modrinth  -->
-    <s:String x:Key="DownloadCount">Количеству скачиваниям</s:String>
-    <s:String x:Key="FollowCount">Подписчикам</s:String>
-    <s:String x:Key="RecentlyUpdated">Последнему обновлению</s:String>
-    <s:String x:Key="RecentlyPublished">Дате создания</s:String>
+    <s:String x:Key="ModrinthRelevance">Релевантности</s:String>
+    <s:String x:Key="ModrinthDownloads">Количеству скачиваниям</s:String>
+    <s:String x:Key="ModrinthFollows">Подписчикам</s:String>
+    <s:String x:Key="ModrinthUpdated">Последнему обновлению</s:String>
+    <s:String x:Key="ModrinthNewest">Дате создания</s:String>
     <!--  Curseforge  -->
-    <s:String x:Key="Relevance">Релевантности</s:String>
-    <s:String x:Key="Popularity">Популярности</s:String>
-    <s:String x:Key="LatestUpdate">Последнему обновлению</s:String>
-    <s:String x:Key="CreationDate">Дате создания</s:String>
-    <s:String x:Key="TotalDownloads">Количеству скачиваний</s:String>
-    <s:String x:Key="A-Z">A-Z</s:String>
+    <s:String x:Key="CurseforgeRelevance">Релевантности</s:String>
+    <s:String x:Key="CurseforgeFeatured">Релевантности</s:String>
+    <s:String x:Key="CurseforgePopularity">Популярности</s:String>
+    <s:String x:Key="CurseforgeLastUpdated">Последнему обновлению</s:String>
+    <s:String x:Key="CurseforgeCreationDate">Дате создания</s:String>
+    <s:String x:Key="CurseforgeTotalDownloads">Количеству скачиваний</s:String>
+    <s:String x:Key="CurseforgeName">A-Z</s:String>
 </ResourceDictionary>

@@ -4,7 +4,6 @@ using Lexplosion.Logic.Objects;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.FIlterPanel;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
-using System;
 using System.Collections.Generic;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
@@ -28,10 +27,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
 
         public IEnumerable<InstanceModelBase> Instances { get => _instanceController.Instances; }
 
-        public uint ItemsPerPage { get; set; } = 10;
-
 
         public CatalogFilterPanel FilterPanel { get; }
+        public uint ItemsPerPage { get; set; } = 10;
 
 
         private string _searchFilter = string.Empty;
@@ -102,10 +100,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
             {
                 var instanceClientsTuple = GetInstanceClients(
                     SearchFilter, 
-                    CurrentPageIndex,
+                    (int)CurrentPageIndex,
                     FilterPanel.SelectedSource.Value, 
                     FilterPanel.SelectedCategories.Count == 0 ? new IProjectCategory[] { AllCategory } : FilterPanel.SelectedCategories, 
-                    CfSortField.Featured, 
+                    FilterPanel.SelectedSortByParam.Value,
                     FilterPanel.SelectedVersion, 
                     false);
 
@@ -126,20 +124,26 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
         public void Paginate(uint scrollTo)
         {
             CurrentPageIndex = scrollTo;
-            LoadPageContent();
+            OnFilterChanged();
         }
 
         public void SearchFilterChanged(string searchFilter) 
         {
             SearchFilter = searchFilter;
-            LoadPageContent();
+            OnFilterChanged();
         }
 
         private void LoadPageContent() 
         {
             Runtime.TaskRun(() => 
             {
-                var instanceClientsTuple = GetInstanceClients(SearchFilter, CurrentPageIndex, InstanceSource.Modrinth, new IProjectCategory[] { AllCategory }, CfSortField.Featured, new MinecraftVersion(), false);
+                var instanceClientsTuple = GetInstanceClients(
+                    SearchFilter,
+                    (int)CurrentPageIndex,
+                    InstanceSource.Modrinth, 
+                    new IProjectCategory[] { AllCategory },
+                    (int)ModrinthSortField.Relevance,
+                    new MinecraftVersion(), false);
 
                 IsEmptyPage = instanceClientsTuple.Item2 == 0;
 
@@ -148,6 +152,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
 
                 foreach (var i in instanceClientsTuple.Item1)
                     _instanceController.Add(i);
+
                 OnPropertyChanged(nameof(Instances));
             });
         }
@@ -161,27 +166,34 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
         /// <param name="scrollTo">Page Index</param>
         /// <param name="source">Curseforge/Modrinth/Nightworld</param>
         /// <param name="selectedCategories">Selected Category(ies)</param>
-        /// <param name="sortBy">Sort by data</param>
+        /// <param name="sortBy">CfSortField or ModrinthSortField</param>
         /// <param name="gameVersion">version of minecraft</param>
         /// <param name="isPaginatorInvoke">Is page index changed?</param>
         /// <returns>Tuple[IEnumerable InstanceClient & InstanceClient count </returns>
-        public Tuple<IEnumerable<InstanceClient>, uint> GetInstanceClients(string searchInput, uint scrollTo, InstanceSource source, IEnumerable<IProjectCategory> selectedCategories, CfSortField sortBy, MinecraftVersion gameVersion, bool isPaginatorInvoke = false)
+        public (IEnumerable<InstanceClient>, uint) GetInstanceClients(string searchInput, int scrollTo, InstanceSource source, IEnumerable<IProjectCategory> selectedCategories, int sortBy, MinecraftVersion gameVersion, bool isPaginatorInvoke = false)
         {
-            Console.WriteLine(source);
-            var instanceClientList = InstanceClient.GetOutsideInstances(
-                source,
-                (int)ItemsPerPage,
-                (int)scrollTo,
-                selectedCategories,
-                searchInput,
-                sortBy,
-                gameVersion.Id == "All" ? "" : gameVersion.Id
-                );
+            ISearchParams searchParams = null;
 
-            return new Tuple<IEnumerable<InstanceClient>, uint>(instanceClientList, (uint)instanceClientList.Count);
+            switch(source) 
+            {
+                case InstanceSource.Modrinth:
+                    searchParams = new ModrinthSearchParams(searchInput, gameVersion.Id, selectedCategories, (int)ItemsPerPage, (int)CurrentPageIndex, (ModrinthSortField)sortBy);
+                    break;
+                case InstanceSource.Curseforge:
+                    var version = gameVersion.Id;
+                    version = version == "All" ? string.Empty : version;
+                    searchParams = new CurseforgeSearchParams(searchInput, version, selectedCategories, (int)ItemsPerPage, (int)CurrentPageIndex, (CfSortField)sortBy);
+                    break;
+                case InstanceSource.Nightworld:
+                    searchParams = new NightWorldSearchParams((int)ItemsPerPage, (int)CurrentPageIndex);
+                    break;
+            }
+
+            return InstanceClient.GetOutsideInstances(source, searchParams);
         }
 
 
         #endregion Public & Properties Methods
     }
 }
+
