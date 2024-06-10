@@ -117,10 +117,19 @@
         Popularity,
         LastUpdated,
         Name,
-        Author,
-        TotalDownloads,
-        Category,
-        GameVersion
+        //Author,
+        TotalDownloads = 6,
+        //Category,
+        //GameVersion
+    }   
+
+    public enum ModrinthSortField
+    {
+        Relevance,
+        Downloads,
+        Newest,
+        Updated, 
+        Follows
     }
 
     public enum ModrinthSortField
@@ -180,7 +189,8 @@
         Optifine,
         Forge,
         Fabric = 4,
-        Quilt
+        Quilt,
+        Neoforged
     }
 
     /// <summary>

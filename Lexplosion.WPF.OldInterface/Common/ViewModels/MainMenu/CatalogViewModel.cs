@@ -329,7 +329,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu
                         searchText == null ? _previousSearch : searchText,
                         SelectedCfSortBy,
                         (string)gameVersion
-                        );
+                        ).Item1;
 
 
                     _previousSearch = searchText == null ? _previousSearch : searchText;

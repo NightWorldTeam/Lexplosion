@@ -16,6 +16,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
 
         private Action<InstanceClient> _exportFunc;
 
+        public event Action<InstanceModelBase> InstanceAdded;
+        public event Action<InstanceModelBase> InstanceRemoved;
+
 
         #region Constructors
 
@@ -75,7 +78,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
 
         public void Clear()
         {
-            _instances.Clear();
+            App.Current.Dispatcher.Invoke(() => { 
+                _instances.Clear();
+            });
         }
 
 

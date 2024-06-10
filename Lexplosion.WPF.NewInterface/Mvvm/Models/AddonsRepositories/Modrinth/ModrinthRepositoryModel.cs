@@ -153,7 +153,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
             //var s = InstanceAddon.GetAddonsCatalog(null, PageSize, PageIndex, _addonType, SelectedCategories, "");
 
             _addonsList.Clear();
-            foreach (var i in InstanceAddon.GetModrinthAddonsCatalog(_instanceModelBase.InstanceData, (int)PageSize, (int)CurrentPageIndex, _addonType, AllCategory, SearchFilter))
+            foreach (var i in InstanceAddon.GetAddonsCatalog(_instanceModelBase.InstanceData, (int)PageSize, (int)CurrentPageIndex, _addonType, AllCategory, SearchFilter))
             {
                 _addonsList.Add(i);
             }

@@ -283,12 +283,18 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
 
         private void Border_MouseDown_2(object sender, MouseButtonEventArgs e)
         {
-            ChangeChangeWHPHorizontalOrintationAnimation();
+            ChangeWHPHorizontalOrintationAnimation();
         }
 
 
-        private void ChangeChangeWHPHorizontalOrintationAnimation()
+        private void ChangeWHPHorizontalOrintationAnimation()
         {
+            var opacityAdditionalFuncsHideAnimation = new DoubleAnimation()
+            {
+                Duration = TimeSpan.FromSeconds(0.35 / 2),
+                To = 0
+            };
+
             var opacityHideAnimation = new DoubleAnimation()
             {
                 Duration = TimeSpan.FromSeconds(0.35 / 2),
@@ -306,10 +312,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
             {
                 ChangeWHPHorizontalOrintation();
                 WindowHeaderPanelButtonsGrid.BeginAnimation(OpacityProperty, opacityShowAnimation);
+                AddtionalFuncs.BeginAnimation(OpacityProperty, opacityShowAnimation);
             };
 
             // скрываем 
             WindowHeaderPanelButtonsGrid.BeginAnimation(OpacityProperty, opacityHideAnimation);
+            AddtionalFuncs.BeginAnimation(OpacityProperty, opacityAdditionalFuncsHideAnimation);
         }
 
         private void ChangeWHPHorizontalOrintation()
@@ -318,6 +326,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
             {
                 WindowHeaderPanelButtons.RenderTransform = new RotateTransform(180);
                 WindowHeaderPanelButtonsGrid.HorizontalAlignment = HorizontalAlignment.Right;
+
+                AddtionalFuncs.HorizontalAlignment = HorizontalAlignment.Left;
 
                 Grid.SetColumn(DebugPanel, 0);
                 Grid.SetColumn(WindowHeaderPanelButtons, 1);
@@ -328,6 +338,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
             {
                 WindowHeaderPanelButtons.RenderTransform = new RotateTransform(360);
                 WindowHeaderPanelButtonsGrid.HorizontalAlignment = HorizontalAlignment.Left;
+
+                AddtionalFuncs.HorizontalAlignment = HorizontalAlignment.Right;
 
                 Grid.SetColumn(DebugPanel, 1);
                 Grid.SetColumn(WindowHeaderPanelButtons, 0);

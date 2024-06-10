@@ -204,7 +204,7 @@
     <!--    -->
     <!--  Instance Overview Menu  -->
     <!--    -->
-    <s:String x:Key="Version">Версия</s:String>
+    <s:String x:Key="Version">Version</s:String>
 
 
     <!--    -->
@@ -305,13 +305,6 @@
     <s:String x:Key="Update">Update</s:String>
     <s:String x:Key="Delete">Delete</s:String>
 
-    <s:String x:Key="Relevancy">Relevancy</s:String>
-    <s:String x:Key="Popularity">Popularity</s:String>
-    <s:String x:Key="LatestUpdate">LatestUpdate</s:String>
-    <s:String x:Key="CreationDate">CreationDate</s:String>
-    <s:String x:Key="TotalDownloads">TotalDownloads</s:String>
-    <s:String x:Key="A-Z">A-Z</s:String>
-
     <s:String x:Key="ProjectFound">Project Found</s:String>
 
 
@@ -340,4 +333,48 @@
     <s:String x:Key="FullExport">Full Export</s:String>
     <s:String x:Key="InstanceExport">Instance Export</s:String>
     <s:String x:Key="ExportProcessActive">Export Process is active</s:String>
+
+
+    <!--  Filter Sorting  -->
+    <s:String x:Key="Source">Source</s:String>
+    <s:String x:Key="Sorting">Sorting</s:String>
+
+    <!--  Sources  -->
+    <s:String x:Key="AllSource">All sources</s:String>
+    <s:String x:Key="LocalSource">Lexplosion</s:String>
+    <s:String x:Key="Curseforge">Curseforge</s:String>
+    <s:String x:Key="Modrinth">Modrinth</s:String>
+    <s:String x:Key="NightWorld">NightWorld</s:String>
+
+    <s:String x:Key="Or">Or</s:String>
+    <s:String x:Key="And">And</s:String>
+
+    <!--  Categories  -->
+    <s:String x:Key="CategoriesSearchBoxPlaceholder">Select a tag to filter...</s:String>
+
+    <!--  Modrinth  -->
+    <s:String x:Key="ModrinthRelevance">Relevancy</s:String>
+    <s:String x:Key="ModrinthDownloads">Download Count</s:String>
+    <s:String x:Key="ModrinthFollows">Follow Count</s:String>
+    <s:String x:Key="ModrinthUpdated">Recently Updated</s:String>
+    <s:String x:Key="ModrinthNewest">Recently Published</s:String>
+    <!--  Curseforge  -->
+    <s:String x:Key="CurseforgeRelevance">Relevancy</s:String>
+    <s:String x:Key="CurseforgeFeatured">Featured</s:String>
+    <s:String x:Key="CurseforgePopularity">Popularity</s:String>
+    <s:String x:Key="CurseforgeLastUpdated">Last Updated</s:String>
+    <s:String x:Key="CurseforgeCreationDate">CreationDate</s:String>
+    <s:String x:Key="CurseforgeTotalDownloads">TotalDownloads</s:String>
+    <s:String x:Key="CurseforgeName">A-Z</s:String>
+
+    <!--
+        Featured = 1,
+        Popularity,
+        LastUpdated,
+        Name,
+        Author,
+        TotalDownloads,
+        Category,
+        GameVersion
+    -->
 </ResourceDictionary>

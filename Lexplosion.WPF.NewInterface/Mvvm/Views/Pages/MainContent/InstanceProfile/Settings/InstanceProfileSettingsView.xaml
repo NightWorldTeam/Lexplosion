@@ -413,7 +413,7 @@
                             Height="32"
                             Margin="0,8,0,0"
                             HorizontalAlignment="Stretch"
-                            PlaceholderKey="Default"
+                            Placeholder="{DynamicResource Default}"
                             Text="{Binding Model.JavaPath}" />
 
                     </Grid>
