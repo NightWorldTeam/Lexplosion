@@ -598,7 +598,6 @@ namespace Lexplosion.Logic.Management.Instances
             return list;
         }
 
-
         /// <summary>
         /// Возвращает список модпаков для каталога.
         /// </summary>

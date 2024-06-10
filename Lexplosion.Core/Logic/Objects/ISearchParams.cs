@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 
 namespace Lexplosion.Logic.Objects
 {
@@ -32,7 +31,6 @@ namespace Lexplosion.Logic.Objects
             get => SortField.ToString().ToLower();
         }
         public IEnumerable<string> Modloaders { get; }
-
 
         private ModrinthSearchParams(string searchFilter, string gameVersion, IEnumerable<IProjectCategory> categories, int pageSize, int pageIndex, ModrinthSortField sortField, IEnumerable<string> modloaders)
         {
