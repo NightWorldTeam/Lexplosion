@@ -132,15 +132,6 @@
         Follows
     }
 
-    public enum ModrinthSortField
-    {
-        Relevance,
-        Downloads,
-        Newest,
-        Updated, 
-        Follows
-    }
-
     public enum InstanceInit
     {
         Successful,

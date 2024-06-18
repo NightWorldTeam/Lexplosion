@@ -69,7 +69,7 @@ namespace Lexplosion.Logic.Management.Accounts
                 }
                 else
                 {
-                    ActiveAccount = null;
+                    if (ActiveAccount != null && ActiveAccount.Equals(this)) ActiveAccount = null;
                     TryStopNwServices();
                 }
 
@@ -99,7 +99,7 @@ namespace Lexplosion.Logic.Management.Accounts
                         IsActive = true;
                     }
                 }
-                else
+                else if (LaunchedAccount != null && LaunchedAccount.Equals(this))
                 {
                     LaunchedAccount = null;
                 }
@@ -182,11 +182,11 @@ namespace Lexplosion.Logic.Management.Accounts
 
         private Account(AccountSummary summary)
         {
+            AccountType = summary.AccountType;
             Login = summary.Login;
             UUID = summary.UUID;
             IsActive = summary.IsActive;
             IsLaunch = summary.IsLaunched;
-            AccountType = summary.AccountType;
 
             try
             {
@@ -207,7 +207,7 @@ namespace Lexplosion.Logic.Management.Accounts
             string accessData = null;
             try
             {
-                Convert.ToBase64String(Cryptography.AesEncode(this._accessData, Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey), Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey.Substring(0, 16))));
+                accessData = Convert.ToBase64String(Cryptography.AesEncode(this._accessData, Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey), Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey.Substring(0, 16))));
             }
             catch (Exception ex)
             {
@@ -309,6 +309,7 @@ namespace Lexplosion.Logic.Management.Accounts
         }
 
         private string _gameClientName = "";
+        private bool _nwServicesIsInit = false;
 
         private void TryInitNwServices()
         {
@@ -327,16 +328,20 @@ namespace Lexplosion.Logic.Management.Accounts
                 LaunchGame.OnGameProcessStarted += this.GameStart;
                 LaunchGame.OnGameStoped += this.GameStop;
                 Lexplosion.Runtime.OnExitEvent += this.Exit;
+
+                _nwServicesIsInit = true;
             }
         }
 
         private void TryStopNwServices()
         {
-            if (AccountType == AccountType.NightWorld)
+            if (AccountType == AccountType.NightWorld && _nwServicesIsInit)
             {
                 LaunchGame.OnGameProcessStarted -= this.GameStart;
                 LaunchGame.OnGameStoped -= this.GameStop;
                 Lexplosion.Runtime.OnExitEvent -= this.Exit;
+
+                _nwServicesIsInit = false;
             }
         }
 
