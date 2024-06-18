@@ -38,7 +38,7 @@ namespace Lexplosion.Logic.Management.Accounts
         private ActivityStatus _status = ActivityStatus.Offline;
         public ActivityStatus Status
         {
-            get => (IsActive || IsLaunched) ? _status : ActivityStatus.Offline;
+            get => (IsActive || IsLaunch) ? _status : ActivityStatus.Offline;
             private set
             {
                 _status = value;
@@ -72,6 +72,8 @@ namespace Lexplosion.Logic.Management.Accounts
                     ActiveAccount = null;
                     TryStopNwServices();
                 }
+
+                OnPropertyChanged();
             }
         }
         private bool _isActive = false;
@@ -82,15 +84,15 @@ namespace Lexplosion.Logic.Management.Accounts
         /// При установке true, статичное свойство LaunchedAccount примет значение в виде этого аккаунта.
         /// Так же, если установить true аккаунту NightWorld, то IsActive у этого аккаунта тоже примет значение true.
         /// </summary>
-        public bool IsLaunched
+        public bool IsLaunch
         {
-            get => _isLaunched;
+            get => _isLaunch;
             set
             {
-                _isLaunched = value;
-                if (_isLaunched)
+                _isLaunch = value;
+                if (_isLaunch)
                 {
-                    if (LaunchedAccount != null) LaunchedAccount.IsLaunched = false;
+                    if (LaunchedAccount != null) LaunchedAccount.IsLaunch = false;
                     LaunchedAccount = this;
                     if (AccountType == AccountType.NightWorld)
                     {
@@ -101,9 +103,11 @@ namespace Lexplosion.Logic.Management.Accounts
                 {
                     LaunchedAccount = null;
                 }
+
+                OnPropertyChanged();
             }
         }
-        private bool _isLaunched = false;
+        private bool _isLaunch = false;
 
         private string _accessData;
 
@@ -181,7 +185,7 @@ namespace Lexplosion.Logic.Management.Accounts
             Login = summary.Login;
             UUID = summary.UUID;
             IsActive = summary.IsActive;
-            IsLaunched = summary.IsLaunched;
+            IsLaunch = summary.IsLaunched;
             AccountType = summary.AccountType;
 
             try
@@ -215,15 +219,36 @@ namespace Lexplosion.Logic.Management.Accounts
                 Login = this.Login,
                 UUID = this.UUID,
                 IsActive = this.IsActive,
-                IsLaunched = this.IsLaunched,
+                IsLaunched = this.IsLaunch,
                 AccountType = this.AccountType,
                 AccessData = accessData
             };
         }
 
+        /// <summary>
+        /// Заносит этот аккаунт в список аккаунтов и сохраняется в файл.
+        /// </summary>
         public void Save()
         {
             AddToList(this);
+            SaveSummaryList();
+        }
+
+        /// <summary>
+        /// Заносит этот аккаунт в список аккаунтов без сохранения в файл.
+        /// </summary>
+        public void PutToList() => AddToList(this);
+
+        /// <summary>
+        /// Соохраняет все аккаунты из спсика аккаунтов
+        /// </summary>
+        public static void SaveAll()
+        {
+            foreach (var account in _accounts)
+            {
+                _listToSave[account] = account.GetAccountSummary();
+            }
+
             SaveSummaryList();
         }
 
