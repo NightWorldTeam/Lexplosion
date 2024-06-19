@@ -2,118 +2,312 @@
     x:Class="Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu.AccountsSettingsView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:accounts="clr-namespace:Lexplosion.Logic.Management.Accounts;assembly=Lexplosion.Core"
     xmlns:controls="clr-namespace:Lexplosion.WPF.NewInterface.Controls"
+    xmlns:converters="clr-namespace:Lexplosion.WPF.NewInterface.Core.Converters"
+    xmlns:core="clr-namespace:Lexplosion.WPF.NewInterface.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent"
+    xmlns:localVm="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="450"
     d:DesignWidth="800"
+    Background="{DynamicResource PrimarySolidColorBrush}"
     mc:Ignorable="d">
-    <Grid Margin="32">
 
+    <UserControl.Resources>
+        <Style x:Key="AccountDropDownButton" TargetType="{x:Type Button}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border
+                            x:Name="border"
+                            Margin="1"
+                            Padding="5,2,5,2"
+                            Background="Transparent"
+                            CornerRadius="5">
 
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <!--  ___ Accounts Header  -->
+                            <Grid Margin="5,3,5,3" ShowGridLines="False">
+
+                                <TextBlock
+                                    x:Name="TextBlock"
+                                    Margin="0,0,5,0"
+                                    FontSize="14"
+                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                    Text="{TemplateBinding Content}"
+                                    TextAlignment="Justify" />
+                            </Grid>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background">
+                                    <Setter.Value>
+                                        <SolidColorBrush Opacity="0.1" Color="{DynamicResource ActivityColor}" />
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter TargetName="TextBlock" Property="TextElement.Foreground" Value="{DynamicResource ActivitySolidColorBrush}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <DataTemplate DataType="{x:Type accounts:Account}">
             <Border
-                Padding="0,0,0,16"
-                VerticalAlignment="Top"
+                Padding="0,8,0,8"
                 BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                BorderThickness="0,0,0,2">
-                <StackPanel Orientation="Horizontal">
+                BorderThickness="0,0,0,1">
+                <Grid ShowGridLines="False">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" SharedSizeGroup="login" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!--  Profile Button  -->
                     <Border
-                        Width="28"
-                        Height="28"
-                        Margin="0,0,8,0">
+                        Width="32"
+                        Height="32"
+                        CornerRadius="5">
                         <Border.Background>
-                            <ImageBrush ImageSource="pack://application:,,,/assets/images/icons/logo.ico" />
+                            <ImageBrush ImageSource="pack://application:,,,/Assets/images/icons/hel2xhead.png" />
                         </Border.Background>
                     </Border>
 
-                    <TextBlock
-                        FontSize="16"
-                        FontWeight="Medium"
-                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                        Text="NightWorld" />
-                </StackPanel>
+                    <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                        <TextBlock
+                            FontSize="16"
+                            FontWeight="Medium"
+                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                            Text="{Binding Login}" />
+                        <TextBlock
+                            Margin="0,4,0,0"
+                            FontSize="14"
+                            Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                            Text="{Binding Login}" />
+                    </StackPanel>
+
+                    <StackPanel
+                        Grid.Column="2"
+                        Margin="8,0,0,0"
+                        Orientation="Horizontal">
+
+                        <!--  Active Status  -->
+                        <core:If Condition="{Binding IsActive}" Visibility="{Binding DataContext.IsNightWorldAccount, Converter={converters:BooleanToVisibilityConverter}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}}">
+                            <core:If.True>
+                                <Border
+                                    Height="24"
+                                    Padding="8,3,8,6"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Top"
+                                    Background="{DynamicResource ActivitySolidColorBrush}"
+                                    CornerRadius="5">
+                                    <TextBlock
+                                        VerticalAlignment="Center"
+                                        FontSize="14"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource BrandColorForegroundSolidColorBrush}"
+                                        Text="{DynamicResource Active}" />
+                                </Border>
+                            </core:If.True>
+                            <core:If.False>
+                                <Border
+                                    Height="24"
+                                    Margin="0,0,0,0"
+                                    Padding="8,3,8,6"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Top"
+                                    Background="Gray"
+                                    CornerRadius="5">
+                                    <TextBlock
+                                        VerticalAlignment="Center"
+                                        FontSize="14"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource CheckBoxMarkSolidColorBrush}"
+                                        Text="{DynamicResource NotActive}" />
+                                </Border>
+                            </core:If.False>
+                        </core:If>
+
+                        <!--  Launch Account  -->
+                        <core:If Condition="{Binding IsLaunch}">
+                            <core:If.True>
+                                <Border
+                                    Height="24"
+                                    Margin="8,0,0,0"
+                                    Padding="8,3,8,6"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Top"
+                                    Background="Green"
+                                    CornerRadius="5">
+                                    <TextBlock
+                                        VerticalAlignment="Center"
+                                        FontSize="14"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource CheckBoxMarkSolidColorBrush}"
+                                        Text="{DynamicResource GameLauncher}" />
+                                </Border>
+                            </core:If.True>
+                            <core:If.False>
+                                <x:Null />
+                            </core:If.False>
+                        </core:If>
+                    </StackPanel>
+
+                    <StackPanel
+                        Grid.Column="3"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
+
+                        <!--  Activate Button  -->
+
+                        <!--  Do Launch  -->
+
+                        <!--  Sing-out  -->
+
+                        <Button
+                            Margin="8,0,0,0"
+                            Command="{Binding DataContext.ActivateAccountCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}, Mode=FindAncestor}}"
+                            CommandParameter="{Binding}"
+                            Content="FlashOn"
+                            Foreground="{DynamicResource ActivitySolidColorBrush}">
+                            <Button.Style>
+                                <Style BasedOn="{StaticResource x32IconButtonActivityColor}" TargetType="{x:Type Button}">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                    <Style.Triggers>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding DataContext.IsNightWorldAccount, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}}" Value="True" />
+                                                <Condition Binding="{Binding IsActive}" Value="False" />
+                                            </MultiDataTrigger.Conditions>
+                                            <MultiDataTrigger.Setters>
+                                                <Setter Property="Visibility" Value="Visible" />
+                                            </MultiDataTrigger.Setters>
+                                        </MultiDataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+
+                        <core:If Condition="{Binding IsLaunch}">
+                            <core:If.False>
+                                <Button
+                                    Margin="8,0,0,0"
+                                    Command="{Binding DataContext.DoAccountLauncher, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
+                                    CommandParameter="{Binding}"
+                                    Content="PlayArrow"
+                                    Foreground="{DynamicResource ActivitySolidColorBrush}"
+                                    Style="{StaticResource x32IconButtonActivityColor}" />
+                            </core:If.False>
+                        </core:If>
+
+                        <Button
+                            Margin="8,0,0,0"
+                            Command="{Binding DataContext.UninstallCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                            Content="Logout"
+                            Foreground="Red"
+                            Style="{StaticResource x32IconButtonActivityColor}" />
+                    </StackPanel>
+                    <!--<controls:DropdownMenu
+                        Grid.Column="3"
+                        Width="32"
+                        Height="32"
+                        HorizontalAlignment="Right"
+                        Background="{DynamicResource SecondarySolidColorBrush}"
+                        BorderBrush="{DynamicResource SeparateSolidColorBrush}">
+                        <StackPanel>
+                            <Button
+                                Command="{Binding DataContext.ActivateAccountCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}, Mode=FindAncestor}}"
+                                CommandParameter="{Binding}"
+                                Content="{DynamicResource Activate}">
+                                <Button.Style>
+                                    <Style BasedOn="{StaticResource AccountDropDownButton}" TargetType="{x:Type Button}">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                        <Style.Triggers>
+                                            <MultiDataTrigger>
+                                                <MultiDataTrigger.Conditions>
+                                                    <Condition Binding="{Binding DataContext.IsNightWorldAccount, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}}" Value="True" />
+                                                    <Condition Binding="{Binding IsActive}" Value="False" />
+                                                </MultiDataTrigger.Conditions>
+                                                <MultiDataTrigger.Setters>
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </MultiDataTrigger.Setters>
+                                            </MultiDataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+
+                            <core:If Condition="{Binding IsLaunch}">
+                                <core:If.False>
+                                    <Button
+                                        Command="{Binding DataContext.DoAccountLauncher, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
+                                        CommandParameter="{Binding}"
+                                        Content="{DynamicResource DoGameLauncher}"
+                                        Style="{StaticResource AccountDropDownButton}" />
+                                </core:If.False>
+                            </core:If>
+
+                            <Button
+                                Command=""
+                                Content="{DynamicResource Signout}"
+                                Style="{StaticResource AccountDropDownButton}" />
+                        </StackPanel>
+                    </controls:DropdownMenu>-->
+                </Grid>
             </Border>
+        </DataTemplate>
 
-            <StackPanel Grid.Row="1">
+        <DataTemplate DataType="{x:Type localVm:Accounts}">
+            <Grid Visibility="{Binding HasAccounts, Converter={converters:BooleanToVisibilityConverter}}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
                 <Border
-                    Padding="0,8,0,8"
+                    Padding="0,0,0,8"
+                    VerticalAlignment="Top"
                     BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                    BorderThickness="0,0,0,1">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-
+                    BorderThickness="0,0,0,2">
+                    <StackPanel Orientation="Horizontal">
                         <Border
-                            Width="32"
-                            Height="32"
-                            CornerRadius="5">
+                            Width="28"
+                            Height="28"
+                            Margin="0,0,8,0">
                             <Border.Background>
-                                <ImageBrush ImageSource="pack://application:,,,/Assets/images/icons/hel2xhead.png" />
+                                <ImageBrush ImageSource="{Binding IconSource}" />
                             </Border.Background>
                         </Border>
 
-                        <StackPanel Grid.Column="1" Margin="8,0,0,0">
-                            <TextBlock
-                                FontSize="16"
-                                FontWeight="Medium"
-                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                Text="_Hel2x_" />
-                            <TextBlock
-                                Margin="0,4,0,0"
-                                FontSize="14"
-                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                Text="Hel2x" />
-                        </StackPanel>
-
-                        <Border
-                            Grid.Column="2"
-                            Height="24"
-                            Margin="16,0,0,0"
-                            Padding="8,3,8,6"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Top"
-                            Background="{DynamicResource ActivitySolidColorBrush}"
-                            CornerRadius="5">
-                            <TextBlock
-                                VerticalAlignment="Center"
-                                FontSize="14"
-                                FontWeight="Medium"
-                                Foreground="{DynamicResource CheckBoxMarkSolidColorBrush}"
-                                Text="Активно" />
-                        </Border>
-
-                        <controls:DropdownMenu
-                            Grid.Column="3"
-                            Width="32"
-                            Height="32"
-                            HorizontalAlignment="Right"
-                            Background="{DynamicResource SecondarySolidColorBrush}"
-                            BorderBrush="{DynamicResource SeparateSolidColorBrush}">
-                            <StackPanel>
-                                <Border Padding="16,8">
-                                    <TextBlock Text="Change To" />
-                                </Border>
-                                <Border Padding="16,8">
-                                    <TextBlock Text="Log out" />
-                                </Border>
-                            </StackPanel>
-                        </controls:DropdownMenu>
-                    </Grid>
+                        <TextBlock
+                            FontSize="16"
+                            FontWeight="Medium"
+                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                            Text="{Binding Type, Converter={converters:ToStringConverter}}" />
+                    </StackPanel>
                 </Border>
-            </StackPanel>
-        </Grid>
 
+                <ItemsControl
+                    Grid.Row="1"
+                    Margin="0,0,0,32"
+                    Grid.IsSharedSizeScope="True"
+                    ItemsSource="{Binding List}" />
+            </Grid>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Grid Margin="32,24,32,16">
+        <ScrollViewer Margin="-32,0">
+            <ItemsControl
+                Margin="32,0"
+                Grid.IsSharedSizeScope="True"
+                ItemsSource="{Binding Model.AccountsByType}" />
+        </ScrollViewer>
     </Grid>
 </UserControl>

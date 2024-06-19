@@ -361,4 +361,16 @@
     <s:String x:Key="CurseforgeCreationDate">Дате создания</s:String>
     <s:String x:Key="CurseforgeTotalDownloads">Количеству скачиваний</s:String>
     <s:String x:Key="CurseforgeName">A-Z</s:String>
+
+
+    <!--  Accounts  -->
+    <s:String x:Key="Active">Активно</s:String>
+    <s:String x:Key="NotActive">Неактивно</s:String>
+
+    <!--  Funcs  -->
+    <s:String x:Key="Activate">Сделать активным</s:String>
+    <s:String x:Key="DoGameLauncher">Сделать запускаемым</s:String>
+    <s:String x:Key="Signout">Выйти</s:String>
+
+    <s:String x:Key="GameLauncher">Запуск игры</s:String>
 </ResourceDictionary>

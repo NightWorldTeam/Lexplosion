@@ -739,5 +739,11 @@
   <ItemGroup>
     <Resource Include="Assets\images\icons\hel2xhead.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\images\icons\microsoft.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\images\icons\nightworld.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

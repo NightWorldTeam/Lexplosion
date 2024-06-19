@@ -367,14 +367,15 @@
     <s:String x:Key="CurseforgeTotalDownloads">TotalDownloads</s:String>
     <s:String x:Key="CurseforgeName">A-Z</s:String>
 
-    <!--
-        Featured = 1,
-        Popularity,
-        LastUpdated,
-        Name,
-        Author,
-        TotalDownloads,
-        Category,
-        GameVersion
-    -->
+
+    <!--  Accounts  -->
+    <s:String x:Key="Active">Active</s:String>
+    <s:String x:Key="NotActive">Not active</s:String>
+
+    <!--  Funcs  -->
+    <s:String x:Key="Activate">Activate</s:String>
+    <s:String x:Key="DoGameLauncher">Do game launcher</s:String>
+    <s:String x:Key="Signout">Sign-out</s:String>
+
+    <s:String x:Key="GameLauncher">Game Launch</s:String>
 </ResourceDictionary>

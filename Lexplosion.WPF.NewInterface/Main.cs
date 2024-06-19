@@ -1,7 +1,9 @@
 ﻿using Lexplosion.Core.Tools.Notification;
 using Lexplosion.Global;
 using Lexplosion.Logic;
+using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.Logic.Management.Authentication;
+using Lexplosion.Logic.Network;
 using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Core.Services;
 using Lexplosion.WPF.NewInterface.Mvvm.Views.Windows;
@@ -61,11 +63,27 @@ namespace Lexplosion.WPF.NewInterface
             AppColorThemeService = new AppColorThemeService();
             //GlobalData.SetUser(new User("Hel2x", "d66ec2c0-7a35-4e8a-a3d8-d1cb913fa71c", "", "", AccountType.NoAuth, ActivityStatus.Online));
 
-                AuthCode authCode = Authentication.Instance.Auth(
-                    AccountType.NightWorld,
-                    "Editor",
-                    "1",
-                    true);
+            //var account1 = new Account(AccountType.NightWorld, "Editor");
+            //var code1 = account1.Auth("1");
+            //account1.Save();
+
+            var account = new Account(AccountType.Microsoft);
+            CommandReceiver.MicrosoftAuthPassed += (token, res) =>
+            {
+                if (res == MicrosoftAuthRes.Successful) 
+                { 
+                    account.Auth(token);
+                    account.Save();
+                }
+            };
+            //Authentication.Instance.Auth(AccountType.Microsoft, null, null, false);
+            //System.Diagnostics.Process.Start("https://login.live.com/oauth20_authorize.srf?client_id=ed0f84c7-4bf4-4a97-96c7-8c82b1e4ea0b&response_type=code&redirect_uri=https://night-world.org/requestProcessing/microsoftOAuth.php&scope=XboxLive.signin%20offline_access&state=NOT_NEEDED");
+
+            AuthCode authCode = Authentication.Instance.Auth(
+                AccountType.NightWorld,
+                "Editor",
+                "1",
+                true);
           
             var title = "TKESKLTSRLK ALLALA";
             var message = "Действие фильма будет происходить после событий, рассказанных в фильме «Миссия невыполнима: Последствия». В центре истории новые приключения агента Итана Ханта.";
