@@ -116,6 +116,14 @@ namespace Lexplosion.WPF.NewInterface
 
             ResourcesDictionariesRegister();
             LoadCurrentLanguage();
+
+            var latestActiveAccount = Account.ActiveAccount;
+            var code = latestActiveAccount.Auth();
+            if (code != AuthCode.Successfully) 
+            {
+                
+            }
+
             _app.Dispatcher.Invoke(SetMainWindow);
         }
 

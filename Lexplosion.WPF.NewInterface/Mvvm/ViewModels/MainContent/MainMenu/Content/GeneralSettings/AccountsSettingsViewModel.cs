@@ -1,6 +1,7 @@
 ﻿using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
+using Lexplosion.WPF.NewInterface.Core.ViewModel;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal;
 using Lexplosion.WPF.NewInterface.Stores;
 using System;
@@ -8,12 +9,13 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Security.Principal;
 using System.Windows.Data;
 using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 {
-    public struct Accounts : INotifyPropertyChanged
+    public class Accounts : ObservableObject
     {
         private ObservableCollection<Account> _list;
 
@@ -84,13 +86,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             _list.Add(account);
             OnPropertyChanged(nameof(HasAccounts));
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
 
         public void FilterAccountsByLogin(string value) 
         {

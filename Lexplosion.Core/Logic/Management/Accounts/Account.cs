@@ -46,7 +46,17 @@ namespace Lexplosion.Logic.Management.Accounts
             }
         }
 
-        public static event Action<Account, AuthCode> OnAccountAuth;
+        private AuthCode _latestAuthCode;
+        public AuthCode AuthorizationCodeResult 
+        { 
+            get => _latestAuthCode; private set 
+            {
+                _latestAuthCode = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public static event Action<Account> AuthozationFinished;
 
         /// <summary>
         /// Является ли аккаунт активным. 
@@ -289,7 +299,7 @@ namespace Lexplosion.Logic.Management.Accounts
         /// Передавать null, если нужно переавторизироваться по сохраненным данным.
         /// </param>
         /// <returns>Результат авторизации</returns>
-        public AuthCode Auth(string newAccessData)
+        public AuthCode Auth(string newAccessData = null)
         {
             IAuthHandler authHandler;
             switch (AccountType)
@@ -334,7 +344,10 @@ namespace Lexplosion.Logic.Management.Accounts
                 TryInitNwServices();
             }
 
-            OnAccountAuth?.Invoke(this, result.Code);
+
+            IsActive = false;
+            AuthozationFinished?.Invoke(this);
+            AuthorizationCodeResult = result.Code;
 
             return result.Code;
         }

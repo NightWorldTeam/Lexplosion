@@ -7,6 +7,7 @@
     xmlns:converters="clr-namespace:Lexplosion.WPF.NewInterface.Core.Converters"
     xmlns:core="clr-namespace:Lexplosion.WPF.NewInterface.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:enums="clr-namespace:Lexplosion;assembly=Lexplosion.Core"
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
     xmlns:localVm="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -158,6 +159,33 @@
                                 <x:Null />
                             </core:If.False>
                         </core:If>
+
+                        <Border
+                            Height="24"
+                            Margin="8,0,0,0"
+                            Padding="8,3,8,6"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            Background="DarkRed"
+                            CornerRadius="5">
+                            <Border.Style>
+                                <Style TargetType="{x:Type Border}">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding AuthorizationCodeResult}" Value="{x:Static enums:AuthCode.Successfully}">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
+
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                FontSize="14"
+                                FontWeight="Medium"
+                                Foreground="{DynamicResource CheckBoxMarkSolidColorBrush}"
+                                Text="Токен устарел" />
+                        </Border>
                     </StackPanel>
 
                     <StackPanel
@@ -186,6 +214,7 @@
                                             <MultiDataTrigger.Conditions>
                                                 <Condition Binding="{Binding DataContext.IsNightWorldAccount, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}}" Value="True" />
                                                 <Condition Binding="{Binding IsActive}" Value="False" />
+                                                <Condition Binding="{Binding IsTokenValid}" Value="True" />
                                             </MultiDataTrigger.Conditions>
                                             <MultiDataTrigger.Setters>
                                                 <Setter Property="Visibility" Value="Visible" />
