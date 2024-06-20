@@ -46,7 +46,7 @@ namespace Lexplosion.Logic.Management.Accounts
             }
         }
 
-        public AuthCode? LastAuthCode { get; private set; }
+        public static event Action<Account, AuthCode> OnAccountAuth;
 
         /// <summary>
         /// Является ли аккаунт активным. 
@@ -334,7 +334,7 @@ namespace Lexplosion.Logic.Management.Accounts
                 TryInitNwServices();
             }
 
-            LastAuthCode = result.Code;
+            OnAccountAuth?.Invoke(this, result.Code);
 
             return result.Code;
         }
