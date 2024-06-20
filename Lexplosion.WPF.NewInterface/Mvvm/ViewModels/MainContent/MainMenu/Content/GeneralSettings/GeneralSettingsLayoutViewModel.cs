@@ -1,5 +1,7 @@
 ﻿using Lexplosion.WPF.NewInterface.Core;
+using Lexplosion.WPF.NewInterface.Core.Modal;
 using Lexplosion.WPF.NewInterface.Core.Objects;
+using Lexplosion.WPF.NewInterface.Stores;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 {
@@ -8,11 +10,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         private readonly ViewModelBase _generalSettingsViewModel = new GeneralSettingsViewModel();
         private readonly ViewModelBase _appearanceViewModel = new AppearanceSettingsViewModel();
         private readonly ViewModelBase _languageViewModel = new LanguageSettingsViewModel();
-        private readonly ViewModelBase _accountsViewModel = new AccountsSettingsViewModel();
+        private readonly ViewModelBase _accountsViewModel;
         private readonly ViewModelBase _aboutViewModel = new AboutUsViewModel();
 
-        public GeneralSettingsLayoutViewModel() : base()
+        public GeneralSettingsLayoutViewModel(ModalNavigationStore modalNavigationStore) : base()
         {
+            _accountsViewModel = new AccountsSettingsViewModel(modalNavigationStore);
+
             InitDefaultSettingsTabMenu();
         }
 

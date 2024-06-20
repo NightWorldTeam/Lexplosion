@@ -373,4 +373,16 @@
     <s:String x:Key="Signout">Выйти</s:String>
 
     <s:String x:Key="GameLauncher">Запуск игры</s:String>
+
+
+    <!--  Account Factory  -->
+    <s:String x:Key="AddingAccount">Добавление аккаунта</s:String>
+    <s:String x:Key="Login">Логин</s:String>
+    <s:String x:Key="Password">Пароль</s:String>
+    <s:String x:Key="AccountType">Тип аккаунта</s:String>
+    <s:String x:Key="AccountTypeDescription">Сервис авторизации</s:String>
+    <s:String x:Key="LoginAccountFactoryDescription">Логин или почта для аккаунта</s:String>
+    <s:String x:Key="PasswordAccountFactoryDescription">Пароль от аккаунта</s:String>
+    <s:String x:Key="AddAccount">Добавить аккаунт</s:String>
+    <s:String x:Key="LoginExample">Например: _Hel2x_</s:String>
 </ResourceDictionary>

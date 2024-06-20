@@ -165,4 +165,9 @@
     <DataTemplate DataType="{x:Type instanceTransferViewModel:InstanceImportViewModel}">
         <instanceTransferView:InstanceImportView />
     </DataTemplate>
+
+    <!--  Accounts  -->
+    <DataTemplate DataType="{x:Type modalvm:AccountFactoryViewModel}">
+        <modalviews:AccountFactoryView />
+    </DataTemplate>
 </ResourceDictionary>

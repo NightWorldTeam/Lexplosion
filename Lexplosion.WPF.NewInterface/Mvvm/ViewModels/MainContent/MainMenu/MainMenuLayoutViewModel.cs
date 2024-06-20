@@ -13,7 +13,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         private readonly ViewModelBase _libraryViewModel;
         private readonly ViewModelBase _multiplayerLayoutViewModel = new MultiplayerLayoutViewModel();
         private readonly ViewModelBase _friendsLayoutViewModel = new FriendsLayoutViewModel();
-        private readonly ViewModelBase _generalSettingsLayoutViewModel = new GeneralSettingsLayoutViewModel();
+        private readonly ViewModelBase _generalSettingsLayoutViewModel;
 
 
         #region Properties
@@ -45,6 +45,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
             _catalogViewModel = new CatalogViewModel(navigationStore, ToMainMenuLayoutCommand, mainModel.CatalogController);
             _libraryViewModel = new LibraryViewModel(navigationStore, ToMainMenuLayoutCommand, modalNavStore, mainModel.LibraryController);
+
+            _generalSettingsLayoutViewModel = new GeneralSettingsLayoutViewModel(modalNavStore);
 
             Content = _catalogViewModel;
 

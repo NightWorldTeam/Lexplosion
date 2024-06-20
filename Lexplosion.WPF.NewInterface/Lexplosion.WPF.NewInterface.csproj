@@ -155,9 +155,14 @@
     <Compile Include="Mvvm\Models\MainContent\MainMenu\FIlterPanel\LibraryFilterPanel.cs" />
     <Compile Include="Mvvm\Models\MainContent\MainMenu\Friends\Friend.cs" />
     <Compile Include="Mvvm\Models\MainContent\MainMenu\Multiplayer\MultiplayerModel.cs" />
+    <Compile Include="Mvvm\Models\Modal\AccountFactoryModel.cs" />
     <Compile Include="Mvvm\ViewModels\MainContent\MainMenu\Content\Friends\FindFriendsViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\Modal\AccountFactoryViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\InstanceExportViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\InstanceImportViewModel.cs" />
+    <Compile Include="Mvvm\Views\Modal\AccountFactoryView.xaml.cs">
+      <DependentUpon>AccountFactoryView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Mvvm\Views\Modal\InstanceTransfer\InstanceExportView.xaml.cs">
       <DependentUpon>InstanceExportView.xaml</DependentUpon>
     </Compile>
@@ -359,6 +364,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="DataTemplates.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Mvvm\Views\Modal\AccountFactoryView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

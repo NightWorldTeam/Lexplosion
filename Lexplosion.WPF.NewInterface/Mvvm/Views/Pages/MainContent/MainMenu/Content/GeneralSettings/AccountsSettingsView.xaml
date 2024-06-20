@@ -7,6 +7,7 @@
     xmlns:converters="clr-namespace:Lexplosion.WPF.NewInterface.Core.Converters"
     xmlns:core="clr-namespace:Lexplosion.WPF.NewInterface.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
     xmlns:localVm="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="450"
@@ -265,9 +266,42 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <controls:SearchBox Text="{Binding Model.SearchBoxText, UpdateSourceTrigger=PropertyChanged}" />
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
 
-        <ScrollViewer Grid.Row="1" Margin="-32,24,-32,0">
+        <controls:SearchBox Grid.Column="0" Text="{Binding Model.SearchBoxText, UpdateSourceTrigger=PropertyChanged}" />
+
+        <StackPanel
+            Grid.Column="1"
+            Margin="8,0,0,0"
+            Orientation="Horizontal">
+            <Button
+                Height="32"
+                Command="{Binding OpenAccountFactoryCommand}"
+                Style="{DynamicResource x32DefaultIconButton}">
+                <Viewbox>
+                    <Path
+                        extensions:Path.StringKeyData="AddCircle"
+                        Fill="{DynamicResource BrandColorForegroundSolidColorBrush}"
+                        Stretch="Fill" />
+                </Viewbox>
+            </Button>
+
+            <Button
+                Width="32"
+                Height="32"
+                Margin="8,0,0,0"
+                Content="AccountGroupRemove"
+                Foreground="DarkRed"
+                Style="{StaticResource x32IconButtonActivityColor}" />
+        </StackPanel>
+
+        <ScrollViewer
+            Grid.Row="1"
+            Grid.ColumnSpan="3"
+            Margin="-32,24,-32,0">
             <ItemsControl
                 Margin="32,0"
                 Grid.IsSharedSizeScope="True"

@@ -378,4 +378,16 @@
     <s:String x:Key="Signout">Sign-out</s:String>
 
     <s:String x:Key="GameLauncher">Game Launch</s:String>
+
+
+    <!--  Account Factory  -->
+    <s:String x:Key="AddingAccount">Account an Adding</s:String>
+    <s:String x:Key="Login">Login</s:String>
+    <s:String x:Key="Password">Password</s:String>
+    <s:String x:Key="AccountType">Account Type</s:String>
+    <s:String x:Key="AccountTypeDescription">Authorization Service</s:String>
+    <s:String x:Key="LoginAccountFactoryDescription">Account Login or email</s:String>
+    <s:String x:Key="PasswordAccountFactoryDescription">Account password</s:String>
+    <s:String x:Key="AddAccount">Add account</s:String>
+    <s:String x:Key="LoginExample">For example: _Hel2x_</s:String>
 </ResourceDictionary>

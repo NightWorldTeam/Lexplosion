@@ -1,6 +1,8 @@
 ﻿using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
+using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal;
+using Lexplosion.WPF.NewInterface.Stores;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -157,10 +159,21 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
 
         #endregion Constructors
+
+
+        public void AddAccount(Account account) 
+        {
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                AccountsByType[(int)account.AccountType].AddAccount(account);
+            });
+        }
     }
 
     public class AccountsSettingsViewModel : ViewModelBase
     {
+        private ModalNavigationStore _modalNavigationStore;
+
         public AccountsSettingsModel Model { get; }
 
 
@@ -200,11 +213,23 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         }
 
 
+        private RelayCommand _addAccountCommand;
+        public ICommand OpenAccountFactoryCommand {
+            get => RelayCommand.GetCommand(ref _addAccountCommand, () => 
+            {
+                _modalNavigationStore.Open(new AccountFactoryViewModel(Model.AddAccount));
+            });
+        }
+
+
+
+
         #endregion Commands
 
 
-        public AccountsSettingsViewModel()
+        public AccountsSettingsViewModel(ModalNavigationStore modalNavigationStore)
         {
+            _modalNavigationStore = modalNavigationStore;
             Model = new AccountsSettingsModel();
         }
     }
