@@ -60,6 +60,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             LeftPanel.SelectedItemChanged += OnLeftPanelSelectedItemChanged;
 
             InitDefaultLeftPanelTabs();
+            Runtime.DebugWrite("Instance Profile Layout created");
         }
 
 
@@ -67,6 +68,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
 
 
         #region Private Methods
+
+
+        /// <summary>
+        /// TODO IMPORTANT!!! Пролаг при открытии страницы сборки вероятнее всего из-за InstanceData в InstanceModelBase.
+        /// </summary>
 
 
         private void InitDefaultLeftPanelTabs()
@@ -85,7 +91,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
 
                 if (_instanceModel.IsInstalled) 
                 {
-                    LeftPanel.AddTabItem("Addons", "Addons", _addonsViewModel);
+                    //LeftPanel.AddTabItem("Addons", "Addons", _addonsViewModel);
                     LeftPanel.AddTabItem("Settings", "Settings", _settingsLayoutViewModel);
                 }
 
