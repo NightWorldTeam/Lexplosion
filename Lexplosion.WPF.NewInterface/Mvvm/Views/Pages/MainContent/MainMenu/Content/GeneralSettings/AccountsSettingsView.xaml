@@ -7,8 +7,6 @@
     xmlns:converters="clr-namespace:Lexplosion.WPF.NewInterface.Core.Converters"
     xmlns:core="clr-namespace:Lexplosion.WPF.NewInterface.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
-    xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent"
     xmlns:localVm="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="450"
@@ -17,6 +15,8 @@
     mc:Ignorable="d">
 
     <UserControl.Resources>
+        <core:BindingProxy x:Key="ViewModel" Data="{Binding}" />
+
         <Style x:Key="AccountDropDownButton" TargetType="{x:Type Button}">
             <Setter Property="Template">
                 <Setter.Value>
@@ -173,7 +173,7 @@
 
                         <Button
                             Margin="8,0,0,0"
-                            Command="{Binding DataContext.ActivateAccountCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}, Mode=FindAncestor}}"
+                            Command="{Binding Data.ActivateAccountCommand, Source={StaticResource ViewModel}}"
                             CommandParameter="{Binding}"
                             Content="FlashOn"
                             Foreground="{DynamicResource ActivitySolidColorBrush}">
@@ -199,7 +199,7 @@
                             <core:If.False>
                                 <Button
                                     Margin="8,0,0,0"
-                                    Command="{Binding DataContext.DoAccountLauncher, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
+                                    Command="{Binding Data.DoAccountLauncherCommand, Source={StaticResource ViewModel}}"
                                     CommandParameter="{Binding}"
                                     Content="PlayArrow"
                                     Foreground="{DynamicResource ActivitySolidColorBrush}"
@@ -209,67 +209,23 @@
 
                         <Button
                             Margin="8,0,0,0"
-                            Command="{Binding DataContext.UninstallCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                            Command="{Binding Data.SingOutCommand, Source={StaticResource ViewModel}}"
                             Content="Logout"
                             Foreground="Red"
                             Style="{StaticResource x32IconButtonActivityColor}" />
                     </StackPanel>
-                    <!--<controls:DropdownMenu
-                        Grid.Column="3"
-                        Width="32"
-                        Height="32"
-                        HorizontalAlignment="Right"
-                        Background="{DynamicResource SecondarySolidColorBrush}"
-                        BorderBrush="{DynamicResource SeparateSolidColorBrush}">
-                        <StackPanel>
-                            <Button
-                                Command="{Binding DataContext.ActivateAccountCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}, Mode=FindAncestor}}"
-                                CommandParameter="{Binding}"
-                                Content="{DynamicResource Activate}">
-                                <Button.Style>
-                                    <Style BasedOn="{StaticResource AccountDropDownButton}" TargetType="{x:Type Button}">
-                                        <Setter Property="Visibility" Value="Collapsed" />
-                                        <Style.Triggers>
-                                            <MultiDataTrigger>
-                                                <MultiDataTrigger.Conditions>
-                                                    <Condition Binding="{Binding DataContext.IsNightWorldAccount, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}}" Value="True" />
-                                                    <Condition Binding="{Binding IsActive}" Value="False" />
-                                                </MultiDataTrigger.Conditions>
-                                                <MultiDataTrigger.Setters>
-                                                    <Setter Property="Visibility" Value="Visible" />
-                                                </MultiDataTrigger.Setters>
-                                            </MultiDataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Button.Style>
-                            </Button>
-
-                            <core:If Condition="{Binding IsLaunch}">
-                                <core:If.False>
-                                    <Button
-                                        Command="{Binding DataContext.DoAccountLauncher, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
-                                        CommandParameter="{Binding}"
-                                        Content="{DynamicResource DoGameLauncher}"
-                                        Style="{StaticResource AccountDropDownButton}" />
-                                </core:If.False>
-                            </core:If>
-
-                            <Button
-                                Command=""
-                                Content="{DynamicResource Signout}"
-                                Style="{StaticResource AccountDropDownButton}" />
-                        </StackPanel>
-                    </controls:DropdownMenu>-->
                 </Grid>
             </Border>
         </DataTemplate>
 
         <DataTemplate DataType="{x:Type localVm:Accounts}">
-            <Grid Visibility="{Binding HasAccounts, Converter={converters:BooleanToVisibilityConverter}}">
+            <Grid Visibility="{Binding List.View.IsEmpty, UpdateSourceTrigger=PropertyChanged, Converter={converters:NegativeBooleanToVisibilityConverter}}">
+
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
+
                 <Border
                     Padding="0,0,0,8"
                     VerticalAlignment="Top"
@@ -294,16 +250,24 @@
                 </Border>
 
                 <ItemsControl
+                    x:Name="AccountList"
                     Grid.Row="1"
                     Margin="0,0,0,32"
                     Grid.IsSharedSizeScope="True"
-                    ItemsSource="{Binding List}" />
+                    ItemsSource="{Binding List.View}" />
             </Grid>
         </DataTemplate>
     </UserControl.Resources>
 
-    <Grid Margin="32,24,32,16">
-        <ScrollViewer Margin="-32,0">
+    <Grid Margin="32,16,32,16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <controls:SearchBox Text="{Binding Model.SearchBoxText, UpdateSourceTrigger=PropertyChanged}" />
+
+        <ScrollViewer Grid.Row="1" Margin="-32,24,-32,0">
             <ItemsControl
                 Margin="32,0"
                 Grid.IsSharedSizeScope="True"

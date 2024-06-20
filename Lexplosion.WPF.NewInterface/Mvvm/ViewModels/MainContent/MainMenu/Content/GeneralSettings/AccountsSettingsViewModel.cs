@@ -1,23 +1,36 @@
 ﻿using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
-using Lexplosion.WPF.NewInterface.Core.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 {
     public struct Accounts : INotifyPropertyChanged
     {
+        private ObservableCollection<Account> _list;
+
+
+        #region Properties
+
+
         public AccountType Type { get; }
         public string IconSource { get; }
-        public IList<Account> List { get; }
-        public bool HasAccounts { get => List.Count > 0; }
+        public CollectionViewSource List { get; } = new();
+        public int Count { get => _list.Count; }
+        public bool HasAccounts { get => _list.Count > 0; }
         public bool IsNightWorldAccount { get; }
+
+
+        #endregion Properties
+
+
+        #region Commands
 
 
         private RelayCommand _activateAccountCommand;
@@ -35,22 +48,38 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         {
             get => RelayCommand.GetCommand<Account>(ref _doAccountLauncher, (acc) => 
             {
+                Runtime.DebugWrite($"{acc.AccountType} {acc.Login} executed.");
                 acc.IsLaunch = true;
                 Account.SaveAll();
             });
         }
 
+
+        #endregion Commands
+
+
+        #region Commands
+
+
         public Accounts(AccountType type, IList<Account> list)
         {
             Type = type;
             IsNightWorldAccount = type == AccountType.NightWorld;
-            List = new ObservableCollection<Account>(list);
+            _list = new ObservableCollection<Account>(list);
+            List.Source = _list;
             IconSource = $"pack://application:,,,/assets/images/icons/{Type.ToString().ToLower()}.png";
         }
 
+
+        #endregion Constructors
+
+
+        #region Public Methods
+
+
         public void AddAccount(Account account) 
         {
-            List.Add(account);
+            _list.Add(account);
             OnPropertyChanged(nameof(HasAccounts));
         }
 
@@ -59,14 +88,50 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+
+        public void FilterAccountsByLogin(string value) 
+        {
+            if (List.View == null)
+                return;
+
+            value ??= value;
+            List.View.Filter = (i => (i as Account).Login.IndexOf(value, System.StringComparison.InvariantCultureIgnoreCase) > -1);
+        }
+
+
+        #endregion Public Methods
     }
 
     public sealed class AccountsSettingsModel : ViewModelBase
     {
+        #region Properties
+
+
         public IList<Accounts> AccountsByType { get; } = new ObservableCollection<Accounts>();
 
         public int ActiveAccountIndex { get; private set; }
         public int LaunchAccountIndex { get; private set; }
+
+        private string _searchBoxText;
+        public string SearchBoxText
+        {
+            get => _searchBoxText; set
+            {
+                _searchBoxText = value;
+                foreach (var accounts in AccountsByType) 
+                { 
+                    accounts.FilterAccountsByLogin(value);
+                }
+                OnPropertyChanged();
+            }
+        }
+
+        #endregion Properties
+
+
+        #region Constructors
+
 
         public AccountsSettingsModel()
         {
@@ -81,27 +146,62 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             foreach (var account in Account.List) 
             {
                 if (Account.ActiveAccount == account)
-                    ActiveAccountIndex = AccountsByType[(int)account.AccountType].List.Count;
+                    ActiveAccountIndex = AccountsByType[(int)account.AccountType].Count;
 
                 if (Account.LaunchedAccount == account)
-                    LaunchAccountIndex = AccountsByType[(int)account.AccountType].List.Count;
+                    LaunchAccountIndex = AccountsByType[(int)account.AccountType].Count;
 
                 AccountsByType[(int)account.AccountType].AddAccount(account);
             }
         }
 
 
-        public void ActiveAccount(Account account) 
-        {
-            account.IsActive = true;
-            AccountsByType[(int)account.AccountType].List.IndexOf(account);
-
-        }
+        #endregion Constructors
     }
 
     public class AccountsSettingsViewModel : ViewModelBase
     {
         public AccountsSettingsModel Model { get; }
+
+
+        #region Commands
+
+
+        private RelayCommand _activateAccountCommand;
+        public ICommand ActivateAccountCommand
+        {
+            get => RelayCommand.GetCommand<Account>(ref _activateAccountCommand, (acc) =>
+            {
+                acc.IsActive = true;
+                Account.SaveAll();
+            });
+        }
+
+        private RelayCommand _doAccountLauncherCommand;
+        public ICommand DoAccountLauncherCommand
+        {
+            get => RelayCommand.GetCommand<Account>(ref _doAccountLauncherCommand, (acc) =>
+            {
+                Runtime.DebugWrite($"{acc.AccountType} {acc.Login} executed.");
+                acc.IsLaunch = true;
+                Account.SaveAll();
+            });
+        }
+
+
+        private RelayCommand _singOutCommand;
+        public ICommand SingOutCommand
+        {
+            get => RelayCommand.GetCommand<Account>(ref _singOutCommand, (acc) =>
+            {
+                Runtime.DebugWrite($"{acc.AccountType} {acc.Login} executed.");
+                Account.SaveAll();
+            });
+        }
+
+
+        #endregion Commands
+
 
         public AccountsSettingsViewModel()
         {

@@ -85,6 +85,7 @@
     <Compile Include="Controls\DragDropBoard\DragDropBoard.cs" />
     <Compile Include="Controls\LoadingBoard\LoadingBoard.cs" />
     <Compile Include="Controls\TextSwitcherButton\TextSwitcherButton.cs" />
+    <Compile Include="Core\BindingProxy.cs" />
     <Compile Include="Core\Commands\CommandBase.cs" />
     <Compile Include="Core\Commands\NavigateCommand.cs" />
     <Compile Include="Core\Commands\RelayCommand.cs" />
