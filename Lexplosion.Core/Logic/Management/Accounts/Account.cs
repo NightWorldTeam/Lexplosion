@@ -46,6 +46,8 @@ namespace Lexplosion.Logic.Management.Accounts
             }
         }
 
+        public AuthCode? LastAuthCode { get; private set; }
+
         /// <summary>
         /// Является ли аккаунт активным. 
         /// Если установить true, то IsActive другого аккаунта, который был запускаемым изменится на false.
@@ -271,6 +273,15 @@ namespace Lexplosion.Logic.Management.Accounts
         }
 
         /// <summary>
+        /// Удаляем аккаунт их списка аккаунтов
+        /// </summary>
+        public void RemoveFromList()
+        {
+            _accounts.Remove(this);
+            _listToSave.Remove(this);
+        }
+
+        /// <summary>
         /// Проводит авторизацию
         /// </summary>
         /// <param name="newAccessData">
@@ -322,6 +333,8 @@ namespace Lexplosion.Logic.Management.Accounts
 
                 TryInitNwServices();
             }
+
+            LastAuthCode = result.Code;
 
             return result.Code;
         }
