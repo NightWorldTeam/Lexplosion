@@ -20,7 +20,8 @@
         TempPathError,
         FileCopyError,
         InfoFileError,
-        ZipFileError
+        ZipFileError,
+        NotExistsValidAccount
     }
 
     public enum AuthCode

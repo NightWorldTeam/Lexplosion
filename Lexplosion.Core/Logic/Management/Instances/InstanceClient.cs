@@ -17,6 +17,7 @@ using Lexplosion.Logic.Management.Sources;
 using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Network;
 using Newtonsoft.Json.Linq;
+using Lexplosion.Logic.Management.Accounts;
 
 namespace Lexplosion.Logic.Management.Instances
 {
@@ -343,7 +344,7 @@ namespace Lexplosion.Logic.Management.Instances
             var client = new InstanceClient(name, source, gameVersion, externalId)
             {
                 InLibrary = true,
-                Author = GlobalData.User?.Login,
+                Author = Account.AnyFuckingLogin,
                 Description = NoDescription,
                 Summary = NoDescription
             };
@@ -848,7 +849,11 @@ namespace Lexplosion.Logic.Management.Instances
 
             instanceVersion ??= _instanceVersionToDownload;
 
-            LaunchGame launchGame = new LaunchGame(_localId, instanceSettings, _instanceSource, _cancelTokenSource.Token);
+            var generalSettings = GlobalData.GeneralSettings;
+            var activeAccount = Account.ActiveAccount?.IsAuthed == true ? Account.ActiveAccount : null;
+            var launchAccount = Account.LaunchedAccount;
+
+            LaunchGame launchGame = new LaunchGame(_localId, generalSettings, instanceSettings, activeAccount, launchAccount, _instanceSource, _cancelTokenSource.Token);
             InitData data = launchGame.Update(ProgressHandler, FileDownloadEvent, DownloadStarted, instanceVersion);
 
             UpdateAvailable = data.UpdatesAvailable;
@@ -889,7 +894,11 @@ namespace Lexplosion.Logic.Management.Instances
             Settings instanceSettings = GetSettings();
             instanceSettings.Merge(GlobalData.GeneralSettings, true);
 
-            _gameManager = new LaunchGame(_localId, instanceSettings, _instanceSource, _cancelTokenSource.Token);
+            var generalSettings = GlobalData.GeneralSettings;
+            var activeAccount = Account.ActiveAccount?.IsAuthed == true ? Account.ActiveAccount : null;
+            var launchAccount = Account.LaunchedAccount;
+
+            _gameManager = new LaunchGame(_localId, generalSettings, instanceSettings, activeAccount, launchAccount, _instanceSource, _cancelTokenSource.Token);
             InitData data = _gameManager.Initialization(ProgressHandler, FileDownloadEvent, DownloadStarted);
 
             UpdateAvailable = data.UpdatesAvailable;
@@ -901,7 +910,7 @@ namespace Lexplosion.Logic.Management.Instances
                 SaveInstalledInstancesList(); // чтобы если сборка установилась то флаг IsInstalled сохранился
                 DownloadComplited?.Invoke(data.InitResult, data.DownloadErrors, true);
 
-                _gameManager.Run(data, LaunchComplited, GameExited, Name, GlobalData.User.AccountType == AccountType.NightWorld);
+                _gameManager.Run(data, LaunchComplited, GameExited, Name);
                 DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
                 // TODO: тут надо как-то определять что сборка обновилась и UpdateAvailable = false делать, если было обновление
             }
@@ -1207,6 +1216,15 @@ namespace Lexplosion.Logic.Management.Instances
         {
             distributor = null;
 
+            var activeAccount = Account.ActiveAccount;
+            if (activeAccount == null || !activeAccount.IsAuthed)
+            {
+                return ExportResult.NotExistsValidAccount;
+            }
+
+            string uuid = activeAccount.UUID;
+            string sessionToken = activeAccount.SessionToken;
+
             string shareDir = FileDistributor.SharesDir;
             try
             {
@@ -1227,7 +1245,7 @@ namespace Lexplosion.Logic.Management.Instances
             {
                 IsSharing = true;
 
-                distributor = FileDistributor.CreateDistribution(zipFile, Name);
+                distributor = FileDistributor.CreateDistribution(zipFile, Name, uuid, sessionToken);
                 if (distributor == null) return ExportResult.ZipFileError;
 
                 distributor.OnClosed += delegate ()

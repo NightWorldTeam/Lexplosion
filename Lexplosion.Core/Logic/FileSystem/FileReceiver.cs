@@ -20,13 +20,21 @@ namespace Lexplosion.Logic.FileSystem
 
         private static object _dataClientInitLocker = new object();
 
+
+        // TODO: потом не забыть убрать этот метод к хуям собачим
+        [Obsolete("Это метод нужен только для совместимости со старым интерфейсом. Вскоре он будет удалён.")]
         public static List<FileReceiver> GetDistributors()
+        {
+            return GetDistributors(GlobalData.User.UUID, GlobalData.User.SessionToken);
+        }
+
+        public static List<FileReceiver> GetDistributors(string uuid, string sessionToken)
         {
             var data = new List<FileReceiver>();
             string anwer = ToServer.HttpPost(LaunсherSettings.URL.UserApi + "getFileDistributions", new Dictionary<string, string>
             {
-                ["UUID"] = GlobalData.User.UUID,
-                ["sessionToken"] = GlobalData.User.SessionToken
+                ["UUID"] = uuid,
+                ["sessionToken"] = sessionToken
             });
 
             if (anwer == null)
@@ -43,7 +51,7 @@ namespace Lexplosion.Logic.FileSystem
                     foreach (RecieverInfo reciverInfo in recieversInfo)
                     {
                         var parameters = JsonConvert.DeserializeObject<DistributionData>(reciverInfo.Parameters);
-                        data.Add(new FileReceiver(reciverInfo.Login, reciverInfo.UserUUID, reciverInfo.FileId, parameters));
+                        data.Add(new FileReceiver(uuid, sessionToken, reciverInfo.Login, reciverInfo.UserUUID, reciverInfo.FileId, parameters));
                     }
                 }
             }
@@ -88,12 +96,18 @@ namespace Lexplosion.Logic.FileSystem
             get => _fileId;
         }
 
-        private FileReceiver(string ownerLogin, string ownerUUID, string fileId, DistributionData info)
+        private string _myUUID;
+        private string _mySessionToken;
+
+        private FileReceiver(string myUUID, string mySessionToken, string ownerLogin, string ownerUUID, string fileId, DistributionData info)
         {
             _ownerLogin = ownerLogin;
             _ownerUUID = ownerUUID;
             _fileId = fileId;
             _info = info;
+
+            _myUUID = myUUID;
+            _mySessionToken = mySessionToken;
 
             _state = DistributionState.InQueue;
         }
@@ -121,7 +135,7 @@ namespace Lexplosion.Logic.FileSystem
 
                 lock (_dataClientInitLocker)
                 {
-                    bool result = _dataClient.Initialization(GlobalData.User.UUID, GlobalData.User.SessionToken, _ownerUUID);
+                    bool result = _dataClient.Initialization(_myUUID, _mySessionToken, _ownerUUID);
                     if (!result)
                     {
                         _dataClient.Close();

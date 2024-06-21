@@ -56,7 +56,24 @@ namespace Lexplosion.Logic.Management.Accounts
             }
         }
 
+        public static string AnyFuckingLogin { get => ActiveAccount?.Login ?? LaunchedAccount?.Login; }
+
         public static event Action<Account> AuthozationFinished;
+
+        public bool IsTokenValid { get; private set; } = true;
+
+        /// <summary>
+        /// Ссылка на картинку головы скина. Может быть null.
+        /// </summary>
+        public string HeadImageUrl
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(Login)) return null;
+                if (AccountType != AccountType.NightWorld) return $"https://mineskin.eu/helm/{Login}/64.png";
+                return $"https://night-world.org/requestProcessing/getUserImage.php?user_login={Login}";
+            }
+        }
 
         /// <summary>
         /// Является ли аккаунт активным. 
@@ -187,7 +204,7 @@ namespace Lexplosion.Logic.Management.Accounts
         private static void AddToList(Account account)
         {
             _accounts.Add(account);
-            _listToSave[account] = account.GetAccountSummary();   
+            _listToSave[account] = account.GetAccountSummary();
         }
 
         private static void SaveSummaryList()
@@ -349,6 +366,8 @@ namespace Lexplosion.Logic.Management.Accounts
 
             AuthozationFinished?.Invoke(this);
             AuthorizationCodeResult = result.Code;
+
+            Runtime.DebugWrite($"Auth {Login}, Account type: {AccountType}, Result: {result.Code}");
 
             return result.Code;
         }

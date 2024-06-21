@@ -13,6 +13,7 @@ using Lexplosion.Logic.Management.Installers;
 using Lexplosion.Logic.Management.Sources;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
+using Lexplosion.Logic.Management.Accounts;
 
 namespace Lexplosion.Logic.Management
 {
@@ -41,6 +42,11 @@ namespace Lexplosion.Logic.Management
 
         private string _customJavaPath = null;
         private string _keyStorePath;
+
+        private Account _activeAccount;
+        private Account _launchAccount;
+
+        private Settings _generalSettings;
 
         #region events
         /// <summary>
@@ -108,15 +114,19 @@ namespace Lexplosion.Logic.Management
             get => _instanceId;
         }
 
-        public LaunchGame(string instanceId, Settings instanceSettings, IInstanceSource source, CancellationToken updateCancelToken)
+        public LaunchGame(string instanceId, Settings generalSettings, Settings instanceSettings, Account activeAccount, Account launchAccount,  IInstanceSource source, CancellationToken updateCancelToken)
         {
             if (_classInstance == null)
                 _classInstance = this;
 
+            _generalSettings = generalSettings;
+            _activeAccount = activeAccount;
+            _launchAccount = launchAccount;
+
             // Сохраняем JavaPath для этой сборки. У настроек сборок нельзя установить Java17Path,
             // поэтому в JavaPath может храниться как новая версия джавы, так и старая.
             _customJavaPath = instanceSettings.JavaPath;
-            instanceSettings.Merge(GlobalData.GeneralSettings, true);
+            instanceSettings.Merge(_generalSettings, true);
 
             _settings = instanceSettings;
             _instanceId = instanceId;
@@ -231,7 +241,7 @@ namespace Lexplosion.Logic.Management
 
             bool isNwClient = !string.IsNullOrWhiteSpace(data.VersionFile?.NightWorldClientData?.MainClass) && data.VersionFile.IsNightWorldClient;
 
-            string accountType = GlobalData.User.AccountType.ToString();
+            string accountType = _launchAccount.AccountType.ToString();
             string libs = string.Empty;
             foreach (string lib in data.Libraries.Keys)
             {
@@ -365,13 +375,13 @@ namespace Lexplosion.Logic.Management
                 command += " --width " + _settings.WindowWidth + " --height " + _settings.WindowHeight;
                 command += autologin;
                 command += additionalInstallerArgumentsAfter;
-                command = command.Replace("${auth_player_name}", GlobalData.User.Login);
+                command = command.Replace("${auth_player_name}", _launchAccount.Login);
                 command = command.Replace("${version_name}", data.VersionFile.GameVersion);
                 command = command.Replace("${game_directory}", "\"" + gamePath + "instances/" + _instanceId + "\"");
                 command = command.Replace("${assets_root}", "\"" + gamePath + "assets" + "\"");
                 command = command.Replace("${assets_index_name}", data.VersionFile.AssetsVersion);
-                command = command.Replace("${auth_uuid}", GlobalData.User.UUID);
-                command = command.Replace("${auth_access_token}", GlobalData.User.AccessToken);
+                command = command.Replace("${auth_uuid}", _launchAccount.UUID);
+                command = command.Replace("${auth_access_token}", _launchAccount.AccessToken);
                 command = command.Replace("${user_type}", "legacy");
                 command = command.Replace("${version_type}", "release");
                 command = command.Replace("${natives_directory}", "\"" + gamePath + "natives/" + (data.VersionFile.CustomVersionName ?? data.VersionFile.GameVersion) + "\"");
@@ -398,11 +408,11 @@ namespace Lexplosion.Logic.Management
                 command += " -Xmx" + _settings.Xmx + "M -Xms" + _settings.Xms + "M " + _settings.GameArgs;
                 command += (isNwClient ? data.VersionFile.NightWorldClientData.MainClass : mainClass) + " ";
                 command += nwClientMinecraftArgs;
-                command += " --username " + GlobalData.User.Login + " --version " + data.VersionFile.GameVersion;
+                command += " --username " + _launchAccount.Login + " --version " + data.VersionFile.GameVersion;
                 command += " --gameDir \"" + gamePath + "instances/" + _instanceId + "\"";
                 command += " --assetsDir \"" + gamePath + "assets" + "\"";
                 command += " --assetIndex " + data.VersionFile.AssetsVersion;
-                command += " --uuid " + GlobalData.User.UUID + " --accessToken " + GlobalData.User.AccessToken + " --userProperties [] --userType legacy ";
+                command += " --uuid " + _launchAccount.UUID + " --accessToken " + _launchAccount.AccessToken + " --userProperties [] --userType legacy ";
                 command += data.VersionFile.Arguments;
                 command += " --width " + _settings.WindowWidth + " --height " + _settings.WindowHeight;
                 command += autologin;
@@ -504,7 +514,7 @@ namespace Lexplosion.Logic.Management
             }
         }
 
-        public bool Run(InitData data, LaunchComplitedCallback ComplitedLaunch, GameExitedCallback GameExited, string gameClientName, bool onlineGame)
+        public bool Run(InitData data, LaunchComplitedCallback ComplitedLaunch, GameExitedCallback GameExited, string gameClientName)
         {
             GameClientName = gameClientName;
             GameVersion = data?.VersionFile?.GameVersion;
@@ -513,12 +523,12 @@ namespace Lexplosion.Logic.Management
 
             _process = new Process();
 
-            if (onlineGame)
+            if (_activeAccount != null)
             {
                 lock (loocker)
                 {
                     var serverData = new ControlServerData(LaunсherSettings.ServerIp);
-                    _gameGateway = new OnlineGameGateway(GlobalData.User.UUID, GlobalData.User.SessionToken, serverData, GlobalData.GeneralSettings.NetworkDirectConnection);
+                    _gameGateway = new OnlineGameGateway(_activeAccount.UUID, _activeAccount.SessionToken, serverData, _generalSettings.NetworkDirectConnection);
 
                     _removeImportantTaskMark = false;
                     Lexplosion.Runtime.AddImportantTask();

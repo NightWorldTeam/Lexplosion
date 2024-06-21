@@ -66,7 +66,7 @@ namespace Lexplosion.Logic.FileSystem
             _informingThread.Start();
         }
 
-        public static FileDistributor CreateDistribution(string filePath, string name)
+        public static FileDistributor CreateDistribution(string filePath, string name, string userUUID, string userSessionToken)
         {
             if (!_isWork) return null;
 
@@ -80,7 +80,7 @@ namespace Lexplosion.Logic.FileSystem
                     _confirmWord = new Random().GenerateString(32);
 
                     var serverData = new ControlServerData(LaunсherSettings.ServerIp);
-                    _dataServer = new DataServer(privateKey, _confirmWord, GlobalData.User.UUID, GlobalData.User.SessionToken, serverData);
+                    _dataServer = new DataServer(privateKey, _confirmWord, userUUID, userSessionToken, serverData);
                 }
 
                 //Получаем хэш файла
@@ -97,8 +97,8 @@ namespace Lexplosion.Logic.FileSystem
 
                 string answer = ToServer.HttpPost(LaunсherSettings.URL.UserApi + "setFileDistribution", new Dictionary<string, string>
                 {
-                    ["UUID"] = GlobalData.User.UUID,
-                    ["sessionToken"] = GlobalData.User.SessionToken,
+                    ["UUID"] = userUUID,
+                    ["sessionToken"] = userSessionToken,
                     ["FileId"] = hash,
                     ["Parameters"] = JsonConvert.SerializeObject(new DistributionData
                     {
@@ -112,7 +112,7 @@ namespace Lexplosion.Logic.FileSystem
 
                 _distributionsCount++;
 
-                var dstr = new FileDistributor(hash, GlobalData.User.UUID, GlobalData.User.SessionToken);
+                var dstr = new FileDistributor(hash, userUUID, userSessionToken);
                 _distributors.Add(dstr);
 
                 return dstr;
