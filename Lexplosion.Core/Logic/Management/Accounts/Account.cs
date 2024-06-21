@@ -47,9 +47,9 @@ namespace Lexplosion.Logic.Management.Accounts
         }
 
         private AuthCode _latestAuthCode;
-        public AuthCode AuthorizationCodeResult 
-        { 
-            get => _latestAuthCode; private set 
+        public AuthCode AuthorizationCodeResult
+        {
+            get => _latestAuthCode; private set
             {
                 _latestAuthCode = value;
                 OnPropertyChanged();
@@ -160,14 +160,9 @@ namespace Lexplosion.Logic.Management.Accounts
         public static Account ActiveAccount { get; private set; }
 
         /// <summary>
-        /// Возвращает запускаемый аккаунт. Если он не установлен, то вернется значение свойство ActiveAccount
+        /// Возвращает запускаемый аккаунт.
         /// </summary>
-        public static Account LaunchedAccount
-        {
-            get => _launchedAccount ?? ActiveAccount;
-            private set => _launchedAccount = value;
-        }
-        private static Account _launchedAccount = null;
+        public static Account LaunchedAccount { get; private set; }
 
         static Account()
         {
@@ -192,7 +187,7 @@ namespace Lexplosion.Logic.Management.Accounts
         private static void AddToList(Account account)
         {
             _accounts.Add(account);
-            _listToSave[account] = account.GetAccountSummary();
+            _listToSave[account] = account.GetAccountSummary();   
         }
 
         private static void SaveSummaryList()
@@ -287,6 +282,9 @@ namespace Lexplosion.Logic.Management.Accounts
         /// </summary>
         public void RemoveFromList()
         {
+            IsActive = false;
+            IsLaunch = false;
+
             _accounts.Remove(this);
             _listToSave.Remove(this);
         }
@@ -344,8 +342,11 @@ namespace Lexplosion.Logic.Management.Accounts
                 TryInitNwServices();
             }
 
+            if (result.Code != AuthCode.Successfully)
+            {
+                IsActive = false;
+            }
 
-            IsActive = false;
             AuthozationFinished?.Invoke(this);
             AuthorizationCodeResult = result.Code;
 
