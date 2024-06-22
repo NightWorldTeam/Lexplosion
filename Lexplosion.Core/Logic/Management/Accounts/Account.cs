@@ -162,6 +162,15 @@ namespace Lexplosion.Logic.Management.Accounts
         private static HashSet<Account> _accounts;
 
         public bool IsAuthed { get; private set; } = false;
+        private bool _isAuthIsProcess;
+        public bool IsAuthInProcess 
+        {
+            get => _isAuthIsProcess; private set 
+            {
+                _isAuthIsProcess = value;
+                OnPropertyChanged();
+            } 
+        }
 
         /// <summary>
         /// Список сохраненных акаунтов
@@ -316,6 +325,7 @@ namespace Lexplosion.Logic.Management.Accounts
         /// <returns>Результат авторизации</returns>
         public AuthCode Auth(string newAccessData = null)
         {
+            IsAuthInProcess = true;
             IAuthHandler authHandler;
             switch (AccountType)
             {
@@ -349,7 +359,9 @@ namespace Lexplosion.Logic.Management.Accounts
             if (result.Code == AuthCode.Successfully)
             {
                 IsAuthed = true;
+                OnPropertyChanged(nameof(IsAuthed));
                 Login = result.Login;
+                OnPropertyChanged(nameof(Login));
                 _accessData = result.AccessData;
                 UUID = result.UUID;
                 Status = result.Status;
@@ -366,8 +378,7 @@ namespace Lexplosion.Logic.Management.Accounts
 
             AuthozationFinished?.Invoke(this);
             AuthorizationCodeResult = result.Code;
-
-            Runtime.DebugWrite($"Auth {Login}, Account type: {AccountType}, Result: {result.Code}");
+            IsAuthInProcess = false;
 
             return result.Code;
         }

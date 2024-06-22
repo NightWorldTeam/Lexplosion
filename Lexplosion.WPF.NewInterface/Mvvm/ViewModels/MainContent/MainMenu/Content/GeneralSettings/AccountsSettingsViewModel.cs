@@ -42,6 +42,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         {
             get => RelayCommand.GetCommand<Account>(ref _activateAccountCommand, (acc) => 
             {
+                if (!acc.IsAuthed) {
+                    acc.Auth();
+                }
+
                 acc.IsActive = true;
                 Account.SaveAll();
             });
@@ -52,7 +56,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         {
             get => RelayCommand.GetCommand<Account>(ref _doAccountLauncher, (acc) => 
             {
-                Runtime.DebugWrite($"{acc.AccountType} {acc.Login} executed.");
+                if (!acc.IsAuthed) {
+                    acc.Auth();
+                }
+
                 acc.IsLaunch = true;
                 Account.SaveAll();
             });

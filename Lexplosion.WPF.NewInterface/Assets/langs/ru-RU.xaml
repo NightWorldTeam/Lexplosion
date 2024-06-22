@@ -366,6 +366,7 @@
     <!--  Accounts  -->
     <s:String x:Key="Active">Активно</s:String>
     <s:String x:Key="NotActive">Неактивно</s:String>
+    <s:String x:Key="TypingNicknamePlaceholder">Введите ник...</s:String>
 
     <!--  Funcs  -->
     <s:String x:Key="Activate">Сделать активным</s:String>

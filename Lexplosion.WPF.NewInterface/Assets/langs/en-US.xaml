@@ -376,6 +376,7 @@
     <s:String x:Key="Activate">Activate</s:String>
     <s:String x:Key="DoGameLauncher">Do game launcher</s:String>
     <s:String x:Key="Signout">Sign-out</s:String>
+    <s:String x:Key="TypingNicknamePlaceholder">Typing nickname...</s:String>
 
     <s:String x:Key="GameLauncher">Game Launch</s:String>
 

@@ -77,7 +77,7 @@
                         Height="32"
                         CornerRadius="5">
                         <Border.Background>
-                            <ImageBrush ImageSource="pack://application:,,,/Assets/images/icons/hel2xhead.png" />
+                            <ImageBrush ImageSource="{Binding HeadImageUrl}" />
                         </Border.Background>
                     </Border>
 
@@ -300,7 +300,10 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <controls:SearchBox Grid.Column="0" Text="{Binding Model.SearchBoxText, UpdateSourceTrigger=PropertyChanged}" />
+        <controls:SearchBox
+            Grid.Column="0"
+            Placeholder="{DynamicResource TypingNicknamePlaceholder}"
+            Text="{Binding Model.SearchBoxText, UpdateSourceTrigger=PropertyChanged}" />
 
         <StackPanel
             Grid.Column="1"
