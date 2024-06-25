@@ -292,7 +292,7 @@
             Visibility="{Binding Model.IsEmpty, Converter={converters:BooleanToVisibilityConverter}}" />
 
         <controls:LoadingBoard
-            BackgroundColor="Black"
+            Background="Black"
             BackgroundOpacity="0.3"
             IsActive="{Binding Model.IsLoading}"
             Placeholder="Загрузка..." />
