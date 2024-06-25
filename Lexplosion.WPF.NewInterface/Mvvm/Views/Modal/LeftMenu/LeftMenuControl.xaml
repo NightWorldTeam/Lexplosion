@@ -183,7 +183,7 @@
                         Visibility="Visible">
                         <controls:LoadingBoard
                             x:Name="Loader"
-                            BackgroundColor="Black"
+                            Background="Black"
                             BackgroundOpacity="0.3"
                             IsActive="{Binding IsProcessActive}"
                             Placeholder="{Binding LoaderPlaceholderKey}" />

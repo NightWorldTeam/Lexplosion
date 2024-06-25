@@ -11,7 +11,7 @@
                         Margin="-7"
                         BorderBrush="{DynamicResource DefaultButtonBackgroundColorBrush}"
                         BorderThickness="3"
-                        CornerRadius="22"
+                        CornerRadius="7"
                         Opacity="0.4"
                         SnapsToDevicePixels="true" />
                 </ControlTemplate>
@@ -26,6 +26,7 @@
         <Setter Property="Background" Value="{DynamicResource DefaultButtonBackgroundColorBrush}" />
         <Setter Property="Foreground" Value="{DynamicResource DefaultButtonForegroundColorBrush}" />
         <Setter Property="Height" Value="32" />
+        <Setter Property="FontSize" Value="14" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="FocusVisualStyle" Value="{StaticResource DefaultAdvancedButtonFocusVisual}" />
