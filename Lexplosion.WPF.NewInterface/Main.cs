@@ -156,15 +156,20 @@ namespace Lexplosion.WPF.NewInterface
             {
                 Source = new Uri(AssetsPath + "LanguagesRegister.xaml")
             });
-            // Resources //
+            // Themes //
             _app.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
-                Source = new Uri(ResourcePath + "ResourcesRegister.xaml")
+                Source = new Uri(ResourcePath + "ThemesRegistry.xaml")
             });
             // Controls //
             _app.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
                 Source = new Uri(ControlsPath + "Controls.xaml")
+            });
+            // Resources //
+            _app.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            {
+                Source = new Uri(ResourcePath + "ResourcesRegister.xaml")
             });
             // DataTemplates //
             _app.Resources.MergedDictionaries.Add(new ResourceDictionary()
