@@ -3,18 +3,22 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="AdvancedToolTip/AdvancedToolTip.xaml" />
 
+        <!--  Core  -->
+
         <ResourceDictionary Source="AdvancedTextBox/AdvancedTextBox.xaml" />
+        <ResourceDictionary Source="AdvancedButton/AdvancedButton.xaml" />
+        <ResourceDictionary Source="SearchBox/SearchBox.xaml" />
+
+        <!--    -->
+
         <ResourceDictionary Source="UpperPlaceholderTextBox/UpperPlaceholderTextBox.xaml" />
         <ResourceDictionary Source="DigitCodeBox/DigitCodeBox.xaml" />
         <ResourceDictionary Source="DefaultMainMenuTabItem/DefaultMainMenuTabItem.xaml" />
-        <ResourceDictionary Source="SearchBox/SearchBox.xaml" />
 
         <ResourceDictionary Source="AnimatedContentControl/AnimatedContentControl.xaml" />
         <ResourceDictionary Source="UIUnderlineTabControl/UIUnderlineTabControl.xaml" />
 
         <ResourceDictionary Source="ModalControl/ModalControl.xaml" />
-
-
 
         <ResourceDictionary Source="DropdownMenu/DropdownMenu.xaml" />
 

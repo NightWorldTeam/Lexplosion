@@ -232,13 +232,12 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <Button
-                                HorizontalAlignment="Stretch"
-                                HorizontalContentAlignment="Center"
-                                VerticalContentAlignment="Center"
-                                Command="{Binding PlayCommand}">
-                                <TextBlock extensions:TextBlock.TextByKey="Play" FontWeight="Medium" />
-                            </Button>
+                            <controls:AdvancedButton
+                                Padding="16,8"
+                                FontWeight="Medium"
+                                IconData="{DynamicResource PDPlay}"
+                                Style="{StaticResource DefaultAdvancedButton}"
+                                Text="{DynamicResource Play}" />
 
                             <Border
                                 Grid.Column="1"

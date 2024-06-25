@@ -216,4 +216,21 @@
         Opacity="{DynamicResource ImportSuccessColorOpacity}"
         Color="{StaticResource ImportSuccessColor}" />
 
+
+    <!--  AdvancedButton  -->
+
+
+    <SolidColorBrush x:Key="DefaultButtonBackgroundColorBrush" Color="{DynamicResource ActivityColor}" />
+
+    <Color x:Key="DefaultButtonHoverBackgroundColor">#1472E3</Color>
+    <SolidColorBrush x:Key="DefaultButtonHoverBackgroundColorBrush" Color="{DynamicResource DefaultButtonHoverBackgroundColor}" />
+
+    <Color x:Key="DefaultButtonPressedBackgroundColor">#1266CA</Color>
+    <SolidColorBrush x:Key="DefaultButtonPressedBackgroundColorBrush" Color="{DynamicResource DefaultButtonPressedBackgroundColor}" />
+
+    <Color x:Key="DefaultButtonDisableBackgroundColor">#07264C</Color>
+    <SolidColorBrush x:Key="DefaultButtonDisableBackgroundColorBrush" Color="{DynamicResource DefaultDisableButtonBackgroundColor}" />
+
+    <Color x:Key="DefaultButtonForegroundColor">White</Color>
+    <SolidColorBrush x:Key="DefaultButtonForegroundColorBrush" Color="{DynamicResource DefaultButtonForegroundColor}" />
 </ResourceDictionary>
