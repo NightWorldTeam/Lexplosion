@@ -87,7 +87,7 @@
                             Orientation="Horizontal">
 
                             <controls:SearchBox
-                                Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={StaticResource WindowWidthToXProcentWidth}, ConverterParameter=40}"
+                                Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={converters:WindowWidthToXProcentWidth}, ConverterParameter=40}"
                                 Placeholder="{DynamicResource Search}"
                                 SearchCommand="{Binding SearchCommand}"
                                 Text="{Binding Model.SearchFilter, UpdateSourceTrigger=PropertyChanged}" />

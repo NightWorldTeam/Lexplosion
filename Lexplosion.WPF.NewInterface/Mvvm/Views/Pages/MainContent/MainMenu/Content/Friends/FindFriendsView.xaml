@@ -18,7 +18,7 @@
     <UserControl.Resources>
         <DataTemplate DataType="{x:Type objects:NightWorldUser}">
             <Border
-                Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={StaticResource WindowWidthToXProcentWidth}, ConverterParameter=22}"
+                Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={converters:WindowWidthToXProcentWidth}, ConverterParameter=22}"
                 MinWidth="300"
                 MinHeight="64"
                 Margin="4,0,0,4"

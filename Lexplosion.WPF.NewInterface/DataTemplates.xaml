@@ -16,11 +16,6 @@
     xmlns:modalvm="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal"
     xmlns:viewmodels="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels">
 
-    <converters:NegativeBooleanToVisibilityConverter x:Key="NegativeBooleanToVisibilityConverter" />
-    <converters:WindowHeightToXProcentHeight x:Key="WindowHeightToXProcentHeight" />
-    <converters:WindowWidthToXProcentWidth x:Key="WindowWidthToXProcentWidth" />
-    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-
     <viewmodels:MainViewModel x:Key="MainViewModel" />
 
     <!--  Authorization  -->

@@ -115,69 +115,6 @@
                 IsOpen="{Binding IsModalOpen, Source={StaticResource MainViewModel}}"
                 KeyboardNavigation.IsTabStop="False" />
 
-            <Border Background="{DynamicResource PrimaryForegroundSolidColorBrush}" Visibility="Collapsed">
-
-                <Grid HorizontalAlignment="Center" ShowGridLines="True">
-
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-
-                    <Button
-                        Width="200"
-                        Height="124"
-                        Content="Some Button">
-                        <Button.ToolTip>
-                            <ToolTip
-                                Background="Transparent"
-                                BorderThickness="0"
-                                Placement="Center"
-                                PlacementRectangle="32,-22,0,0"
-                                PlacementTarget="{Binding ElementName=MainPanel}">
-                                <!--  Custom ToolTip  -->
-                                <Grid
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    MouseDown="Grid_MouseDown"
-                                    Visibility="Visible">
-
-                                    <!--  Top / Bottom -> 40  -->
-                                    <!--  Left / Right -> 44  -->
-
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
-
-                                    <Border
-                                        Height="32"
-                                        Background="Black"
-                                        CornerRadius="5">
-                                        <TextBlock
-                                            Padding="16"
-                                            VerticalAlignment="Center"
-                                            FontSize="13"
-                                            FontWeight="Medium"
-                                            Foreground="White"
-                                            Text="Direct Messages" />
-                                    </Border>
-
-                                    <Polygon
-                                        Grid.Row="1"
-                                        HorizontalAlignment="Center"
-                                        Fill="Black"
-                                        Points="10,0 5,5, 0,0" />
-                                </Grid>
-                            </ToolTip>
-                        </Button.ToolTip>
-                    </Button>
-                </Grid>
-            </Border>
-
             <!--  Window Header Panel Margin="16,12"  -->
             <Grid
                 x:Name="WindowHeaderPanelButtonsGrid"
@@ -465,6 +402,7 @@
                                     </Viewbox>
 
                                     <Border.ToolTip>
+
                                         <controls:AdvancedToolTip
                                             Background="Transparent"
                                             BorderThickness="0"
@@ -497,7 +435,7 @@
                     BorderBrush="{DynamicResource SeparateSolidColorBrush}"
                     BorderThickness="1"
                     CornerRadius="5"
-                    Visibility="{Binding IsChecked, ElementName=notify, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    Visibility="{Binding IsChecked, ElementName=notify, Converter={converters:BooleanToVisibilityConverter}}">
 
                     <Border.Effect>
                         <DropShadowEffect Opacity="0.1" Color="Black" />
