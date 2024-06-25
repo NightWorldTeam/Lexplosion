@@ -40,7 +40,7 @@
                         Padding="{TemplateBinding Padding}"
                         Background="{TemplateBinding Background}"
                         CornerRadius="{TemplateBinding CornerRadius}">
-                        <Grid Background="Transparent" ShowGridLines="True">
+                        <Grid Background="Transparent" ShowGridLines="False">
 
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />

@@ -1,10 +1,12 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Effects;
 
 namespace Lexplosion.WPF.NewInterface.Controls
 {
-    [TemplatePart(Name = PART_BACKGROUND_LAYER, Type = typeof(Grid))]
+    [TemplatePart(Name = PART_BACKGROUND_LAYER, Type = typeof(Border))]
     //[TemplatePart(Name = PART_CONTENT_BORDER, Type = typeof(Border))]
     //[TemplatePart(Name = PART_RECTANGLE, Type = typeof(Rectangle))]
     //[TemplatePart(Name = PART_PLACEHOLDER, Type = typeof(TextBlock))]
@@ -19,7 +21,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
 
         public static readonly DependencyProperty IsLoadingFinishedProperty
-            = DependencyProperty.Register("IsActive", typeof(bool), typeof(LoadingBoard), new PropertyMetadata(false));
+            = DependencyProperty.Register("IsActive", typeof(bool), typeof(LoadingBoard), new PropertyMetadata(false, propertyChangedCallback: OnIsActiveChanged));
 
         public static readonly DependencyProperty PlaceholderProperty
             = DependencyProperty.Register("Placeholder", typeof(string), typeof(LoadingBoard), new PropertyMetadata(string.Empty));
@@ -30,11 +32,18 @@ namespace Lexplosion.WPF.NewInterface.Controls
         public static readonly DependencyProperty BorderColorProperty
             = DependencyProperty.Register("BorderColor", typeof(Brush), typeof(LoadingBoard), new PropertyMetadata(Brushes.White));
 
-        public static readonly DependencyProperty BackgroundColorProperty
-            = DependencyProperty.Register("BackgroundColor", typeof(Color), typeof(LoadingBoard), new FrameworkPropertyMetadata(Colors.Transparent));
-
         public static readonly DependencyProperty BackgroundOpacityProperty
-            = DependencyProperty.Register("BackgroundOpacity", typeof(double), typeof(LoadingBoard), new FrameworkPropertyMetadata(1.0));
+            = DependencyProperty.Register("BackgroundOpacity", typeof(double), typeof(LoadingBoard), new FrameworkPropertyMetadata(1.0, propertyChangedCallback: OnBackgroundOpacityChanged));
+
+        public static readonly DependencyProperty CornerRadiusProperty
+            = DependencyProperty.Register("CornerRadius", typeof(CornerRadius), typeof(LoadingBoard),
+                                  new FrameworkPropertyMetadata(new CornerRadius(),
+                                  FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender),
+                                  new ValidateValueCallback(IsCornerRadiusValid));
+
+        public static readonly DependencyProperty BlurTargetProperty
+            = DependencyProperty.Register("BlurTarget", typeof(UIElement), typeof(LoadingBoard), 
+                new FrameworkPropertyMetadata(propertyChangedCallback: OnBlurTargetChanged));
 
         public bool IsActive
         {
@@ -60,17 +69,25 @@ namespace Lexplosion.WPF.NewInterface.Controls
             set => SetValue(BorderColorProperty, value);
         }
 
-        public Color BackgroundColor
-        {
-            get => (Color)GetValue(BackgroundColorProperty);
-            set => SetValue(BackgroundColorProperty, value);
-        }
-
         public double BackgroundOpacity
         {
             get => (double)GetValue(BackgroundOpacityProperty);
             set => SetValue(BackgroundOpacityProperty, value);
         }
+
+
+        public CornerRadius CornerRadius
+        {
+            get => (CornerRadius)GetValue(CornerRadiusProperty);
+            set => SetValue(CornerRadiusProperty, value);
+        }
+
+        public UIElement BlurTarget 
+        {
+            get => (UIElement)GetValue(BlurTargetProperty);
+            set => SetValue(BlurTargetProperty, value);
+        }
+
 
         #endregion
 
@@ -93,11 +110,59 @@ namespace Lexplosion.WPF.NewInterface.Controls
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-
-
         }
 
 
         #endregion Public & Protected Methods
+
+
+        #region Private Methods
+
+
+        private void SetBlurToTarget() 
+        {
+            if (BlurTarget != null) {  
+                BlurTarget.Effect = IsActive ? new BlurEffect() : null;
+            }
+        }
+
+
+        private static bool IsCornerRadiusValid(object value)
+        {
+            CornerRadius cr = (CornerRadius)value;
+            return cr.IsValid(false, false, false, false);
+        }
+
+        private static void OnIsActiveChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is LoadingBoard _this)
+            {
+                _this.SetBlurToTarget();
+            }
+        }
+
+        private static void OnBlurTargetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is LoadingBoard _this)
+            {
+                if (e.OldValue is UIElement blurTarget)
+                    blurTarget.Effect = null;
+                _this.SetBlurToTarget();
+            }
+        }
+
+        private static void OnBackgroundOpacityChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is LoadingBoard _this)
+            {
+                var scBursh = new SolidColorBrush((_this.Background as SolidColorBrush).Color);
+                scBursh.Opacity = (double)e.NewValue;
+
+                _this.Background = scBursh;
+            }
+        }
+
+
+        #endregion Private Methods
     }
 }
