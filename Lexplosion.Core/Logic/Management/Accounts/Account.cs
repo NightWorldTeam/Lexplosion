@@ -58,7 +58,14 @@ namespace Lexplosion.Logic.Management.Accounts
 
         public static string AnyFuckingLogin { get => ActiveAccount?.Login ?? LaunchedAccount?.Login; }
 
+        /// <summary>
+        /// Событие которые происходит при окончании авторизации.
+        /// </summary>
         public static event Action<Account> AuthozationFinished;
+        /// <summary>
+        /// Событие которые происходит при удалении аккаунта.
+        /// </summary>
+        public static event Action<Account> AccountDeleted;
 
         public bool IsTokenValid { get; private set; } = true;
 
@@ -313,6 +320,8 @@ namespace Lexplosion.Logic.Management.Accounts
 
             _accounts.Remove(this);
             _listToSave.Remove(this);
+
+            AccountDeleted?.Invoke(this);
         }
 
         /// <summary>
@@ -379,7 +388,7 @@ namespace Lexplosion.Logic.Management.Accounts
             AuthozationFinished?.Invoke(this);
             AuthorizationCodeResult = result.Code;
             IsAuthInProcess = false;
-
+            Runtime.DebugWrite($"Auth {Login}, Account type: {AccountType}, Result: {result.Code}");
             return result.Code;
         }
 

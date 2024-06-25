@@ -59,7 +59,7 @@
 
         <DataTemplate DataType="{x:Type accounts:Account}">
             <Border
-                Padding="0,8,0,8"
+                Padding="8,8,0,8"
                 BorderBrush="{DynamicResource SeparateSolidColorBrush}"
                 BorderThickness="0,0,0,1">
                 <Grid ShowGridLines="False">
@@ -81,6 +81,7 @@
                         </Border.Background>
                     </Border>
 
+                    <!--  Login & Login  -->
                     <StackPanel Grid.Column="1" Margin="8,0,0,0">
                         <TextBlock
                             FontSize="16"
@@ -98,6 +99,35 @@
                         Grid.Column="2"
                         Margin="8,0,0,0"
                         Orientation="Horizontal">
+
+                        <core:If Condition="{Binding IsAuthInProcess, UpdateSourceTrigger=PropertyChanged}">
+                            <core:If.True>
+                                <Border
+                                    Height="24"
+                                    Margin="0,0,8,0"
+                                    Padding="8,3,8,6"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Top"
+                                    Background="Black"
+                                    CornerRadius="5">
+                                    <Grid>
+                                        <TextBlock
+                                            VerticalAlignment="Center"
+                                            FontSize="14"
+                                            FontWeight="Medium"
+                                            Foreground="{DynamicResource CheckBoxMarkSolidColorBrush}"
+                                            Text="Идет процесс авторизации" />
+                                        <ProgressBar
+                                            Height="4"
+                                            Margin="-8,-6"
+                                            VerticalAlignment="Bottom"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            IsIndeterminate="True" />
+                                    </Grid>
+                                </Border>
+                            </core:If.True>
+                        </core:If>
 
                         <!--  Active Status  -->
                         <core:If Condition="{Binding IsActive}" Visibility="{Binding DataContext.IsNightWorldAccount, Converter={converters:BooleanToVisibilityConverter}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}}">
@@ -240,6 +270,7 @@
                         <Button
                             Margin="8,0,0,0"
                             Command="{Binding Data.SingOutCommand, Source={StaticResource ViewModel}}"
+                            CommandParameter="{Binding}"
                             Content="Logout"
                             Foreground="Red"
                             Style="{StaticResource x32IconButtonActivityColor}" />
@@ -309,24 +340,19 @@
             Grid.Column="1"
             Margin="8,0,0,0"
             Orientation="Horizontal">
-            <Button
-                Height="32"
-                Command="{Binding OpenAccountFactoryCommand}"
-                Style="{DynamicResource x32DefaultIconButton}">
-                <Viewbox>
-                    <Path
-                        extensions:Path.StringKeyData="AddCircle"
-                        Fill="{DynamicResource BrandColorForegroundSolidColorBrush}"
-                        Stretch="Fill" />
-                </Viewbox>
-            </Button>
 
+            <controls:AdvancedButton
+                Command="{Binding OpenAccountFactoryCommand}"
+                Foreground="{DynamicResource DefaultButtonForegroundColorBrush}"
+                IconData="{DynamicResource PDAddCircle}"
+                IconPadding="6"
+                Style="{DynamicResource DefaultAdvancedButton}" />
             <Button
                 Width="32"
                 Height="32"
                 Margin="8,0,0,0"
                 Content="AccountGroupRemove"
-                Foreground="DarkRed"
+                Foreground="Red"
                 Style="{StaticResource x32IconButtonActivityColor}" />
         </StackPanel>
 

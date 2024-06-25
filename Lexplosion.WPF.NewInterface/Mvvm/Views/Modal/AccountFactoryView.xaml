@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:System="clr-namespace:System;assembly=mscorlib"
     xmlns:controls="clr-namespace:Lexplosion.WPF.NewInterface.Controls"
+    xmlns:core="clr-namespace:Lexplosion.WPF.NewInterface.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:enums="clr-namespace:Lexplosion;assembly=Lexplosion.Core"
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
@@ -28,204 +29,272 @@
         Padding="20,0,20,16"
         Background="{DynamicResource PrimarySolidColorBrush}"
         CornerRadius="10">
+
         <Grid>
+            <Grid x:Name="Content">
 
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-
-
-            <!--  Header  -->
-            <Border
-                Margin="-20,16,-20,0"
-                Padding="0,0,0,10"
-                VerticalAlignment="Top"
-                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                BorderThickness="0,0,0,1">
                 <Grid>
 
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
 
-                    <!--  Selected Page Title  -->
-                    <TextBlock
-                        Margin="20,0"
+                    <!--  Header  -->
+                    <Border
+                        Margin="-20,16,-20,0"
+                        Padding="0,0,0,10"
                         VerticalAlignment="Top"
-                        FontSize="18"
-                        FontWeight="Medium"
-                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                        Text="{DynamicResource AddingAccount}" />
+                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                        BorderThickness="0,0,0,1">
+                        <Grid>
 
-                    <!--  Close Button  -->
-                    <Button
-                        Width="20"
-                        Height="20"
-                        Margin="0,0,20,0"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"
-                        Panel.ZIndex="10000"
-                        Command="{Binding CloseCommand}"
-                        IsCancel="True">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
 
-                        <Button.Template>
-                            <ControlTemplate>
-                                <Grid Background="Transparent">
-                                    <Viewbox Height="16">
-                                        <Path
-                                            x:Name="CloseIcon"
-                                            extensions:Path.StringKeyData="Close"
-                                            Fill="{DynamicResource SecondaryForegroundSolidColorBrush}"
-                                            Stretch="Fill" />
-                                    </Viewbox>
+                            <!--  Selected Page Title  -->
+                            <TextBlock
+                                Margin="20,0"
+                                VerticalAlignment="Top"
+                                FontSize="18"
+                                FontWeight="Medium"
+                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                Text="{DynamicResource AddingAccount}" />
+
+                            <!--  Close Button  -->
+                            <Button
+                                Width="20"
+                                Height="20"
+                                Margin="0,0,20,0"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Panel.ZIndex="10000"
+                                Command="{Binding CloseCommand}"
+                                IsCancel="True">
+
+                                <Button.Template>
+                                    <ControlTemplate>
+                                        <Grid Background="Transparent">
+                                            <Viewbox Height="16">
+                                                <Path
+                                                    x:Name="CloseIcon"
+                                                    extensions:Path.StringKeyData="Close"
+                                                    Fill="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                                    Stretch="Fill" />
+                                            </Viewbox>
+                                        </Grid>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                        </Grid>
+
+                    </Border>
+
+                    <Grid
+                        x:Name="AccountFactoryForm"
+                        Grid.Row="1"
+                        IsEnabled="False">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <!--  Field & Information  -->
+                        <StackPanel>
+
+                            <!--  Account Type  -->
+                            <Border
+                                Padding="0,16,0,8"
+                                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                BorderThickness="0,0,0,2">
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+
+                                    <!--  Header  -->
+                                    <StackPanel>
+                                        <TextBlock
+                                            FontSize="14"
+                                            FontWeight="Medium"
+                                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                            Text="{DynamicResource AccountType}" />
+                                        <TextBlock
+                                            FontSize="14"
+                                            FontWeight="Medium"
+                                            Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                            Text="{DynamicResource AccountTypeDescription}" />
+                                    </StackPanel>
+
+                                    <!--  Content  -->
+                                    <ComboBox
+                                        Grid.Column="1"
+                                        Height="32"
+                                        HorizontalAlignment="Stretch"
+                                        FontSize="14"
+                                        ItemsSource="{Binding Source={StaticResource AccountTypeEnum}}"
+                                        SelectedValue="{Binding Model.AccountType, UpdateSourceTrigger=PropertyChanged}" />
                                 </Grid>
-                            </ControlTemplate>
-                        </Button.Template>
-                    </Button>
+                            </Border>
+
+                            <!--  Login  -->
+                            <Border
+                                Padding="0,16,0,8"
+                                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                BorderThickness="0,0,0,2">
+
+                                <Border.Style>
+                                    <Style TargetType="{x:Type Border}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Model.AccountType}" Value="{x:Static enums:AccountType.Microsoft}">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+
+                                    <!--  Header  -->
+                                    <StackPanel>
+                                        <TextBlock
+                                            FontSize="14"
+                                            FontWeight="Medium"
+                                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                            Text="{DynamicResource Login}" />
+                                        <TextBlock
+                                            FontSize="14"
+                                            FontWeight="Medium"
+                                            Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                            Text="{DynamicResource LoginAccountFactoryDescription}" />
+                                    </StackPanel>
+
+                                    <!--  Content  -->
+                                    <controls:AdvancedTextBox
+                                        Grid.Column="1"
+                                        Height="34"
+                                        HorizontalAlignment="Stretch"
+                                        Placeholder="{DynamicResource LoginExample}"
+                                        Text="{Binding Model.Login, UpdateSourceTrigger=PropertyChanged}" />
+                                </Grid>
+                            </Border>
+
+                            <!--  Password  -->
+                            <Border
+                                Padding="0,16,0,8"
+                                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                BorderThickness="0,0,0,2">
+
+                                <Border.Style>
+                                    <Style TargetType="{x:Type Border}">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Model.AccountType}" Value="{x:Static enums:AccountType.NightWorld}">
+                                                <DataTrigger.Setters>
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger.Setters>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+
+                                    <!--  Header  -->
+                                    <StackPanel>
+                                        <TextBlock
+                                            FontSize="14"
+                                            FontWeight="Medium"
+                                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                            Text="{DynamicResource Password}" />
+                                        <TextBlock
+                                            FontSize="14"
+                                            FontWeight="Medium"
+                                            Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                            Text="{DynamicResource PasswordAccountFactoryDescription}" />
+                                    </StackPanel>
+
+                                    <!--  Content  -->
+                                    <controls:AdvancedTextBox
+                                        Grid.Column="1"
+                                        Height="34"
+                                        HorizontalAlignment="Stretch"
+                                        Text="{Binding Model.Password, UpdateSourceTrigger=PropertyChanged}" />
+                                </Grid>
+                            </Border>
+
+                            <!--  Microsoft Authorization Info Message  -->
+                            <Border
+                                Margin="0,16,0,0"
+                                Padding="16"
+                                Background="#d7eaf8"
+                                CornerRadius="5">
+
+                                <Border.Style>
+                                    <Style TargetType="{x:Type Border}">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Model.AccountType}" Value="{x:Static enums:AccountType.Microsoft}">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
+
+                                <StackPanel>
+                                    <TextBlock
+                                        FontSize="16"
+                                        FontWeight="Medium"
+                                        Text="Информация" />
+
+                                    <TextBlock
+                                        Margin="0,16,0,0"
+                                        FontSize="16"
+                                        FontWeight="Normal"
+                                        Text="Для авторизации лицензионого аккаунта вы будете автоматически перенаправлены на страницу авторизации Microsoft."
+                                        TextWrapping="WrapWithOverflow" />
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+
+                        <!--  Add Account Button  -->
+                        <controls:AdvancedButton
+                            Grid.Row="1"
+                            Command="{Binding ActionCommand}"
+                            FontWeight="Medium"
+                            Style="{DynamicResource DefaultAdvancedButton}"
+                            Text="{DynamicResource AddAccount}" />
+                    </Grid>
                 </Grid>
 
-            </Border>
+            </Grid>
 
-            <StackPanel Grid.Row="1">
-
-                <!--  Account Type  -->
-                <Border
-                    Padding="0,16,0,8"
-                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                    BorderThickness="0,0,0,2">
-
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-
-
-                        <!--  Header  -->
-                        <StackPanel>
-                            <TextBlock
-                                FontSize="14"
-                                FontWeight="Medium"
-                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                Text="{DynamicResource AccountType}" />
-                            <TextBlock
-                                FontSize="14"
-                                FontWeight="Medium"
-                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
-                                Text="{DynamicResource AccountTypeDescription}" />
-                        </StackPanel>
-
-                        <!--  Content  -->
-                        <ComboBox
-                            Grid.Column="1"
-                            Height="32"
-                            HorizontalAlignment="Stretch"
-                            FontSize="14"
-                            ItemsSource="{Binding Source={StaticResource AccountTypeEnum}}"
-                            SelectedValue="{Binding Model.AccountType, UpdateSourceTrigger=PropertyChanged}" />
-                    </Grid>
-                </Border>
-
-                <!--  Login  -->
-                <Border
-                    Padding="0,16,0,8"
-                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                    BorderThickness="0,0,0,2">
-
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-
-
-                        <!--  Header  -->
-                        <StackPanel>
-                            <TextBlock
-                                FontSize="14"
-                                FontWeight="Medium"
-                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                Text="{DynamicResource Login}" />
-                            <TextBlock
-                                FontSize="14"
-                                FontWeight="Medium"
-                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
-                                Text="{DynamicResource LoginAccountFactoryDescription}" />
-                        </StackPanel>
-
-                        <!--  Content  -->
-                        <controls:AdvancedTextBox
-                            Grid.Column="1"
-                            Height="34"
-                            HorizontalAlignment="Stretch"
-                            Placeholder="{DynamicResource LoginExample}"
-                            Text="{Binding Model.Login, UpdateSourceTrigger=PropertyChanged}" />
-                    </Grid>
-                </Border>
-
-                <!--  Password  -->
-                <Border
-                    Padding="0,16,0,8"
-                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                    BorderThickness="0,0,0,2">
-
-                    <Border.Style>
-                        <Style TargetType="{x:Type Border}">
-                            <Setter Property="Visibility" Value="Collapsed" />
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding Model.AccountType}" Value="{x:Static enums:AccountType.NightWorld}">
-                                    <DataTrigger.Setters>
-                                        <Setter Property="Visibility" Value="Visible" />
-                                    </DataTrigger.Setters>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Border.Style>
-
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-
-
-                        <!--  Header  -->
-                        <StackPanel>
-                            <TextBlock
-                                FontSize="14"
-                                FontWeight="Medium"
-                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                Text="{DynamicResource Password}" />
-                            <TextBlock
-                                FontSize="14"
-                                FontWeight="Medium"
-                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
-                                Text="{DynamicResource PasswordAccountFactoryDescription}" />
-                        </StackPanel>
-
-                        <!--  Content  -->
-                        <controls:AdvancedTextBox
-                            Grid.Column="1"
-                            Height="34"
-                            HorizontalAlignment="Stretch"
-                            Text="{Binding Model.Password, UpdateSourceTrigger=PropertyChanged}" />
-                    </Grid>
-                </Border>
-            </StackPanel>
-
-            <!--  Add Account Button  -->
-            <Button
-                Grid.Row="2"
-                Height="32"
-                HorizontalContentAlignment="Center"
-                VerticalContentAlignment="Center"
-                Command="{Binding ActionCommand}"
-                Content="{DynamicResource AddAccount}"
-                FontSize="14"
-                FontWeight="Medium" />
+            <controls:LoadingBoard
+                Grid.RowSpan="3"
+                Margin="-20,0,-20,-16"
+                Panel.ZIndex="10000"
+                Background="Black"
+                BackgroundOpacity="0.3"
+                BlurTarget="{Binding ElementName=AccountFactoryForm}"
+                CornerRadius="10"
+                IsActive="True"
+                Placeholder="Идет процесс авторизации..." />
         </Grid>
     </Border>
 </UserControl>

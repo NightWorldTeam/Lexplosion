@@ -1,4 +1,5 @@
 ﻿using Lexplosion.Logic.Management;
+using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Objects;
 using Lexplosion.WPF.NewInterface.Core;
@@ -216,8 +217,29 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         /// </summary>
         public void Run()
         {
-            LaunchModel.Run();
-            GameLaunched?.Invoke();
+            // TODO: !!!IMPORTANT сделать бесконечный progressbar и вместо описания фразу "Идет авторизация запускаемого аккаунта..."
+            var launchAcc = Account.LaunchedAccount;
+            if (launchAcc != null) 
+            {
+                if (!launchAcc.IsAuthed) 
+                {
+                    Runtime.TaskRun(() => { 
+                        var authResult = launchAcc.Auth();
+
+                        if (authResult == AuthCode.Successfully) 
+                        {
+                            App.Current.Dispatcher.Invoke(() => { 
+                                LaunchModel.Run();
+                                GameLaunched?.Invoke();
+                            });
+                        }
+                    });
+                    return;
+                }
+
+                LaunchModel.Run();
+                GameLaunched?.Invoke();
+            }
         }
 
         /// <summary>

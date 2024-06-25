@@ -7,9 +7,6 @@ using Lexplosion.WPF.NewInterface.Stores;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Security.Principal;
 using System.Windows.Data;
 using System.Windows.Input;
 
@@ -37,41 +34,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         #region Commands
 
 
-        private RelayCommand _activateAccountCommand;
-        public ICommand ActivateAccountCommand 
-        {
-            get => RelayCommand.GetCommand<Account>(ref _activateAccountCommand, (acc) => 
-            {
-                if (!acc.IsAuthed) {
-                    acc.Auth();
-                }
-
-                acc.IsActive = true;
-                Account.SaveAll();
-            });
-        }
-
-        private RelayCommand _doAccountLauncher;
-        public ICommand DoAccountLauncher 
-        {
-            get => RelayCommand.GetCommand<Account>(ref _doAccountLauncher, (acc) => 
-            {
-                if (!acc.IsAuthed) {
-                    acc.Auth();
-                }
-
-                acc.IsLaunch = true;
-                Account.SaveAll();
-            });
-        }
-
-
-        #endregion Commands
-
-
-        #region Commands
-
-
         public Accounts(AccountType type, IList<Account> list)
         {
             Type = type;
@@ -90,8 +52,24 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
         public void AddAccount(Account account) 
         {
-            _list.Add(account);
+            _list.Add(account); 
             OnPropertyChanged(nameof(HasAccounts));
+        }
+
+        public void RemoveAccount(Account account)
+        {
+            _list.Remove(account);
+            account.RemoveFromList();
+
+            if (IsNightWorldAccount && _list.Count == 1) 
+            {
+                _list[0].IsActive = true;
+
+                if (Account.ListCount == 1 || Account.LaunchedAccount == null) 
+                {
+                    _list[0].IsLaunch = true;
+                }
+            }
         }
 
         public void FilterAccountsByLogin(string value) 
@@ -170,6 +148,14 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
                 AccountsByType[(int)account.AccountType].AddAccount(account);
             });
         }
+
+        public void RemoveAccount(Account account) 
+        {
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                AccountsByType[(int)account.AccountType].RemoveAccount(account);
+            });
+        }
     }
 
     public class AccountsSettingsViewModel : ViewModelBase
@@ -187,17 +173,47 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         {
             get => RelayCommand.GetCommand<Account>(ref _activateAccountCommand, (acc) =>
             {
+                if (!acc.IsAuthed)
+                {
+                    Runtime.TaskRun(() =>
+                    {
+                        var authResult = acc.Auth();
+                        if (authResult == AuthCode.Successfully)
+                        {
+                            acc.IsActive = true;
+                            Account.SaveAll();
+                        }
+                    });
+
+                    return;
+                }
+
                 acc.IsActive = true;
                 Account.SaveAll();
             });
         }
+
 
         private RelayCommand _doAccountLauncherCommand;
         public ICommand DoAccountLauncherCommand
         {
             get => RelayCommand.GetCommand<Account>(ref _doAccountLauncherCommand, (acc) =>
             {
-                Runtime.DebugWrite($"{acc.AccountType} {acc.Login} executed.");
+                if (!acc.IsAuthed)
+                {
+                    Runtime.TaskRun(() => 
+                    {
+                        var authResult = acc.Auth();
+                        if (authResult == AuthCode.Successfully) 
+                        {
+                            acc.IsLaunch = true;
+                            Account.SaveAll();
+                        }
+                    });
+
+                    return;
+                }
+
                 acc.IsLaunch = true;
                 Account.SaveAll();
             });
@@ -210,10 +226,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             get => RelayCommand.GetCommand<Account>(ref _singOutCommand, (acc) =>
             {
                 Runtime.DebugWrite($"{acc.AccountType} {acc.Login} executed.");
+                Model.RemoveAccount(acc);
                 Account.SaveAll();
             });
         }
-
 
         private RelayCommand _addAccountCommand;
         public ICommand OpenAccountFactoryCommand {
@@ -222,8 +238,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
                 _modalNavigationStore.Open(new AccountFactoryViewModel(Model.AddAccount));
             });
         }
-
-
 
 
         #endregion Commands

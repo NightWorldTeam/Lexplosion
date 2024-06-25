@@ -9,6 +9,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Modal
     {
         private Action<Account> _addAccount;
 
+
         #region Properties
 
 
@@ -42,6 +43,17 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Modal
             }
         }
 
+        private bool _isAuthorizationInProgress;
+        public bool IsAuthorzationInProgress 
+        {
+            get => _isAuthorizationInProgress; private set 
+            {
+                _isAuthorizationInProgress = value;
+                OnPropertyChanged();
+            }
+        }
+
+
         #endregion Properties
 
         // NoAuth       |$>> Login
@@ -55,6 +67,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Modal
 
         public void Auth()
         {
+            IsAuthorzationInProgress = true;
             switch (AccountType)
             {
                 case AccountType.NoAuth: 
@@ -74,6 +87,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Modal
                         break;
                     }
                 default:
+                    IsAuthorzationInProgress = false;
                     break;
             };
         }
@@ -83,17 +97,35 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Modal
             var account = new Account(AccountType.NoAuth, Login);
             account.Save();
             _addAccount(account);
+            IsAuthorzationInProgress = false;
         }
 
-        private void NightWorldAuth()
+        private async void NightWorldAuth()
         {
             var account = new Account(AccountType.NightWorld, Login);
-            var code1 = account.Auth(Password);
-            if (code1 == AuthCode.Successfully) 
-            { 
-                account.Save();
-                _addAccount(account);
-            }
+
+            //var authCode = await account.Auth(Password);
+            //if (code1 == AuthCode.Successfully)
+            //{
+            //    account.Save();
+            //    _addAccount(account);
+            //    IsAuthorzationInProgress = false;
+            //}
+
+
+            Runtime.TaskRun(() => {
+                var authCode = account.Auth(Password);
+                if (authCode == AuthCode.Successfully)
+                {
+                    App.Current.Dispatcher.Invoke(() =>
+                    {
+
+                        account.Save();
+                        _addAccount(account);
+                        IsAuthorzationInProgress = false;
+                    });
+                }
+            });
         }
 
         private void MicrosoftAuth()
@@ -104,10 +136,19 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Modal
             {
                 if (res == MicrosoftAuthRes.Successful)
                 {
-                    account.Auth(token);
-                    account.Save();
-                    _addAccount(account);
-                    CommandReceiver.MicrosoftAuthPassed -= successAuth;
+                    Runtime.TaskRun(() => {
+                        var code = account.Auth(token);
+                        if (code == AuthCode.Successfully) 
+                        {
+                            App.Current.Dispatcher.Invoke(() => 
+                            {
+                                account.Save();
+                                _addAccount(account);
+                                CommandReceiver.MicrosoftAuthPassed -= successAuth;
+                                IsAuthorzationInProgress = false;
+                            });
+                        }
+                    });
                 }
             }
 
