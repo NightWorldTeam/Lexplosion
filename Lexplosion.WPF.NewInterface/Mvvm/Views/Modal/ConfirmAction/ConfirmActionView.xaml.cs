@@ -3,11 +3,11 @@
 namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Modal
 {
     /// <summary>
-    /// Логика взаимодействия для DialogBoxView.xaml
+    /// Логика взаимодействия для ConfirmActionView.xaml
     /// </summary>
-    public partial class DialogBoxView : UserControl
+    public partial class ConfirmActionView : UserControl
     {
-        public DialogBoxView()
+        public ConfirmActionView()
         {
             InitializeComponent();
         }

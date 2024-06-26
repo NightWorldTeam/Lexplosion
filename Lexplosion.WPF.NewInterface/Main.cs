@@ -107,6 +107,17 @@ namespace Lexplosion.WPF.NewInterface
             _app.MainWindow.Show();
             _app.Run(_app.MainWindow);
 
+
+            if (Account.ActiveAccount == null) 
+            {
+                var statusCode = Account.ActiveAccount.Auth(null);
+                if (statusCode != AuthCode.Successfully) 
+                {
+                    var latestActiveAccount = Account.ActiveAccount;
+                    latestActiveAccount.IsActive = false;
+
+                }
+            }
             Runtime.DebugWrite("SetMainWindow");
         }
 
@@ -118,10 +129,12 @@ namespace Lexplosion.WPF.NewInterface
             LoadCurrentLanguage();
 
             var latestActiveAccount = Account.ActiveAccount;
-            var code = latestActiveAccount.Auth();
-            if (code != AuthCode.Successfully) 
-            {
+            if (latestActiveAccount != null) { 
+                var code = latestActiveAccount.Auth();
+                if (code != AuthCode.Successfully) 
+                {
                 
+                }
             }
 
             _app.Dispatcher.Invoke(SetMainWindow);
@@ -152,7 +165,7 @@ namespace Lexplosion.WPF.NewInterface
         private static void ResourcesDictionariesRegister()
         {
             // Languages //
-            _app.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            _app.Resources.MergedDictionaries.Add(new ResourceDictionary() 
             {
                 Source = new Uri(AssetsPath + "LanguagesRegister.xaml")
             });

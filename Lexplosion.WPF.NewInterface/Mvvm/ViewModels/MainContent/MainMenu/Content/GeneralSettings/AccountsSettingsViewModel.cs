@@ -50,8 +50,19 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         #region Public Methods
 
 
-        public void AddAccount(Account account) 
+        public void AddAccount(Account account)
         {
+            if (account.AccountType == AccountType.NightWorld)
+            {
+                account.IsActive = true;
+                if (Account.LaunchedAccount == null) 
+                {
+                    account.IsLaunch = true;
+                }
+
+                Account.SaveAll();
+            }
+
             _list.Add(account); 
             OnPropertyChanged(nameof(HasAccounts));
         }
@@ -69,6 +80,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
                 {
                     _list[0].IsLaunch = true;
                 }
+                Account.SaveAll();
             }
         }
 
@@ -226,8 +238,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             get => RelayCommand.GetCommand<Account>(ref _singOutCommand, (acc) =>
             {
                 Runtime.DebugWrite($"{acc.AccountType} {acc.Login} executed.");
-                Model.RemoveAccount(acc);
-                Account.SaveAll();
+
+                _modalNavigationStore.Open(new ConfirmActionViewModel("Удаление аккаунта", "", 
+                    (obj) => 
+                    {
+                        Model.RemoveAccount(acc);
+                        Account.SaveAll();
+                    }));
             });
         }
 

@@ -81,6 +81,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\AlertBlock\AlertBlock.cs" />
+    <Compile Include="Core\ViewModel\ILimitedAccess.cs" />
+    <Compile Include="Mvvm\ViewModels\Modal\ConfirmActionViewModel.cs" />
+    <Compile Include="Mvvm\Views\Modal\ConfirmAction\ConfirmActionView.xaml.cs">
+      <DependentUpon>ConfirmActionView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="NWColorTools\ColorModel.cs" />
     <Compile Include="NWColorTools\Gradient.cs" />
     <Compile Include="NWColorTools\HSV.cs" />
@@ -90,6 +96,7 @@
     <Compile Include="Controls\DependencyObjectHelper.cs" />
     <Compile Include="Controls\DragDropBoard\DragDropBoard.cs" />
     <Compile Include="Controls\LoadingBoard\LoadingBoard.cs" />
+    <Compile Include="Controls\PageCurtains\PageCurtains.cs" />
     <Compile Include="Controls\TextSwitcherButton\TextSwitcherButton.cs" />
     <Compile Include="Core\BindingProxy.cs" />
     <Compile Include="Core\Commands\CommandBase.cs" />
@@ -251,12 +258,8 @@
     <Compile Include="Mvvm\ViewModels\MainContent\MainMenu\Content\Multiplayer\MultiplayerViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\MainContent\MainMenu\LeftPanel\LeftPanelViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\MainContent\MainMenu\MainMenuLayoutViewModel.cs" />
-    <Compile Include="Mvvm\ViewModels\Modal\DialogBox\DialogBoxViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\InstanceFactory\InstanceFactoryViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\LeftMenu\LeftMenuControl.cs" />
-    <Compile Include="Mvvm\Views\Modal\DialogBox\DialogBoxView.xaml.cs">
-      <DependentUpon>DialogBoxView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Mvvm\Views\Modal\InstanceFactory\InstanceFactoryView.xaml.cs">
       <DependentUpon>InstanceFactoryView.xaml</DependentUpon>
     </Compile>
@@ -306,6 +309,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\AdvancedToolTip\AdvancedToolTip.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\AlertBlock\AlertBlock.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -381,6 +388,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Mvvm\Views\Modal\ConfirmAction\ConfirmActionView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Mvvm\Views\Modal\InstanceTransfer\InstanceExportView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -426,6 +437,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\Styles\ComboBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Styles\PageCurtains.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -478,10 +493,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\Themes\LightColorTheme.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Mvvm\Views\Modal\DialogBox\DialogBoxView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

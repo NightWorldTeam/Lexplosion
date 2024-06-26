@@ -14,8 +14,8 @@ namespace Lexplosion.WPF.NewInterface.Controls
         // 
         //
 
-        private const string PATH_ICON_NAME = "PATH_Icon";
-        private const string PATH_TEXT_NAME = "PATH_Text";
+        private const string PART_ICON_NAME = "PATH_Icon";
+        private const string PART_TEXT_NAME = "PATH_Text";
 
         private Viewbox _iconViewBox;
         private Path _iconPath;
@@ -111,7 +111,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
         {
             base.OnApplyTemplate();
 
-            _iconViewBox = Template.FindName(PATH_ICON_NAME, this) as Viewbox;
+            _iconViewBox = Template.FindName(PART_ICON_NAME, this) as Viewbox;
 
             if (_iconViewBox != null) 
             {
@@ -131,7 +131,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
                 _iconPath.Data = Geometry.Parse(IconData);
             }
 
-            _textBlock = Template.FindName(PATH_TEXT_NAME, this) as TextBlock;
+            _textBlock = Template.FindName(PART_TEXT_NAME, this) as TextBlock;
 
             if (_textBlock != null) 
             {

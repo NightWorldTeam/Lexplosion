@@ -47,4 +47,32 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+
+    <Style
+        x:Key="TransparentAdvancedButton"
+        BasedOn="{StaticResource {x:Type controls:AdvancedButton}}"
+        TargetType="{x:Type controls:AdvancedButton}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+        <Setter Property="Height" Value="32" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="FocusVisualStyle" Value="{StaticResource DefaultAdvancedButtonFocusVisual}" />
+
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="{DynamicResource DefaultButtonHoverBackgroundColorBrush}" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Foreground" Value="{DynamicResource DefaultButtonPressedBackgroundColorBrush}" />
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{DynamicResource DefaultButtonDisableBackgroundColorBrush}" />
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="True">
+                <Setter Property="Cursor" Value="Hand" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
 </ResourceDictionary>

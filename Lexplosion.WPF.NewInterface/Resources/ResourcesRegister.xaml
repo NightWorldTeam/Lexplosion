@@ -20,5 +20,7 @@
         <ResourceDictionary Source="Styles/ScrollBar.xaml" />
         <ResourceDictionary Source="Styles/ComboBox.xaml" />
         <ResourceDictionary Source="Styles/TreeViewItem.xaml" />
+
+        <ResourceDictionary Source="Styles/PageCurtains.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

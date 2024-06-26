@@ -354,11 +354,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         {
             get => RelayCommand.GetCommand(ref _uninstallCommand, (obj) =>
             {
-                var dialogViewModel = new DialogBoxViewModel("delete", "delete",
+                var dialogViewModel = new ConfirmActionViewModel("delete", "delete",
                 (obj) =>
                 {
                     Model.UninstallAddon(obj);
-                }, (obj) => { //ModalNavigationStore.Close();
                 });
                 //ModalNavigationStore.Instance.Open(dialogViewModel);
             });

@@ -234,6 +234,7 @@
 
                             <controls:AdvancedButton
                                 Padding="16,8"
+                                FontSize="12"
                                 FontWeight="Medium"
                                 IconData="{DynamicResource PDPlay}"
                                 Style="{StaticResource DefaultAdvancedButton}"

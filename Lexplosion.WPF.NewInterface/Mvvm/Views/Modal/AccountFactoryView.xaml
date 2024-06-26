@@ -65,30 +65,15 @@
                                 Text="{DynamicResource AddingAccount}" />
 
                             <!--  Close Button  -->
-                            <Button
-                                Width="20"
-                                Height="20"
+                            <controls:AdvancedButton
                                 Margin="0,0,20,0"
+                                Padding="8"
                                 HorizontalAlignment="Right"
-                                VerticalAlignment="Center"
                                 Panel.ZIndex="10000"
                                 Command="{Binding CloseCommand}"
-                                IsCancel="True">
-
-                                <Button.Template>
-                                    <ControlTemplate>
-                                        <Grid Background="Transparent">
-                                            <Viewbox Height="16">
-                                                <Path
-                                                    x:Name="CloseIcon"
-                                                    extensions:Path.StringKeyData="Close"
-                                                    Fill="{DynamicResource SecondaryForegroundSolidColorBrush}"
-                                                    Stretch="Fill" />
-                                            </Viewbox>
-                                        </Grid>
-                                    </ControlTemplate>
-                                </Button.Template>
-                            </Button>
+                                IconData="{DynamicResource PDClose}"
+                                IsCancel="True"
+                                Style="{StaticResource TransparentAdvancedButton}" />
                         </Grid>
 
                     </Border>
@@ -96,7 +81,7 @@
                     <Grid
                         x:Name="AccountFactoryForm"
                         Grid.Row="1"
-                        IsEnabled="False">
+                        IsEnabled="{Binding Model.IsAuthorizationInProcess, Converter={converters:NegativeBooleanValueConverter}}">
 
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
@@ -294,7 +279,7 @@
                 BackgroundOpacity="0.3"
                 BlurTarget="{Binding ElementName=AccountFactoryForm}"
                 CornerRadius="10"
-                IsActive="True"
+                IsActive="{Binding Model.IsAuthorizationInProcess}"
                 Placeholder="Идет процесс авторизации..." />
         </Grid>
     </Border>

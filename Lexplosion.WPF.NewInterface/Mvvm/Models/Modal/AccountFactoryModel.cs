@@ -44,7 +44,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Modal
         }
 
         private bool _isAuthorizationInProgress;
-        public bool IsAuthorzationInProgress 
+        public bool IsAuthorizationInProcess 
         {
             get => _isAuthorizationInProgress; private set 
             {
@@ -67,7 +67,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Modal
 
         public void Auth()
         {
-            IsAuthorzationInProgress = true;
+            IsAuthorizationInProcess = true;
             switch (AccountType)
             {
                 case AccountType.NoAuth: 
@@ -87,7 +87,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Modal
                         break;
                     }
                 default:
-                    IsAuthorzationInProgress = false;
+                    IsAuthorizationInProcess = false;
                     break;
             };
         }
@@ -97,7 +97,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Modal
             var account = new Account(AccountType.NoAuth, Login);
             account.Save();
             _addAccount(account);
-            IsAuthorzationInProgress = false;
+            IsAuthorizationInProcess = false;
         }
 
         private async void NightWorldAuth()
@@ -122,7 +122,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Modal
 
                         account.Save();
                         _addAccount(account);
-                        IsAuthorzationInProgress = false;
+                        IsAuthorizationInProcess = false;
                     });
                 }
             });
@@ -145,7 +145,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Modal
                                 account.Save();
                                 _addAccount(account);
                                 CommandReceiver.MicrosoftAuthPassed -= successAuth;
-                                IsAuthorzationInProgress = false;
+                                IsAuthorizationInProcess = false;
                             });
                         }
                     });

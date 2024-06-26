@@ -66,6 +66,10 @@ namespace Lexplosion.Logic.Management.Accounts
         /// Событие которые происходит при удалении аккаунта.
         /// </summary>
         public static event Action<Account> AccountDeleted;
+        /// <summary>
+        /// Событие которое происходит когда меняется активный аккаунт.
+        /// </summary>
+        public static event Action<Account> ActiveAccountChanged;
 
         public bool IsTokenValid { get; private set; } = true;
 
@@ -190,7 +194,16 @@ namespace Lexplosion.Logic.Management.Accounts
         /// <summary>
         /// Аккаунт, который активен
         /// </summary>
-        public static Account ActiveAccount { get; private set; }
+        /// 
+        private static Account _activeAccount;
+        public static Account ActiveAccount 
+        { 
+            get => _activeAccount; private set 
+            {
+                _activeAccount = value;
+                ActiveAccountChanged?.Invoke(value);
+            }
+        }
 
         /// <summary>
         /// Возвращает запускаемый аккаунт.

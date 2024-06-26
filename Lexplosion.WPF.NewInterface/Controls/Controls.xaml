@@ -29,7 +29,6 @@
         <ResourceDictionary Source="DragDropBoard/DragDropBoard.xaml" />
 
         <ResourceDictionary Source="TextSwitcherButton/TextSwitcherButton.xaml" />
-
-
+        <ResourceDictionary Source="AlertBlock/AlertBlock.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

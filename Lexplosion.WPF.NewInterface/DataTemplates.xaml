@@ -104,8 +104,8 @@
     <DataTemplate DataType="{x:Type modalvm:InstanceFactoryViewModel}">
         <modalviews:InstanceFactoryView />
     </DataTemplate>
-    <DataTemplate DataType="{x:Type modalvm:DialogBoxViewModel}">
-        <modalviews:DialogBoxView />
+    <DataTemplate DataType="{x:Type modalvm:ConfirmActionViewModel}">
+        <modalviews:ConfirmActionView />
     </DataTemplate>
 
     <!--  Addons Repository  -->
