@@ -48,14 +48,14 @@
                                         Padding="8,6"
                                         FontSize="12"
                                         FontWeight="Medium"
-                                        Style="{StaticResource DefaultAdvancedButton}"
+                                        Style="{DynamicResource DefaultAdvancedButton}"
                                         Text="Создать аккаунт NightWorld" />
                                     <controls:AdvancedButton
                                         Margin="8,0,0,0"
                                         Padding="8,6"
                                         FontSize="12"
                                         FontWeight="Medium"
-                                        Style="{StaticResource DefaultAdvancedButton}"
+                                        Style="{DynamicResource DefaultAdvancedButton}"
                                         Text="Авторизироваться через NightWorld" />
                                 </WrapPanel>
                             </StackPanel>
