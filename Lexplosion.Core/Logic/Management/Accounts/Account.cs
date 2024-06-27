@@ -138,7 +138,7 @@ namespace Lexplosion.Logic.Management.Accounts
             {
                 if (LaunchedAccount != null && LaunchedAccount.Equals(this)) LaunchedAccount = null;
                 _isLaunch = false;
-                OnPropertyChanged();
+                OnPropertyChanged(nameof(IsLaunch));
             }
         }
 
@@ -173,7 +173,7 @@ namespace Lexplosion.Logic.Management.Accounts
                     TryStopNwServices();
                 }
 
-                OnPropertyChanged();
+                OnPropertyChanged(nameof(IsActive));
             }
         }
 
