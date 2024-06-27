@@ -22,12 +22,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
         private void InitDefaultSettingsTabMenu()
         {
-            AddTabItem(new TabItemModel("general", "General", _generalSettingsViewModel, true));
+            AddTabItem(new TabItemModel("General", _generalSettingsViewModel, true));
             SelectedItem = Tabs.First();
-            AddTabItem(new TabItemModel("appearance", "Appearance", _appearanceViewModel));
-            AddTabItem(new TabItemModel("language", "Language", _languageViewModel));
-            AddTabItem(new TabItemModel("accounts", "Accounts", _accountsViewModel));
-            AddTabItem(new TabItemModel("about", "About", _aboutViewModel));
+            AddTabItem(new TabItemModel("Appearance", _appearanceViewModel));
+            AddTabItem(new TabItemModel("Language", _languageViewModel));
+            AddTabItem(new TabItemModel("Accounts", _accountsViewModel));
+            AddTabItem(new TabItemModel("About", _aboutViewModel));
         }
     }
 }

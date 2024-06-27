@@ -3,6 +3,7 @@ using Lexplosion.WPF.NewInterface.Core.Objects;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 {
@@ -83,7 +84,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
         public void AddTabItems(IEnumerable<LeftPanelMenuItem> em)
         {
-
+            foreach (var tabItem in em) 
+            {
+                AddTabItem(tabItem);
+            }
         }
 
         public void SelectFirst()
@@ -94,6 +98,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         public void SelectLast()
         {
             _items[_items.Count - 1].IsSelected = true;
+        }
+
+        public LeftPanelMenuItem GetByContentType(Type type) 
+        {
+            return _items.FirstOrDefault(t => t.Content.GetType() == type);
         }
 
 

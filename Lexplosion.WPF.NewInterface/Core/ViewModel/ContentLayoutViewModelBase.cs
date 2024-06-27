@@ -13,8 +13,8 @@ namespace Lexplosion.WPF.NewInterface.Core
 
         protected ObservableCollection<TabItemModel> _tabs = new ObservableCollection<TabItemModel>();
         public IEnumerable<TabItemModel> Tabs { get => _tabs; }
-        public int Count { get => _tabs.Count; }
 
+        protected int Count { get => _tabs.Count; }
 
         private string _headerKey;
         public string HeaderKey
@@ -37,21 +37,10 @@ namespace Lexplosion.WPF.NewInterface.Core
         #endregion Properties
 
 
-        #region Constructors
-
-
-        public ContentLayoutViewModelBase()
-        {
-        }
-
-
-        #endregion Constructors
-
-
         #region Public & Protected Methods
 
 
-        public void AddTabItem(TabItemModel tabItemModel)
+        protected void AddTabItem(TabItemModel tabItemModel)
         {
             _tabs.Add(tabItemModel);
             tabItemModel.SelectedChanged += (value, state) =>

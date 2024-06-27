@@ -83,20 +83,17 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             OnPropertyChanged(nameof(Content));
         }
 
-
-        #endregion Private Methods
-
-
         private void OpenAccountFactory() 
         {
-            LeftPanel.SelectLast();
+            LeftPanel.GetByContentType(typeof(GeneralSettingsLayoutViewModel)).IsSelected = true;
             var generalSettingsLayout = _generalSettingsLayoutViewModel as GeneralSettingsLayoutViewModel;
             var accountsSettingsTIM = generalSettingsLayout.GetByTypeOfContent(typeof(AccountsSettingsViewModel));
             accountsSettingsTIM.IsSelected = true;
             var accountsSettings = accountsSettingsTIM.Content as AccountsSettingsViewModel;
             accountsSettings?.OpenAccountFactoryCommand.Execute(null);
-            
-            //generalSettingsLayout.SelectedItem = accountsSettingsTIM;
         }
+
+
+        #endregion Private Methods
     }
 }

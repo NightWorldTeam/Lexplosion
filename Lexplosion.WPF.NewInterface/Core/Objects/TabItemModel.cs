@@ -6,30 +6,12 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
     {
         public event Action<TabItemModel, bool> SelectedChanged;
 
-        public string Name { get; }
+
+        #region Properties
+
+
         public string TextKey { get; set; }
         public ViewModelBase Content { get; set; }
-
-
-        #region Constructors        
-
-
-        public TabItemModel()
-        {
-            
-        }
-
-        public TabItemModel(string name, string textKey, ViewModelBase content, bool isSelected = false)
-        {
-            Name = name;
-            TextKey = textKey;
-            Content = content;
-            IsSelected = isSelected;
-        }
-
-
-        #endregion Constructors
-
 
         private bool _isSelected;
         public bool IsSelected
@@ -41,5 +23,27 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
                 OnPropertyChanged();
             }
         }
+
+
+        #endregion Properties
+
+
+        #region Constructors        
+
+
+        public TabItemModel()
+        {
+            
+        }
+
+        public TabItemModel(string textKey, ViewModelBase content, bool isSelected = false)
+        {
+            TextKey = textKey;
+            Content = content;
+            IsSelected = isSelected;
+        }
+
+
+        #endregion Constructors
     }
 }
