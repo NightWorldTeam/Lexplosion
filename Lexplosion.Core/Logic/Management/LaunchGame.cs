@@ -561,6 +561,7 @@ namespace Lexplosion.Logic.Management
             }
 
             OnGameProcessStarted?.Invoke(this);
+            _activeAccount?.SetInGameStatus(GameClientName);
 
             _processDataReceived?.Invoke("Выполняется запуск игры...");
             _processDataReceived?.Invoke(command);
@@ -601,6 +602,7 @@ namespace Lexplosion.Logic.Management
                     catch { }
 
                     OnGameStoped?.Invoke(this);
+                    _activeAccount?.SetOnlineStatus();
 
                     lock (_removeImportantTaskLocker)
                     {
