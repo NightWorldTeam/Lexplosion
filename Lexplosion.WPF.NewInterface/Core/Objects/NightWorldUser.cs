@@ -3,6 +3,8 @@ using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects.Nightworld;
 using Lexplosion.WPF.NewInterface.Core.ViewModel;
 using System;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,7 +20,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
 
 
         public string Login { get; }
-        public byte[] Logo { get; private set; } = new byte[0];
+        public ImageSource Avatar { get; private set; }
         public string RunningClientName { get; }
         public ActivityStatus Status { get; }
 
@@ -50,38 +52,14 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
             Login = nwUser.Login;
             RunningClientName = nwUser.GameClientName;
             Status = nwUser.ActivityStatus;
-            //HasFriendRequestSent = nwUser.
-
-            Task.Run(() =>
-            {
-                Logo = DownloadLogoAsync(nwUser.AvatarUrl).Result;
-                OnPropertyChanged(nameof(Logo));
-            });
+            Avatar = new BitmapImage(new Uri(nwUser.AvatarUrl));
         }
 
 
         #endregion Constructors
 
 
-
-
-        #region Public Methods
-
-
-        public override bool Equals(object obj)
-        {
-            if (obj == null || obj is not NightWorldUser)
-            {
-                return false;
-            }
-
-            return (obj as NightWorldUser).Login == Login;
-        }
-
-        public bool Equals(NightWorldUser other)
-        {
-            return Login == other.Login;
-        }
+        #region Public & Protected Methods
 
 
         /// <summary>
@@ -114,35 +92,26 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
             NightWorldApi.RemoveFriend(GlobalData.User.UUID, GlobalData.User.SessionToken, Login);
         }
 
+        public override bool Equals(object obj)
+        {
+            if (obj == null || obj is not NightWorldUser)
+            {
+                return false;
+            }
+
+            return (obj as NightWorldUser).Login == Login;
+        }
+
+        public bool Equals(NightWorldUser other)
+        {
+            return Login == other.Login;
+        }
+
+
         #endregion Public Methods
 
 
-
         #region Private Methods
-
-
-        private async Task<byte[]> DownloadLogoAsync(string url)
-        {
-            try
-            {
-                using (var httpClient = new HttpClient())
-                {
-                    using (_cancellationToken.Register(httpClient.CancelPendingRequests))
-                    {
-                        using (var response = await httpClient.GetAsync(url))
-                        {
-                            response.EnsureSuccessStatusCode();
-
-                            return await response.Content.ReadAsByteArrayAsync();
-                        }
-                    }
-                }
-            }
-            catch
-            {
-                return new byte[0];
-            }
-        }
 
 
         private string ActivityStatusToStringKey(ActivityStatus status)
@@ -150,7 +119,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
             switch (status)
             {
                 case ActivityStatus.Offline:
-                    return "Offiline";
+                    return "Offline";
                 case ActivityStatus.Online:
                     return "Online";
                 case ActivityStatus.InGame:

@@ -1,4 +1,5 @@
 ﻿using Lexplosion.Global;
+using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects.Nightworld;
 using Lexplosion.WPF.NewInterface.Commands;
@@ -168,14 +169,15 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
             ThreadPool.QueueUserWorkItem((obj) =>
             {
+                var activeAccount = Account.ActiveAccount;
                 if (reboot) 
                 {
                     CurrentPageIndex = 1;
-                    _usersCatalogPage = NightWorldApi.FindUsers(GlobalData.User.UUID, GlobalData.User.SessionToken, 0, string.Empty);
+                    _usersCatalogPage = NightWorldApi.FindUsers(activeAccount.UUID, activeAccount.SessionToken, 0, string.Empty);
                 }
                 else 
                 {
-                    _usersCatalogPage = NightWorldApi.FindUsers(GlobalData.User.UUID, GlobalData.User.SessionToken, (uint)CurrentPageIndex - 1, searchFilter);
+                    _usersCatalogPage = NightWorldApi.FindUsers(activeAccount.UUID, activeAccount.SessionToken, (uint)CurrentPageIndex - 1, searchFilter);
                 }
 
                 App.Current.Dispatcher.Invoke(() => 

@@ -1,4 +1,7 @@
-﻿using System.Windows;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows;
 using System.Windows.Documents;
 
 namespace Lexplosion.WPF.NewInterface.Extensions
@@ -10,8 +13,8 @@ namespace Lexplosion.WPF.NewInterface.Extensions
                 new FrameworkPropertyMetadata(string.Empty, OnTextByKeyChanged));
 
         public static readonly DependencyProperty RunByKeyProperty
-    = DependencyProperty.RegisterAttached("RunByKey", typeof(string), typeof(TextBlock),
-        new FrameworkPropertyMetadata(string.Empty, OnRunByKeyChanged));
+            = DependencyProperty.RegisterAttached("RunByKey", typeof(string), typeof(TextBlock),
+            new FrameworkPropertyMetadata(string.Empty, OnRunByKeyChanged));
 
         public static void SetTextByKey(DependencyObject dp, string value)
         {
@@ -20,7 +23,7 @@ namespace Lexplosion.WPF.NewInterface.Extensions
 
         public static string GetTextByKey(DependencyObject dp)
         {
-            return (string)dp.GetValue(TextByKeyProperty);
+            return dp.GetValue(TextByKeyProperty) as string;
         }
 
         private static void OnTextByKeyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -39,7 +42,7 @@ namespace Lexplosion.WPF.NewInterface.Extensions
 
         public static string GetRunByKey(DependencyObject dp)
         {
-            return (string)dp.GetValue(TextByKeyProperty);
+            return dp.GetValue(TextByKeyProperty) as string;
         }
 
         private static void OnRunByKeyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

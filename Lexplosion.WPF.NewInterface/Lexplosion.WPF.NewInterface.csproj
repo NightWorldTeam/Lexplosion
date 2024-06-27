@@ -81,7 +81,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Controls\AlertBlock\AlertBlock.cs" />
     <Compile Include="Core\ViewModel\ILimitedAccess.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\ConfirmActionViewModel.cs" />
     <Compile Include="Mvvm\Views\Modal\ConfirmAction\ConfirmActionView.xaml.cs">
@@ -245,7 +244,7 @@
     <Compile Include="Mvvm\ViewModels\MainContent\InstanceProfile\Settings\InstanceProfileSettingsViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\MainContent\MainMenu\Content\CatalogViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\MainContent\MainMenu\Content\Friends\FriendsLayoutViewModel.cs" />
-    <Compile Include="Mvvm\ViewModels\MainContent\MainMenu\Content\Friends\FriendsRequestsViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\MainContent\MainMenu\Content\Friends\FriendRequestsViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\MainContent\MainMenu\Content\Friends\FriendsViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\MainContent\MainMenu\Content\GeneralSettings\AboutUsViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\MainContent\MainMenu\Content\GeneralSettings\AccountsSettingsViewModel.cs" />
@@ -309,10 +308,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\AdvancedToolTip\AdvancedToolTip.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\AlertBlock\AlertBlock.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -576,7 +571,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\Friends\FriendsRequestsView.xaml">
+    <Page Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\Friends\FriendRequestsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -671,8 +666,8 @@
     <Compile Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\Friends\FriendsLayoutViewModel.xaml.cs">
       <DependentUpon>FriendsLayoutViewModel.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\Friends\FriendsRequestsView.xaml.cs">
-      <DependentUpon>FriendsRequestsView.xaml</DependentUpon>
+    <Compile Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\Friends\FriendRequestsView.xaml.cs">
+      <DependentUpon>FriendRequestsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\Friends\FriendsView.xaml.cs">
       <DependentUpon>FriendsView.xaml</DependentUpon>

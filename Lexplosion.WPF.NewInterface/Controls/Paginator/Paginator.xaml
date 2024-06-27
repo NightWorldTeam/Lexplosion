@@ -15,9 +15,20 @@
 
                         <Button
                             x:Name="PART_PreviousPageButton"
-                            Width="32"
                             Height="32"
-                            Margin="0,0,10,0" />
+                            Margin="0,0,10,0">
+                            <Border
+                                Padding="16,8"
+                                Background="{DynamicResource PrimarySolidColorBrush}"
+                                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                BorderThickness="1"
+                                CornerRadius="5">
+                                <TextBlock
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                    Text="Previous" />
+                            </Border>
+                        </Button>
 
                         <StackPanel
                             x:Name="PART_NumbersPanel"
@@ -26,24 +37,45 @@
                             VerticalAlignment="Center"
                             Orientation="Horizontal">
                             <TextBlock
+                                FontWeight="Medium"
+                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                Text="Page " />
+
+                            <TextBlock
                                 x:Name="CurrentIndexValueTextBlock"
                                 VerticalAlignment="Center"
+                                FontWeight="Medium"
                                 Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
 
-                            <TextBlock Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" Text=" | " />
+                            <TextBlock
+                                FontWeight="Medium"
+                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                Text=" of " />
 
                             <TextBlock
                                 x:Name="MaxPage"
                                 VerticalAlignment="Center"
+                                FontWeight="Medium"
                                 Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
                         </StackPanel>
 
                         <Button
                             x:Name="PART_NextPageButton"
                             Grid.Column="2"
-                            Width="32"
                             Height="32"
-                            Margin="10,0,0,0" />
+                            Margin="10,0,0,0">
+                            <Border
+                                Padding="16,8"
+                                Background="{DynamicResource PrimarySolidColorBrush}"
+                                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                BorderThickness="1"
+                                CornerRadius="5">
+                                <TextBlock
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                    Text="Next" />
+                            </Border>
+                        </Button>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

@@ -21,14 +21,14 @@
                 Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={converters:WindowWidthToXProcentWidth}, ConverterParameter=22}"
                 MinWidth="300"
                 MinHeight="64"
-                Margin="4,0,0,4"
+                Margin="0,0,4,4"
                 Padding="16,13"
                 HorizontalAlignment="Stretch"
                 Background="{DynamicResource SecondarySolidColorBrush}"
                 BorderBrush="{DynamicResource SeparateSolidColorBrush}"
                 BorderThickness="1"
                 CornerRadius="5">
-                <Grid>
+                <Grid HorizontalAlignment="Stretch">
 
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -52,7 +52,7 @@
                                         Height="38"
                                         CornerRadius="5">
                                         <Border.Background>
-                                            <ImageBrush ImageSource="{Binding Logo}" />
+                                            <ImageBrush ImageSource="{Binding Avatar}" />
                                         </Border.Background>
                                     </Border>
 
@@ -89,7 +89,7 @@
                                         <Setter TargetName="IconBorder" Property="Visibility" Value="Visible" />
                                     </Trigger>
 
-                                    <DataTrigger Binding="{Binding Logo}" Value="{x:Null}">
+                                    <DataTrigger Binding="{Binding Avatar}" Value="{x:Null}">
                                         <Setter TargetName="AvatarBorder" Property="Background">
                                             <Setter.Value>
                                                 <ImageBrush ImageSource="pack://Application:,,,/Assets/images/icons/non_image.png" />
@@ -137,16 +137,54 @@
                             </Border>
                         </StackPanel>
 
-                        <!--  Current Activity  -->
-                        <TextBlock
+                        <Grid Margin="0,2,0,0">
+                            <!--  Current Activity  -->
+                            <TextBlock
                             Margin="0,2,0,0"
-                            FontSize="12"
-                            FontWeight="Medium"
-                            Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
-                            TextTrimming="CharacterEllipsis">
-                            <Run Text="Играет в" />
-                            <Run Text="{Binding RunningClientName, Mode=OneWay}" />
-                        </TextBlock>
+                                FontSize="12"
+                                FontWeight="Medium"
+                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                TextTrimming="CharacterEllipsis">
+                                <TextBlock.Style>
+                                    <Style TargetType="{x:Type TextBlock}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Status}" Value="{x:Static lexplosion:ActivityStatus.Online}">
+                                                <Setter Property="Text" Value="{DynamicResource Online}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Status}" Value="{x:Static lexplosion:ActivityStatus.Offline}">
+                                                <Setter Property="Text" Value="{DynamicResource Offline}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Status}" Value="{x:Static lexplosion:ActivityStatus.NotDisturb}">
+                                                <Setter Property="Text" Value="{DynamicResource NotDisturb}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Status}" Value="{x:Static lexplosion:ActivityStatus.InGame}">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+
+                            <TextBlock
+                                FontSize="10"
+                                FontWeight="Medium"
+                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                TextTrimming="CharacterEllipsis">
+                                <TextBlock.Style>
+                                    <Style TargetType="{x:Type TextBlock}">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Status}" Value="{x:Static lexplosion:ActivityStatus.InGame}">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+
+                                <Run FontSize="10" Text="{DynamicResource PlayingIn}" />
+                                <Run FontSize="10" Text="{Binding RunningClientName, Mode=OneWay}" />
+                            </TextBlock>
+                        </Grid>
                     </StackPanel>
 
                     <Button Grid.Column="2" Cursor="Hand">
@@ -252,7 +290,7 @@
             <!--  SearchBox & Filters  -->
             <controls:SearchBox
                 Width="{Binding ActualWidth, ElementName=UsersList}"
-                Margin="0,0,0,16"
+                Margin="0,0,0,8"
                 HorizontalAlignment="Stretch"
                 Background="{DynamicResource SecondarySolidColorBrush}"
                 Placeholder="{DynamicResource Search}"
@@ -263,6 +301,7 @@
             <ItemsControl
                 x:Name="UsersList"
                 Grid.Row="1"
+                Margin="0,0,0,8"
                 HorizontalAlignment="Stretch"
                 ItemsSource="{Binding Model.Users}">
 

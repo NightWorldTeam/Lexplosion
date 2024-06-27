@@ -5,6 +5,7 @@
     xmlns:controls="clr-namespace:Lexplosion.WPF.NewInterface.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
+    xmlns:lexplosion="clr-namespace:Lexplosion;assembly=Lexplosion.Core"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="450"
@@ -29,11 +30,12 @@
             </Grid.ColumnDefinitions>
 
             <Border
+                x:Name="AvatarBorder"
                 Width="38"
                 Height="38"
                 CornerRadius="2">
                 <Border.Background>
-                    <ImageBrush ImageSource="pack://Application:,,,/Assets/images/icons/hel2xhead.png" />
+                    <ImageBrush ImageSource="pack://Application:,,,/Assets/images/icons/non_image.png" />
                 </Border.Background>
             </Border>
 
@@ -46,8 +48,9 @@
                         FontWeight="Medium"
                         Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
 
-                    <!--  Status Indecator  -->
+                    <!--  Status Indicator  -->
                     <Border
+                        x:Name="StatusIndicator"
                         Width="10"
                         Height="10"
                         Margin="8,0,0,0"

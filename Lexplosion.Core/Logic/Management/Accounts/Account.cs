@@ -408,6 +408,40 @@ namespace Lexplosion.Logic.Management.Accounts
         private string _gameClientName = "";
         private bool _nwServicesIsInit = false;
 
+        private void TryInitNwServices()
+        {
+            if (AccountType == AccountType.NightWorld && _isActive)
+            {
+                // запускаем поток который постоянно будет уведомлять сервер о том что мы в сети
+                Lexplosion.Runtime.TaskRun(delegate ()
+                {
+                    while (IsAuthed && _isActive)
+                    {
+                        ToServer.HttpGet(LaunсherSettings.URL.UserApi + "setActivity?status=" + (int)Status + "&UUID=" + UUID + "&sessionToken=" + SessionToken + "&gameClientName=" + _gameClientName);
+                        Thread.Sleep(240000); // Ждём 4 минуты
+                    }
+                });
+
+                LaunchGame.OnGameProcessStarted += this.GameStart;
+                LaunchGame.OnGameStoped += this.GameStop;
+                Lexplosion.Runtime.OnExitEvent += this.Exit;
+
+                _nwServicesIsInit = true;
+            }
+        }
+
+        private void TryStopNwServices()
+        {
+            if (AccountType == AccountType.NightWorld && _nwServicesIsInit)
+            {
+                LaunchGame.OnGameProcessStarted -= this.GameStart;
+                LaunchGame.OnGameStoped -= this.GameStop;
+                Lexplosion.Runtime.OnExitEvent -= this.Exit;
+
+                _nwServicesIsInit = false;
+            }
+        }
+
         private void GameStart(LaunchGame gameManager)
         {
             if (Status == ActivityStatus.Online)
@@ -450,54 +484,6 @@ namespace Lexplosion.Logic.Management.Accounts
             }
 
             Status = status;
-        }
-
-        private void TryInitNwServices()
-        {
-            if (AccountType == AccountType.NightWorld && _isActive)
-            {
-                // запускаем поток который постоянно будет уведомлять сервер о том что мы в сети
-                Lexplosion.Runtime.TaskRun(delegate ()
-                {
-                    while (IsAuthed && _isActive)
-                    {
-                        ToServer.HttpGet(LaunсherSettings.URL.UserApi + "setActivity?status=" + (int)Status + "&UUID=" + UUID + "&sessionToken=" + SessionToken + "&gameClientName=" + _gameClientName);
-                        Thread.Sleep(240000); // Ждём 4 минуты
-                    }
-                });
-
-                Runtime.OnExitEvent += this.Exit;
-                _nwServicesIsInit = true;
-            }
-        }
-
-        private void TryStopNwServices()
-        {
-            if (AccountType == AccountType.NightWorld && _nwServicesIsInit)
-            {
-                Runtime.OnExitEvent -= this.Exit;
-                _nwServicesIsInit = false;
-                ThreadPool.QueueUserWorkItem((object obj) => Exit());
-            }
-        }
-
-        public void SetInGameStatus(string gameClientName)
-        {
-            if (AccountType == AccountType.NightWorld && IsAuthed && _nwServicesIsInit)
-            {
-                _gameClientName = gameClientName;
-                Status = ActivityStatus.InGame;
-                ToServer.HttpGet(LaunсherSettings.URL.UserApi + "setActivity?status=2&UUID=" + UUID + "&sessionToken=" + SessionToken + "&gameClientName=" + _gameClientName);
-            }
-        }
-
-        public void SetOnlineStatus()
-        {
-            if (AccountType == AccountType.NightWorld && IsAuthed && _nwServicesIsInit)
-            {
-                Status = ActivityStatus.Online;
-                ToServer.HttpGet(LaunсherSettings.URL.UserApi + "setActivity?status=1&UUID=" + UUID + "&sessionToken=" + SessionToken);
-            }
         }
     }
 }

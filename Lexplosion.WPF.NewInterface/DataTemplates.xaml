@@ -69,7 +69,7 @@
     <DataTemplate DataType="{x:Type mainmenuvm:FriendsViewModel}">
         <mainmenuview:FriendsViewModel />
     </DataTemplate>
-    <DataTemplate DataType="{x:Type mainmenuvm:FriendsRequestsViewModel}">
+    <DataTemplate DataType="{x:Type mainmenuvm:FriendRequestsViewModel}">
         <mainmenuview:FriendsRequestsView />
     </DataTemplate>
     <DataTemplate DataType="{x:Type mainmenuvm:FindFriendsViewModel}">

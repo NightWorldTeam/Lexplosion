@@ -214,6 +214,65 @@
         Opacity="{DynamicResource ImportSuccessColorOpacity}"
         Color="{StaticResource ImportSuccessColor}" />
 
+    <!--    -->
+    <!--  User status color  -->
+    <!--    -->
+    <!--  Online  -->
+    <Color x:Key="OnlineColor">
+        #009834
+    </Color>
+
+    <sys:Double x:Key="OnlineColorOpacity">
+        1
+    </sys:Double>
+
+    <SolidColorBrush
+        x:Key="OnlineSolidColorBrush"
+        x:Shared="False"
+        Opacity="{DynamicResource OnlineColorOpacity}"
+        Color="{StaticResource OnlineColor}" />
+
+    <!--  Offline  -->
+    <Color x:Key="OfflineColor">
+        Gray
+    </Color>
+
+    <sys:Double x:Key="OfflineColorOpacity">
+        1
+    </sys:Double>
+
+    <SolidColorBrush
+        x:Key="OfflineSolidColorBrush"
+        x:Shared="False"
+        Opacity="{DynamicResource OfflineColorOpacity}"
+        Color="{StaticResource OfflineColor}" />
+
+    <!--  DoNotDisturb  -->
+    <Color x:Key="DoNotDisturbColor">
+        Orange
+    </Color>
+
+    <sys:Double x:Key="DoNotDisturbColorOpacity">
+        1
+    </sys:Double>
+
+    <SolidColorBrush
+        x:Key="DoNotDisturbSolidColorBrush"
+        x:Shared="False"
+        Opacity="{DynamicResource DoNotDisturbColorOpacity}"
+        Color="{StaticResource DoNotDisturbColor}" />
+
+    <!--  InGame  -->
+    <sys:Double x:Key="InGameColorOpacity">
+        1
+    </sys:Double>
+
+    <SolidColorBrush
+        x:Key="InGameSolidColorBrush"
+        x:Shared="False"
+        Opacity="{DynamicResource InGameColorOpacity}"
+        Color="{StaticResource ActivityColor}" />
+
 
     <!--  AdvancedButton  -->
 

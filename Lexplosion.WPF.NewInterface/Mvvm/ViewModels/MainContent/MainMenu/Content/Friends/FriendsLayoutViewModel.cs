@@ -76,7 +76,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             {
                 _tabs.Clear();
                 _friendsViewModel = new FriendsViewModel();
-                _friendsRequestsViewModel = new FriendsRequestsViewModel();
+                _friendsRequestsViewModel = new FriendRequestsViewModel();
                 _findFriendsViewModel = new FindFriendsViewModel();
                 _tabs.Add(new TabItemModel { TextKey = "Friends", Content = _friendsViewModel, IsSelected = true });
                 _tabs.Add(new TabItemModel { TextKey = "FriendsRequests", Content = _friendsRequestsViewModel });

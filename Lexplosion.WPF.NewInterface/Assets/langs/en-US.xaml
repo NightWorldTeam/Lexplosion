@@ -64,6 +64,13 @@
     <s:String x:Key="AddFriend">Add Friend</s:String>
     <s:String x:Key="Unfriends">Unfriends</s:String>
 
+    <!--  Status  -->
+    <s:String x:Key="Online">Online</s:String>
+    <s:String x:Key="Offline">Offline</s:String>
+    <s:String x:Key="PlayingIn">Playing in</s:String>
+    <s:String x:Key="InGame">In Game</s:String>
+    <s:String x:Key="DoNotDisturb">Do not Disturb</s:String>
+
 
     <!--    -->
     <!--  Multiplayer  -->

@@ -64,6 +64,13 @@
     <s:String x:Key="AddFriend">Добавить в друзья</s:String>
     <s:String x:Key="Unfriends">Удалить из друзей</s:String>
 
+    <!--  Status  -->
+    <s:String x:Key="Online">В сети</s:String>
+    <s:String x:Key="Offline">Не сети</s:String>
+    <s:String x:Key="PlayingIn">Играет в</s:String>
+    <s:String x:Key="InGame">В игре</s:String>
+    <s:String x:Key="DoNotDisturb">Не беспокоить</s:String>
+
 
     <!--    -->
     <!--  Multiplayer  -->
