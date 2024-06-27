@@ -27,7 +27,7 @@
                                     FontSize="20"
                                     FontWeight="Medium"
                                     Foreground="{DynamicResource ActivitySolidColorBrush}"
-                                    Text="Доступно только с аккаунт NightWorld"
+                                    Text="{DynamicResource OnlyAvailableWithNightWorldAccount}"
                                     TextAlignment="Left" />
                                 <TextBlock
                                     Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={converters:WindowWidthToXProcentWidth}, ConverterParameter=60}"
@@ -35,7 +35,7 @@
                                     Margin="0,8,0,0"
                                     FontSize="16"
                                     Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                    Text="Данный функции лаунчера доступны только при наличии авторизации через аккаунт NightWorld, делать его запускаемым при этом не обязательно."
+                                    Text="{DynamicResource OnlyAvailableWithNightWorldAccountDescription}"
                                     TextAlignment="Left"
                                     TextWrapping="WrapWithOverflow" />
                                 <WrapPanel
@@ -49,7 +49,7 @@
                                         FontSize="12"
                                         FontWeight="Medium"
                                         Style="{DynamicResource DefaultAdvancedButton}"
-                                        Text="Создать аккаунт NightWorld" />
+                                        Text="{DynamicResource CreateNightWorldAccount}" />
                                     <controls:AdvancedButton
                                         Margin="8,0,0,0"
                                         Padding="8,6"
@@ -57,7 +57,7 @@
                                         FontSize="12"
                                         FontWeight="Medium"
                                         Style="{DynamicResource DefaultAdvancedButton}"
-                                        Text="Авторизироваться через NightWorld" />
+                                        Text="{DynamicResource LoginWithYourNightWorldAccount}" />
                                 </WrapPanel>
                             </StackPanel>
                         </Grid>

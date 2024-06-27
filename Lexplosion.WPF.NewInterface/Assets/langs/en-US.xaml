@@ -398,4 +398,14 @@
     <s:String x:Key="PasswordAccountFactoryDescription">Account password</s:String>
     <s:String x:Key="AddAccount">Add account</s:String>
     <s:String x:Key="LoginExample">For example: _Hel2x_</s:String>
+
+
+    <!--  Nightworld Limited Pages Curtains  -->
+    <s:String x:Key="OnlyAvailableWithNightWorldAccount">Only available with a NightWorld account</s:String>
+    <s:String x:Key="OnlyAvailableWithNightWorldAccountDescription">
+        This launch feature is only available if you are logged in through your NightWorld account;
+        P.S you don't need to run it.
+    </s:String>
+    <s:String x:Key="CreateNightWorldAccount">Create a NightWorld account</s:String>
+    <s:String x:Key="LoginWithYourNightWorldAccount">Login with your NightWorld account</s:String>
 </ResourceDictionary>

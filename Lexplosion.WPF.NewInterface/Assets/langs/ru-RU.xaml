@@ -393,4 +393,11 @@
     <s:String x:Key="PasswordAccountFactoryDescription">Пароль от аккаунта</s:String>
     <s:String x:Key="AddAccount">Добавить аккаунт</s:String>
     <s:String x:Key="LoginExample">Например: _Hel2x_</s:String>
+
+
+    <!--  Nightworld Limited Pages Curtains  -->
+    <s:String x:Key="OnlyAvailableWithNightWorldAccount">Доступно только через аккаунт NightWorld</s:String>
+    <s:String x:Key="OnlyAvailableWithNightWorldAccountDescription">Данный функции лаунчера доступны только при наличии авторизации через аккаунт NightWorld, делать его запускаемым при этом не обязательно.</s:String>
+    <s:String x:Key="CreateNightWorldAccount">Создать аккаунт NightWorld</s:String>
+    <s:String x:Key="LoginWithYourNightWorldAccount">Авторизироваться через NightWorld</s:String>
 </ResourceDictionary>

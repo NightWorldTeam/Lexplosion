@@ -851,7 +851,7 @@ namespace Lexplosion.Logic.Management.Instances
 
             var generalSettings = GlobalData.GeneralSettings;
             var activeAccount = Account.ActiveAccount?.IsAuthed == true ? Account.ActiveAccount : null;
-            var launchAccount = Account.LaunchedAccount;
+            var launchAccount = Account.LaunchAccount;
 
             LaunchGame launchGame = new LaunchGame(_localId, generalSettings, instanceSettings, activeAccount, launchAccount, _instanceSource, _cancelTokenSource.Token);
             InitData data = launchGame.Update(ProgressHandler, FileDownloadEvent, DownloadStarted, instanceVersion);
@@ -896,7 +896,7 @@ namespace Lexplosion.Logic.Management.Instances
 
             var generalSettings = GlobalData.GeneralSettings;
             var activeAccount = Account.ActiveAccount?.IsAuthed == true ? Account.ActiveAccount : null;
-            var launchAccount = Account.LaunchedAccount;
+            var launchAccount = Account.LaunchAccount;
 
             _gameManager = new LaunchGame(_localId, generalSettings, instanceSettings, activeAccount, launchAccount, _instanceSource, _cancelTokenSource.Token);
             InitData data = _gameManager.Initialization(ProgressHandler, FileDownloadEvent, DownloadStarted);

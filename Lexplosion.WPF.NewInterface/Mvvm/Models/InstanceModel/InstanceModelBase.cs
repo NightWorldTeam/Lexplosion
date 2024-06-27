@@ -218,7 +218,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         public void Run()
         {
             // TODO: !!!IMPORTANT сделать бесконечный progressbar и вместо описания фразу "Идет авторизация запускаемого аккаунта..."
-            var launchAcc = Account.LaunchedAccount;
+            var launchAcc = Account.LaunchAccount;
             if (launchAcc != null) 
             {
                 if (!launchAcc.IsAuthed) 

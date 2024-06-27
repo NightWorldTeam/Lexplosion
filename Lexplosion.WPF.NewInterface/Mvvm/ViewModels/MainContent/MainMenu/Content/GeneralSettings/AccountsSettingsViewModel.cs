@@ -55,7 +55,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             if (Account.ActiveAccount == null && account.AccountType == AccountType.NightWorld)
             {
                 account.IsActive = true;
-                if (Account.LaunchedAccount == null)    
+                if (Account.LaunchAccount == null)    
                 {
                     account.IsLaunch = true;
                 }
@@ -76,7 +76,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             {
                 _list[0].IsActive = true;
 
-                if (Account.ListCount == 1 || Account.LaunchedAccount == null) 
+                if (Account.ListCount == 1 || Account.LaunchAccount == null) 
                 {
                     _list[0].IsLaunch = true;
                 }
@@ -142,7 +142,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
                 if (Account.ActiveAccount == account)
                     ActiveAccountIndex = AccountsByType[(int)account.AccountType].Count;
 
-                if (Account.LaunchedAccount == account)
+                if (Account.LaunchAccount == account)
                     LaunchAccountIndex = AccountsByType[(int)account.AccountType].Count;
 
                 AccountsByType[(int)account.AccountType].AddAccount(account);

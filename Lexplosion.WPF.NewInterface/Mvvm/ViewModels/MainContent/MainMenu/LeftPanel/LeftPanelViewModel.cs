@@ -1,4 +1,5 @@
-﻿using Lexplosion.WPF.NewInterface.Core;
+﻿using Lexplosion.Logic.Management.Accounts;
+using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Objects;
 using System;
 using System.Collections.Generic;
@@ -31,6 +32,45 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         }
 
 
+        #region Header Data
+
+
+        //TODO: вынести header в отдельный компонетн.
+
+
+        private string _userLogin = "Unknown";
+        public string UserLogin 
+        {
+            get => _userLogin; private set 
+            {
+                _userLogin = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _userAvatar = "pack://Application:,,,/Assets/images/icons/non_image1.png";
+        public string UserAvatar
+        {
+            get => _userAvatar; private set
+            {
+                _userAvatar = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private AccountType _userAccountType = AccountType.NoAuth;
+        public AccountType UserAccountType
+        {
+            get => _userAccountType; private set
+            {
+                _userAccountType = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+        #endregion Header Data
+
         #endregion Properties
 
 
@@ -39,7 +79,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
         public LeftPanelViewModel()
         {
+            Account.LaunchAccountChanged += (acc) => SetUserDataToHeader();
+            Account.ActiveAccountChanged += (acc) => SetUserDataToHeader();
 
+            SetUserDataToHeader();
         }
 
 
@@ -115,6 +158,29 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         private void OnSelectedTabItemChanged(LeftPanelMenuItem instance)
         {
             SelectedItem = instance;
+        }
+
+        private void SetUserDataToHeader() 
+        {
+            if (Account.ActiveAccount != null)
+            {
+                UserLogin = Account.ActiveAccount.Login;
+                UserAvatar = Account.ActiveAccount.HeadImageUrl;
+                UserAccountType = AccountType.NightWorld;
+                return;
+            }
+
+            if (Account.LaunchAccount != null) 
+            {
+                UserLogin = Account.LaunchAccount.Login;
+                UserAvatar = Account.LaunchAccount.HeadImageUrl;
+                UserAccountType = Account.LaunchAccount.AccountType;
+                return;
+            }
+
+            UserLogin = "Unknown";
+            UserAvatar = "pack://Application:,,,/Assets/images/icons/non_image1.png";
+            UserAccountType = AccountType.NoAuth;
         }
 
 

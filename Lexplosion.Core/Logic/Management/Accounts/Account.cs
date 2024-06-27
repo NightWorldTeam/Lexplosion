@@ -56,7 +56,7 @@ namespace Lexplosion.Logic.Management.Accounts
             }
         }
 
-        public static string AnyFuckingLogin { get => ActiveAccount?.Login ?? LaunchedAccount?.Login; }
+        public static string AnyFuckingLogin { get => ActiveAccount?.Login ?? LaunchAccount?.Login; }
 
         /// <summary>
         /// Событие которые происходит при окончании авторизации.
@@ -69,7 +69,11 @@ namespace Lexplosion.Logic.Management.Accounts
         /// <summary>
         /// Событие которое происходит когда меняется активный аккаунт.
         /// </summary>
-        public static event Action<Account> ActiveAccountChanged;
+        public static event Action<Account?> ActiveAccountChanged;
+        /// <summary>
+        /// Событие которое происходит когда меняется запускаемый аккаунт.
+        /// </summary>
+        public static event Action<Account?> LaunchAccountChanged;
 
         public bool IsTokenValid { get; private set; } = true;
 
@@ -136,7 +140,7 @@ namespace Lexplosion.Logic.Management.Accounts
             }
             else
             {
-                if (LaunchedAccount != null && LaunchedAccount.Equals(this)) LaunchedAccount = null;
+                if (LaunchAccount != null && LaunchAccount.Equals(this)) LaunchAccount = null;
                 _isLaunch = false;
                 OnPropertyChanged(nameof(IsLaunch));
             }
@@ -179,8 +183,8 @@ namespace Lexplosion.Logic.Management.Accounts
 
         private void SetToLaunch()
         {
-            if (LaunchedAccount != null && !LaunchedAccount.Equals(this)) LaunchedAccount.IsLaunchSet(false);
-            LaunchedAccount = this;
+            if (LaunchAccount != null && !LaunchAccount.Equals(this)) LaunchAccount.IsLaunchSet(false);
+            LaunchAccount = this;
             _isLaunch = true;
             OnPropertyChanged(nameof(IsLaunch));
         }
@@ -226,7 +230,15 @@ namespace Lexplosion.Logic.Management.Accounts
         /// <summary>
         /// Возвращает запускаемый аккаунт.
         /// </summary>
-        public static Account LaunchedAccount { get; private set; }
+        private static Account _launchAccount;
+        public static Account LaunchAccount 
+        {
+            get => _launchAccount; private set 
+            {
+                _launchAccount = value;
+                LaunchAccountChanged?.Invoke(value);
+            }
+        }
 
         static Account()
         {
