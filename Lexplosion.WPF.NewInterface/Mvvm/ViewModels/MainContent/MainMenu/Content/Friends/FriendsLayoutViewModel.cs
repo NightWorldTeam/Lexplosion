@@ -1,16 +1,32 @@
 ﻿using Lexplosion.Logic.Management.Accounts;
+using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Core.ViewModel;
 using System.Threading;
+using System;
+using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 {
+    public class LimitedLayoutContentLayoutViewModelBase : ILimitedAccess
+    {
+        public bool HasAccess => throw new NotImplementedException();
+
+        public void RefreshAccessData()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public class FriendsLayoutViewModel : ContentLayoutViewModelBase, ILimitedAccess
     {
         private ViewModelBase _friendsViewModel;
         private ViewModelBase _friendsRequestsViewModel;
         private ViewModelBase _findFriendsViewModel;
+
+
+        private Action _openAccountFactory;
 
 
         #region Properties
@@ -26,6 +42,15 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             }
         }
 
+        private RelayCommand _authorzation;
+        public ICommand Authorzation 
+        {
+            get => RelayCommand.GetCommand(ref _authorzation, () =>
+            {
+                _openAccountFactory?.Invoke();
+            });
+        }
+
 
         #endregion Properties
 
@@ -33,8 +58,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         #region Constructors
 
 
-        public FriendsLayoutViewModel() : base()
+        public FriendsLayoutViewModel(Action openFactoryAction) : base()
         {
+            _openAccountFactory = openFactoryAction;
             Account.ActiveAccountChanged += (acc) =>
             {
                 ThreadPool.QueueUserWorkItem((obj) => { 
@@ -43,6 +69,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
                     });
                 });
             };
+
             HasAccess = Account.ActiveAccount?.AccountType == AccountType.NightWorld;
 
             // TODO !!!IMPORTANT!!! не пытаться загрузить данные без аккаунта NW.

@@ -34,6 +34,7 @@
             Grid.Row="1"
             Background="Transparent"
             ItemsSource="{Binding Tabs}"
+            SelectedItem="{Binding SelectedItem, UpdateSourceTrigger=PropertyChanged}"
             TabPanelPadding="45,16,45,0">
             <controls:UIUnderlineTabControl.ItemContainerStyle>
                 <Style BasedOn="{StaticResource UITabItem}" TargetType="TabItem">

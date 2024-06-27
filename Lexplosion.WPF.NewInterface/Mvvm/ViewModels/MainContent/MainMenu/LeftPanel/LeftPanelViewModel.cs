@@ -93,7 +93,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
         public void SelectLast()
         {
-            _items[_items.Count - 1].IsSelected = false;
+            _items[_items.Count - 1].IsSelected = true;
         }
 
 

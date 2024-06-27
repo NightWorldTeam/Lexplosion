@@ -1,8 +1,10 @@
 ﻿using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
+using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Mvvm.Models;
 using Lexplosion.WPF.NewInterface.Stores;
 using System;
+using System.Linq;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 {
@@ -10,8 +12,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
     {
         private readonly ViewModelBase _catalogViewModel;
         private readonly ViewModelBase _libraryViewModel;
-        private readonly ViewModelBase _multiplayerLayoutViewModel = new MultiplayerLayoutViewModel();
-        private readonly ViewModelBase _friendsLayoutViewModel = new FriendsLayoutViewModel();
+        private readonly ViewModelBase _multiplayerLayoutViewModel;
+        private readonly ViewModelBase _friendsLayoutViewModel;
         private readonly ViewModelBase _generalSettingsLayoutViewModel;
 
 
@@ -44,6 +46,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
             _catalogViewModel = new CatalogViewModel(navigationStore, ToMainMenuLayoutCommand, mainModel.CatalogController);
             _libraryViewModel = new LibraryViewModel(navigationStore, ToMainMenuLayoutCommand, modalNavStore, mainModel.LibraryController);
+
+            _multiplayerLayoutViewModel = new MultiplayerLayoutViewModel(OpenAccountFactory);
+            _friendsLayoutViewModel = new FriendsLayoutViewModel(OpenAccountFactory);
 
             _generalSettingsLayoutViewModel = new GeneralSettingsLayoutViewModel(modalNavStore);
 
@@ -80,5 +85,18 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
 
         #endregion Private Methods
+
+
+        private void OpenAccountFactory() 
+        {
+            LeftPanel.SelectLast();
+            var generalSettingsLayout = _generalSettingsLayoutViewModel as GeneralSettingsLayoutViewModel;
+            var accountsSettingsTIM = generalSettingsLayout.GetByTypeOfContent(typeof(AccountsSettingsViewModel));
+            accountsSettingsTIM.IsSelected = true;
+            var accountsSettings = accountsSettingsTIM.Content as AccountsSettingsViewModel;
+            accountsSettings?.OpenAccountFactoryCommand.Execute(null);
+            
+            //generalSettingsLayout.SelectedItem = accountsSettingsTIM;
+        }
     }
 }

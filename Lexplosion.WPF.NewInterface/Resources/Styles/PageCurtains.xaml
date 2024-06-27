@@ -53,6 +53,7 @@
                                     <controls:AdvancedButton
                                         Margin="8,0,0,0"
                                         Padding="8,6"
+                                        Command="{Binding DataContext.Authorzation, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
                                         FontSize="12"
                                         FontWeight="Medium"
                                         Style="{DynamicResource DefaultAdvancedButton}"

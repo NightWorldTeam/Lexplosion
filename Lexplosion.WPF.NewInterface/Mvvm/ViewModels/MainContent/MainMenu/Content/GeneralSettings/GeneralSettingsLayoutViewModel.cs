@@ -1,7 +1,7 @@
 ﻿using Lexplosion.WPF.NewInterface.Core;
-using Lexplosion.WPF.NewInterface.Core.Modal;
 using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Stores;
+using System.Linq;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 {
@@ -22,11 +22,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
         private void InitDefaultSettingsTabMenu()
         {
-            _tabs.Add(new TabItemModel { TextKey = "General", Content = _generalSettingsViewModel, IsSelected = true });
-            _tabs.Add(new TabItemModel { TextKey = "Appearance", Content = _appearanceViewModel });
-            _tabs.Add(new TabItemModel { TextKey = "Language", Content = _languageViewModel });
-            _tabs.Add(new TabItemModel { TextKey = "Accounts", Content = _accountsViewModel });
-            _tabs.Add(new TabItemModel { TextKey = "About", Content = _aboutViewModel });
+            AddTabItem(new TabItemModel("general", "General", _generalSettingsViewModel, true));
+            SelectedItem = Tabs.First();
+            AddTabItem(new TabItemModel("appearance", "Appearance", _appearanceViewModel));
+            AddTabItem(new TabItemModel("language", "Language", _languageViewModel));
+            AddTabItem(new TabItemModel("accounts", "Accounts", _accountsViewModel));
+            AddTabItem(new TabItemModel("about", "About", _aboutViewModel));
         }
     }
 }

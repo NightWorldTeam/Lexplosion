@@ -1,28 +1,40 @@
 ﻿using Lexplosion.Logic.Management.Accounts;
+using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Core.ViewModel;
+using System;
+using System.Threading;
+using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 {
     public sealed class MultiplayerLayoutViewModel : ContentLayoutViewModelBase, ILimitedAccess
     {
         private ViewModelBase _generalMultiplayerViewModel = new MultiplayerViewModel();
-
+        private readonly Action _openAccountFactory;
 
         #region Properties
 
 
         private bool _hasAccess;
-        public bool HasAccess 
-        { 
-            get => _hasAccess; set 
+        public bool HasAccess
+        {
+            get => _hasAccess; set
             {
                 _hasAccess = value;
                 OnPropertyChanged();
             }
         }
 
+        private RelayCommand _authorzation;
+        public ICommand Authorzation
+        {
+            get => RelayCommand.GetCommand(ref _authorzation, () =>
+            {
+                _openAccountFactory?.Invoke();
+            });
+        }
 
         #endregion Properties
 
@@ -30,9 +42,20 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         #region Constructors
 
 
-        public MultiplayerLayoutViewModel() : base()
+        public MultiplayerLayoutViewModel(Action openAccountFactory) : base()
         {
-            Account.ActiveAccountChanged += (acc) => RefreshAccessData();
+            _openAccountFactory = openAccountFactory;
+            Account.ActiveAccountChanged += (acc) =>
+            {
+                ThreadPool.QueueUserWorkItem((obj) =>
+                {
+                    App.Current.Dispatcher.Invoke(() =>
+                    {
+                        RefreshAccessData();
+                    });
+                });
+            };
+
             HasAccess = Account.ActiveAccount?.AccountType == AccountType.NightWorld;
             OnAccessChanged();
         }
@@ -47,17 +70,14 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         public void RefreshAccessData()
         {
             HasAccess = Account.ActiveAccount?.AccountType == AccountType.NightWorld;
-            App.Current.Dispatcher.Invoke(() => 
-            { 
-                if (!HasAccess) 
-                {
-                    _tabs.Clear();
-                    _generalMultiplayerViewModel = null;
-                    return;
-                }
+            if (!HasAccess)
+            {
+                _tabs.Clear();
+                _generalMultiplayerViewModel = null;
+                return;
+            }
 
-                OnAccessChanged();
-            });
+            OnAccessChanged();
         }
 
 
@@ -67,9 +87,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         #region Private Methods
 
 
-        private void OnAccessChanged() 
+        private void OnAccessChanged()
         {
-            if (HasAccess) 
+            if (HasAccess)
             {
                 _tabs.Clear();
                 _generalMultiplayerViewModel = new MultiplayerViewModel();
