@@ -92,21 +92,25 @@ namespace Lexplosion
         }
 
         [Conditional("DEBUG")]
-        public static void DebugConsoleWrite<T>(T line, [CallerMemberName] string memberName = "", [CallerFilePath] string sourceFilePath = "", [CallerLineNumber] int sourceLineNumber = 0)
+        public static void DebugConsoleWrite<T>(T line, [CallerMemberName] string memberName = "", [CallerFilePath] string sourceFilePath = "", [CallerLineNumber] int sourceLineNumber = 0, ConsoleColor color = ConsoleColor.White)
         {
 #if DEBUG
             string str = FormDebugString(line, memberName, sourceFilePath, sourceLineNumber);
+            Console.ForegroundColor = color;
             Console.WriteLine(str);
+            Console.ForegroundColor = ConsoleColor.White;
 #endif
         }
 
         private static object _debugWriteLocker = new object();
 
-        public static void DebugWrite<T>(T line, [CallerMemberName] string memberName = "", [CallerFilePath] string sourceFilePath = "", [CallerLineNumber] int sourceLineNumber = 0)
+        public static void DebugWrite<T>(T line, [CallerMemberName] string memberName = "", [CallerFilePath] string sourceFilePath = "", [CallerLineNumber] int sourceLineNumber = 0, ConsoleColor color = ConsoleColor.White)
         {
 #if DEBUG
             string str = FormDebugString(line, memberName, sourceFilePath, sourceLineNumber);
+            Console.ForegroundColor = color;
             Console.WriteLine(str);
+            Console.ForegroundColor = ConsoleColor.White;
 #endif
 
             if (IsDebugMode && _logFileStream != null)
