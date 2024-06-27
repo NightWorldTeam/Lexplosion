@@ -86,6 +86,8 @@ namespace Lexplosion.Logic.Management.Accounts
             }
         }
 
+        private static readonly object StateSetLocker = new object();
+
         /// <summary>
         /// Является ли аккаунт активным. 
         /// Если установить true, то IsActive другого аккаунта, который был запускаемым изменится на false.
@@ -97,37 +99,10 @@ namespace Lexplosion.Logic.Management.Accounts
             get => _isActive;
             set
             {
-                // производим какие-либо действия, только если аккаунт найтворлд. отсальные должны всегда иметь false
-                if (AccountType == AccountType.NightWorld)
+                lock (StateSetLocker)
                 {
-                    _isActive = value;
-                    if (_isActive)
-                    {
-                        if (ActiveAccount != null && !ActiveAccount.Equals(this)) // если ActiveAccount не равен null и в ActiveAccount леэит не этот аккаунт
-                        {
-                            // если ActiveAccount это найтворлд аккаунт и он является запускаемым, то ActiveAccount делаем не запускаемым, а этот аккаунт запускаемым
-                            // эта хрень нужна потому что не должно быть так, что один найтворлд аккаунт был запускаемым, а другой активным
-                            if (ActiveAccount.AccountType == AccountType.NightWorld && ActiveAccount.IsLaunch)
-                            {
-                                ActiveAccount.IsLaunch = false;
-                                SetLaunch();
-                            }
-
-                            ActiveAccount.IsActive = false;
-                        }
-
-                        ActiveAccount = this;
-                        TryInitNwServices();
-                    }
-                    else
-                    {
-                        // если в ActiveAccount находится этот аккаунт, то обнуляем ActiveAccount
-                        if (ActiveAccount != null && ActiveAccount.Equals(this)) ActiveAccount = null;
-                        TryStopNwServices();
-                    }
-
-                    OnPropertyChanged();
-                }
+                    IsActiveSet(value);
+                }         
             }
         }
         private bool _isActive = false;
@@ -143,25 +118,68 @@ namespace Lexplosion.Logic.Management.Accounts
             get => _isLaunch;
             set
             {
-                if (value)
+                lock (StateSetLocker)
                 {
-                    // делаем аккаунт запускаемым, и если это аккаунт найтворлд, то делаем его и активным
-                    SetLaunch();
-                    if (AccountType == AccountType.NightWorld) IsActive = true;
-                }
-                else
-                {
-                    if (LaunchedAccount != null && LaunchedAccount.Equals(this)) LaunchedAccount = null;
-                    _isLaunch = false;
-                    OnPropertyChanged();
-                }
+                    IsLaunchSet(value);
+                }         
             }
         }
         private bool _isLaunch = false;
 
-        private void SetLaunch()
+        private void IsLaunchSet(bool value)
         {
-            if (LaunchedAccount != null && !LaunchedAccount.Equals(this)) LaunchedAccount.IsLaunch = false;
+            if (value)
+            {
+                // делаем аккаунт запускаемым, и если это аккаунт найтворлд, то делаем его и активным
+                SetToLaunch();
+                if (AccountType == AccountType.NightWorld) IsActiveSet(true);
+            }
+            else
+            {
+                if (LaunchedAccount != null && LaunchedAccount.Equals(this)) LaunchedAccount = null;
+                _isLaunch = false;
+                OnPropertyChanged();
+            }
+        }
+
+        private void IsActiveSet(bool value)
+        {
+            // производим какие-либо действия, только если аккаунт найтворлд. отсальные должны всегда иметь false
+            if (AccountType == AccountType.NightWorld)
+            {
+                _isActive = value;
+                if (_isActive)
+                {
+                    if (ActiveAccount != null && !ActiveAccount.Equals(this)) // если ActiveAccount не равен null и в ActiveAccount леэит не этот аккаунт
+                    {
+                        // если ActiveAccount это найтворлд аккаунт и он является запускаемым, то ActiveAccount делаем не запускаемым, а этот аккаунт запускаемым
+                        // эта хрень нужна потому что не должно быть так, что один найтворлд аккаунт был запускаемым, а другой активным
+                        if (ActiveAccount.AccountType == AccountType.NightWorld && ActiveAccount.IsLaunch)
+                        {
+                            ActiveAccount.IsLaunchSet(false);
+                            SetToLaunch();
+                        }
+
+                        ActiveAccount.IsActiveSet(false);
+                    }
+
+                    ActiveAccount = this;
+                    TryInitNwServices();
+                }
+                else
+                {
+                    // если в ActiveAccount находится этот аккаунт, то обнуляем ActiveAccount
+                    if (ActiveAccount != null && ActiveAccount.Equals(this)) ActiveAccount = null;
+                    TryStopNwServices();
+                }
+
+                OnPropertyChanged();
+            }
+        }
+
+        private void SetToLaunch()
+        {
+            if (LaunchedAccount != null && !LaunchedAccount.Equals(this)) LaunchedAccount.IsLaunchSet(false);
             LaunchedAccount = this;
             _isLaunch = true;
             OnPropertyChanged(nameof(IsLaunch));
@@ -407,25 +425,6 @@ namespace Lexplosion.Logic.Management.Accounts
 
         private string _gameClientName = "";
         private bool _nwServicesIsInit = false;
-
-        private void GameStart(LaunchGame gameManager)
-        {
-            if (Status == ActivityStatus.Online)
-            {
-                _gameClientName = gameManager.GameClientName;
-                Status = ActivityStatus.InGame;
-                ToServer.HttpGet(LaunсherSettings.URL.UserApi + "setActivity?status=2&UUID=" + UUID + "&sessionToken=" + SessionToken + "&gameClientName=" + _gameClientName);
-            }
-        }
-
-        private void GameStop(LaunchGame gameManager)
-        {
-            if (Status == ActivityStatus.InGame)
-            {
-                Status = ActivityStatus.Online;
-                ToServer.HttpGet(LaunсherSettings.URL.UserApi + "setActivity?status=1&UUID=" + UUID + "&sessionToken=" + SessionToken);
-            }
-        }
 
         private void Exit()
         {
