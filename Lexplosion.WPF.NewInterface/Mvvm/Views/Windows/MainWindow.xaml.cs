@@ -84,7 +84,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
 
             for (int i = 0; i < grid.ColumnDefinitions.Count; i++)
             {
-                Runtime.DebugWrite(i.ToString() + " " + grid.ColumnDefinitions[i].ActualWidth.ToString());
+                //Runtime.DebugWrite(i.ToString() + " " + grid.ColumnDefinitions[i].ActualWidth.ToString());
             }
         }
 
@@ -356,7 +356,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
         private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
         {
             var grid = (Grid)sender;
-            Runtime.DebugWrite(grid.ActualWidth.ToString() + "x" + grid.ActualHeight.ToString());
+            //Runtime.DebugWrite(grid.ActualWidth.ToString() + "x" + grid.ActualHeight.ToString());
         }
     }
 }

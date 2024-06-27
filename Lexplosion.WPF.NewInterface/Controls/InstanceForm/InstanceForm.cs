@@ -266,7 +266,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
             base.OnApplyTemplate();
             ApplyTemplateExecuted?.Invoke();
-            Runtime.DebugWrite("OnApplyTemplate");
+            //Runtime.DebugWrite("OnApplyTemplate");
         }
 
         private void OnInstanceModelStateChanged()
@@ -350,7 +350,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
             if (imageBytes is null || imageBytes.Length == 0)
                 return new BitmapImage(new Uri("pack://application:,,,/assets/images/icons/non_image.png"));
 
-            Runtime.DebugWrite(name + " " + imageBytes.Length);
+            //Runtime.DebugWrite(name + " " + imageBytes.Length);
 
             using (var stream = new System.IO.MemoryStream(imageBytes))
             {
@@ -637,7 +637,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
         /// </summary>
         private void StopProcessVisual()
         {
-            Runtime.DebugWrite("Close clicked");
+            //Runtime.DebugWrite("Close clicked");
             InstanceModel.Close();
             IsDownloading = false;
             IsProcessActive = false;
@@ -768,7 +768,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
         /// <param name="isGameRunning">Запускается ли игра</param>
         private void OnDownloadCompleted(InstanceInit result, IEnumerable<string> downloadErrors, bool isGameRunning)
         {
-            Runtime.DebugWrite("Instance Form - Download Completed");
+            //Runtime.DebugWrite("Instance Form - Download Completed");
             App.Current.Dispatcher.Invoke(() =>
             {
                 SetMainActionButtonTextValue();
@@ -811,7 +811,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
         private void OnGameLaunched()
         {
             //State = InstanceFormState.Launching;
-            Runtime.DebugWrite("Started");
+            //Runtime.DebugWrite("Started");
         }
 
         /// <summary>
@@ -832,7 +832,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
         /// </summary>
         private void OnGameClosed()
         {
-            Runtime.DebugWrite("Game Exit");
+            //Runtime.DebugWrite("Game Exit");
         }
 
 

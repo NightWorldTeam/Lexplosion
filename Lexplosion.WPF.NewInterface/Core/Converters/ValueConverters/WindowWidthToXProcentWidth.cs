@@ -9,7 +9,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Converters
         {
             if (value is double) 
             {
-                Runtime.DebugWrite(((double)value / 100) * double.Parse(parameter.ToString(), CultureInfo.InvariantCulture));
+                //Runtime.DebugWrite(((double)value / 100) * double.Parse(parameter.ToString(), CultureInfo.InvariantCulture));
                 return ((double)value / 100) * double.Parse(parameter.ToString(), CultureInfo.InvariantCulture);
             }
             return 620;
