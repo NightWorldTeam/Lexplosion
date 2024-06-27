@@ -2,6 +2,7 @@
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Core.ViewModel;
+using System.Threading;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 {
@@ -34,7 +35,14 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
         public FriendsLayoutViewModel() : base()
         {
-            Account.ActiveAccountChanged += (acc) => RefreshAccessData();
+            Account.ActiveAccountChanged += (acc) =>
+            {
+                ThreadPool.QueueUserWorkItem((obj) => { 
+                    App.Current.Dispatcher.Invoke(() => { 
+                        RefreshAccessData();
+                    });
+                });
+            };
             HasAccess = Account.ActiveAccount?.AccountType == AccountType.NightWorld;
 
             // TODO !!!IMPORTANT!!! не пытаться загрузить данные без аккаунта NW.

@@ -31,7 +31,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         #endregion Properties
 
 
-        #region Commands
+        #region Constructors
 
 
         public Accounts(AccountType type, IList<Account> list)
@@ -52,10 +52,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
         public void AddAccount(Account account)
         {
-            if (account.AccountType == AccountType.NightWorld)
+            if (Account.ActiveAccount == null && account.AccountType == AccountType.NightWorld)
             {
                 account.IsActive = true;
-                if (Account.LaunchedAccount == null) 
+                if (Account.LaunchedAccount == null)    
                 {
                     account.IsLaunch = true;
                 }
@@ -195,6 +195,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
                             acc.IsActive = true;
                             Account.SaveAll();
                         }
+
+                        Runtime.DebugWrite(acc.IsLaunch);
                     });
 
                     return;
@@ -221,6 +223,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
                             acc.IsLaunch = true;
                             Account.SaveAll();
                         }
+                        Runtime.DebugWrite(acc.IsLaunch);
                     });
 
                     return;

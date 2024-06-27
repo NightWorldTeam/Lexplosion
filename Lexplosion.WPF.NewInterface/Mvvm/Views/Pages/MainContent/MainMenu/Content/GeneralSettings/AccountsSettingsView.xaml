@@ -167,7 +167,7 @@
                         </core:If>
 
                         <!--  Launch Account  -->
-                        <core:If Condition="{Binding IsLaunch}">
+                        <core:If Condition="{Binding IsLaunch, UpdateSourceTrigger=PropertyChanged}">
                             <core:If.True>
                                 <Border
                                     Height="24"

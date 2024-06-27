@@ -1,12 +1,10 @@
-﻿using Lexplosion.Global;
-using Lexplosion.Logic.Management.Accounts;
+﻿using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects.Nightworld;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Objects;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 using System.Threading;
 using System.Windows.Data;
 

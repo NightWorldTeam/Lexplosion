@@ -61,7 +61,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             {
                 var activeAccount = Account.ActiveAccount;
                 var friends = NightWorldApi.GetFriends(activeAccount.UUID, activeAccount.SessionToken, activeAccount.Login);
-                UpdateFriends(friends);
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    UpdateFriends(friends);
+                });
             });
         }
 
@@ -102,40 +105,43 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         {
             App.Current.Dispatcher.Invoke(() =>
             {
-                _allFriends.Clear();
-                _inGameFriends.Clear();
-                _onlineFriends.Clear();
-                _onlineFriends.Clear();
-
-                foreach (var friend in friends)
+                App.Current.Dispatcher.Invoke(() =>
                 {
-                    var friendObj = new Friend(friend.Login, friend.ActivityStatus.ToString(), Friend.FriendState.Added, new BitmapImage(new System.Uri(friend.AvatarUrl)), friend.GameClientName);
-                    _allFriends.Add(friendObj);
+                    _allFriends.Clear();
+                    _inGameFriends.Clear();
+                    _onlineFriends.Clear();
+                    _onlineFriends.Clear();
 
-                    switch (friend.ActivityStatus) 
+                    foreach (var friend in friends)
                     {
-                        case ActivityStatus.Online:
-                            {
-                                _onlineFriends.Add(friendObj);
-                            }
-                            break;
-                        case ActivityStatus.Offline:
-                            {
-                                _offlineFriends.Add(friendObj);
-                            }
-                            break;
-                        case ActivityStatus.InGame:
-                            {
-                                _inGameFriends.Add(friendObj);
-                            }
-                            break;
-                        default:
-                            {
-                                _onlineFriends.Add(friendObj);
-                            }
-                            break;
+                        var friendObj = new Friend(friend.Login, friend.ActivityStatus.ToString(), Friend.FriendState.Added, new BitmapImage(new System.Uri(friend.AvatarUrl)), friend.GameClientName);
+                        _allFriends.Add(friendObj);
+
+                        switch (friend.ActivityStatus)
+                        {
+                            case ActivityStatus.Online:
+                                {
+                                    _onlineFriends.Add(friendObj);
+                                }
+                                break;
+                            case ActivityStatus.Offline:
+                                {
+                                    _offlineFriends.Add(friendObj);
+                                }
+                                break;
+                            case ActivityStatus.InGame:
+                                {
+                                    _inGameFriends.Add(friendObj);
+                                }
+                                break;
+                            default:
+                                {
+                                    _onlineFriends.Add(friendObj);
+                                }
+                                break;
+                        }
                     }
-                }
+                });
             });
         }
 
@@ -159,11 +165,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
     public class FriendsViewModel : ViewModelBase
     {
-        public FriendsModel Model { get; }
+        public FriendsModel Model { get; private set; }
 
         public FriendsViewModel()
         {
-            Model = new FriendsModel();
+            App.Current.Dispatcher.Invoke(() => { 
+                Model = new FriendsModel();
+            });
         }
     }
 }

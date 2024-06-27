@@ -103,16 +103,16 @@ namespace Lexplosion.WPF.NewInterface
             _app.Run(_app.MainWindow);
 
 
-            if (Account.ActiveAccount == null) 
-            {
-                var statusCode = Account.ActiveAccount.Auth(null);
-                if (statusCode != AuthCode.Successfully) 
-                {
-                    var latestActiveAccount = Account.ActiveAccount;
-                    latestActiveAccount.IsActive = false;
+            //if (Account.ActiveAccount == null) 
+            //{
+            //    var statusCode = Account.ActiveAccount.Auth(null);
+            //    if (statusCode != AuthCode.Successfully) 
+            //    {
+            //        var latestActiveAccount = Account.ActiveAccount;
+            //        latestActiveAccount.IsActive = false;
 
-                }
-            }
+            //    }
+            //}
             Runtime.DebugWrite("SetMainWindow");
         }
 
