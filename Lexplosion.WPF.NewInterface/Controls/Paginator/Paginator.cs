@@ -18,7 +18,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
         private Button _previousPageButton;
         private Button _nextPageButton;
         private TextBlock _currentIndexValueTextBlock;
-        private TextBlock s;
+        private TextBlock _maxCountTextBlock;
         private Panel _numbersPanel;
 
 
@@ -113,12 +113,13 @@ namespace Lexplosion.WPF.NewInterface.Controls
             _previousPageButton = GetPartHandler(PART_PREVIOUS_PAGE_BUTTON) as Button;
             _nextPageButton = GetPartHandler(PART_NEXT_PAGE_BUTTON) as Button;
             _currentIndexValueTextBlock = GetPartHandler("CurrentIndexValueTextBlock") as TextBlock;
-            s = GetPartHandler("MaxPage") as TextBlock;
+            _maxCountTextBlock = GetPartHandler("MaxPage") as TextBlock;
             _numbersPanel = GetPartHandler(PART_NUMBERS_PANEL) as Panel;
-            _currentIndexValueTextBlock.Text = 1.ToString();
-            s.Text = 1.ToString();
-            //var binding = BindingOperations.GetBinding(_currentIndexValueTextBlock, TextBlock.TextProperty);
+            _currentIndexValueTextBlock.Text = (CurrentPageIndex + 1).ToString();
+            _maxCountTextBlock.Text = 1.ToString();
 
+            _previousPageButton.IsEnabled = CurrentPageIndex > 0;
+            _nextPageButton.IsEnabled = true;
             _previousPageButton.Click += _previousPageButton_Click;
             _nextPageButton.Click += _nextPageButton_Click;
 
@@ -134,7 +135,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
         private void _nextPageButton_Click(object sender, RoutedEventArgs e)
         {
-            if (CurrentPageIndex + 1 <= PageCount) 
+            if (CurrentPageIndex + 1 <= PageCount)
             {
                 CurrentPageIndex++;
                 NextCommand?.Execute(CurrentPageIndex);
@@ -143,8 +144,8 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
         private void _previousPageButton_Click(object sender, RoutedEventArgs e)
         {
-            if (CurrentPageIndex - 1 > 0) 
-            { 
+            if (CurrentPageIndex - 1 != uint.MaxValue)
+            {
                 CurrentPageIndex--;
                 PrevCommand?.Execute(CurrentPageIndex);
             }
@@ -152,7 +153,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
         private void _pageIndex_Click() 
         {
-            if (CurrentPageIndex - 1 > 0 && CurrentPageIndex + 1 <= PageCount) 
+            if (CurrentPageIndex - 1 > 0 && CurrentPageIndex + 1 <= PageCount)
             {
                 CurrentPageIndex++;
                 ToCommand?.Execute(CurrentPageIndex);
@@ -180,23 +181,31 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
         private static void OnCurrentPageIndexChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is Paginator) 
+            if (d is Paginator _this) 
             {
-                var paginator = (Paginator)d;
-                if (paginator._currentIndexValueTextBlock != null) { 
-                    paginator._currentIndexValueTextBlock.Text = e.NewValue.ToString();
+                _this._isFirst = _this.CurrentPageIndex - 1 == uint.MaxValue; 
+                _this._isLast = _this.CurrentPageIndex + 1 == _this.PageCount;
+
+                if (_this._previousPageButton != null)
+                    _this._previousPageButton.IsEnabled = !_this._isFirst;
+                
+                if (_this._nextPageButton != null)
+                    _this._nextPageButton.IsEnabled = !_this._isLast;
+
+                if (_this._currentIndexValueTextBlock != null) 
+                {
+                    _this._currentIndexValueTextBlock.Text = ((uint)e.NewValue + 1).ToString();
                 }
             }
         }
 
         private static void OnPageCountPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is Paginator) 
+            if (d is Paginator _this) 
             {
-                var paginator = (Paginator)d;
-                if (paginator.s != null) 
+                if (_this._maxCountTextBlock != null) 
                 {
-                    paginator.s.Text = e.NewValue.ToString();
+                    _this._maxCountTextBlock.Text = e.NewValue.ToString();
                 }
             }
         }

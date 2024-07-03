@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu
@@ -23,7 +24,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu
         public static readonly DependencyProperty NicknameProperty
             = DependencyProperty.Register(nameof(Nickname), typeof(string), typeof(Friend), 
                 new PropertyMetadata(defaultValue: "NW Player", propertyChangedCallback: OnUserNameChanged));
-
 
         public static readonly DependencyProperty StatusProperty
             = DependencyProperty.Register(nameof(Status), typeof(ActivityStatus), typeof(Friend), 

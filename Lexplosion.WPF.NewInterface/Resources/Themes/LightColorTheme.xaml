@@ -292,4 +292,10 @@
 
     <Color x:Key="DefaultButtonForegroundColor">White</Color>
     <SolidColorBrush x:Key="DefaultButtonForegroundColorBrush" Color="{DynamicResource DefaultButtonForegroundColor}" />
+
+
+    <!--  Advanced Toggle Button #E6EDF4  -->
+    <Color x:Key="TransparentAdvnacedToggleButtonBackgroundCheckedColor">LightGray</Color>
+    <SolidColorBrush x:Key="TransparentAdvnacedToggleButtonBackgroundCheckedColorBrush" Color="{DynamicResource TransparentAdvnacedToggleButtonBackgroundCheckedColor}" />
+
 </ResourceDictionary>

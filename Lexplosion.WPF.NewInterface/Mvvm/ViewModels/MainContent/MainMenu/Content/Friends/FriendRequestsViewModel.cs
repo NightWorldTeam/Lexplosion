@@ -1,12 +1,15 @@
 ﻿using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects.Nightworld;
+using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Objects;
+using Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading;
 using System.Windows.Data;
+using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 {
@@ -40,6 +43,18 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             Outgoing.Source = _outgoing;
             Incoming.Source = _incoming;
 
+            UpdateRequestsData();
+        }
+
+
+        #endregion Constructors
+
+
+        #region Public & Protected Methods
+
+
+        public void UpdateRequestsData() 
+        {
             Runtime.TaskRun(() =>
             {
                 var activeAccount = Account.ActiveAccount;
@@ -53,6 +68,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             });
         }
 
+
+        #endregion Publuc & Protected Methods
+
+
+        #region Private Methods
+
+
         private void OnSearchBoxTextChanged(string value)
         {
             if (Outgoing.View == null || Incoming.View == null)
@@ -64,11 +86,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             Incoming.View.Filter = (i => (i as NightWorldUser).Login.IndexOf(value, System.StringComparison.InvariantCultureIgnoreCase) > -1);
         }
 
-
-        #endregion Constructors
-
-
-        #region Private Methods
 
 
         private void UpdateFriendRequestsOutcoming(IEnumerable<NwUser> outgoingRequests)
@@ -96,6 +113,39 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
     public sealed class FriendRequestsViewModel : ViewModelBase
     {
         public FriendRequestsModel Model { get; }
+
+
+
+        #region Command
+
+
+        private RelayCommand _cancelFriendRequestCommand;
+        public ICommand CancelFriendRequestCommand
+        {
+            get => RelayCommand.GetCommand<Friend>(ref _cancelFriendRequestCommand, friend =>
+            {
+                NightWorldApi.RemoveFriend(Account.ActiveAccount.UUID, Account.ActiveAccount.SessionToken, friend.Name);
+                Model.UpdateRequestsData();
+                // TODO: Friends Translate
+            });
+        }
+
+        /// <summary>
+        /// Добавление друга, в качестве агрумента obj, будет передаваться ссылка на объект друга.
+        /// </summary>
+        private RelayCommand _addFriendCommand;
+        public ICommand AddFriendCommand
+        {
+            get => RelayCommand.GetCommand<NightWorldUser>(ref _addFriendCommand, friend =>
+            {
+                NightWorldApi.AddFriend(Account.ActiveAccount.UUID, Account.ActiveAccount.SessionToken, friend.Login);
+                Model.UpdateRequestsData();
+                // TODO: Friends Translate
+            });
+        }
+
+
+        #endregion Command
 
 
         public FriendRequestsViewModel()

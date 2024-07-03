@@ -16,6 +16,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Services
 
         #region Properties
 
+
         public IEnumerable<Theme> LoadedThemes { get; } = new List<Theme>();
 
         public List<Action> Animations { get; } = new List<Action>();
@@ -73,6 +74,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Services
 
             ColorThemeChanged?.Invoke();
 
+            // TODO: При быстрых вызовах смены темы, будет происходить утечка памяти июо circle animation создает brush в виде image картинки.
             Animations.ForEach(item => item?.Invoke());
         }
 

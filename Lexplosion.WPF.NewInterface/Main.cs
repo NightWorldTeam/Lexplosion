@@ -8,6 +8,7 @@ using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Core.Services;
 using Lexplosion.WPF.NewInterface.Mvvm.Views.Windows;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -55,6 +56,8 @@ namespace Lexplosion.WPF.NewInterface
 
         public static HeaderState HeaderState;
 
+        internal static string[] ResourceNames;
+
         public static ICollection<INotificable> Notification = new ObservableCollection<INotificable>();
 
         [STAThread]
@@ -95,8 +98,23 @@ namespace Lexplosion.WPF.NewInterface
             //app.Run(_splashWindow);
         }
 
+        public static string[] GetResourceNames()
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            string resName = assembly.GetName().Name + ".g.resources";
+            using (var stream = assembly.GetManifestResourceStream(resName))
+            {
+                using (var reader = new System.Resources.ResourceReader(stream))
+                {
+                    return reader.Cast<DictionaryEntry>().Select(entry =>
+                             (string)entry.Key).ToArray();
+                }
+            }
+        }
+
         private static void SetMainWindow()
         {
+            ResourceNames = GetResourceNames();
             _app.MainWindow = new MainWindow();//new TestWindow();
             //_app.MainWindow = new TestWindow();
             _app.MainWindow.Show();

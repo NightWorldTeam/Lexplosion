@@ -62,7 +62,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
             }
         }
 
-        private uint _pageCount = 500;
+        private uint _pageCount = 100;
         public uint PageCount
         {
             get => _pageCount; set 

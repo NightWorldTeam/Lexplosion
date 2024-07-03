@@ -48,6 +48,7 @@
         </Style.Triggers>
     </Style>
 
+    <!--  Without background change only icon & text colors  -->
     <Style
         x:Key="TransparentAdvancedButton"
         BasedOn="{StaticResource {x:Type controls:AdvancedButton}}"
@@ -69,6 +70,45 @@
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
                 <Setter Property="Foreground" Value="{DynamicResource DefaultButtonDisableBackgroundColorBrush}" />
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="True">
+                <Setter Property="Cursor" Value="Hand" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!--  Without background change only icon & text colors  -->
+    <Style
+        x:Key="HalfOpacityAdvancedButton"
+        BasedOn="{StaticResource {x:Type controls:AdvancedButton}}"
+        TargetType="{x:Type controls:AdvancedButton}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+        <Setter Property="Height" Value="32" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="FocusVisualStyle" Value="{StaticResource DefaultAdvancedButtonFocusVisual}" />
+        <Setter Property="CornerRadius" Value="5" />
+
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background">
+                    <Setter.Value>
+                        <SolidColorBrush Opacity="0.1" Color="{DynamicResource ActivityColor}" />
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Foreground" Value="{DynamicResource ActivitySolidColorBrush}" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background">
+                    <Setter.Value>
+                        <SolidColorBrush Opacity="0.2" Color="{DynamicResource ActivityColor}" />
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Background" Value="{DynamicResource DefaultButtonDisableBackgroundColorBrush}" />
             </Trigger>
             <Trigger Property="IsEnabled" Value="True">
                 <Setter Property="Cursor" Value="Hand" />

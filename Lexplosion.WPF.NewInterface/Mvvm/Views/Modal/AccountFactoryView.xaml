@@ -217,6 +217,11 @@
                                     </StackPanel>
 
                                     <!--  Content  -->
+                                    <!--
+                                        FontSize="12"
+                                        Padding="0,4,0,0"
+                                        FontFamily="{StaticResource Passdots}"
+                                    -->
                                     <controls:AdvancedTextBox
                                         Grid.Column="1"
                                         Height="34"

@@ -8,6 +8,7 @@
         <!--  Styles  -->
 
         <ResourceDictionary Source="Styles/AdvancedButton.xaml" />
+        <ResourceDictionary Source="Styles/AdvancedToggleButton.xaml" />
         <ResourceDictionary Source="Styles/TextBlock.xaml" />
         <ResourceDictionary Source="Styles/Button.xaml" />
         <ResourceDictionary Source="Styles/TextBox.xaml" />
@@ -20,6 +21,7 @@
         <ResourceDictionary Source="Styles/ScrollBar.xaml" />
         <ResourceDictionary Source="Styles/ComboBox.xaml" />
         <ResourceDictionary Source="Styles/TreeViewItem.xaml" />
+        <ResourceDictionary Source="Styles/Paginator.xaml" />
 
         <ResourceDictionary Source="Styles/PageCurtains.xaml" />
     </ResourceDictionary.MergedDictionaries>

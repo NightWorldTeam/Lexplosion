@@ -178,6 +178,12 @@ namespace Lexplosion.WPF.NewInterface.Controls
         {
             Text = string.Empty;
             UpdateIsEmpty();
+
+            if (_lastRequests == Text)
+                return;
+
+            _lastRequests = Text;
+            ExecuteSearchCommand();
         }
 
         private void ExecuteSearchCommand()

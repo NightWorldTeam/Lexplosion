@@ -1,5 +1,4 @@
-﻿using Lexplosion.Global;
-using Lexplosion.Logic.Management.Accounts;
+﻿using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects.Nightworld;
 using Lexplosion.WPF.NewInterface.Commands;
@@ -65,7 +64,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         /// <summary>
         /// Индекс выбранной страницы.
         /// </summary>
-        private int _currentPageIndex = 1;
+        private int _currentPageIndex = 0;
         public int CurrentPageIndex 
         { 
             get => _currentPageIndex; private set 
@@ -152,7 +151,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             IsNextPageExist = _usersCatalogPage.NextPage;
             OnPropertyChanged(nameof(IsNextPageExist));
 
-            IsPrevPageExist = CurrentPageIndex != 1;
+            IsPrevPageExist = CurrentPageIndex != 0;
             OnPropertyChanged(nameof(IsPrevPageExist));
         }
 
@@ -172,12 +171,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
                 var activeAccount = Account.ActiveAccount;
                 if (reboot) 
                 {
-                    CurrentPageIndex = 1;
+                    CurrentPageIndex = 0;
                     _usersCatalogPage = NightWorldApi.FindUsers(activeAccount.UUID, activeAccount.SessionToken, 0, string.Empty);
                 }
-                else 
+                else
                 {
-                    _usersCatalogPage = NightWorldApi.FindUsers(activeAccount.UUID, activeAccount.SessionToken, (uint)CurrentPageIndex - 1, searchFilter);
+                    Console.WriteLine(searchFilter);
+                    _usersCatalogPage = NightWorldApi.FindUsers(activeAccount.UUID, activeAccount.SessionToken, (uint)CurrentPageIndex, searchFilter ?? string.Empty);
                 }
 
                 App.Current.Dispatcher.Invoke(() => 
@@ -231,7 +231,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         private RelayCommand _searchCommand;
         public ICommand SearchCommand 
         {
-            get => RelayCommand.GetCommand(ref _searchCommand, (obj) => Model.LoadUsersList(obj as string, reboot: (obj as string) == ""));
+            get => RelayCommand.GetCommand(ref _searchCommand, (obj) => Model.LoadUsersList(obj as string, reboot: string.IsNullOrEmpty(obj as string), isClear: true));
         }
 
         /// <summary>

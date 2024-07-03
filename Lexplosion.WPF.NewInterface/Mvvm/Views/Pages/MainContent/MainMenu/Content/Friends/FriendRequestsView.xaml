@@ -194,7 +194,11 @@
                     </StackPanel>
 
                     <!--  Action Button  -->
-                    <Button Grid.Column="2" Cursor="Hand">
+                    <Button
+                        Grid.Column="2"
+                        Command="{Binding DataContext.AddFriendCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                        CommandParameter="{Binding}"
+                        Cursor="Hand">
                         <Button.Template>
                             <ControlTemplate TargetType="{x:Type Button}">
                                 <Grid>
@@ -592,11 +596,14 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <controls:SearchBox Margin="0,8" Text="{Binding Model.SearchBoxText, UpdateSourceTrigger=PropertyChanged}" />
+        <controls:SearchBox
+            Margin="0,8"
+            Placeholder="{DynamicResource TypingNicknamePlaceholder}"
+            Text="{Binding Model.SearchBoxText, UpdateSourceTrigger=PropertyChanged}" />
 
         <TabControl
             Grid.Row="1"
-            HorizontalAlignment="Center"
+            HorizontalAlignment="Left"
             VerticalAlignment="Stretch">
             <TabItem Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" Header="Pending">
                 <ItemsControl
@@ -609,7 +616,10 @@
 
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <WrapPanel HorizontalAlignment="Left" IsItemsHost="True" />
+                            <WrapPanel
+                                HorizontalAlignment="Left"
+                                IsItemsHost="True"
+                                VirtualizingPanel.IsVirtualizing="True" />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
 
@@ -627,7 +637,10 @@
 
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <WrapPanel HorizontalAlignment="Left" IsItemsHost="True" />
+                            <WrapPanel
+                                HorizontalAlignment="Left"
+                                IsItemsHost="True"
+                                VirtualizingPanel.IsVirtualizing="True" />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
 

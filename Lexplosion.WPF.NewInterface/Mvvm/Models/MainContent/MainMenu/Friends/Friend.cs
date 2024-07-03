@@ -1,5 +1,8 @@
-﻿using Lexplosion.WPF.NewInterface.Core;
+﻿using Lexplosion.Logic.Management.Accounts;
+using Lexplosion.Logic.Network;
+using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.ViewModel;
+using System;
 using System.Windows.Media;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends
@@ -28,6 +31,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends
             State = state;
             Avatar = avatar;
             RunningClientName = runningClientName;
+        }
+
+        public void Unfriend(Action afterMethodAction = null) 
+        {
+            NightWorldApi.RemoveFriend(Account.ActiveAccount.UUID, Account.ActiveAccount.SessionToken, Name);
+            afterMethodAction?.Invoke();
         }
     }
 }

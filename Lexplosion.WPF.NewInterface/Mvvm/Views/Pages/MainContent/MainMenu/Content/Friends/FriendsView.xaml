@@ -47,7 +47,10 @@
 
 
             <!--  TODO: Убирать SearchBox все друзья влазять и скролить не надо и друзей нет???  -->
-            <controls:SearchBox Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" Text="{Binding Model.SearchBoxText, UpdateSourceTrigger=PropertyChanged}" />
+            <controls:SearchBox
+                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                Placeholder="{DynamicResource TypingNicknamePlaceholder}"
+                Text="{Binding Model.SearchBoxText, UpdateSourceTrigger=PropertyChanged}" />
 
             <Grid Grid.Row="1" Margin="0,16,0,0">
 
@@ -99,7 +102,10 @@
                         </ItemsControl.ItemTemplate>
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <WrapPanel IsItemsHost="True" Orientation="Horizontal" />
+                                <WrapPanel
+                                    IsItemsHost="True"
+                                    Orientation="Horizontal"
+                                    VirtualizingPanel.IsVirtualizing="True" />
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                     </ItemsControl>
@@ -152,7 +158,10 @@
                         </ItemsControl.ItemTemplate>
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <WrapPanel IsItemsHost="True" Orientation="Horizontal" />
+                                <WrapPanel
+                                    IsItemsHost="True"
+                                    Orientation="Horizontal"
+                                    VirtualizingPanel.IsVirtualizing="True" />
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                     </ItemsControl>
@@ -202,7 +211,10 @@
                         </ItemsControl.ItemTemplate>
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <WrapPanel IsItemsHost="True" Orientation="Horizontal" />
+                                <WrapPanel
+                                    IsItemsHost="True"
+                                    Orientation="Horizontal"
+                                    VirtualizingPanel.IsVirtualizing="True" />
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                     </ItemsControl>

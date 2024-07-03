@@ -1,26 +1,26 @@
-﻿using Lexplosion.Global;
-using Lexplosion.Logic.Management.Accounts;
+﻿using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects.Nightworld;
+using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Windows.Data;
-using System.Windows.Media;
+using System.Windows.Input;
 using System.Windows.Media.Imaging;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 {
-    public class FriendsModel : ViewModelBase 
+    public class FriendsModel : ViewModelBase
     {
-        private List<Friend> _allFriends = new List<Friend>();
+        private List<Friend> _allFriends = new();
 
-        private ObservableCollection<Friend> _inGameFriends = new ObservableCollection<Friend>();
-        private ObservableCollection<Friend> _onlineFriends = new ObservableCollection<Friend>();
-        private ObservableCollection<Friend> _offlineFriends = new ObservableCollection<Friend>();
+        private ObservableCollection<Friend> _inGameFriends = new();
+        private ObservableCollection<Friend> _onlineFriends = new();
+        private ObservableCollection<Friend> _offlineFriends = new();
 
 
         #region Properties
@@ -57,15 +57,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             OnlineFriends.Source = _onlineFriends;
             OfflineFriends.Source = _offlineFriends;
 
-            Lexplosion.Runtime.TaskRun(() =>
-            {
-                var activeAccount = Account.ActiveAccount;
-                var friends = NightWorldApi.GetFriends(activeAccount.UUID, activeAccount.SessionToken, activeAccount.Login);
-                App.Current.Dispatcher.Invoke(() =>
-                {
-                    UpdateFriends(friends);
-                });
-            });
+            UpdateRequestsData();
         }
 
 
@@ -75,15 +67,26 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         #region Public Methods
 
 
+        public void UpdateRequestsData()
+        {
+            Runtime.TaskRun(() =>
+            {
+                var activeAccount = Account.ActiveAccount;
+                var friends = NightWorldApi.GetFriends(activeAccount.UUID, activeAccount.SessionToken, activeAccount.Login);
+                App.Current.Dispatcher.Invoke( () => UpdateFriends(friends) );
+            });
+        }
+
+
         /// <summary>
         /// Пересобирает списки с друзьями ники которых содержат выражение.
         /// </summary>
         /// <param name="value">Выражение</param>
-        public void SearchFriendsByNickname(string value) 
+        public void SearchFriendsByNickname(string value)
         {
             _allFriends.Where(f => f.Name.Contains(value));
 
-            foreach (var f in _allFriends) 
+            foreach (var f in _allFriends)
             {
                 if (f.ActivityStatus == ActivityStatus.InGame)
                     _inGameFriends.Add(f);
@@ -105,43 +108,40 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         {
             App.Current.Dispatcher.Invoke(() =>
             {
-                App.Current.Dispatcher.Invoke(() =>
+                _allFriends.Clear();
+                _inGameFriends.Clear();
+                _onlineFriends.Clear();
+                _offlineFriends.Clear();
+
+                foreach (var friend in friends)
                 {
-                    _allFriends.Clear();
-                    _inGameFriends.Clear();
-                    _onlineFriends.Clear();
-                    _onlineFriends.Clear();
+                    var friendObj = new Friend(friend.Login, friend.ActivityStatus.ToString(), Friend.FriendState.Added, new BitmapImage(new System.Uri(friend.AvatarUrl)), friend.GameClientName);
+                    _allFriends.Add(friendObj);
 
-                    foreach (var friend in friends)
+                    switch (friend.ActivityStatus)
                     {
-                        var friendObj = new Friend(friend.Login, friend.ActivityStatus.ToString(), Friend.FriendState.Added, new BitmapImage(new System.Uri(friend.AvatarUrl)), friend.GameClientName);
-                        _allFriends.Add(friendObj);
-
-                        switch (friend.ActivityStatus)
-                        {
-                            case ActivityStatus.Online:
-                                {
-                                    _onlineFriends.Add(friendObj);
-                                }
-                                break;
-                            case ActivityStatus.Offline:
-                                {
-                                    _offlineFriends.Add(friendObj);
-                                }
-                                break;
-                            case ActivityStatus.InGame:
-                                {
-                                    _inGameFriends.Add(friendObj);
-                                }
-                                break;
-                            default:
-                                {
-                                    _onlineFriends.Add(friendObj);
-                                }
-                                break;
-                        }
+                        case ActivityStatus.Online:
+                            {
+                                _onlineFriends.Add(friendObj);
+                            }
+                            break;
+                        case ActivityStatus.Offline:
+                            {
+                                _offlineFriends.Add(friendObj);
+                            }
+                            break;
+                        case ActivityStatus.InGame:
+                            {
+                                _inGameFriends.Add(friendObj);
+                            }
+                            break;
+                        default:
+                            {
+                                _offlineFriends.Add(friendObj);
+                            }
+                            break;
                     }
-                });
+                }
             });
         }
 
@@ -167,9 +167,37 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
     {
         public FriendsModel Model { get; private set; }
 
+
+        #region Commands
+
+
+        private RelayCommand _viewProfileCommand;
+        public ICommand ViewProfileCommand
+        {
+            get => RelayCommand.GetCommand<Friend>(ref _viewProfileCommand, (friend) =>
+            {
+                // Open Profile Page here.
+                Process.Start($"https://night-world.org/users/{friend.Name}");
+            });
+        }
+
+        private RelayCommand _unfriendCommand;
+        public ICommand UnfriendCommand
+        {
+            get => RelayCommand.GetCommand<Friend>(ref _unfriendCommand, (friend) =>
+            {
+                friend.Unfriend();
+                Model.UpdateRequestsData();
+            });
+        }
+
+
+        #endregion Commands
+
+
         public FriendsViewModel()
         {
-            App.Current.Dispatcher.Invoke(() => { 
+            App.Current.Dispatcher.Invoke(() => {
                 Model = new FriendsModel();
             });
         }

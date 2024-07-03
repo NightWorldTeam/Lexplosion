@@ -140,7 +140,7 @@
                         <Grid Margin="0,2,0,0">
                             <!--  Current Activity  -->
                             <TextBlock
-                            Margin="0,2,0,0"
+                                Margin="0,2,0,0"
                                 FontSize="12"
                                 FontWeight="Medium"
                                 Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
@@ -261,7 +261,7 @@
 
     <Grid>
 
-        <Grid Margin="32,16">
+        <Grid Margin="42,16">
 
             <!--  Triggers  -->
             <Grid.Style>
@@ -289,11 +289,10 @@
 
             <!--  SearchBox & Filters  -->
             <controls:SearchBox
-                Width="{Binding ActualWidth, ElementName=UsersList}"
-                Margin="0,0,0,8"
+                Margin="0,0,0,12"
                 HorizontalAlignment="Stretch"
                 Background="{DynamicResource SecondarySolidColorBrush}"
-                Placeholder="{DynamicResource Search}"
+                Placeholder="{DynamicResource TypingNicknamePlaceholder}"
                 SearchCommand="{Binding SearchCommand}" />
 
 
@@ -307,7 +306,11 @@
 
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <WrapPanel HorizontalAlignment="Center" IsItemsHost="True" />
+                        <WrapPanel
+                            HorizontalAlignment="Left"
+                            IsItemsHost="True"
+                            VirtualizingPanel.CacheLengthUnit="Item"
+                            VirtualizingPanel.IsVirtualizing="True" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
 
@@ -322,6 +325,7 @@
                 PrevCommand="{Binding MovePrevPageCommand}" />
         </Grid>
 
+        <!--  TODO: Translate  -->
         <TextBlock
             HorizontalAlignment="Center"
             VerticalAlignment="Center"

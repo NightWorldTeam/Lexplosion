@@ -298,7 +298,7 @@
                             Height="28"
                             Margin="0,0,8,0">
                             <Border.Background>
-                                <ImageBrush ImageSource="{Binding IconSource}" />
+                                <ImageBrush ImageSource="{Binding IconSource, Converter={converters:ImagePathValidateConverter}}" />
                             </Border.Background>
                         </Border>
 
@@ -333,6 +333,7 @@
 
         <controls:SearchBox
             Grid.Column="0"
+            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
             Placeholder="{DynamicResource TypingNicknamePlaceholder}"
             Text="{Binding Model.SearchBoxText, UpdateSourceTrigger=PropertyChanged}" />
 
