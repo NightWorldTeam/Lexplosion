@@ -389,7 +389,7 @@
 
 
     <!--  Account Factory  -->
-    <s:String x:Key="AddingAccount">Account an Adding</s:String>
+    <s:String x:Key="AddingAccount">Adding an account</s:String>
     <s:String x:Key="Login">Login</s:String>
     <s:String x:Key="Password">Password</s:String>
     <s:String x:Key="AccountType">Account Type</s:String>
@@ -408,8 +408,8 @@
     </s:String>
     <s:String x:Key="CreateNightWorldAccount">Create a NightWorld account</s:String>
     <s:String x:Key="LoginWithYourNightWorldAccount">Login with your NightWorld account</s:String>
-    
-    <!-- -->
+
+    <!--    -->
     <s:String x:Key="Unfriend">Unfriend</s:String>
     <s:String x:Key="ViewProfile">View Profile</s:String>
 </ResourceDictionary>

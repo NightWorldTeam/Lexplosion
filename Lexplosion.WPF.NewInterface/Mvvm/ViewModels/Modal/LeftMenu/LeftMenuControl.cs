@@ -54,7 +54,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
             }
             if (_tabItems.Count > 0) 
             {
-                OnCurrentContentChanged(_tabItems[0]);
+                OnCurrentContentChanged(_tabItems[0], true);
             }
         }
 
@@ -84,12 +84,15 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
         #region Private Methods
 
 
-        private void OnCurrentContentChanged(ModalLeftMenuTabItem tabItem)
+        private void OnCurrentContentChanged(ModalLeftMenuTabItem tabItem, bool state)
         {
-            SelectedContent = tabItem.Content;
-            TitleKey = tabItem.TitleKey;
-            OnPropertyChanged(nameof(SelectedContent));
-            OnPropertyChanged(nameof(TitleKey));
+            if (state) 
+            { 
+                SelectedContent = tabItem.Content;
+                TitleKey = tabItem.TitleKey;
+                OnPropertyChanged(nameof(SelectedContent));
+                OnPropertyChanged(nameof(TitleKey));
+            }
         }
 
 
