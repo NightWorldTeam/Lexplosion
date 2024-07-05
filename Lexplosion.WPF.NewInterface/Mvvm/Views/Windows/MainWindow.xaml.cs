@@ -11,11 +11,22 @@ using System.Windows.Media.Imaging;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
 {
+    public interface IScalable
+    {
+        double ActualWidth { get; }
+        double ActualHeight { get; }
+        double ScalingFactor { get; }
+    }
+
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, IScalable
     {
+        public double ScalingKeff { get; private set; } = 1;
+
+        public double ScalingFactor { get; private set; } = 1;
+
         public string currentLang = "ru";
         private bool _isScalled = false;
 
@@ -55,19 +66,19 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
         }
         private void Scalling()
         {
-            double keff = 0.25;
-            var yScale = keff + 1;
+            double factor = 0.25;
+            var yScale = factor + 1;
 
             if (_isScalled)
             {
-                keff *= -1;
+                factor *= -1;
                 yScale = 1;
             }
 
             ContainerGrid.LayoutTransform = new ScaleTransform(yScale, yScale);
-            this.Width += Width * keff;
-            this.Height += Height * keff;
-
+            this.Width += Width * factor;
+            this.Height += Height * factor;
+            ScalingFactor = factor;
             // Bring window center screen
             var screenHeight = System.Windows.SystemParameters.PrimaryScreenHeight;
             var screenWidth = System.Windows.SystemParameters.PrimaryScreenWidth;

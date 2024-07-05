@@ -57,7 +57,7 @@
                                         Height="38"
                                         CornerRadius="5">
                                         <Border.Background>
-                                            <ImageBrush ImageSource="{Binding Avatar}" />
+                                            <ImageBrush ImageSource="{Binding AvatarUrl}" />
                                         </Border.Background>
                                     </Border>
 
@@ -94,7 +94,7 @@
                                         <Setter TargetName="IconBorder" Property="Visibility" Value="Visible" />
                                     </Trigger>
 
-                                    <DataTrigger Binding="{Binding Avatar}" Value="{x:Null}">
+                                    <DataTrigger Binding="{Binding AvatarUrl}" Value="{x:Null}">
                                         <Setter TargetName="AvatarBorder" Property="Background">
                                             <Setter.Value>
                                                 <ImageBrush ImageSource="pack://Application:,,,/Assets/images/icons/non_image.png" />
@@ -306,7 +306,7 @@
                                         Height="38"
                                         CornerRadius="5">
                                         <Border.Background>
-                                            <ImageBrush ImageSource="{Binding Avatar}" />
+                                            <ImageBrush ImageSource="{Binding AvatarUrl}" />
                                         </Border.Background>
                                     </Border>
 
@@ -343,7 +343,7 @@
                                         <Setter TargetName="IconBorder" Property="Visibility" Value="Visible" />
                                     </Trigger>
 
-                                    <DataTrigger Binding="{Binding Avatar}" Value="{x:Null}">
+                                    <DataTrigger Binding="{Binding AvatarUrl}" Value="{x:Null}">
                                         <Setter TargetName="AvatarBorder" Property="Background">
                                             <Setter.Value>
                                                 <ImageBrush ImageSource="pack://Application:,,,/Assets/images/icons/non_image.png" />

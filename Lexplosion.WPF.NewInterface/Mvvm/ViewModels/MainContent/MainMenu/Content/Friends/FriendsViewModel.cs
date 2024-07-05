@@ -115,7 +115,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
                 foreach (var friend in friends)
                 {
-                    var friendObj = new Friend(friend.Login, friend.ActivityStatus.ToString(), Friend.FriendState.Added, new BitmapImage(new System.Uri(friend.AvatarUrl)), friend.GameClientName);
+                    var friendObj = new Friend(friend.Login, friend.ActivityStatus.ToString(), Friend.FriendState.Added, friend.AvatarUrl, friend.GameClientName);
                     _allFriends.Add(friendObj);
 
                     switch (friend.ActivityStatus)

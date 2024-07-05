@@ -94,7 +94,7 @@
                             <DataTemplate DataType="{x:Type model:Friend}">
                                 <local:Friend
                                     Margin="0,0,4,4"
-                                    Avatar="{Binding Avatar}"
+                                    Avatar="{Binding AvatarUrl}"
                                     Nickname="{Binding Name}"
                                     RunningClientName="{Binding RunningClientName}"
                                     Status="{Binding Status}" />
@@ -151,7 +151,7 @@
                             <DataTemplate DataType="{x:Type model:Friend}">
                                 <local:Friend
                                     Margin="0,0,4,4"
-                                    Avatar="{Binding Avatar}"
+                                    Avatar="{Binding AvatarUrl}"
                                     Nickname="{Binding Name}"
                                     Status="{Binding Status}" />
                             </DataTemplate>
@@ -204,7 +204,7 @@
                             <DataTemplate DataType="{x:Type model:Friend}">
                                 <local:Friend
                                     Margin="0,0,4,4"
-                                    Avatar="{Binding Avatar}"
+                                    Avatar="{Binding AvatarUrl}"
                                     Nickname="{Binding Name}"
                                     Status="{Binding Status}" />
                             </DataTemplate>

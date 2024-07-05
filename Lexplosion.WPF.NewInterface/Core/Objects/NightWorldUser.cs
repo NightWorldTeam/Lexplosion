@@ -20,7 +20,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
 
 
         public string Login { get; }
-        public ImageSource Avatar { get; private set; }
+        public string AvatarUrl { get; private set; }
         public string RunningClientName { get; }
         public ActivityStatus Status { get; }
 
@@ -52,7 +52,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
             Login = nwUser.Login;
             RunningClientName = nwUser.GameClientName;
             Status = nwUser.ActivityStatus;
-            Avatar = new BitmapImage(new Uri(nwUser.AvatarUrl));
+            AvatarUrl = nwUser.AvatarUrl;
         }
 
 
