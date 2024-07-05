@@ -93,6 +93,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             accountsSettings?.OpenAccountFactoryCommand.Execute(null);
         }
 
+        public void Refresh()
+        {
+            //_multiplayerLayoutViewModel = new 
+        }
+
 
         #endregion Private Methods
     }

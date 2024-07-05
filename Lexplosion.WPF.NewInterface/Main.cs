@@ -1,9 +1,6 @@
 ﻿using Lexplosion.Core.Tools.Notification;
 using Lexplosion.Global;
-using Lexplosion.Logic;
 using Lexplosion.Logic.Management.Accounts;
-using Lexplosion.Logic.Management.Authentication;
-using Lexplosion.Logic.Network;
 using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Core.Services;
 using Lexplosion.WPF.NewInterface.Mvvm.Views.Windows;
@@ -11,7 +8,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
@@ -63,10 +59,9 @@ namespace Lexplosion.WPF.NewInterface
         [STAThread]
         static void Main()
         {
-            //GlobalData.SetUser(new User("Hel2x", "d66ec2c0-7a35-4e8a-a3d8-d1cb913fa71c", "", "", AccountType.NoAuth, ActivityStatus.Online));
+            //SetupTestEnviroment();
+            //return;
             AppColorThemeService = new AppColorThemeService();
-            //GlobalData.SetUser(new User("Hel2x", "d66ec2c0-7a35-4e8a-a3d8-d1cb913fa71c", "", "", AccountType.NoAuth, ActivityStatus.Online));
-
             var title = "TKESKLTSRLK ALLALA";
             var message = "Действие фильма будет происходить после событий, рассказанных в фильме «Миссия невыполнима: Последствия». В центре истории новые приключения агента Итана Ханта.";
 
@@ -96,6 +91,23 @@ namespace Lexplosion.WPF.NewInterface
             // thread.Start();
 
             //app.Run(_splashWindow);
+        }
+
+        private static void SetupTestEnviroment() 
+        {
+            _app.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            {
+                Source = new Uri(ControlsPath + "Controls.xaml")
+            });
+
+            _app.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            {
+                Source = new Uri(ResourcePath + "ResourcesRegister.xaml")
+            });
+
+            _app.MainWindow = new TestWindow();
+            _app.MainWindow.Show();
+            _app.Run(_app.MainWindow);
         }
 
         public static string[] GetResourceNames()
@@ -142,14 +154,14 @@ namespace Lexplosion.WPF.NewInterface
             LoadCurrentLanguage();
 
             var latestActiveAccount = Account.ActiveAccount;
-            if (latestActiveAccount != null) { 
+            if (latestActiveAccount != null)
+            {
                 var code = latestActiveAccount.Auth();
                 if (code != AuthCode.Successfully) 
                 {
                 
                 }
             }
-
             _app.Dispatcher.Invoke(SetMainWindow);
         }
 
@@ -187,6 +199,7 @@ namespace Lexplosion.WPF.NewInterface
             {
                 Source = new Uri(ResourcePath + "ThemesRegistry.xaml")
             });
+            // TODO: Избавить Control от зависимости от цветов тем.
             // Controls //
             _app.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {

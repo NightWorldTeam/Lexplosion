@@ -67,6 +67,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             OnPropertyChanged(nameof(HasAccounts));
         }
 
+        // TODO: Если аккаунт остался один выводит модальное окно с подтверждение действия,
+        // И запуск окна авторизации в случае согласия.
         public void RemoveAccount(Account account)
         {
             _list.Remove(account);

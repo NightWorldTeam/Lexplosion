@@ -64,6 +64,7 @@
 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
@@ -172,6 +173,101 @@
                     AlternationCount="2"
                     ItemsSource="{Binding Items}"
                     KeyboardNavigation.IsTabStop="False" />
+
+                <Border
+                    x:Name="HelpButton"
+                    Grid.Row="2"
+                    Width="32"
+                    Height="32"
+                    HorizontalAlignment="Right"
+                    CornerRadius="100">
+
+                    <Border.Background>
+                        <SolidColorBrush Opacity="0.1" Color="Black" />
+                    </Border.Background>
+
+                    <Viewbox
+                        Width="16"
+                        Height="16"
+                        Stretch="Fill">
+                        <Path
+                            extensions:Path.StringKeyData="Help"
+                            Fill="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                            Stretch="Fill" />
+                    </Viewbox>
+                </Border>
+
+                <Popup
+                    AllowsTransparency="True"
+                    IsOpen="True"
+                    Placement="Top"
+                    PlacementRectangle="0,-16,0,0"
+                    PlacementTarget="{Binding ElementName=HelpButton}"
+                    PopupAnimation="Fade"
+                    StaysOpen="False">
+                    <Grid Background="Transparent">
+                        <Border
+                            Margin="0,0,0,2"
+                            Background="{DynamicResource PrimarySolidColorBrush}"
+                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                            BorderThickness="1"
+                            CornerRadius="5">
+                            <Border.Effect>
+                                <DropShadowEffect
+                                    BlurRadius="10"
+                                    Direction="340"
+                                    Opacity="0.2" />
+                            </Border.Effect>
+                        </Border>
+
+                        <StackPanel Margin="8,8">
+                            <Border MinWidth="200" Padding="8">
+                                <StackPanel Orientation="Horizontal">
+                                    <Viewbox
+                                        Height="14"
+                                        Margin="0,0,16,0"
+                                        Stretch="Fill">
+                                        <Path
+                                            extensions:Path.StringKeyData="Library"
+                                            Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                            Stretch="Fill" />
+                                    </Viewbox>
+                                    <TextBlock
+                                        Margin="0,0,0,2"
+                                        FontSize="14"
+                                        FontWeight="Medium"
+                                        Text="API docs" />
+                                </StackPanel>
+                            </Border>
+                            <Border MinWidth="200" Padding="8">
+                                <StackPanel Orientation="Horizontal">
+                                    <Viewbox
+                                        Height="14"
+                                        Margin="0,0,16,0"
+                                        Stretch="Fill">
+                                        <Path
+                                            extensions:Path.StringKeyData="Help"
+                                            Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                            Stretch="Fill" />
+                                    </Viewbox>
+                                    <TextBlock
+                                        Margin="0,0,0,2"
+                                        FontSize="14"
+                                        FontWeight="Medium"
+                                        Text="Support docs" />
+                                </StackPanel>
+                            </Border>
+
+                            <TextBlock
+                                Grid.Row="2"
+                                Margin="8,16,0,8"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Bottom"
+                                Foreground="{DynamicResource LatestForegroundSolidColorBrush}"
+                                Text="© 2024 NightWorld" />
+                        </StackPanel>
+                    </Grid>
+                </Popup>
             </Grid>
         </Border>
     </Grid>
