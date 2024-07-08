@@ -24,6 +24,8 @@
         <ResourceDictionary Source="Paginator/Paginator.xaml" />
         <ResourceDictionary Source="DragDropBoard/DragDropBoard.xaml" />
 
+        <ResourceDictionary Source="CircleLoader/CircleLoader.xaml" />
+
 
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

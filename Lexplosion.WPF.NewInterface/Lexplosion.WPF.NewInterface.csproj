@@ -85,6 +85,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Controls\AdvancedToolTip\AdvancedToolTip.cs" />
+    <Compile Include="Controls\CircleLoader\CircleLoader.cs" />
     <Compile Include="Controls\DragDropBoard\DragDropBoard.cs" />
     <Compile Include="Controls\LoadingBoard\LoadingBoard.cs" />
     <Compile Include="Core\Commands\CommandBase.cs" />
@@ -111,6 +112,7 @@
     <Compile Include="Core\Converters\MultiValueConverter\StringFormatConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\BooleanToVisibilityConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\ConverterBase.cs" />
+    <Compile Include="Core\Converters\ValueConverters\IsObjectNullConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\IsStringNullOrEmptyConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\NegativeBooleanToVisibilityConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\NegativeBooleanValueConverter.cs" />
@@ -298,6 +300,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\BindablePasswordBox\BindablePasswordBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\CircleLoader\CircleLoader.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

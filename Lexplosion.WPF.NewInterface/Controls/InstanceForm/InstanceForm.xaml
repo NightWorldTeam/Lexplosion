@@ -186,6 +186,7 @@
                             <!--  Left Block  -->
                             <Grid x:Name="PART_LogoBlock">
                                 <!--  Avatar  -->
+                                <!--  Circle loader here>???  -->
                                 <Border
                                     x:Name="PART_Logo"
                                     Background="{DynamicResource ActivitySolidColorBrush}"
