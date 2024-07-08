@@ -11,7 +11,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
 {
     public sealed class InstanceAddonsContainerModel : ViewModelBase
     {
-        private readonly BaseInstanceData _baseInstanceData;
+        private BaseInstanceData _baseInstanceData;
         private readonly InstanceModelBase _instanceModelBase;
         private ObservableCollection<InstanceAddon> _addonsList = new();
 
@@ -111,10 +111,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
             Type = type;
             _selectedSortByParam = SortByList[0];
             _instanceModelBase = instanceModelBase;
-            _baseInstanceData = instanceModelBase.InstanceData;
 
-            Runtime.TaskRun(() => {
-
+            Runtime.TaskRun(() => 
+            {
+                _baseInstanceData = instanceModelBase.InstanceData;
                 var instanceAddons = InstanceAddon.GetInstalledAddons(type, _baseInstanceData);
 
                 App.Current.Dispatcher.Invoke(() => {
