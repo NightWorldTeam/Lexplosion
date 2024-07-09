@@ -135,7 +135,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
         #endregion Modloader
 
 
-
         #region OptimizationMods
 
 
@@ -152,6 +151,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
             get => _isOptifine && ClientType == ClientType.Vanilla; set
             {
                 _isOptifine = value;
+                _instanceData.OptifineVersion = _optifineVersion;
                 OnPropertyChanged(nameof(HasChanges));
                 OnPropertyChanged(nameof(OptifineVersion));
                 OnPropertyChanged();
@@ -262,8 +262,15 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
             {
                 OptifineVersion = IsOptifine ? OptifineVersion : string.Empty;
             }
+
+            if (!IsOptifine)
+            {
+                _instanceData.OptifineVersion = null;
+            }
+
             _instanceModelBase.ChangeOverviewParameters(_instanceData);
-            _instanceData = _instanceModelBase.InstanceData;
+            
+           /* _instanceData = _instanceModelBase.InstanceData;*/
             _oldInstanceData = _instanceModelBase.InstanceData;
             OnPropertyChanged(nameof(HasChanges));
         }
@@ -277,6 +284,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
             IsShowSnapshots = _instanceData.GameVersion.Type == MinecraftVersion.VersionType.Snapshot;
             Version = _instanceData.GameVersion ?? GameVersions[0];
             ClientType = _instanceData.Modloader;
+            _isOptifine = _instanceData.OptifineVersion != null;
+            OnPropertyChanged(nameof(_isOptifine));
             LoadInstanceDefaultExtension(ClientType);
             OnPropertyChanged(nameof(HasChanges));
         }
@@ -312,11 +321,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
                 return true;
             if (ModloaderVersion != null && !_oldInstanceData.ModloaderVersion.Equals(ModloaderVersion) && ClientType != ClientType.Vanilla)
                 return true;
-            if (_oldInstanceData.OptifineVersion != null)
-            {
-                if (!_oldInstanceData.OptifineVersion.Equals(IsOptifine ? OptifineVersion : ""))
-                    return true;
-            }
+            if (_oldInstanceData.OptifineVersion != (IsOptifine ? OptifineVersion : null))
+                return true;
+            
             return false;
         }
 

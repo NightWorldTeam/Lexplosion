@@ -117,8 +117,19 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         private void UpdateFrameworkElementModels()
         {
             _instanceActions.Clear();
+
             if (!_instanceModel.IsInstalled && !_instanceModel.InLibrary)
-                return;
+            {
+                _instanceActions.Add(new FrameworkElementModel("AddToLibrary", _instanceModel.AddToLibrary, "AddToLibrary"));
+            }
+
+            if (_instanceModel.Source != InstanceSource.Local)
+            {
+                _instanceActions.Add(new FrameworkElementModel("Visit" + _instanceModel.Source.ToString(), _instanceModel.GoToWebsite, _instanceModel.Source.ToString(), 20, 20));
+            }
+
+            //if (!_instanceModel.IsInstalled && !_instanceModel.InLibrary)
+            //    return;
 
             // 1. Website
             // 2. AddToLibrary
@@ -126,15 +137,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             // 3. Export
             // 4. RemoveFromLibrary / Delete (Перед удаление переводим пользователя в обратно библиотеку.)
 
-            if (_instanceModel.Source != InstanceSource.Local)
-            {
-                _instanceActions.Add(new FrameworkElementModel("Visit" + _instanceModel.Source.ToString(), _instanceModel.GoToWebsite, _instanceModel.Source.ToString(), 20, 20));
-            }
-
-            if (!_instanceModel.IsInstalled && !_instanceModel.InLibrary)
-            {
-                _instanceActions.Add(new FrameworkElementModel("AddToLibrary", _instanceModel.AddToLibrary, "AddToLibrary"));
-            }
 
             if (_instanceModel.InLibrary)
             {
