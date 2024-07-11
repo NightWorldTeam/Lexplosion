@@ -1,10 +1,6 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:extension="clr-namespace:Lexplosion.WPF.NewInterface.Extensions">
-<ResourceDictionary
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions">
 
     <Style x:Key="SwitchButton" TargetType="{x:Type ToggleButton}">
@@ -138,7 +134,7 @@
                         <Viewbox Height="16">
                             <Path
                                 x:Name="IconPath"
-                                extension:Path.StringKeyData="{TemplateBinding Content}"
+                                extensions:Path.StringKeyData="{TemplateBinding Content}"
                                 Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
                                 Stretch="Fill" />
                         </Viewbox>
