@@ -54,7 +54,8 @@
 
     <Grid>
         <Border
-            Padding="15,16" Background="{DynamicResource PrimarySolidColorBrush}"
+            Padding="15,16"
+            Background="{DynamicResource PrimarySolidColorBrush}"
             BorderBrush="{DynamicResource SeparateSolidColorBrush}"
             BorderThickness="0,0,2,0">
             <Grid Background="{DynamicResource PrimarySolidColorBrush}">

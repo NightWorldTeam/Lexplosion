@@ -41,7 +41,7 @@
     <ControlTemplate x:Key="ComboBoxTextBox" TargetType="{x:Type TextBox}">
         <Border
             x:Name="PART_ContentHost"
-            Background="{TemplateBinding Background}"
+            Background="Transparent"
             Focusable="False" />
     </ControlTemplate>
 
@@ -83,10 +83,11 @@
                             VerticalAlignment="Bottom"
                             Background="Transparent"
                             Focusable="True"
+                            Foreground="{TemplateBinding Foreground}"
+                            IsEnabled="False"
                             IsReadOnly="{TemplateBinding IsReadOnly}"
                             Style="{x:Null}"
-                            Template="{StaticResource ComboBoxTextBox}"
-                            Visibility="Hidden" />
+                            Template="{StaticResource ComboBoxTextBox}" />
                         <Popup
                             x:Name="Popup"
                             AllowsTransparency="True"

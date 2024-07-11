@@ -5,8 +5,8 @@ using System.Text;
 using Newtonsoft.Json;
 using Lexplosion.Global;
 using Lexplosion.Logic.Objects;
-using static Lexplosion.Logic.FileSystem.WithDirectory;
 using Lexplosion.Logic.Objects.CommonClientData;
+using static Lexplosion.Logic.FileSystem.WithDirectory;
 
 namespace Lexplosion.Logic.FileSystem
 {

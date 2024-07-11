@@ -74,6 +74,11 @@
     <Compile Include="Logic\FileSystem\ModrinthInstaller.cs" />
     <Compile Include="Logic\FileSystem\NightWorldInstaller.cs" />
     <Compile Include="Logic\FileSystem\WithDirectory.cs" />
+    <Compile Include="Logic\Management\Accounts\Account.cs" />
+    <Compile Include="Logic\Management\Accounts\Auth\IAuthHandler.cs" />
+    <Compile Include="Logic\Management\Accounts\Auth\LocalAuth.cs" />
+    <Compile Include="Logic\Management\Accounts\Auth\MicrosoftAuth.cs" />
+    <Compile Include="Logic\Management\Accounts\Auth\NightWorldAuth.cs" />
     <Compile Include="Logic\Management\Addons\AddonDependencie.cs" />
     <Compile Include="Logic\Management\Addons\AddonsPrototypesCreater.cs" />
     <Compile Include="Logic\Management\Addons\CurseforgeAddon.cs" />
@@ -112,6 +117,7 @@
     <Compile Include="Logic\Management\LaunchGame.cs" />
     <Compile Include="Logic\Network\SMP\Synchronizer.cs" />
     <Compile Include="Logic\Objects\FreeSource.cs" />
+    <Compile Include="Logic\Objects\ISearchParams.cs" />
     <Compile Include="Logic\Objects\MinecraftServerInstance.cs" />
     <Compile Include="Logic\Management\Player.cs" />
     <Compile Include="Logic\FileSystem\ProcentUpdateDelegate.cs" />

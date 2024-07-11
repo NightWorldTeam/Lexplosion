@@ -3,21 +3,77 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:Lexplosion.WPF.NewInterface.Controls"
+    xmlns:converters="clr-namespace:Lexplosion.WPF.NewInterface.Core.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
     xmlns:instanceModel="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:objects="clr-namespace:Lexplosion.Logic.Objects;assembly=Lexplosion.Core"
+    xmlns:translatable="clr-namespace:Lexplosion.WPF.NewInterface.Core.Objects.TranslatableObjects"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <Style x:Key="FilterIconRadioButton" TargetType="{x:Type RadioButton}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RadioButton}">
+                        <Border
+                            x:Name="border"
+                            Width="32"
+                            Height="32"
+                            Padding="4"
+                            Background="Transparent"
+                            CornerRadius="5">
+                            <Grid>
+                                <Viewbox Width="24" Height="22">
+                                    <Path
+                                        x:Name="path"
+                                        extensions:Path.StringKeyData="{TemplateBinding Content,
+                                                                                        Converter={converters:ToStringConverter}}"
+                                        Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                        Stretch="Fill" />
+                                </Viewbox>
+                            </Grid>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="{DynamicResource ActivitySolidColorBrush}" />
+                                <Setter TargetName="path" Property="Fill" Value="{DynamicResource BrandColorForegroundSolidColorBrush}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <DataTemplate DataType="{x:Type translatable:InstanceSourceObject}">
+            <RadioButton
+                Command="{Binding DataContext.TestCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                CommandParameter="{Binding}"
+                Content="{Binding Value, Converter={converters:ToStringConverter}}"
+                GroupName="LibraryInstanceSource"
+                Style="{StaticResource FilterIconRadioButton}" />
+        </DataTemplate>
+    </UserControl.Resources>
+
     <Grid>
 
-
         <ScrollViewer
+            Grid.Row="1"
             Margin="0,40,0,0"
             KeyboardNavigation.IsTabStop="False"
             KeyboardNavigation.TabNavigation="None">
             <Grid>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
 
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="0.0715*" />
@@ -25,11 +81,353 @@
                     <ColumnDefinition Width="0.0715*" />
                 </Grid.ColumnDefinitions>
 
-                <ItemsControl
+                <Grid
                     Grid.Column="1"
-                    ItemsSource="{Binding Model.Instances}"
+                    Margin="0,0,0,16"
+                    HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!--  SearchBox  -->
+                    <controls:SearchBox
+                        Grid.Column="1"
+                        Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={StaticResource WindowWidthToXProcentWidth}, ConverterParameter=40}"
+                        HorizontalAlignment="Stretch"
+                        Placeholder="{DynamicResource Search}"
+                        Text="{Binding Model.SearchText, UpdateSourceTrigger=PropertyChanged}" />
+
+                    <!--  Filters open button  -->
+                    <ToggleButton
+                        x:Name="FiltersButton"
+                        Grid.Column="2"
+                        Width="40"
+                        Height="40"
+                        Margin="8,0,0,0"
+                        Style="{StaticResource FilterIconToggleButton}" />
+                </Grid>
+
+                <!--  Filter Panel  -->
+                <Border
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Margin="0,0,0,16"
+                    HorizontalAlignment="Stretch"
+                    Background="{DynamicResource PrimarySolidColorBrush}"
+                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                    BorderThickness="1"
+                    CornerRadius="10"
+                    Visibility="{Binding IsChecked, ElementName=FiltersButton, Converter={converters:BooleanToVisibilityConverter}}">
+                    <Grid HorizontalAlignment="Stretch" ShowGridLines="False">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <!--  Source  -->
+
+                        <Border BorderBrush="{DynamicResource SeparateSolidColorBrush}" BorderThickness="0,0,1,1">
+                            <Grid Margin="8">
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <Grid Margin="0,0,0,8">
+                                    <TextBlock
+                                        FontSize="14"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                        Text="{DynamicResource Source}" />
+                                    <TextBlock
+                                        HorizontalAlignment="Right"
+                                        extensions:TextBlock.TextByKey="{Binding Model.FilterPanel.SelectedSource.TranslateKey}"
+                                        FontSize="14"
+                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                </Grid>
+
+                                <Border
+                                    Grid.Row="1"
+                                    Background="{DynamicResource SecondarySolidColorBrush}"
+                                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="5">
+
+                                    <ItemsControl>
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel IsItemsHost="True" />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+
+                                        <ItemsControl.Resources>
+                                            <CollectionViewSource x:Key="InstanceCollectionSource" Source="{Binding Model.FilterPanel.Sources}" />
+                                        </ItemsControl.Resources>
+
+                                        <ItemsControl.ItemsSource>
+                                            <CompositeCollection>
+
+                                                <RadioButton
+                                                    Command="{Binding TestCommand}"
+                                                    CommandParameter="{Binding Model.FilterPanel.NoneSource}"
+                                                    Content="NoFilter"
+                                                    GroupName="LibraryInstanceSource"
+                                                    IsChecked="True"
+                                                    Style="{StaticResource FilterIconRadioButton}" />
+
+                                                <CollectionContainer Collection="{Binding Source={StaticResource InstanceCollectionSource}}" />
+
+                                            </CompositeCollection>
+                                        </ItemsControl.ItemsSource>
+                                    </ItemsControl>
+
+                                    <!--<WrapPanel Height="35" Orientation="Horizontal">
+                                        <Border
+                                            Width="32"
+                                            Height="32"
+                                            Padding="4"
+                                            Background="{DynamicResource ActivitySolidColorBrush}"
+                                            CornerRadius="5">
+                                            <Viewbox Height="10" HorizontalAlignment="Center">
+                                                <Path
+                                                    extensions:Path.StringKeyData="Curseforge"
+                                                    Fill="{DynamicResource PrimarySolidColorBrush}"
+                                                    Stretch="Fill" />
+                                            </Viewbox>
+                                        </Border>
+                                        <Border
+                                            Width="32"
+                                            Height="32"
+                                            Padding="4"
+                                            Background="Transparent"
+                                            CornerRadius="5">
+                                            <Viewbox Height="19" HorizontalAlignment="Center">
+                                                <Path
+                                                    extensions:Path.StringKeyData="Modrinth"
+                                                    Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                                    Stretch="Fill" />
+                                            </Viewbox>
+                                        </Border>
+                                        <Border
+                                            Width="32"
+                                            Height="32"
+                                            Padding="4"
+                                            Background="Transparent"
+                                            CornerRadius="5">
+                                            <Viewbox Height="20" HorizontalAlignment="Center">
+                                                <Path
+                                                    extensions:Path.StringKeyData="Nightworld"
+                                                    Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                                    Stretch="Fill"
+                                                    StrokeThickness="1" />
+                                            </Viewbox>
+                                        </Border>
+                                    </WrapPanel>-->
+                                </Border>
+                            </Grid>
+                        </Border>
+
+                        <!--  Sorting  -->
+                        <Border
+                            Grid.Row="1"
+                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                            BorderThickness="0,0,1,1"
+                            Visibility="Collapsed">
+                            <Grid Margin="8">
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <Grid Margin="0,0,0,8">
+                                    <TextBlock
+                                        FontSize="14"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                        Text="Sorting" />
+                                    <TextBlock
+                                        HorizontalAlignment="Right"
+                                        FontSize="14"
+                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                        Text="Popularity" />
+                                </Grid>
+
+                                <Border
+                                    Grid.Row="1"
+                                    Background="{DynamicResource SecondarySolidColorBrush}"
+                                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="5">
+                                    <WrapPanel Height="35" Orientation="Horizontal">
+                                        <Border
+                                            Width="32"
+                                            Height="32"
+                                            Padding="4"
+                                            Background="{DynamicResource ActivitySolidColorBrush}"
+                                            CornerRadius="5">
+                                            <Viewbox Height="10" HorizontalAlignment="Center">
+                                                <Path
+                                                    extensions:Path.StringKeyData="PDClock"
+                                                    Fill="{DynamicResource PrimarySolidColorBrush}"
+                                                    Stretch="Fill" />
+                                            </Viewbox>
+                                        </Border>
+                                        <Border
+                                            Width="32"
+                                            Height="32"
+                                            Padding="4"
+                                            Background="Transparent"
+                                            CornerRadius="5">
+                                            <Viewbox Height="19" HorizontalAlignment="Center">
+                                                <Path
+                                                    extensions:Path.StringKeyData="Modrinth"
+                                                    Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                                    Stretch="Fill" />
+                                            </Viewbox>
+                                        </Border>
+                                        <Border
+                                            Width="32"
+                                            Height="32"
+                                            Padding="4"
+                                            Background="Transparent"
+                                            CornerRadius="5">
+                                            <Viewbox Height="20" HorizontalAlignment="Center">
+                                                <Path
+                                                    extensions:Path.StringKeyData="PDAZ"
+                                                    Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                                    Stretch="Fill"
+                                                    StrokeThickness="1" />
+                                            </Viewbox>
+                                        </Border>
+                                        <Border
+                                            Width="32"
+                                            Height="32"
+                                            Padding="4"
+                                            Background="Transparent"
+                                            CornerRadius="5">
+                                            <TextBlock Text="&#xf15d;" />
+                                        </Border>
+                                    </WrapPanel>
+                                </Border>
+                            </Grid>
+                        </Border>
+
+
+                        <!--  Todo: для библиотеки пробежаться и получить список всех доступных версий  -->
+                        <!--  Version  -->
+                        <Border
+                            Grid.Row="2"
+                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                            BorderThickness="0,0,1,0">
+                            <Grid Grid.Row="2" Margin="8">
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <Grid Margin="0,0,0,8">
+                                    <TextBlock
+                                        FontSize="14"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                        Text="{DynamicResource Version}" />
+                                </Grid>
+
+
+                                <ComboBox
+                                    Grid.Row="1"
+                                    ItemsSource="{Binding Model.FilterPanel.Versions}"
+                                    SelectedIndex="{Binding Model.FilterPanel.SelectedIndex, UpdateSourceTrigger=PropertyChanged}"
+                                    SelectedValue="{Binding Model.FilterPanel.SelectedVersion, UpdateSourceTrigger=PropertyChanged}" />
+                            </Grid>
+                        </Border>
+
+                        <!--  Categories  -->
+                        <Grid
+                            Grid.RowSpan="3"
+                            Grid.Column="1"
+                            Margin="8">
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <Grid Margin="0,0,0,8">
+
+                                <TextBlock
+                                    FontSize="14"
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                    Text="{DynamicResource Categories}" />
+
+                                <controls:TextSwitcherButton
+                                    HorizontalAlignment="Right"
+                                    FirstText="{DynamicResource Or}"
+                                    FontSize="14"
+                                    IsChecked="{Binding Model.FilterPanel.IsOperatorAnd}"
+                                    SecondText="{DynamicResource And}" />
+                            </Grid>
+
+                            <Grid Grid.Row="1">
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <!--  categories list  -->
+
+                                <!--  selected categories  -->
+                                <ItemsControl Grid.Row="1" ItemsSource="{Binding Model.FilterPanel.AvailableCategories}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel IsItemsHost="true" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate DataType="{x:Type objects:CategoryBase}">
+                                            <ToggleButton
+                                                Margin="0,4,4,0"
+                                                Command="{Binding DataContext.SelectCategoryCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                CommandParameter="{Binding}"
+                                                Content="{Binding Name}"
+                                                Style="{StaticResource CategoryToggleButton}" />
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Grid>
+                        </Grid>
+
+
+
+
+
+                    </Grid>
+                </Border>
+
+                <ItemsControl
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    ItemsSource="{Binding Model.InstancesCollectionViewSource.View}"
                     KeyboardNavigation.IsTabStop="False"
-                    KeyboardNavigation.TabNavigation="None">
+                    KeyboardNavigation.TabNavigation="None"
+                    VirtualizingPanel.ScrollUnit="Pixel"
+                    VirtualizingStackPanel.IsVirtualizing="True"
+                    VirtualizingStackPanel.VirtualizationMode="Recycling">
 
                     <ItemsControl.ItemTemplate>
                         <DataTemplate DataType="{x:Type instanceModel:InstanceModelBase}">
@@ -46,13 +444,99 @@
         </ScrollViewer>
 
         <Button
-            Grid.Column="2"
+            Grid.RowSpan="3"
             Width="32"
             Height="32"
-            Margin="0,0,16,16"
+            Margin="0,0,12,16"
             HorizontalAlignment="Right"
             VerticalAlignment="Bottom"
             Background="{DynamicResource SecondaryForegroundSolidColorBrush}"
             Command="{Binding OpenInstanceFactory}" />
+
+        <!--<Grid Visibility="Visible">
+
+        -->
+        <!--  Transparent Black Background  -->
+        <!--
+            <Border>
+                <Border.Background>
+                    <SolidColorBrush Opacity="0" Color="Black" />
+                </Border.Background>
+            </Border>
+
+            <Border
+                Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={StaticResource WindowWidthToXProcentWidth}, ConverterParameter=26}"
+                Margin="0,40,0,0"
+                HorizontalAlignment="Right"
+                Background="{DynamicResource PrimarySolidColorBrush}"
+                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                BorderThickness="1"
+                CornerRadius="10,0,0,0">
+                <Grid>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+        -->
+        <!--  Header  -->
+        <!--
+                    <Border BorderBrush="{DynamicResource SeparateSolidColorBrush}" BorderThickness="0,0,0,1">
+                        <Grid Margin="16,16" ShowGridLines="True">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+        -->
+        <!--  Title  -->
+        <!--
+                            <StackPanel Orientation="Horizontal">
+                                <Viewbox Height="18">
+                                    <Path
+                                        extensions:Path.StringKeyData="Filter"
+                                        Fill="Black"
+                                        Stretch="Fill" />
+                                </Viewbox>
+                                <TextBlock
+                                    Margin="16,0"
+                                    FontSize="18"
+                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                    Text="Filters" />
+                            </StackPanel>
+
+        -->
+        <!--  Buttons  -->
+        <!--
+                            <Border
+                                Grid.Column="1"
+                                Padding="5"
+                                Background="{DynamicResource SeparateSolidColorBrush}"
+                                CornerRadius="5">
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Margin="0,0,8,0" Style="{StaticResource IconButton}">
+                                        <Viewbox Height="18">
+                                            <Path
+                                                extensions:Path.StringKeyData="Reload"
+                                                Fill="Black"
+                                                Stretch="Fill" />
+                                        </Viewbox>
+                                    </Button>
+                                    <Button Style="{StaticResource IconButton}">
+                                        <Viewbox Height="18">
+                                            <Path
+                                                extensions:Path.StringKeyData="Close"
+                                                Fill="Black"
+                                                Stretch="Fill" />
+                                        </Viewbox>
+                                    </Button>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Border>
+        </Grid>-->
     </Grid>
 </UserControl>

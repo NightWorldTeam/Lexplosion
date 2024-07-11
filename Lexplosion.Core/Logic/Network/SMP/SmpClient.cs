@@ -687,7 +687,10 @@ namespace Lexplosion.Logic.Network.SMP
                         bool isSignal = _deliveryWait.IsSignal;
                         if (!_deliveryWait.WaitOne(delay)) // истекло время ожидания
                         {
+                            // TODO: наверное надо вместо Synchronizer вернуть авторезет эвент. И этот дебаг вывод потом вообще убрать        
+#if DEBUG
                             Runtime.DebugWrite("No signal, isSignal:" + isSignal + ", IsSignal: " + _deliveryWait.IsSignal + ", ResetCalled: " + _deliveryWait.ResetCalled);
+#endif
                             delay *= _delayMultipliers[attemptCount];
                             attemptCount++;
                             isTimeout = true;
@@ -1067,7 +1070,9 @@ namespace Lexplosion.Logic.Network.SMP
 
                                     _repeatDeliveryList = ids;
                                     bool test = _deliveryWait.Set();
-                                    Runtime.DebugWrite("packageId " + packageId + " " + _lastPackage + " " + test + ", IsSignal: " + _deliveryWait.IsSignal + ", ResetCalled: " + _deliveryWait.ResetCalled);
+#if DEBUG
+                                    //Runtime.DebugWrite("packageId " + packageId + " " + _lastPackage + " " + test + ", IsSignal: " + _deliveryWait.IsSignal + ", ResetCalled: " + _deliveryWait.ResetCalled);
+#endif
                                 }
                                 _repeatDeliveryBlock.Release();
                             }

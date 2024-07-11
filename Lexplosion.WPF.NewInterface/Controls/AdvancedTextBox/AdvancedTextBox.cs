@@ -27,9 +27,9 @@ namespace Lexplosion.WPF.NewInterface.Controls
             = DependencyProperty.Register(nameof(IconKey), typeof(string), typeof(AdvancedTextBox),
                 new FrameworkPropertyMetadata(defaultValue: string.Empty, propertyChangedCallback: OnIsIconKeyChanged));
 
-        public static readonly DependencyProperty PlaceholderKeyProperty
-            = DependencyProperty.Register(nameof(PlaceholderKey), typeof(string), typeof(AdvancedTextBox),
-                new FrameworkPropertyMetadata(defaultValue: string.Empty, propertyChangedCallback: OnPlaceholderKeyChanged));
+        public static readonly DependencyProperty PlaceholderProperty
+            = DependencyProperty.Register(nameof(Placeholder), typeof(string), typeof(AdvancedTextBox),
+                new FrameworkPropertyMetadata(defaultValue: string.Empty, propertyChangedCallback: OnPlaceholderChanged));
 
 
         /// ----- Readonly Properties ----- ///
@@ -47,16 +47,17 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
         private static readonly DependencyProperty IsIconEmptyProperty = IsIconEmptyPropertyKey.DependencyProperty;
 
+
         public string IconKey
         {
             get => (string)GetValue(IconKeyProperty);
             set => SetValue(IconKeyProperty, value);
         }
 
-        public string PlaceholderKey
+        public string Placeholder
         {
-            get => (string)GetValue(PlaceholderKeyProperty);
-            set => SetValue(PlaceholderKeyProperty, value);
+            get => (string)GetValue(PlaceholderProperty);
+            set => SetValue(PlaceholderProperty, value);
         }
 
         public bool IsEmpty
@@ -88,7 +89,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
             IsIconKeyEmpty = string.IsNullOrEmpty(IconKey);
 
             UpdatePath(IconKey);
-            UpdatePlaceholder(PlaceholderKey);
+            UpdatePlaceholder(Placeholder);
 
             base.OnApplyTemplate();
         }
@@ -136,7 +137,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
             instance.UpdatePath(e.NewValue);
         }
 
-        private static void OnPlaceholderKeyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnPlaceholderChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var instance = d as AdvancedTextBox;
             instance.UpdatePlaceholder(e.NewValue);
@@ -171,7 +172,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
             }
 
             _placeholder.Visibility = Visibility.Visible;
-            _placeholder.SetResourceReference(System.Windows.Controls.TextBlock.TextProperty, newValue);
+            _placeholder.Text = newValue as string;
         }
 
 

@@ -10,6 +10,7 @@
         MovingFilesError,
         DownloadError,
         DirectoryCreateError,
+        WrongUrl,
         Canceled
     }
 
@@ -76,6 +77,21 @@
                     return CfProjectType.Mods;
             }
         }
+
+        public static Modloader ToModloader(this ClientType cfProjectType)
+        {
+            switch (cfProjectType)
+            {
+                case ClientType.Forge:
+                    return Modloader.Forge;
+                case ClientType.Fabric:
+                    return Modloader.Fabric;
+                case ClientType.Quilt:
+                    return Modloader.Quilt;
+                default:
+                    return Modloader.Forge;
+            }
+        }
     }
 
     public enum InstanceSource
@@ -101,10 +117,19 @@
         Popularity,
         LastUpdated,
         Name,
-        Author,
-        TotalDownloads,
-        Category,
-        GameVersion
+        //Author,
+        TotalDownloads = 6,
+        //Category,
+        //GameVersion
+    }   
+
+    public enum ModrinthSortField
+    {
+        Relevance,
+        Downloads,
+        Newest,
+        Updated, 
+        Follows
     }
 
     public enum InstanceInit
@@ -147,7 +172,7 @@
     {
         Forge = 1,
         Fabric = 4,
-        Quilt = 3
+        Quilt
     }
 
     public enum GameExtension
@@ -155,7 +180,8 @@
         Optifine,
         Forge,
         Fabric = 4,
-        Quilt
+        Quilt,
+        Neoforged
     }
 
     /// <summary>

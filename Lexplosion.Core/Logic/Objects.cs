@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.IO;
 using Lexplosion.Logic.Management;
 using Newtonsoft.Json;
@@ -177,6 +178,19 @@ namespace Lexplosion.Logic.Objects
         public Dictionary<AccountType, Profile> Profiles;
     }
 
+    public class Test
+    {
+        public class Profile
+        {
+            public string Login;
+            public string AccessData;
+            public AccountType Type;
+            public bool IsSelected;
+        }
+
+        public List<Profile> Profiles;
+    }
+
     public class InstanceVersion
     {
         public string FileName { get; set; }
@@ -214,12 +228,35 @@ namespace Lexplosion.Logic.Objects
         public string ParentCategoryId { get; set; } //TODO: на нулл проверку намутить
     }
 
-    public abstract class CategoryBase : IProjectCategory
+    public abstract class CategoryBase : IProjectCategory, IEquatable<CategoryBase>
     {
         public abstract string Id { get; set; }
         public abstract string Name { get; set; }
         public abstract string ClassId { get; set; }
         public abstract string ParentCategoryId { get; set; }
+        
+        public override string ToString()
+        {
+            return Name;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is CategoryBase))
+                return false;
+
+            return Equals(obj as CategoryBase);
+        }
+
+        public bool Equals(CategoryBase other)
+        {
+            return Name.ToLower() == other.Name.ToLower();
+        }
+
+        public override int GetHashCode()
+        {
+            return Name.ToLower().GetHashCode();
+        }
     }
 
     public class SimpleCategory : CategoryBase

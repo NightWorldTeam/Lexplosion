@@ -88,7 +88,7 @@ namespace Lexplosion.Logic.Network
         protected static readonly (string, int)[] StunServers = new (string, int)[]
         {
             new ("stun.l.google.com", 19305),
-            new ("194.61.2.176", 3478),
+            new ("79.174.92.100", 3478),
             new ("stun.webcalldirect.com", 3478)
         };
 
@@ -391,6 +391,8 @@ namespace Lexplosion.Logic.Network
                                     catch { }
 
                                     //result = null;
+
+                                    // TODO: наверное тут надо сделать проверку типа NAT.
 
                                     //парсим порт
                                     if (result?.PublicEndPoint != null)

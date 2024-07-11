@@ -9,6 +9,9 @@ namespace Lexplosion.Tools
     {
         public static byte[] ResizeImage(byte[] imageBytes, int width, int height)
         {
+            if (imageBytes.Length == 0)
+                return imageBytes;
+
             Image image;
             using (var ms = new MemoryStream(imageBytes))
             {

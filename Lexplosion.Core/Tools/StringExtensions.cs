@@ -38,5 +38,11 @@
         {
             return value.Length > maxLength ? value.Substring(0, maxLength) : value;
         }
+
+        public static string RemoveLastChars(this string value, int count)
+        {
+            if (value.Length < 1) return value;
+            return value.Remove(value.Length - count);
+        }
     }
 }

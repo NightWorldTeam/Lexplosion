@@ -10,10 +10,14 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
 {
     public sealed class LibraryController : IInstanceController
     {
+        public IReadOnlyCollection<InstanceModelBase> Instances { get => _instances; }
+
         private readonly Action<InstanceClient> _exportFunc;
 
         private ObservableCollection<InstanceModelBase> _instances = new ObservableCollection<InstanceModelBase>();
-        public IReadOnlyCollection<InstanceModelBase> Instances { get => _instances; }
+
+        public event Action<InstanceModelBase> InstanceAdded;
+        public event Action<InstanceModelBase> InstanceRemoved;
 
 
         #region Constructors
@@ -44,6 +48,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
             App.Current.Dispatcher.Invoke(() =>
             {
                 _instances.Add(instanceModelBase);
+                InstanceAdded?.Invoke(instanceModelBase);
             });
         }
 
@@ -51,7 +56,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
         {
             App.Current.Dispatcher.Invoke(() =>
             {
-                _instances.Add(new InstanceModelBase(instanceClient, _exportFunc));
+                Add(new InstanceModelBase(instanceClient, _exportFunc));
             });
         }
 

@@ -26,21 +26,30 @@ namespace Lexplosion.Logic.Management.Sources
             return new CurseforgeInstallManager(localId, updateOnlyBase, updateCancelToken);
         }
 
-        public List<InstanceInfo> GetCatalog(InstanceSource type, int pageSize, int pageIndex, IEnumerable<IProjectCategory> categories, string searchFilter, CfSortField sortField, string gameVersion)
+        public List<InstanceInfo> GetCatalog(InstanceSource type, ISearchParams searchParams)
         {
             IProjectCategory category = _modpacksAllCategory;
 
-            if (categories == null)
+            CurseforgeSearchParams sParams;
+            if (searchParams is CurseforgeSearchParams)
             {
-                // получаем первый элемент списка
-                using (var iter = categories.GetEnumerator())
-                {
-                    iter.MoveNext();
-                    category = (IProjectCategory)iter.Current;
-                }
+                sParams = (CurseforgeSearchParams)searchParams;
+            }
+            else
+            {
+                sParams = new CurseforgeSearchParams();
             }
 
-            var curseforgeInstances = CurseforgeApi.GetInstances(pageSize, pageIndex * pageSize, category.Id, sortField, searchFilter, gameVersion);
+            // получаем первый элемент списка
+            using (var iter = searchParams.Categories.GetEnumerator())
+            {
+                if (iter.MoveNext())
+                {
+                    category = (IProjectCategory)iter.Current;
+                }       
+            }
+
+            var curseforgeInstances = CurseforgeApi.GetInstances(sParams.PageSize, sParams.LastIndexInPage, category.Id, sParams.SortField, sParams.SearchFilter, sParams.GameVersion);
             var result = new List<InstanceInfo>();
 
             foreach (var instance in curseforgeInstances)

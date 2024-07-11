@@ -12,7 +12,7 @@ namespace Lexplosion.Logic.Network
         {
             HandshakeServerPoint = new IPEndPoint(IPAddress.Parse(serverIp), 4565);
             TurnPoint = new IPEndPoint(IPAddress.Parse(serverIp), 9765);
-            SmpProxyPoint = new IPEndPoint(IPAddress.Parse(serverIp), 4719);
+            SmpProxyPoint = new IPEndPoint(IPAddress.Parse(serverIp), 4729);
         }
     }
 }

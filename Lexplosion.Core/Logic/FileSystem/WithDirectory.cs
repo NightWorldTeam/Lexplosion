@@ -296,6 +296,8 @@ namespace Lexplosion.Logic.FileSystem
                         client?.CancelPendingRequests();
                     });
 
+                    client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0");
+
                     using (HttpResponseMessage response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead))
                     {
                         response.EnsureSuccessStatusCode();
@@ -615,9 +617,14 @@ namespace Lexplosion.Logic.FileSystem
                     File.Copy(fileName, targetFileName);
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                Directory.Delete(unzipPath, true);
+                try
+                {
+                    Directory.Delete(unzipPath, true);
+                }
+                catch { }
+                Runtime.DebugWrite("Exception " + ex);
 
                 return ImportResult.MovingFilesError;
             }
@@ -637,47 +644,6 @@ namespace Lexplosion.Logic.FileSystem
             file = tempDir + "archive.zip";
 
             return reciver.StartDownload(file);
-        }
-
-        public static bool DonwloadJava(string javaName, string bitDepth, TaskArgs taskArgs)
-        {
-            string tempDir = CreateTempDir();
-            string fileName = javaName + ".zip";
-
-            try
-            {
-                if (!DownloadFile(LaunсherSettings.URL.JavaData + "download/windows/" + bitDepth + "/" + fileName + "?1", fileName, tempDir, taskArgs))
-                {
-                    return false;
-                }
-
-                string javaPath = DirectoryPath + "/java/";
-                if (!Directory.Exists(javaPath))
-                {
-                    Directory.CreateDirectory(javaPath);
-                }
-                else
-                {
-                    if (Directory.Exists(javaPath + javaName))
-                    {
-                        Directory.Delete(javaPath + javaName, true);
-                    }
-                }
-
-                ZipFile.ExtractToDirectory(tempDir + fileName, javaPath);
-            }
-            catch
-            {
-                return false;
-            }
-
-            try
-            {
-                Directory.Delete(tempDir, true);
-            }
-            catch { }
-
-            return true;
         }
 
         public static List<byte[]> LoadMcScreenshots(string instanceId)

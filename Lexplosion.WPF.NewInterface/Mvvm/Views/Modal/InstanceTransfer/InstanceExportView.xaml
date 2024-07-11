@@ -50,7 +50,7 @@
                     HorizontalAlignment="Right"
                     VerticalAlignment="Top"
                     FontSize="13"
-                    PlaceholderKey="InstanceName"
+                    Placeholder="{DynamicResource InstanceName}"
                     Text="{Binding Model.InstanceName}" />
             </Grid>
         </Border>

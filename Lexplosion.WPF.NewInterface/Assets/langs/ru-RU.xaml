@@ -303,13 +303,6 @@
     <s:String x:Key="Update">Обновить</s:String>
     <s:String x:Key="Delete">Удалить</s:String>
 
-    <s:String x:Key="Relevancy">Релевантности</s:String>
-    <s:String x:Key="Popularity">Популярности</s:String>
-    <s:String x:Key="LatestUpdate">Последнему обновлению</s:String>
-    <s:String x:Key="CreationDate">Дате создания</s:String>
-    <s:String x:Key="TotalDownloads">Количеству скачиваний</s:String>
-    <s:String x:Key="A-Z">A-Z</s:String>
-
     <s:String x:Key="ProjectFound">проектов найдено</s:String>
 
 
@@ -337,4 +330,35 @@
     <s:String x:Key="ImportDragDropFieldDescription">Перетащите архив со сборкой, чтобы начать загрузку.</s:String>
     <s:String x:Key="Review">Обзор</s:String>
 
+    <!--  Filter Sorting  -->
+    <s:String x:Key="Source">Источник</s:String>
+    <s:String x:Key="Sorting">Сортировать по</s:String>
+
+    <!--  Sources  -->
+    <s:String x:Key="AllSource">Все источники</s:String>
+    <s:String x:Key="LocalSource">Lexplosion</s:String>
+    <s:String x:Key="Curseforge">Curseforge</s:String>
+    <s:String x:Key="Modrinth">Modrinth</s:String>
+    <s:String x:Key="NightWorld">NightWorld</s:String>
+
+    <s:String x:Key="Or">Или</s:String>
+    <s:String x:Key="And">И</s:String>
+
+    <!--  Categories  -->
+    <s:String x:Key="CategoriesSearchBoxPlaceholder">Выберите категорию для фильтрации...</s:String>
+
+    <!--  Modrinth  -->
+    <s:String x:Key="ModrinthRelevance">Релевантности</s:String>
+    <s:String x:Key="ModrinthDownloads">Количеству скачиваниям</s:String>
+    <s:String x:Key="ModrinthFollows">Подписчикам</s:String>
+    <s:String x:Key="ModrinthUpdated">Последнему обновлению</s:String>
+    <s:String x:Key="ModrinthNewest">Дате создания</s:String>
+    <!--  Curseforge  -->
+    <s:String x:Key="CurseforgeRelevance">Релевантности</s:String>
+    <s:String x:Key="CurseforgeFeatured">Релевантности</s:String>
+    <s:String x:Key="CurseforgePopularity">Популярности</s:String>
+    <s:String x:Key="CurseforgeLastUpdated">Последнему обновлению</s:String>
+    <s:String x:Key="CurseforgeCreationDate">Дате создания</s:String>
+    <s:String x:Key="CurseforgeTotalDownloads">Количеству скачиваний</s:String>
+    <s:String x:Key="CurseforgeName">A-Z</s:String>
 </ResourceDictionary>

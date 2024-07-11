@@ -293,6 +293,31 @@
                             </Grid>
                         </Border>
                     </controls:DragDropBoard>
+
+                    <Grid Margin="0,8,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <controls:PlaceholderTextBox
+                            Height="32"
+                            Padding="8,0"
+                            HorizontalContentAlignment="Left"
+                            VerticalContentAlignment="Center"
+                            Foreground="White"
+                            Placeholder="{StaticResource importFromYandexOrGooglePlaceholder}"
+                            Text="{Binding ImportURL, UpdateSourceTrigger=PropertyChanged}" />
+
+                        <Button
+                            Grid.Column="1"
+                            Height="32"
+                            Margin="16,0,0,0"
+                            Padding="16,8"
+                            Command="{Binding ImportFromYandexOrGoogleDiskCommand}"
+                            Content="{StaticResource import}"
+                            Style="{StaticResource DefaultBrandColorButton}" />
+                    </Grid>
                 </StackPanel>
             </Border>
 

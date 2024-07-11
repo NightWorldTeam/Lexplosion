@@ -40,7 +40,7 @@ namespace Lexplosion.Logic
                     while (true)
                     {
                         ToServer.HttpGet(LaunсherSettings.URL.UserApi + "setActivity?status=" + (int)Status + "&UUID=" + UUID + "&sessionToken=" + SessionToken + "&gameClientName=" + _gameClientName);
-                        Thread.Sleep(54000); // Ждём 9 минут
+                        Thread.Sleep(240000); // Ждём 4 минуты
                     }
                 });
             }

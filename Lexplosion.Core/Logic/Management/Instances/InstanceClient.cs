@@ -15,6 +15,8 @@ using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Management.Sources;
 using Lexplosion.Logic.Network.Web;
+using Lexplosion.Logic.Network;
+using Newtonsoft.Json.Linq;
 
 namespace Lexplosion.Logic.Management.Instances
 {
@@ -450,7 +452,7 @@ namespace Lexplosion.Logic.Management.Instances
                     GameVersion = manifest?.version?.GameVersionInfo,
                     InLibrary = InLibrary,
                     Author = Author,
-                    Categories = Categories,
+                    Categories = Categories ?? new List<CategoryBase>(),
                     Description = Description,
                     Name = _name,
                     Summary = _summary,
@@ -600,14 +602,14 @@ namespace Lexplosion.Logic.Management.Instances
         /// Возвращает список модпаков для каталога.
         /// </summary>
         /// <returns>Список внешних модпаков.</returns>
-        public static List<InstanceClient> GetOutsideInstances(InstanceSource type, int pageSize, int pageIndex, IEnumerable<IProjectCategory> categories, string searchFilter = "", CfSortField sortField = CfSortField.Featured, string gameVersion = "")
+        public static (List<InstanceClient>, uint) GetOutsideInstances(InstanceSource type, ISearchParams searchParams)
         {
-            Runtime.DebugWrite("UploadInstances " + pageIndex);
+            Runtime.DebugWrite("UploadInstances " + searchParams.PageIndex);
 
             IInstanceSource source = CreateSourceFactory(type);
 
             var instances = new List<InstanceClient>();
-            List<InstanceInfo> catalog = source.GetCatalog(type, pageSize, pageIndex, categories, searchFilter, sortField, gameVersion);
+            List<InstanceInfo> catalog = source.GetCatalog(type, searchParams);
 
             foreach (var instance in catalog)
             {
@@ -651,9 +653,41 @@ namespace Lexplosion.Logic.Management.Instances
 
                 instances.Add(instanceClient);
             }
-            Runtime.DebugWrite("UploadInstances End " + pageIndex);
 
-            return instances;
+            return (instances, (uint)100);
+        }
+
+
+        // TODO: потом выпилить этот метод. Он сейчас нужен чисто для работы старого кода
+        [Obsolete("Данный метод является устаревшим, пожалуйста используйте перегрузку данного метода.")]
+        public static (List<InstanceClient>, uint) GetOutsideInstances(InstanceSource type, int pageSize, int pageIndex, IEnumerable<IProjectCategory> categories, string searchFilter = "", CfSortField sortField = CfSortField.Featured, string gameVersion = "")
+        {
+            ISearchParams searchParams;
+            if (type == InstanceSource.Curseforge)
+            {
+                searchParams = new CurseforgeSearchParams(searchFilter, gameVersion, categories, pageSize, pageIndex, sortField);
+            }
+            else
+            {
+                ModrinthSortField sortFiled;
+                switch (sortField)
+                {
+                    case CfSortField.TotalDownloads:
+                        sortFiled = ModrinthSortField.Downloads;
+                        break;
+                    case CfSortField.LastUpdated:
+                        sortFiled = ModrinthSortField.Updated;
+                        break;
+                    default:
+                        sortFiled = ModrinthSortField.Relevance;
+                        break;
+                }
+
+
+                searchParams = new ModrinthSearchParams(searchFilter, gameVersion, categories, pageSize, pageIndex, sortFiled);
+            }
+
+            return GetOutsideInstances(type, searchParams);
         }
 
         /// <summary>
@@ -1393,6 +1427,145 @@ namespace Lexplosion.Logic.Management.Instances
                     callback(result == FileRecvResult.Canceled ? ImportResult.Canceled : ImportResult.DownloadError);
                 }
 
+                client.IsUpdating = false;
+            });
+
+            return client;
+        }
+
+        public static InstanceClient Import(Uri fileURL, Action<ImportResult> callback)
+        {
+            var client = new InstanceClient(CreateSourceFactory(InstanceSource.Local))
+            {
+                Name = "Importing...",
+                InLibrary = true,
+                Author = UnknownAuthor,
+                Summary = string.Empty,
+                IsComplete = false,
+                IsUpdating = true
+            };
+
+            Lexplosion.Runtime.TaskRun(delegate ()
+            {
+                string downloadUrl = null;
+                try
+                {
+                    if (fileURL.Host == "drive.google.com")
+                    {
+                        string[] parts = fileURL.PathAndQuery.Split('/');
+                        if (parts.Length < 4 || string.IsNullOrWhiteSpace(parts[3]))
+                        {
+                            callback(ImportResult.WrongUrl);
+                            return;
+                        }
+
+                        downloadUrl = "https://drive.google.com/uc?export=download&confirm=no_antivirus&id=" + parts[3];
+
+                        if (ToServer.IsHtmlPage(downloadUrl))
+                        {
+                            string data = ToServer.HttpGet(downloadUrl);
+                            if (string.IsNullOrWhiteSpace(data))
+                            {
+                                callback(ImportResult.WrongUrl);
+                                return;
+                            }
+
+                            IEnumerable<string> GetSubStrings(string input, string start, string end)
+                            {
+                                Regex r = new Regex(Regex.Escape(start) + "(.*?)" + Regex.Escape(end));
+                                MatchCollection matches = r.Matches(input);
+                                foreach (Match match in matches)
+                                    yield return match.Groups[1].Value;
+                            }
+
+                            string GetStrBetweenStrings(string input, string start, string end)
+                            {
+                                return Regex.Match(input, Regex.Escape(start) + "(.*?)" + Regex.Escape(end)).Groups[1].Value;
+                            }
+
+                            string urlBase = null;
+                            string formHead = null;
+                            foreach (string pageForm in GetSubStrings(data, "<form", ">"))
+                            {
+                                if (pageForm.Contains("id=\"download-form\"") && pageForm.Contains("action=\""))
+                                {
+                                    urlBase = GetStrBetweenStrings(pageForm, "action=\"", "\"");
+                                    formHead = "<form" + pageForm + ">";
+                                    break;
+                                }
+                            }
+
+                            if (urlBase == null)
+                            {
+                                callback(ImportResult.WrongUrl);
+                                return;
+                            }
+
+                            urlBase += "?";
+                            data = GetStrBetweenStrings(data, formHead, "</form>");
+                            foreach (string htmlInput in GetSubStrings(data, "<input", ">"))
+                            {
+                                if (htmlInput.Contains("name=\"") && htmlInput.Contains("value=\""))
+                                {
+                                    string name = GetStrBetweenStrings(htmlInput, "name=\"", "\"");
+                                    string value = GetStrBetweenStrings(htmlInput, "value=\"", "\"");
+                                    urlBase += Uri.EscapeDataString(name) + "=" + Uri.EscapeDataString(value) + "&";
+                                }
+                            }
+
+                            downloadUrl = urlBase;
+                        }
+                    }
+                    else if (fileURL.Host == "yadi.sk" || fileURL.Host == "disk.yandex.ru" || fileURL.Host == "disk.yandex.com" || fileURL.Host == "disk.yandex.by")
+                    {
+                        string queryUrl = "https://cloud-api.yandex.net/v1/disk/public/resources/download?public_key=" + Uri.EscapeDataString(fileURL.ToString());
+
+                        string result = ToServer.HttpGet(queryUrl);
+                        if (result == null)
+                        {
+                            callback(ImportResult.WrongUrl);
+                            return;
+                        }
+
+                        var data = JsonConvert.DeserializeObject<JToken>(result);
+                        downloadUrl = data["href"].ToString();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Runtime.DebugWrite("Exception " + ex);
+                    callback(ImportResult.WrongUrl);
+                    return;
+                }
+
+                string tempDir = WithDirectory.CreateTempDir();
+                bool res = WithDirectory.DownloadFile(downloadUrl, "instance_file", tempDir, new TaskArgs
+                {
+                    CancelToken = (new CancellationTokenSource()).Token,
+                    PercentHandler = (int pr) => { }
+                });
+
+                if (!res)
+                {
+                    callback(ImportResult.DownloadError);
+                    return;
+                }
+
+                ImportResult impurtRes = Import(client, tempDir + "instance_file");
+
+                try
+                {
+                    if (Directory.Exists(tempDir))
+                    {
+                        Directory.Delete(tempDir, true);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Runtime.DebugWrite("Exception " + ex);
+                }
+
+                callback(impurtRes);
                 client.IsUpdating = false;
             });
 

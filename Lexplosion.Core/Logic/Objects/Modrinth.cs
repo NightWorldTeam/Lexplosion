@@ -53,6 +53,9 @@ namespace Lexplosion.Logic.Objects.Modrinth
 
         [JsonProperty("downloads")]
         public int Downloads;
+
+        [JsonProperty("date_modified")]
+        public new string Updated;        
     }
 
     public class ModrinthProjectInfo : ModrinthProject

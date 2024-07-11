@@ -100,7 +100,8 @@ namespace Lexplosion.WPF.NewInterface
 
         private static void SetMainWindow()
         {
-            _app.MainWindow = new MainWindow();
+            _app.MainWindow = new MainWindow();//new TestWindow();
+            //_app.MainWindow = new TestWindow();
             _app.MainWindow.Show();
             _app.Run(_app.MainWindow);
 

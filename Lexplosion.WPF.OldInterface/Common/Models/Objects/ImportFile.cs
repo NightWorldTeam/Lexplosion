@@ -1,4 +1,6 @@
-﻿namespace Lexplosion.Common.Models.Objects
+﻿using System;
+
+namespace Lexplosion.Common.Models.Objects
 {
     public sealed class ImportFile : VMBase
     {
@@ -30,6 +32,13 @@
         {
             Name = System.IO.Path.GetFileName(path);
             Path = path;
+            IsImportFinished = false;
+        }
+
+        public ImportFile(Uri fileURL)
+        {
+            Name = System.IO.Path.GetFileName(fileURL.LocalPath);
+            Path = fileURL.OriginalString;
             IsImportFinished = false;
         }
     }
