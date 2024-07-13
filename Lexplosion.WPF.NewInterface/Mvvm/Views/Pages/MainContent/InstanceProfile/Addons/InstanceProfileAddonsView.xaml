@@ -168,7 +168,7 @@
         </Style>
 
         <Storyboard x:Key="ItemAnimation" AutoReverse="False">
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="MyGrid" Storyboard.TargetProperty="(UIElement.Opacity)">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="AnimatableUIElement" Storyboard.TargetProperty="(UIElement.Opacity)">
                 <EasingDoubleKeyFrame KeyTime="0" Value="0.5" />
                 <EasingDoubleKeyFrame KeyTime="0:0:0.34" Value="1" />
             </DoubleAnimationUsingKeyFrames>
@@ -184,7 +184,7 @@
 
         <DataTemplate x:Key="RectInstanceAddon" DataType="{x:Type logicInstances:InstanceAddon}">
             <Border
-                x:Name="MyGrid"
+                x:Name="AnimatableUIElement"
                 Width="217"
                 Height="200"
                 Margin="0,8,8,0"
@@ -222,12 +222,28 @@
                             </Grid.ColumnDefinitions>
 
                             <Border
+                                x:Name="LogoBorder"
                                 Width="64"
                                 Height="64"
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Center"
                                 Background="{Binding Logo, Converter={valueconverters:ImageSourceNullValidateConverter}}"
                                 CornerRadius="5" />
+
+                            <controls:CircleLoader
+                                Width="64"
+                                Height="64"
+                                Padding="16"
+                                VerticalAlignment="Center"
+                                BlurTarget="{Binding ElementName=LogoBorder}"
+                                CornerRadius="5"
+                                IconHeight="16"
+                                IconWidth="16"
+                                IsActive="{Binding Logo, Converter={valueconverters:IsValueNullConverter}}">
+                                <controls:CircleLoader.Background>
+                                    <SolidColorBrush Opacity="0.8" Color="Black" />
+                                </controls:CircleLoader.Background>
+                            </controls:CircleLoader>
 
                             <StackPanel Grid.Column="1" Margin="8,0,0,0">
 
@@ -326,7 +342,10 @@
         </ControlTemplate>
 
         <DataTemplate x:Key="LibeInstanceAddon" DataType="{x:Type logicInstances:InstanceAddon}">
-            <Border BorderBrush="{DynamicResource SeparateSolidColorBrush}" BorderThickness="0,0,0,1">
+            <Border
+                x:Name="AnimatableUIElement"
+                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                BorderThickness="0,0,0,1">
                 <Grid
                     Height="60"
                     HorizontalAlignment="Stretch"
@@ -360,7 +379,7 @@
                         IconWidth="16"
                         IsActive="{Binding Logo, Converter={valueconverters:IsValueNullConverter}}">
                         <controls:CircleLoader.Background>
-                            <SolidColorBrush Opacity="0.5" Color="Black" />
+                            <SolidColorBrush Opacity="0.8" Color="Black" />
                         </controls:CircleLoader.Background>
                     </controls:CircleLoader>
 
@@ -466,6 +485,12 @@
                     </WrapPanel>
                 </Grid>
             </Border>
+
+            <DataTemplate.Triggers>
+                <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                    <BeginStoryboard Storyboard="{StaticResource ItemAnimation}" />
+                </EventTrigger>
+            </DataTemplate.Triggers>
         </DataTemplate>
 
         <ControlTemplate x:Key="RectInstanceHeaderControlTemplate">

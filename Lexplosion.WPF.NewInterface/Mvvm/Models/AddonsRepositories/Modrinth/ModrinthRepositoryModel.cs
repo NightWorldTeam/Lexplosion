@@ -3,12 +3,89 @@ using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Objects;
-using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 {
+    public abstract class AdodonsRepositoryModel : ViewModelBase
+    {
+        private static readonly SimpleCategory AllCategory = new SimpleCategory()
+        {
+            Id = "-1",
+            Name = "All",
+            ClassId = "",
+            ParentCategoryId = ""
+        };
+
+
+        #region Properties
+
+
+        private readonly ObservableCollection<CategoryWrapper> _categories = new();
+        private readonly ObservableCollection<IProjectCategory> _selectedCategories = new();
+        private ObservableCollection<InstanceAddon> _addonsList = new();
+
+
+        public IEnumerable<CategoryWrapper> Categories { get => _categories; }
+        public IEnumerable<IProjectCategory> SelectedCategories { get => _selectedCategories; }
+        public IEnumerable<InstanceAddon> AddonsList { get => _addonsList; }
+
+
+        #endregion Properties
+
+
+        #region Constructors
+
+
+        protected AdodonsRepositoryModel(BaseInstanceData instanceData, AddonType addonType)
+        {
+            
+        }
+
+
+        #endregion Constructors
+
+
+        #region Public & Protected Methods
+
+
+        protected void LoadContent() 
+        {
+            
+        }
+
+
+        public void ClearFilters()
+        {
+/*            _isClearFilters = true;
+            foreach (var category in Categories)
+            {
+                category.IsSelected = false;
+            }
+            _isClearFilters = false;
+            LoadPage();*/
+        }
+
+        public void InstallAddon()
+        {
+
+        }
+
+
+        #endregion Public & Protected Methods 
+
+
+        #region Private Methods
+
+
+
+
+
+        #endregion Private Methods
+    }
+
+
     public sealed class ModrinthRepositoryModel : ViewModelBase
     {
         private static readonly SimpleCategory AllCategory = new SimpleCategory()
@@ -30,9 +107,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
         });
 
 
-        private readonly InstanceModelBase _instanceModelBase;
+        //private readonly InstanceModelBase _instanceModelBase;
+        private readonly BaseInstanceData _instanceData;
         private readonly AddonType _addonType;
-        private readonly ClientType _clientType;
+        private ClientType _clientType;
 
         private bool _isClearFilters = false;
 
@@ -97,11 +175,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
         #region Constructors
 
 
-        public ModrinthRepositoryModel(InstanceModelBase instanceModelBase, AddonType addonType)
+        public ModrinthRepositoryModel(BaseInstanceData instanceData, AddonType addonType)
         {
-            _instanceModelBase = instanceModelBase;
+            _instanceData = instanceData;
+            _clientType = _instanceData.Modloader;
             _addonType = addonType;
-            _clientType = instanceModelBase.InstanceData.Modloader;
 
             _selectedCategories.CollectionChanged += OnSelectedCategoriesCollectionChanged;
 
@@ -153,7 +231,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
             //var s = InstanceAddon.GetAddonsCatalog(null, PageSize, PageIndex, _addonType, SelectedCategories, "");
 
             _addonsList.Clear();
-            foreach (var i in InstanceAddon.GetAddonsCatalog(_instanceModelBase.InstanceData, (int)PageSize, (int)CurrentPageIndex, _addonType, AllCategory, SearchFilter))
+            foreach (var i in InstanceAddon.GetModrinthAddonsCatalog(_instanceData, (int)PageSize, (int)CurrentPageIndex, _addonType, AllCategory, SearchFilter))
             {
                 _addonsList.Add(i);
             }
