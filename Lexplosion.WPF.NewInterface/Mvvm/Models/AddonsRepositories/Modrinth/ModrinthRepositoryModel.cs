@@ -3,14 +3,16 @@ using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Objects;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 {
-    public abstract class AdodonsRepositoryModel : ViewModelBase
+    public abstract class AddonsRepositoryModel : ViewModelBase
     {
-        private static readonly SimpleCategory AllCategory = new SimpleCategory()
+        protected static readonly SimpleCategory AllCategory = new SimpleCategory()
         {
             Id = "-1",
             Name = "All",
@@ -19,103 +21,25 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
         };
 
 
+        protected BaseInstanceData _instanceData;
+        protected readonly InstanceSource _instanceSource;
+        protected readonly AddonType _addonType;
+
+
+        protected bool _isClearFilters = false;
+
+
         #region Properties
 
 
-        private readonly ObservableCollection<CategoryWrapper> _categories = new();
-        private readonly ObservableCollection<IProjectCategory> _selectedCategories = new();
-        private ObservableCollection<InstanceAddon> _addonsList = new();
+        protected readonly ObservableCollection<CategoryWrapper> _categories = new();
+        protected readonly ObservableCollection<IProjectCategory> _selectedCategories = new();
+        protected ObservableCollection<InstanceAddon> _addonsList = new();
 
 
         public IEnumerable<CategoryWrapper> Categories { get => _categories; }
         public IEnumerable<IProjectCategory> SelectedCategories { get => _selectedCategories; }
         public IEnumerable<InstanceAddon> AddonsList { get => _addonsList; }
-
-
-        #endregion Properties
-
-
-        #region Constructors
-
-
-        protected AdodonsRepositoryModel(BaseInstanceData instanceData, AddonType addonType)
-        {
-            
-        }
-
-
-        #endregion Constructors
-
-
-        #region Public & Protected Methods
-
-
-        protected void LoadContent() 
-        {
-            
-        }
-
-
-        public void ClearFilters()
-        {
-/*            _isClearFilters = true;
-            foreach (var category in Categories)
-            {
-                category.IsSelected = false;
-            }
-            _isClearFilters = false;
-            LoadPage();*/
-        }
-
-        public void InstallAddon()
-        {
-
-        }
-
-
-        #endregion Public & Protected Methods 
-
-
-        #region Private Methods
-
-
-
-
-
-        #endregion Private Methods
-    }
-
-
-    public sealed class ModrinthRepositoryModel : ViewModelBase
-    {
-        private static readonly SimpleCategory AllCategory = new SimpleCategory()
-        {
-            Id = "-1",
-            Name = "All",
-            ClassId = "",
-            ParentCategoryId = ""
-        };
-
-        public ReadOnlyCollection<uint> PageSizes { get; } = new ReadOnlyCollection<uint>(new uint[]
-        {
-            6, 10, 16, 20, 50, 100
-        });
-
-        public ReadOnlyCollection<string> SortByItems { get; } = new ReadOnlyCollection<string>(new string[]
-        {
-            "Relevance", "Donwload count", "Follow count", "Recently published", "Recently updated"
-        });
-
-
-        //private readonly InstanceModelBase _instanceModelBase;
-        private readonly BaseInstanceData _instanceData;
-        private readonly AddonType _addonType;
-        private ClientType _clientType;
-
-        private bool _isClearFilters = false;
-
-
-        #region Properties
 
 
         private string _searchFilter = string.Empty;
@@ -128,12 +52,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
             }
         }
 
-        private string _selectedSortBy = "Relevance";
-        public string SelectedSortBy
+        private byte _selectedSortByIndex = 0;
+        public byte SelectedSortByIndex
         {
-            get => _selectedSortBy; set
+            get => _selectedSortByIndex; set
             {
-                _selectedSortBy = value;
+                _selectedSortByIndex = value;
                 OnSortByChanged();
             }
         }
@@ -149,24 +73,14 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
         }
 
         private uint _currentPageIndex;
-        public uint CurrentPageIndex 
+        public uint CurrentPageIndex
         {
-            get => _currentPageIndex; set 
+            get => _currentPageIndex; set
             {
                 _currentPageIndex = value;
                 OnPropertyChanged();
             }
         }
-
-        private readonly ObservableCollection<CategoryWrapper> _categories = new ObservableCollection<CategoryWrapper>();
-        public IEnumerable<CategoryWrapper> Categories { get => _categories; }
-
-        private readonly ObservableCollection<IProjectCategory> _selectedCategories = new ObservableCollection<IProjectCategory>();
-        public IEnumerable<IProjectCategory> SelectedCategories;
-
-
-        private ObservableCollection<InstanceAddon> _addonsList = new ObservableCollection<InstanceAddon>();
-        public IEnumerable<InstanceAddon> AddonsList { get => _addonsList; }
 
 
         #endregion Properties
@@ -175,113 +89,92 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
         #region Constructors
 
 
-        public ModrinthRepositoryModel(BaseInstanceData instanceData, AddonType addonType)
+        protected AddonsRepositoryModel(InstanceSource instanceSource, BaseInstanceData instanceData, AddonType addonType)
         {
+            _instanceSource = instanceSource;
             _instanceData = instanceData;
-            _clientType = _instanceData.Modloader;
             _addonType = addonType;
 
-            _selectedCategories.CollectionChanged += OnSelectedCategoriesCollectionChanged;
-
-            if (_clientType == ClientType.Forge)
-            {
-                AllCategory.ClassId = ((int)_addonType.ToCfProjectType()).ToString();
-                AllCategory.ParentCategoryId = ((int)_addonType.ToCfProjectType()).ToString();
-            }
-            else if (_clientType == ClientType.Fabric)
-            {
-                AllCategory.ClassId = "";
-                AllCategory.ParentCategoryId = "";
-            }
-
             PrepareCategories();
-            LoadPage();
+            LoadContent();
         }
 
 
         #endregion Constructors
 
 
-        #region Public Methods
+        #region Public & Protected Methods
 
 
-        public void LoadPage()
+        protected abstract ISearchParams BuildSearchParams();
+        protected abstract List<IProjectCategory> GetCategories();
+
+        
+        protected void LoadContent() 
         {
-            //(IEnumerable<ModrinthProjectInfo>, int) hits;
-            //if (_selectedCategories.Count > 0)
-            //{
-            //    hits = ModrinthApi.GetAddonsList(
-            //            PageSize,
-            //            PageIndex,
-            //            _addonType,
-            //            SelectedCategories,
-            //            _clientType,
-            //            "",
-            //            _minecraftVersion.Id);
-            //    //_addonsList = new ObservableCollection<InstanceAddon>(hits.Item1);
-            //}
-            //else
-            //{
-            //    hits = ModrinthApi.GetAddonsList(
-            //        PageSize, PageIndex, _addonType, new IProjectCategory[] { AllCategory }, _clientType, "", _minecraftVersion.Id);
-            //    /_addonsList = new ObservableCollection<ModrinthProjectInfo>(hits.Item1);
-            //}
+            Runtime.TaskRun(() => 
+            { 
+                var addons = InstanceAddon.GetAddonsCatalog(_instanceSource, _instanceData, _addonType, BuildSearchParams());
 
-
-            //var s = InstanceAddon.GetAddonsCatalog(null, PageSize, PageIndex, _addonType, SelectedCategories, "");
-
-            _addonsList.Clear();
-            foreach (var i in InstanceAddon.GetModrinthAddonsCatalog(_instanceData, (int)PageSize, (int)CurrentPageIndex, _addonType, AllCategory, SearchFilter))
-            {
-                _addonsList.Add(i);
-            }
-
-            //AllCategory.ClassId = ((int)_addonType.ToCfProjectType()).ToString();
-            //AllCategory.ParentCategoryId = ((int)_addonType.ToCfProjectType()).ToString();
-            //var test = CurseforgeApi.GetInstances(10, 0, "all", CfSortField.Popularity, "", "1.19.2");
-            //Runtime.DebugWrite("total hits count: " + hits.Item2);
+                App.Current.Dispatcher.Invoke(() => 
+                { 
+                    _addonsList.Clear();
+                    foreach (var i in addons)
+                    {
+                        _addonsList.Add(i);
+                    }
+                });
+            });
         }
+
 
         public void ClearFilters()
         {
-            _isClearFilters = true;
+/*            _isClearFilters = true;
             foreach (var category in Categories)
             {
                 category.IsSelected = false;
             }
             _isClearFilters = false;
-            LoadPage();
+            LoadPage();*/
         }
 
-        public void InstallAddon(InstanceAddon modrinthProjectInfo)
+        public void InstallAddon(InstanceAddon instanceAddon)
         {
+            //instanceAddon.InstallLatestVersion();
+        }
+        
 
+        private void PrepareCategories()
+        {
+            Runtime.TaskRun(() => 
+            {
+                var categories = GetCategories();
+             
+                App.Current.Dispatcher.Invoke(() => 
+                { 
+                    foreach (var category in categories)
+                    {
+                        if (category.ClassId == "mod")
+                        {
+                            var categoryWrapper = new CategoryWrapper(category);
+                            categoryWrapper.SelectedEvent += OnSelectedCategoryChanged;
+                            _categories.Add(categoryWrapper);
+                        }
+                    }
+                });
+            });
         }
 
 
-        #endregion Public Methods
+        #endregion Public & Protected Methods 
 
 
         #region Private Methods
 
 
-        private void PrepareCategories()
-        {
-            var categories = ModrinthApi.GetCategories();
 
-            foreach (var category in categories)
-            {
-                if (category.ClassId == "mod")
-                {
-                    var categoryWrapper = new CategoryWrapper(category);
-                    categoryWrapper.SelectedEvent += OnSelectedCategoryChanged;
-                    _categories.Add(categoryWrapper);
-                }
-            }
-        }
-
-
-        private void OnSelectedCategoryChanged(IProjectCategory category, bool isSelected)
+        protected virtual void OnSelectedCategoryChanged(IProjectCategory category, bool isSelected)
         {
             if (isSelected)
             {
@@ -295,35 +188,89 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 
         private void OnSortByChanged()
         {
-            OnPropertyChanged(nameof(SelectedSortBy));
-            LoadPage();
+            OnPropertyChanged(nameof(SelectedSortByIndex));
+            LoadContent();
         }
 
         private void OnSearchFilterChanged()
         {
             OnPropertyChanged(nameof(SearchFilter));
-            LoadPage();
+            LoadContent();
         }
 
         private void OnCurrentPageIndexChanged()
         {
             OnPropertyChanged(nameof(CurrentPageIndex));
-            LoadPage();
+            LoadContent();
         }
 
         private void OnPageSizeChanged()
         {
             OnPropertyChanged(nameof(PageSize));
-            LoadPage();
+            LoadContent();
         }
 
-        private void OnSelectedCategoriesCollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+
+        #endregion Private Methods
+    }
+
+
+    public sealed class ModrinthRepositoryModel : AddonsRepositoryModel
+    {
+        public ReadOnlyCollection<uint> PageSizes { get; } = new ReadOnlyCollection<uint>(new uint[]
         {
-            if (_isClearFilters)
-                return;
+             6, 10, 16, 20, 50, 100
+        });
 
-            LoadPage();
+        public ReadOnlyCollection<string> SortByItems { get; } = new ReadOnlyCollection<string>(new string[]
+        {
+            "Relevance", "Donwload count", "Follow count", "Recently published", "Recently updated"
+        });
+
+
+        #region Constructors
+
+
+        public ModrinthRepositoryModel(BaseInstanceData instanceData, AddonType addonType) 
+            : base(InstanceSource.Modrinth, instanceData, addonType)
+        {
+
         }
+
+
+        #endregion Constructors
+
+
+        #region Public Methods
+
+        protected override ISearchParams BuildSearchParams()
+        {
+            return new ModrinthSearchParams(SearchFilter, _instanceData.GameVersion.ToString(),
+                SelectedCategories, (int)PageSize, (int)CurrentPageIndex, (ModrinthSortField)SelectedSortByIndex, 
+                new List<Modloader> { _instanceData.Modloader.ToModloader() });
+        }
+
+        protected override List<IProjectCategory> GetCategories()
+        {
+            return ModrinthApi.GetCategories().ToList<IProjectCategory>();
+        }
+
+        public void InstallAddon(InstanceAddon modrinthProjectInfo)
+        {
+
+        }
+
+        public void ApplyCategories()
+        {
+            LoadContent();
+        }
+
+
+        #endregion Public Methods
+
+
+        #region Private Methods
+
 
 
         #endregion Private Methods

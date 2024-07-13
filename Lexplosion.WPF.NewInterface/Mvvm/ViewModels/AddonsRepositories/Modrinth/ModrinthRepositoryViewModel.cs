@@ -120,6 +120,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
             get => RelayCommand.GetCommand(ref _uninstallAddonCommand, () => { });
         }
 
+        public ICommand ApplySelectedCategoriesCommand { get; private set; }
 
         #endregion Commands
 
@@ -158,7 +159,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
                     OnPropertyChanged(nameof(ToCurseforgeCommand));
 
                     Model = new ModrinthRepositoryModel(instanceData, addonType);
+                    ApplySelectedCategoriesCommand = new RelayCommand((obj) => Model.ApplyCategories());
+
                     OnPropertyChanged(nameof(Model));
+                    OnPropertyChanged(nameof(ApplySelectedCategoriesCommand));
                 });
             });
 

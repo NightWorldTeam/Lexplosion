@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:Lexplosion.WPF.NewInterface.Controls"
     xmlns:converters="clr-namespace:Lexplosion.WPF.NewInterface.Core.Converters"
+    xmlns:core="clr-namespace:Lexplosion;assembly=Lexplosion.Core"
     xmlns:coreInstances="clr-namespace:Lexplosion.Logic.Management.Instances;assembly=Lexplosion.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
@@ -319,7 +320,10 @@
 
 
         <DataTemplate DataType="{x:Type objects:CategoryWrapper}">
-            <CheckBox Margin="0,0,0,4" Content="{Binding Name}" />
+            <CheckBox
+                Margin="0,0,0,4"
+                Content="{Binding Name}"
+                IsChecked="{Binding IsSelected}" />
         </DataTemplate>
 
 
@@ -578,6 +582,16 @@
                 </Grid>
             </Border>
         </DataTemplate>
+
+
+        <ObjectDataProvider
+            x:Key="ModrinthSortField"
+            MethodName="GetValues"
+            ObjectType="{x:Type core:ModrinthSortField}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="e:FontStyles" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
     </UserControl.Resources>
 
     <Grid Background="{DynamicResource Primary}">
@@ -666,12 +680,13 @@
                         Grid.Row="1"
                         HorizontalScrollBarVisibility="Disabled">
                         <ItemsControl
-                            x:Name="CategoriesList" VirtualizingPanel.IsVirtualizing="True"
+                            x:Name="CategoriesList"
                             Background="Transparent"
                             ItemsSource="{Binding Model.Categories}"
                             MouseEnter="CategoriesList_MouseEnter"
                             MouseLeave="CategoriesList_MouseLeave"
-                            ScrollViewer.CanContentScroll="True" />
+                            ScrollViewer.CanContentScroll="True"
+                            VirtualizingPanel.IsVirtualizing="True" />
                     </ScrollViewer>
 
                     <Button
@@ -682,6 +697,7 @@
                         HorizontalContentAlignment="Center"
                         VerticalContentAlignment="Center"
                         Background="{DynamicResource BrandColor}"
+                        Command="{Binding ApplySelectedCategoriesCommand}"
                         Content="{DynamicResource Accept}"
                         FontWeight="Medium"
                         Foreground="Black" />
