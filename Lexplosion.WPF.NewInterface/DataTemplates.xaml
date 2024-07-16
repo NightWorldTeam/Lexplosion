@@ -168,4 +168,8 @@
     <DataTemplate DataType="{x:Type instanceTransferViewModel:InstanceImportViewModel}">
         <instanceTransferView:InstanceImportView />
     </DataTemplate>
+
+    <DataTemplate DataType="{x:Type addonsrepositoriesvm:LexplosionAddonsRepositoryViewModel}">
+        <addonsrepositoriesviews:AddonsRepository />
+    </DataTemplate>
 </ResourceDictionary>

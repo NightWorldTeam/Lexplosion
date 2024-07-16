@@ -1,0 +1,525 @@
+﻿<UserControl
+    x:Class="Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.AddonsRepositories.AddonsRepository"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Lexplosion.WPF.NewInterface.Controls"
+    xmlns:converters="clr-namespace:Lexplosion.WPF.NewInterface.Core.Converters"
+    xmlns:coreInstances="clr-namespace:Lexplosion.Logic.Management.Instances;assembly=Lexplosion.Core"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
+    xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.AddonsRepositories"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:objects="clr-namespace:Lexplosion.WPF.NewInterface.Core.Objects"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <DataTemplate DataType="{x:Type objects:CategoryWrapper}">
+            <CheckBox
+                Margin="0,0,0,4"
+                Content="{Binding Name}"
+                FontSize="14"
+                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                IsChecked="{Binding IsSelected}" />
+        </DataTemplate>
+
+        <Style TargetType="{x:Type TabItem}">
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TabItem}">
+                        <Border
+                            x:Name="border"
+                            Margin="0,0,8,0"
+                            Padding="8,6"
+                            Background="Transparent"
+                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                            BorderThickness="2"
+                            CornerRadius="5">
+                            <ContentPresenter
+                                x:Name="ContentSite"
+                                ContentSource="Header"
+                                TextBlock.Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource ActivitySolidColorBrush}" />
+                                <Setter TargetName="border" Property="TextBlock.FontWeight" Value="Medium" />
+                                <Setter TargetName="border" Property="TextBlock.Foreground" Value="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <DataTemplate DataType="{x:Type coreInstances:InstanceAddon}">
+            <Border
+                Margin="0,0,0,8"
+                Padding="16,16,16,8"
+                Background="{DynamicResource SecondarySolidColorBrush}"
+                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                BorderThickness="1"
+                CornerRadius="5">
+                <Grid ShowGridLines="False">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!--  Logo  -->
+                    <Border
+                        x:Name="LogoBorder"
+                        Width="90"
+                        Height="90"
+                        VerticalAlignment="Top"
+                        Background="{Binding Logo, Converter={converters:ImageSourceNullValidateConverter}}"
+                        CornerRadius="5" />
+                    <!--  Loader  -->
+                    <controls:CircleLoader
+                        Width="90"
+                        Height="90"
+                        Padding="19"
+                        VerticalAlignment="Center"
+                        BlurTarget="{Binding ElementName=LogoBorder}"
+                        CornerRadius="5"
+                        IconHeight="26"
+                        IconWidth="26"
+                        IsActive="{Binding Logo, Converter={converters:IsValueNullConverter}}">
+                        <controls:CircleLoader.Background>
+                            <SolidColorBrush Opacity="0.5" Color="Black" />
+                        </controls:CircleLoader.Background>
+                    </controls:CircleLoader>
+
+                    <!--  Content  -->
+                    <Grid
+                        Grid.Column="1"
+                        Margin="16,0,0,0"
+                        ShowGridLines="False">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <!--  Name & Author & Description  -->
+                        <StackPanel>
+                            <StackPanel Margin="0,0,0,8" Orientation="Horizontal">
+                                <TextBlock
+                                    FontSize="16"
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                    Text="{Binding Name}" />
+
+                                <TextBlock
+                                    Margin="8,0"
+                                    FontSize="16"
+                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                    Text=" | " />
+
+                                <TextBlock
+                                    FontSize="16"
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                    Text="{Binding Author}" />
+                            </StackPanel>
+
+                            <TextBlock
+                                FontSize="14"
+                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                Text="{Binding Description}"
+                                TextWrapping="WrapWithOverflow" />
+                        </StackPanel>
+
+                        <!--  Buttons  -->
+                        <Grid Grid.RowSpan="2" Grid.Column="2">
+                            <StackPanel Background="Transparent">
+                                <WrapPanel>
+                                    <Button
+                                        Height="32"
+                                        Padding="16,8"
+                                        HorizontalContentAlignment="Center"
+                                        VerticalContentAlignment="Center"
+                                        Content="{DynamicResource Install}"
+                                        FontWeight="Medium" />
+                                    <controls:DropdownMenu
+                                        Width="32"
+                                        Height="32"
+                                        Margin="8,0,0,0"
+                                        PopupHorizontalOffset="40"
+                                        PopupVerticalOffset="40">
+                                        <Border
+                                            Padding="8"
+                                            Background="{DynamicResource PrimarySolidColorBrush}"
+                                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="5">
+                                            <StackPanel>
+                                                <TextBlock
+                                                    FontSize="14"
+                                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                                    Text="Веб-страница" />
+                                                <TextBlock
+                                                    FontSize="14"
+                                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                                    Text="Веб-страница" />
+                                                <TextBlock
+                                                    FontSize="14"
+                                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                                    Text="Веб-страница" />
+                                                <TextBlock
+                                                    FontSize="14"
+                                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                                    Text="Веб-страница" />
+                                            </StackPanel>
+                                        </Border>
+                                    </controls:DropdownMenu>
+                                </WrapPanel>
+
+
+                            </StackPanel>
+                        </Grid>
+
+                        <!--  Additional Info  -->
+                        <WrapPanel
+                            Grid.Row="2"
+                            Grid.ColumnSpan="2"
+                            Margin="0,16,0,0"
+                            VerticalAlignment="Bottom"
+                            Background="Transparent">
+                            <!--  Downloads  -->
+                            <StackPanel Margin="0,0,16,0" Orientation="Horizontal">
+                                <Viewbox Height="14" Margin="0,0,8,0">
+                                    <Path
+                                        Data="M16 18C16 18.5523 15.5523 19 15 19L5.00002 19C4.44774 19 4.00002 18.5523 4.00002 18C4.00002 17.4477 4.44774 17 5.00002 17L15 17C15.5523 17 16 17.4477 16 18ZM10.6247 13.7809C10.2595 14.073 9.74055 14.073 9.37533 13.7809L4.37533 9.78087C3.94407 9.43586 3.87415 8.80657 4.21916 8.3753C4.56417 7.94404 5.19346 7.87412 5.62472 8.21913L9.00002 10.9194L9.00002 2C9.00002 1.44772 9.44774 0.999999 10 0.999999C10.5523 1 11 1.44772 11 2L11 10.9194L14.3753 8.21913C14.8066 7.87412 15.4359 7.94404 15.7809 8.37531C16.1259 8.80657 16.056 9.43586 15.6247 9.78087L10.6247 13.7809Z"
+                                        Fill="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                        Stretch="Fill" />
+                                </Viewbox>
+
+                                <TextBlock
+                                    FontSize="14"
+                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                    Text="{Binding DownloadCount}" />
+                            </StackPanel>
+
+                            <!--  Date updated  -->
+                            <StackPanel Margin="0,0,16,0" Orientation="Horizontal">
+                                <Viewbox Height="14" Margin="0,1,8,0">
+                                    <Path
+                                        Data="M10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18ZM9 7C9 6.44772 9.44772 6 10 6C10.5523 6 11 6.44772 11 7V10H13C13.5523 10 14 10.4477 14 11C14 11.5523 13.5523 12 13 12H9V7Z"
+                                        Fill="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                        Stretch="Fill" />
+                                </Viewbox>
+
+                                <TextBlock
+                                    FontSize="14"
+                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                    Text="{Binding LastUpdated}" />
+                            </StackPanel>
+
+                            <!--  Date created  -->
+                            <StackPanel Margin="0,0,16,0" Orientation="Horizontal">
+                                <Viewbox Height="14" Margin="0,0,8,0">
+                                    <Path
+                                        Data="M4 3C4 2.44772 4.44772 2 5 2C5.55228 2 6 2.44772 6 3V4H14V3C14 2.44772 14.4477 2 15 2C15.5523 2 16 2.44772 16 3V4H18C18.5523 4 19 4.44772 19 5V17C19 17.5523 18.5523 18 18 18H2C1.44772 18 1 17.5523 1 17V5C1 4.44772 1.44772 4 2 4H4V3ZM3 8H17V16H3V8Z"
+                                        Fill="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                        Stretch="Fill" />
+                                </Viewbox>
+
+                                <TextBlock
+                                    FontSize="14"
+                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                    Text="When Created?" />
+                            </StackPanel>
+
+                            <!--  File size  -->
+                            <!--<StackPanel Margin="0,0,16,0" Orientation="Horizontal">
+                                <Viewbox Height="14" Margin="0,0,8,0">
+                                    <Path
+                                        Data="M17 5C17 6.10457 13.866 7 10 7C6.13401 7 3 6.10457 3 5C3 3.89543 6.13401 3 10 3C13.866 3 17 3.89543 17 5Z M10 9.12195C7.47222 9.12195 4.66898 8.80488 3 8V10.2317C3 11.2073 6.12732 12 10 12C13.8727 12 17 11.2073 17 10.2195V8C15.331 8.80488 12.5278 9.12195 10 9.12195Z M3 15.2195C3 16.2073 6.12732 17 10 17C13.8727 17 17 16.2073 17 15.2195V13C15.331 13.7927 12.5278 14.1098 10 14.1098C7.47222 14.1098 4.66898 13.7927 3 13V15.2195Z"
+                                        Fill="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                        Stretch="Fill" />
+                                </Viewbox>
+
+                                <TextBlock
+                                    FontSize="14"
+                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                    Text="264 KB" />
+                            </StackPanel>-->
+
+                            <!--  Game Version  -->
+                            <StackPanel Margin="0,0,16,0" Orientation="Horizontal">
+                                <Viewbox
+                                    Height="12"
+                                    Margin="0,0,8,0"
+                                    VerticalAlignment="Center">
+                                    <Path
+                                        Data="M9.39798 13C8.61991 14.7934 7.16564 16 5.5 16C3.01472 16 1 13.3137 1 10C1 6.68629 3.01472 4 5.5 4H14.5C16.9853 4 19 6.68629 19 10C19 13.3137 16.9853 16 14.5 16C12.8344 16 11.3801 14.7934 10.602 13H9.39798ZM7 6H5V8H3V10H5V12H7V10H9V8H7V6ZM14 11C15.1046 11 16 10.1046 16 9C16 7.89543 15.1046 7 14 7C12.8954 7 12 7.89543 12 9C12 10.1046 12.8954 11 14 11Z"
+                                        Fill="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                        Stretch="Fill" />
+                                </Viewbox>
+
+                                <TextBlock
+                                    FontSize="14"
+                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                    Text="1.81.2" />
+                            </StackPanel>
+
+                            <!--  Modloaders  -->
+                            <TextBlock
+                                FontSize="14"
+                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                Text="Forge + 1" />
+                        </WrapPanel>
+                    </Grid>
+
+                    <!--  Tags  -->
+                    <Border
+                        Grid.Row="1"
+                        Grid.ColumnSpan="2"
+                        Margin="-16,4,-16,0"
+                        Padding="20,4,20,0"
+                        BorderBrush="{DynamicResource PrimarySolidColorBrush}"
+                        BorderThickness="0,0.5,0,0">
+                        <TextBlock Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="Armor, Tools, and Weapons" />
+                    </Border>
+                </Grid>
+            </Border>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Grid Background="{DynamicResource PrimarySolidColorBrush}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="250" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!--  Left Panel  -->
+            <Border
+                Background="{DynamicResource Secondary}"
+                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                BorderThickness="0,0,1,0">
+                <Grid Margin="16,52,16,16" ShowGridLines="False">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+
+                    <!--  Close | Source  -->
+                    <StackPanel Margin="0,0,0,16" Orientation="Horizontal">
+                        <Button
+                            Width="32"
+                            Height="32"
+                            Content="Close"
+                            Style="{StaticResource x32IconButton}" />
+                        <ComboBox Height="32" Margin="8,0,0,0" />
+                    </StackPanel>
+
+                    <!--  Modloaders  -->
+                    <StackPanel Grid.Row="1" Margin="0,0,0,8">
+                        <TextBlock
+                            Margin="0,0,0,8"
+                            extensions:TextBlock.TextByKey="GameType"
+                            FontSize="18"
+                            FontWeight="Medium"
+                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+
+                        <StackPanel>
+                            <CheckBox
+                                Margin="0,0,0,4"
+                                Content="Fabric"
+                                FontSize="14" />
+                            <CheckBox
+                                Margin="0,0,0,4"
+                                Content="Forge"
+                                FontSize="14" />
+                            <CheckBox
+                                Margin="0,0,0,4"
+                                Content="Neoforge"
+                                FontSize="14" />
+                            <CheckBox
+                                Margin="0,0,0,4"
+                                Content="Quilt"
+                                FontSize="14" />
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!--  Categories  -->
+                    <Grid x:Name="CategoriesStackPanel" Grid.Row="2">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock
+                            Margin="0,0,0,8"
+                            extensions:TextBlock.TextByKey="Categories"
+                            FontSize="18"
+                            FontWeight="Medium"
+                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+
+                        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled">
+                            <ItemsControl Background="Transparent" ItemsSource="{Binding Model.Categories}" />
+                        </ScrollViewer>
+                    </Grid>
+
+
+                    <!--  Apply Categories  -->
+                    <Button
+                        Grid.Row="3"
+                        Height="32"
+                        Margin="0,16,0,0"
+                        HorizontalContentAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        Command="{Binding ApplySelectedCategoriesCommand}"
+                        Content="{DynamicResource Accept}"
+                        FontWeight="Medium" />
+                </Grid>
+
+
+            </Border>
+
+            <Border Grid.Column="1" Margin="16,16,0,4">
+                <Grid>
+                    <TabControl Background="Transparent" BorderThickness="0">
+                        <TabItem Header="Каталог">
+                            <ScrollViewer Margin="0,0,0,0">
+                                <Grid Margin="0,16,16,0">
+
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+
+                                    <!--  Additional Fields & SearchBox  -->
+                                    <Border
+                                        Padding="16"
+                                        Background="{DynamicResource SecondarySolidColorBrush}"
+                                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                        BorderThickness="1"
+                                        CornerRadius="5">
+                                        <Grid>
+
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+
+                                            <!--  Additional Fields  -->
+                                            <Grid ShowGridLines="True">
+
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <!--  Sort by & Show per page  -->
+                                                <StackPanel Orientation="Horizontal">
+                                                    <!--  Sort by  -->
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock
+                                                            VerticalAlignment="Center"
+                                                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                                            Text="Sort by" />
+                                                        <ComboBox Height="32" Margin="16,0,0,0">
+                                                            <ComboBoxItem>Latest update</ComboBoxItem>
+                                                        </ComboBox>
+                                                    </StackPanel>
+
+                                                    <!--  Show per page  -->
+                                                    <StackPanel Margin="24,0,0,0" Orientation="Horizontal">
+
+                                                        <TextBlock
+                                                            VerticalAlignment="Center"
+                                                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                                            Text="Show per page" />
+                                                        <ComboBox Height="32" Margin="16,0,0,0">
+                                                            <ComboBoxItem>20</ComboBoxItem>
+                                                        </ComboBox>
+                                                    </StackPanel>
+
+                                                </StackPanel>
+
+                                                <WrapPanel Grid.Column="3">
+                                                    <Border
+                                                        Padding="2,0"
+                                                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                                        BorderThickness="1,0,0,0">
+                                                        <ToggleButton
+                                                            x:Name="PaginatorToggleButton"
+                                                            Width="32"
+                                                            Height="32"
+                                                            Content="Numbers123"
+                                                            Cursor="Hand"
+                                                            IsChecked="False"
+                                                            Style="{StaticResource IconToggleButton}" />
+                                                    </Border>
+                                                    <Border
+                                                        Padding="2,0"
+                                                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                                        BorderThickness="1,0,0,0">
+                                                        <ToggleButton
+                                                            x:Name="SearchBoxToggleButton"
+                                                            Width="32"
+                                                            Height="32"
+                                                            Content="Search"
+                                                            Cursor="Hand"
+                                                            IsChecked="True"
+                                                            Style="{StaticResource IconToggleButton}" />
+                                                    </Border>
+                                                </WrapPanel>
+                                            </Grid>
+
+                                            <!--  SearchBox  -->
+                                            <controls:SearchBox
+                                                Grid.Row="1"
+                                                Margin="0,8,0,0"
+                                                Visibility="{Binding IsChecked, ElementName=SearchBoxToggleButton, Converter={converters:BooleanToVisibilityConverter}}" />
+
+                                            <controls:Paginator
+                                                Grid.Row="2"
+                                                Margin="0,8,0,0"
+                                                Visibility="{Binding IsChecked, ElementName=PaginatorToggleButton, Converter={converters:BooleanToVisibilityConverter}}" />
+                                        </Grid>
+                                    </Border>
+
+                                    <!--  Instance Addons  -->
+                                    <ItemsControl
+                                        Grid.Row="1"
+                                        Margin="0,16,0,0"
+                                        ItemsSource="{Binding Model.AddonsList}" />
+
+                                    <!--  Paginator  -->
+                                    <controls:Paginator Grid.Row="2" Margin="0,32" />
+                                </Grid>
+                            </ScrollViewer>
+                        </TabItem>
+                        <TabItem Header="В процессе" />
+                        <TabItem Header="Установленные" />
+                    </TabControl>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

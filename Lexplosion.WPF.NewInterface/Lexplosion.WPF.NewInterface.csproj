@@ -152,6 +152,7 @@
     <Compile Include="Core\ViewModel\ObservableObject.cs" />
     <Compile Include="Extensions\ResourceKeyBinding.cs" />
     <Compile Include="Extensions\TreeViewItemExtension.cs" />
+    <Compile Include="Mvvm\Models\AddonsRepositories\AddonsRepositoryModel.cs" />
     <Compile Include="Mvvm\Models\InstanceControllers\CatalogController.cs" />
     <Compile Include="Mvvm\Models\InstanceControllers\IInstanceController.cs" />
     <Compile Include="Mvvm\Models\InstanceControllers\LibraryController.cs" />
@@ -163,6 +164,7 @@
     <Compile Include="Mvvm\Models\MainContent\MainMenu\FIlterPanel\LibraryFilterPanel.cs" />
     <Compile Include="Mvvm\Models\MainContent\MainMenu\Friends\Friend.cs" />
     <Compile Include="Mvvm\Models\MainContent\MainMenu\Multiplayer\MultiplayerModel.cs" />
+    <Compile Include="Mvvm\ViewModels\AddonsRepositories\LexplosionAddonsRepositoryViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\MainContent\InstanceProfile\Addons\InstanceAddonsContainerViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\MainContent\InstanceProfile\Addons\IVisualFormat.cs" />
     <Compile Include="Mvvm\ViewModels\MainContent\InstanceProfile\Addons\VisualFormat.cs" />
@@ -174,6 +176,9 @@
     </Compile>
     <Compile Include="Mvvm\Views\Modal\InstanceTransfer\InstanceImportView.xaml.cs">
       <DependentUpon>InstanceImportView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Views\Pages\AddonsRepositories\AddonsRepository.xaml.cs">
+      <DependentUpon>AddonsRepository.xaml</DependentUpon>
     </Compile>
     <Compile Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\Friends\FindFriendsView.xaml.cs">
       <DependentUpon>FindFriendsView.xaml</DependentUpon>
@@ -382,6 +387,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Mvvm\Views\Modal\InstanceTransfer\InstanceImportView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Mvvm\Views\Pages\AddonsRepositories\AddonsRepository.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

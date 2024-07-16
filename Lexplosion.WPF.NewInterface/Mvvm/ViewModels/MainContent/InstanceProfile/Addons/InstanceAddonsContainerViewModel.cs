@@ -114,7 +114,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             var currentViewModel = _navigationStore.CurrentViewModel;
             var backNavCommand = new NavigateCommand<ViewModelBase>(_navigationStore, () => currentViewModel);
             // TODO: Давай возможно назначать репозиторий по-умолчанию
-            _navigationStore.CurrentViewModel = new ModrinthRepositoryViewModel(_instanceModelBase, Model.Type, backNavCommand, _navigationStore);
+            _navigationStore.CurrentViewModel = new LexplosionAddonsRepositoryViewModel(_instanceModelBase, Model.Type, backNavCommand, _navigationStore); //new ModrinthRepositoryViewModel(_instanceModelBase, Model.Type, backNavCommand, _navigationStore);
         }
 
         /// <summary>
