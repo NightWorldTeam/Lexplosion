@@ -1257,25 +1257,25 @@ namespace Lexplosion.Logic.Management.Instances
         {
             if (url != null)
             {
-                ThreadPool.QueueUserWorkItem(delegate (object state)
+                try
                 {
-                    try
+                    using (var webClient = new WebClient())
                     {
-                        using (var webClient = new WebClient())
-                        {
-                            webClient.Proxy = null;
-                            Logo = ImageTools.ResizeImage(webClient.DownloadData(url), 80, 80);
-                        }
+                        webClient.Proxy = null;
+                        Logo = ImageTools.ResizeImage(webClient.DownloadData(url), 80, 80);
                     }
-                    catch { }
-                });
+                }
+                catch { }
             }
         }
 
         private void LoadAdditionalData(string logoUrl)
         {
-            DownloadLogo(logoUrl);
-            Categories ??= _addonPrototype?.LoadCategories();
+            ThreadPool.QueueUserWorkItem(delegate (object state)
+            {
+                DownloadLogo(logoUrl);
+                Categories = _addonPrototype.LoadCategories();
+            });
         }
 
         private void Disable()
