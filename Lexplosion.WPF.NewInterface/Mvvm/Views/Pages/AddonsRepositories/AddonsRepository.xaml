@@ -8,13 +8,19 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.AddonsRepositories"
+    xmlns:logicObjects="clr-namespace:Lexplosion.Logic.Objects;assembly=Lexplosion.Core"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:objects="clr-namespace:Lexplosion.WPF.NewInterface.Core.Objects"
+    xmlns:test="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
 
     <UserControl.Resources>
+        <DataTemplate DataType="{x:Type logicObjects:IProjectCategory}">
+            <TextBlock Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="{Binding Name}" />
+        </DataTemplate>
+
         <DataTemplate DataType="{x:Type objects:CategoryWrapper}">
             <CheckBox
                 Margin="0,0,0,4"
@@ -22,6 +28,27 @@
                 FontSize="14"
                 Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
                 IsChecked="{Binding IsSelected}" />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type test:CategoryGroup}">
+            <Grid Margin="0,16,0,0">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <TextBlock
+                    Margin="0,0,0,8"
+                    FontSize="18"
+                    FontWeight="Medium"
+                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                    Text="{Binding Header}" />
+                <ItemsControl
+                    Grid.Row="1"
+                    Background="Transparent"
+                    ItemsSource="{Binding Categories}" />
+            </Grid>
         </DataTemplate>
 
         <Style TargetType="{x:Type TabItem}">
@@ -294,7 +321,7 @@
                         Padding="20,4,20,0"
                         BorderBrush="{DynamicResource PrimarySolidColorBrush}"
                         BorderThickness="0,0.5,0,0">
-                        <TextBlock Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="Armor, Tools, and Weapons" />
+                        <ItemsControl ItemsSource="{Binding Categories}" />
                     </Border>
                 </Grid>
             </Border>
@@ -302,107 +329,96 @@
     </UserControl.Resources>
 
     <Grid Background="{DynamicResource PrimarySolidColorBrush}">
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="250" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
 
-            <!--  Left Panel  -->
-            <Border
-                Background="{DynamicResource Secondary}"
-                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                BorderThickness="0,0,1,0">
-                <Grid Margin="16,52,16,16" ShowGridLines="False">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
 
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
+        <ScrollViewer Grid.ColumnSpan="2">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="250" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!--  Left Panel  -->
+                <Border
+                    Background="{DynamicResource Secondary}"
+                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                    BorderThickness="0,0,1,0">
+                    <StackPanel Margin="16,52,16,16">
+
+                        <!--  Close | Source  -->
+                        <StackPanel Margin="0,0,0,16" Orientation="Horizontal">
+                            <Button
+                                Width="32"
+                                Height="32"
+                                Command="{Binding BackToInstanceProfileCommand}"
+                                Content="Close"
+                                IsCancel="True"
+                                Style="{StaticResource x32IconButton}" />
+                            <ComboBox Height="32" Margin="8,0,0,0" />
+                        </StackPanel>
+
+                        <!--  Categories  -->
+                        <!--<Grid x:Name="CategoriesStackPanel">
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <TextBlock
+                                Margin="0,0,0,8"
+                                extensions:TextBlock.TextByKey="Categories"
+                                FontSize="18"
+                                FontWeight="Medium"
+                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                            <ItemsControl
+                                Grid.Row="1"
+                                Background="Transparent"
+                                ItemsSource="{Binding Model.Categories}" />
+                        </Grid>-->
+                        <ItemsControl ItemsSource="{Binding Model.CategoriesGroups}" />
 
 
-                    <!--  Close | Source  -->
-                    <StackPanel Margin="0,0,0,16" Orientation="Horizontal">
-                        <Button
-                            Width="32"
-                            Height="32"
-                            Content="Close"
-                            Style="{StaticResource x32IconButton}" />
-                        <ComboBox Height="32" Margin="8,0,0,0" />
-                    </StackPanel>
+                        <!--  Modloaders  -->
+                        <StackPanel Grid.Row="1" Margin="0,16,0,0">
+                            <TextBlock
+                                Margin="0,0,0,8"
+                                extensions:TextBlock.TextByKey="GameType"
+                                FontSize="18"
+                                FontWeight="Medium"
+                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
 
-                    <!--  Modloaders  -->
-                    <StackPanel Grid.Row="1" Margin="0,0,0,8">
-                        <TextBlock
-                            Margin="0,0,0,8"
-                            extensions:TextBlock.TextByKey="GameType"
-                            FontSize="18"
-                            FontWeight="Medium"
-                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
-
-                        <StackPanel>
-                            <CheckBox
-                                Margin="0,0,0,4"
-                                Content="Fabric"
-                                FontSize="14" />
-                            <CheckBox
-                                Margin="0,0,0,4"
-                                Content="Forge"
-                                FontSize="14" />
-                            <CheckBox
-                                Margin="0,0,0,4"
-                                Content="Neoforge"
-                                FontSize="14" />
-                            <CheckBox
-                                Margin="0,0,0,4"
-                                Content="Quilt"
-                                FontSize="14" />
+                            <StackPanel>
+                                <CheckBox
+                                    Margin="0,0,0,4"
+                                    Content="Fabric"
+                                    FontSize="14" />
+                                <CheckBox
+                                    Margin="0,0,0,4"
+                                    Content="Forge"
+                                    FontSize="14" />
+                                <CheckBox
+                                    Margin="0,0,0,4"
+                                    Content="Neoforge"
+                                    FontSize="14" />
+                                <CheckBox
+                                    Margin="0,0,0,4"
+                                    Content="Quilt"
+                                    FontSize="14" />
+                            </StackPanel>
                         </StackPanel>
                     </StackPanel>
+                </Border>
 
-                    <!--  Categories  -->
-                    <Grid x:Name="CategoriesStackPanel" Grid.Row="2">
-
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-
-                        <TextBlock
-                            Margin="0,0,0,8"
-                            extensions:TextBlock.TextByKey="Categories"
-                            FontSize="18"
-                            FontWeight="Medium"
-                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
-
-                        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled">
-                            <ItemsControl Background="Transparent" ItemsSource="{Binding Model.Categories}" />
-                        </ScrollViewer>
-                    </Grid>
-
-
-                    <!--  Apply Categories  -->
-                    <Button
-                        Grid.Row="3"
-                        Height="32"
-                        Margin="0,16,0,0"
-                        HorizontalContentAlignment="Center"
-                        VerticalContentAlignment="Center"
-                        Command="{Binding ApplySelectedCategoriesCommand}"
-                        Content="{DynamicResource Accept}"
-                        FontWeight="Medium" />
-                </Grid>
-
-
-            </Border>
-
-            <Border Grid.Column="1" Margin="16,16,0,4">
-                <Grid>
-                    <TabControl Background="Transparent" BorderThickness="0">
-                        <TabItem Header="Каталог">
-                            <ScrollViewer Margin="0,0,0,0">
+                <!--  Right Content  -->
+                <Border Grid.Column="1" Margin="16,16,0,4">
+                    <Grid>
+                        <TabControl Background="Transparent" BorderThickness="0">
+                            <TabItem Header="Каталог">
                                 <Grid Margin="0,16,16,0">
 
                                     <Grid.RowDefinitions>
@@ -508,18 +524,32 @@
                                     <ItemsControl
                                         Grid.Row="1"
                                         Margin="0,16,0,0"
-                                        ItemsSource="{Binding Model.AddonsList}" />
+                                        ItemsSource="{Binding Model.AddonsList}"
+                                        ScrollViewer.CanContentScroll="True" />
 
                                     <!--  Paginator  -->
                                     <controls:Paginator Grid.Row="2" Margin="0,32" />
                                 </Grid>
-                            </ScrollViewer>
-                        </TabItem>
-                        <TabItem Header="В процессе" />
-                        <TabItem Header="Установленные" />
-                    </TabControl>
-                </Grid>
-            </Border>
-        </Grid>
+                            </TabItem>
+                            <TabItem Header="В процессе" />
+                            <TabItem Header="Установленные" />
+                        </TabControl>
+                    </Grid>
+                </Border>
+            </Grid>
+        </ScrollViewer>
+
+        <!--  Apply Categories  -->
+        <Button
+            Height="32"
+            Margin="16,0,16,16"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Bottom"
+            HorizontalContentAlignment="Center"
+            VerticalContentAlignment="Center"
+            Command="{Binding ApplySelectedCategoriesCommand}"
+            Content="{DynamicResource Accept}"
+            FontWeight="Medium"
+            Visibility="{Binding Model.HasConfirmCategories, Converter={converters:BooleanToVisibilityConverter}}" />
     </Grid>
 </UserControl>
