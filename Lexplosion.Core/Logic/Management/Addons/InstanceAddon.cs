@@ -182,6 +182,17 @@ namespace Lexplosion.Logic.Management.Instances
             }
         }
 
+        private IEnumerable<IProjectCategory> _categories = new List<CategoryBase>();
+        public IEnumerable<IProjectCategory> Categories
+        {
+            get => _categories;
+            private set
+            {
+                _categories = value;
+                OnPropertyChanged();
+            }
+        }
+
         #endregion
 
         //private readonly CurseforgeAddonInfo _modInfo;
@@ -205,7 +216,7 @@ namespace Lexplosion.Logic.Management.Instances
             Name = addonPrototype.Name;
             WebsiteUrl = addonPrototype.WebsiteUrl;
 
-            DownloadLogo(addonPrototype.LogoUrl);
+            LoadAdditionalData(addonPrototype.LogoUrl);
 
             addonPrototype.OnInfoUpdated += delegate ()
             {
@@ -445,7 +456,7 @@ namespace Lexplosion.Logic.Management.Instances
                         else
                         {
                             instanceAddon = _installingAddons[addonKey].Point;
-                            instanceAddon.DownloadLogo(getLogoUrl(addon));
+                            instanceAddon.LoadAdditionalData(getLogoUrl(addon));
                         }
                     }
                     else
@@ -1259,6 +1270,12 @@ namespace Lexplosion.Logic.Management.Instances
                     catch { }
                 });
             }
+        }
+
+        private void LoadAdditionalData(string logoUrl)
+        {
+            DownloadLogo(logoUrl);
+            Categories ??= _addonPrototype?.LoadCategories();
         }
 
         private void Disable()

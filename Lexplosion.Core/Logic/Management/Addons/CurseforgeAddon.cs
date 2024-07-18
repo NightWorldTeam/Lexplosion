@@ -129,13 +129,22 @@ namespace Lexplosion.Logic.Management.Addons
         }
         #endregion
 
+        private object _addonInfoLocker = new object();
+        private void DefineAddonInfo()
+        {
+            lock (_addonInfoLocker)
+            {
+                if (_addonInfo == null)
+                {
+                    _addonInfo = CurseforgeApi.GetAddonInfo(_projectId);
+                }
+            }     
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void DefaineLatesVersion_()
         {
-            if (_addonInfo == null)
-            {
-                _addonInfo = CurseforgeApi.GetAddonInfo(_projectId);
-            }
+            DefineAddonInfo();
 
             //_versionInfo = GetLastFile(_instanceData.GameVersion, _addonInfo?.latestFiles, _addonInfo?.latestFilesIndexes, (AddonType)_addonInfo?.classId);
             //if (_versionInfo == null)
@@ -153,10 +162,7 @@ namespace Lexplosion.Logic.Management.Addons
         {
             if (_versionInfo != null)
             {
-                if (_addonInfo == null)
-                {
-                    _addonInfo = CurseforgeApi.GetAddonInfo(_projectId);
-                }
+                DefineAddonInfo();
             }
             else
             {
@@ -246,6 +252,14 @@ namespace Lexplosion.Logic.Management.Addons
                     return;
                 }
             }
+        }
+
+        public IEnumerable<CategoryBase> LoadCategories()
+        {
+            DefineAddonInfo();
+
+            return _addonInfo?.categories ?? new List<CurseforgeCategory>(); 
+
         }
 
         public event Action OnInfoUpdated;

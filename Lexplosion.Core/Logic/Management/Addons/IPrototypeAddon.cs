@@ -13,6 +13,8 @@ namespace Lexplosion.Logic.Management.Addons
 
         void DefineLatestVersion();
 
+        IEnumerable<CategoryBase> LoadCategories();
+
         SetValues<InstalledAddonInfo, DownloadAddonRes> Install(TaskArgs taskArgs);
 
         /// <summary>
