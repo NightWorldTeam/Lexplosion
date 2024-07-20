@@ -7,6 +7,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Lexplosion.Logic.Network.Web;
 using System;
+using Lexplosion.WPF.NewInterface.Core.Objects.TranslatableObjects;
+using Lexplosion.WPF.NewInterface.Core.Extensions;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 {
@@ -56,6 +58,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
         public IEnumerable<IProjectCategory> SelectedCategories { get => _selectedCategories; }
         public IEnumerable<InstanceAddon> AddonsList { get => _addonsList; }
         public IEnumerable<CategoryGroup> CategoriesGroups { get => _categoriesGroups; }
+
+        //public IEnumerable<SortByParamObject> SortByParams { get; }
 
 
         private string _searchFilter = string.Empty;
@@ -110,6 +114,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
             _instanceSource = instanceSource;
             _instanceData = instanceData;
             _addonType = addonType;
+
+            //TranslatableObjectConverters.EnumToTranslatebleObject<int>(typeof(ModrinthSortField));
 
             PrepareCategories();
             LoadContent();
@@ -343,9 +349,18 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 
         protected override ISearchParams BuildSearchParams()
         {
-            return new ModrinthSearchParams(SearchFilter, _instanceData.GameVersion.ToString(),
-                SelectedCategories, (int)PageSize, (int)CurrentPageIndex, (ModrinthSortField)SelectedSortByIndex,
-                new List<Modloader> { _instanceData.Modloader.ToModloader() });
+            if (_instanceSource == InstanceSource.Curseforge)
+            {
+                return new CurseforgeSearchParams(SearchFilter, _instanceData.GameVersion.ToString(),
+                    SelectedCategories, (int)PageSize, (int)CurrentPageIndex, (CfSortField)SelectedSortByIndex,
+                    new List<Modloader> { _instanceData.Modloader.ToModloader() });
+            }
+            else 
+            {
+                return new ModrinthSearchParams(SearchFilter, _instanceData.GameVersion.ToString(),
+                    SelectedCategories, (int)PageSize, (int)CurrentPageIndex, (ModrinthSortField)SelectedSortByIndex,
+                    new List<Modloader> { _instanceData.Modloader.ToModloader() });
+            }
         }
 
         protected override List<IProjectCategory> GetCategories()

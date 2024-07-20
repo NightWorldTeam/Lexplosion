@@ -17,8 +17,14 @@
     mc:Ignorable="d">
 
     <UserControl.Resources>
-        <DataTemplate DataType="{x:Type logicObjects:IProjectCategory}">
-            <TextBlock Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="{Binding Name}" />
+        <DataTemplate DataType="{x:Type logicObjects:CategoryBase}">
+            <TextBlock Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}">
+                <Run Text="{Binding Name}" />
+                <Run
+                    FontWeight="Medium"
+                    Foreground="{DynamicResource LatestForegroundSolidColorBrush}"
+                    Text=" |  " />
+            </TextBlock>
         </DataTemplate>
 
         <DataTemplate DataType="{x:Type objects:CategoryWrapper}">
@@ -52,7 +58,6 @@
         </DataTemplate>
 
         <Style TargetType="{x:Type TabItem}">
-            <Setter Property="Cursor" Value="Hand" />
             <Setter Property="FocusVisualStyle" Value="{x:Null}" />
             <Setter Property="Template">
                 <Setter.Value>
@@ -64,7 +69,8 @@
                             Background="Transparent"
                             BorderBrush="{DynamicResource SeparateSolidColorBrush}"
                             BorderThickness="2"
-                            CornerRadius="5">
+                            CornerRadius="5"
+                            Cursor="Hand">
                             <ContentPresenter
                                 x:Name="ContentSite"
                                 ContentSource="Header"
@@ -90,7 +96,8 @@
                 Background="{DynamicResource SecondarySolidColorBrush}"
                 BorderBrush="{DynamicResource SeparateSolidColorBrush}"
                 BorderThickness="1"
-                CornerRadius="5">
+                CornerRadius="5"
+                Cursor="Hand">
                 <Grid ShowGridLines="False">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
@@ -224,7 +231,7 @@
                         <WrapPanel
                             Grid.Row="2"
                             Grid.ColumnSpan="2"
-                            Margin="0,16,0,0"
+                            Margin="0,16,0,8"
                             VerticalAlignment="Bottom"
                             Background="Transparent">
                             <!--  Downloads  -->
@@ -319,9 +326,17 @@
                         Grid.ColumnSpan="2"
                         Margin="-16,4,-16,0"
                         Padding="20,4,20,0"
-                        BorderBrush="{DynamicResource PrimarySolidColorBrush}"
+                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
                         BorderThickness="0,0.5,0,0">
-                        <ItemsControl ItemsSource="{Binding Categories}" />
+
+                        <ItemsControl ItemsSource="{Binding Categories}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+
                     </Border>
                 </Grid>
             </Border>
