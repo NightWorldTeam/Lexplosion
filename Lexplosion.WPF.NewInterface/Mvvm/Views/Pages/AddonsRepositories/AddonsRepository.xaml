@@ -115,7 +115,7 @@
                         Width="90"
                         Height="90"
                         VerticalAlignment="Top"
-                        Background="{Binding Logo, Converter={converters:ImageSourceNullValidateConverter}}"
+                        Background="{Binding LogoUrl, Converter={converters:ImageSourceNullValidateConverter}}"
                         CornerRadius="5" />
                     <!--  Loader  -->
                     <controls:CircleLoader
@@ -127,7 +127,7 @@
                         CornerRadius="5"
                         IconHeight="26"
                         IconWidth="26"
-                        IsActive="{Binding Logo, Converter={converters:IsValueNullConverter}}">
+                        IsActive="{Binding Background, ElementName=LogoBorder, Converter={converters:IsValueNullConverter}}">
                         <controls:CircleLoader.Background>
                             <SolidColorBrush Opacity="0.5" Color="Black" />
                         </controls:CircleLoader.Background>
