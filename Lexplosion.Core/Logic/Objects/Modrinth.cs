@@ -122,6 +122,7 @@ namespace Lexplosion.Logic.Objects.Modrinth
         public ModrinthProjectInfo(ModrinthCtalogUnit catalogUnit)
         {
             ProjectId = catalogUnit.ProjectId;
+            Categories = catalogUnit.Categories;
             Summary = catalogUnit.Summary;
             Downloads = catalogUnit.Downloads;
             GameVersions = catalogUnit.GameVersions;
