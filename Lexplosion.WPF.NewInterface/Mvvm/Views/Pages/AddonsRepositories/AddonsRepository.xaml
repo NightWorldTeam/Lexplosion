@@ -12,6 +12,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:objects="clr-namespace:Lexplosion.WPF.NewInterface.Core.Objects"
     xmlns:test="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories"
+    xmlns:translatableObjects="clr-namespace:Lexplosion.WPF.NewInterface.Core.Objects.TranslatableObjects"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
@@ -25,6 +26,11 @@
                     Foreground="{DynamicResource LatestForegroundSolidColorBrush}"
                     Text=" |  " />
             </TextBlock>
+        </DataTemplate>
+
+
+        <DataTemplate DataType="{x:Type translatableObjects:SortByParamObject}">
+            <TextBlock extensions:TextBlock.TextByKey="{Binding TranslateKey}" Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
         </DataTemplate>
 
         <DataTemplate DataType="{x:Type objects:CategoryWrapper}">
@@ -373,7 +379,11 @@
                                 Content="Close"
                                 IsCancel="True"
                                 Style="{StaticResource x32IconButton}" />
-                            <ComboBox Height="32" Margin="8,0,0,0" />
+                            <ComboBox
+                                Height="32"
+                                Margin="8,0,0,0"
+                                ItemsSource="{Binding ProjectSources}"
+                                SelectedIndex="{Binding SelectedAddonsRepositoryIndex}" />
                         </StackPanel>
 
                         <!--  Categories  -->
@@ -473,9 +483,11 @@
                                                             VerticalAlignment="Center"
                                                             Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
                                                             Text="Sort by" />
-                                                        <ComboBox Height="32" Margin="16,0,0,0">
-                                                            <ComboBoxItem>Latest update</ComboBoxItem>
-                                                        </ComboBox>
+                                                        <ComboBox
+                                                            Height="32"
+                                                            Margin="16,0,0,0"
+                                                            ItemsSource="{Binding Model.SortByParams}"
+                                                            SelectedIndex="{Binding Model.SelectedSortByIndex}" />
                                                     </StackPanel>
 
                                                     <!--  Show per page  -->
@@ -485,9 +497,11 @@
                                                             VerticalAlignment="Center"
                                                             Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
                                                             Text="Show per page" />
-                                                        <ComboBox Height="32" Margin="16,0,0,0">
-                                                            <ComboBoxItem>20</ComboBoxItem>
-                                                        </ComboBox>
+                                                        <ComboBox
+                                                            Height="32"
+                                                            Margin="16,0,0,0"
+                                                            ItemsSource="{Binding Model.PageSizes}"
+                                                            SelectedValue="{Binding Model.PageSize}" />
                                                     </StackPanel>
 
                                                 </StackPanel>
@@ -540,7 +554,8 @@
                                         Grid.Row="1"
                                         Margin="0,16,0,0"
                                         ItemsSource="{Binding Model.AddonsList}"
-                                        ScrollViewer.CanContentScroll="True" />
+                                        ScrollViewer.CanContentScroll="True"
+                                        VirtualizingPanel.IsVirtualizing="True" />
 
                                     <!--  Paginator  -->
                                     <controls:Paginator Grid.Row="2" Margin="0,32" />

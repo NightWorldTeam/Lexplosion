@@ -12,19 +12,19 @@ using Lexplosion.WPF.NewInterface.Core.Extensions;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 {
-    public sealed class CategoryGroup 
+    public sealed class CategoryGroup
     {
         public string Header { get; }
         public string IconData { get; }
         public IReadOnlyCollection<CategoryWrapper> Categories { get; }
 
-        public CategoryGroup(string header, IEnumerable<CategoryWrapper> categories, string iconData = null)    
+        public CategoryGroup(string header, IEnumerable<CategoryWrapper> categories, string iconData = null)
         {
             Header = header;
             Categories = categories.ToArray<CategoryWrapper>();
             IconData = iconData;
         }
-    } 
+    }
 
     public abstract class AddonsRepositoryModelBase : ViewModelBase
     {
@@ -35,10 +35,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
             ClassId = "",
             ParentCategoryId = ""
         };
-
-
         protected BaseInstanceData _instanceData;
-        protected readonly InstanceSource _instanceSource;
+        protected readonly ProjectSource _projectSource;
         protected readonly AddonType _addonType;
 
 
@@ -48,19 +46,20 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
         #region Properties
 
 
+        public abstract ReadOnlyCollection<uint> PageSizes { get; }
+
+
         protected readonly ObservableCollection<CategoryWrapper> _categories = new();
         protected readonly ObservableCollection<IProjectCategory> _selectedCategories = new();
         protected ObservableCollection<InstanceAddon> _addonsList = new();
         protected ObservableCollection<CategoryGroup> _categoriesGroups = new();
-        private readonly Dictionary<string, List<CategoryWrapper>> _categoriesGroupsByName = new();
 
         public IEnumerable<CategoryWrapper> Categories { get => _categories; }
         public IEnumerable<IProjectCategory> SelectedCategories { get => _selectedCategories; }
         public IEnumerable<InstanceAddon> AddonsList { get => _addonsList; }
         public IEnumerable<CategoryGroup> CategoriesGroups { get => _categoriesGroups; }
 
-        //public IEnumerable<SortByParamObject> SortByParams { get; }
-
+        public IEnumerable<SortByParamObject> SortByParams { get; protected set; }
 
         private string _searchFilter = string.Empty;
         public string SearchFilter
@@ -109,16 +108,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
         #region Constructors
 
 
-        protected AddonsRepositoryModelBase(InstanceSource instanceSource, BaseInstanceData instanceData, AddonType addonType)
+        protected AddonsRepositoryModelBase(ProjectSource projectSource, BaseInstanceData instanceData, AddonType addonType)
         {
-            _instanceSource = instanceSource;
+            _projectSource = projectSource;
             _instanceData = instanceData;
             _addonType = addonType;
-
-            //TranslatableObjectConverters.EnumToTranslatebleObject<int>(typeof(ModrinthSortField));
-
-            PrepareCategories();
-            LoadContent();
         }
 
 
@@ -136,7 +130,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
         {
             Runtime.TaskRun(() =>
             {
-                var addons = InstanceAddon.GetAddonsCatalog(_instanceSource, _instanceData, _addonType, BuildSearchParams());
+                var addons = InstanceAddon.GetAddonsCatalog(_projectSource, _instanceData, _addonType, BuildSearchParams());
 
                 App.Current.Dispatcher.Invoke(() =>
                 {
@@ -167,74 +161,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
         }
 
 
-        private void PrepareCategories()
-        {
-            Runtime.TaskRun(() =>
-            {
-                var categories = GetCategories();
-                Console.WriteLine(categories.Count);
-
-                App.Current.Dispatcher.Invoke(() =>
-                {
-                    foreach (var category in categories)
-                    {
-                        //Console.WriteLine($"{category.Id} {category.Name} {category.ClassId} {category.ParentCategoryId}");
-
-                        if (category.Id == "-1")
-                            continue;
-
-                        if (_instanceSource == InstanceSource.Modrinth)
-                        {
-                            if (!_addonType.ToString().ToLower().Contains(category.ClassId.ToLower()))
-                                continue;
-                        }
-
-
-                        if (!_categoriesGroupsByName.ContainsKey(category.ParentCategoryId))
-                        {
-                            _categoriesGroupsByName.Add(category.ParentCategoryId, new List<CategoryWrapper>());
-                        }
-
-                        var categoryWrapper = new CategoryWrapper(category);
-                        categoryWrapper.SelectedEvent += OnSelectedCategoryChanged;
-                        _categories.Add(categoryWrapper);
-                        _categoriesGroupsByName[category.ParentCategoryId].Add(categoryWrapper);
-                    }
-
-                    foreach (var item in _categoriesGroupsByName) 
-                    {
-                        _categoriesGroups.Add(new CategoryGroup(GetCategoryGroupHeader(item.Key, categories), item.Value));
-                    }
-                });
-            });
-        }
-
-
         #endregion Public & Protected Methods 
 
 
         #region Private Methods
-
-
-        private string GetCategoryGroupHeader(string header, IEnumerable<IProjectCategory> categories) 
-        {
-            if (_instanceSource == InstanceSource.Modrinth)
-            {
-                return header;
-            }
-            if (int.TryParse(header, out var newHeader)) 
-            {
-                if (header == "6")
-                    return "All";
-/*              Id Name ClassId ParentCategoryId}
-                426 Addons 6 6
-                427 Thermal Expansion 6 426*/
-// not working
-                var g = categories.FirstOrDefault(c => c.Id == header && c.ParentCategoryId == "6");
-                return g == null ? string.Empty : g.Name;
-            }
-            return header;
-        }
 
 
         protected virtual void OnSelectedCategoryChanged(IProjectCategory category, bool isSelected)
@@ -280,25 +210,56 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
     public sealed class AddonsRepositoryModel : AddonsRepositoryModelBase
     {
         private ICollection<IProjectCategory> _latestApplyCategories = new List<IProjectCategory>();
+        private readonly Dictionary<string, List<CategoryWrapper>> _categoriesGroupsByName = new();
 
         private bool _hasConfirmCategories;
-        public bool HasConfirmCategories 
+        public bool HasConfirmCategories
         {
-            get => _hasConfirmCategories; set 
+            get => _hasConfirmCategories; set
             {
                 _hasConfirmCategories = value;
                 OnPropertyChanged();
             }
         }
 
+        public override ReadOnlyCollection<uint> PageSizes { get; }
+
 
         #region Constructors
 
 
-        public AddonsRepositoryModel(InstanceSource instanceSource, BaseInstanceData instanceData, AddonType addonType) 
-            : base(instanceSource, instanceData, addonType)
+        public AddonsRepositoryModel(ProjectSource projectSource, BaseInstanceData instanceData, AddonType addonType)
+            : base(projectSource, instanceData, addonType)
         {
+            PageSizes = projectSource switch
+            {
+                ProjectSource.Modrinth => new([6, 10, 16, 20, 50, 100]),
+                ProjectSource.Curseforge => new([10, 20, 50]),
+                _ => new([10]),
+            };
+            PageSize = PageSizes[0];
 
+            Type sortByParamsType = _projectSource switch
+            {
+                ProjectSource.Curseforge => typeof(CfSortField),
+                ProjectSource.Modrinth => typeof(ModrinthSortField),
+                _ => null,
+            };
+
+            // If Exception when ProjectSource has new Value)
+            var enumValues = Enum.GetValues(sortByParamsType);
+            var sortByParams = new SortByParamObject[enumValues.Length];
+            var i = 0;
+            foreach (var index in enumValues)
+            {
+                var name = Enum.GetName(sortByParamsType, index);
+                sortByParams[i] = new(name, (int)index);
+                i++;
+            }
+            SortByParams = sortByParams;
+
+            PrepareCategories();
+            LoadContent();
         }
 
 
@@ -310,7 +271,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 
         protected override void OnSelectedCategoryChanged(IProjectCategory category, bool isSelected)
         {
-            if (!HasConfirmCategories) 
+            if (!HasConfirmCategories)
             {
                 HasConfirmCategories = true;
                 _latestApplyCategories.Clear();
@@ -341,7 +302,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
         }
 
 
-        public void ApplyCategories() 
+        public void ApplyCategories()
         {
             HasConfirmCategories = false;
             LoadContent();
@@ -349,13 +310,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 
         protected override ISearchParams BuildSearchParams()
         {
-            if (_instanceSource == InstanceSource.Curseforge)
+            if (_projectSource == ProjectSource.Curseforge)
             {
                 return new CurseforgeSearchParams(SearchFilter, _instanceData.GameVersion.ToString(),
                     SelectedCategories, (int)PageSize, (int)CurrentPageIndex, (CfSortField)SelectedSortByIndex,
                     new List<Modloader> { _instanceData.Modloader.ToModloader() });
             }
-            else 
+            else
             {
                 return new ModrinthSearchParams(SearchFilter, _instanceData.GameVersion.ToString(),
                     SelectedCategories, (int)PageSize, (int)CurrentPageIndex, (ModrinthSortField)SelectedSortByIndex,
@@ -365,10 +326,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 
         protected override List<IProjectCategory> GetCategories()
         {
-            if (_instanceSource == InstanceSource.Modrinth)
+            if (_projectSource == ProjectSource.Modrinth)
                 return ModrinthApi.GetCategories().ToList<IProjectCategory>();
 
-            if (_instanceSource == InstanceSource.Curseforge)
+            if (_projectSource == ProjectSource.Curseforge)
                 return CurseforgeApi.GetCategories(_addonType.ToCfProjectType()).ToList<IProjectCategory>();
 
             return [];
@@ -376,6 +337,75 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 
 
         #endregion Public & Protected
+
+
+        #region Private Methods
+
+
+        private void PrepareCategories()
+        {
+            Runtime.TaskRun(() =>
+            {
+                var categories = GetCategories();
+                Console.WriteLine(categories.Count);
+
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    foreach (var category in categories)
+                    {
+                        //Console.WriteLine($"{category.Id} {category.Name} {category.ClassId} {category.ParentCategoryId}");
+
+                        if (category.Id == "-1")
+                            continue;
+
+                        if (_projectSource == ProjectSource.Modrinth)
+                        {
+                            if (!_addonType.ToString().ToLower().Contains(category.ClassId.ToLower()))
+                                continue;
+                        }
+
+
+                        if (!_categoriesGroupsByName.ContainsKey(category.ParentCategoryId))
+                        {
+                            _categoriesGroupsByName.Add(category.ParentCategoryId, new List<CategoryWrapper>());
+                        }
+
+                        var categoryWrapper = new CategoryWrapper(category);
+                        categoryWrapper.SelectedEvent += OnSelectedCategoryChanged;
+                        _categories.Add(categoryWrapper);
+                        _categoriesGroupsByName[category.ParentCategoryId].Add(categoryWrapper);
+                    }
+
+                    foreach (var item in _categoriesGroupsByName)
+                    {
+                        _categoriesGroups.Add(new CategoryGroup(GetCategoryGroupHeader(item.Key, categories), item.Value));
+                    }
+                });
+            });
+        }
+
+        private string GetCategoryGroupHeader(string header, IEnumerable<IProjectCategory> categories)
+        {
+            if (_projectSource == ProjectSource.Modrinth)
+            {
+                return header;
+            }
+            if (int.TryParse(header, out var newHeader))
+            {
+                if (header == "6")
+                    return "All";
+                /*              Id Name ClassId ParentCategoryId}
+                                426 Addons 6 6
+                                427 Thermal Expansion 6 426*/
+                // not working
+                var g = categories.FirstOrDefault(c => c.Id == header && c.ParentCategoryId == "6");
+                return g == null ? string.Empty : g.Name;
+            }
+            return header;
+        }
+
+
+        #endregion Private Methods
     }
 }
 /*-1 All 6 6

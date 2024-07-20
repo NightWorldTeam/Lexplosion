@@ -302,11 +302,11 @@ namespace Lexplosion.Logic.Management.Instances
         /// <param name="type">Тип аддона.</param>
         /// <param name="searchParams">Параметры поиска.</param>
         /// <returns>Собстна список аддонов.</returns>
-        public static IList<InstanceAddon> GetAddonsCatalog(InstanceSource instanceSource, BaseInstanceData modpackInfo, AddonType type, ISearchParams searchParams)
+        public static IList<InstanceAddon> GetAddonsCatalog(ProjectSource instanceSource, BaseInstanceData modpackInfo, AddonType type, ISearchParams searchParams)
         {
             switch (instanceSource)
             {
-                case InstanceSource.Curseforge:
+                case ProjectSource.Curseforge:
                     {
                         CurseforgeSearchParams sParams;
                         if (searchParams is CurseforgeSearchParams)
@@ -321,7 +321,7 @@ namespace Lexplosion.Logic.Management.Instances
                         return GetCurseforgeAddonsCatalog(modpackInfo, type, sParams);
                     }
 
-                case InstanceSource.Modrinth:
+                case ProjectSource.Modrinth:
                     {
                         ModrinthSearchParams sParams;
                         if (searchParams is ModrinthSearchParams)

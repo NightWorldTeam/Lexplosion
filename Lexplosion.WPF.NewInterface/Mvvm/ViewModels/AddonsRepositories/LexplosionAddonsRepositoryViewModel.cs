@@ -1,6 +1,7 @@
 ﻿using Lexplosion.Logic.Management.Instances;
 using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
+using Lexplosion.WPF.NewInterface.Core.Objects.TranslatableObjects;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using Lexplosion.WPF.NewInterface.Stores;
@@ -21,6 +22,22 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
         public AddonsRepositoryModel Model { get; private set; }
 
         public bool IsLoading { get; private set; }
+
+
+        private int _selectedAddonsRepositoryIndex;
+        public int SelectedAddonsRepositoryIndex 
+        {
+            get => _selectedAddonsRepositoryIndex; set 
+            {
+                _selectedAddonsRepositoryIndex = value;
+                Model = _repositoriesList[value];
+                OnPropertyChanged(nameof(Model));
+                OnPropertyChanged();
+            }
+        }
+
+
+        public IEnumerable<ProjectSource> ProjectSources { get; }
 
 
         #region Commands
@@ -98,19 +115,20 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
             BackToInstanceProfileCommand = backCommand;
             _navigationStore = navigationStore;
 
+            ProjectSources = [ProjectSource.Modrinth, ProjectSource.Curseforge];
+
             Runtime.TaskRun(() =>
             {
                 var instanceData = instanceModelBase.InstanceData;
                 App.Current.Dispatcher.Invoke(() =>
                 {
-                    _repositoriesList.Add(new AddonsRepositoryModel(InstanceSource.Modrinth, instanceData, addonType));
-                    _repositoriesList.Add(new AddonsRepositoryModel(InstanceSource.Curseforge, instanceData, addonType));
+                    _repositoriesList.Add(new AddonsRepositoryModel(ProjectSource.Modrinth, instanceData, addonType));
+                    _repositoriesList.Add(new AddonsRepositoryModel(ProjectSource.Curseforge, instanceData, addonType));
 
-                    Model = _repositoriesList[0];
-
+                    SelectedAddonsRepositoryIndex = 0;
+                    
                     ApplySelectedCategoriesCommand = new RelayCommand((obj) => Model.ApplyCategories());
 
-                    OnPropertyChanged(nameof(Model));
                     OnPropertyChanged(nameof(ApplySelectedCategoriesCommand));
                 });
             });

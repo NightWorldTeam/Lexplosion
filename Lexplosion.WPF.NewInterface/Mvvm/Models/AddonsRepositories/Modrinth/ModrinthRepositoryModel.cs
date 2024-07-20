@@ -1,9 +1,6 @@
 ﻿using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects;
-using Lexplosion.WPF.NewInterface.Core;
-using Lexplosion.WPF.NewInterface.Core.Objects;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -12,7 +9,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 {
     public sealed class ModrinthRepositoryModel : AddonsRepositoryModelBase
     {
-        public ReadOnlyCollection<uint> PageSizes { get; } = new ReadOnlyCollection<uint>(new uint[]
+        public override ReadOnlyCollection<uint> PageSizes { get; } = new ReadOnlyCollection<uint>(new uint[]
         {
              6, 10, 16, 20, 50, 100
         });
@@ -27,7 +24,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 
 
         public ModrinthRepositoryModel(BaseInstanceData instanceData, AddonType addonType) 
-            : base(InstanceSource.Modrinth, instanceData, addonType)
+            : base(ProjectSource.Modrinth, instanceData, addonType)
         {
 
         }
