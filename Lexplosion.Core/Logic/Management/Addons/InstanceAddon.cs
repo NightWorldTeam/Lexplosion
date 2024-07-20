@@ -174,6 +174,17 @@ namespace Lexplosion.Logic.Management.Instances
             get => !string.IsNullOrWhiteSpace(_websiteUrl);
         }
 
+        private string _logoUrl = null;
+        public string LogoUrl
+        {
+            get => _logoUrl;
+            set
+            {
+                _logoUrl = value;
+                OnPropertyChanged();
+            }
+        }
+
         public ProjectSource Source
         {
             get
@@ -215,6 +226,8 @@ namespace Lexplosion.Logic.Management.Instances
             Description = addonPrototype.Description;
             Name = addonPrototype.Name;
             WebsiteUrl = addonPrototype.WebsiteUrl;
+
+            LogoUrl = addonPrototype.LogoUrl;
 
             LoadAdditionalData(addonPrototype.LogoUrl);
 
@@ -456,6 +469,7 @@ namespace Lexplosion.Logic.Management.Instances
                         else
                         {
                             instanceAddon = _installingAddons[addonKey].Point;
+                            instanceAddon.LogoUrl = getLogoUrl(addon);
                             instanceAddon.LoadAdditionalData(getLogoUrl(addon));
                         }
                     }
@@ -1273,9 +1287,15 @@ namespace Lexplosion.Logic.Management.Instances
         {
             ThreadPool.QueueUserWorkItem(delegate (object state)
             {
-                DownloadLogo(logoUrl);
                 Categories = _addonPrototype.LoadCategories();
+                //DownloadLogo(logoUrl);
             });
+
+            //Runtime.TaskRun(() =>
+            //{
+            //    Categories = _addonPrototype.LoadCategories();
+            //    DownloadLogo(logoUrl);
+            //});
         }
 
         private void Disable()
