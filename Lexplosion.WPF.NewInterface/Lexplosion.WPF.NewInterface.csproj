@@ -122,7 +122,6 @@
     <Compile Include="Core\Converters\ValueConverters\ToStringConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\WindowHeightToXProcentHeight.cs" />
     <Compile Include="Core\Converters\ValueConverters\WindowWidthToXProcentWidth.cs" />
-    <Compile Include="Core\Extensions\TranslatableObjectConverters.cs" />
     <Compile Include="Core\If.cs" />
     <Compile Include="Core\Objects\PlayerWrapper.cs" />
     <Compile Include="Core\Objects\NightWorldUser.cs" />
@@ -734,6 +733,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Core\Extensions\" />
     <Folder Include="Mvvm\ViewModels\Authorization\OAuth2\" />
     <Folder Include="Mvvm\ViewModels\InstanceForm\" />
   </ItemGroup>
