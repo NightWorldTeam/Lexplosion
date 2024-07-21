@@ -128,7 +128,7 @@
                         Width="90"
                         Height="90"
                         Padding="19"
-                        VerticalAlignment="Center"
+                        VerticalAlignment="Top"
                         BlurTarget="{Binding ElementName=LogoBorder}"
                         CornerRadius="5"
                         IconHeight="26"
