@@ -8,7 +8,6 @@ using System.Linq;
 using Lexplosion.Logic.Network.Web;
 using System;
 using Lexplosion.WPF.NewInterface.Core.Objects.TranslatableObjects;
-using Lexplosion.WPF.NewInterface.Core.Extensions;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 {
