@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:Lexplosion.WPF.NewInterface.Controls"
     xmlns:converters="clr-namespace:Lexplosion.WPF.NewInterface.Core.Converters"
+    xmlns:core="clr-namespace:Lexplosion.WPF.NewInterface.Core"
     xmlns:coreInstances="clr-namespace:Lexplosion.Logic.Management.Instances;assembly=Lexplosion.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
@@ -19,13 +20,32 @@
 
     <UserControl.Resources>
         <DataTemplate DataType="{x:Type logicObjects:CategoryBase}">
-            <TextBlock Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}">
-                <Run Text="{Binding Name}" />
-                <Run
-                    FontWeight="Medium"
-                    Foreground="{DynamicResource LatestForegroundSolidColorBrush}"
-                    Text=" |  " />
-            </TextBlock>
+            <Button Command="{Binding DataContext.SelectCategoryCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}">
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate>
+                                    <Border
+                                        x:Name="border"
+                                        Margin="0,2,8,0"
+                                        Padding="8,4"
+                                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                        BorderThickness="1">
+                                        <TextBlock Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="{Binding Name}" />
+                                    </Border>
+
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="border" Property="Background" Value="{DynamicResource PrimarySolidColorBrush}" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Style>
+            </Button>
         </DataTemplate>
 
 
@@ -188,13 +208,67 @@
                         <Grid Grid.RowSpan="2" Grid.Column="2">
                             <StackPanel Background="Transparent">
                                 <WrapPanel>
-                                    <Button
+                                    <controls:OneStageInstallButton
+                                        Command="{Binding DataContext.InstallAddonCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                        CommandParameter="{Binding}"
+                                        Foreground="{DynamicResource BrandColorForegroundSolidColorBrush}"
+                                        ProgressValue="{Binding DownloadPercentages}">
+
+
+                                        <controls:OneStageInstallButton.Style>
+                                            <Style BasedOn="{StaticResource {x:Type controls:OneStageInstallButton}}" TargetType="{x:Type controls:OneStageInstallButton}">
+                                                <Setter Property="IsInstalled" Value="{Binding IsInstalled}" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsInstalled}" Value="False">
+                                                        <Setter Property="IsInstalled" Value="False" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding UpdateAvailable}" Value="True">
+                                                        <Setter Property="IsInstalled" Value="False" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </controls:OneStageInstallButton.Style>
+
+                                        <controls:OneStageInstallButton.BeforeInstallContent>
+
+                                            <core:If Condition="{Binding UpdateAvailable}">
+                                                <core:If.True>
+                                                    <TextBlock
+                                                        Margin="16,8"
+                                                        HorizontalAlignment="Center"
+                                                        VerticalAlignment="Center"
+                                                        Foreground="{DynamicResource BrandColorForegroundSolidColorBrush}"
+                                                        Text="Обновить" />
+                                                </core:If.True>
+                                                <core:If.False>
+
+                                                    <TextBlock
+                                                        Margin="16,8"
+                                                        HorizontalAlignment="Center"
+                                                        VerticalAlignment="Center"
+                                                        Foreground="{DynamicResource BrandColorForegroundSolidColorBrush}"
+                                                        Text="Установить" />
+                                                </core:If.False>
+                                            </core:If>
+
+                                        </controls:OneStageInstallButton.BeforeInstallContent>
+                                        <controls:OneStageInstallButton.AfterInstallContent>
+                                            <Border Background="{DynamicResource DisableControlIconSolidColorBrush}" CornerRadius="5">
+                                                <TextBlock
+                                                    Margin="16,8"
+                                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                                    Text="Установленно" />
+                                            </Border>
+                                        </controls:OneStageInstallButton.AfterInstallContent>
+                                    </controls:OneStageInstallButton>
+
+                                    <!--<Button
                                         Height="32"
                                         Padding="16,8"
                                         HorizontalContentAlignment="Center"
                                         VerticalContentAlignment="Center"
                                         Content="{DynamicResource Install}"
-                                        FontWeight="Medium" />
+                                        FontWeight="Medium" />-->
                                     <controls:DropdownMenu
                                         Width="32"
                                         Height="32"
@@ -215,7 +289,7 @@
                                                 <TextBlock
                                                     FontSize="14"
                                                     Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                                    Text="Веб-страница" />
+                                                    Text="Добавить в избранное" />
                                                 <TextBlock
                                                     FontSize="14"
                                                     Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
@@ -223,7 +297,7 @@
                                                 <TextBlock
                                                     FontSize="14"
                                                     Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                                    Text="Веб-страница" />
+                                                    Text="Удалить" />
                                             </StackPanel>
                                         </Border>
                                     </controls:DropdownMenu>
@@ -540,6 +614,9 @@
                                             <controls:SearchBox
                                                 Grid.Row="1"
                                                 Margin="0,8,0,0"
+                                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                                SearchCommand="{Binding SearchCommand}"
+                                                Text="{Binding Model.SearchFilter}"
                                                 Visibility="{Binding IsChecked, ElementName=SearchBoxToggleButton, Converter={converters:BooleanToVisibilityConverter}}" />
 
                                             <controls:Paginator

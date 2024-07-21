@@ -8,6 +8,7 @@ using System.Linq;
 using Lexplosion.Logic.Network.Web;
 using System;
 using Lexplosion.WPF.NewInterface.Core.Objects.TranslatableObjects;
+using Lexplosion.Tools;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 {
@@ -238,24 +239,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
             };
             PageSize = PageSizes[0];
 
-            Type sortByParamsType = _projectSource switch
-            {
-                ProjectSource.Curseforge => typeof(CfSortField),
-                ProjectSource.Modrinth => typeof(ModrinthSortField),
-                _ => null,
-            };
 
-            // If Exception when ProjectSource has new Value)
-            var enumValues = Enum.GetValues(sortByParamsType);
-            var sortByParams = new SortByParamObject[enumValues.Length];
-            var i = 0;
-            foreach (var index in enumValues)
-            {
-                var name = Enum.GetName(sortByParamsType, index);
-                sortByParams[i] = new(name, (int)index);
-                i++;
-            }
-            SortByParams = sortByParams;
+
+            SortByParams = GetSortByParams();
 
             PrepareCategories();
             LoadContent();
@@ -266,6 +252,24 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 
 
         #region Public & Protected Methods
+
+        public void InstallAddon(InstanceAddon instanceAddon) 
+        {
+            var stateData = new DynamicStateData<SetValues<InstanceAddon, DownloadAddonRes>, InstanceAddon.InstallAddonState>();
+
+            stateData.StateChanged += (arg, state) =>
+            {
+                if (arg.Value2 != DownloadAddonRes.Successful) 
+                {
+                    var s = 0;
+                }
+            };
+
+            Runtime.TaskRun(() => 
+            { 
+                instanceAddon.InstallLatestVersion(stateData.GetHandler);
+            });
+        }
 
 
         protected override void OnSelectedCategoryChanged(IProjectCategory category, bool isSelected)
@@ -341,6 +345,30 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
         #region Private Methods
 
 
+        private IEnumerable<SortByParamObject> GetSortByParams() 
+        {
+            Type sortByParamsType = _projectSource switch
+            {
+                ProjectSource.Curseforge => typeof(CfSortField),
+                ProjectSource.Modrinth => typeof(ModrinthSortField),
+                _ => null,
+            };
+
+            // If Exception when ProjectSource has new Value)
+            var enumValues = Enum.GetValues(sortByParamsType);
+            var sortByParams = new SortByParamObject[enumValues.Length];
+            var i = 0;
+            
+            foreach (var index in enumValues)
+            {
+                var name = Enum.GetName(sortByParamsType, index);
+                sortByParams[i] = new(name, (int)index);
+                i++;
+            }
+
+            return sortByParams;
+        }
+
         private void PrepareCategories()
         {
             Runtime.TaskRun(() =>
@@ -401,6 +429,16 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
                 return g == null ? string.Empty : g.Name;
             }
             return header;
+        }
+
+        internal void SelectCategory(IProjectCategory category)
+        {
+            foreach (var i in Categories) 
+            {
+                if (i.GetHashCode() == category.GetHashCode())
+                    i.IsSelected = true;
+                Console.WriteLine($"{i.Name} {i.GetHashCode()} == {i.GetHashCode()} {i.Name}");
+            }
         }
 
 

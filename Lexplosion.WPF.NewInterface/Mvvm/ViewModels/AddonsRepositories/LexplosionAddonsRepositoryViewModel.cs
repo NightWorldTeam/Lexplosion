@@ -1,6 +1,8 @@
 ﻿using Lexplosion.Logic.Management.Instances;
+using Lexplosion.Logic.Objects;
 using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
+using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Core.Objects.TranslatableObjects;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
@@ -30,6 +32,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
             get => _selectedAddonsRepositoryIndex; set 
             {
                 _selectedAddonsRepositoryIndex = value;
+                // сохраняем SearchFilter
+                if (Model != null)
+                    _repositoriesList[value].SearchFilter = Model.SearchFilter;
                 Model = _repositoriesList[value];
                 OnPropertyChanged(nameof(Model));
                 OnPropertyChanged();
@@ -98,6 +103,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
 
         public ICommand ApplySelectedCategoriesCommand { get; private set; }
 
+        private RelayCommand _selectCategoryCommand;
+        public ICommand SelectCategoryCommand 
+        {
+            get => RelayCommand.GetCommand<IProjectCategory>(ref _selectCategoryCommand, Model.SelectCategory);
+        }
 
         private List<AddonsRepositoryModel> _repositoriesList = new();
 
