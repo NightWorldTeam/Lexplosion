@@ -297,14 +297,14 @@ namespace Lexplosion.Logic.Management.Instances
         /// <summary>
         /// Вовзращает каталог аддонов
         /// </summary>
-        /// <param name="instanceSource">Тип источника в котором искать. (Curseforge или Modrinth, других нету).</param>
+        /// <param name="projectSource">Тип источника в котором искать. (Curseforge или Modrinth, других нету).</param>
         /// <param name="modpackInfo">Класс BaseInstanceData, описывающий модпак, для которого нужно получить каталог адднов.</param>
         /// <param name="type">Тип аддона.</param>
         /// <param name="searchParams">Параметры поиска.</param>
         /// <returns>Собстна список аддонов.</returns>
-        public static IList<InstanceAddon> GetAddonsCatalog(ProjectSource instanceSource, BaseInstanceData modpackInfo, AddonType type, ISearchParams searchParams)
+        public static AddonsCatalog GetAddonsCatalog(ProjectSource projectSource, BaseInstanceData modpackInfo, AddonType type, ISearchParams searchParams)
         {
-            switch (instanceSource)
+            switch (projectSource)
             {
                 case ProjectSource.Curseforge:
                     {
@@ -336,7 +336,7 @@ namespace Lexplosion.Logic.Management.Instances
                         return GetModrinthAddonsCatalog(modpackInfo, type, sParams);
                     }
                 default:
-                    return new List<InstanceAddon>();
+                    return new AddonsCatalog();
 
             }
         }
@@ -354,12 +354,12 @@ namespace Lexplosion.Logic.Management.Instances
         public static List<InstanceAddon> GetAddonsCatalog(BaseInstanceData modpackInfo, int pageSize, int index, AddonType type, CategoryBase category, string searchFilter = "")
         {
             var searchParams = new CurseforgeSearchParams(searchFilter, modpackInfo.GameVersion.Id, new List<CategoryBase>() { category }, pageSize, index, CfSortField.Popularity, new List<ClientType>() { modpackInfo.Modloader });
-            return GetCurseforgeAddonsCatalog(modpackInfo, type, searchParams);
+            return (List<InstanceAddon>)GetCurseforgeAddonsCatalog(modpackInfo, type, searchParams).List;
             //var searchParams = new ModrinthSearchParams(searchFilter, modpackInfo.GameVersion.Id, new List<CategoryBase>() { category }, pageSize, index, ModrinthSortField.Relevance, new List<ClientType>() { modpackInfo.Modloader });
             //return GetModrinthAddonsCatalog(modpackInfo, type, searchParams);
         }
 
-        private static List<InstanceAddon> GetCurseforgeAddonsCatalog(BaseInstanceData modpackInfo, AddonType type, CurseforgeSearchParams sParams)
+        private static AddonsCatalog GetCurseforgeAddonsCatalog(BaseInstanceData modpackInfo, AddonType type, CurseforgeSearchParams sParams)
         {
             Func<List<CurseforgeAddonInfo>> getCatalog = () =>
             {
@@ -386,15 +386,18 @@ namespace Lexplosion.Logic.Management.Instances
             };
             Func<CurseforgeAddonInfo, string> getLogoUrl = (CurseforgeAddonInfo addonInfo) => addonInfo.logo?.url;
 
-            return GetAddonsCatalog(modpackInfo, type, sParams, getCatalog, addonPrototypeCreate, getAddonId, getDownloadCounts, getLastUpdate, getLogoUrl);
+            var catalog =  GetAddonsCatalog(modpackInfo, type, sParams, getCatalog, addonPrototypeCreate, getAddonId, getDownloadCounts, getLastUpdate, getLogoUrl);
+            return new AddonsCatalog(catalog, -1);
         }
 
-        private static List<InstanceAddon> GetModrinthAddonsCatalog(BaseInstanceData modpackInfo, AddonType type, ModrinthSearchParams sParams)
+        private static AddonsCatalog GetModrinthAddonsCatalog(BaseInstanceData modpackInfo, AddonType type, ModrinthSearchParams sParams)
         {
+            int totalHits = -1;
             Func<List<ModrinthProjectInfo>> getCatalog = () =>
             {
-                (List<ModrinthProjectInfo>, int) addonsList1 = ModrinthApi.GetAddonsList(sParams.PageSize, sParams.PageIndex, type, sParams.Categories, sParams.Modloaders, sParams.SearchFilter, modpackInfo.GameVersion.Id);
-                return addonsList1.Item1;
+                (List<ModrinthProjectInfo>, int) addonsList = ModrinthApi.GetAddonsList(sParams.PageSize, sParams.PageIndex, type, sParams.Categories, sParams.Modloaders, sParams.SearchFilter, modpackInfo.GameVersion.Id);
+                totalHits = addonsList.Item2;
+                return addonsList.Item1;
             };
 
             Func<ModrinthProjectInfo, IPrototypeAddon> addonPrototypeCreate = (ModrinthProjectInfo addonInfo) =>
@@ -417,7 +420,8 @@ namespace Lexplosion.Logic.Management.Instances
             };
             Func<ModrinthProjectInfo, string> getLogoUrl = (ModrinthProjectInfo addonInfo) => addonInfo.LogoUrl;
 
-            return GetAddonsCatalog(modpackInfo, type, sParams, getCatalog, addonPrototypeCreate, getAddonId, getDownloadCounts, getLastUpdate, getLogoUrl);
+            var catalog = GetAddonsCatalog(modpackInfo, type, sParams, getCatalog, addonPrototypeCreate, getAddonId, getDownloadCounts, getLastUpdate, getLogoUrl);
+            return new AddonsCatalog(catalog, totalHits);
         }
 
         private static List<InstanceAddon> GetAddonsCatalog<TAddonInfo>(BaseInstanceData modpackInfo, AddonType type, ISearchParams searchParams, Func<List<TAddonInfo>> getCatalog, Func<TAddonInfo, IPrototypeAddon> addonPrototypeCreate, Func<TAddonInfo, string> getAddonId, Func<TAddonInfo, int> getDownloadCounts, Func<TAddonInfo, string> getLastUpdate, Func<TAddonInfo, string> getLogoUrl)
