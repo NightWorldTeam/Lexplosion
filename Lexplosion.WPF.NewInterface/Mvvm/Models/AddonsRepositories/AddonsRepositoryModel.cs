@@ -130,7 +130,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
         {
             Runtime.TaskRun(() =>
             {
-                var addons = InstanceAddon.GetAddonsCatalog(_projectSource, _instanceData, _addonType, BuildSearchParams());
+                var addons = InstanceAddon.GetAddonsCatalog(_projectSource, _instanceData, _addonType, BuildSearchParams()).List;
 
                 App.Current.Dispatcher.Invoke(() =>
                 {
