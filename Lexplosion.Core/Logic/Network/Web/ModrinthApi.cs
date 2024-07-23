@@ -209,7 +209,14 @@ namespace Lexplosion.Logic.Network.Web
             return GetApiData<CtalogContainer>(url)?.hits ?? new List<ModrinthCtalogUnit>();
         }
 
-        public static (List<ModrinthProjectInfo>, int) GetAddonsList(int pageSize, int index, AddonType type, IEnumerable<IProjectCategory> categories, IEnumerable<string> modloaders, string searchFilter = "", string gameVersion = "")
+
+        /// <summary>
+        /// Получает список аддонов
+        /// </summary>
+        /// <param name="type">Тип аддона</param>
+        /// <param name="searchParams">параметры поиска</param>
+        /// <returns>Первое значение - список аддонов, второе - общее количество аддонов, доступных по запросу</returns>
+        public static (List<ModrinthProjectInfo>, int) GetAddonsList(AddonType type, ModrinthSearchParams searchParams)
         {
             string _type;
             switch (type)
@@ -220,6 +227,9 @@ namespace Lexplosion.Logic.Network.Web
                 case AddonType.Resourcepacks:
                     _type = "resourcepack";
                     break;
+                case AddonType.Shaders:
+                    _type = "shader";
+                    break;
                 default:
                     _type = "resourcepack";
                     break;
@@ -228,14 +238,14 @@ namespace Lexplosion.Logic.Network.Web
             string url = "https://api.modrinth.com/v2/search?facets=";
             string facets = $"[[\"project_type:{_type}\"]";
 
-            if (!string.IsNullOrWhiteSpace(gameVersion))
+            if (!string.IsNullOrWhiteSpace(searchParams.GameVersion))
             {
-                facets += $",[\"versions:{gameVersion}\"]";
+                facets += $",[\"versions:{searchParams.GameVersion}\"]";
             }
 
             if (type == AddonType.Mods)
             {
-                string modloadersFilter = string.Join(",", modloaders.Select(x => ($"\"categories:{x}\"")));
+                string modloadersFilter = string.Join(",", searchParams.Modloaders.Select(x => ($"\"categories:{x}\"")));
                 if (modloadersFilter != string.Empty)
                 {
                     facets += $",[{modloadersFilter}]";
@@ -243,7 +253,7 @@ namespace Lexplosion.Logic.Network.Web
             }
 
             string ctrs = string.Empty;
-            foreach (var category in categories)
+            foreach (var category in searchParams.Categories)
             {
                 if (category.Id == "-1")
                 {
@@ -261,12 +271,14 @@ namespace Lexplosion.Logic.Network.Web
 
             facets += "]";
 
-            url += WebUtility.UrlEncode(facets) + "&offset=" + (index * pageSize) + "&limit" + pageSize;
+            url += WebUtility.UrlEncode(facets) + "&offset=" + (searchParams.PageIndex * searchParams.PageSize) + "&limit" + searchParams.PageSize;
 
-            if (!string.IsNullOrWhiteSpace(searchFilter))
+            if (!string.IsNullOrWhiteSpace(searchParams.SearchFilter))
             {
-                url += "&query=" + WebUtility.UrlEncode(searchFilter);
+                url += "&query=" + WebUtility.UrlEncode(searchParams.SearchFilter);
             }
+
+            url += "&index=" + searchParams.SortFieldString;
 
             Runtime.DebugWrite(url);
             CtalogContainer catalogList = GetApiData<CtalogContainer>(url);

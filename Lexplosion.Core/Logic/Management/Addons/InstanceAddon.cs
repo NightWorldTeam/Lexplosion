@@ -361,9 +361,12 @@ namespace Lexplosion.Logic.Management.Instances
 
         private static AddonsCatalog GetCurseforgeAddonsCatalog(BaseInstanceData modpackInfo, AddonType type, CurseforgeSearchParams sParams)
         {
+            int totalHits = -1;
             Func<List<CurseforgeAddonInfo>> getCatalog = () =>
             {
-                return CurseforgeApi.GetAddonsList(sParams.PageSize, sParams.LastIndexInPage, type, sParams.Categories, sParams.Modloaders, sParams.SearchFilter, sParams.GameVersion);
+                (List<CurseforgeAddonInfo>, int) addonsList = CurseforgeApi.GetAddonsList(type, sParams);
+                totalHits = addonsList.Item2;
+                return addonsList.Item1;
             };
 
             Func<CurseforgeAddonInfo, IPrototypeAddon> addonPrototypeCreate = (CurseforgeAddonInfo addonInfo) =>
@@ -386,8 +389,8 @@ namespace Lexplosion.Logic.Management.Instances
             };
             Func<CurseforgeAddonInfo, string> getLogoUrl = (CurseforgeAddonInfo addonInfo) => addonInfo.logo?.url;
 
-            var catalog =  GetAddonsCatalog(modpackInfo, type, sParams, getCatalog, addonPrototypeCreate, getAddonId, getDownloadCounts, getLastUpdate, getLogoUrl);
-            return new AddonsCatalog(catalog, -1);
+            var catalog = GetAddonsCatalog(modpackInfo, type, sParams, getCatalog, addonPrototypeCreate, getAddonId, getDownloadCounts, getLastUpdate, getLogoUrl);
+            return new AddonsCatalog(catalog, totalHits);
         }
 
         private static AddonsCatalog GetModrinthAddonsCatalog(BaseInstanceData modpackInfo, AddonType type, ModrinthSearchParams sParams)
@@ -395,7 +398,7 @@ namespace Lexplosion.Logic.Management.Instances
             int totalHits = -1;
             Func<List<ModrinthProjectInfo>> getCatalog = () =>
             {
-                (List<ModrinthProjectInfo>, int) addonsList = ModrinthApi.GetAddonsList(sParams.PageSize, sParams.PageIndex, type, sParams.Categories, sParams.Modloaders, sParams.SearchFilter, modpackInfo.GameVersion.Id);
+                (List<ModrinthProjectInfo>, int) addonsList = ModrinthApi.GetAddonsList(type, sParams);
                 totalHits = addonsList.Item2;
                 return addonsList.Item1;
             };
@@ -1289,10 +1292,10 @@ namespace Lexplosion.Logic.Management.Instances
 
         private void LoadAdditionalData(string logoUrl)
         {
+            Categories = _addonPrototype.LoadCategories();
             ThreadPool.QueueUserWorkItem(delegate (object state)
             {
-                Categories = _addonPrototype.LoadCategories();
-                //DownloadLogo(logoUrl);
+                DownloadLogo(logoUrl);
             });
 
             //Runtime.TaskRun(() =>

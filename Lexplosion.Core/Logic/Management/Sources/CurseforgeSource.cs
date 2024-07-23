@@ -49,7 +49,7 @@ namespace Lexplosion.Logic.Management.Sources
                 }       
             }
 
-            var curseforgeInstances = CurseforgeApi.GetInstances(sParams.PageSize, sParams.LastIndexInPage, category.Id, sParams.SortField, sParams.SearchFilter, sParams.GameVersion);
+            var curseforgeInstances = CurseforgeApi.GetInstances(sParams).Item1;
             var result = new List<InstanceInfo>();
 
             foreach (var instance in curseforgeInstances)
