@@ -24,7 +24,7 @@ namespace Lexplosion.Logic.FileSystem
             // тут переосим нужные файлы из этого архива
 
             string sourcePath = unzupArchivePath + "overrides/";
-            string destinationPath = DirectoryPath + "/instances/" + instanceId + "/";
+            string destinationPath = InstancesPath + instanceId + "/";
 
             //если архив нового типа, то папки overrides не будет. Все папки сборки будут храниться рядом с манифестом 
             if (!Directory.Exists(sourcePath))
@@ -87,7 +87,7 @@ namespace Lexplosion.Logic.FileSystem
                         }
                         else
                         {
-                            if (installedAddons[file.projectID].FileID != file.fileID || !installedAddons[file.projectID].IsExists(DirectoryPath + "/instances/" + instanceId + "/"))
+                            if (installedAddons[file.projectID].FileID != file.fileID || !installedAddons[file.projectID].IsExists(InstancesPath + instanceId + "/"))
                             {
                                 downloadList.Add(file);
                             }
@@ -104,8 +104,8 @@ namespace Lexplosion.Logic.FileSystem
                         {
                             if (installedAddons[addonId].ActualPath != null)
                             {
-                                Runtime.DebugWrite("Delete file: " + DirectoryPath + "/instances/" + instanceId + "/" + installedAddons[addonId].ActualPath);
-                                DelFile(DirectoryPath + "/instances/" + instanceId + "/" + installedAddons[addonId].ActualPath);
+                                Runtime.DebugWrite("Delete file: " + InstancesPath + instanceId + "/" + installedAddons[addonId].ActualPath);
+                                DelFile(InstancesPath + instanceId + "/" + installedAddons[addonId].ActualPath);
                             }
                         }
                         else

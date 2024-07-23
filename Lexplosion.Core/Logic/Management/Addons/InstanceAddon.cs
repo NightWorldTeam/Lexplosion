@@ -287,6 +287,21 @@ namespace Lexplosion.Logic.Management.Instances
             _chacheSemaphore.Release();
         }
 
+
+        private static FileSystemWatcher _modsDirectoryWathcer;
+        private static FileSystemWatcher _resourcepacksDirectoryWathcer;
+
+        public static void StartWathingDirecoty(BaseInstanceData instanceData)
+        {
+            _modsDirectoryWathcer = new FileSystemWatcher(WithDirectory.InstancesPath + instanceData.LocalId + "/mods");
+            _resourcepacksDirectoryWathcer = new FileSystemWatcher(WithDirectory.InstancesPath + instanceData.LocalId + "/resourcepacks");
+        }
+
+        public static void StopWatchingDirectory()
+        {
+
+        }
+
         public static InstanceAddon CreateModrinthAddon(BaseInstanceData modpackInfo, ModrinthProjectInfo projectInfo)
         {
             IPrototypeAddon addonPrototype = new ModrinthAddon(modpackInfo, projectInfo);
@@ -445,7 +460,7 @@ namespace Lexplosion.Logic.Management.Instances
                 foreach (TAddonInfo addon in addonsList)
                 {
                     string addonId = getAddonId(addon);
-                    bool isInstalled = (installedAddons.ContainsKey(addonId) && installedAddons[addonId].IsExists(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/"));
+                    bool isInstalled = (installedAddons.ContainsKey(addonId) && installedAddons[addonId].IsExists(WithDirectory.InstancesPath + instanceId + "/"));
 
                     InstanceAddon instanceAddon;
                     string addonKey = GetAddonKey(modpackInfo, addonId);
@@ -522,7 +537,7 @@ namespace Lexplosion.Logic.Management.Instances
             {
                 InstalledAddonInfo addon = installedAddons[_projectId];
                 installedAddons.TryRemove(_projectId);
-                addon.RemoveFromDir(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/");
+                addon.RemoveFromDir(WithDirectory.InstancesPath + instanceId + "/");
                 installedAddons.Save();
             }
         }
@@ -707,7 +722,7 @@ namespace Lexplosion.Logic.Management.Instances
                         {
                             try
                             {
-                                string path = WithDirectory.DirectoryPath + "/instances/" + instanceId + "/";
+                                string path = WithDirectory.InstancesPath + instanceId + "/";
                                 InstalledAddonInfo installedAddon = installedAddons[_addonPrototype.ProjectId];
                                 if (installedAddon.IsExists(path))
                                 {
@@ -721,7 +736,7 @@ namespace Lexplosion.Logic.Management.Instances
                         {
                             try
                             {
-                                string dir = WithDirectory.DirectoryPath + "/instances/" + instanceId + "/";
+                                string dir = WithDirectory.InstancesPath + instanceId + "/";
                                 File.Move(dir + ressult.Value1.ActualPath, dir + ressult.Value1.Path + DISABLE_FILE_EXTENSION);
                                 ressult.Value1.IsDisable = true;
 
@@ -809,7 +824,7 @@ namespace Lexplosion.Logic.Management.Instances
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static List<InstanceAddon> InstalledAddonsHandle(BaseInstanceData modpackInfo, AddonType addonType, string folderName, string fileExtension, IternalAddonInfo infoHandler)
         {
-            string clientPath = WithDirectory.DirectoryPath + "/instances/" + modpackInfo.LocalId + "/";
+            string clientPath = WithDirectory.InstancesPath + modpackInfo.LocalId + "/";
             List<InstanceAddon> addons = new List<InstanceAddon>();
 
             InstalledAddonsFormat actualAddonsList = new InstalledAddonsFormat(); //актуальный список аддонов, то есть те аддоны которы действительно существуют и есть в списке. В конце именно этот спсиок будет сохранен в файл
@@ -923,7 +938,7 @@ namespace Lexplosion.Logic.Management.Instances
                     bool isAddonExtension = (extension == fileExtension), isDisable = (extension == DISABLE_FILE_EXTENSION);
                     if (isAddonExtension || isDisable)
                     {
-                        string xyi = fileAddr_.Replace(WithDirectory.DirectoryPath + "/instances/" + modpackInfo.LocalId + "/", "");
+                        string xyi = fileAddr_.Replace(WithDirectory.InstancesPath + modpackInfo.LocalId + "/", "");
                         if (!existsUnknownAddons.Contains(xyi) && !existsAddons.ContainsKey(xyi))
                         {
                             unknownAddons.Add(fileAddr);
@@ -947,7 +962,7 @@ namespace Lexplosion.Logic.Management.Instances
                     bool isAddonExtension = (extension == fileExtension), isDisable = (extension == DISABLE_FILE_EXTENSION);
                     if (isAddonExtension || isDisable)
                     {
-                        string xyi = fileAddr_.Replace(WithDirectory.DirectoryPath + "/instances/" + modpackInfo.LocalId + "/", "");
+                        string xyi = fileAddr_.Replace(WithDirectory.InstancesPath + modpackInfo.LocalId + "/", "");
 
                         string filename = "";
                         try
@@ -1196,7 +1211,7 @@ namespace Lexplosion.Logic.Management.Instances
 
         public static List<InstanceAddon> GetInstalledWorlds(BaseInstanceData modpackInfo)
         {
-            string clientPath = WithDirectory.DirectoryPath + "/instances/" + modpackInfo.LocalId + "/";
+            string clientPath = WithDirectory.InstancesPath + modpackInfo.LocalId + "/";
             List<InstanceAddon> addons = new List<InstanceAddon>();
             InstalledAddonsFormat actualAddonsList = new InstalledAddonsFormat(); //актуальный список аддонов, то есть те аддоны которы действительно существуют и есть в списке. В конце именно этот спсиок будет сохранен в файл
             var existsCfMods = new HashSet<string>(); // айдишники модов которые действителньо существуют (есть и в списке и в папке) и скачаны с курсфорджа
@@ -1316,7 +1331,7 @@ namespace Lexplosion.Logic.Management.Instances
                 {
                     try
                     {
-                        string dir = WithDirectory.DirectoryPath + "/instances/" + instanceId + "/";
+                        string dir = WithDirectory.InstancesPath + instanceId + "/";
                         if (data.IsExists(dir))
                         {
                             File.Move(dir + data.Path + DISABLE_FILE_EXTENSION, dir + data.Path);
@@ -1328,7 +1343,7 @@ namespace Lexplosion.Logic.Management.Instances
                 {
                     try
                     {
-                        string dir = WithDirectory.DirectoryPath + "/instances/" + instanceId + "/";
+                        string dir = WithDirectory.InstancesPath + instanceId + "/";
                         if (data.IsExists(dir))
                         {
                             File.Move(dir + data.Path, dir + data.Path + DISABLE_FILE_EXTENSION);

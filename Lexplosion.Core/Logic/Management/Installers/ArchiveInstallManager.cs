@@ -110,7 +110,7 @@ namespace Lexplosion.Logic.Management.Installers
             javaVersionName = string.Empty;
 
             Manifest = DataFilesManager.GetManifest(InstanceId, false);
-            InfoData = DataFilesManager.GetFile<CPlatformData>(WithDirectory.DirectoryPath + "/instances/" + InstanceId + "/instancePlatformData.json");
+            InfoData = DataFilesManager.GetFile<CPlatformData>(WithDirectory.InstancesPath + InstanceId + "/instancePlatformData.json");
 
             if (!LocalInfoIsValid(InfoData))
             {
@@ -178,7 +178,7 @@ namespace Lexplosion.Logic.Management.Installers
                 InfoData.instanceVersion = GetProjectVersion(info);
             }
 
-            DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/instances/" + InstanceId + "/instancePlatformData.json", JsonConvert.SerializeObject(InfoData));
+            DataFilesManager.SaveFile(WithDirectory.InstancesPath + InstanceId + "/instancePlatformData.json", JsonConvert.SerializeObject(InfoData));
 
             javaVersionName = Manifest.version.JavaVersionName ?? string.Empty;
             return InstanceInit.Successful;
@@ -216,7 +216,7 @@ namespace Lexplosion.Logic.Management.Installers
                         if (ProfectInfoIsValid)
                         {
                             InfoData.instanceVersion = GetProjectVersion(ProjectInfo);
-                            DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/instances/" + InstanceId + "/instancePlatformData.json", JsonConvert.SerializeObject(InfoData));
+                            DataFilesManager.SaveFile(WithDirectory.InstancesPath + InstanceId + "/instancePlatformData.json", JsonConvert.SerializeObject(InfoData));
                         }
                         else
                         {

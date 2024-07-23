@@ -237,7 +237,7 @@ namespace Lexplosion.Logic.Management.Instances
 
         public bool IsInstalled { get; private set; } = false;
 
-        public string FolderPath { get => WithDirectory.DirectoryPath + "/instances/" + _localId; }
+        public string FolderPath { get => WithDirectory.InstancesPath + _localId; }
 
         #endregion
 
@@ -515,7 +515,7 @@ namespace Lexplosion.Logic.Management.Instances
                         //получаем вншний айдшник и версию, если этот модпак не локлаьный
                         if (list[localId].Type != InstanceSource.Local)
                         {
-                            InstancePlatformData data = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.DirectoryPath + "/instances/" + localId + "/instancePlatformData.json");
+                            InstancePlatformData data = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.InstancesPath + localId + "/instancePlatformData.json");
                             if (data?.instanceVersion != null && data.id != null)
                             {
                                 externalID = data.id;

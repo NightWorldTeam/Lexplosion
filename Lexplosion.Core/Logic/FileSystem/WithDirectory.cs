@@ -12,9 +12,8 @@ using Newtonsoft.Json;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Global;
 using Lexplosion.Tools;
-
-using static Lexplosion.Logic.FileSystem.DataFilesManager;
 using Lexplosion.Logic.Objects;
+using static Lexplosion.Logic.FileSystem.DataFilesManager;
 
 namespace Lexplosion.Logic.FileSystem
 {
@@ -22,6 +21,7 @@ namespace Lexplosion.Logic.FileSystem
     {
         // TODO: во всём WithDirectory я заменяю элементы адресов директорий через replace. Не знаю как на винде, но на линуксе могут появиться проблемы, ведь replace заменяет подстроки в строке, а не только конечную подстроку
         public static string DirectoryPath { get; private set; }
+        public static string InstancesPath { get => DirectoryPath + "/instances/"; }
 
         public static void Create(string path)
         {
@@ -425,15 +425,15 @@ namespace Lexplosion.Logic.FileSystem
 
             try
             {
-                if (!File.Exists(DirectoryPath + "/instances/" + instanceId + "/" + "lastUpdates.json"))
+                if (!File.Exists(InstancesPath + instanceId + "/" + "lastUpdates.json"))
                 {
-                    if (!Directory.Exists(DirectoryPath + "/instances/" + instanceId))
+                    if (!Directory.Exists(InstancesPath + instanceId))
                     {
-                        Directory.CreateDirectory(DirectoryPath + "/instances/" + instanceId); //создаем папку с модпаком, если её нет
+                        Directory.CreateDirectory(InstancesPath + instanceId); //создаем папку с модпаком, если её нет
                     }
                 }
 
-                using (FileStream fstream = new FileStream(DirectoryPath + "/instances/" + instanceId + "/lastUpdates.json", FileMode.OpenOrCreate, FileAccess.Read)) //открываем файл с последними обновлениями
+                using (FileStream fstream = new FileStream(InstancesPath + instanceId + "/lastUpdates.json", FileMode.OpenOrCreate, FileAccess.Read)) //открываем файл с последними обновлениями
                 {
                     byte[] fileBytes = new byte[fstream.Length];
                     fstream.Read(fileBytes, 0, fileBytes.Length);
@@ -449,7 +449,7 @@ namespace Lexplosion.Logic.FileSystem
                     }
                     catch
                     {
-                        File.Delete(DirectoryPath + "/instances/" + instanceId + "/lastUpdates.json");
+                        File.Delete(InstancesPath + instanceId + "/lastUpdates.json");
                     }
                 }
 
@@ -463,7 +463,7 @@ namespace Lexplosion.Logic.FileSystem
         {
             // TODO: удалять временную папку в конце
             string targetDir = CreateTempDir() + instanceId + "-export"; //временная папка, куда будем копировать все файлы
-            string srcDir = DirectoryPath + "/instances/" + instanceId;
+            string srcDir = InstancesPath + instanceId;
 
             try
             {
@@ -599,7 +599,7 @@ namespace Lexplosion.Logic.FileSystem
         public static ImportResult MoveUnpackedInstance(string instanceId, string unzipPath)
         {
             string addr = unzipPath + "files/";
-            string targetDir = DirectoryPath + "/instances/" + instanceId + "/";
+            string targetDir = InstancesPath + instanceId + "/";
 
             try
             {
@@ -653,9 +653,9 @@ namespace Lexplosion.Logic.FileSystem
 
             try
             {
-                if (Directory.Exists(DirectoryPath + "/instances/" + instanceId + "/screenshots"))
+                if (Directory.Exists(InstancesPath + instanceId + "/screenshots"))
                 {
-                    files = Directory.GetFiles(DirectoryPath + "/instances/" + instanceId + "/screenshots");
+                    files = Directory.GetFiles(InstancesPath + instanceId + "/screenshots");
                 }
                 else
                 {
@@ -693,7 +693,7 @@ namespace Lexplosion.Logic.FileSystem
         {
             try
             {
-                string path = DirectoryPath + "/instances/" + instanceId;
+                string path = InstancesPath + instanceId;
                 if (Directory.Exists(path))
                 {
                     Directory.Delete(path, true);

@@ -120,15 +120,15 @@ namespace Lexplosion.Logic.FileSystem
                 string gameVersionName = manifest.version.CustomVersionName ?? manifest.version.GameVersion;
 
                 //проверяем файл версии
-                if (!Directory.Exists(DirectoryPath + "/instances/" + instanceId + "/version"))
+                if (!Directory.Exists(InstancesPath + instanceId + "/version"))
                 {
-                    Directory.CreateDirectory(DirectoryPath + "/instances/" + instanceId + "/version"); //создаем папку versions если её нет
+                    Directory.CreateDirectory(InstancesPath + instanceId + "/version"); //создаем папку versions если её нет
                     _minecraftJar = true; //сразу же добавляем minecraftJar в обновления
                     _updatesCount++;
                 }
                 else
                 {
-                    string minecraftJarFile = DirectoryPath + "/instances/" + instanceId + "/version/" + manifest.version.MinecraftJar.name;
+                    string minecraftJarFile = InstancesPath + instanceId + "/version/" + manifest.version.MinecraftJar.name;
                     if (updates.ContainsKey("version") && File.Exists(minecraftJarFile) && manifest.version.MinecraftJar.lastUpdate == updates["version"]) //проверяем его наличие и версию
                     {
                         if (manifest.version.Security) //если включена защита файла версии, то проверяем его 
@@ -608,7 +608,7 @@ namespace Lexplosion.Logic.FileSystem
                 };
 
                 bool isDownload;
-                string to = DirectoryPath + "/instances/" + instanceId + "/version/";
+                string to = InstancesPath + instanceId + "/version/";
                 if (minecraftJar.notArchived)
                 {
                     isDownload = SaveDownloadJar(addr, minecraftJar.name, to, temp, minecraftJar.sha1, minecraftJar.size, taskArgs, true);
@@ -632,7 +632,7 @@ namespace Lexplosion.Logic.FileSystem
 
                 if (cancelToken.IsCancellationRequested)
                 {
-                    SaveFile(DirectoryPath + "/instances/" + instanceId + "/lastUpdates.json", JsonConvert.SerializeObject(updates));
+                    SaveFile(InstancesPath + instanceId + "/lastUpdates.json", JsonConvert.SerializeObject(updates));
                     return errors;
                 }
 
@@ -642,7 +642,7 @@ namespace Lexplosion.Logic.FileSystem
 
                 if (downloadResult == DownloadFileProgress.Error)
                 {
-                    SaveFile(DirectoryPath + "/instances/" + instanceId + "/lastUpdates.json", JsonConvert.SerializeObject(updates));
+                    SaveFile(InstancesPath + instanceId + "/lastUpdates.json", JsonConvert.SerializeObject(updates));
                     return errors;
                 }
             }
@@ -839,11 +839,11 @@ namespace Lexplosion.Logic.FileSystem
                                             Runtime.DebugWrite("Command pattern: " + command);
                                             Runtime.DebugWrite("{DIR}: " + DirectoryPath);
                                             Runtime.DebugWrite("{TEMP_DIR}: " + tempDir);
-                                            Runtime.DebugWrite("{MINECRAFT_JAR}: " + DirectoryPath + "/instances/" + instanceId + "/version/" + manifest.version.MinecraftJar.name);
+                                            Runtime.DebugWrite("{MINECRAFT_JAR}: " + InstancesPath + instanceId + "/version/" + manifest.version.MinecraftJar.name);
 
                                             command = command.Replace("{DIR}", DirectoryPath);
                                             command = command.Replace("{TEMP_DIR}", tempDir);
-                                            string minecraftJar = "\"" + DirectoryPath + "/instances/" + instanceId + "/version/" + manifest.version.MinecraftJar.name + "\"";
+                                            string minecraftJar = "\"" + InstancesPath + instanceId + "/version/" + manifest.version.MinecraftJar.name + "\"";
                                             command = command.Replace("\"{MINECRAFT_JAR}\"", minecraftJar);
                                             command = command.Replace("{MINECRAFT_JAR}", minecraftJar);
 
@@ -876,7 +876,7 @@ namespace Lexplosion.Logic.FileSystem
                                         break;
                                     case "copyFile":
                                         {
-                                            string from = obtainingMethod[i][1].Replace("{MINECRAFT_JAR}", DirectoryPath + "/instances/" + instanceId + "/version/" + manifest.version.MinecraftJar.name).Replace("//", "/");
+                                            string from = obtainingMethod[i][1].Replace("{MINECRAFT_JAR}", InstancesPath + instanceId + "/version/" + manifest.version.MinecraftJar.name).Replace("//", "/");
                                             string to = obtainingMethod[i][2].Replace("{DIR}", DirectoryPath).Replace("{TEMP_DIR}", tempDir).Replace("//", "/");
                                             if (File.Exists(to))
                                             {
@@ -1068,7 +1068,7 @@ namespace Lexplosion.Logic.FileSystem
             _assetsBlock.Release(gameVersionName);
 
             //сохраняем lastUpdates
-            SaveFile(DirectoryPath + "/instances/" + instanceId + "/lastUpdates.json", JsonConvert.SerializeObject(updates));
+            SaveFile(InstancesPath + instanceId + "/lastUpdates.json", JsonConvert.SerializeObject(updates));
 
             return errors;
         }

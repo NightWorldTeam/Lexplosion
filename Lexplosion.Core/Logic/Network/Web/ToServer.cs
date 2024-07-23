@@ -486,7 +486,7 @@ namespace Lexplosion.Logic.Network
             }
             catch (Exception ex)
             {
-                Runtime.DebugWrite("url: " + url + ", Exception: " + ex);
+                Runtime.DebugWrite($"url: {url}, Exception: {ex}, stack trace: {new System.Diagnostics.StackTrace()}");
                 return null;
             }
         }
