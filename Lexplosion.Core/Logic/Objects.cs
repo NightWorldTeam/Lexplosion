@@ -109,7 +109,7 @@ namespace Lexplosion.Logic.Objects
 
         public void RemoveFromDir(string instancePath)
         {
-            if (Type == AddonType.Mods || Type == AddonType.Resourcepacks)
+            if (Type == AddonType.Mods || Type == AddonType.Resourcepacks || Type == AddonType.Shaders)
             {
                 try
                 {

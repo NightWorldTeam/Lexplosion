@@ -287,20 +287,89 @@ namespace Lexplosion.Logic.Management.Instances
             _chacheSemaphore.Release();
         }
 
+        /// <summary>
+        /// Отвечает за синхронизацию загрузки установленны аддонов
+        /// </summary>
+        private static KeySemaphore<string> _addonsHandleSemaphore = new();
 
+        private static object _watchingLocker = new object();
         private static FileSystemWatcher _modsDirectoryWathcer;
         private static FileSystemWatcher _resourcepacksDirectoryWathcer;
+        private static BaseInstanceData _wathingInstanceData;
 
+        /// <summary>
+        /// Начинает наблюдение за добавлением или удалением файлов аддонов.
+        /// Когда произойдет добавление или удаление, то отработает либо эвент AddonAdded, либо AddonRemoved соотвественно. 
+        /// </summary>
+        /// <param name="instanceData">Данные сборки, за папкой которой нужно следить</param>
         public static void StartWathingDirecoty(BaseInstanceData instanceData)
         {
-            _modsDirectoryWathcer = new FileSystemWatcher(WithDirectory.InstancesPath + instanceData.LocalId + "/mods");
-            _resourcepacksDirectoryWathcer = new FileSystemWatcher(WithDirectory.InstancesPath + instanceData.LocalId + "/resourcepacks");
+            lock (_watchingLocker)
+            {
+                _modsDirectoryWathcer?.Dispose();
+                _resourcepacksDirectoryWathcer?.Dispose();
+
+                _wathingInstanceData = instanceData;
+
+                _modsDirectoryWathcer = new FileSystemWatcher(WithDirectory.InstancesPath + instanceData.LocalId + "/mods");
+                _modsDirectoryWathcer.Created += (object sender, FileSystemEventArgs e) =>
+                {
+                    OnAddonFileAdded(e.FullPath, AddonType.Mods, ".jar", DefineIternalModInfo);
+                };
+                _modsDirectoryWathcer.EnableRaisingEvents = true;
+
+                _resourcepacksDirectoryWathcer = new FileSystemWatcher(WithDirectory.InstancesPath + instanceData.LocalId + "/resourcepacks");
+                _resourcepacksDirectoryWathcer.Created += (object sender, FileSystemEventArgs e) =>
+                {
+                    IternalAddonInfoGetter addonInfo = delegate (string fileAddr, out string displayName, out string authors, out string version, out string description, out string modId)
+                    {
+                        displayName = UNKNOWN_NAME;
+                        authors = "";
+                        version = "";
+                        description = "";
+                        modId = "";
+                    };
+
+                    OnAddonFileAdded(e.FullPath, AddonType.Resourcepacks, ".zip", addonInfo);
+                };
+                _resourcepacksDirectoryWathcer.EnableRaisingEvents = true;
+            }     
         }
 
+        /// <summary>
+        /// Прекращает наблюдение, начатое методом StartWathingDirecoty.
+        /// </summary>
         public static void StopWatchingDirectory()
         {
+            lock (_watchingLocker)
+            {
+                _modsDirectoryWathcer?.Dispose();
+                _modsDirectoryWathcer = null;
 
+                _resourcepacksDirectoryWathcer?.Dispose();
+                _resourcepacksDirectoryWathcer = null;
+
+                _wathingInstanceData = null;
+            }         
         }
+
+        private static void OnAddonFileAdded(string filePath, AddonType type, string fileExtension, IternalAddonInfoGetter addonInfoGetter)
+        {
+            ThreadPool.QueueUserWorkItem((_) =>
+            {
+                if (_wathingInstanceData != null)
+                {
+                    var addon = AddonFileHandle(_wathingInstanceData, filePath, type, fileExtension, addonInfoGetter);
+                    if (addon != null)
+                    {
+                        AddonAdded?.Invoke(addon);
+                    }
+                }
+            });
+        }
+
+        public static event Action<InstanceAddon> AddonAdded;
+        public static event Action<InstanceAddon> AddonRemoved;
 
         public static InstanceAddon CreateModrinthAddon(BaseInstanceData modpackInfo, ModrinthProjectInfo projectInfo)
         {
@@ -819,11 +888,13 @@ namespace Lexplosion.Logic.Management.Instances
             return obj;
         }
 
-        private delegate void IternalAddonInfo(string fileAddr, out string displayName, out string authors, out string version, out string description, out string modId);
+        private delegate void IternalAddonInfoGetter(string fileAddr, out string displayName, out string authors, out string version, out string description, out string modId);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static List<InstanceAddon> InstalledAddonsHandle(BaseInstanceData modpackInfo, AddonType addonType, string folderName, string fileExtension, IternalAddonInfo infoHandler)
+        private static List<InstanceAddon> InstalledAddonsHandle(BaseInstanceData modpackInfo, AddonType addonType, string folderName, string fileExtension, IternalAddonInfoGetter infoHandler)
         {
+            _addonsHandleSemaphore.WaitOne(modpackInfo.LocalId);
+
             string clientPath = WithDirectory.InstancesPath + modpackInfo.LocalId + "/";
             List<InstanceAddon> addons = new List<InstanceAddon>();
 
@@ -927,6 +998,7 @@ namespace Lexplosion.Logic.Management.Instances
                 }
                 catch
                 {
+                    _addonsHandleSemaphore.Release(modpackInfo.LocalId);
                     return addons;
                 }
 
@@ -1063,7 +1135,112 @@ namespace Lexplosion.Logic.Management.Instances
             }
 
             Runtime.DebugWrite(addonType + " " + addons.Count);
+            _addonsHandleSemaphore.Release(modpackInfo.LocalId);
             return addons;
+        }
+
+        private static InstanceAddon AddonFileHandle(BaseInstanceData modpackInfo, string filePath, AddonType addonType, string fileExtension, IternalAddonInfoGetter infoHandler)
+        {
+            _addonsHandleSemaphore.WaitOne(modpackInfo.LocalId);
+            // определяем айдишник
+            int addonId_;
+            string addonId;
+
+            string fileAddr_ = filePath.Replace('\\', '/');
+            string extension = Path.GetExtension(fileAddr_);
+            bool isAddonExtension = (extension == fileExtension), isDisable = (extension == DISABLE_FILE_EXTENSION);
+
+            if (!isAddonExtension && !isDisable)
+            {
+                _addonsHandleSemaphore.Release(modpackInfo.LocalId);
+                return null;
+            }
+
+            string filename = "";
+            try
+            {
+                filename = Path.GetFileName(filePath);
+            }
+            catch { }
+
+            string xyi = fileAddr_.Replace(WithDirectory.InstancesPath + modpackInfo.LocalId + "/", "");
+
+            IPrototypeAddon addonData = AddonsPrototypesCreater.CreateFromFile(modpackInfo, filePath);
+
+            using (InstalledAddons installedAddons = InstalledAddons.Get(modpackInfo.LocalId))
+            {
+                if (addonData != null)
+                {
+                    addonData.DefineDefaultVersion();
+                    string addon_projectId = addonData.ProjectId;
+
+                    installedAddons[addon_projectId] = new InstalledAddonInfo
+                    {
+                        FileID = addonData.FileId,
+                        ProjectID = addon_projectId,
+                        Type = addonType,
+                        IsDisable = isDisable,
+                        Path = isAddonExtension ? xyi : xyi.Remove(xyi.Length - 8), // если аддон выключен, то в спсиок его путь помещаем без расширения .disable
+                        Source = addonData.Source
+                    };
+
+                    var obj = new InstanceAddon(addonData, modpackInfo)
+                    {
+                        Version = ""
+                    };
+
+                    // проверяем наличие обновлений для мода
+                    if (modpackInfo.Type == InstanceSource.Local)
+                    {
+                        addonData.CompareVersions(addonData.FileId, () =>
+                        {
+                            obj.UpdateAvailable = true;
+                        });
+                    }
+
+                    obj.FileName = filename;
+                    obj._isEnable = isAddonExtension;
+
+                    _addonsHandleSemaphore.Release(modpackInfo.LocalId);
+                    return obj;
+                }
+
+                // собстна генерируем айдишник
+                addonId_ = -1;
+                while (installedAddons.ContainsKey(addonId_.ToString()))
+                {
+                    addonId_--;
+                }
+                addonId = addonId_.ToString();
+
+                Runtime.DebugWrite("unknown addon " + fileAddr_);
+
+                installedAddons[addonId] = new InstalledAddonInfo
+                {
+                    FileID = "-1",
+                    ProjectID = addonId,
+                    Type = addonType,
+                    IsDisable = isDisable,
+                    Path = isAddonExtension ? xyi : xyi.Remove(xyi.Length - 8), // если аддон выключен, то в спсиок его путь помещаем без расширения .disable
+                    Source = ProjectSource.None
+                };
+
+                // тут пытаемся получить инфу о моде
+                infoHandler(fileAddr_, out string displayName, out string authors, out string version, out string description, out string modId);
+
+                installedAddons.Save();
+
+                _addonsHandleSemaphore.Release(modpackInfo.LocalId);
+                return new InstanceAddon(addonId, modpackInfo)
+                {
+                    Author = authors,
+                    Description = description,
+                    Name = displayName,
+                    FileName = filename,
+                    Version = (!version.Contains("{") ? version : ""),
+                    _isEnable = isAddonExtension
+                };
+            }
         }
 
         /// <summary>
@@ -1085,12 +1262,7 @@ namespace Lexplosion.Logic.Management.Instances
             };
         }
 
-        /// <summary>
-        /// Возвращает список модов. При вызове так же сохраняет список модов, 
-        /// анализирует папку mods и пихает в список моды которые были в папке, но которых не было в списке.
-        /// </summary>
-        /// <param name="modpackInfo">Инфа о модпаке с которого нужно получить список модов</param>
-        public static List<InstanceAddon> GetInstalledMods(BaseInstanceData modpackInfo)
+        private static void DefineIternalModInfo(string fileAddr, out string displayName, out string authors, out string version, out string description, out string modId)
         {
             string getParameterValue(TomlTable table, string parameter)
             {
@@ -1102,41 +1274,71 @@ namespace Lexplosion.Logic.Management.Instances
                     return "";
             }
 
-            IternalAddonInfo addonInfo = delegate (string fileAddr, out string displayName, out string authors, out string version, out string description, out string modId)
-            {
-                displayName = UNKNOWN_NAME;
-                authors = "";
-                version = "";
-                description = "";
-                modId = "";
+            displayName = UNKNOWN_NAME;
+            authors = "";
+            version = "";
+            description = "";
+            modId = "";
 
-                // тут пытаемся получить инфу о моде
-                try
+            // тут пытаемся получить инфу о моде
+            try
+            {
+                using (ZipArchive zip = ZipFile.Open(fileAddr, ZipArchiveMode.Read))
                 {
-                    using (ZipArchive zip = ZipFile.Open(fileAddr, ZipArchiveMode.Read))
+                    ZipArchiveEntry entry = zip.GetEntry("META-INF/mods.toml");
+                    if (entry != null)
                     {
-                        ZipArchiveEntry entry = zip.GetEntry("META-INF/mods.toml");
+                        using (Stream file = entry.Open())
+                        {
+                            using (TextReader text = new StreamReader(file))
+                            {
+                                TomlTable table = TOML.Parse(text);
+                                if (table != null)
+                                {
+                                    displayName = getParameterValue(table, "displayName");
+                                    authors = getParameterValue(table, "authors");
+                                    version = getParameterValue(table, "version");
+                                    description = getParameterValue(table, "description");
+                                    modId = getParameterValue(table, "modId");
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        entry = zip.GetEntry("mcmod.info");
                         if (entry != null)
                         {
                             using (Stream file = entry.Open())
                             {
-                                using (TextReader text = new StreamReader(file))
+                                using (StreamReader reader = new StreamReader(file, encoding: Encoding.UTF8))
                                 {
-                                    TomlTable table = TOML.Parse(text);
-                                    if (table != null)
+                                    string text = reader.ReadToEnd();
+                                    List<McmodInfo> data;
+                                    try
                                     {
-                                        displayName = getParameterValue(table, "displayName");
-                                        authors = getParameterValue(table, "authors");
-                                        version = getParameterValue(table, "version");
-                                        description = getParameterValue(table, "description");
-                                        modId = getParameterValue(table, "modId");
+                                        data = JsonConvert.DeserializeObject<List<McmodInfo>>(text);
+                                    }
+                                    catch
+                                    {
+                                        data = JsonConvert.DeserializeObject<McmodInfoContainer>(text)?.modList;
+                                    }
+
+                                    if (data != null && data.Count > 0)
+                                    {
+                                        McmodInfo modInfo = data[0];
+                                        displayName = modInfo?.name ?? "";
+                                        version = modInfo?.version ?? "";
+                                        description = modInfo?.description ?? "";
+                                        modId = modInfo?.modid ?? "";
+                                        authors = (modInfo?.authorList != null && modInfo.authorList.Count > 0) ? modInfo.authorList[0] : ((modInfo?.authors != null && modInfo.authors.Count > 0) ? modInfo.authors[0] : "");
                                     }
                                 }
                             }
                         }
                         else
                         {
-                            entry = zip.GetEntry("mcmod.info");
+                            entry = zip.GetEntry("fabric.mod.json");
                             if (entry != null)
                             {
                                 using (Stream file = entry.Open())
@@ -1144,60 +1346,35 @@ namespace Lexplosion.Logic.Management.Instances
                                     using (StreamReader reader = new StreamReader(file, encoding: Encoding.UTF8))
                                     {
                                         string text = reader.ReadToEnd();
-                                        List<McmodInfo> data;
-                                        try
-                                        {
-                                            data = JsonConvert.DeserializeObject<List<McmodInfo>>(text);
-                                        }
-                                        catch
-                                        {
-                                            data = JsonConvert.DeserializeObject<McmodInfoContainer>(text)?.modList;
-                                        }
-
-                                        if (data != null && data.Count > 0)
-                                        {
-                                            McmodInfo modInfo = data[0];
-                                            displayName = modInfo?.name ?? "";
-                                            version = modInfo?.version ?? "";
-                                            description = modInfo?.description ?? "";
-                                            modId = modInfo?.modid ?? "";
-                                            authors = (modInfo?.authorList != null && modInfo.authorList.Count > 0) ? modInfo.authorList[0] : ((modInfo?.authors != null && modInfo.authors.Count > 0) ? modInfo.authors[0] : "");
-                                        }
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                entry = zip.GetEntry("fabric.mod.json");
-                                if (entry != null)
-                                {
-                                    using (Stream file = entry.Open())
-                                    {
-                                        using (StreamReader reader = new StreamReader(file, encoding: Encoding.UTF8))
-                                        {
-                                            string text = reader.ReadToEnd();
-                                            FabricModJson modInfo = JsonConvert.DeserializeObject<FabricModJson>(text);
-                                            displayName = modInfo?.name ?? "";
-                                            version = modInfo?.version ?? "";
-                                            description = modInfo?.description ?? "";
-                                            modId = modInfo?.id ?? "";
-                                            authors = (modInfo?.authors != null && modInfo.authors.Count > 0) ? modInfo.authors[0] : "";
-                                        }
+                                        FabricModJson modInfo = JsonConvert.DeserializeObject<FabricModJson>(text);
+                                        displayName = modInfo?.name ?? "";
+                                        version = modInfo?.version ?? "";
+                                        description = modInfo?.description ?? "";
+                                        modId = modInfo?.id ?? "";
+                                        authors = (modInfo?.authors != null && modInfo.authors.Count > 0) ? modInfo.authors[0] : "";
                                     }
                                 }
                             }
                         }
                     }
                 }
-                catch { }
-            };
+            }
+            catch { }
+        }
 
-            return InstalledAddonsHandle(modpackInfo, AddonType.Mods, "mods", ".jar", addonInfo);
+        /// <summary>
+        /// Возвращает список модов. При вызове так же сохраняет список модов, 
+        /// анализирует папку mods и пихает в список моды которые были в папке, но которых не было в списке.
+        /// </summary>
+        /// <param name="modpackInfo">Инфа о модпаке с которого нужно получить список модов</param>
+        public static List<InstanceAddon> GetInstalledMods(BaseInstanceData modpackInfo)
+        {
+            return InstalledAddonsHandle(modpackInfo, AddonType.Mods, "mods", ".jar", DefineIternalModInfo);
         }
 
         public static List<InstanceAddon> GetInstalledResourcepacks(BaseInstanceData modpackInfo)
         {
-            IternalAddonInfo addonInfo = delegate (string fileAddr, out string displayName, out string authors, out string version, out string description, out string modId)
+            IternalAddonInfoGetter addonInfo = delegate (string fileAddr, out string displayName, out string authors, out string version, out string description, out string modId)
             {
                 displayName = UNKNOWN_NAME;
                 authors = "";
@@ -1312,12 +1489,6 @@ namespace Lexplosion.Logic.Management.Instances
             {
                 DownloadLogo(logoUrl);
             });
-
-            //Runtime.TaskRun(() =>
-            //{
-            //    Categories = _addonPrototype.LoadCategories();
-            //    DownloadLogo(logoUrl);
-            //});
         }
 
         private void Disable()
