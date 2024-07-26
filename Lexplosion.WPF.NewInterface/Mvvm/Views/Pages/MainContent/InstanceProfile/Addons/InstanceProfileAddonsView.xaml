@@ -7,6 +7,7 @@
     xmlns:core="clr-namespace:Lexplosion.WPF.NewInterface.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extension="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
+    xmlns:lexplosion="clr-namespace:Lexplosion;assembly=Lexplosion.Core"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.InstanceProfile"
     xmlns:logicInstances="clr-namespace:Lexplosion.Logic.Management.Instances;assembly=Lexplosion.Core"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -248,9 +249,11 @@
                             <StackPanel Grid.Column="1" Margin="8,0,0,0">
 
                                 <TextBlock
+                                    MaxHeight="48"
                                     FontWeight="Bold"
                                     Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
                                     Text="{Binding Name}"
+                                    TextTrimming="CharacterEllipsis"
                                     TextWrapping="WrapWithOverflow" />
                                 <TextBlock>
                                     <Run Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" Text="by" />
@@ -279,42 +282,89 @@
                             <TextBlock
                                 Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
                                 Text="{Binding FileName}"
-                                TextWrapping="Wrap" />
+                                TextWrapping="WrapWithOverflow" />
                         </StackPanel>
                     </StackPanel>
 
                     <Border
                         Grid.Row="1"
-                        Padding="0,4,0,0"
+                        Padding="8,4,4,0"
                         HorizontalAlignment="Stretch"
                         BorderBrush="{DynamicResource SeparateSolidColorBrush}"
                         BorderThickness="0,1,0,0"
                         CornerRadius="10">
-                        <WrapPanel HorizontalAlignment="Center">
-                            <Button
-                                Height="12"
-                                Command="{Binding DataContext.OpenExternalResourceCommand, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
-                                CommandParameter="{Binding}"
-                                Content="Curseforge"
-                                Style="{StaticResource x32IconButtonWithHover}" />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
 
-                            <Button
-                                Height="16"
-                                Content="Update"
-                                Style="{StaticResource x32IconButtonWithHover}"
-                                Visibility="{Binding UpdateAvailable, UpdateSourceTrigger=PropertyChanged, Converter={valueconverters:BooleanToVisibilityConverter}}" />
+                            <WrapPanel HorizontalAlignment="Left" VerticalAlignment="Center">
+                                <Button
+                                    Height="32"
+                                    Command="{Binding DataContext.OpenExternalResourceCommand, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                    CommandParameter="{Binding}">
+                                    <Button.Style>
+                                        <Style BasedOn="{StaticResource IconButton}" TargetType="{x:Type Button}">
 
-                            <Button
-                                Height="16"
-                                Content="Delete"
-                                Style="{StaticResource x32IconButtonWithHover}" />
+                                            <Setter Property="Content" Value="{x:Null}" />
 
-                            <!--  Addon Switch Enable  -->
-                            <ToggleButton
+                                            <Style.Triggers>
+                                                <!--  If Curseforge  -->
+                                                <DataTrigger Binding="{Binding Source}" Value="{x:Static lexplosion:ProjectSource.Curseforge}">
+                                                    <Setter Property="Content">
+                                                        <Setter.Value>
+                                                            <Viewbox Height="12">
+                                                                <Path
+                                                                    extension:Path.StringKeyData="Curseforge"
+                                                                    Fill="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                                                    Stretch="Fill" />
+                                                            </Viewbox>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </DataTrigger>
+
+                                                <!--  If Modrinth  -->
+                                                <DataTrigger Binding="{Binding Source}" Value="{x:Static lexplosion:ProjectSource.Modrinth}">
+                                                    <Setter Property="Content">
+                                                        <Setter.Value>
+                                                            <Viewbox Height="18">
+                                                                <Path
+                                                                    extension:Path.StringKeyData="Modrinth"
+                                                                    Fill="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                                                    Stretch="Fill" />
+                                                            </Viewbox>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
+
+                                <Button
+                                    Height="16"
+                                    Content="Update"
+                                    Style="{StaticResource x32IconButtonWithHover}"
+                                    Visibility="{Binding UpdateAvailable, UpdateSourceTrigger=PropertyChanged, Converter={valueconverters:BooleanToVisibilityConverter}}" />
+
+                                <!--  Addon Switch Enable  -->
+                                <ToggleButton
+                                    Margin="8,0,0,0"
+                                    IsChecked="{Binding IsEnable}"
+                                    Style="{StaticResource EllipseToggleButton}" />
+                            </WrapPanel>
+
+                            <!--  Addon Uninstall  -->
+                            <Button
+                                Grid.Column="1"
                                 Margin="8,0,0,0"
-                                IsChecked="{Binding IsEnable}"
-                                Style="{StaticResource EllipseToggleButton}" />
-                        </WrapPanel>
+                                Command="{Binding DataContext.UninstallCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                CommandParameter="{Binding}"
+                                Content="Delete"
+                                Foreground="Red"
+                                Style="{StaticResource x32IconButtonActivityColor}" />
+                        </Grid>
                     </Border>
                 </Grid>
             </Border>
@@ -341,13 +391,13 @@
             </Border>
         </ControlTemplate>
 
-        <DataTemplate x:Key="LibeInstanceAddon" DataType="{x:Type logicInstances:InstanceAddon}">
+        <DataTemplate x:Key="LineInstanceAddon" DataType="{x:Type logicInstances:InstanceAddon}">
             <Border
                 x:Name="AnimatableUIElement"
                 BorderBrush="{DynamicResource SeparateSolidColorBrush}"
                 BorderThickness="0,0,0,1">
                 <Grid
-                    Height="60"
+                    MinHeight="60"
                     HorizontalAlignment="Stretch"
                     Background="Transparent"
                     ShowGridLines="False">
@@ -396,10 +446,12 @@
 
                         <StackPanel Orientation="Horizontal">
                             <TextBlock
+                                MaxWidth="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={valueconverters:WindowWidthToXProcentWidth}, ConverterParameter=45}"
                                 FontSize="14"
                                 FontWeight="Medium"
                                 Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                Text="{Binding Name}" />
+                                Text="{Binding Name}"
+                                TextTrimming="CharacterEllipsis" />
 
                             <Border
                                 Margin="12,0,0,0"
@@ -445,7 +497,8 @@
                         <Button
                             Command="{Binding DataContext.UpdateCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
                             CommandParameter="{Binding}"
-                            Style="{StaticResource IconButton}">
+                            Style="{StaticResource IconButton}"
+                            Visibility="{Binding UpdateAvailable, Converter={valueconverters:BooleanToVisibilityConverter}}">
                             <Viewbox Height="18" Margin="4,0,0,0">
                                 <Path
                                     extension:Path.StringKeyData="Update"
@@ -454,25 +507,55 @@
                             </Viewbox>
                         </Button>
 
-                        <!--  Addon Switch Enable  -->
-                        <ToggleButton
-                            Margin="8,0,0,0"
-                            IsChecked="{Binding IsEnable}"
-                            Style="{StaticResource EllipseToggleButton}" />
 
                         <!--  Addon External Link  -->
                         <Button
                             Margin="8,0,0,0"
                             Command="{Binding DataContext.OpenExternalResourceCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
-                            CommandParameter="{Binding}"
-                            Style="{StaticResource IconButton}">
-                            <Viewbox Height="12">
-                                <Path
-                                    extension:Path.StringKeyData="Curseforge"
-                                    Fill="{DynamicResource SecondaryForegroundSolidColorBrush}"
-                                    Stretch="Fill" />
-                            </Viewbox>
+                            CommandParameter="{Binding}">
+                            <Button.Style>
+                                <Style BasedOn="{StaticResource IconButton}" TargetType="{x:Type Button}">
+
+                                    <Setter Property="Content" Value="{x:Null}" />
+
+                                    <Style.Triggers>
+                                        <!--  If Curseforge  -->
+                                        <DataTrigger Binding="{Binding Source}" Value="{x:Static lexplosion:ProjectSource.Curseforge}">
+                                            <Setter Property="Content">
+                                                <Setter.Value>
+                                                    <Viewbox Height="12">
+                                                        <Path
+                                                            extension:Path.StringKeyData="Curseforge"
+                                                            Fill="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                                            Stretch="Fill" />
+                                                    </Viewbox>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </DataTrigger>
+
+                                        <!--  If Modrinth  -->
+                                        <DataTrigger Binding="{Binding Source}" Value="{x:Static lexplosion:ProjectSource.Modrinth}">
+                                            <Setter Property="Content">
+                                                <Setter.Value>
+                                                    <Viewbox Height="18">
+                                                        <Path
+                                                            extension:Path.StringKeyData="Modrinth"
+                                                            Fill="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                                            Stretch="Fill" />
+                                                    </Viewbox>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
                         </Button>
+
+                        <!--  Addon Switch Enable  -->
+                        <ToggleButton
+                            Margin="8,0,0,0"
+                            IsChecked="{Binding IsEnable}"
+                            Style="{StaticResource EllipseToggleButton}" />
 
                         <!--  Addon Uninstall  -->
                         <Button
@@ -523,6 +606,7 @@
                 x:Name="SearchBox"
                 Height="40"
                 Margin="0,0,4,0"
+                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
                 Text="{Binding Model.SearchBoxText, UpdateSourceTrigger=PropertyChanged}" />
 
             <ComboBox
@@ -595,7 +679,7 @@
                 <core:If.False>
                     <ListBox
                         Margin="4,8,4,8"
-                        ItemTemplate="{StaticResource LibeInstanceAddon}"
+                        ItemTemplate="{StaticResource LineInstanceAddon}"
                         ItemsSource="{Binding Model.InstanceAddonCollectionViewSource.View}"
                         Template="{StaticResource DLCHeaderControlTemplate}"
                         VirtualizingPanel.ScrollUnit="Pixel"
