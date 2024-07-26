@@ -39,12 +39,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         #region Commands
 
 
-        private RelayCommand _backCommand;
-        public ICommand BackCoommand
-        {
-            get => RelayCommand.GetCommand(ref _backCommand, () => { });
-        }
-
 
         #endregion Commands
 

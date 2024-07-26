@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Threading;
+using Lexplosion.Logic.Management.Instances;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile
 {
@@ -63,6 +64,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         }
 
         public ICommand BackCommand { get; }
+        
 
 
         #endregion Commands
@@ -73,7 +75,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
 
         public InstanceProfileLeftPanelViewModel(INavigationStore navigationStore, ICommand toMainMenuLayoutCommand, InstanceModelBase instanceModelBase)
         {
-            BackCommand = toMainMenuLayoutCommand;
+            BackCommand = new RelayCommand((obj) =>
+            {
+                // Останавливаем обновление директорий сборки.
+                InstanceAddon.StopWatchingDirectory();
+                toMainMenuLayoutCommand.Execute(obj);
+            });
+
             _navigationStore = navigationStore;
 
             _instanceModel = instanceModelBase;

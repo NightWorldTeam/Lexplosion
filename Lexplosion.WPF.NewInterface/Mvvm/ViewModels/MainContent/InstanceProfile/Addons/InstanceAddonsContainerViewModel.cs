@@ -7,6 +7,7 @@ using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile.Addons;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal;
 using Lexplosion.WPF.NewInterface.Stores;
+using System;
 using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile
@@ -65,7 +66,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
                     Model.UninstallAddon(obj);
                 }, (obj) => { //ModalNavigationStore.Close();
                 });
-                //ModalNavigationStore.Instance.Open(dialogViewModel);
+                ModalNavigationStore.Instance.Open(dialogViewModel);
             });
         }
 
@@ -80,7 +81,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         {
             _navigationStore = navigationStore;
             _instanceModelBase = instanceModelBase;
-            Model = new InstanceAddonsContainerModel(addonType, instanceModelBase);
+            Model = new InstanceAddonsContainerModel(addonType, instanceModelBase, () => instanceModelBase.DirectoryPath);
         }
 
 
@@ -113,7 +114,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         {
             var currentViewModel = _navigationStore.CurrentViewModel;
             var backNavCommand = new NavigateCommand<ViewModelBase>(_navigationStore, () => currentViewModel);
-            // TODO: Давай возможно назначать репозиторий по-умолчанию
+            // TODO: Давать возможно назначать репозиторий по-умолчанию
+            // Возможно даже делать параметр по умолчанию
             _navigationStore.CurrentViewModel = new LexplosionAddonsRepositoryViewModel(_instanceModelBase, Model.Type, backNavCommand, _navigationStore); //new ModrinthRepositoryViewModel(_instanceModelBase, Model.Type, backNavCommand, _navigationStore);
         }
 
@@ -122,7 +124,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         /// </summary>
         public void OpenFolder()
         {
-            _instanceModelBase.OpenFolder();
+            Model.OpenFolder();
         }
 
         /// <summary>

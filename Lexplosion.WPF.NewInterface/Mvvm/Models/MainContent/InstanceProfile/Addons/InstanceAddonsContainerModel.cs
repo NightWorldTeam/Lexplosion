@@ -5,28 +5,32 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Windows.Data;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
 {
     public sealed class InstanceAddonsContainerModel : ViewModelBase
     {
-        private BaseInstanceData _baseInstanceData;
-        private readonly InstanceModelBase _instanceModelBase;
-        private ObservableCollection<InstanceAddon> _addonsList = new();
-
-
         private static string[] _sortByList =
         {
             "name", "author"
         };
 
-        public string[] SortByList => _sortByList;
+
+        private BaseInstanceData _baseInstanceData;
+        private readonly InstanceModelBase _instanceModelBase;
+        private ObservableCollection<InstanceAddon> _addonsList = new();
+
+        private readonly Func<string> GetDirectoryPath;
+        private readonly string _directoryPath;
+
 
 
         #region Properties
 
 
+        public string[] SortByList => _sortByList;
         /// <summary>
         /// Тип аддонов.
         /// </summary>
@@ -67,8 +71,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
         /// </summary>
         private bool _isSearchEnabled = true;
         public bool IsSearchEnabled
-        { 
-            get => _isSearchEnabled; set 
+        {
+            get => _isSearchEnabled; set
             {
                 _isSearchEnabled = value;
                 OnPropertyChanged();
@@ -78,9 +82,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
         /// Текст в поле поиска.
         /// </summary>
         private string _searchBoxText;
-        public string SearchBoxText 
+        public string SearchBoxText
         {
-            get => _searchBoxText; set 
+            get => _searchBoxText; set
             {
                 _searchBoxText = value;
                 OnPropertyChanged();
@@ -91,7 +95,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
         private string _selectedSortByParam;
         public string SelectedSortByParam
         {
-            get => _selectedSortByParam; set 
+            get => _selectedSortByParam; set
             {
                 _selectedSortByParam = value;
                 OnPropertyChanged();
@@ -106,13 +110,24 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
         #region Constructors
 
 
-        public InstanceAddonsContainerModel(AddonType type, InstanceModelBase instanceModelBase)
+        public InstanceAddonsContainerModel(AddonType type, InstanceModelBase instanceModelBase, Func<string> getDirectoryPath = null)
         {
             Type = type;
             _selectedSortByParam = SortByList[0];
             _instanceModelBase = instanceModelBase;
 
-            Runtime.TaskRun(() => 
+            var folderName = type switch
+            {
+                AddonType.Mods => "mods",
+                AddonType.Resourcepacks => "Resourcepacks",
+                AddonType.Maps => "saves",
+                AddonType.Shaders => "shaders",
+                _ => string.Empty
+            };
+
+            _directoryPath = $"{getDirectoryPath()}\\{folderName}";
+
+            Runtime.TaskRun(() =>
             {
                 _baseInstanceData = instanceModelBase.InstanceData;
                 var instanceAddons = InstanceAddon.GetInstalledAddons(type, _baseInstanceData);
@@ -125,6 +140,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
                     OnPropertyChanged(nameof(AddonsCount));
 
                     Runtime.DebugWrite(AddonsCount);
+
+                    InstanceAddon.StartWathingDirecoty(_baseInstanceData);
+                    InstanceAddon.AddonAdded += InstanceAddon_AddonAdded;
+                    InstanceAddon.AddonRemoved += InstanceAddon_AddonRemoved;
                 });
             });
         }
@@ -134,6 +153,20 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
 
 
         #region Public Methods
+
+
+        public void OpenFolder() 
+        {
+
+            try
+            {
+                Process.Start("explorer", _directoryPath);
+            }
+            catch 
+            {
+                Process.Start("explorer", GetDirectoryPath());
+            }
+        }
 
 
         /// <summary>
@@ -199,7 +232,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
         /// <param name="instanceAddon">Addon который нужно удалить</param>
         public void UninstallAddon(object instanceAddon)
         {
-            if (instanceAddon is InstanceAddon) 
+            if (instanceAddon is InstanceAddon)
             {
                 Runtime.TaskRun(() => {
                     (instanceAddon as InstanceAddon).Delete();
@@ -208,13 +241,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
         }
 
 
-        public void OpenExternalResource(InstanceAddon addon) 
+        public void OpenExternalResource(InstanceAddon addon)
         {
-            try 
+            try
             {
                 Process.Start(addon.WebsiteUrl);
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
             }
         }
@@ -243,6 +276,22 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
             {
                 InstanceAddonCollectionViewSource.View.Filter = (m => (m as InstanceAddon).Author?.IndexOf(value, System.StringComparison.InvariantCultureIgnoreCase) > -1);
             }
+        }
+
+
+        private void InstanceAddon_AddonRemoved(InstanceAddon obj)
+        {
+            App.Current.Dispatcher.Invoke(() => { 
+                _addonsList.Remove(obj);
+            });
+        }
+
+        private void InstanceAddon_AddonAdded(InstanceAddon obj)
+        {
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                _addonsList.Add(obj);
+            });
         }
 
 
