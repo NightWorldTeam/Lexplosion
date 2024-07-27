@@ -7,10 +7,15 @@
     <Style x:Key="IconButton" TargetType="{x:Type Button}">
         <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
+        <Setter Property="Background" Value="Transparent" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
-                    <Border Background="Transparent">
+                    <Border
+                        Padding="{TemplateBinding Padding}"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}">
                         <ContentPresenter
                             x:Name="CP"
                             HorizontalAlignment="Center"

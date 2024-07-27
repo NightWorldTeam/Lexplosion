@@ -70,7 +70,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             get => _currentPageIndex; private set 
             {
                 _currentPageIndex = value;
-                Console.WriteLine(_currentPageIndex);
+                //Console.WriteLine(_currentPageIndex);
                 OnPropertyChanged();
             }
         }

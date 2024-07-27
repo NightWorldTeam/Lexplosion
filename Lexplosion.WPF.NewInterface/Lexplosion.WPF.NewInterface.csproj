@@ -31,6 +31,7 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -114,6 +115,7 @@
     <Compile Include="Core\Converters\MultiValueConverter\StringFormatConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\BooleanToVisibilityConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\ConverterBase.cs" />
+    <Compile Include="Core\Converters\ValueConverters\PositiveIntToShortStringConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\IsObjectNullConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\IsStringNullOrEmptyConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\NegativeBooleanToVisibilityConverter.cs" />
@@ -155,6 +157,10 @@
     <Compile Include="Extensions\ResourceKeyBinding.cs" />
     <Compile Include="Extensions\TreeViewItemExtension.cs" />
     <Compile Include="Mvvm\Models\AddonsRepositories\AddonsRepositoryModel.cs" />
+    <Compile Include="Mvvm\Models\AddonsRepositories\AddonsRepositoryModelBase.cs" />
+    <Compile Include="Mvvm\Models\AddonsRepositories\Groups\CategoryGroup.cs" />
+    <Compile Include="Mvvm\Models\AddonsRepositories\Groups\IAddonSearchParamsGroupBase.cs" />
+    <Compile Include="Mvvm\Models\AddonsRepositories\Groups\ModloaderGroup.cs" />
     <Compile Include="Mvvm\Models\InstanceControllers\CatalogController.cs" />
     <Compile Include="Mvvm\Models\InstanceControllers\IInstanceController.cs" />
     <Compile Include="Mvvm\Models\InstanceControllers\LibraryController.cs" />

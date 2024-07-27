@@ -1,7 +1,6 @@
 ﻿using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Objects;
 using Lexplosion.WPF.NewInterface.Core.Objects;
-using Lexplosion.WPF.NewInterface.Core;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -9,204 +8,12 @@ using Lexplosion.Logic.Network.Web;
 using System;
 using Lexplosion.WPF.NewInterface.Core.Objects.TranslatableObjects;
 using Lexplosion.Tools;
+using Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories.Groups;
+using Lexplosion.Logic.Management;
+using Lexplosion.WPF.NewInterface.Core.GameExtensions;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 {
-    public sealed class CategoryGroup
-    {
-        public string Header { get; }
-        public string IconData { get; }
-        public IReadOnlyCollection<CategoryWrapper> Categories { get; }
-
-        public CategoryGroup(string header, IEnumerable<CategoryWrapper> categories, string iconData = null)
-        {
-            Header = header;
-            Categories = categories.ToArray<CategoryWrapper>();
-            IconData = iconData;
-        }
-    }
-
-    public abstract class AddonsRepositoryModelBase : ViewModelBase
-    {
-        protected static readonly SimpleCategory AllCategory = new SimpleCategory()
-        {
-            Id = "-1",
-            Name = "All",
-            ClassId = "",
-            ParentCategoryId = ""
-        };
-        protected BaseInstanceData _instanceData;
-        protected readonly ProjectSource _projectSource;
-        protected readonly AddonType _addonType;
-
-
-        protected bool _isClearFilters = false;
-
-
-        #region Properties
-
-
-        public abstract ReadOnlyCollection<uint> PageSizes { get; }
-
-
-        protected readonly ObservableCollection<CategoryWrapper> _categories = new();
-        protected readonly ObservableCollection<IProjectCategory> _selectedCategories = new();
-        protected ObservableCollection<InstanceAddon> _addonsList = new();
-        protected ObservableCollection<CategoryGroup> _categoriesGroups = new();
-
-        public IEnumerable<CategoryWrapper> Categories { get => _categories; }
-        public IEnumerable<IProjectCategory> SelectedCategories { get => _selectedCategories; }
-        public IEnumerable<InstanceAddon> AddonsList { get => _addonsList; }
-        public IEnumerable<CategoryGroup> CategoriesGroups { get => _categoriesGroups; }
-
-        public IEnumerable<SortByParamObject> SortByParams { get; protected set; }
-
-        private string _searchFilter = string.Empty;
-        public string SearchFilter
-        {
-            get => _searchFilter; set
-            {
-                _searchFilter = value;
-                OnSearchFilterChanged();
-            }
-        }
-
-        private byte _selectedSortByIndex = 0;
-        public byte SelectedSortByIndex
-        {
-            get => _selectedSortByIndex; set
-            {
-                _selectedSortByIndex = value;
-                OnSortByChanged();
-            }
-        }
-
-        private uint _pageSize = 10;
-        public uint PageSize
-        {
-            get => _pageSize; set
-            {
-                _pageSize = value;
-                OnPageSizeChanged();
-            }
-        }
-
-        private uint _currentPageIndex;
-        public uint CurrentPageIndex
-        {
-            get => _currentPageIndex; set
-            {
-                _currentPageIndex = value;
-                OnPropertyChanged();
-            }
-        }
-
-
-        #endregion Properties
-
-
-        #region Constructors
-
-
-        protected AddonsRepositoryModelBase(ProjectSource projectSource, BaseInstanceData instanceData, AddonType addonType)
-        {
-            _projectSource = projectSource;
-            _instanceData = instanceData;
-            _addonType = addonType;
-        }
-
-
-        #endregion Constructors
-
-
-        #region Public & Protected Methods
-
-
-        protected abstract ISearchParams BuildSearchParams();
-        protected abstract List<IProjectCategory> GetCategories();
-
-
-        protected void LoadContent()
-        {
-            Runtime.TaskRun(() =>
-            {
-                var addons = InstanceAddon.GetAddonsCatalog(_projectSource, _instanceData, _addonType, BuildSearchParams()).List;
-
-                App.Current.Dispatcher.Invoke(() =>
-                {
-                    _addonsList.Clear();
-                    foreach (var i in addons)
-                    {
-                        _addonsList.Add(i);
-                    }
-                });
-            });
-        }
-
-
-        public void ClearFilters()
-        {
-            /*            _isClearFilters = true;
-                        foreach (var category in Categories)
-                        {
-                            category.IsSelected = false;
-                        }
-                        _isClearFilters = false;
-                        LoadPage();*/
-        }
-
-        public void InstallAddon(InstanceAddon instanceAddon)
-        {
-            //instanceAddon.InstallLatestVersion();
-        }
-
-
-        #endregion Public & Protected Methods 
-
-
-        #region Private Methods
-
-
-        protected virtual void OnSelectedCategoryChanged(IProjectCategory category, bool isSelected)
-        {
-            if (isSelected)
-            {
-                _selectedCategories.Add(category);
-            }
-            else
-            {
-                _selectedCategories.Remove(category);
-            }
-        }
-
-        private void OnSortByChanged()
-        {
-            OnPropertyChanged(nameof(SelectedSortByIndex));
-            LoadContent();
-        }
-
-        private void OnSearchFilterChanged()
-        {
-            OnPropertyChanged(nameof(SearchFilter));
-            LoadContent();
-        }
-
-        private void OnCurrentPageIndexChanged()
-        {
-            OnPropertyChanged(nameof(CurrentPageIndex));
-            LoadContent();
-        }
-
-        private void OnPageSizeChanged()
-        {
-            OnPropertyChanged(nameof(PageSize));
-            LoadContent();
-        }
-
-
-        #endregion Private Methods
-    }
-
     public sealed class AddonsRepositoryModel : AddonsRepositoryModelBase
     {
         private ICollection<IProjectCategory> _latestApplyCategories = new List<IProjectCategory>();
@@ -259,7 +66,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 
             stateData.StateChanged += (arg, state) =>
             {
-                if (arg.Value2 != DownloadAddonRes.Successful) 
+                if (arg.Value2 == DownloadAddonRes.Successful) 
                 {
                     var s = 0;
                 }
@@ -361,7 +168,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
             
             foreach (var index in enumValues)
             {
-                var name = Enum.GetName(sortByParamsType, index);
+                var name = $"{_projectSource.ToString()}{Enum.GetName(sortByParamsType, index)}";
                 sortByParams[i] = new(name, (int)index);
                 i++;
             }
@@ -410,6 +217,45 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
                 });
             });
         }
+
+        private void PrepareLoaderGroup() 
+        {
+            var list = new List<Modloader>();
+            foreach (GameExtension i in Enum.GetValues(typeof(GameExtension))) 
+            { 
+                if (MinecraftExtension.CheckExistsOnVersion(_instanceData.GameVersion, i)) 
+                {
+                    var loader = i switch
+                    {
+                        GameExtension.Forge => Modloader.Forge,
+                        GameExtension.Fabric => Modloader.Fabric,
+                        GameExtension.Quilt => Modloader.Quilt,
+                        _ => Modloader.Quilt,
+                    };
+
+                    list.Add(loader);
+                }
+            }
+
+            /*            var loaders = new Modloader[4];
+
+                        if (_instanceData.GameVersion >= new MinecraftVersion("1.20.2")) 
+                        {
+                            //loaders[0] = Modloader.Neoforge;
+                        }
+
+                        if (_instanceData.GameVersion >=)
+
+                        if (_projectSource == ProjectSource.Curseforge && _addonType == AddonType.Mods) 
+                        {
+                            return []
+                        }
+
+                        var type = this.Type switch 
+                        {
+                            AddonType.Resourcepacks =>
+                        }*/
+        } 
 
         private string GetCategoryGroupHeader(string header, IEnumerable<IProjectCategory> categories)
         {

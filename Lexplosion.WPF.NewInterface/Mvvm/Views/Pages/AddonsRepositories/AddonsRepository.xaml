@@ -8,11 +8,11 @@
     xmlns:coreInstances="clr-namespace:Lexplosion.Logic.Management.Instances;assembly=Lexplosion.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
+    xmlns:groups="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories.Groups"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.AddonsRepositories"
     xmlns:logicObjects="clr-namespace:Lexplosion.Logic.Objects;assembly=Lexplosion.Core"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:objects="clr-namespace:Lexplosion.WPF.NewInterface.Core.Objects"
-    xmlns:test="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories"
     xmlns:translatableObjects="clr-namespace:Lexplosion.WPF.NewInterface.Core.Objects.TranslatableObjects"
     d:DesignHeight="450"
     d:DesignWidth="800"
@@ -62,7 +62,7 @@
                 IsChecked="{Binding IsSelected}" />
         </DataTemplate>
 
-        <DataTemplate DataType="{x:Type test:CategoryGroup}">
+        <DataTemplate DataType="{x:Type groups:CategoryGroup}">
             <Grid Margin="0,16,0,0">
 
                 <Grid.RowDefinitions>
@@ -79,7 +79,7 @@
                 <ItemsControl
                     Grid.Row="1"
                     Background="Transparent"
-                    ItemsSource="{Binding Categories}" />
+                    ItemsSource="{Binding Objects}" />
             </Grid>
         </DataTemplate>
 
@@ -117,6 +117,7 @@
 
         <DataTemplate DataType="{x:Type coreInstances:InstanceAddon}">
             <Border
+                x:Name="Border"
                 Margin="0,0,0,8"
                 Padding="16,16,16,8"
                 Background="{DynamicResource SecondarySolidColorBrush}"
@@ -179,10 +180,12 @@
                         <StackPanel>
                             <StackPanel Margin="0,0,0,8" Orientation="Horizontal">
                                 <TextBlock
+                                    MaxWidth="{Binding ActualWidth, ElementName=Border, Converter={converters:WindowWidthToXProcentWidth}, ConverterParameter=35}"
                                     FontSize="16"
                                     FontWeight="Medium"
                                     Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                    Text="{Binding Name}" />
+                                    Text="{Binding Name}"
+                                    TextTrimming="CharacterEllipsis" />
 
                                 <TextBlock
                                     Margin="8,0"
@@ -191,10 +194,12 @@
                                     Text=" | " />
 
                                 <TextBlock
+                                    MaxWidth="{Binding ActualWidth, ElementName=Border, Converter={converters:WindowWidthToXProcentWidth}, ConverterParameter=18}"
                                     FontSize="16"
                                     FontWeight="Medium"
                                     Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
-                                    Text="{Binding Author}" />
+                                    Text="{Binding Author}"
+                                    TextTrimming="WordEllipsis" />
                             </StackPanel>
 
                             <TextBlock
@@ -294,10 +299,13 @@
                                                     FontSize="14"
                                                     Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
                                                     Text="Веб-страница" />
-                                                <TextBlock
-                                                    FontSize="14"
-                                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                                    Text="Удалить" />
+
+                                                <Button>
+                                                    <TextBlock
+                                                        FontSize="14"
+                                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                                        Text="Удалить" />
+                                                </Button>
                                             </StackPanel>
                                         </Border>
                                     </controls:DropdownMenu>
@@ -326,7 +334,7 @@
                                 <TextBlock
                                     FontSize="14"
                                     Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
-                                    Text="{Binding DownloadCount}" />
+                                    Text="{Binding DownloadCount, Converter={converters:PositiveIntToShortStringConverter}}" />
                             </StackPanel>
 
                             <!--  Date updated  -->

@@ -17,7 +17,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
             "name", "author"
         };
 
-
         private BaseInstanceData _baseInstanceData;
         private readonly InstanceModelBase _instanceModelBase;
         private ObservableCollection<InstanceAddon> _addonsList = new();
@@ -221,7 +220,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
         {
             if (instanceAddon is InstanceAddon) {
                 Runtime.TaskRun(() => {
-                    Console.WriteLine((instanceAddon as InstanceAddon).Update());
+                    (instanceAddon as InstanceAddon).Update();
                 });
             }
         }
@@ -272,7 +271,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
             {
                 InstanceAddonCollectionViewSource.View.Filter = (m => (m as InstanceAddon).Name?.IndexOf(value, System.StringComparison.InvariantCultureIgnoreCase) > -1);
             }
-            else if (SelectedSortByParam == "author") 
+            else if (SelectedSortByParam == "author")
             {
                 InstanceAddonCollectionViewSource.View.Filter = (m => (m as InstanceAddon).Author?.IndexOf(value, System.StringComparison.InvariantCultureIgnoreCase) > -1);
             }
