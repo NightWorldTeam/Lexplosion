@@ -48,7 +48,7 @@ namespace Lexplosion.WPF.NewInterface.Extensions
         {
             if (d is System.Windows.Shapes.Path && e.NewValue is string)
             {
-                Runtime.DebugWrite(e.NewValue);
+                //Runtime.DebugWrite(e.NewValue);
                 var path = d as System.Windows.Shapes.Path;
                 // для всех икнок в этом проекте, ключём является PD (PathData) + название иконки,
                 // создано для избежание колизий, с текстами локализации.

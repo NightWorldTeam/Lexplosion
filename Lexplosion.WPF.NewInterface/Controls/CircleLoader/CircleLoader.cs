@@ -2,7 +2,6 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Effects;
-using System.Windows.Shapes;
 
 namespace Lexplosion.WPF.NewInterface.Controls
 {
@@ -99,7 +98,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
             if (BlurTarget != null)
             {
                 BlurTarget.Effect = IsActive ? new BlurEffect() : null;
-                Console.WriteLine($"OnBlurTargetChanged {BlurTarget.Effect}");
+                //Console.WriteLine($"OnBlurTargetChanged {BlurTarget.Effect}");
             }
         }
 
@@ -120,7 +119,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
             if (d is CircleLoader _this)
             {
                 _this.SetBlurToTarget();
-                Console.WriteLine("OnIsActiveChanged");
+                //Console.WriteLine("OnIsActiveChanged");
             }
         }
 
