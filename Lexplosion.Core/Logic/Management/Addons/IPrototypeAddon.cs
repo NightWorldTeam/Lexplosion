@@ -39,6 +39,8 @@ namespace Lexplosion.Logic.Management.Addons
         string LogoUrl { get; }
 
         event Action OnInfoUpdated;
+
+        string GetFullDescription();
     }
 
 }

@@ -17,6 +17,7 @@ using Lexplosion.Logic.Management.Addons;
 using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects.Curseforge;
 using Lexplosion.Logic.Objects.Modrinth;
+using System.Diagnostics;
 
 namespace Lexplosion.Logic.Management.Instances
 {
@@ -311,29 +312,55 @@ namespace Lexplosion.Logic.Management.Instances
 
                 _wathingInstanceData = instanceData;
 
-                _modsDirectoryWathcer = new FileSystemWatcher(WithDirectory.InstancesPath + instanceData.LocalId + "/mods");
-                _modsDirectoryWathcer.Created += (object sender, FileSystemEventArgs e) =>
+                try
                 {
-                    OnAddonFileAdded(e.FullPath, AddonType.Mods, ".jar", DefineIternalModInfo);
-                };
-                _modsDirectoryWathcer.EnableRaisingEvents = true;
-
-                _resourcepacksDirectoryWathcer = new FileSystemWatcher(WithDirectory.InstancesPath + instanceData.LocalId + "/resourcepacks");
-                _resourcepacksDirectoryWathcer.Created += (object sender, FileSystemEventArgs e) =>
-                {
-                    IternalAddonInfoGetter addonInfo = delegate (string fileAddr, out string displayName, out string authors, out string version, out string description, out string modId)
+                    string modsPath = WithDirectory.InstancesPath + instanceData.LocalId + "/mods";
+                    if (Directory.Exists(modsPath))
                     {
-                        displayName = UNKNOWN_NAME;
-                        authors = "";
-                        version = "";
-                        description = "";
-                        modId = "";
-                    };
+                        Directory.CreateDirectory(modsPath);
+                    }
 
-                    OnAddonFileAdded(e.FullPath, AddonType.Resourcepacks, ".zip", addonInfo);
-                };
-                _resourcepacksDirectoryWathcer.EnableRaisingEvents = true;
-            }     
+                    _modsDirectoryWathcer = new FileSystemWatcher(modsPath);
+                    _modsDirectoryWathcer.Created += (object sender, FileSystemEventArgs e) =>
+                    {
+                        OnAddonFileAdded(e.FullPath, AddonType.Mods, ".jar", DefineIternalModInfo);
+                    };
+                    _modsDirectoryWathcer.EnableRaisingEvents = true;
+                }
+                catch (Exception ex)
+                {
+                    Runtime.DebugWrite("Exception " + ex);
+                }
+
+                string resourcespacksPath = WithDirectory.InstancesPath + instanceData.LocalId + "/resourcepacks";
+                try
+                {
+                    if (Directory.Exists(resourcespacksPath))
+                    {
+                        Directory.CreateDirectory(resourcespacksPath);
+                    }
+
+                    _resourcepacksDirectoryWathcer = new FileSystemWatcher(resourcespacksPath);
+                    _resourcepacksDirectoryWathcer.Created += (object sender, FileSystemEventArgs e) =>
+                    {
+                        IternalAddonInfoGetter addonInfo = delegate (string fileAddr, out string displayName, out string authors, out string version, out string description, out string modId)
+                        {
+                            displayName = UNKNOWN_NAME;
+                            authors = "";
+                            version = "";
+                            description = "";
+                            modId = "";
+                        };
+
+                        OnAddonFileAdded(e.FullPath, AddonType.Resourcepacks, ".zip", addonInfo);
+                    };
+                    _resourcepacksDirectoryWathcer.EnableRaisingEvents = true;
+                }
+                catch (Exception ex)
+                {
+                    Runtime.DebugWrite("Exception " + ex);
+                }
+            }
         }
 
         /// <summary>
@@ -350,7 +377,7 @@ namespace Lexplosion.Logic.Management.Instances
                 _resourcepacksDirectoryWathcer = null;
 
                 _wathingInstanceData = null;
-            }         
+            }
         }
 
         private static void OnAddonFileAdded(string filePath, AddonType type, string fileExtension, IternalAddonInfoGetter addonInfoGetter)
@@ -441,6 +468,76 @@ namespace Lexplosion.Logic.Management.Instances
             return (List<InstanceAddon>)GetCurseforgeAddonsCatalog(modpackInfo, type, searchParams).List;
             //var searchParams = new ModrinthSearchParams(searchFilter, modpackInfo.GameVersion.Id, new List<CategoryBase>() { category }, pageSize, index, ModrinthSortField.Relevance, new List<ClientType>() { modpackInfo.Modloader });
             //return GetModrinthAddonsCatalog(modpackInfo, type, searchParams);
+        }
+
+        /// <summary>
+        /// Добавляет в клиент аддоны
+        /// </summary>
+        /// <param name="locations">Пути к аддонам</param>
+        /// <param name="instanceData">Данные клиента, куда аддоны добавить</param>
+        /// <param name="type">Тип аддонов</param>
+        /// <param name="addons">Результрующий список. 
+        /// Если количество аддонов меньше 10, то здесь будет null и InstanceAddon'ы надо будет получить через эвент AddonAdded.
+        /// Если же количество аддонов больше или равно 10, то эвент AddonAdded не отработает и InstanceAddon'ы надо брать от сюда</param>
+        /// <returns>Требуется ли полное обновление списка. 
+        /// Если количество аддонов больше или равно 10, то список надо будет обновить полностью и здесь будет true, иначе false</returns>
+        public static bool AddAddons(IEnumerable<string> locations, BaseInstanceData instanceData, AddonType type, out IList<InstanceAddon> addons)
+        {
+            addons = null;
+
+            string path = WithDirectory.InstancesPath + instanceData.LocalId + "/";
+            if (type == AddonType.Mods)
+                path += "mods/";
+            else if (type == AddonType.Resourcepacks)
+                path += "resourcepacks/";
+            else if (type == AddonType.Shaders)
+                path += "shaderspacks/";
+            else if (type == AddonType.Maps)
+                path += "saves/";
+            else
+                return false;
+
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+
+
+            bool bigQuantity = locations.Count() > 10;
+            BaseInstanceData watchingInstanceData = null;
+            if (bigQuantity && _wathingInstanceData != null)
+            {
+                watchingInstanceData = _wathingInstanceData;
+                StopWatchingDirectory();
+            }
+
+            foreach (string location in locations)
+            {
+                try
+                {
+                    if (File.Exists(location))
+                    {
+                        File.Copy(location, path + Path.GetFileName(location));
+                    }
+                }
+                catch (Exception e)
+                {
+                    Runtime.DebugWrite("File copy error " + e);
+                }
+            }
+
+            if (!bigQuantity)
+            {
+                return false;
+            }
+
+            addons = GetInstalledAddons(type, instanceData);
+
+            if (watchingInstanceData != null)
+            {
+                _wathingInstanceData = watchingInstanceData;
+                StartWathingDirecoty(instanceData);
+            }
+
+            return true;
         }
 
         private static AddonsCatalog GetCurseforgeAddonsCatalog(BaseInstanceData modpackInfo, AddonType type, CurseforgeSearchParams sParams)
@@ -597,6 +694,11 @@ namespace Lexplosion.Logic.Management.Instances
             }
 
             return addons;
+        }
+
+        public string GetFullDescription()
+        {
+           return _addonPrototype?.GetFullDescription() ?? string.Empty;
         }
 
         public void Delete()

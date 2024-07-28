@@ -271,6 +271,11 @@ namespace Lexplosion.Logic.Management.Addons
             return resutl ?? new List<CategoryBase>();
         }
 
+        public string GetFullDescription()
+        {
+            return string.Empty;
+        }
+
         public event Action OnInfoUpdated;
     }
 }

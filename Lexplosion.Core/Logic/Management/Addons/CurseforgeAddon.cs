@@ -262,6 +262,11 @@ namespace Lexplosion.Logic.Management.Addons
 
         }
 
+        public string GetFullDescription()
+        {
+            return CurseforgeApi.GetProjectDescription(_addonInfo?.id);
+        }
+
         public event Action OnInfoUpdated;
     }
 }
