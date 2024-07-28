@@ -29,6 +29,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
         #region Properties
 
 
+        public Action<IEnumerable<string>> ImportAction { get; }
+
+        public IEnumerable<string> AvailableImportFileExtensions { get; }
+
         public string[] SortByList => _sortByList;
         /// <summary>
         /// Тип аддонов.
@@ -115,13 +119,36 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
             _selectedSortByParam = SortByList[0];
             _instanceModelBase = instanceModelBase;
 
-            var folderName = type switch
+            string folderName = string.Empty;
+
+            switch (type)
             {
-                AddonType.Mods => "mods",
-                AddonType.Resourcepacks => "Resourcepacks",
-                AddonType.Maps => "saves",
-                AddonType.Shaders => "shaders",
-                _ => string.Empty
+                case AddonType.Mods:
+                    {
+                        folderName = "mods";
+                        AvailableImportFileExtensions = [".jar"];
+                    }
+                    break;
+                case AddonType.Resourcepacks:
+                    {
+                        folderName = "resourcepacks";
+                        AvailableImportFileExtensions = [".zip"];
+                    }
+                    break;
+                case AddonType.Maps:
+                    {
+                        folderName = "saves";
+                        AvailableImportFileExtensions = [".zip"];
+                    }
+                    break;
+                case AddonType.Shaders:
+                    {
+                        folderName = "shaders";
+                        AvailableImportFileExtensions = [".zip"];
+                    }
+                    break;
+                default:
+                    break;
             };
 
             _directoryPath = $"{getDirectoryPath()}\\{folderName}";
@@ -145,6 +172,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
                     InstanceAddon.AddonRemoved += InstanceAddon_AddonRemoved;
                 });
             });
+            ImportAction = (files) => 
+            { 
+                foreach (var file in files) 
+                    ImportAddon(file); 
+            };
         }
 
 
@@ -154,14 +186,14 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
         #region Public Methods
 
 
-        public void OpenFolder() 
+        public void OpenFolder()
         {
 
             try
             {
                 Process.Start("explorer", _directoryPath);
             }
-            catch 
+            catch
             {
                 Process.Start("explorer", GetDirectoryPath());
             }
@@ -218,7 +250,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
         /// <param name="instanceAddon">Addon который нужно обновить</param>
         public void UpdateAddon(object instanceAddon)
         {
-            if (instanceAddon is InstanceAddon) {
+            if (instanceAddon is InstanceAddon)
+            {
                 Runtime.TaskRun(() => {
                     (instanceAddon as InstanceAddon).Update();
                 });
@@ -251,6 +284,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
             }
         }
 
+
         #endregion Public Methods
 
 
@@ -261,7 +295,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
         /// Обновляется при изменении текста в searchbox. При выполнении фильтрует значение имени.
         /// </summary>
         /// <param name="value"></param
-        private void OnSearchBoxTextChanged(string value) 
+        private void OnSearchBoxTextChanged(string value)
         {
             if (InstanceAddonCollectionViewSource.View == null)
                 return;
@@ -277,10 +311,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
             }
         }
 
-
         private void InstanceAddon_AddonRemoved(InstanceAddon obj)
         {
-            App.Current.Dispatcher.Invoke(() => { 
+            App.Current.Dispatcher.Invoke(() => {
                 _addonsList.Remove(obj);
             });
         }
@@ -293,6 +326,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
             });
         }
 
+
+        private void ImportAddon(string file)
+        {
+            Runtime.DebugWrite(file);
+        }
 
         #endregion Private Methods
     }

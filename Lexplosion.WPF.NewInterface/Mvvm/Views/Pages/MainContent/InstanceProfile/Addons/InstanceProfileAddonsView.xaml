@@ -7,11 +7,13 @@
     xmlns:core="clr-namespace:Lexplosion.WPF.NewInterface.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extension="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
+    xmlns:instanceprofile="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile"
     xmlns:lexplosion="clr-namespace:Lexplosion;assembly=Lexplosion.Core"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.InstanceProfile"
     xmlns:logicInstances="clr-namespace:Lexplosion.Logic.Management.Instances;assembly=Lexplosion.Core"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:valueconverters="clr-namespace:Lexplosion.WPF.NewInterface.Core.Converters"
+    d:DataContext="{d:DesignInstance Type=instanceprofile:InstanceAddonsContainerViewModel}"
     mc:Ignorable="d">
 
     <UserControl.Resources>
@@ -588,115 +590,177 @@
     </UserControl.Resources>
 
     <Grid>
+        <Grid
+            AllowDrop="True"
+            Background="Transparent"
+            DragEnter="Grid_DragEnter">
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
+            <Grid Margin="8,4,8,0">
 
-        <Grid Margin="8,4,8,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+                <controls:SearchBox
+                    x:Name="SearchBox"
+                    Height="40"
+                    Margin="0,0,4,0"
+                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                    Text="{Binding Model.SearchBoxText, UpdateSourceTrigger=PropertyChanged}" />
 
-            <controls:SearchBox
-                x:Name="SearchBox"
-                Height="40"
-                Margin="0,0,4,0"
-                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                Text="{Binding Model.SearchBoxText, UpdateSourceTrigger=PropertyChanged}" />
+                <ComboBox
+                    Grid.Column="1"
+                    Width="120"
+                    Height="40"
+                    ItemsSource="{Binding Model.SortByList}"
+                    SelectedIndex="0"
+                    SelectedValue="{Binding Model.SelectedSortByParam, UpdateSourceTrigger=PropertyChanged}" />
 
-            <ComboBox
-                Grid.Column="1"
-                Width="120"
-                Height="40"
-                ItemsSource="{Binding Model.SortByList}"
-                SelectedIndex="0"
-                SelectedValue="{Binding Model.SelectedSortByParam, UpdateSourceTrigger=PropertyChanged}" />
+                <Grid.Style>
+                    <Style TargetType="{x:Type Grid}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Model.IsSearchEnabled, UpdateSourceTrigger=PropertyChanged}" Value="True">
+                                <Setter Property="Visibility" Value="Visible" />
+                                <Setter Property="FocusManager.FocusedElement" Value="{Binding ElementName=SearchBox}" />
+                                <DataTrigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard Storyboard.TargetProperty="Height">
+                                            <DoubleAnimation
+                                                From="0"
+                                                To="44"
+                                                Duration="0:0:0.24" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.EnterActions>
+                                <DataTrigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard Storyboard.TargetProperty="Height">
+                                            <DoubleAnimation
+                                                From="44"
+                                                To="0"
+                                                Duration="0:0:0.24" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.ExitActions>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+            </Grid>
 
-            <Grid.Style>
-                <Style TargetType="{x:Type Grid}">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding Model.IsSearchEnabled, UpdateSourceTrigger=PropertyChanged}" Value="True">
-                            <Setter Property="Visibility" Value="Visible" />
-                            <Setter Property="FocusManager.FocusedElement" Value="{Binding ElementName=SearchBox}" />
-                            <DataTrigger.EnterActions>
-                                <BeginStoryboard>
-                                    <Storyboard Storyboard.TargetProperty="Height">
-                                        <DoubleAnimation
-                                            From="0"
-                                            To="44"
-                                            Duration="0:0:0.24" />
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </DataTrigger.EnterActions>
-                            <DataTrigger.ExitActions>
-                                <BeginStoryboard>
-                                    <Storyboard Storyboard.TargetProperty="Height">
-                                        <DoubleAnimation
-                                            From="44"
-                                            To="0"
-                                            Duration="0:0:0.24" />
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </DataTrigger.ExitActions>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Grid.Style>
+            <!--  TODO: Scrool To Start  -->
+            <!--  TODO: IconButton MouseOver fill Activity Color  -->
+
+            <controls:Loader Grid.Row="1" IsActive="{Binding Model.IsAddonsLoading, UpdateSourceTrigger=PropertyChanged}">
+                <core:If Condition="{Binding IsCurrentFormatBlock, UpdateSourceTrigger=PropertyChanged}">
+                    <core:If.True>
+                        <controls1:VirtualizingItemsControl
+                            Margin="0,8"
+                            ItemTemplate="{StaticResource RectInstanceAddon}"
+                            ItemsSource="{Binding Model.InstanceAddonCollectionViewSource.View}"
+                            Template="{StaticResource RectInstanceHeaderControlTemplate}"
+                            VirtualizingPanel.CacheLengthUnit="Item"
+                            VirtualizingPanel.IsVirtualizingWhenGrouping="True"
+                            VirtualizingPanel.ScrollUnit="Pixel"
+                            VirtualizingPanel.VirtualizationMode="Recycling"
+                            Visibility="{Binding IsCurrentFormatBlock, Converter={valueconverters:BooleanToVisibilityConverter}}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <controls1:VirtualizingWrapPanel
+                                        HorizontalAlignment="Stretch"
+                                        Orientation="Horizontal"
+                                        SpacingMode="StartAndEndOnly"
+                                        StretchItems="False" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </controls1:VirtualizingItemsControl>
+                    </core:If.True>
+                    <core:If.False>
+                        <ListBox
+                            Margin="4,8,4,8"
+                            ItemTemplate="{StaticResource LineInstanceAddon}"
+                            ItemsSource="{Binding Model.InstanceAddonCollectionViewSource.View}"
+                            Template="{StaticResource DLCHeaderControlTemplate}"
+                            VirtualizingPanel.ScrollUnit="Pixel"
+                            VirtualizingStackPanel.IsVirtualizing="True"
+                            VirtualizingStackPanel.VirtualizationMode="Recycling"
+                            Visibility="{Binding IsCurrentFormatBlock, UpdateSourceTrigger=PropertyChanged, Converter={valueconverters:NegativeBooleanToVisibilityConverter}}" />
+                    </core:If.False>
+                </core:If>
+            </controls:Loader>
+
+            <!--  TODO: Translate  -->
+            <TextBlock
+                Grid.RowSpan="2"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="18"
+                Text="Дополнения отсутствуют"
+                Visibility="{Binding DataContext.Model.IsEmptyAddonsList, Converter={valueconverters:BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
         </Grid>
 
-        <!--  TODO: Scrool To Start  -->
-        <!--  TODO: IconButton MouseOver fill Activity Color  -->
+        <controls:DragDropBoard
+            x:Name="DragDropField"
+            AllowFolder="True"
+            AvailableFileExtensions="{Binding Model.AvailableImportFileExtensions}"
+            DragDrop.Drop="DragDropField_Drop"
+            DragLeave="DragDropField_DragLeave"
+            ImportAction="{Binding Model.ImportAction}"
+            Visibility="Collapsed">
 
-        <controls:Loader Grid.Row="1" IsActive="{Binding Model.IsAddonsLoading, UpdateSourceTrigger=PropertyChanged}">
-            <core:If Condition="{Binding IsCurrentFormatBlock, UpdateSourceTrigger=PropertyChanged}">
-                <core:If.True>
-                    <controls1:VirtualizingItemsControl
-                        Margin="0,8"
-                        ItemTemplate="{StaticResource RectInstanceAddon}"
-                        ItemsSource="{Binding Model.InstanceAddonCollectionViewSource.View}"
-                        Template="{StaticResource RectInstanceHeaderControlTemplate}"
-                        VirtualizingPanel.CacheLengthUnit="Item"
-                        VirtualizingPanel.IsVirtualizingWhenGrouping="True"
-                        VirtualizingPanel.ScrollUnit="Pixel"
-                        VirtualizingPanel.VirtualizationMode="Recycling"
-                        Visibility="{Binding IsCurrentFormatBlock, Converter={valueconverters:BooleanToVisibilityConverter}}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <controls1:VirtualizingWrapPanel
-                                    HorizontalAlignment="Stretch"
-                                    Orientation="Horizontal"
-                                    SpacingMode="StartAndEndOnly"
-                                    StretchItems="False" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </controls1:VirtualizingItemsControl>
-                </core:If.True>
-                <core:If.False>
-                    <ListBox
-                        Margin="4,8,4,8"
-                        ItemTemplate="{StaticResource LineInstanceAddon}"
-                        ItemsSource="{Binding Model.InstanceAddonCollectionViewSource.View}"
-                        Template="{StaticResource DLCHeaderControlTemplate}"
-                        VirtualizingPanel.ScrollUnit="Pixel"
-                        VirtualizingStackPanel.IsVirtualizing="True"
-                        VirtualizingStackPanel.VirtualizationMode="Recycling"
-                        Visibility="{Binding IsCurrentFormatBlock, UpdateSourceTrigger=PropertyChanged, Converter={valueconverters:NegativeBooleanToVisibilityConverter}}" />
-                </core:If.False>
-            </core:If>
-        </controls:Loader>
+            <Border
+                Margin="0,2,3,2"
+                AllowDrop="True"
+                BorderThickness="3"
+                CornerRadius="5">
 
-        <!--  TODO: Translate  -->
-        <TextBlock
-            Grid.RowSpan="2"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            FontSize="18"
-            Text="Дополнения отсутствуют"
-            Visibility="{Binding DataContext.Model.IsEmptyAddonsList, Converter={valueconverters:BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                <Border.Background>
+                    <SolidColorBrush Opacity="0.8" Color="{DynamicResource PrimaryColor}" />
+                </Border.Background>
+
+                <Border.BorderBrush>
+                    <DrawingBrush
+                        TileMode="Tile"
+                        Viewport="0,0,20,23"
+                        ViewportUnits="Absolute">
+                        <DrawingBrush.Drawing>
+                            <DrawingGroup>
+                                <GeometryDrawing Brush="{DynamicResource ActivitySolidColorBrush}">
+                                    <GeometryDrawing.Geometry>
+                                        <GeometryGroup>
+                                            <RectangleGeometry Rect="0,0,100,100" />
+                                            <RectangleGeometry Rect="100,100,100,100" />
+                                        </GeometryGroup>
+                                    </GeometryDrawing.Geometry>
+                                </GeometryDrawing>
+                            </DrawingGroup>
+                        </DrawingBrush.Drawing>
+                    </DrawingBrush>
+                </Border.BorderBrush>
+
+                <Grid Background="Transparent" IsEnabled="False">
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Viewbox Width="64" Height="64">
+                            <Path
+                                extension:Path.StringData="M440-200h80v-167l64 64 56-57-160-160-160 160 57 56 63-63v167ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z"
+                                Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                Stretch="Fill" />
+                        </Viewbox>
+
+                        <TextBlock
+                            FontSize="20"
+                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                            IsEnabled="False"
+                            Text="Перенесите .jar, .zip или .rar, что установить его" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </controls:DragDropBoard>
     </Grid>
 </UserControl>
