@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.IO;
+using System.Linq;
 using System.Windows.Data;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
@@ -14,8 +14,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
     {
         private static string[] _sortByList =
         {
-            "name", "author"
+            "name", "author", "file name"
         };
+
 
         private BaseInstanceData _baseInstanceData;
         private readonly InstanceModelBase _instanceModelBase;
@@ -25,11 +26,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
         private readonly string _directoryPath;
 
 
-
         #region Properties
 
 
         public Action<IEnumerable<string>> ImportAction { get; }
+
+        public bool IsBigImportLoading { get; private set; }
 
         public IEnumerable<string> AvailableImportFileExtensions { get; }
 
@@ -158,24 +160,39 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
                 _baseInstanceData = instanceModelBase.InstanceData;
                 var instanceAddons = InstanceAddon.GetInstalledAddons(type, _baseInstanceData);
 
-                App.Current.Dispatcher.Invoke(() => {
+                App.Current.Dispatcher.Invoke(() => 
+                {
                     _addonsList = new ObservableCollection<InstanceAddon>(instanceAddons);
                     InstanceAddonCollectionViewSource.Source = _addonsList;
                     OnPropertyChanged(nameof(AddonsList));
                     IsAddonsLoading = false;
                     OnPropertyChanged(nameof(AddonsCount));
 
-                    Runtime.DebugWrite(AddonsCount);
-
                     InstanceAddon.StartWathingDirecoty(_baseInstanceData);
                     InstanceAddon.AddonAdded += InstanceAddon_AddonAdded;
                     InstanceAddon.AddonRemoved += InstanceAddon_AddonRemoved;
                 });
             });
+
             ImportAction = (files) => 
-            { 
-                foreach (var file in files) 
-                    ImportAddon(file); 
+            {
+                Runtime.TaskRun(() => 
+                {
+                    if (files.Count() > 10)
+                        IsAddonsLoading = true;
+
+                    InstanceAddon.AddAddons(files, _baseInstanceData, type, out var addons);
+
+                    if (addons == null)
+                        return;
+
+                    App.Current.Dispatcher?.Invoke(() => 
+                    { 
+                        _addonsList = new ObservableCollection<InstanceAddon>(addons);
+                        OnPropertyChanged(nameof(AddonsList));
+                        IsAddonsLoading = false;
+                    });
+                });
             };
         }
 
@@ -309,6 +326,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
             {
                 InstanceAddonCollectionViewSource.View.Filter = (m => (m as InstanceAddon).Author?.IndexOf(value, System.StringComparison.InvariantCultureIgnoreCase) > -1);
             }
+            else if (SelectedSortByParam == "file name") 
+            {
+                InstanceAddonCollectionViewSource.View.Filter = (m => (m as InstanceAddon).FileName?.IndexOf(value, System.StringComparison.InvariantCultureIgnoreCase) > -1);
+            }
         }
 
         private void InstanceAddon_AddonRemoved(InstanceAddon obj)
@@ -326,11 +347,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
             });
         }
 
-
-        private void ImportAddon(string file)
-        {
-            Runtime.DebugWrite(file);
-        }
 
         #endregion Private Methods
     }
