@@ -253,10 +253,22 @@ namespace Lexplosion.Logic.Network.Web
 
         public static string GetProjectDescription(string projectId)
         {
-            return ToServer.HttpGet($"https://api.curseforge.com/v1/mods/{projectId}/description", new Dictionary<string, string>()
+            try
             {
-                ["x-api-key"] = Token
-            });
+                string result = ToServer.HttpGet($"https://api.curseforge.com/v1/mods/{projectId}/description", new Dictionary<string, string>()
+                {
+                    ["x-api-key"] = Token
+                });
+
+                if (result == null) return string.Empty;
+
+                var data = JsonConvert.DeserializeObject<DataContainer<string>>(result);
+                return data?.data ?? string.Empty;
+            }
+            catch
+            {
+                return string.Empty;
+            }
         }
 
         public static List<CurseforgeCategory> GetCategories(CfProjectType type)
