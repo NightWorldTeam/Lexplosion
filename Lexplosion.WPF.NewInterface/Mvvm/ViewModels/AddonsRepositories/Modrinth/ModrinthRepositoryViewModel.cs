@@ -56,24 +56,18 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
     public sealed class ModrinthRepositoryViewModel : ViewModelBase
     {
         private readonly INavigationStore _navigationStore;
-        private readonly ICommand _backToInstanceProfile;
-        private readonly ICommand _toCurseforge;
 
-        public ModrinthRepositoryModel Model { get; }
+
+        public ModrinthRepositoryModel Model { get; private set; }
+
+        public bool IsLoading { get; private set; }
 
 
         #region Commands
 
 
-        public ICommand ToCurseforgeCommand
-        {
-            get => _toCurseforge;
-        }
-
-        public ICommand BackToInstanceProfileCommand
-        {
-            get => _backToInstanceProfile;
-        }
+        public ICommand ToCurseforgeCommand { get; private set; }
+        public ICommand BackToInstanceProfileCommand { get; }
 
         // paginator
         private RelayCommand _nextPageCommand;
@@ -126,6 +120,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
             get => RelayCommand.GetCommand(ref _uninstallAddonCommand, () => { });
         }
 
+        public ICommand ApplySelectedCategoriesCommand { get; private set; }
 
         #endregion Commands
 
@@ -133,17 +128,45 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
         #region Constructors
 
 
+        public ModrinthRepositoryViewModel(BaseInstanceData instanceData, AddonType addonType, ICommand backCommand, ICommand toCurseforge)
+        {
+            IsLoading = true;
+            
+            BackToInstanceProfileCommand = backCommand;
+            ToCurseforgeCommand = toCurseforge;
+
+            Model = new ModrinthRepositoryModel(instanceData, addonType);
+
+            IsLoading = false;
+        }
+        
         public ModrinthRepositoryViewModel(InstanceModelBase instanceModelBase, AddonType addonType, ICommand backCommand, INavigationStore navigationStore)
         {
-            _backToInstanceProfile = backCommand;
+            IsLoading = true;
+
+            BackToInstanceProfileCommand = backCommand;
             _navigationStore = navigationStore;
 
-            var toModrinthNavCommand = new NavigateCommand<ViewModelBase>(_navigationStore, () => this);
-            var curseforgeRepository = new CurseforgeRepositoryViewModel(instanceModelBase, addonType, backCommand, toModrinthNavCommand);
+            Runtime.TaskRun(() => 
+            {
+                var instanceData = instanceModelBase.InstanceData;
+                App.Current.Dispatcher.Invoke(() => 
+                {
+                    var toModrinthNavCommand = new NavigateCommand<ViewModelBase>(_navigationStore, () => this);
+                    var curseforgeRepository = new CurseforgeRepositoryViewModel(instanceData, addonType, backCommand, toModrinthNavCommand);
 
-            _toCurseforge = new NavigateCommand<ViewModelBase>(_navigationStore, () => curseforgeRepository);
+                    ToCurseforgeCommand = new NavigateCommand<ViewModelBase>(_navigationStore, () => curseforgeRepository);
+                    OnPropertyChanged(nameof(ToCurseforgeCommand));
 
-            Model = new ModrinthRepositoryModel(instanceModelBase, addonType);
+                    Model = new ModrinthRepositoryModel(instanceData, addonType);
+                    ApplySelectedCategoriesCommand = new RelayCommand((obj) => Model.ApplyCategories());
+
+                    OnPropertyChanged(nameof(Model));
+                    OnPropertyChanged(nameof(ApplySelectedCategoriesCommand));
+                });
+            });
+
+            IsLoading = false;
         }
 
 

@@ -1,5 +1,4 @@
 ﻿using Lexplosion.WPF.NewInterface.Commands;
-using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Core.Tools;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
@@ -10,7 +9,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Threading;
-using Lexplosion.WPF.NewInterface.Controls;
+using Lexplosion.Logic.Management.Instances;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile
 {
@@ -33,6 +32,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         public string InstanceModloader { get => _instanceModel.InstanceData.Modloader.ToString(); }
         public string PlayerPlayedTime { get => _instanceModel.IsInstalled ? "10ч" : DownloadCount; }
         public string DownloadCount { get => _instanceModel.TotalDonwloads; }
+        public bool IsInstalled { get => _instanceModel.IsInstalled; }
 
 
         private ObservableCollection<FrameworkElementModel> _instanceActions = new ObservableCollection<FrameworkElementModel>();
@@ -46,12 +46,25 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
 
 
         private RelayCommand _playCommand;
+        /// <summary>
+        /// Устанавливает клиент, если клиент требуется докачать, докачивает.
+        /// </summary>
         public ICommand PlayCommand
         {
             get => RelayCommand.GetCommand(ref _playCommand, _instanceModel.Run);
         }
 
+        private RelayCommand _installCommand;
+        /// <summary>
+        /// Устанавливает клиент, если клиент не добавлен в библиотеку добавляет.
+        /// </summary>
+        public ICommand InstallCommand 
+        {
+            get => RelayCommand.GetCommand(ref _installCommand, _instanceModel.Download);
+        }
+
         public ICommand BackCommand { get; }
+        
 
 
         #endregion Commands
@@ -62,7 +75,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
 
         public InstanceProfileLeftPanelViewModel(INavigationStore navigationStore, ICommand toMainMenuLayoutCommand, InstanceModelBase instanceModelBase)
         {
-            BackCommand = toMainMenuLayoutCommand;
+            BackCommand = new RelayCommand((obj) =>
+            {
+                // Останавливаем обновление директорий сборки.
+                InstanceAddon.StopWatchingDirectory();
+                toMainMenuLayoutCommand.Execute(obj);
+            });
+
             _navigationStore = navigationStore;
 
             _instanceModel = instanceModelBase;
@@ -70,6 +89,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             _instanceModel.GameVersionChanged += OnVersionChanged;
             _instanceModel.ModloaderChanged += OnModloaderChanged;
             _instanceModel.StateChanged += OnStateChanged;
+
+            _instanceModel.DataChanged += OnInstanceModelDataChanged;
 
             UpdateFrameworkElementModels();
         }
@@ -104,8 +125,19 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         private void UpdateFrameworkElementModels()
         {
             _instanceActions.Clear();
+
             if (!_instanceModel.IsInstalled && !_instanceModel.InLibrary)
-                return;
+            {
+                _instanceActions.Add(new FrameworkElementModel("AddToLibrary", _instanceModel.AddToLibrary, "AddToLibrary"));
+            }
+
+            if (_instanceModel.Source != InstanceSource.Local)
+            {
+                _instanceActions.Add(new FrameworkElementModel("Visit" + _instanceModel.Source.ToString(), _instanceModel.GoToWebsite, _instanceModel.Source.ToString(), 20, 20));
+            }
+
+            //if (!_instanceModel.IsInstalled && !_instanceModel.InLibrary)
+            //    return;
 
             // 1. Website
             // 2. AddToLibrary
@@ -113,15 +145,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             // 3. Export
             // 4. RemoveFromLibrary / Delete (Перед удаление переводим пользователя в обратно библиотеку.)
 
-            if (_instanceModel.Source != InstanceSource.Local)
-            {
-                _instanceActions.Add(new FrameworkElementModel("Visit" + _instanceModel.Source.ToString(), _instanceModel.GoToWebsite, _instanceModel.Source.ToString(), 20, 20));
-            }
-
-            if (!_instanceModel.IsInstalled && !_instanceModel.InLibrary)
-            {
-                _instanceActions.Add(new FrameworkElementModel("AddToLibrary", _instanceModel.AddToLibrary, "AddToLibrary"));
-            }
 
             if (_instanceModel.InLibrary)
             {
@@ -158,6 +181,15 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
                     _instanceModel.Delete();
                 });
             });
+        }
+
+
+        private void OnInstanceModelDataChanged() 
+        {
+            OnPropertyChanged(nameof(InstanceName));
+            OnPropertyChanged(nameof(InstanceVersion));
+            OnPropertyChanged(nameof(InstanceModloader));
+            OnPropertyChanged(nameof(IsInstalled));
         }
 
 

@@ -14,13 +14,13 @@ namespace Lexplosion.Logic.Management.Instances
     {
         public override bool CheckUpdates(string localId)
         {
-            var infoData = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.DirectoryPath + "/instances/" + localId + "/instancePlatformData.json");
+            var infoData = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.InstancesPath + localId + "/instancePlatformData.json");
             if (string.IsNullOrWhiteSpace(infoData?.id))
             {
                 return false;
             }
 
-            var content = DataFilesManager.GetFile<InstanceContentFile>(WithDirectory.DirectoryPath + "/instances/" + localId + "/instanceContent.json");
+            var content = DataFilesManager.GetFile<InstanceContentFile>(WithDirectory.InstancesPath + localId + "/instanceContent.json");
             if (content != null && !content.FullClient)
             {
                 return true;

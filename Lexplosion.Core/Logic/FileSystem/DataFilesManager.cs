@@ -67,7 +67,7 @@ namespace Lexplosion.Logic.FileSystem
             {
                 data.GamePath = null;
 
-                string path = DirectoryPath + "/instances/" + instanceId;
+                string path = InstancesPath + instanceId;
                 if (!Directory.Exists(path))
                     Directory.CreateDirectory(path);
 
@@ -106,7 +106,7 @@ namespace Lexplosion.Logic.FileSystem
             }
             else
             {
-                file = DirectoryPath + "/instances/" + instanceId + "/instanceSettings.json";
+                file = InstancesPath + instanceId + "/instanceSettings.json";
 
                 if (!File.Exists(file))
                 {
@@ -139,9 +139,9 @@ namespace Lexplosion.Logic.FileSystem
         {
             try
             {
-                if (File.Exists(DirectoryPath + "/instances/" + instanceId + "/lastUpdates.json"))
+                if (File.Exists(InstancesPath + instanceId + "/lastUpdates.json"))
                 {
-                    File.Delete(DirectoryPath + "/instances/" + instanceId + "/lastUpdates.json");
+                    File.Delete(InstancesPath + instanceId + "/lastUpdates.json");
                 }
 
                 return true;
@@ -274,7 +274,7 @@ namespace Lexplosion.Logic.FileSystem
 
         public static void SaveManifest(string instanceId, VersionManifest data)
         {
-            SaveFile(DirectoryPath + "/instances/" + instanceId + "/" + "manifest.json", JsonConvert.SerializeObject(data));
+            SaveFile(InstancesPath + instanceId + "/" + "manifest.json", JsonConvert.SerializeObject(data));
             if (data.libraries != null)
             {
                 if (data.version.AdditionalInstaller != null)
@@ -312,7 +312,7 @@ namespace Lexplosion.Logic.FileSystem
 
         public static VersionManifest GetManifest(string instanceId, bool includingLibraries)
         {
-            VersionManifest data = GetFile<VersionManifest>(DirectoryPath + "/instances/" + instanceId + "/" + "manifest.json");
+            VersionManifest data = GetFile<VersionManifest>(InstancesPath + instanceId + "/" + "manifest.json");
             if (data == null)
             {
                 return null;
@@ -349,7 +349,7 @@ namespace Lexplosion.Logic.FileSystem
 
         public static InstalledAddonsFormat GetInstalledAddons(string instanceId)
         {
-            string path = WithDirectory.DirectoryPath + "/instances/" + instanceId + "/installedAddons.json";
+            string path = WithDirectory.InstancesPath + instanceId + "/installedAddons.json";
 
             var data = DataFilesManager.GetFile<InstalledAddonsFormat>(path);
             if (data == null)
@@ -362,7 +362,7 @@ namespace Lexplosion.Logic.FileSystem
 
         public static void SaveInstalledAddons(string instanceId, InstalledAddonsFormat data)
         {
-            string path = WithDirectory.DirectoryPath + "/instances/" + instanceId + "/installedAddons.json";
+            string path = WithDirectory.InstancesPath + instanceId + "/installedAddons.json";
             DataFilesManager.SaveFile(path, JsonConvert.SerializeObject(data));
         }
     }

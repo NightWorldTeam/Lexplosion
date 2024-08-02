@@ -2,6 +2,7 @@
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using Lexplosion.WPF.NewInterface.Stores;
+using System;
 using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile
@@ -38,12 +39,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         #region Commands
 
 
-        private RelayCommand _backCommand;
-        public ICommand BackCoommand
-        {
-            get => RelayCommand.GetCommand(ref _backCommand, () => { });
-        }
-
 
         #endregion Commands
 
@@ -59,6 +54,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             LeftPanel.SelectedItemChanged += OnLeftPanelSelectedItemChanged;
 
             InitDefaultLeftPanelTabs();
+            Runtime.DebugWrite("Instance Profile Layout created");
         }
 
 
@@ -68,25 +64,31 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         #region Private Methods
 
 
+        /// <summary>
+        /// TODO IMPORTANT!!! Пролаг при открытии страницы сборки вероятнее всего из-за InstanceData в InstanceModelBase.
+        /// </summary>
+
+
         private void InitDefaultLeftPanelTabs()
         {
             _overviewViewModel = new InstanceProfileOverviewViewModel(_instanceModel);
 
-            //if (_instanceModel.InstanceData.Modloader != ClientType.Vanilla)
-            _addonsViewModel = new InstanceProfileAddonsLayoutViewModel(_navigationStore, _instanceModel);
-
-            //if (_instanceModel.IsInstalled)
-            _settingsLayoutViewModel = new InstanceProfileSettingsLayoutViewModel(_instanceModel);
+            if (_instanceModel.InLibrary)
+            {
+                _addonsViewModel = new InstanceProfileAddonsLayoutViewModel(_navigationStore, _instanceModel);
+                _settingsLayoutViewModel = new InstanceProfileSettingsLayoutViewModel(_instanceModel);
+            }
 
             Lexplosion.Runtime.TaskRun(() =>
             {
                 LeftPanel.AddTabItem("Overview", "Services", _overviewViewModel);
 
-                //if (_instanceModel.InstanceData.Modloader != ClientType.Vanilla)
-                LeftPanel.AddTabItem("Addons", "Addons", _addonsViewModel);
+                if (_instanceModel.InLibrary) 
+                {
+                    LeftPanel.AddTabItem("Addons", "Addons", _addonsViewModel);
+                    LeftPanel.AddTabItem("Settings", "Settings", _settingsLayoutViewModel);
+                }
 
-                //if (_instanceModel.IsInstalled)
-                LeftPanel.AddTabItem("Settings", "Settings", _settingsLayoutViewModel);
                 LeftPanel.SelectFirst();
             });
         }

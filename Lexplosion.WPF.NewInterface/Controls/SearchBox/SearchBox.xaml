@@ -7,10 +7,15 @@
     <Style x:Key="IconButton" TargetType="{x:Type Button}">
         <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
+        <Setter Property="Background" Value="Transparent" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
-                    <Border Background="Transparent">
+                    <Border
+                        Padding="{TemplateBinding Padding}"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}">
                         <ContentPresenter
                             x:Name="CP"
                             HorizontalAlignment="Center"
@@ -49,10 +54,10 @@
     </Style>
 
     <Style TargetType="{x:Type local:SearchBox}">
-        <Setter Property="MinHeight" Value="40" />
         <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
         <Setter Property="CaretBrush" Value="{DynamicResource ActivitySolidColorBrush}" />
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Height" Value="40" />
         <Setter Property="Background" Value="{DynamicResource PrimarySolidColorBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource SeparateSolidColorBrush}" />
         <Setter Property="FontSize" Value="14" />
@@ -61,7 +66,7 @@
                 <ControlTemplate TargetType="{x:Type local:SearchBox}">
                     <Border
                         Width="{TemplateBinding Width}"
-                        Height="40"
+                        Height="{TemplateBinding Height}"
                         Padding="16,10"
                         Background="{TemplateBinding Background}"
                         BorderBrush="{TemplateBinding BorderBrush}"

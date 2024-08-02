@@ -27,7 +27,7 @@
                         <Path
                             x:Name="PathActivityColor"
                             Data="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-                            Fill="{DynamicResource CheckBoxMarkSolidColorBrush}"
+                            Fill="{DynamicResource BrandColorForegroundSolidColorBrush}"
                             Opacity="0"
                             Stretch="Fill" />
                     </Viewbox>
@@ -43,12 +43,12 @@
                                 Storyboard.TargetName="ActivityColorBorder"
                                 Storyboard.TargetProperty="Opacity"
                                 To="1"
-                                Duration="{StaticResource MediumAnimationSpeed}" />
+                                Duration="00:00:0.1" />
                             <DoubleAnimation
                                 Storyboard.TargetName="PathActivityColor"
                                 Storyboard.TargetProperty="Opacity"
                                 To="1"
-                                Duration="{StaticResource MediumAnimationSpeed}" />
+                                Duration="00:00:0.1" />
                         </Storyboard>
                     </BeginStoryboard>
                 </Trigger.EnterActions>
@@ -59,12 +59,12 @@
                                 Storyboard.TargetName="ActivityColorBorder"
                                 Storyboard.TargetProperty="Opacity"
                                 To="0"
-                                Duration="{StaticResource MediumAnimationSpeed}" />
+                                Duration="00:00:0.1" />
                             <DoubleAnimation
                                 Storyboard.TargetName="PathActivityColor"
                                 Storyboard.TargetProperty="Opacity"
                                 To="0"
-                                Duration="{StaticResource MediumAnimationSpeed}" />
+                                Duration="00:00:0.1" />
                         </Storyboard>
                     </BeginStoryboard>
                 </Trigger.ExitActions>

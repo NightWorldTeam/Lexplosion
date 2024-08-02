@@ -56,6 +56,7 @@
                                         Text="Some Text Desctiiopn" />
                                 </StackPanel>
 
+                                <!--  TODO: Translate  -->
                                 <Button
                                     Grid.Column="1"
                                     HorizontalContentAlignment="Center"
@@ -63,7 +64,7 @@
                                     Command="{Binding SetLogoPathCommand}"
                                     Content="Load your Logo"
                                     FontSize="14"
-                                    Foreground="{DynamicResource CheckBoxMarkSolidColorBrush}" />
+                                    Foreground="{DynamicResource BrandColorForegroundSolidColorBrush}" />
                             </Grid>
 
                             <!--  Previews  -->
@@ -118,7 +119,7 @@
                         Padding="0,16,0,8"
                         BorderBrush="{DynamicResource SeparateSolidColorBrush}"
                         BorderThickness="0,0,0,2">
-                        <Grid>
+                        <Grid ShowGridLines="False">
 
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -142,10 +143,9 @@
                             <!--  Content  -->
                             <controls:AdvancedTextBox
                                 Grid.Column="1"
-                                Width="300"
                                 Height="32"
                                 Margin="16,0,0,0"
-                                HorizontalAlignment="Right"
+                                HorizontalAlignment="Stretch"
                                 Text="{Binding Model.Name, UpdateSourceTrigger=PropertyChanged}" />
                         </Grid>
                     </Border>
@@ -227,6 +227,7 @@
             </Grid>
         </ScrollViewer>
 
+        <!--  TODO: Возможно эту панель плохо видно на темной теме, подумать над этим.  -->
         <Border
             x:Name="ChangesAlertBorder"
             Height="48"
@@ -291,7 +292,7 @@
                         Command="{Binding RebootChangesCommand}"
                         Content="Сброс"
                         FontWeight="Medium"
-                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                        Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
                         Style="{StaticResource TextButton}" />
 
                     <!--  Save Button  -->
@@ -301,7 +302,7 @@
                         Padding="16,8"
                         Command="{Binding SaveChangesCommand}"
                         FontWeight="Medium">
-                        <TextBlock Foreground="White" Text="Сохранить изменения" />
+                        <TextBlock Foreground="{DynamicResource BrandColorForegroundSolidColorBrush}" Text="Сохранить изменения" />
                     </Button>
                 </StackPanel>
             </Grid>

@@ -29,6 +29,29 @@ namespace Lexplosion.Logic.Objects.Modrinth
 
         [JsonProperty("icon_url")]
         public string LogoUrl;
+
+        /// <summary>
+        /// Нужен для аддонов. Пробразует Type в AddonType.
+        /// Если использовать для модпака, то в ебало прилетит AddonType.Unknown
+        /// </summary>
+        [JsonIgnore]  
+        public AddonType GetAddonType
+        {
+            get
+            {
+                switch (Type)
+                {
+                    case "mod":
+                        return AddonType.Mods;
+                    case "resourcepack":
+                        return AddonType.Resourcepacks;
+                    case "shader":
+                        return AddonType.Shaders;
+                    default:
+                        return AddonType.Unknown;
+                }
+            }
+        }
     }
 
     public class ModrinthCtalogUnit : ModrinthProject
@@ -55,7 +78,7 @@ namespace Lexplosion.Logic.Objects.Modrinth
         public int Downloads;
 
         [JsonProperty("date_modified")]
-        public new string Updated;        
+        public new string Updated;
     }
 
     public class ModrinthProjectInfo : ModrinthProject
@@ -99,6 +122,7 @@ namespace Lexplosion.Logic.Objects.Modrinth
         public ModrinthProjectInfo(ModrinthCtalogUnit catalogUnit)
         {
             ProjectId = catalogUnit.ProjectId;
+            Categories = catalogUnit.Categories;
             Summary = catalogUnit.Summary;
             Downloads = catalogUnit.Downloads;
             GameVersions = catalogUnit.GameVersions;

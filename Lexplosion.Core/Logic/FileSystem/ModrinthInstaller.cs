@@ -24,7 +24,7 @@ namespace Lexplosion.Logic.FileSystem
             // тут переосим нужные файлы из этого архива
 
             string SourcePath = unzupArchivePath + "overrides/";
-            string DestinationPath = DirectoryPath + "/instances/" + instanceId + "/";
+            string DestinationPath = InstancesPath + instanceId + "/";
 
             foreach (string dirPath in Directory.GetDirectories(SourcePath, "*", SearchOption.AllDirectories))
             {
@@ -194,7 +194,7 @@ namespace Lexplosion.Logic.FileSystem
                         else
                         {
                             InstalledAddonInfo addonInfo = installedAddons[projectId];
-                            if (addonInfo.FileID != addonData.Value1.FileId || !addonInfo.IsExists(DirectoryPath + "/instances/" + instanceId + "/"))
+                            if (addonInfo.FileID != addonData.Value1.FileId || !addonInfo.IsExists(InstancesPath + instanceId + "/"))
                             {
                                 // версия не сходится или нет файла. Тоже кидаем на обновление
                                 downloadList.Add(addonData);
@@ -212,8 +212,8 @@ namespace Lexplosion.Logic.FileSystem
                         {
                             if (installedAddons[addonId].ActualPath != null)
                             {
-                                Runtime.DebugWrite("Delete file: " + DirectoryPath + "/instances/" + instanceId + "/" + installedAddons[addonId].ActualPath);
-                                DelFile(DirectoryPath + "/instances/" + instanceId + "/" + installedAddons[addonId].ActualPath);
+                                Runtime.DebugWrite("Delete file: " + InstancesPath + instanceId + "/" + installedAddons[addonId].ActualPath);
+                                DelFile(InstancesPath + instanceId + "/" + installedAddons[addonId].ActualPath);
                             }
                         }
                         else

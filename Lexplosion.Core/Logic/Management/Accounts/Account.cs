@@ -21,7 +21,7 @@ namespace Lexplosion.Logic.Management.Accounts
             public string UUID;
             public string AccessData;
             public bool IsActive;
-            public bool IsLaunched;
+            public bool IsLaunch;
 
             public bool IsValid()
             {
@@ -106,17 +106,19 @@ namespace Lexplosion.Logic.Management.Accounts
                 lock (StateSetLocker)
                 {
                     IsActiveSet(value);
-                }         
+                }
             }
         }
+
         private bool _isActive = false;
 
         /// <summary>
         /// Является ли аккаунт запускаемым. 
-        /// Если установить true, то IsLaunched другого аккаунта, который был запускаемым изменится на false.
+        /// Если установить true, то IsLaunch другого аккаунта, который был запускаемым изменится на false.
         /// При установке true, статичное свойство LaunchedAccount примет значение в виде этого аккаунта.
         /// Так же, если установить true аккаунту NightWorld, то IsActive у этого аккаунта тоже примет значение true.
         /// </summary>
+        private bool _isLaunch = false;
         public bool IsLaunch
         {
             get => _isLaunch;
@@ -128,7 +130,6 @@ namespace Lexplosion.Logic.Management.Accounts
                 }         
             }
         }
-        private bool _isLaunch = false;
 
         private void IsLaunchSet(bool value)
         {
@@ -149,8 +150,8 @@ namespace Lexplosion.Logic.Management.Accounts
         private void IsActiveSet(bool value)
         {
             // производим какие-либо действия, только если аккаунт найтворлд. отсальные должны всегда иметь false
-            if (AccountType == AccountType.NightWorld)
-            {
+                    if (AccountType == AccountType.NightWorld)
+                    {
                 _isActive = value;
                 if (_isActive)
                 {
@@ -162,10 +163,10 @@ namespace Lexplosion.Logic.Management.Accounts
                         {
                             ActiveAccount.IsLaunchSet(false);
                             SetToLaunch();
-                        }
+                    }
 
                         ActiveAccount.IsActiveSet(false);
-                    }
+                }
 
                     ActiveAccount = this;
                     TryInitNwServices();
@@ -234,7 +235,7 @@ namespace Lexplosion.Logic.Management.Accounts
         public static Account LaunchAccount 
         {
             get => _launchAccount; private set 
-            {
+        {
                 _launchAccount = value;
                 LaunchAccountChanged?.Invoke(value);
             }
@@ -287,7 +288,7 @@ namespace Lexplosion.Logic.Management.Accounts
             Login = summary.Login;
             UUID = summary.UUID;
             IsActive = summary.IsActive;
-            IsLaunch = summary.IsLaunched;
+            IsLaunch = summary.IsLaunch;
 
             try
             {
@@ -320,7 +321,7 @@ namespace Lexplosion.Logic.Management.Accounts
                 Login = this.Login,
                 UUID = this.UUID,
                 IsActive = this.IsActive,
-                IsLaunched = this.IsLaunch,
+                IsLaunch = this.IsLaunch,
                 AccountType = this.AccountType,
                 AccessData = accessData
             };

@@ -15,6 +15,8 @@
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <TargetFrameworkProfile />
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -27,10 +29,9 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile />
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -72,6 +73,9 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="VirtualizingWrapPanel, Version=2.0.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\VirtualizingWrapPanel.2.0.5\lib\net462\VirtualizingWrapPanel.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -95,7 +99,9 @@
     <Compile Include="Controls\AdvancedToolTip\AdvancedToolTip.cs" />
     <Compile Include="Controls\CornerRadiusExtension.cs" />
     <Compile Include="Controls\DependencyObjectHelper.cs" />
+    <Compile Include="Controls\CircleLoader\CircleLoader.cs" />
     <Compile Include="Controls\DragDropBoard\DragDropBoard.cs" />
+    <Compile Include="Controls\OneStageInstallButton\OneStageInstallButton.cs" />
     <Compile Include="Controls\LoadingBoard\LoadingBoard.cs" />
     <Compile Include="Controls\PageCurtains\PageCurtains.cs" />
     <Compile Include="Controls\TextSwitcherButton\TextSwitcherButton.cs" />
@@ -124,8 +130,13 @@
     <Compile Include="Core\Converters\MultiValueConverter\StringFormatConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\BooleanToVisibilityConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\ConverterBase.cs" />
+    <Compile Include="Core\Converters\ValueConverters\PositiveIntToShortStringConverter.cs" />
+    <Compile Include="Core\Converters\ValueConverters\IsObjectNullConverter.cs" />
+    <Compile Include="Core\Converters\ValueConverters\IsStringNullOrEmptyConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\NegativeBooleanToVisibilityConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\NegativeBooleanValueConverter.cs" />
+    <Compile Include="Core\Converters\ValueConverters\IsValueNullConverter.cs" />
+    <Compile Include="Core\Converters\ValueConverters\ImageSourceNullValidateConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\ToStringConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\WindowHeightToXProcentHeight.cs" />
     <Compile Include="Core\Converters\ValueConverters\WindowWidthToXProcentWidth.cs" />
@@ -134,6 +145,7 @@
     <Compile Include="Core\Objects\NightWorldUser.cs" />
     <Compile Include="Core\Objects\TranslatableObjects\InstanceSourceObject.cs" />
     <Compile Include="Core\Objects\TranslatableObjects\ITranslatableObject.cs" />
+    <Compile Include="Core\Objects\TranslatableObjects\TranslatableObject.cs" />
     <Compile Include="Core\Objects\TranslatableObjects\SortByParamObject.cs" />
     <Compile Include="Core\Paginator\IPaginator.cs" />
     <Compile Include="Core\Paginator\Paginator.cs" />
@@ -159,17 +171,27 @@
     <Compile Include="Core\ViewModel\ObservableObject.cs" />
     <Compile Include="Extensions\ResourceKeyBinding.cs" />
     <Compile Include="Extensions\TreeViewItemExtension.cs" />
+    <Compile Include="Mvvm\Models\AddonsRepositories\AddonsRepositoryModel.cs" />
+    <Compile Include="Mvvm\Models\AddonsRepositories\AddonsRepositoryModelBase.cs" />
+    <Compile Include="Mvvm\Models\AddonsRepositories\Groups\CategoryGroup.cs" />
+    <Compile Include="Mvvm\Models\AddonsRepositories\Groups\IAddonSearchParamsGroupBase.cs" />
+    <Compile Include="Mvvm\Models\AddonsRepositories\Groups\ModloaderGroup.cs" />
     <Compile Include="Mvvm\Models\InstanceControllers\CatalogController.cs" />
     <Compile Include="Mvvm\Models\InstanceControllers\IInstanceController.cs" />
     <Compile Include="Mvvm\Models\InstanceControllers\LibraryController.cs" />
     <Compile Include="Mvvm\Models\InstanceTransfer\ImportProcess.cs" />
     <Compile Include="Mvvm\Models\InstanceTransfer\InstanceFileTree.cs" />
     <Compile Include="Mvvm\Models\InstanceTransfer\InstanceImportModel.cs" />
+    <Compile Include="Mvvm\Models\MainContent\InstanceProfile\Addons\InstanceAddonsContainerModel.cs" />
     <Compile Include="Mvvm\Models\MainContent\MainMenu\FIlterPanel\CatalogFilterPanel.cs" />
     <Compile Include="Mvvm\Models\MainContent\MainMenu\FIlterPanel\LibraryFilterPanel.cs" />
     <Compile Include="Mvvm\Models\MainContent\MainMenu\Friends\Friend.cs" />
     <Compile Include="Mvvm\Models\MainContent\MainMenu\Multiplayer\MultiplayerModel.cs" />
     <Compile Include="Mvvm\Models\Modal\AccountFactoryModel.cs" />
+    <Compile Include="Mvvm\ViewModels\AddonsRepositories\LexplosionAddonsRepositoryViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\MainContent\InstanceProfile\Addons\InstanceAddonsContainerViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\MainContent\InstanceProfile\Addons\IVisualFormat.cs" />
+    <Compile Include="Mvvm\ViewModels\MainContent\InstanceProfile\Addons\VisualFormat.cs" />
     <Compile Include="Mvvm\ViewModels\MainContent\MainMenu\Content\Friends\FindFriendsViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\AccountFactoryViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\InstanceExportViewModel.cs" />
@@ -182,6 +204,9 @@
     </Compile>
     <Compile Include="Mvvm\Views\Modal\InstanceTransfer\InstanceImportView.xaml.cs">
       <DependentUpon>InstanceImportView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Views\Pages\AddonsRepositories\AddonsRepository.xaml.cs">
+      <DependentUpon>AddonsRepository.xaml</DependentUpon>
     </Compile>
     <Compile Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\Friends\FindFriendsView.xaml.cs">
       <DependentUpon>FindFriendsView.xaml</DependentUpon>
@@ -325,6 +350,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\CircleLoader\CircleLoader.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Controls.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -358,6 +387,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\ModalControl\ModalControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\OneStageInstallButton\OneStageInstallButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -398,6 +431,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Mvvm\Views\Modal\InstanceTransfer\InstanceImportView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Mvvm\Views\Pages\AddonsRepositories\AddonsRepository.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -749,6 +786,7 @@
     <Resource Include="Assets\fonts\Arkhip.ttf" />
     <Resource Include="Assets\fonts\PassDots.ttf" />
     <Resource Include="Assets\fonts\SFProDisplay.otf" />
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -758,6 +796,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Core\Extensions\" />
     <Folder Include="Mvvm\ViewModels\Authorization\OAuth2\" />
     <Folder Include="Mvvm\ViewModels\InstanceForm\" />
   </ItemGroup>

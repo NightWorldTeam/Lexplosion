@@ -9,10 +9,8 @@
     mc:Ignorable="d">
 
     <!--  TODO: Можем оставить старый лоадер  -->
-    <controls:Loader IsActive="False">
 
-        <Grid Margin="0,40,0,0" Background="{DynamicResource SecondarySolidColorBrush}">
-            
-        </Grid>
-    </controls:Loader>
+    <Grid Margin="0,40,0,0" Background="{DynamicResource SecondarySolidColorBrush}">
+
+    </Grid>
 </UserControl>

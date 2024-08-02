@@ -32,5 +32,9 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
             SelectedEvent?.Invoke(_category, value);
         }
 
+        public override int GetHashCode()
+        {
+            return _category.GetHashCode();
+        }
     }
 }

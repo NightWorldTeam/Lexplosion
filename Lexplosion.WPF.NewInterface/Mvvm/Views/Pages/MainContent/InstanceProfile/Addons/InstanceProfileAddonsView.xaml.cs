@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.InstanceProfile
@@ -13,21 +14,22 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.InstanceProfi
             InitializeComponent();
         }
 
-        private void Grid_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void Grid_DragEnter(object sender, System.Windows.DragEventArgs e)
         {
-            var grid = (Grid)sender;
-            Runtime.DebugWrite(grid.ActualWidth.ToString());
-            for (int i = 0; i < grid.ColumnDefinitions.Count; i++)
-            {
-                Runtime.DebugWrite(i.ToString() + " " + grid.ColumnDefinitions[i].ActualWidth.ToString());
-            }
+            DragDropField.Visibility = System.Windows.Visibility.Visible;
         }
 
-        private void ListBox_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        private void DragDropField_DragLeave(object sender, System.Windows.DragEventArgs e)
         {
-            var grid = (FrameworkElement)sender;
-            Runtime.DebugWrite(" lsb: " + grid.ActualWidth.ToString());
-            Runtime.DebugWrite(" usercontrol: " + this.ActualWidth.ToString());
+            DragDropField.Visibility = System.Windows.Visibility.Collapsed;
+        }
+
+        private void DragDropField_Drop(object sender, System.Windows.DragEventArgs e)
+        {
+            var fe = sender as FrameworkElement;
+            Console.WriteLine(e.Data);
+
+            fe.Visibility = System.Windows.Visibility.Collapsed;
         }
     }
 }

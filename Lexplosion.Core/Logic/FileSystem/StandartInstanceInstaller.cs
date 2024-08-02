@@ -37,7 +37,7 @@ namespace Lexplosion.Logic.FileSystem
 
         public InstanceContent GetInstanceContent()
         {
-            var content = DataFilesManager.GetFile<InstanceContentFile>(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/instanceContent.json");
+            var content = DataFilesManager.GetFile<InstanceContentFile>(WithDirectory.InstancesPath + instanceId + "/instanceContent.json");
             using (InstalledAddons installedAddons = InstalledAddons.Get(instanceId))
             {
                 if (content != null)
@@ -73,7 +73,7 @@ namespace Lexplosion.Logic.FileSystem
 
         public void SaveInstanceContent(InstanceContent content)
         {
-            DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/instanceContent.json",
+            DataFilesManager.SaveFile(WithDirectory.InstancesPath + instanceId + "/instanceContent.json",
                 JsonConvert.SerializeObject(new InstanceContentFile
                 {
                     FullClient = content.FullClient,
@@ -111,7 +111,7 @@ namespace Lexplosion.Logic.FileSystem
                     return true;
                 }
 
-                string instancePath = DirectoryPath + "/instances/" + instanceId + "/";
+                string instancePath = InstancesPath + instanceId + "/";
 
                 if (!addon.IsExists(instancePath))
                 {
@@ -121,7 +121,7 @@ namespace Lexplosion.Logic.FileSystem
 
             foreach (string file in localFiles.Files)
             {
-                if (!File.Exists(DirectoryPath + "/instances/" + instanceId + file))
+                if (!File.Exists(InstancesPath + instanceId + file))
                 {
                     return true;
                 }
@@ -139,7 +139,7 @@ namespace Lexplosion.Logic.FileSystem
                 {
                     foreach (string file in localFiles.Files)
                     {
-                        DelFile(DirectoryPath + "/instances/" + instanceId + file);
+                        DelFile(InstancesPath + instanceId + file);
                     }
                 }
 

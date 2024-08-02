@@ -30,5 +30,10 @@
         <ResourceDictionary Source="DragDropBoard/DragDropBoard.xaml" />
 
         <ResourceDictionary Source="TextSwitcherButton/TextSwitcherButton.xaml" />
+
+        <ResourceDictionary Source="CircleLoader/CircleLoader.xaml" />
+        <ResourceDictionary Source="OneStageInstallButton/OneStageInstallButton.xaml" />
+
+
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

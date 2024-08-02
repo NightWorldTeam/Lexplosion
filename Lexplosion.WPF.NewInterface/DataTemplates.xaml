@@ -14,9 +14,12 @@
     xmlns:mainmenuvm="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu"
     xmlns:modalviews="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Modal"
     xmlns:modalvm="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal"
+    xmlns:s="clr-namespace:System;assembly=mscorlib"
     xmlns:viewmodels="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels">
 
     <viewmodels:MainViewModel x:Key="MainViewModel" />
+
+    <ImageBrush x:Key="NoneImageBrush" ImageSource="pack://Application:,,,/Assets/images/icons/non_image.png" />
 
     <!--  Authorization  -->
     <DataTemplate DataType="{x:Type authviewmodels:AuthorizationMenuViewModel}">
@@ -159,6 +162,10 @@
 
     <DataTemplate DataType="{x:Type instanceTransferViewModel:InstanceImportViewModel}">
         <instanceTransferView:InstanceImportView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type addonsrepositoriesvm:LexplosionAddonsRepositoryViewModel}">
+        <addonsrepositoriesviews:AddonsRepository />
     </DataTemplate>
 
     <!--  Accounts  -->

@@ -7,6 +7,7 @@ using Lexplosion.Logic.Management.Instances;
 using System.Runtime.CompilerServices;
 using System;
 using System.Threading;
+using Lexplosion.Logic.Objects.Curseforge;
 
 namespace Lexplosion.Logic.Management.Addons
 {
@@ -181,13 +182,22 @@ namespace Lexplosion.Logic.Management.Addons
             }
         }
 
+        private object _addonInfoLocker = new object();
+        private void DefineAddonInfo()
+        {
+            lock (_addonInfoLocker)
+            {
+                if (_addonInfo == null)
+                {
+                    _addonInfo = ModrinthApi.GetProject(_projectId);
+                    SetAuthor();
+                }
+            }
+        }
+
         public void DefineDefaultVersion()
         {
-            if (_addonInfo == null)
-            {
-                _addonInfo = ModrinthApi.GetProject(_projectId);
-                SetAuthor();
-            }
+            DefineAddonInfo();
 
             if (_fileId != null)
             {
@@ -204,12 +214,7 @@ namespace Lexplosion.Logic.Management.Addons
 
         public void DefineLatestVersion()
         {
-            if (_addonInfo == null)
-            {
-                _addonInfo = ModrinthApi.GetProject(_projectId);
-                SetAuthor();
-            }
-
+            DefineAddonInfo();
             DefaineLatesVersion_();
         }
 
@@ -255,6 +260,20 @@ namespace Lexplosion.Logic.Management.Addons
                     actionIfTrue();
                 }
             }
+        }
+
+        public IEnumerable<CategoryBase> LoadCategories()
+        {
+            DefineAddonInfo();
+            if (_addonInfo?.Categories == null) return new List<CategoryBase>();
+
+            var resutl = CategoriesManager.FindAddonsCategoriesById(ProjectSource.Modrinth, _addonInfo.GetAddonType, _addonInfo.Categories);
+            return resutl ?? new List<CategoryBase>();
+        }
+
+        public string GetFullDescription()
+        {
+            return string.Empty;
         }
 
         public event Action OnInfoUpdated;

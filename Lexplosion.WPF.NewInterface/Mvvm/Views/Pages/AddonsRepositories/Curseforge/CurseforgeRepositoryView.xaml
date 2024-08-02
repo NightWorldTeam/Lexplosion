@@ -125,6 +125,8 @@
         </Style>
 
         <Style TargetType="{x:Type controls:SearchBox}">
+            <Setter Property="Foreground" Value="{DynamicResource Foreground}" />
+            <Setter Property="FontSize" Value="14" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type controls:SearchBox}">
@@ -166,6 +168,7 @@
                                 Width="56"
                                 Height="56"
                                 Background="{DynamicResource BrandColor}"
+                                IsDefault="True"
                                 Style="{StaticResource IconButton}">
                                 <Viewbox Height="16">
                                     <Path
@@ -806,11 +809,17 @@
                 </Grid>
             </Border>
         </DataTemplate>
+
+
     </UserControl.Resources>
 
     <Grid Margin="0,40,0,0">
 
         <ScrollViewer>
+            <ScrollViewer.Effect>
+                <BlurEffect />
+            </ScrollViewer.Effect>
+
             <Grid
                 MinHeight="650"
                 Margin="16,0,8,0"
@@ -827,7 +836,9 @@
                     Margin="0,0,0,16"
                     HorizontalAlignment="Stretch"
                     Background="#262626"
-                    Placeholder="Search for Minecraft mods..." />
+                    Placeholder="Search for Minecraft mods..."
+                    SearchCommand="{Binding SearchCommand}"
+                    Text="{Binding Model.SearchFilter, UpdateSourceTrigger=PropertyChanged}" />
 
                 <!--  Content  -->
                 <Grid Grid.Row="1">
@@ -1088,5 +1099,11 @@
                 </Grid>
             </Grid>
         </ScrollViewer>
+
+        <controls:LoadingBoard
+            Background="Black"
+            BackgroundOpacity="0.4"
+            IsActive="{Binding Model.IsContentLoading}"
+            Placeholder="Загрузка..." />
     </Grid>
 </UserControl>

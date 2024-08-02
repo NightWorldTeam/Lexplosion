@@ -529,4 +529,36 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <!--  TODO: сделать отдельный control для icon button  -->
+    <Style x:Key="x32IconButtonWithHover" TargetType="{x:Type Button}">
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="UseLayoutRounding" Value="True" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Height" Value="32" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+        <Setter Property="Width" Value="32" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid Background="Transparent">
+                        <Viewbox Width="{TemplateBinding Width}" Height="{TemplateBinding Height}">
+                            <Path
+                                x:Name="IconPath"
+                                extensions:Path.StringKeyData="{TemplateBinding Content}"
+                                Fill="{TemplateBinding Foreground}"
+                                Stretch="Fill" />
+                        </Viewbox>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="IconPath" Property="Path.Fill" Value="{DynamicResource ActivitySolidColorBrush}" />
+                            <Setter TargetName="IconPath" Property="Path.Opacity" Value="0.7" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

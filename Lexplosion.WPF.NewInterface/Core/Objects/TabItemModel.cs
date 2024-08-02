@@ -2,13 +2,15 @@
 
 namespace Lexplosion.WPF.NewInterface.Core.Objects
 {
-    public class TabItemModel : ViewModelBase
+    public class TabItemModel : ViewModelBase, IComparable<TabItemModel>
     {
         public event Action<TabItemModel, bool> SelectedChanged;
 
 
         #region Properties
 
+
+        public uint Id { get; set; }
 
         public string TextKey { get; set; }
         public ViewModelBase Content { get; set; }
@@ -22,6 +24,11 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
                 SelectedChanged?.Invoke(this, value);
                 OnPropertyChanged();
             }
+        }
+
+        public int CompareTo(TabItemModel other)
+        {
+            return Id.CompareTo(other.Id);
         }
 
 

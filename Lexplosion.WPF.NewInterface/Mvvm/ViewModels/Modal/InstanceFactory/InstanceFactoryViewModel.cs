@@ -60,7 +60,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
                 _isShowSnapshots = value;
                 OnPropertyChanged();
 
-                // Убираем пролаг при клике
+                // Убираем пролаг при клике.
+                // P.S Это не должно делаться через виртуализацию
                 Lexplosion.Runtime.TaskRun(() =>
                 {
                     OnPropertyChanged(nameof(GameVersions));
