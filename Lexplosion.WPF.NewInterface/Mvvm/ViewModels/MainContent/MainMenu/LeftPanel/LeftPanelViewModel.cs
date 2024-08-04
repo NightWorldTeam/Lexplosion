@@ -5,11 +5,15 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 {
     public class LeftPanelViewModel : ViewModelBase
     {
+        public AutoResetEvent WaitHandler = new AutoResetEvent(false);
+
+
         public event Action<ViewModelBase> SelectedItemChanged;
 
 
@@ -70,6 +74,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
 
         #endregion Header Data
+
 
         #endregion Properties
 
@@ -133,13 +138,33 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             }
         }
 
+        /// <summary>
+        /// Выбирает элемент по индексу в коллекции.
+        /// Индексация как у обычной коллекции с нуля.
+        /// </summary>
+        /// <param name="index">Индекс элемента</param>
+        public void SelectItem(int index) 
+        {
+            WaitHandler.WaitOne();
+            if (SelectedItem != null)
+                SelectedItem.IsSelected = false;
+            Console.WriteLine($"{_items.Count} {index}");
+            _items[index].IsSelected = true;
+        }
+
         public void SelectFirst()
         {
+            if (SelectedItem != null)
+                SelectedItem.IsSelected = false;
+
             _items[0].IsSelected = true;
         }
 
         public void SelectLast()
         {
+            if (SelectedItem != null)
+                SelectedItem.IsSelected = false;
+
             _items[_items.Count - 1].IsSelected = true;
         }
 

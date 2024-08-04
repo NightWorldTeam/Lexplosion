@@ -3,6 +3,8 @@ using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using Lexplosion.WPF.NewInterface.Stores;
 using System;
+using System.Linq;
+using System.Threading;
 using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile
@@ -61,6 +63,24 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         #endregion Constructors
 
 
+        #region Public & Protected Methods
+
+
+        /// <summary>
+        /// Делает активным вкладку с Аддонами, если сборка установлена или в библиотеке.
+        /// </summary>
+        public void OpenAddonContainerPage() 
+        {
+            if (_instanceModel.IsInstalled) 
+            {
+                LeftPanel.SelectItem(1);
+            }
+        }
+
+
+        #endregion Public & Protected Methods
+
+
         #region Private Methods
 
 
@@ -83,12 +103,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             {
                 LeftPanel.AddTabItem("Overview", "Services", _overviewViewModel);
 
-                if (_instanceModel.InLibrary) 
+                if (_instanceModel.InLibrary)
                 {
                     LeftPanel.AddTabItem("Addons", "Addons", _addonsViewModel);
                     LeftPanel.AddTabItem("Settings", "Settings", _settingsLayoutViewModel);
                 }
-
+                LeftPanel.WaitHandler.Set();
                 LeftPanel.SelectFirst();
             });
         }

@@ -137,6 +137,7 @@
                     <Button
                         Command="{Binding BackCommand}"
                         Content="{DynamicResource Back}"
+                        IsCancel="True"
                         Style="{DynamicResource GhostButton}" />
                 </Grid>
 

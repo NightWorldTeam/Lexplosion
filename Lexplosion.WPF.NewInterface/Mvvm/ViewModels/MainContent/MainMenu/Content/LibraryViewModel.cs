@@ -37,10 +37,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         #region Commands
 
 
-        private RelayCommand _openInstanceProfileMenu;
-        public ICommand OpenInstanceProfileMenu
+        private RelayCommand _openInstanceProfileMenuCommand;
+        public ICommand OpenInstanceProfileMenuCommand
         {
-            get => RelayCommand.GetCommand(ref _openInstanceProfileMenu, (obj) =>
+            get => RelayCommand.GetCommand(ref _openInstanceProfileMenuCommand, (obj) =>
             {
                 var ins = (InstanceModelBase)obj;
 
@@ -48,9 +48,22 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             });
         }
 
+        private RelayCommand _openAddonsPageCommand;
+        public ICommand OpenAddonsPageCommand
+        {
+            get => RelayCommand.GetCommand(ref _openAddonsPageCommand, (obj) =>
+            {
+                var ins = (InstanceModelBase)obj;
+
+                _navigationStore.CurrentViewModel = new InstanceProfileLayoutViewModel(_navigationStore, _toMainMenuLayoutCommand, ins);
+
+                (_navigationStore.CurrentViewModel as InstanceProfileLayoutViewModel).OpenAddonContainerPage();
+            });
+        }
+
 
         private RelayCommand _openInstanceFactory;
-        public ICommand OpenInstanceFactory
+        public ICommand OpenInstanceFactoryCommand
         {
             get => RelayCommand.GetCommand(ref _openInstanceFactory, () => 
             {

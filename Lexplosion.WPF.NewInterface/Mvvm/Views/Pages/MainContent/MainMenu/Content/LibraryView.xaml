@@ -434,8 +434,9 @@
                             <controls:InstanceForm
                                 Margin="0,0,0,16"
                                 InstanceModel="{Binding}"
-                                LogoButtonCommand="{Binding DataContext.OpenInstanceProfileMenu, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
-                                LogoButtonCommandParameter="{Binding}" />
+                                LogoButtonCommand="{Binding DataContext.OpenInstanceProfileMenuCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
+                                LogoButtonCommandParameter="{Binding}"
+                                OpenAddonsPageCommand="{Binding DataContext.OpenAddonsPageCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
 
@@ -451,7 +452,7 @@
             HorizontalAlignment="Right"
             VerticalAlignment="Bottom"
             Background="{DynamicResource SecondaryForegroundSolidColorBrush}"
-            Command="{Binding OpenInstanceFactory}" />
+            Command="{Binding OpenInstanceFactoryCommand}" />
 
         <!--<Grid Visibility="Visible">
 

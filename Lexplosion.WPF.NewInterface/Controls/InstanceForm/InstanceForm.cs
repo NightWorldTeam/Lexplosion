@@ -4,7 +4,6 @@ using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -13,7 +12,6 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using static Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel.InstanceModelBase;
-using static System.Windows.Forms.AxHost;
 
 namespace Lexplosion.WPF.NewInterface.Controls
 {
@@ -118,6 +116,10 @@ namespace Lexplosion.WPF.NewInterface.Controls
             = DependencyProperty.Register(nameof(LogoButtonCommandParameter), typeof(object), typeof(InstanceForm),
                 new FrameworkPropertyMetadata(defaultValue: (object)null));
 
+        public static readonly DependencyProperty OpenAddonsPageCommandProperty
+            = DependencyProperty.Register(nameof(OpenAddonsPageCommand), typeof(ICommand), typeof(InstanceForm),
+                new FrameworkPropertyMetadata());
+
         public InstanceModelBase InstanceModel
         {
             get => (InstanceModelBase)GetValue(InstanceModelProperty);
@@ -128,6 +130,12 @@ namespace Lexplosion.WPF.NewInterface.Controls
         {
             get => (ICommand)GetValue(LogoButtonCommandProperty);
             set => SetValue(LogoButtonCommandProperty, value);
+        }
+        
+        public ICommand OpenAddonsPageCommand
+        {
+            get => (ICommand)GetValue(OpenAddonsPageCommandProperty);
+            set => SetValue(OpenAddonsPageCommandProperty, value);
         }
 
         public object LogoButtonCommandParameter
@@ -535,7 +543,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
                 {
                     _lowerMenuButtons.Add(new LowerMenuButton(3, "Export", "Export", InstanceModel.Export, LowerButtonClicked));
                 }
-                _lowerMenuButtons.Add(new LowerMenuButton(4, "Addons", "Addons", () => { }, LowerButtonClicked));
+                _lowerMenuButtons.Add(new LowerMenuButton(4, "Addons", "Addons", () => OpenAddonsPageCommand.Execute(InstanceModel), LowerButtonClicked));
             }
 
             if (!InstanceModel.IsInstalled && InstanceModel.InLibrary)

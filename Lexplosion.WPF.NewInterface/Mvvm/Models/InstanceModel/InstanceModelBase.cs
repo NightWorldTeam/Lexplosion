@@ -50,6 +50,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         }
 
 
+
+        private Action _openAddonPage;
+
+
         #region Events
 
 
@@ -303,8 +307,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         /// </summary>
         public void Update()
         {
-            _instanceClient.Update();
-            DataChanged?.Invoke();
+            Runtime.TaskRun(() => 
+            { 
+                _instanceClient.Update();
+                DataChanged?.Invoke();
+            });
         }
 
 
