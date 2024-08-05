@@ -11,6 +11,7 @@ using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal;
 using Lexplosion.WPF.NewInterface.Core.Objects.TranslatableObjects;
 using Lexplosion.Logic.Objects;
+using Lexplosion.WPF.NewInterface.Core.Notifications;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 {
@@ -21,7 +22,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         private readonly ModalNavigationStore _modalNavigationStore;
         private readonly Func<IEnumerable<InstanceModelBase>> _getInstances;
 
+
+        #region Properties
+
+
         public LibraryModel Model { get; }
+        public NotifyCallback Notify { get; }
+
 
         private bool _isCategoriesListOpen;
         public bool IsCategoriesListOpen 
@@ -32,6 +39,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
                 OnPropertyChanged();
             }
         }
+
+
+        #endregion Properties
 
 
         #region Commands
@@ -108,8 +118,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
 
         // TODO: думаю делегат с инстансами это костыль ченить другое надо придумать
-        public LibraryViewModel(INavigationStore navigationStore, ICommand toMainMenuLayoutCommand, ModalNavigationStore modalNavigationStore, IInstanceController instanceController)
+        public LibraryViewModel(INavigationStore navigationStore, ICommand toMainMenuLayoutCommand, ModalNavigationStore modalNavigationStore, IInstanceController instanceController, NotifyCallback? notify = null)
         {
+            Notify = notify;
             Model = new LibraryModel(instanceController);
             _navigationStore = navigationStore;
             _toMainMenuLayoutCommand = toMainMenuLayoutCommand;

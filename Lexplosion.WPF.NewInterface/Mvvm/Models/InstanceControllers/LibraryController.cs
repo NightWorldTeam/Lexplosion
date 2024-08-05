@@ -1,4 +1,5 @@
 ﻿using Lexplosion.Logic.Management.Instances;
+using Lexplosion.WPF.NewInterface.Core.Notifications;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using System;
 using System.Collections.Generic;
@@ -10,21 +11,29 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
 {
     public sealed class LibraryController : IInstanceController
     {
-        public IReadOnlyCollection<InstanceModelBase> Instances { get => _instances; }
-
-        private readonly Action<InstanceClient> _exportFunc;
-
-        private ObservableCollection<InstanceModelBase> _instances = new ObservableCollection<InstanceModelBase>();
-
         public event Action<InstanceModelBase> InstanceAdded;
         public event Action<InstanceModelBase> InstanceRemoved;
+
+
+        private readonly Action<InstanceClient> _exportFunc;
+        private ObservableCollection<InstanceModelBase> _instances = new ObservableCollection<InstanceModelBase>();
+
+        #region Properties
+
+        public NotifyCallback Notify { get; }
+        public IReadOnlyCollection<InstanceModelBase> Instances { get => _instances; }
+
+
+        #endregion Properties
 
 
         #region Constructors
 
 
-        public LibraryController(Action<InstanceClient> export)
+        public LibraryController(Action<InstanceClient> export, NotifyCallback? notify = null)
         {
+            Notify = notify;
+
             InstanceModelBase.GlobalAddedToLibrary += Add;
             InstanceModelBase.GlobalDeletedEvent += Remove;
 
@@ -56,7 +65,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
         {
             App.Current.Dispatcher.Invoke(() =>
             {
-                Add(new InstanceModelBase(instanceClient, _exportFunc));
+                Add(new InstanceModelBase(instanceClient, _exportFunc, Notify));
             });
         }
 

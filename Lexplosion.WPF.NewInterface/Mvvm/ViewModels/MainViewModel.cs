@@ -70,6 +70,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
     {
         public static event Action AllVersionsLoaded;
 
+
         #region Properties
 
 
@@ -127,6 +128,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
         public MainViewModel()
         {
             Model = new MainModel();
+            OnPropertyChanged(nameof(Model));
             // так как грузится в отдельном потоке, может загрузится позже чем создатся экземпляр класса InstanceFactory!!!
             ModalNavigationStore.Instance.CurrentViewModelChanged += Instance_CurrentViewModelChanged;
             NavigationStore.CurrentViewModelChanged += NavigationStore_CurrentViewModelChanged;

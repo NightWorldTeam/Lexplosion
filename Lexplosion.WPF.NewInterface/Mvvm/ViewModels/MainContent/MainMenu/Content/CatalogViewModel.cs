@@ -7,6 +7,7 @@ using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile;
 using System.Windows.Input;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers;
 using Lexplosion.Logic.Objects;
+using Lexplosion.WPF.NewInterface.Core.Notifications;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 {
@@ -15,7 +16,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         private readonly INavigationStore _navigationStore;
         private readonly NavigateCommand<ViewModelBase> _navigationCommand;
 
+
+        #region Properties
+
+
         public CatalogModel Model { get; }
+        public NotifyCallback Notify { get; }
 
 
         private bool _isCategoriesListOpen;
@@ -27,6 +33,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
                 OnPropertyChanged();
             }
         }
+
+
+        #endregion Properties
 
 
         #region Commands
@@ -93,8 +102,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         #region Constructors
 
 
-        public CatalogViewModel(INavigationStore navigationStore, NavigateCommand<ViewModelBase> navigationCommand, IInstanceController instanceController)
+        public CatalogViewModel(INavigationStore navigationStore, NavigateCommand<ViewModelBase> navigationCommand, IInstanceController instanceController, NotifyCallback? notify = null)
         {
+            Notify = notify;
             Model = new CatalogModel(instanceController);
             _navigationCommand = navigationCommand;
             _navigationStore = navigationStore;

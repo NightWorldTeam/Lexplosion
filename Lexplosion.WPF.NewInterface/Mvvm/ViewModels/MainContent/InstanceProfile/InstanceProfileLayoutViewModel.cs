@@ -1,10 +1,7 @@
-﻿using Lexplosion.WPF.NewInterface.Commands;
-using Lexplosion.WPF.NewInterface.Core;
+﻿using Lexplosion.WPF.NewInterface.Core;
+using Lexplosion.WPF.NewInterface.Core.Notifications;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using Lexplosion.WPF.NewInterface.Stores;
-using System;
-using System.Linq;
-using System.Threading;
 using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile
@@ -20,6 +17,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
 
 
         #region Properties
+
+
+        public NotifyCallback Notify { get; }
 
 
         private InstanceProfileLeftPanelViewModel _leftPanel;
@@ -48,7 +48,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         #region Constructors
 
 
-        public InstanceProfileLayoutViewModel(INavigationStore navigationStore, ICommand toMainMenuLayoutCommand, InstanceModelBase instanceModelBase)
+        public InstanceProfileLayoutViewModel(INavigationStore navigationStore, ICommand toMainMenuLayoutCommand, InstanceModelBase instanceModelBase, NotifyCallback? notify = null)
         {
             _instanceModel = instanceModelBase;
             _navigationStore = navigationStore;
@@ -99,8 +99,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
                 _settingsLayoutViewModel = new InstanceProfileSettingsLayoutViewModel(_instanceModel);
             }
 
-            Lexplosion.Runtime.TaskRun(() =>
-            {
+            //Lexplosion.Runtime.TaskRun(() =>
+            //{
                 LeftPanel.AddTabItem("Overview", "Services", _overviewViewModel);
 
                 if (_instanceModel.InLibrary)
@@ -108,9 +108,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
                     LeftPanel.AddTabItem("Addons", "Addons", _addonsViewModel);
                     LeftPanel.AddTabItem("Settings", "Settings", _settingsLayoutViewModel);
                 }
-                LeftPanel.WaitHandler.Set();
+                //LeftPanel.WaitHandler.Set();
                 LeftPanel.SelectFirst();
-            });
+            //});
         }
 
         private void OnLeftPanelSelectedItemChanged(ViewModelBase content)

@@ -34,6 +34,6 @@
         <ResourceDictionary Source="CircleLoader/CircleLoader.xaml" />
         <ResourceDictionary Source="OneStageInstallButton/OneStageInstallButton.xaml" />
 
-
+        <ResourceDictionary Source="ToastMessage/ToastMessage.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

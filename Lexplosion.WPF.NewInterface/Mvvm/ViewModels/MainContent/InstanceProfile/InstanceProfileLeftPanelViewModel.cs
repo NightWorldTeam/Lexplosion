@@ -10,6 +10,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Threading;
 using Lexplosion.Logic.Management.Instances;
+using Lexplosion.WPF.NewInterface.Core.Notifications;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile
 {
@@ -20,6 +21,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
 
 
         #region Properties
+
+
+        public NotifyCallback Notify { get; }
 
 
         public ImageBrush InstanceImage
@@ -73,8 +77,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         #region Contructors
 
 
-        public InstanceProfileLeftPanelViewModel(INavigationStore navigationStore, ICommand toMainMenuLayoutCommand, InstanceModelBase instanceModelBase)
+        public InstanceProfileLeftPanelViewModel(INavigationStore navigationStore, ICommand toMainMenuLayoutCommand, InstanceModelBase instanceModelBase, NotifyCallback? notify = null)
         {
+            Notify = notify;
             BackCommand = new RelayCommand((obj) =>
             {
                 // Останавливаем обновление директорий сборки.

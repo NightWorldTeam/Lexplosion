@@ -145,7 +145,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         /// <param name="index">Индекс элемента</param>
         public void SelectItem(int index) 
         {
-            WaitHandler.WaitOne();
+            //WaitHandler.WaitOne();
             if (SelectedItem != null)
                 SelectedItem.IsSelected = false;
             Console.WriteLine($"{_items.Count} {index}");

@@ -86,7 +86,16 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Controls\AdvancedToggleButton\AdvancedToggleButton.cs" />
+    <Compile Include="Controls\ToastMessage\ToastMessage.cs" />
     <Compile Include="Core\Converters\ValueConverters\ImagePathValidateConverter.cs" />
+    <Compile Include="Core\Notifications\IActionNotification.cs" />
+    <Compile Include="Core\Notifications\INotificable.cs" />
+    <Compile Include="Core\Notifications\INotification.cs" />
+    <Compile Include="Core\Notifications\INotificationAction.cs" />
+    <Compile Include="Core\Notifications\INotificationService.cs" />
+    <Compile Include="Core\Notifications\NotificationType.cs" />
+    <Compile Include="Core\Notifications\NotifyCallback.cs" />
+    <Compile Include="Core\Notifications\SimpleNotification.cs" />
     <Compile Include="Core\ViewModel\ILimitedAccess.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\ConfirmActionViewModel.cs" />
     <Compile Include="Mvvm\Views\Modal\ConfirmAction\ConfirmActionView.xaml.cs">
@@ -143,10 +152,10 @@
     <Compile Include="Core\If.cs" />
     <Compile Include="Core\Objects\PlayerWrapper.cs" />
     <Compile Include="Core\Objects\NightWorldUser.cs" />
-    <Compile Include="Core\Objects\TranslatableObjects\InstanceSourceObject.cs" />
-    <Compile Include="Core\Objects\TranslatableObjects\ITranslatableObject.cs" />
-    <Compile Include="Core\Objects\TranslatableObjects\TranslatableObject.cs" />
-    <Compile Include="Core\Objects\TranslatableObjects\SortByParamObject.cs" />
+    <Compile Include="Core\TranslatableObjects\InstanceSourceObject.cs" />
+    <Compile Include="Core\TranslatableObjects\ITranslatableObject.cs" />
+    <Compile Include="Core\TranslatableObjects\TranslatableObject.cs" />
+    <Compile Include="Core\TranslatableObjects\SortByParamObject.cs" />
     <Compile Include="Core\Paginator\IPaginator.cs" />
     <Compile Include="Core\Paginator\Paginator.cs" />
     <Compile Include="Core\Services\AppColorThemeService.cs" />
@@ -403,6 +412,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\TextSwitcherButton\TextSwitcherButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ToastMessage\ToastMessage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

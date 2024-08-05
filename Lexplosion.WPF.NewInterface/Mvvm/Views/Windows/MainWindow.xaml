@@ -7,13 +7,16 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:notification="clr-namespace:Lexplosion.WPF.NewInterface.Core.Notifications"
     xmlns:objects="clr-namespace:Lexplosion.WPF.NewInterface.Core.Objects"
     xmlns:runtime="clr-namespace:Lexplosion.WPF.NewInterface"
+    xmlns:viewmodels="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels"
     Title="Lexplosion New Interface Debug"
     Width="944"
     Height="528"
     MinWidth="944"
     MinHeight="528"
+    d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
     ResizeMode="CanResize"
     SnapsToDevicePixels="True"
     UseLayoutRounding="True"
@@ -374,6 +377,30 @@
                 </StackPanel>
             </Grid>
 
+            <!--  Toast Message Notification Panel  -->
+            <ItemsControl
+                Height="300"
+                Margin="0,22,-14,0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                ItemsSource="{Binding Model.NotificationService.Notifications, Source={StaticResource MainViewModel}}"
+                Visibility="Visible">
+
+                <ItemsControl.Resources>
+
+                    <DataTemplate DataType="{x:Type notification:SimpleNotification}">
+                        <controls:ToastMessage
+                            Title="{Binding Title}"
+                            CloseCommand="{Binding CloseCommand}"
+                            Message="{Binding Content}"
+                            State="Notification"
+                            VisibilityTime="{Binding VisibleTime}" />
+                    </DataTemplate>
+
+                </ItemsControl.Resources>
+
+            </ItemsControl>
+
             <Grid
                 x:Name="AddtionalFuncs"
                 Margin="16,12"
@@ -394,13 +421,24 @@
                                     Background="{DynamicResource SeparateSolidColorBrush}"
                                     CornerRadius="2">
 
-                                    <Viewbox Height="14">
-                                        <Path
-                                            Data="M160-200v-80h80v-280q0-83 50-147.5T420-792v-28q0-25 17.5-42.5T480-880q25 0 42.5 17.5T540-820v28q80 20 130 84.5T720-560v280h80v80H160Zm320-300Zm0 420q-33 0-56.5-23.5T400-160h160q0 33-23.5 56.5T480-80ZM320-280h320v-280q0-66-47-113t-113-47q-66 0-113 47t-47 113v280Z"
-                                            Fill="{DynamicResource ActivitySolidColorBrush}"
-                                            Stretch="Fill" />
-                                    </Viewbox>
+                                    <Grid>
+                                        <Viewbox Height="16">
+                                            <Path
+                                                Data="M160-200v-80h80v-280q0-83 50-147.5T420-792v-28q0-25 17.5-42.5T480-880q25 0 42.5 17.5T540-820v28q80 20 130 84.5T720-560v280h80v80H160Zm320-300Zm0 420q-33 0-56.5-23.5T400-160h160q0 33-23.5 56.5T480-80ZM320-280h320v-280q0-66-47-113t-113-47q-66 0-113 47t-47 113v280Z"
+                                                Fill="{DynamicResource ActivitySolidColorBrush}"
+                                                Stretch="Fill" />
+                                        </Viewbox>
 
+                                        <Border
+                                            Width="6"
+                                            Height="6"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Top"
+                                            Background="Red"
+                                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="50" />
+                                    </Grid>
                                     <Border.ToolTip>
 
                                         <controls:AdvancedToolTip
@@ -467,22 +505,14 @@
                             <ItemsControl
                                 Margin="0,0,0,0"
                                 Background="Transparent"
-                                ItemsSource="{x:Static runtime:RuntimeApp.Notification}" />
+                                ItemsSource="{Binding Model.NotificationService.Notifications}" />
                         </ScrollViewer>
                     </Grid>
                 </Border>
             </Grid>
 
-            <ItemsControl
-                Width="300"
-                Height="300"
-                Margin="0,40,0,0"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Top"
-                Background="Transparent"
-                ItemsSource="{x:Static runtime:RuntimeApp.Notification}"
-                Visibility="Collapsed" />
 
+            <!--  Circle Animation Block  -->
             <Grid x:Name="PaintArea">
                 <Grid.RenderTransform>
                     <TranslateTransform X="0" Y="0" />

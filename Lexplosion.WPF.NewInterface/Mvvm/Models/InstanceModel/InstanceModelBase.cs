@@ -3,6 +3,7 @@ using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Objects;
 using Lexplosion.WPF.NewInterface.Core;
+using Lexplosion.WPF.NewInterface.Core.Notifications;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,9 +11,9 @@ using System.Runtime.CompilerServices;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 {
-    public class InstancePresentationInfo 
+    public class InstancePresentationInfo
     {
-        
+
     }
 
     public enum InstanceModelStateProperty
@@ -135,17 +136,20 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         #region Properties
 
 
+        public NotifyCallback Notify { get; }
+
+
         private InstanceState _state;
-        public InstanceState State 
+        public InstanceState State
         {
-            get => _state; private set 
+            get => _state; private set
             {
                 _state = value;
                 StateChanged?.Invoke();
-            } 
+            }
         }
 
-        private void SetState(InstanceState state, [CallerMemberName] string methodName = null) 
+        private void SetState(InstanceState state, [CallerMemberName] string methodName = null)
         {
             Runtime.DebugWrite(_state + " " + methodName);
             State = state;
@@ -171,7 +175,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 
         public MinecraftVersion GameVersion { get => _instanceClient.GameVersion; }
 
-        public void UpdateInLibrary() 
+        public void UpdateInLibrary()
         {
             OnPropertyChanged(nameof(InLibrary));
         }
@@ -193,8 +197,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         #region Constructors
 
 
-        public InstanceModelBase(InstanceClient instanceClient, Action<InstanceClient> exportFunc)
+        public InstanceModelBase(InstanceClient instanceClient, Action<InstanceClient> exportFunc, NotifyCallback notify)
         {
+            Notify = notify;
+
             _instanceClient = instanceClient;
             _exportFunc = exportFunc;
             LaunchModel = new LaunchModel(instanceClient);
@@ -226,7 +232,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         #region Public Methods
 
 
-        public bool CheckInstanceClient(InstanceClient instanceClient) 
+        public bool CheckInstanceClient(InstanceClient instanceClient)
         {
             return _instanceClient == instanceClient;
         }
@@ -239,27 +245,33 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         {
             // TODO: !!!IMPORTANT сделать бесконечный progressbar и вместо описания фразу "Идет авторизация запускаемого аккаунта..."
             var launchAcc = Account.LaunchAccount;
-            if (launchAcc != null) 
+
+            // если запускамый аккаунт отсутствует, то выкидываем уведомление об этом 
+            if (launchAcc == null)
             {
-                if (!launchAcc.IsAuthed) 
-                {
-                    Runtime.TaskRun(() => { 
-                        var authResult = launchAcc.Auth();
-
-                        if (authResult == AuthCode.Successfully) 
-                        {
-                            App.Current.Dispatcher.Invoke(() => { 
-                                LaunchModel.Run();
-                                GameLaunched?.Invoke();
-                            });
-                        }
-                    });
-                    return;
-                }
-
-                LaunchModel.Run();
-                GameLaunched?.Invoke();
+                Notify.Invoke(new SimpleNotification($"Не удалось запустить {Name}", "Запускаемый аккаунт не выбран, он требуется для запуска клиента."));
+                return;
             }
+
+            if (!launchAcc.IsAuthed)
+            {
+                Runtime.TaskRun(() => {
+                    var authResult = launchAcc.Auth();
+
+                    if (authResult == AuthCode.Successfully)
+                    {
+                        App.Current.Dispatcher.Invoke(() =>
+                        {
+                            LaunchModel.Run();
+                            GameLaunched?.Invoke();
+                        });
+                    }
+                });
+                return;
+            }
+
+            LaunchModel.Run();
+            GameLaunched?.Invoke();
         }
 
         /// <summary>
@@ -307,8 +319,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         /// </summary>
         public void Update()
         {
-            Runtime.TaskRun(() => 
-            { 
+            Runtime.TaskRun(() =>
+            {
                 _instanceClient.Update();
                 DataChanged?.Invoke();
             });
@@ -428,7 +440,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         }
 
 
-        private void OnDownloadProgressChanged(StageType stageType, ProgressHandlerArguments progressHandlerArguments) 
+        private void OnDownloadProgressChanged(StageType stageType, ProgressHandlerArguments progressHandlerArguments)
         {
             // Данный код вызывается при скачивании и запуске.
             // Поэтому мы будет при StageType.Prepare изменять состояние клиента на Preparing; 
@@ -459,7 +471,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             {
                 SetState(InstanceState.Launching);
             }
-            else 
+            else
             {
                 SetState(InstanceState.Default);
             }

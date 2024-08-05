@@ -24,7 +24,7 @@ namespace Lexplosion.WPF.NewInterface
 
     public class NotificationManager : INotificationManager
     {
-        public void Show(INotificable notifiable)
+        public void Show(INotification notifiable)
         {
             RuntimeApp.Notification.Add(notifiable);
         }
@@ -54,7 +54,7 @@ namespace Lexplosion.WPF.NewInterface
 
         internal static string[] ResourceNames;
 
-        public static ICollection<INotificable> Notification = new ObservableCollection<INotificable>();
+        public static ICollection<INotification> Notification = new ObservableCollection<INotification>();
 
         [STAThread]
         static void Main()
@@ -62,10 +62,10 @@ namespace Lexplosion.WPF.NewInterface
             //SetupTestEnviroment();
             //return;
             AppColorThemeService = new AppColorThemeService();
-            var title = "TKESKLTSRLK ALLALA";
-            var message = "Действие фильма будет происходить после событий, рассказанных в фильме «Миссия невыполнима: Последствия». В центре истории новые приключения агента Итана Ханта.";
+            //var title = "TKESKLTSRLK ALLALA";
+            //var message = "Действие фильма будет происходить после событий, рассказанных в фильме «Миссия невыполнима: Последствия». В центре истории новые приключения агента Итана Ханта.";
 
-            Notification.Add(new InstanceNotification(title, message, NotificationType.Info, TimeSpan.MaxValue));
+            //Notification.Add(new InstanceNotification(title, message, NotificationType.Info, TimeSpan.MaxValue));
             // Подписываемся на эвент для загрузки всех строенных dll'ников
             AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
 
