@@ -1,6 +1,7 @@
 ﻿using Lexplosion.Core.Tools.Notification;
 using Lexplosion.Global;
 using Lexplosion.Logic.Management.Accounts;
+using Lexplosion.WPF.NewInterface.Core.Notifications;
 using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Core.Services;
 using Lexplosion.WPF.NewInterface.Mvvm.Views.Windows;
@@ -22,13 +23,13 @@ namespace Lexplosion.WPF.NewInterface
         Top,
     }
 
-    public class NotificationManager : INotificationManager
+/*    public class NotificationManager : INotificationManager
     {
         public void Show(INotification notifiable)
         {
             RuntimeApp.Notification.Add(notifiable);
         }
-    }
+    }*/
 
     internal static class RuntimeApp
     {
