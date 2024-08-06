@@ -203,7 +203,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 
             _instanceClient = instanceClient;
             _exportFunc = exportFunc;
-            LaunchModel = new LaunchModel(instanceClient);
+            LaunchModel = new LaunchModel(instanceClient, notify);
 
             LaunchModel.LaunchStarted += OnLaunchStarted;
             LaunchModel.LaunchCompleted += OnLaunchCompleted;
@@ -282,6 +282,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             LaunchModel.Close();
             GameClosed?.Invoke();
             DataChanged?.Invoke();
+            State = InstanceState.Default;
         }
 
 

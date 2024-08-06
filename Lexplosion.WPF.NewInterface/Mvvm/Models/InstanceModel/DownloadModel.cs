@@ -95,7 +95,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             IsActive = false;
             
             Completed?.Invoke(result, downloadErrors, IsGameRun);
-
+            Console.WriteLine($"Install result {result}");
             switch (result)
             {
                 case InstanceInit.Successful:

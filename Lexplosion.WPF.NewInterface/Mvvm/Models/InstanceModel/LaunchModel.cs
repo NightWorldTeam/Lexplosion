@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Logic.Management.Instances;
 using Lexplosion.WPF.NewInterface.Core;
+using Lexplosion.WPF.NewInterface.Core.Notifications;
 using System;
 using System.Threading.Tasks;
 
@@ -8,7 +9,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
     public sealed class LaunchModel : ViewModelBase
     {
         private readonly InstanceClient _instanceClient;
-
+        private NotifyCallback _notify;
 
         /// <summary>
         /// Игра запускается
@@ -54,8 +55,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         #region Constructors
 
 
-        public LaunchModel(InstanceClient instanceClient)
+        public LaunchModel(InstanceClient instanceClient, NotifyCallback notify)
         {
+            _notify = notify;
             _instanceClient = instanceClient;
             // эвент завершения запуска.
             _instanceClient.LaunchComplited += OnLaunchFinished;
@@ -117,6 +119,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             else
             {
                 IsLaunching = false;
+                _notify.Invoke(new SimpleNotification($"Не удалось запустить {_instanceClient.Name}", "Причины хз"));
             }
             Runtime.DebugWrite("Game Launch Finished");
         }
