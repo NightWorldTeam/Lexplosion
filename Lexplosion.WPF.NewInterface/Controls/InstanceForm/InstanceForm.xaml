@@ -247,7 +247,10 @@
                                     </Grid.Style>
                                 </Grid>
 
+
+                                <!--  Update Button  -->
                                 <Border
+                                    x:Name="UpdateIndicator"
                                     Width="28"
                                     Height="28"
                                     HorizontalAlignment="Right"
@@ -265,7 +268,6 @@
                                             Stretch="Fill" />
                                     </Viewbox>
                                 </Border>
-                                <!--  Update Button  -->
                             </Grid>
 
                             <!--  Center Block  -->

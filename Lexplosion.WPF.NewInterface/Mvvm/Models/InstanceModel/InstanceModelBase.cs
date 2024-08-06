@@ -171,6 +171,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         public bool IsInstalled { get => _instanceClient.IsInstalled; }
         public bool InLibrary { get => _instanceClient.InLibrary; }
         public string DirectoryPath { get => _instanceClient.GetDirectoryPath(); }
+        public bool HasAvailableUpdate { get => _instanceClient.UpdateAvailable; }
 
 
         public MinecraftVersion GameVersion { get => _instanceClient.GameVersion; }

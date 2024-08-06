@@ -218,6 +218,10 @@ namespace Lexplosion.WPF.NewInterface.Controls
             _dropdownMenuItemsControl = Template.FindName(PART_DROPDOWNMENU_CONTENT, this) as ItemsControl;
             _mainActionButton = Template.FindName(PART_MAIN_ACTION_BUTTON, this) as Button;
 
+            // TODO: сделать адекватно, чтобы после обновления индикатор пропадал
+            var _updateIndicator = Template.FindName("UpdateIndicator", this) as Border;
+            _updateIndicator.Visibility = InstanceModel.HasAvailableUpdate ? Visibility.Visible : Visibility.Collapsed;
+
             // donwload progress
             _progressBar = Template.FindName(PART_PROGRESSBAR, this) as ProgressBar;
             _filesCountLabel = Template.FindName(PART_FILESCOUNT_LABEL, this) as TextBlock;
