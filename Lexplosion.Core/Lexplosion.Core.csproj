@@ -160,6 +160,7 @@
     <Compile Include="Logic\Objects\Nightworld.cs" />
     <Compile Include="Logic\Settings.cs" />
     <Compile Include="Logic\Cryptography.cs" />
+    <Compile Include="NightWorld\Collections\Concurrent\ConcurrentHashSet.cs" />
     <Compile Include="NightWorld\Tools\Minecraft\NBT\INbtNode.cs" />
     <Compile Include="NightWorld\Tools\Minecraft\NBT\NbtDocoder.cs" />
     <Compile Include="NightWorld\Tools\Minecraft\NBT\NbtEncoder.cs" />

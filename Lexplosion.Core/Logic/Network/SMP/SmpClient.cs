@@ -32,17 +32,38 @@ namespace Lexplosion.Logic.Network.SMP
         /// <summary>
         /// Позиции в заголовке пакета данных.
         /// </summary>
-        private struct HeaderPositions
+        private struct DataPackageHeaders
         {
             public const byte Code = 0; // Код пакета
             public const byte Id_1 = 1; // Первая часть айдишника
             public const byte Id_2 = 2; // Вторая часть
-            public const byte Flag = 3; // Флаг пакета
-            public const byte LastId_1 = 4; // id последнего пакета в данном окне. Первая часть
-            public const byte LastId_2 = 5; // Вторая часть
-            public const byte AttemptsCounts = 6; // Количество попыток отправки данного пакета
+            public const byte IdsRange = 3; // номер пространсва айдишников. Можно сказать второй айди
+            public const byte Flag = 4; // Флаг пакета
+            public const byte LastId_1 = 5; // id последнего пакета в данном окне. Первая часть
+            public const byte LastId_2 = 6; // Вторая часть
+            public const byte AttemptsCounts = 7; // Количество попыток отправки данного пакета
 
             public const byte FirstDataByte = AttemptsCounts + 1; // Позиция первого байта вне заголовка и соотвественно размер ебучего хэадера
+        }
+
+        private struct FailedListHeaders
+        {
+            public const byte Code = 0; // Код пакета
+            public const byte IdsRange = 1; // номер пространсва айдишников. Можно сказать второй айди
+            public const byte LastId_1 = 2; // id последнего пакета в данном окне. Первая часть
+            public const byte LastId_2 = 3; // Вторая часть
+
+            public const byte HeadersSize = LastId_2 + 1;
+        }
+
+        private struct ConfirmDataDeliveryHeaders
+        {
+            public const byte Code = 0; // Код пакета
+            public const byte IdsRange = 1; // номер пространсва айдишников. Можно сказать второй айди
+            public const byte LastId_1 = 2; // id последнего пакета в данном окне. Первая часть
+            public const byte LastId_2 = 3; // Вторая часть
+
+            public const byte HeadersSize = LastId_2 + 1;
         }
 
         private struct PackgeCodes
@@ -168,15 +189,18 @@ namespace Lexplosion.Logic.Network.SMP
 
         private readonly object _sendLocker = new object();
         private readonly AutoResetEvent _waitSendData = new AutoResetEvent(false);
-        private readonly Synchronizer _deliveryWait = new Synchronizer(false);
+        private readonly AutoResetEvent _deliveryWait = new AutoResetEvent(false);
         private readonly Semaphore _repeatDeliveryBlock = new Semaphore(1, 1);
-        private readonly Semaphore _closeBlock = new Semaphore(1, 1);
+        private readonly object _closeLocker = new object();
         private readonly AutoResetEvent _receiveWait = new AutoResetEvent(false);
         private readonly ManualResetEvent _sendingCycleDetector = new ManualResetEvent(false);
 
         private ushort _sendingPointer = 0;
         private ushort _receivingPointer = 0;
+        private byte _sendingIdsRange = 0;
+        private byte _receivingIdsRange = 0;
         private int _lastPackage = -1;
+        private short _lastPackageIdsRange = -1;
         private List<ushort> _repeatDeliveryList = null;
 
         private int _maxPackagesCount = 100;
@@ -563,6 +587,7 @@ namespace Lexplosion.Logic.Network.SMP
                     }
 
                     ushort lastPackageId;
+                    byte lastPackageIdsRange = _sendingIdsRange;
                     SortedDictionary<ushort, byte[]> packages;
                     bool acquiredLock = false;
 
@@ -582,16 +607,17 @@ namespace Lexplosion.Logic.Network.SMP
                             byte[] package = new byte[packageInfo.Size];
 
                             byte[] id = BitConverter.GetBytes(_sendingPointer);
-                            package[HeaderPositions.Code] = PackgeCodes.Data; //код пакета
-                            package[HeaderPositions.Id_1] = id[0]; //первая часть его айдишника
-                            package[HeaderPositions.Id_2] = id[1]; //вторая
+                            package[DataPackageHeaders.Code] = PackgeCodes.Data; //код пакета
+                            package[DataPackageHeaders.Id_1] = id[0]; //первая часть его айдишника
+                            package[DataPackageHeaders.Id_2] = id[1]; //вторая
+                            package[DataPackageHeaders.IdsRange] = _sendingIdsRange;
 
                             id = BitConverter.GetBytes(lastPackageId);
-                            package[HeaderPositions.LastId_1] = id[0]; // первая часть id последнего пакета
-                            package[HeaderPositions.LastId_2] = id[1]; // вторая часть
-                            package[HeaderPositions.AttemptsCounts] = 0; // этот байт отвечает за номер попытки отправки
+                            package[DataPackageHeaders.LastId_1] = id[0]; // первая часть id последнего пакета
+                            package[DataPackageHeaders.LastId_2] = id[1]; // вторая часть
+                            package[DataPackageHeaders.AttemptsCounts] = 0; // этот байт отвечает за номер попытки отправки
 
-                            int offset = HeaderPositions.FirstDataByte;
+                            int offset = DataPackageHeaders.FirstDataByte;
                             int lastFlagIndex = 0;
                             // проходимся по каждому сегменту
                             foreach (byte[] payload in packageInfo.Segments)
@@ -620,6 +646,7 @@ namespace Lexplosion.Logic.Network.SMP
 
                             if (_sendingPointer == 0)
                             {
+                                _sendingIdsRange++;
                                 break;
                             }
                         }
@@ -643,6 +670,7 @@ namespace Lexplosion.Logic.Network.SMP
 
                     _repeatDeliveryBlock.WaitOne();
                     _lastPackage = lastPackageId;
+                    _lastPackageIdsRange = lastPackageIdsRange;
                     _deliveryWait.Reset();
                     _repeatDeliveryBlock.Release();
 
@@ -665,14 +693,14 @@ namespace Lexplosion.Logic.Network.SMP
                         {
                             foreach (ushort id in packages.Keys)
                             {
-                                packages[id][HeaderPositions.AttemptsCounts] = attemptCount; // увставляем номер попытки
+                                packages[id][DataPackageHeaders.AttemptsCounts] = attemptCount; // увставляем номер попытки
                                 _socket.Send(packages[id], packages[id].Length, SocketFlags.None);
                             }
                         }
                         else // если в прошлый раз был тймаут, то отправляем только псоледний пакет. Хост потом просто отправит список нехватающих пакетов
                         {
                             ushort id = packages.Keys.Last();
-                            packages[id][HeaderPositions.AttemptsCounts] = attemptCount; // увставляем номер попытки
+                            packages[id][DataPackageHeaders.AttemptsCounts] = attemptCount; // увставляем номер попытки
                             _socket.Send(packages[id], packages[id].Length, SocketFlags.None);
                         }
 
@@ -684,13 +712,8 @@ namespace Lexplosion.Logic.Network.SMP
                         }
 
                     Begin:
-                        bool isSignal = _deliveryWait.IsSignal;
                         if (!_deliveryWait.WaitOne(delay)) // истекло время ожидания
                         {
-                            // TODO: наверное надо вместо Synchronizer вернуть авторезет эвент. И этот дебаг вывод потом вообще убрать        
-#if DEBUG
-                            Runtime.DebugWrite("No signal, isSignal:" + isSignal + ", IsSignal: " + _deliveryWait.IsSignal + ", ResetCalled: " + _deliveryWait.ResetCalled);
-#endif
                             delay *= _delayMultipliers[attemptCount];
                             attemptCount++;
                             isTimeout = true;
@@ -731,7 +754,7 @@ namespace Lexplosion.Logic.Network.SMP
 
                                 if (isValid)
                                 {
-                                    packages_[maxId][HeaderPositions.Flag] = Flags.NeedConfirm;
+                                    packages_[maxId][DataPackageHeaders.Flag] = Flags.NeedConfirm;
 
                                     repeated = true;
                                     packages = packages_;
@@ -748,6 +771,9 @@ namespace Lexplosion.Logic.Network.SMP
                         }
                     }
 
+                    _lastPackage = -1;
+                    _lastPackageIdsRange = -1;
+
                     if (attemptCount == 15)
                     {
                         Runtime.DebugConsoleWrite("PIZDETS!!!!");
@@ -756,9 +782,9 @@ namespace Lexplosion.Logic.Network.SMP
                             Close();
                             ClientClosing?.Invoke(_point);
                         });
-                    }
 
-                    _lastPackage = -1;
+                        return;
+                    }
                 }
                 catch
                 {
@@ -774,7 +800,7 @@ namespace Lexplosion.Logic.Network.SMP
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void AddToReceivingBuffer(byte[] buffer, int packageLength)
         {
-            int offset = HeaderPositions.FirstDataByte;
+            int offset = DataPackageHeaders.FirstDataByte;
             while (offset < packageLength - 3)
             {
                 byte flag = buffer[offset];
@@ -801,25 +827,29 @@ namespace Lexplosion.Logic.Network.SMP
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void DataPackcageProcessing(byte[] buffer, int dataLength, ref int waitingLastPackage, ref int attemptSendCounts, ref ushort lastMissedPacket)
+        private void DataPackcageProcessing(byte[] buffer, int dataLength, ref int waitingLastPackage, ref int attemptSendCounts, ref ushort lastMissedPacket, ref short lastIdRange)
         {
-            if (dataLength > 5)
+            if (dataLength > DataPackageHeaders.FirstDataByte)
             {
                 ushort id = BitConverter.ToUInt16(new byte[2]
                 {
-                    buffer[HeaderPositions.Id_1],
-                    buffer[HeaderPositions.Id_2]
+                    buffer[DataPackageHeaders.Id_1],
+                    buffer[DataPackageHeaders.Id_2]
                 }, 0);
+
+                byte packageIdRange = buffer[DataPackageHeaders.IdsRange];
 
                 ushort lastId = BitConverter.ToUInt16(new byte[2]
                 {
-                    buffer[HeaderPositions.LastId_1],
-                    buffer[HeaderPositions.LastId_2]
+                    buffer[DataPackageHeaders.LastId_1],
+                    buffer[DataPackageHeaders.LastId_2]
                 }, 0);
 
-                if (id >= _receivingPointer && id - _receivingPointer < _maxPackagesCount)
+                if (id >= _receivingPointer && packageIdRange == _receivingIdsRange)
                 {
+                    lastIdRange = _receivingIdsRange;
                     waitingLastPackage = lastId;
+                    byte receivingIdsRange = _receivingIdsRange;
 
                     if (id == _receivingPointer)
                     {
@@ -828,6 +858,7 @@ namespace Lexplosion.Logic.Network.SMP
                         _receiveWait.Set();
 
                         _receivingPointer++;
+                        if (_receivingPointer == 0) _receivingIdsRange++;
                     }
                     else
                     {
@@ -846,6 +877,11 @@ namespace Lexplosion.Logic.Network.SMP
                         _receiveWait.Set();
 
                         _receivingPointer++;
+                        if (_receivingPointer == 0)
+                        {
+                            _receivingIdsRange++;
+                            break;
+                        }
                     }
 
                     // проверяем все ли пакеты были получены
@@ -853,12 +889,14 @@ namespace Lexplosion.Logic.Network.SMP
                     {
                         // отправляем подтверждение
                         byte[] neEbyKakNazvat = BitConverter.GetBytes(lastId);
-                        _socket.Send(new byte[3]
-                        {
-                            PackgeCodes.ConfirmDataDelivery,
-                            neEbyKakNazvat[0],
-                            neEbyKakNazvat[1]
-                        }, 3, SocketFlags.None);
+
+                        byte[] confirmPackage = new byte[ConfirmDataDeliveryHeaders.HeadersSize];
+                        confirmPackage[ConfirmDataDeliveryHeaders.Code] = PackgeCodes.ConfirmDataDelivery;
+                        confirmPackage[ConfirmDataDeliveryHeaders.IdsRange] = receivingIdsRange;
+                        confirmPackage[ConfirmDataDeliveryHeaders.LastId_1] = neEbyKakNazvat[0];
+                        confirmPackage[ConfirmDataDeliveryHeaders.LastId_2] = neEbyKakNazvat[1];
+                        _socket.Send(confirmPackage, ConfirmDataDeliveryHeaders.HeadersSize, SocketFlags.None);
+
                         attemptSendCounts = -1;
                         waitingLastPackage = -1;
                     }
@@ -867,8 +905,9 @@ namespace Lexplosion.Logic.Network.SMP
                         var package = new List<byte>
                         {
                             PackgeCodes.FailedList,
-                            buffer[HeaderPositions.LastId_1],
-                            buffer[HeaderPositions.LastId_2]
+                            receivingIdsRange,
+                            buffer[DataPackageHeaders.LastId_1],
+                            buffer[DataPackageHeaders.LastId_2]
                         };
 
                         bool flag = true;
@@ -877,7 +916,7 @@ namespace Lexplosion.Logic.Network.SMP
                         {
                             if (!_packagesBuffer.ContainsKey((ushort)i))
                             {
-                                if (i == lastMissedPacket && buffer[HeaderPositions.AttemptsCounts] <= attemptSendCounts)
+                                if (i == lastMissedPacket && buffer[DataPackageHeaders.AttemptsCounts] <= attemptSendCounts)
                                 {
                                     needRepeat = false;
                                     break;
@@ -909,32 +948,35 @@ namespace Lexplosion.Logic.Network.SMP
                             }
                         }
 
-                        attemptSendCounts = buffer[HeaderPositions.AttemptsCounts];
+                        attemptSendCounts = buffer[DataPackageHeaders.AttemptsCounts];
                     }
                 }
-                else
+                else if (packageIdRange == _receivingIdsRange)
                 {
-                    if (waitingLastPackage == lastId && buffer[HeaderPositions.AttemptsCounts] > attemptSendCounts)
+                    if (waitingLastPackage == lastId && buffer[DataPackageHeaders.AttemptsCounts] > attemptSendCounts)
                     {
                         // TODO: это оптимизировать. Я по сути впустую формирую failedList
                         var package = new List<byte>
                         {
                             PackgeCodes.FailedList,
-                            buffer[HeaderPositions.LastId_1],
-                            buffer[HeaderPositions.LastId_2]
+                            _receivingIdsRange,
+                            buffer[DataPackageHeaders.LastId_1],
+                            buffer[DataPackageHeaders.LastId_2]
                         };
 
+                        bool needRepeat = false;
                         for (int i = _receivingPointer; i <= lastId; i++)
                         {
                             if (!_packagesBuffer.ContainsKey((ushort)i))
                             {
+                                needRepeat = true;
                                 byte[] packageId = BitConverter.GetBytes((ushort)i);
                                 package.Add(packageId[0]);
                                 package.Add(packageId[1]);
                             }
                         }
 
-                        if (package.Count > 3)
+                        if (needRepeat)
                         {
                             byte[] array = package.ToArray();
                             _socket.Send(array, array.Length, SocketFlags.None);
@@ -942,29 +984,39 @@ namespace Lexplosion.Logic.Network.SMP
                         else
                         {
                             byte[] neEbyKakNazvat = BitConverter.GetBytes(lastId);
-                            _socket.Send(new byte[3]
-                            {
-                                PackgeCodes.ConfirmDataDelivery,
-                                neEbyKakNazvat[0],
-                                neEbyKakNazvat[1]
-                            }, 3, SocketFlags.None);
+
+                            byte[] confirmPackage = new byte[ConfirmDataDeliveryHeaders.HeadersSize];
+                            confirmPackage[ConfirmDataDeliveryHeaders.Code] = PackgeCodes.ConfirmDataDelivery;
+                            confirmPackage[ConfirmDataDeliveryHeaders.IdsRange] = _receivingIdsRange;
+                            confirmPackage[ConfirmDataDeliveryHeaders.LastId_1] = neEbyKakNazvat[0];
+                            confirmPackage[ConfirmDataDeliveryHeaders.LastId_2] = neEbyKakNazvat[1];
+                            _socket.Send(confirmPackage, ConfirmDataDeliveryHeaders.HeadersSize, SocketFlags.None);
                         }
 
-                        attemptSendCounts = buffer[HeaderPositions.AttemptsCounts];
+                        attemptSendCounts = buffer[DataPackageHeaders.AttemptsCounts];
                     }
-                    else if (id == lastId || buffer[HeaderPositions.Flag] == Flags.NeedConfirm)
+                    else if ((id == lastId || buffer[DataPackageHeaders.Flag] == Flags.NeedConfirm) && lastId != waitingLastPackage)
                     {
-                        if (lastId != waitingLastPackage && (id < _receivingPointer || id - _receivingPointer >= _maxPackagesCount))
-                        {
-                            byte[] neEbyKakNazvat = BitConverter.GetBytes(lastId);
-                            _socket.Send(new byte[3]
-                            {
-                                PackgeCodes.ConfirmDataDelivery,
-                                neEbyKakNazvat[0],
-                                neEbyKakNazvat[1]
-                            }, 3, SocketFlags.None);
-                        }
+                        byte[] neEbyKakNazvat = BitConverter.GetBytes(lastId);
+
+                        byte[] confirmPackage = new byte[ConfirmDataDeliveryHeaders.HeadersSize];
+                        confirmPackage[ConfirmDataDeliveryHeaders.Code] = PackgeCodes.ConfirmDataDelivery;
+                        confirmPackage[ConfirmDataDeliveryHeaders.IdsRange] = _receivingIdsRange;
+                        confirmPackage[ConfirmDataDeliveryHeaders.LastId_1] = neEbyKakNazvat[0];
+                        confirmPackage[ConfirmDataDeliveryHeaders.LastId_2] = neEbyKakNazvat[1];
+                        _socket.Send(confirmPackage, ConfirmDataDeliveryHeaders.HeadersSize, SocketFlags.None);
                     }
+                }
+                else if (packageIdRange == lastIdRange && (id == lastId || buffer[DataPackageHeaders.Flag] == Flags.NeedConfirm))
+                {
+                    byte[] neEbyKakNazvat = BitConverter.GetBytes(lastId);
+
+                    byte[] confirmPackage = new byte[ConfirmDataDeliveryHeaders.HeadersSize];
+                    confirmPackage[ConfirmDataDeliveryHeaders.Code] = PackgeCodes.ConfirmDataDelivery;
+                    confirmPackage[ConfirmDataDeliveryHeaders.IdsRange] = packageIdRange;
+                    confirmPackage[ConfirmDataDeliveryHeaders.LastId_1] = neEbyKakNazvat[0];
+                    confirmPackage[ConfirmDataDeliveryHeaders.LastId_2] = neEbyKakNazvat[1];
+                    _socket.Send(confirmPackage, ConfirmDataDeliveryHeaders.HeadersSize, SocketFlags.None);
                 }
             }
         }
@@ -974,6 +1026,7 @@ namespace Lexplosion.Logic.Network.SMP
             int waitingLastPackage = -1;
             int attemptSendCounts = -1;
             ushort lastMissedPacket = 0;
+            short lastIdRange = -1;
 
             try
             {
@@ -1018,19 +1071,21 @@ namespace Lexplosion.Logic.Network.SMP
                             PingProcessing(buffer, dataLength);
                             break;
                         case PackgeCodes.Data: //пришел пакет данных
-                            DataPackcageProcessing(buffer, dataLength, ref waitingLastPackage, ref attemptSendCounts, ref lastMissedPacket);
+                            DataPackcageProcessing(buffer, dataLength, ref waitingLastPackage, ref attemptSendCounts, ref lastMissedPacket, ref lastIdRange);
                             break;
                         case PackgeCodes.ConfirmDataDelivery: // пришло подтверждение доставки пакета
-                            if (dataLength == 3)
+                            if (dataLength == ConfirmDataDeliveryHeaders.HeadersSize)
                             {
                                 ushort id = BitConverter.ToUInt16(new byte[2]
                                 {
-                                    buffer[1],
-                                    buffer[2]
+                                    buffer[ConfirmDataDeliveryHeaders.LastId_1],
+                                    buffer[ConfirmDataDeliveryHeaders.LastId_2]
                                 }, 0);
 
+                                byte packageIdRange = buffer[ConfirmDataDeliveryHeaders.IdsRange];
+
                                 _repeatDeliveryBlock.WaitOne();
-                                if (id == _lastPackage)
+                                if (id == _lastPackage && packageIdRange == _lastPackageIdsRange)
                                 {
                                     _repeatDeliveryList = null;
                                     _deliveryWait.Set();
@@ -1053,14 +1108,15 @@ namespace Lexplosion.Logic.Network.SMP
                             break;
                         case PackgeCodes.FailedList: // пришел пакет со списком пакетов, которые нужно переотправить
                             //проверяем валидность этого пакета. пакет должен содержать список айдишников. каждый id занимает 2 байта. первый байт - код. то есть размер должен быть нечетным
-                            if (dataLength > 4 && ((dataLength & 1) == 1))
+                            if (dataLength > 5 && ((dataLength & 1) == 0))
                             {
                                 _repeatDeliveryBlock.WaitOne();
-                                ushort packageId = BitConverter.ToUInt16(new byte[2] { buffer[1], buffer[2] }, 0);
-                                if (packageId == _lastPackage) // проверяем не старый ли это запрос на повторную отправку
+                                ushort packageId = BitConverter.ToUInt16(new byte[2] { buffer[FailedListHeaders.LastId_1], buffer[FailedListHeaders.LastId_2] }, 0);
+                                byte packageIdRange = buffer[FailedListHeaders.IdsRange];
+                                if (packageId == _lastPackage && packageIdRange == _lastPackageIdsRange) // проверяем не старый ли это запрос на повторную отправку
                                 {
                                     List<ushort> ids = new List<ushort>();
-                                    int i = 3;
+                                    int i = FailedListHeaders.HeadersSize;
                                     while (i < dataLength)
                                     {
                                         ushort id = BitConverter.ToUInt16(new byte[2] { buffer[i], buffer[i + 1] }, 0);
@@ -1069,10 +1125,7 @@ namespace Lexplosion.Logic.Network.SMP
                                     }
 
                                     _repeatDeliveryList = ids;
-                                    bool test = _deliveryWait.Set();
-#if DEBUG
-                                    //Runtime.DebugWrite("packageId " + packageId + " " + _lastPackage + " " + test + ", IsSignal: " + _deliveryWait.IsSignal + ", ResetCalled: " + _deliveryWait.ResetCalled);
-#endif
+                                    _deliveryWait.Set();
                                 }
                                 _repeatDeliveryBlock.Release();
                             }
@@ -1119,11 +1172,13 @@ namespace Lexplosion.Logic.Network.SMP
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void CreatePackagesHeap(byte[] inputData, ref List<Package> packagesHeap, ref int mtu, ref int maxPackagesCount)
         {
-            if (inputData.Length + 10 <= mtu)
+            const int serviceDataLenght = DataPackageHeaders.FirstDataByte + 3;
+
+            if (inputData.Length + serviceDataLenght <= mtu)
             {
                 Package package = new Package
                 {
-                    Size = inputData.Length + 10
+                    Size = inputData.Length + serviceDataLenght
                 };
                 package.Segments.Add(inputData);
                 packagesHeap.Add(package);
@@ -1133,13 +1188,13 @@ namespace Lexplosion.Logic.Network.SMP
                 int offset = 0;
                 while (offset < inputData.Length)
                 {
-                    int lenght = (inputData.Length - offset) > (mtu - 10) ? mtu - 10 : inputData.Length - offset;
+                    int lenght = (inputData.Length - offset) > (mtu - serviceDataLenght) ? mtu - serviceDataLenght : inputData.Length - offset;
                     byte[] part = new byte[lenght];
                     Buffer.BlockCopy(inputData, offset, part, 0, lenght);
 
                     Package package = new Package
                     {
-                        Size = lenght + 10,
+                        Size = lenght + serviceDataLenght,
                         lastSegmentIsFull = false
                     };
                     package.Segments.Add(part);
@@ -1250,6 +1305,84 @@ namespace Lexplosion.Logic.Network.SMP
             if (acquiredLock) Monitor.Exit(_sendLocker);
         }
 
+        public bool TrySend(byte[] inputData)
+        {
+            if (_inStopping || !IsConnected) return false;
+
+            lock (_sendLocker)
+            {
+                int mtu = _mtu;
+                int maxPackagesCount = _maxPackagesCount;
+
+                List<Package> packagesHeap;
+                if (_sendingBuffer.Count > 0)
+                {
+                    if (_sendingBuffer.Count > 1) return false;
+
+                    _sendingBuffer.TryPeek(out packagesHeap);
+                }
+                else
+                {
+                    packagesHeap = new List<Package>();
+                    _sendingBuffer.Enqueue(packagesHeap);
+                }
+
+                if (packagesHeap.Count <= maxPackagesCount)
+                {
+                    if (packagesHeap.Count > 0)
+                    {
+                        Package lastElement = packagesHeap[packagesHeap.Count - 1];
+                        if (lastElement.Size + inputData.Length + 3 <= mtu)
+                        {
+                            lastElement.Segments.Add(inputData);
+                            lastElement.Size += inputData.Length + 3;
+                        }
+                        else
+                        {
+                            if (packagesHeap.Count < maxPackagesCount)
+                            {
+                                int freeSpace = mtu - lastElement.Size - 3;
+                                if (freeSpace > 0)
+                                {
+                                    byte[] part = new byte[freeSpace];
+                                    Buffer.BlockCopy(inputData, 0, part, 0, freeSpace);
+
+                                    lastElement.Segments.Add(part);
+                                    lastElement.Size += freeSpace + 3;
+                                    lastElement.lastSegmentIsFull = false;
+
+                                    int partSize = inputData.Length - freeSpace;
+                                    part = new byte[partSize];
+                                    Buffer.BlockCopy(inputData, freeSpace, part, 0, partSize);
+
+                                    CreatePackagesHeap(part, ref packagesHeap, ref mtu, ref maxPackagesCount);
+                                }
+                                else
+                                {
+                                    CreatePackagesHeap(inputData, ref packagesHeap, ref mtu, ref maxPackagesCount);
+                                }
+                            }
+                            else
+                            {
+                                return false;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        CreatePackagesHeap(inputData, ref packagesHeap, ref mtu, ref maxPackagesCount);
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+
+                _waitSendData.Set();
+                return true;
+            }
+        }
+
         private void FormingMessage(out byte[] data)
         {
             List<byte[]> buffer = new List<byte[]>();
@@ -1338,37 +1471,44 @@ namespace Lexplosion.Logic.Network.SMP
 
         public void Close()
         {
-            _closeBlock.WaitOne();
-            try
+            ThreadPool.QueueUserWorkItem((_) =>
             {
-                if (IsConnected)
+                lock (_closeLocker)
                 {
-                    bool acquiredLock = false;
-                    Monitor.Enter(_sendLocker, ref acquiredLock);
-                    _inStopping = true; // ставим флаг чтобы send нельзя было вызвать ещё раз
-                    if (acquiredLock) Monitor.Exit(_sendLocker);
-
-                    while (_sendingBuffer.Count != 0) // ждём когда все пакеты из буфера будут доставлены
+                    if (IsConnected)
                     {
-                        _sendingCycleDetector.WaitOne();
-                    }
-
-                    Runtime.DebugConsoleWrite("_sendingBuffer.Count " + _sendingBuffer.Count);
-
-                    try
-                    {
-                        for (int i = 0; i < 20; i++) //отправляем 20 запросов на разрыв соединения
+                        try
                         {
-                            _socket.Send(new byte[2] { PackgeCodes.ConnectionClose, _selfSessionId }, 2, SocketFlags.None);
-                        }
-                    }
-                    catch { }
+                            bool acquiredLock = false;
+                            Monitor.Enter(_sendLocker, ref acquiredLock);
+                            _inStopping = true; // ставим флаг чтобы send нельзя было вызвать ещё раз
+                            if (acquiredLock) Monitor.Exit(_sendLocker);
 
-                    StopWork();
+                            while (_sendingBuffer.Count != 0) // ждём когда все пакеты из буфера будут доставлены
+                            {
+                                _sendingCycleDetector.WaitOne();
+                            }
+
+                            Runtime.DebugConsoleWrite("_sendingBuffer.Count " + _sendingBuffer.Count);
+                        }
+                        catch
+                        {
+                            return;
+                        }
+
+                        try
+                        {
+                            for (int i = 0; i < 20; i++) //отправляем 20 запросов на разрыв соединения
+                            {
+                                _socket.Send(new byte[2] { PackgeCodes.ConnectionClose, _selfSessionId }, 2, SocketFlags.None);
+                            }
+                        }
+                        catch { }
+
+                        StopWork();
+                    }
                 }
-            }
-            catch { }
-            _closeBlock.Release();
+            });
         }
 
         public event PointHandle ClientClosing;

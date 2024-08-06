@@ -1,4 +1,6 @@
-﻿using System.Net;
+﻿using System;
+using System.Collections.Generic;
+using System.Net;
 
 namespace Lexplosion.Logic.Network
 {
@@ -8,6 +10,8 @@ namespace Lexplosion.Logic.Network
     {
         ClientDesc Receive(out byte[] data);
         void Send(byte[] inputData, ClientDesc clientData);
+
+        IEnumerable<ClientDesc> WaitSendAvailable();
 
         event ClientPointHandle ClientClosing;
 

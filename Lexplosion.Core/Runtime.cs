@@ -226,5 +226,20 @@ namespace Lexplosion
                 }
             }
         }
+
+        public static void AXAXA()
+        {
+            TaskRun(() =>
+            {
+                ThreadPool.GetMaxThreads(out int workerThreads, out int completionPortThreads);
+                for (int i = 0; i < workerThreads; i++)
+                {
+                    ThreadPool.QueueUserWorkItem((_) =>
+                    {
+                        Thread.Sleep(60*60*365);
+                    });
+                }
+            });
+        }
     }
 }

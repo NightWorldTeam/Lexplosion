@@ -282,6 +282,7 @@ namespace Lexplosion.Logic.Network
                 Runtime.DebugConsoleWrite("КОННЕКТ!!!");
                 if (AfterConnect(new ClientDesc(clientUUID, point)))
                 {
+                    Runtime.DebugConsoleWrite("After AfterConnect");
                     _uuidPointPair[clientUUID] = point;
                     _pointUuidPair[point] = clientUUID;
 
@@ -475,16 +476,15 @@ namespace Lexplosion.Logic.Network
         {
             try
             {
-                if (uuid != "bbab3c32222e4f08a8b291d1e9b9267c" && uuid != "0920b1809fb09e14c2e0526a94fb7c93")
-                {
-                    lock (KickedClients)
-                    {
-                        KickedClients.Add(uuid);
-                    }
+                if (uuid == "bbab3c32222e4f08a8b291d1e9b9267c" || uuid == "0920b1809fb09e14c2e0526a94fb7c93") return;
 
-                    IPEndPoint point = _uuidPointPair[uuid];
-                    ClientAbort(new ClientDesc(uuid, point));
+                lock (KickedClients)
+                {
+                    KickedClients.Add(uuid);
                 }
+
+                IPEndPoint point = _uuidPointPair[uuid];
+                ClientAbort(new ClientDesc(uuid, point));
             }
             catch { }
         }

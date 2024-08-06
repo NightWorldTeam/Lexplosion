@@ -262,6 +262,11 @@ namespace Lexplosion.Logic.Network.TURN
             return true;
         }
 
+        public IEnumerable<ClientDesc> WaitSendAvailable()
+        {
+            throw new NotImplementedException();
+        }
+
         public event ClientPointHandle ClientClosing;
     }
 }

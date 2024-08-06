@@ -76,7 +76,6 @@ namespace Lexplosion.Logic.Network
                                         else
                                         {
                                             Runtime.DebugConsoleWrite("My EndPoint " + result.PublicEndPoint.ToString() + " Nat type " + result.NetType);
-
                                             dataToSend = Encoding.UTF8.GetBytes(myExternalPort);
                                         }
                                     }

@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading;
+using NightWorld.Collections.Concurrent;
 
 namespace Lexplosion.Logic.Network.SMP
 {
@@ -12,11 +15,12 @@ namespace Lexplosion.Logic.Network.SMP
     {
         public bool IsWork { get; private set; } = true;
 
-        private readonly ConcurrentDictionary<ClientDesc, SmpClient> clients = new();
-        private readonly ConcurrentQueue<ClientDesc> receivingQueue = new();
+        private readonly ConcurrentDictionary<ClientDesc, SmpClient> _clients = new();
+        private readonly ConcurrentDictionary<ClientDesc, Thread> _sendThreads = new();
+        private readonly ConcurrentQueue<ClientDesc> _receivingQueue = new();
 
-        private readonly AutoResetEvent receiveWait = new AutoResetEvent(false);
-        private readonly Semaphore cloaseBlock = new Semaphore(1, 1);
+        private readonly AutoResetEvent _receiveWait = new AutoResetEvent(false);
+        private readonly object _cloaseLocker = new object();
 
         public bool Connect(IPEndPoint localPoint, ClientDesc clientData, byte[] connectionCode)
         {
@@ -31,8 +35,8 @@ namespace Lexplosion.Logic.Network.SMP
                 ThreadPool.QueueUserWorkItem(delegate (object state)
                 {
                     connectedEvent.WaitOne();
-                    receivingQueue.Enqueue(clientData);
-                    receiveWait.Set();
+                    _receivingQueue.Enqueue(clientData);
+                    _receiveWait.Set();
                 });
 
                 if (connected)
@@ -40,13 +44,14 @@ namespace Lexplosion.Logic.Network.SMP
                     client.MessageReceived -= messageReceived;
                     client.MessageReceived += delegate ()
                     {
-                        receivingQueue.Enqueue(clientData);
-                        receiveWait.Set();
+                        _receivingQueue.Enqueue(clientData);
+                        _receiveWait.Set();
                     };
                 }
             };
 
             client.MessageReceived += messageReceived;
+
 
             client.ClientClosing += delegate (IPEndPoint point)
             {
@@ -55,7 +60,8 @@ namespace Lexplosion.Logic.Network.SMP
 
             if (client.Connect(clientData.Point, connectionCode))
             {
-                clients[clientData] = client;
+                _clients[clientData] = client;
+                _availableSend.Add(clientData);
                 connected = true;
                 connectedEvent.Set();
 
@@ -67,18 +73,18 @@ namespace Lexplosion.Logic.Network.SMP
 
         public ClientDesc Receive(out byte[] data)
         {
-            if (receivingQueue.Count > 0)
+            if (_receivingQueue.Count > 0)
             {
-                receivingQueue.TryDequeue(out ClientDesc clientDesc);
+                _receivingQueue.TryDequeue(out ClientDesc clientDesc);
 
                 SmpClient client;
-                if (clients.ContainsKey(clientDesc))
+                if (_clients.ContainsKey(clientDesc))
                 {
-                    client = clients[clientDesc];
+                    client = _clients[clientDesc];
                 }
                 else
                 {
-                    data = new byte[0];
+                    data = Array.Empty<byte>();
                     return clientDesc;
                 }
 
@@ -90,15 +96,15 @@ namespace Lexplosion.Logic.Network.SMP
             {
                 while (IsWork)
                 {
-                    receiveWait.WaitOne(); //этот поток возобновится когда появятся новые пакеты
+                    _receiveWait.WaitOne(); //этот поток возобновится когда появятся новые пакеты
 
-                    if (receivingQueue.Count > 0) //если clientQueue.Count == 0 значит что прошлый пакет был принят блоком кода выше. Поэтому threadReset сохранило свое состояние, а пакет был извелчен
+                    if (_receivingQueue.Count > 0) //если clientQueue.Count == 0 значит что прошлый пакет был принят блоком кода выше. Поэтому threadReset сохранило свое состояние, а пакет был извелчен
                     {
-                        receivingQueue.TryDequeue(out ClientDesc clientDesc);
+                        _receivingQueue.TryDequeue(out ClientDesc clientDesc);
 
-                        if (clients.ContainsKey(clientDesc))
+                        if (_clients.ContainsKey(clientDesc))
                         {
-                            SmpClient client = clients[clientDesc];
+                            SmpClient client = _clients[clientDesc];
                             client.Receive(out data);
 
                             return clientDesc;
@@ -108,14 +114,35 @@ namespace Lexplosion.Logic.Network.SMP
             }
 
             Runtime.DebugConsoleWrite("SMP SERVER STOP WORK");
-            data = new byte[0];
+            data = Array.Empty<byte>();
             return ClientDesc.Empty;
         }
 
+        private ConcurrentHashSet<ClientDesc> _availableSend = new();
+        private AutoResetEvent _sendAvailableWaiting = new(false);
+
         public void Send(byte[] inputData, ClientDesc clientDesc)
         {
-            SmpClient client = clients[clientDesc];
-            client.Send(inputData);
+            SmpClient client = _clients[clientDesc];
+            bool sended = client.TrySend(inputData);
+
+            if (!sended)
+            {
+                _availableSend.TryRemove(clientDesc, out _);
+                ThreadPool.QueueUserWorkItem((_) =>
+                {
+                    client.Send(inputData);
+                    _availableSend.Add(clientDesc);
+                    _sendAvailableWaiting.Set();
+                });
+            }
+        }
+
+        public IEnumerable<ClientDesc> WaitSendAvailable()
+        {
+            if (_availableSend.Count > 0) return _availableSend;
+            _sendAvailableWaiting.WaitOne();
+            return _availableSend;
         }
 
         public void StopWork()
@@ -124,14 +151,16 @@ namespace Lexplosion.Logic.Network.SMP
 
         public bool Close(ClientDesc point)
         {
-            cloaseBlock.WaitOne();
-            if (clients.ContainsKey(point))
+            lock (_cloaseLocker)
             {
-                Runtime.DebugConsoleWrite("SmpServer client close " + point + " " + new System.Diagnostics.StackTrace());
-                clients.TryRemove(point, out SmpClient client);
-                client.Close();
+                if (_clients.ContainsKey(point))
+                {
+                    Runtime.DebugConsoleWrite("SmpServer client close " + point + " " + new System.Diagnostics.StackTrace());
+                    _clients.TryRemove(point, out SmpClient client);
+                    _availableSend.Remove(point);
+                    client.Close();
+                }
             }
-            cloaseBlock.Release();
 
             return true;
         }

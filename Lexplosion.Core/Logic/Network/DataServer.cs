@@ -6,6 +6,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
+using NightWorld.Collections.Concurrent;
 
 namespace Lexplosion.Logic.Network
 {
@@ -17,12 +18,19 @@ namespace Lexplosion.Logic.Network
             public long FileSize;
         }
 
+        protected class ClientData
+        {
+            public string FileId; // отправляемый файл
+            public long ReadingOffset; //офсет в отправляемом файле
+            public byte[] EncodeKey; //ключ ширования
+            public byte[] IV; //вектор инициализации
+        }
+
         protected Dictionary<string, FileData> SFilesList = new(); // список всех FileStream и размеров файлов
 
-        // первое значение - отправляемый файл, второе - офсет в отправляемом файле, третье - ключ ширования, четвертое - вектор инициализации
-        protected ConcurrentDictionary<ClientDesc, ReferenceTuple<string, long, byte[], byte[]>> ClientsData = new();
+        protected ConcurrentDictionary<ClientDesc, ClientData> ClientsData = new();
 
-        protected List<ClientDesc> AuthorizedClients = new();
+        protected ConcurrentHashSet<ClientDesc> AuthorizedClients = new();
         protected List<ClientDesc> AvailableConnections = new();
 
         protected AutoResetEvent WaitClient = new AutoResetEvent(false);
@@ -65,27 +73,28 @@ namespace Lexplosion.Logic.Network
                     WaitClient.WaitOne(); //ждём первого авторизированного клиента
                 }
 
-                ClientDesc[] authorizedClients;
-                lock (_authorizeLocker)
-                {
-                    authorizedClients = AuthorizedClients.ToArray();
-                }
+
+                IEnumerable<ClientDesc> clients = Server.WaitSendAvailable();
 
                 SendingBlock.WaitOne();
-                foreach (ClientDesc clientPoint in authorizedClients)
+
+                foreach (ClientDesc clientPoint in clients)
                 {
                     try
                     {
+                        if (!AuthorizedClients.Contains(clientPoint)) continue;
+
+                        ClientData clientData = ClientsData[clientPoint];
+
                         byte[] buffer = new byte[HEAP];
 
-                        ReferenceTuple<string, long, byte[], byte[]> clientData = ClientsData[clientPoint];
-                        var fileData = SFilesList[clientData.Value1];
+                        var fileData = SFilesList[clientData.FileId];
                         FileStream file = fileData.Stream; //получаем FileStream для этого клиента
                         long fileSize = fileData.FileSize;
 
-                        file.Seek(clientData.Value2, SeekOrigin.Begin); //перемещаем указатель чтения файла
+                        file.Seek(clientData.ReadingOffset, SeekOrigin.Begin); //перемещаем указатель чтения файла
                         int bytesCount = file.Read(buffer, 0, HEAP); //читаем файл
-                        clientData.Value2 += HEAP; //увеличиваем оффсет
+                        clientData.ReadingOffset += HEAP; //увеличиваем оффсет
 
                         byte[] buffer_;
                         if (bytesCount != HEAP)
@@ -99,13 +108,13 @@ namespace Lexplosion.Logic.Network
                         }
 
                         // TODO: тут трай надо        -- 09.07.2023 А нахуя тут трай?
-                        byte[] payload = Cryptography.AesEncode(buffer_, clientData.Value3, clientData.Value4);
+                        byte[] payload = Cryptography.AesEncode(buffer_, clientData.EncodeKey, clientData.IV);
                         Server.Send(payload, clientPoint); //отправляем
 
                         //файл передан, удаляем клиента
-                        if (clientData.Value2 >= fileSize)
+                        if (clientData.ReadingOffset >= fileSize)
                         {
-                            Runtime.DebugConsoleWrite("END SEND. Bytes count " + clientData.Value2);
+                            Runtime.DebugConsoleWrite("END SEND. Bytes count " + clientData.ReadingOffset);
                             toDisconect.Add(clientPoint);
                         }
                     }
@@ -210,19 +219,16 @@ namespace Lexplosion.Logic.Network
 
                                     if (SFilesList.ContainsKey(profileId))
                                     {
-                                        ClientsData[point] = new ReferenceTuple<string, long, byte[], byte[]>
+                                        ClientsData[point] = new ClientData
                                         {
-                                            Value1 = profileId,
-                                            Value2 = 0,
-                                            Value3 = aesKey,
-                                            Value4 = aesIV
+                                            FileId = profileId,
+                                            ReadingOffset = 0,
+                                            EncodeKey = aesKey,
+                                            IV = aesIV
                                         };
 
                                         connectionStages.Remove(point);
-                                        lock (_authorizeLocker)
-                                        {
-                                            AuthorizedClients.Add(point);
-                                        }
+                                        AuthorizedClients.Add(point);
 
                                         byte[] fileSize = BitConverter.GetBytes(SFilesList[profileId].FileSize);
                                         Server.Send(Cryptography.AesEncode(fileSize, aesKey, aesIV), point); // отправляем размер файла

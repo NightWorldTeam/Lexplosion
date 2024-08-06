@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Sockets;
 using System.Threading;
 
@@ -106,14 +107,14 @@ namespace Lexplosion.Logic.Network
         {
             SendingWait.WaitOne(); //ждём первого подключения
 
-            List<ClientDesc> isDisconected = new List<ClientDesc>();
+            var isDisconected = new List<ClientDesc>();
 
             while (IsWork)
             {
                 SendingBlock.WaitOne();
 
                 ConnectSemaphore.WaitOne();
-                List<Socket> listeningSokets = new List<Socket>(Sockets);
+                var listeningSokets = new List<Socket>(Sockets);
                 ConnectSemaphore.Release();
 
                 try
@@ -146,10 +147,14 @@ namespace Lexplosion.Logic.Network
                     continue;
                 }
 
+                IEnumerable<ClientDesc> availableClients = Server.WaitSendAvailable();
                 foreach (Socket sock in listeningSokets)
                 {
                     try
                     {
+                        ClientDesc point = ClientsPoints[sock];
+                        if (!availableClients.Contains(point)) continue;
+
                         //получем данные с локального сокета и отправляем клиенту через сеть с помощью SMP
                         byte[] data = new byte[1200]; // TODO: думаю тут можно заюзать sock.Available вместо 1200
                         int bytes = sock.Receive(data);
@@ -166,8 +171,6 @@ namespace Lexplosion.Logic.Network
                         {
                             data_[i] = data[i];
                         }
-
-                        var point = ClientsPoints[sock];
 
                         Server.Send(data_, point);
                     }
