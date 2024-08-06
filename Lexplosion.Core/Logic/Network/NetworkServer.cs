@@ -333,8 +333,9 @@ namespace Lexplosion.Logic.Network
                         {
                             bytes = _controlConnection.Receive(data);
                         }
-                        catch
+                        catch (Exception ex)
                         {
+                            Runtime.DebugConsoleWrite("Exception " + ex);
                             needRepeat = true;
                             break;
                         }

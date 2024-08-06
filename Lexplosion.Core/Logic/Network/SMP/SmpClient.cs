@@ -240,7 +240,17 @@ namespace Lexplosion.Logic.Network.SMP
 
         private byte[] _connectAnswerPackage;
 
+        /// <summary>
+        /// Активно ли соединение. 
+        /// Соединение может быть активно еще в течении некотрого времени после вызова Close, в случае если идёт отправка пакетов, оставшихся в буфере
+        /// </summary>
         public bool IsConnected { get; private set; } = false;
+
+
+        /// <summary>
+        /// Было ли закрыто соединение. После вызова Close сразу же принимает значение true
+        /// </summary>
+        public bool IsClosed { get; private set; } = false;
 
         public long Ping
         {
@@ -1445,6 +1455,7 @@ namespace Lexplosion.Logic.Network.SMP
         private void StopWork()
         {
             Runtime.DebugConsoleWrite("StopWork() SMP CLIENT");
+            IsClosed = true;
             IsConnected = false;
             SafeThreadAbort(_connectionControl);
             //serviceReceive.Abort();
@@ -1471,6 +1482,7 @@ namespace Lexplosion.Logic.Network.SMP
 
         public void Close()
         {
+            IsClosed = true;
             ThreadPool.QueueUserWorkItem((_) =>
             {
                 lock (_closeLocker)

@@ -111,6 +111,8 @@ namespace Lexplosion.Logic.Network
 
             while (IsWork)
             {
+                IEnumerable<ClientDesc> availableClients = Server.WaitSendAvailable();
+
                 SendingBlock.WaitOne();
 
                 ConnectSemaphore.WaitOne();
@@ -147,7 +149,6 @@ namespace Lexplosion.Logic.Network
                     continue;
                 }
 
-                IEnumerable<ClientDesc> availableClients = Server.WaitSendAvailable();
                 foreach (Socket sock in listeningSokets)
                 {
                     try

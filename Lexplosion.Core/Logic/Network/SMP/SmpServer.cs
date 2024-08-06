@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Net;
 using System.Threading;
@@ -20,7 +21,7 @@ namespace Lexplosion.Logic.Network.SMP
         private readonly ConcurrentQueue<ClientDesc> _receivingQueue = new();
 
         private readonly AutoResetEvent _receiveWait = new AutoResetEvent(false);
-        private readonly object _cloaseLocker = new object();
+        private readonly object _closeLocker = new object();
 
         public bool Connect(IPEndPoint localPoint, ClientDesc clientData, byte[] connectionCode)
         {
@@ -64,6 +65,7 @@ namespace Lexplosion.Logic.Network.SMP
                 _availableSend.Add(clientData);
                 connected = true;
                 connectedEvent.Set();
+                _sendAvailableWaiting.Set();
 
                 return true;
             }
@@ -132,8 +134,14 @@ namespace Lexplosion.Logic.Network.SMP
                 ThreadPool.QueueUserWorkItem((_) =>
                 {
                     client.Send(inputData);
-                    _availableSend.Add(clientDesc);
-                    _sendAvailableWaiting.Set();
+                    lock (_closeLocker)
+                    {
+                        if (!client.IsClosed)
+                        {
+                            _availableSend.Add(clientDesc);
+                            _sendAvailableWaiting.Set();
+                        }
+                    }
                 });
             }
         }
@@ -151,7 +159,7 @@ namespace Lexplosion.Logic.Network.SMP
 
         public bool Close(ClientDesc point)
         {
-            lock (_cloaseLocker)
+            lock (_closeLocker)
             {
                 if (_clients.ContainsKey(point))
                 {
