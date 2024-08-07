@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lexplosion.Logic.Objects.CommonClientData;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -1180,12 +1181,13 @@ namespace Lexplosion.Logic.Network.SMP
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void CreatePackagesHeap(byte[] inputData, ref List<Package> packagesHeap, ref int mtu, ref int maxPackagesCount)
+        private void DistributeByPackcages(byte[] inputData, ref List<Package> packagesHeap, int mtu, int maxPackagesCount)
         {
             const int serviceDataLenght = DataPackageHeaders.FirstDataByte + 3;
 
             if (inputData.Length + serviceDataLenght <= mtu)
             {
+                // inputData вмещается в один пакет, создаем пакет и вставляем его в кучу пакетов
                 Package package = new Package
                 {
                     Size = inputData.Length + serviceDataLenght
@@ -1195,6 +1197,7 @@ namespace Lexplosion.Logic.Network.SMP
             }
             else
             {
+                // inputData не вмещается в один пакет, разбиваем на сегменты и рассовываем в несколько пакетов
                 int offset = 0;
                 while (offset < inputData.Length)
                 {
@@ -1221,6 +1224,33 @@ namespace Lexplosion.Logic.Network.SMP
                 }
 
                 packagesHeap[packagesHeap.Count - 1].lastSegmentIsFull = true;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void DistributeBySegments(Package package, byte[] inputData, ref List<Package> packagesHeap, int mtu, int maxPackagesCount)
+        {
+            int freeSpace = mtu - package.Size - 3; // оставшееся место в пакете
+            if (freeSpace > 0)
+            {
+                // в пакете есть место, часть inputData пихаем в этот пакет, а часть в новые пакеты
+                byte[] part = new byte[freeSpace];
+                Buffer.BlockCopy(inputData, 0, part, 0, freeSpace);
+
+                package.Segments.Add(part);
+                package.Size += freeSpace + 3;
+                package.lastSegmentIsFull = false;
+
+                int partSize = inputData.Length - freeSpace;
+                part = new byte[partSize];
+                Buffer.BlockCopy(inputData, freeSpace, part, 0, partSize);
+
+                DistributeByPackcages(part, ref packagesHeap, mtu, maxPackagesCount);
+            }
+            else
+            {
+                // в пакете места нет, пихаем данные в новые пакеты
+                DistributeByPackcages(inputData, ref packagesHeap, mtu, maxPackagesCount);
             }
         }
 
@@ -1254,66 +1284,46 @@ namespace Lexplosion.Logic.Network.SMP
                 _sendingBuffer.Enqueue(packagesHeap);
             }
 
-            if (packagesHeap.Count <= maxPackagesCount)
-            {
-                if (packagesHeap.Count > 0)
-                {
-                    Package lastElement = packagesHeap[packagesHeap.Count - 1];
-                    if (lastElement.Size + inputData.Length + 3 <= mtu)
-                    {
-                        lastElement.Segments.Add(inputData);
-                        lastElement.Size += inputData.Length + 3;
-                    }
-                    else
-                    {
-                        if (packagesHeap.Count < maxPackagesCount)
-                        {
-                            int freeSpace = mtu - lastElement.Size - 3;
-                            if (freeSpace > 0)
-                            {
-                                byte[] part = new byte[freeSpace];
-                                Buffer.BlockCopy(inputData, 0, part, 0, freeSpace);
-
-                                lastElement.Segments.Add(part);
-                                lastElement.Size += freeSpace + 3;
-                                lastElement.lastSegmentIsFull = false;
-
-                                int partSize = inputData.Length - freeSpace;
-                                part = new byte[partSize];
-                                Buffer.BlockCopy(inputData, freeSpace, part, 0, partSize);
-
-                                CreatePackagesHeap(part, ref packagesHeap, ref mtu, ref maxPackagesCount);
-                            }
-                            else
-                            {
-                                CreatePackagesHeap(inputData, ref packagesHeap, ref mtu, ref maxPackagesCount);
-                            }
-                        }
-                        else
-                        {
-                            if (acquiredLock) Monitor.Exit(_sendLocker);
-                            _sendingCycleDetector.WaitOne();
-
-                            if (_inStopping || !IsConnected) return;
-                            goto Begin;
-                        }
-                    }
-                }
-                else
-                {
-                    CreatePackagesHeap(inputData, ref packagesHeap, ref mtu, ref maxPackagesCount);
-                }
-            }
-            else
+            if (packagesHeap.Count > maxPackagesCount)
             {
                 if (acquiredLock) Monitor.Exit(_sendLocker);
                 _sendingCycleDetector.WaitOne();
                 goto Begin;
             }
 
+            if (packagesHeap.Count > 0)
+            {
+                Package lastElement = packagesHeap[packagesHeap.Count - 1];
+                if (lastElement.Size + inputData.Length + 3 > mtu)
+                {
+                    if (packagesHeap.Count >= maxPackagesCount)
+                    {
+                        if (acquiredLock) Monitor.Exit(_sendLocker);
+                        _sendingCycleDetector.WaitOne();
+
+                        if (_inStopping || !IsConnected) return;
+                        goto Begin;
+                    }
+
+                    DistributeBySegments(lastElement, inputData, ref packagesHeap, mtu, maxPackagesCount);
+
+                    _waitSendData.Set();
+                    if (acquiredLock) Monitor.Exit(_sendLocker);
+                    return;
+                }
+
+                lastElement.Segments.Add(inputData);
+                lastElement.Size += inputData.Length + 3;
+            }
+            else
+            {
+                DistributeByPackcages(inputData, ref packagesHeap, mtu, maxPackagesCount);
+            }
+
             _waitSendData.Set();
             if (acquiredLock) Monitor.Exit(_sendLocker);
         }
+
 
         public bool TrySend(byte[] inputData)
         {
@@ -1328,7 +1338,6 @@ namespace Lexplosion.Logic.Network.SMP
                 if (_sendingBuffer.Count > 0)
                 {
                     if (_sendingBuffer.Count > 1) return false;
-
                     _sendingBuffer.TryPeek(out packagesHeap);
                 }
                 else
@@ -1337,55 +1346,26 @@ namespace Lexplosion.Logic.Network.SMP
                     _sendingBuffer.Enqueue(packagesHeap);
                 }
 
-                if (packagesHeap.Count <= maxPackagesCount)
+                if (packagesHeap.Count > maxPackagesCount) return false;
+
+                if (packagesHeap.Count > 0)
                 {
-                    if (packagesHeap.Count > 0)
+                    Package lastElement = packagesHeap[packagesHeap.Count - 1];
+                    if (lastElement.Size + inputData.Length + 3 > mtu)
                     {
-                        Package lastElement = packagesHeap[packagesHeap.Count - 1];
-                        if (lastElement.Size + inputData.Length + 3 <= mtu)
-                        {
-                            lastElement.Segments.Add(inputData);
-                            lastElement.Size += inputData.Length + 3;
-                        }
-                        else
-                        {
-                            if (packagesHeap.Count < maxPackagesCount)
-                            {
-                                int freeSpace = mtu - lastElement.Size - 3;
-                                if (freeSpace > 0)
-                                {
-                                    byte[] part = new byte[freeSpace];
-                                    Buffer.BlockCopy(inputData, 0, part, 0, freeSpace);
+                        if (packagesHeap.Count >= maxPackagesCount) return false;
+                        DistributeBySegments(lastElement, inputData, ref packagesHeap, mtu, maxPackagesCount);
 
-                                    lastElement.Segments.Add(part);
-                                    lastElement.Size += freeSpace + 3;
-                                    lastElement.lastSegmentIsFull = false;
-
-                                    int partSize = inputData.Length - freeSpace;
-                                    part = new byte[partSize];
-                                    Buffer.BlockCopy(inputData, freeSpace, part, 0, partSize);
-
-                                    CreatePackagesHeap(part, ref packagesHeap, ref mtu, ref maxPackagesCount);
-                                }
-                                else
-                                {
-                                    CreatePackagesHeap(inputData, ref packagesHeap, ref mtu, ref maxPackagesCount);
-                                }
-                            }
-                            else
-                            {
-                                return false;
-                            }
-                        }
+                        _waitSendData.Set();
+                        return true;
                     }
-                    else
-                    {
-                        CreatePackagesHeap(inputData, ref packagesHeap, ref mtu, ref maxPackagesCount);
-                    }
+
+                    lastElement.Segments.Add(inputData);
+                    lastElement.Size += inputData.Length + 3;
                 }
                 else
                 {
-                    return false;
+                    DistributeByPackcages(inputData, ref packagesHeap, mtu, maxPackagesCount);
                 }
 
                 _waitSendData.Set();
