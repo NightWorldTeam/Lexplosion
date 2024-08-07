@@ -63,6 +63,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
             });
 
             MouseDown += delegate { try { DragMove(); } catch { } };
+            this.Closing += MainWindow_Closing;
         }
         private void Scalling()
         {
@@ -86,6 +87,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
             Left = (screenWidth - Width) / 2;
 
             _isScalled = !_isScalled;
+        }
+
+        private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            Runtime.Exit();
         }
 
 

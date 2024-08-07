@@ -136,13 +136,10 @@ namespace Lexplosion.WPF.NewInterface
 
             //_nofityIcon = (TaskbarIcon)App.Current.FindResource("NofityIcon");
 
-            //App.Current.MainWindow.Topmost = true;
-
             var mainWindow = new MainWindow()
             {
                 Left = App.Current.MainWindow.Left - 322,
-                Top = App.Current.MainWindow.Top - 89,
-                Topmost = true
+                Top = App.Current.MainWindow.Top - 89
             };
 
             _leftPos = mainWindow.Left;
