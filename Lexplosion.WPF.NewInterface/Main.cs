@@ -1,9 +1,14 @@
-﻿using Lexplosion.Core.Tools.Notification;
+﻿using DiscordRPC;
+using Lexplosion.Core.Tools.Notification;
 using Lexplosion.Global;
+using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Accounts;
+using Lexplosion.Tools;
 using Lexplosion.WPF.NewInterface.Core.Notifications;
 using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Core.Services;
+using Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSettings;
+using Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Settings;
 using Lexplosion.WPF.NewInterface.Mvvm.Views.Windows;
 using System;
 using System.Collections;
@@ -23,13 +28,13 @@ namespace Lexplosion.WPF.NewInterface
         Top,
     }
 
-/*    public class NotificationManager : INotificationManager
-    {
-        public void Show(INotification notifiable)
+    /*    public class NotificationManager : INotificationManager
         {
-            RuntimeApp.Notification.Add(notifiable);
-        }
-    }*/
+            public void Show(INotification notifiable)
+            {
+                RuntimeApp.Notification.Add(notifiable);
+            }
+        }*/
 
     internal static class RuntimeApp
     {
@@ -94,7 +99,7 @@ namespace Lexplosion.WPF.NewInterface
             //app.Run(_splashWindow);
         }
 
-        private static void SetupTestEnviroment() 
+        private static void SetupTestEnviroment()
         {
             _app.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
@@ -128,23 +133,30 @@ namespace Lexplosion.WPF.NewInterface
         private static void SetMainWindow()
         {
             ResourceNames = GetResourceNames();
+
+            //_nofityIcon = (TaskbarIcon)App.Current.FindResource("NofityIcon");
+
+            //App.Current.MainWindow.Topmost = true;
+
+            var mainWindow = new MainWindow()
+            {
+                Left = App.Current.MainWindow.Left - 322,
+                Top = App.Current.MainWindow.Top - 89,
+                Topmost = true
+            };
+
+            _leftPos = mainWindow.Left;
+            _topPos = mainWindow.Top;
+
+            mainWindow.Show();
+            //(App.Current.MainWindow as SplashWindow).SmoothClosing();
+            App.Current.MainWindow = mainWindow;
+            App.Current.Run(mainWindow);
+/*
             _app.MainWindow = new MainWindow();//new TestWindow();
             //_app.MainWindow = new TestWindow();
             _app.MainWindow.Show();
-            _app.Run(_app.MainWindow);
-
-
-            //if (Account.ActiveAccount == null) 
-            //{
-            //    var statusCode = Account.ActiveAccount.Auth(null);
-            //    if (statusCode != AuthCode.Successfully) 
-            //    {
-            //        var latestActiveAccount = Account.ActiveAccount;
-            //        latestActiveAccount.IsActive = false;
-
-            //    }
-            //}
-            Runtime.DebugWrite("SetMainWindow");
+            _app.Run(_app.MainWindow);*/
         }
 
         private static void InitializedSystem()
@@ -152,19 +164,209 @@ namespace Lexplosion.WPF.NewInterface
             Runtime.InitializedSystem((int)0, (int)0, false);
 
             ResourcesDictionariesRegister();
-            LoadCurrentLanguage();
+            
 
+            InitializedAccountSystem();
+
+            App.Current.Dispatcher.Invoke(delegate ()
+            {
+                App.Current.Exit += Runtime.BeforeExit;
+            });
+
+            Runtime.ПереходВРежимЗавершения += CloseMainWindow;
+            Runtime.OnExitEvent += ExitHandler;
+            Runtime.OnUpdateStart += () => App.Current.Dispatcher.Invoke(() =>
+            {   
+                //_splashWindow.ChangeLoadingBoardPlaceholder(true);
+            });
+
+            Runtime.OnLexplosionOpened += ShowMainWindow;
+
+            Runtime.InitializedSystem((int)_splashWindowLeft, (int)_splashWindowTop);
+
+            // Выставляем язык
+            LoadCurrentLanguage();
+            // Встраеваем стили
+            //App.Current.Dispatcher.Invoke(StylesInit);
+
+            // инициализация окна уведомлений
+            // InitializeNotificationWindow();
+
+            var discordClient = InitDiscordApp();
+
+            LaunchGame _activeGameManager = null;
+
+            LaunchGame.OnGameProcessStarted += (LaunchGame gameManager) =>
+            {
+                _activeGameManager = gameManager;
+
+                if (gameManager.ClientSettings.IsShowConsole == true)
+                {
+                    //App.Current.Dispatcher.Invoke(() => ConsoleWindow.SetWindow(gameManager));
+                }
+            };
+
+            LaunchGame.OnGameStarted += delegate (LaunchGame gameManager) //подписываемся на эвент запуска игры
+            {
+                // если в настрйоках устанавлено что нужно скрывать лаунчер при запуске клиента, то скрывеам главное окно
+                if (GlobalData.GeneralSettings.IsHiddenMode == true)
+                {
+                    CloseMainWindow();
+                }
+
+                discordClient?.SetPresence(new RichPresence()
+                {
+                    State = "Minecraft " + gameManager.GameVersion,
+                    Details = "Сборка - " + gameManager.GameClientName,
+                    Timestamps = Timestamps.Now,
+                    Assets = new Assets()
+                    {
+                        LargeImageKey = "logo1"
+                    }
+                });
+            };
+
+            LaunchGame.OnGameStoped += delegate (LaunchGame gameManager) //подписываемся на эвент завершения игры
+            {
+                _activeGameManager = null;
+
+                // если в настрйоках устанавлено что нужно скрывать лаунчер при запуске клиента, то показываем главное окно
+                if (gameManager.ClientSettings.IsHiddenMode == true)
+                {
+                    ShowMainWindow();
+                }
+
+                discordClient?.SetPresence(new RichPresence()
+                {
+                    State = "Minercaft не запущен.",
+                    Timestamps = Timestamps.Now,
+                    Assets = new Assets()
+                    {
+                        LargeImageKey = "logo1"
+                    }
+                });
+            };
+
+            // Если в глобальных настройках включена консоль.
+            GeneralSettingsModel.ConsoleParameterChanged += delegate (bool isShow)
+            {
+                if (isShow && _activeGameManager != null)
+                {
+                    //App.Current.Dispatcher.Invoke(() => ConsoleWindow.SetWindow(_activeGameManager));
+                }
+            };
+
+            // Если в настройках сборки, включена консоль.
+            InstanceProfileSettingsModel.ConsoleParameterChanged += delegate (bool isShow, string instanceId)
+            {
+                if (isShow && _activeGameManager != null && _activeGameManager.InstanceId == instanceId)
+                {
+                    //App.Current.Dispatcher.Invoke(() => ConsoleWindow.SetWindow(_activeGameManager));
+                }
+            };
+
+            Thread.Sleep(800);
+
+            _app.Dispatcher.Invoke(SetMainWindow);
+        }
+
+        private static void InitializedAccountSystem() 
+        {
             var latestActiveAccount = Account.ActiveAccount;
             if (latestActiveAccount != null)
             {
                 var code = latestActiveAccount.Auth();
-                if (code != AuthCode.Successfully) 
+                if (code != AuthCode.Successfully)
                 {
-                
+
                 }
             }
-            _app.Dispatcher.Invoke(SetMainWindow);
         }
+
+        private static DiscordRpcClient InitDiscordApp()
+        {
+            DiscordRpcClient client = new DiscordRpcClient(LaunсherSettings.DiscordAppID);
+
+            if (client.Initialize())
+            {
+                return null;
+            }
+
+            client.SetPresence(new RichPresence()
+            {
+                State = "Minecraft не запущен",
+                Timestamps = Timestamps.Now,
+                Assets = new Assets()
+                {
+                    LargeImageKey = "logo1"
+                }
+            });
+
+            return client;
+        }
+
+        public static void ExitHandler()
+        {
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                foreach (Window window in App.Current.Windows)
+                {
+                    window.Close();
+                }
+
+                //_nofityIcon.Dispose();
+            });
+        }
+
+        public static void ShowMainWindow()
+        {
+            Runtime.CancelingExit();
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                if (App.Current.MainWindow == null)
+                {
+                    NativeMethods.ShowProcessWindows(Runtime.CurrentProcess.MainWindowHandle);
+                    return;
+                }
+
+                App.Current.MainWindow = new MainWindow()
+                {
+                    Left = _leftPos,
+                    Top = _topPos
+                };
+                App.Current.MainWindow.Show();
+            });
+        }
+
+        public static void CloseMainWindow()
+        {
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                if (App.Current.MainWindow != null)
+                {
+                    try
+                    {
+                        _leftPos = App.Current.MainWindow.Left;
+                        _topPos = App.Current.MainWindow.Top;
+                    }
+                    catch { }
+
+                    try
+                    {
+                        App.Current.MainWindow.Close();
+                    }
+                    catch { }
+
+                    try
+                    {
+                        App.Current.MainWindow = null;
+                    }
+                    catch { }
+                }
+            });
+        }
+
+
 
         public static void LoadCurrentLanguage()
         {

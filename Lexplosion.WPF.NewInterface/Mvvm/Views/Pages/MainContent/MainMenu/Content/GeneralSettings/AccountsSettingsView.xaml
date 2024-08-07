@@ -11,6 +11,7 @@
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
     xmlns:localVm="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DataContext="{d:DesignInstance Type=localVm:AccountsSettingsViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
     Background="{DynamicResource PrimarySolidColorBrush}"
@@ -266,6 +267,14 @@
                                     Style="{StaticResource x32IconButtonActivityColor}" />
                             </core:If.False>
                         </core:If>
+
+                        <Button
+                            Margin="8,0,0,0"
+                            Command="{Binding Data.ReauthAccountCommand, Source={StaticResource ViewModel}}"
+                            CommandParameter="{Binding}"
+                            Content="Reload"
+                            Foreground="{DynamicResource ActivitySolidColorBrush}"
+                            Style="{StaticResource x32IconButtonActivityColor}" />
 
                         <Button
                             Margin="8,0,0,0"

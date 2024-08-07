@@ -253,6 +253,26 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             });
         }
 
+
+        private RelayCommand _reauthAccountCommand;
+        public ICommand ReauthAccountCommand
+        {
+            get => RelayCommand.GetCommand<Account>(ref _reauthAccountCommand, (acc) => 
+            {
+                Runtime.TaskRun(() =>
+                {
+                    var authResult = acc.Auth();
+                    if (authResult == AuthCode.Successfully)
+                        Account.SaveAll();
+                    else 
+                    {
+                        // TODO: Error Handler
+                    }
+                });
+            }); 
+        }
+
+
         private RelayCommand _addAccountCommand;
         public ICommand OpenAccountFactoryCommand {
             get => RelayCommand.GetCommand(ref _addAccountCommand, () => 
