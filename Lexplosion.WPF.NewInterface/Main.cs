@@ -161,7 +161,6 @@ namespace Lexplosion.WPF.NewInterface
             Runtime.InitializedSystem((int)0, (int)0, false);
 
             ResourcesDictionariesRegister();
-            
 
             InitializedAccountSystem();
 

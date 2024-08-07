@@ -9,6 +9,44 @@
     xmlns:objects="clr-namespace:Lexplosion.Logic.Objects;assembly=Lexplosion.Core"
     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
+    <Style TargetType="{x:Type ProgressBar}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ProgressBar}">
+                    <Grid>
+                        <Border
+                            x:Name="PART_Track"
+                            Background="{DynamicResource SeparateSolidColorBrush}"
+                            CornerRadius="2,2,0,0" />
+
+                        <Border
+                            x:Name="PART_Indicator"
+                            Margin="0,0,0,0"
+                            HorizontalAlignment="Left"
+                            Background="{DynamicResource ActivitySolidColorBrush}"
+                            CornerRadius="2,2,0,0" />
+
+                        <Grid x:Name="Animation" ClipToBounds="True">
+                            <Rectangle
+                                x:Name="PART_GlowRect"
+                                Width="100"
+                                Margin="-100,0,0,0"
+                                HorizontalAlignment="Left">
+                                <Rectangle.Fill>
+                                    <LinearGradientBrush Opacity="0.3">
+                                        <GradientStop Offset="0.2" Color="{DynamicResource ActivityColor}" />
+                                        <GradientStop Offset="0.7" Color="{DynamicResource BrandColorForegroundColor}" />
+                                        <GradientStop Offset="1" Color="{DynamicResource ActivityColor}" />
+                                    </LinearGradientBrush>
+                                </Rectangle.Fill>
+                            </Rectangle>
+                        </Grid>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <DataTemplate DataType="{x:Type local:LowerMenuButton}">
         <Button Command="{Binding ExecuteAction}">
             <Button.Template>
@@ -285,14 +323,23 @@
 
                                 <!--  Name and Author  -->
                                 <Grid Margin="0,0,0,2">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
                                     <TextBlock
                                         x:Name="PART_Name"
                                         Margin="0,4,0,0"
                                         FontSize="20"
                                         Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                        Text="Instance Name" />
+                                        Text="Instance Name"
+                                        TextTrimming="CharacterEllipsis" />
+
                                     <TextBlock
                                         x:Name="PART_Author"
+                                        Grid.Column="1"
                                         HorizontalAlignment="Right"
                                         VerticalAlignment="Center"
                                         Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
@@ -344,6 +391,7 @@
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Bottom"
                                     FontSize="14"
+                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
                                     Text="Скачено 1/11" />
 
                                 <ProgressBar
