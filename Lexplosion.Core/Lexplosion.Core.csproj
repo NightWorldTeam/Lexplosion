@@ -116,6 +116,7 @@
     <Compile Include="Logic\Management\Instances\PrototypeInstance.cs" />
     <Compile Include="Logic\Management\JavaChecker.cs" />
     <Compile Include="Logic\Management\LaunchGame.cs" />
+    <Compile Include="Logic\Network\SMP\SmpClient_Objects.cs" />
     <Compile Include="Logic\Network\SMP\Synchronizer.cs" />
     <Compile Include="Logic\Objects\FreeSource.cs" />
     <Compile Include="Logic\Objects\ISearchParams.cs" />
