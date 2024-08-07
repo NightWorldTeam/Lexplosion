@@ -36,8 +36,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
         {
             Notify = notify;
 
-            InstanceModelBase.GlobalAddedToLibrary += Add;
-            InstanceModelBase.GlobalDeletedEvent += Remove;
+            //InstanceModelBase.GlobalAddedToLibrary += Add;
+            // Лол, а зачем удалять из каталога?
+            //InstanceModelBase.GlobalDeletedEvent += Remove;
 
             _exportFunc = exportFunc;
         }

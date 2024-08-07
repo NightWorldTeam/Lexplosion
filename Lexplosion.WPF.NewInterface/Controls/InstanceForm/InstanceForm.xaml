@@ -10,6 +10,7 @@
     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
     <Style TargetType="{x:Type ProgressBar}">
+        <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ProgressBar}">
@@ -398,8 +399,7 @@
                                     x:Name="PART_ProgressBar"
                                     Grid.Row="3"
                                     Height="5"
-                                    Margin="-8,0,-8,0"
-                                    IsIndeterminate="True" />
+                                    Margin="-8,0,-8,0" />
                             </Grid>
 
                             <!--  Right Block - Buttons  -->

@@ -25,7 +25,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
     [TemplatePart(Name = PART_DROPDOWNMENU, Type = typeof(DropdownMenu))]
     [TemplatePart(Name = PART_DROPDOWNMENU_CONTENT, Type = typeof(ItemsControl))]
 
-    [TemplatePart(Name = PART_DROPDOWNMENU_CONTENT, Type = typeof(ProgressBar))]
+    [TemplatePart(Name = PART_PROGRESSBAR, Type = typeof(ProgressBar))]
     [TemplatePart(Name = PART_MAIN_BUTTON_PERCENTAGE, Type = typeof(TextBlock))]
     [TemplatePart(Name = PART_MAIN_BUTTON_PERCENTAGE_ACTIVITY_COLOR, Type = typeof(TextBlock))]
     public sealed partial class InstanceForm : Control
@@ -119,6 +119,16 @@ namespace Lexplosion.WPF.NewInterface.Controls
         public static readonly DependencyProperty OpenAddonsPageCommandProperty
             = DependencyProperty.Register(nameof(OpenAddonsPageCommand), typeof(ICommand), typeof(InstanceForm),
                 new FrameworkPropertyMetadata());
+
+        public static readonly DependencyProperty CanBeDeletedProperty
+            = DependencyProperty.Register(nameof(CanBeDeleted), typeof(bool), typeof(InstanceForm),
+            new FrameworkPropertyMetadata(false));
+
+        public bool CanBeDeleted
+        {
+            get => (bool)GetValue(CanBeDeletedProperty);
+            set => SetValue(CanBeDeletedProperty, value);
+        }
 
         public InstanceModelBase InstanceModel
         {
@@ -263,6 +273,8 @@ namespace Lexplosion.WPF.NewInterface.Controls
             InstanceModel.DeletedEvent += (s) =>
             {
                 DeleteAnimation();
+
+                OnInstanceModelStateChanged();
             };
 
             IsProcessActive = false;
@@ -905,6 +917,9 @@ namespace Lexplosion.WPF.NewInterface.Controls
         /// </summary>
         private void DeleteAnimation()
         {
+            if (!CanBeDeleted)
+                return;
+
             var doubleAnim = new DoubleAnimation()
             {
                 From = 1,
@@ -920,6 +935,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
                     To = 0,
                     Duration = TimeSpan.FromSeconds(0.10)
                 };
+
                 this.BeginAnimation(HeightProperty, doubleAnim1);
             };
 
