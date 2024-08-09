@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows.Data;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.FIlterPanel
@@ -40,7 +41,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.FIlterPan
             get => _selectedSortByParam; set
             {
                 _selectedSortByParam = value;
-                FilterChanged?.Invoke();
+                FilterChangedExecuteEvent();
                 OnPropertyChanged();
             }
         }
@@ -57,7 +58,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.FIlterPan
             get => _selectedVersion; set
             {
                 _selectedVersion = value;
-                FilterChanged?.Invoke();
+                FilterChangedExecuteEvent();
                 OnPropertyChanged();
             }
         }
@@ -95,16 +96,16 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.FIlterPan
                                 var name = Enum.GetName(typeof(CfSortField), index);
 
                                 _sortByParams.Add(new SortByParamObject($"Curseforge{name}", (int)index));
-                                SelectedSortByParam = _sortByParams.First();
                             }
+                            SelectedSortByParam = _sortByParams.First();
                         }
                         break;
                     case InstanceSource.Nightworld:
                         _sortByParams.Clear();
+                        FilterChangedExecuteEvent();
                         break;
                 }
 
-                FilterChanged?.Invoke();
 
                 OnPropertyChanged();
             }
@@ -160,9 +161,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.FIlterPan
         #region Public Methods
 
 
-        public void FilterChangedExecuteEvent()
+        public void FilterChangedExecuteEvent([CallerMemberName] string member = "")
         {
             FilterChanged?.Invoke();
+            Runtime.DebugWrite($"{member} FilterChanged Executed");
         }
 
 

@@ -84,7 +84,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
             _instanceController = instanceController;
             FilterPanel = new CatalogFilterPanel();
             FilterPanel.FilterChanged += OnFilterChanged;
-            LoadPageContent();
         }
 
 
@@ -96,6 +95,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
 
         private void OnFilterChanged() 
         {
+            _instanceController.Clear();
             Runtime.TaskRun(() =>
             {
                 var instanceClientsTuple = GetInstanceClients(
@@ -135,6 +135,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
 
         private void LoadPageContent() 
         {
+            _instanceController.Clear();
             Runtime.TaskRun(() => 
             {
                 var instanceClientsTuple = GetInstanceClients(

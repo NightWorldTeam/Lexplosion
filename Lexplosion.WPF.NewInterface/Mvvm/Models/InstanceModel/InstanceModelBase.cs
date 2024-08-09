@@ -222,7 +222,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             _instanceClient.StateChanged += OnStateClientChanged;
 
             Logo = _instanceClient.Logo;
-            Runtime.DebugWrite(Logo == null ? "Null" : Logo.Length.ToString());
+            //Runtime.DebugWrite(Logo == null ? "Null" : Logo.Length.ToString());
             Tags = _instanceClient.Categories ?? new List<CategoryBase>();
         }
 

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
@@ -50,16 +51,18 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
         #region Public Methods
 
 
-        public void Add(InstanceModelBase instanceModelBase)
+        public void Add(InstanceModelBase instanceModelBase, [CallerMemberName] string member = "")
         {
+            Runtime.DebugWrite($"{member} {instanceModelBase.Name}");
             App.Current.Dispatcher.Invoke(() =>
             {
                 _instances.Add(instanceModelBase);
             });
         }
 
-        public void Add(InstanceClient instanceClient)
+        public void Add(InstanceClient instanceClient, [CallerMemberName] string member = "")
         {
+            Runtime.DebugWrite($"{member} {instanceClient.Name}");
             App.Current.Dispatcher.Invoke(() =>
             {
                 _instances.Add(new InstanceModelBase(instanceClient, _exportFunc, Notify));

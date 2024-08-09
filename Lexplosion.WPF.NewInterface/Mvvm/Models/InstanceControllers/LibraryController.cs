@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
@@ -34,7 +35,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
         {
             Notify = notify;
 
-            InstanceModelBase.GlobalAddedToLibrary += Add;
+            InstanceModelBase.GlobalAddedToLibrary += (str) => Add(str);
             InstanceModelBase.GlobalDeletedEvent += Remove;
 
             _exportFunc = export;
@@ -52,7 +53,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
         #region Public Methods
 
 
-        public void Add(InstanceModelBase instanceModelBase)
+        public void Add(InstanceModelBase instanceModelBase, [CallerMemberName] string member = "")
         {
             App.Current.Dispatcher.Invoke(() =>
             {
@@ -61,7 +62,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
             });
         }
 
-        public void Add(InstanceClient instanceClient)
+        public void Add(InstanceClient instanceClient, [CallerMemberName] string member = "")
         {
             App.Current.Dispatcher.Invoke(() =>
             {

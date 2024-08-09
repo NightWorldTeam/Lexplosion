@@ -135,7 +135,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
 
 
             // Register Modal Window Contents
-            ModalNavigationStore.Instance.RegisterAbstractFactory(typeof(InstanceFactoryViewModel), new ModalInstanceCreatorFactory(Model.LibraryController.Add, Model.LibraryController.Remove));
+            ModalNavigationStore.Instance.RegisterAbstractFactory(typeof(InstanceFactoryViewModel), new ModalInstanceCreatorFactory((str) => Model.LibraryController.Add(str), Model.LibraryController.Remove));
 
 
             //ModalNavigationStore.Close();
