@@ -165,7 +165,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         public byte[] Logo { get; private set; }
         public IEnumerable<IProjectCategory> Tags { get; }
         public InstanceSource Source { get => _instanceClient.Type; }
-        public string TotalDonwloads { get => _instanceClient.GetFullInfo().TotalDownloads.ToString(); }
+        public string TotalDonwloads { get; private set; }
 
         public bool IsLaunched { get; private set; }
         public bool IsInstalled { get => _instanceClient.IsInstalled; }
@@ -224,6 +224,46 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             Logo = _instanceClient.Logo;
             //Runtime.DebugWrite(Logo == null ? "Null" : Logo.Length.ToString());
             Tags = _instanceClient.Categories ?? new List<CategoryBase>();
+
+            if (instanceClient.Type == InstanceSource.Local)
+            {
+                var s = _instanceClient.GetFullInfo;
+                /*                         
+                 * InstanceSource !
+                 * GameVersion !
+                 * LocalId 
+                 * ExternalId 
+                 * InLibrary 
+                 * Name 
+                 * Description !
+                 * Summary 
+                 * Categories !
+                 * Author 
+                 * Modloader 
+                 * ModloaderVersion 
+                 * OptifineVersion
+                 */
+
+                /*
+                 * InstanceSource 
+                 * GameVersion 
+                 * LastUpdate 
+                 * TotalDownloads 
+                 * Modloader !
+                 * Description !
+                 * Categories !
+                 * Images 
+                 * WebsiteUrl  
+                 * Summary !
+                 * Changelog 
+                 */
+            }
+
+            Runtime.TaskRun(() =>
+            {
+                TotalDonwloads = _instanceClient.GetFullInfo().TotalDownloads.ToString();
+                OnPropertyChanged(nameof(TotalDonwloads));
+            });
         }
 
 

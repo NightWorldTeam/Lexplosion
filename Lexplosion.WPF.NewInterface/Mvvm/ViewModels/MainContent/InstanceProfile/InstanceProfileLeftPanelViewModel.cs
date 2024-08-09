@@ -124,7 +124,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
 
         private void OnStateChanged()
         {
-            UpdateFrameworkElementModels();
+            App.Current.Dispatcher.Invoke(() => 
+            { 
+                UpdateFrameworkElementModels();
+            });
         }
 
         private void UpdateFrameworkElementModels()
