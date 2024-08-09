@@ -6,9 +6,11 @@
     xmlns:core="clr-namespace:Lexplosion.WPF.NewInterface.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
+    xmlns:instanceprofile="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.InstanceProfile"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:objects="clr-namespace:Lexplosion.WPF.NewInterface.Core.Objects"
+    d:DataContext="{d:DesignInstance Type=instanceprofile:InstanceProfileLeftPanelViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
@@ -21,6 +23,19 @@
             x:Key="nthchild2n"
             Expression="1n"
             Style="{StaticResource EveryPair}" />
+
+
+        <DataTemplate DataType="{x:Type instanceprofile:InstanceFieldInfo}">
+            <TextBlock
+                FontSize="13"
+                FontWeight="Medium"
+                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                TextWrapping="WrapWithOverflow">
+                <!--  TODO: Language Key Here  -->
+                <Run extensions:TextBlock.RunByKey="{Binding Name, Mode=OneWay}" />
+                <Run Foreground="{DynamicResource ActivitySolidColorBrush}" Text="{Binding Value, Mode=OneWay}" />
+            </TextBlock>
+        </DataTemplate>
 
 
         <DataTemplate DataType="{x:Type objects:FrameworkElementModel}">
@@ -170,41 +185,7 @@
                                         Background="{Binding InstanceImage, Mode=OneWay}"
                                         CornerRadius="5" />
 
-                                    <StackPanel>
-                                        <TextBlock
-                                            Margin="8,0,0,0"
-                                            FontSize="13"
-                                            FontWeight="Medium"
-                                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                            TextWrapping="WrapWithOverflow">
-                                            <!--  TODO: Language Key Here  -->
-                                            <Run Text="{DynamicResource Version:}" />
-                                            <Run Foreground="{DynamicResource ActivitySolidColorBrush}" Text="{Binding InstanceVersion, Mode=OneWay}" />
-                                        </TextBlock>
-
-                                        <TextBlock
-                                            Margin="8,0,0,0"
-                                            FontSize="13"
-                                            FontWeight="Medium"
-                                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                            TextWrapping="WrapWithOverflow">
-                                            <!--  TODO: Language Key Here  -->
-                                            <Run Text="{DynamicResource GameType:}" />
-                                            <Run Foreground="{DynamicResource ActivitySolidColorBrush}" Text="{Binding InstanceModloader, Mode=OneWay}" />
-                                        </TextBlock>
-
-                                        <!--  TODO: Hide when instance is not installed  -->
-                                        <TextBlock
-                                            Margin="8,0,0,0"
-                                            FontSize="13"
-                                            FontWeight="Medium"
-                                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                            TextWrapping="WrapWithOverflow">
-                                            <!--  TODO: Language Key Here  -->
-                                            <Run Text="{DynamicResource PlayedTime:}" />
-                                            <Run Foreground="{DynamicResource ActivitySolidColorBrush}" Text="{Binding PlayerPlayedTime, Mode=OneWay}" />
-                                        </TextBlock>
-                                    </StackPanel>
+                                    <ItemsControl Margin="8,0,0,0" ItemsSource="{Binding AdditionalInfo}" />
                                 </StackPanel>
 
                                 <Grid

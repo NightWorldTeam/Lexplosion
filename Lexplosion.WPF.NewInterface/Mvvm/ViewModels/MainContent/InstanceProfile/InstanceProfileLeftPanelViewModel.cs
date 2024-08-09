@@ -11,9 +11,32 @@ using System.Windows.Media;
 using System.Threading;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.WPF.NewInterface.Core.Notifications;
+using System;
+using Lexplosion.Logic.Management;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile
 {
+    public class InstanceFieldInfo
+    {
+        public string Name { get; }
+        public string Value { get; }
+
+        public InstanceFieldInfo(string name, string value)
+        {
+            Name = name;
+            Value = value;
+        }
+    }
+
+    public class InstanceFieldInfo<T> : InstanceFieldInfo
+    {
+        private readonly InstanceFieldInfo _info;
+
+        public InstanceFieldInfo(string name, T value, Func<T, string>? converter = null) 
+            : base(name, converter == null ? value.ToString() : converter(value)) 
+        { }
+    }
+
     public class InstanceProfileLeftPanelViewModel : LeftPanelViewModel
     {
         private InstanceModelBase _instanceModel;
@@ -41,6 +64,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
 
         private ObservableCollection<FrameworkElementModel> _instanceActions = new ObservableCollection<FrameworkElementModel>();
         public IEnumerable<FrameworkElementModel> InstanceActions { get => _instanceActions; }
+
+
+        private ObservableCollection<InstanceFieldInfo> _additionalInfo = []; 
+        public IEnumerable<InstanceFieldInfo> AdditionalInfo { get => _additionalInfo; }
 
 
         #endregion Properties
@@ -98,6 +125,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             _instanceModel.DataChanged += OnInstanceModelDataChanged;
 
             UpdateFrameworkElementModels();
+            GenerateAdditionalInfo();
         }
 
 
@@ -105,6 +133,65 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
 
 
         #region Private Methods
+
+
+        private void GenerateAdditionalInfo() 
+        {
+            _additionalInfo.Clear();
+            _additionalInfo.Add(new InstanceFieldInfo<MinecraftVersion>("Version:", _instanceModel.GameVersion));
+            _additionalInfo.Add(new InstanceFieldInfo("GameType:", _instanceModel.InstanceData.Modloader.ToString()));
+
+            if (_instanceModel.IsInstalled)
+            {
+                _additionalInfo.Add(new InstanceFieldInfo<long>("PlayedTime:", 100000, SecondsToPlayTime));
+            }
+            else 
+            {
+                _additionalInfo.Add(new InstanceFieldInfo<int>("DownloadCount:", 100000, DownloadsCountToString));
+            }
+        }
+
+
+        string SecondsToPlayTime(long seconds)
+        {
+            if (seconds >= 3600)
+            {
+                return $"{seconds / 3600}ч";
+            }
+            return $"{seconds / 60}мин";
+        }
+
+        string DownloadsCountToString(int number) 
+        {
+            if (number < 10000)
+                return number.ToString();
+
+            var size = (int)Math.Log10(number);
+
+            switch (size)
+            {
+                //k
+                case 4:
+                    {
+                        return (number / 1000).ToString("##.###k");
+                    }
+                case 5:
+                    {
+                        return (number / 100).ToString("###.###k");
+                    }
+                // M
+                case 7:
+                    {
+                        return (number / 1000000).ToString("##.##M");
+                    }
+                case 8:
+                    {
+                        return (number / 100000).ToString("###.##M");
+                    }
+                default:
+                    return (number / Math.Pow(10, size)).ToString("#.##M");
+            }
+        }
 
 
         private void OnNameChanged()
@@ -127,6 +214,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             App.Current.Dispatcher.Invoke(() => 
             { 
                 UpdateFrameworkElementModels();
+                GenerateAdditionalInfo();
             });
         }
 

@@ -229,6 +229,7 @@
     <s:String x:Key="Version:">Версия игры:</s:String>
     <s:String x:Key="GameType:">Тип игры:</s:String>
     <s:String x:Key="PlayedTime:">Наиграно:</s:String>
+    <s:String x:Key="DownloadCount:">Скачиваний:</s:String>
 
     <!--    -->
     <!--  Instance Profile Addons  -->
