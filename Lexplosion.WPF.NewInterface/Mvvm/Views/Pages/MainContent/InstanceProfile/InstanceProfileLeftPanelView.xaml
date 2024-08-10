@@ -218,22 +218,34 @@
                             <!--  TODO:  add ProgressBar  -->
                             <core:If Condition="{Binding IsInstalled, UpdateSourceTrigger=PropertyChanged}">
                                 <core:If.True>
-                                    <Button
+                                    <controls:AdvancedButton
+                                        Height="32"
                                         HorizontalAlignment="Stretch"
-                                        HorizontalContentAlignment="Center"
                                         VerticalContentAlignment="Center"
-                                        Command="{Binding PlayCommand}">
-                                        <TextBlock extensions:TextBlock.TextByKey="Play" FontWeight="Medium" />
-                                    </Button>
+                                        Command="{Binding PlayCommand}"
+                                        FontSize="12"
+                                        FontWeight="Medium"
+                                        IconData="{StaticResource PDPlay}"
+                                        IconPadding="0,9,0,9"
+                                        Style="{StaticResource DefaultAdvancedButton}"
+                                        Text="{DynamicResource Play}" />
                                 </core:If.True>
                                 <core:If.False>
-                                    <Button
+                                    <controls:OneStageInstallButton
                                         HorizontalAlignment="Stretch"
                                         HorizontalContentAlignment="Center"
                                         VerticalContentAlignment="Center"
-                                        Command="{Binding InstallCommand}">
-                                        <TextBlock extensions:TextBlock.TextByKey="Download" FontWeight="Medium" />
-                                    </Button>
+                                        Command="{Binding InstallCommand}"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource BrandColorForegroundSolidColorBrush}"
+                                        ProgressValue="{Binding ProgressValue}">
+                                        <TextBlock
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            extensions:TextBlock.TextByKey="Download"
+                                            FontWeight="Medium"
+                                            Foreground="{DynamicResource BrandColorForegroundSolidColorBrush}" />
+                                    </controls:OneStageInstallButton>
                                 </core:If.False>
                             </core:If>
 
@@ -253,6 +265,8 @@
 
                                 <controls:DropdownMenu
                                     Background="{DynamicResource PrimarySolidColorBrush}"
+                                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                    BorderThickness="1"
                                     PopupPlacement="Bottom"
                                     PopupVerticalOffset="5">
                                     <ItemsControl x:Name="Buttons" ItemsSource="{Binding InstanceActions}" />

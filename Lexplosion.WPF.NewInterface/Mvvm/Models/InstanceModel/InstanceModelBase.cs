@@ -6,7 +6,6 @@ using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Notifications;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
@@ -167,6 +166,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         public InstanceSource Source { get => _instanceClient.Type; }
         public string TotalDonwloads { get; private set; }
 
+        public InstanceData PageData { get; private set; }
+
         public bool IsLaunched { get; private set; }
         public bool IsInstalled { get => _instanceClient.IsInstalled; }
         public bool InLibrary { get => _instanceClient.InLibrary; }
@@ -261,7 +262,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 
             Runtime.TaskRun(() =>
             {
-                TotalDonwloads = _instanceClient.GetFullInfo().TotalDownloads.ToString();
+                PageData = _instanceClient.GetFullInfo();
+                TotalDonwloads = PageData.TotalDownloads.ToString();
                 OnPropertyChanged(nameof(TotalDonwloads));
             });
         }
@@ -385,7 +387,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         /// </summary>
         public void OpenFolder()
         {
-            Process.Start("explorer", _instanceClient.GetDirectoryPath());
+            System.Diagnostics.Process.Start("explorer", _instanceClient.GetDirectoryPath());
         }
 
         /// <summary>

@@ -42,7 +42,10 @@
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}"
                         CornerRadius="{TemplateBinding CornerRadius}">
-                        <Grid Background="Transparent" ShowGridLines="False">
+                        <Grid
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            Background="Transparent"
+                            ShowGridLines="False">
 
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -51,10 +54,7 @@
 
                             <!--  Icon  -->
                             <Border Padding="{TemplateBinding IconPadding}">
-                                <Viewbox
-                                    x:Name="PATH_Icon"
-                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                                <Viewbox x:Name="PATH_Icon" VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
                                     <Path Fill="{TemplateBinding Foreground}" Stretch="Fill" />
                                 </Viewbox>
                             </Border>
@@ -66,7 +66,8 @@
                                 VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
                                 <TextBlock
                                     x:Name="PATH_Text"
-                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                    Margin="16,0,0,0"
+                                    FontSize="{TemplateBinding FontSize}"
                                     Foreground="{TemplateBinding Foreground}" />
                             </Border>
 

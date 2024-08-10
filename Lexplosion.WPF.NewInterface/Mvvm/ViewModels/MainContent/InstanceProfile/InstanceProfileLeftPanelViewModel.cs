@@ -70,6 +70,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         public IEnumerable<InstanceFieldInfo> AdditionalInfo { get => _additionalInfo; }
 
 
+        public int ProgressValue 
+        {
+            get; private set;
+        }
+
+
         #endregion Properties
 
 
@@ -121,6 +127,24 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             _instanceModel.GameVersionChanged += OnVersionChanged;
             _instanceModel.ModloaderChanged += OnModloaderChanged;
             _instanceModel.StateChanged += OnStateChanged;
+            _instanceModel.DownloadProgressChanged += (type, progressArgs) =>
+            {
+                // TODO: сделать прогресс бар для кнопки запуска.
+                if (type == StageType.Java)
+                {
+                    ProgressValue = progressArgs.Procents / 3;
+                }
+                else if (type == StageType.Prepare)
+                {
+                    ProgressValue = 33 + progressArgs.Procents / 3;
+                }
+                else 
+                {
+                    ProgressValue = 66 + progressArgs.Procents / 3;
+                }
+
+                OnPropertyChanged(nameof(ProgressValue));
+            };
 
             _instanceModel.DataChanged += OnInstanceModelDataChanged;
 
@@ -147,7 +171,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             }
             else 
             {
-                _additionalInfo.Add(new InstanceFieldInfo<int>("DownloadCount:", 100000, DownloadsCountToString));
+                _additionalInfo.Add(new InstanceFieldInfo<int>("DownloadCount:", 100000000, DownloadsCountToString));
             }
         }
 
