@@ -262,7 +262,7 @@ namespace Lexplosion.Logic.Network.TURN
             return true;
         }
 
-        public IEnumerable<ClientDesc> WaitSendAvailable()
+        public IReadOnlyCollection<ClientDesc> WaitSendAvailable()
         {
             throw new NotImplementedException();
         }

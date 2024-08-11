@@ -146,7 +146,7 @@ namespace Lexplosion.Logic.Network.SMP
             }
         }
 
-        public IEnumerable<ClientDesc> WaitSendAvailable()
+        public IReadOnlyCollection<ClientDesc> WaitSendAvailable()
         {
             if (_availableSend.Count > 0) return _availableSend;
             _sendAvailableWaiting.WaitOne();

@@ -12,6 +12,7 @@ using LumiSoft.Net.STUN.Client;
 namespace Lexplosion.Logic.Network
 {
     using SMP;
+    using System.Drawing;
     using TURN;
 
     abstract class NetworkServer
@@ -40,8 +41,8 @@ namespace Lexplosion.Logic.Network
         public event Action<string> DisconnectedUser;
 
         // тут хранится список клиентов. В одном соответсвие uuid и ip, в другом наоборот
-        private ConcurrentDictionary<string, IPEndPoint> _uuidPointPair = new ConcurrentDictionary<string, IPEndPoint>();
-        private ConcurrentDictionary<IPEndPoint, string> _pointUuidPair = new ConcurrentDictionary<IPEndPoint, string>();
+        private ConcurrentDictionary<string, IPEndPoint> _uuidPointPair = new();
+        private ConcurrentDictionary<IPEndPoint, string> _pointUuidPair = new();
 
         protected HashSet<string> KickedClients = new HashSet<string>(); //тут хранятся выкинутые клиенты
 
@@ -499,6 +500,13 @@ namespace Lexplosion.Logic.Network
                     KickedClients.Remove(uuid);
                 }
             }
+        }
+
+        protected ClientDesc ClientDescByUUID(string uuid)
+        {
+            _uuidPointPair.TryGetValue(UUID, out IPEndPoint point);
+            if (point == null) return ClientDesc.Empty;
+            return new ClientDesc(uuid, point);
         }
 
         private void MaintainingConnection()

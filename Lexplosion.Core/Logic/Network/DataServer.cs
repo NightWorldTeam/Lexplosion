@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using NightWorld.Collections.Concurrent;
+using System.Net;
 
 namespace Lexplosion.Logic.Network
 {
@@ -283,6 +284,20 @@ namespace Lexplosion.Logic.Network
                     SendingBlock.Release();
                 }
             }
+        }
+
+        /// <summary>
+        /// Возвращает id файла, который скачивает пользователь с указанным UUID
+        /// </summary>
+        /// <param name="userUUID">UUID пользователя, у которго нужно получить id скачиваемого файла </param>
+        /// <returns>Id скачиваемого файла. Если пользователь не найден, то null.</returns>
+        public string GetDownloadedFileId(string userUUID)
+        {
+            ClientDesc client = ClientDescByUUID(userUUID);
+            ClientsData.TryGetValue(client, out ClientData value);
+
+            if (value == null) return null;
+            return value.FileId;
         }
 
         public bool AddFile(string fileName, string id)

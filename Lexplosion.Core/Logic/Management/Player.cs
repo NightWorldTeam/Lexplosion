@@ -6,7 +6,7 @@ using Lexplosion.Logic.Objects.Nightworld;
 
 namespace Lexplosion.Logic.Management
 {
-    public partial class Player : VMBase
+    public class Player : VMBase
     {
         public enum UserAction
         {

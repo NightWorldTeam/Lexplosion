@@ -7,6 +7,8 @@ using Newtonsoft.Json;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Network;
 using Lexplosion.Global;
+using Lexplosion.Logic.Management;
+using System.Collections.Concurrent;
 
 namespace Lexplosion.Logic.FileSystem
 {
@@ -17,14 +19,19 @@ namespace Lexplosion.Logic.FileSystem
         private static string _confirmWord;
         private static int _distributionsCount = 0;
         private static object _createLock = new object();
-        private static HashSet<FileDistributor> _distributors = new();
+        private static ConcurrentDictionary<string, FileDistributor> _distributors = new();
         private static bool _isWork = true;
         private static List<string> _files = new();
 
         private Thread _informingThread;
         private AutoResetEvent _waitingInforming;
+        private ConcurrentDictionary<string, Player> _connectedUsers = new();
+        private string _fileId;
 
         public event Action OnClosed;
+
+        public static event Action<Player> UserConnected;
+        public static event Action<Player> UserDisconnected;
 
         public static string SharesDir
         {
@@ -36,6 +43,7 @@ namespace Lexplosion.Logic.FileSystem
 
         private FileDistributor(string fileId, string UUID, string sessionToken)
         {
+            _fileId = fileId;
             _waitingInforming = new AutoResetEvent(false);
 
             _informingThread = new Thread(() =>
@@ -81,6 +89,37 @@ namespace Lexplosion.Logic.FileSystem
 
                     var serverData = new ControlServerData(LaunсherSettings.ServerIp);
                     _dataServer = new DataServer(privateKey, _confirmWord, userUUID, userSessionToken, serverData);
+
+                    _dataServer.ConnectingUser += (string uuid) =>
+                    {
+                        var player = new Player(uuid,
+                            () =>
+                            {
+                                _dataServer.KickClient(uuid);
+                            },
+                            () =>
+                            {
+                                _dataServer.UnkickClient(uuid);
+                            }
+                        );
+
+                        string fileId = _dataServer.GetDownloadedFileId(userUUID);
+                        _distributors.TryGetValue(fileId, out FileDistributor value);
+                        if (value == null) return;
+
+                        value._connectedUsers[uuid] = player;
+                        UserConnected?.Invoke(player);
+                    };
+
+                    _dataServer.DisconnectedUser += (string uuid) =>
+                    {
+                        string fileId = _dataServer.GetDownloadedFileId(userUUID);
+                        _distributors.TryGetValue(fileId, out FileDistributor value);
+                        if (value == null) return;
+
+                        value._connectedUsers.TryRemove(uuid, out Player player);
+                        UserDisconnected?.Invoke(player);
+                    };
                 }
 
                 //Получаем хэш файла
@@ -113,7 +152,7 @@ namespace Lexplosion.Logic.FileSystem
                 _distributionsCount++;
 
                 var dstr = new FileDistributor(hash, userUUID, userSessionToken);
-                _distributors.Add(dstr);
+                _distributors[dstr._fileId] = dstr;
 
                 return dstr;
             }
@@ -135,7 +174,7 @@ namespace Lexplosion.Logic.FileSystem
 
                 if (_isWork)
                 {
-                    _distributors.Remove(this);
+                    _distributors.TryRemove(this._fileId, out _);
 
                     ThreadPool.QueueUserWorkItem(delegate (object state)
                     {
@@ -149,11 +188,12 @@ namespace Lexplosion.Logic.FileSystem
         {
             _isWork = false;
 
+            // TODO: тут пихнуть какой-нибудь лукер, ибо в _distributors может null присвоится во время работы CreateDistribution
             if (_distributors != null)
             {
                 foreach (var distributor in _distributors)
                 {
-                    distributor.Stop();
+                    distributor.Value.Stop();
                 }
 
                 _distributors = null;

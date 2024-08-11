@@ -11,7 +11,7 @@ namespace Lexplosion.Logic.Network
         ClientDesc Receive(out byte[] data);
         void Send(byte[] inputData, ClientDesc clientData);
 
-        IEnumerable<ClientDesc> WaitSendAvailable();
+        IReadOnlyCollection<ClientDesc> WaitSendAvailable();
 
         event ClientPointHandle ClientClosing;
 
