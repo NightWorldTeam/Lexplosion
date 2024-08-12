@@ -1423,6 +1423,11 @@ namespace Lexplosion.Logic.Management.Instances
 
         public static InstanceClient Import(FileReceiver reciver, Action<ImportResult> callback)
         {
+            return Import(reciver, callback, (_) => { });
+        }
+
+        public static InstanceClient Import(FileReceiver reciver, Action<ImportResult> callback, Action<DownloadShareState> stateHandler)
+        {
             var client = new InstanceClient(CreateSourceFactory(InstanceSource.Local))
             {
                 Name = reciver.Name,
@@ -1435,9 +1440,30 @@ namespace Lexplosion.Logic.Management.Instances
 
             Lexplosion.Runtime.TaskRun(delegate ()
             {
+                reciver.StateChanged += () =>
+                {
+                    var state = reciver.State;
+                    DownloadShareState resState = DownloadShareState.InQueue;
+                    switch (state)
+                    {
+                        case FileReceiver.DistributionState.InQueue:
+                            resState = DownloadShareState.InQueue;
+                            break;
+                        case FileReceiver.DistributionState.InConnect:
+                            resState = DownloadShareState.InConnect;
+                            break;
+                        case FileReceiver.DistributionState.InProcess:
+                            resState = DownloadShareState.PostProcessing;
+                            break;
+                    }
+
+                    stateHandler(resState);
+                };
+
                 FileRecvResult result = WithDirectory.ReceiveFile(reciver, out string file);
                 if (result == FileRecvResult.Successful)
                 {
+                    stateHandler(DownloadShareState.PostProcessing);
                     callback(Import(in client, file));
                 }
                 else

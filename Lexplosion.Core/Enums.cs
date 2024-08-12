@@ -300,10 +300,12 @@
         Successful
     }
 
-    public enum DistributionState
+    public enum DownloadShareState
     {
         InQueue,
-        InProcess
+        InConnect,
+        InProcess,
+        PostProcessing
     }
 
     public enum FileRecvResult

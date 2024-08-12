@@ -1,9 +1,11 @@
 ﻿using Lexplosion.Global;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
+using Lexplosion.Tools;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Lexplosion.Logic.FileSystem
 {
@@ -60,30 +62,44 @@ namespace Lexplosion.Logic.FileSystem
             return data;
         }
 
+        private static KeySemaphore<string> _downloadSemaphore = new();
+
+
+        public enum DistributionState
+        {
+            InQueue,
+            InConnect,
+            InProcess
+        }
+
         #endregion
 
         private string _ownerLogin;
         private string _ownerUUID;
         private string _fileId;
 
-        private DistributionState _state;
         private DataClient _dataClient = null;
         private DistributionData _info;
 
         public event Action<double> ProcentUpdate;
         public event Action<double> SpeedUpdate;
-        public event Action<DistributionState> StateChanged;
+        public event Action StateChanged;
+
+        private DistributionState _state;
+        public DistributionState State
+        {
+            get => _state;
+            private set
+            {
+                _state = value; StateChanged?.Invoke();
+            }
+        }
 
         private object _locker = new object();
 
         public string OwnerLogin
         {
             get => _ownerLogin;
-        }
-
-        public DistributionState GetState
-        {
-            get => _state;
         }
 
         public string Name
@@ -123,31 +139,41 @@ namespace Lexplosion.Logic.FileSystem
 
         public FileRecvResult StartDownload(string fileName)
         {
-            lock (_locker)
+            try
             {
-                var publicKey = Cryptography.DecodeRsaParams(_info.PublicRsaKey);
-                var serverData = new ControlServerData(LaunсherSettings.ServerIp);
+                State = DistributionState.InQueue;
 
-                _dataClient?.Close();
-                _dataClient = new DataClient(publicKey, _info.ConfirmWord, serverData, fileName, _fileId);
-                _dataClient.SpeedUpdate += SpeedUpdate;
-                _dataClient.ProcentUpdate += ProcentUpdate;
-
-                lock (_dataClientInitLocker)
+                _downloadSemaphore.WaitOne(_ownerUUID);
+                lock (_locker)
                 {
-                    bool result = _dataClient.Initialization(_myUUID, _mySessionToken, _ownerUUID);
-                    if (!result)
+                    var publicKey = Cryptography.DecodeRsaParams(_info.PublicRsaKey);
+                    var serverData = new ControlServerData(LaunсherSettings.ServerIp);
+
+                    _dataClient?.Close();
+                    _dataClient = new DataClient(publicKey, _info.ConfirmWord, serverData, fileName, _fileId);
+                    _dataClient.SpeedUpdate += SpeedUpdate;
+                    _dataClient.ProcentUpdate += ProcentUpdate;
+
+                    lock (_dataClientInitLocker)
                     {
-                        _dataClient.Close();
-                        return FileRecvResult.ConnectionClose;
+                        State = DistributionState.InConnect;
+                        bool result = _dataClient.Initialization(_myUUID, _mySessionToken, _ownerUUID);
+                        if (!result)
+                        {
+                            _dataClient.Close();
+                            return FileRecvResult.ConnectionClose;
+                        }
                     }
+
+                    State = DistributionState.InProcess;
                 }
 
-                _state = DistributionState.InProcess;
-                StateChanged?.Invoke(_state);
+                return _dataClient?.WorkWait() ?? FileRecvResult.Canceled;
             }
-
-            return _dataClient?.WorkWait() ?? FileRecvResult.Canceled;
+            finally
+            {
+                _downloadSemaphore.Release(_ownerUUID);
+            }
         }
     }
 }
