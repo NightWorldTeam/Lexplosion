@@ -584,6 +584,11 @@ namespace Lexplosion.Logic.Management.Instances
             }
         }
 
+        public static InstancesGroup CreateGroup(string name)
+        {
+            return InstancesGroup.AllInstances;
+        }
+
         public static List<InstancesGroup> GetInstancesGroups()
         {
             var result = new List<InstancesGroup>();
