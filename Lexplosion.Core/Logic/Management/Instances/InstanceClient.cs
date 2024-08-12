@@ -584,30 +584,16 @@ namespace Lexplosion.Logic.Management.Instances
             }
         }
 
-        public static InstancesGroup CreateGroup(string name)
-        {
-            return InstancesGroup.AllInstances;
-        }
-
-        public static List<InstancesGroup> GetInstancesGroups()
-        {
-            var result = new List<InstancesGroup>();
-            result.Add(InstancesGroup.AllInstances);
-            result.Add(InstancesGroup.UngroupedInstances);
-
-            return result;
-        }
-
         /// <summary>
         /// Возвращает список модпаков для библиотеки.
         /// </summary>
         /// <returns>Список установленных модпаков.</returns>
-        public static List<InstanceClient> GetInstalledInstances(InstancesGroup group)
+        public static List<InstanceClient> GetInstalledInstances(InstanceGroup group)
         {
             return new List<InstanceClient>(_installedInstances.Values);
         }
 
-        public static List<InstanceClient> GetInstalledInstances() => GetInstalledInstances(InstancesGroup.AllInstances);
+        public static List<InstanceClient> GetInstalledInstances() => GetInstalledInstances(InstanceGroup.AllInstances);
 
         /// <summary>
         /// Возвращает список модпаков для каталога.
@@ -1642,12 +1628,12 @@ namespace Lexplosion.Logic.Management.Instances
             SaveSettings(settings);
         }
 
-        public void AddToGroup(InstancesGroup group)
+        public void AddToGroup(InstanceGroup group)
         {
 
         }
 
-        public void RemoveFromGroup(InstancesGroup group)
+        public void RemoveFromGroup(InstanceGroup group)
         {
 
         }
