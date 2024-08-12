@@ -7,6 +7,7 @@ using System.Threading;
 using System.Runtime.CompilerServices;
 using System.Linq;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NightWorld.Tools.Minecraft.NBT.StorageFiles;
 using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
@@ -16,7 +17,6 @@ using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Management.Sources;
 using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Network;
-using Newtonsoft.Json.Linq;
 using Lexplosion.Logic.Management.Accounts;
 
 namespace Lexplosion.Logic.Management.Instances
@@ -584,20 +584,25 @@ namespace Lexplosion.Logic.Management.Instances
             }
         }
 
+        public static List<InstancesGroup> GetInstancesGroups()
+        {
+            var result = new List<InstancesGroup>();
+            result.Add(InstancesGroup.AllInstances);
+            result.Add(InstancesGroup.UngroupedInstances);
+
+            return result;
+        }
+
         /// <summary>
         /// Возвращает список модпаков для библиотеки.
         /// </summary>
         /// <returns>Список установленных модпаков.</returns>
-        public static List<InstanceClient> GetInstalledInstances()
+        public static List<InstanceClient> GetInstalledInstances(InstancesGroup group)
         {
-            var list = new List<InstanceClient>();
-            foreach (InstanceClient instance in _installedInstances.Values)
-            {
-                list.Add(instance);
-            }
-
-            return list;
+            return new List<InstanceClient>(_installedInstances.Values);
         }
+
+        public static List<InstanceClient> GetInstalledInstances() => GetInstalledInstances(InstancesGroup.AllInstances);
 
         /// <summary>
         /// Возвращает список модпаков для каталога.
@@ -1630,6 +1635,16 @@ namespace Lexplosion.Logic.Management.Instances
             settings.AutoLoginServer = autoLogin ? server.Address : null;
 
             SaveSettings(settings);
+        }
+
+        public void AddToGroup(InstancesGroup group)
+        {
+
+        }
+
+        public void RemoveFromGroup(InstancesGroup group)
+        {
+
         }
     }
 }

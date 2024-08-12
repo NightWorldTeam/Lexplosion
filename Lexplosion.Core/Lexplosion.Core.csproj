@@ -96,6 +96,7 @@
     <Compile Include="Logic\Management\Delegates.cs" />
     <Compile Include="Logic\Management\Installers\FreeSourceInstanceInstallManager.cs" />
     <Compile Include="Logic\Management\Instances\FreeInstance.cs" />
+    <Compile Include="Logic\Management\Instances\InstancesGroup.cs" />
     <Compile Include="Logic\Management\MinecraftVersion.cs" />
     <Compile Include="Logic\Management\Sources\CurseforgeSource.cs" />
     <Compile Include="Logic\Management\Sources\FreeSource.cs" />
