@@ -564,9 +564,10 @@ namespace Lexplosion.Logic.Management
             _activeAccount?.SetInGameStatus(GameClientName);
 
             _processDataReceived?.Invoke("Выполняется запуск игры...");
-            _processDataReceived?.Invoke(command);
+            _processDataReceived?.Invoke($"\"{_javaPath}\" {command}");
 
             Runtime.DebugWrite("Run javaPath " + _javaPath);
+            Runtime.DebugWrite($"Minecraft run command: \"{_javaPath}\" {command}");
 
             bool gameVisible = false;
 

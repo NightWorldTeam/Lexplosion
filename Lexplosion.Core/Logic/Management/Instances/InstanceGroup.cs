@@ -9,7 +9,7 @@ namespace Lexplosion.Logic.Management.Instances
     public class InstanceGroup
     {
         #region static
-        public static InstanceGroup AllInstances { get; } = new InstanceGroup();
+        public static InstanceGroup AllInstances { get; } = new InstanceGroup("AllInstances", 0);
         public static InstanceGroup UngroupedInstances { get; } = new InstanceGroup("UngroupedInstances", 1);
 
         private static HashSet<InstanceGroup> _allGroups = [InstanceGroup.AllInstances, InstanceGroup.UngroupedInstances];
@@ -24,22 +24,21 @@ namespace Lexplosion.Logic.Management.Instances
         public string Name { get; private set; }
         public uint Id { get; private set; }
 
-        public InstanceGroup(string name, uint id)
+        private InstanceGroup(string name, uint id)
         {
             Name = name;
             Id = id;
         }
 
-        public InstanceGroup()
+        public InstanceGroup(string name)
         {
-            Name = "AllInstances";
-            Id = 0;
-        }
+            Name = name;
 
-        public void Save()
-        {
+            Id = (uint)new Random().Next();
+
             _allGroups.Add(this);
         }
+
 
         public override bool Equals(object obj)
         {
