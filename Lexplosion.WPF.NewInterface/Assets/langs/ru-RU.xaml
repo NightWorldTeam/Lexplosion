@@ -405,4 +405,10 @@
     <!--  Friends DropdownMenu  -->
     <s:String x:Key="Unfriend">Удалить из друзей</s:String>
     <s:String x:Key="ViewProfile">Открыть профиль</s:String>
+
+
+    <!--  Instance Share  -->
+    <s:String x:Key="Share">Раздача</s:String>
+    <s:String x:Key="ActiveShares">Активные раздачи</s:String>
+
 </ResourceDictionary>

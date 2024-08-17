@@ -92,8 +92,11 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Controls\AdvancedToggleButton\AdvancedToggleButton.cs" />
+    <Compile Include="Controls\AdvancedWrapPanel\AdvancedWrapPanel.cs" />
     <Compile Include="Controls\ToastMessage\ToastMessage.cs" />
+    <Compile Include="Core\Converters\MultiValueConverter\StyleSelectorConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\ImagePathValidateConverter.cs" />
+    <Compile Include="Core\Converters\ValueConverters\RowElementCountConverter.cs" />
     <Compile Include="Core\Notifications\IActionNotification.cs" />
     <Compile Include="Core\Notifications\INotificable.cs" />
     <Compile Include="Core\Notifications\INotification.cs" />
@@ -102,10 +105,41 @@
     <Compile Include="Core\Notifications\NotificationType.cs" />
     <Compile Include="Core\Notifications\NotifyCallback.cs" />
     <Compile Include="Core\Notifications\SimpleNotification.cs" />
+    <Compile Include="Core\Objects\InstanceDistribution.cs" />
+    <Compile Include="Core\Objects\InstanceGroup.cs" />
+    <Compile Include="Core\Objects\SelecteableItem.cs" />
+    <Compile Include="Core\Objects\Test.cs" />
     <Compile Include="Core\ViewModel\ILimitedAccess.cs" />
+    <Compile Include="Extensions\StyleSelectors\LastRowItemWrapPanelStyleSelector.cs" />
+    <Compile Include="Mvvm\Models\InstanceControllers\InstanceSharesController.cs" />
+    <Compile Include="Mvvm\Models\InstanceTransfer\DistributedInstance.cs" />
+    <Compile Include="Mvvm\Models\InstanceTransfer\InstanceDistributionModel.cs" />
+    <Compile Include="Mvvm\Models\InstanceTransfer\InstanceExportModel.cs" />
+    <Compile Include="Mvvm\ViewModels\ModalFactory\ModalFactoryBase.cs" />
+    <Compile Include="Mvvm\ViewModels\ModalFactory\ModalInstanceCreatorFactory.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\ConfirmActionViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\Modal\GroupFactory\GroupFactoryViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\ActiveSharesViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\InstanceDistributionViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\InstanceShareLayoutViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\InstanceShareViewModel.cs" />
     <Compile Include="Mvvm\Views\Modal\ConfirmAction\ConfirmActionView.xaml.cs">
       <DependentUpon>ConfirmActionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Views\Modal\GroupFactory\GroupFactoryView.xaml.cs">
+      <DependentUpon>GroupFactoryView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Views\Modal\InstanceTransfer\ActiveSharesView.xaml.cs">
+      <DependentUpon>ActiveSharesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Views\Modal\InstanceTransfer\InstanceDistributionView.xaml.cs">
+      <DependentUpon>InstanceDistributionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Views\Modal\InstanceTransfer\InstanceShareLayoutView.xaml.cs">
+      <DependentUpon>InstanceShareLayoutView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Views\Modal\InstanceTransfer\InstanceShareView.xaml.cs">
+      <DependentUpon>InstanceShareView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Mvvm\Views\Windows\ConsoleWindow.xaml.cs">
       <DependentUpon>ConsoleWindow.xaml</DependentUpon>
@@ -448,11 +482,31 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Mvvm\Views\Modal\GroupFactory\GroupFactoryView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Mvvm\Views\Modal\InstanceTransfer\ActiveSharesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Mvvm\Views\Modal\InstanceTransfer\InstanceDistributionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Mvvm\Views\Modal\InstanceTransfer\InstanceExportView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Mvvm\Views\Modal\InstanceTransfer\InstanceImportView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Mvvm\Views\Modal\InstanceTransfer\InstanceShareLayoutView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Mvvm\Views\Modal\InstanceTransfer\InstanceShareView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -823,6 +877,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Core\Extensions\" />
+    <Folder Include="Core\StyleSelectors\" />
     <Folder Include="Mvvm\ViewModels\Authorization\OAuth2\" />
     <Folder Include="Mvvm\ViewModels\InstanceForm\" />
   </ItemGroup>

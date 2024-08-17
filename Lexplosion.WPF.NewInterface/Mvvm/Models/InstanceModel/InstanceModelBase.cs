@@ -29,7 +29,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         State
     }
 
-    public class InstanceModelBase : ViewModelBase
+    public class InstanceModelBase : ViewModelBase, IEquatable<InstanceClient>
     {
         private readonly InstanceClient _instanceClient;
         private readonly LaunchModel LaunchModel;
@@ -175,7 +175,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         public bool HasAvailableUpdate { get => _instanceClient.UpdateAvailable; }
 
 
-        public MinecraftVersion GameVersion { get => _instanceClient.GameVersion; }
+        public MinecraftVersion GameVersion { get => _instanceClient.GameVersion ?? new MinecraftVersion("1.20.1"); }
 
         public void UpdateInLibrary()
         {
@@ -228,7 +228,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 
             if (instanceClient.Type == InstanceSource.Local)
             {
-                var s = _instanceClient.GetFullInfo;
+                //var s = _instanceClient.GetFullInfo;
                 /*                         
                  * InstanceSource !
                  * GameVersion !
@@ -262,8 +262,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 
             Runtime.TaskRun(() =>
             {
-                PageData = _instanceClient.GetFullInfo();
-                TotalDonwloads = PageData.TotalDownloads.ToString();
+                //PageData = _instanceClient.GetFullInfo();
+                TotalDonwloads = "0"; //PageData.TotalDownloads.ToString();
                 OnPropertyChanged(nameof(TotalDonwloads));
             });
         }
@@ -587,6 +587,16 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         private void OnStateClientChanged()
         {
             //StateChanged?.Invoke();
+        }
+
+        public bool Equals(InstanceClient other)
+        {
+            if (other == null || other == null) 
+            {
+                return false;
+            }
+
+            return _instanceClient == other;
         }
 
 

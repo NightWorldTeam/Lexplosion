@@ -52,6 +52,7 @@
     <DataTemplate DataType="{x:Type mainmenuvm:CatalogViewModel}">
         <mainmenuview:CatalogView />
     </DataTemplate>
+
     <DataTemplate DataType="{x:Type mainmenuvm:LibraryViewModel}">
         <mainmenuview:LibraryView />
     </DataTemplate>
@@ -110,6 +111,9 @@
     <DataTemplate DataType="{x:Type modalvm:ConfirmActionViewModel}">
         <modalviews:ConfirmActionView />
     </DataTemplate>
+    <DataTemplate DataType="{x:Type modalvm:GroupFactoryViewModel}">
+        <modalviews:GroupFactoryView />
+    </DataTemplate>
 
     <!--  Addons Repository  -->
     <DataTemplate DataType="{x:Type addonsrepositoriesvm:ModrinthRepositoryViewModel}">
@@ -160,9 +164,28 @@
         <instanceTransferView:InstanceExportView />
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type instanceTransferViewModel:InstanceShareLayoutViewModel}">
+        <instanceTransferView:InstanceShareLayoutView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type instanceTransferViewModel:InstanceShareViewModel}">
+        <instanceTransferView:InstanceShareView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type instanceTransferViewModel:ActiveSharesViewModel}">
+        <instanceTransferView:ActiveSharesView />
+    </DataTemplate>
+
     <DataTemplate DataType="{x:Type instanceTransferViewModel:InstanceImportViewModel}">
         <instanceTransferView:InstanceImportView />
     </DataTemplate>
+
+    <DataTemplate DataType="{x:Type instanceTransferViewModel:InstanceDistributionViewModel}">
+        <instanceTransferView:InstanceDistributionView />
+    </DataTemplate>
+
+    <!--  Instance Addons  -->
+
 
     <DataTemplate DataType="{x:Type addonsrepositoriesvm:LexplosionAddonsRepositoryViewModel}">
         <addonsrepositoriesviews:AddonsRepository />

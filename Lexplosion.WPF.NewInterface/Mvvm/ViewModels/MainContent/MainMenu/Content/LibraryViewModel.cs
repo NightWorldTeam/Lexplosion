@@ -12,6 +12,7 @@ using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal;
 using Lexplosion.WPF.NewInterface.Core.Objects.TranslatableObjects;
 using Lexplosion.Logic.Objects;
 using Lexplosion.WPF.NewInterface.Core.Notifications;
+using Lexplosion.WPF.NewInterface.Core.Objects;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 {
@@ -31,9 +32,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
 
         private bool _isCategoriesListOpen;
-        public bool IsCategoriesListOpen 
+        public bool IsCategoriesListOpen
         {
-            get => _isCategoriesListOpen; set 
+            get => _isCategoriesListOpen; set
             {
                 _isCategoriesListOpen = value;
                 OnPropertyChanged();
@@ -75,7 +76,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         private RelayCommand _openInstanceFactory;
         public ICommand OpenInstanceFactoryCommand
         {
-            get => RelayCommand.GetCommand(ref _openInstanceFactory, () => 
+            get => RelayCommand.GetCommand(ref _openInstanceFactory, () =>
             {
                 _modalNavigationStore.OpenModalPageByType(typeof(InstanceFactoryViewModel));
             });
@@ -83,9 +84,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
 
         private RelayCommand _testCommand;
-        public ICommand TestCommand 
+        public ICommand TestCommand
         {
-            get => RelayCommand.GetCommand<ITranslatableObject<InstanceSource>>(ref _testCommand, (o) => 
+            get => RelayCommand.GetCommand<ITranslatableObject<InstanceSource>>(ref _testCommand, (o) =>
             {
                 if (Model.FilterPanel.SelectedSource.Value == o.Value)
                     return;
@@ -96,16 +97,16 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
 
         private RelayCommand _selectCategoryCommand;
-        public ICommand SelectCategoryCommand 
+        public ICommand SelectCategoryCommand
         {
-            get => RelayCommand.GetCommand<CategoryBase>(ref _selectCategoryCommand, (category) => 
+            get => RelayCommand.GetCommand<CategoryBase>(ref _selectCategoryCommand, (category) =>
             {
                 if (Model.FilterPanel.SelectedCategories.Contains(category))
-                { 
+                {
                     Model.FilterPanel.SelectedCategories.Remove(category);
                 }
                 else
-                { 
+                {
                     Model.FilterPanel.SelectedCategories.Add(category);
                 }
 
@@ -113,7 +114,31 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             });
         }
 
-   
+
+        private RelayCommand _openGroupCommand;
+        public ICommand OpenGroupCommand 
+        {
+            get => RelayCommand.GetCommand<InstanceGroup>(ref _openGroupCommand, Model.SelectGroup);
+        }
+
+        private RelayCommand _closeGroupCommand;
+        public ICommand CloseGroupCommand
+        {
+            get => RelayCommand.GetCommand(ref _closeGroupCommand, () => Model.SelectGroup(null));
+        }
+
+
+        private RelayCommand _openGroupFactory;
+        public ICommand OpenGroupFactoryCommand 
+        {
+            get => RelayCommand.GetCommand(ref _closeGroupCommand, () =>
+            {
+                _modalNavigationStore.Open(new GroupFactoryViewModel());
+            });
+        }
+
+
+
         #endregion Commands
 
 

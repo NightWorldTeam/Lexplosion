@@ -98,6 +98,15 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
         }
 
 
+        public InstanceModelBase? GetByInstanceClient(InstanceClient? instanceClient) 
+        {
+            if (instanceClient == null)
+                return null;
+
+            return _instances.FirstOrDefault(i => i.Equals(instanceClient));
+        }
+
+
         #endregion Public Methods
     }
 }

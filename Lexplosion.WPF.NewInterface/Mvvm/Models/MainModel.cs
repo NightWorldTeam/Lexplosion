@@ -28,6 +28,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models
 
         public IInstanceController CatalogController { get; }
         public IInstanceController LibraryController { get; }
+        public InstanceSharesController InstanceSharesController { get; }
 
 
         public INotificationService NotificationService { get; } = new NotificationService();
@@ -36,6 +37,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models
         {
             CatalogController = new CatalogController(Export, NotificationService.Notify);
             LibraryController = new LibraryController(Export, NotificationService.Notify);
+            InstanceSharesController = new InstanceSharesController();
 
             OnPropertyChanged(nameof(NotificationService));
         }
@@ -43,22 +45,26 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models
         /// <summary>
         /// Запускает модальное окно с экспортом сборки.
         /// </summary>
-        /// <param name="_instanceClient"></param>
-        public void Export(InstanceClient _instanceClient)
+        /// <param name="instanceClient"></param>
+        public void Export(InstanceClient instanceClient)
         {
             // TODO: Засунить метод Export и HashSet ExportingInstances в отдельный контроллер.
             // Ибо в будущем всё равно делать Раздачу, которая работает по такому-же принципу.
-            var exportVM = new InstanceExportViewModel(_instanceClient);
+            var exportVM = new InstanceExportViewModel(instanceClient);
+            var instanceShare = new InstanceShareViewModel(instanceClient, InstanceSharesController, NotificationService.Notify);
+            var activeShares = new ActiveSharesViewModel(InstanceSharesController, NotificationService.Notify);
 
             var leftmenu = new LeftMenuControl(new ModalLeftMenuTabItem[]
             {
-                new ModalLeftMenuTabItem(0, "Export", "Download", exportVM, true, true)
+                new ModalLeftMenuTabItem(0, "Export", "Download", exportVM, true, true),
+                new ModalLeftMenuTabItem(1, "Share", "Share", instanceShare, true, false),
+                new ModalLeftMenuTabItem(2, "ActiveShares", "ActiveShares", activeShares, true, false)
             });
 
             leftmenu.LoaderPlaceholderKey = "ExportProcessActive";
 
             // Если сборка экспортируется.
-            if (ExportingInstances.Contains(_instanceClient))
+            if (ExportingInstances.Contains(instanceClient))
             {
                 leftmenu.IsProcessActive = true;
             }
@@ -70,11 +76,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models
                 // Иначе удалем из него.
                 if (isExporting)
                 {
-                    ExportingInstances.Add(_instanceClient);
+                    ExportingInstances.Add(instanceClient);
                 }
                 else
                 {
-                    ExportingInstances.Remove(_instanceClient);
+                    ExportingInstances.Remove(instanceClient);
                 }
 
                 leftmenu.IsProcessActive = isExporting;

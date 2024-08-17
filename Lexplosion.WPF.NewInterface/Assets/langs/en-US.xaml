@@ -410,7 +410,13 @@
     <s:String x:Key="CreateNightWorldAccount">Create a NightWorld account</s:String>
     <s:String x:Key="LoginWithYourNightWorldAccount">Login with your NightWorld account</s:String>
 
-    <!--    -->
+    <!--  Friends More  -->
     <s:String x:Key="Unfriend">Unfriend</s:String>
     <s:String x:Key="ViewProfile">View Profile</s:String>
+
+
+    <!--  Instance Share  -->
+    <s:String x:Key="Share">Shares</s:String>
+    <s:String x:Key="ActiveShares">Active Shares</s:String>
+
 </ResourceDictionary>

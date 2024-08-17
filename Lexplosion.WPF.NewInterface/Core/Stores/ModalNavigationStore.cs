@@ -1,5 +1,5 @@
 ﻿using Lexplosion.WPF.NewInterface.Core.Modal;
-using Lexplosion.WPF.NewInterface.Mvvm.ViewModels;
+using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.ModalFactory;
 using System;
 using System.Collections.Generic;
 
@@ -9,7 +9,6 @@ namespace Lexplosion.WPF.NewInterface.Stores
     {
         private static ModalNavigationStore _modalNavigationStore;
         public static ModalNavigationStore Instance { get => _modalNavigationStore ?? new ModalNavigationStore(); }
-
 
 
         private ModalNavigationStore()
@@ -40,7 +39,7 @@ namespace Lexplosion.WPF.NewInterface.Stores
             CurrentViewModel.CloseCommandExecutedEvent += Close;
         }
 
-        public void RegisterAbstractFactory(Type type, ModalAbstractFactory factory) 
+        public void RegisterAbstractFactory(Type type, ModalFactoryBase factory) 
         {
             if (_modalAbstractFactoriesByType.ContainsKey(type))
                 throw new ArgumentException($"{type.ToString()} уже существует в словаре абстрактных фабрик модального окна");

@@ -1,5 +1,4 @@
 ﻿using DiscordRPC;
-using Lexplosion.Core.Tools.Notification;
 using Lexplosion.Global;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Accounts;
@@ -15,8 +14,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Net;
+using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace Lexplosion.WPF.NewInterface
@@ -149,11 +151,11 @@ namespace Lexplosion.WPF.NewInterface
             //(App.Current.MainWindow as SplashWindow).SmoothClosing();
             App.Current.MainWindow = mainWindow;
             App.Current.Run(mainWindow);
-/*
-            _app.MainWindow = new MainWindow();//new TestWindow();
-            //_app.MainWindow = new TestWindow();
-            _app.MainWindow.Show();
-            _app.Run(_app.MainWindow);*/
+            /*
+                        _app.MainWindow = new MainWindow();//new TestWindow();
+                        //_app.MainWindow = new TestWindow();
+                        _app.MainWindow.Show();
+                        _app.Run(_app.MainWindow);*/
         }
 
         private static void InitializedSystem()
@@ -172,7 +174,7 @@ namespace Lexplosion.WPF.NewInterface
             Runtime.ПереходВРежимЗавершения += CloseMainWindow;
             Runtime.OnExitEvent += ExitHandler;
             Runtime.OnUpdateStart += () => App.Current.Dispatcher.Invoke(() =>
-            {   
+            {
                 //_splashWindow.ChangeLoadingBoardPlaceholder(true);
             });
 
@@ -266,17 +268,19 @@ namespace Lexplosion.WPF.NewInterface
             _app.Dispatcher.Invoke(SetMainWindow);
         }
 
-        private static void InitializedAccountSystem() 
+        private static void InitializedAccountSystem()
         {
-            var latestActiveAccount = Account.ActiveAccount;
-            if (latestActiveAccount != null)
-            {
-                var code = latestActiveAccount.Auth();
-                if (code != AuthCode.Successfully)
+            Runtime.TaskRun(() => {
+                var latestActiveAccount = Account.ActiveAccount;
+                if (latestActiveAccount != null)
                 {
+                    var code = latestActiveAccount.Auth();
+                    if (code != AuthCode.Successfully)
+                    {
 
+                    }
                 }
-            }
+            });
         }
 
         private static DiscordRpcClient InitDiscordApp()
@@ -389,7 +393,7 @@ namespace Lexplosion.WPF.NewInterface
         private static void ResourcesDictionariesRegister()
         {
             // Languages //
-            _app.Resources.MergedDictionaries.Add(new ResourceDictionary() 
+            _app.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
                 Source = new Uri(AssetsPath + "LanguagesRegister.xaml")
             });

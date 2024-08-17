@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace Lexplosion.WPF.NewInterface.Extensions.StyleSelectors
+namespace Lexplosion.WPF.NewInterface.Extensions
 {
     public class LastChildStyleSelector : StyleSelector
     {

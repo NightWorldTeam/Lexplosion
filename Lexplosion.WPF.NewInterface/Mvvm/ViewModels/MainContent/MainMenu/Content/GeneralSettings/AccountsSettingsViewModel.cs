@@ -264,7 +264,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
                     var authResult = acc.Auth();
                     if (authResult == AuthCode.Successfully)
                         Account.SaveAll();
-                    else 
+                    else if (acc.AccountType == AccountType.Microsoft && (authResult == AuthCode.TokenError || authResult == AuthCode.SessionExpired)) 
+                    {
+                        System.Diagnostics.Process.Start("https://login.live.com/oauth20_authorize.srf?client_id=ed0f84c7-4bf4-4a97-96c7-8c82b1e4ea0b&response_type=code&redirect_uri=https://night-world.org/requestProcessing/microsoftOAuth.php&scope=XboxLive.signin%20offline_access&state=NOT_NEEDED");
+                    }
+                    else
                     {
                         // TODO: Error Handler
                     }
@@ -292,3 +296,5 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         }
     }
 }
+
+

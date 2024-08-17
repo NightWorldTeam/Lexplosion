@@ -174,32 +174,57 @@
                     ItemsSource="{Binding Items}"
                     KeyboardNavigation.IsTabStop="False" />
 
-                <Border
+                <ToggleButton
                     x:Name="HelpButton"
                     Grid.Row="2"
                     Width="32"
-                    Height="32"
+                    Height="32" Cursor="Hand"
                     HorizontalAlignment="Right"
-                    CornerRadius="100">
+                    Background="Transparent"
+                    FocusVisualStyle="{x:Null}">
+                    <ToggleButton.Template>
+                        <ControlTemplate TargetType="{x:Type ToggleButton}">
 
-                    <Border.Background>
-                        <SolidColorBrush Opacity="0.1" Color="Black" />
-                    </Border.Background>
+                            <Border
+                                x:Name="HelpButtonBorder"
+                                Background="Transparent"
+                                CornerRadius="100">
 
-                    <Viewbox
-                        Width="16"
-                        Height="16"
-                        Stretch="Fill">
-                        <Path
-                            extensions:Path.StringKeyData="Help"
-                            Fill="{DynamicResource SecondaryForegroundSolidColorBrush}"
-                            Stretch="Fill" />
-                    </Viewbox>
-                </Border>
+                                <Viewbox
+                                    Width="16"
+                                    Height="16"
+                                    Stretch="Fill">
+                                    <Path
+                                        extensions:Path.StringKeyData="Help"
+                                        Fill="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                        Stretch="Fill" />
+                                </Viewbox>
+                            </Border>
+
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="HelpButtonBorder" Property="Background">
+                                        <Setter.Value>
+                                            <SolidColorBrush Opacity="0.1" Color="Black" />
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter TargetName="HelpButtonBorder" Property="Background">
+                                        <Setter.Value>
+                                            <SolidColorBrush Opacity="0.2" Color="Black" />
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </ToggleButton.Template>
+                </ToggleButton>
 
                 <Popup
                     AllowsTransparency="True"
-                    IsOpen="True"
+                    IsOpen="{Binding IsChecked, ElementName=HelpButton}"
                     Placement="Top"
                     PlacementRectangle="0,-16,0,0"
                     PlacementTarget="{Binding ElementName=HelpButton}"

@@ -66,7 +66,6 @@
                                 VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
                                 <TextBlock
                                     x:Name="PATH_Text"
-                                    Margin="16,0,0,0"
                                     FontSize="{TemplateBinding FontSize}"
                                     Foreground="{TemplateBinding Foreground}" />
                             </Border>

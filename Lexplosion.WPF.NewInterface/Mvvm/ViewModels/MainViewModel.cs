@@ -2,70 +2,19 @@
 using Lexplosion.Logic.Network;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Modal;
-using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Stores;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal;
 using System.Collections.Generic;
 using System.Windows.Media;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu;
-using Lexplosion.Logic.Management.Instances;
 using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Mvvm.Models;
 using System;
-using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer;
+using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers;
+using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.ModalFactory;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
 {
-    public abstract class ModalAbstractFactory 
-    {
-        public abstract IModalViewModel Create();
-    }
-
-    public sealed class ModalInstanceCreatorFactory : ModalAbstractFactory
-    {
-        private readonly Action<InstanceClient> _addToLibrary;
-        private readonly Action<InstanceClient> _removeFromLibrary;
-
-        public ModalInstanceCreatorFactory(Action<InstanceClient> addToLibrary, Action<InstanceClient> removeFromLibrary)
-        {
-            _addToLibrary = addToLibrary;
-            _removeFromLibrary = removeFromLibrary;
-        }
-
-        public override IModalViewModel Create()
-        {
-            return new LeftMenuControl(
-                new ModalLeftMenuTabItem[3]
-                {
-                    new ModalLeftMenuTabItem()
-                    {
-                        IconKey = "AddCircle",
-                        TitleKey = "Create",
-                        IsEnable = true,
-                        IsSelected = true,
-                        Content = new InstanceFactoryViewModel(_addToLibrary)
-                    },
-                    new ModalLeftMenuTabItem()
-                    {
-                        IconKey = "PlaceItem",
-                        TitleKey = "Import",
-                        IsEnable = true,
-                        IsSelected = false,
-                        Content = new InstanceImportViewModel(_addToLibrary, _removeFromLibrary)
-                    },
-                    new ModalLeftMenuTabItem()
-                    {
-                        IconKey = "DownloadCloud",
-                        TitleKey = "Distributions",
-                        IsEnable = true,
-                        IsSelected = false
-                    }
-                }
-                );
-        }
-    }
-
-
     public sealed class MainViewModel : VMBase
     {
         public static event Action AllVersionsLoaded;
@@ -128,33 +77,20 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
         public MainViewModel()
         {
             Model = new MainModel();
-            OnPropertyChanged(nameof(Model));
             // так как грузится в отдельном потоке, может загрузится позже чем создатся экземпляр класса InstanceFactory!!!
             ModalNavigationStore.Instance.CurrentViewModelChanged += Instance_CurrentViewModelChanged;
             NavigationStore.CurrentViewModelChanged += NavigationStore_CurrentViewModelChanged;
 
 
             // Register Modal Window Contents
-            ModalNavigationStore.Instance.RegisterAbstractFactory(typeof(InstanceFactoryViewModel), new ModalInstanceCreatorFactory((str) => Model.LibraryController.Add(str), Model.LibraryController.Remove));
-
-
-            //ModalNavigationStore.Close();
-            //ModalNavigationStore.Open(new DialogBoxViewModel("Library", "Protection", (obj) => { }, (obj) => { }));
-            //ModalNavigationStore.Close();
+            ModalNavigationStore.Instance.RegisterAbstractFactory(
+                typeof(InstanceFactoryViewModel), 
+                new ModalInstanceCreatorFactory(Model.LibraryController as LibraryController, Model.InstanceSharesController)
+            );
 
             var mainMenuLayout = new MainMenuLayoutViewModel(NavigationStore, ModalNavigationStore, Model);
             var toMainMenu = new NavigateCommand<ViewModelBase>(NavigationStore, () => mainMenuLayout);
             toMainMenu?.Execute(null);
-            //var toAuthForms = new NavigateCommand<ViewModelBase>(NavigationStore, () => new AuthorizationMenuViewModel(NavigationStore, toMainMenu));
-
-            //toAuthForms.Execute(null);
-
-            //NavigationStore.CurrentViewModel = new ModrinthAddonPageViewModel(null);
-            //NavigationStore.CurrentViewModel = new CurseforgeRepositoryViewModel(InstanceClient.GetInstalledInstances()[0].GetBaseData);
-            //new MainMenuLayoutViewModel(NavigationStore); 
-            //NavigationStore.CurrentViewModel = new InstanceProfileLayoutViewModel(null, null, LibraryController.Instance.Instances.Last());
-            //new InstanceModelBase(InstanceClient.GetOutsideInstances( InstanceSource.Modrinth, 2, 0, new IProjectCategory[] { new SimpleCategory() { Name = "All", Id = "-1", ClassId = "", ParentCategoryId = "" }}, "", CfSortField.Featured, "1.19.4")[1])); //new MainMenuLayoutViewModel(); //new ModrinthRepositoryViewModel(AddonType.Mods, ClientType.Fabric, "1.19.4");
-            //NavigationStore.Content = new AuthorizationMenuViewModel(NavigationStore);
         }
 
 
