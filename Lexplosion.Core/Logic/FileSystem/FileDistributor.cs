@@ -90,9 +90,9 @@ namespace Lexplosion.Logic.FileSystem
                     var serverData = new ControlServerData(LaunсherSettings.ServerIp);
                     _dataServer = new DataServer(privateKey, _confirmWord, userUUID, userSessionToken, serverData);
 
-                    _dataServer.ConnectingUser += (string uuid) =>
+                    _dataServer.ClientStartedDownloading += (string uuid, string fileId) =>
                     {
-                        var player = new Player(uuid,
+                        var user = new Player(uuid,
                             () =>
                             {
                                 _dataServer.KickClient(uuid);
@@ -103,22 +103,20 @@ namespace Lexplosion.Logic.FileSystem
                             }
                         );
 
-                        string fileId = _dataServer.GetDownloadedFileId(userUUID);
-                        _distributors.TryGetValue(fileId, out FileDistributor value);
-                        if (value == null) return;
+                        _distributors.TryGetValue(fileId, out FileDistributor distributor);
+                        if (distributor == null) return;
 
-                        value._connectedUsers[uuid] = player;
-                        value.UserConnected?.Invoke(player);
+                        distributor._connectedUsers[uuid] = user;
+                        distributor.UserConnected?.Invoke(user);
                     };
 
-                    _dataServer.DisconnectedUser += (string uuid) =>
+                    _dataServer.ClientFinishedDownloading += (string uuid, string fileId) =>
                     {
-                        string fileId = _dataServer.GetDownloadedFileId(userUUID);
-                        _distributors.TryGetValue(fileId, out FileDistributor value);
-                        if (value == null) return;
+                        _distributors.TryGetValue(fileId, out FileDistributor distributor);
+                        if (distributor == null) return;
 
-                        value._connectedUsers.TryRemove(uuid, out Player player);
-                        value.UserDisconnected?.Invoke(player);
+                        distributor._connectedUsers.TryRemove(uuid, out Player user);
+                        distributor.UserDisconnected?.Invoke(user);
                     };
                 }
 

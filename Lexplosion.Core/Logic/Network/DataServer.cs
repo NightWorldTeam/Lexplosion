@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using NightWorld.Collections.Concurrent;
 using System.Net;
+using System.Security.Policy;
 
 namespace Lexplosion.Logic.Network
 {
@@ -45,6 +46,9 @@ namespace Lexplosion.Logic.Network
 
         private object _abortLoocker = new object();
         private object _authorizeLocker = new object();
+
+        public event Action<string, string> ClientStartedDownloading;
+        public event Action<string, string> ClientFinishedDownloading;
 
         public DataServer(RSAParameters privateRsaKey, string confirmWord, string uuid, string sessionToken, ControlServerData server) : base(uuid, sessionToken, SERVER_TYPE, true, server)
         {
@@ -134,9 +138,17 @@ namespace Lexplosion.Logic.Network
                 {
                     foreach (ClientDesc point in toDisconect)
                     {
+                        string clientUuid = UuidByClientDesc(point);
+                        string fileId = ClientsData[point].FileId;
+
                         //удаляем клиента, но не вызываем закрытия соединения что бы последние пакеты не потерялись.
                         //Позже клиент сам оборвет сединение. Или же оно закроется само через некоторое время
                         ClientAbort(point);
+
+                        ThreadPool.QueueUserWorkItem((_) =>
+                        {
+                            ClientFinishedDownloading?.Invoke(clientUuid, fileId);
+                        });
                     }
 
                     toDisconect = new List<ClientDesc>();
@@ -236,6 +248,11 @@ namespace Lexplosion.Logic.Network
 
                                         WaitClient.Set();
                                         Runtime.DebugConsoleWrite("Авторизировал");
+
+                                        ThreadPool.QueueUserWorkItem((_) =>
+                                        {
+                                            ClientStartedDownloading?.Invoke(UuidByClientDesc(point), profileId);
+                                        });
                                     }
                                     else
                                     {

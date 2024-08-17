@@ -509,6 +509,13 @@ namespace Lexplosion.Logic.Network
             return new ClientDesc(uuid, point);
         }
 
+        protected string UuidByClientDesc(ClientDesc clientDesk)
+        {
+            if (clientDesk.IsEmpty) return null;
+            _pointUuidPair.TryGetValue(clientDesk.Point, out string uuid);
+            return uuid;
+        }
+
         private void MaintainingConnection()
         {
             try
@@ -531,10 +538,10 @@ namespace Lexplosion.Logic.Network
             try
             {
                 _pointUuidPair.TryRemove(clientData.Point, out string clientUuid);
-                if (clientUuid != null) _uuidPointPair.TryRemove(clientUuid, out _);
 
                 if (clientUuid != null)
                 {
+                    _uuidPointPair.TryRemove(clientUuid, out _);
                     ThreadPool.QueueUserWorkItem((object obj) =>
                     {
                         DisconnectedUser?.Invoke(clientUuid);

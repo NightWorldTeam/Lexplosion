@@ -12,7 +12,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
     {
         private readonly DispatcherTimer _timer = new();
         private readonly FileDistributor _fileDistributor;
-        private readonly ObservableCollection<Player> _тянучи;
+        private readonly ObservableCollection<Player> _тянучи = new();
 
 
         #region Properties
@@ -47,12 +47,18 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
 
             _fileDistributor.UserConnected += (user) =>
             {
-                _тянучи.Add(user);
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    _тянучи.Add(user);
+                });
             };
 
             _fileDistributor.UserDisconnected += (user) =>
             {
-                _тянучи.Remove(user);
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    _тянучи.Remove(user);
+                });
             };
 
             _timer.Interval = TimeSpan.FromMinutes(1);
@@ -65,7 +71,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
             ActivityTime += 1;
         }
 
-        public void Stop() 
+        public void Stop()
         {
             _timer.Stop();
             _fileDistributor?.Stop();
