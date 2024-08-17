@@ -30,8 +30,8 @@ namespace Lexplosion.Logic.FileSystem
 
         public event Action OnClosed;
 
-        public static event Action<Player> UserConnected;
-        public static event Action<Player> UserDisconnected;
+        public event Action<Player> UserConnected;
+        public event Action<Player> UserDisconnected;
 
         public static string SharesDir
         {
@@ -108,7 +108,7 @@ namespace Lexplosion.Logic.FileSystem
                         if (value == null) return;
 
                         value._connectedUsers[uuid] = player;
-                        UserConnected?.Invoke(player);
+                        value.UserConnected?.Invoke(player);
                     };
 
                     _dataServer.DisconnectedUser += (string uuid) =>
@@ -118,7 +118,7 @@ namespace Lexplosion.Logic.FileSystem
                         if (value == null) return;
 
                         value._connectedUsers.TryRemove(uuid, out Player player);
-                        UserDisconnected?.Invoke(player);
+                        value.UserDisconnected?.Invoke(player);
                     };
                 }
 
