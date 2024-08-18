@@ -3,6 +3,8 @@ using System.IO;
 using System.Collections.Concurrent;
 using System;
 using System.Threading;
+using System.Net;
+using System.Security.Cryptography.X509Certificates;
 using Lexplosion.Global;
 using Lexplosion.Tools;
 using Lexplosion.Logic.Objects;
@@ -11,9 +13,8 @@ using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Management.Installers;
 using Lexplosion.Logic.Management.Sources;
-using System.Net;
-using System.Security.Cryptography.X509Certificates;
 using Lexplosion.Logic.Management.Accounts;
+using System.Text;
 
 namespace Lexplosion.Logic.Management
 {
@@ -114,7 +115,7 @@ namespace Lexplosion.Logic.Management
             get => _instanceId;
         }
 
-        public LaunchGame(string instanceId, Settings generalSettings, Settings instanceSettings, Account activeAccount, Account launchAccount,  IInstanceSource source, CancellationToken updateCancelToken)
+        public LaunchGame(string instanceId, Settings generalSettings, Settings instanceSettings, Account activeAccount, Account launchAccount, IInstanceSource source, CancellationToken updateCancelToken)
         {
             if (_classInstance == null)
                 _classInstance = this;
@@ -281,41 +282,20 @@ namespace Lexplosion.Logic.Management
             }
 
             string jvmArgs = data.VersionFile.JvmArguments ?? string.Empty;
-            jvmArgs = jvmArgs.Replace("${version_file}", data.VersionFile.MinecraftJar.name);
-            jvmArgs = jvmArgs.Replace("${library_directory}", gamePath + "libraries");
 
             string nwClientMinecraftArgs = string.Empty;
             string nwClientJvmArgs = string.Empty;
+            NightWorldClientData.ComlexArgument[] nwClientComplexArguments = null;
             if (isNwClient)
             {
                 var nwClientData = data.VersionFile.NightWorldClientData;
-
-                switch (data.VersionFile.ModloaderType)
+                NightWorldClientData.Arguments arguments = nwClientData.GetByClientType(data.VersionFile.ModloaderType);
+                if (arguments != null)
                 {
-                    case ClientType.Vanilla:
-                        nwClientMinecraftArgs = nwClientData.VanillaArgs.Minecraft ?? string.Empty;
-                        nwClientJvmArgs = nwClientData.VanillaArgs.Jvm ?? string.Empty;
-                        break;
-                    case ClientType.Quilt:
-                    case ClientType.Fabric:
-                        nwClientMinecraftArgs = nwClientData.FabricArgs.Minecraft ?? string.Empty;
-                        nwClientJvmArgs = nwClientData.FabricArgs.Jvm ?? string.Empty;
-                        break;
-                    case ClientType.Forge:
-                        nwClientMinecraftArgs = nwClientData.ForgeArg.Minecraft ?? string.Empty;
-                        nwClientJvmArgs = nwClientData.ForgeArg.Jvm ?? string.Empty;
-                        break;
-                    default:
-                        nwClientMinecraftArgs = string.Empty;
-                        nwClientJvmArgs = string.Empty;
-                        break;
+                    nwClientMinecraftArgs = arguments.Minecraft ?? string.Empty;
+                    nwClientJvmArgs = arguments.Jvm ?? string.Empty;
+                    nwClientComplexArguments = arguments.Complex;
                 }
-
-                nwClientMinecraftArgs = nwClientMinecraftArgs.Replace("${mainClass}", mainClass);
-                nwClientMinecraftArgs = nwClientMinecraftArgs.Replace("${appearanceElementsDir}", gamePath + "appearanceElements");
-
-                nwClientJvmArgs = nwClientJvmArgs.Replace("${mainClass}", mainClass);
-                nwClientJvmArgs = nwClientJvmArgs.Replace("${appearanceElementsDir}", gamePath + "appearanceElements");
             }
 
             string autologin = string.Empty;
@@ -418,6 +398,30 @@ namespace Lexplosion.Logic.Management
                 command += autologin;
                 command += additionalInstallerArgumentsAfter;
             }
+
+            if (nwClientComplexArguments != null)
+            {
+                foreach (var arg in nwClientComplexArguments)
+                {
+                    if (arg?.InsertValue == null || arg.InsertPlace == null) continue;
+
+                    if (arg.InsertType == NightWorldClientData.ComplexArgumentType.After)
+                    {
+                        command = command.Replace(arg.InsertPlace, arg.InsertPlace + arg.InsertValue);
+                    }
+                    else if (arg.InsertType == NightWorldClientData.ComplexArgumentType.Before)
+                    {
+                        command = command.Replace(arg.InsertPlace, arg.InsertValue + arg.InsertPlace);
+                    }
+                }
+            }
+
+            command = command.Replace("${version_file}", data.VersionFile.MinecraftJar.name);
+            command = command.Replace("${library_directory}", gamePath + "libraries");
+            command = command.Replace("${mainClass}", mainClass);
+            command = command.Replace("${appearanceElementsDir}", gamePath + "appearanceElements");
+            command = command.Replace("${mainClass}", mainClass);
+            command = command.Replace("${appearanceElementsDir}", gamePath + "appearanceElements");
 
             //TODO: сделать функционал для автоматического коннекта - --server 192.168.1.114 --port 55538 --quickPlayMultiplayer "192.168.1.114:55538";
 

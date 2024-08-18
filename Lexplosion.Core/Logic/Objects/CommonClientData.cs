@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
+using static Lexplosion.Logic.Objects.CommonClientData.NightWorldClientData;
 
 namespace Lexplosion.Logic.Objects.CommonClientData
 {
@@ -243,6 +244,24 @@ namespace Lexplosion.Logic.Objects.CommonClientData
 
     public class NightWorldClientData
     {
+        public enum ComplexArgumentType
+        {
+            [JsonProperty("after")]
+            After,
+            [JsonProperty("before")]
+            Before
+        }
+
+        public class ComlexArgument
+        {
+            [JsonProperty("insertType")]
+            public ComplexArgumentType InsertType;
+            [JsonProperty("insertPlace")]
+            public string InsertPlace;
+            [JsonProperty("insertValue")]
+            public string InsertValue;
+        }
+
         public class Arguments
         {
             [JsonProperty("jvm")]
@@ -250,6 +269,9 @@ namespace Lexplosion.Logic.Objects.CommonClientData
 
             [JsonProperty("minecraft")]
             public string Minecraft;
+
+            [JsonProperty("complex")]
+            public ComlexArgument[] Complex;
         }
 
         [JsonProperty("forgeArgs")]
@@ -263,6 +285,22 @@ namespace Lexplosion.Logic.Objects.CommonClientData
 
         [JsonProperty("mainClass")]
         public string MainClass;
+
+        public Arguments GetByClientType(ClientType clientType)
+        {
+            switch (clientType)
+            {
+                case ClientType.Vanilla:
+                    return VanillaArgs;
+                case ClientType.Quilt:
+                case ClientType.Fabric:
+                    return FabricArgs;
+                case ClientType.Forge:
+                    return ForgeArg;
+                default:
+                    return null;
+            }
+        }
     }
 
     /// <summary>
