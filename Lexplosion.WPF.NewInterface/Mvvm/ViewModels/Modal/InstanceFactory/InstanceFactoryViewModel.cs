@@ -36,7 +36,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
         /// <summary>
         /// Версия сборки
         /// </summary>
-        private MinecraftVersion _version = new MinecraftVersion("1.19.4");
+        private MinecraftVersion _version;
         public MinecraftVersion Version
         {
             get => _version; set

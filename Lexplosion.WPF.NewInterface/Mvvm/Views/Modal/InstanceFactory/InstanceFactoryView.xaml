@@ -8,7 +8,9 @@
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Modal"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:modal="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal"
     xmlns:objects="clr-namespace:Lexplosion;assembly=Lexplosion.Core"
+    d:DataContext="{d:DesignInstance Type=modal:InstanceFactoryViewModel}"
     mc:Ignorable="d">
     <Grid>
         <ScrollViewer
@@ -106,8 +108,7 @@
                                             HorizontalAlignment="Right"
                                             IsSynchronizedWithCurrentItem="True"
                                             ItemsSource="{Binding Model.GameVersions}"
-                                            SelectedIndex="0"
-                                            SelectedValue="{Binding Model.Version, UpdateSourceTrigger=PropertyChanged}"
+                                            SelectedItem="{Binding Model.Version, UpdateSourceTrigger=PropertyChanged}"
                                             Visibility="{Binding Model.IsGameVersionsAvaliable, Converter={converters:BooleanToVisibilityConverter}}" />
 
                                         <!--  Only version when GameVersions count = 0  -->
