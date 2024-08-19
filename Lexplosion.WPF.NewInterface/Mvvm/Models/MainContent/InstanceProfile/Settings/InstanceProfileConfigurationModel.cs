@@ -62,6 +62,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
             }
         }
 
+        public int SelectedVersionIndex { get; private set; }
+
         /// <summary>
         /// Показывать ли снапшоты в массиве GameVersions.
         /// </summary>
@@ -192,6 +194,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
             IsShowSnapshots = _instanceData.GameVersion.Type == MinecraftVersion.VersionType.Snapshot;
 
             Version = _instanceData.GameVersion ?? GameVersions[0];
+            SelectedVersionIndex = Array.IndexOf(GameVersions, Version);
 
             ModloaderManager = new ModloaderManager(GameExtension.Forge, Version);
 
@@ -283,11 +286,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
             _instanceData = _instanceModelBase.InstanceData;
             IsShowSnapshots = _instanceData.GameVersion.Type == MinecraftVersion.VersionType.Snapshot;
             Version = _instanceData.GameVersion ?? GameVersions[0];
+            SelectedVersionIndex = Array.IndexOf(GameVersions, Version);
             ClientType = _instanceData.Modloader;
             _isOptifine = _instanceData.OptifineVersion != null;
             OnPropertyChanged(nameof(_isOptifine));
             LoadInstanceDefaultExtension(ClientType);
             OnPropertyChanged(nameof(HasChanges));
+            OnPropertyChanged(nameof(SelectedVersionIndex));
         }
 
 

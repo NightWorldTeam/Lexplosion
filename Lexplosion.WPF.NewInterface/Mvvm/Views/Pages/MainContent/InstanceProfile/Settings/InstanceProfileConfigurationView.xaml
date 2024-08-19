@@ -6,9 +6,11 @@
     xmlns:converters="clr-namespace:Lexplosion.WPF.NewInterface.Core.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
+    xmlns:instanceprofile="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.InstanceProfile"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:objects="clr-namespace:Lexplosion;assembly=Lexplosion.Core"
+    d:DataContext="{d:DesignInstance Type=instanceprofile:InstanceProfileConfigurationViewModel}"
     mc:Ignorable="d">
 
     <UserControl.Resources>
@@ -66,7 +68,8 @@
                                         HorizontalAlignment="Right"
                                         IsSynchronizedWithCurrentItem="True"
                                         ItemsSource="{Binding Model.GameVersions}"
-                                        SelectedValue="{Binding Model.Version, UpdateSourceTrigger=PropertyChanged}"
+                                        SelectedIndex="{Binding Model.SelectedVersionIndex, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                        SelectedItem="{Binding Model.Version, UpdateSourceTrigger=PropertyChanged}"
                                         Visibility="{Binding Model.IsGameVersionsAvaliable, Converter={converters:BooleanToVisibilityConverter}}" />
 
                                     <!--  Only version when GameVersions count = 0  -->

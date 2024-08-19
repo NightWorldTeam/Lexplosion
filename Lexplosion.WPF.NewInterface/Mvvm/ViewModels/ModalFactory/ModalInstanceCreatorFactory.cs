@@ -21,16 +21,16 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.ModalFactory
 
         public override IModalViewModel Create()
         {
-            return new LeftMenuControl(
-                new ModalLeftMenuTabItem[3]
-                {
+            var leftMenuControl = new LeftMenuControl();
+
+            var menuItems = new ModalLeftMenuTabItem[3] {
                     new ModalLeftMenuTabItem()
                     {
                         IconKey = "AddCircle",
                         TitleKey = "Create",
                         IsEnable = true,
                         IsSelected = true,
-                        Content = new InstanceFactoryViewModel((i) => _libraryController.Add(i))
+                        Content = new InstanceFactoryViewModel((i) => _libraryController.Add(i), leftMenuControl.CloseCommand)
                     },
                     new ModalLeftMenuTabItem()
                     {
@@ -48,8 +48,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.ModalFactory
                         IsSelected = false,
                         Content = new InstanceDistributionViewModel(_libraryController, _shareController)
                     }
-                }
-            );
+            };
+
+            leftMenuControl.AddTabItems(menuItems, true);
+            return leftMenuControl;
         }
     }
 }

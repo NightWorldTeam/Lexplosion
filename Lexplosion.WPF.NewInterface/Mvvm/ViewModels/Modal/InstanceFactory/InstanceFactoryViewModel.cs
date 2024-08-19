@@ -209,7 +209,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
                 ClientType,
                 null,
                 ModloaderVersion,
-                OptifineVersion,
+                ClientType == ClientType.Vanilla && IsOptifine ? OptifineVersion : null,
                 false
                 );
         }
@@ -239,9 +239,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
         /// <param name="version">Версия игры</param>
         private void UpdateModloaderManager(ClientType type, MinecraftVersion version, string modloaderVersion = null)
         {
-            if (type == ClientType.Vanilla)
-                return;
-
             UpdateModloaderManager((GameExtension)type, version, modloaderVersion);
         }
 
@@ -253,9 +250,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
         /// <param name="version">Версия игры</param>
         private void UpdateModloaderManager(GameExtension type, MinecraftVersion version, string modloaderVersion = null)
         {
-            if (type == GameExtension.Optifine)
-                return;
-
             // (пере)Создаём менеджер
             ModloaderManager = new ModloaderManager(type, version);
 
@@ -381,7 +375,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
             get => RelayCommand.GetCommand(ref _changeInstanceClientTypeCommand, Model.ChangeGameType);
         }
 
-        public InstanceFactoryViewModel(Action<InstanceClient> addToLibrary) : base()
+        public InstanceFactoryViewModel(Action<InstanceClient> addToLibrary, ICommand closeModalMenu) : base()
         {
             IsCloseAfterCommandExecuted = true;
             Model = new InstanceFactoryModel();
@@ -389,6 +383,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
             ActionCommandExecutedEvent += (obj) => 
             {
                 addToLibrary(Model.CreateInstance());
+                closeModalMenu.Execute(obj);
             };
 
             Model.GameTypeChanged += UpdateSelectedGameType;

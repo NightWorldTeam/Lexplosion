@@ -47,15 +47,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
 
         public LeftMenuControl(IEnumerable<ModalLeftMenuTabItem> tabItems)
         {
-            foreach (var item in tabItems)
-            {
-                item.SelectedEvent += OnCurrentContentChanged;
-                _tabItems.Add(item);
-            }
-            if (_tabItems.Count > 0) 
-            {
-                OnCurrentContentChanged(_tabItems[0], true);
-            }
+            AddTabItems(tabItems, true);
         }
 
 
@@ -63,6 +55,21 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
 
 
         #region Public Methods
+
+
+        public void AddTabItems(IEnumerable<ModalLeftMenuTabItem> tabItems, bool isSelectFirst = false) 
+        {
+            foreach (var item in tabItems)
+            {
+                item.SelectedEvent += OnCurrentContentChanged;
+                _tabItems.Add(item);
+            }
+
+            if (_tabItems.Count > 0 && isSelectFirst)
+            {
+                OnCurrentContentChanged(_tabItems[0], true);
+            }
+        }
 
 
         public void AddTabItem(string titleKey, string iconKey, ViewModelBase content, bool isEnable = true)
