@@ -68,8 +68,7 @@
                                         HorizontalAlignment="Right"
                                         IsSynchronizedWithCurrentItem="True"
                                         ItemsSource="{Binding Model.GameVersions}"
-                                        SelectedIndex="{Binding Model.SelectedVersionIndex, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                                        SelectedItem="{Binding Model.Version, UpdateSourceTrigger=PropertyChanged}"
+                                        SelectedItem="{Binding Model.Version, Mode=TwoWay}"
                                         Visibility="{Binding Model.IsGameVersionsAvaliable, Converter={converters:BooleanToVisibilityConverter}}" />
 
                                     <!--  Only version when GameVersions count = 0  -->

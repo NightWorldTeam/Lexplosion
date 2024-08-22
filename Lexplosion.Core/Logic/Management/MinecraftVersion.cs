@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace Lexplosion.Logic.Management
@@ -18,7 +19,7 @@ namespace Lexplosion.Logic.Management
         [JsonIgnore]
         public bool IsNan { get => string.IsNullOrWhiteSpace(Id); }
         [JsonIgnore]
-        private int Weight { get; }
+        public int Weight { get; }
 
 
         #region Constructors
@@ -30,10 +31,21 @@ namespace Lexplosion.Logic.Management
             Type = VersionType.Release;
         }
 
-        public MinecraftVersion(string id, VersionType versionType)
+        public MinecraftVersion(string id, VersionType versionType, int weight = -4)
         {
             Id = id;
             Type = versionType;
+
+            if (weight != -4)
+            {
+                Weight = weight;
+                return;
+            }
+
+            if (!string.IsNullOrWhiteSpace(id))
+            {
+                Weight = CalcWeight(id);
+            }
         }
 
         public MinecraftVersion(string id)
@@ -43,6 +55,7 @@ namespace Lexplosion.Logic.Management
             {
                 if (!id.Contains("."))
                     Type = VersionType.Snapshot;
+
                 Weight = CalcWeight(id);
             }
 
@@ -152,13 +165,16 @@ namespace Lexplosion.Logic.Management
 
         private int CalcWeight(string id) 
         {
+            if (id == "All")
+                return -1;
+
             if (Type == VersionType.Release)
             {
                 return CalcWeight(id.Split('.'));
             }
             else 
             {
-                return CalcWeight(id.Replace("a", "").Split('w'));
+                return -2;// CalcWeight(id.Replace("a", "").Split('w'));
             }
         }
 
@@ -201,6 +217,15 @@ namespace Lexplosion.Logic.Management
             return !(mv1 < mv2);
         }
 
+        public static bool operator ==(MinecraftVersion mv1, MinecraftVersion mv2) 
+        {
+            return mv1?.Id == mv2?.Id;
+        }
+
+        public static bool operator !=(MinecraftVersion mv1, MinecraftVersion mv2)
+        {
+            return mv1.Id != mv2.Id;
+        }
 
         #endregion Math Operators
     }
