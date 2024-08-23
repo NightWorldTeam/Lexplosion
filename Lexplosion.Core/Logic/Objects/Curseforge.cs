@@ -244,6 +244,7 @@ namespace Lexplosion.Logic.Objects.Curseforge
         {
             public string projectID;
             public string fileID;
+            public bool required;
         }
 
         public McVersionInfo minecraft;

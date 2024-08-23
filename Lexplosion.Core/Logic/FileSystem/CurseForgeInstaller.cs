@@ -192,6 +192,12 @@ namespace Lexplosion.Logic.FileSystem
 
                             if (result.Value2 == DownloadAddonRes.Successful)
                             {
+                                if (!file.required && !result.Value1.IsDisable)
+                                {
+                                    File.Move(WithDirectory.GetInstancePath(instanceId) + result.Value1.ActualPath, WithDirectory.GetInstancePath(instanceId) + result.Value1.ActualPath + ".disable");
+                                    result.Value1.IsDisable = true;
+                                }
+
                                 downloadedCount++;
                                 AddonsDownloadEventInvoke(filesCount, downloadedCount);
 

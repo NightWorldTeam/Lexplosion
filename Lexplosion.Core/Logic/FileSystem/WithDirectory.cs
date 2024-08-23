@@ -21,7 +21,8 @@ namespace Lexplosion.Logic.FileSystem
     {
         // TODO: во всём WithDirectory я заменяю элементы адресов директорий через replace. Не знаю как на винде, но на линуксе могут появиться проблемы, ведь replace заменяет подстроки в строке, а не только конечную подстроку
         public static string DirectoryPath { get; private set; }
-        public static string InstancesPath { get => DirectoryPath + "/instances/"; }
+        public static string InstancesPath { get => $"{DirectoryPath}/instances/"; }
+        public static string GetInstancePath(string instanceId) => $"{InstancesPath}{instanceId}/";
 
         public static void Create(string path)
         {

@@ -2,7 +2,6 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
-using static Lexplosion.Logic.Objects.CommonClientData.NightWorldClientData;
 
 namespace Lexplosion.Logic.Objects.CommonClientData
 {
