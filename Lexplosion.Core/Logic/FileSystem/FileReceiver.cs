@@ -5,7 +5,6 @@ using Lexplosion.Tools;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Threading;
 
 namespace Lexplosion.Logic.FileSystem
 {

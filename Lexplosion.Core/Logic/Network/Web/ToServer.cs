@@ -14,36 +14,6 @@ namespace Lexplosion.Logic.Network
 {
     public static class ToServer
     {
-        public static JavaVersionManifest GetJavaVersions()
-        {
-            string answer = null;
-            try
-            {
-                try
-                {
-                    answer = HttpGet(LaunсherSettings.URL.JavaData);
-                }
-                catch (Exception ex)
-                {
-                    Runtime.DebugWrite(ex);
-                }
-
-                if (answer == null)
-                {
-                    string url = LaunсherSettings.URL.MirrorUrl + LaunсherSettings.URL.JavaData.Replace("https://", "");
-                    Runtime.DebugWrite("Try mirror, url " + url);
-                    answer = HttpGet(url);
-                }
-
-                return JsonConvert.DeserializeObject<JavaVersionManifest>(answer);
-            }
-            catch (Exception ex)
-            {
-                Runtime.DebugWrite("answer is null " + (answer == null) + ", exception: " + ex);
-                return null;
-            }
-        }
-
         /// <summary>
         /// Проверяет есть ли на сервере новая версия лаунчера
         /// </summary>

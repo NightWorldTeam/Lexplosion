@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.IO;
 using Lexplosion.Logic.Management;
 using Newtonsoft.Json;
@@ -234,7 +233,7 @@ namespace Lexplosion.Logic.Objects
         public abstract string Name { get; set; }
         public abstract string ClassId { get; set; }
         public abstract string ParentCategoryId { get; set; }
-        
+
         public override string ToString()
         {
             return Name;

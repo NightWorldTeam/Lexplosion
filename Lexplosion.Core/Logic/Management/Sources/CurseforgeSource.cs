@@ -46,7 +46,7 @@ namespace Lexplosion.Logic.Management.Sources
                 if (iter.MoveNext())
                 {
                     category = (IProjectCategory)iter.Current;
-                }       
+                }
             }
 
             var curseforgeInstances = CurseforgeApi.GetInstances(sParams).Item1;

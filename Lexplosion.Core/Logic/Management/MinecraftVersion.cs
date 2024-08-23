@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace Lexplosion.Logic.Management
@@ -92,7 +91,7 @@ namespace Lexplosion.Logic.Management
             if (other == null)
                 return -1;
 
-            if (Type == other.Type) 
+            if (Type == other.Type)
             {
                 return Weight.CompareTo(other.Weight);
             }
@@ -101,7 +100,7 @@ namespace Lexplosion.Logic.Management
             {
                 return 1;
             }
-            
+
             return -1;
         }
 
@@ -163,7 +162,7 @@ namespace Lexplosion.Logic.Management
         #region Private Methods
 
 
-        private int CalcWeight(string id) 
+        private int CalcWeight(string id)
         {
             if (id == "All")
                 return -1;
@@ -172,7 +171,7 @@ namespace Lexplosion.Logic.Management
             {
                 return CalcWeight(id.Split('.'));
             }
-            else 
+            else
             {
                 return -2;// CalcWeight(id.Replace("a", "").Split('w'));
             }
@@ -217,7 +216,7 @@ namespace Lexplosion.Logic.Management
             return !(mv1 < mv2);
         }
 
-        public static bool operator ==(MinecraftVersion mv1, MinecraftVersion mv2) 
+        public static bool operator ==(MinecraftVersion mv1, MinecraftVersion mv2)
         {
             return mv1?.Id == mv2?.Id;
         }

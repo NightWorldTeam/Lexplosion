@@ -138,7 +138,7 @@ namespace Lexplosion.Logic.Management.Addons
                 {
                     _addonInfo = CurseforgeApi.GetAddonInfo(_projectId);
                 }
-            }     
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -258,7 +258,7 @@ namespace Lexplosion.Logic.Management.Addons
         {
             DefineAddonInfo();
 
-            return _addonInfo?.categories ?? new List<CurseforgeCategory>(); 
+            return _addonInfo?.categories ?? new List<CurseforgeCategory>();
 
         }
 

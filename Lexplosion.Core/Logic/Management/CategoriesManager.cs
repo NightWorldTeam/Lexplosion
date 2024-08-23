@@ -124,7 +124,7 @@ namespace Lexplosion.Logic.Management
 
             IEnumerable<CategoryBase> allCategories = GetAddonsCategories(source, addonType);
 
-           var res = new List<CategoryBase>();
+            var res = new List<CategoryBase>();
             foreach (string id in ids)
             {
                 var category = allCategories.FirstOrDefault(x => x.Id == id);

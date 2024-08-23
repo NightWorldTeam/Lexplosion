@@ -100,7 +100,7 @@ namespace Lexplosion.Logic
             return Sb.ToString();
         }
 
-        static public byte[] AesDecode(byte[] data, byte[] Key, byte[] IV)
+        public static byte[] AesDecode(byte[] data, byte[] Key, byte[] IV)
         {
             using (Aes aesAlg = Aes.Create())
             {
@@ -122,7 +122,7 @@ namespace Lexplosion.Logic
             }
         }
 
-        static public byte[] CryptoDecode(ICryptoTransform decryptor, byte[] data)
+        public static byte[] CryptoDecode(ICryptoTransform decryptor, byte[] data)
         {
             using (var memoryStream = new MemoryStream())
             {
@@ -135,12 +135,12 @@ namespace Lexplosion.Logic
             }
         }
 
-        static public byte[] AesEncode(string plainText, byte[] Key, byte[] IV)
+        public static byte[] AesEncode(string plainText, byte[] Key, byte[] IV)
         {
             return AesEncode(Encoding.UTF8.GetBytes(plainText), Key, IV);
         }
 
-        static public byte[] AesEncode(byte[] data, byte[] Key, byte[] IV)
+        public static byte[] AesEncode(byte[] data, byte[] Key, byte[] IV)
         {
             using (RijndaelManaged rijAlg = new RijndaelManaged())
             {

@@ -198,7 +198,7 @@ namespace Lexplosion.Logic.Network
             }
         }
 
-        override protected void Sending() //отправляет данные с майнкрафт клиента в сеть
+        protected override void Sending() //отправляет данные с майнкрафт клиента в сеть
         {
             SendingWait.WaitOne();
             Runtime.DebugConsoleWrite("sending begin");
@@ -237,7 +237,7 @@ namespace Lexplosion.Logic.Network
             Runtime.DebugConsoleWrite("Sending end " + Bridge.IsConnected);
         }
 
-        override protected void Reading() //получаем данные из сети и отправляем на майкрафт клиент
+        protected override void Reading() //получаем данные из сети и отправляем на майкрафт клиент
         {
             ReadingWait.WaitOne();
             Runtime.DebugConsoleWrite("reading begin");

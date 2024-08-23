@@ -14,7 +14,6 @@ using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Management.Installers;
 using Lexplosion.Logic.Management.Sources;
 using Lexplosion.Logic.Management.Accounts;
-using System.Text;
 
 namespace Lexplosion.Logic.Management
 {

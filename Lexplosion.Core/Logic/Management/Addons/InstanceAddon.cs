@@ -17,7 +17,6 @@ using Lexplosion.Logic.Management.Addons;
 using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects.Curseforge;
 using Lexplosion.Logic.Objects.Modrinth;
-using System.Diagnostics;
 
 namespace Lexplosion.Logic.Management.Instances
 {
@@ -698,7 +697,7 @@ namespace Lexplosion.Logic.Management.Instances
 
         public string GetFullDescription()
         {
-           return _addonPrototype?.GetFullDescription() ?? string.Empty;
+            return _addonPrototype?.GetFullDescription() ?? string.Empty;
         }
 
         public void Delete()

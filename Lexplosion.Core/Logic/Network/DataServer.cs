@@ -7,8 +7,6 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using NightWorld.Collections.Concurrent;
-using System.Net;
-using System.Security.Policy;
 
 namespace Lexplosion.Logic.Network
 {

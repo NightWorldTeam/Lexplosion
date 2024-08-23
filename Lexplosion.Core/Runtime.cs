@@ -236,7 +236,7 @@ namespace Lexplosion
                 {
                     ThreadPool.QueueUserWorkItem((_) =>
                     {
-                        Thread.Sleep(60*60*365);
+                        Thread.Sleep(60 * 60 * 365);
                     });
                 }
             });

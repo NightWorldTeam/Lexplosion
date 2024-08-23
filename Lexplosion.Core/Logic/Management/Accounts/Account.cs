@@ -3,10 +3,8 @@ using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Management.Accounts.Auth;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using Lexplosion.Logic.FileSystem;
 using Newtonsoft.Json;
 
@@ -127,7 +125,7 @@ namespace Lexplosion.Logic.Management.Accounts
                 lock (StateSetLocker)
                 {
                     IsLaunchSet(value);
-                }         
+                }
             }
         }
 
@@ -150,8 +148,8 @@ namespace Lexplosion.Logic.Management.Accounts
         private void IsActiveSet(bool value)
         {
             // производим какие-либо действия, только если аккаунт найтворлд. отсальные должны всегда иметь false
-                    if (AccountType == AccountType.NightWorld)
-                    {
+            if (AccountType == AccountType.NightWorld)
+            {
                 _isActive = value;
                 if (_isActive)
                 {
@@ -163,10 +161,10 @@ namespace Lexplosion.Logic.Management.Accounts
                         {
                             ActiveAccount.IsLaunchSet(false);
                             SetToLaunch();
-                    }
+                        }
 
                         ActiveAccount.IsActiveSet(false);
-                }
+                    }
 
                     ActiveAccount = this;
                     TryInitNwServices();
@@ -232,10 +230,10 @@ namespace Lexplosion.Logic.Management.Accounts
         /// Возвращает запускаемый аккаунт.
         /// </summary>
         private static Account _launchAccount;
-        public static Account LaunchAccount 
+        public static Account LaunchAccount
         {
-            get => _launchAccount; private set 
-        {
+            get => _launchAccount; private set
+            {
                 _launchAccount = value;
                 LaunchAccountChanged?.Invoke(value);
             }

@@ -12,7 +12,6 @@ using LumiSoft.Net.STUN.Client;
 namespace Lexplosion.Logic.Network
 {
     using SMP;
-    using System.Drawing;
     using TURN;
 
     abstract class NetworkServer

@@ -7,7 +7,6 @@ using Lexplosion.Logic.Management.Instances;
 using System.Runtime.CompilerServices;
 using System;
 using System.Threading;
-using Lexplosion.Logic.Objects.Curseforge;
 
 namespace Lexplosion.Logic.Management.Addons
 {

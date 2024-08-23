@@ -122,14 +122,14 @@
         TotalDownloads = 6,
         //Category,
         //GameVersion
-    }   
+    }
 
     public enum ModrinthSortField
     {
         Relevance,
         Downloads,
         Newest,
-        Updated, 
+        Updated,
         Follows
     }
 

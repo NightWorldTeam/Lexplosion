@@ -34,7 +34,7 @@ namespace Lexplosion.Logic.Objects.Modrinth
         /// Нужен для аддонов. Пробразует Type в AddonType.
         /// Если использовать для модпака, то в ебало прилетит AddonType.Unknown
         /// </summary>
-        [JsonIgnore]  
+        [JsonIgnore]
         public AddonType GetAddonType
         {
             get
