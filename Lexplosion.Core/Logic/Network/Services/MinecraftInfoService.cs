@@ -1,14 +1,14 @@
-﻿using Lexplosion.Global;
-using Lexplosion.Logic.Network;
-using Lexplosion.Logic.Objects;
-using Lexplosion.Logic.Objects.CommonClientData;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Lexplosion.Global;
+using Lexplosion.Logic.Network;
+using Lexplosion.Logic.Objects;
+using Lexplosion.Logic.Objects.CommonClientData;
 
 namespace Lexplosion.Logic.Network.Services
 {

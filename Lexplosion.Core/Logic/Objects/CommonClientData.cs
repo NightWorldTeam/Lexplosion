@@ -421,7 +421,7 @@ namespace Lexplosion.Logic.Objects.CommonClientData
             }
         }
 
-        //Прописываем какие поля нужно проигнорировать
+        //Прописываем какие поля нужно проигнорировать при сериализации в json
         public bool ShouldSerializeCustomVersionName() => false;
         public bool ShouldSerializesecurity() => false;
         public bool ShouldSerializelibrariesLastUpdate() => false;
