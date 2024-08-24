@@ -12,6 +12,7 @@ using Lexplosion.WPF.NewInterface.Mvvm.Models;
 using System;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.ModalFactory;
+using Lexplosion.Logic;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
 {
@@ -124,7 +125,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
         {
             Lexplosion.Runtime.TaskRun(() =>
             {
-                var versionsList = ToServer.GetVersionsList();
+                var versionsList = CoreServicesManager.MinecraftInfo.GetVersionsList();
                 var releaseOnlyVersions = new List<MinecraftVersion>();
                 var allVersions = new MinecraftVersion[versionsList.Count];
                 var i = 0;

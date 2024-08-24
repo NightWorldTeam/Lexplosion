@@ -1,4 +1,5 @@
-﻿using Lexplosion.Logic.Management;
+﻿using Lexplosion.Logic;
+using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Network;
 using System;
 using System.Collections.Concurrent;
@@ -103,9 +104,9 @@ namespace Lexplosion.WPF.NewInterface.Core.GameExtensions
 
                 // if optifine
                 if (GameExtension.Optifine == extension)
-                    extensionVersion = ToServer.GetOptifineVersions(minecraftVersion.Id);
+                    extensionVersion = CoreServicesManager.MinecraftInfo.GetOptifineVersions(minecraftVersion.Id);
                 else
-                    extensionVersion = ToServer.GetModloadersList(minecraftVersion.Id, (ClientType)extension);
+                    extensionVersion = CoreServicesManager.MinecraftInfo.GetModloadersList(minecraftVersion.Id, (ClientType)extension);
 
                 _extensionVersions[extension].TryAdd(minecraftVersion, new MinecraftExtension(new ReadOnlyCollection<string>(extensionVersion), extension));
             }
