@@ -189,15 +189,12 @@
         <Button
             Width="32"
             Height="32"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
             Command="{Binding RefreshListCommand}" />
 
-        <TextBlock
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            FontSize="18"
-            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-            Text="There are no shares available" />
+        <controls:Empty Description="There are no shares available" />
 
-        <ItemsControl ItemsSource="{Binding Model.Distributions}" />
+        <ItemsControl FocusVisualStyle="{x:Null}" ItemsSource="{Binding Model.Distributions}" />
     </Grid>
 </UserControl>

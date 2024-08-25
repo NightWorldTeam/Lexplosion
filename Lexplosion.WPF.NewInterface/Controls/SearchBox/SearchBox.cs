@@ -213,11 +213,17 @@ namespace Lexplosion.WPF.NewInterface.Controls
         /// </summary>
         private void UpdateIsEmpty()
         {
-            if (_placeholderBlock != null)
+            if (_placeholderBlock == null)
             {
+                return;
+            }
+
                 if (IsEmpty)
                 {
-                    ShowPlaceholderBox();
+                    if (this.IsFocused)
+                        HidePlaceholderBox();
+                    else
+                        ShowPlaceholderBox();
                     HideClearButton();
                 }
                 else
@@ -225,7 +231,6 @@ namespace Lexplosion.WPF.NewInterface.Controls
                     HidePlaceholderBox();
                     ShowClearButton();
                 }
-            }
         }
 
         private void HidePlaceholderBox()

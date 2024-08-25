@@ -51,12 +51,12 @@
         </Style>
     </UserControl.Resources>
 
-    <Border Padding="0,40,0,0">
+    <Border Padding="0,40,0,0" Focusable="True">
         <Grid Background="Transparent">
 
             <ScrollViewer KeyboardNavigation.IsTabStop="False" KeyboardNavigation.TabNavigation="None">
 
-                <Grid>
+                <Grid Focusable="True">
 
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />

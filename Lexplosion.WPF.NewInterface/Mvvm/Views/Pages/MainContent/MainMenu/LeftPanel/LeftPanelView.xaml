@@ -178,10 +178,10 @@
                     x:Name="HelpButton"
                     Grid.Row="2"
                     Width="32"
-                    Height="32" Cursor="Hand"
+                    Height="32"
                     HorizontalAlignment="Right"
                     Background="Transparent"
-                    FocusVisualStyle="{x:Null}">
+                    Cursor="Hand">
                     <ToggleButton.Template>
                         <ControlTemplate TargetType="{x:Type ToggleButton}">
 

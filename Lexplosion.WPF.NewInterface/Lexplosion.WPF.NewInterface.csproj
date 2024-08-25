@@ -93,6 +93,7 @@
     </ApplicationDefinition>
     <Compile Include="Controls\AdvancedToggleButton\AdvancedToggleButton.cs" />
     <Compile Include="Controls\AdvancedWrapPanel\AdvancedWrapPanel.cs" />
+    <Compile Include="Controls\Empty\Empty.cs" />
     <Compile Include="Controls\ToastMessage\ToastMessage.cs" />
     <Compile Include="Core\Converters\MultiValueConverter\StyleSelectorConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\ImagePathValidateConverter.cs" />
@@ -115,6 +116,7 @@
     <Compile Include="Mvvm\Models\InstanceTransfer\DistributedInstance.cs" />
     <Compile Include="Mvvm\Models\InstanceTransfer\InstanceDistributionModel.cs" />
     <Compile Include="Mvvm\Models\InstanceTransfer\InstanceExportModel.cs" />
+    <Compile Include="Mvvm\Models\MainContent\MainMenu\Friends\FriendsModel.cs" />
     <Compile Include="Mvvm\ViewModels\ModalFactory\ModalFactoryBase.cs" />
     <Compile Include="Mvvm\ViewModels\ModalFactory\ModalInstanceCreatorFactory.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\ConfirmActionViewModel.cs" />
@@ -423,6 +425,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\DropdownMenu\DropdownMenu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Empty\Empty.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

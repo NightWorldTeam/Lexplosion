@@ -562,6 +562,7 @@
                     <ControlTemplate TargetType="TabItem">
                         <Border
                             Name="Border"
+                            Margin="0,0,8,0"
                             Padding="16,8"
                             Background="Transparent"
                             CornerRadius="5">
@@ -573,12 +574,24 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsSelected" Value="True">
-                                <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource SeparateSolidColorBrush}" />
+                                <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource ActivitySolidColorBrush}" />
+                                <Setter Property="TextBlock.Foreground" Value="{DynamicResource ActivitySolidColorBrush}" />
+                                <Setter TargetName="Border" Property="Background">
+                                    <Setter.Value>
+                                        <SolidColorBrush Opacity="0.3" Color="{DynamicResource ActivityColor}" />
+                                    </Setter.Value>
+                                </Setter>
                                 <Setter TargetName="Border" Property="BorderThickness" Value="1" />
                             </Trigger>
-                            <Trigger Property="IsMouseOver" Value="True">
+
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsMouseOver" Value="True" />
+                                    <Condition Property="IsSelected" Value="False" />
+                                </MultiTrigger.Conditions>
+
                                 <Setter TargetName="Border" Property="Background" Value="{DynamicResource SecondarySolidColorBrush}" />
-                            </Trigger>
+                            </MultiTrigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
@@ -596,59 +609,123 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <controls:SearchBox
-            Margin="0,8"
-            Placeholder="{DynamicResource TypingNicknamePlaceholder}"
-            Text="{Binding Model.SearchBoxText, UpdateSourceTrigger=PropertyChanged}" />
+        <StackPanel HorizontalAlignment="Stretch" Orientation="Horizontal">
+            <controls:SearchBox
+                Width="320"
+                Height="32"
+                Margin="0,8"
+                Placeholder="{DynamicResource TypingNicknamePlaceholder}"
+                Text="{Binding Model.SearchBoxText, UpdateSourceTrigger=PropertyChanged}" />
+
+            <Border
+                Height="32"
+                Margin="8,0,0,0"
+                Background="Transparent"
+                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                BorderThickness="1"
+                CornerRadius="3">
+                <StackPanel VerticalAlignment="Stretch" Orientation="Horizontal">
+                    <Border Padding="11,0">
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                            Text="Daily" />
+                    </Border>
+                    <Border Padding="11,0">
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                            Text="Weekly" />
+                    </Border>
+                    <Border
+                        Padding="11,0"
+                        Background="{DynamicResource ActivitySolidColorBrush}"
+                        CornerRadius="2">
+
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            Foreground="{DynamicResource BrandColorForegroundSolidColorBrush}"
+                            Text="Monthly" />
+                    </Border>
+                    <Border Padding="11,0">
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                            Text="Quarterly" />
+                    </Border>
+                    <Border Padding="11,0">
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                            Text="Yaerly" />
+                    </Border>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+
+        <controls:Empty Grid.Row="1" Description="Исходящие заявки в друзья отсутствуют." />
 
         <TabControl
             Grid.Row="1"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Stretch">
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            Visibility="Collapsed">
             <TabItem Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" Header="Pending">
-                <ItemsControl
-                    Grid.Row="1"
-                    Margin="0,0,0,8"
-                    HorizontalAlignment="Stretch"
-                    AlternationCount="3"
-                    ItemTemplate="{StaticResource PendingRequestUser}"
-                    ItemsSource="{Binding Model.Incoming.View}">
+                <Grid>
+                    <TextBlock Text="Входящие заявки в друзья отсутствуют." />
 
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel
-                                HorizontalAlignment="Left"
-                                IsItemsHost="True"
-                                VirtualizingPanel.IsVirtualizing="True" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
+                    <ItemsControl
+                        Grid.Row="1"
+                        Margin="0,0,0,8"
+                        HorizontalAlignment="Stretch"
+                        AlternationCount="3"
+                        ItemTemplate="{StaticResource PendingRequestUser}"
+                        ItemsSource="{Binding Model.Incoming.View}">
 
-                </ItemsControl>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel
+                                    HorizontalAlignment="Left"
+                                    IsItemsHost="True"
+                                    VirtualizingPanel.IsVirtualizing="True" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+
+                    </ItemsControl>
+                </Grid>
             </TabItem>
 
-            <TabItem Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" Header="Outgoing">
-                <ItemsControl
-                    Grid.Row="1"
-                    Margin="0,0,0,8"
-                    HorizontalAlignment="Stretch"
-                    ItemTemplate="{StaticResource OutgoingRequestUser}"
-                    ItemsSource="{Binding Model.Outgoing.View}"
-                    SizeChanged="ItemsControl_SizeChanged">
+            <TabItem
+                HorizontalAlignment="Stretch"
+                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                Header="Outgoing">
+                <Grid>
 
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel
-                                HorizontalAlignment="Left"
-                                IsItemsHost="True"
-                                VirtualizingPanel.IsVirtualizing="True" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
+                    <controls:Empty />
 
-                    <!--<ItemsControl.ItemContainerStyleSelector>
+                    <ItemsControl
+                        Grid.Row="1"
+                        Margin="0,0,0,8"
+                        HorizontalAlignment="Stretch"
+                        ItemTemplate="{StaticResource OutgoingRequestUser}"
+                        ItemsSource="{Binding Model.Outgoing.View}"
+                        SizeChanged="ItemsControl_SizeChanged">
+
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel
+                                    HorizontalAlignment="Left"
+                                    IsItemsHost="True"
+                                    VirtualizingPanel.IsVirtualizing="True" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+
+                        <!--<ItemsControl.ItemContainerStyleSelector>
                         <extensions:NthChildStyleSelector Expression="Even" Style="{StaticResource EveryEvenUser}" />
                     </ItemsControl.ItemContainerStyleSelector>-->
 
-                </ItemsControl>
+                    </ItemsControl>
+                </Grid>
             </TabItem>
         </TabControl>
     </Grid>

@@ -96,6 +96,7 @@
                     Width="32"
                     Height="32"
                     Padding="6,0"
+                    FocusVisualStyle="{x:Null}"
                     IconData="{DynamicResource PDMore}"
                     Style="{DynamicResource IconTextTransparentAdvancedToggleButton}" />
 
@@ -116,6 +117,7 @@
                                 Padding="10,0,16,0"
                                 Command="{Binding DataContext.ViewProfileCommand, RelativeSource={RelativeSource AncestorLevel=2, AncestorType={x:Type UserControl}}}"
                                 CommandParameter="{Binding}"
+                                FocusVisualStyle="{x:Null}"
                                 FontWeight="Medium"
                                 IconData="{DynamicResource PDProfile}"
                                 IconPadding="6"
@@ -126,6 +128,7 @@
                                 Padding="10,0,16,0"
                                 Command="{Binding DataContext.UnfriendCommand, RelativeSource={RelativeSource AncestorLevel=2, AncestorType={x:Type UserControl}}}"
                                 CommandParameter="{Binding}"
+                                FocusVisualStyle="{x:Null}"
                                 FontWeight="Medium"
                                 Foreground="#f44336"
                                 IconData="{DynamicResource PDPersonOff}"

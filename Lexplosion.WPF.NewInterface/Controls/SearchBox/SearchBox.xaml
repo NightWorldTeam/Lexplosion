@@ -74,7 +74,7 @@
                         ClipToBounds="True"
                         CornerRadius="5">
                         <Grid>
-                            <Grid ShowGridLines="True">
+                            <Grid ShowGridLines="False">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="Auto" />

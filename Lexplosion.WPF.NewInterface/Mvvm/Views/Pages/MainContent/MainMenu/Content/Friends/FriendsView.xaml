@@ -3,56 +3,33 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:Lexplosion.WPF.NewInterface.Controls"
+    xmlns:converters="clr-namespace:Lexplosion.WPF.NewInterface.Core.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu"
+    xmlns:mainmenu="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends"
+    d:DataContext="{d:DesignInstance Type=mainmenu:FriendsViewModel}"
     mc:Ignorable="d">
 
-    <ScrollViewer>
-        <Grid Margin="32,16" HorizontalAlignment="Stretch">
+    <ScrollViewer Focusable="True">
+        <Grid Margin="32,16,32,0" HorizontalAlignment="Stretch">
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-
-            <!--  No result textblock  -->
-            <TextBlock
-                Grid.RowSpan="3"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                FontSize="18"
-                FontWeight="Medium"
-                Text="С вами никто не дружит, найдити себе друзей.">
-                <TextBlock.Style>
-                    <Style TargetType="{x:Type TextBlock}">
-                        <Setter Property="Visibility" Value="Collapsed" />
-                        <Style.Triggers>
-                            <MultiDataTrigger>
-                                <MultiDataTrigger.Conditions>
-                                    <Condition Binding="{Binding Model.AllFriends.View.Count}" Value="0" />
-                                    <Condition Binding="{Binding Model.InGameFriends.View.Count}" Value="0" />
-                                    <Condition Binding="{Binding Model.OnlineFriends.View.Count}" Value="0" />
-                                    <Condition Binding="{Binding Model.OfflineFriends.View.Count}" Value="0" />
-                                </MultiDataTrigger.Conditions>
-                                <Setter Property="Visibility" Value="Visible" />
-                            </MultiDataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </TextBlock.Style>
-            </TextBlock>
-
-
             <!--  TODO: Убирать SearchBox все друзья влазять и скролить не надо и друзей нет???  -->
             <controls:SearchBox
+                Margin="0,0,0,16"
                 Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
                 Placeholder="{DynamicResource TypingNicknamePlaceholder}"
-                Text="{Binding Model.SearchBoxText, UpdateSourceTrigger=PropertyChanged}" />
+                Text="{Binding Model.SearchBoxText, UpdateSourceTrigger=PropertyChanged}"
+                Visibility="{Binding Model.HasFriends, Converter={converters:BooleanToVisibilityConverter}}" />
 
-            <Grid Grid.Row="1" Margin="0,16,0,0">
+            <Grid Grid.Row="1">
 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -129,6 +106,7 @@
                         </Style>
                     </StackPanel.Style>
 
+                    <!--  Name & Count  -->
                     <StackPanel Orientation="Horizontal">
                         <TextBlock
                             FontSize="13"
@@ -145,6 +123,7 @@
                             Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
                             Text="{Binding Model.OnlineFriends.View.Count, StringFormat='{}({0})'}" />
                     </StackPanel>
+
                     <!--  Online Players  -->
                     <ItemsControl Margin="0,8,0,24" ItemsSource="{Binding Model.OnlineFriends.View}">
                         <ItemsControl.ItemTemplate>
@@ -222,23 +201,21 @@
             </Grid>
 
             <!--  TODO: Translate  -->
-            <TextBlock
+            <controls:Empty
                 Grid.RowSpan="2"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                FontSize="18"
-                Text="С вами никто не дружит. Капец... :("
-                Visibility="Collapsed">
-                <TextBlock.Style>
-                    <Style TargetType="{x:Type TextBlock}">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding Model.AllFriends.View.Count}" Value="0">
-                                <Setter Property="Visibility" Value="Visible" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </TextBlock.Style>
-            </TextBlock>
+                Description="С вами никто не дружит. Капец... :("
+                Visibility="{Binding Model.HasFriends, Converter={converters:NegativeBooleanToVisibilityConverter}}">
+
+                <!--  TODO: Translate  -->
+                <controls:AdvancedButton
+                    Margin="0,8,0,0"
+                    HorizontalAlignment="Center"
+                    Style="{StaticResource DefaultAdvancedButton}"
+                    Text="Найти друзей"
+                    TextPadding="16,0" />
+            </controls:Empty>
         </Grid>
     </ScrollViewer>
 </UserControl>

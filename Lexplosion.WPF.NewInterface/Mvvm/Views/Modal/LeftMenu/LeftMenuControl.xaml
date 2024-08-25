@@ -99,7 +99,7 @@
                     BorderThickness="0,0,1,0"
                     CornerRadius="10,0,0,10">
                     <!--  Custom Tab Panel  -->
-                    <ItemsControl ItemsSource="{Binding TabItems}" />
+                    <ItemsControl FocusVisualStyle="{x:Null}" ItemsSource="{Binding TabItems}" />
                 </Border>
 
                 <!--  Page  -->
@@ -174,7 +174,8 @@
                     <ContentControl
                         Grid.Row="1"
                         Margin="10,0,10,0"
-                        Content="{Binding SelectedContent}" />
+                        Content="{Binding SelectedContent}"
+                        FocusVisualStyle="{x:Null}" />
 
 
                     <Grid
