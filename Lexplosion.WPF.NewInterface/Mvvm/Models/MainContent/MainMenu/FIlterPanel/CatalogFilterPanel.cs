@@ -118,29 +118,38 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.FIlterPan
         #region Constructors
 
 
-        public CatalogFilterPanel()
+        public CatalogFilterPanel(Action test)
         {
-            MainViewModel.AllVersionsLoaded += (() => 
-            {
-                App.Current.Dispatcher.Invoke(() => 
-                { 
-                    var versions = new ObservableCollection<MinecraftVersion>(MainViewModel.AllGameVersions);
-                    versions.Insert(0, AllVersion);
-                    SelectedVersion = versions[0];
-
-                    VersionCollectionViewSource.Source = versions;
-                    VersionCollectionViewSource.View.Filter = (mv) => ((mv as MinecraftVersion).Type == MinecraftVersion.VersionType.Release);
-                });
-            });
-
-            UpdateCategories(InstanceSource.Modrinth);
-
-            Sources.Add(new InstanceSourceObject("Modrinth", InstanceSource.Modrinth));
             Sources.Add(new InstanceSourceObject("Curseforge", InstanceSource.Curseforge));
+            Sources.Add(new InstanceSourceObject("Modrinth", InstanceSource.Modrinth));
             Sources.Add(new InstanceSourceObject("NightWorld", InstanceSource.Nightworld));
 
+            UpdateCategories(Sources[0].Value);
             SelectedSource = Sources[0];
-            SelectedSortByParam = SortByParams.First();
+
+            FilterChanged += test;
+
+            if (MainViewModel.AllGameVersions == null)
+            {
+                MainViewModel.AllVersionsLoaded += MainViewModel_AllVersionsLoaded;
+            }
+            else 
+            {
+                MainViewModel_AllVersionsLoaded();
+            }
+        }
+
+        private void MainViewModel_AllVersionsLoaded()
+        {
+            App.Current.Dispatcher.Invoke(() => 
+            { 
+                var versions = new ObservableCollection<MinecraftVersion>(MainViewModel.AllGameVersions);
+                versions.Insert(0, AllVersion);
+                SelectedVersion = versions[0];
+
+                VersionCollectionViewSource.Source = versions;
+                VersionCollectionViewSource.View.Filter = (mv) => ((mv as MinecraftVersion).Type == MinecraftVersion.VersionType.Release);
+            });
         }
 
 
@@ -159,6 +168,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.FIlterPan
 
 
         #region Public Methods
+
+
+        public void ExecuteFilter() 
+        {
+            SelectedSource = Sources[0];
+        }
 
 
         public void FilterChangedExecuteEvent([CallerMemberName] string member = "")

@@ -91,6 +91,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\AdvancedComboBox\AdvancedComboBox.cs" />
     <Compile Include="Controls\AdvancedToggleButton\AdvancedToggleButton.cs" />
     <Compile Include="Controls\AdvancedWrapPanel\AdvancedWrapPanel.cs" />
     <Compile Include="Controls\Empty\Empty.cs" />

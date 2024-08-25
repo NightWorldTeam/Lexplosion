@@ -363,7 +363,7 @@
                                 Margin="0,0,32,0"
                                 BorderBrush="{DynamicResource ActivitySolidColorBrush}"
                                 GroupName="ConnectionType"
-                                IsChecked="{Binding Model.IsDirectConnection, Converter={converters:NegativeBooleanValueConverter}}">
+                                IsChecked="{Binding Model.IsDirectConnection}">
                                 <TextBlock FontSize="16" Text="{DynamicResource DirectConnection}" />
                             </RadioButton>
 
@@ -371,7 +371,7 @@
                             <RadioButton
                                 Margin="0,4,0,0"
                                 GroupName="ConnectionType"
-                                IsChecked="{Binding Model.IsDirectConnection}">
+                                IsChecked="{Binding Model.IsDirectConnection, Converter={converters:NegativeBooleanValueConverter}}">
                                 <TextBlock FontSize="16" Text="{DynamicResource ViaRepeater}" />
                             </RadioButton>
                         </StackPanel>

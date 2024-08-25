@@ -4,6 +4,7 @@ using Lexplosion.Logic.Objects;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.FIlterPanel;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
+using Lexplosion.WPF.NewInterface.Mvvm.ViewModels;
 using System.Collections.Generic;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
@@ -82,8 +83,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
         public CatalogModel(IInstanceController instanceController)
         {
             _instanceController = instanceController;
-            FilterPanel = new CatalogFilterPanel();
-            FilterPanel.FilterChanged += OnFilterChanged;
+            FilterPanel = new CatalogFilterPanel(OnFilterChanged);
+            //FilterPanel.FilterChanged += OnFilterChanged;
+            //FilterPanel.ExecuteFilter();
         }
 
 
