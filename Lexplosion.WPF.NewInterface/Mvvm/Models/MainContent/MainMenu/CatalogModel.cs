@@ -87,7 +87,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
         public CatalogModel(IInstanceController instanceController)
         {
             _instanceController = instanceController;
-            FilterPanel = new CatalogFilterPanel(OnFilterChanged, _resetEvent);
+            FilterPanel = new CatalogFilterPanel(OnFilterChanged);
             _resetEvent.Set();
             //FilterPanel.FilterChanged += OnFilterChanged;
             //FilterPanel.ExecuteFilter();

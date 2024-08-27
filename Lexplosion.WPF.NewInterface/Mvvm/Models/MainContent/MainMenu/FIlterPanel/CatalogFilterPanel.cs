@@ -16,7 +16,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.FIlterPan
     public class CatalogFilterPanel : ObservableObject
     {
         public event Action FilterChanged;
-        private readonly AutoResetEvent _resetEvent;
 
 
         #region Properties
@@ -122,7 +121,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.FIlterPan
 
         public CatalogFilterPanel(Action test, AutoResetEvent resetEvent)
         {
-            _resetEvent = resetEvent;
             Sources.Add(new InstanceSourceObject("Curseforge", InstanceSource.Curseforge));
             Sources.Add(new InstanceSourceObject("Modrinth", InstanceSource.Modrinth));
             Sources.Add(new InstanceSourceObject("NightWorld", InstanceSource.Nightworld));
