@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects.CommonClientData;
+using Lexplosion.Tools;
 
 namespace Lexplosion.Logic.Management.Installers
 {
@@ -228,7 +229,7 @@ namespace Lexplosion.Logic.Management.Installers
                     }
                 }
 
-                _installer.MainFileDownloadEvent += delegate (int percent)
+                _installer.MainFileDownload += delegate (int percent)
                 {
                     progressHandler(StageType.Client, new ProgressHandlerArguments()
                     {
@@ -248,8 +249,14 @@ namespace Lexplosion.Logic.Management.Installers
                     };
                 }
 
+                InstanceFileGetter fileGetter = (string tempDir, Func<string, TaskArgs> taskArgsGetter) =>
+                {
+                    bool res = WithDirectory.DownloadFile(ArchiveDownloadUrl, ArchiveFileName, tempDir, taskArgsGetter(ArchiveFileName));
+                    return (res, tempDir + ArchiveFileName, ArchiveFileName);
+                };
+
                 // скачиваем архив модпака и из него получаем манифест
-                var manifest = _installer.DownloadInstance(ArchiveDownloadUrl, ArchiveFileName, ref localFiles, _cancelToken);
+                var manifest = _installer.Extraction(fileGetter, ref localFiles, _cancelToken);
 
                 if (_cancelToken.IsCancellationRequested)
                 {
@@ -401,7 +408,7 @@ namespace Lexplosion.Logic.Management.Installers
                     _installer.FileDownloadEvent -= singleDownloadMethod;
                 }
 
-                _installer.AddonsDownloadEvent += delegate (int totalDataCount, int nowDataCount)
+                _installer.AddonsDownload += delegate (int totalDataCount, int nowDataCount)
                 {
                     if (nowDataCount != 0)
                     {
@@ -436,7 +443,7 @@ namespace Lexplosion.Logic.Management.Installers
                 }
 
                 // скачиваем аддоны
-                errors = _installer.InstallInstance(manifest, localFiles, _cancelToken);
+                errors = _installer.Install(manifest, localFiles, _cancelToken);
 
                 if (_cancelToken.IsCancellationRequested)
                 {

@@ -1,4 +1,5 @@
 ﻿using Lexplosion.Logic.Objects.CommonClientData;
+using Lexplosion.Tools;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -17,22 +18,39 @@ namespace Lexplosion.Logic.FileSystem
         public bool InvalidStruct(InstanceContent localFiles);
 
         /// <summary>
-        /// Скачивает архив с модпаком.
+        /// Выполняет извлечение основных данных сборки из ее файла
         /// </summary>
+        /// <param name="instanceFileGetter">Делегат, выполняющий получение самого файла сборки</param>
+        /// <param name="fileName">Имя файла сборки</param>
+        /// <param name="localFiles">Локальные файлы, полученные из файла сборки</param>
+        /// <param name="cancelToken">Токен отмены</param>
         /// <returns>
         /// Возвращает манифест, полученный из архива.
         /// </returns>
-        public TManifest DownloadInstance(string downloadUrl, string fileName, ref InstanceContent localFiles, CancellationToken cancelToken);
+        public TManifest Extraction(InstanceFileGetter instanceFileGetter, ref InstanceContent localFiles, CancellationToken cancelToken);
 
         /// <summary>
-        /// Скачивает все аддоны модпака из спика
+        /// Скачивает все аддоны модпака из списка
         /// </summary>
         /// <returns>
         /// Возвращает список ошибок.
         /// </returns>
-        public List<string> InstallInstance(TManifest data, InstanceContent localFiles, CancellationToken cancelToken);
+        public List<string> Install(TManifest data, InstanceContent localFiles, CancellationToken cancelToken);
 
-        public event Action<int> MainFileDownloadEvent;
-        public event ProcentUpdate AddonsDownloadEvent;
+        /// <summary>
+        /// Устанавливает id для сборки и создает папку с ней
+        /// </summary>
+        public void SetInstanceId(string instanceId);
+
+        public event Action<int> MainFileDownload;
+        public event ProcentUpdate AddonsDownload;
     }
+
+    /// <summary>
+    /// Делегат, выполняющий получение файла модпака.
+    /// </summary>
+    /// <param name="tempDir">Путь до папки temp</param>
+    /// <param name="taskArgsBuilder">Делегат, который создаст TaskArgs. Принимает имя файла модпака</param>
+    /// <returns>Первое значение - удачен ли результат выполнения, второе - путь до файла модпака, третье - имя файла модпака</returns>
+    public delegate (bool, string, string) InstanceFileGetter(string tempDir, Func<string, TaskArgs> taskArgsBuilder);
 }

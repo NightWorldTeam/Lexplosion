@@ -23,8 +23,8 @@ namespace Lexplosion.Logic.FileSystem
         {
         }
 
-        public event Action<int> MainFileDownloadEvent;
-        public event ProcentUpdate AddonsDownloadEvent;
+        public event Action<int> MainFileDownload;
+        public event ProcentUpdate AddonsDownload;
 
         private class WhiteListManifest
         {
@@ -34,8 +34,21 @@ namespace Lexplosion.Logic.FileSystem
             public HashSet<FileDesc> WhiteList;
         }
 
-        public InstanceManifest DownloadInstance(string downloadUrl, string fileName, ref InstanceContent localFiles, CancellationToken cancelToken)
+        public InstanceManifest Extraction(InstanceFileGetter instanceFileGetter, ref InstanceContent localFiles, CancellationToken cancelToken)
         {
+            TaskArgs BuildTaskArgs(string fileName)
+            {
+                return new TaskArgs
+                {
+                    PercentHandler = delegate (int percent)
+                    {
+                        _fileDownloadHandler?.Invoke(fileName, percent, DownloadFileProgress.PercentagesChanged);
+                        MainFileDownload?.Invoke(percent);
+                    },
+                    CancelToken = cancelToken
+                };
+            }
+
             try
             {
                 //удаляем старые файлы
@@ -52,27 +65,17 @@ namespace Lexplosion.Logic.FileSystem
 
                 string tempDir = WithDirectory.CreateTempDir();
 
-                MainFileDownloadEvent?.Invoke(0);
+                MainFileDownload?.Invoke(0);
 
-                var taskArgs = new TaskArgs
+
+                (bool, string, string) res = instanceFileGetter(tempDir, BuildTaskArgs);
+
+                if (!res.Item1)
                 {
-                    PercentHandler = delegate (int percent)
-                    {
-                        _fileDownloadHandler?.Invoke(fileName, percent, DownloadFileProgress.PercentagesChanged);
-                        MainFileDownloadEvent?.Invoke(percent);
-                    },
-                    CancelToken = cancelToken
-                };
-
-                // скачивание архива
-                bool res = WithDirectory.DownloadFile(downloadUrl, fileName, tempDir, taskArgs);
-
-                if (!res)
-                {
-                    _fileDownloadHandler?.Invoke(fileName, 100, DownloadFileProgress.Error);
+                    _fileDownloadHandler?.Invoke(res.Item3, 100, DownloadFileProgress.Error);
                     return default;
                 }
-                _fileDownloadHandler?.Invoke(fileName, 100, DownloadFileProgress.Successful);
+                _fileDownloadHandler?.Invoke(res.Item3, 100, DownloadFileProgress.Successful);
 
 
                 string unzipFolder = tempDir + "dataDownload/";
@@ -107,7 +110,7 @@ namespace Lexplosion.Logic.FileSystem
                 if (files != null)
                 {
                     // у нас есть список разрешенных файлов. Проходимся по всему архиву и берем только нужные файлы
-                    using (ZipArchive zip = ZipFile.Open(tempDir + fileName, ZipArchiveMode.Read))
+                    using (ZipArchive zip = ZipFile.Open(res.Item2, ZipArchiveMode.Read))
                     {
                         foreach (ZipArchiveEntry entry in zip.Entries)
                         {
@@ -152,10 +155,8 @@ namespace Lexplosion.Logic.FileSystem
                 else
                 {
                     //белого спсика нет. Тупо потрошим архив
-                    ZipFile.ExtractToDirectory(tempDir + fileName, unzipFolder);
+                    ZipFile.ExtractToDirectory(res.Item2, unzipFolder);
                 }
-
-                WithDirectory.DelFile(tempDir + fileName);
 
                 var manifest = DataFilesManager.GetFile<InstanceManifest>(unzipFolder + "instanceInfo.json");
                 if (manifest == null || (string.IsNullOrWhiteSpace(manifest.GameVersion) && manifest.GameVersionInfo?.IsNan != false))
@@ -209,7 +210,7 @@ namespace Lexplosion.Logic.FileSystem
             }
         }
 
-        public List<string> InstallInstance(InstanceManifest data, InstanceContent localFiles, CancellationToken cancelToken)
+        public List<string> Install(InstanceManifest data, InstanceContent localFiles, CancellationToken cancelToken)
         {
             var errors = new List<string>();
             InstanceContent compliteDownload = new InstanceContent
@@ -314,7 +315,7 @@ namespace Lexplosion.Logic.FileSystem
 
                 if (result.Value2 == DownloadAddonRes.Successful)
                 {
-                    AddonsDownloadEvent?.Invoke(totalDataCount, nowDataCount);
+                    AddonsDownload?.Invoke(totalDataCount, nowDataCount);
 
                     compliteDownload.InstalledAddons[addon.ProjectID] = result.Value1;
                     SaveInstanceContent(compliteDownload);
@@ -346,7 +347,7 @@ namespace Lexplosion.Logic.FileSystem
 
                 if (result.Value2 == DownloadAddonRes.Successful)
                 {
-                    AddonsDownloadEvent?.Invoke(totalDataCount, nowDataCount);
+                    AddonsDownload?.Invoke(totalDataCount, nowDataCount);
 
                     compliteDownload.InstalledAddons[addon.ProjectID] = result.Value1;
                     SaveInstanceContent(compliteDownload);
@@ -481,6 +482,12 @@ namespace Lexplosion.Logic.FileSystem
             }
 
             return false;
+        }
+
+        public void SetInstanceId(string id)
+        {
+            ChangeInstanceId(id);
+            instanceId = id;
         }
     }
 }

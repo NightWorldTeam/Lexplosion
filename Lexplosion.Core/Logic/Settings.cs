@@ -45,6 +45,7 @@ namespace Lexplosion.Logic
         public bool? IsShowConsole = null;
         public bool? IsHiddenMode = null;
         public bool? IsAutoUpdate = null;
+        public bool? NwClientByDefault = null;
         public string GameArgs = null;
         /// <summary>
         /// Использовать ли в приоритете в сетевой игре прямое подключение.
@@ -81,6 +82,7 @@ namespace Lexplosion.Logic
                 if (IsShowConsole == null) IsShowConsole = settings.IsShowConsole;
                 if (IsHiddenMode == null) IsHiddenMode = settings.IsHiddenMode;
                 if (IsAutoUpdate == null) IsAutoUpdate = settings.IsAutoUpdate;
+                if (NwClientByDefault == null) NwClientByDefault = settings.NwClientByDefault;
                 if (GameArgs == null) GameArgs = settings.GameArgs;
                 if (string.IsNullOrWhiteSpace(AutoLoginServer)) AutoLoginServer = settings.AutoLoginServer;
             }
@@ -98,6 +100,7 @@ namespace Lexplosion.Logic
                 if (settings.IsShowConsole != null) IsShowConsole = settings.IsShowConsole;
                 if (settings.IsHiddenMode != null) IsHiddenMode = settings.IsHiddenMode;
                 if (settings.IsAutoUpdate != null) IsAutoUpdate = settings.IsAutoUpdate;
+                if (settings.NwClientByDefault != null) NwClientByDefault = settings.NwClientByDefault;
                 if (settings.GameArgs != null) GameArgs = settings.GameArgs;
                 AutoLoginServer = settings.AutoLoginServer;
             }
@@ -139,7 +142,8 @@ namespace Lexplosion.Logic
                 IsHiddenMode = false,
                 GameArgs = "",
                 IsAutoUpdate = false,
-                NetworkDirectConnection = true
+                NetworkDirectConnection = true,
+                NwClientByDefault = true
             };
         }
     }
