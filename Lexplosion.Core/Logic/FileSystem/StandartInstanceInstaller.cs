@@ -17,8 +17,8 @@ namespace Lexplosion.Logic.FileSystem
     {
         public StandartInstanceInstaller(string instanceId) : base(instanceId) { }
 
-        public event Action<int> MainFileDownloadEvent;
-        public event ProcentUpdate AddonsDownloadEvent;
+        public event Action<int> MainFileDownload;
+        public event ProcentUpdate AddonsDownload;
 
         /// <summary>
         /// Вызывает когда нужно обработать разорхивированный архив со сборкой. 
@@ -28,11 +28,11 @@ namespace Lexplosion.Logic.FileSystem
         /// <returns>Манифест</returns>
         protected abstract TManifest ArchiveHadnle(string unzupArchivePath, out List<string> files);
 
-        public abstract List<string> InstallInstance(TManifest data, InstanceContent localFiles, CancellationToken cancelToken);
+        public abstract List<string> Install(TManifest data, InstanceContent localFiles, CancellationToken cancelToken);
 
         protected void AddonsDownloadEventInvoke(int totalDataCount, int nowDataCount)
         {
-            AddonsDownloadEvent?.Invoke(totalDataCount, nowDataCount);
+            AddonsDownload?.Invoke(totalDataCount, nowDataCount);
         }
 
         public InstanceContent GetInstanceContent()
@@ -130,10 +130,37 @@ namespace Lexplosion.Logic.FileSystem
             return false;
         }
 
-        public TManifest DownloadInstance(string downloadUrl, string fileName, ref InstanceContent localFiles, CancellationToken cancelToken)
+
+        public TManifest Extraction(InstanceFileGetter instanceFileGetter, ref InstanceContent localFiles, CancellationToken cancelToken)
         {
+            TaskArgs BuildTaskArgs(string fileName)
+            {
+                return new TaskArgs
+                {
+                    PercentHandler = delegate (int percent)
+                    {
+                        _fileDownloadHandler?.Invoke(fileName, percent, DownloadFileProgress.PercentagesChanged);
+                        MainFileDownload?.Invoke(percent);
+                    },
+                    CancelToken = cancelToken
+                };
+            }
+
             try
             {
+                string tempDir = CreateTempDir();
+
+                MainFileDownload?.Invoke(0);
+
+                (bool, string, string) res = instanceFileGetter(tempDir, BuildTaskArgs);
+
+                if (!res.Item1)
+                {
+                    _fileDownloadHandler?.Invoke(res.Item3, 100, DownloadFileProgress.Error);
+                    return default;
+                }
+                _fileDownloadHandler?.Invoke(res.Item3, 100, DownloadFileProgress.Successful);
+
                 //удаляем старые файлы
                 if (localFiles.Files != null)
                 {
@@ -143,30 +170,6 @@ namespace Lexplosion.Logic.FileSystem
                     }
                 }
 
-                string tempDir = CreateTempDir();
-
-                MainFileDownloadEvent?.Invoke(0);
-
-                var taskArgs = new TaskArgs
-                {
-                    PercentHandler = delegate (int percent)
-                    {
-                        _fileDownloadHandler?.Invoke(fileName, percent, DownloadFileProgress.PercentagesChanged);
-                        MainFileDownloadEvent?.Invoke(percent);
-                    },
-                    CancelToken = cancelToken
-                };
-
-                // скачивание архива
-                bool res = DownloadFile(downloadUrl, fileName, tempDir, taskArgs);
-
-                if (!res)
-                {
-                    _fileDownloadHandler?.Invoke(fileName, 100, DownloadFileProgress.Error);
-                    return default;
-                }
-                _fileDownloadHandler?.Invoke(fileName, 100, DownloadFileProgress.Successful);
-
                 if (Directory.Exists(tempDir + "dataDownload"))
                 {
                     Directory.Delete(tempDir + "dataDownload", true);
@@ -174,8 +177,7 @@ namespace Lexplosion.Logic.FileSystem
 
                 // Извлекаем содержимое этого архима
                 Directory.CreateDirectory(tempDir + "dataDownload");
-                ZipFile.ExtractToDirectory(tempDir + fileName, tempDir + "dataDownload");
-                DelFile(tempDir + fileName);
+                ZipFile.ExtractToDirectory(res.Item2, tempDir + "dataDownload");
 
                 var manifest = ArchiveHadnle(tempDir + "dataDownload/", out List<string> files);
                 localFiles.Files = files;
@@ -196,6 +198,12 @@ namespace Lexplosion.Logic.FileSystem
                 Runtime.DebugWrite("Exception " + ex);
                 return default;
             }
+        }
+
+        public void SetInstanceId(string id)
+        {
+            ChangeInstanceId(id);
+            instanceId = id;
         }
     }
 }
