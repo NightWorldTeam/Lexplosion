@@ -119,7 +119,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.FIlterPan
         #region Constructors
 
 
-        public CatalogFilterPanel(Action test, AutoResetEvent resetEvent)
+        public CatalogFilterPanel(Action filterChange)
         {
             Sources.Add(new InstanceSourceObject("Curseforge", InstanceSource.Curseforge));
             Sources.Add(new InstanceSourceObject("Modrinth", InstanceSource.Modrinth));
@@ -128,7 +128,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.FIlterPan
             UpdateCategories(Sources[0].Value);
             SelectedSource = Sources[0];
 
-            FilterChanged += test;
+            FilterChanged += filterChange;
 
             if (MainViewModel.AllGameVersions == null)
             {
