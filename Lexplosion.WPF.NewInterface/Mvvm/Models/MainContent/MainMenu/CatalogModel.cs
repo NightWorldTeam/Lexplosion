@@ -24,7 +24,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
         private readonly IInstanceController _instanceController;
 
 
-        private readonly AutoResetEvent _resetEvent = new AutoResetEvent(true);
+        private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
 
 
         #region Properties
@@ -88,6 +88,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
         {
             _instanceController = instanceController;
             FilterPanel = new CatalogFilterPanel(OnFilterChanged, _resetEvent);
+            _resetEvent.Set();
             //FilterPanel.FilterChanged += OnFilterChanged;
             //FilterPanel.ExecuteFilter();
         }

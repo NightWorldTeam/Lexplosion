@@ -140,7 +140,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.FIlterPan
             {
                 MainViewModel_AllVersionsLoaded();
             }
-            _resetEvent.Set();
         }
 
         private void MainViewModel_AllVersionsLoaded()
