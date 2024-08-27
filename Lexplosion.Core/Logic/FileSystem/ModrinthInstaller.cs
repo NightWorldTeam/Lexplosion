@@ -57,7 +57,7 @@ namespace Lexplosion.Logic.FileSystem
         /// <returns>
         /// Возвращает список ошибок.
         /// </returns>
-        public override List<string> Install(InstanceManifest data, InstanceContent localFiles, CancellationToken cancelToken)
+        public override List<string> InstallInstance(InstanceManifest data, InstanceContent localFiles, CancellationToken cancelToken)
         {
             InstalledAddonsFormat installedAddons = null;
             installedAddons = localFiles.InstalledAddons;

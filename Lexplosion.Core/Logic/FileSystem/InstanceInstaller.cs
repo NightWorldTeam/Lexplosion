@@ -1072,26 +1072,5 @@ namespace Lexplosion.Logic.FileSystem
 
             return errors;
         }
-
-        /// <summary>
-        /// Изменяет id сборки и создает соотвествующий каталог. Если каталог уже есть, то переименовывает его.
-        /// </summary>
-        public void ChangeInstanceId(string newId)
-        {
-            if (instanceId != null)
-            {
-                string oldPath = GetInstancePath(instanceId);
-                if (!Directory.Exists(oldPath))
-                {
-                    Directory.CreateDirectory(GetInstancePath(newId));
-                    instanceId = newId;
-                    return;
-                }
-
-                Directory.Move(GetInstancePath(instanceId), GetInstancePath(newId));
-            }
-
-            instanceId = newId;
-        }
     }
 }

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Windows.Data;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.FIlterPanel
@@ -15,6 +16,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.FIlterPan
     public class CatalogFilterPanel : ObservableObject
     {
         public event Action FilterChanged;
+        private readonly AutoResetEvent _resetEvent;
 
 
         #region Properties
@@ -118,8 +120,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.FIlterPan
         #region Constructors
 
 
-        public CatalogFilterPanel(Action test)
+        public CatalogFilterPanel(Action test, AutoResetEvent resetEvent)
         {
+            _resetEvent = resetEvent;
             Sources.Add(new InstanceSourceObject("Curseforge", InstanceSource.Curseforge));
             Sources.Add(new InstanceSourceObject("Modrinth", InstanceSource.Modrinth));
             Sources.Add(new InstanceSourceObject("NightWorld", InstanceSource.Nightworld));
@@ -137,6 +140,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.FIlterPan
             {
                 MainViewModel_AllVersionsLoaded();
             }
+            _resetEvent.Set();
         }
 
         private void MainViewModel_AllVersionsLoaded()

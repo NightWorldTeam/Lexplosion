@@ -65,7 +65,6 @@
     <Compile Include="Global.cs" />
     <Compile Include="Logic\CoreServicesManager.cs" />
     <Compile Include="Logic\FileSystem\FreeSourceInstanceInstaller.cs" />
-    <Compile Include="Logic\FileSystem\ModrinthImportManager.cs" />
     <Compile Include="Logic\FileSystem\StandartInstanceInstaller.cs" />
     <Compile Include="Logic\FileSystem\IArchivedInstanceInstaller.cs" />
     <Compile Include="Logic\FileSystem\CurseforgeInstaller.cs" />
@@ -96,9 +95,7 @@
     <Compile Include="Logic\Management\Authentication\NightWorldAuth.cs" />
     <Compile Include="Logic\Management\CategoriesManager.cs" />
     <Compile Include="Logic\Management\Delegates.cs" />
-    <Compile Include="Logic\Management\Installers\ArchiveImportManager.cs" />
     <Compile Include="Logic\Management\Installers\FreeSourceInstanceInstallManager.cs" />
-    <Compile Include="Logic\Management\Installers\IImportManager.cs" />
     <Compile Include="Logic\Management\Instances\FreeInstance.cs" />
     <Compile Include="Logic\Management\Instances\InstanceGroup.cs" />
     <Compile Include="Logic\Management\MinecraftVersion.cs" />
