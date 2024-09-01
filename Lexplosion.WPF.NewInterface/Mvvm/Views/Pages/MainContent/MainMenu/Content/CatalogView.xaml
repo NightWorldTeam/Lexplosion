@@ -54,7 +54,14 @@
     <Border Padding="0,40,0,0" Focusable="True">
         <Grid Background="Transparent">
 
-            <ScrollViewer KeyboardNavigation.IsTabStop="False" KeyboardNavigation.TabNavigation="None">
+            <ScrollViewer
+                x:Name="ContainerPage_ScrollViewer"
+                extensions:ScrollViewerExtensions.ChildItemsUpdated="{Binding IsLoaded}"
+                extensions:ScrollViewerExtensions.OnScrollCommand="{Binding OnScrollCommand}"
+                IsTabStop="False"
+                KeyboardNavigation.IsTabStop="False"
+                KeyboardNavigation.TabNavigation="None"
+                ScrollChanged="ContainerPage_ScrollChanged">
 
                 <Grid Focusable="True">
 
@@ -355,6 +362,20 @@
                     </Grid>
                 </Grid>
             </ScrollViewer>
+
+            <controls:AdvancedButton
+                x:Name="UpButton"
+                Width="40"
+                Height="40"
+                Margin="16"
+                Padding="10"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                Click="UpButton_Click"
+                CornerRadius="100"
+                IconData="M22.5 40V13.7L10.1 26.1 8 24 24 8l16 16-2.1 2.1-12.4-12.4V40Z"
+                Style="{StaticResource DefaultAdvancedButton}"
+                Visibility="Collapsed" />
         </Grid>
     </Border>
 </UserControl>

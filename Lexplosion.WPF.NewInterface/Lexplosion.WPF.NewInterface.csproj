@@ -115,6 +115,7 @@
     <Compile Include="Core\SegmentItem.cs" />
     <Compile Include="Core\Switch.cs" />
     <Compile Include="Core\ViewModel\ILimitedAccess.cs" />
+    <Compile Include="Extensions\ScrollViewer.cs" />
     <Compile Include="Extensions\StyleSelectors\LastRowItemWrapPanelStyleSelector.cs" />
     <Compile Include="Mvvm\Models\InstanceControllers\InstanceSharesController.cs" />
     <Compile Include="Mvvm\Models\InstanceTransfer\DistributedInstance.cs" />

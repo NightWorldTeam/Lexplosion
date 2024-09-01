@@ -4,7 +4,6 @@ using Lexplosion.Logic.Objects;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.FIlterPanel;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
-using Lexplosion.WPF.NewInterface.Mvvm.ViewModels;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -24,7 +23,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
         private readonly IInstanceController _instanceController;
 
 
-        private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
+        private readonly ManualResetEvent _resetEvent = new ManualResetEvent(false);
 
 
         #region Properties
@@ -89,8 +88,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
             _instanceController = instanceController;
             FilterPanel = new CatalogFilterPanel(OnFilterChanged);
             _resetEvent.Set();
-            //FilterPanel.FilterChanged += OnFilterChanged;
-            //FilterPanel.ExecuteFilter();
         }
 
 
