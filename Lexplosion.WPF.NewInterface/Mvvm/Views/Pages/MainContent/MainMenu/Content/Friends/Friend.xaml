@@ -121,7 +121,7 @@
                                 FontWeight="Medium"
                                 IconData="{DynamicResource PDProfile}"
                                 IconPadding="6"
-                                Style="{StaticResource HalfOpacityAdvancedButton}"
+                                Style="{StaticResource TransparentAdvancedButton}"
                                 Text="{DynamicResource ViewProfile}"
                                 TextPadding="8,0,0,0" />
                             <controls:AdvancedButton
@@ -133,7 +133,7 @@
                                 Foreground="#f44336"
                                 IconData="{DynamicResource PDPersonOff}"
                                 IconPadding="6"
-                                Style="{StaticResource HalfOpacityAdvancedButton}"
+                                Style="{StaticResource TransparentAdvancedButton}"
                                 Text="{DynamicResource Unfriend}"
                                 TextBlock.TextAlignment="Left"
                                 TextPadding="8,0,0,0" />

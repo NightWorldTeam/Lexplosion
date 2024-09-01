@@ -1,6 +1,7 @@
 ﻿using Lexplosion;
 using Lexplosion.Core.Tools.Notification;
 using Lexplosion.Global;
+using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.WPF.NewInterface.Core;
 using System;
 
@@ -28,7 +29,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization
             {
                 case AuthCode.Successfully:
                     {
-                        SuccessfulAuthorization(GlobalData.User.Login, accountType);
+                        SuccessfulAuthorization(Account.ActiveAccount.Login, accountType);
                         break;
                     }
                 case AuthCode.DataError:

@@ -6,7 +6,7 @@ using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 {
-    public sealed class FriendsViewModel : ViewModelBase
+    public sealed class FriendsViewModel : ViewModelBase, IRefreshable
     {
         public FriendsModel Model { get; private set; }
 
@@ -43,6 +43,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             App.Current.Dispatcher.Invoke(() => {
                 Model = new FriendsModel();
             });
+        }
+
+        public void Refresh()
+        {
+            Model.UpdateRequestsData();
         }
     }
 }

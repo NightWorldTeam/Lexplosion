@@ -1,14 +1,14 @@
 ﻿using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.Logic.Network;
-using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.ViewModel;
 using System;
-using System.Windows.Media;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends
 {
     public class Friend : ObservableObject
     {
+        public event Action<Friend> Unfriended;
+
         public enum FriendState
         {
             NotAdded,
@@ -33,10 +33,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends
             RunningClientName = runningClientName;
         }
 
-        public void Unfriend(Action afterMethodAction = null) 
+        public void Unfriend() 
         {
             NightWorldApi.RemoveFriend(Account.ActiveAccount.UUID, Account.ActiveAccount.SessionToken, Name);
-            afterMethodAction?.Invoke();
+            Unfriended?.Invoke(this);
         }
     }
 }

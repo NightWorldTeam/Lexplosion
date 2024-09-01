@@ -2,6 +2,7 @@
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects.Nightworld;
 using Lexplosion.WPF.NewInterface.Core;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -11,6 +12,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends
 {
     public sealed class FriendsModel : ViewModelBase
     {
+        public event Action<Friend> Unfriended;
+
+
         private List<Friend> _allFriends = new();
 
         private ObservableCollection<Friend> _inGameFriends = new();
@@ -114,6 +118,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends
                 foreach (var friend in friends)
                 {
                     var friendObj = new Friend(friend.Login, friend.ActivityStatus.ToString(), Friend.FriendState.Added, friend.AvatarUrl, friend.GameClientName);
+                    friendObj.Unfriended += FriendObj_Unfriended;
                     _allFriends.Add(friendObj);
                     OnPropertyChanged(nameof(HasFriends));
 
@@ -144,7 +149,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends
             });
         }
 
-
         private void OnSearchBoxTextChanged(string value)
         {
             if (AllFriends.View == null || InGameFriends.View == null || OnlineFriends == null || OfflineFriends == null)
@@ -152,10 +156,20 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends
 
             value ??= string.Empty;
 
-            AllFriends.View.Filter = (i => (i as Friend).Name.IndexOf(value, System.StringComparison.InvariantCultureIgnoreCase) > -1);
+            //AllFriends.View.Filter = (i => (i as Friend).Name.IndexOf(value, System.StringComparison.InvariantCultureIgnoreCase) > -1);
             InGameFriends.View.Filter = (i => (i as Friend).Name.IndexOf(value, System.StringComparison.InvariantCultureIgnoreCase) > -1);
             OnlineFriends.View.Filter = (i => (i as Friend).Name.IndexOf(value, System.StringComparison.InvariantCultureIgnoreCase) > -1);
             OfflineFriends.View.Filter = (i => (i as Friend).Name.IndexOf(value, System.StringComparison.InvariantCultureIgnoreCase) > -1);
+        }
+
+        /// <summary>
+        /// Вызывает эвент удаления из друзей
+        /// </summary>
+        /// <param name="obj">Удаленный друг</param>
+        private void FriendObj_Unfriended(Friend obj)
+        {
+            Unfriended?.Invoke(obj);
+            obj.Unfriended -= FriendObj_Unfriended;
         }
 
 

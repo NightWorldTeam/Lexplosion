@@ -8,23 +8,13 @@ using System.Windows.Media.Imaging;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu;
+using Lexplosion.Logic.Management.Accounts;
 
 namespace Lexplosion.WPF.NewInterface.Core.Objects
 {
-    public class NightWorldUser : ObservableObject, IEquatable<NightWorldUser>
+    public class NightWorldUser : NightWorldUserBase
     {
-        private readonly CancellationToken _cancellationToken;
-
-
-        #region Properties
-
-
-        public string Login { get; }
-        public string AvatarUrl { get; private set; }
-        public string RunningClientName { get; }
-        public ActivityStatus Status { get; }
-
-
         private bool _hasFriendRequestSent;
         public bool HasFriendRequestSent
         {
@@ -36,30 +26,21 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
         }
 
 
-        #endregion Properties
-
-
         #region Constructors
 
 
-        public NightWorldUser()
+        public NightWorldUser() : base()
         {
-
+            
         }
 
-        public NightWorldUser(NwUser nwUser)
+        public NightWorldUser(NwUser nwUser) : base(nwUser)
         {
-            Login = nwUser.Login;
-            RunningClientName = nwUser.GameClientName;
-            Status = nwUser.ActivityStatus;
-            AvatarUrl = nwUser.AvatarUrl;
+            
         }
 
 
         #endregion Constructors
-
-
-        #region Public & Protected Methods
 
 
         /// <summary>
@@ -74,7 +55,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
             }
 
             HasFriendRequestSent = true;
-            NightWorldApi.AddFriend(GlobalData.User.UUID, GlobalData.User.SessionToken, Login);
+            NightWorldApi.AddFriend(Account.ActiveAccount.UUID, Account.ActiveAccount.SessionToken, Login);
         }
 
         /// <summary>
@@ -89,8 +70,80 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
             }
 
             HasFriendRequestSent = false;
-            NightWorldApi.RemoveFriend(GlobalData.User.UUID, GlobalData.User.SessionToken, Login);
+            NightWorldApi.RemoveFriend(Account.ActiveAccount.UUID, Account.ActiveAccount.SessionToken, Login);
         }
+    }
+
+    public class NightWorldUserRequest : NightWorldUserBase
+    {
+        #region Constructors
+
+
+        public NightWorldUserRequest() : base()
+        {
+
+        }
+
+        public NightWorldUserRequest(NwUser nwUser) : base(nwUser)
+        {
+
+        }
+
+
+        #endregion Constructors
+
+
+        public void AddFriend() 
+        {
+            NightWorldApi.AddFriend(Account.ActiveAccount.UUID, Account.ActiveAccount.SessionToken, Login);
+        }
+
+        public void DeclineFriend() 
+        {
+            NightWorldApi.RemoveFriend(Account.ActiveAccount.UUID, Account.ActiveAccount.SessionToken, Login);
+        }
+    }
+
+
+    public abstract class NightWorldUserBase : ObservableObject, IEquatable<NightWorldUser>
+    {
+        private readonly CancellationToken _cancellationToken;
+
+
+        #region Properties
+
+
+        public string Login { get; }
+        public string AvatarUrl { get; private set; }
+        public string RunningClientName { get; }
+        public ActivityStatus Status { get; }
+
+
+        #endregion Properties
+
+
+        #region Constructors
+
+
+        protected NightWorldUserBase()
+        {
+
+        }
+
+        protected NightWorldUserBase(NwUser nwUser)
+        {
+            Login = nwUser.Login;
+            RunningClientName = nwUser.GameClientName;
+            Status = nwUser.ActivityStatus;
+            AvatarUrl = nwUser.AvatarUrl;
+        }
+
+
+        #endregion Constructors
+
+
+        #region Public & Protected Methods
+
 
         public override bool Equals(object obj)
         {

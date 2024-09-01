@@ -5,6 +5,7 @@ using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading;
@@ -15,6 +16,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 {
     public sealed class FriendRequestsModel : ViewModelBase 
     {
+        public event Action<NightWorldUserBase> FriendAdded;
+
+
         private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
         private ObservableCollection<object> _outgoing = new ObservableCollection<object>();
@@ -69,6 +73,19 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         }
 
 
+        public void AddFriend(NightWorldUserRequest friend) 
+        {
+            friend.AddFriend();
+            UpdateRequestsData();
+            FriendAdded?.Invoke(friend);
+        }
+
+        public void DeclineFriend(NightWorldUserRequest friend) 
+        {
+            friend.DeclineFriend();
+            UpdateRequestsData();
+        }
+
         #endregion Publuc & Protected Methods
 
 
@@ -82,8 +99,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
             value ??= string.Empty;
 
-            Outgoing.View.Filter = (i => (i as NightWorldUser).Login.IndexOf(value, System.StringComparison.InvariantCultureIgnoreCase) > -1);
-            Incoming.View.Filter = (i => (i as NightWorldUser).Login.IndexOf(value, System.StringComparison.InvariantCultureIgnoreCase) > -1);
+            Outgoing.View.Filter = (i => (i as NightWorldUserBase).Login.IndexOf(value, System.StringComparison.InvariantCultureIgnoreCase) > -1);
+            Incoming.View.Filter = (i => (i as NightWorldUserBase).Login.IndexOf(value, System.StringComparison.InvariantCultureIgnoreCase) > -1);
         }
 
 
@@ -93,7 +110,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             _outgoing.Clear();
             foreach (var friendRequest in outgoingRequests)
             {
-                _outgoing.Add(new NightWorldUser(friendRequest));
+                _outgoing.Add(new NightWorldUserRequest(friendRequest));
             }
         }
 
@@ -102,7 +119,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             _incoming.Clear();
             foreach (var friendRequest in incomingRequests)
             {
-                _incoming.Add(new NightWorldUser(friendRequest));
+                _incoming.Add(new NightWorldUserRequest(friendRequest));
             }
         }
 
@@ -110,7 +127,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         #endregion Private Methods
     }
 
-    public sealed class FriendRequestsViewModel : ViewModelBase
+    public sealed class FriendRequestsViewModel : ViewModelBase, IRefreshable
     {
         public FriendRequestsModel Model { get; }
 
@@ -119,13 +136,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         #region Command
 
 
-        private RelayCommand _cancelFriendRequestCommand;
-        public ICommand CancelFriendRequestCommand
+        private RelayCommand _declineFriendRequestCommand;
+        public ICommand DeclineFriendRequestCommand
         {
-            get => RelayCommand.GetCommand<Friend>(ref _cancelFriendRequestCommand, friend =>
+            get => RelayCommand.GetCommand<NightWorldUserRequest>(ref _declineFriendRequestCommand, friend =>
             {
-                NightWorldApi.RemoveFriend(Account.ActiveAccount.UUID, Account.ActiveAccount.SessionToken, friend.Name);
-                Model.UpdateRequestsData();
+                Model.DeclineFriend(friend);
                 // TODO: Friends Translate
             });
         }
@@ -136,10 +152,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         private RelayCommand _addFriendCommand;
         public ICommand AddFriendCommand
         {
-            get => RelayCommand.GetCommand<NightWorldUser>(ref _addFriendCommand, friend =>
+            get => RelayCommand.GetCommand<NightWorldUserRequest>(ref _addFriendCommand, friend =>
             {
-                NightWorldApi.AddFriend(Account.ActiveAccount.UUID, Account.ActiveAccount.SessionToken, friend.Login);
-                Model.UpdateRequestsData();
+                Model.AddFriend(friend);
                 // TODO: Friends Translate
             });
         }
@@ -151,6 +166,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         public FriendRequestsViewModel()
         {
             Model = new FriendRequestsModel();
+        }
+
+        public void Refresh()
+        {
+            Model.UpdateRequestsData();
         }
     }
 }

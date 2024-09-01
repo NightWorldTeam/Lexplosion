@@ -21,9 +21,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
     public class FriendsLayoutViewModel : ContentLayoutViewModelBase, ILimitedAccess
     {
-        private ViewModelBase _friendsViewModel;
-        private ViewModelBase _friendsRequestsViewModel;
-        private ViewModelBase _findFriendsViewModel;
+        private FriendsViewModel _friendsViewModel;
+        private FriendRequestsViewModel _friendsRequestsViewModel;
+        private FindFriendsViewModel _findFriendsViewModel;
 
 
         private Action _openAccountFactory;
@@ -61,6 +61,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         public FriendsLayoutViewModel(Action openFactoryAction) : base()
         {
             _openAccountFactory = openFactoryAction;
+
             Account.ActiveAccountChanged += (acc) =>
             {
                 ThreadPool.QueueUserWorkItem((obj) => { 
@@ -110,9 +111,29 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             if (HasAccess)
             {
                 _tabs.Clear();
+
                 _friendsViewModel = new FriendsViewModel();
                 _friendsRequestsViewModel = new FriendRequestsViewModel();
                 _findFriendsViewModel = new FindFriendsViewModel();
+
+                _friendsViewModel.Model.Unfriended += (user) =>
+                {
+                    _friendsRequestsViewModel.Refresh();
+                    _findFriendsViewModel.Refresh();
+                };
+
+                _friendsRequestsViewModel.Model.FriendAdded += (user) =>
+                {
+                    _friendsViewModel.Refresh();
+                    _findFriendsViewModel.Refresh();
+                };
+
+                _findFriendsViewModel.Model.FriendRequestSent += (user) => 
+                {
+                    _friendsRequestsViewModel.Refresh();
+                };
+
+
                 _tabs.Add(new TabItemModel { TextKey = "Friends", Content = _friendsViewModel, IsSelected = true });
                 _tabs.Add(new TabItemModel { TextKey = "FriendsRequests", Content = _friendsRequestsViewModel });
                 _tabs.Add(new TabItemModel { TextKey = "FindFriends", Content = _findFriendsViewModel });

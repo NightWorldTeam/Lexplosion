@@ -14,7 +14,7 @@
     mc:Ignorable="d">
 
     <ScrollViewer Focusable="True">
-        <Grid Margin="32,16,32,0" HorizontalAlignment="Stretch">
+        <Grid Margin="32,16,23,0" HorizontalAlignment="Stretch">
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -23,13 +23,17 @@
 
             <!--  TODO: Убирать SearchBox все друзья влазять и скролить не надо и друзей нет???  -->
             <controls:SearchBox
+                Height="32"
                 Margin="0,0,0,16"
                 Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
                 Placeholder="{DynamicResource TypingNicknamePlaceholder}"
                 Text="{Binding Model.SearchBoxText, UpdateSourceTrigger=PropertyChanged}"
-                Visibility="{Binding Model.HasFriends, Converter={converters:BooleanToVisibilityConverter}}" />
+                Visibility="{Binding Model.AllFriends.View.IsEmpty, Converter={converters:NegativeBooleanToVisibilityConverter}}" />
 
-            <Grid Grid.Row="1">
+            <Grid
+                Grid.Row="1"
+                Background="Transparent"
+                Visibility="{Binding Model.AllFriends.View.IsEmpty, Converter={converters:NegativeBooleanToVisibilityConverter}}">
 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -206,11 +210,11 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Description="С вами никто не дружит. Капец... :("
-                Visibility="{Binding Model.HasFriends, Converter={converters:NegativeBooleanToVisibilityConverter}}">
+                Visibility="{Binding Model.AllFriends.View.IsEmpty, Converter={converters:BooleanToVisibilityConverter}}">
 
                 <!--  TODO: Translate  -->
                 <controls:AdvancedButton
-                    Margin="0,8,0,0"
+                    Margin="0,16,0,0"
                     HorizontalAlignment="Center"
                     Style="{StaticResource DefaultAdvancedButton}"
                     Text="Найти друзей"

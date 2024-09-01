@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Collections;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace Lexplosion.WPF.NewInterface.Controls
@@ -9,10 +10,20 @@ namespace Lexplosion.WPF.NewInterface.Controls
             = DependencyProperty.Register(nameof(Description), typeof(string), typeof(Empty),
             new FrameworkPropertyMetadata(defaultValue: "No data"));
 
+        public static readonly DependencyProperty CollectionCountProperty
+            = DependencyProperty.Register(nameof(CollectionCount), typeof(int), typeof(Empty),
+            new FrameworkPropertyMetadata(defaultValue: 0, propertyChangedCallback: OnCollectionCountChanged));
+
         public string Description 
         {
             get => (string)GetValue(DescriptionProperty);
             set => SetValue(DescriptionProperty, value);
+        }
+
+        public int CollectionCount 
+        {
+            get => (int)GetValue(CollectionCountProperty);
+            set => SetValue(CollectionCountProperty, value);
         }
 
 
@@ -26,5 +37,12 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
 
         #endregion Constructors
+
+
+        private static void OnCollectionCountChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var _this = d as Empty;
+            _this.Visibility = _this.CollectionCount == 0 ? Visibility.Visible : Visibility.Collapsed;
+        }
     }
 }

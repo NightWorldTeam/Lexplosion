@@ -9,8 +9,10 @@
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
     xmlns:lexplosion="clr-namespace:Lexplosion;assembly=Lexplosion.Core"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu"
+    xmlns:mainmenu="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:objects="clr-namespace:Lexplosion.WPF.NewInterface.Core.Objects"
+    d:DataContext="{d:DesignInstance Type=mainmenu:FindFriendsViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
@@ -187,73 +189,34 @@
                         </Grid>
                     </StackPanel>
 
-                    <Button Grid.Column="2" Cursor="Hand">
-                        <Button.Template>
-                            <ControlTemplate TargetType="{x:Type Button}">
-                                <Grid>
-                                    <Border
-                                        x:Name="HoverBorder"
-                                        Height="{Binding ActualHeight, ElementName=ContentBorder}"
-                                        Background="{DynamicResource ActivitySolidColorBrush}"
-                                        CornerRadius="5"
-                                        Opacity="0" />
-
-                                    <Border
-                                        x:Name="ContentBorder"
-                                        Padding="8"
-                                        BorderThickness="0"
-                                        CornerRadius="5">
-
-                                        <Border.Background>
-                                            <SolidColorBrush Opacity="0.6" Color="{DynamicResource SeparateColor}" />
-                                        </Border.Background>
-
-                                        <Viewbox Width="20" Height="20">
-                                            <Path
-                                                x:Name="PersonOperationPath"
-                                                extensions:Path.StringKeyData="AddPerson"
-                                                Fill="{DynamicResource ActivitySolidColorBrush}"
-                                                Opacity="1"
-                                                Stretch="Fill" />
-                                        </Viewbox>
-                                    </Border>
-                                </Grid>
-
-                                <ControlTemplate.Triggers>
-                                    <DataTrigger Binding="{Binding HasFriendRequestSent}" Value="True">
-                                        <Setter TargetName="PersonOperationPath" Property="extensions:Path.StringKeyData" Value="RemovePerson" />
-                                    </DataTrigger>
-
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Trigger.EnterActions>
-                                            <BeginStoryboard>
-                                                <Storyboard>
-                                                    <DoubleAnimation
-                                                        Storyboard.TargetName="HoverBorder"
-                                                        Storyboard.TargetProperty="Opacity"
-                                                        From="0"
-                                                        To="1"
-                                                        Duration="0:0:0.125" />
-                                                </Storyboard>
-                                            </BeginStoryboard>
-                                        </Trigger.EnterActions>
-                                        <Trigger.ExitActions>
-                                            <BeginStoryboard>
-                                                <Storyboard>
-                                                    <DoubleAnimation
-                                                        Storyboard.TargetName="HoverBorder"
-                                                        Storyboard.TargetProperty="Opacity"
-                                                        From="1"
-                                                        To="0"
-                                                        Duration="0:0:0.125" />
-                                                </Storyboard>
-                                            </BeginStoryboard>
-                                        </Trigger.ExitActions>
-                                    </Trigger>
-                                </ControlTemplate.Triggers>
-                            </ControlTemplate>
-                        </Button.Template>
-                    </Button>
+                    <core:If Grid.Column="2" Condition="{Binding HasFriendRequestSent}">
+                        <core:If.False>
+                            <controls:AdvancedButton
+                                Width="32"
+                                Height="32"
+                                HorizontalContentAlignment="Center"
+                                Command="{Binding DataContext.SendFriendRequestCommand, RelativeSource={RelativeSource AncestorLevel=2, AncestorType={x:Type UserControl}}}"
+                                CommandParameter="{Binding}"
+                                Cursor="Hand"
+                                Foreground="{DynamicResource ActivitySolidColorBrush}"
+                                IconData="{DynamicResource PDAddPerson}"
+                                IconPadding="0,8"
+                                Style="{StaticResource HalfOpacityAdvancedButton}" />
+                        </core:If.False>
+                        <core:If.True>
+                            <controls:AdvancedButton
+                                Width="32"
+                                Height="32"
+                                HorizontalContentAlignment="Center"
+                                Command="{Binding DataContext.CancelFriendRequestCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                CommandParameter="{Binding}"
+                                Cursor="Hand"
+                                Foreground="{DynamicResource ActivitySolidColorBrush}"
+                                IconData="{DynamicResource PDRemovePerson}"
+                                IconPadding="0,8"
+                                Style="{StaticResource HalfOpacityAdvancedButton}" />
+                        </core:If.True>
+                    </core:If>
                 </Grid>
             </Border>
         </DataTemplate>
@@ -289,7 +252,9 @@
 
             <!--  SearchBox & Filters  -->
             <controls:SearchBox
+                Height="32"
                 Margin="0,0,0,12"
+                Padding="8,4"
                 HorizontalAlignment="Stretch"
                 Background="{DynamicResource SecondarySolidColorBrush}"
                 Placeholder="{DynamicResource TypingNicknamePlaceholder}"
@@ -302,7 +267,7 @@
                 Grid.Row="1"
                 Margin="0,0,0,8"
                 HorizontalAlignment="Stretch"
-                ItemsSource="{Binding Model.Users}">
+                ItemsSource="{Binding Model.Users.View}">
 
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -326,13 +291,7 @@
         </Grid>
 
         <!--  TODO: Translate  -->
-        <TextBlock
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            FontSize="20"
-            Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
-            Text="Мы ничего не нашли по данному запросу."
-            Visibility="{Binding Model.IsEmpty, Converter={converters:BooleanToVisibilityConverter}}" />
+        <controls:Empty CollectionCount="{Binding Model.Users.View.Count}" Description="Мы ничего не нашли по данному запросу" />
 
         <controls:LoadingBoard
             Background="Black"

@@ -99,6 +99,7 @@
     <Compile Include="Core\Converters\MultiValueConverter\StyleSelectorConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\ImagePathValidateConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\RowElementCountConverter.cs" />
+    <Compile Include="Core\IRefreshable.cs" />
     <Compile Include="Core\Notifications\IActionNotification.cs" />
     <Compile Include="Core\Notifications\INotificable.cs" />
     <Compile Include="Core\Notifications\INotification.cs" />
@@ -111,6 +112,8 @@
     <Compile Include="Core\Objects\InstanceGroup.cs" />
     <Compile Include="Core\Objects\SelecteableItem.cs" />
     <Compile Include="Core\Objects\Test.cs" />
+    <Compile Include="Core\SegmentItem.cs" />
+    <Compile Include="Core\Switch.cs" />
     <Compile Include="Core\ViewModel\ILimitedAccess.cs" />
     <Compile Include="Extensions\StyleSelectors\LastRowItemWrapPanelStyleSelector.cs" />
     <Compile Include="Mvvm\Models\InstanceControllers\InstanceSharesController.cs" />

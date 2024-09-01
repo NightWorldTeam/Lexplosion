@@ -8,12 +8,16 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 {
     public sealed class FindFriendsModel : ViewModelBase 
     {
+        public event Action<NightWorldUser> FriendRequestSent;
+
+
         private CancellationTokenSource _cancellationToken = new();
 
 
@@ -24,7 +28,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         /// <summary>
         /// Список пользователей на странице.
         /// </summary>
-        public IEnumerable<NightWorldUser> Users { get => _users; }
+        public CollectionViewSource Users { get; } = new CollectionViewSource();
+
 
         /// <summary>
         /// Загружается ли страница.
@@ -87,6 +92,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
         public FindFriendsModel()
         {
+            Users.Source = _users;
             LoadUsersList();
         }
 
@@ -127,6 +133,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         public void SendFriendRequest(NightWorldUser user) 
         {
             user.SendFriendRequest();
+            FriendRequestSent?.Invoke(user);
             //DoNotification(ResourceGetter.GetString("friendsChanged"), user.Login + " " + ResourceGetter.GetString("requestsWasSend"), 5, 0);
         }
 
@@ -202,12 +209,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
     }
 
 
-    public sealed class FindFriendsViewModel : ViewModelBase
+    public sealed class FindFriendsViewModel : ViewModelBase, IRefreshable
     {
         public FindFriendsModel Model { get; }
 
 
-        #region Properties
+        #region Commands
 
 
         /// <summary>
@@ -253,12 +260,17 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         }
 
 
-        #endregion Properties
+        #endregion Commands
 
 
         public FindFriendsViewModel()
         {
             Model = new FindFriendsModel();
+        }
+
+        public void Refresh()
+        {
+            
         }
     }
 }
