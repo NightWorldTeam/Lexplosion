@@ -53,6 +53,7 @@ namespace Lexplosion.Logic
         public bool NetworkDirectConnection = true;
         public string LanguageId = "";
         public string AccentColor = "";
+        public string ThemeName = "";
         /// <summary>
         /// Адрес сервера для автовхода при запуске майкрафта.
         /// Параметр только для настроек конкретного клиента. 
@@ -108,6 +109,7 @@ namespace Lexplosion.Logic
             NetworkDirectConnection = settings.NetworkDirectConnection;
             LanguageId = settings.LanguageId;
             AccentColor = settings.AccentColor;
+            ThemeName = settings.ThemeName;
         }
 
         public Settings Copy()

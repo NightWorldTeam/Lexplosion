@@ -1,7 +1,11 @@
-﻿using Lexplosion.WPF.NewInterface.Core;
+﻿using Lexplosion.Global;
+using Lexplosion.Logic;
+using Lexplosion.Logic.FileSystem;
+using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Objects;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Media;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSettings
@@ -22,8 +26,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
 
         public AppearanceSettingsModel()
         {
-            LoadActivityColors();
             LoadThemes();
+            LoadActivityColors();
         }
 
 
@@ -40,7 +44,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
                 theme.SelectedEvent += SelectedThemeChanged;
             }
 
-            _themes[0].IsSelected = true;
+            var savedTheme = _themes.FirstOrDefault(t => t.Name == GlobalData.GeneralSettings.ThemeName);
+            
+            if (savedTheme == null)
+                _themes[0].IsSelected = true;
+            else
+                savedTheme.IsSelected = true;
+
         }
 
         private void LoadActivityColors()
@@ -55,6 +65,14 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
             {
                 color.SelectedEvent += SelectedColorChanged;
             }
+
+            var savedColorBrush = new BrushConverter().ConvertFrom(GlobalData.GeneralSettings.AccentColor);
+            var savedColor = _colors.FirstOrDefault(c => c.Brush.ToString() == savedColorBrush.ToString());
+            if (savedColor == null)
+                _colors[0].IsSelected = true;
+            else
+                savedColor.IsSelected = true;
+
         }
 
         private void SelectedColorChanged(ActivityColor color, bool isSelected)
@@ -62,6 +80,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
             if (isSelected)
             {
                 RuntimeApp.AppColorThemeService.ChangeActivityColor(color.Brush.Color);
+                GlobalData.GeneralSettings.AccentColor = color.Brush.Color.ToString();
+                DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
             }
         }
 
@@ -70,6 +90,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
             if (isSelected) 
             {
                 RuntimeApp.AppColorThemeService.ChangeTheme(theme);
+                GlobalData.GeneralSettings.ThemeName = theme.Name;
+                DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
             }
         }
 
