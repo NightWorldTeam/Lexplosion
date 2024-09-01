@@ -504,7 +504,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
             var instanceForm = d as InstanceForm;
             var instanceModelBase = ((InstanceModelBase)e.NewValue);
 
-            //instanceModelBase.NameChanged += instanceForm.SetName;
+            instanceModelBase.NameChanged += () => { App.Current.Dispatcher.Invoke(() => { instanceForm.SetName(instanceModelBase.Name); }); };
 
             instanceForm.UpdateAllFields(instanceModelBase);
         }

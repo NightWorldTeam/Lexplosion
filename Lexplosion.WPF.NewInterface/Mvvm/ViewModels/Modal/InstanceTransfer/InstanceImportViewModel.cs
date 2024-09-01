@@ -10,10 +10,21 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer
 {
     public sealed class InstanceImportViewModel : ActionModalViewModelBase
     {
-        public InstanceImportModel Model { get; } 
+        public InstanceImportModel Model { get; }
 
 
         #region Commands
+
+
+        private RelayCommand _browseFileFromLocalCommand;
+        public ICommand BrowseFileFromLocalCommand 
+        {
+            get => RelayCommand.GetCommand(ref _browseFileFromLocalCommand, () => 
+            {
+                Model.BrowseFiles();
+            });
+        }
+
 
 
         private RelayCommand _cancelImportCommand;

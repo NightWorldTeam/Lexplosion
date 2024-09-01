@@ -3,6 +3,7 @@ using Lexplosion.WPF.NewInterface.Core;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows.Forms;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
 {
@@ -37,6 +38,26 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
 
 
         #region Public Methods 
+
+
+        /// <summary>
+        /// Открывает модальное окно, для выбора файлов с PC.
+        /// </summary>
+        public void BrowseFiles()
+        {
+            using (var dialog = new OpenFileDialog())
+            {
+                dialog.Filter = Constants.ImportFileDialogFilters;
+
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    if (dialog.FileName.EndsWith(Constants.ImportFileExtension))
+                    {
+                        Import(dialog.FileName);
+                    }
+                }
+            }
+        }
 
 
         public void Import(string path)
@@ -82,6 +103,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
             importFile.IsImporing = false;
 
             // TODO: Send Notification
+            OnPropertyChanged(nameof(instanceClient.Name));
 
             if (importResult != ImportResult.Successful)
             {

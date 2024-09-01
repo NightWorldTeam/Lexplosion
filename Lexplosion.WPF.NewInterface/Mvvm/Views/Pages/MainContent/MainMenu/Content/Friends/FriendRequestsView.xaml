@@ -526,8 +526,7 @@
                 Margin="16,8"
                 Padding="16,2"
                 Placeholder="{DynamicResource TypingNicknamePlaceholder}"
-                Text="{Binding Model.SearchBoxText, UpdateSourceTrigger=PropertyChanged}"
-                TextMargin="2,0" />
+                Text="{Binding Model.SearchBoxText, UpdateSourceTrigger=PropertyChanged}" />
 
         </Grid>
 
