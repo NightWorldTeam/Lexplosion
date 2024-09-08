@@ -10,8 +10,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     x:Name="TestWindowName"
     Title="TestWindow"
-    Height="450"
-    MinWidth="200"
+    MinWidth="944"
+    MinHeight="528"
     mc:Ignorable="d">
     <Window.Resources>
         <Style x:Key="ButtonFocusVisual1">
@@ -53,9 +53,10 @@
             </Style.Triggers>
             <!--<Setter Property="Width" Value="{Binding ActualWidth, ElementName=TestWindowName, Converter={converters:WindowWidthToXProcentWidth}, ConverterParameter=60}" />-->
         </Style>
+
     </Window.Resources>
 
-    <Border Padding="32" Background="{DynamicResource PrimarySolidColorBrush}">
+    <Border Padding="32" Background="{DynamicResource SeparateSolidColorBrush}">
         <Border.LayoutTransform>
             <ScaleTransform ScaleX="1" ScaleY="1" />
         </Border.LayoutTransform>
@@ -80,6 +81,28 @@
                     x:Name="hex"
                     Width="120"
                     Margin="16,0,0,0" />
+
+                <ComboBox
+                    Height="32"
+                    Margin="16,0,0,0"
+                    SelectedIndex="0">
+                    <ComboBoxItem>Item 1</ComboBoxItem>
+                    <ComboBoxItem>Item 2</ComboBoxItem>
+                    <ComboBoxItem>Item 3</ComboBoxItem>
+                    <ComboBoxItem>Item 4</ComboBoxItem>
+                    <ComboBoxItem>Item 5</ComboBoxItem>
+                    <ComboBoxItem>Item 6</ComboBoxItem>
+                    <ComboBoxItem>Item 7</ComboBoxItem>
+                    <ComboBoxItem>Item 8</ComboBoxItem>
+                    <ComboBoxItem>Item 9</ComboBoxItem>
+                    <ComboBoxItem>Item 10</ComboBoxItem>
+                    <ComboBoxItem>Item 11</ComboBoxItem>
+                    <ComboBoxItem>Item 12</ComboBoxItem>
+                    <ComboBoxItem>Item 13</ComboBoxItem>
+                    <ComboBoxItem>Item 14</ComboBoxItem>
+                    <ComboBoxItem>Item 15</ComboBoxItem>
+                    <ComboBoxItem>Item 16</ComboBoxItem>
+                </ComboBox>
             </WrapPanel>
             <!--  Text="Test Label"  -->
             <!--  IconData="{StaticResource PDNightworld}"  -->

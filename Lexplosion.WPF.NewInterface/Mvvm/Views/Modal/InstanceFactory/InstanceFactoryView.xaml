@@ -108,6 +108,7 @@
                                             HorizontalAlignment="Right"
                                             IsSynchronizedWithCurrentItem="True"
                                             ItemsSource="{Binding Model.GameVersions}"
+                                            MaxDropDownHeight="300"
                                             SelectedItem="{Binding Model.Version, UpdateSourceTrigger=PropertyChanged}"
                                             Visibility="{Binding Model.IsGameVersionsAvaliable, Converter={converters:BooleanToVisibilityConverter}}" />
 
