@@ -57,21 +57,19 @@ namespace Lexplosion.WPF.NewInterface.Controls
             = DependencyProperty.Register(nameof(IconFill), typeof(Brush), typeof(AdvancedButton),
                 new FrameworkPropertyMetadata(SystemColors.ControlTextBrush, FrameworkPropertyMetadataOptions.Inherits, propertyChangedCallback: OnIconFillChanged));
 
-        private static void OnIconFillChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static readonly DependencyPropertyKey HasIconPropertyKey
+            = DependencyProperty.RegisterReadOnly(nameof(HasIcon),typeof(bool), typeof(AdvancedButton),
+                new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.None));
+
+        public static readonly DependencyProperty HasIconProperty = HasIconPropertyKey.DependencyProperty;
+
+        public bool HasIcon
         {
-            if (d is AdvancedButton _this) 
-            {
-                if (_this.IconFill == null)
-                {
-                    _this._iconPath.SetValue(Path.FillProperty, new TemplateBindingExtension(AdvancedButton.ForegroundProperty));
-                }
-                else
-                {
-                    _this._iconPath.SetValue(Path.FillProperty, new TemplateBindingExtension(AdvancedButton.IconFillProperty));
-                    _this._iconPath.Fill = _this.IconFill;
-                }
-            }
+            get => (bool)GetValue(HasIconProperty);
+            protected set => SetValue(HasIconPropertyKey, value); 
         }
+
+
 
         public string Text 
         {
@@ -163,6 +161,8 @@ namespace Lexplosion.WPF.NewInterface.Controls
             {
                 _textBlock.Text = Text;   
             }
+
+            HasIcon = IconData != null;
         }
 
 
@@ -203,7 +203,9 @@ namespace Lexplosion.WPF.NewInterface.Controls
             _textBlock.Visibility = Visibility.Collapsed;
         }
 
-
+        /// <summary>
+        /// Иконка изменилась
+        /// </summary>
         private static void OnIconDataChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is AdvancedButton _this)
@@ -211,17 +213,23 @@ namespace Lexplosion.WPF.NewInterface.Controls
                 Runtime.DebugWrite("Icon data changed");
                 if (_this._iconPath != null) 
                 {
-                    if (string.IsNullOrEmpty(_this.IconData)) { 
+                    if (string.IsNullOrEmpty(_this.IconData)) 
+                    { 
                         _this._iconViewBox.Visibility = Visibility.Collapsed;
+                        _this.HasIcon = false;
                         return;
                     }
 
                     _this._iconViewBox.Visibility = Visibility.Visible;
                     _this._iconPath.Data = Geometry.Parse(_this.IconData);
+                    _this.HasIcon = true;
                 }
             }
         }
 
+        /// <summary>
+        /// Текст изменился
+        /// </summary>
         private static void OnTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is AdvancedButton _this)
@@ -235,6 +243,25 @@ namespace Lexplosion.WPF.NewInterface.Controls
         {
             CornerRadius cr = (CornerRadius)value;
             return cr.IsValid(false, false, false, false);
+        }
+
+        /// <summary>
+        /// Цвет иконки изменился
+        /// </summary>
+        private static void OnIconFillChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is AdvancedButton _this) 
+            {
+                if (_this.IconFill == null)
+                {
+                    _this._iconPath.SetValue(Path.FillProperty, new TemplateBindingExtension(AdvancedButton.ForegroundProperty));
+                }
+                else
+                {
+                    _this._iconPath.SetValue(Path.FillProperty, new TemplateBindingExtension(AdvancedButton.IconFillProperty));
+                    _this._iconPath.Fill = _this.IconFill;
+                }
+            }
         }
 
 

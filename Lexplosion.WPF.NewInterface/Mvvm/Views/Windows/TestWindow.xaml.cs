@@ -74,5 +74,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
             // #13f287
             // #167FFC
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

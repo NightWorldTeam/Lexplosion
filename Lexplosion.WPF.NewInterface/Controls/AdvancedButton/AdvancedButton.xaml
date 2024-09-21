@@ -58,7 +58,14 @@
                             <!--  Icon  -->
                             <Border Padding="{TemplateBinding IconPadding}">
                                 <Viewbox x:Name="PATH_Icon" VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
-                                    <Path Fill="{TemplateBinding Foreground}" Stretch="Fill" />
+                                    <Path
+                                        Fill="{TemplateBinding Foreground}"
+                                        RenderTransformOrigin="0.5, 0.5"
+                                        Stretch="Fill">
+                                        <Path.RenderTransform>
+                                            <ScaleTransform ScaleX="0.7" ScaleY="0.7" />
+                                        </Path.RenderTransform>
+                                    </Path>
                                 </Viewbox>
                             </Border>
 
