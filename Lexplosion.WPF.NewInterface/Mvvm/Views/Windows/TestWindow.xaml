@@ -62,6 +62,22 @@
                 <ScaleTransform ScaleX="1" ScaleY="1" />
             </Border.LayoutTransform>
             <Grid>
+                <StackPanel
+                    Margin="0,300,0,0"
+                    HorizontalAlignment="Left"
+                    Orientation="Horizontal">
+                    <controls:AdvancedButton
+                        HorizontalAlignment="Left"
+                        Style="{StaticResource md-default}"
+                        Text="Button 40px" />
+
+                    <controls:AdvancedButton
+                        Margin="10,0,0,0"
+                        HorizontalAlignment="Left"
+                        Style="{StaticResource md-default}"
+                        Text="Button 46px" />
+                </StackPanel>
+
                 <WrapPanel>
                     <controls:AdvancedButton
                         Padding="32,6"
@@ -126,9 +142,10 @@
                                     Text="Button 32px" />
                             </Border>
 
+                            <!--  IconData="{StaticResource PDMemory}"  -->
                             <controls:AdvancedButton
                                 FontSize="14"
-                                IconData="{StaticResource PDMemory}"
+                                IsEnabled="False"
                                 Style="{StaticResource sm-default}"
                                 Text="Button 32px" />
                         </WrapPanel>
@@ -148,20 +165,36 @@
                                 Text="Button 40px" />
 
                         </Border>
-                        <Border
-                            Height="46"
+
+                        <controls:AdvancedButton
                             Margin="0,0,0,32"
+                            FontSize="14"
+                            IconData="{StaticResource PDMemory}"
+                            Style="{StaticResource md-default}"
+                            Text="Button 40px" />
+
+                        <Border
+                            Height="40"
+                            Margin="0,0,0,32"
+                            Padding="14,0,14,0"
                             Background="#167FFC"
                             CornerRadius="5">
                             <TextBlock
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
-                                FontSize="14"
+                                FontSize="16"
                                 FontWeight="Medium"
                                 Foreground="White"
                                 Text="Button 46px" />
 
                         </Border>
+
+                        <controls:AdvancedButton
+                            Margin="0,0,0,32"
+                            FontSize="14"
+                            IconData="{StaticResource PDMemory}"
+                            Style="{StaticResource lg-default}"
+                            Text="Button 46px" />
                     </StackPanel>
                 </WrapPanel>
                 <!--  Text="Test Label"  -->

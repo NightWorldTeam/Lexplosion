@@ -877,9 +877,6 @@
     <Resource Include="Assets\fonts\Arkhip.ttf" />
     <Resource Include="Assets\fonts\PassDots.ttf" />
     <Resource Include="Assets\fonts\SFProDisplay.otf" />
-    <Resource Include="Assets\fonts\Inter_28pt-Regular.ttf" />
-    <Resource Include="Assets\fonts\DMSans-Medium.ttf" />
-    <Resource Include="Assets\fonts\DMSans-Regular.ttf" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -892,6 +889,7 @@
   <ItemGroup>
     <Folder Include="Core\Extensions\" />
     <Folder Include="Core\StyleSelectors\" />
+    <Folder Include="Experiments\" />
     <Folder Include="Mvvm\ViewModels\Authorization\OAuth2\" />
     <Folder Include="Mvvm\ViewModels\InstanceForm\" />
   </ItemGroup>

@@ -285,8 +285,8 @@
     <Color x:Key="DefaultButtonPressedBackgroundColor">#0FC26C</Color>
     <SolidColorBrush x:Key="DefaultButtonPressedBackgroundColorBrush" Color="{DynamicResource DefaultButtonPressedBackgroundColor}" />
 
-    <Color x:Key="DefaultButtonDisableBackgroundColor" />
-    <SolidColorBrush x:Key="DefaultButtonDisableBackgroundColorBrush" Color="{DynamicResource ActivityColor}" />
+    <Color x:Key="DefaultButtonDisableBackgroundColor">#434343</Color>
+    <SolidColorBrush x:Key="DefaultButtonDisableBackgroundColorBrush" Color="{DynamicResource DefaultButtonDisableBackgroundColor}" />
 
     <Color x:Key="DefaultButtonForegroundColor">Black</Color>
     <SolidColorBrush x:Key="DefaultButtonForegroundColorBrush" Color="{DynamicResource DefaultButtonForegroundColor}" />

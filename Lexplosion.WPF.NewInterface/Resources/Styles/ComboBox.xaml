@@ -191,8 +191,8 @@
             <Border
                 x:Name="Border"
                 Grid.ColumnSpan="2"
-                Background="White"
-                BorderBrush="#E6E6E6"
+                Background="{DynamicResource PrimarySolidColorBrush}"
+                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
                 BorderThickness="1"
                 CornerRadius="5">
                 <Border.Effect>
@@ -221,7 +221,7 @@
                 <Path
                     x:Name="Arrow"
                     Data="M34.1213 38.945C32.9497 40.1166 31.0503 40.1166 29.8787 38.945L17.8667 26.933C16.8357 25.9021 16.8357 24.2306 17.8667 23.1997V23.1997C18.8976 22.1687 20.5691 22.1687 21.6 23.1997L29.8787 31.4784C31.0503 32.6499 32.9497 32.6499 34.1213 31.4784L42.4 23.1997C43.4309 22.1687 45.1024 22.1687 46.1333 23.1997V23.1997C47.1643 24.2306 47.1643 25.9021 46.1333 26.933L34.1213 38.945Z"
-                    Fill="Black"
+                    Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
                     Stretch="Fill" />
             </Viewbox>
         </Grid>
@@ -236,7 +236,9 @@
         <Setter Property="ScrollViewer.CanContentScroll" Value="true" />
         <Setter Property="TextBlock.FontWeight" Value="Medium" />
         <Setter Property="MinWidth" Value="120" />
-        <Setter Property="MinHeight" Value="20" />
+        <Setter Property="MinHeight" Value="32" />
+        <Setter Property="TextBlock.FontSize" Value="12" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryForegroundSolidColorBrush}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ComboBox}">
@@ -250,13 +252,14 @@
                             Template="{StaticResource ComboBoxToggleButton1}" />
                         <ContentPresenter
                             x:Name="ContentSite"
-                            Margin="16,8,10,8"
+                            Margin="16,6,10,6"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Stretch"
                             Content="{TemplateBinding SelectionBoxItem}"
                             ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
                             ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
-                            IsHitTestVisible="False" />
+                            IsHitTestVisible="False"
+                            TextBlock.FontSize="14" />
                         <TextBox
                             x:Name="PART_EditableTextBox"
                             Margin="3,3,23,3"
@@ -284,7 +287,7 @@
                                 <Border
                                     x:Name="DropDownBorder"
                                     Background="{DynamicResource PrimarySolidColorBrush}"
-                                    BorderBrush="#E6E6E6"
+                                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
                                     BorderThickness="1"
                                     CornerRadius="5" />
                                 <ScrollViewer Margin="1,3,1,1" SnapsToDevicePixels="True">
@@ -317,6 +320,7 @@
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="FontSize" Value="14" />
         <Setter Property="FontWeight" Value="Medium" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryForegroundSolidColorBrush}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ComboBoxItem}">
@@ -325,7 +329,7 @@
                             x:Name="Border"
                             Padding="16,8,4,8"
                             HorizontalAlignment="Stretch"
-                            Background="White"
+                            Background="{DynamicResource PrimarySolidColorBrush}"
                             SnapsToDevicePixels="true">
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -339,7 +343,7 @@
                                     Margin="-16,-8"
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Stretch"
-                                    Background="#167ffc"
+                                    Background="{DynamicResource ActivitySolidColorBrush}"
                                     CornerRadius="0,3,3,0"
                                     Visibility="Collapsed" />
 
@@ -354,7 +358,7 @@
                                     Visibility="Collapsed">
                                     <Path
                                         Data="M16.5869 28.878C15.4154 30.0495 13.5159 30.0495 12.3443 28.878L1.16563 17.6993C0.116286 16.6499 0.116284 14.9486 1.16563 13.8993V13.8993C2.21497 12.8499 3.91628 12.8499 4.96563 13.8993L12.3443 21.278C13.5159 22.4495 15.4154 22.4495 16.5869 21.278L37.0323 0.832619C38.0816 -0.216722 39.7829 -0.216723 40.8323 0.832618V0.832618C41.8816 1.88196 41.8816 3.58328 40.8323 4.63262L16.5869 28.878Z"
-                                        Fill="Black"
+                                        Fill="{DynamicResource SecondaryForegroundSolidColorBrush}"
                                         Stretch="Fill" />
                                 </Viewbox>
                             </Grid>
@@ -363,7 +367,7 @@
 
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="TextBlock.Foreground" Value="#167ffc" />
+                            <Setter Property="TextBlock.Foreground" Value="{DynamicResource ActivitySolidColorBrush}" />
                             <Setter Property="TextBlock.FontWeight" Value="Medium" />
                             <Setter TargetName="Border" Property="CornerRadius" Value="5" />
                         </Trigger>
@@ -375,7 +379,7 @@
                             <Setter Property="FontWeight" Value="Medium" />
                         </Trigger>
                         <Trigger Property="IsFocused" Value="True">
-                            <Setter Property="TextBlock.Foreground" Value="#167ffc" />
+                            <Setter Property="TextBlock.Foreground" Value="{DynamicResource ActivitySolidColorBrush}" />
                             <Setter Property="TextBlock.FontWeight" Value="Medium" />
                         </Trigger>
                     </ControlTemplate.Triggers>

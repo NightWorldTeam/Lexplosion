@@ -115,15 +115,13 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
         protected override void OnClick()
         {
-            if (IsInstalled)
+            if (IsInstalled || _isInstalling)
                 return;
 
             _content.Visibility = Visibility.Hidden;
 
             _progressBar.Visibility = Visibility.Visible;
             _persentageTextBlock.Visibility = Visibility.Visible;
-
-            
 
             base.OnClick();
         }
@@ -171,6 +169,13 @@ namespace Lexplosion.WPF.NewInterface.Controls
                 Content = BeforeInstallContent;
                 Cursor = Cursors.Hand;
             }
+        }
+
+        protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
+        {
+            _progressBar.MaxWidth = sizeInfo.NewSize.Width;
+
+            base.OnRenderSizeChanged(sizeInfo);
         }
 
         private static void OnProgressValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

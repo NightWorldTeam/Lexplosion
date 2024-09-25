@@ -355,7 +355,7 @@
                 Command="{Binding OpenAccountFactoryCommand}"
                 Foreground="{DynamicResource DefaultButtonForegroundColorBrush}"
                 IconData="{DynamicResource PDAddCircle}"
-                IconPadding="6"
+                IconPadding="2"
                 Style="{DynamicResource DefaultAdvancedButton}" />
             <Button
                 Width="32"

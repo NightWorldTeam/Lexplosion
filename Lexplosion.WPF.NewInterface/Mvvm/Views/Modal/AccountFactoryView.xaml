@@ -268,8 +268,7 @@
                         <controls:AdvancedButton
                             Grid.Row="1"
                             Command="{Binding ActionCommand}"
-                            FontWeight="Medium"
-                            Style="{DynamicResource DefaultAdvancedButton}"
+                            Style="{DynamicResource sm-default}"
                             Text="{DynamicResource AddAccount}" />
                     </Grid>
                 </Grid>

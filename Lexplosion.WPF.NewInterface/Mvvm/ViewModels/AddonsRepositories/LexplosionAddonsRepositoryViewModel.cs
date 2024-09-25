@@ -109,6 +109,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
             get => RelayCommand.GetCommand<IProjectCategory>(ref _selectCategoryCommand, Model.SelectCategory);
         }
 
+
+
         private List<AddonsRepositoryModel> _repositoriesList = new();
 
 

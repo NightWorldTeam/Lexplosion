@@ -281,11 +281,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
         /// <param name="instanceAddon">Addon который нужно удалить</param>
         public void UninstallAddon(object instanceAddon)
         {
-            if (instanceAddon is InstanceAddon)
+            if (instanceAddon is InstanceAddon addon)
             {
                 Runtime.TaskRun(() => {
-                    (instanceAddon as InstanceAddon).Delete();
+                    addon.Delete();
                 });
+                _addonsList.Remove(addon);
             }
         }
 

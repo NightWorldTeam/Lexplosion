@@ -19,6 +19,69 @@
     mc:Ignorable="d">
 
     <UserControl.Resources>
+
+        <Style x:Key="DownMenuItem" TargetType="{x:Type controls:AdvancedButton}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type controls:AdvancedButton}">
+                        <Border
+                            x:Name="Body"
+                            Padding="8,8,16,8"
+                            CornerRadius="5">
+                            <Grid
+                                VerticalAlignment="Center"
+                                Background="Transparent"
+                                Grid.IsSharedSizeScope="True"
+                                ShowGridLines="False">
+
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="Icon" />
+                                    <ColumnDefinition Width="*" SharedSizeGroup="Text" />
+                                </Grid.ColumnDefinitions>
+
+                                <Border
+                                    Padding="0"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center">
+                                    <Viewbox Height="16" Stretch="Fill">
+                                        <Path
+                                            x:Name="Icon"
+                                            Data="{TemplateBinding IconData}"
+                                            Fill="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                            Stretch="Fill" />
+                                    </Viewbox>
+                                </Border>
+
+                                <TextBlock
+                                    x:Name="Text"
+                                    Grid.Column="1"
+                                    Margin="16,0,0,0"
+                                    VerticalAlignment="Center"
+                                    FontSize="13"
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                    Text="{TemplateBinding Text}" />
+                            </Grid>
+
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Text" Property="TextBlock.Foreground" Value="{DynamicResource ActivitySolidColorBrush}" />
+                                <Setter TargetName="Body" Property="Background">
+                                    <Setter.Value>
+                                        <SolidColorBrush Opacity="0.1" Color="{DynamicResource ActivityColor}" />
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter TargetName="Icon" Property="Fill" Value="{DynamicResource ActivitySolidColorBrush}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
         <DataTemplate DataType="{x:Type logicObjects:CategoryBase}">
             <Button Command="{Binding DataContext.SelectCategoryCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}">
                 <Button.Style>
@@ -243,7 +306,7 @@
                                                         HorizontalAlignment="Center"
                                                         VerticalAlignment="Center"
                                                         Foreground="{DynamicResource BrandColorForegroundSolidColorBrush}"
-                                                        Text="Обновить" />
+                                                        Text="{DynamicResource Update}" />
                                                 </core:If.True>
                                                 <core:If.False>
 
@@ -252,7 +315,7 @@
                                                         HorizontalAlignment="Center"
                                                         VerticalAlignment="Center"
                                                         Foreground="{DynamicResource BrandColorForegroundSolidColorBrush}"
-                                                        Text="Установить" />
+                                                        Text="{DynamicResource Install}" />
                                                 </core:If.False>
                                             </core:If>
 
@@ -262,18 +325,11 @@
                                                 <TextBlock
                                                     Margin="16,8"
                                                     Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                                    Text="Установленно" />
+                                                    Text="{DynamicResource Install}" />
                                             </Border>
                                         </controls:OneStageInstallButton.AfterInstallContent>
                                     </controls:OneStageInstallButton>
 
-                                    <!--<Button
-                                        Height="32"
-                                        Padding="16,8"
-                                        HorizontalContentAlignment="Center"
-                                        VerticalContentAlignment="Center"
-                                        Content="{DynamicResource Install}"
-                                        FontWeight="Medium" />-->
                                     <controls:DropdownMenu
                                         Width="32"
                                         Height="32"
@@ -287,25 +343,23 @@
                                             BorderThickness="1"
                                             CornerRadius="5">
                                             <StackPanel>
-                                                <TextBlock
-                                                    FontSize="14"
-                                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                                    Text="Веб-страница" />
-                                                <TextBlock
-                                                    FontSize="14"
-                                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                                    Text="Добавить в избранное" />
-                                                <TextBlock
-                                                    FontSize="14"
-                                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                                <controls:AdvancedButton
+                                                    Command="{Binding DataContext.OpenExternalResourceCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                    CommandParameter="{Binding}"
+                                                    IconData="{StaticResource PDClose}"
+                                                    IconPadding="8"
+                                                    Style="{StaticResource DownMenuItem}"
                                                     Text="Веб-страница" />
 
-                                                <Button>
-                                                    <TextBlock
-                                                        FontSize="14"
-                                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                                        Text="Удалить" />
-                                                </Button>
+                                                <controls:AdvancedButton
+                                                    IconData="{StaticResource PDClose}"
+                                                    Style="{StaticResource DownMenuItem}"
+                                                    Text="Добавить в избранное" />
+
+                                                <controls:AdvancedButton
+                                                    IconData="{StaticResource PDDelete}"
+                                                    Style="{StaticResource DownMenuItem}"
+                                                    Text="Удалить" />
                                             </StackPanel>
                                         </Border>
                                     </controls:DropdownMenu>
@@ -643,7 +697,7 @@
                                         VirtualizingPanel.IsVirtualizing="True" />
 
                                     <!--  Paginator  -->
-                                    <controls:Paginator Grid.Row="2" Margin="0,32" />
+                                    <controls:Paginator Grid.Row="2" Margin="0,32,0,16" />
                                 </Grid>
                             </TabItem>
                             <TabItem Header="В процессе" />
