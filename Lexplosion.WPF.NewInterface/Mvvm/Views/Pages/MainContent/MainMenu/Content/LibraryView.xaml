@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:Lexplosion.WPF.NewInterface.Controls"
+    xmlns:controls1="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
     xmlns:converters="clr-namespace:Lexplosion.WPF.NewInterface.Core.Converters"
     xmlns:core="clr-namespace:Lexplosion.WPF.NewInterface.Core"
     xmlns:coreObjects="clr-namespace:Lexplosion.WPF.NewInterface.Core.Objects"
@@ -536,73 +537,37 @@
                     </Grid>
                 </Border>
 
-                <core:If
+                <controls1:VirtualizingItemsControl
                     Grid.Row="2"
-                    Grid.ColumnSpan="3"
-                    Condition="{Binding Model.HasSelectedGroup}">
-                    <core:If.True>
-                        <Grid Grid.ColumnSpan="3">
-
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="0.0715*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="0.0715*" />
-                            </Grid.ColumnDefinitions>
-
-
-                            <ItemsControl
-                                Grid.Column="1"
-                                ItemsSource="{Binding Model.InstancesCollectionViewSource.View}"
-                                KeyboardNavigation.IsTabStop="False"
-                                KeyboardNavigation.TabNavigation="None"
-                                VirtualizingPanel.ScrollUnit="Pixel"
-                                VirtualizingStackPanel.IsVirtualizing="True"
-                                VirtualizingStackPanel.VirtualizationMode="Recycling">
-
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate DataType="{x:Type instanceModel:InstanceModelBase}">
-                                        <controls:InstanceForm
-                                            Margin="0,0,0,16"
-                                            CanBeDeleted="True"
-                                            InstanceModel="{Binding}"
-                                            LogoButtonCommand="{Binding DataContext.OpenInstanceProfileMenuCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
-                                            LogoButtonCommandParameter="{Binding}"
-                                            OpenAddonsPageCommand="{Binding DataContext.OpenAddonsPageCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </Grid>
-                    </core:If.True>
-                    <core:If.False>
-                        <ItemsControl
-                            Grid.ColumnSpan="3"
-                            ItemContainerStyle="{StaticResource InstanceGroupMargin}"
-                            ItemsSource="{Binding Model.Groups}"
-                            KeyboardNavigation.IsTabStop="False"
-                            KeyboardNavigation.TabNavigation="None"
-                            VirtualizingPanel.ScrollUnit="Pixel"
-                            VirtualizingStackPanel.IsVirtualizing="True"
-                            VirtualizingStackPanel.VirtualizationMode="Recycling">
-
-                            <!--  StyleSelector  -->
-
-                            <!--  Panel  -->
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <WrapPanel
-                                        HorizontalAlignment="Center"
-                                        IsItemsHost="True"
-                                        KeyboardNavigation.IsTabStop="False"
-                                        KeyboardNavigation.TabNavigation="None"
-                                        VirtualizingPanel.ScrollUnit="Pixel"
-                                        VirtualizingStackPanel.IsVirtualizing="True"
-                                        VirtualizingStackPanel.VirtualizationMode="Recycling" />
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-
-                        </ItemsControl>
-                    </core:If.False>
-                </core:If>
+                    Grid.Column="1"
+                    ItemContainerStyle="{StaticResource InstanceGroupMargin}"
+                    ItemsSource="{Binding Model.InstancesCollectionViewSource.View}"
+                    KeyboardNavigation.IsTabStop="False"
+                    VirtualizingPanel.CacheLengthUnit="Item"
+                    VirtualizingPanel.IsVirtualizingWhenGrouping="True"
+                    VirtualizingPanel.ScrollUnit="Pixel"
+                    VirtualizingPanel.VirtualizationMode="Recycling">
+                    <controls1:VirtualizingItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type instanceModel:InstanceModelBase}">
+                            <controls:InstanceForm
+                                Margin="0,0,0,16"
+                                CanBeDeleted="True"
+                                InstanceModel="{Binding}"
+                                LogoButtonCommand="{Binding DataContext.OpenInstanceProfileMenuCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
+                                LogoButtonCommandParameter="{Binding}"
+                                OpenAddonsPageCommand="{Binding DataContext.OpenAddonsPageCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
+                        </DataTemplate>
+                    </controls1:VirtualizingItemsControl.ItemTemplate>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <controls1:VirtualizingWrapPanel
+                                HorizontalAlignment="Stretch"
+                                Orientation="Horizontal"
+                                SpacingMode="StartAndEndOnly"
+                                StretchItems="True" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </controls1:VirtualizingItemsControl>
             </Grid>
         </ScrollViewer>
 

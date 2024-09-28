@@ -3,13 +3,10 @@ using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
-using Lexplosion.WPF.NewInterface.Stores;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Data;
-using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
 {
@@ -57,22 +54,24 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
 
             FilterPanel.FilterChanged += OnFilterChanged;
 
-            var i = 0;
-            var ins = new List<InstanceModelBase>();
-            
-            _groups.Add(new InstanceGroup("All", instanceController.Instances));
-            _groups.Add(new InstanceGroup("Without group", instanceController.Instances));
+            InstancesCollectionViewSource.Source = instanceController.Instances;
 
-            foreach (var instance in instanceController.Instances) 
-            {
-                ins.Add(instance);
-                if (i % 2 == 0)
-                {
-                    _groups.Add(new InstanceGroup(Guid.NewGuid().ToString(), ins.ToArray()));
-                    ins.Clear();
-                }
-                i++;
-            }
+            //var i = 0;
+            //var ins = new List<InstanceModelBase>();
+            
+            //_groups.Add(new InstanceGroup("All", instanceController.Instances));
+            //_groups.Add(new InstanceGroup("Without group", instanceController.Instances));
+
+            //foreach (var instance in instanceController.Instances) 
+            //{
+            //    ins.Add(instance);
+            //    if (i % 2 == 0)
+            //    {
+            //        _groups.Add(new InstanceGroup(Guid.NewGuid().ToString(), ins.ToArray()));
+            //        ins.Clear();
+            //    }
+            //    i++;
+            //}
         }
 
 
