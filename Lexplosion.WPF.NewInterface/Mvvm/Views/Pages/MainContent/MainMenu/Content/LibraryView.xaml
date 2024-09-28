@@ -537,17 +537,15 @@
                     </Grid>
                 </Border>
 
-                <controls1:VirtualizingItemsControl
+                <ItemsControl
                     Grid.Row="2"
                     Grid.Column="1"
-                    ItemContainerStyle="{StaticResource InstanceGroupMargin}"
+                    VirtualizingStackPanel.IsVirtualizing="True"
                     ItemsSource="{Binding Model.InstancesCollectionViewSource.View}"
                     KeyboardNavigation.IsTabStop="False"
-                    VirtualizingPanel.CacheLengthUnit="Item"
-                    VirtualizingPanel.IsVirtualizingWhenGrouping="True"
-                    VirtualizingPanel.ScrollUnit="Pixel"
+                   
                     VirtualizingPanel.VirtualizationMode="Recycling">
-                    <controls1:VirtualizingItemsControl.ItemTemplate>
+                    <ItemsControl.ItemTemplate>
                         <DataTemplate DataType="{x:Type instanceModel:InstanceModelBase}">
                             <controls:InstanceForm
                                 Margin="0,0,0,16"
@@ -557,17 +555,9 @@
                                 LogoButtonCommandParameter="{Binding}"
                                 OpenAddonsPageCommand="{Binding DataContext.OpenAddonsPageCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
                         </DataTemplate>
-                    </controls1:VirtualizingItemsControl.ItemTemplate>
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <controls1:VirtualizingWrapPanel
-                                HorizontalAlignment="Stretch"
-                                Orientation="Horizontal"
-                                SpacingMode="StartAndEndOnly"
-                                StretchItems="True" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                </controls1:VirtualizingItemsControl>
+                    </ItemsControl.ItemTemplate>
+
+                </ItemsControl>
             </Grid>
         </ScrollViewer>
 
