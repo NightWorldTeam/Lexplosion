@@ -64,7 +64,7 @@
 
                                 <Grid Grid.Column="1">
                                     <ComboBox
-                                        Width="215"
+                                        Width="215" Height="32"
                                         HorizontalAlignment="Right"
                                         IsSynchronizedWithCurrentItem="True"
                                         ItemsSource="{Binding Model.GameVersions}"
