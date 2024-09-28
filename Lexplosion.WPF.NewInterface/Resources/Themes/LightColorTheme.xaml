@@ -312,4 +312,17 @@
         x:Shared="False"
         Opacity="{DynamicResource DisableControlIconColorOpacity}"
         Color="{StaticResource DisableControlIconColor}" />
+
+
+    <SolidColorBrush
+        x:Key="LightSeparateSolidColorBrush"
+        x:Shared="False"
+        Opacity="{DynamicResource SeparateColorOpacity}"
+        Color="{DynamicResource SeparateColor}" />
+
+    <SolidColorBrush
+        x:Key="TagsColorBrush"
+        x:Shared="False"
+        Opacity="{DynamicResource SeparateColorOpacity}"
+        Color="{DynamicResource SecondaryColor}" />
 </ResourceDictionary>
