@@ -271,7 +271,7 @@ namespace Lexplosion.Logic.Network.Web
 
             facets += "]";
 
-            url += facets + "&offset=" + (searchParams.PageIndex * searchParams.PageSize) + "&limit" + searchParams.PageSize; // было WebUtility.UrlEncode(facets), но почему то модринф тупит, если так делать
+            url += facets + "&offset=" + (searchParams.PageIndex * searchParams.PageSize) + "&limit" + searchParams.PageSize; //было WebUtility.UrlEncode(facets), но почему то модринф тупит, если так делать
 
             if (!string.IsNullOrWhiteSpace(searchParams.SearchFilter))
             {
