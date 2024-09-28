@@ -368,7 +368,7 @@
                                             <Border
                                                 Margin="0,2,3,0"
                                                 Padding="8,4"
-                                                Background="{DynamicResource SeparateSolidColorBrush}"
+                                                Background="{DynamicResource TagsColorBrush}"
                                                 CornerRadius="5">
                                                 <TextBlock
                                                     FontSize="14"

@@ -72,7 +72,11 @@
 
     <!--  Separate Color  -->
     <Color x:Key="SeparateColor">
-        #303030
+        #181818
+    </Color>
+
+    <Color x:Key="LightSeparateColor">
+        #172036
     </Color>
 
     <sys:Double x:Key="SeparateColorOpacity">
@@ -84,6 +88,18 @@
         x:Shared="False"
         Opacity="{DynamicResource SeparateColorOpacity}"
         Color="{StaticResource SeparateColor}" />
+
+    <SolidColorBrush
+        x:Key="LightSeparateSolidColorBrush"
+        x:Shared="False"
+        Opacity="{DynamicResource SeparateColorOpacity}"
+        Color="{StaticResource LightSeparateColor}" />
+
+    <SolidColorBrush
+        x:Key="TagsColorBrush"
+        x:Shared="False"
+        Opacity="{DynamicResource SeparateColorOpacity}"
+        Color="#151e33" />
 
 
     <!--    -->
