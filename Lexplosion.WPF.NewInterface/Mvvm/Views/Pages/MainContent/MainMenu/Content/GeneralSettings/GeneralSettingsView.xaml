@@ -397,8 +397,15 @@
                                 Grid.Row="1"
                                 Height="32"
                                 Margin="0,8,0,0"
-                                HorizontalAlignment="Stretch"
-                                Text="{Binding Model.SystemPath}" />
+                                HorizontalAlignment="Stretch">
+                                <controls:AdvancedTextBox.Text>
+                                    <Binding Path="Model.SystemPath">
+                                        <Binding.ValidationRules>
+                                            <DataErrorValidationRule />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </controls:AdvancedTextBox.Text>
+                            </controls:AdvancedTextBox>
 
                         </Grid>
                     </Border>

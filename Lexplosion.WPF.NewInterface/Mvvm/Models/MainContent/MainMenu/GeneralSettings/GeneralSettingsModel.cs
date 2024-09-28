@@ -5,6 +5,9 @@ using Lexplosion.WPF.NewInterface.Core.Tools;
 using Microsoft.VisualBasic.Devices;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
+using System.Net.Http.Headers;
 using System.Windows.Forms;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSettings
@@ -54,6 +57,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
         {
             get => GlobalData.GeneralSettings.GamePath.Replace('\\', '/'); set
             {
+                if (string.IsNullOrWhiteSpace(value) || value.IndexOfAny(Path.GetInvalidPathChars()) != -1) 
+                {
+                    return;
+                }
+
                 GlobalData.GeneralSettings.GamePath = value.Replace('\\', '/');
                 OnPropertyChanged();
                 DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
@@ -189,7 +197,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
                 DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
             }
         }
-
 
         public void ResetJavaPath()
         {
