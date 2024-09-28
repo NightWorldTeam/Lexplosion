@@ -86,6 +86,9 @@ namespace Lexplosion.Logic
                 if (NwClientByDefault == null) NwClientByDefault = settings.NwClientByDefault;
                 if (GameArgs == null) GameArgs = settings.GameArgs;
                 if (string.IsNullOrWhiteSpace(AutoLoginServer)) AutoLoginServer = settings.AutoLoginServer;
+                if (string.IsNullOrWhiteSpace(LanguageId)) LanguageId = settings.LanguageId;
+                if (string.IsNullOrWhiteSpace(ThemeName)) ThemeName = settings.ThemeName;
+                if (string.IsNullOrWhiteSpace(AccentColor)) AccentColor = settings.AccentColor;
             }
             else
             {
@@ -103,13 +106,13 @@ namespace Lexplosion.Logic
                 if (settings.IsAutoUpdate != null) IsAutoUpdate = settings.IsAutoUpdate;
                 if (settings.NwClientByDefault != null) NwClientByDefault = settings.NwClientByDefault;
                 if (settings.GameArgs != null) GameArgs = settings.GameArgs;
+                if (!string.IsNullOrWhiteSpace(settings.LanguageId)) LanguageId = settings.LanguageId;
+                if (!string.IsNullOrWhiteSpace(settings.ThemeName)) ThemeName = settings.ThemeName;
+                if (!string.IsNullOrWhiteSpace(settings.AccentColor)) AccentColor = settings.AccentColor;
                 AutoLoginServer = settings.AutoLoginServer;
             }
 
             NetworkDirectConnection = settings.NetworkDirectConnection;
-            LanguageId = settings.LanguageId;
-            AccentColor = settings.AccentColor;
-            ThemeName = settings.ThemeName;
         }
 
         public Settings Copy()
@@ -145,7 +148,10 @@ namespace Lexplosion.Logic
                 GameArgs = "",
                 IsAutoUpdate = false,
                 NetworkDirectConnection = true,
-                NwClientByDefault = true
+                NwClientByDefault = true,
+                LanguageId = "ru-RU",
+                ThemeName = "DarkColorTheme",
+                AccentColor = "#167ffc"
             };
         }
     }

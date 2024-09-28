@@ -1,5 +1,6 @@
 ﻿using DiscordRPC;
 using Lexplosion.Global;
+using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.Tools;
@@ -160,8 +161,6 @@ namespace Lexplosion.WPF.NewInterface
 
         private static void InitializedSystem()
         {
-            Runtime.InitializedSystem((int)0, (int)0, false);
-
             ResourcesDictionariesRegister();
 
             InitializedAccountSystem();
@@ -367,26 +366,47 @@ namespace Lexplosion.WPF.NewInterface
         }
 
 
+        private static ResourceDictionary CurrentLangDict;
+        internal const string LangPath = AssetsPath + "langs/";
 
         public static void LoadCurrentLanguage()
         {
             var selectedLangId = GlobalData.GeneralSettings.LanguageId;
-            var currentCultureName = Thread.CurrentThread.CurrentCulture.ToString();
 
-            if (selectedLangId.Length == 0)
+            if (string.IsNullOrWhiteSpace(selectedLangId))
             {
-
+                try
+                {
+                    if (GlobalData.GeneralSettings.LanguageId.Length == 0)
+                    {
+                        var currentCultureName = Thread.CurrentThread.CurrentCulture.ToString();
+                        //switch () тут код для стран cis
+                        CurrentLangDict.Source = new Uri(LangPath + currentCultureName + ".xaml");
+                        GlobalData.GeneralSettings.LanguageId = currentCultureName;
+                        DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+                    }
+                    else
+                    {
+                        CurrentLangDict.Source = new Uri(LangPath + GlobalData.GeneralSettings.LanguageId + ".xaml");
+                    }
+                }
+                catch
+                {
+                    CurrentLangDict.Source = new Uri(LangPath + "ru-RU.xaml");
+                    GlobalData.GeneralSettings.LanguageId = "ru-RU";
+                    DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+                }
             }
             else
             {
 
             }
 
-            Runtime.DebugWrite(currentCultureName);
+            //Runtime.DebugWrite(currentCultureName);
 
             App.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
-                Source = new Uri("pack://application:,,,/Assets/langs/" + GlobalData.GeneralSettings.LanguageId + ".xaml")
+                Source = new Uri("pack://application:,,,/Assets/langs/" + selectedLangId + ".xaml")
             });
         }
 
