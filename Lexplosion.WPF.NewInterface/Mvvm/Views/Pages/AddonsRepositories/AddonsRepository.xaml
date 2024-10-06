@@ -9,6 +9,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
     xmlns:groups="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories.Groups"
+    xmlns:lexplosion="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.AddonsRepositories.Lexplosion"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.AddonsRepositories"
     xmlns:logicObjects="clr-namespace:Lexplosion.Logic.Objects;assembly=Lexplosion.Core"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -485,42 +486,51 @@
         </DataTemplate>
     </UserControl.Resources>
 
-    <Grid Background="{DynamicResource PrimarySolidColorBrush}">
+    <Grid Background="{DynamicResource PrimarySolidColorBrush}" ShowGridLines="False">
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="250" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <ScrollViewer x:Name="Scroll" Grid.ColumnSpan="2">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="250" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
+        <!--    -->
+        <!--  Left Panel  -->
+        <!--    -->
 
-                <!--  Left Panel  -->
-                <Border
-                    Background="{DynamicResource Secondary}"
-                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                    BorderThickness="0,0,1,0">
-                    <StackPanel Margin="16,52,16,16">
+        <Border
+            Background="{DynamicResource Secondary}"
+            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+            BorderThickness="0,0,1,0">
 
-                        <!--  Close | Source  -->
-                        <StackPanel Margin="0,0,0,16" Orientation="Horizontal">
-                            <Button
-                                Width="32"
-                                Height="32"
-                                Command="{Binding BackToInstanceProfileCommand}"
-                                Content="Close"
-                                IsCancel="True"
-                                Style="{StaticResource x32IconButton}" />
-                            <ComboBox
-                                Height="32"
-                                Margin="8,0,0,0"
-                                ItemsSource="{Binding ProjectSources}"
-                                SelectedIndex="{Binding SelectedAddonsRepositoryIndex}" />
-                        </StackPanel>
+            <Grid Margin="16,52,16,16">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <!--    -->
+                <!--  Close | Source  -->
+                <!--    -->
+                <StackPanel
+                    Margin="0,0,0,16"
+                    VerticalAlignment="Top"
+                    Orientation="Horizontal">
+                    <Button
+                        Width="32"
+                        Height="32"
+                        Command="{Binding BackToInstanceProfileCommand}"
+                        Content="Close"
+                        IsCancel="True"
+                        Style="{StaticResource x32IconButton}" />
+                    <ComboBox
+                        Height="32"
+                        Margin="8,0,0,0"
+                        ItemsSource="{Binding ProjectSources}"
+                        SelectedIndex="{Binding SelectedAddonsRepositoryIndex}" />
+                </StackPanel>
+
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden">
+                    <StackPanel>
 
                         <!--  Categories  -->
                         <!--<Grid x:Name="CategoriesStackPanel">
@@ -573,139 +583,32 @@
                             </StackPanel>
                         </StackPanel>
                     </StackPanel>
-                </Border>
-
-                <!--  Right Content  -->
-                <Border Grid.Column="1" Margin="16,16,0,4">
-                    <Grid>
-                        <TabControl Background="Transparent" BorderThickness="0">
-                            <TabItem Header="Каталог">
-                                <Grid Margin="0,16,16,0">
-
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="*" />
-                                    </Grid.RowDefinitions>
-
-                                    <!--  Additional Fields & SearchBox  -->
-                                    <Border
-                                        Padding="16"
-                                        Background="{DynamicResource SecondarySolidColorBrush}"
-                                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                                        BorderThickness="1"
-                                        CornerRadius="5">
-                                        <Grid>
-
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                            </Grid.RowDefinitions>
-
-                                            <!--  Additional Fields  -->
-                                            <Grid ShowGridLines="True">
-
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="*" />
-                                                    <ColumnDefinition Width="Auto" />
-                                                </Grid.ColumnDefinitions>
-
-                                                <!--  Sort by & Show per page  -->
-                                                <StackPanel Orientation="Horizontal">
-                                                    <!--  Sort by  -->
-                                                    <StackPanel Orientation="Horizontal">
-                                                        <TextBlock
-                                                            VerticalAlignment="Center"
-                                                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                                            Text="Sort by" />
-                                                        <ComboBox
-                                                            Height="32"
-                                                            Margin="16,0,0,0"
-                                                            ItemsSource="{Binding Model.SortByParams}"
-                                                            SelectedIndex="{Binding Model.SelectedSortByIndex}" />
-                                                    </StackPanel>
-
-                                                    <!--  Show per page  -->
-                                                    <StackPanel Margin="24,0,0,0" Orientation="Horizontal">
-
-                                                        <TextBlock
-                                                            VerticalAlignment="Center"
-                                                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                                            Text="Show per page" />
-                                                        <ComboBox
-                                                            Height="32"
-                                                            Margin="16,0,0,0"
-                                                            ItemsSource="{Binding Model.PageSizes}"
-                                                            SelectedValue="{Binding Model.PageSize}" />
-                                                    </StackPanel>
-
-                                                </StackPanel>
-
-                                                <WrapPanel Grid.Column="3">
-                                                    <Border
-                                                        Padding="2,0"
-                                                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                                                        BorderThickness="1,0,0,0">
-                                                        <ToggleButton
-                                                            x:Name="PaginatorToggleButton"
-                                                            Width="32"
-                                                            Height="32"
-                                                            Content="Numbers123"
-                                                            Cursor="Hand"
-                                                            IsChecked="False"
-                                                            Style="{StaticResource IconToggleButton}" />
-                                                    </Border>
-                                                    <Border
-                                                        Padding="2,0"
-                                                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                                                        BorderThickness="1,0,0,0">
-                                                        <ToggleButton
-                                                            x:Name="SearchBoxToggleButton"
-                                                            Width="32"
-                                                            Height="32"
-                                                            Content="Search"
-                                                            Cursor="Hand"
-                                                            IsChecked="True"
-                                                            Style="{StaticResource IconToggleButton}" />
-                                                    </Border>
-                                                </WrapPanel>
-                                            </Grid>
-
-                                            <!--  SearchBox  -->
-                                            <controls:SearchBox
-                                                Grid.Row="1"
-                                                Margin="0,8,0,0"
-                                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                                SearchCommand="{Binding SearchCommand}"
-                                                Text="{Binding Model.SearchFilter}"
-                                                Visibility="{Binding IsChecked, ElementName=SearchBoxToggleButton, Converter={converters:BooleanToVisibilityConverter}}" />
-
-                                            <controls:Paginator
-                                                Grid.Row="2"
-                                                Margin="0,8,0,0"
-                                                Visibility="{Binding IsChecked, ElementName=PaginatorToggleButton, Converter={converters:BooleanToVisibilityConverter}}" />
-                                        </Grid>
-                                    </Border>
-
-                                    <!--  Instance Addons  -->
-                                    <ItemsControl
-                                        Grid.Row="1"
-                                        Margin="0,16,0,0"
-                                        ItemsSource="{Binding Model.AddonsList}"
-                                        ScrollViewer.CanContentScroll="True"
-                                        VirtualizingPanel.IsVirtualizing="True" />
-
-                                    <!--  Paginator  -->
-                                    <controls:Paginator Grid.Row="2" Margin="0,32,0,16" />
-                                </Grid>
-                            </TabItem>
-                            <TabItem Header="В процессе" />
-                            <TabItem Header="Установленные" />
-                        </TabControl>
-                    </Grid>
-                </Border>
+                </ScrollViewer>
             </Grid>
+        </Border>
+
+        <!--    -->
+        <!--  Right Content  -->
+        <!--    -->
+        <ScrollViewer
+            x:Name="Scroll"
+            Grid.Column="1"
+            Margin="16,16,0,4">
+            <Grid>
+                <TabControl Background="Transparent" BorderThickness="0">
+                    <TabItem Header="{DynamicResource Catalog}">
+                        <lexplosion:AddonRepositoryCatalogView DataContext="{Binding}" />
+                    </TabItem>
+                    <TabItem Header="В процессе">
+                        <lexplosion:InProgressAddonsRepositoryView DataContext="{Binding}" />
+                    </TabItem>
+
+                    <TabItem Header="Установленные">
+                        <lexplosion:InstalledAddonsRepositoryView DataContext="{Binding}" />
+                    </TabItem>
+                </TabControl>
+            </Grid>
+
         </ScrollViewer>
 
         <controls:BackTop

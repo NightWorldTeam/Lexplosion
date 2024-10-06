@@ -4,10 +4,7 @@ using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile.Addons;
 using Lexplosion.WPF.NewInterface.Stores;
-using Microsoft.VisualBasic;
-using System;
 using System.Windows.Input;
-using static System.Windows.Forms.AxHost;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile
 {
@@ -19,9 +16,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         private readonly ViewModelBase _shadersViewModel;
 
         private bool _isLargeBlocks;
-        public bool IsLargeBlocks 
-        { 
-            get => _isLargeBlocks; set 
+        public bool IsLargeBlocks
+        {
+            get => _isLargeBlocks; set
             {
                 _isLargeBlocks = value;
 
@@ -30,7 +27,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
                     (_modsViewModel as IVisualFormat<VisualFormat>).ChangeVisualFormat(VisualFormat.Block);
                 }
                 if (_shadersViewModel != null)
-                { 
+                {
                     (_shadersViewModel as IVisualFormat<VisualFormat>).ChangeVisualFormat(VisualFormat.Block);
                 }
 
@@ -41,9 +38,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         }
 
         private bool _isSearchEnable = true;
-        public bool IsSearchEnable 
+        public bool IsSearchEnable
         {
-            get => _isSearchEnable; set 
+            get => _isSearchEnable; set
             {
                 _isSearchEnable = value;
                 OnPropertyChanged();
@@ -57,7 +54,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         private RelayCommand _searchStateChanged;
         public ICommand SearchStateChangedCommand
         {
-            get => RelayCommand.GetCommand(ref _searchStateChanged, () => 
+            get => RelayCommand.GetCommand(ref _searchStateChanged, () =>
             {
                 (SelectedItem.Content as IInstanceAddonContainerActions).SearchStateChanged(IsSearchEnable);
             });
@@ -68,7 +65,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         private RelayCommand _openFolderCommand;
         public ICommand OpenFolderCommand
         {
-            get => RelayCommand.GetCommand(ref _openFolderCommand, () => 
+            get => RelayCommand.GetCommand(ref _openFolderCommand, () =>
             {
                 (SelectedItem.Content as IInstanceAddonContainerActions).OpenFolder();
             });
@@ -79,7 +76,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         private RelayCommand _openMarketCommand;
         public ICommand OpenMarketCommand
         {
-            get => RelayCommand.GetCommand(ref _openMarketCommand, () => 
+            get => RelayCommand.GetCommand(ref _openMarketCommand, () =>
             {
                 (SelectedItem.Content as IInstanceAddonContainerActions).OpenAddonRepository();
             });
@@ -104,14 +101,14 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         public InstanceProfileAddonsLayoutViewModel(INavigationStore navigationStore, InstanceModelBase instanceModelBase) : base()
         {
             HeaderKey = "Addons";
-            if (instanceModelBase.InstanceData.Modloader != ClientType.Vanilla) 
+            if (instanceModelBase.InstanceData.Modloader != ClientType.Vanilla)
             {
                 _modsViewModel = new InstanceAddonsContainerViewModel(navigationStore, AddonType.Mods, instanceModelBase);
                 _shadersViewModel = new InstanceAddonsContainerViewModel(navigationStore, AddonType.Shaders, instanceModelBase);
             }
             _resourcepacksViewModel = new InstanceAddonsContainerViewModel(navigationStore, AddonType.Resourcepacks, instanceModelBase);
             _mapsViewModel = new InstanceAddonsContainerViewModel(navigationStore, AddonType.Maps, instanceModelBase);
-            
+
             InitAddonsTabMenu(instanceModelBase);
         }
 
@@ -121,7 +118,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
 
         private void InitAddonsTabMenu(InstanceModelBase instanceModelBase)
         {
-            if (instanceModelBase.InstanceData.Modloader != ClientType.Vanilla) { 
+            if (instanceModelBase.InstanceData.Modloader != ClientType.Vanilla)
+            {
                 _tabs.Add(new TabItemModel { Id = 0, TextKey = "Mods", Content = _modsViewModel });
                 _tabs.Add(new TabItemModel { Id = 3, TextKey = "Shaders", Content = _shadersViewModel });
             }

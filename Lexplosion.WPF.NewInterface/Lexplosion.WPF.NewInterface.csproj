@@ -149,6 +149,15 @@
     <Compile Include="Mvvm\Views\Modal\InstanceTransfer\InstanceShareView.xaml.cs">
       <DependentUpon>InstanceShareView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Mvvm\Views\Pages\AddonsRepositories\Lexplosion\AddonRepositoryCatalogView.xaml.cs">
+      <DependentUpon>AddonRepositoryCatalogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Views\Pages\AddonsRepositories\Lexplosion\InProgressAddonsRepositoryView.xaml.cs">
+      <DependentUpon>InProgressAddonsRepositoryView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Views\Pages\AddonsRepositories\Lexplosion\InstalledAddonsRepositoryView.xaml.cs">
+      <DependentUpon>InstalledAddonsRepositoryView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Mvvm\Views\Windows\ConsoleWindow.xaml.cs">
       <DependentUpon>ConsoleWindow.xaml</DependentUpon>
     </Compile>
@@ -527,6 +536,18 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Mvvm\Views\Pages\AddonsRepositories\AddonsRepository.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Mvvm\Views\Pages\AddonsRepositories\Lexplosion\AddonRepositoryCatalogView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Mvvm\Views\Pages\AddonsRepositories\Lexplosion\InProgressAddonsRepositoryView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Mvvm\Views\Pages\AddonsRepositories\Lexplosion\InstalledAddonsRepositoryView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

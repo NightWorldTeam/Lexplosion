@@ -9,7 +9,6 @@ using System;
 using Lexplosion.WPF.NewInterface.Core.Objects.TranslatableObjects;
 using Lexplosion.Tools;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories.Groups;
-using Lexplosion.Logic.Management;
 using Lexplosion.WPF.NewInterface.Core.GameExtensions;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
@@ -18,6 +17,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
     {
         private ICollection<IProjectCategory> _latestApplyCategories = new List<IProjectCategory>();
         private readonly Dictionary<string, List<CategoryWrapper>> _categoriesGroupsByName = new();
+
+        public ObservableCollection<InstanceAddon> InstalledAddons { get; set; } = [];
+
+
 
         private bool _hasConfirmCategories;
         public bool HasConfirmCategories
@@ -46,12 +49,20 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
             };
             PageSize = PageSizes[0];
 
-
-
             SortByParams = GetSortByParams();
 
             PrepareCategories();
             LoadContent();
+
+            Runtime.TaskRun(() =>
+            {
+                var installedAddons = InstanceAddon.GetInstalledAddons(addonType, instanceData);
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    InstalledAddons = new(installedAddons);
+                    OnPropertyChanged(nameof(InstalledAddons));
+                });
+            });
         }
 
 
@@ -60,20 +71,21 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 
         #region Public & Protected Methods
 
-        public void InstallAddon(InstanceAddon instanceAddon) 
+        public void InstallAddon(InstanceAddon instanceAddon)
         {
             var stateData = new DynamicStateData<SetValues<InstanceAddon, DownloadAddonRes>, InstanceAddon.InstallAddonState>();
 
             stateData.StateChanged += (arg, state) =>
             {
-                if (arg.Value2 == DownloadAddonRes.Successful) 
+                if (arg.Value2 == DownloadAddonRes.Successful)
                 {
                     var s = 0;
+                    InstalledAddons.Add(instanceAddon);
                 }
             };
 
-            Runtime.TaskRun(() => 
-            { 
+            Runtime.TaskRun(() =>
+            {
                 instanceAddon.InstallLatestVersion(stateData.GetHandler);
             });
         }
@@ -152,7 +164,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
         #region Private Methods
 
 
-        private IEnumerable<SortByParamObject> GetSortByParams() 
+        private IEnumerable<SortByParamObject> GetSortByParams()
         {
             Type sortByParamsType = _projectSource switch
             {
@@ -165,7 +177,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
             var enumValues = Enum.GetValues(sortByParamsType);
             var sortByParams = new SortByParamObject[enumValues.Length];
             var i = 0;
-            
+
             foreach (var index in enumValues)
             {
                 var name = $"{_projectSource.ToString()}{Enum.GetName(sortByParamsType, index)}";
@@ -218,12 +230,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
             });
         }
 
-        private void PrepareLoaderGroup() 
+        private void PrepareLoaderGroup()
         {
             var list = new List<Modloader>();
-            foreach (GameExtension i in Enum.GetValues(typeof(GameExtension))) 
-            { 
-                if (MinecraftExtension.CheckExistsOnVersion(_instanceData.GameVersion, i)) 
+            foreach (GameExtension i in Enum.GetValues(typeof(GameExtension)))
+            {
+                if (MinecraftExtension.CheckExistsOnVersion(_instanceData.GameVersion, i))
                 {
                     var loader = i switch
                     {
@@ -255,7 +267,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
                         {
                             AddonType.Resourcepacks =>
                         }*/
-        } 
+        }
 
         private string GetCategoryGroupHeader(string header, IEnumerable<IProjectCategory> categories)
         {
@@ -279,7 +291,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 
         internal void SelectCategory(IProjectCategory category)
         {
-            foreach (var i in Categories) 
+            foreach (var i in Categories)
             {
                 if (i.GetHashCode() == category.GetHashCode())
                     i.IsSelected = true;

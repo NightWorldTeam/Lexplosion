@@ -132,6 +132,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
             Runtime.TaskRun(() =>
             {
                 var instanceData = instanceModelBase.InstanceData;
+                
                 App.Current.Dispatcher.Invoke(() =>
                 {
                     _repositoriesList.Add(new AddonsRepositoryModel(ProjectSource.Modrinth, instanceData, addonType));

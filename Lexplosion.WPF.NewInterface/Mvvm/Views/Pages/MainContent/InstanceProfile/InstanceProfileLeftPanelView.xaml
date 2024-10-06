@@ -226,8 +226,8 @@
                                         FontSize="12"
                                         FontWeight="Medium"
                                         IconData="{StaticResource PDPlay}"
-                                        IconPadding="0,9,0,9"
-                                        Style="{StaticResource DefaultAdvancedButton}"
+                                        IconPadding="0,0,8,0"
+                                        Style="{StaticResource sm-default}"
                                         Text="{DynamicResource Play}" />
                                 </core:If.True>
                                 <core:If.False>
