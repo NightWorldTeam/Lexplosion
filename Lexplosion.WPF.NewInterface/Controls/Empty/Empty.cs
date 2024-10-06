@@ -14,6 +14,10 @@ namespace Lexplosion.WPF.NewInterface.Controls
             = DependencyProperty.Register(nameof(CollectionCount), typeof(int), typeof(Empty),
             new FrameworkPropertyMetadata(defaultValue: 0, propertyChangedCallback: OnCollectionCountChanged));
 
+        public static readonly DependencyProperty IsContentLoadingProperty
+            = DependencyProperty.Register(nameof(IsContentLoading), typeof(bool), typeof(Empty),
+            new FrameworkPropertyMetadata(defaultValue: false, propertyChangedCallback: OnIsContentLoadingChanged));
+
         public string Description 
         {
             get => (string)GetValue(DescriptionProperty);
@@ -23,6 +27,12 @@ namespace Lexplosion.WPF.NewInterface.Controls
         public int CollectionCount 
         {
             get => (int)GetValue(CollectionCountProperty);
+            set => SetValue(CollectionCountProperty, value);
+        }
+
+        public bool IsContentLoading
+        {
+            get => (bool)GetValue(CollectionCountProperty);
             set => SetValue(CollectionCountProperty, value);
         }
 
@@ -43,6 +53,12 @@ namespace Lexplosion.WPF.NewInterface.Controls
         {
             var _this = d as Empty;
             _this.Visibility = _this.CollectionCount == 0 ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private static void OnIsContentLoadingChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var _this = d as Empty;
+            _this.Visibility = _this.CollectionCount == 0 && !((bool)e.NewValue) ? Visibility.Visible : Visibility.Collapsed;
         }
     }
 }

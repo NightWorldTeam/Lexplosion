@@ -696,13 +696,15 @@
             </controls:Loader>
 
             <!--  TODO: Translate  -->
-            <TextBlock
+            <controls:Empty
                 Grid.RowSpan="2"
+                Margin="0,48,0,0"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                FontSize="18"
-                Text="Дополнения отсутствуют"
-                Visibility="{Binding DataContext.Model.IsEmptyAddonsList, Converter={valueconverters:BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                CollectionCount="{Binding Model.InstanceAddonCollectionViewSource.Source.Count}"
+                Description="Дополнения отсутствуют"
+                IsContentLoading="{Binding Model.IsAddonsLoading}" />
+
         </Grid>
 
         <controls:DragDropBoard
