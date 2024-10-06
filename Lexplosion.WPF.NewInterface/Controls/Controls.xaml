@@ -36,5 +36,6 @@
         <ResourceDictionary Source="OneStageInstallButton/OneStageInstallButton.xaml" />
 
         <ResourceDictionary Source="ToastMessage/ToastMessage.xaml" />
+        <ResourceDictionary Source="BackTop/BackTop.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

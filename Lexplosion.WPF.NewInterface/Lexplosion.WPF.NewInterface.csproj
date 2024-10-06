@@ -94,6 +94,7 @@
     <Compile Include="Controls\AdvancedComboBox\AdvancedComboBox.cs" />
     <Compile Include="Controls\AdvancedToggleButton\AdvancedToggleButton.cs" />
     <Compile Include="Controls\AdvancedWrapPanel\AdvancedWrapPanel.cs" />
+    <Compile Include="Controls\BackTop\BackTop.cs" />
     <Compile Include="Controls\Empty\Empty.cs" />
     <Compile Include="Controls\ToastMessage\ToastMessage.cs" />
     <Compile Include="Core\Converters\MultiValueConverter\StyleSelectorConverter.cs" />
@@ -402,6 +403,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\AnimatedContentControl\AnimatedContentControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\BackTop\BackTop.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

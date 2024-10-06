@@ -492,7 +492,7 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <ScrollViewer Grid.ColumnSpan="2">
+        <ScrollViewer x:Name="Scroll" Grid.ColumnSpan="2">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="250" />
@@ -707,6 +707,14 @@
                 </Border>
             </Grid>
         </ScrollViewer>
+
+        <controls:BackTop
+            Grid.Column="1"
+            Margin="16"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
+            Style="{StaticResource DefaultAdvancedButton}"
+            TargetScroll="{Binding ElementName=Scroll}" />
 
         <!--  Apply Categories  -->
         <Button
