@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:Lexplosion.WPF.NewInterface.Controls"
     xmlns:converters="clr-namespace:Lexplosion.WPF.NewInterface.Core.Converters"
+    xmlns:core="clr-namespace:Lexplosion.WPF.NewInterface.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.AddonsRepositories.Lexplosion"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -13,7 +14,6 @@
     <Grid Margin="0,16,16,0">
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
@@ -118,15 +118,37 @@
             </Grid>
         </Border>
 
-        <!--  Instance Addons  -->
-        <ItemsControl
+        <core:If
             Grid.Row="1"
             Margin="0,16,0,0"
-            ItemsSource="{Binding Model.AddonsList}"
-            ScrollViewer.CanContentScroll="True"
-            VirtualizingPanel.IsVirtualizing="True" />
+            Condition="{Binding Model.IsLoading}">
+            <core:If.True>
+                <controls:LoadingBoard
+                    Background="Transparent"
+                    BackgroundOpacity="0.6"
+                    IsActive="True"
+                    Placeholder="Загрузка аддонов" />
+            </core:If.True>
 
-        <!--  Paginator  -->
-        <controls:Paginator Grid.Row="2" Margin="0,32,0,16" />
+            <core:If.False>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <!--  Instance Addons  -->
+                    <ItemsControl
+                        ItemsSource="{Binding Model.AddonsList}"
+                        ScrollViewer.CanContentScroll="True"
+                        VirtualizingPanel.IsVirtualizing="True" />
+
+                    <!--  Paginator  -->
+                    <controls:Paginator Grid.Row="1" Margin="0,32,0,16" />
+                </Grid>
+            </core:If.False>
+        </core:If>
     </Grid>
+
+
 </UserControl>

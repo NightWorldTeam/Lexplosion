@@ -45,6 +45,7 @@
 
             <!--  Arrow  -->
             <Viewbox
+                x:Name="ArrowViewBox"
                 Grid.Column="1"
                 Height="6"
                 HorizontalAlignment="Left"
@@ -56,6 +57,12 @@
                     Stretch="Fill" />
             </Viewbox>
         </Grid>
+
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter TargetName="ArrowViewBox" Property="Visibility" Value="Collapsed" />
+            </Trigger>
+        </ControlTemplate.Triggers>
     </ControlTemplate>
 
     <Style x:Key="{x:Type ComboBox}" TargetType="{x:Type ComboBox}">
@@ -80,6 +87,7 @@
                             ClickMode="Press"
                             Focusable="false"
                             IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                            IsEnabled="{TemplateBinding IsEnabled}"
                             Template="{StaticResource ComboBoxToggleButton}" />
                         <ContentPresenter
                             x:Name="ContentSite"

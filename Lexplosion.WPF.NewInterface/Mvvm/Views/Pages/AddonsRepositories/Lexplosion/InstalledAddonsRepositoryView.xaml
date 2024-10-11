@@ -17,7 +17,6 @@
 
         <Grid>
             <controls:SearchBox />
-            
         </Grid>
 
         <ItemsControl

@@ -21,6 +21,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
         public ObservableCollection<InstanceAddon> InstalledAddons { get; set; } = [];
 
 
+        public bool IsAddonTypeMaps { get; set; }
+        public bool IsAddonTypeMods { get; set; }
+        public bool IsAddonTypeResourcepacks { get; set; }
+        public bool IsAddonTypeShaders { get; set; }
+
 
         private bool _hasConfirmCategories;
         public bool HasConfirmCategories
@@ -48,6 +53,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
                 _ => new([10]),
             };
             PageSize = PageSizes[0];
+
+            IsAddonTypeMods = addonType == AddonType.Mods;
+            IsAddonTypeMaps = addonType == AddonType.Maps;
+            IsAddonTypeShaders = addonType == AddonType.Shaders;
+            IsAddonTypeResourcepacks = addonType == AddonType.Resourcepacks;
 
             SortByParams = GetSortByParams();
 

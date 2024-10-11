@@ -86,6 +86,16 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
             }
         }
 
+        private bool _isLoading;
+        public bool IsLoading 
+        { 
+            get => _isLoading; set 
+            {
+                _isLoading = value;
+                OnPropertyChanged();
+            }
+        }
+
 
         #endregion Properties
 
@@ -113,6 +123,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 
         protected void LoadContent()
         {
+            IsLoading = true;
             Runtime.TaskRun(() =>
             {
                 var addons = InstanceAddon.GetAddonsCatalog(_projectSource, _instanceData, _addonType, BuildSearchParams()).List;
@@ -124,6 +135,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
                     {
                         _addonsList.Add(i);
                     }
+                    IsLoading = false;
                 });
             });
         }

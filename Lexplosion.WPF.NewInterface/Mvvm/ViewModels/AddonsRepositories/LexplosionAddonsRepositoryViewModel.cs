@@ -27,9 +27,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
 
 
         private int _selectedAddonsRepositoryIndex;
-        public int SelectedAddonsRepositoryIndex 
+        public int SelectedAddonsRepositoryIndex
         {
-            get => _selectedAddonsRepositoryIndex; set 
+            get => _selectedAddonsRepositoryIndex; set
             {
                 _selectedAddonsRepositoryIndex = value;
                 // сохраняем SearchFilter
@@ -104,7 +104,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
         public ICommand ApplySelectedCategoriesCommand { get; private set; }
 
         private RelayCommand _selectCategoryCommand;
-        public ICommand SelectCategoryCommand 
+        public ICommand SelectCategoryCommand
         {
             get => RelayCommand.GetCommand<IProjectCategory>(ref _selectCategoryCommand, Model.SelectCategory);
         }
@@ -132,14 +132,17 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
             Runtime.TaskRun(() =>
             {
                 var instanceData = instanceModelBase.InstanceData;
-                
+
                 App.Current.Dispatcher.Invoke(() =>
                 {
-                    _repositoriesList.Add(new AddonsRepositoryModel(ProjectSource.Modrinth, instanceData, addonType));
+                    if (addonType != AddonType.Maps)
+                    {
+                        _repositoriesList.Add(new AddonsRepositoryModel(ProjectSource.Modrinth, instanceData, addonType));
+                    }
                     _repositoriesList.Add(new AddonsRepositoryModel(ProjectSource.Curseforge, instanceData, addonType));
 
                     SelectedAddonsRepositoryIndex = 0;
-                    
+
                     ApplySelectedCategoriesCommand = new RelayCommand((obj) => Model.ApplyCategories());
 
                     OnPropertyChanged(nameof(ApplySelectedCategoriesCommand));

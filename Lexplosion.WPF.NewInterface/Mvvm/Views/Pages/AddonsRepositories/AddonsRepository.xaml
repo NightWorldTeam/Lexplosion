@@ -522,11 +522,23 @@
                         Content="Close"
                         IsCancel="True"
                         Style="{StaticResource x32IconButton}" />
-                    <ComboBox
-                        Height="32"
-                        Margin="8,0,0,0"
-                        ItemsSource="{Binding ProjectSources}"
-                        SelectedIndex="{Binding SelectedAddonsRepositoryIndex}" />
+                    <core:If Condition="{Binding Model.IsAddonTypeMaps}">
+                        <core:If.True>
+                            <ComboBox
+                                Height="32"
+                                Margin="8,0,0,0"
+                                IsEnabled="False"
+                                ItemsSource="{Binding ProjectSources}"
+                                SelectedIndex="1" />
+                        </core:If.True>
+                        <core:If.False>
+                            <ComboBox
+                                Height="32"
+                                Margin="8,0,0,0"
+                                ItemsSource="{Binding ProjectSources}"
+                                SelectedIndex="{Binding SelectedAddonsRepositoryIndex}" />
+                        </core:If.False>
+                    </core:If>
                 </StackPanel>
 
                 <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden">
@@ -554,34 +566,39 @@
                         <ItemsControl ItemsSource="{Binding Model.CategoriesGroups}" />
 
 
-                        <!--  Modloaders  -->
-                        <StackPanel Grid.Row="1" Margin="0,16,0,0">
-                            <TextBlock
-                                Margin="0,0,0,8"
-                                extensions:TextBlock.TextByKey="GameType"
-                                FontSize="18"
-                                FontWeight="Medium"
-                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                        <core:If Condition="{Binding Model.IsAddonTypeMods}">
+                            <core:If.True>
 
-                            <StackPanel>
-                                <CheckBox
-                                    Margin="0,0,0,4"
-                                    Content="Fabric"
-                                    FontSize="14" />
-                                <CheckBox
-                                    Margin="0,0,0,4"
-                                    Content="Forge"
-                                    FontSize="14" />
-                                <CheckBox
-                                    Margin="0,0,0,4"
-                                    Content="Neoforge"
-                                    FontSize="14" />
-                                <CheckBox
-                                    Margin="0,0,0,4"
-                                    Content="Quilt"
-                                    FontSize="14" />
-                            </StackPanel>
-                        </StackPanel>
+                                <!--  Modloaders  -->
+                                <StackPanel Grid.Row="1" Margin="0,16,0,0">
+                                    <TextBlock
+                                        Margin="0,0,0,8"
+                                        extensions:TextBlock.TextByKey="GameType"
+                                        FontSize="18"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+
+                                    <StackPanel>
+                                        <CheckBox
+                                            Margin="0,0,0,4"
+                                            Content="Fabric"
+                                            FontSize="14" />
+                                        <CheckBox
+                                            Margin="0,0,0,4"
+                                            Content="Forge"
+                                            FontSize="14" />
+                                        <CheckBox
+                                            Margin="0,0,0,4"
+                                            Content="Neoforge"
+                                            FontSize="14" />
+                                        <CheckBox
+                                            Margin="0,0,0,4"
+                                            Content="Quilt"
+                                            FontSize="14" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </core:If.True>
+                        </core:If>
                     </StackPanel>
                 </ScrollViewer>
             </Grid>
