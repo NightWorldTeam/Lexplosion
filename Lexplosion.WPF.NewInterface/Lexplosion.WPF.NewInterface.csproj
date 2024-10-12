@@ -96,6 +96,7 @@
     <Compile Include="Controls\AdvancedWrapPanel\AdvancedWrapPanel.cs" />
     <Compile Include="Controls\BackTop\BackTop.cs" />
     <Compile Include="Controls\Empty\Empty.cs" />
+    <Compile Include="Controls\Paginator\PaginatorOptions.cs" />
     <Compile Include="Controls\ToastMessage\ToastMessage.cs" />
     <Compile Include="Core\Converters\MultiValueConverter\StyleSelectorConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\ImagePathValidateConverter.cs" />

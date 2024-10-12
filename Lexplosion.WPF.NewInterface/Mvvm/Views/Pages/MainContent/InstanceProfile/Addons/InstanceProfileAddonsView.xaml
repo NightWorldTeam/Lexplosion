@@ -396,14 +396,13 @@
         <DataTemplate x:Key="LineInstanceAddon" DataType="{x:Type logicInstances:InstanceAddon}">
             <Border
                 x:Name="AnimatableUIElement"
-                MaxWidth="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={valueconverters:WindowWidthToXProcentWidth}, ConverterParameter=70}"
                 BorderBrush="{DynamicResource SeparateSolidColorBrush}"
                 BorderThickness="0,0,0,1">
                 <Grid
                     MinHeight="60"
                     HorizontalAlignment="Stretch"
                     Background="Transparent"
-                    ShowGridLines="True">
+                    ShowGridLines="False">
 
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -591,6 +590,7 @@
 
     <Grid>
         <Grid
+            x:Name="Content"
             AllowDrop="True"
             Background="Transparent"
             DragEnter="Grid_DragEnter">
@@ -657,45 +657,45 @@
             <!--  TODO: Scrool To Start  -->
             <!--  TODO: IconButton MouseOver fill Activity Color  -->
 
-            <controls:Loader Grid.Row="1" IsActive="{Binding Model.IsAddonsLoading, UpdateSourceTrigger=PropertyChanged}">
-                <core:If Condition="{Binding IsCurrentFormatBlock, UpdateSourceTrigger=PropertyChanged}">
-                    <core:If.True>
-                        <controls1:VirtualizingItemsControl
-                            Margin="0,8"
-                            ItemTemplate="{StaticResource RectInstanceAddon}"
-                            ItemsSource="{Binding Model.InstanceAddonCollectionViewSource.View}"
-                            Template="{StaticResource RectInstanceHeaderControlTemplate}"
-                            VirtualizingPanel.CacheLengthUnit="Item"
-                            VirtualizingPanel.IsVirtualizingWhenGrouping="True"
-                            VirtualizingPanel.ScrollUnit="Pixel"
-                            VirtualizingPanel.VirtualizationMode="Recycling"
-                            Visibility="{Binding IsCurrentFormatBlock, Converter={valueconverters:BooleanToVisibilityConverter}}">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <controls1:VirtualizingWrapPanel
-                                        HorizontalAlignment="Stretch"
-                                        Orientation="Horizontal"
-                                        SpacingMode="StartAndEndOnly"
-                                        StretchItems="False" />
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                        </controls1:VirtualizingItemsControl>
-                    </core:If.True>
-                    <core:If.False>
-                        <ListBox
-                            Margin="4,8,4,8"
-                            ItemTemplate="{StaticResource LineInstanceAddon}"
-                            ItemsSource="{Binding Model.InstanceAddonCollectionViewSource.View}"
-                            ScrollViewer.CanContentScroll="True"
-                            Template="{StaticResource DLCHeaderControlTemplate}"
-                            VirtualizingStackPanel.CacheLength="1,5"
-                            VirtualizingStackPanel.CacheLengthUnit="Page"
-                            VirtualizingStackPanel.IsVirtualizing="True"
-                            VirtualizingStackPanel.VirtualizationMode="Recycling"
-                            Visibility="{Binding IsCurrentFormatBlock, UpdateSourceTrigger=PropertyChanged, Converter={valueconverters:NegativeBooleanToVisibilityConverter}}" />
-                    </core:If.False>
-                </core:If>
-            </controls:Loader>
+
+            <core:If Condition="{Binding IsCurrentFormatBlock, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1">
+                <core:If.True>
+                    <controls1:VirtualizingItemsControl
+                        Margin="0,8"
+                        ItemTemplate="{StaticResource RectInstanceAddon}"
+                        ItemsSource="{Binding Model.InstanceAddonCollectionViewSource.View}"
+                        Template="{StaticResource RectInstanceHeaderControlTemplate}"
+                        VirtualizingPanel.CacheLengthUnit="Item"
+                        VirtualizingPanel.IsVirtualizingWhenGrouping="True"
+                        VirtualizingPanel.ScrollUnit="Pixel"
+                        VirtualizingPanel.VirtualizationMode="Recycling"
+                        Visibility="{Binding IsCurrentFormatBlock, Converter={valueconverters:BooleanToVisibilityConverter}}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <controls1:VirtualizingWrapPanel
+                                    HorizontalAlignment="Stretch"
+                                    Orientation="Horizontal"
+                                    SpacingMode="StartAndEndOnly"
+                                    StretchItems="False" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </controls1:VirtualizingItemsControl>
+                </core:If.True>
+                <core:If.False>
+                    <ListBox
+                        Margin="4,8,4,8"
+                        ItemTemplate="{StaticResource LineInstanceAddon}"
+                        ItemsSource="{Binding Model.InstanceAddonCollectionViewSource.View}"
+                        ScrollViewer.CanContentScroll="True"
+                        Template="{StaticResource DLCHeaderControlTemplate}"
+                        VirtualizingStackPanel.CacheLength="1,5"
+                        VirtualizingStackPanel.CacheLengthUnit="Page"
+                        VirtualizingStackPanel.IsVirtualizing="True"
+                        VirtualizingStackPanel.VirtualizationMode="Recycling"
+                        Visibility="{Binding IsCurrentFormatBlock, UpdateSourceTrigger=PropertyChanged, Converter={valueconverters:NegativeBooleanToVisibilityConverter}}" />
+                </core:If.False>
+            </core:If>
+
 
             <!--  TODO: Translate  -->
             <controls:Empty
@@ -766,5 +766,11 @@
                 </Grid>
             </Border>
         </controls:DragDropBoard>
+
+        <controls:LoadingBoard
+            Background="Black"
+            BackgroundOpacity="0.2"
+            BlurTarget="{Binding ElementName=Content}"
+            IsActive="{Binding Model.IsAddonsLoading, UpdateSourceTrigger=PropertyChanged}" />
     </Grid>
 </UserControl>

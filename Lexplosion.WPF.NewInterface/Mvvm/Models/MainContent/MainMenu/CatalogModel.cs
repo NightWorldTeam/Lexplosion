@@ -76,6 +76,15 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
             }
         }
 
+        private bool _isLoading;
+        public bool IsLoading 
+        {
+            get => _isLoading; set 
+            {
+                _isLoading = value;
+                OnPropertyChanged();
+            }
+        }
 
         #endregion Properties
 
@@ -99,6 +108,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
 
         private void OnFilterChanged() 
         {
+            IsLoading = true;
             _instanceController.Clear();
             Runtime.TaskRun(() =>
             {
@@ -122,6 +132,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
                 foreach (var i in instanceClientsTuple.Item1)
                     _instanceController.Add(i);
                 OnPropertyChanged(nameof(Instances));
+                IsLoading = false;
             });
         }
 

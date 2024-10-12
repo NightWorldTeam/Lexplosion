@@ -322,7 +322,7 @@
     <!--  Instance Form Download Process  -->
     <s:String x:Key="DownloadPreparing">Идет подготовка к скачиванию...</s:String>
     <s:String x:Key="JavaInstalling">Идет процесс установки Java</s:String>
-    <s:String x:Key="InstanceDownloading">Instance is downloading... Stage {0}/{1}</s:String>
+    <s:String x:Key="InstanceDownloading">Сборка устанавливается... Stage {0}/{1}</s:String>
 
     <!--  Export  -->
     <s:String x:Key="ExportProperties">Свойства экспорт</s:String>
@@ -411,4 +411,6 @@
     <s:String x:Key="Share">Раздача</s:String>
     <s:String x:Key="ActiveShares">Активные раздачи</s:String>
 
+
+    <s:String x:Key="CurseforgeCatalogLoading">Идет загрузка каталога Curseforge</s:String>
 </ResourceDictionary>

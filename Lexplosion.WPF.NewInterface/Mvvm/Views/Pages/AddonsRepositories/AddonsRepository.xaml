@@ -541,6 +541,7 @@
                     </core:If>
                 </StackPanel>
 
+                <!--  TODO: Скрывать при открытии страницы установленные  -->
                 <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden">
                     <StackPanel>
 
