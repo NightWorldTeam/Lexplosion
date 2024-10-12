@@ -84,6 +84,7 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
 
@@ -108,13 +109,16 @@
                                     BorderBrush="{DynamicResource SeparateSolidColorBrush}"
                                     Style="{StaticResource FilterIconToggleButton}" />
 
-                                <Border
+
+                                <ToggleButton
+                                    x:Name="HeadPaginatorSwitch"
                                     Width="40"
                                     Height="40"
                                     Margin="15,0,0,0"
                                     Background="{DynamicResource PrimarySolidColorBrush}"
                                     BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                                    CornerRadius="5" />
+                                    Content="Numbers123"
+                                    Style="{StaticResource FilterIconToggleButton}" />
                             </StackPanel>
 
                             <!--  Filter Panel  -->
@@ -324,6 +328,16 @@
                                 </Grid>
                             </Border>
 
+                            <controls:Paginator
+                                Grid.Row="2"
+                                Margin="0,0,0,16"
+                                CurrentPageIndex="{Binding Model.CurrentPageIndex}"
+                                NextCommand="{Binding NextPageCommand}"
+                                PageChanged="Paginator_PageChanged"
+                                PageCount="{Binding Model.PageCount}"
+                                PrevCommand="{Binding PrevPageCommand}"
+                                ToCommand="{Binding ToCurrentPageIndexCommand}"
+                                Visibility="{Binding IsChecked, ElementName=HeadPaginatorSwitch, Converter={converters:BooleanToVisibilityConverter}}" />
                         </Grid>
 
                         <!--  Instance Clients List  -->
@@ -357,6 +371,7 @@
                                 Margin="0,16,0,32"
                                 CurrentPageIndex="{Binding Model.CurrentPageIndex}"
                                 NextCommand="{Binding NextPageCommand}"
+                                PageChanged="Paginator_PageChanged"
                                 PageCount="{Binding Model.PageCount}"
                                 PrevCommand="{Binding PrevPageCommand}"
                                 ToCommand="{Binding ToCurrentPageIndexCommand}" />
@@ -371,6 +386,7 @@
                     Style="{StaticResource DefaultAdvancedButton}"
                     TargetScroll="{Binding ElementName=ContainerPage_ScrollViewer}" />
             </Grid>
+
             <controls:LoadingBoard
                 Background="Black"
                 BackgroundOpacity="0.3"

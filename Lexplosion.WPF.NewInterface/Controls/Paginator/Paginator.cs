@@ -26,6 +26,9 @@ namespace Lexplosion.WPF.NewInterface.Controls
         private bool _isLast;
 
 
+        public event Action<uint> PageChanged;
+
+
         #region Dependency Properties
 
 
@@ -139,6 +142,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
             {
                 CurrentPageIndex++;
                 NextCommand?.Execute(CurrentPageIndex);
+                PageChanged?.Invoke(CurrentPageIndex);
             }
         }
 
@@ -148,6 +152,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
             {
                 CurrentPageIndex--;
                 PrevCommand?.Execute(CurrentPageIndex);
+                PageChanged?.Invoke(CurrentPageIndex);
             }
         }
 
@@ -157,6 +162,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
             {
                 CurrentPageIndex++;
                 ToCommand?.Execute(CurrentPageIndex);
+                PageChanged?.Invoke(CurrentPageIndex);
             }
         }
 

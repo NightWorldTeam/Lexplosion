@@ -128,5 +128,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu
             var if_ = (InstanceForm)sender;
             Runtime.DebugWrite(if_.ActualWidth);
         }
+
+        private void Paginator_PageChanged(uint obj)
+        {
+            ScrollViewerExtensions.ScroollToPosAnimated(
+                ContainerPage_ScrollViewer,
+                ScrollViewerExtensions.GetScrollBar(ContainerPage_ScrollViewer).Minimum
+            );
+        }
     }
 }

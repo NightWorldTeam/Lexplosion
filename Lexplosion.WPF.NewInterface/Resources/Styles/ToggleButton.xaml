@@ -159,6 +159,7 @@
 
     <Style x:Key="FilterIconToggleButton" TargetType="{x:Type ToggleButton}">
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Content" Value="Filter" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ToggleButton}">
@@ -173,7 +174,7 @@
                             <Viewbox>
                                 <Path
                                     x:Name="Icon"
-                                    extensions:Path.StringKeyData="Filter"
+                                    extensions:Path.StringKeyData="{TemplateBinding Content}"
                                     Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
                                     Stretch="Fill" />
                             </Viewbox>
