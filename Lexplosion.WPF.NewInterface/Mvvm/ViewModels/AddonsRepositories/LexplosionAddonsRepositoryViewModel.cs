@@ -6,6 +6,7 @@ using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Core.Objects.TranslatableObjects;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
+using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile;
 using Lexplosion.WPF.NewInterface.Stores;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
 
 
         public AddonsRepositoryModel Model { get; private set; }
+
+        public ViewModelBase _modsViewModel { get; set; }
 
         public bool IsLoading { get; private set; }
 
@@ -148,6 +151,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
                     OnPropertyChanged(nameof(ApplySelectedCategoriesCommand));
                 });
             });
+
+
+            _modsViewModel = new InstanceAddonsContainerViewModel(navigationStore, AddonType.Mods, instanceModelBase);
+
 
             IsLoading = false;
         }

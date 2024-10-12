@@ -87,11 +87,16 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 
             stateData.StateChanged += (arg, state) =>
             {
-                if (arg.Value2 == DownloadAddonRes.Successful)
+                App.Current.Dispatcher.Invoke(() =>
                 {
-                    var s = 0;
-                    InstalledAddons.Add(instanceAddon);
-                }
+
+                    if (arg.Value2 == DownloadAddonRes.Successful)
+                    {
+                        var s = 0;
+                        InstalledAddons.Add(instanceAddon);
+                    }
+
+                });
             };
 
             Runtime.TaskRun(() =>

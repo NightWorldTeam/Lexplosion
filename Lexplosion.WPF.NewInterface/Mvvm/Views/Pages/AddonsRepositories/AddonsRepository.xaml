@@ -607,34 +607,34 @@
         <!--    -->
         <!--  Right Content  -->
         <!--    -->
-        <ScrollViewer
-            x:Name="Scroll"
-            Grid.Column="1"
-            Margin="16,16,0,4">
-            <Grid>
-                <TabControl Background="Transparent" BorderThickness="0">
-                    <TabItem Header="{DynamicResource Catalog}">
-                        <lexplosion:AddonRepositoryCatalogView DataContext="{Binding}" />
-                    </TabItem>
-                    <TabItem Header="В процессе">
-                        <lexplosion:InProgressAddonsRepositoryView DataContext="{Binding}" />
-                    </TabItem>
 
-                    <TabItem Header="Установленные">
-                        <lexplosion:InstalledAddonsRepositoryView DataContext="{Binding}" />
-                    </TabItem>
-                </TabControl>
-            </Grid>
+        <Grid Grid.Column="1">
+            <TabControl Background="Transparent" BorderThickness="0">
+                <TabItem Header="{DynamicResource Catalog}">
+                    <Grid>
 
-        </ScrollViewer>
+                        <ScrollViewer x:Name="Scroll" Margin="16,16,0,4">
+                            <lexplosion:AddonRepositoryCatalogView DataContext="{Binding}" />
+                        </ScrollViewer>
 
-        <controls:BackTop
-            Grid.Column="1"
-            Margin="16"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Bottom"
-            Style="{StaticResource DefaultAdvancedButton}"
-            TargetScroll="{Binding ElementName=Scroll}" />
+                        <controls:BackTop
+                            Grid.Column="1"
+                            Margin="16"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom"
+                            Style="{StaticResource DefaultAdvancedButton}"
+                            TargetScroll="{Binding ElementName=Scroll}" />
+                    </Grid>
+                </TabItem>
+                <TabItem Header="В процессе">
+                    <lexplosion:InProgressAddonsRepositoryView DataContext="{Binding}" />
+                </TabItem>
+
+                <TabItem Header="Установленные">
+                    <lexplosion:InstalledAddonsRepositoryView DataContext="{Binding _modsViewModel}" />
+                </TabItem>
+            </TabControl>
+        </Grid>
 
         <!--  Apply Categories  -->
         <Button
