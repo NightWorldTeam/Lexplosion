@@ -396,13 +396,14 @@
         <DataTemplate x:Key="LineInstanceAddon" DataType="{x:Type logicInstances:InstanceAddon}">
             <Border
                 x:Name="AnimatableUIElement"
+                MaxWidth="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={valueconverters:WindowWidthToXProcentWidth}, ConverterParameter=70}"
                 BorderBrush="{DynamicResource SeparateSolidColorBrush}"
                 BorderThickness="0,0,0,1">
                 <Grid
                     MinHeight="60"
                     HorizontalAlignment="Stretch"
                     Background="Transparent"
-                    ShowGridLines="False">
+                    ShowGridLines="True">
 
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -448,7 +449,6 @@
 
                         <StackPanel Orientation="Horizontal">
                             <TextBlock
-                                MaxWidth="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={valueconverters:WindowWidthToXProcentWidth}, ConverterParameter=45}"
                                 FontSize="14"
                                 FontWeight="Medium"
                                 Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
@@ -686,8 +686,10 @@
                             Margin="4,8,4,8"
                             ItemTemplate="{StaticResource LineInstanceAddon}"
                             ItemsSource="{Binding Model.InstanceAddonCollectionViewSource.View}"
+                            ScrollViewer.CanContentScroll="True"
                             Template="{StaticResource DLCHeaderControlTemplate}"
-                            VirtualizingPanel.ScrollUnit="Pixel"
+                            VirtualizingStackPanel.CacheLength="1,5"
+                            VirtualizingStackPanel.CacheLengthUnit="Page"
                             VirtualizingStackPanel.IsVirtualizing="True"
                             VirtualizingStackPanel.VirtualizationMode="Recycling"
                             Visibility="{Binding IsCurrentFormatBlock, UpdateSourceTrigger=PropertyChanged, Converter={valueconverters:NegativeBooleanToVisibilityConverter}}" />
