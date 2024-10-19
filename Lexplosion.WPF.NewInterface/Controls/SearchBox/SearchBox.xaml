@@ -60,6 +60,7 @@
         <Setter Property="Height" Value="40" />
         <Setter Property="Background" Value="{DynamicResource PrimarySolidColorBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource SeparateSolidColorBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryForegroundSolidColorBrush}" />
         <Setter Property="FontSize" Value="14" />
         <Setter Property="Template">
             <Setter.Value>

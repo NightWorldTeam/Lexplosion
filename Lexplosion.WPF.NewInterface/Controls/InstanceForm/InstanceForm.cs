@@ -93,7 +93,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
         // -- State -- //
 
         public event Action LowerButtonClicked;
-        
+
         // -- State -- //
 
 
@@ -141,7 +141,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
             get => (ICommand)GetValue(LogoButtonCommandProperty);
             set => SetValue(LogoButtonCommandProperty, value);
         }
-        
+
         public ICommand OpenAddonsPageCommand
         {
             get => (ICommand)GetValue(OpenAddonsPageCommandProperty);
@@ -201,7 +201,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
         public InstanceForm()
         {
-            Loaded += (object sender, RoutedEventArgs e) => 
+            Loaded += (object sender, RoutedEventArgs e) =>
             {
                 IsProcessActive = false;
                 IsDownloading = false;
@@ -262,7 +262,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
             InstanceModel.LogoChanged += () =>
             {
-                App.Current.Dispatcher.Invoke((() => 
+                App.Current.Dispatcher.Invoke((() =>
                 {
                     SetLogo(InstanceModel.Logo);
                 }));
@@ -314,12 +314,12 @@ namespace Lexplosion.WPF.NewInterface.Controls
                             break;
                         }
                     case InstanceState.Preparing:
-                            {
-                                IsDownloading = false;
-                                IsProcessActive = true;
-                                PrepareVisualState();
-                                break;
-                            }
+                        {
+                            IsDownloading = false;
+                            IsProcessActive = true;
+                            PrepareVisualState();
+                            break;
+                        }
                     case InstanceState.Downloading:
                         {
                             IsProcessActive = true;
@@ -425,8 +425,8 @@ namespace Lexplosion.WPF.NewInterface.Controls
             if (_shortDescriptionTextBlock == null)
                 return;
 
-            App.Current.Dispatcher.Invoke(() => 
-            { 
+            App.Current.Dispatcher.Invoke(() =>
+            {
                 _shortDescriptionTextBlock.Text = value;
             });
         }
@@ -485,8 +485,8 @@ namespace Lexplosion.WPF.NewInterface.Controls
         /// <param name="model">InstanceModelBase информацию которого мы используем</param>
         private void UpdateAllFields(InstanceModelBase model)
         {
-            App.Current.Dispatcher?.Invoke(() => 
-            { 
+            App.Current.Dispatcher?.Invoke(() =>
+            {
                 SetName(model.Name);
                 SetShortDescription(model.Summary);
                 SetCategories(model.Tags);
@@ -504,9 +504,13 @@ namespace Lexplosion.WPF.NewInterface.Controls
             var instanceForm = d as InstanceForm;
             var instanceModelBase = ((InstanceModelBase)e.NewValue);
 
-            instanceModelBase.NameChanged += () => { App.Current.Dispatcher.Invoke(() => { instanceForm.SetName(instanceModelBase.Name); }); };
 
-            instanceForm.UpdateAllFields(instanceModelBase);
+            if (instanceModelBase != null)
+            {
+                instanceModelBase.NameChanged += () => { App.Current.Dispatcher.Invoke(() => { instanceForm.SetName(instanceModelBase.Name); }); };
+
+                instanceForm.UpdateAllFields(instanceModelBase);
+            }
         }
 
         /// <summary>
@@ -524,7 +528,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
         /// <summary>
         /// Отменяет скачивание клиента игры.
         /// </summary>
-        private void CancelDownload() 
+        private void CancelDownload()
         {
             InstanceModel.CancelDownload();
         }
@@ -579,39 +583,39 @@ namespace Lexplosion.WPF.NewInterface.Controls
         /// <param name="e">Аргументы события</param>
         private void _mainActionButton_Click(object sender, RoutedEventArgs e)
         {
-                switch (InstanceModel.State)
-                {
-                    case InstanceState.Default:
+            switch (InstanceModel.State)
+            {
+                case InstanceState.Default:
+                    {
+                        if (InstanceModel.IsInstalled)
                         {
-                            if (InstanceModel.IsInstalled)
-                            {
-                                InstanceModel.Run();
-                            }
-                            else
-                            {
-                                InstanceModel.Download();
-                            }
-                            break;
+                            InstanceModel.Run();
                         }
-                    case InstanceState.Downloading:
+                        else
                         {
-                            //Open Modal Windows with instance about downloading.
-                            break;
+                            InstanceModel.Download();
                         }
-                    case InstanceState.Launching:
-                        {
-                            StopProcessVisual();
-                            break;
-                        }
-                    case InstanceState.Running:
-                        {
-                            StopProcessVisual();
-                            break;
-                        }
-                    default:
                         break;
-                }
+                    }
+                case InstanceState.Downloading:
+                    {
+                        //Open Modal Windows with instance about downloading.
+                        break;
+                    }
+                case InstanceState.Launching:
+                    {
+                        StopProcessVisual();
+                        break;
+                    }
+                case InstanceState.Running:
+                    {
+                        StopProcessVisual();
+                        break;
+                    }
+                default:
+                    break;
             }
+        }
 
         /// <summary>
         /// Включает видимость TextBlock для вывода статистики, по количеству всех и скаченных файлов.
@@ -844,7 +848,8 @@ namespace Lexplosion.WPF.NewInterface.Controls
         /// <param name="isSuccessful">Успешен ли запуск</param>
         private void OnLaunchedCompleted(bool isSuccessful)
         {
-            App.Current.Dispatcher.Invoke(() => {
+            App.Current.Dispatcher.Invoke(() =>
+            {
                 SetShortDescription(InstanceModel.Summary);
                 IsProcessActive = false;
                 _tagsPanel.Visibility = Visibility.Visible;

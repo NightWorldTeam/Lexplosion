@@ -3,6 +3,7 @@ using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -55,6 +56,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
             FilterPanel.FilterChanged += OnFilterChanged;
 
             InstancesCollectionViewSource.Source = instanceController.Instances;
+            Console.WriteLine("library loading test");
 
             //var i = 0;
             //var ins = new List<InstanceModelBase>();
