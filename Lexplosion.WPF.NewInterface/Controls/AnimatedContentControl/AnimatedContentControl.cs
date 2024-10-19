@@ -99,18 +99,24 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
         private void BeginFadeAnimationContentReplacement()
         {
-            _paintArea.Visibility = Visibility.Visible;
+            _paintArea.Visibility = Visibility.Collapsed;
             _contentPresenter.Opacity = 0;
 
             var opacityAnimation = new DoubleAnimation()
             {
-                To = 0,
-                Duration = TimeSpan.FromSeconds(3)
+                To = 1,
+                From = 0,
+                Duration = TimeSpan.FromSeconds(0.6)
             };
 
-            opacityAnimation.Completed += OpacityAnimation_Completed; //(s, e) => _paintArea.Visibility = Visibility.Hidden;
+            opacityAnimation.EasingFunction = new CircleEase()
+            {
+                EasingMode = EasingMode.EaseInOut
+            };
 
-            _paintArea.BeginAnimation(OpacityProperty, opacityAnimation);
+            //opacityAnimation.Completed += OpacityAnimation_Completed; //(s, e) => _paintArea.Visibility = Visibility.Hidden;
+
+            _contentPresenter.BeginAnimation(OpacityProperty, opacityAnimation);
         }
 
         private void OpacityAnimation_Completed(object sender, EventArgs e)
