@@ -21,7 +21,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer
     public sealed class InstanceShareModel : ViewModelBase 
     {
         // true - exporting | false - nothing
-        public event Action<bool> ExportStatusChanged;
+        public event Action<bool> SharePreparingStarted;
 
 
         private readonly InstanceClient _instanceClient;
@@ -55,20 +55,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer
             }
         }
 
-        private bool _isExportStarted;
-        /// <summary>
-        /// Процесс экспорта был запущен.
-        /// </summary>
-        public bool IsExportActive
-        {
-            get => _isExportStarted; private set
-            {
-                _isExportStarted = value;
-                OnPropertyChanged();
-                ExportStatusChanged?.Invoke(value);
-            }
-        }
-
 
         #endregion Properties
 
@@ -92,13 +78,14 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer
 
 
         /// <summary>
-        /// Запускает экспорт асинхронно. Возвращает результат экспорта.
+        /// Запускает экспорт асинхронно (в другом потоке). Возвращает результат экспорта.
         /// </summary>
         /// <param name="fileName">Название файла</param>
         /// <returns></returns>
         public void Share()
         {
             IsPreparingToShare = true;
+            SharePreparingStarted?.Invoke(true);
             Lexplosion.Runtime.TaskRun(() =>
             {
                 var result = _instanceClient.Share(InstanceFileTree.UnitsList, out FileDistributor fileDistribution);
@@ -113,6 +100,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer
                     IsPreparingToShare = false;
                     OnPropertyChanged(nameof(IsPreparingToShare));
                     _instanceSharesController.ShareStopped += OnActiveShareStopped;
+                    SharePreparingStarted?.Invoke(false);
                 });
             });
         }

@@ -417,6 +417,7 @@
 
     <!--  Instance Share  -->
     <s:String x:Key="Share">Shares</s:String>
+    <s:String x:Key="ShareInstance">Share this instance</s:String>
     <s:String x:Key="ActiveShares">Active Shares</s:String>
 
 </ResourceDictionary>

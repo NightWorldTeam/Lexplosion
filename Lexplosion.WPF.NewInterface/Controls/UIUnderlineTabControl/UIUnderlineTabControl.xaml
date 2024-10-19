@@ -81,7 +81,7 @@
                             KeyboardNavigation.DirectionalNavigation="Contained"
                             KeyboardNavigation.TabIndex="2"
                             KeyboardNavigation.TabNavigation="Local">
-                            <local:AnimatedContentControl Content="{TemplateBinding SelectedContent}" AnimationType="Fade" />
+                            <local:AnimatedContentControl Content="{TemplateBinding SelectedContent}" />
                         </Border>
                     </Grid>
                 </ControlTemplate>

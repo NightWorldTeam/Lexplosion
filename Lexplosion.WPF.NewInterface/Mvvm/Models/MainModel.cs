@@ -86,6 +86,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models
                 leftmenu.IsProcessActive = isExporting;
             };
 
+            instanceShare.Model.SharePreparingStarted += (isPreparing) =>
+            {
+                leftmenu.IsProcessActive = isPreparing;
+            };
+
             ModalNavigationStore.Instance.Open(leftmenu);
         }
     }

@@ -103,7 +103,7 @@
                 Grid.Row="1"
                 BorderBrush="{DynamicResource SeparateSolidColorBrush}"
                 BorderThickness="1"
-                CornerRadius="5">
+                CornerRadius="5" >
                 <!--  !!! IMPORTANT Use StackPanel like a parent for TreeView will make a expand item delay. It'll make freeze all app. !!!  -->
                 <!--  !!! ВАЖНО Использование StackPanel в качестве родителя для TreeView создаст задержку при раскрытии элеметнов списка. Всё приложение зависнет. !!!  -->
                 <TreeView

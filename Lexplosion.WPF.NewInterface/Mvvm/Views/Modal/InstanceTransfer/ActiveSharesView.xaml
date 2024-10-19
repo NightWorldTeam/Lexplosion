@@ -91,7 +91,7 @@
         <DataTemplate DataType="{x:Type transferModel:DistributedInstance}">
             <!--  Active Share  -->
             <Border
-                Margin="0,16,0,0"
+                Margin="0,0,0,16"
                 Padding="8"
                 VerticalAlignment="Top"
                 Background="{DynamicResource SecondarySolidColorBrush}"
@@ -193,14 +193,12 @@
 
     <Grid Height="350">
         <!--    -->
-
-
-
         <core:If Condition="{Binding Model.IsEmpty}">
             <core:If.False>
                 <ItemsControl ItemsSource="{Binding Model.DistributedInstances}" />
             </core:If.False>
             <core:If.True>
+                <!--  TODO: Translate  -->
                 <TextBlock
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"

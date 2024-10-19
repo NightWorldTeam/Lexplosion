@@ -409,7 +409,8 @@
 
     <!--  Instance Share  -->
     <s:String x:Key="Share">Раздача</s:String>
-    <s:String x:Key="ActiveShares">Активные раздачи</s:String>
+    <s:String x:Key="ShareInstance">Начать раздачу данной сборки</s:String>
+    <s:String x:Key="ActiveShares">Ваши раздачи</s:String>
 
 
     <s:String x:Key="CurseforgeCatalogLoading">Идет загрузка каталога Curseforge</s:String>

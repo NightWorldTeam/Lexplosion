@@ -139,11 +139,12 @@
                     <!--  Export Button  -->
                     <controls:AdvancedButton
                         Grid.Row="2"
-                        Margin="0,8,0,16"
+                        Margin="0,8,0,8"
                         Command="{Binding ActionCommand}"
-                        Content="{DynamicResource InstanceShare}"
+                        FontSize="12"
                         FontWeight="Medium"
-                        Style="{StaticResource DefaultAdvancedButton}" />
+                        Style="{StaticResource sm-default}"
+                        Text="{DynamicResource ShareInstance}" />
                 </Grid>
             </core:If.False>
 

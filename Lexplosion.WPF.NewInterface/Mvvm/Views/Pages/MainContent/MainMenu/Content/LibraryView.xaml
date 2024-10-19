@@ -537,14 +537,14 @@
                     </Grid>
                 </Border>
 
-                <ItemsControl
+                <ListBox
                     Grid.Row="2"
                     Grid.Column="1"
-                    VirtualizingStackPanel.IsVirtualizing="True"
                     ItemsSource="{Binding Model.InstancesCollectionViewSource.View}"
                     KeyboardNavigation.IsTabStop="False"
-                   
-                    VirtualizingPanel.VirtualizationMode="Recycling">
+                    ScrollViewer.CanContentScroll="True"
+                    VirtualizingPanel.VirtualizationMode="Recycling"
+                    VirtualizingStackPanel.IsVirtualizing="True">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate DataType="{x:Type instanceModel:InstanceModelBase}">
                             <controls:InstanceForm
@@ -557,7 +557,7 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
 
-                </ItemsControl>
+                </ListBox>
             </Grid>
         </ScrollViewer>
 
