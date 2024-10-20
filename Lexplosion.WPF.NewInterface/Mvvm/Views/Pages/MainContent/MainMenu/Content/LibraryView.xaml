@@ -178,18 +178,20 @@
 
         <DataTemplate DataType="{x:Type instanceModel:InstanceModelBase}">
             <controls:InstanceForm
+                MaxWidth="600"
                 Margin="0,0,0,16"
                 CanBeDeleted="True"
                 InstanceModel="{Binding}"
                 LogoButtonCommand="{Binding DataContext.OpenInstanceProfileMenuCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
                 LogoButtonCommandParameter="{Binding}"
+                MouseDown="InstanceForm_MouseDown"
                 OpenAddonsPageCommand="{Binding DataContext.OpenAddonsPageCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
         </DataTemplate>
     </UserControl.Resources>
 
     <Grid>
 
-        <Grid Margin="0,40,0,0">
+        <Grid Margin="0,40,0,0" MouseDown="Grid_MouseDown">
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -198,9 +200,9 @@
             </Grid.RowDefinitions>
 
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="0.0715*" />
+                <ColumnDefinition Width="0.0715*" MinWidth="43" />
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="0.0715*" />
+                <ColumnDefinition Width="0.0715*" MinWidth="43" />
             </Grid.ColumnDefinitions>
 
             <!--  Search Box & Filter Toggle Button  -->
@@ -548,6 +550,7 @@
             <ListBox
                 Grid.Row="2"
                 Grid.ColumnSpan="3"
+                Padding="43,0,43,0"
                 Background="Transparent"
                 BorderThickness="0"
                 ItemContainerStyle="{StaticResource InstanceFormListBoxItem}"
@@ -565,7 +568,7 @@
                         <controls1:VirtualizingWrapPanel
                             HorizontalAlignment="Stretch"
                             Orientation="Horizontal"
-                            SpacingMode="StartAndEndOnly"
+                            SpacingMode="BetweenItemsOnly"
                             StretchItems="True" />
                     </ItemsPanelTemplate>
                 </ListBox.ItemsPanel>

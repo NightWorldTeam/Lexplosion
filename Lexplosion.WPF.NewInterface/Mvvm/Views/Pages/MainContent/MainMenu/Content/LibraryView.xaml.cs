@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lexplosion.WPF.NewInterface.Controls;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -24,6 +25,31 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu
         private void ListBox_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
 
+        }
+
+        private void Grid_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            var grid = sender as Grid;
+
+            var actualHeight = grid.ActualHeight;
+            var actualWidth = grid.ActualWidth;
+
+
+
+            foreach (var i in grid.ColumnDefinitions)
+            {
+                Runtime.DebugWrite(i.ActualWidth);
+            }
+        }
+
+        private void InstanceForm_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            var grid = sender as InstanceForm;
+
+            var actualHeight = grid.ActualHeight;
+            var actualWidth = grid.ActualWidth;
+
+            Runtime.DebugWrite($"{actualWidth} x {actualHeight}");
         }
     }
 }
