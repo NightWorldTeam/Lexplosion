@@ -66,6 +66,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
         {
             App.Current.Dispatcher.Invoke(() => 
             {
+                distributedInstance.Stop();
                 _activeShares.Remove(distributedInstance);
                 ShareStopped?.Invoke(distributedInstance.Id);
                 ActiveSharesListChanged?.Invoke();

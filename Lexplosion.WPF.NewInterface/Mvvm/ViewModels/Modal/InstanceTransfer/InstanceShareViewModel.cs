@@ -68,6 +68,16 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer
             InstanceName = _instanceClient.Name;
             InstanceFileTree = new InstanceFileTree(instanceClient);
             _instanceSharesController = controller;
+            controller.ShareStopped += Controller_ShareStopped;
+        }
+
+        private void Controller_ShareStopped(string obj)
+        {
+            if (_instanceClient.LocalId == obj) 
+            {
+                OnPropertyChanged(nameof(IsAlreadySharing));
+                OnPropertyChanged(nameof(IsPreparingToShare));
+            }
         }
 
 
