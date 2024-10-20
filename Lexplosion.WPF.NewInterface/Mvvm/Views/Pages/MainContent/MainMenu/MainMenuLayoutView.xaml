@@ -12,7 +12,7 @@
     <Grid MouseDown="Grid_MouseDown">
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0.363*" />
+            <ColumnDefinition Width="260" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
