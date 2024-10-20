@@ -1,0 +1,25 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:Lexplosion.WPF.NewInterface.Core.Converters">
+    <Style x:Key="InstanceFormListBoxItem" TargetType="{x:Type ListBoxItem}">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="MaxWidth" Value="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}, Converter={converters:WindowWidthToXProcentWidth}, ConverterParameter=86}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListBoxItem">
+                    <Border
+                        x:Name="Border"
+                        Padding="2"
+                        Background="Transparent"
+                        SnapsToDevicePixels="true">
+
+                        <ContentPresenter />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

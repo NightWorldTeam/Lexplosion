@@ -22,6 +22,7 @@
         <ResourceDictionary Source="Styles/ComboBox.xaml" />
         <ResourceDictionary Source="Styles/TreeViewItem.xaml" />
         <ResourceDictionary Source="Styles/Paginator.xaml" />
+        <ResourceDictionary Source="Styles/ListBox.xaml" />
 
         <ResourceDictionary Source="Styles/PageCurtains.xaml" />
     </ResourceDictionary.MergedDictionaries>

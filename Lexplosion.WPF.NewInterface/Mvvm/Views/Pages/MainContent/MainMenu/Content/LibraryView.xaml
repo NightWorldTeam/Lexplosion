@@ -185,26 +185,6 @@
                 LogoButtonCommandParameter="{Binding}"
                 OpenAddonsPageCommand="{Binding DataContext.OpenAddonsPageCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
         </DataTemplate>
-
-        <Style x:Key="{x:Type ListBoxItem}" TargetType="ListBoxItem">
-            <Setter Property="SnapsToDevicePixels" Value="true" />
-            <Setter Property="OverridesDefaultStyle" Value="true" />
-            <Setter Property="MaxWidth" Value="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}, Converter={converters:WindowWidthToXProcentWidth}, ConverterParameter=86}" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="ListBoxItem">
-                        <Border
-                            x:Name="Border"
-                            Padding="2"
-                            Background="Transparent"
-                            SnapsToDevicePixels="true">
-
-                            <ContentPresenter />
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
     </UserControl.Resources>
 
     <Grid>
@@ -570,6 +550,7 @@
                 Grid.ColumnSpan="3"
                 Background="Transparent"
                 BorderThickness="0"
+                ItemContainerStyle="{StaticResource InstanceFormListBoxItem}"
                 ItemsSource="{Binding Model.InstancesCollectionViewSource.View}"
                 KeyboardNavigation.IsTabStop="False"
                 ScrollViewer.CanContentScroll="True"
@@ -578,7 +559,17 @@
                 VirtualizingPanel.CacheLengthUnit="Page"
                 VirtualizingPanel.IsVirtualizing="True"
                 VirtualizingPanel.ScrollUnit="Pixel"
-                VirtualizingStackPanel.VirtualizationMode="Recycling" />
+                VirtualizingStackPanel.VirtualizationMode="Recycling">
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <controls1:VirtualizingWrapPanel
+                            HorizontalAlignment="Stretch"
+                            Orientation="Horizontal"
+                            SpacingMode="StartAndEndOnly"
+                            StretchItems="True" />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+            </ListBox>
         </Grid>
 
         <!--  Float Buttons  -->

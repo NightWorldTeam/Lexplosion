@@ -49,6 +49,15 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <DataTemplate DataType="{x:Type instanceModel:InstanceModelBase}">
+            <controls:InstanceForm
+                Margin="0,0,0,16"
+                InstanceModel="{Binding}"
+                LogoButtonCommand="{Binding DataContext.OpenInstanceProfileMenu, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                LogoButtonCommandParameter="{Binding}"
+                MouseDown="InstanceForm_MouseDown" />
+        </DataTemplate>
     </UserControl.Resources>
 
     <Border Padding="0,40,0,0" Focusable="True">
@@ -342,28 +351,26 @@
 
                         <!--  Instance Clients List  -->
                         <Grid Grid.Row="1" Grid.Column="1">
+
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
-                            <ItemsControl
-                                Grid.Column="1"
+                            <ListBox
+                                Grid.Row="2"
+                                Grid.ColumnSpan="3"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                ItemContainerStyle="{StaticResource InstanceFormListBoxItem}"
                                 ItemsSource="{Binding Model.Instances}"
                                 KeyboardNavigation.IsTabStop="False"
-                                KeyboardNavigation.TabNavigation="None">
-
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate DataType="{x:Type instanceModel:InstanceModelBase}">
-                                        <controls:InstanceForm
-                                            Margin="0,0,0,16"
-                                            InstanceModel="{Binding}"
-                                            LogoButtonCommand="{Binding DataContext.OpenInstanceProfileMenu, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
-                                            LogoButtonCommandParameter="{Binding}"
-                                            MouseDown="InstanceForm_MouseDown" />
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
+                                ScrollViewer.CanContentScroll="True"
+                                VirtualizingPanel.CacheLength="2"
+                                VirtualizingPanel.CacheLengthUnit="Page"
+                                VirtualizingPanel.IsVirtualizing="True"
+                                VirtualizingPanel.ScrollUnit="Pixel"
+                                VirtualizingStackPanel.VirtualizationMode="Recycling" />
 
                             <controls:Paginator
                                 Grid.Row="1"
