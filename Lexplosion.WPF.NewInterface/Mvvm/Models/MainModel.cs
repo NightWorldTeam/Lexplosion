@@ -66,7 +66,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models
             // Если сборка экспортируется.
             if (ExportingInstances.Contains(instanceClient))
             {
-                leftmenu.IsProcessActive = true;
+                leftmenu.PageLoadingStatusChange(true);
             }
 
             // Состояние экспорта изменилось
@@ -83,12 +83,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models
                     ExportingInstances.Remove(instanceClient);
                 }
 
-                leftmenu.IsProcessActive = isExporting;
+                leftmenu.PageLoadingStatusChange(isExporting);
             };
 
             instanceShare.Model.SharePreparingStarted += (isPreparing) =>
             {
-                leftmenu.IsProcessActive = isPreparing;
+                leftmenu.PageLoadingStatusChange(isPreparing);
             };
 
             ModalNavigationStore.Instance.Open(leftmenu);
