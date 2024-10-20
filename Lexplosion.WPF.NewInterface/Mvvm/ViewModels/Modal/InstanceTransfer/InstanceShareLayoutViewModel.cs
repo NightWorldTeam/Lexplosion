@@ -3,6 +3,7 @@ using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Notifications;
 using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers;
+using System;
 using System.Collections.Generic;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer
@@ -14,7 +15,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer
 
         public InstanceShareLayoutViewModel(InstanceSharesController controller, InstanceClient instanceClient, NotifyCallback notify = null)
         {
-            var instanceShare = new InstanceShareViewModel(instanceClient, controller, notify);
+            var instanceShare = new InstanceShareViewModel(instanceClient, controller, (i) => { Runtime.DebugConsoleWrite("Я хз тут должно чет происходить или нет>?!", type: DebugWriteType.Warning); }, notify);
             var activeShares = new ActiveSharesViewModel(controller, notify);
 
             Tabs = [

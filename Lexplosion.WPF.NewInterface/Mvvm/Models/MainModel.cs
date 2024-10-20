@@ -50,16 +50,18 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models
         {
             // TODO: Засунить метод Export и HashSet ExportingInstances в отдельный контроллер.
             // Ибо в будущем всё равно делать Раздачу, которая работает по такому-же принципу.
+            var leftmenu = new LeftMenuControl();
+
             var exportVM = new InstanceExportViewModel(instanceClient);
-            var instanceShare = new InstanceShareViewModel(instanceClient, InstanceSharesController, NotificationService.Notify);
+            var instanceShare = new InstanceShareViewModel(instanceClient, InstanceSharesController, leftmenu.NavigateTo, NotificationService.Notify);
             var activeShares = new ActiveSharesViewModel(InstanceSharesController, NotificationService.Notify);
 
-            var leftmenu = new LeftMenuControl(new ModalLeftMenuTabItem[]
+            leftmenu.AddTabItems(new ModalLeftMenuTabItem[]
             {
                 new ModalLeftMenuTabItem(0, "Export", "Download", exportVM, true, true),
                 new ModalLeftMenuTabItem(1, "Share", "Share", instanceShare, true, false),
                 new ModalLeftMenuTabItem(2, "ActiveShares", "ActiveShares", activeShares, true, false)
-            });
+            }, false);
 
             leftmenu.LoaderPlaceholderKey = "ExportProcessActive";
 

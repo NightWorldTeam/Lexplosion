@@ -7,6 +7,13 @@ using System.Threading;
 
 namespace Lexplosion
 {
+    public enum DebugWriteType
+    {
+        Info,
+        Warning,
+        Error
+    }
+
     public static partial class Runtime
     {
         private static int _importantThreads = 0;
@@ -92,11 +99,25 @@ namespace Lexplosion
         }
 
         [Conditional("DEBUG")]
-        public static void DebugConsoleWrite<T>(T line, [CallerMemberName] string memberName = "", [CallerFilePath] string sourceFilePath = "", [CallerLineNumber] int sourceLineNumber = 0, ConsoleColor color = ConsoleColor.White)
+        public static void DebugConsoleWrite<T>(T line, [CallerMemberName] string memberName = "", [CallerFilePath] string sourceFilePath = "", [CallerLineNumber] int sourceLineNumber = 0, DebugWriteType type = DebugWriteType.Info, ConsoleColor color = ConsoleColor.White)
         {
 #if DEBUG
             string str = FormDebugString(line, memberName, sourceFilePath, sourceLineNumber);
-            Console.ForegroundColor = color;
+
+
+
+            if (color == null)
+            {
+                Console.ForegroundColor = type switch
+                {
+                    DebugWriteType.Warning => ConsoleColor.DarkYellow,
+                    DebugWriteType.Error => ConsoleColor.Red,
+                    _ => ConsoleColor.White
+                };
+            }
+            else
+                Console.ForegroundColor = color;
+
             Console.WriteLine(str);
             Console.ForegroundColor = ConsoleColor.White;
 #endif

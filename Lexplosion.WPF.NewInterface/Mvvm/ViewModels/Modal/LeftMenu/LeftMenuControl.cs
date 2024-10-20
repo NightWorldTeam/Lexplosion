@@ -99,6 +99,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
             IsProcessActive = isLoading;
         }
 
+        public void NavigateTo(int index) 
+        {
+            OnCurrentContentChanged(_tabItems[index], true);
+        }
+
         #endregion Public Methods
 
 

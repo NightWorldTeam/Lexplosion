@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Documents;
@@ -31,7 +32,15 @@ namespace Lexplosion.WPF.NewInterface.Extensions
             if (d is System.Windows.Controls.TextBlock)
             {
                 var textBlock = d as System.Windows.Controls.TextBlock;
-                textBlock.SetResourceReference(System.Windows.Controls.TextBlock.TextProperty, e.NewValue);
+
+                if (e.NewValue != null)
+                {
+                    textBlock.SetResourceReference(System.Windows.Controls.TextBlock.TextProperty, e.NewValue);
+                }
+                else
+                {
+                    Runtime.DebugWrite("Значение ключа null, так быть явно не должно.", color: ConsoleColor.Red);
+                }
             }
         }
 
