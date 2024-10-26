@@ -22,9 +22,28 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu
             filterHeight = FiltersControlPanel.ActualHeight;
         }
 
+        public static ChildItem FindVisualChild<ChildItem>(DependencyObject obj) where ChildItem : DependencyObject
+        {
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
+            {
+                DependencyObject child = VisualTreeHelper.GetChild(obj, i);
+                if (child != null && child is ChildItem)
+                    return (ChildItem)child;
+                else
+                {
+                    ChildItem childOfChild = FindVisualChild<ChildItem>(child);
+                    if (childOfChild != null)
+                        return childOfChild;
+                }
+            }
+            return null;
+        }
         private void ListBox_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
-
+            if (BackTopButton.TargetScroll == null) 
+            {
+                BackTopButton.TargetScroll = e.OriginalSource as ScrollViewer;
+            }
         }
 
         private void Grid_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)

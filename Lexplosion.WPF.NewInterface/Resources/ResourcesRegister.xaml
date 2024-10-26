@@ -26,5 +26,6 @@
 
         <ResourceDictionary Source="Styles/PageCurtains.xaml" />
         <ResourceDictionary Source="Styles/SearchBox.xaml" />
+        <ResourceDictionary Source="Styles/BackTop.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

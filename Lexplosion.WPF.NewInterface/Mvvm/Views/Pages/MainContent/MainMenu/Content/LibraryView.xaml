@@ -548,6 +548,7 @@
             </Border>
 
             <ListBox
+                x:Name="InstanceList"
                 Grid.Row="2"
                 Grid.ColumnSpan="3"
                 Padding="43,0,43,0"
@@ -582,9 +583,9 @@
             HorizontalAlignment="Right"
             VerticalAlignment="Bottom">
             <controls:AdvancedButton
-                Width="32"
-                Height="32"
-                Padding="6"
+                Width="40"
+                Height="40"
+                Padding="4"
                 Background="{DynamicResource PrimarySolidColorBrush}"
                 BorderBrush="{DynamicResource SeparateSolidColorBrush}"
                 BorderThickness="2"
@@ -593,7 +594,9 @@
                 Foreground="{DynamicResource ActivitySolidColorBrush}"
                 IconData="{StaticResource PDAddCircle}" />
 
-            <controls:AdvancedButton
+            <controls:BackTop x:Name="BackTopButton" Style="{StaticResource sm-backtop-default}" />
+
+            <!--<controls:AdvancedButton
                 Width="32"
                 Height="32"
                 Margin="0,8,0,0"
@@ -605,7 +608,7 @@
                 CornerRadius="100"
                 Foreground="{DynamicResource ActivitySolidColorBrush}"
                 IconData="{StaticResource PDGroupList}"
-                IsCancel="True" />
+                IsCancel="True" />-->
         </StackPanel>
     </Grid>
 </UserControl>

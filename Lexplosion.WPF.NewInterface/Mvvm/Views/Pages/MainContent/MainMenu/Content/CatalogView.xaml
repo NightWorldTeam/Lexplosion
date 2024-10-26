@@ -386,12 +386,13 @@
                     </Grid>
                 </ScrollViewer>
 
-                <controls:BackTop
-                    Margin="16"
+                <Border
+                    Margin="0,0,12,16"
                     HorizontalAlignment="Right"
-                    VerticalAlignment="Bottom"
-                    Style="{StaticResource DefaultAdvancedButton}"
-                    TargetScroll="{Binding ElementName=ContainerPage_ScrollViewer}" />
+                    VerticalAlignment="Bottom">
+
+                    <controls:BackTop Style="{StaticResource sm-backtop-default}" TargetScroll="{Binding ElementName=ContainerPage_ScrollViewer}" />
+                </Border>
             </Grid>
 
             <controls:LoadingBoard
