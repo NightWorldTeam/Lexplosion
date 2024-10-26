@@ -522,10 +522,9 @@
 
             <controls:SearchBox
                 Grid.Column="1"
-                Height="32"
                 Margin="16,8"
-                Padding="16,2"
                 Placeholder="{DynamicResource TypingNicknamePlaceholder}"
+                Style="{StaticResource sm-searchbox-default}"
                 Text="{Binding Model.SearchBoxText, UpdateSourceTrigger=PropertyChanged}" />
 
         </Grid>

@@ -23,10 +23,10 @@
 
             <!--  TODO: Убирать SearchBox все друзья влазять и скролить не надо и друзей нет???  -->
             <controls:SearchBox
-                Height="32"
                 Margin="0,0,0,16"
                 Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
                 Placeholder="{DynamicResource TypingNicknamePlaceholder}"
+                Style="{StaticResource sm-searchbox-default}"
                 Text="{Binding Model.SearchBoxText, UpdateSourceTrigger=PropertyChanged}"
                 Visibility="{Binding Model.AllFriends.View.IsEmpty, Converter={converters:NegativeBooleanToVisibilityConverter}}" />
 

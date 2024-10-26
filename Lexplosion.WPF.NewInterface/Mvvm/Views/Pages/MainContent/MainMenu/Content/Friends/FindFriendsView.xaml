@@ -252,13 +252,12 @@
 
             <!--  SearchBox & Filters  -->
             <controls:SearchBox
-                Height="32"
                 Margin="0,0,0,12"
-                Padding="8,4"
                 HorizontalAlignment="Stretch"
                 Background="{DynamicResource SecondarySolidColorBrush}"
                 Placeholder="{DynamicResource TypingNicknamePlaceholder}"
-                SearchCommand="{Binding SearchCommand}" />
+                SearchCommand="{Binding SearchCommand}"
+                Style="{StaticResource sm-searchbox-default}" />
 
 
             <!--  Users List  -->
