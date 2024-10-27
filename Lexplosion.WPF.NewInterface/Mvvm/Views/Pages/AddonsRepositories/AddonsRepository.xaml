@@ -618,16 +618,27 @@
                             <lexplosion:AddonRepositoryCatalogView DataContext="{Binding}" />
                         </ScrollViewer>
 
-                        <Border Margin="0,0,12,16">
+                        <StackPanel
+                            Margin="0,0,12,16"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom">
+
+                            <controls:AdvancedButton
+                                Padding="0"
+                                HorizontalContentAlignment="Center"
+                                Background="Black"
+                                Command="{Binding LaunchInstanceCommand}"
+                                CornerRadius="100"
+                                IconData="{StaticResource PDPlay}"
+                                IconFill="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                Style="{StaticResource md-default}" />
 
                             <controls:BackTop
                                 Grid.Column="1"
-                                Margin="16"
-                                HorizontalAlignment="Right"
-                                VerticalAlignment="Bottom"
                                 Style="{StaticResource sm-backtop-default}"
-                                TargetScroll="{Binding ElementName=Scroll}" />
-                        </Border>
+                                TargetScroll="{Binding ElementName=Scroll}"
+                                TopMargin="10" />
+                        </StackPanel>
                     </Grid>
                 </TabItem>
                 <TabItem Header="В процессе">

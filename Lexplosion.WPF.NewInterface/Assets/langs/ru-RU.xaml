@@ -414,4 +414,8 @@
 
 
     <s:String x:Key="CurseforgeCatalogLoading">Идет загрузка каталога Curseforge</s:String>
+
+
+    <!--  Instance Addons  -->
+    <s:String x:Key="FileName">Имя файла</s:String>
 </ResourceDictionary>

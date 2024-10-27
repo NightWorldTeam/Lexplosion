@@ -18,6 +18,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
         private ICollection<IProjectCategory> _latestApplyCategories = new List<IProjectCategory>();
         private readonly Dictionary<string, List<CategoryWrapper>> _categoriesGroupsByName = new();
 
+        private readonly Action _launchInstanceAction;
+
         public ObservableCollection<InstanceAddon> InstalledAddons { get; set; } = [];
 
 
@@ -43,7 +45,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
         #region Constructors
 
 
-        public AddonsRepositoryModel(ProjectSource projectSource, BaseInstanceData instanceData, AddonType addonType)
+        public AddonsRepositoryModel(ProjectSource projectSource, BaseInstanceData instanceData, AddonType addonType, Action launchInstanceAction)
             : base(projectSource, instanceData, addonType)
         {
             PageSizes = projectSource switch
@@ -63,6 +65,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 
             PrepareCategories();
             LoadContent();
+            _launchInstanceAction = launchInstanceAction;
 
             Runtime.TaskRun(() =>
             {
@@ -170,6 +173,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
                 return CurseforgeApi.GetCategories(_addonType.ToCfProjectType()).ToList<IProjectCategory>();
 
             return [];
+        }
+
+
+        public void LaunchInstance() 
+        {
+            _launchInstanceAction?.Invoke();
         }
 
 

@@ -45,6 +45,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
         }
 
 
+        private RelayCommand _launchInstance;
+        public ICommand LaunchInstanceCommand
+        {
+            get => RelayCommand.GetCommand(ref _launchInstance, Model.LaunchInstance);
+        }
+
+
         public IEnumerable<ProjectSource> ProjectSources { get; }
 
 
@@ -140,9 +147,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
                 {
                     if (addonType != AddonType.Maps)
                     {
-                        _repositoriesList.Add(new AddonsRepositoryModel(ProjectSource.Modrinth, instanceData, addonType));
+                        _repositoriesList.Add(new AddonsRepositoryModel(ProjectSource.Modrinth, instanceData, addonType, instanceModelBase.Run));
                     }
-                    _repositoriesList.Add(new AddonsRepositoryModel(ProjectSource.Curseforge, instanceData, addonType));
+                    _repositoriesList.Add(new AddonsRepositoryModel(ProjectSource.Curseforge, instanceData, addonType, instanceModelBase.Run));
 
                     SelectedAddonsRepositoryIndex = 0;
 

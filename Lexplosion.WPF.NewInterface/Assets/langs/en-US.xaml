@@ -420,4 +420,8 @@
     <s:String x:Key="ShareInstance">Share this instance</s:String>
     <s:String x:Key="ActiveShares">Active Shares</s:String>
 
+
+
+    <!--  Instance Addons  -->
+    <s:String x:Key="FileName">File Name</s:String>
 </ResourceDictionary>

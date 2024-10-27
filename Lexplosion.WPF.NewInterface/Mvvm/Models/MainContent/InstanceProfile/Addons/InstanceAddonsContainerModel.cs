@@ -14,7 +14,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
     {
         private static string[] _sortByList =
         {
-            "name", "author", "file name"
+            "Name", "Author", "FileName"
         };
 
 
@@ -319,15 +319,15 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
                 return;
 
             value ??= string.Empty;
-            if (SelectedSortByParam == "name")
+            if (SelectedSortByParam == "Name")
             {
                 InstanceAddonCollectionViewSource.View.Filter = (m => (m as InstanceAddon).Name?.IndexOf(value, System.StringComparison.InvariantCultureIgnoreCase) > -1);
             }
-            else if (SelectedSortByParam == "author")
+            else if (SelectedSortByParam == "Author")
             {
                 InstanceAddonCollectionViewSource.View.Filter = (m => (m as InstanceAddon).Author?.IndexOf(value, System.StringComparison.InvariantCultureIgnoreCase) > -1);
             }
-            else if (SelectedSortByParam == "file name") 
+            else if (SelectedSortByParam == "FileName") 
             {
                 InstanceAddonCollectionViewSource.View.Filter = (m => (m as InstanceAddon).FileName?.IndexOf(value, System.StringComparison.InvariantCultureIgnoreCase) > -1);
             }

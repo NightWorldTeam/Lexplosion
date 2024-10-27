@@ -104,8 +104,8 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
         public Brush IconFill
         {
-            get => (Brush)GetValue(IconDataProperty);
-            set => SetValue(IconDataProperty, value);
+            get => (Brush)GetValue(IconFillProperty);
+            set => SetValue(IconFillProperty, value);
         }
 
         #endregion Properties
@@ -234,8 +234,19 @@ namespace Lexplosion.WPF.NewInterface.Controls
         {
             if (d is AdvancedButton _this)
             {
-                if (_this._textBlock != null)
-                    _this._textBlock.Text = _this.Text;
+                if (_this._textBlock == null) 
+                {
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(_this._textBlock.Text)) 
+                {
+                    _this._textBlock.Visibility = Visibility.Collapsed;
+                    return;
+                }
+
+                _this._textBlock.Visibility = Visibility.Visible;
+                _this._textBlock.Text = _this.Text;
             }
         }
 
@@ -252,6 +263,11 @@ namespace Lexplosion.WPF.NewInterface.Controls
         {
             if (d is AdvancedButton _this) 
             {
+                if (_this._iconPath == null) 
+                {
+                    return;
+                }
+
                 if (_this.IconFill == null)
                 {
                     _this._iconPath.SetValue(Path.FillProperty, new TemplateBindingExtension(AdvancedButton.ForegroundProperty));

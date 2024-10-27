@@ -56,8 +56,11 @@
                             </Grid.ColumnDefinitions>
 
                             <!--  Icon  -->
-                            <Border Padding="{TemplateBinding IconPadding}">
-                                <Viewbox x:Name="PATH_Icon" VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                            <Border
+                                Padding="{TemplateBinding IconPadding}"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                                <Viewbox x:Name="PATH_Icon">
                                     <Path
                                         Fill="{TemplateBinding Foreground}"
                                         RenderTransformOrigin="0.5, 0.5"

@@ -620,7 +620,13 @@
                     Height="40"
                     ItemsSource="{Binding Model.SortByList}"
                     SelectedIndex="0"
-                    SelectedValue="{Binding Model.SelectedSortByParam, UpdateSourceTrigger=PropertyChanged}" />
+                    SelectedValue="{Binding Model.SelectedSortByParam, UpdateSourceTrigger=PropertyChanged}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock extension:TextBlock.TextByKey="{Binding}" Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
 
                 <Grid.Style>
                     <Style TargetType="{x:Type Grid}">
@@ -658,7 +664,7 @@
             <!--  TODO: IconButton MouseOver fill Activity Color  -->
 
 
-            <core:If Condition="{Binding IsCurrentFormatBlock, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1">
+            <core:If Grid.Row="1" Condition="{Binding IsCurrentFormatBlock, UpdateSourceTrigger=PropertyChanged}">
                 <core:If.True>
                     <controls1:VirtualizingItemsControl
                         Margin="0,8"
