@@ -559,18 +559,18 @@
                 KeyboardNavigation.IsTabStop="False"
                 ScrollViewer.CanContentScroll="True"
                 ScrollViewer.ScrollChanged="ListBox_ScrollChanged"
-                VirtualizingPanel.CacheLength="2"
+                VirtualizingPanel.CacheLength="1,5"
                 VirtualizingPanel.CacheLengthUnit="Page"
                 VirtualizingPanel.IsVirtualizing="True"
-                VirtualizingPanel.ScrollUnit="Pixel"
-                VirtualizingStackPanel.VirtualizationMode="Recycling">
+                VirtualizingPanel.ScrollUnit="Pixel">
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <controls1:VirtualizingWrapPanel
                             HorizontalAlignment="Stretch"
                             Orientation="Horizontal"
                             SpacingMode="BetweenItemsOnly"
-                            StretchItems="True" />
+                            StretchItems="True"
+                            VirtualizingPanel.VirtualizationMode="Recycling" />
                     </ItemsPanelTemplate>
                 </ListBox.ItemsPanel>
             </ListBox>
