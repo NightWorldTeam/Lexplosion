@@ -748,7 +748,7 @@
                             <!--  Content  -->
                             <ToggleButton
                                 HorizontalAlignment="Right"
-                                IsChecked="{Binding Model.IsNightWorldEnable}"
+                                IsChecked="{Binding Model.IsNightWorldSkinSystemEnabled}"
                                 Style="{StaticResource SwitchButton}" />
                         </Grid>
                     </Border>

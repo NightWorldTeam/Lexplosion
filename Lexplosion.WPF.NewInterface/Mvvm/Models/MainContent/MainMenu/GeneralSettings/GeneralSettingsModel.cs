@@ -140,7 +140,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
             }
         }
 
-        public bool? IsNightWorldEnable
+        public bool? IsNightWorldSkinSystemEnabled
         {
             get => true; set
             {

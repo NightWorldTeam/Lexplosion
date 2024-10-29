@@ -194,6 +194,17 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
             }
         }
 
+        public bool IsNightWorldSkinSystemEnabled
+        {
+            get => true; set//(bool)InstanceSettings.IsAutoUpdate; set
+            {
+                //InstanceSettings.IsAutoUpdate = value;
+                //_instanceSettingsCopy.IsAutoUpdate = value;
+                //OnPropertyChanged();
+                //_instanceModel.SaveSettings(_instanceSettingsCopy);
+            }
+        }
+
 
         #endregion Launcher Properties
 
