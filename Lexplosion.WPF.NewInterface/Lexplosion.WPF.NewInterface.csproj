@@ -96,6 +96,7 @@
     <Compile Include="Controls\AdvancedWrapPanel\AdvancedWrapPanel.cs" />
     <Compile Include="Controls\BackTop\BackTop.cs" />
     <Compile Include="Controls\Empty\Empty.cs" />
+    <Compile Include="Controls\LaunchButton\LaunchButton.cs" />
     <Compile Include="Controls\Paginator\PaginatorOptions.cs" />
     <Compile Include="Controls\ToastMessage\ToastMessage.cs" />
     <Compile Include="Core\Converters\MultiValueConverter\StyleSelectorConverter.cs" />
@@ -158,6 +159,9 @@
     </Compile>
     <Compile Include="Mvvm\Views\Pages\AddonsRepositories\Lexplosion\InstalledAddonsRepositoryView.xaml.cs">
       <DependentUpon>InstalledAddonsRepositoryView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Views\Pages\WelcomeView.xaml.cs">
+      <DependentUpon>WelcomeView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Mvvm\Views\Windows\ConsoleWindow.xaml.cs">
       <DependentUpon>ConsoleWindow.xaml</DependentUpon>
@@ -456,6 +460,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\LaunchButton\LaunchButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Loader\Loader.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -560,6 +568,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Mvvm\Views\Pages\WelcomeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Mvvm\Views\Windows\ConsoleWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -621,6 +633,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\Styles\PasswordBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Styles\ProgressBar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -916,7 +932,6 @@
     <Resource Include="Assets\fonts\Arkhip.ttf" />
     <Resource Include="Assets\fonts\PassDots.ttf" />
     <Resource Include="Assets\fonts\SFProDisplay.otf" />
-    <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

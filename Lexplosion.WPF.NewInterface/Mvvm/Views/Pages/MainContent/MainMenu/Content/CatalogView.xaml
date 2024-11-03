@@ -11,6 +11,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:objects="clr-namespace:Lexplosion.Logic.Objects;assembly=Lexplosion.Core"
     xmlns:translatable="clr-namespace:Lexplosion.WPF.NewInterface.Core.Objects.TranslatableObjects"
+    xmlns:virtualization="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
     d:DesignHeight="528"
     d:DesignWidth="694"
     mc:Ignorable="d">
@@ -357,20 +358,7 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
-                            <ListBox
-                                Grid.Row="2"
-                                Grid.ColumnSpan="3"
-                                Background="Transparent"
-                                BorderThickness="0"
-                                ItemContainerStyle="{StaticResource InstanceFormListBoxItem}"
-                                ItemsSource="{Binding Model.Instances}"
-                                KeyboardNavigation.IsTabStop="False"
-                                ScrollViewer.CanContentScroll="True"
-                                VirtualizingPanel.CacheLength="2"
-                                VirtualizingPanel.CacheLengthUnit="Page"
-                                VirtualizingPanel.IsVirtualizing="True"
-                                VirtualizingPanel.ScrollUnit="Pixel"
-                                VirtualizingStackPanel.VirtualizationMode="Recycling" />
+                            <virtualization:VirtualizingItemsControl ItemsSource="{Binding Model.Instances}" VirtualizingPanel.VirtualizationMode="Recycling" />
 
                             <controls:Paginator
                                 Grid.Row="1"

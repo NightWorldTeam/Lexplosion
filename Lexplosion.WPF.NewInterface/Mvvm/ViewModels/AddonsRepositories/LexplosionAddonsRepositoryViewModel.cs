@@ -48,7 +48,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
         private RelayCommand _launchInstance;
         public ICommand LaunchInstanceCommand
         {
-            get => RelayCommand.GetCommand(ref _launchInstance, Model.LaunchInstance);
+            get; private set;
         }
 
 
@@ -147,15 +147,16 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
                 {
                     if (addonType != AddonType.Maps)
                     {
-                        _repositoriesList.Add(new AddonsRepositoryModel(ProjectSource.Modrinth, instanceData, addonType, instanceModelBase.Run));
+                        _repositoriesList.Add(new AddonsRepositoryModel(ProjectSource.Modrinth, instanceData, addonType, instanceModelBase));
                     }
-                    _repositoriesList.Add(new AddonsRepositoryModel(ProjectSource.Curseforge, instanceData, addonType, instanceModelBase.Run));
+                    _repositoriesList.Add(new AddonsRepositoryModel(ProjectSource.Curseforge, instanceData, addonType, instanceModelBase));
 
                     SelectedAddonsRepositoryIndex = 0;
 
                     ApplySelectedCategoriesCommand = new RelayCommand((obj) => Model.ApplyCategories());
 
                     OnPropertyChanged(nameof(ApplySelectedCategoriesCommand));
+                    LaunchInstanceCommand = RelayCommand.GetCommand(ref _launchInstance, Model.LaunchInstance);
                 });
             });
 

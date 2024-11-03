@@ -10,6 +10,7 @@ using Lexplosion.WPF.NewInterface.Core.Objects.TranslatableObjects;
 using Lexplosion.Tools;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories.Groups;
 using Lexplosion.WPF.NewInterface.Core.GameExtensions;
+using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 {
@@ -42,10 +43,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
         public override ReadOnlyCollection<uint> PageSizes { get; }
 
 
+        public bool IsGameLoaded { get; set; }
+
+
         #region Constructors
 
 
-        public AddonsRepositoryModel(ProjectSource projectSource, BaseInstanceData instanceData, AddonType addonType, Action launchInstanceAction)
+        public AddonsRepositoryModel(ProjectSource projectSource, BaseInstanceData instanceData, AddonType addonType, InstanceModelBase instanceModelBase)
             : base(projectSource, instanceData, addonType)
         {
             PageSizes = projectSource switch
@@ -65,7 +69,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 
             PrepareCategories();
             LoadContent();
-            _launchInstanceAction = launchInstanceAction;
+            instanceModelBase.GameLaunchCompleted += (o) =>
+                {
+                    IsGameLoaded = true;
+                    OnPropertyChanged(nameof(IsGameLoaded));
+                };
+            _launchInstanceAction = instanceModelBase.Run;
 
             Runtime.TaskRun(() =>
             {
@@ -176,7 +185,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
         }
 
 
-        public void LaunchInstance() 
+        public void LaunchInstance()
         {
             _launchInstanceAction?.Invoke();
         }

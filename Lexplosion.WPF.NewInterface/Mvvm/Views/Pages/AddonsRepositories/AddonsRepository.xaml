@@ -623,15 +623,15 @@
                             HorizontalAlignment="Right"
                             VerticalAlignment="Bottom">
 
-                            <controls:AdvancedButton
-                                Padding="0"
-                                HorizontalContentAlignment="Center"
-                                Background="Black"
+                            <controls:LaunchButton
+                                Width="40"
+                                Height="40"
+                                Background="{DynamicResource PrimarySolidColorBrush}"
+                                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                BorderThickness="1"
                                 Command="{Binding LaunchInstanceCommand}"
-                                CornerRadius="100"
-                                IconData="{StaticResource PDPlay}"
-                                IconFill="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                Style="{StaticResource md-default}" />
+                                Foreground="{DynamicResource ActivitySolidColorBrush}"
+                                IsLoaded="{Binding Model.IsGameLoaded}" />
 
                             <controls:BackTop
                                 Grid.Column="1"

@@ -9,6 +9,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:notification="clr-namespace:Lexplosion.WPF.NewInterface.Core.Notifications"
     xmlns:objects="clr-namespace:Lexplosion.WPF.NewInterface.Core.Objects"
+    xmlns:pages="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages"
     xmlns:runtime="clr-namespace:Lexplosion.WPF.NewInterface"
     xmlns:viewmodels="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels"
     Title="Lexplosion New Interface Debug"
@@ -111,6 +112,8 @@
                 Content="{Binding CurrentViewModel, Source={StaticResource MainViewModel}}"
                 IsEnabled="{Binding IsModalOpen, Converter={converters:NegativeBooleanValueConverter}, Source={StaticResource MainViewModel}}"
                 KeyboardNavigation.IsTabStop="False" />
+
+            <!--<pages:WelcomeView />-->
 
             <!--  Modal Control  -->
             <controls:ModalControl

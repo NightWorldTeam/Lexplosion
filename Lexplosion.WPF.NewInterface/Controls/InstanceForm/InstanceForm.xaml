@@ -9,45 +9,6 @@
     xmlns:objects="clr-namespace:Lexplosion.Logic.Objects;assembly=Lexplosion.Core"
     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
-    <Style TargetType="{x:Type ProgressBar}">
-        <Setter Property="OverridesDefaultStyle" Value="True" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type ProgressBar}">
-                    <Grid>
-                        <Border
-                            x:Name="PART_Track"
-                            Background="{DynamicResource SeparateSolidColorBrush}"
-                            CornerRadius="2,2,0,0" />
-
-                        <Border
-                            x:Name="PART_Indicator"
-                            Margin="0,0,0,0"
-                            HorizontalAlignment="Left"
-                            Background="{DynamicResource ActivitySolidColorBrush}"
-                            CornerRadius="2,2,0,0" />
-
-                        <Grid x:Name="Animation" ClipToBounds="True">
-                            <Rectangle
-                                x:Name="PART_GlowRect"
-                                Width="100"
-                                Margin="-100,0,0,0"
-                                HorizontalAlignment="Left">
-                                <Rectangle.Fill>
-                                    <LinearGradientBrush Opacity="0.3">
-                                        <GradientStop Offset="0.2" Color="{DynamicResource ActivityColor}" />
-                                        <GradientStop Offset="0.7" Color="{DynamicResource BrandColorForegroundColor}" />
-                                        <GradientStop Offset="1" Color="{DynamicResource ActivityColor}" />
-                                    </LinearGradientBrush>
-                                </Rectangle.Fill>
-                            </Rectangle>
-                        </Grid>
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
     <DataTemplate DataType="{x:Type local:LowerMenuButton}">
         <Button Command="{Binding ExecuteAction}">
             <Button.Template>

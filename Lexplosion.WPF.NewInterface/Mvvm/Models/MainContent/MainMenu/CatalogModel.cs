@@ -151,6 +151,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
 
         private void LoadPageContent() 
         {
+            Runtime.DebugWrite("Instances loading");
             _instanceController.Clear();
             Runtime.TaskRun(() => 
             {

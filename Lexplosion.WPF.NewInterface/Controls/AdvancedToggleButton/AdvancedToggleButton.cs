@@ -209,7 +209,6 @@ namespace Lexplosion.WPF.NewInterface.Controls
         {
             if (d is AdvancedToggleButton _this)
             {
-                Runtime.DebugWrite("Icon data changed");
                 if (_this._iconPath != null)
                 {
                     if (string.IsNullOrEmpty(_this.IconData))

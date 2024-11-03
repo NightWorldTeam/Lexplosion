@@ -5,6 +5,7 @@
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions">
     <Style TargetType="{x:Type controls:CircleLoader}">
         <Setter Property="Visibility" Value="Collapsed" />
+        <Setter Property="Foreground" Value="{DynamicResource ActivitySolidColorBrush}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type controls:CircleLoader}">
@@ -29,7 +30,7 @@
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Top"
                                 extensions:Path.StringKeyData="CircleLoader"
-                                Fill="{DynamicResource ActivitySolidColorBrush}"
+                                Fill="{TemplateBinding Foreground}"
                                 Stretch="UniformToFill" />
                         </Border>
                     </Border>
