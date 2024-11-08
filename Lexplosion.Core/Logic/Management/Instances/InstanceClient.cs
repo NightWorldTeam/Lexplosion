@@ -398,13 +398,14 @@ namespace Lexplosion.Logic.Management.Instances
             if (server.InstanceSource == InstanceSource.FreeSource)
             {
                 source = new FreeSource(server.ModpackInfo.SourceId, null);
-                externalId = server.ModpackInfo.ModpackId;
-                modpackVersion = server.ModpackInfo.Version;
             }
             else
             {
                 source = CreateSourceFactory(server.InstanceSource);
             }
+
+            externalId = server.ModpackInfo.ModpackId;
+            modpackVersion = server.ModpackInfo.Version;
 
             var client = CreateClient(source, name, server.InstanceSource, minecraftVersion, ClientType.Vanilla, externalId: externalId);
             client.AddGameServer(server, autoLogin);
