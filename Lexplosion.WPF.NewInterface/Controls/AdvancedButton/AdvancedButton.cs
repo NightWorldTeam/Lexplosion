@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -47,7 +48,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
         public static readonly DependencyProperty CornerRadiusProperty
             = DependencyProperty.Register(nameof(CornerRadius), typeof(CornerRadius), typeof(AdvancedButton),
-                new FrameworkPropertyMetadata(new CornerRadius(), 
+                new FrameworkPropertyMetadata(new CornerRadius(),
                     FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender),
                     new ValidateValueCallback(IsCornerRadiusValid));
 
@@ -58,7 +59,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
                 new FrameworkPropertyMetadata(SystemColors.ControlTextBrush, FrameworkPropertyMetadataOptions.Inherits, propertyChangedCallback: OnIconFillChanged));
 
         private static readonly DependencyPropertyKey HasIconPropertyKey
-            = DependencyProperty.RegisterReadOnly(nameof(HasIcon),typeof(bool), typeof(AdvancedButton),
+            = DependencyProperty.RegisterReadOnly(nameof(HasIcon), typeof(bool), typeof(AdvancedButton),
                 new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.None));
 
         public static readonly DependencyProperty HasIconProperty = HasIconPropertyKey.DependencyProperty;
@@ -66,12 +67,12 @@ namespace Lexplosion.WPF.NewInterface.Controls
         public bool HasIcon
         {
             get => (bool)GetValue(HasIconProperty);
-            protected set => SetValue(HasIconPropertyKey, value); 
+            protected set => SetValue(HasIconPropertyKey, value);
         }
 
 
 
-        public string Text 
+        public string Text
         {
             get => (string)GetValue(TextProperty);
             set => SetValue(TextProperty, value);
@@ -82,13 +83,13 @@ namespace Lexplosion.WPF.NewInterface.Controls
             get => (string)GetValue(IconDataProperty);
             set => SetValue(IconDataProperty, value);
         }
-        
+
         public Thickness IconPadding
         {
             get => (Thickness)GetValue(IconPaddingProperty);
             set => SetValue(IconPaddingProperty, value);
         }
-        
+
         public Thickness TextPadding
         {
             get => (Thickness)GetValue(TextPaddingProperty);
@@ -114,7 +115,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
         #region Constructors
 
 
-        static AdvancedButton() 
+        static AdvancedButton()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(AdvancedButton), new FrameworkPropertyMetadata(typeof(AdvancedButton)));
         }
@@ -137,7 +138,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
             _iconViewBox = Template.FindName(PART_ICON_NAME, this) as Viewbox;
 
-            if (_iconViewBox != null) 
+            if (_iconViewBox != null)
             {
                 _iconPath = _iconViewBox.GetChildOfType<Path>();
                 //if (_iconPath != null)
@@ -157,9 +158,9 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
             _textBlock = Template.FindName(PART_TEXT_NAME, this) as TextBlock;
 
-            if (_textBlock != null) 
+            if (_textBlock != null)
             {
-                _textBlock.Text = Text;   
+                _textBlock.Text = Text;
             }
 
             HasIcon = IconData != null;
@@ -190,17 +191,31 @@ namespace Lexplosion.WPF.NewInterface.Controls
         /// Включает или выключает продвинутый контент (Icon[ViewBox+Path], TextBlock).
         /// </summary>
         /// <param name="isEnable">Включить/Выключить</param>
-        private void ChangeAdvancedContentVisibility(bool isEnable) 
+        private void ChangeAdvancedContentVisibility(bool isEnable)
         {
             if (isEnable)
             {
-                _iconViewBox.Visibility = Visibility.Visible;
-                _textBlock.Visibility = Visibility.Visible;
+                if (_iconViewBox != null)
+                {
+                    _iconViewBox.Visibility = Visibility.Visible;
+                }
+
+                if (_textBlock != null)
+                {
+                    _textBlock.Visibility = Visibility.Visible;
+                }
                 return;
             }
 
-            _iconViewBox.Visibility = Visibility.Collapsed;
-            _textBlock.Visibility = Visibility.Collapsed;
+            if (_iconViewBox != null)
+            {
+                _iconViewBox.Visibility = Visibility.Collapsed;
+            }
+
+            if (_textBlock != null)
+            {
+                _textBlock.Visibility = Visibility.Collapsed;
+            }
         }
 
         /// <summary>
@@ -211,10 +226,10 @@ namespace Lexplosion.WPF.NewInterface.Controls
             if (d is AdvancedButton _this)
             {
                 //Runtime.DebugWrite("Icon data changed");
-                if (_this._iconPath != null) 
+                if (_this._iconPath != null)
                 {
-                    if (string.IsNullOrEmpty(_this.IconData)) 
-                    { 
+                    if (string.IsNullOrEmpty(_this.IconData))
+                    {
                         _this._iconViewBox.Visibility = Visibility.Collapsed;
                         _this.HasIcon = false;
                         return;
@@ -234,12 +249,12 @@ namespace Lexplosion.WPF.NewInterface.Controls
         {
             if (d is AdvancedButton _this)
             {
-                if (_this._textBlock == null) 
+                if (_this._textBlock == null)
                 {
                     return;
                 }
 
-                if (string.IsNullOrWhiteSpace(_this._textBlock.Text)) 
+                if (string.IsNullOrWhiteSpace(_this._textBlock.Text))
                 {
                     _this._textBlock.Visibility = Visibility.Collapsed;
                     return;
@@ -261,9 +276,9 @@ namespace Lexplosion.WPF.NewInterface.Controls
         /// </summary>
         private static void OnIconFillChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is AdvancedButton _this) 
+            if (d is AdvancedButton _this)
             {
-                if (_this._iconPath == null) 
+                if (_this._iconPath == null)
                 {
                     return;
                 }

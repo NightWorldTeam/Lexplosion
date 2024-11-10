@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -10,12 +11,18 @@ namespace Lexplosion.WPF.NewInterface.Controls
     [TemplatePart(Name = PART_TOGGLE_NAME, Type = typeof(Control))]
     public class DropdownMenu : ContentControl
     {
+        public event Action<DropdownMenu> PopupOpenedEvent;
+
         private const string PART_POPUP_NAME = "PART_Popup";
         private const string PART_TOGGLE_NAME = "PART_Toggle";
 
         private Popup _popup;
         private CheckBox _toggle;
         private Control _control;
+
+
+        #region Properties
+
 
         public static readonly DependencyProperty IsOpenProperty =
             DependencyProperty.Register(nameof(IsOpen), typeof(bool), typeof(DropdownMenu), new PropertyMetadata(false));
@@ -137,10 +144,24 @@ namespace Lexplosion.WPF.NewInterface.Controls
             set => SetValue(PopupMinHeightProperty, value);
         }
 
+
+        #endregion Properties
+
+
+        #region Constructors
+
+
         static DropdownMenu()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(DropdownMenu), new FrameworkPropertyMetadata(typeof(DropdownMenu)));
         }
+
+
+        #endregion Constructors
+
+
+        #region Public Methods
+
 
         public override void OnApplyTemplate()
         {
@@ -152,7 +173,11 @@ namespace Lexplosion.WPF.NewInterface.Controls
             if (!IsInfoBox)
             {
                 _toggle = Template.FindName(PART_TOGGLE_NAME, this) as CheckBox;
-                _toggle.Checked += (s, e) => IsOpen = true;
+                _toggle.Checked += (s, e) => 
+                {
+                    IsOpen = true; 
+                    PopupOpenedEvent?.Invoke(this);
+                };
                 _control = _toggle;
             }
             else
@@ -164,6 +189,13 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
             base.OnApplyTemplate();
         }
+
+
+        #endregion Public Methods
+
+
+        #region Private Methods
+
 
         private void OnMouseLeaveChanged(object sender, MouseEventArgs e)
         {
@@ -194,5 +226,8 @@ namespace Lexplosion.WPF.NewInterface.Controls
             //FrameworkElement fe = (FrameworkElement)d;
             //fe.AreTransformsClean = false;
         }
+
+
+        #endregion Private Methods
     }
 }

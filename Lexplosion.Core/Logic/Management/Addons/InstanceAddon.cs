@@ -711,6 +711,7 @@ namespace Lexplosion.Logic.Management.Instances
                 addon.RemoveFromDir(WithDirectory.InstancesPath + instanceId + "/");
                 installedAddons.Save();
             }
+            IsInstalled = false;
         }
 
         private CancellationTokenSource _cancelTokenSource = null;

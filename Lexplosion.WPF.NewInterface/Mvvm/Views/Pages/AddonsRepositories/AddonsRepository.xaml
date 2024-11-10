@@ -20,7 +20,6 @@
     mc:Ignorable="d">
 
     <UserControl.Resources>
-
         <Style x:Key="DownMenuItem" TargetType="{x:Type controls:AdvancedButton}">
             <Setter Property="Template">
                 <Setter.Value>
@@ -332,10 +331,13 @@
                                     </controls:OneStageInstallButton>
 
                                     <controls:DropdownMenu
+                                        x:Name="DropdownMenuButton"
                                         Width="32"
                                         Height="32"
                                         Margin="8,0,0,0"
                                         PopupHorizontalOffset="40"
+                                        PopupOpenedEvent="DropdownMenuButton_PopupOpenedEvent"
+                                        PopupStaysOpen="False"
                                         PopupVerticalOffset="40">
                                         <Border
                                             Padding="8"
@@ -345,22 +347,33 @@
                                             CornerRadius="5">
                                             <StackPanel>
                                                 <controls:AdvancedButton
+                                                    Click="DropdownMenuButtonItem_Click"
                                                     Command="{Binding DataContext.OpenExternalResourceCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
                                                     CommandParameter="{Binding}"
                                                     IconData="{StaticResource PDClose}"
-                                                    IconPadding="8"
                                                     Style="{StaticResource DownMenuItem}"
                                                     Text="Веб-страница" />
 
                                                 <controls:AdvancedButton
+                                                    Click="DropdownMenuButtonItem_Click"
+                                                    CommandParameter="{Binding}"
                                                     IconData="{StaticResource PDClose}"
                                                     Style="{StaticResource DownMenuItem}"
                                                     Text="Добавить в избранное" />
 
-                                                <controls:AdvancedButton
-                                                    IconData="{StaticResource PDDelete}"
-                                                    Style="{StaticResource DownMenuItem}"
-                                                    Text="Удалить" />
+                                                <!--  If addon installed  -->
+
+                                                <core:If Condition="{Binding IsInstalled}">
+                                                    <core:If.True>
+                                                        <controls:AdvancedButton
+                                                            Click="DropdownMenuButtonItem_Click"
+                                                            Command="{Binding DataContext.UninstallAddonCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                            CommandParameter="{Binding}"
+                                                            IconData="{StaticResource PDDelete}"
+                                                            Style="{StaticResource DownMenuItem}"
+                                                            Text="Удалить" />
+                                                    </core:If.True>
+                                                </core:If>
                                             </StackPanel>
                                         </Border>
                                     </controls:DropdownMenu>
@@ -609,9 +622,9 @@
         <!--  Right Content  -->
         <!--    -->
 
-        <Grid Grid.Column="1">
+        <Grid Grid.Column="1" Margin="0,4,0,0">
             <TabControl Background="Transparent" BorderThickness="0">
-                <TabItem Header="{DynamicResource Catalog}">
+                <TabItem Margin="16,0,-16,0" Header="{DynamicResource Catalog}">
                     <Grid>
 
                         <ScrollViewer x:Name="Scroll" Margin="16,16,0,4">
@@ -641,11 +654,11 @@
                         </StackPanel>
                     </Grid>
                 </TabItem>
-                <TabItem Header="В процессе">
+                <TabItem Margin="16,0,-16,0" Header="В процессе">
                     <lexplosion:InProgressAddonsRepositoryView DataContext="{Binding}" />
                 </TabItem>
 
-                <TabItem Header="Установленные">
+                <TabItem Margin="16,0,-16,0" Header="Установленные">
                     <lexplosion:InstalledAddonsRepositoryView DataContext="{Binding _modsViewModel}" />
                 </TabItem>
             </TabControl>

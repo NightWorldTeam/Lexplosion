@@ -149,6 +149,4 @@
             </core:If.False>
         </core:If>
     </Grid>
-
-
 </UserControl>

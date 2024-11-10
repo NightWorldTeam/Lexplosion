@@ -11,7 +11,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
                 new FrameworkPropertyMetadata(defaultValue: false, propertyChangedCallback: OnIsLoadedChanged));
 
         public static readonly DependencyProperty IsLoadingProperty
-            = DependencyProperty.Register(nameof(IsLoaded), typeof(bool), typeof(LaunchButton),
+            = DependencyProperty.Register(nameof(IsLoading), typeof(bool), typeof(LaunchButton),
                 new FrameworkPropertyMetadata(defaultValue: false, propertyChangedCallback: OnIsLoadingChanged));
 
         public bool IsLoading

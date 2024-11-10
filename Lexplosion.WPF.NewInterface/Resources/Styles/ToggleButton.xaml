@@ -85,29 +85,31 @@
                         MinHeight="{TemplateBinding MinHeight}"
                         Background="Transparent">
                         <Grid>
-                            <Ellipse
-                                x:Name="ellipse"
-                                Width="15"
-                                Height="15"
-                                HorizontalAlignment="Right"
-                                Stroke="{DynamicResource SecondaryForegroundSolidColorBrush}"
-                                StrokeThickness="2" />
                             <Border
                                 x:Name="rect"
                                 Width="10.5"
                                 Height="9"
                                 HorizontalAlignment="Left"
-                                Background="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                Background="{DynamicResource SecondaryForegroundSolidColorBrush}"
                                 CornerRadius="3,0,0,3" />
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            <Border
+                                x:Name="ellipse"
+                                Width="15"
+                                Height="15"
+                                Margin="0,1,0,0"
+                                HorizontalAlignment="Right"
+                                Background="Transparent"
+                                BorderBrush="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                BorderThickness="2"
+                                CornerRadius="1000" />
                         </Grid>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsChecked" Value="True">
-                            <Setter TargetName="ellipse" Property="Ellipse.Stroke" Value="{DynamicResource ActivitySolidColorBrush}" />
+                            <Setter TargetName="ellipse" Property="Border.BorderBrush" Value="{DynamicResource ActivitySolidColorBrush}" />
                             <Setter TargetName="ellipse" Property="HorizontalAlignment" Value="Left" />
                             <Setter TargetName="rect" Property="Border.Background" Value="{DynamicResource ActivitySolidColorBrush}" />
-                            <Setter TargetName="rect" Property="Border.CornerRadius" Value="0,3,3,0" />
+                            <Setter TargetName="rect" Property="Border.CornerRadius" Value="0,0,0,0" />
                             <Setter TargetName="rect" Property="HorizontalAlignment" Value="Right" />
                         </Trigger>
                     </ControlTemplate.Triggers>

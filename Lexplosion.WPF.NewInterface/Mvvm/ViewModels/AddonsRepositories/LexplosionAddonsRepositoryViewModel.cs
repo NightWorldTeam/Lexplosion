@@ -102,13 +102,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
         private RelayCommand _installAddonCommand;
         public ICommand InstallAddonCommand
         {
-            get => RelayCommand.GetCommand(ref _installAddonCommand, (obj) => { Model.InstallAddon((InstanceAddon)obj); });
+            get => RelayCommand.GetCommand<InstanceAddon>(ref _installAddonCommand, Model.InstallAddon);
         }
 
         private RelayCommand _uninstallAddonCommand;
         public ICommand UninstallAddonCommand
         {
-            get => RelayCommand.GetCommand(ref _uninstallAddonCommand, () => { });
+            get => RelayCommand.GetCommand<InstanceAddon>(ref _uninstallAddonCommand, Model.RemoveAddon);
         }
 
         public ICommand ApplySelectedCategoriesCommand { get; private set; }
@@ -117,6 +117,18 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
         public ICommand SelectCategoryCommand
         {
             get => RelayCommand.GetCommand<IProjectCategory>(ref _selectCategoryCommand, Model.SelectCategory);
+        }
+
+        private RelayCommand _enableAddonCommand;
+        public ICommand EnableAddonCommand
+        {
+            get => RelayCommand.GetCommand<InstanceAddon>(ref _enableAddonCommand, Model.EnableAddon);
+        }
+
+        private RelayCommand _disableAddonCommand;
+        public ICommand DisableAddonCommand
+        {
+            get => RelayCommand.GetCommand<InstanceAddon>(ref _disableAddonCommand, Model.DisableAddon);
         }
 
 

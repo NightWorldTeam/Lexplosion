@@ -1,12 +1,87 @@
-﻿<UserControl x:Class="Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.AddonsRepositories.Lexplosion.InProgressAddonsRepositoryView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.AddonsRepositories.Lexplosion"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+﻿<UserControl
+    x:Class="Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.AddonsRepositories.Lexplosion.InProgressAddonsRepositoryView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Lexplosion.WPF.NewInterface.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.AddonsRepositories.Lexplosion"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:objects="clr-namespace:Lexplosion.Logic.Objects;assembly=Lexplosion.Core"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
     <Grid>
-            
+
+
+        <ListBox ItemsSource="{Binding Model.InProgressAddons}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Border
+                        Height="60"
+                        MinHeight="60"
+                        Padding="4"
+                        VerticalAlignment="Top"
+                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                        BorderThickness="1"
+                        CornerRadius="5">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Border
+                                Width="48"
+                                Height="48"
+                                Background="{DynamicResource ActivitySolidColorBrush}"
+                                CornerRadius="5" />
+
+                            <Grid
+                                Grid.Column="1"
+                                Margin="8,0,8,0"
+                                ShowGridLines="False">
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="5" />
+                                </Grid.RowDefinitions>
+
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock
+                                    FontSize="14"
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                    Text="{Binding Addon.Name}" />
+
+                                <TextBlock
+                                    Margin="0,0,0,6"
+                                    VerticalAlignment="Bottom"
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                    Text="{Binding Addon.DownloadPercentages, StringFormat='{}{0}%'}" />
+
+                                <ProgressBar
+                                    Grid.Row="1"
+                                    Grid.ColumnSpan="2"
+                                    Height="5"
+                                    Value="{Binding Addon.DownloadPercentages}" />
+
+                                <controls:AdvancedButton
+                                    Grid.Column="1"
+                                    Padding="8,0"
+                                    HorizontalAlignment="Right"
+                                    Command="{Binding CancelCommand}"
+                                    Content="Отменить"
+                                    Style="{StaticResource sm-default}" />
+                            </Grid>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
     </Grid>
 </UserControl>

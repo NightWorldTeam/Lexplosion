@@ -111,6 +111,7 @@
     <Compile Include="Core\Notifications\NotificationType.cs" />
     <Compile Include="Core\Notifications\NotifyCallback.cs" />
     <Compile Include="Core\Notifications\SimpleNotification.cs" />
+    <Compile Include="Core\Objects\DownloableAddonFile.cs" />
     <Compile Include="Core\Objects\InstanceDistribution.cs" />
     <Compile Include="Core\Objects\InstanceGroup.cs" />
     <Compile Include="Core\Objects\SelecteableItem.cs" />

@@ -22,6 +22,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
         private readonly Action _launchInstanceAction;
 
         public ObservableCollection<InstanceAddon> InstalledAddons { get; set; } = [];
+        public ObservableCollection<DownloableAddonFile> InProgressAddons { get; set; } = [];
 
 
         public bool IsAddonTypeMaps { get; set; }
@@ -96,7 +97,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
         public void InstallAddon(InstanceAddon instanceAddon)
         {
             var stateData = new DynamicStateData<SetValues<InstanceAddon, DownloadAddonRes>, InstanceAddon.InstallAddonState>();
-
+            var downloableAddonFile = new DownloableAddonFile(instanceAddon);
             stateData.StateChanged += (arg, state) =>
             {
                 App.Current.Dispatcher.Invoke(() =>
@@ -104,12 +105,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 
                     if (arg.Value2 == DownloadAddonRes.Successful)
                     {
-                        var s = 0;
                         InstalledAddons.Add(instanceAddon);
                     }
-
+                    InProgressAddons.Remove(downloableAddonFile);
                 });
             };
+
+            InProgressAddons.Add(downloableAddonFile);
 
             Runtime.TaskRun(() =>
             {
@@ -330,6 +332,22 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
                     i.IsSelected = true;
                 Console.WriteLine($"{i.Name} {i.GetHashCode()} == {i.GetHashCode()} {i.Name}");
             }
+        }
+
+        internal void RemoveAddon(InstanceAddon addon)
+        {
+            addon.Delete();
+        }
+
+
+        public void DisableAddon(InstanceAddon addon) 
+        {
+            addon.IsEnable = false;
+        }
+
+        public void EnableAddon(InstanceAddon addon) 
+        {
+            addon.IsEnable = true;
         }
 
 
