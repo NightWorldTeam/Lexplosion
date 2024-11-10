@@ -51,7 +51,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
 
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
-                    if (dialog.FileName.EndsWith(Constants.ImportFileExtension))
+                    if (dialog.FileName.EndsWith(Constants.ImportFileExtensionZip) || dialog.FileName.EndsWith(Constants.ImportFileExtensionNWPack) || dialog.FileName.EndsWith(Constants.ImportFileExtensionMRPack))
                     {
                         Import(dialog.FileName);
                     }

@@ -110,13 +110,16 @@ namespace Lexplosion.Logic.Network
                         continue;
                     }
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    Runtime.DebugWrite($"Exception: {ex}");
+                }
             }
 
             return false;
         }
 
-        // Симуляция майнкрафт клиента. То есть используется если наш макрафт является сервером
+        // Симуляция майнкрафт клиента. То есть используется если наш майнкрафт является сервером
         public void ClientSimulator(int pid)
         {
             UdpClient client = new UdpClient();
@@ -222,6 +225,7 @@ namespace Lexplosion.Logic.Network
         // Симуляция майнкрафт сервера. То есть используется если наш макрафт является клиентом
         public void ServerSimulator(int pid)
         {
+            Runtime.DebugWrite("Start server simulator");
             ClientBridge bridge = new ClientBridge(UUID, sessionToken, _controlServer);
 
             UdpClient client = new UdpClient();
@@ -243,6 +247,8 @@ namespace Lexplosion.Logic.Network
             {
                 if (Utils.ContainsUdpPort(pid, 4445))
                 {
+                    Runtime.DebugWrite("Port 4445 is used by the process");
+
                     Dictionary<string, string> input = new Dictionary<string, string>
                     {
                         ["UUID"] = UUID,
@@ -255,10 +261,14 @@ namespace Lexplosion.Logic.Network
                     {
                         servers = JsonConvert.DeserializeObject<Dictionary<string, OnlineUserInfo>>(data);
                     }
-                    catch { }
+                    catch (Exception ex)
+                    {
+                        Runtime.DebugWrite($"Exception {ex}");
+                    }
 
                     if (servers != null && servers.Count > 0)
                     {
+                        Runtime.DebugWrite($"Servers count: {servers}");
                         Dictionary<string, int> ports = bridge.SetServers(new List<string>(servers.Keys));
 
                         //Отправляем пакеты сервера для отображения в локальных мирах
@@ -272,6 +282,10 @@ namespace Lexplosion.Logic.Network
                             byte[] _data = Encoding.UTF8.GetBytes("[MOTD]§3" + text + "[/MOTD][AD]" + ports[uuid] + "[/AD]");
                             client.Send(_data, _data.Length, new IPEndPoint(IPAddress.Parse("224.0.2.60"), 4445));
                         }
+                    }
+                    else
+                    {
+                        Runtime.DebugWrite($"servers == null: {servers == null}");
                     }
                 }
 

@@ -5,13 +5,16 @@
         Successful,
         ZipFileError,
         GameVersionError,
+        ManifestError,
         JavaDownloadError,
         IsOfflineMode,
         MovingFilesError,
         DownloadError,
         DirectoryCreateError,
         WrongUrl,
-        Canceled
+        UnknownFileType,
+        Canceled,
+        UnknownError
     }
 
     public enum ExportResult
@@ -147,6 +150,7 @@
         ManifestError,
         JavaDownloadError,
         IsCancelled,
+        MoveFilesError,
         UnknownError
     }
 

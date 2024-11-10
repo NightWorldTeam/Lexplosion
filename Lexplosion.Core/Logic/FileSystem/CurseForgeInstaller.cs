@@ -16,15 +16,24 @@ namespace Lexplosion.Logic.FileSystem
     {
         public CurseforgeInstaller(string instanceId) : base(instanceId) { }
 
-        protected override InstanceManifest ArchiveHadnle(string unzupArchivePath, out List<string> files)
+        protected override InstanceManifest LoadManifest(string unzupArchivePath)
+        {
+            return GetFile<InstanceManifest>(unzupArchivePath + "manifest.json");
+        }
+
+        protected override void ArchiveHadnle(string unzupArchivePath, out List<string> files)
         {
             files = new List<string>();
-            var data = GetFile<InstanceManifest>(unzupArchivePath + "manifest.json");
 
             // тут переосим нужные файлы из этого архива
 
             string sourcePath = unzupArchivePath + "overrides/";
-            string destinationPath = InstancesPath + instanceId + "/";
+            string destinationPath = WithDirectory.GetInstancePath(instanceId);
+
+            if (!Directory.Exists(destinationPath))
+            {
+                Directory.CreateDirectory(destinationPath);
+            }
 
             //если архив нового типа, то папки overrides не будет. Все папки сборки будут храниться рядом с манифестом 
             if (!Directory.Exists(sourcePath))
@@ -43,14 +52,12 @@ namespace Lexplosion.Logic.FileSystem
 
             foreach (string path in Directory.GetFiles(sourcePath, "*.*", SearchOption.AllDirectories))
             {
-                if (Path.GetFileName(path) != "manifest.jaon")
+                if (Path.GetFileName(path) != "manifest.json")
                 {
                     File.Copy(path, path.Replace(sourcePath, destinationPath), true);
                     files.Add(path.Replace(sourcePath, "/").Replace("\\", "/"));
                 }
             }
-
-            return data;
         }
 
         /// <summary>

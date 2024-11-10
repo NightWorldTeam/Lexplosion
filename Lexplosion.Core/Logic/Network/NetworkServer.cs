@@ -470,7 +470,7 @@ namespace Lexplosion.Logic.Network
             SendingThread.Abort();
             ReadingThread.Abort();
 
-            Server.StopWork();
+            Server?.StopWork();
         }
 
         public void KickClient(string uuid)

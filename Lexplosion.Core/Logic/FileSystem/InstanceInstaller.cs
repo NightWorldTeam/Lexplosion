@@ -1078,20 +1078,30 @@ namespace Lexplosion.Logic.FileSystem
         /// </summary>
         public void ChangeInstanceId(string newId)
         {
-            if (instanceId != null)
+            try
             {
-                string oldPath = GetInstancePath(instanceId);
-                if (!Directory.Exists(oldPath))
+                if (instanceId != null)
                 {
-                    Directory.CreateDirectory(GetInstancePath(newId));
-                    instanceId = newId;
-                    return;
+                    string oldPath = GetInstancePath(instanceId);
+                    if (!Directory.Exists(oldPath))
+                    {
+                        string newPaath = GetInstancePath(newId);
+                        if (!Directory.Exists(newPaath)) Directory.CreateDirectory(newPaath);
+                        instanceId = newId;
+                        return;
+                    }
+
+                    Directory.Move(GetInstancePath(instanceId), GetInstancePath(newId));
                 }
 
-                Directory.Move(GetInstancePath(instanceId), GetInstancePath(newId));
+                instanceId = newId;
+                Directory.CreateDirectory(GetInstancePath(instanceId));
             }
-
-            instanceId = newId;
+            catch (Exception ex)
+            {
+                Runtime.DebugWrite(ex);
+                instanceId = newId;
+            }
         }
     }
 }

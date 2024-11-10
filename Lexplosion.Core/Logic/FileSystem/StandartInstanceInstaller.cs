@@ -21,12 +21,19 @@ namespace Lexplosion.Logic.FileSystem
         public event ProcentUpdate AddonsDownload;
 
         /// <summary>
-        /// Вызывает когда нужно обработать разорхивированный архив со сборкой. 
+        /// Вызывается, когда необходимо загрузить манифест из разорхивированного файла со сборкой. 
+        /// </summary>
+        /// <param name="unzupArchivePath"></param>
+        /// <returns>Манифест</returns>
+        protected abstract TManifest LoadManifest(string unzupArchivePath);
+
+        /// <summary>
+        /// Вызывается когда нужно обработать разорхивированный архив со сборкой. 
         /// </summary>
         /// <param name="unzupArchivePath">Путь до папки, содержащей разорхивированный архив.</param>
         /// <param name="files">Список файлов клиента.</param>
         /// <returns>Манифест</returns>
-        protected abstract TManifest ArchiveHadnle(string unzupArchivePath, out List<string> files);
+        protected abstract void ArchiveHadnle(string unzupArchivePath, out List<string> files);
 
         public abstract List<string> Install(TManifest data, InstanceContent localFiles, CancellationToken cancelToken);
 
@@ -130,8 +137,9 @@ namespace Lexplosion.Logic.FileSystem
             return false;
         }
 
+        private string _extractedFilesDir;
 
-        public TManifest Extraction(InstanceFileGetter instanceFileGetter, ref InstanceContent localFiles, CancellationToken cancelToken)
+        public TManifest Extraction(InstanceFileGetter instanceFileGetter, CancellationToken cancelToken)
         {
             TaskArgs BuildTaskArgs(string fileName)
             {
@@ -148,11 +156,11 @@ namespace Lexplosion.Logic.FileSystem
 
             try
             {
-                string tempDir = CreateTempDir();
+                _extractedFilesDir = CreateTempDir();
 
                 MainFileDownload?.Invoke(0);
 
-                (bool, string, string) res = instanceFileGetter(tempDir, BuildTaskArgs);
+                (bool, string, string) res = instanceFileGetter(_extractedFilesDir, BuildTaskArgs);
 
                 if (!res.Item1)
                 {
@@ -161,6 +169,28 @@ namespace Lexplosion.Logic.FileSystem
                 }
                 _fileDownloadHandler?.Invoke(res.Item3, 100, DownloadFileProgress.Successful);
 
+                if (Directory.Exists(_extractedFilesDir + "dataDownload"))
+                {
+                    Directory.Delete(_extractedFilesDir + "dataDownload", true);
+                }
+
+                // Извлекаем содержимое этого архима
+                Directory.CreateDirectory(_extractedFilesDir + "dataDownload");
+                ZipFile.ExtractToDirectory(res.Item2, _extractedFilesDir + "dataDownload");
+
+                return LoadManifest(_extractedFilesDir + "dataDownload/");
+            }
+            catch (Exception ex)
+            {
+                Runtime.DebugWrite("Exception " + ex);
+                return default;
+            }
+        }
+
+        public bool HandleExtractedFiles(ref InstanceContent localFiles, CancellationToken cancelToken)
+        {
+            try
+            {
                 //удаляем старые файлы
                 if (localFiles.Files != null)
                 {
@@ -170,33 +200,24 @@ namespace Lexplosion.Logic.FileSystem
                     }
                 }
 
-                if (Directory.Exists(tempDir + "dataDownload"))
-                {
-                    Directory.Delete(tempDir + "dataDownload", true);
-                }
-
-                // Извлекаем содержимое этого архима
-                Directory.CreateDirectory(tempDir + "dataDownload");
-                ZipFile.ExtractToDirectory(res.Item2, tempDir + "dataDownload");
-
-                var manifest = ArchiveHadnle(tempDir + "dataDownload/", out List<string> files);
+                ArchiveHadnle(_extractedFilesDir + "dataDownload/", out List<string> files);
                 localFiles.Files = files;
 
                 try
                 {
-                    if (Directory.Exists(tempDir))
+                    if (Directory.Exists(_extractedFilesDir))
                     {
-                        Directory.Delete(tempDir, true);
+                        Directory.Delete(_extractedFilesDir, true);
                     }
                 }
                 catch { }
 
-                return manifest;
+                return true;
             }
             catch (Exception ex)
             {
                 Runtime.DebugWrite("Exception " + ex);
-                return default;
+                return false;
             }
         }
 

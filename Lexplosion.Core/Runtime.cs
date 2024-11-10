@@ -105,6 +105,8 @@ namespace Lexplosion
 
             //подписываемся на эвент открытия второй копии лаунчера
             CommandReceiver.OnLexplosionOpened += OnLexplosionOpened;
+
+            //InstanceClient.Import(@"C:\Users\Grey_Eminence\Downloads\Fabulously Optimized-6.1.0-beta.3.mrpack", (ImportResult test) => { });
         }
 
         private static bool LauncherUpdate(int version, int updaterOffsetLeft, int updaterOffsetRight)

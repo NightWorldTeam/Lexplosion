@@ -18,6 +18,7 @@ using Lexplosion.Logic.Management.Sources;
 using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Management.Accounts;
+using Lexplosion.Logic.Management.Importers;
 
 namespace Lexplosion.Logic.Management.Instances
 {
@@ -108,14 +109,23 @@ namespace Lexplosion.Logic.Management.Instances
             get => _logo;
             private set
             {
-                if (value != null)
+                try
                 {
-                    _logo = ImageTools.ResizeImage(value, 120, 120);
+                    if (value != null)
+                    {
+                        _logo = ImageTools.ResizeImage(value, 120, 120);
+                    }
+                    else
+                    {
+                        _logo = null;
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
+                    Runtime.DebugWrite(ex);
                     _logo = null;
                 }
+
                 LogoChanged?.Invoke();
                 OnPropertyChanged();
             }
@@ -238,7 +248,7 @@ namespace Lexplosion.Logic.Management.Instances
 
         public bool IsInstalled { get; private set; } = false;
 
-        public string FolderPath { get => WithDirectory.InstancesPath + _localId; }
+        public string FolderPath { get => WithDirectory.GetInstancePath(_localId); }
 
         #endregion
 
@@ -399,13 +409,14 @@ namespace Lexplosion.Logic.Management.Instances
             if (server.InstanceSource == InstanceSource.FreeSource)
             {
                 source = new FreeSource(server.ModpackInfo.SourceId, null);
-                externalId = server.ModpackInfo.ModpackId;
-                modpackVersion = server.ModpackInfo.Version;
             }
             else
             {
                 source = CreateSourceFactory(server.InstanceSource);
             }
+
+            externalId = server.ModpackInfo.ModpackId;
+            modpackVersion = server.ModpackInfo.Version;
 
             var client = CreateClient(source, name, server.InstanceSource, minecraftVersion, ClientType.Vanilla, externalId: externalId);
             client.AddGameServer(server, autoLogin);
@@ -652,39 +663,6 @@ namespace Lexplosion.Logic.Management.Instances
             }
 
             return (instances, (uint)100);
-        }
-
-
-        // TODO: потом выпилить этот метод. Он сейчас нужен чисто для работы старого кода
-        [Obsolete("Данный метод является устаревшим, пожалуйста используйте перегрузку данного метода.")]
-        public static (List<InstanceClient>, uint) GetOutsideInstances(InstanceSource type, int pageSize, int pageIndex, IEnumerable<IProjectCategory> categories, string searchFilter = "", CfSortField sortField = CfSortField.Featured, string gameVersion = "")
-        {
-            ISearchParams searchParams;
-            if (type == InstanceSource.Curseforge)
-            {
-                searchParams = new CurseforgeSearchParams(searchFilter, gameVersion, categories, pageSize, pageIndex, sortField);
-            }
-            else
-            {
-                ModrinthSortField sortFiled;
-                switch (sortField)
-                {
-                    case CfSortField.TotalDownloads:
-                        sortFiled = ModrinthSortField.Downloads;
-                        break;
-                    case CfSortField.LastUpdated:
-                        sortFiled = ModrinthSortField.Updated;
-                        break;
-                    default:
-                        sortFiled = ModrinthSortField.Relevance;
-                        break;
-                }
-
-
-                searchParams = new ModrinthSearchParams(searchFilter, gameVersion, categories, pageSize, pageIndex, sortFiled);
-            }
-
-            return GetOutsideInstances(type, searchParams);
         }
 
         /// <summary>
@@ -1086,7 +1064,7 @@ namespace Lexplosion.Logic.Management.Instances
         {
             // TODO: тут надо трай. И если будет исключение надо передавать ошибку
 
-            Directory.CreateDirectory(FolderPath);
+            if (!Directory.Exists(FolderPath)) Directory.CreateDirectory(FolderPath);
 
             VersionManifest manifest = new VersionManifest
             {
@@ -1342,58 +1320,112 @@ namespace Lexplosion.Logic.Management.Instances
 
         private static ImportResult Import(in InstanceClient client, string zipFile)
         {
-            ArchivedClientData parameters;
-            string unzipPath;
+            CancellationTokenSource tes = new CancellationTokenSource();
 
-            ImportResult res = WithDirectory.UnzipInstance(zipFile, out parameters, out unzipPath);
-            if (res == ImportResult.Successful)
+            var executor = new ImportExecutor(zipFile, true, GlobalData.GeneralSettings, tes.Token, client.ProgressHandler);
+            ImportResult res = executor.Prepeare(out PrepeareResult result);
+
+            if (res != ImportResult.Successful) return res;
+
+            byte[] logo = null;
+            if (result.LogoPath != null)
             {
-                if (parameters != null && parameters.Name != null && parameters.GameVersion != null)
+                try
                 {
-                    byte[] logo = null;
-                    if (parameters.LogoFileName != null)
-                    {
-                        try
-                        {
-                            string file = unzipPath + parameters.LogoFileName;
-                            if (File.Exists(unzipPath + parameters.LogoFileName))
-                            {
-                                logo = File.ReadAllBytes(file);
-                            }
-                        }
-                        catch { }
-                    }
-
-                    client.Name = parameters.Name;
-                    client.GameVersion = parameters.GameVersionInfo;
-                    client.Author = parameters.Author ?? UnknownAuthor;
-                    client.Description = parameters.Description;
-                    client.Summary = parameters.Summary;
-                    client.Logo = logo;
-                    client.GenerateInstanceId();
-
-                    client.CreateFileStruct(parameters.ModloaderType, parameters.ModloaderVersion, parameters.AdditionalInstallerType, parameters.AdditionalInstallerVersion);
-                    res = WithDirectory.MoveUnpackedInstance(client._localId, unzipPath);
-
-                    if (res == ImportResult.Successful)
-                    {
-                        client.SaveAssets();
-                        _installedInstances[client._localId] = client;
-                        SaveInstalledInstancesList();
-                        client.IsComplete = true;
-                    }
-                    else
-                    {
-                        WithDirectory.DeleteInstance(client._localId);
-                    }
+                    logo = File.ReadAllBytes(result.LogoPath);
                 }
-                else
-                {
-                    res = ImportResult.GameVersionError;
-                }
+                catch { }
             }
 
-            return res;
+            client.Name = result.Name;
+            client.Logo = logo;
+            client.GameVersion = result.GameVersionInfo;
+            client.Author = result.Author ?? UnknownAuthor;
+            client.Description = result.Description ?? NoDescription;
+            client.Summary = result.Summary ?? NoDescription;
+            client.Logo = logo;
+            client.GenerateInstanceId();
+
+            client.CreateFileStruct(ClientType.Vanilla, string.Empty);
+            res = executor.Import(client._localId, out IReadOnlyCollection<string> errors);
+
+            client.DownloadComplited?.Invoke(InstanceInit.Successful, (List<string>)errors, false);
+
+            if (res != ImportResult.Successful) return res;
+
+            client.SaveAssets();
+            _installedInstances[client._localId] = client;
+            SaveInstalledInstancesList();
+            client.IsComplete = true;
+            return ImportResult.Successful;
+
+            //if (Path.GetExtension(zipFile) == ".mrpack")
+            //{
+            //    CancellationTokenSource tes = new CancellationTokenSource();
+            //    var importManager = new ModrinthImportManager(zipFile, true, GlobalData.GeneralSettings, tes.Token);
+            //    importManager.Prepeare((StageType stageType, ProgressHandlerArguments data) => { }, out var result);
+
+            //    client.Name = result.Name;
+            //    client.GenerateInstanceId();
+
+            //    importManager.SetInstanceId(client.LocalId);
+            //    importManager.Import((StageType stageType, ProgressHandlerArguments data) => { }, out var errors);
+
+            //    return ImportResult.Successful;
+            //}
+
+            //ArchivedClientData parameters;
+            //string unzipPath;
+
+            //ImportResult res = WithDirectory.UnzipInstance(zipFile, out parameters, out unzipPath);
+            //if (res == ImportResult.Successful)
+            //{
+            //    if (parameters != null && parameters.Name != null && parameters.GameVersion != null)
+            //    {
+            //        byte[] logo = null;
+            //        if (parameters.LogoFileName != null)
+            //        {
+            //            try
+            //            {
+            //                string file = unzipPath + parameters.LogoFileName;
+            //                if (File.Exists(unzipPath + parameters.LogoFileName))
+            //                {
+            //                    logo = File.ReadAllBytes(file);
+            //                }
+            //            }
+            //            catch { }
+            //        }
+
+            //        client.Name = parameters.Name;
+            //        client.GameVersion = parameters.GameVersionInfo;
+            //        client.Author = parameters.Author ?? UnknownAuthor;
+            //        client.Description = parameters.Description;
+            //        client.Summary = parameters.Summary;
+            //        client.Logo = logo;
+            //        client.GenerateInstanceId();
+
+            //        client.CreateFileStruct(parameters.ModloaderType, parameters.ModloaderVersion, parameters.AdditionalInstallerType, parameters.AdditionalInstallerVersion);
+            //        res = WithDirectory.MoveUnpackedInstance(client._localId, unzipPath);
+
+            //        if (res == ImportResult.Successful)
+            //        {
+            //            client.SaveAssets();
+            //            _installedInstances[client._localId] = client;
+            //            SaveInstalledInstancesList();
+            //            client.IsComplete = true;
+            //        }
+            //        else
+            //        {
+            //            WithDirectory.DeleteInstance(client._localId);
+            //        }
+            //    }
+            //    else
+            //    {
+            //        res = ImportResult.GameVersionError;
+            //    }
+            //}
+
+            //return res;
         }
 
         public static InstanceClient Import(string zipFile, Action<ImportResult> callback)

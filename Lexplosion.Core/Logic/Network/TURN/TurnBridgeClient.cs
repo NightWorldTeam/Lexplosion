@@ -50,7 +50,7 @@ namespace Lexplosion.Logic.Network.TURN
 
         public void Send(byte[] inputData)
         {
-            _socket.Send(inputData);
+            int count = _socket.Send(inputData);
         }
 
         public bool Receive(out byte[] data)
@@ -59,7 +59,7 @@ namespace Lexplosion.Logic.Network.TURN
             {
                 _socket.Poll(-1, SelectMode.SelectRead);
                 data = new byte[_socket.Available];
-                _socket.Receive(data);
+                int recvCount = _socket.Receive(data);
 
                 return true;
             }

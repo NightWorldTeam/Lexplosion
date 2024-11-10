@@ -272,20 +272,19 @@ namespace Lexplosion.Logic.Network
                     if (optifineVersion != null)
                     {
                         var optifineData = ProtectedRequest<ProtectedInstallerManifest>(LaunсherSettings.URL.InstallersData + WebUtility.UrlEncode(version) + "/optifine/" + optifineVersion);
-                        if (optifineData != null)
-                        {
-                            foreach (string lib in optifineData.libraries.Keys)
-                            {
-                                if (optifineData.libraries[lib].os == null || optifineData.libraries[lib].os.Contains("windows"))
-                                {
-                                    libraries[lib] = optifineData.libraries[lib].GetLibInfo;
-                                    libraries[lib].additionalInstallerType = AdditionalInstallerType.Optifine;
-                                }
-                            }
+                        if (optifineData == null) return null;
 
-                            optifineData.version.installerVersion = optifineVersion;
-                            manifest.version.AdditionalInstaller = optifineData.version;
+                        foreach (string lib in optifineData.libraries.Keys)
+                        {
+                            if (optifineData.libraries[lib].os == null || optifineData.libraries[lib].os.Contains("windows"))
+                            {
+                                libraries[lib] = optifineData.libraries[lib].GetLibInfo;
+                                libraries[lib].additionalInstallerType = AdditionalInstallerType.Optifine;
+                            }
                         }
+
+                        optifineData.version.installerVersion = optifineVersion;
+                        manifest.version.AdditionalInstaller = optifineData.version;
                     }
 
                     return manifest;

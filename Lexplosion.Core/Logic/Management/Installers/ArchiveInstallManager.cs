@@ -256,7 +256,7 @@ namespace Lexplosion.Logic.Management.Installers
                 };
 
                 // скачиваем архив модпака и из него получаем манифест
-                var manifest = _installer.Extraction(fileGetter, ref localFiles, _cancelToken);
+                var manifest = _installer.Extraction(fileGetter, _cancelToken);
 
                 if (_cancelToken.IsCancellationRequested)
                 {
@@ -272,6 +272,18 @@ namespace Lexplosion.Logic.Management.Installers
                     return new InitData
                     {
                         InitResult = InstanceInit.ManifestError,
+                        UpdatesAvailable = true,
+                        ClientVersion = ProjectId
+                    };
+                }
+
+                // производим обработку разорхивированных файлов
+                if (!_installer.HandleExtractedFiles(ref localFiles, _cancelToken))
+                {
+                    Runtime.DebugWrite("Move files error");
+                    return new InitData
+                    {
+                        InitResult = InstanceInit.MoveFilesError,
                         UpdatesAvailable = true,
                         ClientVersion = ProjectId
                     };

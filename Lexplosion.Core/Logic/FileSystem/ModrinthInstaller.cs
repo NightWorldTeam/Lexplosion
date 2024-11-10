@@ -16,33 +16,42 @@ namespace Lexplosion.Logic.FileSystem
     {
         public ModrinthInstaller(string instanceId) : base(instanceId) { }
 
-        protected override InstanceManifest ArchiveHadnle(string unzupArchivePath, out List<string> files)
+        protected override InstanceManifest LoadManifest(string unzupArchivePath)
+        {
+            return GetFile<InstanceManifest>(unzupArchivePath + "modrinth.index.json");
+        }
+
+        protected override void ArchiveHadnle(string unzupArchivePath, out List<string> files)
         {
             files = new List<string>();
-            var data = GetFile<InstanceManifest>(unzupArchivePath + "modrinth.index.json");
 
             // тут переосим нужные файлы из этого архива
 
-            string SourcePath = unzupArchivePath + "overrides/";
-            string DestinationPath = InstancesPath + instanceId + "/";
+            string sourcePath = unzupArchivePath + "overrides/";
+            string destinationPath = WithDirectory.GetInstancePath(instanceId);
 
-            foreach (string dirPath in Directory.GetDirectories(SourcePath, "*", SearchOption.AllDirectories))
+            if (!Directory.Exists(destinationPath))
             {
-                string dir = dirPath.Replace(SourcePath, DestinationPath);
-                if (!Directory.Exists(dir))
+                Directory.CreateDirectory(destinationPath);
+            }
+
+            if (Directory.Exists(sourcePath))
+            {
+                foreach (string dirPath in Directory.GetDirectories(sourcePath, "*", SearchOption.AllDirectories))
                 {
-                    Directory.CreateDirectory(dir);
+                    string dir = dirPath.Replace(sourcePath, destinationPath);
+                    if (!Directory.Exists(dir))
+                    {
+                        Directory.CreateDirectory(dir);
+                    }
+                }
+
+                foreach (string newPath in Directory.GetFiles(sourcePath, "*.*", SearchOption.AllDirectories))
+                {
+                    File.Copy(newPath, newPath.Replace(sourcePath, destinationPath), true);
+                    files.Add(newPath.Replace(sourcePath, "/").Replace("\\", "/"));
                 }
             }
-
-            foreach (string newPath in Directory.GetFiles(SourcePath, "*.*", SearchOption.AllDirectories))
-            {
-                File.Copy(newPath, newPath.Replace(SourcePath, DestinationPath), true);
-                files.Add(newPath.Replace(SourcePath, "/").Replace("\\", "/"));
-            }
-
-            return data;
-
         }
 
         private struct AddonInstallingInfo

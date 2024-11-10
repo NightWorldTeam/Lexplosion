@@ -1,12 +1,13 @@
-﻿using System.Threading;
-using Lexplosion.Logic.Management.Installers;
+﻿using System;
+using System.Threading;
+using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Objects.Modrinth;
 
-namespace Lexplosion.Logic.FileSystem
+namespace Lexplosion.Logic.Management.Importers
 {
     class ModrinthImportManager : ArchiveImportManager<InstanceManifest>
     {
-        public ModrinthImportManager(string fileAddres, bool isLocalPath, Settings globalSettings, CancellationToken cancelToken) : base(fileAddres, isLocalPath, new ModrinthInstaller(GenerateTempId()), globalSettings, cancelToken)
+        public ModrinthImportManager(string fileAddres, Settings globalSettings, CancellationToken cancelToken) : base(fileAddres, new ModrinthInstaller(null), globalSettings, cancelToken)
         {
         }
 
@@ -22,8 +23,15 @@ namespace Lexplosion.Logic.FileSystem
 
         protected override string DetermineInstanceName(InstanceManifest manifest)
         {
-            return manifest.name;
+            return manifest.name ?? new Random().GenerateString(15);
         }
+
+        protected override string DetermineSummary(InstanceManifest manifest)
+        {
+            return manifest.summary;
+        }
+
+        protected override string DetermineAthor(InstanceManifest manifest) => null;
 
         protected override void DetermineGameType(InstanceManifest manifest, out ClientType clienType, out string modloaderVersion)
         {

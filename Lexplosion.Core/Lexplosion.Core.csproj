@@ -65,7 +65,9 @@
     <Compile Include="Global.cs" />
     <Compile Include="Logic\CoreServicesManager.cs" />
     <Compile Include="Logic\FileSystem\FreeSourceInstanceInstaller.cs" />
-    <Compile Include="Logic\FileSystem\ModrinthImportManager.cs" />
+    <Compile Include="Logic\Management\Importers\CurseforgeImportManager.cs" />
+    <Compile Include="Logic\Management\Importers\ImportExecutor.cs" />
+    <Compile Include="Logic\Management\Importers\ModrinthImportManager.cs" />
     <Compile Include="Logic\FileSystem\StandartInstanceInstaller.cs" />
     <Compile Include="Logic\FileSystem\IArchivedInstanceInstaller.cs" />
     <Compile Include="Logic\FileSystem\CurseforgeInstaller.cs" />
@@ -96,9 +98,11 @@
     <Compile Include="Logic\Management\Authentication\NightWorldAuth.cs" />
     <Compile Include="Logic\Management\CategoriesManager.cs" />
     <Compile Include="Logic\Management\Delegates.cs" />
-    <Compile Include="Logic\Management\Installers\ArchiveImportManager.cs" />
+    <Compile Include="Logic\Management\Importers\ArchiveImportManager.cs" />
+    <Compile Include="Logic\Management\Importers\NWPackImportManager.cs" />
+    <Compile Include="Logic\Management\Importers\SimpleArchiveImportManager.cs" />
     <Compile Include="Logic\Management\Installers\FreeSourceInstanceInstallManager.cs" />
-    <Compile Include="Logic\Management\Installers\IImportManager.cs" />
+    <Compile Include="Logic\Management\Importers\IImportManager.cs" />
     <Compile Include="Logic\Management\Instances\FreeInstance.cs" />
     <Compile Include="Logic\Management\Instances\InstanceGroup.cs" />
     <Compile Include="Logic\Management\MinecraftVersion.cs" />
@@ -204,7 +208,9 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="NightWorld\Collections\Generic\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

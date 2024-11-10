@@ -278,7 +278,7 @@ namespace Lexplosion.Logic.FileSystem
                     DelFile(DirectoryPath + "/" + path + "/" + fileName);
                 }
 
-                Runtime.DebugWrite("Downloading error fileName: " + fileName + ", path: " + path + ", url: " + url + ", Exception:" + ex);
+                Runtime.DebugWrite($"Downloading error fileName: {fileName}, path: {path}, gamePath: {DirectoryPath}, url: {url}, Exception:" + ex);
 
                 return false;
             }

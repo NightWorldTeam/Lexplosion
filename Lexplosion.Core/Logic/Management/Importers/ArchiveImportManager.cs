@@ -6,42 +6,23 @@ using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Tools;
 
-namespace Lexplosion.Logic.Management.Installers
+namespace Lexplosion.Logic.Management.Importers
 {
     abstract class ArchiveImportManager<TManifest> : IImportManager
     {
         private CancellationToken _cancelToken;
         private Settings _settings;
 
+        protected string instanceId;
+        protected string fileAddres;
+
         /// <summary>
         /// Конструктор, автоматом определяющий делегат получения файла модпака.
         /// </summary>
         /// <param name="fileAddres">Путь до файла модпака.</param>
-        /// <param name="isLocalPath">true если fileAddres содержит путь до локлаьного файла, false если fileAddres содержит url для скачивнаия файла</param>
-        protected ArchiveImportManager(string fileAddres, bool isLocalPath, IArchivedInstanceInstaller<TManifest> installer, Settings globalSettings, CancellationToken cancelToken)
+        protected ArchiveImportManager(string fileAddres, IArchivedInstanceInstaller<TManifest> installer, Settings globalSettings, CancellationToken cancelToken)
         {
-            if (isLocalPath)
-            {
-                instanceFileGetter = (string tempDir, Func<string, TaskArgs> taskArgsGetter) => (true, fileAddres, Path.GetFileName(fileAddres));
-            }
-            else
-            {
-                instanceFileGetter = (string tempDir, Func<string, TaskArgs> taskArgsGetter) =>
-                {
-                    string fileName = "axaxa_ebala";
-                    bool res = WithDirectory.DownloadFile(fileAddres, fileName, tempDir, taskArgsGetter(fileName));
-                    return (res, tempDir + fileName, fileName);
-                };
-            }
-
-            _cancelToken = cancelToken;
-            _settings = globalSettings;
-            this.installer = installer;
-        }
-
-        protected ArchiveImportManager(InstanceFileGetter instanceFileGetter, IArchivedInstanceInstaller<TManifest> installer, Settings globalSettings, CancellationToken cancelToken)
-        {
-            this.instanceFileGetter = instanceFileGetter;
+            this.fileAddres = fileAddres;
             _cancelToken = cancelToken;
             _settings = globalSettings;
             this.installer = installer;
@@ -49,22 +30,10 @@ namespace Lexplosion.Logic.Management.Installers
 
         protected IArchivedInstanceInstaller<TManifest> installer;
 
-        protected InstanceFileGetter instanceFileGetter { get; set; }
         protected VersionManifest versionManifest;
-        protected InstanceContent instanceContent;
         protected TManifest manifest;
 
-        protected static string GenerateTempId()
-        {
-            var rnd = new Random();
-            string id = rnd.GenerateString(10);
-            while (Directory.Exists(WithDirectory.GetInstancePath(id)))
-            {
-                id = rnd.GenerateString(10);
-            }
-
-            return id;
-        }
+        public int CompletedStagesCount { private get; set; }
 
         protected abstract bool ManifestIsValid(TManifest manifest);
 
@@ -79,30 +48,45 @@ namespace Lexplosion.Logic.Management.Installers
 
         protected abstract string DetermineInstanceName(TManifest manifest);
 
-        public virtual InstanceInit Prepeare(ProgressHandlerCallback progressHandler, out PrepeareResult result)
+        protected abstract string DetermineSummary(TManifest manifest);
+
+        protected abstract string DetermineAthor(TManifest manifest);
+
+        public virtual ImportResult Prepeare(ProgressHandlerCallback progressHandler, out PrepeareResult result)
         {
             result = new PrepeareResult();
 
-            instanceContent = new InstanceContent();
-            manifest = installer.Extraction(instanceFileGetter, ref instanceContent, _cancelToken);
+            progressHandler(StageType.Client, new ProgressHandlerArguments()
+            {
+                StagesCount = CompletedStagesCount + 2,
+                Stage = CompletedStagesCount + 1,
+                Procents = 0
+            });
+
+            installer.MainFileDownload += (int pr) =>
+            {
+                progressHandler(StageType.Client, new ProgressHandlerArguments()
+                {
+                    StagesCount = CompletedStagesCount + 2,
+                    Stage = CompletedStagesCount + 1,
+                    Procents = pr
+                });
+            };
+
+            InstanceFileGetter instanceFileGetter = (string tempDir, Func<string, TaskArgs> taskArgsGetter) => (true, fileAddres, Path.GetFileName(fileAddres));
+
+            manifest = installer.Extraction(instanceFileGetter, _cancelToken);
 
             if (_cancelToken.IsCancellationRequested)
             {
-                return InstanceInit.IsCancelled;
+                return ImportResult.Canceled;
             }
 
             if (!ManifestIsValid(manifest))
             {
                 Runtime.DebugWrite("Manifest is invalid");
-                return InstanceInit.ManifestError;
+                return ImportResult.ManifestError;
             }
-
-            progressHandler(StageType.Client, new ProgressHandlerArguments()
-            {
-                StagesCount = 3,
-                Stage = 2,
-                Procents = 0
-            });
 
             DetermineGameType(manifest, out ClientType gameType, out string modLoaderVersion);
             Runtime.DebugWrite("modLoaderVersion " + modLoaderVersion);
@@ -119,30 +103,52 @@ namespace Lexplosion.Logic.Management.Installers
             };
 
             result.Name = DetermineInstanceName(manifest);
+            result.Summary = DetermineSummary(manifest);
+            result.Author = DetermineAthor(manifest);
 
-            return InstanceInit.Successful;
+            return ImportResult.Successful;
         }
 
-        public virtual InstanceInit Import(ProgressHandlerCallback progressHandler, string instanceId, out IReadOnlyCollection<string> errors)
+        public virtual ImportResult Import(ProgressHandlerCallback progressHandler, out IReadOnlyCollection<string> errors)
         {
             errors = null;
-            if (versionManifest == null || instanceContent == null)
+            if (versionManifest == null)
             {
-                return InstanceInit.UnknownError;
+                return ImportResult.UnknownError;
+            }
+
+            installer.AddonsDownload += (int totalDataCount, int nowDataCount) =>
+            {
+                progressHandler(StageType.Client, new ProgressHandlerArguments()
+                {
+                    TotalFilesCount = totalDataCount,
+                    FilesCount = nowDataCount,
+                    Procents = (((nowDataCount != 0 ? nowDataCount : 1) * 100) / totalDataCount),
+                    Stage = CompletedStagesCount + 2,
+                    StagesCount = CompletedStagesCount + 2
+                });
+            };
+
+            var instanceContent = new InstanceContent();
+            bool result = installer.HandleExtractedFiles(ref instanceContent, _cancelToken);
+            if (!result || instanceContent == null)
+            {
+                return ImportResult.MovingFilesError;
             }
 
             errors = installer.Install(manifest, instanceContent, _cancelToken);
             if (errors.Count > 0)
             {
-                return InstanceInit.DownloadFilesError;
+                return ImportResult.DownloadError;
             }
 
             DataFilesManager.SaveManifest(instanceId, versionManifest);
-            return InstanceInit.Successful;
+            return ImportResult.Successful;
         }
 
         public void SetInstanceId(string id)
         {
+            instanceId = id;
             installer.SetInstanceId(id);
         }
     }

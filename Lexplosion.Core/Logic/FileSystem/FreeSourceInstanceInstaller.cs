@@ -34,7 +34,9 @@ namespace Lexplosion.Logic.FileSystem
             public HashSet<FileDesc> WhiteList;
         }
 
-        public InstanceManifest Extraction(InstanceFileGetter instanceFileGetter, ref InstanceContent localFiles, CancellationToken cancelToken)
+        private string _extractedFilesDir;
+
+        public InstanceManifest Extraction(InstanceFileGetter instanceFileGetter, CancellationToken cancelToken)
         {
             TaskArgs BuildTaskArgs(string fileName)
             {
@@ -51,24 +53,11 @@ namespace Lexplosion.Logic.FileSystem
 
             try
             {
-                //удаляем старые файлы
-                if (localFiles.Files != null)
-                {
-                    foreach (string file in localFiles.Files)
-                    {
-                        WithDirectory.DelFile(WithDirectory.InstancesPath + instanceId + file);
-                        if (cancelToken.IsCancellationRequested) return null;
-                    }
-                }
-
-                localFiles.Files = new List<string>();
-
-                string tempDir = WithDirectory.CreateTempDir();
+                _extractedFilesDir = WithDirectory.CreateTempDir();
 
                 MainFileDownload?.Invoke(0);
 
-
-                (bool, string, string) res = instanceFileGetter(tempDir, BuildTaskArgs);
+                (bool, string, string) res = instanceFileGetter(_extractedFilesDir, BuildTaskArgs);
 
                 if (!res.Item1)
                 {
@@ -78,7 +67,7 @@ namespace Lexplosion.Logic.FileSystem
                 _fileDownloadHandler?.Invoke(res.Item3, 100, DownloadFileProgress.Successful);
 
 
-                string unzipFolder = tempDir + "dataDownload/";
+                string unzipFolder = _extractedFilesDir + "dataDownload/";
 
                 if (Directory.Exists(unzipFolder))
                 {
@@ -92,7 +81,7 @@ namespace Lexplosion.Logic.FileSystem
                 var content = DataFilesManager.GetFile<FreeSourcePlatformData>(WithDirectory.InstancesPath + instanceId + "/instancePlatformData.json");
                 if (content != null && content.IsValid())
                 {
-                    string result = ToServer.HttpGet(LaunсherSettings.URL.Base + "api/freeSources/" + content.sourceId + "/modpacks/" + content.id + "/exutableFilesWhiteList"); ; ;
+                    string result = ToServer.HttpGet(LaunсherSettings.URL.Base + "api/freeSources/" + content.sourceId + "/modpacks/" + content.id + "/exutableFilesWhiteList");
                     if (result != null)
                     {
                         try
@@ -139,16 +128,6 @@ namespace Lexplosion.Logic.FileSystem
                             }
 
                             entry.ExtractToFile(pathToExtract);
-                            if (entryPath.StartsWith("/files") && entry.Name != "installedAddons.json")
-                            {
-                                entryPath = entryPath.ReplaceFirst("/files", string.Empty);
-                                localFiles.Files.Add(entryPath);
-                            }
-                            else if (entryPath.StartsWith("files") && entry.Name != "installedAddons.json")
-                            {
-                                entryPath = entryPath.ReplaceFirst("files", string.Empty);
-                                localFiles.Files.Add(entryPath);
-                            }
                         }
                     }
                 }
@@ -171,8 +150,34 @@ namespace Lexplosion.Logic.FileSystem
                     manifest.Addons = installedAddons ?? new InstalledAddonsFormat();
                 }
 
+                return manifest;
+            }
+            catch (Exception ex)
+            {
+                Runtime.DebugWrite("Exception " + ex);
+                return null;
+            }
+        }
+
+        public bool HandleExtractedFiles(ref InstanceContent localFiles, CancellationToken cancelToken)
+        {
+            try
+            {
+                //удаляем старые файлы
+                if (localFiles.Files != null)
+                {
+                    foreach (string file in localFiles.Files)
+                    {
+                        WithDirectory.DelFile(WithDirectory.InstancesPath + instanceId + file);
+                        if (cancelToken.IsCancellationRequested) return false;
+                    }
+                }
+
+                localFiles.Files = new List<string>();
+
+                string unzipFolder = _extractedFilesDir + "dataDownload/";
                 string sourcePath = unzipFolder + "files/";
-                string destinationPath = WithDirectory.InstancesPath + instanceId + "/";
+                string destinationPath = WithDirectory.GetInstancePath(instanceId);
 
                 foreach (string dirPath in Directory.GetDirectories(sourcePath, "*", SearchOption.AllDirectories))
                 {
@@ -194,19 +199,19 @@ namespace Lexplosion.Logic.FileSystem
 
                 try
                 {
-                    if (Directory.Exists(tempDir))
+                    if (Directory.Exists(_extractedFilesDir))
                     {
-                        Directory.Delete(tempDir, true);
+                        Directory.Delete(_extractedFilesDir, true);
                     }
                 }
                 catch { }
 
-                return manifest;
+                return true;
             }
             catch (Exception ex)
             {
                 Runtime.DebugWrite("Exception " + ex);
-                return null;
+                return false;
             }
         }
 

@@ -414,6 +414,7 @@ namespace Lexplosion.Logic.Management.Instances
         /// <returns>Собстна список аддонов.</returns>
         public static AddonsCatalog GetAddonsCatalog(ProjectSource projectSource, BaseInstanceData modpackInfo, AddonType type, ISearchParams searchParams)
         {
+            Runtime.DebugWrite($"GetAddonsCatalog {projectSource} {type}");
             switch (projectSource)
             {
                 case ProjectSource.Curseforge:

@@ -210,6 +210,7 @@ namespace Lexplosion.Logic.Objects.Modrinth
         }
 
         public string name;
+        public string summary;
         public string versionId;
         public List<FileData> files;
         public Dictionary<string, string> dependencies;
