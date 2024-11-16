@@ -81,7 +81,6 @@
             </Setter>
         </Style>
 
-
         <DataTemplate DataType="{x:Type logicObjects:CategoryBase}">
             <Button Command="{Binding DataContext.SelectCategoryCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}">
                 <Button.Style>
@@ -110,7 +109,6 @@
                 </Button.Style>
             </Button>
         </DataTemplate>
-
 
         <DataTemplate DataType="{x:Type translatableObjects:SortByParamObject}">
             <TextBlock extensions:TextBlock.TextByKey="{Binding TranslateKey}" Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />

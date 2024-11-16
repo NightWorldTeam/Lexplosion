@@ -66,6 +66,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:SearchBox}">
                     <Border
+                        x:Name="Body"
                         Width="{TemplateBinding Width}"
                         Height="{TemplateBinding Height}"
                         Padding="16,10"
@@ -78,7 +79,7 @@
                             <Grid ShowGridLines="False">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
 
                                 <Button
@@ -107,6 +108,7 @@
                                     x:Name="PART_ContentHost"
                                     Grid.Column="1"
                                     Margin="16,0,0,0"
+                                    HorizontalAlignment="Stretch"
                                     VerticalAlignment="Center"
                                     VerticalScrollBarVisibility="Auto" />
                             </Grid>
@@ -128,6 +130,8 @@
                             </Button>
                         </Grid>
                     </Border>
+
+                    <ControlTemplate.Triggers />
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
