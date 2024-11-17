@@ -246,14 +246,15 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
         {
             var themeService = RuntimeApp.AppColorThemeService;
             Theme selectedTheme = null;
-            if (themeService.SelectedTheme.Name == "Open Space")
-            {
-                var resourceLoader = new ResourcesLoader();
-                var newTheme = resourceLoader.LoadThemeFromPath("D:\\EmptyFolder\\Theme1.xml");
-                themeService.AddAndActiveTheme(newTheme.Item2);
-                return;
-            }
-            else if (themeService.SelectedTheme.Name == "Light Punch")
+            //if (themeService.SelectedTheme.Name == "Open Space")
+            //{
+            //    var resourceLoader = new ResourcesLoader();
+            //    var newTheme = resourceLoader.LoadThemeFromPath("D:\\EmptyFolder\\Theme1.xml");
+            //    themeService.AddAndActiveTheme(newTheme.Item2);
+            //    return;
+            //}
+            //else 
+            if (themeService.SelectedTheme.Name == "Light Punch")
             {
                 selectedTheme = themeService.Themes.FirstOrDefault(t => t.Name == "Open Space");
             }
