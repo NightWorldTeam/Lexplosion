@@ -4,6 +4,8 @@ using System;
 using System.Windows.Media;
 using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Tools;
+using Lexplosion.WPF.NewInterface.Extensions;
+using System.Linq;
 
 namespace Lexplosion.WPF.NewInterface.Core.Services
 {
@@ -20,7 +22,8 @@ namespace Lexplosion.WPF.NewInterface.Core.Services
         #region Properties
 
 
-        public IEnumerable<Theme> LoadedThemes { get; } = new List<Theme>();
+        private List<Theme> _themes = [];
+        public IEnumerable<Theme> Themes { get => _themes; set => _themes = value.ToList(); }
 
         public List<Action> Animations { get; } = new List<Action>();
         public List<Action> BeforeAnimations { get; } = new List<Action>();
@@ -57,6 +60,18 @@ namespace Lexplosion.WPF.NewInterface.Core.Services
             }
         }
 
+        public void AddTheme(ResourceDictionary resourceDictionary) 
+        {
+            var theme = new Theme(resourceDictionary);
+            _themes.Add(theme);
+        }
+
+        public void AddAndActiveTheme(ResourceDictionary resourceDictionary) 
+        {
+            AddTheme(resourceDictionary);
+            ChangeTheme(_themes[_themes.Count - 1]);
+        }
+
         public void ChangeTheme(Theme theme) 
         {
             var currentThemeName = string.Empty;
@@ -64,12 +79,15 @@ namespace Lexplosion.WPF.NewInterface.Core.Services
 
             BeforeAnimations.ForEach(item => item?.Invoke());
 
-            foreach (var s in App.Current.Resources.MergedDictionaries)
+            foreach (var md in App.Current.Resources.MergedDictionaries)
             {
-                if (s.Source.ToString().Contains("ColorTheme"))
+                if (md.TryGetValue<string, string>("type", out var result))
                 {
-                    currentThemeName = s.Source.ToString();
-                    resourceDictionaries.Add(s);
+                    if (result.Contains("_ColorTheme"))
+                    {
+                        currentThemeName = result;
+                        resourceDictionaries.Add(md);
+                    }
                 }
             }
 
@@ -78,10 +96,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Services
                 App.Current.Resources.MergedDictionaries.Remove(s);
             }
 
-            _selectedThemeResourceDictionary = new ResourceDictionary()
-            {
-                Source = theme.DictionaryUri
-            };
+            _selectedThemeResourceDictionary = theme.ResourceDictionary;
 
             if (_selectedActivityColor == default)
                 _selectedActivityColor = (Color)_selectedThemeResourceDictionary["ActivityColor"];

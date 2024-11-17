@@ -9,18 +9,19 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
 {
     public class Theme : ObservableObject
     {
-        public const string ThemesResourcePath = "pack://application:,,,/Resources/Themes/";
+        public const string DefaultThemesResourcePath = "pack://application:,,,/Resources/Themes/";
 
         public event Action<Theme, bool> SelectedEvent = null;
+
+        private readonly ResourceDictionary _dictionary;
 
 
         #region Properties
 
 
-        private ResourceDictionary _dictionary;
-
         public string Name { get; private set; }
-        public Uri DictionaryUri { get; private set; }
+        public ResourceDictionary ResourceDictionary { get => _dictionary; }
+        public Uri? DictionaryUri { get; private set; }
 
         // colors
         public SolidColorBrush PrimaryBrush { get; }
@@ -58,24 +59,29 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
         #region Constructors
 
 
-        public Theme(string name, string fileName)
+        public Theme(string name, string fileName) : this(new() { Source = new Uri(DefaultThemesResourcePath + fileName) })
         {
             Name = name;
+            DictionaryUri = new Uri(DefaultThemesResourcePath + fileName);
+
             _dictionary = new ResourceDictionary()
             {
-                Source = new Uri(ThemesResourcePath + fileName),
+                Source = DictionaryUri
             };
+        }
 
-            PrimaryBrush = (SolidColorBrush)_dictionary["PrimarySolidColorBrush"];
-            SecondaryBrush = (SolidColorBrush)_dictionary["SecondarySolidColorBrush"];
-            SeparateBrush = (SolidColorBrush)_dictionary["SeparateSolidColorBrush"];
+        public Theme(ResourceDictionary dictionary)
+        {
+            _dictionary = dictionary;
+
+            PrimaryBrush = (SolidColorBrush)dictionary["PrimarySolidColorBrush"];
+            SecondaryBrush = (SolidColorBrush)dictionary["SecondarySolidColorBrush"];
+            SeparateBrush = (SolidColorBrush)dictionary["SeparateSolidColorBrush"];
 
             if (!IsPresetColor)
             {
-                ActivityBrush = (SolidColorBrush)_dictionary["ActivitySolidColorBrush"];
+                ActivityBrush = (SolidColorBrush)dictionary["ActivitySolidColorBrush"];
             }
-
-            DictionaryUri = new Uri(ThemesResourcePath + fileName);
         }
 
 

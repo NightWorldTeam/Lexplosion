@@ -3,6 +3,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
+    <sys:String x:Key="Name">Open Space</sys:String>
+    <sys:String x:Key="Type">_ColorTheme</sys:String>
+
     <Duration x:Key="SlowAnimationSpeed">0:0:0.35</Duration>
     <Duration x:Key="MediumAnimationSpeed">0:0:0.25</Duration>
     <Duration x:Key="FastAnimationSpeed">0:0:0.15</Duration>

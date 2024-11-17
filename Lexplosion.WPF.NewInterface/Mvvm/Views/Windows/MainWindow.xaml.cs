@@ -8,6 +8,19 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
+using System.IO;
+using System.Xml;
+using System.Windows.Markup;
+using System.Xml.Linq;
+using System.Runtime.InteropServices;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Collections;
+using DiscordRPC.Events;
+using Lexplosion.WPF.NewInterface.Core.Resources;
+using Lexplosion.Core.Resources;
+using Lexplosion.WPF.NewInterface.Core.Objects;
+using System.Resources;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
 {
@@ -43,19 +56,19 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
         {
             InitializeComponent();
 
-            _defaultChangeThemeAnimation.Completed += (sender, e) => 
+            _defaultChangeThemeAnimation.Completed += (sender, e) =>
             {
                 PaintArea.Visibility = Visibility.Hidden;
             };
 
-            RuntimeApp.AppColorThemeService.BeforeAnimations.Add(() => 
+            RuntimeApp.AppColorThemeService.BeforeAnimations.Add(() =>
             {
                 PaintArea.Opacity = 1;
                 PaintArea.Visibility = Visibility.Visible;
                 PaintArea.Background = CreateBrushFromVisual(this);
             });
 
-            RuntimeApp.AppColorThemeService.Animations.Add(() => 
+            RuntimeApp.AppColorThemeService.Animations.Add(() =>
             {
                 PaintArea.BeginAnimation(OpacityProperty, _defaultChangeThemeAnimation);
                 CircleReveal.BeginAnimation(EllipseGeometry.RadiusXProperty, _defaultChangeThemeAnimation);
@@ -211,63 +224,45 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
         }
 
 
-        private void ChangeTheme_MouseDown(object sender, MouseButtonEventArgs e)
+        public static bool Contains(ICollection collection, string key)
         {
-            var border = (Border)sender;
-            border.IsEnabled = false;
+            if (collection == null || collection.Count == 0)
+                return false;
 
-            PaintArea.Opacity = 1;
-            PaintArea.Visibility = Visibility.Visible;
-            PaintArea.Background = CreateBrushFromVisual(this);
-
-            DoubleAnimation dba;
-
-            var resourceDictionaries = new List<ResourceDictionary>();
-
-            var currentThemeName = "";
-
-            foreach (var s in App.Current.Resources.MergedDictionaries)
+            foreach (var item in collection)
             {
-                if (s.Source.ToString().Contains("ColorTheme"))
+                if (item is string str)
                 {
-                    currentThemeName = s.Source.ToString();
-                    resourceDictionaries.Add(s);
+                    if (str.Contains(key))
+                    {
+                        return true;
+                    }
                 }
             }
+            return false;
+        }
 
-            foreach (var s in resourceDictionaries)
+        private void ChangeTheme_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            var themeService = RuntimeApp.AppColorThemeService;
+            Theme selectedTheme = null;
+            if (themeService.SelectedTheme.Name == "Open Space")
             {
-                App.Current.Resources.MergedDictionaries.Remove(s);
+                var resourceLoader = new ResourcesLoader();
+                var newTheme = resourceLoader.LoadThemeFromPath("D:\\EmptyFolder\\Theme1.xml");
+                themeService.AddAndActiveTheme(newTheme.Item2);
+                return;
+            }
+            else if (themeService.SelectedTheme.Name == "Light Punch")
+            {
+                selectedTheme = themeService.Themes.FirstOrDefault(t => t.Name == "Open Space");
+            }
+            else 
+            {
+                selectedTheme = themeService.Themes.FirstOrDefault(t => t.Name == "Light Punch");
             }
 
-            if (currentThemeName.Contains("Light"))
-            {
-                App.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
-                {
-                    Source = new Uri("pack://application:,,,/Resources/Themes/DarkColorTheme.xaml")
-                });
-            }
-            else
-            {
-                App.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
-                {
-                    Source = new Uri("pack://application:,,,/Resources/Themes/LightColorTheme.xaml")
-                });
-            }
-
-            dba = new DoubleAnimation()
-            {
-                From = 1700,
-                To = 0,
-                Duration = TimeSpan.FromSeconds(0.35 * 1.5),
-                EasingFunction = new SineEase
-                { EasingMode = EasingMode.EaseInOut }
-            };
-
-            dba.Completed += (s, e) => Dba_Completed(s, e, border);
-            //PaintArea.BeginAnimation(OpacityProperty, dba);
-            CircleReveal.BeginAnimation(EllipseGeometry.RadiusXProperty, dba);
-            CircleReveal.BeginAnimation(EllipseGeometry.RadiusYProperty, dba);
+            themeService.ChangeTheme(selectedTheme);
         }
 
         private void Dba_Completed(object sender, EventArgs e, Border border)

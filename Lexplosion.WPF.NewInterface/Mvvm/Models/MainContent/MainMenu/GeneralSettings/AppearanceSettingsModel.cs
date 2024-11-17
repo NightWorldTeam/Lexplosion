@@ -39,6 +39,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
             _themes.Add(new Theme("Light Punch", "LightColorTheme.xaml"));
             _themes.Add(new Theme("Open Space", "DarkColorTheme.xaml"));
 
+            RuntimeApp.AppColorThemeService.Themes = _themes;
+
             foreach (var theme in _themes)
             {
                 theme.SelectedEvent += SelectedThemeChanged;

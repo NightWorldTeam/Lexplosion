@@ -116,9 +116,16 @@
     <Compile Include="Core\Objects\InstanceGroup.cs" />
     <Compile Include="Core\Objects\SelecteableItem.cs" />
     <Compile Include="Core\Objects\Test.cs" />
+    <Compile Include="Core\Resources\IResourceLoader.cs" />
+    <Compile Include="Core\Resources\Language\LanguageItem.cs" />
+    <Compile Include="Core\Resources\Language\LanguageLoader.cs" />
+    <Compile Include="Core\Resources\ResourcesLoader.cs" />
+    <Compile Include="Core\Resources\Theme\ThemeItem.cs" />
+    <Compile Include="Core\Resources\Theme\ThemeLoader.cs" />
     <Compile Include="Core\SegmentItem.cs" />
     <Compile Include="Core\Switch.cs" />
     <Compile Include="Core\ViewModel\ILimitedAccess.cs" />
+    <Compile Include="Extensions\ResourceDictionaryExtensions.cs" />
     <Compile Include="Extensions\ScrollViewer.cs" />
     <Compile Include="Extensions\StyleSelectors\LastRowItemWrapPanelStyleSelector.cs" />
     <Compile Include="Mvvm\Models\InstanceControllers\InstanceSharesController.cs" />
