@@ -76,6 +76,10 @@ namespace Lexplosion.Logic.FileSystem
 
             try
             {
+                if (string.IsNullOrEmpty(data?.ThemeName))
+                {
+
+                }
                 Settings settings = GetSettings(instanceId);
                 if (settings != null)
                 {
@@ -84,6 +88,11 @@ namespace Lexplosion.Logic.FileSystem
                 else
                 {
                     settings = data;
+                }
+
+                if (string.IsNullOrEmpty(settings?.ThemeName))
+                {
+
                 }
 
                 using (FileStream fstream = new FileStream(file, FileMode.Create))
