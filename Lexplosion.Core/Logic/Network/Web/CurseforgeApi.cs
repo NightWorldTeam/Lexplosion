@@ -137,7 +137,7 @@ namespace Lexplosion.Logic.Network.Web
 
             string categoryStr = "&categoryIds=" + WebUtility.UrlEncode("[" + ctrs.RemoveLastChars(1) + "]");
 
-            url += "gameId=432&classId=4471&sortOrder=desc&pageSize=" + searchParams.PageSize + "&index=" + searchParams.PageIndex + gameVersion + "&categoryIds=" + categoryStr + "&sortField=" + (int)searchParams.SortField;
+            url += $"gameId=432&classId=4471&sortOrder=desc&pageSize={searchParams.PageSize}&index={searchParams.PageIndex}{gameVersion}{categoryStr}&sortField={(int)searchParams.SortField}";
 
             Runtime.DebugWrite(url);
 

@@ -249,7 +249,7 @@ namespace Lexplosion.Logic.Management.Instances
         }
 
         /// <summary>
-        /// Тут хранится список аддонов из метода GetAddonsCatalog. При каждом вызове GetAddonsCatalog этот список обновляется.
+        /// Тут хранится список аддонов из метода <see cref="GetAddonsCatalog"/>. При каждом вызове <see cref="GetAddonsCatalog"/> этот список обновляется.
         /// Этот кэш необходим чтобы не перессоздавать InstanceClient для зависимого мода, при его скачивании.
         /// </summary>
         private static Dictionary<string, InstanceAddon> _addonsCatalogChache;
@@ -259,10 +259,17 @@ namespace Lexplosion.Logic.Management.Instances
         /// Нужно чтобы не создавать новый InstanceClient для тех модов, которые прямо сейчас скачиваются.
         /// Ключ - локальный id данной сборки + id мода. Значение - поинтер на InstanceAddon.
         /// </summary>
-        private static ConcurrentDictionary<string, Pointer<InstanceAddon>> _installingAddons = new ConcurrentDictionary<string, Pointer<InstanceAddon>>();
+        private static ConcurrentDictionary<string, Pointer<InstanceAddon>> _installingAddons = new();
         private static KeySemaphore<string> _installingSemaphore = new KeySemaphore<string>();
         private static Semaphore _chacheSemaphore = new Semaphore(1, 1);
 
+        /// <summary>
+        /// Файлы, которые были только что установлены методом <see cref="InstallAddon"/>. 
+        /// Это поле нужно чтобы проверять его в <see cref="OnAddonFileAdded"/> и повторно не вызывать эвент <see cref="AddonAdded"/>
+        /// Значение представляет из себя связку локлаьного id сборки и имени файла соотвественно.
+        /// </summary>
+        private static HashSet<(string, string)> _installedFiles = new();
+        private static object _installedFilesLocker = new();
 
         /// <summary>
         /// Этот метод нужен просто для удобства
@@ -271,10 +278,7 @@ namespace Lexplosion.Logic.Management.Instances
         /// <param name="addnId">айдишник мода</param>
         /// <returns>Ключ по которому искать этот мод в _installingAddons. (формат: _modpackInfo.LocalId + addnId)</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static string GetAddonKey(BaseInstanceData instanceData, string addnId)
-        {
-            return instanceData.LocalId + addnId;
-        }
+        private static string GetAddonKey(BaseInstanceData instanceData, string addnId) => instanceData.LocalId + addnId;
 
         /// <summary>
         /// Очищает сохранённый список аддонов. Нужно вызывать при закрытии каталога чтобы очистить память.
@@ -313,8 +317,8 @@ namespace Lexplosion.Logic.Management.Instances
 
                 try
                 {
-                    string modsPath = WithDirectory.InstancesPath + instanceData.LocalId + "/mods";
-                    if (Directory.Exists(modsPath))
+                    string modsPath = WithDirectory.GetInstancePath(instanceData.LocalId) + "mods";
+                    if (!Directory.Exists(modsPath))
                     {
                         Directory.CreateDirectory(modsPath);
                     }
@@ -322,7 +326,7 @@ namespace Lexplosion.Logic.Management.Instances
                     _modsDirectoryWathcer = new FileSystemWatcher(modsPath);
                     _modsDirectoryWathcer.Created += (object sender, FileSystemEventArgs e) =>
                     {
-                        OnAddonFileAdded(e.FullPath, AddonType.Mods, ".jar", DefineIternalModInfo);
+                        OnAddonFileAdded(instanceData, e.FullPath, AddonType.Mods, ".jar", DefineIternalModInfo);
                     };
                     _modsDirectoryWathcer.EnableRaisingEvents = true;
                 }
@@ -331,10 +335,10 @@ namespace Lexplosion.Logic.Management.Instances
                     Runtime.DebugWrite("Exception " + ex);
                 }
 
-                string resourcespacksPath = WithDirectory.InstancesPath + instanceData.LocalId + "/resourcepacks";
+                string resourcespacksPath = WithDirectory.GetInstancePath(instanceData.LocalId) + "resourcepacks";
                 try
                 {
-                    if (Directory.Exists(resourcespacksPath))
+                    if (!Directory.Exists(resourcespacksPath))
                     {
                         Directory.CreateDirectory(resourcespacksPath);
                     }
@@ -351,7 +355,7 @@ namespace Lexplosion.Logic.Management.Instances
                             modId = "";
                         };
 
-                        OnAddonFileAdded(e.FullPath, AddonType.Resourcepacks, ".zip", addonInfo);
+                        OnAddonFileAdded(instanceData, e.FullPath, AddonType.Resourcepacks, ".zip", addonInfo);
                     };
                     _resourcepacksDirectoryWathcer.EnableRaisingEvents = true;
                 }
@@ -363,7 +367,7 @@ namespace Lexplosion.Logic.Management.Instances
         }
 
         /// <summary>
-        /// Прекращает наблюдение, начатое методом StartWathingDirecoty.
+        /// Прекращает наблюдение, начатое методом <see cref="StartWathingDirecoty"/>.
         /// </summary>
         public static void StopWatchingDirectory()
         {
@@ -379,17 +383,36 @@ namespace Lexplosion.Logic.Management.Instances
             }
         }
 
-        private static void OnAddonFileAdded(string filePath, AddonType type, string fileExtension, IternalAddonInfoGetter addonInfoGetter)
+        private static void OnAddonFileAdded(BaseInstanceData instanceData, string filePath, AddonType type, string fileExtension, IternalAddonInfoGetter addonInfoGetter)
         {
             ThreadPool.QueueUserWorkItem((_) =>
             {
                 if (_wathingInstanceData != null)
                 {
-                    var addon = AddonFileHandle(_wathingInstanceData, filePath, type, fileExtension, addonInfoGetter);
-                    if (addon != null)
+                    string fileName;
+                    try
                     {
-                        AddonAdded?.Invoke(addon);
+                        fileName = Path.GetFileName(filePath);
                     }
+                    catch (Exception ex)
+                    {
+                        Runtime.DebugWrite(ex);
+                        return;
+                    }
+
+                    if (fileName == null) return;
+
+                    lock (_installedFilesLocker)
+                    {
+                        if (_installedFiles.Contains((instanceData.LocalId, fileName)))
+                        {
+                            _installedFiles.Remove((instanceData.LocalId, fileName));
+                            return;
+                        }
+                    }
+
+                    var addon = AddonFileHandle(_wathingInstanceData, filePath, type, fileExtension, addonInfoGetter);
+                    if (addon != null) AddonAdded?.Invoke(addon);
                 }
             });
         }
@@ -500,7 +523,6 @@ namespace Lexplosion.Logic.Management.Instances
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
 
-
             bool bigQuantity = locations.Count() > 10;
             BaseInstanceData watchingInstanceData = null;
             if (bigQuantity && _wathingInstanceData != null)
@@ -524,10 +546,7 @@ namespace Lexplosion.Logic.Management.Instances
                 }
             }
 
-            if (!bigQuantity)
-            {
-                return false;
-            }
+            if (!bigQuantity) return false;
 
             addons = GetInstalledAddons(type, instanceData);
 
@@ -708,10 +727,11 @@ namespace Lexplosion.Logic.Management.Instances
             {
                 InstalledAddonInfo addon = installedAddons[_projectId];
                 installedAddons.TryRemove(_projectId);
-                addon.RemoveFromDir(WithDirectory.InstancesPath + instanceId + "/");
+                addon?.RemoveFromDir(WithDirectory.GetInstancePath(instanceId));
                 installedAddons.Save();
             }
             IsInstalled = false;
+            AddonRemoved?.Invoke(this);
         }
 
         private CancellationTokenSource _cancelTokenSource = null;
@@ -733,7 +753,7 @@ namespace Lexplosion.Logic.Management.Instances
         /// <summary>
         /// Проверяет не устанавливается ли аддон в данный момент
         /// </summary>
-        /// <param name="_modpackInfo">Инфа о модпаке</param>
+        /// <param name="modpackInfo">Инфа о модпаке</param>
         /// <param name="addonId">Айди</param>
         /// <returns>true - устанавливается. Не устанавливается - false</returns>
         private static bool CheckInstalling(BaseInstanceData modpackInfo, string addonId)
@@ -802,49 +822,48 @@ namespace Lexplosion.Logic.Management.Instances
                 {
                     foreach (var dependencie in dependencies)
                     {
-                        if (!installedAddons.ContainsKey(dependencie.AddonId))
+                        if (installedAddons.ContainsKey(dependencie.AddonId)) continue;
+
+                        Lexplosion.Runtime.TaskRun(delegate ()
                         {
-                            Lexplosion.Runtime.TaskRun(delegate ()
+                            string modId = dependencie.AddonId;
+
+                            // если такой аддон уже скачивается - выходим нахуй
+                            if (CheckInstalling(_modpackInfo, modId)) return;
+
+                            var addonPointer = new Pointer<InstanceAddon>();
+                            addonPointer.Point = null;
+                            _chacheSemaphore.WaitOne();
+                            if (_addonsCatalogChache.ContainsKey(modId))
                             {
-                                string modId = dependencie.AddonId;
+                                addonPointer.Point = _addonsCatalogChache[modId];
+                                addonPointer.Point.IsInstalling = true;
+                            }
+                            _chacheSemaphore.Release();
 
-                                // если такой аддон уже скачивается - выходим нахуй
-                                if (CheckInstalling(_modpackInfo, modId)) return;
+                            string modKey = GetAddonKey(_modpackInfo, modId);
 
-                                Pointer<InstanceAddon> addonPointer = new Pointer<InstanceAddon>();
-                                addonPointer.Point = null;
-                                _chacheSemaphore.WaitOne();
-                                if (_addonsCatalogChache.ContainsKey(modId))
-                                {
-                                    addonPointer.Point = _addonsCatalogChache[modId];
-                                    addonPointer.Point.IsInstalling = true;
-                                }
-                                _chacheSemaphore.Release();
+                            _installingSemaphore.WaitOne(modKey);
+                            _installingAddons[modKey] = addonPointer;
+                            _installingSemaphore.Release(modKey);
 
-                                string modKey = GetAddonKey(_modpackInfo, modId);
+                            InstanceAddon addonInstance;
+                            if (addonPointer.Point == null)
+                            {
+                                IPrototypeAddon addon = dependencie.AddonPrototype;
+                                addon.DefineDefaultVersion();
 
                                 _installingSemaphore.WaitOne(modKey);
-                                _installingAddons[modKey] = addonPointer;
+                                addonInstance = new InstanceAddon(addon, _modpackInfo);
                                 _installingSemaphore.Release(modKey);
+                            }
+                            else
+                            {
+                                addonInstance = addonPointer.Point;
+                            }
 
-                                InstanceAddon addonInstance;
-                                if (addonPointer.Point == null)
-                                {
-                                    IPrototypeAddon addon = dependencie.AddonPrototype;
-                                    addon.DefineDefaultVersion();
-
-                                    _installingSemaphore.WaitOne(modKey);
-                                    addonInstance = new InstanceAddon(addon, _modpackInfo);
-                                    _installingSemaphore.Release(modKey);
-                                }
-                                else
-                                {
-                                    addonInstance = addonPointer.Point;
-                                }
-
-                                addonInstance.InstallLatestVersion(stateHandler, true, true);
-                            });
-                        }
+                            addonInstance.InstallLatestVersion(stateHandler, true, true);
+                        });
                     }
                 }
 
@@ -919,6 +938,12 @@ namespace Lexplosion.Logic.Management.Instances
                     }
 
                     installedAddons[_addonPrototype.ProjectId] = ressult.Value1;
+
+                    lock (_installedFilesLocker)
+                    {
+                        _installedFiles.Add((instanceId, FileName));
+                        AddonAdded?.Invoke(this);
+                    }
                 }
                 else
                 {
@@ -1571,18 +1596,16 @@ namespace Lexplosion.Logic.Management.Instances
         /// </summary>
         private void DownloadLogo(string url)
         {
-            if (url != null)
+            if (url == null) return;
+            try
             {
-                try
+                using (var webClient = new WebClient())
                 {
-                    using (var webClient = new WebClient())
-                    {
-                        webClient.Proxy = null;
-                        Logo = ImageTools.ResizeImage(webClient.DownloadData(url), 80, 80);
-                    }
+                    webClient.Proxy = null;
+                    Logo = ImageTools.ResizeImage(webClient.DownloadData(url), 80, 80);
                 }
-                catch { }
             }
+            catch { }
         }
 
         private void LoadAdditionalData(string logoUrl)
