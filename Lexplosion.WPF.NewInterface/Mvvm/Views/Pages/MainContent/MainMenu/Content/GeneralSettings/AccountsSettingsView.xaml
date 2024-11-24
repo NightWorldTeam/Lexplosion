@@ -353,7 +353,6 @@
 
             <controls:AdvancedButton
                 Command="{Binding OpenAccountFactoryCommand}"
-                Foreground="{DynamicResource DefaultButtonForegroundColorBrush}"
                 IconData="{DynamicResource PDAddCircle}"
                 IconPadding="2"
                 Style="{DynamicResource DefaultAdvancedButton}" />

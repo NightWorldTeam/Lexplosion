@@ -155,34 +155,30 @@ namespace Lexplosion.WPF.NewInterface.Core.Services
         /// <param name="color">Фон кнопки</param>
         private void ChangeDefaultAdvancedButtonColors(Color color)
         {
-            //color = Color.FromRgb(255, 0, 0);
             ////*** Default Button Background ***//
 
-            //_selectedThemeResourceDictionary["DefaultButtonBackgroundColor"] = color;
-            //_selectedThemeResourceDictionary["DefaultButtonBackgroundColorBrush"] = new SolidColorBrush(color);
+            _selectedThemeResourceDictionary["DefaultButtonBackgroundColor"] = color;
+            _selectedThemeResourceDictionary["DefaultButtonBackgroundColorBrush"] = new SolidColorBrush(color);
 
             ////*** Default Button Hover Background ***//
-
-            //_selectedThemeResourceDictionary["DefaultButtonHoverBackgroundColor"] = ColorTools.GetDarkerColor(color, 10);
-            //_selectedThemeResourceDictionary["DefaultButtonHoverBackgroundColorBrush"] = new SolidColorBrush(color);
-
-            //Console.WriteLine(_selectedThemeResourceDictionary["DefaultButtonHoverBackgroundColor"]);
-            //Console.WriteLine(_selectedThemeResourceDictionary["DefaultButtonHoverBackgroundColorBrush"]);
+            var hoverColor = ColorTools.GetDarkerColor(color, 10);
+            _selectedThemeResourceDictionary["DefaultButtonHoverBackgroundColor"] = hoverColor;
+            _selectedThemeResourceDictionary["DefaultButtonHoverBackgroundColorBrush"] = new SolidColorBrush(hoverColor);
 
             //*** Default Button Pressed Background ***//
-
-            //_selectedThemeResourceDictionary["DefaultButtonPressedBackgroundColor"] = color;
-            //_selectedThemeResourceDictionary["DefaultButtonPressedBackgroundColorBrush"] = new SolidColorBrush(color);
+            var pressedColor = ColorTools.GetDarkerColor(color, 20);
+            _selectedThemeResourceDictionary["DefaultButtonPressedBackgroundColor"] = pressedColor;
+            _selectedThemeResourceDictionary["DefaultButtonPressedBackgroundColorBrush"] = new SolidColorBrush(pressedColor);
 
             ////*** Default Button Disable Background ***//
-
-            //_selectedThemeResourceDictionary["DefaultButtonDisableBackgroundColor"] = color;
-            //_selectedThemeResourceDictionary["DefaultButtonDisableBackgroundColorBrush"] = new SolidColorBrush(color);
+            var disabledColor = ColorTools.GetDarkerColor(color, 70);
+            _selectedThemeResourceDictionary["DefaultButtonDisableBackgroundColor"] = disabledColor;
+            _selectedThemeResourceDictionary["DefaultButtonDisableBackgroundColorBrush"] = new SolidColorBrush(disabledColor);
 
             ///*** Default Button Foreground Color ***/
-
-            //_selectedThemeResourceDictionary["DefaultButtonForegroundColor"] = color;
-            //_selectedThemeResourceDictionary["DefaultButtonForegroundColorBrush"] = new SolidColorBrush(color);
+            var foregroundColor = ColorTools.ForegroundByColor(color);
+            _selectedThemeResourceDictionary["DefaultButtonForegroundColor"] = foregroundColor;
+            _selectedThemeResourceDictionary["DefaultButtonForegroundColorBrush"] = new SolidColorBrush(foregroundColor);
         }
     }
 }
