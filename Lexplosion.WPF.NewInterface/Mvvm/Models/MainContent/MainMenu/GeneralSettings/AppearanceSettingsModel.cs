@@ -12,8 +12,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
 {
     public sealed class AppearanceSettingsModel : ViewModelBase
     {
-        public Theme SelectedTheme { get => RuntimeApp.AppColorThemeService.SelectedTheme; }
-        public ActivityColor SelectedColor { get => RuntimeApp.AppColorThemeService.SelectedActivityColor; }
+        public Theme SelectedTheme { get => RuntimeApp.Settings.ThemeService.SelectedTheme; }
+        public ActivityColor SelectedColor { get => RuntimeApp.Settings.ThemeService.SelectedActivityColor; }
 
 
         private ObservableCollection<ActivityColor> _colors = new ObservableCollection<ActivityColor>();
@@ -22,6 +22,26 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
 
         private ObservableCollection<Theme> _themes = new ObservableCollection<Theme>();
         public IEnumerable<Theme> Themes { get => _themes; }
+
+
+        private string _newHexActivityColor;
+        public string NewHexActivityColor
+        {
+            get => _newHexActivityColor; set
+            {
+                _newHexActivityColor = value;
+
+                if (!string.IsNullOrWhiteSpace(value))
+                {
+                    SelectedColorChanged(new ActivityColor(value), true);
+                }
+                else 
+                {
+                    SelectedColorChanged(SelectedColor, true);
+                }
+                OnPropertyChanged();
+            }
+        }
 
 
         public AppearanceSettingsModel()
@@ -39,7 +59,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
             _themes.Add(new Theme("Light Punch", "LightColorTheme.xaml"));
             _themes.Add(new Theme("Open Space", "DarkColorTheme.xaml"));
 
-            RuntimeApp.AppColorThemeService.Themes = _themes;
+            RuntimeApp.Settings.ThemeService.Themes = _themes;
 
             foreach (var theme in _themes)
             {
@@ -47,7 +67,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
             }
 
             var savedTheme = _themes.FirstOrDefault(t => t.Name == GlobalData.GeneralSettings.ThemeName);
-            
+
             if (savedTheme == null)
                 _themes[0].IsSelected = true;
             else
@@ -79,9 +99,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
 
         private void SelectedColorChanged(ActivityColor color, bool isSelected)
         {
-            if (isSelected)
+            if (isSelected && color != null)
             {
-                RuntimeApp.AppColorThemeService.ChangeActivityColor(color.Brush.Color);
+                RuntimeApp.Settings.ThemeService.ChangeActivityColor(color.Brush.Color);
                 GlobalData.GeneralSettings.AccentColor = color.Brush.Color.ToString();
                 DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
             }
@@ -89,9 +109,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
 
         private void SelectedThemeChanged(Theme theme, bool isSelected)
         {
-            if (isSelected) 
+            if (isSelected)
             {
-                RuntimeApp.AppColorThemeService.ChangeTheme(theme);
+                RuntimeApp.Settings.ThemeService.ChangeTheme(theme);
                 GlobalData.GeneralSettings.ThemeName = theme.Name;
                 DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
             }

@@ -61,14 +61,14 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
                 PaintArea.Visibility = Visibility.Hidden;
             };
 
-            RuntimeApp.AppColorThemeService.BeforeAnimations.Add(() =>
+            RuntimeApp.Settings.ThemeService.BeforeAnimations.Add(() =>
             {
                 PaintArea.Opacity = 1;
                 PaintArea.Visibility = Visibility.Visible;
                 PaintArea.Background = CreateBrushFromVisual(this);
             });
 
-            RuntimeApp.AppColorThemeService.Animations.Add(() =>
+            RuntimeApp.Settings.ThemeService.Animations.Add(() =>
             {
                 PaintArea.BeginAnimation(OpacityProperty, _defaultChangeThemeAnimation);
                 CircleReveal.BeginAnimation(EllipseGeometry.RadiusXProperty, _defaultChangeThemeAnimation);
@@ -244,7 +244,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
 
         private void ChangeTheme_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            var themeService = RuntimeApp.AppColorThemeService;
+            var themeService = RuntimeApp.Settings.ThemeService;
             Theme selectedTheme = null;
             //if (themeService.SelectedTheme.Name == "Open Space")
             //{

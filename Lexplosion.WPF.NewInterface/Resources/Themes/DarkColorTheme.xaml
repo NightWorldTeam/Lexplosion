@@ -298,11 +298,17 @@
 
     <SolidColorBrush x:Key="DefaultButtonBackgroundColorBrush" Color="{DynamicResource ActivityColor}" />
 
-    <Color x:Key="DefaultButtonHoverBackgroundColor">#11DA79</Color>
-    <SolidColorBrush x:Key="DefaultButtonHoverBackgroundColorBrush" Color="{DynamicResource DefaultButtonHoverBackgroundColor}" />
+    <Color x:Key="DefaultButtonHoverBackgroundColor" x:Shared="True">#11DA79</Color>
+    <SolidColorBrush
+        x:Key="DefaultButtonHoverBackgroundColorBrush"
+        x:Shared="True"
+        Color="{DynamicResource DefaultButtonHoverBackgroundColor}" />
 
-    <Color x:Key="DefaultButtonPressedBackgroundColor">#0FC26C</Color>
-    <SolidColorBrush x:Key="DefaultButtonPressedBackgroundColorBrush" Color="{DynamicResource DefaultButtonPressedBackgroundColor}" />
+    <Color x:Key="DefaultButtonPressedBackgroundColor" x:Shared="True">#0FC26C</Color>
+    <SolidColorBrush
+        x:Key="DefaultButtonPressedBackgroundColorBrush"
+        x:Shared="True"
+        Color="{DynamicResource DefaultButtonPressedBackgroundColor}" />
 
     <Color x:Key="DefaultButtonDisableBackgroundColor">#434343</Color>
     <SolidColorBrush x:Key="DefaultButtonDisableBackgroundColorBrush" Color="{DynamicResource DefaultButtonDisableBackgroundColor}" />

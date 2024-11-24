@@ -32,7 +32,8 @@ namespace Lexplosion.WPF.NewInterface.NWColorTools
             G = g;
             B = b;
 
-            Luminance = 0.2126 * R + 0.7152 * G + 0.0722 * B;
+            //Luminance = 0.2126 * R + 0.7152 * G + 0.0722 * B;
+            Luminance = 0.299 * R + 0.587 * G + 0.114 * B;
             Max = Math.Max(Math.Max(r, g), b);
             Min = Math.Min(Math.Min(r, g), b);
 

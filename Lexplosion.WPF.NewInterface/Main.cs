@@ -4,6 +4,7 @@ using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.Tools;
+using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Notifications;
 using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Core.Services;
@@ -57,7 +58,8 @@ namespace Lexplosion.WPF.NewInterface
         private static double _splashWindowLeft;
         private static double _splashWindowTop;
 
-        internal static AppColorThemeService AppColorThemeService;
+        //internal static AppColorThemeService AppColorThemeService { get; set; }
+        internal static AppSettings Settings { get; set; }
 
         public static HeaderState HeaderState;
 
@@ -70,7 +72,7 @@ namespace Lexplosion.WPF.NewInterface
         {
             //SetupTestEnviroment();
             //return;
-            AppColorThemeService = new AppColorThemeService();
+            Settings = new AppSettings();
             //var title = "TKESKLTSRLK ALLALA";
             //var message = "Действие фильма будет происходить после событий, рассказанных в фильме «Миссия невыполнима: Последствия». В центре истории новые приключения агента Итана Ханта.";
 

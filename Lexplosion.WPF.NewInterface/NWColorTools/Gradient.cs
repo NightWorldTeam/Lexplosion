@@ -1,16 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Windows.Media;
 
 namespace Lexplosion.WPF.NewInterface.NWColorTools
 {
     public static class Gradient
     {
-        public static Color[] GenerateGradient(Color startColor, Color endColor, int lenght) 
+        public static Color[] GenerateGradient(Color startColor, Color endColor, int length)
+        {
+            var gradient = new Color[length];
+            for (int i = 0; i < length; i++)
+            {
+                var r = (byte)(startColor.R + (endColor.R - startColor.R) * (double)i / (length - 1));
+                var g = (byte)(startColor.G + (endColor.G - startColor.G) * (double)i / (length - 1));
+                var b = (byte)(startColor.B + (endColor.B - startColor.B) * (double)i / (length - 1));
+                gradient[i] = Color.FromRgb(r, g, b);
+            }
+            return gradient;
+        }
+
+        public static Color[] GenerateGradient(Color startColor, Color endColor, int length, bool correctToEnd = true)
         {
             var startHSV = new HSV(new ColorModel(startColor.R, startColor.G, startColor.B));
             var endHSV = new HSV(new ColorModel(endColor.R, endColor.G, endColor.B));
@@ -19,34 +27,20 @@ namespace Lexplosion.WPF.NewInterface.NWColorTools
             {
                 endHSV.Hue += 360;
             }
-            else if (startHSV.Hue - endHSV.Hue < -180) 
+            else if (startHSV.Hue - endHSV.Hue < -180)
             {
                 startHSV.Hue += 360;
             }
 
-            var hues = LinearInterpolate((int)startHSV.Hue, (int)endHSV.Hue, lenght);
-            var saturations = LinearInterpolate(startHSV.Saturation, endHSV.Saturation, lenght);
-            var values = LinearInterpolate(startHSV.Value, endHSV.Value, lenght);
+            var hues = LinearInterpolate((int)startHSV.Hue, (int)endHSV.Hue, length);
+            var saturations = LinearInterpolate(startHSV.Saturation, endHSV.Saturation, length);
+            var values = LinearInterpolate(startHSV.Value, endHSV.Value, length);
             Console.WriteLine("Linear Interpolate executed");
-            /**
-            HSV[] HSVs = new HSV[lenght];
 
-            for (var i = 0; i < lenght; i++) 
+            var colors = new Color[length];
+            var HSVs = new ColorModel[length];
+            for (var i = 0; i < length; i++)
             {
-                HSVs[i] = new HSV(hues[i], saturations[i], values[i]);
-            }
-
-            var colorModel = new ColorModel[lenght];
-
-            for (var i = 0; i < lenght; i++) 
-            {
-                colorModel[i] = 
-            }
-            */
-
-            var colors = new Color[lenght];
-            var HSVs = new ColorModel[lenght];
-            for (var i = 0; i < lenght; i++) {
                 HSVs[i] = new HSV(hues[i], saturations[i], values[i]).ToColorModel();
             }
 
@@ -55,7 +49,7 @@ namespace Lexplosion.WPF.NewInterface.NWColorTools
             var blues = ColorModel.GetBluesFromArray(HSVs);
 
             Console.WriteLine("Building Colors...");
-            for (var i = 0; i < lenght; i++)
+            for (var i = 0; i < length; i++)
             {
                 colors[i] = Color.FromRgb(reds[i], greens[i], blues[i]);
             }
@@ -63,15 +57,14 @@ namespace Lexplosion.WPF.NewInterface.NWColorTools
             return colors;
         }
 
-        public static double[] LinearInterpolate(double start, double end, int length) 
+        public static double[] LinearInterpolate(double start, double end, int length)
         {
-
             var stepCount = length - 1;
             double slope = (double)(end - start) / stepCount;
             double tmpStart = start;
             var gradientValues = new double[length];
 
-            for (var i = 0; i < stepCount; i++) 
+            for (var i = 0; i < stepCount; i++)
             {
                 gradientValues[i] = tmpStart;
                 tmpStart += slope;
@@ -81,7 +74,7 @@ namespace Lexplosion.WPF.NewInterface.NWColorTools
             return gradientValues;
         }
 
-        public static int[] LinearInterpolate(int start, int end, int length) 
+        public static int[] LinearInterpolate(int start, int end, int length)
         {
             var stepCount = length - 1;
             double slope = (double)(end - start) / stepCount;

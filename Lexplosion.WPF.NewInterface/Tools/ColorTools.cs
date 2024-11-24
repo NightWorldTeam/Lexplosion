@@ -57,7 +57,6 @@ namespace Lexplosion.WPF.NewInterface.Tools
             color.G = (byte)newG;
             color.B = (byte)newB;
 
-
             //Runtime.DebugWrite(color.R + " " + color.G + " " + color.B);
             return color;
 

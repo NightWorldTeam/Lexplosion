@@ -99,6 +99,7 @@
     <Compile Include="Controls\LaunchButton\LaunchButton.cs" />
     <Compile Include="Controls\Paginator\PaginatorOptions.cs" />
     <Compile Include="Controls\ToastMessage\ToastMessage.cs" />
+    <Compile Include="Core\AppSettings.cs" />
     <Compile Include="Core\Converters\MultiValueConverter\StyleSelectorConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\ImagePathValidateConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\RowElementCountConverter.cs" />

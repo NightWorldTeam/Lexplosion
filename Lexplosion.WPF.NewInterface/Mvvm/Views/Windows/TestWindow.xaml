@@ -53,84 +53,136 @@
             </Style.Triggers>
             <!--<Setter Property="Width" Value="{Binding ActualWidth, ElementName=TestWindowName, Converter={converters:WindowWidthToXProcentWidth}, ConverterParameter=60}" />-->
         </Style>
+
+
     </Window.Resources>
 
     <Grid>
 
-        <Border Padding="32" Background="{DynamicResource SeparateSolidColorBrush}">
-            <Border.LayoutTransform>
-                <ScaleTransform ScaleX="1" ScaleY="1" />
-            </Border.LayoutTransform>
-            <Grid>
-                <StackPanel
-                    Margin="0,300,0,0"
-                    HorizontalAlignment="Left"
-                    Orientation="Horizontal">
-                    <controls:AdvancedButton
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Visibility="Collapsed">
+            <TextBox x:Name="StartTB" />
+            <TextBox x:Name="EndTB" />
+            <Button Click="Button_Click_1" Content="Apply" />
+        </StackPanel>
+
+        <ScrollViewer Grid.Column="1" Visibility="Collapsed">
+            <ItemsControl x:Name="Colors">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type Color}">
+                        <Border Width="400" Height="32">
+                            <Border.Background>
+                                <SolidColorBrush Color="{Binding}" />
+                            </Border.Background>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <Grid Grid.ColumnSpan="2" Visibility="Visible">
+
+            <Border Padding="32" Background="{DynamicResource SeparateSolidColorBrush}">
+                <Border.LayoutTransform>
+                    <ScaleTransform ScaleX="1" ScaleY="1" />
+                </Border.LayoutTransform>
+                <Grid>
+                    <StackPanel
+                        Margin="0,300,0,0"
                         HorizontalAlignment="Left"
-                        Style="{StaticResource md-default}"
-                        Text="Button 40px" />
+                        Orientation="Horizontal">
+                        <controls:AdvancedButton
+                            HorizontalAlignment="Left"
+                            Style="{StaticResource md-default}"
+                            Text="Button 40px" />
 
-                    <controls:AdvancedButton
-                        Margin="10,0,0,0"
-                        HorizontalAlignment="Left"
-                        Style="{StaticResource md-default}"
-                        Text="Button 46px" />
-                </StackPanel>
+                        <controls:AdvancedButton
+                            Margin="10,0,0,0"
+                            HorizontalAlignment="Left"
+                            Style="{StaticResource md-default}"
+                            Text="Button 46px" />
+                    </StackPanel>
 
-                <WrapPanel>
-                    <controls:AdvancedButton
-                        Padding="32,6"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Top"
-                        CornerRadius="15"
-                        FontSize="14"
-                        Text="Default" />
+                    <WrapPanel>
+                        <controls:AdvancedButton
+                            Padding="32,6"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Top"
+                            CornerRadius="15"
+                            FontSize="14"
+                            Text="Default" />
 
-                    <controls:AdvancedButton
-                        Margin="8,0,0,0"
-                        Padding="24,6,32,6"
-                        VerticalAlignment="Top"
-                        CornerRadius="5"
-                        FontSize="16"
-                        Style="{StaticResource DefaultAdvancedButton}"
-                        Text="Test" />
+                        <controls:AdvancedButton
+                            Margin="8,0,0,0"
+                            Padding="24,6,32,6"
+                            VerticalAlignment="Top"
+                            CornerRadius="5"
+                            FontSize="16"
+                            Style="{StaticResource DefaultAdvancedButton}"
+                            Text="Test" />
 
-                    <controls:AdvancedTextBox
-                        x:Name="hex"
-                        Width="120"
-                        Margin="16,0,0,0"
-                        VerticalAlignment="Top" />
+                        <controls:AdvancedTextBox
+                            x:Name="hex"
+                            Width="120"
+                            Margin="16,0,0,0"
+                            VerticalAlignment="Top" />
 
-                    <ComboBox
-                        Height="32"
-                        Margin="16,0,0,0"
-                        VerticalAlignment="Top"
-                        SelectedIndex="0">
-                        <ComboBoxItem>Item 1</ComboBoxItem>
-                        <ComboBoxItem>Item 2</ComboBoxItem>
-                        <ComboBoxItem>Item 3</ComboBoxItem>
-                        <ComboBoxItem>Item 4</ComboBoxItem>
-                        <ComboBoxItem>Item 5</ComboBoxItem>
-                        <ComboBoxItem>Item 6</ComboBoxItem>
-                        <ComboBoxItem>Item 7</ComboBoxItem>
-                        <ComboBoxItem>Item 8</ComboBoxItem>
-                        <ComboBoxItem>Item 9</ComboBoxItem>
-                        <ComboBoxItem>Item 10</ComboBoxItem>
-                        <ComboBoxItem>Item 11</ComboBoxItem>
-                        <ComboBoxItem>Item 12</ComboBoxItem>
-                        <ComboBoxItem>Item 13</ComboBoxItem>
-                        <ComboBoxItem>Item 14</ComboBoxItem>
-                        <ComboBoxItem>Item 15</ComboBoxItem>
-                        <ComboBoxItem>Item 16</ComboBoxItem>
-                    </ComboBox>
+                        <ComboBox
+                            Height="32"
+                            Margin="16,0,0,0"
+                            VerticalAlignment="Top"
+                            SelectedIndex="0">
+                            <ComboBoxItem>Item 1</ComboBoxItem>
+                            <ComboBoxItem>Item 2</ComboBoxItem>
+                            <ComboBoxItem>Item 3</ComboBoxItem>
+                            <ComboBoxItem>Item 4</ComboBoxItem>
+                            <ComboBoxItem>Item 5</ComboBoxItem>
+                            <ComboBoxItem>Item 6</ComboBoxItem>
+                            <ComboBoxItem>Item 7</ComboBoxItem>
+                            <ComboBoxItem>Item 8</ComboBoxItem>
+                            <ComboBoxItem>Item 9</ComboBoxItem>
+                            <ComboBoxItem>Item 10</ComboBoxItem>
+                            <ComboBoxItem>Item 11</ComboBoxItem>
+                            <ComboBoxItem>Item 12</ComboBoxItem>
+                            <ComboBoxItem>Item 13</ComboBoxItem>
+                            <ComboBoxItem>Item 14</ComboBoxItem>
+                            <ComboBoxItem>Item 15</ComboBoxItem>
+                            <ComboBoxItem>Item 16</ComboBoxItem>
+                        </ComboBox>
 
-                    <StackPanel Margin="32,0,0,0">
-                        <WrapPanel Margin="0,0,0,32" Orientation="Horizontal">
+                        <StackPanel Margin="32,0,0,0">
+                            <WrapPanel Margin="0,0,0,32" Orientation="Horizontal">
+                                <Border
+                                    Height="32"
+                                    Margin="0,0,16,0"
+                                    Padding="10,0,10,0"
+                                    Background="#167FFC"
+                                    CornerRadius="5">
+                                    <TextBlock
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        FontSize="14"
+                                        FontWeight="Medium"
+                                        Foreground="White"
+                                        Text="Button 32px" />
+                                </Border>
+
+                                <!--  IconData="{StaticResource PDMemory}"  -->
+                                <controls:AdvancedButton
+                                    FontSize="14"
+                                    IsEnabled="False"
+                                    Style="{StaticResource sm-default}"
+                                    Text="Button 32px" />
+                            </WrapPanel>
+
                             <Border
-                                Height="32"
-                                Margin="0,0,16,0"
-                                Padding="10,0,10,0"
+                                Height="40"
+                                Margin="0,0,0,32"
+                                Padding="14,0,14,0"
                                 Background="#167FFC"
                                 CornerRadius="5">
                                 <TextBlock
@@ -139,69 +191,47 @@
                                     FontSize="14"
                                     FontWeight="Medium"
                                     Foreground="White"
-                                    Text="Button 32px" />
+                                    Text="Button 40px" />
+
                             </Border>
 
-                            <!--  IconData="{StaticResource PDMemory}"  -->
                             <controls:AdvancedButton
+                                Margin="0,0,0,32"
                                 FontSize="14"
-                                IsEnabled="False"
-                                Style="{StaticResource sm-default}"
-                                Text="Button 32px" />
-                        </WrapPanel>
-
-                        <Border
-                            Height="40"
-                            Margin="0,0,0,32"
-                            Padding="14,0,14,0"
-                            Background="#167FFC"
-                            CornerRadius="5">
-                            <TextBlock
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                FontSize="14"
-                                FontWeight="Medium"
-                                Foreground="White"
+                                IconData="{StaticResource PDMemory}"
+                                Style="{StaticResource md-default}"
                                 Text="Button 40px" />
 
-                        </Border>
+                            <Border
+                                Height="40"
+                                Margin="0,0,0,32"
+                                Padding="14,0,14,0"
+                                Background="#167FFC"
+                                CornerRadius="5">
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontSize="16"
+                                    FontWeight="Medium"
+                                    Foreground="White"
+                                    Text="Button 46px" />
 
-                        <controls:AdvancedButton
-                            Margin="0,0,0,32"
-                            FontSize="14"
-                            IconData="{StaticResource PDMemory}"
-                            Style="{StaticResource md-default}"
-                            Text="Button 40px" />
+                            </Border>
 
-                        <Border
-                            Height="40"
-                            Margin="0,0,0,32"
-                            Padding="14,0,14,0"
-                            Background="#167FFC"
-                            CornerRadius="5">
-                            <TextBlock
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                FontSize="16"
-                                FontWeight="Medium"
-                                Foreground="White"
+                            <controls:AdvancedButton
+                                Margin="0,0,0,32"
+                                FontSize="14"
+                                IconData="{StaticResource PDMemory}"
+                                Style="{StaticResource lg-default}"
                                 Text="Button 46px" />
-
-                        </Border>
-
-                        <controls:AdvancedButton
-                            Margin="0,0,0,32"
-                            FontSize="14"
-                            IconData="{StaticResource PDMemory}"
-                            Style="{StaticResource lg-default}"
-                            Text="Button 46px" />
-                    </StackPanel>
-                </WrapPanel>
-                <!--  Text="Test Label"  -->
-                <!--  IconData="{StaticResource PDNightworld}"  -->
+                        </StackPanel>
+                    </WrapPanel>
+                    <!--  Text="Test Label"  -->
+                    <!--  IconData="{StaticResource PDNightworld}"  -->
 
 
-            </Grid>
-        </Border>
+                </Grid>
+            </Border>
+        </Grid>
     </Grid>
 </Window>

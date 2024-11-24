@@ -6,6 +6,8 @@ using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Tools;
 using Lexplosion.WPF.NewInterface.Extensions;
 using System.Linq;
+using Lexplosion.WPF.NewInterface.NWColorTools;
+using System.Threading;
 
 namespace Lexplosion.WPF.NewInterface.Core.Services
 {
@@ -15,8 +17,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Services
         public event Action ActivityColorChanged;
 
         private ResourceDictionary _selectedThemeResourceDictionary;
-
-        private Color _selectedActivityColor; 
+        private Color _selectedActivityColor;
 
 
         #region Properties
@@ -37,42 +38,73 @@ namespace Lexplosion.WPF.NewInterface.Core.Services
 
         public AppColorThemeService()
         {
-            
+
         }
 
 
         #region Public Methods
 
 
-        public void ChangeActivityColor(Color color) 
+        public void ChangeActivityColor(Color color, bool animatedChanging = false)
         {
-            if (_selectedThemeResourceDictionary != null)
+            if (_selectedThemeResourceDictionary == null)
+            {
+                return;
+            }
+
+            if (animatedChanging)
+            {
+                Runtime.TaskRun(() =>
+                {
+                    var currentActivityColor = (Color)_selectedThemeResourceDictionary["ActivityColor"];
+                    var intervalColors = Gradient.GenerateGradient(currentActivityColor, color, 50);
+
+                    foreach (var gradColor in intervalColors)
+                    {
+                        App.Current.Dispatcher.Invoke(() =>
+                        {
+                            _selectedThemeResourceDictionary["ActivityColor"] = gradColor;
+                            _selectedThemeResourceDictionary["ActivitySolidColorBrush"] = new SolidColorBrush(gradColor);
+                        });
+
+                        Thread.Sleep(2);
+                    }
+
+                    App.Current.Dispatcher.Invoke(() =>
+                    {
+                        _selectedThemeResourceDictionary["ActivityColor"] = color;
+                        _selectedThemeResourceDictionary["ActivitySolidColorBrush"] = new SolidColorBrush(color);
+                        ActivityColorChanged?.Invoke();
+                        _selectedActivityColor = color;
+
+                        ChangeDefaultAdvancedButtonColors(color);
+                    });
+                });
+            }
+            else
             {
                 _selectedThemeResourceDictionary["ActivityColor"] = color;
                 _selectedThemeResourceDictionary["ActivitySolidColorBrush"] = new SolidColorBrush(color);
-
-                _selectedActivityColor = color;
-
-
-
-
                 ActivityColorChanged?.Invoke();
+                //_selectedActivityColor = color;
+
+                ChangeDefaultAdvancedButtonColors(color);
             }
         }
 
-        public void AddTheme(ResourceDictionary resourceDictionary) 
+        public void AddTheme(ResourceDictionary resourceDictionary)
         {
             var theme = new Theme(resourceDictionary);
             _themes.Add(theme);
         }
 
-        public void AddAndActiveTheme(ResourceDictionary resourceDictionary) 
+        public void AddAndActiveTheme(ResourceDictionary resourceDictionary)
         {
             AddTheme(resourceDictionary);
             ChangeTheme(_themes[_themes.Count - 1]);
         }
 
-        public void ChangeTheme(Theme theme) 
+        public void ChangeTheme(Theme theme)
         {
             var currentThemeName = string.Empty;
             var resourceDictionaries = new List<ResourceDictionary>();
@@ -121,32 +153,36 @@ namespace Lexplosion.WPF.NewInterface.Core.Services
         /// Изменяет цвет у всех advanced button со стандартным стилем.
         /// </summary>
         /// <param name="color">Фон кнопки</param>
-        private void ChangeDefaultAdvancedButtonColors(Color color) 
+        private void ChangeDefaultAdvancedButtonColors(Color color)
         {
-            //*** Default Button Background ***//
+            //color = Color.FromRgb(255, 0, 0);
+            ////*** Default Button Background ***//
 
-            _selectedThemeResourceDictionary["DefaultButtonBackgroundColor"] = color;
-            _selectedThemeResourceDictionary["DefaultButtonBackgroundColorBrush"] = new SolidColorBrush(color);
+            //_selectedThemeResourceDictionary["DefaultButtonBackgroundColor"] = color;
+            //_selectedThemeResourceDictionary["DefaultButtonBackgroundColorBrush"] = new SolidColorBrush(color);
 
-            //*** Default Button Hover Background ***//
+            ////*** Default Button Hover Background ***//
 
-            _selectedThemeResourceDictionary["DefaultButtonHoverBackgroundColor"] = ColorTools.GetDarkerColor(color, 10);
-            _selectedThemeResourceDictionary["DefaultButtonHoverBackgroundColorBrush"] = new SolidColorBrush(color);
+            //_selectedThemeResourceDictionary["DefaultButtonHoverBackgroundColor"] = ColorTools.GetDarkerColor(color, 10);
+            //_selectedThemeResourceDictionary["DefaultButtonHoverBackgroundColorBrush"] = new SolidColorBrush(color);
+
+            //Console.WriteLine(_selectedThemeResourceDictionary["DefaultButtonHoverBackgroundColor"]);
+            //Console.WriteLine(_selectedThemeResourceDictionary["DefaultButtonHoverBackgroundColorBrush"]);
 
             //*** Default Button Pressed Background ***//
 
-            _selectedThemeResourceDictionary["DefaultButtonPressedBackgroundColor"] = color;
-            _selectedThemeResourceDictionary["DefaultButtonPressedBackgroundColorBrush"] = new SolidColorBrush(color);
+            //_selectedThemeResourceDictionary["DefaultButtonPressedBackgroundColor"] = color;
+            //_selectedThemeResourceDictionary["DefaultButtonPressedBackgroundColorBrush"] = new SolidColorBrush(color);
 
-            //*** Default Button Disable Background ***//
+            ////*** Default Button Disable Background ***//
 
-            _selectedThemeResourceDictionary["DefaultButtonDisableBackgroundColor"] = color;
-            _selectedThemeResourceDictionary["DefaultButtonDisableBackgroundColorBrush"] = new SolidColorBrush(color);
+            //_selectedThemeResourceDictionary["DefaultButtonDisableBackgroundColor"] = color;
+            //_selectedThemeResourceDictionary["DefaultButtonDisableBackgroundColorBrush"] = new SolidColorBrush(color);
 
-            /*** Default Button Foreground Color ***/
+            ///*** Default Button Foreground Color ***/
 
-            _selectedThemeResourceDictionary["DefaultButtonForegroundColor"] = color;
-            _selectedThemeResourceDictionary["DefaultButtonForegroundColorBrush"] = new SolidColorBrush(color);
+            //_selectedThemeResourceDictionary["DefaultButtonForegroundColor"] = color;
+            //_selectedThemeResourceDictionary["DefaultButtonForegroundColorBrush"] = new SolidColorBrush(color);
         }
     }
 }
