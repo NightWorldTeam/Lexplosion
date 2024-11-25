@@ -25,7 +25,10 @@ namespace Lexplosion.Global
             GeneralSettings = Settings.GetDefault();
             var loadedSettings = DataFilesManager.GetSettings();
             Runtime.DebugWrite($"loadedSettings GamePath: {loadedSettings?.GamePath}, theme: {loadedSettings?.ThemeName}");
+            if (string.IsNullOrWhiteSpace(loadedSettings?.ThemeName))
+            {
 
+            }
             GeneralSettings.Merge(loadedSettings);
             Runtime.DebugWrite($"GamePath: {GlobalData.GeneralSettings?.GamePath}, theme: {GlobalData.GeneralSettings?.ThemeName}");
         }

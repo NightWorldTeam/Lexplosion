@@ -65,6 +65,9 @@
     <Compile Include="Global.cs" />
     <Compile Include="Logic\CoreServicesManager.cs" />
     <Compile Include="Logic\FileSystem\FreeSourceInstanceInstaller.cs" />
+    <Compile Include="Logic\Management\Addons\AddonsManager.cs" />
+    <Compile Include="Logic\Management\Addons\InstaceAddonsSynchronizer.cs" />
+    <Compile Include="Logic\Management\Addons\InstanceAddon.cs" />
     <Compile Include="Logic\Management\Importers\CurseforgeImportManager.cs" />
     <Compile Include="Logic\Management\Importers\ImportExecutor.cs" />
     <Compile Include="Logic\Management\Importers\ModrinthImportManager.cs" />
@@ -87,7 +90,6 @@
     <Compile Include="Logic\Management\Addons\AddonsCatalog.cs" />
     <Compile Include="Logic\Management\Addons\AddonsPrototypesCreater.cs" />
     <Compile Include="Logic\Management\Addons\CurseforgeAddon.cs" />
-    <Compile Include="Logic\Management\Addons\InstanceAddon.cs" />
     <Compile Include="Logic\Management\Addons\IPrototypeAddon.cs" />
     <Compile Include="Logic\Management\Addons\ModrinthAddon.cs" />
     <Compile Include="Logic\Management\Authentication\Authentication.cs" />

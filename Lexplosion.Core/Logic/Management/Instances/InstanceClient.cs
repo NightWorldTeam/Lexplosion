@@ -19,6 +19,7 @@ using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.Logic.Management.Importers;
+using Lexplosion.Logic.Management.Addons;
 
 namespace Lexplosion.Logic.Management.Instances
 {
@@ -387,7 +388,7 @@ namespace Lexplosion.Logic.Management.Instances
                 ThreadPool.QueueUserWorkItem(delegate (object o)
                 {
                     var sodium = ModrinthApi.GetProject("AANobbMI");
-                    var addon = InstanceAddon.CreateModrinthAddon(client.GetBaseData, sodium);
+                    var addon = AddonsManager.GetManager(client.GetBaseData).CreateModrinthAddon(sodium);
                     var stateData = new DynamicStateHandler<SetValues<InstanceAddon, DownloadAddonRes>, InstanceAddon.InstallAddonState>(delegate (SetValues<InstanceAddon, DownloadAddonRes> a, InstanceAddon.InstallAddonState b) { });
                     addon.InstallLatestVersion(stateData, downloadDependencies: true);
                 });
