@@ -11,6 +11,7 @@ using Lexplosion.Tools;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories.Groups;
 using Lexplosion.WPF.NewInterface.Core.GameExtensions;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
+using Lexplosion.Logic.Management.Addons;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 {
@@ -79,7 +80,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 
             Runtime.TaskRun(() =>
             {
-                var installedAddons = InstanceAddon.GetInstalledAddons(addonType, instanceData);
+                var installedAddons = AddonsManager.GetManager(instanceData).GetInstalledAddons(addonType);
                 App.Current.Dispatcher.Invoke(() =>
                 {
                     InstalledAddons = new(installedAddons);

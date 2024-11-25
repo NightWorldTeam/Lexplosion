@@ -1,4 +1,4 @@
-﻿using Lexplosion.Logic.Management.Instances;
+﻿using Lexplosion.Logic.Management.Addons;
 using Lexplosion.WPF.NewInterface.Commands;
 using System.Windows.Input;
 

@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories.Groups;
+using Lexplosion.Logic.Management.Addons;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 {
@@ -126,7 +127,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
             IsLoading = true;
             Runtime.TaskRun(() =>
             {
-                var addons = InstanceAddon.GetAddonsCatalog(_projectSource, _instanceData, _addonType, BuildSearchParams()).List;
+                var addons = AddonsManager.GetManager(_instanceData).GetAddonsCatalog(_projectSource, _addonType, BuildSearchParams()).List;
                 //Console.WriteLine(_addonType);
                 App.Current.Dispatcher.Invoke(() =>
                 {

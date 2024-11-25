@@ -1,4 +1,5 @@
-﻿using Lexplosion.Logic.Management.Instances;
+﻿using Lexplosion.Logic.Management.Addons;
+using Lexplosion.Logic.Management.Instances;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using System;
@@ -158,7 +159,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
             Runtime.TaskRun(() =>
             {
                 _baseInstanceData = instanceModelBase.InstanceData;
-                var instanceAddons = InstanceAddon.GetInstalledAddons(type, _baseInstanceData);
+                var instanceAddons = AddonsManager.GetManager(_baseInstanceData).GetInstalledAddons(type);
 
                 App.Current.Dispatcher.Invoke(() => 
                 {
@@ -168,9 +169,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
                     IsAddonsLoading = false;
                     OnPropertyChanged(nameof(AddonsCount));
 
-                    InstanceAddon.StartWathingDirecoty(_baseInstanceData);
-                    InstanceAddon.AddonAdded += InstanceAddon_AddonAdded;
-                    InstanceAddon.AddonRemoved += InstanceAddon_AddonRemoved;
+                    AddonsManager.GetManager(_baseInstanceData).StartWathingDirecoty();
+                    AddonsManager.GetManager(_baseInstanceData).AddonAdded += InstanceAddon_AddonAdded;
+                    AddonsManager.GetManager(_baseInstanceData).AddonRemoved += InstanceAddon_AddonRemoved;
                 });
             });
 
@@ -181,7 +182,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
                     if (files.Count() > 10)
                         IsAddonsLoading = true;
 
-                    InstanceAddon.AddAddons(files, _baseInstanceData, type, out var addons);
+                    AddonsManager.GetManager(_baseInstanceData).AddAddons(files, type, out var addons);
 
                     if (addons == null)
                         return;
@@ -255,7 +256,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
             IsAddonsLoading = true;
             Runtime.TaskRun(() =>
             {
-                var installedAddons = InstanceAddon.GetInstalledAddons(Type, _baseInstanceData);
+                var installedAddons = AddonsManager.GetManager(_baseInstanceData).GetInstalledAddons(Type);
                 //IsAddonsLoaded = !false;
                 SetAddons(installedAddons, true, true);
             });

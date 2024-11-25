@@ -1,5 +1,7 @@
-﻿using Lexplosion.Logic.Management.Instances;
+﻿using Lexplosion.Logic.Management.Addons;
+using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network.Web;
+using Lexplosion.Logic.Objects;
 using Lexplosion.Tools;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Objects;
@@ -8,6 +10,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Windows.Media.Effects;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 {
@@ -74,7 +77,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 
     public sealed class CurseforgeRepositoryModel : ViewModelBase
     {
-        public static ReadOnlyCollection<string> SortByArgs { get; } = new ReadOnlyCollection<string>(new string[] 
+        public static ReadOnlyCollection<string> SortByArgs { get; } = new ReadOnlyCollection<string>(new string[]
         {
             "Relevancy",
             "Popularity",
@@ -103,20 +106,20 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 
 
         private string _searchFilter = string.Empty;
-        public string SearchFilter 
+        public string SearchFilter
         {
-            get => _searchFilter; set 
+            get => _searchFilter; set
             {
                 _searchFilter = value;
                 Runtime.DebugWrite(_searchFilter);
                 OnPropertyChanged();
-            } 
+            }
         }
 
         private uint _currentPageIndex = 0;
-        public uint CurrentPageIndex 
-        { 
-            get => _currentPageIndex; set 
+        public uint CurrentPageIndex
+        {
+            get => _currentPageIndex; set
             {
                 _currentPageIndex = value;
                 OnPropertyChanged();
@@ -171,13 +174,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
         #endregion Constructors
 
 
-        public void Search() 
+        public void Search()
         {
             LoadPageContent();
         }
 
 
-        public void OnPageIndexChanged(uint index) 
+        public void OnPageIndexChanged(uint index)
         {
             CurrentPageIndex = index;
             LoadPageContent();
@@ -190,13 +193,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
             OnPropertyChanged(nameof(IsContentLoading));
             Lexplosion.Runtime.TaskRun(() =>
             {
-                var addonsList = InstanceAddon.GetAddonsCatalog(
-                    _instanceData, (int)PageSize, (int)CurrentPageIndex, _addonType, CurseforgeApi.GetCategories(_addonType.ToCfProjectType())[0], SearchFilter
-                    );
+                var searchParams = new CurseforgeSearchParams(SearchFilter, string.Empty, [CurseforgeApi.GetCategories(_addonType.ToCfProjectType())[0]], (int)PageSize, (int)CurrentPageIndex, CfSortField.Featured);
+
+                var addonsList = AddonsManager.GetManager(_instanceData).GetAddonsCatalog(ProjectSource.Curseforge, _addonType, searchParams);
 
                 App.Current.Dispatcher.Invoke(() =>
                 {
-                    _addonsList = new ObservableCollection<CurseforgeAddon>(addonsList.Select(i => new CurseforgeAddon(i)));
+                    _addonsList = new ObservableCollection<CurseforgeAddon>(addonsList.List.Select(i => new CurseforgeAddon(i)));
                     OnPropertyChanged(nameof(AddonList));
                     IsContentLoading = false;
                     OnPropertyChanged(nameof(IsContentLoading));
@@ -204,7 +207,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
             });
         }
 
-        public void InstallAddon(InstanceAddon addon) 
+        public void InstallAddon(InstanceAddon addon)
         {
             var stateData = new DynamicStateData<SetValues<InstanceAddon, DownloadAddonRes>, InstanceAddon.InstallAddonState>();
             stateData.StateChanged += OnInstanceAddonInstallingStateChanged;
@@ -214,13 +217,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 
         private void OnInstanceAddonInstallingStateChanged(SetValues<InstanceAddon, DownloadAddonRes> arg, InstanceAddon.InstallAddonState state)
         {
-            switch (state) 
+            switch (state)
             {
                 case InstanceAddon.InstallAddonState.StartDownload:
 
                     break;
-                case InstanceAddon.InstallAddonState.EndDownload: 
-                    
+                case InstanceAddon.InstallAddonState.EndDownload:
+
                     break;
             }
         }

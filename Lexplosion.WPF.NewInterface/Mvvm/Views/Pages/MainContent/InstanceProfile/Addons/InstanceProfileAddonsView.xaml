@@ -10,7 +10,7 @@
     xmlns:instanceprofile="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile"
     xmlns:lexplosion="clr-namespace:Lexplosion;assembly=Lexplosion.Core"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.InstanceProfile"
-    xmlns:logicInstances="clr-namespace:Lexplosion.Logic.Management.Instances;assembly=Lexplosion.Core"
+    xmlns:logicInstances="clr-namespace:Lexplosion.Logic.Management.Addons;assembly=Lexplosion.Core"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:valueconverters="clr-namespace:Lexplosion.WPF.NewInterface.Core.Converters"
     d:DataContext="{d:DesignInstance Type=instanceprofile:InstanceAddonsContainerViewModel}"

@@ -13,6 +13,7 @@ using Lexplosion.Logic.Management.Instances;
 using Lexplosion.WPF.NewInterface.Core.Notifications;
 using System;
 using Lexplosion.Logic.Management;
+using Lexplosion.Logic.Management.Addons;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile
 {
@@ -116,7 +117,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             BackCommand = new RelayCommand((obj) =>
             {
                 // Останавливаем обновление директорий сборки.
-                InstanceAddon.StopWatchingDirectory();
+                AddonsManager.GetManager(instanceModelBase.InstanceData).StopWatchingDirectory();
                 toMainMenuLayoutCommand.Execute(obj);
             });
 

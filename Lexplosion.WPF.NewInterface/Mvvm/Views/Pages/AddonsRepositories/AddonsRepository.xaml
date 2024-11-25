@@ -5,7 +5,7 @@
     xmlns:controls="clr-namespace:Lexplosion.WPF.NewInterface.Controls"
     xmlns:converters="clr-namespace:Lexplosion.WPF.NewInterface.Core.Converters"
     xmlns:core="clr-namespace:Lexplosion.WPF.NewInterface.Core"
-    xmlns:coreInstances="clr-namespace:Lexplosion.Logic.Management.Instances;assembly=Lexplosion.Core"
+    xmlns:coreInstances="clr-namespace:Lexplosion.Logic.Management.Addons;assembly=Lexplosion.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
     xmlns:groups="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories.Groups"

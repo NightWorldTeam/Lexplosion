@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using Lexplosion.WPF.NewInterface.Stores;
 using System.Windows.Input;
+using Lexplosion.Logic.Management.Addons;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
 {
