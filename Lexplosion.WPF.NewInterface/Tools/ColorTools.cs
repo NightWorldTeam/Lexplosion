@@ -45,13 +45,13 @@ namespace Lexplosion.WPF.NewInterface.Tools
             return "#" + stringHexR + stringHexG + stringHexB;
         }
 
-        public static Color GetDarkerColor(Color color, float persentages)
+        public static Color GetDarkerColor(Color color, float percentages)
         {
             //Runtime.DebugWrite(color.R + " " + color.G + " " + color.B);
 
-            var newR = color.R - Math.Round(color.R * persentages / 100);
-            var newG = color.G - Math.Round(color.G * persentages / 100);
-            var newB = color.B - Math.Round(color.B * persentages / 100);
+            var newR = color.R - Math.Round(color.R * percentages / 100);
+            var newG = color.G - Math.Round(color.G * percentages / 100);
+            var newB = color.B - Math.Round(color.B * percentages / 100);
 
             color.R = (byte)newR;
             color.G = (byte)newG;
@@ -98,11 +98,11 @@ namespace Lexplosion.WPF.NewInterface.Tools
             return Color.FromArgb(color.A, (byte)red, (byte)green, (byte)blue);
         }
 
-        public static Color GetLighterColor(Color color, float persentages)
+        public static Color GetLighterColor(Color color, float percentages)
         {
-            var newR = color.R + (color.R * Math.Round(persentages / 100));
-            var newG = color.G + (color.G * Math.Round(persentages / 100));
-            var newB = color.B + (color.B * Math.Round(persentages / 100));
+            var newR = color.R + (color.R * Math.Round(percentages / 100));
+            var newG = color.G + (color.G * Math.Round(percentages / 100));
+            var newB = color.B + (color.B * Math.Round(percentages / 100));
 
             newR = newR > 255 ? 255 : newR;
             newR = newR < 0 ? 0 : newR;
@@ -113,12 +113,11 @@ namespace Lexplosion.WPF.NewInterface.Tools
             newB = newB > 255 ? 255 : newR;
             newB = newB < 0 ? 0 : newR;
 
-            return new Color()
-            {
-                R = (byte)newR,
-                G = (byte)newG,
-                B = (byte)newB,
-            };
+            color.R = (byte)newR;
+            color.G = (byte)newG;
+            color.B = (byte)newB;
+
+            return color;
         }
 
         public static float CalculateLuminance(Color color) 

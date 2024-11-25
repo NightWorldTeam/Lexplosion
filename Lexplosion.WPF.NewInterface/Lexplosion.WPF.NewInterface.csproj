@@ -177,6 +177,7 @@
     </Compile>
     <Compile Include="NWColorTools\ColorModel.cs" />
     <Compile Include="NWColorTools\Gradient.cs" />
+    <Compile Include="NWColorTools\HLS.cs" />
     <Compile Include="NWColorTools\HSV.cs" />
     <Compile Include="Controls\AdvancedButton\AdvancedButton.cs" />
     <Compile Include="Controls\AdvancedToolTip\AdvancedToolTip.cs" />
