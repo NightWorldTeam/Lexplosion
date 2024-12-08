@@ -51,8 +51,8 @@ namespace Lexplosion.WPF.NewInterface.Core.Resources.Theme
         {
             var resourceDictionary = new ResourceDictionary();
 
-            resourceDictionary.Add("Name", Name);
-            resourceDictionary.Add("Type", "_ColorTheme");
+            resourceDictionary.Add("__Name", Name);
+            resourceDictionary.Add("__Type", "_ColorTheme");
 
             foreach (var item in Content)
             {

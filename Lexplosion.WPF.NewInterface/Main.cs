@@ -8,8 +8,10 @@ using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Notifications;
 using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Core.Services;
+using Lexplosion.WPF.NewInterface.Extensions;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSettings;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Settings;
+using Lexplosion.WPF.NewInterface.Mvvm.ViewModels;
 using Lexplosion.WPF.NewInterface.Mvvm.Views.Windows;
 using System;
 using System.Collections;
@@ -60,6 +62,7 @@ namespace Lexplosion.WPF.NewInterface
 
         //internal static AppColorThemeService AppColorThemeService { get; set; }
         internal static AppSettings Settings { get; set; }
+        internal static AppCore _appCore;
 
         public static HeaderState HeaderState;
 
@@ -73,6 +76,9 @@ namespace Lexplosion.WPF.NewInterface
             //SetupTestEnviroment();
             //return;
             Settings = new AppSettings();
+
+            _appCore = new AppCore(App.Current.Dispatcher.Invoke, null);
+
             //var title = "TKESKLTSRLK ALLALA";
             //var message = "Действие фильма будет происходить после событий, рассказанных в фильме «Миссия невыполнима: Последствия». В центре истории новые приключения агента Итана Ханта.";
 
@@ -141,10 +147,19 @@ namespace Lexplosion.WPF.NewInterface
 
             //_nofityIcon = (TaskbarIcon)App.Current.FindResource("NofityIcon");
 
+            // инициализируем mainViewModel.
+            ViewModelBase mainViewModel;
+            if (!App.Current.Resources.TryGetValue("MainViewModel", out mainViewModel))
+            {
+                mainViewModel = new MainViewModel(_appCore);
+                App.Current.Resources["MainViewModel"] = mainViewModel;
+            }
+
             var mainWindow = new MainWindow()
             {
                 Left = App.Current.MainWindow.Left - 322,
-                Top = App.Current.MainWindow.Top - 89
+                Top = App.Current.MainWindow.Top - 89,
+                DataContext = mainViewModel,
             };
 
             _leftPos = mainWindow.Left;

@@ -3,8 +3,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
-    <sys:String x:Key="Name">Light Punch</sys:String>
-    <sys:String x:Key="Type">_ColorTheme</sys:String>
+    <sys:String x:Key="__Name">Light Punch</sys:String>
+    <sys:String x:Key="__Type">_ColorTheme</sys:String>
 
     <Duration x:Key="SlowAnimationSpeed">0:0:0.35</Duration>
     <Duration x:Key="MediumAnimationSpeed">0:0:0.20</Duration>

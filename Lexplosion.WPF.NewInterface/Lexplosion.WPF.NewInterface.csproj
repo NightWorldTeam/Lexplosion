@@ -99,6 +99,7 @@
     <Compile Include="Controls\LaunchButton\LaunchButton.cs" />
     <Compile Include="Controls\Paginator\PaginatorOptions.cs" />
     <Compile Include="Controls\ToastMessage\ToastMessage.cs" />
+    <Compile Include="Core\AppCore.cs" />
     <Compile Include="Core\AppSettings.cs" />
     <Compile Include="Core\Converters\MultiValueConverter\StyleSelectorConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\ImagePathValidateConverter.cs" />
@@ -954,7 +955,6 @@
   <ItemGroup>
     <Folder Include="Core\Extensions\" />
     <Folder Include="Core\StyleSelectors\" />
-    <Folder Include="Experiments\" />
     <Folder Include="Mvvm\ViewModels\Authorization\OAuth2\" />
     <Folder Include="Mvvm\ViewModels\InstanceForm\" />
   </ItemGroup>

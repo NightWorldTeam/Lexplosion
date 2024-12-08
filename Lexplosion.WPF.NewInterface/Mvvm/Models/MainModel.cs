@@ -24,6 +24,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models
 
     public sealed class MainModel : ViewModelBase
     {
+        private readonly AppCore _appCore;
         private HashSet<object> ExportingInstances { get; } = new HashSet<object>();
 
         public IInstanceController CatalogController { get; }
@@ -33,10 +34,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models
 
         public INotificationService NotificationService { get; } = new NotificationService();
 
-        public MainModel()
+        public MainModel(AppCore appCore)
         {
-            CatalogController = new CatalogController(Export, NotificationService.Notify);
-            LibraryController = new LibraryController(Export, NotificationService.Notify);
+            _appCore = appCore;
+            CatalogController = new CatalogController(appCore, Export, NotificationService.Notify);
+            LibraryController = new LibraryController(appCore, Export, NotificationService.Notify);
             InstanceSharesController = new InstanceSharesController();
 
             OnPropertyChanged(nameof(NotificationService));
@@ -93,7 +95,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models
                 leftmenu.PageLoadingStatusChange(isPreparing);
             };
 
-            ModalNavigationStore.Instance.Open(leftmenu);
+            _appCore.ModalNavigationStore.Open(leftmenu);
         }
     }
 }

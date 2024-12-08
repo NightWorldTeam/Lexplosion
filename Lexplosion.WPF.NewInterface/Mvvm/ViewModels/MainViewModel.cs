@@ -16,9 +16,12 @@ using Lexplosion.Logic;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
 {
-    public sealed class MainViewModel : VMBase
+    public sealed class MainViewModel : ViewModelBase
     {
         public static event Action AllVersionsLoaded;
+
+
+        private readonly AppCore _appCore;
 
 
         #region Properties
@@ -36,7 +39,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
         /// </summary>
         public ViewModelBase CurrentViewModel => NavigationStore.CurrentViewModel;
 
-        internal ModalNavigationStore ModalNavigationStore { get => ModalNavigationStore.Instance; }
+        internal ModalNavigationStore ModalNavigationStore { get => _appCore.ModalNavigationStore; }
 
         /// <summary>
         /// Выбранный в данный момент viewmodel для модального окна.
@@ -75,16 +78,17 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
             PreLoadGameVersions();
         }
 
-        public MainViewModel()
+        public MainViewModel(AppCore appCore)
         {
-            Model = new MainModel();
+            _appCore = appCore;
+            Model = new MainModel(appCore);
             // так как грузится в отдельном потоке, может загрузится позже чем создатся экземпляр класса InstanceFactory!!!
-            ModalNavigationStore.Instance.CurrentViewModelChanged += Instance_CurrentViewModelChanged;
+            ModalNavigationStore.CurrentViewModelChanged += Instance_CurrentViewModelChanged;
             NavigationStore.CurrentViewModelChanged += NavigationStore_CurrentViewModelChanged;
 
 
             // Register Modal Window Contents
-            ModalNavigationStore.Instance.RegisterAbstractFactory(
+            ModalNavigationStore.RegisterAbstractFactory(
                 typeof(InstanceFactoryViewModel), 
                 new ModalInstanceCreatorFactory(Model.LibraryController as LibraryController, Model.InstanceSharesController)
             );

@@ -40,6 +40,7 @@ namespace Lexplosion.WPF.NewInterface.Extensions
                 else
                 {
                     Runtime.DebugWrite("Значение ключа null, так быть явно не должно.", color: ConsoleColor.Red);
+                    textBlock.Text = "null";
                 }
             }
         }

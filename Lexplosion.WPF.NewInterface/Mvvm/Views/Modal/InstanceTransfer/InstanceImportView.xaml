@@ -100,20 +100,17 @@
     </UserControl.Resources>
 
     <ScrollViewer>
-        <Grid>
+        <Grid Background="Transparent" ShowGridLines="False">
 
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <Border
-                Padding="0,0,0,16"
-                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                BorderThickness="0,0,0,1">
+            <Border Margin="0,16,0,16" VerticalAlignment="Stretch">
+                <!--  Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}, Converter={converters:WindowHeightToXProcentHeight}, ConverterParameter=60}"  -->
                 <controls:DragDropBoard Background="Transparent" ImportAction="{Binding Model.ImportAction}">
                     <Border
-                        Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}, Converter={converters:WindowHeightToXProcentHeight}, ConverterParameter=60}"
                         AllowDrop="True"
                         BorderThickness="2,2,2,2"
                         CornerRadius="5">
@@ -177,10 +174,14 @@
                 </controls:DragDropBoard>
             </Border>
 
-            <ItemsControl
+            <Border
                 Grid.Row="1"
-                Margin="0,16,0,0"
-                ItemsSource="{Binding Model.ImportProcesses}" />
+                Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}, Converter={converters:WindowHeightToXProcentHeight}, ConverterParameter=30}"
+                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                BorderThickness="0,1,0,0"
+                Visibility="{Binding Model.ImportProcesses.Count, Converter={converters:BooleanToVisibilityConverter}}">
+                <ItemsControl Margin="0,16,0,0" ItemsSource="{Binding Model.ImportProcesses}" />
+            </Border>
         </Grid>
     </ScrollViewer>
 </UserControl>

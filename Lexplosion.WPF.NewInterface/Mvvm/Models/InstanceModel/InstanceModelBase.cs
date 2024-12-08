@@ -4,6 +4,9 @@ using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Objects;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Notifications;
+using Lexplosion.WPF.NewInterface.Core.Services;
+using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal;
+using Lexplosion.WPF.NewInterface.Stores;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -35,6 +38,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         private readonly LaunchModel LaunchModel;
         private readonly DownloadModel DownloadModel;
         private readonly Action<InstanceClient> _exportFunc;
+
+        private readonly AppCore _appCore;
 
         /// <summary>
         /// Перечисление состояний формы.
@@ -199,8 +204,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         #region Constructors
 
 
-        public InstanceModelBase(InstanceClient instanceClient, Action<InstanceClient> exportFunc, NotifyCallback notify)
+        public InstanceModelBase(AppCore appCore, InstanceClient instanceClient, Action<InstanceClient> exportFunc, NotifyCallback notify)
         {
+            _appCore = appCore;
             Notify = notify;
 
             _instanceClient = instanceClient;
@@ -298,7 +304,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 
             if (!launchAcc.IsAuthed)
             {
-                Runtime.TaskRun(() => {
+                Runtime.TaskRun(() =>
+                {
                     var authResult = launchAcc.Auth();
 
                     if (authResult == AuthCode.Successfully)
@@ -420,10 +427,24 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         /// </summary>
         public void Delete()
         {
-            _instanceClient.Delete();
-            // TODO: ПОДПИСАТЬСЯ НА эвент и удалять через него.
-            GlobalDeletedEvent?.Invoke(this);
-            DeletedEvent?.Invoke(this);
+            //var config = new DialogConfig("Title", "Description", DialogType.Warning, () => 
+            //{
+            //    _instanceClient.Delete();
+            //    // TODO: ПОДПИСАТЬСЯ НА эвент и удалять через него.
+            //    GlobalDeletedEvent?.Invoke(this);
+            //    DeletedEvent?.Invoke(this);
+            //});
+
+            //_appCore.DialogService.ShowDialog(config);
+
+            _appCore.ModalNavigationStore.Open(new ConfirmActionViewModel("Удаление сборки", "",
+                    (obj) =>
+                    {
+                        _instanceClient.Delete();
+                        // TODO: ПОДПИСАТЬСЯ НА эвент и удалять через него.
+                        GlobalDeletedEvent?.Invoke(this);
+                        DeletedEvent?.Invoke(this);
+                    }));
         }
 
 
@@ -591,7 +612,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 
         public bool Equals(InstanceClient other)
         {
-            if (other == null || other == null) 
+            if (other == null || other == null)
             {
                 return false;
             }
