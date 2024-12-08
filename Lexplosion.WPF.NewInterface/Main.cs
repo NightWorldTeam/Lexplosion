@@ -77,7 +77,7 @@ namespace Lexplosion.WPF.NewInterface
             //return;
             Settings = new AppSettings();
 
-            _appCore = new AppCore(App.Current.Dispatcher.Invoke, null);
+            _appCore = new AppCore(App.Current.Dispatcher.Invoke);
 
             //var title = "TKESKLTSRLK ALLALA";
             //var message = "Действие фильма будет происходить после событий, рассказанных в фильме «Миссия невыполнима: Последствия». В центре истории новые приключения агента Итана Ханта.";

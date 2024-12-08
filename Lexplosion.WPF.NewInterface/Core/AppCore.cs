@@ -29,7 +29,6 @@ namespace Lexplosion.WPF.NewInterface.Core
         /// <summary>
         /// Диалог сервис
         /// </summary>
-        public IDialogService DialogService { get; }
         /// <summary>
         /// Навигация модалок
         /// </summary>
@@ -39,10 +38,9 @@ namespace Lexplosion.WPF.NewInterface.Core
         #endregion Properties
 
 
-        public AppCore(Action<Action> uiThread, IDialogService dialogService)
+        public AppCore(Action<Action> uiThread)
         {
             UIThread = uiThread;
-            DialogService = dialogService;
         }
     }
 }
