@@ -60,10 +60,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models
 
             leftmenu.AddTabItems(new ModalLeftMenuTabItem[]
             {
-                new ModalLeftMenuTabItem(0, "Export", "Download", exportVM, true, true),
-                new ModalLeftMenuTabItem(1, "Share", "Share", instanceShare, true, false),
-                new ModalLeftMenuTabItem(2, "ActiveShares", "ActiveShares", activeShares, true, false)
-            }, false);
+                new ModalLeftMenuTabItem(0, "Export", "Download", exportVM, true),
+                new ModalLeftMenuTabItem(1, "Share", "Share", instanceShare, true),
+                new ModalLeftMenuTabItem(2, "ActiveShares", "ActiveShares", activeShares, true)
+            }, true);
 
             leftmenu.LoaderPlaceholderKey = "ExportProcessActive";
 

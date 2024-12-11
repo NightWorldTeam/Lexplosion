@@ -72,7 +72,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
 
             if (_tabItems.Count > 0 && isSelectFirst)
             {
-                OnCurrentContentChanged(_tabItems[0], true);
+                var firstItem = _tabItems[0];
+                firstItem.IsSelected = true;
+                _tabItems[0] = firstItem;
             }
         }
 
@@ -99,7 +101,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
             IsProcessActive = isLoading;
         }
 
-        public void NavigateTo(int index) 
+        public void NavigateTo(int index)
         {
             OnCurrentContentChanged(_tabItems[index], true);
         }
