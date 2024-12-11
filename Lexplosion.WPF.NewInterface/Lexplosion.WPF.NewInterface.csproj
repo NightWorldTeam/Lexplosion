@@ -102,6 +102,7 @@
     <Compile Include="Core\AppCore.cs" />
     <Compile Include="Core\AppSettings.cs" />
     <Compile Include="Core\Converters\MultiValueConverter\StyleSelectorConverter.cs" />
+    <Compile Include="Core\Converters\ValueConverters\CountToVisibilityConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\ImagePathValidateConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\RowElementCountConverter.cs" />
     <Compile Include="Core\IRefreshable.cs" />

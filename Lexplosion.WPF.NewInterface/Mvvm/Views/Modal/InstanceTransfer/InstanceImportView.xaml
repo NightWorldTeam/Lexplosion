@@ -179,7 +179,7 @@
                 Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}, Converter={converters:WindowHeightToXProcentHeight}, ConverterParameter=30}"
                 BorderBrush="{DynamicResource SeparateSolidColorBrush}"
                 BorderThickness="0,1,0,0"
-                Visibility="{Binding Model.ImportProcesses.Count, Converter={converters:BooleanToVisibilityConverter}}">
+                Visibility="{Binding Model.ImportProcesses.Count, Converter={converters:CountToVisibilityConverter}}">
                 <ItemsControl Margin="0,16,0,0" ItemsSource="{Binding Model.ImportProcesses}" />
             </Border>
         </Grid>
