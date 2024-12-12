@@ -358,7 +358,7 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
-                            <virtualization:VirtualizingItemsControl ItemsSource="{Binding Model.Instances}" VirtualizingPanel.VirtualizationMode="Recycling" />
+                            <ItemsControl ItemsSource="{Binding Model.Instances}" />
 
                             <controls:Paginator
                                 Grid.Row="1"

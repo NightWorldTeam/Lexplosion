@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:Lexplosion.WPF.NewInterface.Controls"
     xmlns:converters="clr-namespace:Lexplosion.WPF.NewInterface.Core.Converters"
+    xmlns:core="clr-namespace:Lexplosion.WPF.NewInterface.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:instancetransfer="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer"
     xmlns:lexplosion="clr-namespace:Lexplosion;assembly=Lexplosion.Core"
@@ -17,7 +18,6 @@
 
     <UserControl.Resources>
         <DataTemplate DataType="{x:Type objects:InstanceDistribution}">
-
             <!--  Downloading  -->
             <Border
                 Margin="0,16,0,0"
@@ -106,7 +106,7 @@
                     <!--  Download Progress  -->
                     <Grid
                         Grid.Row="1"
-                        Margin="0,8,0,0"
+                        Margin="0,0,0,0"
                         Visibility="{Binding IsDownloadStarted, Converter={converters:BooleanToVisibilityConverter}}">
 
                         <Grid.RowDefinitions>
@@ -114,47 +114,13 @@
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
-                        <TextBlock HorizontalAlignment="Right" Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}">
-                            <TextBlock.Style>
-                                <Style TargetType="{x:Type TextBlock}">
-                                    <Style.Triggers>
-
-                                        <!--  In Queue Text  -->
-                                        <DataTrigger Binding="{Binding InstanceState}" Value="{x:Static lexplosion:DownloadShareState.InQueue}">
-                                            <Setter Property="Text" Value="В очереди" />
-                                        </DataTrigger>
-
-                                        <!--  In Connect Text  -->
-                                        <DataTrigger Binding="{Binding InstanceState}" Value="{x:Static lexplosion:DownloadShareState.InConnect}">
-                                            <Setter Property="Text" Value="Идёт соединение" />
-                                        </DataTrigger>
-
-                                        <!--  Post Processing Text  -->
-                                        <DataTrigger Binding="{Binding InstanceState}" Value="{x:Static lexplosion:DownloadShareState.PostProcessing}">
-                                            <Setter Property="Text" Value="Обработка файлов" />
-                                        </DataTrigger>
-
-                                        <!--  In Process Hide  -->
-                                        <DataTrigger Binding="{Binding InstanceState}" Value="{x:Static lexplosion:DownloadShareState.InProcess}">
-                                            <Setter Property="Visibility" Value="Collapsed" />
-                                        </DataTrigger>
-
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBlock.Style>
-                        </TextBlock>
+                        <TextBlock
+                            x:Name="StatusTextBlock"
+                            HorizontalAlignment="Right"
+                            Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
 
                         <!--  Speed & Persentages  -->
-                        <Grid>
-                            <Grid.Style>
-                                <Style TargetType="{x:Type FrameworkElement}">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding InstanceState}" Value="{x:Static lexplosion:DownloadShareState.InProcess}">
-                                            <Setter Property="Visibility" Value="Visible" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Grid.Style>
+                        <Grid x:Name="SpeedPersentagesBlock" Visibility="Collapsed">
 
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
@@ -171,6 +137,7 @@
 
                         <!--  Progress Bar  -->
                         <ProgressBar
+                            x:Name="ProgressBar"
                             Grid.Row="2"
                             Grid.ColumnSpan="2"
                             Height="5"
@@ -181,20 +148,80 @@
                     </Grid>
                 </Grid>
             </Border>
+
+            <DataTemplate.Triggers>
+                <!--  In Queue Text  -->
+                <DataTrigger Binding="{Binding InstanceState}" Value="{x:Static lexplosion:DownloadShareState.InQueue}">
+                    <Setter TargetName="StatusTextBlock" Property="Text" Value="В очереди" />
+                </DataTrigger>
+
+                <!--  In Connect Text  -->
+                <DataTrigger Binding="{Binding InstanceState}" Value="{x:Static lexplosion:DownloadShareState.InConnect}">
+                    <Setter TargetName="StatusTextBlock" Property="Text" Value="Идёт соединение" />
+                </DataTrigger>
+
+                <!--  Post Processing Text  -->
+                <DataTrigger Binding="{Binding InstanceState}" Value="{x:Static lexplosion:DownloadShareState.PostProcessing}">
+                    <Setter TargetName="StatusTextBlock" Property="Text" Value="Обработка файлов" />
+                </DataTrigger>
+
+                <!--  In Process Hide  -->
+                <DataTrigger Binding="{Binding InstanceState}" Value="{x:Static lexplosion:DownloadShareState.InProcess}">
+                    <Setter TargetName="StatusTextBlock" Property="Visibility" Value="Collapsed" />
+                    <Setter TargetName="SpeedPersentagesBlock" Property="Visibility" Value="Visible" />
+                    <Setter TargetName="ProgressBar" Property="IsIndeterminate" Value="False" />
+                </DataTrigger>
+            </DataTemplate.Triggers>
+
         </DataTemplate>
     </UserControl.Resources>
 
-    <Grid>
+    <Grid Margin="0,8,0,0">
 
-        <Button
-            Width="32"
-            Height="32"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Top"
-            Command="{Binding RefreshListCommand}" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="32" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
-        <controls:Empty Description="There are no shares available" />
+        <Border
+            Padding="4"
+            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+            BorderThickness="1"
+            CornerRadius="5">
+            <Grid>
 
-        <ItemsControl FocusVisualStyle="{x:Null}" ItemsSource="{Binding Model.Distributions}" />
+                <controls:AdvancedButton
+                    Width="16"
+                    Height="16"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Command="{Binding RefreshListCommand}"
+                    IconData="{StaticResource PDReload}" />
+            </Grid>
+        </Border>
+
+
+        <core:If Grid.Row="1" Condition="{Binding Model.IsEmpty}">
+            <core:If.True>
+                <controls:Empty Description="There are no shares available" />
+            </core:If.True>
+
+            <core:If.False>
+                <StackPanel>
+                    <ListBox
+                        BorderBrush="Transparent"
+                        BorderThickness="0"
+                        FocusVisualStyle="{x:Null}"
+                        ItemContainerStyle="{StaticResource SharesListBoxItem}"
+                        ItemsSource="{Binding Model.Distributions}"
+                        KeyboardNavigation.IsTabStop="False"
+                        ScrollViewer.CanContentScroll="True"
+                        VirtualizingPanel.CacheLength="1,5"
+                        VirtualizingPanel.CacheLengthUnit="Page"
+                        VirtualizingPanel.IsVirtualizing="True"
+                        VirtualizingPanel.ScrollUnit="Pixel" />
+                </StackPanel>
+            </core:If.False>
+        </core:If>
     </Grid>
 </UserControl>

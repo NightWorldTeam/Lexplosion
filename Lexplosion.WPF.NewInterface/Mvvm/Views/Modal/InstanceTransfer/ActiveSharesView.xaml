@@ -192,6 +192,7 @@
     </UserControl.Resources>
 
     <Grid Height="350">
+
         <!--    -->
         <core:If Condition="{Binding Model.IsEmpty}">
             <core:If.False>
