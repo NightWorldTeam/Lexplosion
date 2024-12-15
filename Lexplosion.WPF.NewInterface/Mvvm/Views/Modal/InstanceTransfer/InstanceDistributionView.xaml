@@ -20,7 +20,7 @@
         <DataTemplate DataType="{x:Type objects:InstanceDistribution}">
             <!--  Downloading  -->
             <Border
-                Margin="0,16,0,0"
+                Margin="0,8,0,0"
                 Padding="8"
                 VerticalAlignment="Top"
                 Background="{DynamicResource SecondarySolidColorBrush}"
@@ -183,25 +183,40 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Border
-            Padding="4"
-            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-            BorderThickness="1"
-            CornerRadius="5">
-            <Grid>
+        <Grid>
 
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <controls:SearchBox
+                Placeholder="{DynamicResource InstanceName}"
+                Style="{StaticResource sm-searchbox-default}"
+                Text="{Binding Model.FilterText, UpdateSourceTrigger=PropertyChanged}" />
+
+            <Border
+                Grid.Column="1"
+                Width="32"
+                Height="32"
+                Margin="8,0,0,0"
+                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                BorderThickness="1"
+                CornerRadius="5">
                 <controls:AdvancedButton
                     Width="16"
                     Height="16"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Top"
                     Command="{Binding RefreshListCommand}"
+                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
                     IconData="{StaticResource PDReload}" />
-            </Grid>
-        </Border>
+            </Border>
+        </Grid>
 
+        <core:If
+            Grid.Row="1"
+            Margin="0,8,0,0"
+            Condition="{Binding Model.IsEmpty}">
 
-        <core:If Grid.Row="1" Condition="{Binding Model.IsEmpty}">
             <core:If.True>
                 <controls:Empty Description="There are no shares available" />
             </core:If.True>
@@ -209,11 +224,12 @@
             <core:If.False>
                 <StackPanel>
                     <ListBox
+                        Background="Transparent"
                         BorderBrush="Transparent"
                         BorderThickness="0"
                         FocusVisualStyle="{x:Null}"
                         ItemContainerStyle="{StaticResource SharesListBoxItem}"
-                        ItemsSource="{Binding Model.Distributions}"
+                        ItemsSource="{Binding Model.Distributions.Filtered}"
                         KeyboardNavigation.IsTabStop="False"
                         ScrollViewer.CanContentScroll="True"
                         VirtualizingPanel.CacheLength="1,5"

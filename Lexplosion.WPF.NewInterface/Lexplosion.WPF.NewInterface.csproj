@@ -105,6 +105,7 @@
     <Compile Include="Core\Converters\ValueConverters\CountToVisibilityConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\ImagePathValidateConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\RowElementCountConverter.cs" />
+    <Compile Include="Core\FiltableObservableCollection.cs" />
     <Compile Include="Core\IRefreshable.cs" />
     <Compile Include="Core\Notifications\IActionNotification.cs" />
     <Compile Include="Core\Notifications\INotificable.cs" />
