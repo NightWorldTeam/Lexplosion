@@ -90,7 +90,9 @@ namespace Lexplosion.Logic.FileSystem
             get => _state;
             private set
             {
-                _state = value; StateChanged?.Invoke();
+                _state = value; 
+				StateChanged?.Invoke();
+				Runtime.DebugWrite($"New state: {_state}");
             }
         }
 

@@ -102,14 +102,12 @@ namespace Lexplosion.Logic.Management.Addons
                 try
                 {
                     string modsPath = WithDirectory.GetInstancePath(_modpackInfo.LocalId) + "mods";
-                    if (!Directory.Exists(modsPath))
-                    {
-                        Directory.CreateDirectory(modsPath);
-                    }
+                    if (!Directory.Exists(modsPath)) Directory.CreateDirectory(modsPath);
 
-                    _modsDirectoryWathcer = new FileSystemWatcher(modsPath);
+					_modsDirectoryWathcer = new FileSystemWatcher(modsPath);
                     _modsDirectoryWathcer.Created += (object sender, FileSystemEventArgs e) =>
                     {
+						if (_synchronizer.InstalledFiles.Contains(Path.GetFileName(e.FullPath))) return;
                         OnAddonFileAdded(e.FullPath, AddonType.Mods, ".jar", DefineIternalModInfo);
                     };
                     _modsDirectoryWathcer.EnableRaisingEvents = true;
