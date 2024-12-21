@@ -96,7 +96,7 @@
                                 x:Name="ellipse"
                                 Width="15"
                                 Height="15"
-                                Margin="0,1,0,0"
+                                Margin="0,0,0,0"
                                 HorizontalAlignment="Right"
                                 Background="Transparent"
                                 BorderBrush="{DynamicResource SecondaryForegroundSolidColorBrush}"
@@ -109,7 +109,7 @@
                             <Setter TargetName="ellipse" Property="Border.BorderBrush" Value="{DynamicResource ActivitySolidColorBrush}" />
                             <Setter TargetName="ellipse" Property="HorizontalAlignment" Value="Left" />
                             <Setter TargetName="rect" Property="Border.Background" Value="{DynamicResource ActivitySolidColorBrush}" />
-                            <Setter TargetName="rect" Property="Border.CornerRadius" Value="0,0,0,0" />
+                            <Setter TargetName="rect" Property="Border.CornerRadius" Value="0,3,3,0" />
                             <Setter TargetName="rect" Property="HorizontalAlignment" Value="Right" />
                         </Trigger>
                     </ControlTemplate.Triggers>
