@@ -14,7 +14,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu
         public FriendsViewModel()
         {
             InitializeComponent();
-            var collectionViewSource = (Resources["Test"] as CollectionViewSource);
+            var collectionViewSource = (Resources["FriendsViewSource"] as CollectionViewSource);
             var groupBy = new PropertyGroupDescription("Status");
             groupBy.CustomSort = new FriendStatusComparer();
             collectionViewSource.GroupDescriptions.Add(groupBy);

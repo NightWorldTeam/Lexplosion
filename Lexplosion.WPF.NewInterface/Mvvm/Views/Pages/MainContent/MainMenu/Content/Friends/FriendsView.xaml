@@ -15,25 +15,9 @@
 
     <UserControl.Resources>
         <CollectionViewSource
-            x:Key="Test"
+            x:Key="FriendsViewSource"
             x:Name="FriendsCollectionViewSource"
             Source="{Binding Path=Model.AllFriends.Filtered}" />
-        <!--<CollectionViewSource.GroupDescriptions>
-                <PropertyGroupDescription PropertyName="Status" />
-            </CollectionViewSource.GroupDescriptions>
-        </CollectionViewSource>-->
-
-        <Style x:Key="{x:Type ListBoxItem}" TargetType="ListBoxItem">
-            <Setter Property="SnapsToDevicePixels" Value="true" />
-            <Setter Property="OverridesDefaultStyle" Value="true" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="ListBoxItem">
-                        <ContentPresenter />
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
     </UserControl.Resources>
 
     <Grid Margin="32,16,0,0" HorizontalAlignment="Stretch">
@@ -55,13 +39,9 @@
 
         <ListBox
             Grid.Row="1"
-            Background="Transparent"
-            BorderBrush="Transparent"
-            ItemsSource="{Binding Source={StaticResource Test}}"
-            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-            VirtualizingPanel.IsVirtualizing="True"
-            VirtualizingPanel.IsVirtualizingWhenGrouping="True"
-            VirtualizingPanel.VirtualizationMode="Recycling">
+            ItemsSource="{Binding Source={StaticResource FriendsViewSource}}"
+            Style="{StaticResource TransparentListBox}"
+            VirtualizingPanel.IsVirtualizingWhenGrouping="True">
 
             <ListBox.GroupStyle>
                 <GroupStyle>
@@ -94,6 +74,7 @@
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel
+                        Margin="0,0,0,16"
                         HorizontalAlignment="Stretch"
                         IsItemsHost="True"
                         VirtualizingPanel.IsVirtualizing="True" />

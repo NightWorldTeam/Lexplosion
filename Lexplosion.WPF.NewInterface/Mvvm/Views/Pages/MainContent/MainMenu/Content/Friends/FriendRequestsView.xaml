@@ -538,18 +538,21 @@
 
                 <core:SwitchCaseItem Key="Pending">
                     <Grid>
+
+                        <!--  TODO: Translate  -->
                         <controls:Empty
                             Grid.Row="1"
-                            CollectionCount="{Binding Model.Incoming.View.Count}"
+                            CollectionCount="{Binding Model.Incoming.Count}"
                             Description="Входящие заявки в друзья отсутствуют." />
 
-                        <ItemsControl
+                        <ListBox
                             Grid.Row="1"
                             Margin="0,0,0,8"
                             HorizontalAlignment="Stretch"
                             AlternationCount="3"
                             ItemTemplate="{StaticResource PendingRequestUser}"
-                            ItemsSource="{Binding Model.Incoming.View}">
+                            ItemsSource="{Binding Model.Incoming}"
+                            Style="{StaticResource TransparentListBox}">
 
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
@@ -560,40 +563,37 @@
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
 
-                        </ItemsControl>
+                        </ListBox>
                     </Grid>
                 </core:SwitchCaseItem>
 
                 <core:SwitchCaseItem Key="Outgoing">
                     <Grid>
 
+                        <!--  TODO: Translate  -->
                         <controls:Empty
                             Grid.Row="1"
-                            CollectionCount="{Binding Model.Outgoing.View.Count}"
+                            CollectionCount="{Binding Model.Outgoing.Count}"
                             Description="Исходящие заявки в друзья отсутствуют." />
 
-                        <ItemsControl
+                        <ListBox
                             Grid.Row="1"
                             Margin="0,0,0,8"
                             HorizontalAlignment="Stretch"
                             ItemTemplate="{StaticResource OutgoingRequestUser}"
-                            ItemsSource="{Binding Model.Outgoing.View}"
-                            SizeChanged="ItemsControl_SizeChanged">
+                            ItemsSource="{Binding Model.Outgoing}"
+                            SizeChanged="ItemsControl_SizeChanged"
+                            Style="{StaticResource TransparentListBox}">
 
-                            <ItemsControl.ItemsPanel>
+                            <ListBox.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <WrapPanel
                                         HorizontalAlignment="Left"
                                         IsItemsHost="True"
                                         VirtualizingPanel.IsVirtualizing="True" />
                                 </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-
-                            <!--<ItemsControl.ItemContainerStyleSelector>
-                        <extensions:NthChildStyleSelector Expression="Even" Style="{StaticResource EveryEvenUser}" />
-                    </ItemsControl.ItemContainerStyleSelector>-->
-
-                        </ItemsControl>
+                            </ListBox.ItemsPanel>
+                        </ListBox>
                     </Grid>
                 </core:SwitchCaseItem>
 
