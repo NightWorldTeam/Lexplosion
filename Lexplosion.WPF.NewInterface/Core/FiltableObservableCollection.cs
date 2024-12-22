@@ -1,12 +1,16 @@
 ﻿using Lexplosion.WPF.NewInterface.Core.ViewModel;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 
 namespace Lexplosion.WPF.NewInterface.Core
 {
-    public class FiltableObservableCollection : ObservableObject, IEnumerable
+    public class FiltableObservableCollection : ObservableObject, IEnumerable, IReadOnlyCollection<object>
     {
+        private Action? _disposeObservableColletion = null;
+
         #region Properties
 
 
@@ -34,11 +38,22 @@ namespace Lexplosion.WPF.NewInterface.Core
             }
         }
 
+        public int Count => _filteredCollection.Count;
+
 
         #endregion Properties
 
 
         #region Public & Protected Methods
+
+
+        /// <summary>
+        /// For collection without INotifyCollectionChanged implementation.
+        /// </summary>
+        public void UpdateSourceData() 
+        {
+            UpdateCollectionWithFilter();
+        }
 
 
         protected virtual void UpdateCollectionWithFilter()
@@ -67,12 +82,25 @@ namespace Lexplosion.WPF.NewInterface.Core
 
         protected virtual void OnSourceChanged()
         {
+            _disposeObservableColletion?.Invoke();
+            if (Source is INotifyCollectionChanged observCollection) 
+            {
+                NotifyCollectionChangedEventHandler collectionChanged = (e, s) => UpdateSourceData();
+                observCollection.CollectionChanged += collectionChanged;
+                _disposeObservableColletion = () => observCollection.CollectionChanged -= collectionChanged;
+            }
+
             UpdateCollectionWithFilter();
         }
 
         public IEnumerator GetEnumerator()
         {
             return Filtered.GetEnumerator();
+        }
+
+        IEnumerator<object> IEnumerable<object>.GetEnumerator()
+        {
+            throw new NotImplementedException();
         }
 
 

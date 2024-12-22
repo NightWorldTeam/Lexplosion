@@ -13,213 +13,102 @@
     d:DataContext="{d:DesignInstance Type=mainmenu:FriendsViewModel}"
     mc:Ignorable="d">
 
-    <ScrollViewer Focusable="True">
-        <Grid Margin="32,16,23,0" HorizontalAlignment="Stretch">
+    <UserControl.Resources>
+        <CollectionViewSource
+            x:Key="Test"
+            x:Name="FriendsCollectionViewSource"
+            Source="{Binding Path=Model.AllFriends.Filtered}" />
+        <!--<CollectionViewSource.GroupDescriptions>
+                <PropertyGroupDescription PropertyName="Status" />
+            </CollectionViewSource.GroupDescriptions>
+        </CollectionViewSource>-->
 
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
+        <Style x:Key="{x:Type ListBoxItem}" TargetType="ListBoxItem">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <ContentPresenter />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
 
-            <!--  TODO: Убирать SearchBox все друзья влазять и скролить не надо и друзей нет???  -->
-            <controls:SearchBox
-                Margin="0,0,0,16"
-                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                Placeholder="{DynamicResource TypingNicknamePlaceholder}"
-                Style="{StaticResource sm-searchbox-default}"
-                Text="{Binding Model.SearchBoxText, UpdateSourceTrigger=PropertyChanged}"
-                Visibility="{Binding Model.AllFriends.View.IsEmpty, Converter={converters:NegativeBooleanToVisibilityConverter}}" />
+    <Grid Margin="32,16,0,0" HorizontalAlignment="Stretch">
 
-            <Grid
-                Grid.Row="1"
-                Background="Transparent"
-                Visibility="{Binding Model.AllFriends.View.IsEmpty, Converter={converters:NegativeBooleanToVisibilityConverter}}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
+        <!--  TODO: Убирать SearchBox все друзья влазять и скролить не надо и друзей нет???  -->
+        <controls:SearchBox
+            Margin="0,0,0,8"
+            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+            Placeholder="{DynamicResource TypingNicknamePlaceholder}"
+            Style="{StaticResource sm-searchbox-default}"
+            Text="{Binding Model.SearchBoxText, UpdateSourceTrigger=PropertyChanged}"
+            Visibility="{Binding Model.HasFriends, Converter={converters:NegativeBooleanToVisibilityConverter}}" />
 
-                <!--  Playing  -->
-                <StackPanel Margin="8,0,0,0" HorizontalAlignment="Stretch">
 
-                    <StackPanel.Style>
-                        <Style TargetType="{x:Type StackPanel}">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding Model.InGameFriends.View.Count}" Value="0">
-                                    <Setter Property="Visibility" Value="Collapsed" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </StackPanel.Style>
+        <ListBox
+            Grid.Row="1"
+            Background="Transparent"
+            BorderBrush="Transparent"
+            ItemsSource="{Binding Source={StaticResource Test}}"
+            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+            VirtualizingPanel.IsVirtualizing="True"
+            VirtualizingPanel.IsVirtualizingWhenGrouping="True"
+            VirtualizingPanel.VirtualizationMode="Recycling">
 
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock
-                            FontSize="13"
-                            FontWeight="Medium"
-                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                            Text="{DynamicResource InGame}" />
+            <ListBox.GroupStyle>
+                <GroupStyle>
+                    <GroupStyle.HeaderTemplate>
+                        <DataTemplate>
+                            <Border
+                                Margin="8,8,0,8"
+                                BorderBrush="Gray"
+                                BorderThickness="0">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock
+                                        extensions:TextBlock.TextByKey="{Binding Name.Value}"
+                                        FontSize="13"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                    <TextBlock
+                                        Margin="8,0,0,0"
+                                        VerticalAlignment="Center"
+                                        FontSize="12"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                        Text="{Binding StringFormat='({0})', Path=ItemCount}" />
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </GroupStyle.HeaderTemplate>
+                </GroupStyle>
+            </ListBox.GroupStyle>
 
-                        <TextBlock
-                            Margin="8,0,0,0"
-                            VerticalAlignment="Center"
-                            FontSize="12"
-                            FontWeight="Medium"
-                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                            Text="{Binding Model.InGameFriends.View.Count, StringFormat='{}({0})'}" />
-                    </StackPanel>
-                    <!--  In Game Players  -->
-                    <ItemsControl Margin="0,8,0,24" ItemsSource="{Binding Model.InGameFriends.View}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate DataType="{x:Type model:Friend}">
-                                <local:Friend
-                                    Margin="0,0,4,4"
-                                    Avatar="{Binding AvatarUrl}"
-                                    Nickname="{Binding Name}"
-                                    RunningClientName="{Binding RunningClientName}"
-                                    Status="{Binding Status}" />
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <WrapPanel
-                                    IsItemsHost="True"
-                                    Orientation="Horizontal"
-                                    VirtualizingPanel.IsVirtualizing="True" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
-                </StackPanel>
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel
+                        HorizontalAlignment="Stretch"
+                        IsItemsHost="True"
+                        VirtualizingPanel.IsVirtualizing="True" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
 
-                <!--  TODO: Show animation??? for stackpanel  -->
-
-                <!--  Online  -->
-                <StackPanel
-                    Grid.Row="1"
-                    Margin="8,0,0,0"
-                    HorizontalAlignment="Stretch">
-
-                    <StackPanel.Style>
-                        <Style TargetType="{x:Type StackPanel}">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding Model.OnlineFriends.View.Count}" Value="0">
-                                    <Setter Property="Visibility" Value="Collapsed" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </StackPanel.Style>
-
-                    <!--  Name & Count  -->
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock
-                            FontSize="13"
-                            FontWeight="Medium"
-                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                            Text="{DynamicResource Online}"
-                            Typography.Capitals="AllPetiteCaps" />
-
-                        <TextBlock
-                            Margin="8,0,0,0"
-                            VerticalAlignment="Center"
-                            FontSize="12"
-                            FontWeight="Medium"
-                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                            Text="{Binding Model.OnlineFriends.View.Count, StringFormat='{}({0})'}" />
-                    </StackPanel>
-
-                    <!--  Online Players  -->
-                    <ItemsControl Margin="0,8,0,24" ItemsSource="{Binding Model.OnlineFriends.View}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate DataType="{x:Type model:Friend}">
-                                <local:Friend
-                                    Margin="0,0,4,4"
-                                    Avatar="{Binding AvatarUrl}"
-                                    Nickname="{Binding Name}"
-                                    Status="{Binding Status}" />
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <WrapPanel
-                                    IsItemsHost="True"
-                                    Orientation="Horizontal"
-                                    VirtualizingPanel.IsVirtualizing="True" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
-                </StackPanel>
-
-                <!--  Offline  -->
-                <StackPanel
-                    Grid.Row="2"
-                    Margin="8,0,0,0"
-                    HorizontalAlignment="Stretch">
-
-                    <StackPanel.Style>
-                        <Style TargetType="{x:Type StackPanel}">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding Model.OfflineFriends.View.Count}" Value="0">
-                                    <Setter Property="Visibility" Value="Collapsed" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </StackPanel.Style>
-
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock
-                            FontSize="13"
-                            FontWeight="Medium"
-                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                            Text="{DynamicResource Offline}" />
-
-                        <TextBlock
-                            Margin="8,0,0,0"
-                            VerticalAlignment="Center"
-                            FontSize="12"
-                            FontWeight="Medium"
-                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                            Text="{Binding Model.OfflineFriends.View.Count, StringFormat='{}({0})'}" />
-                    </StackPanel>
-                    <!--  Offline Players  -->
-                    <ItemsControl Margin="0,8,0,24" ItemsSource="{Binding Model.OfflineFriends.View}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate DataType="{x:Type model:Friend}">
-                                <local:Friend
-                                    Margin="0,0,4,4"
-                                    Avatar="{Binding AvatarUrl}"
-                                    Nickname="{Binding Name}"
-                                    Status="{Binding Status}" />
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <WrapPanel
-                                    IsItemsHost="True"
-                                    Orientation="Horizontal"
-                                    VirtualizingPanel.IsVirtualizing="True" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
-                </StackPanel>
-            </Grid>
-
-            <!--  TODO: Translate  -->
-            <controls:Empty
-                Grid.RowSpan="2"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Description="С вами никто не дружит. Капец... :("
-                Visibility="{Binding Model.AllFriends.View.IsEmpty, Converter={converters:BooleanToVisibilityConverter}}">
-
-                <!--  TODO: Translate  -->
-                <controls:AdvancedButton
-                    Margin="0,16,0,0"
-                    HorizontalAlignment="Center"
-                    Style="{StaticResource DefaultAdvancedButton}"
-                    Text="Найти друзей"
-                    TextPadding="16,0" />
-            </controls:Empty>
-        </Grid>
-    </ScrollViewer>
+            <ListBox.ItemTemplate>
+                <DataTemplate DataType="{x:Type model:Friend}">
+                    <local:Friend
+                        Margin="0,0,4,4"
+                        Avatar="{Binding AvatarUrl}"
+                        Nickname="{Binding Name}"
+                        Status="{Binding Status.Value}" />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
 </UserControl>
