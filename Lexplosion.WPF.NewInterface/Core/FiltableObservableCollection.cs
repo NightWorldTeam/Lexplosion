@@ -7,8 +7,11 @@ using System.Collections.Specialized;
 
 namespace Lexplosion.WPF.NewInterface.Core
 {
-    public class FiltableObservableCollection : ObservableObject, IEnumerable, IReadOnlyCollection<object>
+    public class FiltableObservableCollection : ObservableObject, IEnumerable, IReadOnlyCollection<object>, INotifyCollectionChanged
     {
+        public event NotifyCollectionChangedEventHandler CollectionChanged;
+
+
         private Action? _disposeObservableColletion = null;
 
         #region Properties
@@ -50,7 +53,7 @@ namespace Lexplosion.WPF.NewInterface.Core
         /// <summary>
         /// For collection without INotifyCollectionChanged implementation.
         /// </summary>
-        public void UpdateSourceData() 
+        public void UpdateSourceData()
         {
             UpdateCollectionWithFilter();
         }
@@ -73,6 +76,10 @@ namespace Lexplosion.WPF.NewInterface.Core
                     _filteredCollection.Add(newItem);
                 }
             }
+            CollectionChanged?.Invoke(
+                this, 
+                new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset)
+            );
         }
 
         protected virtual void OnFilterChanged()
@@ -83,7 +90,7 @@ namespace Lexplosion.WPF.NewInterface.Core
         protected virtual void OnSourceChanged()
         {
             _disposeObservableColletion?.Invoke();
-            if (Source is INotifyCollectionChanged observCollection) 
+            if (Source is INotifyCollectionChanged observCollection)
             {
                 NotifyCollectionChangedEventHandler collectionChanged = (e, s) => UpdateSourceData();
                 observCollection.CollectionChanged += collectionChanged;

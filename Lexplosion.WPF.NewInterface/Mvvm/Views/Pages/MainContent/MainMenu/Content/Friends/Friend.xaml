@@ -81,15 +81,6 @@
                 Grid.Column="2"
                 VerticalAlignment="Center"
                 Orientation="Horizontal">
-                <!--<Button
-                Background="{DynamicResource ActivitySolidColorBrush}"
-                Content="AddPerson"
-                Style="{StaticResource x32IconButtonActivityColor}" />
-            <Button
-                Margin="8,0,0,0"
-                Background="{DynamicResource ActivitySolidColorBrush}"
-                Content="RemovePerson"
-                Style="{StaticResource x32IconButtonActivityColor}" />-->
 
                 <controls:AdvancedToggleButton
                     x:Name="MoreMenuToggleButton"
@@ -120,7 +111,7 @@
                                 FocusVisualStyle="{x:Null}"
                                 FontWeight="Medium"
                                 IconData="{DynamicResource PDProfile}"
-                                IconPadding="6"
+                                IconPadding="4"
                                 Style="{StaticResource TransparentAdvancedButton}"
                                 Text="{DynamicResource ViewProfile}"
                                 TextPadding="8,0,0,0" />
@@ -132,7 +123,7 @@
                                 FontWeight="Medium"
                                 Foreground="#f44336"
                                 IconData="{DynamicResource PDPersonOff}"
-                                IconPadding="6"
+                                IconPadding="4"
                                 Style="{StaticResource TransparentAdvancedButton}"
                                 Text="{DynamicResource Unfriend}"
                                 TextBlock.TextAlignment="Left"

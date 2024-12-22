@@ -29,12 +29,12 @@
 
         <!--  TODO: Убирать SearchBox все друзья влазять и скролить не надо и друзей нет???  -->
         <controls:SearchBox
-            Margin="0,0,0,8"
+            Margin="0,0,32,8"
             Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
             Placeholder="{DynamicResource TypingNicknamePlaceholder}"
             Style="{StaticResource sm-searchbox-default}"
             Text="{Binding Model.SearchBoxText, UpdateSourceTrigger=PropertyChanged}"
-            Visibility="{Binding Model.HasFriends, Converter={converters:NegativeBooleanToVisibilityConverter}}" />
+            Visibility="{Binding Model.HasFriends, Converter={converters:BooleanToVisibilityConverter}}" />
 
 
         <ListBox
@@ -87,6 +87,7 @@
                         Margin="0,0,4,4"
                         Avatar="{Binding AvatarUrl}"
                         Nickname="{Binding Name}"
+                        RunningClientName="{Binding RunningClientName}"
                         Status="{Binding Status.Value}" />
                 </DataTemplate>
             </ListBox.ItemTemplate>

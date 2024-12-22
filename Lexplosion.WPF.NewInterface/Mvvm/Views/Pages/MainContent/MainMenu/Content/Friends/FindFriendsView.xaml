@@ -224,7 +224,7 @@
 
     <Grid>
 
-        <Grid Margin="42,16">
+        <Grid Margin="32,16">
 
             <!--  Triggers  -->
             <Grid.Style>
@@ -259,26 +259,26 @@
                 SearchCommand="{Binding SearchCommand}"
                 Style="{StaticResource sm-searchbox-default}" />
 
-
             <!--  Users List  -->
-            <ItemsControl
+            <ListBox
                 x:Name="UsersList"
                 Grid.Row="1"
                 Margin="0,0,0,8"
                 HorizontalAlignment="Stretch"
-                ItemsSource="{Binding Model.Users.View}">
+                ItemsSource="{Binding Model.Users}"
+                Style="{StaticResource TransparentListBox}">
 
-                <ItemsControl.ItemsPanel>
+                <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel
-                            HorizontalAlignment="Left"
+                            HorizontalAlignment="Stretch"
                             IsItemsHost="True"
                             VirtualizingPanel.CacheLengthUnit="Item"
                             VirtualizingPanel.IsVirtualizing="True" />
                     </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
+                </ListBox.ItemsPanel>
 
-            </ItemsControl>
+            </ListBox>
 
             <!--  Paginator  -->
             <controls:Paginator
@@ -290,7 +290,7 @@
         </Grid>
 
         <!--  TODO: Translate  -->
-        <controls:Empty CollectionCount="{Binding Model.Users.View.Count}" Description="Мы ничего не нашли по данному запросу" />
+        <controls:Empty CollectionCount="{Binding Model.Users.Count}" Description="Мы ничего не нашли по данному запросу" />
 
         <controls:LoadingBoard
             Background="Black"
