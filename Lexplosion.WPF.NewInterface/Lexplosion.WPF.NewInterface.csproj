@@ -115,6 +115,8 @@
     <Compile Include="Core\Notifications\NotificationType.cs" />
     <Compile Include="Core\Notifications\NotifyCallback.cs" />
     <Compile Include="Core\Notifications\SimpleNotification.cs" />
+    <Compile Include="Core\Objects\AccountItem.cs" />
+    <Compile Include="Core\Objects\Accounts.cs" />
     <Compile Include="Core\Objects\DownloableAddonFile.cs" />
     <Compile Include="Core\Objects\InstanceDistribution.cs" />
     <Compile Include="Core\Objects\InstanceGroup.cs" />
@@ -139,6 +141,7 @@
     <Compile Include="Mvvm\Models\MainContent\MainMenu\Friends\FindFriendsModel.cs" />
     <Compile Include="Mvvm\Models\MainContent\MainMenu\Friends\FriendRequestsModel.cs" />
     <Compile Include="Mvvm\Models\MainContent\MainMenu\Friends\FriendsModel.cs" />
+    <Compile Include="Mvvm\Models\MainContent\MainMenu\GeneralSettings\AccountsSettingsModel.cs" />
     <Compile Include="Mvvm\ViewModels\ModalFactory\ModalFactoryBase.cs" />
     <Compile Include="Mvvm\ViewModels\ModalFactory\ModalInstanceCreatorFactory.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\ConfirmActionViewModel.cs" />

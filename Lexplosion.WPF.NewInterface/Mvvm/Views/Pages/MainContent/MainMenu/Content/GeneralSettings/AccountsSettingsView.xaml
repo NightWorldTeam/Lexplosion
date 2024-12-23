@@ -11,6 +11,8 @@
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
     xmlns:localVm="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:objects="clr-namespace:Lexplosion.WPF.NewInterface.Core.Objects"
+    xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
     d:DataContext="{d:DesignInstance Type=localVm:AccountsSettingsViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
@@ -58,7 +60,7 @@
             </Setter>
         </Style>
 
-        <DataTemplate DataType="{x:Type accounts:Account}">
+        <DataTemplate DataType="{x:Type objects:AccountItem}">
             <Border
                 Padding="8,8,0,8"
                 BorderBrush="{DynamicResource SeparateSolidColorBrush}"
@@ -78,7 +80,7 @@
                         Height="32"
                         CornerRadius="5">
                         <Border.Background>
-                            <ImageBrush ImageSource="{Binding HeadImageUrl}" />
+                            <ImageBrush ImageSource="{Binding Account.HeadImageUrl}" />
                         </Border.Background>
                     </Border>
 
@@ -88,12 +90,12 @@
                             FontSize="16"
                             FontWeight="Medium"
                             Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                            Text="{Binding Login}" />
+                            Text="{Binding Account.Login}" />
                         <TextBlock
                             Margin="0,4,0,0"
                             FontSize="14"
                             Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
-                            Text="{Binding Login}" />
+                            Text="{Binding Account.Login}" />
                     </StackPanel>
 
                     <StackPanel
@@ -101,7 +103,8 @@
                         Margin="8,0,0,0"
                         Orientation="Horizontal">
 
-                        <core:If Condition="{Binding IsAuthInProcess, UpdateSourceTrigger=PropertyChanged}">
+                        <!--  TODO: Translate  -->
+                        <core:If Condition="{Binding Account.IsAuthInProcess, UpdateSourceTrigger=PropertyChanged}">
                             <core:If.True>
                                 <Border
                                     Height="24"
@@ -131,7 +134,7 @@
                         </core:If>
 
                         <!--  Active Status  -->
-                        <core:If Condition="{Binding IsActive}" Visibility="{Binding DataContext.IsNightWorldAccount, Converter={converters:BooleanToVisibilityConverter}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}}">
+                        <core:If Condition="{Binding Account.IsActive}" Visibility="{Binding IsNightWorldAccount, Converter={converters:BooleanToVisibilityConverter}}">
                             <core:If.True>
                                 <Border
                                     Height="24"
@@ -168,7 +171,7 @@
                         </core:If>
 
                         <!--  Launch Account  -->
-                        <core:If Condition="{Binding IsLaunch, UpdateSourceTrigger=PropertyChanged}">
+                        <core:If Condition="{Binding Account.IsLaunch, UpdateSourceTrigger=PropertyChanged}">
                             <core:If.True>
                                 <Border
                                     Height="24"
@@ -203,7 +206,7 @@
                                 <Style TargetType="{x:Type Border}">
                                     <Setter Property="Visibility" Value="Visible" />
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding AuthorizationCodeResult}" Value="{x:Static enums:AuthCode.Successfully}">
+                                        <DataTrigger Binding="{Binding Account.AuthorizationCodeResult}" Value="{x:Static enums:AuthCode.Successfully}">
                                             <Setter Property="Visibility" Value="Collapsed" />
                                         </DataTrigger>
                                     </Style.Triggers>
@@ -234,7 +237,7 @@
                         <Button
                             Margin="8,0,0,0"
                             Command="{Binding Data.ActivateAccountCommand, Source={StaticResource ViewModel}}"
-                            CommandParameter="{Binding}"
+                            CommandParameter="{Binding Account}"
                             Content="FlashOn"
                             Foreground="{DynamicResource ActivitySolidColorBrush}">
                             <Button.Style>
@@ -243,9 +246,9 @@
                                     <Style.Triggers>
                                         <MultiDataTrigger>
                                             <MultiDataTrigger.Conditions>
-                                                <Condition Binding="{Binding DataContext.IsNightWorldAccount, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}}" Value="True" />
-                                                <Condition Binding="{Binding IsActive}" Value="False" />
-                                                <Condition Binding="{Binding IsTokenValid}" Value="True" />
+                                                <Condition Binding="{Binding IsNightWorldAccount}" Value="True" />
+                                                <Condition Binding="{Binding Account.IsActive}" Value="False" />
+                                                <Condition Binding="{Binding Account.IsTokenValid}" Value="True" />
                                             </MultiDataTrigger.Conditions>
                                             <MultiDataTrigger.Setters>
                                                 <Setter Property="Visibility" Value="Visible" />
@@ -256,12 +259,12 @@
                             </Button.Style>
                         </Button>
 
-                        <core:If Condition="{Binding IsLaunch}">
+                        <core:If Condition="{Binding Account.IsLaunch}">
                             <core:If.False>
                                 <Button
                                     Margin="8,0,0,0"
                                     Command="{Binding Data.DoAccountLauncherCommand, Source={StaticResource ViewModel}}"
-                                    CommandParameter="{Binding}"
+                                    CommandParameter="{Binding Account}"
                                     Content="PlayArrow"
                                     Foreground="{DynamicResource ActivitySolidColorBrush}"
                                     Style="{StaticResource x32IconButtonActivityColor}" />
@@ -271,7 +274,7 @@
                         <Button
                             Margin="8,0,0,0"
                             Command="{Binding Data.ReauthAccountCommand, Source={StaticResource ViewModel}}"
-                            CommandParameter="{Binding}"
+                            CommandParameter="{Binding Account}"
                             Content="Reload"
                             Foreground="{DynamicResource ActivitySolidColorBrush}"
                             Style="{StaticResource x32IconButtonActivityColor}" />
@@ -279,7 +282,7 @@
                         <Button
                             Margin="8,0,0,0"
                             Command="{Binding Data.SingOutCommand, Source={StaticResource ViewModel}}"
-                            CommandParameter="{Binding}"
+                            CommandParameter="{Binding Account}"
                             Content="Logout"
                             Foreground="Red"
                             Style="{StaticResource x32IconButtonActivityColor}" />
@@ -288,45 +291,7 @@
             </Border>
         </DataTemplate>
 
-        <DataTemplate DataType="{x:Type localVm:Accounts}">
-            <Grid Visibility="{Binding List.View.IsEmpty, UpdateSourceTrigger=PropertyChanged, Converter={converters:NegativeBooleanToVisibilityConverter}}">
-
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-
-                <Border
-                    Padding="0,0,0,8"
-                    VerticalAlignment="Top"
-                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                    BorderThickness="0,0,0,2">
-                    <StackPanel Orientation="Horizontal">
-                        <Border
-                            Width="28"
-                            Height="28"
-                            Margin="0,0,8,0">
-                            <Border.Background>
-                                <ImageBrush ImageSource="{Binding IconSource, Converter={converters:ImagePathValidateConverter}}" />
-                            </Border.Background>
-                        </Border>
-
-                        <TextBlock
-                            FontSize="16"
-                            FontWeight="Medium"
-                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                            Text="{Binding Type, Converter={converters:ToStringConverter}}" />
-                    </StackPanel>
-                </Border>
-
-                <ItemsControl
-                    x:Name="AccountList"
-                    Grid.Row="1"
-                    Margin="0,0,0,32"
-                    Grid.IsSharedSizeScope="True"
-                    ItemsSource="{Binding List.View}" />
-            </Grid>
-        </DataTemplate>
+        <CollectionViewSource x:Key="AccountSourceView" Source="{Binding Model.Accounts}" />
     </UserControl.Resources>
 
     <Grid Margin="32,16,32,16">
@@ -338,6 +303,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
+
         </Grid.ColumnDefinitions>
 
         <controls:SearchBox
@@ -365,14 +331,49 @@
                 Style="{StaticResource x32IconButtonActivityColor}" />
         </StackPanel>
 
-        <ScrollViewer
+        <ListBox
             Grid.Row="1"
             Grid.ColumnSpan="3"
-            Margin="-32,24,-32,0">
-            <ItemsControl
-                Margin="32,0"
-                Grid.IsSharedSizeScope="True"
-                ItemsSource="{Binding Model.AccountsByType}" />
-        </ScrollViewer>
+            Margin="0,24,-32,0"
+            ItemsSource="{Binding Source={StaticResource AccountSourceView}}"
+            Style="{StaticResource TransparentListBox}">
+            <ListBox.GroupStyle>
+                <GroupStyle>
+                    <GroupStyle.HeaderTemplate>
+                        <DataTemplate>
+                            <Border
+                                Margin="0,0,32,0"
+                                Padding="0,0,0,8"
+                                VerticalAlignment="Top"
+                                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                BorderThickness="0,0,0,2">
+                                <StackPanel Orientation="Horizontal">
+                                    <Border
+                                        Width="28"
+                                        Height="28"
+                                        Margin="0,0,8,0">
+                                        <Border.Background>
+                                            <ImageBrush ImageSource="{Binding Name.IconSource, Converter={converters:ImagePathValidateConverter}}" />
+                                        </Border.Background>
+                                    </Border>
+
+                                    <TextBlock
+                                        FontSize="16"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                        Text="{Binding Name.Type, Converter={converters:ToStringConverter}}" />
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </GroupStyle.HeaderTemplate>
+                </GroupStyle>
+            </ListBox.GroupStyle>
+
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Margin="0,0,32,24" Orientation="Vertical" />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+        </ListBox>
     </Grid>
 </UserControl>

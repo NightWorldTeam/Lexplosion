@@ -37,7 +37,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu
 
             if (status1.Priority > status2.Priority)
                 return -1;
-            else if (status1.Priority > status2.Priority)
+            else if (status1.Priority < status2.Priority)
                 return 1;
 
             return 0;
