@@ -37,7 +37,7 @@
                             x:Name="PART_PreviousPageButton"
                             Height="32"
                             Style="{DynamicResource DefaultPaginatorMovingAdvancedButton}"
-                            Text="Previous" />
+                            Text="{DynamicResource PaginatorPrevious}" />
 
                         <StackPanel
                             x:Name="PART_NumbersPanel"
@@ -45,10 +45,10 @@
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             Orientation="Horizontal">
-                            <TextBlock
-                                FontWeight="Medium"
-                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                Text="Page " />
+                            <TextBlock FontWeight="Medium" Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}">
+                                <Run Text="{DynamicResource PaginatorPage}" />
+                                <Run Text=" " />
+                            </TextBlock>
 
                             <TextBlock
                                 x:Name="CurrentIndexValueTextBlock"
@@ -56,10 +56,11 @@
                                 FontWeight="Medium"
                                 Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
 
-                            <TextBlock
-                                FontWeight="Medium"
-                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                Text=" of " />
+                            <TextBlock FontWeight="Medium" Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}">
+                                <Run Text=" " />
+                                <Run Text="{DynamicResource PaginatorPageOf}" />
+                                <Run Text=" " />
+                            </TextBlock>
 
                             <TextBlock
                                 x:Name="MaxPage"
@@ -75,7 +76,7 @@
                             Height="32"
                             Margin="0,0,0,0"
                             Style="{DynamicResource DefaultPaginatorMovingAdvancedButton}"
-                            Text="Next" />
+                            Text="{DynamicResource PaginatorNext}" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

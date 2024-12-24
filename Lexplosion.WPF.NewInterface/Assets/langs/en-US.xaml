@@ -449,4 +449,11 @@
     <s:String x:Key="DeclineFriendRequest">Decline friend request</s:String>
     <s:String x:Key="CancelFriendRequest">Cancel friend request</s:String>
     <s:String x:Key="SendFriendRequest">Send friend request</s:String>
+
+
+    <!--  Paginator  -->
+    <s:String x:Key="PaginatorPrevious">Previous</s:String>
+    <s:String x:Key="PaginatorNext">Next</s:String>
+    <s:String x:Key="PaginatorPage">Page</s:String>
+    <s:String x:Key="PaginatorPageOf">of</s:String>
 </ResourceDictionary>

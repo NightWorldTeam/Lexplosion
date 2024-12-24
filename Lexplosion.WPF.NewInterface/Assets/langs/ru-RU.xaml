@@ -445,4 +445,12 @@
     <s:String x:Key="DeclineFriendRequest">Отклонить заявку в друзья</s:String>
     <s:String x:Key="CancelFriendRequest">Отменить заявку в друзья</s:String>
     <s:String x:Key="SendFriendRequest">Отправить заявку в друзья</s:String>
+
+
+
+    <!--  Paginator  -->
+    <s:String x:Key="PaginatorPrevious">Назад</s:String>
+    <s:String x:Key="PaginatorNext">Далее</s:String>
+    <s:String x:Key="PaginatorPage">Страница</s:String>
+    <s:String x:Key="PaginatorPageOf">из</s:String>
 </ResourceDictionary>
