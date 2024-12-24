@@ -5,12 +5,15 @@
     xmlns:controls="clr-namespace:Lexplosion.WPF.NewInterface.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
+    xmlns:instanceprofile="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.InstanceProfile"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:valueconverters="clr-namespace:Lexplosion.WPF.NewInterface.Core.Converters"
+    d:DataContext="{d:DesignInstance Type=instanceprofile:InstanceProfileAddonsLayoutViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
+
     <Grid Background="{DynamicResource PrimarySolidColorBrush}" ShowGridLines="False">
 
         <Grid.RowDefinitions>
@@ -77,7 +80,8 @@
                     Command="{Binding OpenMarketCommand, UpdateSourceTrigger=PropertyChanged}"
                     Content="AddCircle"
                     Cursor="Hand"
-                    Style="{StaticResource x32IconButtonWithHover}" />
+                    Style="{StaticResource x32IconButtonWithHover}"
+                    ToolTip="{DynamicResource AddNewAddon}" />
             </Border>
 
             <!--  Open Folder  -->
@@ -90,7 +94,8 @@
                     Command="{Binding OpenFolderCommand, UpdateSourceTrigger=PropertyChanged}"
                     Content="Folder"
                     Cursor="Hand"
-                    Style="{StaticResource x32IconButtonWithHover}" />
+                    Style="{StaticResource x32IconButtonWithHover}"
+                    ToolTip="{DynamicResource AddonOpenFolder}" />
             </Border>
 
             <!--  Reload  -->
@@ -103,7 +108,8 @@
                     Command="{Binding ReloadCommand, UpdateSourceTrigger=PropertyChanged}"
                     Content="Reload"
                     Cursor="Hand"
-                    Style="{StaticResource x32IconButtonWithHover}" />
+                    Style="{StaticResource x32IconButtonWithHover}"
+                    ToolTip="{DynamicResource AddonReloadList}" />
             </Border>
 
             <Border
@@ -114,7 +120,8 @@
                     Width="32"
                     Content="Services"
                     IsChecked="{Binding IsLargeBlocks, UpdateSourceTrigger=PropertyChanged}"
-                    Style="{StaticResource IconToggleButton}" />
+                    Style="{StaticResource IconToggleButton}"
+                    ToolTip="{DynamicResource AddonChangeView}" />
             </Border>
         </StackPanel>
     </Grid>

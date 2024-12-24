@@ -212,7 +212,8 @@
                             Foreground="{DynamicResource ActivitySolidColorBrush}"
                             IconData="{DynamicResource PDAddPerson}"
                             IconPadding="0,8"
-                            Style="{StaticResource HalfOpacityAdvancedButton}" />
+                            Style="{StaticResource HalfOpacityAdvancedButton}"
+                            ToolTip="{DynamicResource AcceptFriendRequest}" />
 
                         <controls:AdvancedButton
                             Width="32"
@@ -224,7 +225,8 @@
                             Foreground="{DynamicResource ActivitySolidColorBrush}"
                             IconData="{DynamicResource PDRemovePerson}"
                             IconPadding="0,8"
-                            Style="{StaticResource HalfOpacityAdvancedButton}" />
+                            Style="{StaticResource HalfOpacityAdvancedButton}"
+                            ToolTip="{DynamicResource DeclineFriendRequest}" />
                     </StackPanel>
                 </Grid>
             </Border>
@@ -415,7 +417,8 @@
                         Foreground="{DynamicResource ActivitySolidColorBrush}"
                         IconData="{DynamicResource PDRemovePerson}"
                         IconPadding="0,8"
-                        Style="{StaticResource HalfOpacityAdvancedButton}" />
+                        Style="{StaticResource HalfOpacityAdvancedButton}"
+                        ToolTip="{DynamicResource CancelFriendRequest}" />
                 </Grid>
             </Border>
         </DataTemplate>

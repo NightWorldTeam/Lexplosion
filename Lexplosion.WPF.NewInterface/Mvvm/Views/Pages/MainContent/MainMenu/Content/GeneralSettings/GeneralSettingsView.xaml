@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:Lexplosion.WPF.NewInterface.Controls"
+    xmlns:converters="clr-namespace:Lexplosion.WPF.NewInterface.Core.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu"
@@ -262,8 +263,10 @@
 
                                 <ComboBox
                                     ItemsSource="{Binding Model.Resolutions}"
+                                    MaxDropDownHeight="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={converters:WindowHeightToXProcentHeight}, ConverterParameter=52}"
                                     SelectedIndex="0"
-                                    SelectedValue="{Binding Model.SelectedResolution}" />
+                                    SelectedValue="{Binding Model.SelectedResolution}"
+                                    ToolTip="{DynamicResource DisplayResolution}" />
 
                                 <controls:AdvancedTextBox
                                     Width="75"
@@ -381,8 +384,9 @@
                                         Command="{Binding OpenGameDirectoryFolderBrowserCommand}"
                                         Content="Folder"
                                         FontSize="16"
-                                        Foreground="{DynamicResource CheckBoxMarkSolidColorBrush}"
-                                        Style="{StaticResource x32IconButtonActivityColor}" />
+                                        Foreground="{DynamicResource ActivitySolidColorBrush}"
+                                        Style="{StaticResource x32IconButtonActivityColor}"
+                                        ToolTip="{DynamicResource Browse}" />
                                     <!-- TODO: либо восстановить либо убрать кнопку <Button
                                         Margin="8,0,0,0"
                                         Content="Reload"
@@ -476,15 +480,17 @@
                                         Command="{Binding OpenJavaFolderBrowserCommand}"
                                         Content="Folder"
                                         FontSize="16"
-                                        Foreground="{DynamicResource CheckBoxMarkSolidColorBrush}"
-                                        Style="{StaticResource x32IconButtonActivityColor}" />
+                                        Foreground="{DynamicResource ActivitySolidColorBrush}"
+                                        Style="{StaticResource x32IconButtonActivityColor}"
+                                        ToolTip="{DynamicResource Browse}" />
                                     <Button
                                         Margin="8,0,0,0"
                                         Command="{Binding ResetJavaPathCommand}"
                                         Content="Reload"
                                         FontSize="16"
-                                        Foreground="{DynamicResource CheckBoxMarkSolidColorBrush}"
-                                        Style="{StaticResource x32IconButtonActivityColor}" />
+                                        Foreground="{DynamicResource ActivitySolidColorBrush}"
+                                        Style="{StaticResource x32IconButtonActivityColor}"
+                                        ToolTip="{DynamicResource JavaResetPath}" />
                                 </WrapPanel>
 
                             </Grid>

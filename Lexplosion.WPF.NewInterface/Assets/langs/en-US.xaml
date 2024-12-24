@@ -424,4 +424,29 @@
 
     <!--  Instance Addons  -->
     <s:String x:Key="FileName">File Name</s:String>
+
+    <!--  Account Funcs  -->
+    <s:String x:Key="LaunchAccount">Set the game to launch via account</s:String>
+    <s:String x:Key="MakeAccountActive">Set account active</s:String>
+    <s:String x:Key="ReloadAccount">Reload Account</s:String>
+    <s:String x:Key="LogoutAccount">Logout account</s:String>
+    <s:String x:Key="LogoutAllAccounts">Logout of all accounts</s:String>
+    <s:String x:Key="AddNewAccount">Add new account</s:String>
+
+    <!--  Addon ToolTip  -->
+    <s:String x:Key="AddNewAddon">Install</s:String>
+    <s:String x:Key="AddonOpenFolder">Open folder</s:String>
+    <s:String x:Key="AddonReloadList">Reload list</s:String>
+    <s:String x:Key="AddonChangeView">Change view</s:String>
+
+    <!--  Instance Settings  -->
+    <s:String x:Key="DisplayResolution">Display resolutions</s:String>
+    <s:String x:Key="Browse">Browse</s:String>
+    <s:String x:Key="JavaResetPath">Reset java path</s:String>
+
+
+    <s:String x:Key="AcceptFriendRequest">Accept friend request</s:String>
+    <s:String x:Key="DeclineFriendRequest">Decline friend request</s:String>
+    <s:String x:Key="CancelFriendRequest">Cancel friend request</s:String>
+    <s:String x:Key="SendFriendRequest">Send friend request</s:String>
 </ResourceDictionary>

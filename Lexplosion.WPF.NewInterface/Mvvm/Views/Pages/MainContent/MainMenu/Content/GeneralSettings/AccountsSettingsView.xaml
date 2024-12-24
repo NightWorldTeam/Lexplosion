@@ -239,7 +239,8 @@
                             Command="{Binding Data.ActivateAccountCommand, Source={StaticResource ViewModel}}"
                             CommandParameter="{Binding Account}"
                             Content="FlashOn"
-                            Foreground="{DynamicResource ActivitySolidColorBrush}">
+                            Foreground="{DynamicResource ActivitySolidColorBrush}"
+                            ToolTip="{DynamicResource MakeAccountActive}">
                             <Button.Style>
                                 <Style BasedOn="{StaticResource x32IconButtonActivityColor}" TargetType="{x:Type Button}">
                                     <Setter Property="Visibility" Value="Collapsed" />
@@ -267,7 +268,8 @@
                                     CommandParameter="{Binding Account}"
                                     Content="PlayArrow"
                                     Foreground="{DynamicResource ActivitySolidColorBrush}"
-                                    Style="{StaticResource x32IconButtonActivityColor}" />
+                                    Style="{StaticResource x32IconButtonActivityColor}"
+                                    ToolTip="{DynamicResource LaunchAccount}" />
                             </core:If.False>
                         </core:If>
 
@@ -277,7 +279,8 @@
                             CommandParameter="{Binding Account}"
                             Content="Reload"
                             Foreground="{DynamicResource ActivitySolidColorBrush}"
-                            Style="{StaticResource x32IconButtonActivityColor}" />
+                            Style="{StaticResource x32IconButtonActivityColor}"
+                            ToolTip="{DynamicResource ReloadAccount}" />
 
                         <Button
                             Margin="8,0,0,0"
@@ -285,7 +288,8 @@
                             CommandParameter="{Binding Account}"
                             Content="Logout"
                             Foreground="Red"
-                            Style="{StaticResource x32IconButtonActivityColor}" />
+                            Style="{StaticResource x32IconButtonActivityColor}"
+                            ToolTip="{DynamicResource LogoutAccount}" />
                     </StackPanel>
                 </Grid>
             </Border>
@@ -321,14 +325,18 @@
                 Command="{Binding OpenAccountFactoryCommand}"
                 IconData="{DynamicResource PDAddCircle}"
                 IconPadding="2"
-                Style="{DynamicResource DefaultAdvancedButton}" />
+                Style="{DynamicResource DefaultAdvancedButton}"
+                ToolTip="{DynamicResource AddNewAccount}"
+                ToolTipService.PlacementRectangle="16,56,0,0" />
             <Button
                 Width="32"
                 Height="32"
                 Margin="8,0,0,0"
                 Content="AccountGroupRemove"
                 Foreground="Red"
-                Style="{StaticResource x32IconButtonActivityColor}" />
+                Style="{StaticResource x32IconButtonActivityColor}"
+                ToolTip="{DynamicResource LogoutAllAccounts}"
+                ToolTipService.PlacementRectangle="16,56,0,0" />
         </StackPanel>
 
         <ListBox

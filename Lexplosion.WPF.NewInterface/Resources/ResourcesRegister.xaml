@@ -5,6 +5,7 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="Fonts.xaml" />
         <ResourceDictionary Source="Icons.xaml" />
+        <ResourceDictionary Source="Styles/ToolTip.xaml" />
         <ResourceDictionary Source="Styles/AdvancedButton.xaml" />
         <ResourceDictionary Source="Styles/AdvancedToggleButton.xaml" />
         <ResourceDictionary Source="Styles/TextBlock.xaml" />

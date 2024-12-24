@@ -70,8 +70,6 @@ namespace Lexplosion.WPF.NewInterface.Controls
             protected set => SetValue(HasIconPropertyKey, value);
         }
 
-
-
         public string Text
         {
             get => (string)GetValue(TextProperty);

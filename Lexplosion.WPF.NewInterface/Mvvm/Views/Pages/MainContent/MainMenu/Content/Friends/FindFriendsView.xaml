@@ -203,7 +203,8 @@
                                 Foreground="{DynamicResource ActivitySolidColorBrush}"
                                 IconData="{DynamicResource PDAddPerson}"
                                 IconPadding="0,8"
-                                Style="{StaticResource HalfOpacityAdvancedButton}" />
+                                Style="{StaticResource HalfOpacityAdvancedButton}"
+                                ToolTip="{DynamicResource SendFriendRequest}" />
                         </core:If.False>
                         <core:If.True>
                             <controls:AdvancedButton
@@ -216,7 +217,8 @@
                                 Foreground="{DynamicResource ActivitySolidColorBrush}"
                                 IconData="{DynamicResource PDRemovePerson}"
                                 IconPadding="0,8"
-                                Style="{StaticResource HalfOpacityAdvancedButton}" />
+                                Style="{StaticResource HalfOpacityAdvancedButton}"
+                                ToolTip="{DynamicResource CancelFriendRequest}" />
                         </core:If.True>
                     </core:If>
                 </Grid>

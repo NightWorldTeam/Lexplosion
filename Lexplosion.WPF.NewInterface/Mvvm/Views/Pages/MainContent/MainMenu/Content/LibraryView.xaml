@@ -592,7 +592,9 @@
                 Command="{Binding OpenInstanceFactoryCommand}"
                 CornerRadius="100"
                 Foreground="{DynamicResource ActivitySolidColorBrush}"
-                IconData="{StaticResource PDAddCircle}" />
+                IconData="{StaticResource PDAddCircle}"
+                ToolTip="{DynamicResource CreateInstance}"
+                ToolTipService.PlacementRectangle="-64,20,0,0" />
 
             <controls:BackTop x:Name="BackTopButton" Style="{StaticResource sm-backtop-default}" />
 

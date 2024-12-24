@@ -254,7 +254,9 @@
                                 Background="Transparent"
                                 Command="{Binding RebootCommand}"
                                 Cursor="Hand"
-                                Style="{StaticResource EmptyButton}">
+                                Style="{StaticResource EmptyButton}"
+                                ToolTip="{DynamicResource ReloadMutlplayer}"
+                                ToolTipService.PlacementRectangle="108,16,0,0">
                                 <Border Background="{DynamicResource SecondarySolidColorBrush}" CornerRadius="5">
                                     <Viewbox Height="16">
                                         <Path
@@ -263,53 +265,6 @@
                                             Stretch="Fill" />
                                     </Viewbox>
                                 </Border>
-
-                                <Button.ToolTip>
-                                    <ToolTip
-                                        Background="Transparent"
-                                        BorderThickness="0"
-                                        Placement="Top"
-                                        PlacementRectangle="-54.5,0,0,0"
-                                        PlacementTarget="{Binding ElementName=MainPanel}">
-                                        <!--  Custom ToolTip  -->
-                                        <Grid
-                                            HorizontalAlignment="Center"
-                                            VerticalAlignment="Center"
-                                            Visibility="Visible">
-
-                                            <!--  Top / Bottom -> 40  -->
-                                            <!--  Left / Right -> 44  -->
-
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto" />
-                                            </Grid.ColumnDefinitions>
-
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                            </Grid.RowDefinitions>
-
-                                            <Border
-                                                Height="32"
-                                                Background="Black"
-                                                CornerRadius="5">
-                                                <TextBlock
-                                                    Padding="16"
-                                                    VerticalAlignment="Center"
-                                                    FontSize="13"
-                                                    FontWeight="Medium"
-                                                    Foreground="White"
-                                                    Text="{DynamicResource ReloadMutlplayer}" />
-                                            </Border>
-
-                                            <Polygon
-                                                Grid.Row="1"
-                                                HorizontalAlignment="Center"
-                                                Fill="Black"
-                                                Points="10,0 5,5, 0,0" />
-                                        </Grid>
-                                    </ToolTip>
-                                </Button.ToolTip>
                             </Button>
                         </Grid>
 

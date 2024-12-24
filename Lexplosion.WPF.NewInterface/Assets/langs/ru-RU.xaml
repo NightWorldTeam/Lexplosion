@@ -418,4 +418,31 @@
 
     <!--  Instance Addons  -->
     <s:String x:Key="FileName">Имя файла</s:String>
+
+
+
+    <!--  Account Funcs  -->
+    <s:String x:Key="LaunchAccount">Назначить для игры</s:String>
+    <s:String x:Key="MakeAccountActive">Сделать активным</s:String>
+    <s:String x:Key="ReloadAccount">Обновить</s:String>
+    <s:String x:Key="LogoutAccount">Удалить</s:String>
+    <s:String x:Key="LogoutAllAccounts">Удалить все аккаунты</s:String>
+    <s:String x:Key="AddNewAccount">Добавить новый аккаунт</s:String>
+
+    <!--  Addon ToolTip  -->
+    <s:String x:Key="AddNewAddon">Установить</s:String>
+    <s:String x:Key="AddonOpenFolder">Открыть папку</s:String>
+    <s:String x:Key="AddonReloadList">Обновить список</s:String>
+    <s:String x:Key="AddonChangeView">Изменить представление</s:String>
+
+    <!--  Instance Settings  -->
+    <s:String x:Key="DisplayResolution">Разрешения экрана</s:String>
+    <s:String x:Key="Browse">Обзор</s:String>
+    <s:String x:Key="JavaResetPath">Сброс пути до java</s:String>
+
+
+    <s:String x:Key="AcceptFriendRequest">Принять заявку в друзья</s:String>
+    <s:String x:Key="DeclineFriendRequest">Отклонить заявку в друзья</s:String>
+    <s:String x:Key="CancelFriendRequest">Отменить заявку в друзья</s:String>
+    <s:String x:Key="SendFriendRequest">Отправить заявку в друзья</s:String>
 </ResourceDictionary>

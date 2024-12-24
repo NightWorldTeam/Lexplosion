@@ -642,7 +642,9 @@
                                 BorderThickness="1"
                                 Command="{Binding LaunchInstanceCommand}"
                                 Foreground="{DynamicResource ActivitySolidColorBrush}"
-                                IsLoaded="{Binding Model.IsGameLoaded}" />
+                                IsLoaded="{Binding Model.IsGameLoaded}"
+                                ToolTip="{DynamicResource Launch}"
+                                ToolTipService.PlacementRectangle="-50,20,0,0" />
 
                             <controls:BackTop
                                 Grid.Column="1"

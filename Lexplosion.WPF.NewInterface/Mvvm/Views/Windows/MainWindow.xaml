@@ -236,69 +236,16 @@
                         Background="{DynamicResource SeparateSolidColorBrush}"
                         CornerRadius="2"
                         MouseDown="Border_MouseDown_2"
+                        ToolTip="Изменить положение меню"
                         ToolTipService.BetweenShowDelay="0"
-                        ToolTipService.InitialShowDelay="0">
+                        ToolTipService.InitialShowDelay="0"
+                        ToolTipService.PlacementRectangle="7,40,0,0">
                         <Viewbox Height="14">
                             <Path
                                 extensions:Path.StringKeyData="IndentDecrease"
                                 Fill="{DynamicResource ActivitySolidColorBrush}"
                                 Stretch="Fill" />
                         </Viewbox>
-
-                        <Border.ToolTip>
-                            <ToolTip
-                                Background="Transparent"
-                                BorderThickness="0"
-                                Placement="Center"
-                                PlacementRectangle="7,40,0,0"
-                                PlacementTarget="{Binding ElementName=MainPanel}">
-
-                                <!--  Custom ToolTip  -->
-
-                                <Grid
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    MouseDown="Grid_MouseDown"
-                                    Visibility="Visible">
-
-
-                                    <!--
-                                        Top / Bottom -> 40
-                                        Left / Right -> 44
-                                    -->
-
-
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
-
-                                    <Border
-                                        Grid.Row="1"
-                                        Height="32"
-                                        Background="Black"
-                                        CornerRadius="5">
-                                        <TextBlock
-                                            Padding="15,14,15,14"
-                                            VerticalAlignment="Center"
-                                            FontSize="12"
-                                            FontWeight="Medium"
-                                            Foreground="{DynamicResource CheckBoxMarkSolidColorBrush}"
-                                            Text="Изменить положение меню" />
-                                    </Border>
-
-                                    <Polygon
-                                        Grid.Row="0"
-                                        HorizontalAlignment="Center"
-                                        Fill="Black"
-                                        Points="5,10, 10, 5, 15,10" />
-                                </Grid>
-                            </ToolTip>
-                        </Border.ToolTip>
                     </Border>
 
 
@@ -313,7 +260,8 @@
                         CornerRadius="2"
                         MouseDown="ScaleFit_MouseDown"
                         ToolTipService.BetweenShowDelay="0"
-                        ToolTipService.InitialShowDelay="0">
+                        ToolTipService.InitialShowDelay="0"
+                        ToolTipService.PlacementRectangle="7,40,0,0">
 
                         <Viewbox Height="14">
                             <Path
@@ -321,61 +269,6 @@
                                 Fill="{DynamicResource ActivitySolidColorBrush}"
                                 Stretch="Fill" />
                         </Viewbox>
-
-                        <Border.ToolTip>
-                            <ToolTip
-                                Background="Transparent"
-                                BorderThickness="0"
-                                Placement="Center"
-                                PlacementRectangle="7,40,0,0"
-                                PlacementTarget="{Binding ElementName=MainPanel}">
-
-                                <!--  Custom ToolTip  -->
-
-                                <Grid
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    MouseDown="Grid_MouseDown"
-                                    Visibility="Visible">
-
-
-                                    <!--
-                                        Top / Bottom -> 40
-                                        Left / Right -> 44
-                                    -->
-
-
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
-
-                                    <Border
-                                        Grid.Row="1"
-                                        Height="32"
-                                        Background="Black"
-                                        CornerRadius="5">
-                                        <TextBlock
-                                            Padding="15,14,15,14"
-                                            VerticalAlignment="Center"
-                                            FontSize="12"
-                                            FontWeight="Medium"
-                                            Foreground="{DynamicResource CheckBoxMarkSolidColorBrush}"
-                                            Text="Увеличить интерфейс" />
-                                    </Border>
-
-                                    <Polygon
-                                        Grid.Row="0"
-                                        HorizontalAlignment="Center"
-                                        Fill="Black"
-                                        Points="5,10, 10, 5, 15,10" />
-                                </Grid>
-                            </ToolTip>
-                        </Border.ToolTip>
                     </Border>
                 </StackPanel>
             </Grid>
