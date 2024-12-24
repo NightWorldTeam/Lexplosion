@@ -44,6 +44,46 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
         }
 
 
+        #region Tooltip
+
+
+        private bool _isToolTipsEnabled;
+        public bool IsToolTipsEnabled
+        {
+            get => _isToolTipsEnabled; set
+            {
+                _isToolTipsEnabled = value;
+                OnPropertyChanged();
+                OnToolTipStateChanged();
+            }
+        }
+
+
+        private int _initialShowDelay;
+        public int InitialShowDelay 
+        {
+            get => _initialShowDelay; set 
+            {
+                _initialShowDelay = value;
+                OnPropertyChanged();
+                OnInitialShowDelayChanged();
+            }
+        }       
+        
+        private int _betweenShowDelay;
+        public int BetweenShowDelay
+        {
+            get => _betweenShowDelay; set 
+            {
+                _betweenShowDelay = value;
+                OnPropertyChanged();
+                OnBetweenShowDelayChanged();
+            }
+        }
+
+
+        #endregion Tooltip
+
         public AppearanceSettingsModel()
         {
             LoadThemes();
@@ -115,6 +155,26 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
                 GlobalData.GeneralSettings.ThemeName = theme.Name;
                 DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
             }
+        }
+
+
+        /// <summary>
+        /// Изменяет состояние всплывающих подсказок
+        /// </summary>
+        private void OnToolTipStateChanged() 
+        {
+            RuntimeApp.ChangeToolTipState(IsToolTipsEnabled);
+        }
+
+
+        private void OnInitialShowDelayChanged() 
+        {
+            RuntimeApp.ChangeSettingInitialShowDelay(InitialShowDelay);
+        }
+
+        private void OnBetweenShowDelayChanged()
+        {
+            RuntimeApp.ChangeSettingBetweenShowDelay(BetweenShowDelay);
         }
 
 

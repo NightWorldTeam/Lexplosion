@@ -456,4 +456,19 @@
     <s:String x:Key="PaginatorNext">Next</s:String>
     <s:String x:Key="PaginatorPage">Page</s:String>
     <s:String x:Key="PaginatorPageOf">of</s:String>
+
+    <!--  ToolTip Appearance Settings  -->
+
+    <s:String x:Key="Tooltip">Tooltip</s:String>
+    <s:String x:Key="TooltipDescription">Settings tooltips</s:String>
+
+    <s:String x:Key="ToolTipState">Tooltip state</s:String>
+    <s:String x:Key="ToolTipStateDescription">This parameter is responsible for the state of pop-up hints (on/off)</s:String>
+
+    <s:String x:Key="InitialShowDelay">InitialShowDelay</s:String>
+    <s:String x:Key="InitialShowDelayDescription">The delay (in milliseconds) before the tooltip is displayed after the mouse pointer hovers over the element.</s:String>
+    <s:String x:Key="BetweenShowDelay">BetweenShowDelay</s:String>
+    <s:String x:Key="BetweenShowDelayDescription">
+        The time interval (in milliseconds) during which the tooltip can move from one tooltip to another without the delay specified by the InitialShowDelay property.
+    </s:String>
 </ResourceDictionary>

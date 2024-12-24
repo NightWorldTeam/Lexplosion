@@ -4,10 +4,12 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:Lexplosion.WPF.NewInterface.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:extension="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
+    xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu"
+    xmlns:mainmenu="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:objects="clr-namespace:Lexplosion.WPF.NewInterface.Core.Objects"
+    d:DataContext="{d:DesignInstance Type=mainmenu:AppearanceSettingsViewModel}"
     d:DesignWidth="800"
     mc:Ignorable="d">
 
@@ -36,7 +38,7 @@
                                 Height="16"
                                 Opacity="0">
                                 <Path
-                                    extension:Path.StringKeyData="CheckMark"
+                                    extensions:Path.StringKeyData="CheckMark"
                                     Fill="{DynamicResource CheckBoxMarkSolidColorBrush}"
                                     Stretch="Fill" />
                             </Viewbox>
@@ -135,7 +137,7 @@
                                                     Height="14"
                                                     Margin="-4,-4,0,0"
                                                     Opacity="0">
-                                                    <Path extension:Path.StringKeyData="CheckMark" Fill="{DynamicResource ActivitySolidColorBrush}" />
+                                                    <Path extensions:Path.StringKeyData="CheckMark" Fill="{DynamicResource ActivitySolidColorBrush}" />
                                                 </Viewbox>
                                             </Grid>
                                         </Grid>
@@ -349,6 +351,7 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
                     <Border
@@ -357,12 +360,12 @@
                         BorderThickness="0,0,0,2">
                         <StackPanel>
                             <TextBlock
-                                extension:TextBlock.TextByKey="AccentColor"
+                                extensions:TextBlock.TextByKey="AccentColor"
                                 FontSize="16"
                                 FontWeight="Medium"
                                 Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
                             <TextBlock
-                                extension:TextBlock.TextByKey="ChooseAccentColor"
+                                extensions:TextBlock.TextByKey="ChooseAccentColor"
                                 FontSize="14"
                                 FontWeight="Medium"
                                 Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
@@ -390,19 +393,19 @@
 
                     <Border
                         Grid.Row="1"
-                        Margin="0,16,0,32"
+                        Margin="0,16,0,0"
                         Padding="0,0,0,16"
                         BorderBrush="{DynamicResource SeparateSolidColorBrush}"
                         BorderThickness="0,0,0,2">
                         <StackPanel Orientation="Vertical">
 
                             <TextBlock
-                                extension:TextBlock.TextByKey="InterfaceTheme"
+                                extensions:TextBlock.TextByKey="InterfaceTheme"
                                 FontSize="16"
                                 FontWeight="Medium"
                                 Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
                             <TextBlock
-                                extension:TextBlock.TextByKey="ChooseTheme"
+                                extensions:TextBlock.TextByKey="ChooseTheme"
                                 FontSize="14"
                                 FontWeight="Medium"
                                 Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
@@ -418,6 +421,151 @@
                                     </ItemsPanelTemplate>
                                 </ItemsControl.ItemsPanel>
                             </ItemsControl>
+                        </StackPanel>
+                    </Border>
+
+                    <Border
+                        Grid.Row="2"
+                        Margin="0,16,0,32"
+                        Padding="0,0,0,16"
+                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                        BorderThickness="0,0,0,2">
+                        <StackPanel Orientation="Vertical">
+
+                            <Border
+                                Padding="0,0,0,8"
+                                BorderBrush="{DynamicResource LightSeparateSolidColorBrush}"
+                                BorderThickness="0,0,0,2">
+                                <StackPanel>
+                                    <TextBlock
+                                        FontSize="16"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                        Text="{DynamicResource Tooltip}" />
+                                    <TextBlock
+                                        FontSize="14"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                        Text="{DynamicResource TooltipDescription}" />
+                                </StackPanel>
+                            </Border>
+
+                            <StackPanel>
+
+                                <!--  ToolTip Enabled Switch  -->
+
+                                <Border
+                                    Padding="0,16,0,8"
+                                    BorderBrush="{DynamicResource LightSeparateSolidColorBrush}"
+                                    BorderThickness="0,0,0,0">
+                                    <Grid>
+
+                                        <!--  Header  -->
+                                        <StackPanel>
+                                            <TextBlock
+                                                extensions:TextBlock.TextByKey="AutoInstanceUpdate"
+                                                FontSize="14"
+                                                FontWeight="Medium"
+                                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                            <TextBlock
+                                                extensions:TextBlock.TextByKey="AutoInstanceUpdateDescription"
+                                                FontSize="14"
+                                                FontWeight="Medium"
+                                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                                        </StackPanel>
+
+
+                                        <!--  Content  -->
+                                        <ToggleButton
+                                            HorizontalAlignment="Right"
+                                            IsChecked="{Binding Model.IsToolTipsEnabled}"
+                                            Style="{StaticResource SwitchButton}" />
+                                    </Grid>
+                                </Border>
+
+                                <!--  InitialShowDelay  -->
+
+                                <Border
+                                    Padding="0,16,0,8"
+                                    BorderBrush="{DynamicResource LightSeparateSolidColorBrush}"
+                                    BorderThickness="0,0,0,2">
+                                    <Grid>
+
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <!--  Header  -->
+                                        <StackPanel>
+                                            <TextBlock
+                                                FontSize="14"
+                                                FontWeight="Medium"
+                                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                                Text="{DynamicResource InitialShowDelay}" />
+                                            <TextBlock
+                                                FontSize="14"
+                                                FontWeight="Medium"
+                                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                                Text="{DynamicResource InitialShowDelayDescription}"
+                                                TextWrapping="WrapWithOverflow" />
+                                        </StackPanel>
+
+
+                                        <!--  Content  -->
+                                        <controls:AdvancedTextBox
+                                            Grid.Column="1"
+                                            Width="90"
+                                            Height="32"
+                                            Margin="8,0,0,0"
+                                            HorizontalAlignment="Right"
+                                            IconKey="Lightbulb"
+                                            Text="{Binding Model.InitialShowDelay, UpdateSourceTrigger=PropertyChanged}" />
+                                    </Grid>
+                                </Border>
+
+
+                                <!--  BetweenShowDelay  -->
+
+                                <Border
+                                    Padding="0,16,0,8"
+                                    BorderBrush="{DynamicResource LightSeparateSolidColorBrush}"
+                                    BorderThickness="0,0,0,2">
+                                    <Grid>
+
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <!--  Header  -->
+                                        <StackPanel>
+                                            <TextBlock
+                                                FontSize="14"
+                                                FontWeight="Medium"
+                                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                                Text="{DynamicResource BetweenShowDelay}" />
+                                            <TextBlock
+                                                FontSize="14"
+                                                FontWeight="Medium"
+                                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                                Text="{DynamicResource BetweenShowDelayDescription}"
+                                                TextWrapping="WrapWithOverflow" />
+                                        </StackPanel>
+
+
+                                        <!--  Content  -->
+                                        <controls:AdvancedTextBox
+                                            Grid.Column="1"
+                                            Width="90"
+                                            Height="32"
+                                            Margin="8,0,0,0"
+                                            HorizontalAlignment="Right"
+                                            IconKey="Lightbulb"
+                                            Text="{Binding Model.BetweenShowDelay, UpdateSourceTrigger=PropertyChanged}" />
+                                    </Grid>
+                                </Border>
+                            </StackPanel>
                         </StackPanel>
                     </Border>
                 </Grid>

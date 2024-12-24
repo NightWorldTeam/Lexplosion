@@ -453,4 +453,20 @@
     <s:String x:Key="PaginatorNext">Далее</s:String>
     <s:String x:Key="PaginatorPage">Страница</s:String>
     <s:String x:Key="PaginatorPageOf">из</s:String>
+
+
+    <!--  ToolTip Appearance Settings  -->
+
+    <s:String x:Key="Tooltip">Всплывающие подсказки</s:String>
+    <s:String x:Key="TooltipDescription">Настройки всплывающих подсказок</s:String>
+
+    <s:String x:Key="ToolTipState">Состояние всплывающих подсказок</s:String>
+    <s:String x:Key="ToolTipStateDescription">Данные параметр отвечает за состояние всплывающих подсказок (вкл/выкл)</s:String>
+
+    <s:String x:Key="InitialShowDelay">InitialShowDelay</s:String>
+    <s:String x:Key="InitialShowDelayDescription">Задержка (в миллисекундах) перед выводом подсказки после наведения указателя мыши на элемент.</s:String>
+    <s:String x:Key="BetweenShowDelay">BetweenShowDelay</s:String>
+    <s:String x:Key="BetweenShowDelayDescription">
+        Временной интервал (в миллисекундах), в течение которого можно переходить от одной всплывающей подсказки к другой без задержки, определяемой свойством InitialShowDelay.
+    </s:String>
 </ResourceDictionary>

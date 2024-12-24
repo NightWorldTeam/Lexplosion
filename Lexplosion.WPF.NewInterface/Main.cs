@@ -24,6 +24,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace Lexplosion.WPF.NewInterface
 {
@@ -140,6 +141,23 @@ namespace Lexplosion.WPF.NewInterface
                 }
             }
         }
+
+        public static void ChangeToolTipState(bool state) 
+        {
+            Style style = (App.Current.Resources[state ? "DefaulToolTip" : "HiddenToolTip"] as Style);
+            App.Current.Resources[typeof(ToolTip)] = style;
+        }
+
+        public static void ChangeSettingInitialShowDelay(int value) 
+        {
+            App.Current.Resources["SettingInitialShowDelay"] = value;
+        }
+
+        public static void ChangeSettingBetweenShowDelay(int value)
+        {
+            App.Current.Resources["SettingBetweenShowDelay"] = value;
+        }
+
 
         private static void SetMainWindow()
         {
