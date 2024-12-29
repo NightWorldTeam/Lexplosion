@@ -52,6 +52,18 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             });
         }
 
+        private RelayCommand _openAddonsPageCommand;
+        public ICommand OpenAddonsPageCommand
+        {
+            get => RelayCommand.GetCommand(ref _openAddonsPageCommand, (obj) =>
+            {
+                var ins = (InstanceModelBase)obj;
+
+                _navigationStore.CurrentViewModel = new InstanceProfileLayoutViewModel(_navigationStore, _navigationCommand, ins);
+                (_navigationStore.CurrentViewModel as InstanceProfileLayoutViewModel).OpenAddonContainerPage();
+            });
+        }
+
         private RelayCommand _searchCommand;
         public ICommand SearchCommand 
         {

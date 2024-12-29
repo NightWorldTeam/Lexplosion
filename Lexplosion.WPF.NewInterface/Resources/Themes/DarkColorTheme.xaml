@@ -173,7 +173,7 @@
 
     <!--  Brand Color Foreground  -->
     <Color x:Key="BrandColorForegroundColor">
-        #000
+        #fff
     </Color>
 
     <sys:Double x:Key="BrandColorForegroundColorOpacity">

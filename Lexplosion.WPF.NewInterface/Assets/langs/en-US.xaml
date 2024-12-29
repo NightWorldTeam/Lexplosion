@@ -326,13 +326,6 @@
     <s:String x:Key="InstanceName">Instance Name</s:String>
     <s:String x:Key="CreateInstance">Create Instance</s:String>
 
-
-    <!--  Instance Form Download Process  -->
-    <s:String x:Key="DownloadPreparing">Download preparing...</s:String>
-    <s:String x:Key="JavaInstalling">Java downloading...</s:String>
-    <s:String x:Key="InstanceDownloading">Instance is downloading... Stage {0}/{1}</s:String>
-
-
     <!--  Export  -->
     <s:String x:Key="ExportProperties">Export Properties</s:String>
     <s:String x:Key="ExportInstanceNameDescription">Write name which you want to see after export in library.</s:String>
@@ -471,4 +464,15 @@
     <s:String x:Key="BetweenShowDelayDescription">
         The time interval (in milliseconds) during which the tooltip can move from one tooltip to another without the delay specified by the InitialShowDelay property.
     </s:String>
+
+    <!--  InstanceForm  -->
+    <s:String x:Key="Downloaded">Downloaded</s:String>
+    <!--  Instance Form Download Process  -->
+    <s:String x:Key="DownloadPreparing">Download preparing...</s:String>
+    <s:String x:Key="JavaInstalling">Java downloading...</s:String>
+    <s:String x:Key="InstanceDownloading">Instance is downloading...</s:String>
+    <s:String x:Key="Stage">Stage</s:String>
+    <s:String x:Key="VerifyIntegrityGameFiles">Verify integrity of game files...</s:String>
+    <s:String x:Key="GameLaunching">Game launching...</s:String>
+    <s:String x:Key="DownloadCanceling">Download canceling...</s:String>
 </ResourceDictionary>

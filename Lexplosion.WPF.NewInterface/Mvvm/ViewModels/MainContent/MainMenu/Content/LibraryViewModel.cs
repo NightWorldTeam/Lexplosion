@@ -83,10 +83,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         }
 
 
-        private RelayCommand _testCommand;
-        public ICommand TestCommand
+        private RelayCommand _selectSourceCommand;
+        public ICommand SelectSourceCommand
         {
-            get => RelayCommand.GetCommand<ITranslatableObject<InstanceSource>>(ref _testCommand, (o) =>
+            get => RelayCommand.GetCommand<ITranslatableObject<InstanceSource>>(ref _selectSourceCommand, (o) =>
             {
                 if (Model.FilterPanel.SelectedSource.Value == o.Value)
                     return;
@@ -114,42 +114,22 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             });
         }
 
-
-        private RelayCommand _openGroupCommand;
-        public ICommand OpenGroupCommand 
-        {
-            get => RelayCommand.GetCommand<InstanceGroup>(ref _openGroupCommand, Model.SelectGroup);
-        }
-
-        private RelayCommand _closeGroupCommand;
-        public ICommand CloseGroupCommand
-        {
-            get => RelayCommand.GetCommand(ref _closeGroupCommand, () => Model.SelectGroup(null));
-        }
-
-
-        private RelayCommand _openGroupFactory;
-        public ICommand OpenGroupFactoryCommand 
-        {
-            get => RelayCommand.GetCommand(ref _closeGroupCommand, () =>
-            {
-                _modalNavigationStore.Open(new GroupFactoryViewModel());
-            });
-        }
-
+        private RelayCommand _moveToCatalogCommand;
+        public ICommand MoveToCatalogCommand { get; }
 
 
         #endregion Commands
 
 
         // TODO: думаю делегат с инстансами это костыль ченить другое надо придумать
-        public LibraryViewModel(INavigationStore navigationStore, ICommand toMainMenuLayoutCommand, ModalNavigationStore modalNavigationStore, IInstanceController instanceController, NotifyCallback? notify = null)
+        public LibraryViewModel(INavigationStore navigationStore, ICommand toMainMenuLayoutCommand, ModalNavigationStore modalNavigationStore, IInstanceController instanceController, Action moveToCatalog, NotifyCallback? notify = null)
         {
             Notify = notify;
             Model = new LibraryModel(instanceController);
             _navigationStore = navigationStore;
             _toMainMenuLayoutCommand = toMainMenuLayoutCommand;
             _modalNavigationStore = modalNavigationStore;
+            MoveToCatalogCommand = RelayCommand.GetCommand(ref _moveToCatalogCommand, moveToCatalog);
         }
     }
 }

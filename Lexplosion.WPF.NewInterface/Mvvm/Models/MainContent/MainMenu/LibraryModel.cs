@@ -6,6 +6,7 @@ using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Windows.Data;
 
@@ -21,10 +22,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
 
 
         public IReadOnlyCollection<InstanceModelBase> InstanceList { get => _instanceController.Instances; }
-        public CollectionViewSource InstancesCollectionViewSource { get; } = new();
+        public FiltableObservableCollection InstancesCollectionViewSource { get; } = new();
         public IReadOnlyCollection<InstanceGroup> Groups { get => _groups; }
         public InstanceGroup SelectedGroup { get; private set; } = null;
         public bool HasSelectedGroup { get => SelectedGroup != null; }
+        public bool IsEmpty { get => _instanceController.Instances.Count == 0; }
 
 
         private string _searchText;
@@ -58,22 +60,15 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
             InstancesCollectionViewSource.Source = instanceController.Instances;
             Console.WriteLine("library loading test");
 
-            //var i = 0;
-            //var ins = new List<InstanceModelBase>();
-            
-            //_groups.Add(new InstanceGroup("All", instanceController.Instances));
-            //_groups.Add(new InstanceGroup("Without group", instanceController.Instances));
+            if (_instanceController.Instances is INotifyCollectionChanged notifyChangeCollection) 
+            {
+                notifyChangeCollection.CollectionChanged += OnInstancesCollectionChanged;
+            }
+        }
 
-            //foreach (var instance in instanceController.Instances) 
-            //{
-            //    ins.Add(instance);
-            //    if (i % 2 == 0)
-            //    {
-            //        _groups.Add(new InstanceGroup(Guid.NewGuid().ToString(), ins.ToArray()));
-            //        ins.Clear();
-            //    }
-            //    i++;
-            //}
+        private void OnInstancesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            OnPropertyChanged(nameof(IsEmpty));
         }
 
 
@@ -104,7 +99,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
 
         private void OnFilterChanged() 
         {
-            InstancesCollectionViewSource.View.Filter = (i =>
+            InstancesCollectionViewSource.Filter = (i =>
             {
                 var instanceModelBase = i as InstanceModelBase;
                 var searchBoxRes = string.IsNullOrEmpty(SearchText) ? true : instanceModelBase.Name.IndexOf(SearchText, System.StringComparison.InvariantCultureIgnoreCase) > -1;

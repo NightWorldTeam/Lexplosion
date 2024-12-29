@@ -4,8 +4,10 @@ using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
@@ -334,7 +336,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
                             IsDownloading = false;
                             IsProcessActive = true;
                             // TODO: Translate
-                            SetShortDescription("Отмена скачивания...");
+                            SetShortDescription("DownloadCanceling");
                             _mainActionButton.IsEnabled = false;
                             // убираем иконку
                             ChangeMainActionButtonIcon(string.Empty);
@@ -420,15 +422,23 @@ namespace Lexplosion.WPF.NewInterface.Controls
         /// Устанавливает значение для поле формы ShortDescription
         /// </summary>
         /// <param name="value">Значение</param>
-        private void SetShortDescription(string value)
+        private void SetShortDescription(string key)
         {
             if (_shortDescriptionTextBlock == null)
                 return;
 
-            App.Current.Dispatcher.Invoke(() =>
+            _shortDescriptionTextBlock.Text = string.Empty;
+
+            if (App.Current.Resources[key] == null)
             {
-                _shortDescriptionTextBlock.Text = value;
-            });
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    _shortDescriptionTextBlock.Text = key;
+                });
+                return;
+            }
+
+            _shortDescriptionTextBlock.SetResourceReference(TextBlock.TextProperty, key);
         }
 
         /// <summary>
@@ -558,12 +568,12 @@ namespace Lexplosion.WPF.NewInterface.Controls
             if (InstanceModel.InLibrary)
             {
                 _lowerMenuButtons.Add(new LowerMenuButton(2, "Folder", "OpenFolder", InstanceModel.OpenFolder, LowerButtonClicked));
-                // TODO: Сделать возможность экспорта, для только созданного клиента. Так как, человек может вручную накидать модов или установить что-то.
-                if (InstanceModel.IsInstalled)
+
+                if (InstanceModel.InLibrary)
                 {
                     _lowerMenuButtons.Add(new LowerMenuButton(3, "Export", "Export", InstanceModel.Export, LowerButtonClicked));
                 }
-                _lowerMenuButtons.Add(new LowerMenuButton(4, "Addons", "Addons", () => OpenAddonsPageCommand.Execute(InstanceModel), LowerButtonClicked));
+                _lowerMenuButtons.Add(new LowerMenuButton(4, "Addons", "Addons", () => OpenAddonsPageCommand?.Execute(InstanceModel), LowerButtonClicked));
             }
 
             if (!InstanceModel.IsInstalled && InstanceModel.InLibrary)
@@ -637,9 +647,19 @@ namespace Lexplosion.WPF.NewInterface.Controls
         /// Устанавливает значение в TextBlock для вывода статистики, по количеству всех и скаченных файлов.
         /// </summary>
         /// <param name="content">Строка которую нужно отобразить</param>
-        private void SetProcessFilesCount(string content)
+        private void SetProcessFilesCount(int fileCount, int totalFileCount)
         {
-            _filesCountLabel.Text = content;
+            if (_filesCountLabel.Inlines.Count == 2)
+                _filesCountLabel.Inlines.Remove(_filesCountLabel.Inlines.LastInline);
+            else
+            {
+                var dynamicRun = new Run();
+                dynamicRun.SetResourceReference(Run.TextProperty, "Downloaded");
+
+                _filesCountLabel.Inlines.Add(dynamicRun);
+            }
+
+            _filesCountLabel.Inlines.Add($" {fileCount}/{totalFileCount}");
         }
 
         /// <summary>
@@ -647,17 +667,33 @@ namespace Lexplosion.WPF.NewInterface.Controls
         /// </summary>
         /// <param name="key">Ключ текста</param>
         /// <exception cref="Exception">Если, ключ отсутсвует в словаре приложения.</exception>
-        private void SetProcessDescriptionKey(string key, params object[] args)
+        private void SetProcessDescriptionKey(string key)
         {
             if (App.Current.Resources[key] == null)
                 throw new Exception($"Key - {key} is null!");
 
-            Lexplosion.WPF.NewInterface.Extensions.TextBlock.SetTextByKey(_shortDescriptionTextBlock, key);
+            _shortDescriptionTextBlock.SetResourceReference(TextBlock.TextProperty, key);
+        }
 
-            //var fullArgs = new object[args.Length + 1];
-            //args.CopyTo(fullArgs, 1);
-            //fullArgs[0] = _shortDescriptionTextBlock.Text;
-            //_shortDescriptionTextBlock.Text = new StringFormatConverter().Convert(fullArgs, typeof(string), null, null).ToString();
+        private void SetInstanceDownloading(int stage, int totalStages)
+        {
+            _shortDescriptionTextBlock.Inlines.Clear();
+
+            if (_shortDescriptionTextBlock.Inlines.Count == 4)
+                _filesCountLabel.Inlines.Remove(_filesCountLabel.Inlines.LastInline);
+            else
+            {
+                var descRun = new Run();
+                var stageRun = new Run();
+                descRun.SetResourceReference(Run.TextProperty, "InstanceDownloading");
+                stageRun.SetResourceReference(Run.TextProperty, "Stage");
+
+                _shortDescriptionTextBlock.Inlines.Add(descRun);
+                _shortDescriptionTextBlock.Inlines.Add(" ");
+                _shortDescriptionTextBlock.Inlines.Add(stageRun);
+            }
+
+            _shortDescriptionTextBlock.Inlines.Add($" {stage}/{totalStages}");
         }
 
         /// <summary>
@@ -678,10 +714,11 @@ namespace Lexplosion.WPF.NewInterface.Controls
         {
             ChangeMainActionButtonIcon(string.Empty);
             SetMainActionButtonPercentageValue("0");
+            // TODO: Translate
             if (InstanceModel.IsInstalled)
-                SetShortDescription("Проверка целостности игровых файлов...");
+                SetShortDescription("VerifyIntegrityGameFiles");
             else
-                SetShortDescription("Подготовка к скачиванию клиента...");
+                SetShortDescription("DownloadPreparing");
         }
 
         /// <summary>
@@ -764,7 +801,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
                                 IsDownloading = true;
                             SetProcessDescriptionKey("JavaInstalling");
                             ShowProcessFilesCount();
-                            SetProcessFilesCount($"Скачено {progressHandlerArguments.FilesCount}/{progressHandlerArguments.TotalFilesCount}");
+                            SetProcessFilesCount(progressHandlerArguments.FilesCount, progressHandlerArguments.TotalFilesCount);
                             if (_progressBar.IsIndeterminate)
                                 _progressBar.IsIndeterminate = false;
                             _progressBar.Value = progressHandlerArguments.Procents;
@@ -775,8 +812,8 @@ namespace Lexplosion.WPF.NewInterface.Controls
                             if (!IsDownloading)
                                 IsDownloading = true;
                             // Идёт скачинвание. Этап 1/1;
-                            SetProcessDescriptionKey("InstanceDownloading", progressHandlerArguments.Stage, progressHandlerArguments.StagesCount);
-                            SetProcessFilesCount($"Скачено {progressHandlerArguments.FilesCount}/{progressHandlerArguments.TotalFilesCount}");
+                            SetInstanceDownloading(progressHandlerArguments.Stage, progressHandlerArguments.StagesCount);
+                            SetProcessFilesCount(progressHandlerArguments.FilesCount, progressHandlerArguments.TotalFilesCount);
                             if (_progressBar.IsIndeterminate)
                                 _progressBar.IsIndeterminate = false;
                             _progressBar.Value = progressHandlerArguments.Procents;
@@ -805,7 +842,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
                 {
                     IsDownloading = false;
                     _mainActionButton.IsEnabled = true;
-                    SetShortDescription("Идет запуск игры...");
+                    SetShortDescription("GameLaunching");
                     return;
                 }
 

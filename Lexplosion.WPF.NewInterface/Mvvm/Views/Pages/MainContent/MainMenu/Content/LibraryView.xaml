@@ -58,127 +58,19 @@
 
         <DataTemplate DataType="{x:Type translatable:InstanceSourceObject}">
             <RadioButton
-                Command="{Binding DataContext.TestCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                Command="{Binding DataContext.SelectSourceCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                 CommandParameter="{Binding}"
                 Content="{Binding Value, Converter={converters:ToStringConverter}}"
                 GroupName="LibraryInstanceSource"
                 Style="{StaticResource FilterIconRadioButton}" />
         </DataTemplate>
 
-        <Style x:Key="InstanceGroupMargin" TargetType="{x:Type FrameworkElement}">
-            <Setter Property="Margin" Value="4" />
-        </Style>
-
-        <DataTemplate DataType="{x:Type coreObjects:InstanceGroup}">
-            <Button
-                Command="{Binding DataContext.OpenGroupCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                CommandParameter="{Binding}"
-                Cursor="Hand">
-                <Button.Template>
-                    <ControlTemplate TargetType="{x:Type Button}">
-                        <Border
-                            Width="300"
-                            Height="230"
-                            Background="{DynamicResource PrimarySolidColorBrush}"
-                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                            BorderThickness="2"
-                            CornerRadius="5">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="*" />
-                                    <RowDefinition Height="100" />
-                                </Grid.RowDefinitions>
-
-                                <Border Padding="8" CornerRadius="5">
-
-                                    <Border.Effect>
-                                        <BlurEffect />
-                                    </Border.Effect>
-
-                                    <Border.Background>
-                                        <LinearGradientBrush Opacity="0.1">
-                                            <GradientStop Offset="0.5" Color="{DynamicResource ActivityColor}" />
-                                            <GradientStop Offset="1" Color="{DynamicResource PrimaryColor}" />
-                                        </LinearGradientBrush>
-                                    </Border.Background>
-
-                                    <WrapPanel>
-                                        <Border
-                                            Width="64"
-                                            Height="64"
-                                            Margin="2"
-                                            CornerRadius="5,5,0,0">
-                                            <Border.Background>
-                                                <ImageBrush ImageSource="pack://Application:,,,/Assets/images/icons/non_image.png" />
-                                            </Border.Background>
-                                        </Border>
-
-                                        <Border
-                                            Width="64"
-                                            Height="64"
-                                            Margin="2"
-                                            CornerRadius="5,5,0,0">
-                                            <Border.Background>
-                                                <ImageBrush ImageSource="pack://Application:,,,/Assets/images/icons/non_image.png" />
-                                            </Border.Background>
-                                        </Border>
-                                    </WrapPanel>
-                                </Border>
-
-                                <Border
-                                    Grid.Row="1"
-                                    Padding="8"
-                                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                                    BorderThickness="0,1,0,0">
-                                    <Grid>
-
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="*" />
-                                            <RowDefinition Height="Auto" />
-                                        </Grid.RowDefinitions>
-
-                                        <!--  Name  -->
-                                        <TextBlock
-                                            HorizontalAlignment="Left"
-                                            FontSize="18"
-                                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                            Text="{Binding Name}"
-                                            TextWrapping="Wrap" />
-
-                                        <!--  Author  -->
-                                        <TextBlock
-                                            Grid.Row="1"
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Bottom"
-                                            FontSize="14"
-                                            Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
-                                            Text="{Binding Author}"
-                                            TextWrapping="WrapWithOverflow" />
-
-                                        <!--  Instance Count  -->
-                                        <TextBlock
-                                            Grid.Row="1"
-                                            HorizontalAlignment="Right"
-                                            VerticalAlignment="Bottom"
-                                            FontSize="14"
-                                            Foreground="{DynamicResource ActivitySolidColorBrush}"
-                                            Text="{Binding Count}"
-                                            TextWrapping="WrapWithOverflow" />
-                                    </Grid>
-                                </Border>
-                            </Grid>
-
-                        </Border>
-                    </ControlTemplate>
-                </Button.Template>
-            </Button>
-        </DataTemplate>
-
         <core:BindingProxy x:Key="Test" Data="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={converters:WindowWidthToXProcentWidth}, ConverterParameter=30}" />
 
         <DataTemplate DataType="{x:Type instanceModel:InstanceModelBase}">
             <controls:InstanceForm
-                MaxWidth="600"
+                MinWidth="600"
+                MaxWidth="610"
                 Margin="0,0,0,16"
                 CanBeDeleted="True"
                 InstanceModel="{Binding}"
@@ -191,7 +83,10 @@
 
     <Grid>
 
-        <Grid Margin="0,40,0,0" MouseDown="Grid_MouseDown">
+        <Grid
+            Margin="0,40,0,0"
+            MouseDown="Grid_MouseDown"
+            ShowGridLines="False">
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -200,9 +95,9 @@
             </Grid.RowDefinitions>
 
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="0.0715*" MinWidth="43" />
+                <ColumnDefinition Width="0.0715*" MinWidth="41" />
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="0.0715*" MinWidth="43" />
+                <ColumnDefinition Width="0.0715*" MinWidth="41" />
             </Grid.ColumnDefinitions>
 
             <!--  Search Box & Filter Toggle Button  -->
@@ -307,9 +202,9 @@
                                         <CompositeCollection>
 
                                             <RadioButton
-                                                Command="{Binding TestCommand}"
+                                                Command="{Binding SelectSourceCommand}"
                                                 CommandParameter="{Binding Model.FilterPanel.NoneSource}"
-                                                Content="NoFilter"
+                                                Content="FilterNone"
                                                 GroupName="LibraryInstanceSource"
                                                 IsChecked="True"
                                                 Style="{StaticResource FilterIconRadioButton}" />
@@ -319,49 +214,6 @@
                                         </CompositeCollection>
                                     </ItemsControl.ItemsSource>
                                 </ItemsControl>
-
-                                <!--<WrapPanel Height="35" Orientation="Horizontal">
-                                        <Border
-                                            Width="32"
-                                            Height="32"
-                                            Padding="4"
-                                            Background="{DynamicResource ActivitySolidColorBrush}"
-                                            CornerRadius="5">
-                                            <Viewbox Height="10" HorizontalAlignment="Center">
-                                                <Path
-                                                    extensions:Path.StringKeyData="Curseforge"
-                                                    Fill="{DynamicResource PrimarySolidColorBrush}"
-                                                    Stretch="Fill" />
-                                            </Viewbox>
-                                        </Border>
-                                        <Border
-                                            Width="32"
-                                            Height="32"
-                                            Padding="4"
-                                            Background="Transparent"
-                                            CornerRadius="5">
-                                            <Viewbox Height="19" HorizontalAlignment="Center">
-                                                <Path
-                                                    extensions:Path.StringKeyData="Modrinth"
-                                                    Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                                    Stretch="Fill" />
-                                            </Viewbox>
-                                        </Border>
-                                        <Border
-                                            Width="32"
-                                            Height="32"
-                                            Padding="4"
-                                            Background="Transparent"
-                                            CornerRadius="5">
-                                            <Viewbox Height="20" HorizontalAlignment="Center">
-                                                <Path
-                                                    extensions:Path.StringKeyData="Nightworld"
-                                                    Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                                    Stretch="Fill"
-                                                    StrokeThickness="1" />
-                                            </Viewbox>
-                                        </Border>
-                                    </WrapPanel>-->
                             </Border>
                         </Grid>
                     </Border>
@@ -452,8 +304,6 @@
                         </Grid>
                     </Border>
 
-
-                    <!--  Todo: для библиотеки пробежаться и получить список всех доступных версий  -->
                     <!--  Version  -->
                     <Border
                         Grid.Row="2"
@@ -539,41 +389,54 @@
                             </ItemsControl>
                         </Grid>
                     </Grid>
-
-
-
-
-
                 </Grid>
             </Border>
 
-            <ListBox
-                x:Name="InstanceList"
+            <core:If
                 Grid.Row="2"
                 Grid.ColumnSpan="3"
-                Padding="43,0,43,0"
-                Background="Transparent"
-                BorderThickness="0"
-                ItemContainerStyle="{StaticResource InstanceFormListBoxItem}"
-                ItemsSource="{Binding Model.InstancesCollectionViewSource.View}"
-                KeyboardNavigation.IsTabStop="False"
-                ScrollViewer.CanContentScroll="True"
-                ScrollViewer.ScrollChanged="ListBox_ScrollChanged"
-                VirtualizingPanel.CacheLength="1,5"
-                VirtualizingPanel.CacheLengthUnit="Page"
-                VirtualizingPanel.IsVirtualizing="True"
-                VirtualizingPanel.ScrollUnit="Pixel">
-                <ListBox.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <controls1:VirtualizingWrapPanel
-                            HorizontalAlignment="Stretch"
-                            Orientation="Horizontal"
-                            SpacingMode="BetweenItemsOnly"
-                            StretchItems="True"
-                            VirtualizingPanel.VirtualizationMode="Recycling" />
-                    </ItemsPanelTemplate>
-                </ListBox.ItemsPanel>
-            </ListBox>
+                Padding="41,0,0,0"
+                Condition="{Binding Model.IsEmpty}">
+                <core:If.False>
+                    <ListBox
+                        x:Name="InstanceList"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        ItemContainerStyle="{StaticResource InstanceFormListBoxItem}"
+                        ItemsSource="{Binding Model.InstancesCollectionViewSource.Filtered}"
+                        KeyboardNavigation.IsTabStop="False"
+                        ScrollViewer.CanContentScroll="True"
+                        VirtualizingPanel.CacheLength="1,5"
+                        VirtualizingPanel.CacheLengthUnit="Page"
+                        VirtualizingPanel.IsVirtualizing="True"
+                        VirtualizingPanel.ScrollUnit="Pixel">
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <controls1:VirtualizingWrapPanel Margin="0,0,41,0" VirtualizingPanel.VirtualizationMode="Recycling" />
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                    </ListBox>
+                </core:If.False>
+                <core:If.True>
+                    <controls:Empty Description="Вы можете добавить сборки в библиотеку через каталог или создания своей сборки" TitleForeground="{DynamicResource PrimaryForegroundSolidColorBrush}">
+                        <WrapPanel Margin="0,16,0,0">
+                            <controls:AdvancedButton
+                                Margin="0,0,8,0"
+                                Command="{Binding MoveToCatalogCommand}"
+                                FontSize="12"
+                                IconData="{StaticResource PDCatalog}"
+                                Style="{StaticResource sm-ghost}"
+                                Text="Перейти в каталог" />
+                            <controls:AdvancedButton
+                                Command="{Binding OpenInstanceFactoryCommand}"
+                                FontSize="12"
+                                IconData="{StaticResource PDAddCircle}"
+                                Style="{StaticResource sm-default}"
+                                Text="Создать новую сборку" />
+                        </WrapPanel>
+                    </controls:Empty>
+                </core:If.True>
+            </core:If>
         </Grid>
 
         <!--  Float Buttons  -->

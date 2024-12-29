@@ -13,7 +13,6 @@
     <s:String x:Key="ru-RU">Русский</s:String>
 
     <s:String x:Key="Default">По умолчанию</s:String>
-
     <!--    -->
     <!--  LeftPanel  -->
     <!--    -->
@@ -318,12 +317,6 @@
     <s:String x:Key="InstanceName">Название сборки</s:String>
     <s:String x:Key="CreateInstance">Создать сборку</s:String>
 
-
-    <!--  Instance Form Download Process  -->
-    <s:String x:Key="DownloadPreparing">Идет подготовка к скачиванию...</s:String>
-    <s:String x:Key="JavaInstalling">Идет процесс установки Java</s:String>
-    <s:String x:Key="InstanceDownloading">Сборка устанавливается... Stage {0}/{1}</s:String>
-
     <!--  Export  -->
     <s:String x:Key="ExportProperties">Свойства экспорт</s:String>
     <s:String x:Key="ExportInstanceNameDescription">Будет отображаться после экспорта в библиотеке.</s:String>
@@ -469,4 +462,18 @@
     <s:String x:Key="BetweenShowDelayDescription">
         Временной интервал (в миллисекундах), в течение которого можно переходить от одной всплывающей подсказки к другой без задержки, определяемой свойством InitialShowDelay.
     </s:String>
+
+
+
+
+    <!--  InstanceForm  -->
+    <s:String x:Key="Downloaded">Скачано</s:String>
+    <!--  Instance Form Download Process  -->
+    <s:String x:Key="DownloadPreparing">Идет подготовка к скачиванию...</s:String>
+    <s:String x:Key="JavaInstalling">Идет процесс установки Java</s:String>
+    <s:String x:Key="InstanceDownloading">Сборка устанавливается...</s:String>
+    <s:String x:Key="Stage">Этап</s:String>
+    <s:String x:Key="VerifyIntegrityGameFiles">Проверка целостности игровых файлов...</s:String>
+    <s:String x:Key="GameLaunching">Идет запуск игры...</s:String>
+    <s:String x:Key="DownloadCanceling">Отмена скачивания...</s:String>
 </ResourceDictionary>

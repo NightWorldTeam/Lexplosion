@@ -5,6 +5,7 @@ using Lexplosion.WPF.NewInterface.Mvvm.Models;
 using Lexplosion.WPF.NewInterface.Stores;
 using System;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 {
@@ -43,9 +44,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         {
             Func<ViewModelBase> s = () => this;
             var ToMainMenuLayoutCommand = new NavigateCommand<ViewModelBase>(navigationStore, s);
-
             _catalogViewModel = new CatalogViewModel(navigationStore, ToMainMenuLayoutCommand, mainModel.CatalogController);
-            _libraryViewModel = new LibraryViewModel(navigationStore, ToMainMenuLayoutCommand, modalNavStore, mainModel.LibraryController);
+            _libraryViewModel = new LibraryViewModel(navigationStore, ToMainMenuLayoutCommand, modalNavStore, mainModel.LibraryController, OpenCatalog);
 
             _multiplayerLayoutViewModel = new MultiplayerLayoutViewModel(OpenAccountFactory);
             _friendsLayoutViewModel = new FriendsLayoutViewModel(OpenAccountFactory);
@@ -91,6 +91,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             accountsSettingsTIM.IsSelected = true;
             var accountsSettings = accountsSettingsTIM.Content as AccountsSettingsViewModel;
             accountsSettings?.OpenAccountFactoryCommand.Execute(null);
+        }
+
+        private void OpenCatalog() 
+        {
+            LeftPanel.GetByContentType(typeof(CatalogViewModel)).IsSelected = true;
         }
 
         public void Refresh()
