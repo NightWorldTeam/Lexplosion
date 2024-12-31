@@ -246,7 +246,7 @@ namespace Lexplosion.Logic.Network
                     }
                 }
 
-                var filesData = ProtectedRequest<ProtectedVersionManifest>(LaunсherSettings.URL.VersionsData + WebUtility.UrlEncode(version) + modloaderUrl);
+                var filesData = ProtectedRequest<ProtectedVersionManifest>(LaunсherSettings.URL.VersionsData + WebUtility.UrlEncode(version) + modloaderUrl + "?debug=true");
                 if (filesData?.version != null)
                 {
                     if (isNwClient && filesData.version.NightWorldClientData != null)

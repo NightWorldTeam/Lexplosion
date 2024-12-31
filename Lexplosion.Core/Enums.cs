@@ -159,7 +159,8 @@
         Vanilla,
         Forge,
         Fabric = 4,
-        Quilt
+        Quilt,
+        NeoForged = 6
     }
 
     public enum AdditionalInstallerType
@@ -177,7 +178,8 @@
     {
         Forge = 1,
         Fabric = 4,
-        Quilt
+        Quilt,
+        NeoForged = 6
     }
 
     public enum GameExtension
