@@ -55,7 +55,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         }
 
 
-
         private Action _openAddonPage;
 
 
@@ -481,6 +480,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         {
             _instanceClient.ChangeParameters(baseInstance, logoPath);
             DataChanged?.Invoke();
+            LogoChanged?.Invoke();
         }
 
         /// <summary>

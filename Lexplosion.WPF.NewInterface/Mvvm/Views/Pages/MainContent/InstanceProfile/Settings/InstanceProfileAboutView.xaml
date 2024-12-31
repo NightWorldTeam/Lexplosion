@@ -191,7 +191,7 @@
                     <Border
                         Padding="0,16,0,8"
                         BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                        BorderThickness="0,0,0,2">
+                        BorderThickness="0,0,0,0">
                         <Grid>
 
                             <Grid.RowDefinitions>

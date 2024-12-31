@@ -242,9 +242,9 @@
                                         <TextBlock
                                             HorizontalAlignment="Center"
                                             VerticalAlignment="Center"
-                                            extensions:TextBlock.TextByKey="Download"
                                             FontWeight="Medium"
-                                            Foreground="{DynamicResource BrandColorForegroundSolidColorBrush}" />
+                                            Foreground="{DynamicResource BrandColorForegroundSolidColorBrush}"
+                                            Text="{DynamicResource Download}" />
                                     </controls:OneStageInstallButton>
                                 </core:If.False>
                             </core:If>

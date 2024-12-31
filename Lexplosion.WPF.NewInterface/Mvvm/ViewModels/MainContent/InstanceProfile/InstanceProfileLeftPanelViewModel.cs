@@ -125,6 +125,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
 
             _instanceModel = instanceModelBase;
             _instanceModel.NameChanged += OnNameChanged;
+            _instanceModel.LogoChanged += OnLogoChanged;
             _instanceModel.GameVersionChanged += OnVersionChanged;
             _instanceModel.ModloaderChanged += OnModloaderChanged;
             _instanceModel.StateChanged += OnStateChanged;
@@ -222,6 +223,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         private void OnNameChanged()
         {
             OnPropertyChanged(nameof(InstanceName));
+        }
+
+        private void OnLogoChanged() 
+        {
+            OnPropertyChanged(nameof(InstanceImage));
         }
 
         private void OnVersionChanged()
