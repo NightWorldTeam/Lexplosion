@@ -476,4 +476,6 @@
     <s:String x:Key="VerifyIntegrityGameFiles">Проверка целостности игровых файлов...</s:String>
     <s:String x:Key="GameLaunching">Идет запуск игры...</s:String>
     <s:String x:Key="DownloadCanceling">Отмена скачивания...</s:String>
+
+    <s:String x:Key="AddonsListLoadingPlaceholder">Загрузка списков аддонов...</s:String>
 </ResourceDictionary>

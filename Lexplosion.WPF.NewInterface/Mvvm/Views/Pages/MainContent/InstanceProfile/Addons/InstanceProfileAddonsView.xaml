@@ -777,6 +777,7 @@
             Background="Black"
             BackgroundOpacity="0.2"
             BlurTarget="{Binding ElementName=Content}"
-            IsActive="{Binding Model.IsAddonsLoading, UpdateSourceTrigger=PropertyChanged}" />
+            IsActive="{Binding Model.IsAddonsLoading, UpdateSourceTrigger=PropertyChanged}"
+            Placeholder="{DynamicResource AddonsListLoadingPlaceholder}" />
     </Grid>
 </UserControl>

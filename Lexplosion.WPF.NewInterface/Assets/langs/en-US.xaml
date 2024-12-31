@@ -475,4 +475,7 @@
     <s:String x:Key="VerifyIntegrityGameFiles">Verify integrity of game files...</s:String>
     <s:String x:Key="GameLaunching">Game launching...</s:String>
     <s:String x:Key="DownloadCanceling">Download canceling...</s:String>
+
+
+    <s:String x:Key="AddonsListLoadingPlaceholder">Addons List Loading...</s:String>
 </ResourceDictionary>
