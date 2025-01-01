@@ -355,6 +355,16 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
             }
         }
 
+        private bool _isNeoForged;
+        public bool IsNeoForged
+        {
+            get => _isNeoForged; set
+            {
+                _isNeoForged = value;
+                OnPropertyChanged();
+            }
+        }
+
 
         #endregion Properties
 
@@ -366,6 +376,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
                 case ClientType.Forge: IsForge = true; break;
                 case ClientType.Fabric: IsFabric = true; break;
                 case ClientType.Quilt: IsQuilt = true; break;
+                case ClientType.NeoForged: IsNeoForged = true; break;
             }
         }
 

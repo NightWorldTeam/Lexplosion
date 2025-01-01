@@ -16,6 +16,7 @@ namespace Lexplosion.WPF.NewInterface.Core.GameExtensions
         public bool IsFabricAvaliable => MinecraftExtension.CheckExistsOnVersion(_minecraftVersion, GameExtension.Fabric) && IsExtensionLoaded(GameExtension.Fabric, _minecraftVersion);
 
         public bool IsQuiltAvaliable => MinecraftExtension.CheckExistsOnVersion(_minecraftVersion, GameExtension.Quilt) && IsExtensionLoaded(GameExtension.Quilt, _minecraftVersion);
+        public bool IsNeoForgedAvailable => MinecraftExtension.CheckExistsOnVersion(_minecraftVersion, GameExtension.Neoforged) && IsExtensionLoaded(GameExtension.Neoforged, _minecraftVersion);
 
         public bool IsCurrentAvaliable { get => MinecraftExtension.CheckExistsOnVersion(_minecraftVersion, _gameExtension) && IsExtensionLoaded(_gameExtension, _minecraftVersion); }
 
@@ -44,6 +45,7 @@ namespace Lexplosion.WPF.NewInterface.Core.GameExtensions
             OnPropertyChanged(nameof(IsForgeAvaliable));
             OnPropertyChanged(nameof(IsFabricAvaliable));
             OnPropertyChanged(nameof(IsQuiltAvaliable));
+            OnPropertyChanged(nameof(IsNeoForgedAvailable));
             OnPropertyChanged(nameof(IsCurrentAvaliable));
         }
 

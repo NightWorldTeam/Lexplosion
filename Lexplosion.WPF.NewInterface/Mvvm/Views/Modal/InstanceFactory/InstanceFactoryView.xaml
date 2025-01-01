@@ -224,6 +224,15 @@
                                     IsChecked="{Binding IsQuilt}"
                                     IsEnabled="{Binding Model.ModloaderManager.IsQuiltAvaliable}"
                                     Style="{StaticResource HighlightRadioButton}" />
+                                <RadioButton
+                                    Margin="8,0,0,0"
+                                    Command="{Binding ChangeInstanceClientTypeCommand, Mode=OneWay}"
+                                    CommandParameter="{x:Static objects:ClientType.NeoForged}"
+                                    Content="NeoForged"
+                                    GroupName="GameType"
+                                    IsChecked="{Binding IsNeoForged}"
+                                    IsEnabled="{Binding Model.ModloaderManager.IsNeoForgedAvailable}"
+                                    Style="{StaticResource HighlightRadioButton}" />
                             </WrapPanel>
                         </Grid>
                     </Border>
