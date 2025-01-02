@@ -271,6 +271,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
             };
 
             InstanceModel.StateChanged += OnInstanceModelStateChanged;
+            InstanceModel.DataChanged += OnInstanceModelStateChanged;
 
             InstanceModel.DeletedEvent += (s) =>
             {
@@ -324,11 +325,14 @@ namespace Lexplosion.WPF.NewInterface.Controls
                         }
                     case InstanceState.Downloading:
                         {
-                            IsProcessActive = true;
-                            IsDownloading = true;
-                            ChangeMainActionButtonIcon(string.Empty);
-                            _mainActionButton.IsEnabled = true;
-                            SetMainActionButtonPercentageValue("0");
+                            if (!IsDownloading && !IsProcessActive)
+                            {
+                                IsProcessActive = true;
+                                IsDownloading = true;
+                                ChangeMainActionButtonIcon(string.Empty);
+                                _mainActionButton.IsEnabled = true;
+                                SetMainActionButtonPercentageValue("0");
+                            }
                             break;
                         }
                     case InstanceState.DownloadCanceling:
