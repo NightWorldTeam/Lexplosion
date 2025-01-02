@@ -26,7 +26,12 @@ namespace Lexplosion.Logic.Management.Importers
 
             if (modloaderVersion != "")
             {
-                if (modloaderVersion.Contains("forge-"))
+                if (modloaderVersion.Contains("neoforge-"))
+                {
+                    clienType = ClientType.NeoForged;
+                    modloaderVersion = modloaderVersion.Replace("neoforge-", "");
+                }
+                else if (modloaderVersion.Contains("forge-"))
                 {
                     clienType = ClientType.Forge;
                     modloaderVersion = modloaderVersion.Replace("forge-", "");

@@ -13,6 +13,7 @@ using Lexplosion.Global;
 using Lexplosion.Tools;
 using Lexplosion.Logic.Objects;
 using static Lexplosion.Logic.FileSystem.DataFilesManager;
+using System.Diagnostics;
 
 namespace Lexplosion.Logic.FileSystem
 {
@@ -353,52 +354,9 @@ namespace Lexplosion.Logic.FileSystem
             DelFile(tempDir + fileName);
             var task = DownloadFileAsync(url, tempDir + fileName, taskArgs);
             task.Wait();
+
             return task.Result;
         }
-
-        //public static bool DownloadFile(string url, string fileName, string tempDir, TaskArgs taskArgs)
-        //{
-        //    WebClient webClient;
-        //    using (webClient = new WebClient())
-        //    {
-        //        DelFile(tempDir + fileName);
-        //        bool result = true;
-
-        //        webClient.Proxy = null;
-
-        //        taskArgs.CancelToken.Register(delegate ()
-        //        {
-        //            webClient?.CancelAsync();
-        //        });
-
-        //        webClient.DownloadProgressChanged += (sender, e) =>
-        //        {
-        //            taskArgs.PercentHandler(e.ProgressPercentage);
-        //        };
-
-        //        webClient.DownloadFileCompleted += (sender, e) =>
-        //        {
-        //            result = (e.Error == null);
-        //        };
-
-        //        try
-        //        {
-        //            Task task = webClient.DownloadFileTaskAsync(url, tempDir + fileName);
-        //            task.Wait();
-
-        //            return result;
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            Runtime.DebugWrite("Downloading error " + fileName + " " + url + " " + ex);
-        //            return false;
-        //        }
-        //        finally
-        //        {
-        //            webClient = null;
-        //        }
-        //    }
-        //}
 
         /// <summary>
         /// Удаляет файл, если он существует.

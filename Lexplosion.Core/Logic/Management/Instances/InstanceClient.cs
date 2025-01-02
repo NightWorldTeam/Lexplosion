@@ -110,6 +110,7 @@ namespace Lexplosion.Logic.Management.Instances
             get => _logo;
             private set
             {
+                _logo = value;
                 try
                 {
                     if (value != null)
@@ -124,7 +125,7 @@ namespace Lexplosion.Logic.Management.Instances
                 catch (Exception ex)
                 {
                     Runtime.DebugWrite(ex);
-                    _logo = null;
+                    _logo = value;
                 }
 
                 LogoChanged?.Invoke();

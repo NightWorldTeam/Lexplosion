@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Lexplosion.Tools;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Globalization;
 
@@ -155,8 +156,13 @@ namespace Lexplosion.Logic.Objects.Modrinth
             [JsonProperty("url")]
             public string Url;
 
+            private string _filename;
             [JsonProperty("filename")]
-            public string Filename;
+            public string Filename
+            {
+                get => _filename;
+                set => _filename = PathNameTools.EasyValidation(value);
+            }
 
             [JsonProperty("size")]
             public int Size;
@@ -203,7 +209,16 @@ namespace Lexplosion.Logic.Objects.Modrinth
     {
         public class FileData
         {
-            public string path;
+            private string _path;
+            [JsonProperty("path")]
+            public string Path
+            {
+                get => _path; 
+                set
+                {
+                    _path = PathNameTools.EasyValidation(value);
+                }
+            }
             public int fileSize;
             public List<string> downloads;
             public Dictionary<string, string> hashes;

@@ -102,18 +102,18 @@ namespace Lexplosion.Logic.FileSystem
                         if ((file.hashes?.ContainsKey("sha512") ?? false) && projectFiles.ContainsKey(file.hashes["sha512"]))
                         {
                             // проверяем path файла
-                            if (file.path != null)
+                            if (file.Path != null)
                             {
-                                string[] segments = file.path.Split('/');
+                                string[] segments = file.Path.Split('/');
                                 if (segments.Length == 2) // path должен быть в виде: имя_папки/имя_файла
                                 {
                                     // проверяем имя файла на валидность
                                     if (Path.GetInvalidFileNameChars().Any(s => segments[1].Contains(s))) // если имя файла на валидно возращаем ошибку
                                     {
                                         // тут ошибка
-                                        errors.Add("File: " + file.path);
-                                        Runtime.DebugWrite("ERROR " + file.path);
-                                        _fileDownloadHandler?.Invoke(file.path, 100, DownloadFileProgress.Error);
+                                        errors.Add("File: " + file.Path);
+                                        Runtime.DebugWrite("ERROR " + file.Path);
+                                        _fileDownloadHandler?.Invoke(file.Path, 100, DownloadFileProgress.Error);
                                     }
 
                                     string folderName = segments[0];
@@ -153,9 +153,9 @@ namespace Lexplosion.Logic.FileSystem
                             }
                             else
                             {
-                                errors.Add("File: " + file.path);
-                                Runtime.DebugWrite("ERROR " + file.path);
-                                _fileDownloadHandler?.Invoke(file.path, 100, DownloadFileProgress.Error);
+                                errors.Add("File: " + file.Path);
+                                Runtime.DebugWrite("ERROR " + file.Path);
+                                _fileDownloadHandler?.Invoke(file.Path, 100, DownloadFileProgress.Error);
                             }
                         }
                         else
@@ -164,9 +164,9 @@ namespace Lexplosion.Logic.FileSystem
 
                             try
                             {
-                                if (file.path != null)
+                                if (file.Path != null)
                                 {
-                                    string fileName = Path.GetFileName(file.path);
+                                    string fileName = Path.GetFileName(file.Path);
                                     fileNameIsValid = !Path.GetInvalidFileNameChars().Any(s => fileName.Contains(s));
                                 }
                             }
@@ -178,9 +178,9 @@ namespace Lexplosion.Logic.FileSystem
                             }
                             else
                             {
-                                errors.Add("File: " + file.path);
-                                Runtime.DebugWrite("ERROR " + file.path);
-                                _fileDownloadHandler?.Invoke(file.path, 100, DownloadFileProgress.Error);
+                                errors.Add("File: " + file.Path);
+                                Runtime.DebugWrite("ERROR " + file.Path);
+                                _fileDownloadHandler?.Invoke(file.Path, 100, DownloadFileProgress.Error);
                             }
                         }
                     }
@@ -356,8 +356,8 @@ namespace Lexplosion.Logic.FileSystem
                 {
                     if (cancelToken.IsCancellationRequested) break;
 
-                    string fileName = Path.GetFileName(fileData.path);
-                    string folderName = "/instances/" + instanceId + "/" + Path.GetDirectoryName(fileData.path) + "/";
+                    string fileName = Path.GetFileName(fileData.Path);
+                    string folderName = "/instances/" + instanceId + "/" + Path.GetDirectoryName(fileData.Path) + "/";
 
                     var taskArgs = new TaskArgs
                     {
@@ -370,7 +370,7 @@ namespace Lexplosion.Logic.FileSystem
 
                     if (WithDirectory.InstallFile(fileData.downloads[0], fileName, folderName, taskArgs))
                     {
-                        string filePath = "/" + fileData.path;
+                        string filePath = "/" + fileData.Path;
                         if (!existsFiles.Contains(filePath))
                         {
                             compliteDownload.Files.Add(filePath);

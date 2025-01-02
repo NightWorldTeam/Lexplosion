@@ -38,7 +38,17 @@ namespace Lexplosion.Logic.Management.Importers
             modloaderVersion = "";
             clienType = ClientType.Vanilla;
 
-            if (manifest.dependencies.ContainsKey("forge"))
+            if (manifest.dependencies.ContainsKey("neoforge"))
+            {
+                modloaderVersion = manifest.dependencies["neoforge"] ?? "";
+                clienType = ClientType.NeoForged;
+            }
+            else if (manifest.dependencies.ContainsKey("neoforge-loader"))
+            {
+                modloaderVersion = manifest.dependencies["neoforge-loader"] ?? "";
+                clienType = ClientType.NeoForged;
+            }
+            else if (manifest.dependencies.ContainsKey("forge"))
             {
                 modloaderVersion = manifest.dependencies["forge"] ?? "";
                 clienType = ClientType.Forge;
