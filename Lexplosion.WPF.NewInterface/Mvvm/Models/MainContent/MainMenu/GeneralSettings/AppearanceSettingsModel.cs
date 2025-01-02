@@ -33,7 +33,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
 
                 if (!string.IsNullOrWhiteSpace(value))
                 {
-                    SelectedColorChanged(new ActivityColor(value), true);
+                    if ((value.Contains("#") && value.Length == 4) || (value.Contains("#") && value.Length == 7) || value.Length == 3 || value.Length == 6) 
+                    {
+                        SelectedColorChanged(new ActivityColor(value), true);
+                    }
                 }
                 else 
                 {
@@ -121,7 +124,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
             _colors.Add(new ActivityColor("#A020F0"));
             _colors.Add(new ActivityColor("#FFE600"));
             _colors.Add(new ActivityColor("#40A710"));
-            _colors.Add(new ActivityColor("#FF0000"));
+            _colors.Add(new ActivityColor("#000"));
 
             foreach (var color in _colors)
             {

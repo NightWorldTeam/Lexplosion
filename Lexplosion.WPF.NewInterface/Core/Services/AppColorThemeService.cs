@@ -155,9 +155,19 @@ namespace Lexplosion.WPF.NewInterface.Core.Services
         /// <param name="color">Фон кнопки</param>
         private void ChangeDefaultAdvancedButtonColors(Color color)
         {
-            var luminance = ColorTools.CalculateLuminance(color);
+            var hoverColor = Color.FromRgb(51, 51, 51);
+            var pressedColor = Color.FromRgb(77, 77, 77);
+            var disabledColor = Color.FromRgb(179, 179, 179);
 
-            Func<Color, float, Color> colorSelectorByLuminance = luminance < 140 ? ColorTools.GetLighterColor : ColorTools.GetDarkerColor;
+            if (color.R != 0 && color.R != 0 && color.B != 0)
+            {
+                var luminance = ColorTools.CalculateLuminance(color);
+                Func<Color, float, Color> colorSelectorByLuminance = luminance < 140 ? ColorTools.GetLighterColor : ColorTools.GetDarkerColor;
+
+                hoverColor = colorSelectorByLuminance(color, 10);
+                pressedColor = colorSelectorByLuminance(color, 20);
+                disabledColor = colorSelectorByLuminance(color, 70);
+            }
 
             ////*** Default Button Background ***//
 
@@ -165,17 +175,14 @@ namespace Lexplosion.WPF.NewInterface.Core.Services
             _selectedThemeResourceDictionary["DefaultButtonBackgroundColorBrush"] = new SolidColorBrush(color);
 
             ////*** Default Button Hover Background ***//
-            var hoverColor = colorSelectorByLuminance(color, 10);
             _selectedThemeResourceDictionary["DefaultButtonHoverBackgroundColor"] = hoverColor;
             _selectedThemeResourceDictionary["DefaultButtonHoverBackgroundColorBrush"] = new SolidColorBrush(hoverColor);
 
             //*** Default Button Pressed Background ***//
-            var pressedColor = colorSelectorByLuminance(color, 20);
             _selectedThemeResourceDictionary["DefaultButtonPressedBackgroundColor"] = pressedColor;
             _selectedThemeResourceDictionary["DefaultButtonPressedBackgroundColorBrush"] = new SolidColorBrush(pressedColor);
 
             ////*** Default Button Disable Background ***//
-            var disabledColor = colorSelectorByLuminance(color, 70);
             _selectedThemeResourceDictionary["DefaultButtonDisableBackgroundColor"] = disabledColor;
             _selectedThemeResourceDictionary["DefaultButtonDisableBackgroundColorBrush"] = new SolidColorBrush(disabledColor);
 
@@ -183,6 +190,8 @@ namespace Lexplosion.WPF.NewInterface.Core.Services
             var foregroundColor = ColorTools.ForegroundByColor(color);
             _selectedThemeResourceDictionary["DefaultButtonForegroundColor"] = foregroundColor;
             _selectedThemeResourceDictionary["DefaultButtonForegroundColorBrush"] = new SolidColorBrush(foregroundColor);
+
+
         }
     }
 }

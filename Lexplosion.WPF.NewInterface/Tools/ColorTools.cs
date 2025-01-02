@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Documents;
+using System.Windows.Forms;
 using System.Windows.Media;
 
 namespace Lexplosion.WPF.NewInterface.Tools
@@ -100,18 +101,9 @@ namespace Lexplosion.WPF.NewInterface.Tools
 
         public static Color GetLighterColor(Color color, float percentages)
         {
-            var newR = color.R + (color.R * Math.Round(percentages / 100));
-            var newG = color.G + (color.G * Math.Round(percentages / 100));
-            var newB = color.B + (color.B * Math.Round(percentages / 100));
-
-            newR = newR > 255 ? 255 : newR;
-            newR = newR < 0 ? 0 : newR;
-
-            newG = newG > 255 ? 255 : newR;
-            newG = newG < 0 ? 0 : newR;
-
-            newB = newB > 255 ? 255 : newR;
-            newB = newB < 0 ? 0 : newR;
+            var newR = Math.Min(255, Math.Floor(color.R + (color.R * percentages / 100)));
+            var newG = Math.Min(255, Math.Floor(color.G + (color.G * percentages / 100)));
+            var newB = Math.Min(255, Math.Floor(color.B + (color.B * percentages / 100)));
 
             color.R = (byte)newR;
             color.G = (byte)newG;

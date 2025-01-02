@@ -33,6 +33,8 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
 
         public ActivityColor(string hexColor, bool isSelected = false) : this(isSelected)
         {
+            hexColor = hexColor.Contains("#") ? hexColor : $"#{hexColor}";
+
             Brush = (SolidColorBrush)new BrushConverter().ConvertFrom(hexColor);
         }
 
