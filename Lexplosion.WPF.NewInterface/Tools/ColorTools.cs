@@ -48,31 +48,7 @@ namespace Lexplosion.WPF.NewInterface.Tools
 
         public static Color GetDarkerColor(Color color, float percentages)
         {
-            //Runtime.DebugWrite(color.R + " " + color.G + " " + color.B);
-
-            var newR = color.R - Math.Round(color.R * percentages / 100);
-            var newG = color.G - Math.Round(color.G * percentages / 100);
-            var newB = color.B - Math.Round(color.B * percentages / 100);
-
-            color.R = (byte)newR;
-            color.G = (byte)newG;
-            color.B = (byte)newB;
-
-            //Runtime.DebugWrite(color.R + " " + color.G + " " + color.B);
-            return color;
-
-            //var newR = color.R - Math.Round(color.R * persentages / 100);
-            //var newG = color.G - Math.Round(color.G * persentages / 100);
-            //var newB = color.B - Math.Round(color.B * persentages / 100);
-
-            //Runtime.DebugWrite(newR + " " + newG + " " + newB);
-
-            //return new Color()
-            //{
-            //    R = (byte)newR,
-            //    G = (byte)newG,
-            //    B = (byte)newB,
-            //};
+            return GetLighterColor(color, percentages * -1);
         }
 
         public static Color ChangeColorBrightness(Color color, float correctionFactor)
