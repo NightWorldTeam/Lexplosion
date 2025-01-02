@@ -20,7 +20,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
         private ICollection<IProjectCategory> _latestApplyCategories = new List<IProjectCategory>();
         private readonly Dictionary<string, List<CategoryWrapper>> _categoriesGroupsByName = new();
 
-        private readonly Action _launchInstanceAction;
+        private readonly InstanceModelBase _instanceModel;
 
         public ObservableCollection<InstanceAddon> InstalledAddons { get; set; } = [];
         public ObservableCollection<DownloableAddonFile> InProgressAddons { get; set; } = [];
@@ -46,6 +46,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 
 
         public bool IsGameLoaded { get; set; }
+
+
+        public double ProgressValue 
+        {
+            get; private set;
+        }
 
 
         #region Constructors
@@ -76,7 +82,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
                     IsGameLoaded = true;
                     OnPropertyChanged(nameof(IsGameLoaded));
                 };
-            _launchInstanceAction = instanceModelBase.Run;
+            _instanceModel = instanceModelBase;
+            _instanceModel.DownloadProgressChanged += _instanceModel_DownloadProgressChanged;
 
             Runtime.TaskRun(() =>
             {
@@ -87,6 +94,24 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
                     OnPropertyChanged(nameof(InstalledAddons));
                 });
             });
+        }
+
+        private void _instanceModel_DownloadProgressChanged(StageType type, Logic.Management.ProgressHandlerArguments progressArgs)
+        {
+            if (type == StageType.Java)
+            {
+                ProgressValue = progressArgs.Procents / 3;
+            }
+            else if (type == StageType.Prepare)
+            {
+                ProgressValue = 33 + progressArgs.Procents / 3;
+            }
+            else
+            {
+                ProgressValue = 66 + progressArgs.Procents / 3;
+            }
+
+            OnPropertyChanged(nameof(ProgressValue));
         }
 
 
@@ -190,7 +215,19 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 
         public void LaunchInstance()
         {
-            _launchInstanceAction?.Invoke();
+            _instanceModel.Run();
+        }
+
+        public void StopInstanceProcess() 
+        {
+            if (_instanceModel.IsLaunched)
+            {
+                _instanceModel.Close();
+            }
+            else 
+            {
+                _instanceModel.CancelDownload();
+            }
         }
 
 

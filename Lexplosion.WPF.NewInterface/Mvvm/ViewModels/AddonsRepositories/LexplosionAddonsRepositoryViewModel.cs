@@ -52,6 +52,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
             get; private set;
         }
 
+        private RelayCommand _stopProcessCommand;
+        public ICommand StopProcessCommand 
+        {
+            get; private set;
+        }
+
 
         public IEnumerable<ProjectSource> ProjectSources { get; }
 
@@ -147,7 +153,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
         {
             IsLoading = true;
 
-            BackToInstanceProfileCommand = backCommand;
+            BackToInstanceProfileCommand = new RelayCommand((obj) =>
+            {
+                AddonsManager.GetManager(instanceModelBase.InstanceData).ClearAddonsListCache();
+                backCommand.Execute(null);
+            });
             _navigationStore = navigationStore;
 
             ProjectSources = [ProjectSource.Modrinth, ProjectSource.Curseforge];
@@ -165,11 +175,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
                     _repositoriesList.Add(new AddonsRepositoryModel(ProjectSource.Curseforge, instanceData, addonType, instanceModelBase));
 
                     SelectedAddonsRepositoryIndex = 0;
-
+                    LaunchInstanceCommand = RelayCommand.GetCommand(ref _launchInstance, Model.LaunchInstance);
+                    StopProcessCommand = RelayCommand.GetCommand(ref _launchInstance, Model.StopInstanceProcess);
                     ApplySelectedCategoriesCommand = new RelayCommand((obj) => Model.ApplyCategories());
 
                     OnPropertyChanged(nameof(ApplySelectedCategoriesCommand));
-                    LaunchInstanceCommand = RelayCommand.GetCommand(ref _launchInstance, Model.LaunchInstance);
                 });
             });
 
