@@ -478,4 +478,10 @@
 
 
     <s:String x:Key="AddonsListLoadingPlaceholder">Addons List Loading...</s:String>
+
+
+
+    <s:String x:Key="Technology">Technology</s:String>
+    <s:String x:Key="WorldGen">World Gen</s:String>
+    <s:String x:Key="All">All</s:String>
 </ResourceDictionary>

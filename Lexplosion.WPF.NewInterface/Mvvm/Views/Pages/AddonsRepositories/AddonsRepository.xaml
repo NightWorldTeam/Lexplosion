@@ -2,6 +2,8 @@
     x:Class="Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.AddonsRepositories.AddonsRepository"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:addonsrepositories="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories"
+    xmlns:addonsrepositories1="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories"
     xmlns:controls="clr-namespace:Lexplosion.WPF.NewInterface.Controls"
     xmlns:converters="clr-namespace:Lexplosion.WPF.NewInterface.Core.Converters"
     xmlns:core="clr-namespace:Lexplosion.WPF.NewInterface.Core"
@@ -15,6 +17,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:objects="clr-namespace:Lexplosion.WPF.NewInterface.Core.Objects"
     xmlns:translatableObjects="clr-namespace:Lexplosion.WPF.NewInterface.Core.Objects.TranslatableObjects"
+    d:DataContext="{d:DesignInstance Type=addonsrepositories1:LexplosionAddonsRepositoryViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
@@ -133,10 +136,10 @@
 
                 <TextBlock
                     Margin="0,0,0,8"
+                    extensions:TextBlock.TextByKey="{Binding Header}"
                     FontSize="18"
                     FontWeight="Medium"
-                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                    Text="{Binding Header}" />
+                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
                 <ItemsControl
                     Grid.Row="1"
                     Background="Transparent"
@@ -555,26 +558,6 @@
                 <!--  TODO: Скрывать при открытии страницы установленные  -->
                 <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden">
                     <StackPanel>
-
-                        <!--  Categories  -->
-                        <!--<Grid x:Name="CategoriesStackPanel">
-
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-
-                            <TextBlock
-                                Margin="0,0,0,8"
-                                extensions:TextBlock.TextByKey="Categories"
-                                FontSize="18"
-                                FontWeight="Medium"
-                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
-                            <ItemsControl
-                                Grid.Row="1"
-                                Background="Transparent"
-                                ItemsSource="{Binding Model.Categories}" />
-                        </Grid>-->
                         <ItemsControl ItemsSource="{Binding Model.CategoriesGroups}" />
 
 

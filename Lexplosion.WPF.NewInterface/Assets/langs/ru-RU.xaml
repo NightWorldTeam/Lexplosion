@@ -478,4 +478,10 @@
     <s:String x:Key="DownloadCanceling">Отмена скачивания...</s:String>
 
     <s:String x:Key="AddonsListLoadingPlaceholder">Загрузка списков аддонов...</s:String>
+
+
+    <s:String x:Key="Technology">Технологии</s:String>
+    <s:String x:Key="WorldGen">Генерация мира</s:String>
+    <s:String x:Key="All">Всё</s:String>
+
 </ResourceDictionary>
