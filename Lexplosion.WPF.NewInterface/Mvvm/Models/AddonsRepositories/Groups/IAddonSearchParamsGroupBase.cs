@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lexplosion.Core.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -22,7 +23,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories.Groups
 
         public AddonSearchParamsGroupBase(string header, IEnumerable<object> objects, string? iconData = null)
         {
-            Header = header;
+            Header = header.FirstCharToUpper().Replace(" ", "");
             Objects = objects.ToArray();
             IconData = iconData;
         }

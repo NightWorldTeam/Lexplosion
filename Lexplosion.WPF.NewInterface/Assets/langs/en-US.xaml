@@ -476,12 +476,13 @@
     <s:String x:Key="GameLaunching">Game launching...</s:String>
     <s:String x:Key="DownloadCanceling">Download canceling...</s:String>
 
-
     <s:String x:Key="AddonsListLoadingPlaceholder">Addons List Loading...</s:String>
-
-
 
     <s:String x:Key="Technology">Technology</s:String>
     <s:String x:Key="WorldGen">World Gen</s:String>
     <s:String x:Key="All">All</s:String>
+
+    <s:String x:Key="Features">Features</s:String>
+    <s:String x:Key="Performanceimpact">Performance Impact</s:String>
+    <s:String x:Key="Resolutions">Resolutions</s:String>
 </ResourceDictionary>

@@ -405,3 +405,4 @@ FodyWeavers.xsd
 *.sln.iml
 /NewWPFInterface
 /Lexplosion.WPF.NewInterface/ViewModels/MainContent/MainMenu/MainMenuViewModel.cs
+/Lexplosion.Core/Lexplosion.Core.csproj.user

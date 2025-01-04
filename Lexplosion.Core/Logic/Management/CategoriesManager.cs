@@ -75,7 +75,8 @@ namespace Lexplosion.Logic.Management
                             projectType = CfProjectType.Mods;
                         }
 
-                        var result = CurseforgeApi.GetCategories(projectType);
+                        var result = CurseforgeApi.GetCategories(projectType)
+                            .OrderBy(i => i.Name);
                         _addonsCategoriesChache[key] = result;
 
                         return result;

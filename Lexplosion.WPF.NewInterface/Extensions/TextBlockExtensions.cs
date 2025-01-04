@@ -33,15 +33,19 @@ namespace Lexplosion.WPF.NewInterface.Extensions
             {
                 var textBlock = d as System.Windows.Controls.TextBlock;
 
-                if (e.NewValue != null)
-                {
-                    textBlock.SetResourceReference(System.Windows.Controls.TextBlock.TextProperty, e.NewValue);
-                }
-                else
+                if (e.NewValue == null)
                 {
                     Runtime.DebugWrite("Значение ключа null, так быть явно не должно.", color: ConsoleColor.Red);
                     textBlock.Text = "null";
                 }
+
+                if (App.Current.Resources[e.NewValue] == null)
+                {
+                    textBlock.Text = $"Not found {e.NewValue}";
+                    return;
+                }
+
+                textBlock.SetResourceReference(System.Windows.Controls.TextBlock.TextProperty, e.NewValue);
             }
         }
 

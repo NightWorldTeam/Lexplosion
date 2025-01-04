@@ -77,8 +77,10 @@
                     return CfProjectType.Resourcepacks;
                 case AddonType.Maps:
                     return CfProjectType.Maps;
-                default:
-                    return CfProjectType.Mods;
+                case AddonType.Shaders:
+                    return CfProjectType.Shaders;
+                default: 
+                    return CfProjectType.Maps;
             }
         }
 
@@ -211,7 +213,8 @@
         Mods = 6,
         Resourcepacks = 12,
         Maps = 17,
-        Modpacks = 4471
+        Modpacks = 4471,
+        Shaders = 6552
     }
 
     public enum StageType

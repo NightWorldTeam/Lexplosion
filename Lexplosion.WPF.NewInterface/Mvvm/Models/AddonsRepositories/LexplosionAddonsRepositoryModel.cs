@@ -12,6 +12,7 @@ using Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories.Groups;
 using Lexplosion.WPF.NewInterface.Core.GameExtensions;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using Lexplosion.Logic.Management.Addons;
+using Lexplosion.Logic.Management;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 {
@@ -213,13 +214,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 
         protected override List<IProjectCategory> GetCategories()
         {
-            if (_projectSource == ProjectSource.Modrinth)
-                return ModrinthApi.GetCategories().ToList<IProjectCategory>();
-
-            if (_projectSource == ProjectSource.Curseforge)
-                return CurseforgeApi.GetCategories(_addonType.ToCfProjectType()).ToList<IProjectCategory>();
-
-            return [];
+            return CategoriesManager.GetAddonsCategories(_projectSource, _addonType).ToList<IProjectCategory>() ?? [];
         }
 
 
@@ -358,6 +353,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
                 /*              Id Name ClassId ParentCategoryId}
                                 426 Addons 6 6
                                 427 Thermal Expansion 6 426*/
+
+                // curseforge maps or shaders
+                if (header == "12" || header == "17" || header == "6552")
+                    return "categories";
                 // not working
                 var g = categories.FirstOrDefault(c => c.Id == header && c.ParentCategoryId == "6");
                 return g == null ? string.Empty : g.Name;
