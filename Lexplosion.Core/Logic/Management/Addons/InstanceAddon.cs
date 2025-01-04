@@ -186,6 +186,8 @@ namespace Lexplosion.Logic.Management.Addons
             }
         }
 
+        public AddonType Type { get; }
+
         #endregion
 
         //private readonly CurseforgeAddonInfo _modInfo;
@@ -199,8 +201,9 @@ namespace Lexplosion.Logic.Management.Addons
         /// <summary>
         /// Создает экземпляр аддона с курсфорджа.
         /// </summary>
-        internal InstanceAddon(InstaceAddonsSynchronizer synchronizer, IPrototypeAddon addonPrototype, BaseInstanceData modpackInfo)
+        internal InstanceAddon(AddonType type, InstaceAddonsSynchronizer synchronizer, IPrototypeAddon addonPrototype, BaseInstanceData modpackInfo)
         {
+            Type = type;
             _synchronizer = synchronizer;
             _addonPrototype = addonPrototype;
             _projectId = addonPrototype.ProjectId;
@@ -225,8 +228,9 @@ namespace Lexplosion.Logic.Management.Addons
         /// <summary>
         /// Создает экземпляр аддона не с курсфорджа.
         /// </summary>    
-        internal InstanceAddon(InstaceAddonsSynchronizer synchronizer, string projectId, BaseInstanceData modpackInfo)
+        internal InstanceAddon(AddonType type, InstaceAddonsSynchronizer synchronizer, string projectId, BaseInstanceData modpackInfo)
         {
+            Type = type;
             _addonPrototype = null;
             _synchronizer = synchronizer;
             _projectId = projectId;
@@ -251,7 +255,7 @@ namespace Lexplosion.Logic.Management.Addons
             }
 
             IsInstalled = false;
-            _synchronizer.InvokeAddonRemovedEvent(this);
+            _synchronizer.RemoveInstalledAddon(this);
         }
 
         private CancellationTokenSource _cancelTokenSource = null;
@@ -272,6 +276,7 @@ namespace Lexplosion.Logic.Management.Addons
 
         private void InstallAddon(bool downloadDependencies, DynamicStateHandler<SetValues<InstanceAddon, DownloadAddonRes>, InstallAddonState> stateHandler, bool isDependencie)
         {
+            Runtime.DebugWrite($"Download {Name}");
             // если такой аддон уже скачивается - выходим нахуй
             if (!isDependencie && _synchronizer.CheckAddonInstalling(_addonPrototype.ProjectId)) return;
 
@@ -281,6 +286,8 @@ namespace Lexplosion.Logic.Management.Addons
                 Value1 = this,
                 Value2 = DownloadAddonRes.Successful
             }, InstallAddonState.StartDownload);
+
+            _synchronizer.AddAddonInstalling(this);
 
             string instanceId = _modpackInfo.LocalId;
             using (InstalledAddons installedAddons = InstalledAddons.Get(instanceId))
@@ -311,6 +318,7 @@ namespace Lexplosion.Logic.Management.Addons
                         Value2 = DownloadAddonRes.IsCanselled
                     }, InstallAddonState.EndDownload);
 
+                    _synchronizer.RemoveAddonInstalling();
                     return;
                 }
 
@@ -350,7 +358,7 @@ namespace Lexplosion.Logic.Management.Addons
                                 addon.DefineDefaultVersion();
 
                                 _synchronizer.InstallingSemaphore.WaitOne(modId);
-                                addonInstance = new InstanceAddon(_synchronizer, addon, _modpackInfo);
+                                addonInstance = new InstanceAddon(Type, _synchronizer, addon, _modpackInfo);
                                 _synchronizer.InstallingSemaphore.Release(modId);
                             }
                             else
@@ -372,6 +380,7 @@ namespace Lexplosion.Logic.Management.Addons
                         Value2 = ressult.Value2
                     }, InstallAddonState.EndDownload);
 
+                    _synchronizer.RemoveAddonInstalling();
                     return;
                 }
 
@@ -399,6 +408,7 @@ namespace Lexplosion.Logic.Management.Addons
                             Value2 = DownloadAddonRes.Successful
                         }, InstallAddonState.EndDownload);
 
+                        _synchronizer.RemoveAddonInstalling();
                         return;
                     }
 
@@ -434,12 +444,7 @@ namespace Lexplosion.Logic.Management.Addons
                     }
 
                     installedAddons[_addonPrototype.ProjectId] = ressult.Value1;
-
-                    lock (_synchronizer.InstalledFilesLocker)
-                    {
-                        _synchronizer.InstalledFiles.Add(FileName);
-                        _synchronizer.InvokeAddonAddedEvent(this);
-                    }
+                    _synchronizer.AddInstalledAddon(this);
                 }
                 else
                 {
@@ -460,6 +465,7 @@ namespace Lexplosion.Logic.Management.Addons
                         }, InstallAddonState.EndDownload);
                     }
 
+                    _synchronizer.RemoveAddonInstalling();
                     return;
                 }
 
@@ -472,6 +478,8 @@ namespace Lexplosion.Logic.Management.Addons
                 Value1 = this,
                 Value2 = DownloadAddonRes.Successful
             }, InstallAddonState.EndDownload);
+
+            _synchronizer.RemoveAddonInstalling();
         }
 
         public void InstallLatestVersion(DynamicStateHandler<SetValues<InstanceAddon, DownloadAddonRes>, InstallAddonState> stateHandler, bool downloadDependencies = true, bool isDependencie = false)

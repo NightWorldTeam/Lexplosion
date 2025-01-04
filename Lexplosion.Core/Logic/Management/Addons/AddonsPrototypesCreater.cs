@@ -17,35 +17,44 @@ namespace Lexplosion.Logic.Management.Addons
             string md5;
             string sha1;
             long fileLenght;
+            string sha512;
 
-            using (FileStream stream = File.OpenRead(filePath))
+            try
             {
-                string sha512 = Cryptography.Sha512(stream);
-                stream.Position = 0;
-                sha1 = Cryptography.Sha1(stream);
-                stream.Position = 0;
-
-                fileLenght = stream.Length;
-
-                // ищем файл на модринфе
-                List<ModrinthProjectFile> projectFiles = ModrinthApi.GetFilesFromHash(sha512);
-                foreach (var projectFile in projectFiles)
+                using (FileStream stream = File.OpenRead(filePath))
                 {
-                    if (projectFile?.Files != null && projectFile.Files.Count > 0)
+                    sha512 = Cryptography.Sha512(stream);
+                    stream.Position = 0;
+                    sha1 = Cryptography.Sha1(stream);
+                    stream.Position = 0;
+
+                    fileLenght = stream.Length;
+
+                    // ищем файл на модринфе
+                    List<ModrinthProjectFile> projectFiles = ModrinthApi.GetFilesFromHash(sha512);
+                    foreach (var projectFile in projectFiles)
                     {
-                        foreach (var file in projectFile.Files)
+                        if (projectFile?.Files != null && projectFile.Files.Count > 0)
                         {
-                            bool isHash = !string.IsNullOrEmpty(file?.Hashes?.Sha512) && !string.IsNullOrEmpty(file.Hashes.Sha1);
-                            if (isHash && file.Hashes.Sha512 == sha512 && file.Hashes.Sha1 == sha1 && file.Size == fileLenght)
+                            foreach (var file in projectFile.Files)
                             {
-                                return new ModrinthAddon(indtanceData, projectFile);
+                                bool isHash = !string.IsNullOrEmpty(file?.Hashes?.Sha512) && !string.IsNullOrEmpty(file.Hashes.Sha1);
+                                if (isHash && file.Hashes.Sha512 == sha512 && file.Hashes.Sha1 == sha1 && file.Size == fileLenght)
+                                {
+                                    return new ModrinthAddon(indtanceData, projectFile);
+                                }
                             }
                         }
                     }
-                }
 
-                //если дошли до сюда - значит файл на модринфе не найден. Вычисляем md5 для работы с курсфорджем
-                md5 = Cryptography.Md5(stream);
+                    //если дошли до сюда - значит файл на модринфе не найден. Вычисляем md5 для работы с курсфорджем
+                    md5 = Cryptography.Md5(stream);
+                }
+            }
+            catch (Exception ex) 
+            {
+                Runtime.DebugWrite(ex);
+                return null;
             }
 
             //на модринфе не нашелся, ищем на курсфордже

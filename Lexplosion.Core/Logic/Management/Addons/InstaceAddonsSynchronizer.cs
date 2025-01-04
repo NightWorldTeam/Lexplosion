@@ -33,14 +33,6 @@ namespace Lexplosion.Logic.Management.Addons
 		/// </summary>
 		public Semaphore AddonsHandleSemaphore { get; private set; } = new(1, 1);
 
-		/// <summary>
-		/// Файлы, которые были только что установлены методом <see cref="InstanceAddon.InstallAddon"/>.
-		/// Это поле нужно чтобы проверять его в <see cref="InstanceAddon.OnAddonFileAdded"/> и повторно не вызывать эвент <see cref="AddonAdded"/>
-		/// Значение  - это имя файла.
-		/// </summary>
-		public HashSet<string> InstalledFiles { get; private set; } = new();
-		public object InstalledFilesLocker { get; private set; } = new();
-
 		public event Action<InstanceAddon> AddonAdded;
 		public event Action<InstanceAddon> AddonRemoved;
 
@@ -78,36 +70,90 @@ namespace Lexplosion.Logic.Management.Addons
 			}
 		}
 
-		internal void InvokeAddonAddedEvent(InstanceAddon value) => AddonAdded?.Invoke(value);
-		internal void InvokeAddonRemovedEvent(InstanceAddon value) => AddonRemoved?.Invoke(value);
-
 		private int _addonsInstalling = 0;
 		private event Action _nothingAddonsInstalling;
 
 		private object _addAddonInstallingLocker = new();
-		public void AddAddonInstalling()
+		public void AddAddonInstalling(InstanceAddon addon)
 		{
-			lock (_addAddonInstallingLocker) _addonsInstalling++;
+			lock (_addAddonInstallingLocker)
+			{
+                _addonsInstalling++;
+                Runtime.DebugWrite($"_addonsInstalling {_addonsInstalling} {GetHashCode()} {addon.Name}");
+            }
 		}
 
 		public void RemoveAddonInstalling()
 		{
 			lock (_addAddonInstallingLocker)
 			{
-				_addonsInstalling--;
-				if (_addonsInstalling == 0) _nothingAddonsInstalling?.Invoke();
+                _addonsInstalling--;
+                Runtime.DebugWrite($"_RemoveAddonInstalling {_addonsInstalling}");
+                if (_addonsInstalling == 0)
+				{
+                    _nothingAddonsInstalling?.Invoke();
+                }
 			}
 		}
 
-		public bool Xer(Action action)
+		public void Xer(Action action)
 		{
 			lock (_addAddonInstallingLocker)
 			{
-				if (_addonsInstalling == 0) return true;
+				if (_addonsInstalling == 0)
+				{
+					Runtime.DebugWrite($"Xer {_addonsInstalling}");
+                    action();
+                }
 
 				_nothingAddonsInstalling += action;
-				return false;
 			}
 		}
-	}
+
+        private Dictionary<ValueTuple<AddonType, string>, InstanceAddon> _installedAddons = new();
+        private object _installedAddonLocker = new();
+
+        public void AddInstalledAddon(InstanceAddon addon)
+        {
+            lock (_installedAddonLocker)
+            {
+                _installedAddons[(addon.Type, addon.FileName)] = addon;
+                AddonAdded?.Invoke(addon);
+            }
+        }
+
+        public void AddInstalledAddonWithoutEvent(InstanceAddon addon)
+        {
+            lock (_installedAddonLocker)
+            {
+                _installedAddons[(addon.Type, addon.FileName)] = addon;
+            }
+        }
+
+        public void RemoveInstalledAddon(InstanceAddon addon)
+        {
+            lock (_installedAddonLocker)
+            {
+                _installedAddons.Remove((addon.Type, addon.FileName));
+                AddonRemoved?.Invoke(addon);
+            }
+        }
+
+        public bool InstalledAddonContains(InstanceAddon addon)
+        {
+            lock (_installedAddonLocker)
+            {
+                return _installedAddons.ContainsKey((addon.Type, addon.FileName));
+            }
+        }
+
+        public bool InstalledAddonContains(ValueTuple<AddonType, string> addonKey)
+        {
+            lock (_installedAddonLocker)
+            {
+                var res = _installedAddons.ContainsKey(addonKey);
+				return res;
+            }
+        }
+    }
 }
