@@ -27,13 +27,13 @@ namespace Lexplosion.Logic.Network.Web
 
         private class Pagination
         {
-            [JsonProperty("Index")]
+            [JsonProperty("index")]
             public int Index { get; set; }
-            [JsonProperty("PageSize")]
+            [JsonProperty("pageSize")]
             public int PageSize { get; set; }
-            [JsonProperty("ResultCount")]
+            [JsonProperty("resultCount")]
             public int ResultCount { get; set; }
-            [JsonProperty("TotalCount")]
+            [JsonProperty("totalCount")]
             public int TotalCount { get; set; }
         }
 
@@ -61,7 +61,6 @@ namespace Lexplosion.Logic.Network.Web
                 };
 
                 string answer = ToServer.HttpGet(url, headers);
-                Console.WriteLine(answer);
                 if (answer != null)
                 {
                     var data = JsonConvert.DeserializeObject<DataContainer<T>>(answer);

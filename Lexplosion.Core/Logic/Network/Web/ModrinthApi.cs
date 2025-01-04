@@ -39,9 +39,6 @@ namespace Lexplosion.Logic.Network.Web
             try
             {
                 string answer = ToServer.HttpGet(url);
-                Console.WriteLine();
-                Console.WriteLine(answer);
-                Console.WriteLine();
                 if (answer != null)
                 {
                     var data = JsonConvert.DeserializeObject<T>(answer);
