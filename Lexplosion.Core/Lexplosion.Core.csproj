@@ -195,6 +195,7 @@
     <Compile Include="Tools\Notification\INotificable.cs" />
     <Compile Include="Tools\Notification\INotificationManager.cs" />
     <Compile Include="Tools\Notification\NotificationType.cs" />
+    <Compile Include="Tools\PathNameTools.cs" />
     <Compile Include="Tools\Pointer.cs" />
     <Compile Include="Tools\RandomExtensions.cs" />
     <Compile Include="Tools\RuntimeTools.cs" />

@@ -493,7 +493,18 @@ namespace Lexplosion.Logic.Management.Addons
                 using (var webClient = new WebClient())
                 {
                     webClient.Proxy = null;
-                    Logo = ImageTools.ResizeImage(webClient.DownloadData(url), 80, 80);
+                    var image = webClient.DownloadData(url);
+                    if (image != null)
+                    {
+                        try
+                        {
+                            Logo = ImageTools.ResizeImage(image, 80, 80);
+                        }
+                        catch
+                        {
+                            Logo = image;
+                        }
+                    }
                 }
             }
             catch { }

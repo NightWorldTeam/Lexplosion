@@ -76,16 +76,20 @@ namespace Lexplosion.Logic.Management.Addons
         }
 
         private static Dictionary<BaseInstanceData, AddonsManager> _managers = new();
+        private static object _getManagerLocker = new object();
 
         public static AddonsManager GetManager(BaseInstanceData instanceData)
         {
-            _managers.TryGetValue(instanceData, out AddonsManager manager);
-            if (manager != null) return manager;
+            lock (_getManagerLocker)
+            {
+                _managers.TryGetValue(instanceData, out AddonsManager manager);
+                if (manager != null) return manager;
 
-            manager = new AddonsManager(instanceData);
-            _managers[instanceData] = manager;
+                manager = new AddonsManager(instanceData);
+                _managers[instanceData] = manager;
 
-            return manager;
+                return manager;
+            }            
         }
 
         /// <summary>
