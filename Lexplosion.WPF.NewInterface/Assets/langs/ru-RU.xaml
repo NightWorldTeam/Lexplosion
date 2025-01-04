@@ -486,4 +486,6 @@
     <s:String x:Key="Features">Особенности</s:String>
     <s:String x:Key="Performanceimpact">Влияние на производительность</s:String>
     <s:String x:Key="Resolutions">Разрешение текстур</s:String>
+
+    <s:String x:Key="Website">Веб-страница</s:String>
 </ResourceDictionary>

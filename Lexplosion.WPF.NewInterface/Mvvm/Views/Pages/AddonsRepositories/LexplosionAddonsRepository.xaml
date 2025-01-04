@@ -353,14 +353,7 @@
                                                     CommandParameter="{Binding}"
                                                     IconData="{StaticResource PDClose}"
                                                     Style="{StaticResource DownMenuItem}"
-                                                    Text="Веб-страница" />
-
-                                                <controls:AdvancedButton
-                                                    Click="DropdownMenuButtonItem_Click"
-                                                    CommandParameter="{Binding}"
-                                                    IconData="{StaticResource PDClose}"
-                                                    Style="{StaticResource DownMenuItem}"
-                                                    Text="Добавить в избранное" />
+                                                    Text="{DynamicResource Website}" />
 
                                                 <!--  If addon installed  -->
 
@@ -372,7 +365,7 @@
                                                             CommandParameter="{Binding}"
                                                             IconData="{StaticResource PDDelete}"
                                                             Style="{StaticResource DownMenuItem}"
-                                                            Text="Удалить" />
+                                                            Text="{DynamicResource Delete}" />
                                                     </core:If.True>
                                                 </core:If>
                                             </StackPanel>
@@ -630,9 +623,9 @@
                         </StackPanel>
                     </Grid>
                 </TabItem>
-                <TabItem Margin="16,0,-16,0" Header="В процессе">
+                <!--<TabItem Margin="16,0,-16,0" Header="В процессе">
                     <lexplosion:InProgressAddonsRepositoryView DataContext="{Binding}" />
-                </TabItem>
+                </TabItem>-->
 
                 <TabItem Margin="16,0,-16,0" Header="Установленные">
                     <lexplosion:InstalledAddonsRepositoryView DataContext="{Binding _modsViewModel}" />

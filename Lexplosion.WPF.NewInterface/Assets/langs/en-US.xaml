@@ -485,4 +485,6 @@
     <s:String x:Key="Features">Features</s:String>
     <s:String x:Key="Performanceimpact">Performance Impact</s:String>
     <s:String x:Key="Resolutions">Resolutions</s:String>
+
+    <s:String x:Key="Website">Website</s:String>
 </ResourceDictionary>
