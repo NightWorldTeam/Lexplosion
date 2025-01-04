@@ -89,7 +89,7 @@
                                     <Viewbox Height="16">
                                         <Path
                                             x:Name="Path"
-                                            extensions:Path.StringKeyData="Search"
+                                            extensions:PathExtensions.StringKeyData="Search"
                                             Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
                                             Stretch="Fill" />
                                     </Viewbox>
@@ -123,7 +123,7 @@
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Center">
                                     <Path
-                                        extensions:Path.StringKeyData="Close"
+                                        extensions:PathExtensions.StringKeyData="Close"
                                         Fill="{DynamicResource SecondaryForegroundSolidColorBrush}"
                                         Stretch="Fill" />
                                 </Viewbox>

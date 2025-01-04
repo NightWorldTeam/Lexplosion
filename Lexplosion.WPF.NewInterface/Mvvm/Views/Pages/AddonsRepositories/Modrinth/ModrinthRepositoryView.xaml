@@ -53,7 +53,7 @@
                                     <Viewbox Height="16">
                                         <Path
                                             x:Name="Path"
-                                            extensions:Path.StringKeyData="Search"
+                                            extensions:PathExtensions.StringKeyData="Search"
                                             Fill="{DynamicResource Foreground}"
                                             Stretch="Fill" />
                                     </Viewbox>
@@ -110,7 +110,7 @@
                     Margin="0,0,8,0">
                     <Path
                         x:Name="ArrowIcon"
-                        extensions:Path.StringKeyData="ArrowDown"
+                        extensions:PathExtensions.StringKeyData="ArrowDown"
                         Fill="{DynamicResource Foreground}"
                         RenderTransformOrigin="0.5, 0.5"
                         Stretch="Fill">
@@ -291,7 +291,7 @@
                                         <Viewbox Height="7">
                                             <Path
                                                 x:Name="CheckMarkIcon"
-                                                extensions:Path.StringKeyData="CheckMark"
+                                                extensions:PathExtensions.StringKeyData="CheckMark"
                                                 Fill="Black"
                                                 SnapsToDevicePixels="False"
                                                 Stretch="Fill"
@@ -537,14 +537,14 @@
                                         Margin="4,1,0,0"
                                         VerticalAlignment="Center">
                                         <Path
-                                            extensions:Path.StringKeyData="Download"
+                                            extensions:PathExtensions.StringKeyData="Download"
                                             Fill="Black"
                                             Stretch="Fill" />
                                     </Viewbox>
 
                                     <TextBlock
                                         Margin="8,0,0,0"
-                                        extensions:TextBlock.TextByKey="Install"
+                                        extensions:TextBlockExtensions.TextByKey="Install"
                                         FontSize="12"
                                         FontWeight="Medium"
                                         Foreground="Black" />
@@ -638,7 +638,7 @@
                         <WrapPanel Orientation="Horizontal">
                             <Viewbox Height="10" Margin="0,1,0,0">
                                 <Path
-                                    extensions:Path.StringKeyData="Curseforge"
+                                    extensions:PathExtensions.StringKeyData="Curseforge"
                                     Fill="White"
                                     Stretch="Fill" />
                             </Viewbox>
@@ -670,7 +670,7 @@
 
                     <TextBlock
                         Margin="0,0,0,8"
-                        extensions:TextBlock.TextByKey="Categories"
+                        extensions:TextBlockExtensions.TextByKey="Categories"
                         FontSize="18"
                         FontWeight="Medium"
                         Foreground="{DynamicResource ForegroundLighter}" />
@@ -752,7 +752,7 @@
                                 <TextBlock
                                     Margin="8,0,0,0"
                                     VerticalAlignment="Center"
-                                    extensions:TextBlock.TextByKey="SortBy"
+                                    extensions:TextBlockExtensions.TextByKey="SortBy"
                                     FontSize="14"
                                     Foreground="{DynamicResource Foreground}" />
                                 <ComboBox
@@ -770,7 +770,7 @@
                                 <TextBlock
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Center"
-                                    extensions:TextBlock.TextByKey="ShowPerPage"
+                                    extensions:TextBlockExtensions.TextByKey="ShowPerPage"
                                     FontSize="14"
                                     Foreground="{DynamicResource Foreground}" />
                                 <ComboBox

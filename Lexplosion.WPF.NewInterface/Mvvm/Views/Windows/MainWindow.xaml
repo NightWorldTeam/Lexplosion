@@ -201,7 +201,7 @@
                         <Viewbox Height="14">
                             <Path
                                 x:Name="PalettPath"
-                                extensions:Path.StringKeyData="Palette"
+                                extensions:PathExtensions.StringKeyData="Palette"
                                 Fill="{DynamicResource ActivitySolidColorBrush}"
                                 Stretch="Fill" />
                         </Viewbox>
@@ -219,7 +219,7 @@
                         MouseDown="ChangeLanguage_MouseDown">
                         <Viewbox Height="14">
                             <Path
-                                extensions:Path.StringKeyData="Translate"
+                                extensions:PathExtensions.StringKeyData="Translate"
                                 Fill="{DynamicResource ActivitySolidColorBrush}"
                                 Stretch="Fill" />
                         </Viewbox>
@@ -242,7 +242,7 @@
                         ToolTipService.PlacementRectangle="7,40,0,0">
                         <Viewbox Height="14">
                             <Path
-                                extensions:Path.StringKeyData="IndentDecrease"
+                                extensions:PathExtensions.StringKeyData="IndentDecrease"
                                 Fill="{DynamicResource ActivitySolidColorBrush}"
                                 Stretch="Fill" />
                         </Viewbox>
@@ -265,7 +265,7 @@
 
                         <Viewbox Height="14">
                             <Path
-                                extensions:Path.StringKeyData="ScaleFit"
+                                extensions:PathExtensions.StringKeyData="ScaleFit"
                                 Fill="{DynamicResource ActivitySolidColorBrush}"
                                 Stretch="Fill" />
                         </Viewbox>

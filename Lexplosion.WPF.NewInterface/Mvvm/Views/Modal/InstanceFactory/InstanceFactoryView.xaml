@@ -44,12 +44,12 @@
                             <!--  Header  -->
                             <StackPanel>
                                 <TextBlock
-                                    extensions:TextBlock.TextByKey="InstanceName"
+                                    extensions:TextBlockExtensions.TextByKey="InstanceName"
                                     FontSize="13"
                                     FontWeight="Medium"
                                     Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
                                 <TextBlock
-                                    extensions:TextBlock.TextByKey="NameDescription"
+                                    extensions:TextBlockExtensions.TextByKey="NameDescription"
                                     FontSize="12"
                                     FontWeight="Medium"
                                     Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
@@ -91,12 +91,12 @@
                                     <!--  Header  -->
                                     <StackPanel>
                                         <TextBlock
-                                            extensions:TextBlock.TextByKey="Version"
+                                            extensions:TextBlockExtensions.TextByKey="Version"
                                             FontSize="13"
                                             FontWeight="Medium"
                                             Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
                                         <TextBlock
-                                            extensions:TextBlock.TextByKey="VersionDescription"
+                                            extensions:TextBlockExtensions.TextByKey="VersionDescription"
                                             FontSize="12"
                                             FontWeight="Medium"
                                             Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
@@ -138,12 +138,12 @@
 
                                 <StackPanel>
                                     <TextBlock
-                                        extensions:TextBlock.TextByKey="IsShowSnapshots"
+                                        extensions:TextBlockExtensions.TextByKey="IsShowSnapshots"
                                         FontSize="13"
                                         FontWeight="Medium"
                                         Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
                                     <TextBlock
-                                        extensions:TextBlock.TextByKey="IsShowSnapshotsDescription"
+                                        extensions:TextBlockExtensions.TextByKey="IsShowSnapshotsDescription"
                                         FontSize="12"
                                         FontWeight="Medium"
                                         Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
@@ -174,12 +174,12 @@
                             <!--  Header  -->
                             <StackPanel>
                                 <TextBlock
-                                    extensions:TextBlock.TextByKey="GameType"
+                                    extensions:TextBlockExtensions.TextByKey="GameType"
                                     FontSize="13"
                                     FontWeight="Medium"
                                     Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
                                 <TextBlock
-                                    extensions:TextBlock.TextByKey="GameTypeDescription"
+                                    extensions:TextBlockExtensions.TextByKey="GameTypeDescription"
                                     FontSize="12"
                                     FontWeight="Medium"
                                     Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
@@ -254,12 +254,12 @@
                             <!--  Header  -->
                             <StackPanel>
                                 <TextBlock
-                                    extensions:TextBlock.TextByKey="ModloaderVersion"
+                                    extensions:TextBlockExtensions.TextByKey="ModloaderVersion"
                                     FontSize="13"
                                     FontWeight="Medium"
                                     Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
                                 <TextBlock
-                                    extensions:TextBlock.TextByKey="ModloaderVersionDescription"
+                                    extensions:TextBlockExtensions.TextByKey="ModloaderVersionDescription"
                                     FontSize="12"
                                     FontWeight="Medium"
                                     Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
@@ -317,7 +317,7 @@
                                         Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
                                         Text="Optifine" />
                                     <TextBlock
-                                        extensions:TextBlock.TextByKey="OptifineDescription"
+                                        extensions:TextBlockExtensions.TextByKey="OptifineDescription"
                                         FontSize="12"
                                         FontWeight="Medium"
                                         Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
@@ -347,12 +347,12 @@
                                 <!--  Header  -->
                                 <StackPanel>
                                     <TextBlock
-                                        extensions:TextBlock.TextByKey="ModloaderVersion"
+                                        extensions:TextBlockExtensions.TextByKey="ModloaderVersion"
                                         FontSize="13"
                                         FontWeight="Medium"
                                         Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
                                     <TextBlock
-                                        extensions:TextBlock.TextByKey="ModloaderVersionDescription"
+                                        extensions:TextBlockExtensions.TextByKey="ModloaderVersionDescription"
                                         FontSize="12"
                                         FontWeight="Medium"
                                         Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"

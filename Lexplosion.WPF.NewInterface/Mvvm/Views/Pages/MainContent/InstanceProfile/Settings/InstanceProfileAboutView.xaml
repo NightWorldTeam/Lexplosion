@@ -43,13 +43,13 @@
 
                                 <StackPanel>
                                     <TextBlock
-                                        extensions:TextBlock.TextByKey="Image"
+                                        extensions:TextBlockExtensions.TextByKey="Image"
                                         FontSize="14"
                                         FontWeight="Medium"
                                         Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
                                         Text="Image" />
                                     <TextBlock
-                                        extensions:TextBlock.TextByKey="ImageDescription"
+                                        extensions:TextBlockExtensions.TextByKey="ImageDescription"
                                         FontSize="14"
                                         FontWeight="Medium"
                                         Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
@@ -129,12 +129,12 @@
                             <!--  Header  -->
                             <StackPanel>
                                 <TextBlock
-                                    extensions:TextBlock.TextByKey="Name"
+                                    extensions:TextBlockExtensions.TextByKey="Name"
                                     FontSize="14"
                                     FontWeight="Medium"
                                     Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
                                 <TextBlock
-                                    extensions:TextBlock.TextByKey="InstanceNameDescription"
+                                    extensions:TextBlockExtensions.TextByKey="InstanceNameDescription"
                                     FontSize="14"
                                     FontWeight="Medium"
                                     Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
@@ -165,12 +165,12 @@
                             <!--  Header  -->
                             <StackPanel>
                                 <TextBlock
-                                    extensions:TextBlock.TextByKey="Summary"
+                                    extensions:TextBlockExtensions.TextByKey="Summary"
                                     FontSize="14"
                                     FontWeight="Medium"
                                     Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
                                 <TextBlock
-                                    extensions:TextBlock.TextByKey="SummaryDescription"
+                                    extensions:TextBlockExtensions.TextByKey="SummaryDescription"
                                     FontSize="14"
                                     FontWeight="Medium"
                                     Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
@@ -202,12 +202,12 @@
                             <!--  Header  -->
                             <StackPanel>
                                 <TextBlock
-                                    extensions:TextBlock.TextByKey="Description"
+                                    extensions:TextBlockExtensions.TextByKey="Description"
                                     FontSize="14"
                                     FontWeight="Medium"
                                     Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
                                 <TextBlock
-                                    extensions:TextBlock.TextByKey="DescriptionAdditional"
+                                    extensions:TextBlockExtensions.TextByKey="DescriptionAdditional"
                                     FontSize="14"
                                     FontWeight="Medium"
                                     Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />

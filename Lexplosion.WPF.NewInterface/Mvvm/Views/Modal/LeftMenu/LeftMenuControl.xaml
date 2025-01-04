@@ -98,7 +98,7 @@
                                 <Viewbox Width="16" Height="16">
                                     <Path
                                         x:Name="Path"
-                                        extensions:Path.StringKeyData="{Binding IconKey}"
+                                        extensions:PathExtensions.StringKeyData="{Binding IconKey}"
                                         Fill="{DynamicResource ActivitySolidColorBrush}"
                                         SnapsToDevicePixels="True"
                                         Stretch="Fill"
@@ -110,7 +110,7 @@
                                     x:Name="TextBlock"
                                     Margin="10,0,0,0"
                                     VerticalAlignment="Center"
-                                    extensions:TextBlock.TextByKey="{Binding TitleKey}"
+                                    extensions:TextBlockExtensions.TextByKey="{Binding TitleKey}"
                                     FontSize="14"
                                     FontWeight="Medium"
                                     Foreground="{DynamicResource ActivitySolidColorBrush}" />
@@ -185,7 +185,7 @@
                             <!--  Selected Page Title  -->
                             <TextBlock
                                 VerticalAlignment="Top"
-                                extensions:TextBlock.TextByKey="{Binding TitleKey}"
+                                extensions:TextBlockExtensions.TextByKey="{Binding TitleKey}"
                                 FontSize="20"
                                 FontWeight="Medium"
                                 Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
@@ -216,7 +216,7 @@
                                     <Viewbox Height="16">
                                         <Path
                                             x:Name="CloseIcon"
-                                            extensions:Path.StringKeyData="Close"
+                                            extensions:PathExtensions.StringKeyData="Close"
                                             Fill="{DynamicResource SecondaryForegroundSolidColorBrush}"
                                             Stretch="Fill" />
                                     </Viewbox>

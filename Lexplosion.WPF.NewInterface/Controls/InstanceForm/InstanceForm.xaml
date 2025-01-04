@@ -35,7 +35,7 @@
                                     <Path
                                         x:Name="Path"
                                         HorizontalAlignment="Center"
-                                        extensions:Path.StringKeyData="{Binding IconKey}"
+                                        extensions:PathExtensions.StringKeyData="{Binding IconKey}"
                                         Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
                                         Stretch="Fill" />
                                 </Viewbox>
@@ -45,7 +45,7 @@
                                 x:Name="TextBlock"
                                 Grid.Column="1"
                                 Margin="7,0,5,0"
-                                extensions:TextBlock.TextByKey="{Binding TextKey}"
+                                extensions:TextBlockExtensions.TextByKey="{Binding TextKey}"
                                 FontSize="12pt"
                                 Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
                                 TextAlignment="Justify" />
@@ -86,14 +86,14 @@
                             <Viewbox Width="24" Height="24">
                                 <Path
                                     x:Name="Icon"
-                                    extensions:Path.StringKeyData="Download"
+                                    extensions:PathExtensions.StringKeyData="Download"
                                     Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
                                     Stretch="Fill" />
                             </Viewbox>
                             <Viewbox Width="24" Height="24">
                                 <Path
                                     x:Name="IconActivityColor"
-                                    extensions:Path.StringKeyData="Download"
+                                    extensions:PathExtensions.StringKeyData="Download"
                                     Fill="{DynamicResource CheckBoxMarkSolidColorBrush}"
                                     Opacity="0"
                                     Stretch="Fill" />
@@ -207,7 +207,7 @@
                                     <TextBlock
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Center"
-                                        extensions:TextBlock.TextByKey="More"
+                                        extensions:TextBlockExtensions.TextByKey="More"
                                         FontSize="22"
                                         FontWeight="Bold"
                                         Foreground="{DynamicResource CheckBoxMarkSolidColorBrush}" />

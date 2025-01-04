@@ -22,7 +22,7 @@
 
             <TextBlock
                 Margin="45,32,0,8"
-                extensions:TextBlock.TextByKey="Friends"
+                extensions:TextBlockExtensions.TextByKey="Friends"
                 FontSize="20"
                 FontWeight="Bold"
                 Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />

@@ -303,7 +303,7 @@
                         CornerRadius="5">
                         <Viewbox Height="{TemplateBinding FontSize}">
                             <Path
-                                extensions:Path.StringKeyData="{TemplateBinding Content}"
+                                extensions:PathExtensions.StringKeyData="{TemplateBinding Content}"
                                 Fill="{TemplateBinding Foreground}"
                                 Stretch="Fill" />
                         </Viewbox>
@@ -335,7 +335,7 @@
 
                         <Viewbox Height="{TemplateBinding FontSize}">
                             <Path
-                                extensions:Path.StringKeyData="{TemplateBinding Content}"
+                                extensions:PathExtensions.StringKeyData="{TemplateBinding Content}"
                                 Fill="{TemplateBinding Foreground}"
                                 Stretch="Fill" />
                         </Viewbox>
@@ -547,7 +547,7 @@
                         <Viewbox Width="{TemplateBinding Width}" Height="{TemplateBinding Height}">
                             <Path
                                 x:Name="IconPath"
-                                extensions:Path.StringKeyData="{TemplateBinding Content}"
+                                extensions:PathExtensions.StringKeyData="{TemplateBinding Content}"
                                 Fill="{TemplateBinding Foreground}"
                                 Stretch="Fill" />
                         </Viewbox>

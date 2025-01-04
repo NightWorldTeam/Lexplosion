@@ -768,8 +768,8 @@ namespace Lexplosion.WPF.NewInterface.Controls
                 _mainActionButtonPathHover = _mainActionButton.Template.FindName("IconActivityColor", _mainActionButton) as Path;
             }
 
-            Extensions.Path.SetStringKeyData(_mainActionButtonPath, iconKey);
-            Extensions.Path.SetStringKeyData(_mainActionButtonPathHover, iconKey);
+            Extensions.PathExtensions.SetStringKeyData(_mainActionButtonPath, iconKey);
+            Extensions.PathExtensions.SetStringKeyData(_mainActionButtonPathHover, iconKey);
         }
 
         /// <summary>

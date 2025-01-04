@@ -29,7 +29,7 @@
                                 Height="{TemplateBinding IconHeight}"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Top"
-                                extensions:Path.StringKeyData="CircleLoader"
+                                extensions:PathExtensions.StringKeyData="CircleLoader"
                                 Fill="{TemplateBinding Foreground}"
                                 Stretch="UniformToFill" />
                         </Border>

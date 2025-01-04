@@ -77,7 +77,7 @@
                                             HorizontalAlignment="Center"
                                             VerticalAlignment="Center">
                                             <Path
-                                                extensions:Path.StringKeyData="Profile"
+                                                extensions:PathExtensions.StringKeyData="Profile"
                                                 Fill="{DynamicResource CheckBoxMarkSolidColorBrush}"
                                                 Stretch="Fill" />
                                         </Viewbox>
@@ -287,7 +287,7 @@
                                             HorizontalAlignment="Center"
                                             VerticalAlignment="Center">
                                             <Path
-                                                extensions:Path.StringKeyData="Profile"
+                                                extensions:PathExtensions.StringKeyData="Profile"
                                                 Fill="{DynamicResource CheckBoxMarkSolidColorBrush}"
                                                 Stretch="Fill" />
                                         </Viewbox>

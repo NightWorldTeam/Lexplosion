@@ -3,13 +3,13 @@ using System.Windows.Media;
 
 namespace Lexplosion.WPF.NewInterface.Extensions
 {
-    public static class Path
+    public static class PathExtensions
     {
         #region String Data Property
 
 
         public static DependencyProperty StringDataProperty
-            = DependencyProperty.RegisterAttached("StringData", typeof(string), typeof(Path),
+            = DependencyProperty.RegisterAttached("StringData", typeof(string), typeof(PathExtensions),
                 new PropertyMetadata(string.Empty, OnStringDataChanged));
 
         private static void OnStringDataChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -41,7 +41,7 @@ namespace Lexplosion.WPF.NewInterface.Extensions
 
 
         public static DependencyProperty StringKeyDataProperty
-            = DependencyProperty.RegisterAttached("StringKeyData", typeof(string), typeof(Path),
+            = DependencyProperty.RegisterAttached("StringKeyData", typeof(string), typeof(PathExtensions),
                 new FrameworkPropertyMetadata(string.Empty, OnStringKeyDataChanged));
 
         private static void OnStringKeyDataChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

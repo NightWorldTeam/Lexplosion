@@ -23,7 +23,7 @@
 
         <TextBlock
             Margin="45,32,0,8"
-            extensions:TextBlock.TextByKey="{Binding HeaderKey}"
+            extensions:TextBlockExtensions.TextByKey="{Binding HeaderKey}"
             FontSize="20"
             FontWeight="Bold"
             Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />

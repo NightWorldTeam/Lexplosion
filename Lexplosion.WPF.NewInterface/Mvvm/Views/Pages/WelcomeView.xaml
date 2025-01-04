@@ -29,7 +29,7 @@
                     Height="250"
                     Stretch="Fill">
                     <Path
-                        extensions:Path.StringData="{StaticResource PDNightworld}"
+                        extensions:PathExtensions.StringData="{StaticResource PDNightworld}"
                         Fill="#A0C4FF"
                         Stretch="Fill"
                         Stroke="#1A2135">

@@ -7,14 +7,14 @@ using System.Windows.Documents;
 
 namespace Lexplosion.WPF.NewInterface.Extensions
 {
-    public static class TextBlock
+    public static class TextBlockExtensions
     {
         public static readonly DependencyProperty TextByKeyProperty
-            = DependencyProperty.RegisterAttached("TextByKey", typeof(string), typeof(TextBlock),
+            = DependencyProperty.RegisterAttached("TextByKey", typeof(string), typeof(TextBlockExtensions),
                 new FrameworkPropertyMetadata(string.Empty, OnTextByKeyChanged));
 
         public static readonly DependencyProperty RunByKeyProperty
-            = DependencyProperty.RegisterAttached("RunByKey", typeof(string), typeof(TextBlock),
+            = DependencyProperty.RegisterAttached("RunByKey", typeof(string), typeof(TextBlockExtensions),
             new FrameworkPropertyMetadata(string.Empty, OnRunByKeyChanged));
 
         public static void SetTextByKey(DependencyObject dp, string value)

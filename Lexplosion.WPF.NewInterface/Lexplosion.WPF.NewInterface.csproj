@@ -132,7 +132,7 @@
     <Compile Include="Core\Switch.cs" />
     <Compile Include="Core\ViewModel\ILimitedAccess.cs" />
     <Compile Include="Extensions\ResourceDictionaryExtensions.cs" />
-    <Compile Include="Extensions\ScrollViewer.cs" />
+    <Compile Include="Extensions\ScrollViewerExtensions.cs" />
     <Compile Include="Extensions\StyleSelectors\LastRowItemWrapPanelStyleSelector.cs" />
     <Compile Include="Mvvm\Models\InstanceControllers\InstanceSharesController.cs" />
     <Compile Include="Mvvm\Models\InstanceTransfer\DistributedInstance.cs" />
@@ -263,7 +263,7 @@
     <Compile Include="Core\Objects\Theme.cs" />
     <Compile Include="Core\ViewModel\ObservableObject.cs" />
     <Compile Include="Extensions\ResourceKeyBinding.cs" />
-    <Compile Include="Extensions\TreeViewItemExtension.cs" />
+    <Compile Include="Extensions\TreeViewItemExtensions.cs" />
     <Compile Include="Mvvm\Models\AddonsRepositories\AddonsRepositoryModel.cs" />
     <Compile Include="Mvvm\Models\AddonsRepositories\AddonsRepositoryModelBase.cs" />
     <Compile Include="Mvvm\Models\AddonsRepositories\Groups\CategoryGroup.cs" />
@@ -313,10 +313,10 @@
     <Compile Include="Tools\HashCodeHelper.cs" />
     <Compile Include="Tools\ImageTools.cs" />
     <Compile Include="Tools\WindowsResolutionTools.cs" />
-    <Compile Include="Extensions\Path.cs" />
+    <Compile Include="Extensions\PathExtensions.cs" />
     <Compile Include="Extensions\StyleSelectors\LastChildStyleSelector.cs" />
     <Compile Include="Extensions\StyleSelectors\NthChildStyleSelector.cs" />
-    <Compile Include="Extensions\TextBlock.cs" />
+    <Compile Include="Extensions\TextBlockExtensions.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Mvvm\Models\AddonsRepositories\Curseforge\CurseforgeRepositoryModel.cs" />
     <Compile Include="Mvvm\Models\AddonsRepositories\Modrinth\ModrinthAddonPageModel.cs" />

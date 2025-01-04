@@ -85,14 +85,14 @@
                 <DataTrigger Binding="{Binding IsSuccessful}" Value="True">
                     <Setter TargetName="Status" Property="Visibility" Value="Visible" />
                     <Setter TargetName="ProgressBar" Property="Visibility" Value="Collapsed" />
-                    <Setter TargetName="ButtonIcon" Property="extensions:Path.StringKeyData" Value="Success" />
+                    <Setter TargetName="ButtonIcon" Property="extensions:PathExtensions.StringKeyData" Value="Success" />
                     <Setter TargetName="ButtonIcon" Property="Fill" Value="{DynamicResource ImportSuccessSolidColorBrush}" />
                 </DataTrigger>
 
                 <DataTrigger Binding="{Binding IsImporing}" Value="True">
                     <Setter TargetName="Status" Property="Visibility" Value="Collapsed" />
                     <Setter TargetName="ProgressBar" Property="Visibility" Value="Visible" />
-                    <Setter TargetName="ButtonIcon" Property="extensions:Path.StringKeyData" Value="Cancel" />
+                    <Setter TargetName="ButtonIcon" Property="extensions:PathExtensions.StringKeyData" Value="Cancel" />
                     <Setter TargetName="ButtonIcon" Property="Fill" Value="{DynamicResource ImportCancelSolidColorBrush}" />
                 </DataTrigger>
             </DataTemplate.Triggers>

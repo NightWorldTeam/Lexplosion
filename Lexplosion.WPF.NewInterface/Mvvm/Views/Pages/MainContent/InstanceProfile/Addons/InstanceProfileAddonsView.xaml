@@ -6,7 +6,7 @@
     xmlns:controls1="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
     xmlns:core="clr-namespace:Lexplosion.WPF.NewInterface.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:extension="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
+    xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
     xmlns:instanceprofile="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile"
     xmlns:lexplosion="clr-namespace:Lexplosion;assembly=Lexplosion.Core"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.InstanceProfile"
@@ -318,7 +318,7 @@
                                                         <Setter.Value>
                                                             <Viewbox Height="12">
                                                                 <Path
-                                                                    extension:Path.StringKeyData="Curseforge"
+                                                                    extensions:PathExtensions.StringKeyData="Curseforge"
                                                                     Fill="{DynamicResource SecondaryForegroundSolidColorBrush}"
                                                                     Stretch="Fill" />
                                                             </Viewbox>
@@ -332,7 +332,7 @@
                                                         <Setter.Value>
                                                             <Viewbox Height="18">
                                                                 <Path
-                                                                    extension:Path.StringKeyData="Modrinth"
+                                                                    extensions:PathExtensions.StringKeyData="Modrinth"
                                                                     Fill="{DynamicResource SecondaryForegroundSolidColorBrush}"
                                                                     Stretch="Fill" />
                                                             </Viewbox>
@@ -502,7 +502,7 @@
                             Visibility="{Binding UpdateAvailable, Converter={valueconverters:BooleanToVisibilityConverter}}">
                             <Viewbox Height="18" Margin="4,0,0,0">
                                 <Path
-                                    extension:Path.StringKeyData="Update"
+                                    extensions:PathExtensions.StringKeyData="Update"
                                     Fill="{DynamicResource SecondaryForegroundSolidColorBrush}"
                                     Stretch="Fill" />
                             </Viewbox>
@@ -526,7 +526,7 @@
                                                 <Setter.Value>
                                                     <Viewbox Height="12">
                                                         <Path
-                                                            extension:Path.StringKeyData="Curseforge"
+                                                            extensions:PathExtensions.StringKeyData="Curseforge"
                                                             Fill="{DynamicResource SecondaryForegroundSolidColorBrush}"
                                                             Stretch="Fill" />
                                                     </Viewbox>
@@ -540,7 +540,7 @@
                                                 <Setter.Value>
                                                     <Viewbox Height="18">
                                                         <Path
-                                                            extension:Path.StringKeyData="Modrinth"
+                                                            extensions:PathExtensions.StringKeyData="Modrinth"
                                                             Fill="{DynamicResource SecondaryForegroundSolidColorBrush}"
                                                             Stretch="Fill" />
                                                     </Viewbox>
@@ -623,7 +623,7 @@
                     SelectedValue="{Binding Model.SelectedSortByParam, UpdateSourceTrigger=PropertyChanged}">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock extension:TextBlock.TextByKey="{Binding}" Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                            <TextBlock extensions:TextBlockExtensions.TextByKey="{Binding}" Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
@@ -758,7 +758,7 @@
                     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                         <Viewbox Width="64" Height="64">
                             <Path
-                                extension:Path.StringData="M440-200h80v-167l64 64 56-57-160-160-160 160 57 56 63-63v167ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z"
+                                extensions:PathExtensions.StringData="M440-200h80v-167l64 64 56-57-160-160-160 160 57 56 63-63v167ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z"
                                 Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
                                 Stretch="Fill" />
                         </Viewbox>

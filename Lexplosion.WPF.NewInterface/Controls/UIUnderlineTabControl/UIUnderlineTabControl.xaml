@@ -16,7 +16,7 @@
                             x:Name="Border"
                             Padding="0,8,32,8"
                             BorderBrush="{DynamicResource SeparateSolidColorBrush}">
-                            <TextBlock x:Name="HeaderTB" extensions:TextBlock.TextByKey="{TemplateBinding Header}" />
+                            <TextBlock x:Name="HeaderTB" extensions:TextBlockExtensions.TextByKey="{TemplateBinding Header}" />
                         </Border>
                     </Grid>
                     <ControlTemplate.Triggers>

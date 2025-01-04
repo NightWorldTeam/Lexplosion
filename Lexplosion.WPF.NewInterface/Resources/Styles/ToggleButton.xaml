@@ -136,7 +136,7 @@
                         <Viewbox Height="16">
                             <Path
                                 x:Name="IconPath"
-                                extensions:Path.StringKeyData="{TemplateBinding Content}"
+                                extensions:PathExtensions.StringKeyData="{TemplateBinding Content}"
                                 Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
                                 Stretch="Fill" />
                         </Viewbox>
@@ -176,7 +176,7 @@
                             <Viewbox>
                                 <Path
                                     x:Name="Icon"
-                                    extensions:Path.StringKeyData="{TemplateBinding Content}"
+                                    extensions:PathExtensions.StringKeyData="{TemplateBinding Content}"
                                     Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
                                     Stretch="Fill" />
                             </Viewbox>

@@ -36,7 +36,7 @@
                             <Viewbox Width="{TemplateBinding IconWidth}" Height="{TemplateBinding IconHeight}">
                                 <Path
                                     x:Name="Icon"
-                                    extensions:Path.StringKeyData="{TemplateBinding IconKey}"
+                                    extensions:PathExtensions.StringKeyData="{TemplateBinding IconKey}"
                                     Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
                                     Stretch="Fill" />
                             </Viewbox>
@@ -46,7 +46,7 @@
                                 Grid.Column="1"
                                 Margin="10,0,0,0"
                                 HorizontalAlignment="Center"
-                                extensions:TextBlock.TextByKey="{TemplateBinding TextKey}"
+                                extensions:TextBlockExtensions.TextByKey="{TemplateBinding TextKey}"
                                 FontSize="16"
                                 FontWeight="SemiBold"
                                 Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />

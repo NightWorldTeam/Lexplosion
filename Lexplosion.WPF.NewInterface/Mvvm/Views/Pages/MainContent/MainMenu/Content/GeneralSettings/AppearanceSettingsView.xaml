@@ -38,7 +38,7 @@
                                 Height="16"
                                 Opacity="0">
                                 <Path
-                                    extensions:Path.StringKeyData="CheckMark"
+                                    extensions:PathExtensions.StringKeyData="CheckMark"
                                     Fill="{DynamicResource CheckBoxMarkSolidColorBrush}"
                                     Stretch="Fill" />
                             </Viewbox>
@@ -137,7 +137,7 @@
                                                     Height="14"
                                                     Margin="-4,-4,0,0"
                                                     Opacity="0">
-                                                    <Path extensions:Path.StringKeyData="CheckMark" Fill="{DynamicResource ActivitySolidColorBrush}" />
+                                                    <Path extensions:PathExtensions.StringKeyData="CheckMark" Fill="{DynamicResource ActivitySolidColorBrush}" />
                                                 </Viewbox>
                                             </Grid>
                                         </Grid>
@@ -360,12 +360,12 @@
                         BorderThickness="0,0,0,2">
                         <StackPanel>
                             <TextBlock
-                                extensions:TextBlock.TextByKey="AccentColor"
+                                extensions:TextBlockExtensions.TextByKey="AccentColor"
                                 FontSize="16"
                                 FontWeight="Medium"
                                 Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
                             <TextBlock
-                                extensions:TextBlock.TextByKey="ChooseAccentColor"
+                                extensions:TextBlockExtensions.TextByKey="ChooseAccentColor"
                                 FontSize="14"
                                 FontWeight="Medium"
                                 Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
@@ -400,12 +400,12 @@
                         <StackPanel Orientation="Vertical">
 
                             <TextBlock
-                                extensions:TextBlock.TextByKey="InterfaceTheme"
+                                extensions:TextBlockExtensions.TextByKey="InterfaceTheme"
                                 FontSize="16"
                                 FontWeight="Medium"
                                 Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
                             <TextBlock
-                                extensions:TextBlock.TextByKey="ChooseTheme"
+                                extensions:TextBlockExtensions.TextByKey="ChooseTheme"
                                 FontSize="14"
                                 FontWeight="Medium"
                                 Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
@@ -463,12 +463,12 @@
                                         <!--  Header  -->
                                         <StackPanel>
                                             <TextBlock
-                                                extensions:TextBlock.TextByKey="AutoInstanceUpdate"
+                                                extensions:TextBlockExtensions.TextByKey="AutoInstanceUpdate"
                                                 FontSize="14"
                                                 FontWeight="Medium"
                                                 Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
                                             <TextBlock
-                                                extensions:TextBlock.TextByKey="AutoInstanceUpdateDescription"
+                                                extensions:TextBlockExtensions.TextByKey="AutoInstanceUpdateDescription"
                                                 FontSize="14"
                                                 FontWeight="Medium"
                                                 Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />

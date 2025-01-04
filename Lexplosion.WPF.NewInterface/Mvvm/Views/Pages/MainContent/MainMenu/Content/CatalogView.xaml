@@ -33,7 +33,7 @@
                                 <Viewbox Width="24" Height="20">
                                     <Path
                                         x:Name="path"
-                                        extensions:Path.StringKeyData="{TemplateBinding Content}"
+                                        extensions:PathExtensions.StringKeyData="{TemplateBinding Content}"
                                         Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
                                         Stretch="Fill" />
                                 </Viewbox>
@@ -174,7 +174,7 @@
                                                     Text="{DynamicResource Source}" />
                                                 <TextBlock
                                                     HorizontalAlignment="Right"
-                                                    extensions:TextBlock.TextByKey="{Binding Model.FilterPanel.SelectedSource.TranslateKey}"
+                                                    extensions:TextBlockExtensions.TextByKey="{Binding Model.FilterPanel.SelectedSource.TranslateKey}"
                                                     FontSize="14"
                                                     Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
                                             </Grid>
@@ -228,7 +228,7 @@
                                                     Text="{DynamicResource Sorting}" />
                                                 <TextBlock
                                                     HorizontalAlignment="Right"
-                                                    extensions:TextBlock.TextByKey="{Binding Model.FilterPanel.SelectedSortByParam.TranslateKey}"
+                                                    extensions:TextBlockExtensions.TextByKey="{Binding Model.FilterPanel.SelectedSortByParam.TranslateKey}"
                                                     FontSize="14"
                                                     Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
                                             </Grid>

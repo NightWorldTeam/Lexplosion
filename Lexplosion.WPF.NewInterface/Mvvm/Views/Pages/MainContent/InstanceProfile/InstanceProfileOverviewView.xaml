@@ -40,7 +40,7 @@
                             Width="14"
                             Height="14">
                             <Path
-                                extensions:Path.StringKeyData="Profile"
+                                extensions:PathExtensions.StringKeyData="Profile"
                                 Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
                                 Opacity="0.8"
                                 Stretch="Fill" />

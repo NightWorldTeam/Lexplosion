@@ -4,7 +4,7 @@ using System.Windows.Controls;
 
 namespace Lexplosion.WPF.NewInterface.Extensions
 {
-    public static class TreeViewItemExtension
+    public static class TreeViewItemExtensions
     {
         public static DependencyProperty ExpandCommandProperty =
             DependencyProperty.RegisterAttached(

@@ -53,7 +53,7 @@
                                 BorderThickness="0">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock
-                                        extensions:TextBlock.TextByKey="{Binding Name.Value}"
+                                        extensions:TextBlockExtensions.TextByKey="{Binding Name.Value}"
                                         FontSize="13"
                                         FontWeight="Medium"
                                         Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />

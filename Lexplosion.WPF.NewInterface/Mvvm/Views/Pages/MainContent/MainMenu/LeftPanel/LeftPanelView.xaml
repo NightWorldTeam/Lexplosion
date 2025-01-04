@@ -195,7 +195,7 @@
                                     Height="16"
                                     Stretch="Fill">
                                     <Path
-                                        extensions:Path.StringKeyData="Help"
+                                        extensions:PathExtensions.StringKeyData="Help"
                                         Fill="{DynamicResource SecondaryForegroundSolidColorBrush}"
                                         Stretch="Fill" />
                                 </Viewbox>
@@ -253,7 +253,7 @@
                                         Margin="0,0,16,0"
                                         Stretch="Fill">
                                         <Path
-                                            extensions:Path.StringKeyData="Library"
+                                            extensions:PathExtensions.StringKeyData="Library"
                                             Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
                                             Stretch="Fill" />
                                     </Viewbox>
@@ -271,7 +271,7 @@
                                         Margin="0,0,16,0"
                                         Stretch="Fill">
                                         <Path
-                                            extensions:Path.StringKeyData="Help"
+                                            extensions:PathExtensions.StringKeyData="Help"
                                             Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
                                             Stretch="Fill" />
                                     </Viewbox>
