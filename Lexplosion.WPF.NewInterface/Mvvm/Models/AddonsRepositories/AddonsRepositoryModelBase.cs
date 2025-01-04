@@ -126,6 +126,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
                 if (instanceData.Modloader != ClientType.Vanilla && (int)instanceData.Modloader == (int)value)
                 {
                     modloader.IsSelected = true;
+                    modloader.CanBeSelected = false;
                     _selectedModloaders.Add(modloader);
                 }
                 _modloaders.Add(modloader);

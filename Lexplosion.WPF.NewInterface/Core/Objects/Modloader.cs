@@ -25,14 +25,17 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
             }
         }
 
+        public bool CanBeSelected { get; set; }
+
 
         #endregion Properties
 
 
-        public Modloader(string name, Lexplosion.Modloader enumValue)
+        public Modloader(string name, Lexplosion.Modloader enumValue, bool canBeSelected = true)
         {
             Name = name;
             EnumValue = enumValue;
+            CanBeSelected = canBeSelected;
         }
     }
 }

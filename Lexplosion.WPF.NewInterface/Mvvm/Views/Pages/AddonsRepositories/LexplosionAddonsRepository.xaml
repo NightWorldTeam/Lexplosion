@@ -575,7 +575,8 @@
                                                     Margin="0,0,0,4"
                                                     Content="{Binding Name}"
                                                     FontSize="14"
-                                                    IsChecked="{Binding IsSelected}" />
+                                                    IsChecked="{Binding IsSelected}"
+                                                    IsEnabled="{Binding CanBeSelected}" />
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
