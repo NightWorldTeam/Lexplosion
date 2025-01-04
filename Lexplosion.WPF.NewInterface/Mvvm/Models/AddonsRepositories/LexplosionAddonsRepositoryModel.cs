@@ -19,12 +19,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
     public sealed class LexplosionAddonsRepositoryModel : AddonsRepositoryModelBase
     {
         private readonly ICollection<IProjectCategory> _latestApplyCategories = new List<IProjectCategory>();
-        private readonly ICollection<Modloader> _latestApplyModloader = new List<Modloader>();
         private readonly ICollection<object> _latestApplyFilterChanges = new List<object>();
         private readonly Dictionary<string, List<CategoryWrapper>> _categoriesGroupsByName = new();
         private readonly Action _launchInstanceAction;
         private readonly InstanceModelBase _instanceModelBase;
-
 
         public ObservableCollection<InstanceAddon> InstalledAddons { get; set; } = [];
         public ObservableCollection<DownloableAddonFile> InProgressAddons { get; set; } = [];
@@ -58,6 +56,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
         public LexplosionAddonsRepositoryModel(ProjectSource projectSource, BaseInstanceData instanceData, AddonType addonType, InstanceModelBase instanceModelBase)
             : base(projectSource, instanceData, addonType)
         {
+            _instanceModelBase = instanceModelBase;
             PageSizes = projectSource switch
             {
                 ProjectSource.Modrinth => new([6, 10, 16, 20, 50, 100]),
@@ -92,6 +91,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
                     OnPropertyChanged(nameof(InstalledAddons));
                 });
             });
+            HasUnconfirmChanges = false;
         }
 
 
@@ -131,20 +131,20 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
             if (!HasUnconfirmChanges)
             {
                 HasUnconfirmChanges = true;
-                _latestApplyCategories.Clear();
+                _latestApplyFilterChanges.Clear();
                 foreach (var i in _selectedCategories)
-                    _latestApplyCategories.Add(i);
+                    _latestApplyFilterChanges.Add(i);
             }
 
             base.OnSelectedCategoryChanged(category, isSelected);
 
-            bool isOld = _latestApplyCategories.Count == SelectedCategories.Count();
+            bool isOld = _latestApplyFilterChanges.Count == SelectedCategories.Count() + SelectedModloaders.Count();
 
             if (isOld)
             {
-                foreach (var i in _latestApplyCategories)
+                foreach (var i in _latestApplyFilterChanges)
                 {
-                    if (!SelectedCategories.Contains(i))
+                    if (i is IProjectCategory && !SelectedCategories.Contains(i as IProjectCategory))
                     {
                         isOld = false;
                         break;
@@ -164,20 +164,20 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
             if (!HasUnconfirmChanges)
             {
                 HasUnconfirmChanges = true;
-                _latestApplyCategories.Clear();
+                _latestApplyFilterChanges.Clear();
                 foreach (var i in _selectedCategories)
-                    _latestApplyCategories.Add(i);
+                    _latestApplyFilterChanges.Add(i);
             }
 
             base.OnModloaderSelectedChanged(modloader, isSelected);
 
-            bool isOld = _latestApplyCategories.Count == SelectedCategories.Count();
+            bool isOld = _latestApplyFilterChanges.Count == SelectedCategories.Count() + SelectedModloaders.Count();
 
             if (isOld)
             {
-                foreach (var i in _latestApplyCategories)
+                foreach (var i in _latestApplyFilterChanges)
                 {
-                    if (!SelectedCategories.Contains(i))
+                    if (i is Modloader && !SelectedModloaders.Contains(i as Core.Objects.Modloader))
                     {
                         isOld = false;
                         break;
@@ -305,45 +305,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
                     }
                 });
             });
-        }
-
-        private void PrepareLoaderGroup()
-        {
-            var list = new List<Modloader>();
-            foreach (GameExtension i in Enum.GetValues(typeof(GameExtension)))
-            {
-                if (MinecraftExtension.CheckExistsOnVersion(_instanceData.GameVersion, i))
-                {
-                    var loader = i switch
-                    {
-                        GameExtension.Forge => Modloader.Forge,
-                        GameExtension.Fabric => Modloader.Fabric,
-                        GameExtension.Quilt => Modloader.Quilt,
-                        _ => Modloader.Quilt,
-                    };
-
-                    list.Add(loader);
-                }
-            }
-
-            /*            var loaders = new Modloader[4];
-
-                        if (_instanceData.GameVersion >= new MinecraftVersion("1.20.2")) 
-                        {
-                            //loaders[0] = Modloader.Neoforge;
-                        }
-
-                        if (_instanceData.GameVersion >=)
-
-                        if (_projectSource == ProjectSource.Curseforge && _addonType == AddonType.Mods) 
-                        {
-                            return []
-                        }
-
-                        var type = this.Type switch 
-                        {
-                            AddonType.Resourcepacks =>
-                        }*/
         }
 
         private string GetCategoryGroupHeader(string header, IEnumerable<IProjectCategory> categories)
