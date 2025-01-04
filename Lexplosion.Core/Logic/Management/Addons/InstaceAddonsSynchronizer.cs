@@ -79,7 +79,6 @@ namespace Lexplosion.Logic.Management.Addons
 			lock (_addAddonInstallingLocker)
 			{
                 _addonsInstalling++;
-                Runtime.DebugWrite($"_addonsInstalling {_addonsInstalling} {GetHashCode()} {addon.Name}");
             }
 		}
 
@@ -88,7 +87,6 @@ namespace Lexplosion.Logic.Management.Addons
 			lock (_addAddonInstallingLocker)
 			{
                 _addonsInstalling--;
-                Runtime.DebugWrite($"_RemoveAddonInstalling {_addonsInstalling}");
                 if (_addonsInstalling == 0)
 				{
                     _nothingAddonsInstalling?.Invoke();
@@ -102,7 +100,6 @@ namespace Lexplosion.Logic.Management.Addons
 			{
 				if (_addonsInstalling == 0)
 				{
-					Runtime.DebugWrite($"Xer {_addonsInstalling}");
                     action();
                 }
 

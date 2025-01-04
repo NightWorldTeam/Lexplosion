@@ -177,7 +177,8 @@ namespace Lexplosion.Logic.Network.Web
             string _modloader = string.Empty;
             if (type == AddonType.Mods)
             {
-                _modloader = "&modLoaderTypes=" + WebUtility.UrlEncode("[" + string.Join(",", searchParams.Modloaders) + "]");
+                var modloadersList = searchParams.Modloaders.Select(x => x == Modloader.NeoForged.ToString() ? "NeoForge" : x);
+                _modloader = "&modLoaderTypes=" + WebUtility.UrlEncode("[" + string.Join(",", modloadersList) + "]");
             }
 
             string url = "https://api.curseforge.com/v1/mods/search?gameId=432&sortOrder=desc&classId=" + (int)type + "&pageSize=" + searchParams.PageSize + "&index=" + searchParams.PageIndex + gameVersion + categoryStr + _modloader + "&sortField=" + (int)searchParams.SortField + "&searchFilter=" + WebUtility.UrlEncode(searchParams.SearchFilter);

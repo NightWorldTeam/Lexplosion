@@ -188,7 +188,6 @@ namespace Lexplosion.Logic.Management.Addons
                     if (fileName == null) return;
                     if (_synchronizer.InstalledAddonContains((type, fileName))) return;
 
-                    Runtime.DebugWrite("ADDD " + filePath);
                     var addon = AddonFileHandle(filePath, type, fileExtension, addonInfoGetter);
                     if (addon != null) _synchronizer.AddInstalledAddon(addon);
 
