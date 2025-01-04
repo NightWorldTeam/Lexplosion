@@ -48,7 +48,7 @@ namespace Lexplosion.WPF.NewInterface.Tools
 
         public static Color GetDarkerColor(Color color, float percentages)
         {
-            return GetLighterColor(color, percentages * -1);
+            return GetLighterColor(color, -percentages);
         }
 
         public static Color ChangeColorBrightness(Color color, float correctionFactor)

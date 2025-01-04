@@ -147,7 +147,7 @@
                                         VerticalAlignment="Center"
                                         FontSize="14"
                                         FontWeight="Medium"
-                                        Foreground="{DynamicResource BrandColorForegroundSolidColorBrush}"
+                                        Foreground="{DynamicResource DefaultButtonForegroundColorBrush}"
                                         Text="{DynamicResource Active}" />
                                 </Border>
                             </core:If.True>
@@ -343,6 +343,7 @@
             Grid.Row="1"
             Grid.ColumnSpan="3"
             Margin="0,24,-32,0"
+            IsEnabled="True"
             ItemsSource="{Binding Source={StaticResource AccountSourceView}}"
             Style="{StaticResource TransparentListBox}">
             <ListBox.GroupStyle>

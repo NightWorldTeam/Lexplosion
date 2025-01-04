@@ -53,7 +53,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
         // Icon Keys
         private const string IK_PLAY = "Play";
         private const string IK_DOWNLOAD = "Download";
-        private const string IK_CLOSE = "Close";
+        private const string IK_CLOSE = "Cancel";
         private const string IK_LANG = "Lang";
         private const string IK_DELETE = "Delete";
         private const string IK_EXPORT = "Export";
@@ -86,6 +86,18 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
         private TextBlock _mainActionButtonPercentage;
         private TextBlock _mainActionButtonPercentageHover;
+
+
+        private bool _isDownloadCanceling;
+        private bool _isLaunching;
+        private bool _isLaunched;
+        private bool _isPreparing;
+
+        private bool _isPrepareDonwloadStage;
+        private bool _isJavaDonwloadStage;
+        private bool _isClientDonwloadStage;
+
+
 
         /// <summary>
         /// Вызывает когда метод OnApplyTemplate завершает работу.
@@ -271,7 +283,6 @@ namespace Lexplosion.WPF.NewInterface.Controls
             };
 
             InstanceModel.StateChanged += OnInstanceModelStateChanged;
-            InstanceModel.DataChanged += OnInstanceModelStateChanged;
 
             InstanceModel.DeletedEvent += (s) =>
             {
@@ -298,11 +309,8 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
         private void OnInstanceModelStateChanged()
         {
-            // Обновляем список доступных lower buttons.
             App.Current.Dispatcher.Invoke(() =>
             {
-                UpdateLowerButtons();
-
                 switch (InstanceModel.State)
                 {
                     case InstanceState.Default:
@@ -314,51 +322,74 @@ namespace Lexplosion.WPF.NewInterface.Controls
                                 ChangeMainActionButtonIcon(IK_PLAY);
                             else
                                 ChangeMainActionButtonIcon(IK_DOWNLOAD);
+
+                            UpdateLowerButtons();
+
                             break;
                         }
                     case InstanceState.Preparing:
                         {
                             IsDownloading = false;
                             IsProcessActive = true;
-                            PrepareVisualState();
+                            if (!_isPreparing)
+                            {
+                                _isPreparing = true;
+                                PrepareVisualState();
+                            }
                             break;
-                        }
+                        }IsEnabled = false;
                     case InstanceState.Downloading:
                         {
-                            if (!IsDownloading && !IsProcessActive)
+                            _isPreparing = false;
+                            if (_isDownloading)
                             {
                                 IsProcessActive = true;
                                 IsDownloading = true;
                                 ChangeMainActionButtonIcon(string.Empty);
                                 _mainActionButton.IsEnabled = true;
                                 SetMainActionButtonPercentageValue("0");
+                                UpdateLowerButtons();
                             }
                             break;
                         }
                     case InstanceState.DownloadCanceling:
                         {
                             IsDownloading = false;
-                            IsProcessActive = true;
-                            // TODO: Translate
-                            SetShortDescription("DownloadCanceling");
-                            _mainActionButton.IsEnabled = false;
-                            // убираем иконку
-                            ChangeMainActionButtonIcon(string.Empty);
-                            // убираем проценты
-                            SetMainActionButtonTextValue();
+                            if (!_isDownloadCanceling)
+                            {
+                                IsProcessActive = true;
+                                // TODO: Translate
+                                SetShortDescription("DownloadCanceling");
+                                _mainActionButton.IsEnabled = false;
+                                // убираем иконку
+                                ChangeMainActionButtonIcon(string.Empty);
+                                // убираем проценты
+                                SetMainActionButtonTextValue();
+                                UpdateLowerButtons();
+                            }
                             break;
                         }
                     case InstanceState.Launching:
                         {
-                            ChangeMainActionButtonIcon(IK_CLOSE);
-                            _mainActionButton.IsEnabled = true;
                             IsDownloading = false;
+                            if (!_isLaunching)
+                            {
+                                _isLaunching = true;
+                                ChangeMainActionButtonIcon(IK_CLOSE);
+                                _mainActionButton.IsEnabled = true;
+                                UpdateLowerButtons();
+                            }
                             break;
                         }
                     case InstanceState.Running:
                         {
-                            ChangeMainActionButtonIcon(IK_CLOSE);
-                            IsDownloading = false;
+                            _isLaunching = false;
+                            if (!_isLaunched)
+                            {
+                                _isLaunched = true;
+                                ChangeMainActionButtonIcon(IK_CLOSE);
+                                UpdateLowerButtons();
+                            }
                             break;
                         }
                     default:
@@ -792,38 +823,65 @@ namespace Lexplosion.WPF.NewInterface.Controls
                 {
                     case StageType.Prepare:
                         {
-                            PrepareVisualState();
-                            _progressBar.IsIndeterminate = true;
+                            if (!_isPrepareDonwloadStage) 
+                            {
+                                _isPrepareDonwloadStage = true;
+                                _isJavaDonwloadStage = false;
+                                _isClientDonwloadStage = false;
 
-                            if (IsDownloading)
-                                IsDownloading = false;
+                                PrepareVisualState();
+                                _progressBar.IsIndeterminate = true;
+
+                                if (IsDownloading)
+                                    IsDownloading = false;
+                            }
+                            break;
                         }
-                        break;
                     case StageType.Java:
                         {
-                            if (!IsDownloading)
-                                IsDownloading = true;
-                            SetProcessDescriptionKey("JavaInstalling");
+                            if (!_isJavaDonwloadStage)
+                            {
+                                _isPrepareDonwloadStage = false;
+                                _isJavaDonwloadStage = true;
+                                _isClientDonwloadStage = false;
+
+                                if (!IsDownloading)
+                                    IsDownloading = true;
+                                if (_progressBar.IsIndeterminate)
+                                    _progressBar.IsIndeterminate = false;
+
+                                SetProcessDescriptionKey("JavaInstalling");
+                            }
+
                             ShowProcessFilesCount();
                             SetProcessFilesCount(progressHandlerArguments.FilesCount, progressHandlerArguments.TotalFilesCount);
-                            if (_progressBar.IsIndeterminate)
-                                _progressBar.IsIndeterminate = false;
                             _progressBar.Value = progressHandlerArguments.Procents;
+
+                            break;
                         }
-                        break;
                     case StageType.Client:
                         {
-                            if (!IsDownloading)
-                                IsDownloading = true;
+                            if (!_isClientDonwloadStage)
+                            {
+                                _isPrepareDonwloadStage = false;
+                                _isJavaDonwloadStage = false;
+                                _isClientDonwloadStage = true;
+
+                                _isClientDonwloadStage = true;
+                                if (!IsDownloading)
+                                    IsDownloading = true;
+                                if (_progressBar.IsIndeterminate)
+                                    _progressBar.IsIndeterminate = false;
+                            }
+
                             // Идёт скачинвание. Этап 1/1;
                             SetInstanceDownloading(progressHandlerArguments.Stage, progressHandlerArguments.StagesCount);
                             SetProcessFilesCount(progressHandlerArguments.FilesCount, progressHandlerArguments.TotalFilesCount);
-                            if (_progressBar.IsIndeterminate)
-                                _progressBar.IsIndeterminate = false;
                             _progressBar.Value = progressHandlerArguments.Procents;
                             SetMainActionButtonPercentageValue(progressHandlerArguments.Procents.ToString());
+
+                            break;
                         }
-                        break;
                 }
             });
         }

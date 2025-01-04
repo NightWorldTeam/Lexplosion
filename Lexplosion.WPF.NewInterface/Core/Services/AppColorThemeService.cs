@@ -159,7 +159,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Services
             var pressedColor = Color.FromRgb(77, 77, 77);
             var disabledColor = Color.FromRgb(179, 179, 179);
 
-            if (color.R != 0 && color.R != 0 && color.B != 0)
+            if (color != Colors.Black)
             {
                 var luminance = ColorTools.CalculateLuminance(color);
                 Func<Color, float, Color> colorSelectorByLuminance = luminance < 140 ? ColorTools.GetLighterColor : ColorTools.GetDarkerColor;
