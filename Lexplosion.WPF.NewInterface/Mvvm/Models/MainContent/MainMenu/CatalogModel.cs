@@ -1,4 +1,5 @@
-﻿using Lexplosion.Logic.Management;
+﻿using Lexplosion.Core.Logic.Objects;
+using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Objects;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers;
@@ -113,7 +114,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
             Runtime.TaskRun(() =>
             {
                 _resetEvent.WaitOne();
-                var instanceClientsTuple = GetInstanceClients(
+                var catalogResult = GetInstanceClients(
                     SearchFilter, 
                     (int)CurrentPageIndex,
                     FilterPanel.SelectedSource.Value, 
@@ -122,14 +123,14 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
                     FilterPanel.SelectedVersion, 
                     false);
 
-                IsEmptyPage = instanceClientsTuple.Item2 == 0;
+                IsEmptyPage = catalogResult.Count == 0;
 
-                if (PageCount != instanceClientsTuple.Item2)
-                    PageCount = instanceClientsTuple.Item2;
+                if (PageCount != catalogResult.PageCount)
+                    PageCount = (uint)(catalogResult.PageCount > 10 ? (catalogResult.PageCount / ItemsPerPage) : catalogResult.PageCount);
 
                 _instanceController.Clear();
 
-                foreach (var i in instanceClientsTuple.Item1)
+                foreach (var i in catalogResult)
                     _instanceController.Add(i);
                 OnPropertyChanged(nameof(Instances));
                 IsLoading = false;
@@ -155,7 +156,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
             _instanceController.Clear();
             Runtime.TaskRun(() => 
             {
-                var instanceClientsTuple = GetInstanceClients(
+                var catalogResult = GetInstanceClients(
                     SearchFilter,
                     (int)CurrentPageIndex,
                     InstanceSource.Modrinth, 
@@ -163,12 +164,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
                     (int)ModrinthSortField.Relevance,
                     new MinecraftVersion(), false);
 
-                IsEmptyPage = instanceClientsTuple.Item2 == 0;
+                IsEmptyPage = catalogResult.Count == 0;
 
-                if (PageCount != instanceClientsTuple.Item2)
-                    PageCount = instanceClientsTuple.Item2;
+                if (PageCount != catalogResult.PageCount)
+                    PageCount = (uint)(catalogResult.PageCount > 10 ? (catalogResult.PageCount / ItemsPerPage) : catalogResult.PageCount);
 
-                foreach (var i in instanceClientsTuple.Item1)
+                foreach (var i in catalogResult)
                     _instanceController.Add(i);
 
                 OnPropertyChanged(nameof(Instances));
@@ -188,7 +189,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
         /// <param name="gameVersion">version of minecraft</param>
         /// <param name="isPaginatorInvoke">Is page index changed?</param>
         /// <returns>Tuple[IEnumerable InstanceClient & InstanceClient count </returns>
-        public (IEnumerable<InstanceClient>, uint) GetInstanceClients(string searchInput, int scrollTo, InstanceSource source, IEnumerable<IProjectCategory> selectedCategories, int sortBy, MinecraftVersion gameVersion, bool isPaginatorInvoke = false)
+        public CatalogResult<InstanceClient> GetInstanceClients(string searchInput, int scrollTo, InstanceSource source, IEnumerable<IProjectCategory> selectedCategories, int sortBy, MinecraftVersion gameVersion, bool isPaginatorInvoke = false)
         {
             ISearchParams searchParams = null;
 

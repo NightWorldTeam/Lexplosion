@@ -1,4 +1,5 @@
-﻿using Lexplosion.Global;
+﻿using Lexplosion.Core.Logic.Objects;
+using Lexplosion.Global;
 using Lexplosion.Logic.Management.Installers;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network;
@@ -18,7 +19,7 @@ namespace Lexplosion.Logic.Management.Sources
             return new NightworldInstallManager(localId, updateOnlyBase, updateCancelToken);
         }
 
-        public List<Objects.InstanceInfo> GetCatalog(InstanceSource type, ISearchParams searchParams)
+        public CatalogResult<Objects.InstanceInfo> GetCatalog(InstanceSource type, ISearchParams searchParams)
         {
             Dictionary<string, NightWorldApi.InstanceInfo> nwInstances = NightWorldApi.GetInstancesList();
             var result = new List<Objects.InstanceInfo>();
@@ -49,7 +50,7 @@ namespace Lexplosion.Logic.Management.Sources
                 i++;
             }
 
-            return result;
+            return new(result, 1);
         }
 
         public InstancePlatformData CreateInstancePlatformData(string externalId, string localId, string instanceVersion)

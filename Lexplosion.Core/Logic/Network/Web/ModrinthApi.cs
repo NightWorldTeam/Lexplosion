@@ -10,6 +10,7 @@ using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.Modrinth;
 using Lexplosion.Tools;
+using Lexplosion.Core.Logic.Objects;
 
 namespace Lexplosion.Logic.Network.Web
 {
@@ -24,7 +25,7 @@ namespace Lexplosion.Logic.Network.Web
             public const string Follows = "follows";
         }
 
-        private class CtalogContainer
+        private class CatalogContainer
         {
             public List<ModrinthCtalogUnit> hits;
 
@@ -38,6 +39,9 @@ namespace Lexplosion.Logic.Network.Web
             try
             {
                 string answer = ToServer.HttpGet(url);
+                Console.WriteLine();
+                Console.WriteLine(answer);
+                Console.WriteLine();
                 if (answer != null)
                 {
                     var data = JsonConvert.DeserializeObject<T>(answer);
@@ -168,7 +172,7 @@ namespace Lexplosion.Logic.Network.Web
             return files;
         }
 
-        public static List<ModrinthCtalogUnit> GetInstances(int pageSize, int index, IEnumerable<IProjectCategory> categories, string sortField, string searchFilter, string gameVersion)
+        public static CatalogResult<ModrinthCtalogUnit> GetInstances(int pageSize, int index, IEnumerable<IProjectCategory> categories, string sortField, string searchFilter, string gameVersion)
         {
             string url = "https://api.modrinth.com/v2/search?facets=[[%22project_type:modpack%22]]&offset=" + (index * pageSize) + "&limit" + pageSize;
 
@@ -206,7 +210,9 @@ namespace Lexplosion.Logic.Network.Web
                 url += ")";
             }
 
-            return GetApiData<CtalogContainer>(url)?.hits ?? new List<ModrinthCtalogUnit>();
+            var catalogContainer = GetApiData<CatalogContainer>(url);
+
+            return new(catalogContainer?.hits ?? new(), catalogContainer.TotalHits);
         }
 
 
@@ -281,7 +287,7 @@ namespace Lexplosion.Logic.Network.Web
             url += "&index=" + searchParams.SortFieldString;
 
             Runtime.DebugWrite(url);
-            CtalogContainer catalogList = GetApiData<CtalogContainer>(url);
+            CatalogContainer catalogList = GetApiData<CatalogContainer>(url);
             var result = new List<ModrinthProjectInfo>();
 
             if (catalogList.hits != null)

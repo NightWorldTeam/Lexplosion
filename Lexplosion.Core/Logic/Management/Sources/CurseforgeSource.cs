@@ -1,4 +1,5 @@
-﻿using Lexplosion.Logic.Management.Installers;
+﻿using Lexplosion.Core.Logic.Objects;
+using Lexplosion.Logic.Management.Installers;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects;
@@ -26,7 +27,7 @@ namespace Lexplosion.Logic.Management.Sources
             return new CurseforgeInstallManager(localId, updateOnlyBase, updateCancelToken);
         }
 
-        public List<InstanceInfo> GetCatalog(InstanceSource type, ISearchParams searchParams)
+        public CatalogResult<InstanceInfo> GetCatalog(InstanceSource type, ISearchParams searchParams)
         {
             IProjectCategory category = _modpacksAllCategory;
 
@@ -49,10 +50,10 @@ namespace Lexplosion.Logic.Management.Sources
                 }
             }
 
-            var curseforgeInstances = CurseforgeApi.GetInstances(sParams).Item1;
+            var catalogResult = CurseforgeApi.GetInstances(sParams);
             var result = new List<InstanceInfo>();
 
-            foreach (var instance in curseforgeInstances)
+            foreach (var instance in catalogResult.Collection)
             {
                 // проверяем версию игры
                 if (instance.latestFilesIndexes != null && instance.latestFilesIndexes.Count > 0 && instance.latestFilesIndexes[0].gameVersion != null)
@@ -78,7 +79,7 @@ namespace Lexplosion.Logic.Management.Sources
                 }
             }
 
-            return result;
+            return new(result, catalogResult.PageCount);
         }
 
         public InstancePlatformData CreateInstancePlatformData(string externalId, string localId, string instanceVersion)

@@ -1,4 +1,5 @@
-﻿using Lexplosion.Logic.Management.Installers;
+﻿using Lexplosion.Core.Logic.Objects;
+using Lexplosion.Logic.Management.Installers;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects;
@@ -38,7 +39,7 @@ namespace Lexplosion.Logic.Management.Sources
             return categories;
         }
 
-        public List<InstanceInfo> GetCatalog(InstanceSource type, ISearchParams searchParams)
+        public CatalogResult<InstanceInfo> GetCatalog(InstanceSource type, ISearchParams searchParams)
         {
             ModrinthSearchParams sParams;
             if (searchParams is ModrinthSearchParams)
@@ -50,10 +51,10 @@ namespace Lexplosion.Logic.Management.Sources
                 sParams = new ModrinthSearchParams();
             }
 
-            List<ModrinthCtalogUnit> curseforgeInstances = ModrinthApi.GetInstances(sParams.PageSize, sParams.PageIndex, sParams.Categories, sParams.SortFieldString, sParams.SearchFilter, sParams.GameVersion);
+            CatalogResult<ModrinthCtalogUnit> catalogResult = ModrinthApi.GetInstances(sParams.PageSize, sParams.PageIndex, sParams.Categories, sParams.SortFieldString, sParams.SearchFilter, sParams.GameVersion);
             var result = new List<InstanceInfo>(sParams.PageSize);
 
-            foreach (var instance in curseforgeInstances)
+            foreach (var instance in catalogResult.Collection)
             {
                 var _categories = ParseCategories(instance.Categories);
 
@@ -71,7 +72,7 @@ namespace Lexplosion.Logic.Management.Sources
                 });
             }
 
-            return result;
+            return new(result, catalogResult.PageCount);
         }
 
         public InstancePlatformData CreateInstancePlatformData(string externalId, string localId, string instanceVersion)

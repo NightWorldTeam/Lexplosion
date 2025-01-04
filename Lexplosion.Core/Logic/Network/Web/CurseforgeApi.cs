@@ -9,6 +9,7 @@ using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.Curseforge;
 using Lexplosion.Tools;
+using Lexplosion.Core.Logic.Objects;
 
 namespace Lexplosion.Logic.Network.Web
 {
@@ -18,16 +19,22 @@ namespace Lexplosion.Logic.Network.Web
 
         private class DataContainer<T>
         {
-            public T data;
-            public Pagination paginator;
+            [JsonProperty("data")]
+            public T Data;
+            [JsonProperty("pagination")]
+            public Pagination Paginator { get; set; }
         }
 
         private class Pagination
         {
-            public int index;
-            public int pageSize;
-            public int resultCount;
-            public int totalCount;
+            [JsonProperty("Index")]
+            public int Index { get; set; }
+            [JsonProperty("PageSize")]
+            public int PageSize { get; set; }
+            [JsonProperty("ResultCount")]
+            public int ResultCount { get; set; }
+            [JsonProperty("TotalCount")]
+            public int TotalCount { get; set; }
         }
 
         public class FingerprintSearchAnswer
@@ -54,13 +61,14 @@ namespace Lexplosion.Logic.Network.Web
                 };
 
                 string answer = ToServer.HttpGet(url, headers);
+                Console.WriteLine(answer);
                 if (answer != null)
                 {
                     var data = JsonConvert.DeserializeObject<DataContainer<T>>(answer);
                     if (data == null) return new T();
 
-                    pagination = data.paginator;
-                    return data.data ?? new T();
+                    pagination = data.Paginator;
+                    return data.Data ?? new T();
                 }
 
                 return new T();
@@ -89,8 +97,8 @@ namespace Lexplosion.Logic.Network.Web
                     var data = JsonConvert.DeserializeObject<DataContainer<T>>(answer);
                     if (data == null) return new T();
 
-                    pagination = data.paginator;
-                    return data.data ?? new T();
+                    pagination = data.Paginator;
+                    return data.Data ?? new T();
                 }
 
                 return new T();
@@ -108,7 +116,7 @@ namespace Lexplosion.Logic.Network.Web
         private static T GetApiData<T>(string url) where T : new() => GetApiData<T>(url, out _);
 
 
-        public static (List<CurseforgeInstanceInfo>, int) GetInstances(CurseforgeSearchParams searchParams)
+        public static CatalogResult<CurseforgeInstanceInfo> GetInstances(CurseforgeSearchParams searchParams)
         {
             string url = "https://api.curseforge.com/v1/mods/search?";
 
@@ -142,7 +150,7 @@ namespace Lexplosion.Logic.Network.Web
             Runtime.DebugWrite(url);
 
             var result = GetApiData<List<CurseforgeInstanceInfo>>(url, out Pagination paginator);
-            return (result, paginator?.totalCount ?? -1);
+            return new(result, paginator?.TotalCount ?? -1);
         }
 
         public static (List<CurseforgeAddonInfo>, int) GetAddonsList(AddonType type, CurseforgeSearchParams searchParams)
@@ -177,7 +185,7 @@ namespace Lexplosion.Logic.Network.Web
             Runtime.DebugWrite(url);
 
             var result = GetApiData<List<CurseforgeAddonInfo>>(url, out Pagination paginator);
-            return (result, paginator?.totalCount ?? -1);
+            return (result, paginator?.TotalCount ?? -1);
         }
 
         public static List<CurseforgeFileInfo> GetProjectFiles(string projectId, string gameVersion, ClientType modloader)
@@ -263,7 +271,7 @@ namespace Lexplosion.Logic.Network.Web
                 if (result == null) return string.Empty;
 
                 var data = JsonConvert.DeserializeObject<DataContainer<string>>(result);
-                return data?.data ?? string.Empty;
+                return data?.Data ?? string.Empty;
             }
             catch
             {

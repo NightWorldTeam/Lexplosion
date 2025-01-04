@@ -10,6 +10,7 @@ using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Global;
 using System;
+using Lexplosion.Core.Logic.Objects;
 
 namespace Lexplosion.Logic.Management.Sources
 {
@@ -87,9 +88,9 @@ namespace Lexplosion.Logic.Management.Sources
 
         public InstanceSource SourceType => InstanceSource.FreeSource;
 
-        public List<InstanceInfo> GetCatalog(InstanceSource type, ISearchParams searchParams)
+        public CatalogResult<InstanceInfo> GetCatalog(InstanceSource type, ISearchParams searchParams)
         {
-            return new List<InstanceInfo>();
+            return new();
         }
 
         public IInstallManager GetInstaller(string localId, bool updateOnlyBase, CancellationToken updateCancelToken)

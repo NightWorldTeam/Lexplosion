@@ -20,6 +20,7 @@ using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.Logic.Management.Importers;
 using Lexplosion.Logic.Management.Addons;
+using Lexplosion.Core.Logic.Objects;
 
 namespace Lexplosion.Logic.Management.Instances
 {
@@ -612,14 +613,14 @@ namespace Lexplosion.Logic.Management.Instances
         /// Возвращает список модпаков для каталога.
         /// </summary>
         /// <returns>Список внешних модпаков.</returns>
-        public static (List<InstanceClient>, uint) GetOutsideInstances(InstanceSource type, ISearchParams searchParams)
+        public static CatalogResult<InstanceClient> GetOutsideInstances(InstanceSource type, ISearchParams searchParams)
         {
             Runtime.DebugWrite("UploadInstances " + searchParams.PageIndex);
 
             IInstanceSource source = CreateSourceFactory(type);
 
             var instances = new List<InstanceClient>();
-            List<InstanceInfo> catalog = source.GetCatalog(type, searchParams);
+            CatalogResult<InstanceInfo> catalog = source.GetCatalog(type, searchParams);
 
             foreach (var instance in catalog)
             {
@@ -664,7 +665,7 @@ namespace Lexplosion.Logic.Management.Instances
                 instances.Add(instanceClient);
             }
 
-            return (instances, (uint)100);
+            return new(instances, catalog.PageCount);
         }
 
         /// <summary>
