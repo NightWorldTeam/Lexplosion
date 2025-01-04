@@ -186,7 +186,7 @@
 
 
     <DataTemplate DataType="{x:Type addonsrepositoriesvm:LexplosionAddonsRepositoryViewModel}">
-        <addonsrepositoriesviews:AddonsRepository />
+        <addonsrepositoriesviews:LexplosionAddonsRepository />
     </DataTemplate>
 
     <!--  Accounts  -->

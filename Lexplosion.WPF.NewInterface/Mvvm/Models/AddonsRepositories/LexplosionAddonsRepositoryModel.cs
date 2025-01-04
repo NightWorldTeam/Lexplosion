@@ -229,6 +229,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
         }
 
 
+        public void StopInstanceProcess() 
+        {
+            
+        }
+
         #endregion Public & Protected
 
 

@@ -3,11 +3,11 @@ using Lexplosion.Logic.Objects;
 using Lexplosion.WPF.NewInterface.Core.Objects.TranslatableObjects;
 using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Core;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories.Groups;
 using Lexplosion.Logic.Management.Addons;
+using System;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 {
@@ -17,15 +17,22 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
         {
             Id = "-1",
             Name = "All",
-            ClassId = "",
-            ParentCategoryId = ""
+            ClassId = string.Empty,
+            ParentCategoryId = string.Empty
         };
 
         protected BaseInstanceData _instanceData;
         protected readonly ProjectSource _projectSource;
         protected readonly AddonType _addonType;
 
+        protected readonly ObservableCollection<CategoryWrapper> _categories = new();
+        protected readonly ObservableCollection<IProjectCategory> _selectedCategories = new();
+        protected ObservableCollection<InstanceAddon> _addonsList = new();
+        protected ObservableCollection<CategoryGroup> _categoriesGroups = new();
+        protected ObservableCollection<Core.Objects.Modloader> _modloaders = new();
+        protected ObservableCollection<Core.Objects.Modloader> _selectedModloaders = new();
 
+        
         protected bool _isClearFilters = false;
 
 
@@ -35,17 +42,16 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
         public abstract ReadOnlyCollection<uint> PageSizes { get; }
 
 
-        protected readonly ObservableCollection<CategoryWrapper> _categories = new();
-        protected readonly ObservableCollection<IProjectCategory> _selectedCategories = new();
-        protected ObservableCollection<InstanceAddon> _addonsList = new();
-        protected ObservableCollection<CategoryGroup> _categoriesGroups = new();
-
         public IEnumerable<CategoryWrapper> Categories { get => _categories; }
         public IEnumerable<IProjectCategory> SelectedCategories { get => _selectedCategories; }
         public IEnumerable<InstanceAddon> AddonsList { get => _addonsList; }
         public IEnumerable<CategoryGroup> CategoriesGroups { get => _categoriesGroups; }
+        public IEnumerable<Core.Objects.Modloader> Modloaders { get => _modloaders; }
+        public IEnumerable<Core.Objects.Modloader> SelectedModloaders { get => _selectedModloaders; }
+
 
         public IEnumerable<SortByParamObject> SortByParams { get; protected set; }
+
 
         private string _searchFilter = string.Empty;
         public string SearchFilter
@@ -109,6 +115,19 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
             _projectSource = projectSource;
             _instanceData = instanceData;
             _addonType = addonType;
+
+
+            foreach (Modloader value in Enum.GetValues(typeof(Modloader)))
+            {
+                Core.Objects.Modloader modloader = new(value.ToString(), value);
+                
+                modloader.SelectedChanged += OnModloaderSelectedChanged;
+
+                if (instanceData.Modloader != ClientType.Vanilla && (int)instanceData.Modloader == (int)value) 
+                    modloader.IsSelected = true;
+
+                _modloaders.Add(modloader);
+            }
         }
 
 
@@ -120,6 +139,19 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 
         protected abstract ISearchParams BuildSearchParams();
         protected abstract List<IProjectCategory> GetCategories();
+
+
+        protected virtual void OnModloaderSelectedChanged(Core.Objects.Modloader modloader, bool isSelected)
+        {
+            if (isSelected)
+            {
+                _selectedModloaders.Add(modloader);
+            }
+            else 
+            {
+                _selectedModloaders.Remove(modloader);
+            }
+        }
 
 
         protected void LoadContent()

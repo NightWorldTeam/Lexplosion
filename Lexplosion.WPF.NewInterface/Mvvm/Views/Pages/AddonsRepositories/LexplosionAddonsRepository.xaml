@@ -113,7 +113,7 @@
         </DataTemplate>
 
         <DataTemplate DataType="{x:Type translatableObjects:SortByParamObject}">
-            <TextBlock extensions:TextBlock.TextByKey="{Binding TranslateKey}" Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+            <TextBlock extensions:TextBlockExtensions.TextByKey="{Binding TranslateKey}" Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
         </DataTemplate>
 
         <DataTemplate DataType="{x:Type objects:CategoryWrapper}">
@@ -135,7 +135,7 @@
 
                 <TextBlock
                     Margin="0,0,0,8"
-                    extensions:TextBlock.TextByKey="{Binding Header}"
+                    extensions:TextBlockExtensions.TextByKey="{Binding Header}"
                     FontSize="18"
                     FontWeight="Medium"
                     Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
@@ -566,7 +566,7 @@
                                 <StackPanel Grid.Row="1" Margin="0,16,0,0">
                                     <TextBlock
                                         Margin="0,0,0,8"
-                                        extensions:TextBlock.TextByKey="GameType"
+                                        extensions:TextBlockExtensions.TextByKey="GameType"
                                         FontSize="18"
                                         FontWeight="Medium"
                                         Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />

@@ -1,19 +1,12 @@
 ﻿using Lexplosion.Logic.Management.Addons;
-using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Objects;
 using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
-using Lexplosion.WPF.NewInterface.Core.Objects;
-using Lexplosion.WPF.NewInterface.Core.Objects.TranslatableObjects;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile;
 using Lexplosion.WPF.NewInterface.Stores;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
@@ -23,7 +16,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
         private readonly INavigationStore _navigationStore;
 
 
-        public AddonsRepositoryModel Model { get; private set; }
+        public LexplosionAddonsRepositoryModel Model { get; private set; }
 
         public ViewModelBase _modsViewModel { get; set; }
 
@@ -140,7 +133,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
 
 
 
-        private List<AddonsRepositoryModel> _repositoriesList = new();
+        private List<LexplosionAddonsRepositoryModel> _repositoriesList = new();
 
 
         #endregion Commands
@@ -170,9 +163,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
                 {
                     if (addonType != AddonType.Maps)
                     {
-                        _repositoriesList.Add(new AddonsRepositoryModel(ProjectSource.Modrinth, instanceData, addonType, instanceModelBase));
+                        _repositoriesList.Add(new LexplosionAddonsRepositoryModel(ProjectSource.Modrinth, instanceData, addonType, instanceModelBase));
                     }
-                    _repositoriesList.Add(new AddonsRepositoryModel(ProjectSource.Curseforge, instanceData, addonType, instanceModelBase));
+                    _repositoriesList.Add(new LexplosionAddonsRepositoryModel(ProjectSource.Curseforge, instanceData, addonType, instanceModelBase));
 
                     SelectedAddonsRepositoryIndex = 0;
                     LaunchInstanceCommand = RelayCommand.GetCommand(ref _launchInstance, Model.LaunchInstance);

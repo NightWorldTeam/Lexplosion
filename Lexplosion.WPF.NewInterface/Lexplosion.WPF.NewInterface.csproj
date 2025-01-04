@@ -120,6 +120,7 @@
     <Compile Include="Core\Objects\DownloableAddonFile.cs" />
     <Compile Include="Core\Objects\InstanceDistribution.cs" />
     <Compile Include="Core\Objects\InstanceGroup.cs" />
+    <Compile Include="Core\Objects\Modloader.cs" />
     <Compile Include="Core\Objects\SelecteableItem.cs" />
     <Compile Include="Core\Objects\Test.cs" />
     <Compile Include="Core\Resources\IResourceLoader.cs" />
@@ -263,8 +264,8 @@
     <Compile Include="Core\Objects\Theme.cs" />
     <Compile Include="Core\ViewModel\ObservableObject.cs" />
     <Compile Include="Extensions\ResourceKeyBinding.cs" />
+    <Compile Include="Mvvm\Models\AddonsRepositories\LexplosionAddonsRepositoryModel.cs" />
     <Compile Include="Extensions\TreeViewItemExtensions.cs" />
-    <Compile Include="Mvvm\Models\AddonsRepositories\AddonsRepositoryModel.cs" />
     <Compile Include="Mvvm\Models\AddonsRepositories\AddonsRepositoryModelBase.cs" />
     <Compile Include="Mvvm\Models\AddonsRepositories\Groups\CategoryGroup.cs" />
     <Compile Include="Mvvm\Models\AddonsRepositories\Groups\IAddonSearchParamsGroupBase.cs" />
@@ -298,8 +299,8 @@
     <Compile Include="Mvvm\Views\Modal\InstanceTransfer\InstanceImportView.xaml.cs">
       <DependentUpon>InstanceImportView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Mvvm\Views\Pages\AddonsRepositories\AddonsRepository.xaml.cs">
-      <DependentUpon>AddonsRepository.xaml</DependentUpon>
+    <Compile Include="Mvvm\Views\Pages\AddonsRepositories\LexplosionAddonsRepository.xaml.cs">
+      <DependentUpon>LexplosionAddonsRepository.xaml</DependentUpon>
     </Compile>
     <Compile Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\Friends\FindFriendsView.xaml.cs">
       <DependentUpon>FindFriendsView.xaml</DependentUpon>
@@ -563,7 +564,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Mvvm\Views\Pages\AddonsRepositories\AddonsRepository.xaml">
+    <Page Include="Mvvm\Views\Pages\AddonsRepositories\LexplosionAddonsRepository.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
