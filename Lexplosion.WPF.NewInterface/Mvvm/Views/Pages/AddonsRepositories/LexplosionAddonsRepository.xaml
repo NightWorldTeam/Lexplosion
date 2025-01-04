@@ -22,6 +22,8 @@
     mc:Ignorable="d">
 
     <UserControl.Resources>
+        <core:BindingProxy x:Key="ViewModel" Data="{Binding}" />
+
         <Style x:Key="DownMenuItem" TargetType="{x:Type controls:AdvancedButton}">
             <Setter Property="Template">
                 <Setter.Value>
@@ -326,7 +328,7 @@
                                                 <TextBlock
                                                     Margin="16,8"
                                                     Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                                    Text="{DynamicResource Install}" />
+                                                    Text="{DynamicResource Installed}" />
                                             </Border>
                                         </controls:OneStageInstallButton.AfterInstallContent>
                                     </controls:OneStageInstallButton>
@@ -349,7 +351,7 @@
                                             <StackPanel>
                                                 <controls:AdvancedButton
                                                     Click="DropdownMenuButtonItem_Click"
-                                                    Command="{Binding DataContext.OpenExternalResourceCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                    Command="{Binding Data.OpenExternalResourceCommand, Source={StaticResource ViewModel}}"
                                                     CommandParameter="{Binding}"
                                                     IconData="{StaticResource PDClose}"
                                                     Style="{StaticResource DownMenuItem}"
@@ -361,7 +363,7 @@
                                                     <core:If.True>
                                                         <controls:AdvancedButton
                                                             Click="DropdownMenuButtonItem_Click"
-                                                            Command="{Binding DataContext.UninstallAddonCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                            Command="{Binding Data.UninstallAddonCommand, Source={StaticResource ViewModel}}"
                                                             CommandParameter="{Binding}"
                                                             IconData="{StaticResource PDDelete}"
                                                             Style="{StaticResource DownMenuItem}"

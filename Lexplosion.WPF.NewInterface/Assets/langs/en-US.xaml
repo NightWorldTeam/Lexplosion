@@ -487,4 +487,5 @@
     <s:String x:Key="Resolutions">Resolutions</s:String>
 
     <s:String x:Key="Website">Website</s:String>
+    <s:String x:Key="Installed">Installed</s:String>
 </ResourceDictionary>

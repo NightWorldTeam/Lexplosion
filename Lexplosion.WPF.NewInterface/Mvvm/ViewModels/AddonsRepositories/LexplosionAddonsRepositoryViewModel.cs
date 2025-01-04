@@ -130,6 +130,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
         {
             get => RelayCommand.GetCommand<InstanceAddon>(ref _disableAddonCommand, Model.DisableAddon);
         }
+        
+        private RelayCommand _openExternalResourceCommand;
+        public ICommand OpenExternalResourceCommand
+        {
+            get => RelayCommand.GetCommand<InstanceAddon>(ref _openExternalResourceCommand, Model.OpenWebsite);
+        }
 
 
 

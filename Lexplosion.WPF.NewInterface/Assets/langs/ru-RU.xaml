@@ -488,4 +488,6 @@
     <s:String x:Key="Resolutions">Разрешение текстур</s:String>
 
     <s:String x:Key="Website">Веб-страница</s:String>
+
+    <s:String x:Key="Installed">Установленно</s:String>
 </ResourceDictionary>

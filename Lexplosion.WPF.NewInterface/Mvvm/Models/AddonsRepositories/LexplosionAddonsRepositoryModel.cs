@@ -23,6 +23,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
         private readonly ICollection<object> _latestApplyFilterChanges = new List<object>();
         private readonly Dictionary<string, List<CategoryWrapper>> _categoriesGroupsByName = new();
         private readonly Action _launchInstanceAction;
+        private readonly InstanceModelBase _instanceModelBase;
 
 
         public ObservableCollection<InstanceAddon> InstalledAddons { get; set; } = [];
@@ -227,6 +228,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
         public void StopInstanceProcess() 
         {
             
+        }
+
+        public void OpenWebsite() 
+        {
+            _instanceModelBase.GoToWebsite();
         }
 
         #endregion Public & Protected
