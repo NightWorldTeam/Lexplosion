@@ -30,10 +30,17 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
             get => _selectedAddonsRepositoryIndex; set
             {
                 _selectedAddonsRepositoryIndex = value;
-                // сохраняем SearchFilter
+
                 if (Model != null)
+                {
+                    //отключаем активную модель
+                    Model.IsModelSelected = false;
+                    // сохраняем SearchFilter
                     _repositoriesList[value].SearchFilter = Model.SearchFilter;
+                }
+
                 Model = _repositoriesList[value];
+                Model.IsModelSelected = true;
                 OnPropertyChanged(nameof(Model));
                 OnPropertyChanged();
             }
@@ -47,7 +54,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
         }
 
         private RelayCommand _stopProcessCommand;
-        public ICommand StopProcessCommand 
+        public ICommand StopProcessCommand
         {
             get; private set;
         }
@@ -64,7 +71,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
         // paginator
         private RelayCommand _nextPageCommand;
         public ICommand NextPageCommand { get; private set; }
-        
+
         private RelayCommand _prevPageCommand;
         public ICommand PrevPageCommand { get; private set; }
 
@@ -126,7 +133,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
         {
             get => RelayCommand.GetCommand<InstanceAddon>(ref _disableAddonCommand, Model.DisableAddon);
         }
-        
+
         private RelayCommand _openExternalResourceCommand;
         public ICommand OpenExternalResourceCommand
         {
@@ -163,11 +170,15 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
 
                 App.Current.Dispatcher.Invoke(() =>
                 {
-                    if (addonType != AddonType.Maps)
+                    if (addonType == AddonType.Maps)
                     {
-                        _repositoriesList.Add(new LexplosionAddonsRepositoryModel(ProjectSource.Modrinth, instanceData, addonType, instanceModelBase));
+                        _repositoriesList.Add(new LexplosionAddonsRepositoryModel(ProjectSource.Curseforge, instanceData, addonType, instanceModelBase, true));
                     }
-                    _repositoriesList.Add(new LexplosionAddonsRepositoryModel(ProjectSource.Curseforge, instanceData, addonType, instanceModelBase));
+                    else
+                    {
+                        _repositoriesList.Add(new LexplosionAddonsRepositoryModel(ProjectSource.Modrinth, instanceData, addonType, instanceModelBase, true));
+                        _repositoriesList.Add(new LexplosionAddonsRepositoryModel(ProjectSource.Curseforge, instanceData, addonType, instanceModelBase));
+                    }
 
                     SelectedAddonsRepositoryIndex = 0;
                     InitCommands();
@@ -190,13 +201,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
         #region Private Methods
 
 
-        private void InitCommands() 
+        private void InitCommands()
         {
             LaunchInstanceCommand = RelayCommand.GetCommand(ref _launchInstance, Model.LaunchInstance);
             StopProcessCommand = RelayCommand.GetCommand(ref _launchInstance, Model.StopInstanceProcess);
             ApplySelectedCategoriesCommand = RelayCommand.GetCommand(ref _applySelectedCategoriesCommand, Model.ApplyCategories);
-            NextPageCommand = RelayCommand.GetCommand<uint>(ref _nextPageCommand, Model.Paginate);
-            PrevPageCommand = RelayCommand.GetCommand<uint>(ref _prevPageCommand, Model.Paginate);
+            NextPageCommand = new RelayCommand((obj) => Model.Paginate((uint)obj));
+            PrevPageCommand = new RelayCommand((obj) => Model.Paginate((uint)obj));
         }
 
 

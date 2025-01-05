@@ -53,8 +53,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
         #region Constructors
 
 
-        public LexplosionAddonsRepositoryModel(ProjectSource projectSource, BaseInstanceData instanceData, AddonType addonType, InstanceModelBase instanceModelBase)
-            : base(projectSource, instanceData, addonType)
+        public LexplosionAddonsRepositoryModel(ProjectSource projectSource, BaseInstanceData instanceData, AddonType addonType, InstanceModelBase instanceModelBase, bool isDefaultSelected = false)
+            : base(projectSource, instanceData, addonType, isDefaultSelected)
         {
             _instanceModelBase = instanceModelBase;
             PageSizes = projectSource switch
@@ -74,7 +74,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
             SortByParams = GetSortByParams();
 
             PrepareCategories();
-            LoadContent();
 
             instanceModelBase.GameLaunchCompleted += (o) =>
                 {
@@ -235,6 +234,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
         {
             _instanceModelBase.GoToWebsite();
         }
+
 
         #endregion Public & Protected
 

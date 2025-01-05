@@ -23,8 +23,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
         #region Constructors
 
 
-        public ModrinthRepositoryModel(BaseInstanceData instanceData, AddonType addonType)
-            : base(ProjectSource.Modrinth, instanceData, addonType)
+        public ModrinthRepositoryModel(BaseInstanceData instanceData, AddonType addonType, bool isDefaultSelected)
+            : base(ProjectSource.Modrinth, instanceData, addonType, isDefaultSelected)
         {
 
         }

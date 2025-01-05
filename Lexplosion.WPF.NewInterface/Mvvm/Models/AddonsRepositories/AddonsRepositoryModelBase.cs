@@ -21,6 +21,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
             ParentCategoryId = string.Empty
         };
 
+        private bool _isInitialized;
+
         protected BaseInstanceData _instanceData;
         protected readonly ProjectSource _projectSource;
         protected readonly AddonType _addonType;
@@ -51,6 +53,19 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 
 
         public IEnumerable<SortByParamObject> SortByParams { get; protected set; }
+
+
+        private bool _isModelSelected = false;
+        public bool IsModelSelected
+        {
+            get => _isModelSelected;
+            set
+            {
+                _isModelSelected = value;
+                if (_isModelSelected && _isInitialized)
+                    LoadContent();
+            }
+        }
 
 
         private uint _pageCount = 1;
@@ -121,12 +136,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
         #region Constructors
 
 
-        protected AddonsRepositoryModelBase(ProjectSource projectSource, BaseInstanceData instanceData, AddonType addonType)
+        protected AddonsRepositoryModelBase(ProjectSource projectSource, BaseInstanceData instanceData, AddonType addonType, bool isDefaultSelected = false)
         {
             _projectSource = projectSource;
             _instanceData = instanceData;
             _addonType = addonType;
 
+            IsModelSelected = isDefaultSelected;
 
             foreach (Modloader value in Enum.GetValues(typeof(Modloader)))
             {
@@ -142,6 +158,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
                 }
                 _modloaders.Add(modloader);
             }
+
+            _isInitialized = true;
         }
 
 
@@ -169,13 +187,20 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 
         public void Paginate(uint scrollTo)
         {
+            if (!IsModelSelected)
+                return;
+
             CurrentPageIndex = scrollTo;
             LoadContent();
         }
 
         protected void LoadContent()
         {
+            if (!IsModelSelected)
+                return;
+
             IsLoading = true;
+            Runtime.DebugConsoleWrite(CurrentPageIndex, color: ConsoleColor.Yellow);
             Runtime.TaskRun(() =>
             {
                 var catalog = AddonsManager.GetManager(_instanceData)
@@ -208,6 +233,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 
         public void InstallAddon(InstanceAddon instanceAddon)
         {
+            if (!IsModelSelected)
+                return;
+
             //instanceAddon.InstallLatestVersion();
         }
 
@@ -220,6 +248,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 
         protected virtual void OnSelectedCategoryChanged(IProjectCategory category, bool isSelected)
         {
+            if (!IsModelSelected)
+                return;
+
             if (isSelected)
             {
                 _selectedCategories.Add(category);
@@ -232,24 +263,36 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 
         private void OnSortByChanged()
         {
+            if (!IsModelSelected)
+                return;
+
             OnPropertyChanged(nameof(SelectedSortByIndex));
             LoadContent();
         }
 
         private void OnSearchFilterChanged()
         {
+            if (!IsModelSelected)
+                return;
+
             OnPropertyChanged(nameof(SearchFilter));
             LoadContent();
         }
 
         private void OnCurrentPageIndexChanged()
         {
+            if (!IsModelSelected)
+                return;
+
             OnPropertyChanged(nameof(CurrentPageIndex));
             LoadContent();
         }
 
         private void OnPageSizeChanged()
         {
+            if (!IsModelSelected)
+                return;
+
             OnPropertyChanged(nameof(PageSize));
             LoadContent();
         }

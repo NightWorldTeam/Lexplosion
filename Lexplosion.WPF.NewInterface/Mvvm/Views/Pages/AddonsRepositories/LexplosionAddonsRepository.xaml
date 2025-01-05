@@ -464,7 +464,7 @@
                                 <TextBlock
                                     FontSize="14"
                                     Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
-                                    Text="1.81.2" />
+                                    Text="{Binding Version}" />
                             </StackPanel>
 
                             <!--  Modloaders  -->

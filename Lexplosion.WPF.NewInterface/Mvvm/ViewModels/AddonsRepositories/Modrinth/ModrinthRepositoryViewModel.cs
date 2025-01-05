@@ -136,7 +136,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
             BackToInstanceProfileCommand = backCommand;
             ToCurseforgeCommand = toCurseforge;
 
-            Model = new ModrinthRepositoryModel(instanceData, addonType);
+            Model = new ModrinthRepositoryModel(instanceData, addonType, true);
 
             IsLoading = false;
         }
@@ -159,7 +159,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
                     ToCurseforgeCommand = new NavigateCommand<ViewModelBase>(_navigationStore, () => curseforgeRepository);
                     OnPropertyChanged(nameof(ToCurseforgeCommand));
 
-                    Model = new ModrinthRepositoryModel(instanceData, addonType);
+                    Model = new ModrinthRepositoryModel(instanceData, addonType, true);
                     ApplySelectedCategoriesCommand = new RelayCommand((obj) => Model.ApplyCategories());
 
                     OnPropertyChanged(nameof(Model));
