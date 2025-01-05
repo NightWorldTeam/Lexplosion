@@ -66,7 +66,11 @@
     <Compile Include="Global.cs" />
     <Compile Include="Logic\CoreServicesManager.cs" />
     <Compile Include="Logic\FileSystem\FreeSourceInstanceInstaller.cs" />
+    <Compile Include="Logic\Management\Addons\AddonsCatalogParams\AddonsCatalogParamsBase.cs" />
+    <Compile Include="Logic\Management\Addons\AddonsCatalogParams\CurseforgeAddonsCatalogParams.cs" />
+    <Compile Include="Logic\Management\Addons\AddonsCatalogParams\ModrinthAddonsCatalogParams.cs" />
     <Compile Include="Logic\Management\Addons\AddonsManager.cs" />
+    <Compile Include="Logic\Management\Addons\IAddonProjectInfo.cs" />
     <Compile Include="Logic\Management\Addons\InstaceAddonsSynchronizer.cs" />
     <Compile Include="Logic\Management\Addons\InstanceAddon.cs" />
     <Compile Include="Logic\Management\Importers\CurseforgeImportManager.cs" />

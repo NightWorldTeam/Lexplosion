@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Lexplosion.Core.Logic.Management.Addons;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
@@ -145,7 +146,7 @@ namespace Lexplosion.Logic.Objects.Curseforge
     /// <summary>
     /// Описывает мод с курсфорджа. Используются при декодировании Json
     /// </summary>
-    public class CurseforgeAddonInfo : CurseforgeProjectInfo
+    public class CurseforgeAddonInfo : CurseforgeProjectInfo, IAddonProjectInfo
     {
         public class GameVersionAddon : GameVersion
         {

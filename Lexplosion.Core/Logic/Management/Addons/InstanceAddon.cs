@@ -22,47 +22,80 @@ namespace Lexplosion.Logic.Management.Addons
 {
     public class InstanceAddon : VMBase
     {
-        private const string UNKNOWN_NAME = "Без названия";
+        public enum InstallAddonState
+        {
+            StartDownload,
+            EndDownload
+        }
+
+
+        private const string UNKNOWN_NAME = "UnknownName";
         private const string DISABLE_FILE_EXTENSION = ".disable";
 
-        #region info
 
         public event Action LoadLoaded;
 
-        private string _author = "";
+        
+        //private readonly CurseforgeAddonInfo _modInfo;
+        private readonly BaseInstanceData _modpackInfo;
+        private readonly IPrototypeAddon _addonPrototype;
+        private readonly string _projectId;
+        private readonly string _gameVersion;
+
+        private readonly InstaceAddonsSynchronizer _synchronizer;
+        private CancellationTokenSource _cancelTokenSource = null;
+
+
+        #region Properties
+
+
+        /// <summary>
+        /// Название
+        /// </summary>
+        public string Name { get; internal set; } = string.Empty;
+        /// <summary>
+        /// Описание
+        /// </summary>
+        public string Description { get; internal set; } = string.Empty;
+        public string Version { get; internal set; } = string.Empty;
+        /// <summary>
+        /// Количество скачиваний
+        /// </summary>
+        public int DownloadCount { get; internal set; } = 0;
+        /// <summary>
+        /// Дата последнего обновления
+        /// </summary>
+        public string LastUpdated { get; internal set; } = string.Empty;
+        /// <summary>
+        /// Устанавливает значение для свойства IsEnable без вызова OnPropertyChanged
+        /// </summary>
+        internal bool SetIsEnable { set => _isEnable = value; }
+        /// <summary>
+        /// Тип (Mod, Resourcepack, etc)
+        /// </summary>
+        public AddonType Type { get; }
+
+
+        private string _author = string.Empty;
         public string Author
         {
-            get
-            {
-                return _addonPrototype?.AuthorName ?? _author;
-            }
-            set
-            {
-                _author = value;
-            }
+            get => _addonPrototype?.AuthorName ?? _author; set;
         }
 
-        public string Name { get; internal set; } = "";
-        public string Description { get; internal set; } = "";
-        public string Version { get; internal set; } = "";
-        public int DownloadCount { get; internal set; } = 0;
-        public string LastUpdated { get; internal set; } = "";
-        private bool _updateAvailable = false;
+        private bool _updateAvailable;
         public bool UpdateAvailable
         {
-            get => _updateAvailable;
-            internal set
+            get => _updateAvailable; internal set
             {
                 _updateAvailable = value;
                 OnPropertyChanged();
             }
         }
 
-        private string _fileName = "";
+        private string _fileName = string.Empty;
         public string FileName
         {
-            get => _fileName;
-            internal set
+            get => _fileName; internal set
             {
                 _fileName = value;
                 OnPropertyChanged();
@@ -72,8 +105,7 @@ namespace Lexplosion.Logic.Management.Addons
         private bool _isEnable = true;
         public bool IsEnable
         {
-            get => _isEnable;
-            set
+            get => _isEnable; set
             {
                 _isEnable = value;
                 Disable();
@@ -81,17 +113,10 @@ namespace Lexplosion.Logic.Management.Addons
             }
         }
 
-        /// <summary>
-        /// Устанавливает значение для свойства IsEnable без вызова OnPropertyChanged
-        /// </summary>
-        /// <param name="value"></param>
-        internal bool SetIsEnable { set => _isEnable = value; }
-
         private bool _isInstalled = false;
         public bool IsInstalled
         {
-            get => _isInstalled;
-            internal set
+            get => _isInstalled; internal set
             {
                 _isInstalled = value;
                 OnPropertyChanged();
@@ -113,11 +138,7 @@ namespace Lexplosion.Logic.Management.Addons
         private bool _isInstalling = false;
         public bool IsInstalling
         {
-            get
-            {
-                return _isInstalling;
-            }
-            set
+            get => _isInstalling; set 
             {
                 _isInstalling = value;
                 OnPropertyChanged();
@@ -127,12 +148,7 @@ namespace Lexplosion.Logic.Management.Addons
         private int _downloadPercentages = 0;
         public int DownloadPercentages
         {
-            get
-            {
-                return _downloadPercentages;
-            }
-
-            set
+            get => _downloadPercentages; set
             {
                 _downloadPercentages = value;
                 OnPropertyChanged();
@@ -142,8 +158,7 @@ namespace Lexplosion.Logic.Management.Addons
         private string _websiteUrl = null;
         public string WebsiteUrl
         {
-            get => _websiteUrl;
-            set
+            get => _websiteUrl; set
             {
                 _websiteUrl = value;
                 OnPropertyChanged();
@@ -159,8 +174,7 @@ namespace Lexplosion.Logic.Management.Addons
         private string _logoUrl = null;
         public string LogoUrl
         {
-            get => _logoUrl;
-            set
+            get => _logoUrl; set
             {
                 _logoUrl = value;
                 OnPropertyChanged();
@@ -169,34 +183,25 @@ namespace Lexplosion.Logic.Management.Addons
 
         public ProjectSource Source
         {
-            get
-            {
-                return (_addonPrototype is CurseforgeAddon) ? ProjectSource.Curseforge : ((_addonPrototype is ModrinthAddon) ? ProjectSource.Modrinth : ProjectSource.None);
-            }
+            get => (_addonPrototype is CurseforgeAddon) ? ProjectSource.Curseforge : ((_addonPrototype is ModrinthAddon) ? ProjectSource.Modrinth : ProjectSource.None);
         }
 
         private IEnumerable<IProjectCategory> _categories = new List<CategoryBase>();
         public IEnumerable<IProjectCategory> Categories
         {
-            get => _categories;
-            private set
+            get => _categories; private set
             {
                 _categories = value;
                 OnPropertyChanged();
             }
         }
 
-        public AddonType Type { get; }
 
-        #endregion
+        #endregion Properties
 
-        //private readonly CurseforgeAddonInfo _modInfo;
-        private readonly BaseInstanceData _modpackInfo;
-        private readonly IPrototypeAddon _addonPrototype;
-        private readonly string _projectId;
-        private readonly string _gameVersion;
 
-        private readonly InstaceAddonsSynchronizer _synchronizer;
+        #region Constructors
+
 
         /// <summary>
         /// Создает экземпляр аддона с курсфорджа.
@@ -238,6 +243,13 @@ namespace Lexplosion.Logic.Management.Addons
             _gameVersion = modpackInfo.GameVersion.Id;
         }
 
+
+        #endregion Constructors
+
+
+        #region Public Methods
+
+
         public string GetFullDescription()
         {
             return _addonPrototype?.GetFullDescription() ?? string.Empty;
@@ -258,7 +270,44 @@ namespace Lexplosion.Logic.Management.Addons
             _synchronizer.RemoveInstalledAddon(this);
         }
 
-        private CancellationTokenSource _cancelTokenSource = null;
+        public DownloadAddonRes Update()
+        {
+            var stateData = new DynamicStateData<SetValues<InstanceAddon, DownloadAddonRes>, InstallAddonState>();
+
+            var result = DownloadAddonRes.unknownError;
+            stateData.StateChanged += (arg, state) =>
+            {
+                if (state == InstallAddonState.EndDownload)
+                {
+                    result = arg.Value2;
+                }
+            };
+
+            InstallLatestVersion(stateData.GetHandler, false);
+
+            if (result == DownloadAddonRes.Successful)
+                UpdateAvailable = false;
+
+            return result;
+        }
+
+
+        public void InstallLatestVersion(DynamicStateHandler<SetValues<InstanceAddon, DownloadAddonRes>, InstallAddonState> stateHandler, bool downloadDependencies = true, bool isDependencie = false)
+        {
+            IsInstalling = true;
+            _addonPrototype.DefineLatestVersion();
+            InstallAddon(downloadDependencies, stateHandler, isDependencie);
+            IsInstalling = false;
+        }
+
+        internal void LoadAdditionalData(string logoUrl)
+        {
+            Categories = _addonPrototype.LoadCategories();
+            ThreadPool.QueueUserWorkItem(delegate (object state)
+            {
+                DownloadLogo(logoUrl);
+            });
+        }
 
         /// <summary>
         /// Отменяет скачивание аддона.
@@ -268,11 +317,12 @@ namespace Lexplosion.Logic.Management.Addons
             _cancelTokenSource?.Cancel();
         }
 
-        public enum InstallAddonState
-        {
-            StartDownload,
-            EndDownload
-        }
+
+        #endregion Public Methods
+
+
+        #region Private Methods
+
 
         private void InstallAddon(bool downloadDependencies, DynamicStateHandler<SetValues<InstanceAddon, DownloadAddonRes>, InstallAddonState> stateHandler, bool isDependencie)
         {
@@ -482,20 +532,14 @@ namespace Lexplosion.Logic.Management.Addons
             _synchronizer.RemoveAddonInstalling();
         }
 
-        public void InstallLatestVersion(DynamicStateHandler<SetValues<InstanceAddon, DownloadAddonRes>, InstallAddonState> stateHandler, bool downloadDependencies = true, bool isDependencie = false)
-        {
-            IsInstalling = true;
-            _addonPrototype.DefineLatestVersion();
-            InstallAddon(downloadDependencies, stateHandler, isDependencie);
-            IsInstalling = false;
-        }
-
         /// <summary>
         /// Ну бля, качает заглавную картинку (лого) по ссылке и записывает в переменную Logo. Делает это всё в пуле потоков.
         /// </summary>
         private void DownloadLogo(string url)
         {
-            if (url == null) return;
+            if (string.IsNullOrWhiteSpace(url)) 
+                return;
+            
             try
             {
                 using (var webClient = new WebClient())
@@ -516,15 +560,6 @@ namespace Lexplosion.Logic.Management.Addons
                 }
             }
             catch { }
-        }
-
-        internal void LoadAdditionalData(string logoUrl)
-        {
-            Categories = _addonPrototype.LoadCategories();
-            ThreadPool.QueueUserWorkItem(delegate (object state)
-            {
-                DownloadLogo(logoUrl);
-            });
         }
 
         private void Disable()
@@ -565,25 +600,7 @@ namespace Lexplosion.Logic.Management.Addons
             }
         }
 
-        public DownloadAddonRes Update()
-        {
-            var stateData = new DynamicStateData<SetValues<InstanceAddon, DownloadAddonRes>, InstallAddonState>();
 
-            var result = DownloadAddonRes.unknownError;
-            stateData.StateChanged += (arg, state) =>
-            {
-                if (state == InstallAddonState.EndDownload)
-                {
-                    result = arg.Value2;
-                }
-            };
-
-            InstallLatestVersion(stateData.GetHandler, false);
-
-            if (result == DownloadAddonRes.Successful)
-                UpdateAvailable = false;
-
-            return result;
-        }
+        #endregion Private Methods
     }
 }

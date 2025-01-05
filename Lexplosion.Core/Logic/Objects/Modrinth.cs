@@ -1,4 +1,5 @@
-﻿using Lexplosion.Tools;
+﻿using Lexplosion.Core.Logic.Management.Addons;
+using Lexplosion.Tools;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Globalization;
@@ -82,7 +83,7 @@ namespace Lexplosion.Logic.Objects.Modrinth
         public new string Updated;
     }
 
-    public class ModrinthProjectInfo : ModrinthProject
+    public class ModrinthProjectInfo : ModrinthProject, IAddonProjectInfo
     {
         [JsonProperty("id")]
         public string ProjectId;
