@@ -44,7 +44,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
             }
         }
 
-        public override ReadOnlyCollection<uint> PageSizes { get; }
+        public override ReadOnlyCollection<int> PageSizes { get; }
 
 
         public bool IsGameLoaded { get; set; }
@@ -59,11 +59,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
             _instanceModelBase = instanceModelBase;
             PageSizes = projectSource switch
             {
-                ProjectSource.Modrinth => new([6, 10, 16, 20, 50, 100]),
+                ProjectSource.Modrinth => new([5, 10, 15, 20, 50, 100]),
                 ProjectSource.Curseforge => new([10, 20, 50]),
                 _ => new([10]),
             };
-            PageSize = PageSizes[0];
+
+            PageSize = 10;
 
             IsAddonTypeMods = addonType == AddonType.Mods;
             IsAddonTypeMaps = addonType == AddonType.Maps;

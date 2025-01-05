@@ -603,7 +603,7 @@
                     <Grid>
 
                         <ScrollViewer x:Name="Scroll" Margin="16,16,0,4" ScrollChanged="Scroll_ScrollChanged">
-                            <lexplosion:AddonRepositoryCatalogView DataContext="{Binding}" />
+                            <lexplosion:AddonRepositoryCatalogView DataContext="{Binding}" PaginationChanged="AddonRepositoryCatalogView_PaginationChanged" />
                         </ScrollViewer>
 
                         <StackPanel

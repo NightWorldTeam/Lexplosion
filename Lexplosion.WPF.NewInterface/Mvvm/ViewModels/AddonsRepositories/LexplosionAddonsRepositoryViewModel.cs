@@ -7,6 +7,7 @@ using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile;
 using Lexplosion.WPF.NewInterface.Stores;
 using System.Collections.Generic;
+using System.Windows.Forms;
 using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
@@ -62,21 +63,15 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
 
         // paginator
         private RelayCommand _nextPageCommand;
-        public ICommand NextPageCommand
-        {
-            get => RelayCommand.GetCommand(ref _nextPageCommand, () => { });
-        }
-
+        public ICommand NextPageCommand { get; private set; }
+        
         private RelayCommand _prevPageCommand;
-        public ICommand PrevPageCommand
-        {
-            get => RelayCommand.GetCommand(ref _prevPageCommand, () => { });
-        }
+        public ICommand PrevPageCommand { get; private set; }
 
-        private RelayCommand _ToPageCommand;
+        private RelayCommand _toPageCommand;
         public ICommand ToPageCommand
         {
-            get => RelayCommand.GetCommand(ref _nextPageCommand, () => { });
+            get => RelayCommand.GetCommand(ref _toPageCommand, () => { });
         }
 
         // filters
@@ -111,6 +106,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
             get => RelayCommand.GetCommand<InstanceAddon>(ref _uninstallAddonCommand, Model.RemoveAddon);
         }
 
+        private RelayCommand _applySelectedCategoriesCommand;
         public ICommand ApplySelectedCategoriesCommand { get; private set; }
 
         private RelayCommand _selectCategoryCommand;
@@ -174,9 +170,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
                     _repositoriesList.Add(new LexplosionAddonsRepositoryModel(ProjectSource.Curseforge, instanceData, addonType, instanceModelBase));
 
                     SelectedAddonsRepositoryIndex = 0;
-                    LaunchInstanceCommand = RelayCommand.GetCommand(ref _launchInstance, Model.LaunchInstance);
-                    StopProcessCommand = RelayCommand.GetCommand(ref _launchInstance, Model.StopInstanceProcess);
-                    ApplySelectedCategoriesCommand = new RelayCommand((obj) => Model.ApplyCategories());
+                    InitCommands();
 
                     OnPropertyChanged(nameof(ApplySelectedCategoriesCommand));
                 });
@@ -191,5 +185,21 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
 
 
         #endregion Constructors
+
+
+        #region Private Methods
+
+
+        private void InitCommands() 
+        {
+            LaunchInstanceCommand = RelayCommand.GetCommand(ref _launchInstance, Model.LaunchInstance);
+            StopProcessCommand = RelayCommand.GetCommand(ref _launchInstance, Model.StopInstanceProcess);
+            ApplySelectedCategoriesCommand = RelayCommand.GetCommand(ref _applySelectedCategoriesCommand, Model.ApplyCategories);
+            NextPageCommand = RelayCommand.GetCommand<uint>(ref _nextPageCommand, Model.Paginate);
+            PrevPageCommand = RelayCommand.GetCommand<uint>(ref _prevPageCommand, Model.Paginate);
+        }
+
+
+        #endregion Private Methods
     }
 }

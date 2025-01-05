@@ -150,33 +150,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
             OnFilterChanged();
         }
 
-        private void LoadPageContent() 
-        {
-            Runtime.DebugWrite("Instances loading");
-            _instanceController.Clear();
-            Runtime.TaskRun(() => 
-            {
-                var catalogResult = GetInstanceClients(
-                    SearchFilter,
-                    (int)CurrentPageIndex,
-                    InstanceSource.Modrinth, 
-                    new IProjectCategory[] { AllCategory },
-                    (int)ModrinthSortField.Relevance,
-                    new MinecraftVersion(), false);
-
-                IsEmptyPage = catalogResult.Count == 0;
-
-                if (PageCount != catalogResult.PageCount)
-                    PageCount = (uint)(catalogResult.PageCount > 10 ? (catalogResult.PageCount / ItemsPerPage) : catalogResult.PageCount);
-
-                foreach (var i in catalogResult)
-                    _instanceController.Add(i);
-
-                OnPropertyChanged(nameof(Instances));
-            });
-        }
-
-
         /// TODO: Сделать метод приватным
         /// <summary>
         /// Return a list of instances from curseforge/modrinth

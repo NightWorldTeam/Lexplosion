@@ -39,7 +39,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
         #region Properties
 
 
-        public abstract ReadOnlyCollection<uint> PageSizes { get; }
+        public abstract ReadOnlyCollection<int> PageSizes { get; }
 
 
         public IEnumerable<CategoryWrapper> Categories { get => _categories; }
@@ -51,6 +51,17 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 
 
         public IEnumerable<SortByParamObject> SortByParams { get; protected set; }
+
+
+        private uint _pageCount = 1;
+        public uint PageCount
+        {
+            get => _pageCount; set
+            {
+                _pageCount = value;
+                OnPropertyChanged();
+            }
+        }
 
 
         private string _searchFilter = string.Empty;
@@ -73,8 +84,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
             }
         }
 
-        private uint _pageSize = 10;
-        public uint PageSize
+        private int _pageSize = 10;
+        public int PageSize
         {
             get => _pageSize; set
             {
@@ -156,21 +167,28 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
             }
         }
 
+        public void Paginate(uint scrollTo)
+        {
+            CurrentPageIndex = scrollTo;
+            LoadContent();
+        }
 
         protected void LoadContent()
         {
             IsLoading = true;
             Runtime.TaskRun(() =>
             {
-                var addons = AddonsManager.GetManager(_instanceData).GetAddonsCatalog(_projectSource, _addonType, BuildSearchParams()).List;
-                //Console.WriteLine(_addonType);
+                var catalog = AddonsManager.GetManager(_instanceData)
+                    .GetAddonsCatalog(_projectSource, _addonType, BuildSearchParams());
+
                 App.Current.Dispatcher.Invoke(() =>
                 {
                     _addonsList.Clear();
-                    foreach (var i in addons)
+                    foreach (var i in catalog.List)
                     {
                         _addonsList.Add(i);
                     }
+                    PageCount = (uint)(catalog.TotalHits / PageSize);
                     IsLoading = false;
                 });
             });

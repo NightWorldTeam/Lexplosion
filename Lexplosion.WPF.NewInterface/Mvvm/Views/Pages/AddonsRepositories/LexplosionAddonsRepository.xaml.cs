@@ -1,5 +1,5 @@
 ﻿using Lexplosion.WPF.NewInterface.Controls;
-using System.Windows;
+using Lexplosion.WPF.NewInterface.Extensions;
 using System.Windows.Controls;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.AddonsRepositories
@@ -35,6 +35,14 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.AddonsRepositories
             {
                 _currentOpenedDropDownMenu.IsOpen = false;
             }
+        }
+
+        private void AddonRepositoryCatalogView_PaginationChanged()
+        {
+            ScrollViewerExtensions.ScroollToPosAnimated(
+                Scroll,
+                ScrollViewerExtensions.GetScrollBar(Scroll).Minimum
+            );
         }
     }
 }

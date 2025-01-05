@@ -114,6 +114,12 @@
                 <controls:Paginator
                     Grid.Row="2"
                     Margin="0,8,0,0"
+                    CurrentPageIndex="{Binding Model.CurrentPageIndex}"
+                    NextCommand="{Binding NextPageCommand}"
+                    PageChanged="Paginator_PageChanged"
+                    PageCount="{Binding Model.PageCount}"
+                    PrevCommand="{Binding PrevPageCommand}"
+                    ToCommand="{Binding ToPageCommand}"
                     Visibility="{Binding IsChecked, ElementName=PaginatorToggleButton, Converter={converters:BooleanToVisibilityConverter}}" />
             </Grid>
         </Border>
@@ -144,7 +150,15 @@
                         VirtualizingPanel.IsVirtualizing="True" />
 
                     <!--  Paginator  -->
-                    <controls:Paginator Grid.Row="1" Margin="32,32,32,16" />
+                    <controls:Paginator
+                        Grid.Row="1"
+                        Margin="32,32,32,16"
+                        CurrentPageIndex="{Binding Model.CurrentPageIndex}"
+                        NextCommand="{Binding NextPageCommand}"
+                        PageChanged="Paginator_PageChanged"
+                        PageCount="{Binding Model.PageCount}"
+                        PrevCommand="{Binding PrevPageCommand}"
+                        ToCommand="{Binding ToPageCommand}" />
                 </Grid>
             </core:If.False>
         </core:If>

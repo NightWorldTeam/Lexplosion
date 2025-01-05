@@ -6,7 +6,7 @@ namespace Lexplosion.Logic.Management.Addons
     public readonly struct AddonsCatalog
     {
         public IList<InstanceAddon> List { get; }
-        public int TotalHits { get; } = -1;
+        public int TotalHits { get; } = 1;
 
         public AddonsCatalog(IList<InstanceAddon> list, int totalHast)
         {

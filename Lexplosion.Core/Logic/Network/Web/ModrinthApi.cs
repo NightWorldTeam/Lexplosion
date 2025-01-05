@@ -274,7 +274,13 @@ namespace Lexplosion.Logic.Network.Web
 
             facets += "]";
 
-            url += facets + "&offset=" + (searchParams.PageIndex * searchParams.PageSize) + "&limit" + searchParams.PageSize; //было WebUtility.UrlEncode(facets), но почему то модринф тупит, если так делать
+            url += facets + "&limit=" + searchParams.PageSize; //было WebUtility.UrlEncode(facets), но почему то модринф тупит, если так делать
+
+            var offset = searchParams.PageIndex * searchParams.PageSize;
+            if (offset > 0) 
+            {
+                url = $"{url}&offset={offset}";
+            }
 
             if (!string.IsNullOrWhiteSpace(searchParams.SearchFilter))
             {

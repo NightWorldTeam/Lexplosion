@@ -10,21 +10,20 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 {
     public sealed class ModrinthRepositoryModel : AddonsRepositoryModelBase
     {
-        public override ReadOnlyCollection<uint> PageSizes { get; } = new ReadOnlyCollection<uint>(new uint[]
-        {
+        public override ReadOnlyCollection<int> PageSizes { get; } = new ReadOnlyCollection<int>(
+        [
              6, 10, 16, 20, 50, 100
-        });
+        ]);
 
-        public ReadOnlyCollection<string> SortByItems { get; } = new ReadOnlyCollection<string>(new string[]
-        {
+        public ReadOnlyCollection<string> SortByItems { get; } = new ReadOnlyCollection<string>([
             "Relevance", "Donwload count", "Follow count", "Recently published", "Recently updated"
-        });
+        ]);
 
 
         #region Constructors
 
 
-        public ModrinthRepositoryModel(BaseInstanceData instanceData, AddonType addonType) 
+        public ModrinthRepositoryModel(BaseInstanceData instanceData, AddonType addonType)
             : base(ProjectSource.Modrinth, instanceData, addonType)
         {
 
@@ -39,7 +38,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
         protected override ISearchParams BuildSearchParams()
         {
             return new ModrinthSearchParams(SearchFilter, _instanceData.GameVersion.ToString(),
-                SelectedCategories, (int)PageSize, (int)CurrentPageIndex, (ModrinthSortField)SelectedSortByIndex, 
+                SelectedCategories, (int)PageSize, (int)CurrentPageIndex, (ModrinthSortField)SelectedSortByIndex,
                 new List<Modloader> { _instanceData.Modloader.ToModloader() });
         }
 
