@@ -44,13 +44,16 @@
                                 </Grid.ColumnDefinitions>
 
                                 <Border
-                                    Padding="0"
+                                    Width="16"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center">
-                                    <Viewbox Height="16" Stretch="Fill">
+                                    <Viewbox
+                                        Height="16"
+                                        Margin="0,2,0,0"
+                                        Stretch="Fill">
                                         <Path
                                             x:Name="Icon"
-                                            Data="{TemplateBinding IconData}"
+                                            extensions:PathExtensions.StringData="{TemplateBinding IconData}"
                                             Fill="{DynamicResource SecondaryForegroundSolidColorBrush}"
                                             Stretch="Fill" />
                                     </Viewbox>
@@ -59,7 +62,7 @@
                                 <TextBlock
                                     x:Name="Text"
                                     Grid.Column="1"
-                                    Margin="16,0,0,0"
+                                    Margin="12,0,0,0"
                                     VerticalAlignment="Center"
                                     FontSize="13"
                                     FontWeight="Medium"
@@ -353,7 +356,7 @@
                                                     Click="DropdownMenuButtonItem_Click"
                                                     Command="{Binding Data.OpenExternalResourceCommand, Source={StaticResource ViewModel}}"
                                                     CommandParameter="{Binding}"
-                                                    IconData="{StaticResource PDClose}"
+                                                    IconData="{StaticResource PDPublic}"
                                                     Style="{StaticResource DownMenuItem}"
                                                     Text="{DynamicResource Website}" />
 
@@ -599,7 +602,7 @@
                 <TabItem Margin="16,0,-16,0" Header="{DynamicResource Catalog}">
                     <Grid>
 
-                        <ScrollViewer x:Name="Scroll" Margin="16,16,0,4">
+                        <ScrollViewer x:Name="Scroll" Margin="16,16,0,4" ScrollChanged="Scroll_ScrollChanged">
                             <lexplosion:AddonRepositoryCatalogView DataContext="{Binding}" />
                         </ScrollViewer>
 

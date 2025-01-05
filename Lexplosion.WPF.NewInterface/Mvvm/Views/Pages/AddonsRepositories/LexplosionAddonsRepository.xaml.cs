@@ -28,5 +28,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.AddonsRepositories
         {
             _currentOpenedDropDownMenu = obj;
         }
+
+        private void Scroll_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            if (_currentOpenedDropDownMenu != null)
+            {
+                _currentOpenedDropDownMenu.IsOpen = false;
+            }
+        }
     }
 }
