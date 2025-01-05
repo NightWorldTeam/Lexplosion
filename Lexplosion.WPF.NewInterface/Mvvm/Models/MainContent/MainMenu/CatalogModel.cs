@@ -125,8 +125,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
 
                 IsEmptyPage = catalogResult.Count == 0;
 
-                if (PageCount != catalogResult.PageCount)
-                    PageCount = (uint)(catalogResult.PageCount > 10 ? (catalogResult.PageCount / ItemsPerPage) : catalogResult.PageCount);
+                if (PageCount != catalogResult.TotalCount)
+                    PageCount = (uint)(catalogResult.TotalCount > 10 ? (catalogResult.TotalCount / ItemsPerPage) : catalogResult.TotalCount);
 
                 _instanceController.Clear();
 

@@ -88,7 +88,6 @@
     <Compile Include="Logic\Management\Accounts\Auth\MicrosoftAuth.cs" />
     <Compile Include="Logic\Management\Accounts\Auth\NightWorldAuth.cs" />
     <Compile Include="Logic\Management\Addons\AddonDependencie.cs" />
-    <Compile Include="Logic\Management\Addons\AddonsCatalog.cs" />
     <Compile Include="Logic\Management\Addons\AddonsPrototypesCreater.cs" />
     <Compile Include="Logic\Management\Addons\CurseforgeAddon.cs" />
     <Compile Include="Logic\Management\Addons\IPrototypeAddon.cs" />

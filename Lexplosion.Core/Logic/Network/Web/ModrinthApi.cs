@@ -219,7 +219,7 @@ namespace Lexplosion.Logic.Network.Web
         /// <param name="type">Тип аддона</param>
         /// <param name="searchParams">параметры поиска</param>
         /// <returns>Первое значение - список аддонов, второе - общее количество аддонов, доступных по запросу</returns>
-        public static (List<ModrinthProjectInfo>, int) GetAddonsList(AddonType type, ModrinthSearchParams searchParams)
+        public static CatalogResult<ModrinthProjectInfo> GetAddonsList(AddonType type, ModrinthSearchParams searchParams)
         {
             string _type;
             switch (type)
@@ -302,7 +302,7 @@ namespace Lexplosion.Logic.Network.Web
                 }
             }
 
-            return (result, catalogList.TotalHits);
+            return new(result, catalogList.TotalHits);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

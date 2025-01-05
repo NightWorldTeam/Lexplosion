@@ -7,7 +7,7 @@ namespace Lexplosion.Core.Logic.Objects
     public class CatalogResult<T> : IReadOnlyCollection<T>
     {
         public List<T> Collection { get; set; } = [];
-        public int PageCount { get; set; }
+        public int TotalCount { get; set; }
 
         public int Count => Collection.Count;
 
@@ -21,7 +21,7 @@ namespace Lexplosion.Core.Logic.Objects
         public CatalogResult(List<T> collection, int pageCount)
         {
             Collection = collection;
-            PageCount = pageCount;
+            TotalCount = pageCount;
         }
 
 

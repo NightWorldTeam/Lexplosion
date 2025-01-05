@@ -79,7 +79,7 @@ namespace Lexplosion.Logic.Management.Sources
                 }
             }
 
-            return new(result, catalogResult.PageCount);
+            return new(result, catalogResult.TotalCount);
         }
 
         public InstancePlatformData CreateInstancePlatformData(string externalId, string localId, string instanceVersion)

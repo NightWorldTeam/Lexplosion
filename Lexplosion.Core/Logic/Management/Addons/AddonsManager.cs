@@ -19,6 +19,7 @@ using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects.Curseforge;
 using Lexplosion.Logic.Objects.Modrinth;
+using Lexplosion.Core.Logic.Objects;
 
 namespace Lexplosion.Logic.Management.Addons
 {
@@ -258,7 +259,7 @@ namespace Lexplosion.Logic.Management.Addons
         /// <param name="type">Тип аддона.</param>
         /// <param name="searchParams">Параметры поиска.</param>
         /// <returns>Собстна список аддонов.</returns>
-        public AddonsCatalog GetAddonsCatalog(ProjectSource projectSource, AddonType type, ISearchParams searchParams)
+        public CatalogResult<InstanceAddon> GetAddonsCatalog(ProjectSource projectSource, AddonType type, ISearchParams searchParams)
         {
             Runtime.DebugWrite($"GetAddonsCatalog {projectSource} {type}");
             switch (projectSource)
@@ -293,19 +294,16 @@ namespace Lexplosion.Logic.Management.Addons
                         return GetModrinthAddonsCatalog(type, sParams);
                     }
                 default:
-                    return new AddonsCatalog();
+                    return new();
 
             }
         }
 
-        private AddonsCatalog GetCurseforgeAddonsCatalog(AddonType type, CurseforgeSearchParams sParams)
+        private CatalogResult<InstanceAddon> GetCurseforgeAddonsCatalog(AddonType type, CurseforgeSearchParams sParams)
         {
-            int totalHits = -1;
-            Func<List<CurseforgeAddonInfo>> getCatalog = () =>
+            Func<CatalogResult<CurseforgeAddonInfo>> getCatalog = () =>
             {
-                (List<CurseforgeAddonInfo>, int) addonsList = CurseforgeApi.GetAddonsList(type, sParams);
-                totalHits = addonsList.Item2;
-                return addonsList.Item1;
+                return CurseforgeApi.GetAddonsList(type, sParams);
             };
 
             Func<CurseforgeAddonInfo, IPrototypeAddon> addonPrototypeCreate = (CurseforgeAddonInfo addonInfo) =>
@@ -328,18 +326,14 @@ namespace Lexplosion.Logic.Management.Addons
             };
             Func<CurseforgeAddonInfo, string> getLogoUrl = (CurseforgeAddonInfo addonInfo) => addonInfo.logo?.url;
 
-            var catalog = GetAddonsCatalog(type, sParams, getCatalog, addonPrototypeCreate, getAddonId, getDownloadCounts, getLastUpdate, getLogoUrl);
-            return new AddonsCatalog(catalog, totalHits);
+            return GetAddonsCatalog(type, sParams, getCatalog, addonPrototypeCreate, getAddonId, getDownloadCounts, getLastUpdate, getLogoUrl);
         }
 
-        private AddonsCatalog GetModrinthAddonsCatalog(AddonType type, ModrinthSearchParams sParams)
+        private CatalogResult<InstanceAddon> GetModrinthAddonsCatalog(AddonType type, ModrinthSearchParams sParams)
         {
-            int totalHits = -1;
-            Func<List<ModrinthProjectInfo>> getCatalog = () =>
+            Func<CatalogResult<ModrinthProjectInfo>> getCatalog = () =>
             {
-                (List<ModrinthProjectInfo>, int) addonsList = ModrinthApi.GetAddonsList(type, sParams);
-                totalHits = addonsList.Item2;
-                return addonsList.Item1;
+                return ModrinthApi.GetAddonsList(type, sParams);
             };
 
             Func<ModrinthProjectInfo, IPrototypeAddon> addonPrototypeCreate = (ModrinthProjectInfo addonInfo) =>
@@ -362,12 +356,11 @@ namespace Lexplosion.Logic.Management.Addons
             };
             Func<ModrinthProjectInfo, string> getLogoUrl = (ModrinthProjectInfo addonInfo) => addonInfo.LogoUrl;
 
-            var catalog = GetAddonsCatalog(type, sParams, getCatalog, addonPrototypeCreate, getAddonId, getDownloadCounts, getLastUpdate, getLogoUrl);
-            return new AddonsCatalog(catalog, totalHits);
+            return GetAddonsCatalog(type, sParams, getCatalog, addonPrototypeCreate, getAddonId, getDownloadCounts, getLastUpdate, getLogoUrl);
         }
 
 
-        private List<InstanceAddon> GetAddonsCatalog<TAddonInfo>(AddonType type, ISearchParams searchParams, Func<List<TAddonInfo>> getCatalog, Func<TAddonInfo, IPrototypeAddon> addonPrototypeCreate, Func<TAddonInfo, string> getAddonId, Func<TAddonInfo, int> getDownloadCounts, Func<TAddonInfo, string> getLastUpdate, Func<TAddonInfo, string> getLogoUrl)
+        private CatalogResult<InstanceAddon> GetAddonsCatalog<TAddonInfo>(AddonType type, ISearchParams searchParams, Func<CatalogResult<TAddonInfo>> getCatalog, Func<TAddonInfo, IPrototypeAddon> addonPrototypeCreate, Func<TAddonInfo, string> getAddonId, Func<TAddonInfo, int> getDownloadCounts, Func<TAddonInfo, string> getLastUpdate, Func<TAddonInfo, string> getLogoUrl)
         {
             _synchronizer.InitAddonsListChache();
 
@@ -375,7 +368,7 @@ namespace Lexplosion.Logic.Management.Addons
             var addons = new List<InstanceAddon>();
 
             // получаем спсиок всех аддонов с курсфорджа
-            List<TAddonInfo> addonsList = getCatalog();
+            CatalogResult<TAddonInfo> addonsList = getCatalog();
 
             // получаем список установленных аддонов
             using (InstalledAddons installedAddons = InstalledAddons.Get(_modpackInfo.LocalId))
@@ -451,7 +444,7 @@ namespace Lexplosion.Logic.Management.Addons
                 }
             }
 
-            return addons;
+            return new(addons, addonsList.TotalCount);
         }
 
         public InstanceAddon CreateModrinthAddon(ModrinthProjectInfo projectInfo)

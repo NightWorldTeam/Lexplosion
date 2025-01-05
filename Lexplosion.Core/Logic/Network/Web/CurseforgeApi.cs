@@ -149,10 +149,10 @@ namespace Lexplosion.Logic.Network.Web
             Runtime.DebugWrite(url);
 
             var result = GetApiData<List<CurseforgeInstanceInfo>>(url, out Pagination paginator);
-            return new(result, paginator?.TotalCount ?? -1);
+            return new(result, paginator?.TotalCount ?? 1);
         }
 
-        public static (List<CurseforgeAddonInfo>, int) GetAddonsList(AddonType type, CurseforgeSearchParams searchParams)
+        public static CatalogResult<CurseforgeAddonInfo> GetAddonsList(AddonType type, CurseforgeSearchParams searchParams)
         {
             string gameVersion = string.Empty;
             if (!string.IsNullOrWhiteSpace(searchParams.GameVersion))
@@ -185,7 +185,7 @@ namespace Lexplosion.Logic.Network.Web
             Runtime.DebugWrite(url);
 
             var result = GetApiData<List<CurseforgeAddonInfo>>(url, out Pagination paginator);
-            return (result, paginator?.TotalCount ?? -1);
+            return new(result, paginator?.TotalCount ?? 1);
         }
 
         public static List<CurseforgeFileInfo> GetProjectFiles(string projectId, string gameVersion, ClientType modloader)

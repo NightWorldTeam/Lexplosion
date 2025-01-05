@@ -184,11 +184,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
                 App.Current.Dispatcher.Invoke(() =>
                 {
                     _addonsList.Clear();
-                    foreach (var i in catalog.List)
+                    foreach (var i in catalog)
                     {
                         _addonsList.Add(i);
                     }
-                    PageCount = (uint)(catalog.TotalHits / PageSize);
+                    PageCount = (uint)(catalog.TotalCount / PageSize);
                     IsLoading = false;
                 });
             });

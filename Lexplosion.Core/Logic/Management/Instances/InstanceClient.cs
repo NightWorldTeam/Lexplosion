@@ -665,7 +665,7 @@ namespace Lexplosion.Logic.Management.Instances
                 instances.Add(instanceClient);
             }
 
-            return new(instances, catalog.PageCount);
+            return new(instances, catalog.TotalCount);
         }
 
         /// <summary>

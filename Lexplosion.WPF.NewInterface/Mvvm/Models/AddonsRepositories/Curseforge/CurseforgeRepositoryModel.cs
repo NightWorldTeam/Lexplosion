@@ -199,7 +199,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 
                 App.Current.Dispatcher.Invoke(() =>
                 {
-                    _addonsList = new ObservableCollection<CurseforgeAddon>(addonsList.List.Select(i => new CurseforgeAddon(i)));
+                    _addonsList = new ObservableCollection<CurseforgeAddon>(addonsList.Select(i => new CurseforgeAddon(i)));
                     OnPropertyChanged(nameof(AddonList));
                     IsContentLoading = false;
                     OnPropertyChanged(nameof(IsContentLoading));
