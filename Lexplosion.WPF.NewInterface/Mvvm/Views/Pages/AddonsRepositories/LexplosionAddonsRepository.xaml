@@ -602,7 +602,10 @@
                 <TabItem Margin="16,0,-16,0" Header="{DynamicResource Catalog}">
                     <Grid>
 
-                        <ScrollViewer x:Name="Scroll" Margin="16,16,0,4" ScrollChanged="Scroll_ScrollChanged">
+                        <ScrollViewer
+                            x:Name="Scroll"
+                            Margin="16,16,0,4"
+                            ScrollChanged="Scroll_ScrollChanged">
                             <lexplosion:AddonRepositoryCatalogView DataContext="{Binding}" PaginationChanged="AddonRepositoryCatalogView_PaginationChanged" />
                         </ScrollViewer>
 
@@ -633,7 +636,7 @@
                     <lexplosion:InProgressAddonsRepositoryView DataContext="{Binding}" />
                 </TabItem>-->
 
-                <TabItem Margin="16,0,-16,0" Header="Установленные">
+                <TabItem Margin="16,0,-16,0" Header="{DynamicResource InstalledList}">
                     <lexplosion:InstalledAddonsRepositoryView DataContext="{Binding _modsViewModel}" />
                 </TabItem>
             </TabControl>

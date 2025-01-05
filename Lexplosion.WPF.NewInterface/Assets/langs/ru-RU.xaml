@@ -490,4 +490,9 @@
     <s:String x:Key="Website">Веб-страница</s:String>
 
     <s:String x:Key="Installed">Установленно</s:String>
+
+    <s:String x:Key="Paginator">Пагинатор</s:String>
+    <s:String x:Key="Searchbox">Поле поиска</s:String>
+    <s:String x:Key="InstalledList">Установленные</s:String>
+    <s:String x:Key="SearchAddonByNamePlaceholder">Название аддона</s:String>
 </ResourceDictionary>
