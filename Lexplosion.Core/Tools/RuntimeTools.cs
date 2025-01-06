@@ -125,6 +125,7 @@ namespace Lexplosion
 
         private static object _debugWriteLocker = new object();
 
+        [Conditional("DEBUG")]
         public static void DebugWrite<T>(T line, [CallerMemberName] string memberName = "", [CallerFilePath] string sourceFilePath = "", [CallerLineNumber] int sourceLineNumber = 0, ConsoleColor color = ConsoleColor.White)
         {
 #if DEBUG

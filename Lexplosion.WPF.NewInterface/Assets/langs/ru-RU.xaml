@@ -495,4 +495,9 @@
     <s:String x:Key="Searchbox">Поле поиска</s:String>
     <s:String x:Key="InstalledList">Установленные</s:String>
     <s:String x:Key="SearchAddonByNamePlaceholder">Название аддона</s:String>
+
+    <s:String x:Key="AddonInfoDownloadsTooltip">Количество скачиваний</s:String>
+    <s:String x:Key="AddonInfoLatestReleaseTooltip">Дата последнего обновления</s:String>
+    <s:String x:Key="AddonInfoCreationDateTooltip">Дата создания</s:String>
+    <s:String x:Key="AddonInfoGameVersionTooltip">Версия игры</s:String>
 </ResourceDictionary>

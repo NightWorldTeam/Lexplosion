@@ -26,7 +26,7 @@
                 <ControlTemplate TargetType="{x:Type ToolTip}">
                     <Border
                         Grid.Row="1"
-                        Height="32"
+                        MinHeight="32"
                         Background="Black"
                         CornerRadius="5">
                         <ContentPresenter Margin="16,8" />
