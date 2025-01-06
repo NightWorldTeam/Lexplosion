@@ -284,11 +284,11 @@ namespace Lexplosion.Logic.Management.Addons
         }
 
 
-        public void InstallLatestVersion(DynamicStateHandler<SetValues<InstanceAddon, DownloadAddonRes>, InstallAddonState> stateHandler, bool downloadDependencies = true, bool isDependencie = false)
+        public void InstallLatestVersion(DynamicStateHandler<SetValues<InstanceAddon, DownloadAddonRes>, InstallAddonState> stateHandler, bool downloadDependencies = true, bool isDependencie = false, IEnumerable<Modloader> acceptableModloaders = null)
         {
             IsInstalling = true;
             _addonPrototype.DefineLatestVersion();
-            InstallAddon(downloadDependencies, stateHandler, isDependencie);
+            InstallAddon(downloadDependencies, stateHandler, isDependencie, acceptableModloaders);
             IsInstalling = false;
         }
 
@@ -310,7 +310,7 @@ namespace Lexplosion.Logic.Management.Addons
         }
 
 
-        private void InstallAddon(bool downloadDependencies, DynamicStateHandler<SetValues<InstanceAddon, DownloadAddonRes>, InstallAddonState> stateHandler, bool isDependencie)
+        private void InstallAddon(bool downloadDependencies, DynamicStateHandler<SetValues<InstanceAddon, DownloadAddonRes>, InstallAddonState> stateHandler, bool isDependencie, IEnumerable<Modloader> acceptableModloaders)
         {
             Runtime.DebugWrite($"Download {Name}");
             // если такой аддон уже скачивается - выходим нахуй
@@ -402,7 +402,7 @@ namespace Lexplosion.Logic.Management.Addons
                                 addonInstance = addonPointer.Point;
                             }
 
-                            addonInstance.InstallLatestVersion(stateHandler, true, true);
+                            addonInstance.InstallLatestVersion(stateHandler, true, true, acceptableModloaders);
                         });
                     }
                 }

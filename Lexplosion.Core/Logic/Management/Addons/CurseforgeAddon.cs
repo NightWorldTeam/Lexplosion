@@ -17,6 +17,8 @@ namespace Lexplosion.Logic.Management.Addons
         private CurseforgeFileInfo _versionInfo;
         private string _projectId;
 
+        private HashSet<Modloader> _acceptableModloaders = new();
+
         public CurseforgeAddon(BaseInstanceData instanceData, CurseforgeAddonInfo addonInfo)
         {
             _addonInfo = addonInfo;
@@ -154,8 +156,18 @@ namespace Lexplosion.Logic.Management.Addons
 
             var modloader = (_addonInfo.classId == 6) ? _instanceData.Modloader : ClientType.Vanilla; // если это мод (_addonInfo.classId == 6), то передаем модлоадер. Иначе ставим Vanilla
 
-            var files = CurseforgeApi.GetProjectFiles(_addonInfo.id, _instanceData.GameVersion.Id, modloader);
+            var files = CurseforgeApi.GetProjectFiles(_addonInfo.id, _instanceData.GameVersion.Id, (int)modloader);
             _versionInfo = GetLastFile(_instanceData.GameVersion.Id, files, null, (AddonType)_addonInfo?.classId);
+
+            if (_versionInfo == null && modloader != ClientType.Vanilla)
+            {
+                foreach (var newModloader in _acceptableModloaders)
+                {
+                    files = CurseforgeApi.GetProjectFiles(_addonInfo.id, _instanceData.GameVersion.Id, (int)newModloader);
+                    _versionInfo = GetLastFile(_instanceData.GameVersion.Id, files, null, (AddonType)_addonInfo?.classId);
+                    if (_versionInfo != null) break;
+                }
+            }
         }
 
         public void DefineDefaultVersion()
@@ -265,6 +277,16 @@ namespace Lexplosion.Logic.Management.Addons
         public string GetFullDescription()
         {
             return CurseforgeApi.GetProjectDescription(_addonInfo?.id);
+        }
+
+        public void AddAcceptableModloader(Modloader modloader)
+        {
+            _acceptableModloaders.Add(modloader);
+        }
+
+        public void RemoveAcceptableModloader(Modloader modloader)
+        {
+            _acceptableModloaders.Remove(modloader);
         }
 
         public event Action OnInfoUpdated;

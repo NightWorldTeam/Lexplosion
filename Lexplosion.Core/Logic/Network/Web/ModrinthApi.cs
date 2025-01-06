@@ -94,10 +94,10 @@ namespace Lexplosion.Logic.Network.Web
             return GetApiData<List<ModrinthProjectFile>>("https://api.modrinth.com/v2/project/" + projectId + "/version");
         }
 
-        public static List<ModrinthProjectFile> GetProjectFiles(string projectId, ClientType modloader, string gameVersion)
+        public static List<ModrinthProjectFile> GetProjectFiles(string projectId, Modloader? modloader, string gameVersion)
         {
             string param = "?game_versions=" + WebUtility.UrlEncode($"[\"{gameVersion}\"]");
-            if (modloader != ClientType.Vanilla)
+            if (modloader != null)
             {
                 param += "&loaders=" + WebUtility.UrlEncode($"[\"{modloader.ToString().ToLower()}\"]");
             }

@@ -13,6 +13,19 @@ namespace Lexplosion.Logic.Management.Addons
 
         void DefineLatestVersion();
 
+        /// <summary>
+        /// Добавляет допустимый модлоадер. При скачивании мода идёт поиск самой подходящей версии мода, учитывая модлоадер клиента.
+        /// Этот метод добавляет модлоадер, версии мода с которым будут пропускаться.
+        /// Сначала проверяются версии мода с модлоадером клиента, если подходящей версии не найдено, то будет идти поиск среду допускаемых молоадеров по порядку добавления.
+        /// </summary>
+        /// <param name="modloader">Модлоадер для разрешения скачивания.</param>
+        void AddAcceptableModloader(Modloader modloader);
+
+        /// <summary>
+        /// Аналогично <see cref="AddAcceptableModloader"/>, только удаляет.
+        /// </summary>
+        void RemoveAcceptableModloader(Modloader modloader);
+
         IEnumerable<CategoryBase> LoadCategories();
 
         SetValues<InstalledAddonInfo, DownloadAddonRes> Install(TaskArgs taskArgs);

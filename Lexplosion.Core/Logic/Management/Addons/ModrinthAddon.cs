@@ -7,6 +7,8 @@ using Lexplosion.Logic.Management.Instances;
 using System.Runtime.CompilerServices;
 using System;
 using System.Threading;
+using static Lexplosion.Logic.Objects.Curseforge.InstanceManifest;
+using NightWorld.Collections.Concurrent;
 
 namespace Lexplosion.Logic.Management.Addons
 {
@@ -18,6 +20,8 @@ namespace Lexplosion.Logic.Management.Addons
 
         private string _projectId;
         private string _fileId;
+
+        private ConcurrentHashSet<Modloader> _acceptableModloaders = new();
 
         public ModrinthAddon(BaseInstanceData instanceData, ModrinthProjectInfo addonInfo)
         {
@@ -171,13 +175,37 @@ namespace Lexplosion.Logic.Management.Addons
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void DefaineLatesVersion_()
         {
-            ClientType modloader = (_addonInfo.Type == "mod") ? _instanceData.Modloader : ClientType.Vanilla; // если это мод, то передаем модлоадер. Иначе ставим Vanilla
-            var files = ModrinthApi.GetProjectFiles(_projectId, modloader, _instanceData.GameVersion.Id);
-
-            if (files.Count > 0 && files[0] != null)
+            if (_addonInfo.Type == "mod")
             {
-                _versionInfo = files[0];
-                _fileId = _versionInfo.FileId;
+                var files = ModrinthApi.GetProjectFiles(_projectId, (Modloader)_instanceData.Modloader, _instanceData.GameVersion.Id);
+                if (files.Count > 0 && files[0] != null)
+                {
+                    _versionInfo = files[0];
+                    _fileId = _versionInfo.FileId;
+                }
+                else
+                {
+                    foreach (var modloader in _acceptableModloaders)
+                    {
+                        files = ModrinthApi.GetProjectFiles(_projectId, modloader, _instanceData.GameVersion.Id);
+                        if (files.Count > 0 && files[0] != null)
+                        {
+                            _versionInfo = files[0];
+                            _fileId = _versionInfo.FileId;
+                            break;
+                        }
+                    }
+                }             
+            }
+            else
+            {
+                var files = ModrinthApi.GetProjectFiles(_projectId, null, _instanceData.GameVersion.Id);
+
+                if (files.Count > 0 && files[0] != null)
+                {
+                    _versionInfo = files[0];
+                    _fileId = _versionInfo.FileId;
+                }
             }
         }
 
@@ -244,7 +272,7 @@ namespace Lexplosion.Logic.Management.Addons
                     //неизвестно для каокго модлоадера и для какой версии игры предназначена последняя версия аддона, поэтому делаем дополнительный запрос
                     ThreadPool.QueueUserWorkItem((object o) =>
                     {
-                        ClientType modloader = ((addonInfo.Type == "mod") ? _instanceData?.Modloader : ClientType.Vanilla) ?? ClientType.Vanilla;
+                        Modloader? modloader = (addonInfo.Type == "mod") ? (Modloader?)_instanceData?.Modloader : null;
                         var files = ModrinthApi.GetProjectFiles(ProjectId, modloader, _instanceData?.GameVersion?.Id ?? "");
 
                         if (files.Count > 0 && files[0] != null && files[0].FileId != addonFileId)
@@ -273,6 +301,16 @@ namespace Lexplosion.Logic.Management.Addons
         public string GetFullDescription()
         {
             return string.Empty;
+        }
+
+        public void AddAcceptableModloader(Modloader modloader)
+        {
+            _acceptableModloaders.Add(modloader);
+        }
+
+        public void RemoveAcceptableModloader(Modloader modloader)
+        {
+            _acceptableModloaders.Remove(modloader);
         }
 
         public event Action OnInfoUpdated;
