@@ -182,8 +182,7 @@ namespace Lexplosion.Logic.Network.Web
 
             if (type == AddonType.Mods)
             {
-                var modloadersList = searchParams.Modloaders.Select(x => x == Modloader.NeoForged.ToString() ? "NeoForge" : x);
-                queryBuilder.Add("modLoaderTypes", WebUtility.UrlEncode("[" + string.Join(",", modloadersList) + "]"));
+                queryBuilder.Add("modLoaderTypes", WebUtility.UrlEncode("[" + string.Join(",", searchParams.Modloaders) + "]"));
             }
 
             var url = queryBuilder.Build();

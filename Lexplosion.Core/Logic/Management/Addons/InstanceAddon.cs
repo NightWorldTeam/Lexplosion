@@ -79,8 +79,6 @@ namespace Lexplosion.Logic.Management.Addons
         public string CreatedTime { get; }
         public string GameVersion { get; }
         
-
-
         private string _author = string.Empty;
         public string Author
         {
@@ -204,10 +202,6 @@ namespace Lexplosion.Logic.Management.Addons
 
         #endregion Properties
 
-
-        #region Constructors
-
-
         /// <summary>
         /// Создает экземпляр аддона с курсфорджа.
         /// </summary>
@@ -247,13 +241,6 @@ namespace Lexplosion.Logic.Management.Addons
             _modpackInfo = modpackInfo;
             _gameVersion = modpackInfo.GameVersion.Id;
         }
-
-
-        #endregion Constructors
-
-
-        #region Public Methods
-
 
         public string GetFullDescription()
         {
@@ -321,12 +308,6 @@ namespace Lexplosion.Logic.Management.Addons
         {
             _cancelTokenSource?.Cancel();
         }
-
-
-        #endregion Public Methods
-
-
-        #region Private Methods
 
 
         private void InstallAddon(bool downloadDependencies, DynamicStateHandler<SetValues<InstanceAddon, DownloadAddonRes>, InstallAddonState> stateHandler, bool isDependencie)
@@ -542,9 +523,9 @@ namespace Lexplosion.Logic.Management.Addons
         /// </summary>
         private void DownloadLogo(string url)
         {
-            if (string.IsNullOrWhiteSpace(url)) 
+            if (string.IsNullOrWhiteSpace(url))
                 return;
-            
+
             try
             {
                 using (var webClient = new WebClient())
@@ -604,8 +585,5 @@ namespace Lexplosion.Logic.Management.Addons
                 addons.Save();
             }
         }
-
-
-        #endregion Private Methods
     }
 }

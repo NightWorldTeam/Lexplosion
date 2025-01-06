@@ -77,7 +77,7 @@ namespace Lexplosion.Logic.Management.Installers
             {
                 if (modloaderVersion.Contains("neoforge-"))
                 {
-                    clienType = ClientType.NeoForged;
+                    clienType = ClientType.NeoForge;
                     modloaderVersion = modloaderVersion.Replace("neoforge-", "");
                 }
                 else if(modloaderVersion.Contains("forge-"))

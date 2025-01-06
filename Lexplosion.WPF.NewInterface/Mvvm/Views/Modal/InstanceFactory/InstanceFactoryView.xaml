@@ -227,7 +227,7 @@
                                 <RadioButton
                                     Margin="8,0,0,0"
                                     Command="{Binding ChangeInstanceClientTypeCommand, Mode=OneWay}"
-                                    CommandParameter="{x:Static objects:ClientType.NeoForged}"
+                                    CommandParameter="{x:Static objects:ClientType.NeoForge}"
                                     Content="NeoForged"
                                     GroupName="GameType"
                                     IsChecked="{Binding IsNeoForged}"

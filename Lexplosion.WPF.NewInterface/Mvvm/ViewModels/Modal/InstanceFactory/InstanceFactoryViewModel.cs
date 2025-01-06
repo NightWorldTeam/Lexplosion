@@ -376,7 +376,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
                 case ClientType.Forge: IsForge = true; break;
                 case ClientType.Fabric: IsFabric = true; break;
                 case ClientType.Quilt: IsQuilt = true; break;
-                case ClientType.NeoForged: IsNeoForged = true; break;
+                case ClientType.NeoForge: IsNeoForged = true; break;
             }
         }
 

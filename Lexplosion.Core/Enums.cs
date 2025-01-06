@@ -162,7 +162,7 @@
         Forge,
         Fabric = 4,
         Quilt,
-        NeoForged = 6
+        NeoForge = 6
     }
 
     public enum AdditionalInstallerType
@@ -181,7 +181,7 @@
         Forge = 1,
         Fabric = 4,
         Quilt,
-        NeoForged = 6
+        NeoForge = 6
     }
 
     public enum GameExtension
@@ -190,7 +190,7 @@
         Forge,
         Fabric = 4,
         Quilt,
-        Neoforged
+        Neoforge
     }
 
     /// <summary>

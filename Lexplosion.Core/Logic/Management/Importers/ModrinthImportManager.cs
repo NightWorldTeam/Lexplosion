@@ -41,12 +41,12 @@ namespace Lexplosion.Logic.Management.Importers
             if (manifest.dependencies.ContainsKey("neoforge"))
             {
                 modloaderVersion = manifest.dependencies["neoforge"] ?? "";
-                clienType = ClientType.NeoForged;
+                clienType = ClientType.NeoForge;
             }
             else if (manifest.dependencies.ContainsKey("neoforge-loader"))
             {
                 modloaderVersion = manifest.dependencies["neoforge-loader"] ?? "";
-                clienType = ClientType.NeoForged;
+                clienType = ClientType.NeoForge;
             }
             else if (manifest.dependencies.ContainsKey("forge"))
             {
