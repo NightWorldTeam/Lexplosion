@@ -121,7 +121,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 
             Runtime.TaskRun(() =>
             {
-                instanceAddon.InstallLatestVersion(stateData.GetHandler);
+                var acceptableModloaders = SelectedModloaders
+                    .Where(i => (int)i.EnumValue != (int)_instanceModelBase.InstanceData.Modloader)
+                    .Select(i => i.EnumValue);
+                instanceAddon.InstallLatestVersion(stateData.GetHandler, acceptableModloaders: acceptableModloaders);
             });
         }
 
