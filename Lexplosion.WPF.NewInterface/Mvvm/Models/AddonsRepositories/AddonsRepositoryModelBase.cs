@@ -154,7 +154,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
                 {
                     modloader.IsSelected = true;
                     modloader.CanBeSelected = false;
-                    _selectedModloaders.Add(modloader);
+                    //_selectedModloaders.Add(modloader);
                 }
                 _modloaders.Add(modloader);
             }
@@ -175,11 +175,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 
         protected virtual void OnModloaderSelectedChanged(Core.Objects.Modloader modloader, bool isSelected)
         {
-            if (isSelected)
+            if (isSelected && !_selectedModloaders.Contains(modloader))
             {
                 _selectedModloaders.Add(modloader);
             }
-            else 
+            else
             {
                 _selectedModloaders.Remove(modloader);
             }
@@ -187,18 +187,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 
         public void Paginate(uint scrollTo)
         {
-            if (!IsModelSelected)
-                return;
-
             CurrentPageIndex = scrollTo;
             LoadContent();
         }
 
         protected void LoadContent()
         {
-            if (!IsModelSelected)
-                return;
-
             IsLoading = true;
             Runtime.DebugConsoleWrite(CurrentPageIndex, color: ConsoleColor.Yellow);
             Runtime.TaskRun(() =>
@@ -233,9 +227,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 
         public void InstallAddon(InstanceAddon instanceAddon)
         {
-            if (!IsModelSelected)
-                return;
-
             //instanceAddon.InstallLatestVersion();
         }
 
@@ -248,9 +239,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 
         protected virtual void OnSelectedCategoryChanged(IProjectCategory category, bool isSelected)
         {
-            if (!IsModelSelected)
-                return;
-
             if (isSelected)
             {
                 _selectedCategories.Add(category);
@@ -263,36 +251,24 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 
         private void OnSortByChanged()
         {
-            if (!IsModelSelected)
-                return;
-
             OnPropertyChanged(nameof(SelectedSortByIndex));
             LoadContent();
         }
 
         private void OnSearchFilterChanged()
         {
-            if (!IsModelSelected)
-                return;
-
             OnPropertyChanged(nameof(SearchFilter));
             LoadContent();
         }
 
         private void OnCurrentPageIndexChanged()
         {
-            if (!IsModelSelected)
-                return;
-
             OnPropertyChanged(nameof(CurrentPageIndex));
             LoadContent();
         }
 
         private void OnPageSizeChanged()
         {
-            if (!IsModelSelected)
-                return;
-
             OnPropertyChanged(nameof(PageSize));
             LoadContent();
         }

@@ -37,5 +37,10 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
             EnumValue = enumValue;
             CanBeSelected = canBeSelected;
         }
+
+        public override int GetHashCode()
+        {
+            return EnumValue.GetHashCode();
+        }
     }
 }

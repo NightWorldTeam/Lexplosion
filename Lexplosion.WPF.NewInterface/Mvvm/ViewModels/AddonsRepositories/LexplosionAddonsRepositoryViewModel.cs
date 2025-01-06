@@ -33,14 +33,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
 
                 if (Model != null)
                 {
-                    //отключаем активную модель
-                    Model.IsModelSelected = false;
                     // сохраняем SearchFilter
                     _repositoriesList[value].SearchFilter = Model.SearchFilter;
                 }
 
                 Model = _repositoriesList[value];
-                Model.IsModelSelected = true;
+                UpdateCommands();
                 OnPropertyChanged(nameof(Model));
                 OnPropertyChanged();
             }
@@ -181,7 +179,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
                     }
 
                     SelectedAddonsRepositoryIndex = 0;
-                    InitCommands();
+                    UpdateCommands();
 
                     OnPropertyChanged(nameof(ApplySelectedCategoriesCommand));
                 });
@@ -201,11 +199,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
         #region Private Methods
 
 
-        private void InitCommands()
+        private void UpdateCommands()
         {
-            LaunchInstanceCommand = RelayCommand.GetCommand(ref _launchInstance, Model.LaunchInstance);
-            StopProcessCommand = RelayCommand.GetCommand(ref _launchInstance, Model.StopInstanceProcess);
-            ApplySelectedCategoriesCommand = RelayCommand.GetCommand(ref _applySelectedCategoriesCommand, Model.ApplyCategories);
+            LaunchInstanceCommand = new RelayCommand((obj) => Model.LaunchInstance());
+            StopProcessCommand = new RelayCommand((obj) => Model.StopInstanceProcess());
+            ApplySelectedCategoriesCommand = new RelayCommand((obj) => Model.ApplyCategories());
             NextPageCommand = new RelayCommand((obj) => Model.Paginate((uint)obj));
             PrevPageCommand = new RelayCommand((obj) => Model.Paginate((uint)obj));
         }
