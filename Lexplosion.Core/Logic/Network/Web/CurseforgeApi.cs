@@ -114,37 +114,26 @@ namespace Lexplosion.Logic.Network.Web
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static T GetApiData<T>(string url) where T : new() => GetApiData<T>(url, out _);
 
-
         public static CatalogResult<CurseforgeInstanceInfo> GetInstances(CurseforgeSearchParams searchParams)
         {
-            string url = "https://api.curseforge.com/v1/mods/search?";
+            var queryBuilder = new QueryApiBuilder("https://api.curseforge.com/v1/mods/search");
+
+            queryBuilder.Add("gameId", "432");
+            queryBuilder.Add("classId", "4471");
+            queryBuilder.Add("sortOrder", "desc");
+            queryBuilder.Add("pageSize", searchParams.PageSize);
+            queryBuilder.Add("index", searchParams.PageIndex);
 
             if (!string.IsNullOrWhiteSpace(searchParams.SearchFilter))
-            {
-                url += "searchFilter=" + WebUtility.UrlEncode(searchParams.SearchFilter) + "&";
-            }
+                queryBuilder.Add("searchFilter", WebUtility.UrlEncode(searchParams.SearchFilter));
 
-            string gameVersion = string.Empty;
             if (!string.IsNullOrWhiteSpace(searchParams.GameVersion))
-            {
-                gameVersion = "&gameVersion=" + searchParams.GameVersion;
-            }
+                queryBuilder.Add("gameVersion", searchParams.GameVersion);
 
-            string ctrs = string.Empty;
-            foreach (var ct in searchParams.Categories)
-            {
-                if (ct.Id == "-1")
-                {
-                    ctrs = string.Empty;
-                    break;
-                }
+            queryBuilder.Add("categoryIds", BuildCategoriesToQuery(searchParams.Categories));
+            queryBuilder.Add("sortField", (int)searchParams.SortField);
 
-                ctrs += ct.Id + ",";
-            }
-
-            string categoryStr = "&categoryIds=" + WebUtility.UrlEncode("[" + ctrs.RemoveLastChars(1) + "]");
-
-            url += $"gameId=432&classId=4471&sortOrder=desc&pageSize={searchParams.PageSize}&index={searchParams.PageIndex}{gameVersion}{categoryStr}&sortField={(int)searchParams.SortField}";
+            var url = queryBuilder.Build();
 
             Runtime.DebugWrite(url);
 
@@ -152,36 +141,53 @@ namespace Lexplosion.Logic.Network.Web
             return new(result, paginator?.TotalCount ?? 1);
         }
 
+        private static string BuildCategoriesToQuery(IEnumerable<IProjectCategory> categories) 
+        {
+            var ctrs = string.Empty;
+            foreach (var ct in categories)
+            {
+                if (ct.Id == "-1") return string.Empty;
+
+                ctrs += $"{ct.Id},";
+            }
+
+            return ctrs;
+        }
+
         public static CatalogResult<CurseforgeAddonInfo> GetAddonsList(AddonType type, CurseforgeSearchParams searchParams)
         {
-            string gameVersion = string.Empty;
+            /*
+             https://api.curseforge.com/v1/mods/search?gameId=432&classId=12&sortOrder=desc&pageSize=10&index=0&gameVersion=1.20.1&categoryIds=%5B%5D&sortField=0&searchFilter=
+             https://api.curseforge.com/v1/mods/search?gameId=432&classId=12&sortOrder=desc&pageSize=10&index=0&gameVersion=1.20.1&categoryIds=&sortField=0
+             */
+
+            var queryBuilder = new QueryApiBuilder("https://api.curseforge.com/v1/mods/search");
+
+            queryBuilder.Add("gameId", "432");
+            queryBuilder.Add("classId", (int)type);
+            queryBuilder.Add("sortOrder", "desc");
+            queryBuilder.Add("pageSize", searchParams.PageSize);
+            queryBuilder.Add("index", searchParams.PageIndex);
+
+            if (!string.IsNullOrWhiteSpace(searchParams.SearchFilter))
+                queryBuilder.Add("searchFilter", WebUtility.UrlEncode(searchParams.SearchFilter));
+
             if (!string.IsNullOrWhiteSpace(searchParams.GameVersion))
-            {
-                gameVersion = "&gameVersion=" + searchParams.GameVersion;
-            }
+                queryBuilder.Add("gameVersion", searchParams.GameVersion);
 
-            string ctrs = string.Empty;
-            foreach (var ct in searchParams.Categories)
-            {
-                if (ct.Id == "-1")
-                {
-                    ctrs = string.Empty;
-                    break;
-                }
+            if (searchParams.Categories.Count() > 0) 
+                queryBuilder.Add("categoryIds", BuildCategoriesToQuery(searchParams.Categories));
 
-                ctrs += ct.Id + ",";
-            }
+            queryBuilder.Add("sortField", (int)searchParams.SortField);
 
-            string categoryStr = "&categoryIds=" + WebUtility.UrlEncode("[" + ctrs.RemoveLastChars(1) + "]");
-
-            string _modloader = string.Empty;
             if (type == AddonType.Mods)
             {
                 var modloadersList = searchParams.Modloaders.Select(x => x == Modloader.NeoForged.ToString() ? "NeoForge" : x);
-                _modloader = "&modLoaderTypes=" + WebUtility.UrlEncode("[" + string.Join(",", modloadersList) + "]");
+                queryBuilder.Add("modLoaderTypes", WebUtility.UrlEncode("[" + string.Join(",", modloadersList) + "]"));
             }
 
-            string url = "https://api.curseforge.com/v1/mods/search?gameId=432&sortOrder=desc&classId=" + (int)type + "&pageSize=" + searchParams.PageSize + "&index=" + searchParams.PageIndex + gameVersion + categoryStr + _modloader + "&sortField=" + (int)searchParams.SortField + "&searchFilter=" + WebUtility.UrlEncode(searchParams.SearchFilter);
+            var url = queryBuilder.Build();
+
             Runtime.DebugWrite(url);
 
             var result = GetApiData<List<CurseforgeAddonInfo>>(url, out Pagination paginator);

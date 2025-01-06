@@ -11,6 +11,7 @@ using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.Modrinth;
 using Lexplosion.Tools;
 using Lexplosion.Core.Logic.Objects;
+using Microsoft.Win32;
 
 namespace Lexplosion.Logic.Network.Web
 {
@@ -171,47 +172,62 @@ namespace Lexplosion.Logic.Network.Web
 
         public static CatalogResult<ModrinthCtalogUnit> GetInstances(int pageSize, int index, IEnumerable<IProjectCategory> categories, string sortField, string searchFilter, string gameVersion)
         {
-            string url = "https://api.modrinth.com/v2/search?facets=[[%22project_type:modpack%22]]&offset=" + (index * pageSize) + "&limit" + pageSize;
+            var queryBuilder = new QueryApiBuilder("https://api.modrinth.com/v2/search");
+
+
+            queryBuilder.Add("offset", (index * pageSize));
+            queryBuilder.Add("limit", pageSize);
 
             if (!string.IsNullOrWhiteSpace(sortField))
-            {
-                url += "&index=" + sortField;
-            }
+                queryBuilder.Add("index", sortField);
 
             if (!string.IsNullOrWhiteSpace(searchFilter))
-            {
-                url += "&query=" + WebUtility.UrlEncode(searchFilter);
-            }
+                queryBuilder.Add("query", WebUtility.UrlEncode(searchFilter));
 
-            var isFiltersExists = false;
-            foreach (var category in categories)
-            {
-                if (category == null || category.Id == "-1")
-                {
-                    continue;
-                }
+            var categoriesQuery = BuildCategoriesToQuery(categories);
+            queryBuilder.Add("facets", $"[[%22project_type:modpack%22]{categoriesQuery}]");
 
-                if (isFiltersExists)
-                {
-                    url += " AND categories=\"" + category.Id + "\"";
-                }
-                else
-                {
-                    url += "&filters=(categories=\"" + category.Id + "\"";
-                    isFiltersExists = true;
-                }
-            }
-
-            if (isFiltersExists)
-            {
-                url += ")";
-            }
+            var url = queryBuilder.Build();
+            Runtime.DebugWrite(url, color: ConsoleColor.Cyan);
 
             var catalogContainer = GetApiData<CatalogContainer>(url);
-
             return new(catalogContainer?.hits ?? new(), catalogContainer.TotalHits);
         }
 
+
+        /// <summary>
+        /// Возвращает строку формата ,["categories: ..."]
+        /// </summary>
+        private static string BuildCategoriesToQuery(IEnumerable<IProjectCategory> categories)
+        {
+            var result = string.Empty;
+
+            foreach (var category in categories)
+            {
+                if (category.Id == "-1")
+                {
+                    return string.Empty;
+                }
+
+                result += $",[\"categories:{category.Id}\"]";
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Возвращает строку формата ,["categories:forge","categories:neoforge" ..."]
+        /// </summary>
+        private static string BuildModloadersToQuery(IEnumerable<string> modloaders)
+        {
+            var facets = string.Empty;
+            string modloadersFilter = string.Join(",", modloaders.Select(x => ($"\"categories:{x}\"")));
+            if (modloadersFilter != string.Empty)
+            {
+                facets += $",[{modloadersFilter}]";
+            }
+            return facets;
+        }
 
         /// <summary>
         /// Получает список аддонов
@@ -221,75 +237,40 @@ namespace Lexplosion.Logic.Network.Web
         /// <returns>Первое значение - список аддонов, второе - общее количество аддонов, доступных по запросу</returns>
         public static CatalogResult<ModrinthProjectInfo> GetAddonsList(AddonType type, ModrinthSearchParams searchParams)
         {
-            string _type;
-            switch (type)
+            string _type = type switch
             {
-                case AddonType.Mods:
-                    _type = "mod";
-                    break;
-                case AddonType.Resourcepacks:
-                    _type = "resourcepack";
-                    break;
-                case AddonType.Shaders:
-                    _type = "shader";
-                    break;
-                default:
-                    _type = "resourcepack";
-                    break;
-            }
+                AddonType.Mods => _type = "mod",
+                AddonType.Resourcepacks => _type = "resourcepack",
+                AddonType.Shaders => _type = "shader",
+                _ => _type = "resourcepack"
+            };
 
-            string url = "https://api.modrinth.com/v2/search?facets=";
-            string facets = $"[[\"project_type:{_type}\"]";
+            var queryBuilder = new QueryApiBuilder("https://api.modrinth.com/v2/search");
 
-            if (!string.IsNullOrWhiteSpace(searchParams.GameVersion))
-            {
-                facets += $",[\"versions:{searchParams.GameVersion}\"]";
-            }
+            queryBuilder.Add("limit", searchParams.PageSize);
+            queryBuilder.Add("index", searchParams.SortFieldString);
+
+            var offset = searchParams.PageIndex * searchParams.PageSize;
+            if (offset > 0)
+                queryBuilder.Add("offset", offset);
+
+            if (!string.IsNullOrWhiteSpace(searchParams.SearchFilter))
+                queryBuilder.Add("query", WebUtility.UrlEncode(searchParams.SearchFilter));
+
+            var facets = $"[[\"project_type:{_type}\"], [\"versions:{searchParams.GameVersion}\"]";
+            facets += BuildCategoriesToQuery(searchParams.Categories);
 
             if (type == AddonType.Mods)
-            {
-                string modloadersFilter = string.Join(",", searchParams.Modloaders.Select(x => ($"\"categories:{x}\"")));
-                if (modloadersFilter != string.Empty)
-                {
-                    facets += $",[{modloadersFilter}]";
-                }
-            }
-
-            string ctrs = string.Empty;
-            foreach (var category in searchParams.Categories)
-            {
-                if (category.Id == "-1")
-                {
-                    ctrs = string.Empty;
-                    break;
-                }
-
-                ctrs += $"\"categories:{category.Id}\",";
-            }
-
-            if (ctrs != string.Empty)
-            {
-                facets += $",[{ctrs.RemoveLastChars(1)}]";
-            }
+                facets += BuildModloadersToQuery(searchParams.Modloaders);
 
             facets += "]";
 
-            url += facets + "&limit=" + searchParams.PageSize; //было WebUtility.UrlEncode(facets), но почему то модринф тупит, если так делать
+            queryBuilder.Add("facets", facets);
 
-            var offset = searchParams.PageIndex * searchParams.PageSize;
-            if (offset > 0) 
-            {
-                url = $"{url}&offset={offset}";
-            }
+            var url = queryBuilder.Build();
 
-            if (!string.IsNullOrWhiteSpace(searchParams.SearchFilter))
-            {
-                url += "&query=" + WebUtility.UrlEncode(searchParams.SearchFilter);
-            }
+            Runtime.DebugWrite(url, color: ConsoleColor.Cyan);
 
-            url += "&index=" + searchParams.SortFieldString;
-
-            Runtime.DebugWrite(url);
             CatalogContainer catalogList = GetApiData<CatalogContainer>(url);
             var result = new List<ModrinthProjectInfo>();
 

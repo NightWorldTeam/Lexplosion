@@ -125,7 +125,7 @@ namespace Lexplosion.Logic.Management.Instances
                 }
                 catch (Exception ex)
                 {
-                    Runtime.DebugWrite(ex);
+                    Runtime.DebugWrite("[Error] Image resize failed", color: ConsoleColor.DarkGray);
                     _logo = value;
                 }
 
