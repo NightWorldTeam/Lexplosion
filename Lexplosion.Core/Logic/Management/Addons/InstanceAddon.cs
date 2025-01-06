@@ -76,7 +76,9 @@ namespace Lexplosion.Logic.Management.Addons
         public AddonType Type { get; }
 
         public IEnumerable<string> DisplayModloaders { get; }
-        public DateTime CreatedTime { get; }
+        public string CreatedTime { get; }
+        public string GameVersion { get; }
+        
 
 
         private string _author = string.Empty;
