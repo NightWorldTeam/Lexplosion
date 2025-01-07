@@ -19,10 +19,10 @@ namespace Lexplosion.Logic.Management.Addons
         /// Сначала проверяются версии мода с модлоадером клиента, если подходящей версии не найдено, то будет идти поиск среду допускаемых молоадеров по порядку добавления.
         /// </summary>
         /// <param name="modloader">Модлоадер для разрешения скачивания.</param>
-        void AddAcceptableModloader(Modloader modloader);
+        void SetAcceptableModloader(Modloader modloader);
 
         /// <summary>
-        /// Аналогично <see cref="AddAcceptableModloader"/>, только удаляет.
+        /// Аналогично <see cref="SetAcceptableModloader"/>, только удаляет.
         /// </summary>
         void RemoveAcceptableModloader(Modloader modloader);
 

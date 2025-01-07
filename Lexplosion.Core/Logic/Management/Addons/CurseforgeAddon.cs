@@ -279,7 +279,7 @@ namespace Lexplosion.Logic.Management.Addons
             return CurseforgeApi.GetProjectDescription(_addonInfo?.id);
         }
 
-        public void AddAcceptableModloader(Modloader modloader)
+        public void SetAcceptableModloader(Modloader modloader)
         {
             _acceptableModloaders.Add(modloader);
         }

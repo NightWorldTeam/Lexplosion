@@ -303,7 +303,7 @@ namespace Lexplosion.Logic.Management.Addons
             return string.Empty;
         }
 
-        public void AddAcceptableModloader(Modloader modloader)
+        public void SetAcceptableModloader(Modloader modloader)
         {
             _acceptableModloaders.Add(modloader);
         }
