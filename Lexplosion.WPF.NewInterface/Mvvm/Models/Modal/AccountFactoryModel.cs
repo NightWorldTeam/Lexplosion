@@ -7,9 +7,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Modal
 {
     public class AccountFactoryModel : ViewModelBase
     {
-        private Action<Account> _addAccount;
-
-
         #region Properties
 
 
@@ -60,11 +57,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Modal
         // NightWorld   |$>> Login + Password
         // Microsoft    |$>> Login + redirect to Microsoft
 
-        public AccountFactoryModel(Action<Account> addAccount)
-        {
-            _addAccount = addAccount;
-        }
-
         public void Auth()
         {
             IsAuthorizationInProcess = true;
@@ -96,7 +88,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Modal
         {
             var account = new Account(AccountType.NoAuth, Login);
             account.Save();
-            _addAccount(account);
             IsAuthorizationInProcess = false;
         }
 
@@ -104,24 +95,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Modal
         {
             var account = new Account(AccountType.NightWorld, Login);
 
-            //var authCode = await account.Auth(Password);
-            //if (code1 == AuthCode.Successfully)
-            //{
-            //    account.Save();
-            //    _addAccount(account);
-            //    IsAuthorzationInProgress = false;
-            //}
-
-
             Runtime.TaskRun(() => {
                 var authCode = account.Auth(Password);
                 if (authCode == AuthCode.Successfully)
                 {
                     App.Current.Dispatcher.Invoke(() =>
                     {
-
                         account.Save();
-                        _addAccount(account);
                         IsAuthorizationInProcess = false;
                     });
                 }
@@ -143,7 +123,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Modal
                             App.Current.Dispatcher.Invoke(() => 
                             {
                                 account.Save();
-                                _addAccount(account);
                                 CommandReceiver.MicrosoftAuthPassed -= successAuth;
                                 IsAuthorizationInProcess = false;
                             });

@@ -12,8 +12,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.GeneralSe
         #region Properties
 
 
-        public IList<Accounts> AccountsByType { get; } = new ObservableCollection<Accounts>();
-
         private ObservableCollection<AccountItem> _accounts { get; } = [];
         public FiltableObservableCollection Accounts { get; } = [];
 
@@ -46,6 +44,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.GeneralSe
             {
                 _accounts.Add(new(account));
             }
+
+            Account.AccountAdded += Account_AccountAdded;
+        }
+
+        private void Account_AccountAdded(Account obj)
+        {
+            AddAccount(obj);
         }
 
 
@@ -65,6 +70,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.GeneralSe
             App.Current.Dispatcher.Invoke(() =>
             {
                 _accounts.Remove(new AccountItem(account));
+                account.RemoveFromList();
             });
         }
     }

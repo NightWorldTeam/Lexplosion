@@ -9,7 +9,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization
 {
     public delegate void DoNotificationCallback(string titleKey, string messageKey, uint time, NotificationType type);
 
-    public abstract class AuthModelBase : VMBase
+    public abstract class AuthModelBase : ViewModelBase
     {
         private readonly DoNotificationCallback _doNotification = (header, message, time, type) => { };
 

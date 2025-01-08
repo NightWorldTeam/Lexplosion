@@ -1,11 +1,5 @@
-﻿using Lexplosion.WPF.NewInterface.Core.Notifications;
-using Lexplosion.WPF.NewInterface.Core.Services;
-using Lexplosion.WPF.NewInterface.Stores;
+﻿using Lexplosion.WPF.NewInterface.Stores;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Lexplosion.WPF.NewInterface.Core
 {
@@ -33,6 +27,8 @@ namespace Lexplosion.WPF.NewInterface.Core
         /// Навигация модалок
         /// </summary>
         public ModalNavigationStore ModalNavigationStore { get; } = new();
+
+        public INavigationStore NavigationStore { get; } = new NavigationStore();
 
 
         #endregion Properties

@@ -1,4 +1,5 @@
-﻿<ResourceDictionary
+﻿
+<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:s="clr-namespace:System;assembly=mscorlib">
@@ -494,4 +495,18 @@
     <s:String x:Key="InstalledList">Installed</s:String>
 
     <s:String x:Key="SearchAddonByNamePlaceholder">Addon name</s:String>
+
+
+    <!--  region Authorization  -->
+
+    <s:String x:Key="DoNothaveAnyAccount">Don't have any account?</s:String>
+    <s:String x:Key="ForgotPassword">Forgot password?</s:String>
+    <s:String x:Key="SingUp">Sign Up</s:String>
+    <s:String x:Key="SelectAuthorizationMethod">Select Authorization Method</s:String>
+    <s:String x:Key="AuthorizationViaNightWorld">Authorization via NightWorld</s:String>
+    <s:String x:Key="Via">Via</s:String>
+    <s:String x:Key="RememberMe">Remember Me</s:String>
+    <s:String x:Key="LogIn">Log In</s:String>
+
+    <!--  endregion Authorization  -->
 </ResourceDictionary>

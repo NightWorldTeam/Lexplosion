@@ -43,31 +43,18 @@
                         FontWeight="Medium"
                         Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
                         SnapsToDevicePixels="True"
-                        Text="Авторизация через NightWorld"
+                        Text="{DynamicResource AuthorizationViaNightWorld}"
                         UseLayoutRounding="True" />
 
                     <!--  Login Field  -->
                     <controls:UpperPlaceholderTextBox
                         Margin="0,8,0,0"
-                        IsError="True"
-                        Placeholder="Login"
+                        IsError="False"
+                        Placeholder="{DynamicResource Login}"
                         Text="{Binding Model.Login, UpdateSourceTrigger=PropertyChanged}" />
 
                     <!--  Password Field  -->
                     <controls:BindablePasswordBox FontSize="14" Password="{Binding Model.Password, UpdateSourceTrigger=PropertyChanged}" />
-
-                    <TextBlock
-                        Foreground="#e86084"
-                        Text="Алло а кто будет данные заполнять?"
-                        TextWrapping="WrapWithOverflow"
-                        Visibility="Collapsed" />
-
-
-                    <!--<TextBlock
-                        Margin="0,4,0,4"
-                        HorizontalAlignment="Center" FontWeight="Medium"
-                        Foreground="{DynamicResource ErrorSolidColorBrush}"
-                        Text="Please enter a valid email address" />-->
 
                     <Grid Margin="0,8,0,0" ShowGridLines="False">
                         <Grid.ColumnDefinitions>
@@ -78,7 +65,7 @@
                         <!--  Is Remember Me  -->
                         <CheckBox
                             VerticalAlignment="Center"
-                            Content="Remember me"
+                            Content="{DynamicResource RememberMe}"
                             IsChecked="{Binding IsRememberMe, UpdateSourceTrigger=PropertyChanged}" />
                         <!--  Forgot Password Hyperlink  -->
                         <TextBlock
@@ -87,7 +74,7 @@
                             VerticalAlignment="Center"
                             Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}">
                             <Hyperlink Command="{Binding PasswordResetCommand}">
-                                Forgot password?
+                                <Run Text="{DynamicResource ForgotPassword}" />
                             </Hyperlink>
                         </TextBlock>
                     </Grid>
@@ -99,7 +86,7 @@
                                 HorizontalContentAlignment="Center"
                                 VerticalContentAlignment="Center"
                                 Command="{Binding AuthorizationCommand}"
-                                Content="Log In Now"
+                                Content="{DynamicResource LogIn}"
                                 FontWeight="Medium"
                                 Foreground="White" />
 
@@ -130,13 +117,10 @@
                                 Grid.Row="3"
                                 Margin="0,16,0,0"
                                 HorizontalAlignment="Center">
-                                <TextBlock
-                                    FontSize="13"
-                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
-                                    Text="Don’t have any account?" />
-                                <TextBlock Margin="4,0,0,0" FontSize="14">
+                                <TextBlock Margin="4,0,0,0">
+                                    <Run Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="{DynamicResource DoNothaveAnyAccount}" />
                                     <Hyperlink>
-                                        Sing Up
+                                        <Run Text="{DynamicResource SingUp}" />
                                     </Hyperlink>
                                 </TextBlock>
                             </WrapPanel>

@@ -123,7 +123,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         public ICommand OpenAccountFactoryCommand {
             get => RelayCommand.GetCommand(ref _addAccountCommand, () => 
             {
-                _modalNavigationStore.Open(new AccountFactoryViewModel(Model.AddAccount));
+                _modalNavigationStore.Open(new AccountFactoryViewModel());
             });
         }
 

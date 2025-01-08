@@ -52,6 +52,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
         public bool IsModalOpen { get => ModalNavigationStore.CurrentViewModel != null; }
 
 
+        public NavigateCommand<ViewModelBase> ToMainMenu { get; }
+
 
         // Данное свойство содержит в себе версии игры.
         // Является static, т.к эксемпляр MainViewModel создаётся в единственном эксемляре, в начале запуска лаунчер, до появляния начального окна.
@@ -82,6 +84,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
         {
             _appCore = appCore;
             Model = new MainModel(appCore);
+
+            NavigationStore = appCore.NavigationStore;
+
             // так как грузится в отдельном потоке, может загрузится позже чем создатся экземпляр класса InstanceFactory!!!
             ModalNavigationStore.CurrentViewModelChanged += Instance_CurrentViewModelChanged;
             NavigationStore.CurrentViewModelChanged += NavigationStore_CurrentViewModelChanged;
@@ -94,8 +99,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
             );
 
             var mainMenuLayout = new MainMenuLayoutViewModel(NavigationStore, ModalNavigationStore, Model);
-            var toMainMenu = new NavigateCommand<ViewModelBase>(NavigationStore, () => mainMenuLayout);
-            toMainMenu?.Execute(null);
+            ToMainMenu = new NavigateCommand<ViewModelBase>(NavigationStore, () => mainMenuLayout);
         }
 
 

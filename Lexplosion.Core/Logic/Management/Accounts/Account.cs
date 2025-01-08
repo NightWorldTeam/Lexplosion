@@ -72,6 +72,10 @@ namespace Lexplosion.Logic.Management.Accounts
         /// Событие которое происходит когда меняется запускаемый аккаунт.
         /// </summary>
         public static event Action<Account?> LaunchAccountChanged;
+        /// <summary>
+        /// Событие которые происходит когда добавляется при добавлении нового аккаунта.
+        /// </summary>
+        public static event Action<Account> AccountAdded;
 
         public bool IsTokenValid { get; private set; } = true;
 
@@ -263,6 +267,7 @@ namespace Lexplosion.Logic.Management.Accounts
         {
             _accounts.Add(account);
             _listToSave[account] = account.GetAccountSummary();
+            AccountAdded?.Invoke(account);
         }
 
         private static void SaveSummaryList()

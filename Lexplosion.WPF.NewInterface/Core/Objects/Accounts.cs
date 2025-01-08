@@ -35,6 +35,11 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
             _list = new ObservableCollection<Account>(list);
             List.Source = _list;
             IconSource = $"pack://application:,,,/assets/images/icons/{Type.ToString().ToLower()}.png";
+
+            Account.AccountAdded += (account) =>
+            {
+                _list.Add(account);
+            };
         }
 
 

@@ -46,7 +46,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization.OAuth2
         {
             var authCode = Authentication.Instance.Auth(AccountType.Microsoft, "", data, true);
             PerformAuthCode(AccountType.Microsoft, authCode);
-            // WARINING: WINDOWS ONLY METHOD
+            // TODO: WARINING: WINDOWS ONLY METHOD
             NativeMethods.ShowProcessWindows(Runtime.CurrentProcess.MainWindowHandle);
         }
 
@@ -61,7 +61,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization.OAuth2
         {
             var authCode = Authentication.Instance.Auth(AccountType.Microsoft, "", microsoftData, true);
             PerformAuthCode(AccountType.Microsoft, authCode);
-            // WARINING: WINDOWS ONLY METHOD
+            // TODO: WARINING: WINDOWS ONLY METHOD
             NativeMethods.ShowProcessWindows(Runtime.CurrentProcess.MainWindowHandle);
         }
 

@@ -137,6 +137,7 @@
     <Compile Include="Extensions\ResourceDictionaryExtensions.cs" />
     <Compile Include="Extensions\ScrollViewerExtensions.cs" />
     <Compile Include="Extensions\StyleSelectors\LastRowItemWrapPanelStyleSelector.cs" />
+    <Compile Include="Mvvm\Models\Authorization\AuthorizationMenuModel.cs" />
     <Compile Include="Mvvm\Models\InstanceControllers\InstanceSharesController.cs" />
     <Compile Include="Mvvm\Models\InstanceTransfer\DistributedInstance.cs" />
     <Compile Include="Mvvm\Models\InstanceTransfer\InstanceDistributionModel.cs" />

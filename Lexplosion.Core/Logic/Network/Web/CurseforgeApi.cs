@@ -123,7 +123,7 @@ namespace Lexplosion.Logic.Network.Web
             queryBuilder.Add("sortOrder", "desc");
             queryBuilder.Add("pageSize", searchParams.PageSize);
             queryBuilder.Add("index", searchParams.PageIndex);
-
+            
             if (!string.IsNullOrWhiteSpace(searchParams.SearchFilter))
                 queryBuilder.Add("searchFilter", WebUtility.UrlEncode(searchParams.SearchFilter));
 
@@ -135,7 +135,7 @@ namespace Lexplosion.Logic.Network.Web
 
             var url = queryBuilder.Build();
 
-            Runtime.DebugWrite(url);
+            Runtime.DebugWrite(url, color: ConsoleColor.Cyan);
 
             var result = GetApiData<List<CurseforgeInstanceInfo>>(url, out Pagination paginator);
             return new(result, paginator?.TotalCount ?? 1);

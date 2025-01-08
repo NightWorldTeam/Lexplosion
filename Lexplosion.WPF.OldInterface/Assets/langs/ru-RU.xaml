@@ -324,7 +324,11 @@
 
 
     <!--  Instance Form  -->
+
+    <!--#region Notification-->
+
     <!--  Notification  -->
+
     <s:String x:Key="downloadSuccessfullyCompleted">Скачивание было успешно завершено</s:String>
     <s:String x:Key="failedToDownloadFiles">Не удалось скачать следующие файлы</s:String>
     <s:String x:Key="failedToDownloadSomeFiles">Не удалось скачать некоторые файлы</s:String>
@@ -448,6 +452,10 @@
     <s:String x:Key="javeExeDoesNotExists">Файл java.exe или javaw.exe не существует в данном выбранном пути!</s:String>
     <s:String x:Key="wrongExe">Выбранный путь указывает на неправильный .exe файл!</s:String>
     <s:String x:Key="pathDoesNotExists">Выбранный путь не существует!</s:String>
+
+
+    <!--#endregion Notification-->
+
 
     <s:String x:Key="loggingMode">Режим логирования</s:String>
 

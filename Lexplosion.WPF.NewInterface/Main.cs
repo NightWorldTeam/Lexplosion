@@ -4,6 +4,7 @@ using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.Tools;
+using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Notifications;
 using Lexplosion.WPF.NewInterface.Core.Objects;
@@ -12,6 +13,7 @@ using Lexplosion.WPF.NewInterface.Extensions;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSettings;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Settings;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels;
+using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Authorization;
 using Lexplosion.WPF.NewInterface.Mvvm.Views.Windows;
 using System;
 using System.Collections;
@@ -25,6 +27,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface
 {
@@ -166,18 +169,38 @@ namespace Lexplosion.WPF.NewInterface
             //_nofityIcon = (TaskbarIcon)App.Current.FindResource("NofityIcon");
 
             // инициализируем mainViewModel.
-            ViewModelBase mainViewModel;
+            MainViewModel mainViewModel;
             if (!App.Current.Resources.TryGetValue("MainViewModel", out mainViewModel))
             {
                 mainViewModel = new MainViewModel(_appCore);
                 App.Current.Resources["MainViewModel"] = mainViewModel;
             }
 
+            ViewModelBase viewmodel = mainViewModel;
+
+            if (Account.List.Count() == 0)
+            {
+                viewmodel = GetAuthorizationViewModel(mainViewModel.ToMainMenu);
+            }
+            else 
+            {
+                mainViewModel.ToMainMenu.Execute(null);
+            }
+
             var mainWindow = new MainWindow()
             {
                 Left = App.Current.MainWindow.Left - 322,
                 Top = App.Current.MainWindow.Top - 89,
-                DataContext = mainViewModel,
+                DataContext = viewmodel,
+            };
+
+            Account.AccountDeleted += (account) =>
+            {
+                if (Account.ListCount == 0)
+                {
+                    mainWindow.DataContext = null;
+                    mainWindow.DataContext = GetAuthorizationViewModel(mainViewModel.ToMainMenu);
+                }
             };
 
             _leftPos = mainWindow.Left;
@@ -192,6 +215,14 @@ namespace Lexplosion.WPF.NewInterface
                         //_app.MainWindow = new TestWindow();
                         _app.MainWindow.Show();
                         _app.Run(_app.MainWindow);*/
+        }
+
+
+        private static ViewModelBase GetAuthorizationViewModel(ICommand toMainMenu) 
+        {
+            ViewModelBase viewmodel = new AuthorizationMenuViewModel(_appCore.NavigationStore, toMainMenu);
+            _appCore.NavigationStore.CurrentViewModel = viewmodel;
+            return viewmodel;
         }
 
         private static void InitializedSystem()
@@ -246,6 +277,7 @@ namespace Lexplosion.WPF.NewInterface
                     CloseMainWindow();
                 }
 
+                // TODO: Translate
                 discordClient?.SetPresence(new RichPresence()
                 {
                     State = "Minecraft " + gameManager.GameVersion,
@@ -268,6 +300,7 @@ namespace Lexplosion.WPF.NewInterface
                     ShowMainWindow();
                 }
 
+                // TODO: Translate
                 discordClient?.SetPresence(new RichPresence()
                 {
                     State = "Minercaft не запущен.",

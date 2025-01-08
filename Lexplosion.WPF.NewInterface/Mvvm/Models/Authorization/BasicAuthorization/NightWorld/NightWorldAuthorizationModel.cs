@@ -1,9 +1,12 @@
-﻿using Lexplosion.Logic.Management.Authentication;
+﻿using Lexplosion.Logic.Management.Accounts;
+using Lexplosion.Logic.Management.Authentication;
 using Lexplosion.WPF.NewInterface.Core;
+using Lexplosion.WPF.NewInterface.Core.Objects;
+using System.Security.Principal;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization.BasicAuthorization
 {
-    public class NightWorldAuthorizationModel : AuthModelBase, IBasicAuthModel
+    public sealed class NightWorldAuthorizationModel : AuthModelBase, IBasicAuthModel
     {
         #region Properties
 
@@ -18,7 +21,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization.BasicAuthorizati
             }
         }
 
-        private string _password = null;
+        private string _password = string.Empty;
         public string Password
         {
             get => _password; set
@@ -28,7 +31,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization.BasicAuthorizati
             }
         }
 
-        private bool _isRememberMe = false;
+        private bool _isRememberMe;
         public bool IsRememberMe
         {
             get => _isRememberMe; set
@@ -44,10 +47,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization.BasicAuthorizati
 
         #region Constuctors
 
+
         public NightWorldAuthorizationModel(DoNotificationCallback doNotification, string loadedLogin = "") : base(doNotification)
         {
             Login = loadedLogin;
         }
+
 
         #endregion Constructors
 
@@ -57,12 +62,16 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization.BasicAuthorizati
 
         public void LogIn()
         {
-            AuthCode authCode = Authentication.Instance.Auth(
-                AccountType.NightWorld,
-                Login?.Length == 0 ? null : Login,
-                Password?.Length == 0 ? null : Password,
-                IsRememberMe
-                );
+            var account = new Account(AccountType.NightWorld, Login);
+
+            Runtime.TaskRun(() =>
+            {
+                var authCode = account.Auth(Password);
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    AuthorizationCodeHandler(account, authCode);
+                });
+            });
         }
 
 
@@ -70,6 +79,33 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization.BasicAuthorizati
 
 
         #region Private Methods
+
+
+
+        private void AuthorizationCodeHandler(Account account, AuthCode code)
+        {
+            switch (code)
+            {
+                case AuthCode.Successfully:
+                    {
+                        account.IsActive = true;
+                        account.Save();
+                    }
+                    break;
+                case AuthCode.DataError:
+                    break;
+                case AuthCode.NoConnect:
+                    break;
+                case AuthCode.TokenError:
+                    break;
+                case AuthCode.SessionExpired:
+                    break;
+                case AuthCode.NeedMicrosoftAuth:
+                    break;
+                default:
+                    break;
+            }
+        }
 
 
 

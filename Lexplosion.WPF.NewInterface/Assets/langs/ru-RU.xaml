@@ -500,4 +500,32 @@
     <s:String x:Key="AddonInfoLatestReleaseTooltip">Дата последнего обновления</s:String>
     <s:String x:Key="AddonInfoCreationDateTooltip">Дата создания</s:String>
     <s:String x:Key="AddonInfoGameVersionTooltip">Версия игры</s:String>
+
+
+    <!--  region Authorization  -->
+
+    <s:String x:Key="DoNothaveAnyAccount">Нет учетной записи?</s:String>
+    <s:String x:Key="ForgotPassword">Забыли пароль?</s:String>
+    <s:String x:Key="SingUp">Зарегистрироваться</s:String>
+    <s:String x:Key="SelectAuthorizationMethod">Выберите способ авторизации</s:String>
+    <s:String x:Key="AuthorizationViaNightWorld">Авторизация через NightWorld</s:String>
+    <s:String x:Key="Via">Через</s:String>
+    <s:String x:Key="RememberMe">Запомнить меня</s:String>
+    <s:String x:Key="LogIn">Войти</s:String>
+
+    <!--  endregion Authorization  -->
+
+
+
+
+
+
+    <!--  region Notifications Content  -->
+
+
+
+
+
+    <!--  endregion Notifications Content  -->
+
 </ResourceDictionary>
