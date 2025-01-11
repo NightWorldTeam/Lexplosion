@@ -75,13 +75,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         /// <summary>
         /// Запускает сборку.
         /// </summary>
-        public async void Run()
+        public void Run()
         {
             if (!IsLaunching) 
             { 
                 IsLaunching = true;
                 LaunchStarted?.Invoke();
-                await Task.Run(() => { _instanceClient.Run(); });
+                Runtime.TaskRun(_instanceClient.Run);
             }
         }
 

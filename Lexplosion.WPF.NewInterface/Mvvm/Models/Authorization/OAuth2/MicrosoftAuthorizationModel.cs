@@ -1,4 +1,5 @@
-﻿using Lexplosion.Logic.Management.Authentication;
+﻿using Lexplosion.Logic.Management.Accounts;
+using Lexplosion.Logic.Management.Authentication;
 using Lexplosion.Logic.Network;
 using Lexplosion.Tools;
 using Lexplosion.WPF.NewInterface.Core;
@@ -14,7 +15,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization.OAuth2
         #region Constuctors
 
 
-        public MicrosoftAuthorizationModel(DoNotificationCallback doNotification) : base(doNotification)
+        public MicrosoftAuthorizationModel(AppCore appCore) : base(appCore)
         {
             // Подписываемся на обработку данных с браузера
             CommandReceiver.MicrosoftAuthPassed += CommandReceiver_MicrosoftAuthPassed;
@@ -44,10 +45,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization.OAuth2
 
         public void ManualInput(string data)
         {
-            var authCode = Authentication.Instance.Auth(AccountType.Microsoft, "", data, true);
-            PerformAuthCode(AccountType.Microsoft, authCode);
-            // TODO: WARINING: WINDOWS ONLY METHOD
-            NativeMethods.ShowProcessWindows(Runtime.CurrentProcess.MainWindowHandle);
+            LogIn(data);
         }
 
 
@@ -59,10 +57,24 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization.OAuth2
 
         private void CommandReceiver_MicrosoftAuthPassed(string microsoftData, MicrosoftAuthRes result)
         {
-            var authCode = Authentication.Instance.Auth(AccountType.Microsoft, "", microsoftData, true);
-            PerformAuthCode(AccountType.Microsoft, authCode);
-            // TODO: WARINING: WINDOWS ONLY METHOD
-            NativeMethods.ShowProcessWindows(Runtime.CurrentProcess.MainWindowHandle);
+
+        }
+
+
+        private void LogIn(string microsoftData) 
+        {
+            var account = new Account(AccountType.Microsoft);
+
+            Runtime.TaskRun(() =>
+            {
+                var authCode = account.Auth(microsoftData);
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    PerformAuthCode(account, authCode);
+                    // TODO: WARINING: WINDOWS ONLY METHOD
+                    NativeMethods.ShowProcessWindows(Runtime.CurrentProcess.MainWindowHandle);
+                });
+            });
         }
 
 

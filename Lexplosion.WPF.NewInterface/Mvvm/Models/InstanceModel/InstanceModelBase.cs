@@ -426,16 +426,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         /// </summary>
         public void Delete()
         {
-            //var config = new DialogConfig("Title", "Description", DialogType.Warning, () => 
-            //{
-            //    _instanceClient.Delete();
-            //    // TODO: ПОДПИСАТЬСЯ НА эвент и удалять через него.
-            //    GlobalDeletedEvent?.Invoke(this);
-            //    DeletedEvent?.Invoke(this);
-            //});
-
-            //_appCore.DialogService.ShowDialog(config);
-
             _appCore.ModalNavigationStore.Open(new ConfirmActionViewModel("Удаление сборки", "",
                     (obj) =>
                     {

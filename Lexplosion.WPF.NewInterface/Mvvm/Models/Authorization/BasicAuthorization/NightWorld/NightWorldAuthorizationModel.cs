@@ -8,6 +8,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization.BasicAuthorizati
 {
     public sealed class NightWorldAuthorizationModel : AuthModelBase, IBasicAuthModel
     {
+        private readonly AppCore _appCore;
+
+
         #region Properties
 
 
@@ -48,8 +51,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization.BasicAuthorizati
         #region Constuctors
 
 
-        public NightWorldAuthorizationModel(DoNotificationCallback doNotification, string loadedLogin = "") : base(doNotification)
+        public NightWorldAuthorizationModel(AppCore appCore, string loadedLogin = "") : base(appCore)
         {
+            _appCore = appCore;
             Login = loadedLogin;
         }
 
@@ -62,6 +66,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization.BasicAuthorizati
 
         public void LogIn()
         {
+            if (string.IsNullOrWhiteSpace(Login) || string.IsNullOrWhiteSpace(Password)) 
+            {
+                _appCore.MessageService.Warning("Логин или пароль не заполнены!");
+                return;
+            }
+
             var account = new Account(AccountType.NightWorld, Login);
 
             Runtime.TaskRun(() =>
@@ -69,46 +79,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization.BasicAuthorizati
                 var authCode = account.Auth(Password);
                 App.Current.Dispatcher.Invoke(() =>
                 {
-                    AuthorizationCodeHandler(account, authCode);
+                    PerformAuthCode(account, authCode);
                 });
             });
         }
 
 
         #endregion Public & Protected Methods
-
-
-        #region Private Methods
-
-
-
-        private void AuthorizationCodeHandler(Account account, AuthCode code)
-        {
-            switch (code)
-            {
-                case AuthCode.Successfully:
-                    {
-                        account.IsActive = true;
-                        account.Save();
-                    }
-                    break;
-                case AuthCode.DataError:
-                    break;
-                case AuthCode.NoConnect:
-                    break;
-                case AuthCode.TokenError:
-                    break;
-                case AuthCode.SessionExpired:
-                    break;
-                case AuthCode.NeedMicrosoftAuth:
-                    break;
-                default:
-                    break;
-            }
-        }
-
-
-
-        #endregion Private Methods
     }
 }

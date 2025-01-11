@@ -3,7 +3,6 @@ using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization.BasicAuthorization;
 using Lexplosion.WPF.NewInterface.Stores;
-using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu;
 using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Authorization
@@ -56,9 +55,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Authorization
         #region Constructors
 
 
-        public NightWorldAuthorizationViewModel(string loadedLogin = "")
+        public NightWorldAuthorizationViewModel(AppCore appCore, string loadedLogin = "")
         {
-            Model = new NightWorldAuthorizationModel(null, loadedLogin);
+            _navigationStore = appCore.NavigationStore;
+            Model = new NightWorldAuthorizationModel(appCore, loadedLogin);
         }
 
 

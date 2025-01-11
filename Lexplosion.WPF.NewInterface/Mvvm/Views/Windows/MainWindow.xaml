@@ -7,10 +7,12 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:message="clr-namespace:Lexplosion.WPF.NewInterface.Controls.Message.Core"
     xmlns:notification="clr-namespace:Lexplosion.WPF.NewInterface.Core.Notifications"
     xmlns:objects="clr-namespace:Lexplosion.WPF.NewInterface.Core.Objects"
     xmlns:pages="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages"
     xmlns:runtime="clr-namespace:Lexplosion.WPF.NewInterface"
+    xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
     xmlns:viewmodels="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels"
     Title="Lexplosion New Interface Debug"
     Width="944"
@@ -407,6 +409,43 @@
                 </Border>
             </Grid>
 
+            <Grid
+                Margin="16,12"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Top"
+                Background="Transparent">
+
+                <Grid.Resources>
+                    <CollectionViewSource x:Key="Messages" Source="{Binding AppCore.MessageService.Messages, Source={StaticResource MainViewModel}}">
+                        <CollectionViewSource.SortDescriptions>
+                            <scm:SortDescription Direction="Ascending" PropertyName="CreationDate" />
+                        </CollectionViewSource.SortDescriptions>
+                    </CollectionViewSource>
+                </Grid.Resources>
+
+                <ItemsControl
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    ItemsSource="{Binding Source={StaticResource Messages}}">
+
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel IsItemsHost="True" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+
+                    <ItemsControl.Resources>
+
+                        <DataTemplate DataType="{x:Type message:MessageItemModel}">
+                            <controls:MessageItem
+                                Margin="0,0,0,16"
+                                Text="{Binding Text}"
+                                Type="{Binding Type}" />
+                        </DataTemplate>
+
+                    </ItemsControl.Resources>
+                </ItemsControl>
+            </Grid>
 
             <!--  Circle Animation Block  -->
             <Grid x:Name="PaintArea">

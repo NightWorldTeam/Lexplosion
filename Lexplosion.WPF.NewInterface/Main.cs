@@ -220,7 +220,7 @@ namespace Lexplosion.WPF.NewInterface
 
         private static ViewModelBase GetAuthorizationViewModel(ICommand toMainMenu) 
         {
-            ViewModelBase viewmodel = new AuthorizationMenuViewModel(_appCore.NavigationStore, toMainMenu);
+            ViewModelBase viewmodel = new AuthorizationMenuViewModel(_appCore, toMainMenu);
             _appCore.NavigationStore.CurrentViewModel = viewmodel;
             return viewmodel;
         }

@@ -95,8 +95,13 @@
     <Compile Include="Controls\AdvancedToggleButton\AdvancedToggleButton.cs" />
     <Compile Include="Controls\AdvancedWrapPanel\AdvancedWrapPanel.cs" />
     <Compile Include="Controls\BackTop\BackTop.cs" />
+    <Compile Include="Controls\Core\Message\IMessageService.cs" />
+    <Compile Include="Controls\Core\Message\MessageItemModel.cs" />
+    <Compile Include="Controls\Core\Message\MessageService.cs" />
+    <Compile Include="Controls\Core\Message\Types\MessageType.cs" />
     <Compile Include="Controls\Empty\Empty.cs" />
     <Compile Include="Controls\LaunchButton\LaunchButton.cs" />
+    <Compile Include="Controls\Message\MessageItem.cs" />
     <Compile Include="Controls\Paginator\PaginatorOptions.cs" />
     <Compile Include="Controls\ToastMessage\ToastMessage.cs" />
     <Compile Include="Core\AppCore.cs" />
@@ -494,6 +499,10 @@
     <Page Include="Controls\LoadingBoard\LoadingBoard.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Message\MessageItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\ModalControl\ModalControl.xaml">
       <SubType>Designer</SubType>

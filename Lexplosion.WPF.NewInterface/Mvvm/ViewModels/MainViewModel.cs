@@ -21,7 +21,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
         public static event Action AllVersionsLoaded;
 
 
-        private readonly AppCore _appCore;
+        public AppCore AppCore { get; private set; }
 
 
         #region Properties
@@ -39,7 +39,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
         /// </summary>
         public ViewModelBase CurrentViewModel => NavigationStore.CurrentViewModel;
 
-        internal ModalNavigationStore ModalNavigationStore { get => _appCore.ModalNavigationStore; }
+        internal ModalNavigationStore ModalNavigationStore { get => AppCore.ModalNavigationStore; }
 
         /// <summary>
         /// Выбранный в данный момент viewmodel для модального окна.
@@ -82,7 +82,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
 
         public MainViewModel(AppCore appCore)
         {
-            _appCore = appCore;
+            AppCore = appCore;
             Model = new MainModel(appCore);
 
             NavigationStore = appCore.NavigationStore;
