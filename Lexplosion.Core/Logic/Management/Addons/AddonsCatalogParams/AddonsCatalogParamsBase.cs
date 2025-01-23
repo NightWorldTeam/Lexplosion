@@ -1,11 +1,10 @@
-﻿using Lexplosion.Core.Logic.Objects;
-using Lexplosion.Logic.Management.Addons;
+﻿using Lexplosion.Logic.Management.Addons;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Objects;
 
 namespace Lexplosion.Core.Logic.Management.Addons
 {
-    internal abstract class AddonsCatalogParamsBase<TAddonInfo, TSearchParams> 
+	internal abstract class AddonsCatalogParamsBase<TAddonInfo, TSearchParams> 
         where TAddonInfo : IAddonProjectInfo
         where TSearchParams : ISearchParams
     {

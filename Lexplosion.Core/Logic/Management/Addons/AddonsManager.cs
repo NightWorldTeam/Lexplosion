@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Lexplosion.Tools;
 using System.Collections.Concurrent;
 using System.Threading;
 using System.IO.Compression;
@@ -11,6 +10,7 @@ using System.Runtime.CompilerServices;
 using System.IO;
 using Tommy;
 using Newtonsoft.Json;
+using Lexplosion.Tools;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Management.Addons;
 using Lexplosion.Logic.Management.Instances;
@@ -19,13 +19,12 @@ using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects.Curseforge;
 using Lexplosion.Logic.Objects.Modrinth;
-using Lexplosion.Core.Logic.Objects;
 using Lexplosion.Core.Logic.Management.Addons.AddonsCatalogParams;
 using Lexplosion.Core.Logic.Management.Addons;
 
 namespace Lexplosion.Logic.Management.Addons
 {
-    public class AddonsManager
+	public class AddonsManager
     {
         class McmodInfo
         {

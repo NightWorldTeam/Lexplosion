@@ -1,5 +1,4 @@
-﻿using Lexplosion.Core.Logic.Objects;
-using Lexplosion.Logic.Management;
+﻿using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Objects;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers;
@@ -10,7 +9,7 @@ using System.Threading;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
 {
-    public sealed class CatalogModel : VMBase
+	public sealed class CatalogModel : VMBase
     {
         private static readonly SimpleCategory AllCategory = new SimpleCategory()
         {

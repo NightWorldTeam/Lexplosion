@@ -1,5 +1,4 @@
-﻿using Lexplosion.Core.Logic.Objects;
-using Lexplosion.Logic.Management.Installers;
+﻿using Lexplosion.Logic.Management.Installers;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
@@ -7,7 +6,7 @@ using System.Threading;
 
 namespace Lexplosion.Logic.Management.Sources
 {
-    internal class LocalSource : IInstanceSource
+	internal class LocalSource : IInstanceSource
     {
         public PrototypeInstance ContentManager { get => new LocalInstance(); }
 

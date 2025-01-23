@@ -10,12 +10,11 @@ using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.Modrinth;
 using Lexplosion.Tools;
-using Lexplosion.Core.Logic.Objects;
 using Microsoft.Win32;
 
 namespace Lexplosion.Logic.Network.Web
 {
-    public static class ModrinthApi
+	public static class ModrinthApi
     {
         public struct SearchFilters
         {

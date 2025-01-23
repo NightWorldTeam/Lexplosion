@@ -9,11 +9,10 @@ using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.Curseforge;
 using Lexplosion.Tools;
-using Lexplosion.Core.Logic.Objects;
 
 namespace Lexplosion.Logic.Network.Web
 {
-    public static class CurseforgeApi
+	public static class CurseforgeApi
     {
         private const string Token = "$2a$10$Ky9zG9R9.ha.kf5BRrvwU..OGSvC0I2Wp56hgXI/4aRtGbizrm3we";
 
