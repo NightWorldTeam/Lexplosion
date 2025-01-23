@@ -19,7 +19,6 @@ using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects.Curseforge;
 using Lexplosion.Logic.Objects.Modrinth;
 using Lexplosion.Logic.Management.Addons.AddonsCatalogParams;
-using Lexplosion.Core.Logic.Management.Addons;
 
 namespace Lexplosion.Logic.Management.Addons
 {
