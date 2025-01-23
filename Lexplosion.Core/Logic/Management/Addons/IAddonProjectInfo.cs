@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Lexplosion.Core.Logic.Management.Addons
+namespace Lexplosion.Logic.Management.Addons
 {
-    internal interface IAddonProjectInfo
-    {
-    }
+	internal interface IAddonProjectInfo
+	{
+	}
 }
