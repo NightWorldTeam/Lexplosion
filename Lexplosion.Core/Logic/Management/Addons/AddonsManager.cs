@@ -112,7 +112,7 @@ namespace Lexplosion.Logic.Management.Addons
                     _modsDirectoryWathcer = new FileSystemWatcher(modsPath);
                     _modsDirectoryWathcer.Created += (object sender, FileSystemEventArgs e) =>
                     {
-                        _synchronizer.Xer(() => OnAddonFileAdded(e.FullPath, AddonType.Mods, ".jar", DefineIternalModInfo));
+                        _synchronizer.ExecuteWhenAddonsNotInstalling(() => OnAddonFileAdded(e.FullPath, AddonType.Mods, ".jar", DefineIternalModInfo));
                     };
                     _modsDirectoryWathcer.EnableRaisingEvents = true;
                 }
@@ -141,7 +141,7 @@ namespace Lexplosion.Logic.Management.Addons
                             modId = "";
                         };
 
-                        _synchronizer.Xer(() => OnAddonFileAdded(e.FullPath, AddonType.Resourcepacks, ".zip", addonInfo));
+                        _synchronizer.ExecuteWhenAddonsNotInstalling(() => OnAddonFileAdded(e.FullPath, AddonType.Resourcepacks, ".zip", addonInfo));
                     };
                     _resourcepacksDirectoryWathcer.EnableRaisingEvents = true;
                 }
@@ -169,12 +169,14 @@ namespace Lexplosion.Logic.Management.Addons
 
         private void OnAddonFileAdded(string filePath, AddonType type, string fileExtension, IternalAddonInfoGetter addonInfoGetter)
         {
-            Runtime.DebugWrite("OnAddonFileAdded");
-            _synchronizer.Xer(() =>
+			Runtime.DebugWrite($"OnAddonFileAdded {filePath}");
+            _synchronizer.ExecuteWhenAddonsNotInstalling(() =>
             {
                 ThreadPool.QueueUserWorkItem((_) =>
                 {
-                    string fileName;
+					Thread.Sleep(100); // костыль блять. Из-за FileSystemWatcher может иногда выпасть исключение, что файл используется, поэтому тупо подождем чуть
+
+					string fileName;
                     try
                     {
                         fileName = Path.GetFileName(filePath);
@@ -190,7 +192,6 @@ namespace Lexplosion.Logic.Management.Addons
 
                     var addon = AddonFileHandle(filePath, type, fileExtension, addonInfoGetter);
                     if (addon != null) _synchronizer.AddInstalledAddon(addon);
-
                 });
             });
         }
@@ -875,7 +876,9 @@ namespace Lexplosion.Logic.Management.Addons
                     obj.FileName = filename;
                     obj.SetIsEnable = isAddonExtension;
 
-                    _synchronizer.AddonsHandleSemaphore.Release();
+					installedAddons.Save();
+
+					_synchronizer.AddonsHandleSemaphore.Release();
                     return obj;
                 }
 
