@@ -1,14 +1,14 @@
-﻿using Lexplosion.Core.Logic.Management.Addons;
+﻿using Lexplosion.Logic.Management.Addons;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
 namespace Lexplosion.Logic.Objects.Curseforge
 {
-    /// <summary>
-    /// Описывает проект курсфорджа. Дочерние классы используются при декодировании Json
-    /// </summary>
-    public abstract class CurseforgeProjectInfo
+	/// <summary>
+	/// Описывает проект курсфорджа. Дочерние классы используются при декодировании Json
+	/// </summary>
+	public abstract class CurseforgeProjectInfo
     {
         public class GameVersion
         {

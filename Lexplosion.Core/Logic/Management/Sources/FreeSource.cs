@@ -10,11 +10,10 @@ using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Global;
 using System;
-using Lexplosion.Core.Logic.Objects;
 
 namespace Lexplosion.Logic.Management.Sources
 {
-    class FreeSource : IInstanceSource
+	class FreeSource : IInstanceSource
     {
         private static object _locker = new();
         private static Dictionary<string, SourceMap> _maps = new();

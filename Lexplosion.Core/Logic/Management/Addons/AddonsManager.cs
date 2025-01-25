@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Lexplosion.Tools;
 using System.Collections.Concurrent;
 using System.Threading;
 using System.IO.Compression;
@@ -11,21 +10,19 @@ using System.Runtime.CompilerServices;
 using System.IO;
 using Tommy;
 using Newtonsoft.Json;
+using Lexplosion.Tools;
 using Lexplosion.Logic.FileSystem;
-using Lexplosion.Logic.Management.Addons;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects.Curseforge;
 using Lexplosion.Logic.Objects.Modrinth;
-using Lexplosion.Core.Logic.Objects;
-using Lexplosion.Core.Logic.Management.Addons.AddonsCatalogParams;
-using Lexplosion.Core.Logic.Management.Addons;
+using Lexplosion.Logic.Management.Addons.AddonsCatalogParams;
 
 namespace Lexplosion.Logic.Management.Addons
 {
-    public class AddonsManager
+	public class AddonsManager
     {
         class McmodInfo
         {
@@ -115,7 +112,7 @@ namespace Lexplosion.Logic.Management.Addons
                     _modsDirectoryWathcer = new FileSystemWatcher(modsPath);
                     _modsDirectoryWathcer.Created += (object sender, FileSystemEventArgs e) =>
                     {
-                        _synchronizer.Xer(() => OnAddonFileAdded(e.FullPath, AddonType.Mods, ".jar", DefineIternalModInfo));
+                        _synchronizer.ExecuteWhenAddonsNotInstalling(() => OnAddonFileAdded(e.FullPath, AddonType.Mods, ".jar", DefineIternalModInfo));
                     };
                     _modsDirectoryWathcer.EnableRaisingEvents = true;
                 }
@@ -144,7 +141,7 @@ namespace Lexplosion.Logic.Management.Addons
                             modId = "";
                         };
 
-                        _synchronizer.Xer(() => OnAddonFileAdded(e.FullPath, AddonType.Resourcepacks, ".zip", addonInfo));
+                        _synchronizer.ExecuteWhenAddonsNotInstalling(() => OnAddonFileAdded(e.FullPath, AddonType.Resourcepacks, ".zip", addonInfo));
                     };
                     _resourcepacksDirectoryWathcer.EnableRaisingEvents = true;
                 }
@@ -172,12 +169,14 @@ namespace Lexplosion.Logic.Management.Addons
 
         private void OnAddonFileAdded(string filePath, AddonType type, string fileExtension, IternalAddonInfoGetter addonInfoGetter)
         {
-            Runtime.DebugWrite("OnAddonFileAdded");
-            _synchronizer.Xer(() =>
+			Runtime.DebugWrite($"OnAddonFileAdded {filePath}");
+            _synchronizer.ExecuteWhenAddonsNotInstalling(() =>
             {
                 ThreadPool.QueueUserWorkItem((_) =>
                 {
-                    string fileName;
+					Thread.Sleep(100); // костыль блять. Из-за FileSystemWatcher может иногда выпасть исключение, что файл используется, поэтому тупо подождем чуть
+
+					string fileName;
                     try
                     {
                         fileName = Path.GetFileName(filePath);
@@ -193,7 +192,6 @@ namespace Lexplosion.Logic.Management.Addons
 
                     var addon = AddonFileHandle(filePath, type, fileExtension, addonInfoGetter);
                     if (addon != null) _synchronizer.AddInstalledAddon(addon);
-
                 });
             });
         }
@@ -878,7 +876,9 @@ namespace Lexplosion.Logic.Management.Addons
                     obj.FileName = filename;
                     obj.SetIsEnable = isAddonExtension;
 
-                    _synchronizer.AddonsHandleSemaphore.Release();
+					installedAddons.Save();
+
+					_synchronizer.AddonsHandleSemaphore.Release();
                     return obj;
                 }
 

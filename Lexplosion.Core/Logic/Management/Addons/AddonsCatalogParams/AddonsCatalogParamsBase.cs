@@ -1,41 +1,39 @@
-﻿using Lexplosion.Core.Logic.Objects;
-using Lexplosion.Logic.Management.Addons;
-using Lexplosion.Logic.Management.Instances;
+﻿using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Objects;
 
-namespace Lexplosion.Core.Logic.Management.Addons
+namespace Lexplosion.Logic.Management.Addons
 {
-    internal abstract class AddonsCatalogParamsBase<TAddonInfo, TSearchParams> 
-        where TAddonInfo : IAddonProjectInfo
-        where TSearchParams : ISearchParams
-    {
+	internal abstract class AddonsCatalogParamsBase<TAddonInfo, TSearchParams>
+		where TAddonInfo : IAddonProjectInfo
+		where TSearchParams : ISearchParams
+	{
 
-        public AddonType Type { get; }
-        public TSearchParams SearchParams { get; }
-        public BaseInstanceData ModpackInfo { get; }
-
-
-        protected AddonsCatalogParamsBase(AddonType addonType, TSearchParams searchParams, BaseInstanceData modpackInfo)
-        {
-            Type = addonType;
-            SearchParams = searchParams;
-            ModpackInfo = modpackInfo;
-        }
+		public AddonType Type { get; }
+		public TSearchParams SearchParams { get; }
+		public BaseInstanceData ModpackInfo { get; }
 
 
-        /// <summary>
-        /// Возвращает CatalogResult TAddonInfo
-        /// </summary>
-        public abstract CatalogResult<TAddonInfo> GetCatalog();
+		protected AddonsCatalogParamsBase(AddonType addonType, TSearchParams searchParams, BaseInstanceData modpackInfo)
+		{
+			Type = addonType;
+			SearchParams = searchParams;
+			ModpackInfo = modpackInfo;
+		}
 
-        public abstract IPrototypeAddon CreateAddonPrototypeCreate(TAddonInfo addonInfo);
 
-        public abstract string GetAddonId(TAddonInfo addonInfo);
+		/// <summary>
+		/// Возвращает CatalogResult TAddonInfo
+		/// </summary>
+		public abstract CatalogResult<TAddonInfo> GetCatalog();
 
-        public abstract int GetDownloadCounts(TAddonInfo addonInfo);
+		public abstract IPrototypeAddon CreateAddonPrototypeCreate(TAddonInfo addonInfo);
 
-        public abstract string GetLastUpdate(TAddonInfo addonInfo);
+		public abstract string GetAddonId(TAddonInfo addonInfo);
 
-        public abstract string GetLogoUrl(TAddonInfo addonInfo);
-    }
+		public abstract int GetDownloadCounts(TAddonInfo addonInfo);
+
+		public abstract string GetLastUpdate(TAddonInfo addonInfo);
+
+		public abstract string GetLogoUrl(TAddonInfo addonInfo);
+	}
 }

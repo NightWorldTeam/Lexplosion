@@ -74,7 +74,11 @@ namespace Lexplosion.Logic.Management.Addons
 		private event Action _nothingAddonsInstalling;
 
 		private object _addAddonInstallingLocker = new();
-		public void AddAddonInstalling(InstanceAddon addon)
+		/// <summary>
+		/// Если начинаем скачивать аддон - вызываем этот метод
+		/// </summary>
+		/// <param name="addon"></param>
+		public void AddonInstallingStarted()
 		{
 			lock (_addAddonInstallingLocker)
 			{
@@ -82,7 +86,10 @@ namespace Lexplosion.Logic.Management.Addons
             }
 		}
 
-		public void RemoveAddonInstalling()
+		/// <summary>
+		/// Когда скачивание аддона завершается, то вызываем этот метод
+		/// </summary>
+		public void AddonInstallingFinished()
 		{
 			lock (_addAddonInstallingLocker)
 			{
@@ -94,20 +101,25 @@ namespace Lexplosion.Logic.Management.Addons
 			}
 		}
 
-		public void Xer(Action action)
+		/// <summary>
+		/// Выполняет делегат, когда ни один аддон не устанавливается
+		/// </summary>
+		/// <param name="action">Делегат на выполнение</param>
+		public void ExecuteWhenAddonsNotInstalling(Action action)
 		{
 			lock (_addAddonInstallingLocker)
 			{
 				if (_addonsInstalling == 0)
 				{
                     action();
+					return;
                 }
 
 				_nothingAddonsInstalling += action;
 			}
 		}
 
-        private Dictionary<ValueTuple<AddonType, string>, InstanceAddon> _installedAddons = new();
+		private Dictionary<ValueTuple<AddonType, string>, InstanceAddon> _installedAddons = new();
         private object _installedAddonLocker = new();
 
         public void AddInstalledAddon(InstanceAddon addon)

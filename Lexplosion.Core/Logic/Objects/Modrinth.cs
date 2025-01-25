@@ -1,4 +1,4 @@
-﻿using Lexplosion.Core.Logic.Management.Addons;
+﻿using Lexplosion.Logic.Management.Addons;
 using Lexplosion.Tools;
 using Newtonsoft.Json;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Globalization;
 
 namespace Lexplosion.Logic.Objects.Modrinth
 {
-    public enum ModrinthProjectType
+	public enum ModrinthProjectType
     {
         Unknown,
         Mod,

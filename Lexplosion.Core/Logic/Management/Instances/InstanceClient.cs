@@ -20,14 +20,13 @@ using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.Logic.Management.Importers;
 using Lexplosion.Logic.Management.Addons;
-using Lexplosion.Core.Logic.Objects;
 
 namespace Lexplosion.Logic.Management.Instances
 {
-    /// <summary>
-    /// Филиал ада в c#.
-    /// </summary>
-    public class InstanceClient : VMBase
+	/// <summary>
+	/// Филиал ада в c#.
+	/// </summary>
+	public class InstanceClient : VMBase
     {
         public readonly InstanceSource Type;
         private string _externalId = null;

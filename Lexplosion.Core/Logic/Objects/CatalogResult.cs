@@ -2,37 +2,37 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace Lexplosion.Core.Logic.Objects
+namespace Lexplosion.Logic.Objects
 {
-    public class CatalogResult<T> : IReadOnlyCollection<T>
-    {
-        public List<T> Collection { get; set; } = [];
-        public int TotalCount { get; set; }
+	public class CatalogResult<T> : IReadOnlyCollection<T>
+	{
+		public List<T> Collection { get; set; } = [];
+		public int TotalCount { get; set; }
 
-        public int Count => Collection.Count;
-
-
-        public CatalogResult()
-        {
-            
-        }
+		public int Count => Collection.Count;
 
 
-        public CatalogResult(List<T> collection, int pageCount)
-        {
-            Collection = collection;
-            TotalCount = pageCount;
-        }
+		public CatalogResult()
+		{
+
+		}
 
 
-        public IEnumerator<T> GetEnumerator()
-        {
-            return Collection.GetEnumerator();
-        }
+		public CatalogResult(List<T> collection, int pageCount)
+		{
+			Collection = collection;
+			TotalCount = pageCount;
+		}
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return Collection.GetEnumerator();
-        }
-    }
+
+		public IEnumerator<T> GetEnumerator()
+		{
+			return Collection.GetEnumerator();
+		}
+
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return Collection.GetEnumerator();
+		}
+	}
 }

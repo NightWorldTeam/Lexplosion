@@ -1,5 +1,4 @@
-﻿using Lexplosion.Core.Logic.Objects;
-using Lexplosion.Logic.Management.Installers;
+﻿using Lexplosion.Logic.Management.Installers;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects;
@@ -9,7 +8,7 @@ using System.Threading;
 
 namespace Lexplosion.Logic.Management.Sources
 {
-    class CurseforgeSource : IInstanceSource
+	class CurseforgeSource : IInstanceSource
     {
         // чтобы не создавать объект каждый вызов метода GetCatalog 
         private readonly IProjectCategory _modpacksAllCategory = new SimpleCategory()

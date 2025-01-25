@@ -1,5 +1,4 @@
-﻿using Lexplosion.Core.Logic.Objects;
-using Lexplosion.Global;
+﻿using Lexplosion.Global;
 using Lexplosion.Logic.Management.Installers;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network;
@@ -10,7 +9,7 @@ using System.Threading;
 
 namespace Lexplosion.Logic.Management.Sources
 {
-    class NightWorldSource : IInstanceSource
+	class NightWorldSource : IInstanceSource
     {
         public PrototypeInstance ContentManager { get => new NightworldInstance(); }
 

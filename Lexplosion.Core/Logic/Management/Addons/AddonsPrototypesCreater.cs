@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System;
 using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects.Modrinth;
 using Lexplosion.Logic.Objects.Curseforge;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Tools;
-using System.Linq;
-using System;
 
 namespace Lexplosion.Logic.Management.Addons
 {
@@ -14,6 +14,7 @@ namespace Lexplosion.Logic.Management.Addons
     {
         public static IPrototypeAddon CreateFromFile(BaseInstanceData indtanceData, string filePath)
         {
+			Runtime.DebugWrite("CreateFromFile");
             string md5;
             string sha1;
             long fileLenght;
@@ -41,6 +42,7 @@ namespace Lexplosion.Logic.Management.Addons
                                 bool isHash = !string.IsNullOrEmpty(file?.Hashes?.Sha512) && !string.IsNullOrEmpty(file.Hashes.Sha1);
                                 if (isHash && file.Hashes.Sha512 == sha512 && file.Hashes.Sha1 == sha1 && file.Size == fileLenght)
                                 {
+									Runtime.DebugWrite("Return modrinth addon");
                                     return new ModrinthAddon(indtanceData, projectFile);
                                 }
                             }
@@ -85,6 +87,7 @@ namespace Lexplosion.Logic.Management.Addons
 
                         if (fileSha1 == sha1 && fileMd5 == md5 && fileLenght == projectFile.fileLength)
                         {
+							Runtime.DebugWrite("return curseforge addon");
                             return new CurseforgeAddon(indtanceData, projectFile);
                         }
                     }

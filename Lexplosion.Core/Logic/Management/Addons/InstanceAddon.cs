@@ -283,7 +283,6 @@ namespace Lexplosion.Logic.Management.Addons
             return result;
         }
 
-
         public void InstallLatestVersion(DynamicStateHandler<SetValues<InstanceAddon, DownloadAddonRes>, InstallAddonState> stateHandler, bool downloadDependencies = true, bool isDependencie = false, IEnumerable<Modloader> acceptableModloaders = null)
         {
             IsInstalling = true;
@@ -309,7 +308,6 @@ namespace Lexplosion.Logic.Management.Addons
             _cancelTokenSource?.Cancel();
         }
 
-
         private void InstallAddon(bool downloadDependencies, DynamicStateHandler<SetValues<InstanceAddon, DownloadAddonRes>, InstallAddonState> stateHandler, bool isDependencie, IEnumerable<Modloader> acceptableModloaders)
         {
             Runtime.DebugWrite($"Download {Name}");
@@ -323,7 +321,7 @@ namespace Lexplosion.Logic.Management.Addons
                 Value2 = DownloadAddonRes.Successful
             }, InstallAddonState.StartDownload);
 
-            _synchronizer.AddAddonInstalling(this);
+            _synchronizer.AddonInstallingStarted();
 
             string instanceId = _modpackInfo.LocalId;
             using (InstalledAddons installedAddons = InstalledAddons.Get(instanceId))
@@ -354,7 +352,7 @@ namespace Lexplosion.Logic.Management.Addons
                         Value2 = DownloadAddonRes.IsCanselled
                     }, InstallAddonState.EndDownload);
 
-                    _synchronizer.RemoveAddonInstalling();
+                    _synchronizer.AddonInstallingFinished();
                     return;
                 }
 
@@ -416,7 +414,7 @@ namespace Lexplosion.Logic.Management.Addons
                         Value2 = ressult.Value2
                     }, InstallAddonState.EndDownload);
 
-                    _synchronizer.RemoveAddonInstalling();
+                    _synchronizer.AddonInstallingFinished();
                     return;
                 }
 
@@ -444,7 +442,7 @@ namespace Lexplosion.Logic.Management.Addons
                             Value2 = DownloadAddonRes.Successful
                         }, InstallAddonState.EndDownload);
 
-                        _synchronizer.RemoveAddonInstalling();
+                        _synchronizer.AddonInstallingFinished();
                         return;
                     }
 
@@ -501,7 +499,7 @@ namespace Lexplosion.Logic.Management.Addons
                         }, InstallAddonState.EndDownload);
                     }
 
-                    _synchronizer.RemoveAddonInstalling();
+                    _synchronizer.AddonInstallingFinished();
                     return;
                 }
 
@@ -515,7 +513,7 @@ namespace Lexplosion.Logic.Management.Addons
                 Value2 = DownloadAddonRes.Successful
             }, InstallAddonState.EndDownload);
 
-            _synchronizer.RemoveAddonInstalling();
+            _synchronizer.AddonInstallingFinished();
         }
 
         /// <summary>

@@ -1,5 +1,4 @@
-﻿using Lexplosion.Core.Logic.Objects;
-using Lexplosion.Logic.Management.Installers;
+﻿using Lexplosion.Logic.Management.Installers;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects;
@@ -10,7 +9,7 @@ using System.Threading;
 
 namespace Lexplosion.Logic.Management.Sources
 {
-    class ModrinthSource : IInstanceSource
+	class ModrinthSource : IInstanceSource
     {
         public PrototypeInstance ContentManager { get => new ModrinthInstance(); }
 
