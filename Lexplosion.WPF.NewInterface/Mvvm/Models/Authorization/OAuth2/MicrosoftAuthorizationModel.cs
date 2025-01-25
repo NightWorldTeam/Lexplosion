@@ -9,7 +9,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization.OAuth2
 {
     public class MicrosoftAuthorizationModel : AuthModelBase, IOAuth2Model
     {
-        private readonly string OAuth2Url = "https://login.live.com/oauth20_authorize.srf?client_id=ed0f84c7-4bf4-4a97-96c7-8c82b1e4ea0b&response_type=code&redirect_uri=https://night-world.org/requestProcessing/microsoftOAuth.php&scope=XboxLive.signin%20offline_access&state=NOT_NEEDED";
+        private const string OAuth2Url = "https://login.live.com/oauth20_authorize.srf?client_id=ed0f84c7-4bf4-4a97-96c7-8c82b1e4ea0b&response_type=code&redirect_uri=https://night-world.org/requestProcessing/microsoftOAuth.php&scope=XboxLive.signin%20offline_access&state=NOT_NEEDED";
 
 
         #region Constuctors
@@ -57,7 +57,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization.OAuth2
 
         private void CommandReceiver_MicrosoftAuthPassed(string microsoftData, MicrosoftAuthRes result)
         {
-
+            PerformMicrosoftAuthCode(result, microsoftData);
         }
 
 
@@ -65,16 +65,47 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization.OAuth2
         {
             var account = new Account(AccountType.Microsoft);
 
+            if (Account.LaunchAccount == null) 
+            {
+                account.IsLaunch = true;
+            }
+
             Runtime.TaskRun(() =>
             {
                 var authCode = account.Auth(microsoftData);
                 App.Current.Dispatcher.Invoke(() =>
                 {
-                    PerformAuthCode(account, authCode);
+                    PerformNightWorldAuthCode(account, authCode);
                     // TODO: WARINING: WINDOWS ONLY METHOD
                     NativeMethods.ShowProcessWindows(Runtime.CurrentProcess.MainWindowHandle);
                 });
             });
+        }
+
+
+        protected virtual void PerformMicrosoftAuthCode(MicrosoftAuthRes authCode, string microsoftData = "")
+        {
+            //TODO: Перевести
+            switch (authCode)
+            {
+                case MicrosoftAuthRes.Successful:
+                    LogIn(microsoftData);
+                    break;
+                case MicrosoftAuthRes.UnknownError:
+                    _appCore.MessageService.Error("AuthErrorMicrosoftUnknownError", true);
+                    break;
+                case MicrosoftAuthRes.UserDenied:
+                    _appCore.MessageService.Error("AuthErrorMicrosoftUserDenied", true);
+                    break;
+                case MicrosoftAuthRes.Minor:
+                    _appCore.MessageService.Error("AuthErrorMicrosoftMinor", true);
+                    break;
+                case MicrosoftAuthRes.NoXbox:
+                    _appCore.MessageService.Error("AuthErrorNoXbox", true);
+                    break;
+                default:
+                    break;
+            }
         }
 
 

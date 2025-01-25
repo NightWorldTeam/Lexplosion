@@ -65,7 +65,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
             typeof(SolidColorBrush),
             typeof(MessageItem),
             new FrameworkPropertyMetadata(
-                defaultValue: null,
+                defaultValue: new SolidColorBrush(Color.FromRgb(37, 150, 190)),
                 propertyChangedCallback: OnInfoIconColorChanged
             )
         );
@@ -76,7 +76,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
                 typeof(SolidColorBrush),
                 typeof(MessageItem),
                 new FrameworkPropertyMetadata(
-                    defaultValue: null,
+                    defaultValue: new SolidColorBrush(Color.FromRgb(81, 204, 154)),
                     propertyChangedCallback: OnSuccessIconColorChanged
                 )
             );
@@ -87,7 +87,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
                 typeof(SolidColorBrush),
                 typeof(MessageItem),
                 new FrameworkPropertyMetadata(
-                    defaultValue: null,
+                    defaultValue: new SolidColorBrush(Color.FromRgb(255, 181, 70)),
                     propertyChangedCallback: OnWarningIconColorChanged
                 )
             );
@@ -98,7 +98,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
                 typeof(SolidColorBrush),
                 typeof(MessageItem),
                 new FrameworkPropertyMetadata(
-                    defaultValue: null,
+                    defaultValue: new SolidColorBrush(Color.FromRgb(255, 63, 63)),
                     propertyChangedCallback: OnErrorIconColorChanged
                 )
             );

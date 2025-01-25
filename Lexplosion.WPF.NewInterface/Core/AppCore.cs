@@ -1,10 +1,12 @@
 ﻿
+using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Controls.Message.Core;
 using Lexplosion.WPF.NewInterface.Core.Services;
 using Lexplosion.WPF.NewInterface.Stores;
 using System;
 using System.Threading;
 using System.Windows.Documents;
+using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Core
 {
@@ -46,21 +48,20 @@ namespace Lexplosion.WPF.NewInterface.Core
         {
             UIThread = uiThread;
             MessageService = new MessageService();
+        }
 
-            Runtime.TaskRun(() =>
+
+        public ICommand BuildNavigationCommand(ViewModelBase viewModel, Action<ViewModelBase> action = null) 
+        {
+            return BuildNavigationCommand<ViewModelBase>(viewModel, action);
+        }
+
+        public ICommand BuildNavigationCommand<T>(T viewModel, Action<T> action = null) where T : ViewModelBase 
+        {
+            return new NavigateCommand<ViewModelBase>(NavigationStore, () =>
             {
-                for (var i = 0; i < 4; i++) 
-                {
-                    Thread.Sleep(1000);
-                    if (i == 0) 
-                        MessageService.Info("This is info message");
-                    else if (i == 1)
-                        MessageService.Success("This is success message");
-                    else if (i == 2)
-                        MessageService.Warning("This is warning message");                    
-                    else
-                        MessageService.Error("This is error message");
-                }
+                action?.Invoke(viewModel);
+                return viewModel;
             });
         }
     }

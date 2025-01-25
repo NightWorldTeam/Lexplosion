@@ -166,7 +166,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Services
 
                 hoverColor = colorSelectorByLuminance(color, 10);
                 pressedColor = colorSelectorByLuminance(color, 20);
-                disabledColor = colorSelectorByLuminance(color, 70);
+                disabledColor = colorSelectorByLuminance(Colors.Gray, 50);
             }
 
             ////*** Default Button Background ***//

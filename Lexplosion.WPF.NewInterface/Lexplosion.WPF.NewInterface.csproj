@@ -143,6 +143,9 @@
     <Compile Include="Extensions\ScrollViewerExtensions.cs" />
     <Compile Include="Extensions\StyleSelectors\LastRowItemWrapPanelStyleSelector.cs" />
     <Compile Include="Mvvm\Models\Authorization\AuthorizationMenuModel.cs" />
+    <Compile Include="Mvvm\Models\Authorization\Modal\MicrosoftManualInputModal.cs" />
+    <Compile Include="Mvvm\Models\Authorization\NightWorldRegistrationModel.cs" />
+    <Compile Include="Mvvm\Models\Authorization\NoAccountAuthorizationModel.cs" />
     <Compile Include="Mvvm\Models\InstanceControllers\InstanceSharesController.cs" />
     <Compile Include="Mvvm\Models\InstanceTransfer\DistributedInstance.cs" />
     <Compile Include="Mvvm\Models\InstanceTransfer\InstanceDistributionModel.cs" />
@@ -152,6 +155,10 @@
     <Compile Include="Mvvm\Models\MainContent\MainMenu\Friends\FriendRequestsModel.cs" />
     <Compile Include="Mvvm\Models\MainContent\MainMenu\Friends\FriendsModel.cs" />
     <Compile Include="Mvvm\Models\MainContent\MainMenu\GeneralSettings\AccountsSettingsModel.cs" />
+    <Compile Include="Mvvm\ViewModels\Authorization\Modal\MicrosoftManualInputViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\Authorization\NightWorldRegistrationViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\Authorization\NoAccountAuthorizationViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\Authorization\OAuth2\MicrosoftAuthorizationViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\ModalFactory\ModalFactoryBase.cs" />
     <Compile Include="Mvvm\ViewModels\ModalFactory\ModalInstanceCreatorFactory.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\ConfirmActionViewModel.cs" />
@@ -160,6 +167,9 @@
     <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\InstanceDistributionViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\InstanceShareLayoutViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\InstanceShareViewModel.cs" />
+    <Compile Include="Mvvm\Views\Modal\Authorization\MicrosoftManualInputView.xaml.cs">
+      <DependentUpon>MicrosoftManualInputView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Mvvm\Views\Modal\ConfirmAction\ConfirmActionView.xaml.cs">
       <DependentUpon>ConfirmActionView.xaml</DependentUpon>
     </Compile>
@@ -186,6 +196,12 @@
     </Compile>
     <Compile Include="Mvvm\Views\Pages\AddonsRepositories\Lexplosion\InstalledAddonsRepositoryView.xaml.cs">
       <DependentUpon>InstalledAddonsRepositoryView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Views\Pages\Authorization\Microsoft\MicrosoftAuthorizationView.xaml.cs">
+      <DependentUpon>MicrosoftAuthorizationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Views\Pages\Authorization\NightWorld\NightWorldRegistrationView.xaml.cs">
+      <DependentUpon>NightWorldRegistrationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Mvvm\Views\Pages\WelcomeView.xaml.cs">
       <DependentUpon>WelcomeView.xaml</DependentUpon>
@@ -406,13 +422,13 @@
     <Compile Include="Mvvm\Views\Pages\Authorization\AuthorizationMenuView.xaml.cs">
       <DependentUpon>AuthorizationMenuView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Mvvm\Views\Pages\Authorization\DigitCodeConfirmationVIew.xaml.cs">
+    <Compile Include="Mvvm\Views\Pages\Authorization\NightWorld\DigitCodeConfirmationVIew.xaml.cs">
       <DependentUpon>DigitCodeConfirmationVIew.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Mvvm\Views\Pages\Authorization\NightWorldAuthFormView.xaml.cs">
+    <Compile Include="Mvvm\Views\Pages\Authorization\NightWorld\NightWorldAuthFormView.xaml.cs">
       <DependentUpon>NightWorldAuthFormView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Mvvm\Views\Pages\Authorization\PasswordResetView.xaml.cs">
+    <Compile Include="Mvvm\Views\Pages\Authorization\NightWorld\PasswordResetView.xaml.cs">
       <DependentUpon>PasswordResetView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Core\ViewModel\ViewModelBase.cs" />
@@ -544,6 +560,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Mvvm\Views\Modal\Authorization\MicrosoftManualInputView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Mvvm\Views\Modal\ConfirmAction\ConfirmActionView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -589,6 +609,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Mvvm\Views\Pages\AddonsRepositories\Lexplosion\InstalledAddonsRepositoryView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Mvvm\Views\Pages\Authorization\Microsoft\MicrosoftAuthorizationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Mvvm\Views\Pages\Authorization\NightWorld\NightWorldRegistrationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -748,15 +776,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Mvvm\Views\Pages\Authorization\DigitCodeConfirmationVIew.xaml">
+    <Page Include="Mvvm\Views\Pages\Authorization\NightWorld\DigitCodeConfirmationVIew.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Mvvm\Views\Pages\Authorization\NightWorldAuthFormView.xaml">
+    <Page Include="Mvvm\Views\Pages\Authorization\NightWorld\NightWorldAuthFormView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Mvvm\Views\Pages\Authorization\PasswordResetView.xaml">
+    <Page Include="Mvvm\Views\Pages\Authorization\NightWorld\PasswordResetView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -976,7 +1004,6 @@
   <ItemGroup>
     <Folder Include="Core\Extensions\" />
     <Folder Include="Core\StyleSelectors\" />
-    <Folder Include="Mvvm\ViewModels\Authorization\OAuth2\" />
     <Folder Include="Mvvm\ViewModels\InstanceForm\" />
   </ItemGroup>
   <ItemGroup>

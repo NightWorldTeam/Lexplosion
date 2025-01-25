@@ -54,7 +54,10 @@
                         Text="{Binding Model.Login, UpdateSourceTrigger=PropertyChanged}" />
 
                     <!--  Password Field  -->
-                    <controls:BindablePasswordBox FontSize="14" Password="{Binding Model.Password, UpdateSourceTrigger=PropertyChanged}" />
+                    <controls:BindablePasswordBox
+                        Margin="0,8,0,0"
+                        FontSize="14"
+                        Password="{Binding Model.Password, UpdateSourceTrigger=PropertyChanged}" />
 
                     <Grid Margin="0,8,0,0" ShowGridLines="False">
                         <Grid.ColumnDefinitions>
@@ -95,22 +98,30 @@
                                     Width="32"
                                     Height="32"
                                     Margin="12,0,0,0"
+                                    Padding="6"
                                     Background="{DynamicResource SeparateSolidColorBrush}"
-                                    CornerRadius="5" />
+                                    CornerRadius="5">
+                                    <Border>
+                                        <Border.Background>
+                                            <ImageBrush ImageSource="pack://application:,,,/assets/images/icons/microsoft.png" />
+                                        </Border.Background>
+                                    </Border>
+                                </Border>
 
                                 <Border
                                     Width="32"
                                     Height="32"
                                     Margin="12,0,0,0"
+                                    Padding="6"
                                     Background="{DynamicResource SeparateSolidColorBrush}"
-                                    CornerRadius="5" />
+                                    CornerRadius="5">
 
-                                <Border
-                                    Width="32"
-                                    Height="32"
-                                    Margin="12,0,0,0"
-                                    Background="{DynamicResource SeparateSolidColorBrush}"
-                                    CornerRadius="5" />
+                                    <Border>
+                                        <Border.Background>
+                                            <ImageBrush ImageSource="pack://application:,,,/assets/images/icons/non_image1.png" />
+                                        </Border.Background>
+                                    </Border>
+                                </Border>
                             </WrapPanel>
 
                             <WrapPanel
@@ -119,7 +130,7 @@
                                 HorizontalAlignment="Center">
                                 <TextBlock Margin="4,0,0,0">
                                     <Run Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="{DynamicResource DoNothaveAnyAccount}" />
-                                    <Hyperlink>
+                                    <Hyperlink Command="{Binding ToRegistrationCommand}">
                                         <Run Text="{DynamicResource SingUp}" />
                                     </Hyperlink>
                                 </TextBlock>

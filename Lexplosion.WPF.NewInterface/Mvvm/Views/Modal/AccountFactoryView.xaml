@@ -231,6 +231,7 @@
                             </Border>
 
                             <!--  Microsoft Authorization Info Message  -->
+                            <!--  TODO: Вынести в отдельный компонент  -->
                             <Border
                                 Margin="0,16,0,0"
                                 Padding="16"

@@ -188,7 +188,7 @@
                     Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
                     Text="{DynamicResource DoNothaveAnyAccount}" />
                 <TextBlock Margin="4,0,0,0" FontSize="14">
-                    <Hyperlink>
+                    <Hyperlink Command="{Binding ToRegisterCommand}">
                         <Run Text="{DynamicResource SingUp}" />
                     </Hyperlink>
                 </TextBlock>

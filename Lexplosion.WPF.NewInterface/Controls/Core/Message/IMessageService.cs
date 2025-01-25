@@ -7,9 +7,9 @@ namespace Lexplosion.WPF.NewInterface.Controls.Message.Core
     {
         public IEnumerable<MessageItemModel> Messages { get; } 
 
-        public void Info(string message);
-        public void Success(string message);
-        public void Warning(string message);
-        public void Error(string message);
+        public void Info(string message, bool isResourceKey = false);
+        public void Success(string message, bool isResourceKey = false);
+        public void Warning(string message, bool isResourceKey = false);
+        public void Error(string message, bool isResourceKey = false);
     }
 }

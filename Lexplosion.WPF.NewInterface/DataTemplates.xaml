@@ -32,6 +32,15 @@
     <DataTemplate DataType="{x:Type authviewmodels:DigitCodeConfirmationViewModel}">
         <authviews:DigitCodeConfirmationVIew />
     </DataTemplate>
+    <DataTemplate DataType="{x:Type authviewmodels:NightWorldRegistrationViewModel}">
+        <authviews:NightWorldRegistrationView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type authviewmodels:MicrosoftAuthorizationViewModel}">
+        <authviews:MicrosoftAuthorizationView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type authviewmodels:MicrosoftManualInputViewModel}">
+        <modalviews:MicrosoftManualInputView />
+    </DataTemplate>
 
 
     <!--  MainContent  -->

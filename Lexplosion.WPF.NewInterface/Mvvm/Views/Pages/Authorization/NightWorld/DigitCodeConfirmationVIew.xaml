@@ -8,6 +8,8 @@
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.Authorization"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Width="350"
+    Height="470"
     d:DataContext="{d:DesignInstance Type=authViewModels:DigitCodeConfirmationViewModel}"
     mc:Ignorable="d">
 
@@ -53,17 +55,13 @@
                 Text="Resend code in 0:59"
                 TextWrapping="WrapWithOverflow" />
 
-            <Button
+            <controls:AdvancedButton
                 Grid.Row="5"
-                Width="270"
                 Margin="0,32,0,0"
-                HorizontalContentAlignment="CENTER"
                 Click="Button_Click"
                 Content="Подтвердить"
-                FontSize="16"
-                FontWeight="Medium"
-                Foreground="White"
-                IsEnabled="{Binding Model.IsFullCode, Mode=OneWay}" />
+                IsEnabled="{Binding Model.IsFullCode, Mode=OneWay}"
+                Style="{DynamicResource DefaultAdvancedButton}" />
         </Grid>
     </Border>
 </UserControl>

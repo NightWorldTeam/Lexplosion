@@ -9,52 +9,52 @@ namespace Lexplosion.WPF.NewInterface.Controls.Message.Core
         private readonly ObservableCollection<MessageItemModel> _messages = new();
         public IEnumerable<MessageItemModel> Messages => _messages;
 
-        public void Error(string message)
+        public void Error(string message, bool isResourceKey = false)
         {
             App.Current.Dispatcher.Invoke(() => 
             {
                 _messages.Add(new()
                 {
-                    Text = message,
+                    Text = !isResourceKey ? message : (string)App.Current.Resources[message],
                     Type = MessageType.Error,
                     CreationDate = System.DateTime.Now
                 });
             });
         }
 
-        public void Info(string message)
+        public void Info(string message, bool isResourceKey = false)
         {
             App.Current.Dispatcher.Invoke(() =>
             {
                 _messages.Add(new()
                 {
-                    Text = message,
+                    Text = !isResourceKey ? message : (string)App.Current.Resources[message],
                     Type = MessageType.Info,
                     CreationDate = System.DateTime.Now
                 });
             });
         }
 
-        public void Success(string message)
+        public void Success(string message, bool isResourceKey = false)
         {
             App.Current.Dispatcher.Invoke(() =>
             {
                 _messages.Add(new()
                 {
-                    Text = message,
+                    Text = !isResourceKey ? message : (string)App.Current.Resources[message],
                     Type = MessageType.Success,
                     CreationDate = System.DateTime.Now
                 });
             });
         }
 
-        public void Warning(string message)
+        public void Warning(string message, bool isResourceKey = false)
         {
             App.Current.Dispatcher.Invoke(() =>
             {
                 _messages.Add(new()
                 {
-                    Text = message,
+                    Text = !isResourceKey ? message : (string)App.Current.Resources[message],
                     Type = MessageType.Warning,
                     CreationDate = System.DateTime.Now
                 });

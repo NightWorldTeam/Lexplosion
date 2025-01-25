@@ -513,6 +513,11 @@
     <s:String x:Key="RememberMe">Запомнить меня</s:String>
     <s:String x:Key="LogIn">Войти</s:String>
 
+    <s:String x:Key="RegistrationInNightWorld">Регистрация NightWorld</s:String>
+    <s:String x:Key="EmailAddress">Почта</s:String>
+    <s:String x:Key="CreateAccount">Создать аккаунт</s:String>
+    <s:String x:Key="AlreadyHaveAnyAccount">У вас уже есть учетная запись?</s:String>
+
     <!--  endregion Authorization  -->
 
 

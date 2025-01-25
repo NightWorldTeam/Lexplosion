@@ -1,8 +1,8 @@
 ﻿using Lexplosion.Logic.Management.Accounts;
-using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization;
-using Lexplosion.WPF.NewInterface.Stores;
+using System;
+using System.Collections.Generic;
 using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Authorization
@@ -10,13 +10,19 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Authorization
     public sealed class AuthorizationMenuViewModel : ViewModelBase
     {
         private readonly AppCore _appCore;
-        private readonly ICommand _toMainMenu;
-
-        private readonly ViewModelBase _microsoft;
-        private readonly ViewModelBase _nightWorld;
-        private readonly ViewModelBase _withoutAccount;
-
+        private readonly Dictionary<Type, Action> _navigationByType = new();
+        
+     
         public AuthorizationMenuModel Model { get; }
+
+
+        #region Commands
+
+
+        public ICommand ToRegisterCommand { get; }
+
+
+        #endregion Commands
 
 
         #region Constructors
@@ -25,21 +31,37 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Authorization
         public AuthorizationMenuViewModel(AppCore appCore, ICommand toMainMenu)
         {
             _appCore = appCore;
-            _toMainMenu = toMainMenu;
 
             Account.AccountAdded += (account) => 
             {
                 toMainMenu.Execute(null);
             };
 
-            var toNightWorldForm = new NavigateCommand<ViewModelBase>(_appCore.NavigationStore, () => new NightWorldAuthorizationViewModel(appCore));
-            var toMicrosoftForm = new NavigateCommand<ViewModelBase>(_appCore.NavigationStore, () => null);
-            var toForm = new NavigateCommand<ViewModelBase>(_appCore.NavigationStore, () => null);
+            var backCommand = _appCore.BuildNavigationCommand(this);
 
-            Model = new AuthorizationMenuModel(toNightWorldForm, toMicrosoftForm, toForm);
+            ToRegisterCommand = _appCore.BuildNavigationCommand(new NightWorldRegistrationViewModel(appCore, backCommand, NavigateTo));
+
+            var toNightWorldForm = _appCore.BuildNavigationCommand(new NightWorldAuthorizationViewModel(appCore, NavigateTo, ToRegisterCommand));
+            var toMicrosoftForm = _appCore.BuildNavigationCommand(new MicrosoftAuthorizationViewModel(appCore, NavigateTo), (vm) => vm.Model.FollowTo());
+            var toNoAccountForm = _appCore.BuildNavigationCommand(new NoAccountAuthorizationViewModel(appCore, NavigateTo));
+
+            _navigationByType[typeof(NightWorldAuthorizationViewModel)] = () => toNightWorldForm?.Execute(null);
+            _navigationByType[typeof(MicrosoftAuthorizationViewModel)] = () => toMicrosoftForm?.Execute(null);
+            _navigationByType[typeof(NoAccountAuthorizationViewModel)] = () => toNoAccountForm?.Execute(null);
+
+            Model = new AuthorizationMenuModel(toNightWorldForm, toMicrosoftForm, toNoAccountForm);
         }
 
 
         #endregion Constructors
+
+
+        void NavigateTo(Type type) 
+        {
+            if (_navigationByType.TryGetValue(type, out var navigate)) 
+            {
+                navigate();
+            }
+        }
     }
 }

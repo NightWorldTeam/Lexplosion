@@ -11,7 +11,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization
 
     public abstract class AuthModelBase : ViewModelBase
     {
-        private readonly AppCore _appCore;
+        protected readonly AppCore _appCore;
 
         protected AuthModelBase(AppCore appCore)
         {
@@ -19,11 +19,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization
         }
 
         /// <summary>
-        /// Обрабатывает результат авторизации
+        /// Обрабатывает результат авторизации NightWorld
         /// </summary>
         /// <param name="accountType">Тип аккаунта авторизации</param>
         /// <param name="authCode">Код результата авторизации</param>
-        protected virtual void PerformAuthCode(Account account, AuthCode authCode, bool isOAuth2 = false)
+        protected virtual void PerformNightWorldAuthCode(Account account, AuthCode authCode, bool isOAuth2 = false)
         {
             switch (authCode)
             {
@@ -34,26 +34,31 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization
                     }
                 case AuthCode.DataError:
                     {
+                        // TODO: Translate
                         _appCore.MessageService.Error("Ошибка авторизации");
                         break;
                     }
                 case AuthCode.NoConnect:
                     {
+                        // TODO: Translate
                         _appCore.MessageService.Error("Не удалось соединиться с сервером");
                         break;
                     }
                 case AuthCode.TokenError:
                     {
+                        // TODO: Translate
                         _appCore.MessageService.Error("Ошибка токена");
                         break;
                     }
                 case AuthCode.SessionExpired:
                     {
+                        // TODO: Translate
                         _appCore.MessageService.Error("Сессия истекла");
                         break;
                     }
                 default:
                     {
+                        // TODO: Translate
                         _appCore.MessageService.Error("Unknown error");
                         break;
                     }
