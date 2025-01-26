@@ -41,7 +41,7 @@ namespace Lexplosion.WPF.NewInterface.Stores
         public void Open(IModalViewModel viewModel)
         {
             CurrentViewModel = viewModel;
-            CurrentViewModel.CloseCommandExecutedEvent += Close;
+            CurrentViewModel.CloseCommandExecutedEvent += CloseInternal;
         }
 
         public void RegisterAbstractFactory(Type type, ModalFactoryBase factory) 
@@ -68,10 +68,20 @@ namespace Lexplosion.WPF.NewInterface.Stores
             Open(_modalAbstractFactoriesByType[type]?.Invoke());
         }
 
-        public void Close(object obj)
+        public void Close()
         {
-            CurrentViewModel.CloseCommandExecutedEvent -= Close;
+            if (CurrentViewModel == null) 
+            {
+                return;
+            }
+
+            CurrentViewModel.CloseCommandExecutedEvent -= CloseInternal;
             CurrentViewModel = null;
+        }
+
+        private void CloseInternal(object obj) 
+        {
+            Close();
         }
 
         private void OnCurrentViewModelChanged()

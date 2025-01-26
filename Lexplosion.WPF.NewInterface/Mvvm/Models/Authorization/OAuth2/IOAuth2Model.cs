@@ -3,10 +3,6 @@
     public interface IOAuth2Model : IAuthModel
     {
         /// <summary>
-        /// Направляет на страницу сервиса.
-        /// </summary>
-        void FollowTo();
-        /// <summary>
         /// Отмена процесса авторизации.
         /// </summary>
         void Cancel();

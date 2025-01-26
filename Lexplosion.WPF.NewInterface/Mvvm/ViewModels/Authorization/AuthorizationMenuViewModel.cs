@@ -42,7 +42,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Authorization
             ToRegisterCommand = _appCore.BuildNavigationCommand(new NightWorldRegistrationViewModel(appCore, backCommand, NavigateTo));
 
             var toNightWorldForm = _appCore.BuildNavigationCommand(new NightWorldAuthorizationViewModel(appCore, NavigateTo, ToRegisterCommand));
-            var toMicrosoftForm = _appCore.BuildNavigationCommand(new MicrosoftAuthorizationViewModel(appCore, NavigateTo), (vm) => vm.Model.FollowTo());
+            var toMicrosoftForm = _appCore.BuildNavigationCommand(new MicrosoftAuthorizationViewModel(appCore, NavigateTo, backCommand), (vm) => vm.Model.LogIn());
             var toNoAccountForm = _appCore.BuildNavigationCommand(new NoAccountAuthorizationViewModel(appCore, NavigateTo));
 
             _navigationByType[typeof(NightWorldAuthorizationViewModel)] = () => toNightWorldForm?.Execute(null);

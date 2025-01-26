@@ -80,12 +80,28 @@
                             </controls:LoadingBoard.BorderColor>
                         </controls:LoadingBoard>
 
-                        <controls:AdvancedButton
-                            Padding="16,0"
-                            HorizontalAlignment="Center"
-                            Command="{Binding ManualInputCommand}"
-                            Content="Ручной ввод"
-                            Style="{StaticResource DefaultAdvancedButton}" />
+                        <Grid HorizontalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <!--  TODO: Translate  -->
+                            <controls:AdvancedButton
+                                Padding="16,0"
+                                HorizontalAlignment="Left"
+                                Command="{Binding ManualInputCommand}"
+                                Content="Ручной ввод"
+                                Style="{StaticResource sm-default}" />
+
+                            <controls:AdvancedButton
+                                Grid.Column="1"
+                                Margin="8,0,0,0"
+                                Padding="16,0"
+                                HorizontalAlignment="Right"
+                                Command="{Binding CancelCommand}"
+                                Content="Отмена"
+                                Style="{StaticResource sm-ghost}" />
+                        </Grid>
                     </StackPanel>
                 </Grid>
             </Border>
