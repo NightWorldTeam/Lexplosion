@@ -10,6 +10,7 @@
     xmlns:vm="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Authorization"
     Width="350"
     Height="470"
+    d:DataContext="{d:DesignInstance Type=vm:NightWorldAuthorizationViewModel}"
     mc:Ignorable="d">
     <Grid>
         <Border Padding="50,32">
@@ -69,7 +70,7 @@
                         <CheckBox
                             VerticalAlignment="Center"
                             Content="{DynamicResource RememberMe}"
-                            IsChecked="{Binding IsRememberMe, UpdateSourceTrigger=PropertyChanged}" />
+                            IsChecked="{Binding Model.IsRememberMe, UpdateSourceTrigger=PropertyChanged}" />
                         <!--  Forgot Password Hyperlink  -->
                         <TextBlock
                             Grid.Column="1"
@@ -94,34 +95,58 @@
                                 Foreground="White" />
 
                             <WrapPanel Margin="0,12,0,0" HorizontalAlignment="Center">
-                                <Border
-                                    Width="32"
-                                    Height="32"
-                                    Margin="12,0,0,0"
-                                    Padding="6"
-                                    Background="{DynamicResource SeparateSolidColorBrush}"
-                                    CornerRadius="5">
-                                    <Border>
-                                        <Border.Background>
-                                            <ImageBrush ImageSource="pack://application:,,,/assets/images/icons/microsoft.png" />
-                                        </Border.Background>
-                                    </Border>
-                                </Border>
 
-                                <Border
-                                    Width="32"
+                                <!--  microsoft  -->
+                                <Button
                                     Height="32"
-                                    Margin="12,0,0,0"
-                                    Padding="6"
-                                    Background="{DynamicResource SeparateSolidColorBrush}"
-                                    CornerRadius="5">
+                                    Command="{Binding ToMicrosoftCommand}"
+                                    ToolTip="{DynamicResource ViaMicrosoft}"
+                                    ToolTipService.HorizontalOffset="-85"
+                                    ToolTipService.VerticalOffset="40">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="{x:Type Button}">
+                                            <Border
+                                                Width="32"
+                                                Height="32"
+                                                Padding="6"
+                                                Background="{DynamicResource SeparateSolidColorBrush}"
+                                                CornerRadius="5">
+                                                <Border>
+                                                    <Border.Background>
+                                                        <ImageBrush ImageSource="pack://application:,,,/assets/images/icons/microsoft.png" />
+                                                    </Border.Background>
+                                                </Border>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
 
-                                    <Border>
-                                        <Border.Background>
-                                            <ImageBrush ImageSource="pack://application:,,,/assets/images/icons/non_image1.png" />
-                                        </Border.Background>
-                                    </Border>
-                                </Border>
+                                <!--  no account  -->
+                                <Button
+                                    Height="32"
+                                    Command="{Binding ToNoAccountCommand}"
+                                    ToolTip="{DynamicResource WithoutAccount}"
+                                    ToolTipService.HorizontalOffset="90"
+                                    ToolTipService.VerticalOffset="40">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="{x:Type Button}">
+                                            <Border
+                                                Width="32"
+                                                Height="32"
+                                                Margin="12,0,0,0"
+                                                Padding="6"
+                                                Background="{DynamicResource SeparateSolidColorBrush}"
+                                                CornerRadius="5">
+
+                                                <Border>
+                                                    <Border.Background>
+                                                        <ImageBrush ImageSource="pack://application:,,,/assets/images/icons/non_image1.png" />
+                                                    </Border.Background>
+                                                </Border>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
                             </WrapPanel>
 
                             <WrapPanel

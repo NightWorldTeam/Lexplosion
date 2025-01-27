@@ -7,15 +7,6 @@ namespace Lexplosion.WPF.NewInterface.Stores
 {
     public sealed class ModalNavigationStore
     {
-        //private static ModalNavigationStore _modalNavigationStore;
-        //public static ModalNavigationStore Instance { get => _modalNavigationStore ?? new ModalNavigationStore(); }
-
-
-        //private ModalNavigationStore()
-        //{
-        //    _modalNavigationStore = this;
-        //}
-
         public ModalNavigationStore()
         {
             

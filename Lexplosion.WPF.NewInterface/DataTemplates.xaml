@@ -41,6 +41,9 @@
     <DataTemplate DataType="{x:Type authviewmodels:MicrosoftManualInputViewModel}">
         <modalviews:MicrosoftManualInputView />
     </DataTemplate>
+    <DataTemplate DataType="{x:Type authviewmodels:NoAccountAuthorizationViewModel}">
+        <authviews:NoAccountAuthorizationView />
+    </DataTemplate>
 
 
     <!--  MainContent  -->

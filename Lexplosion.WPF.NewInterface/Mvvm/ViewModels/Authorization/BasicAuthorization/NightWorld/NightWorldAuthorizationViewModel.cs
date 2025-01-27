@@ -65,7 +65,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Authorization
         {
             _appCore = appCore;
             ToMicrosoftCommand = new RelayCommand((obj) => navigateTo(typeof(MicrosoftAuthorizationViewModel)));
-            ToNoAccountCommand = new RelayCommand((obj) => navigateTo(typeof(NoAccountAuthorizationModel)));
+            ToNoAccountCommand = new RelayCommand((obj) => navigateTo(typeof(NoAccountAuthorizationViewModel)));
             ToRegistrationCommand = toRegistrationCommand;
 
             _navigationStore = appCore.NavigationStore;

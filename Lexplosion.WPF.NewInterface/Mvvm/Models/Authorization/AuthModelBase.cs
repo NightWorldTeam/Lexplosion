@@ -1,9 +1,6 @@
-﻿using Lexplosion;
-using Lexplosion.Core.Tools.Notification;
-using Lexplosion.Global;
+﻿using Lexplosion.Core.Tools.Notification;
 using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.WPF.NewInterface.Core;
-using System;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization
 {
@@ -73,6 +70,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization
         private void SuccessfulAuthorization(Account account)
         {
             account.IsActive = true;
+            account.IsLaunch = true;
             account.Save();
         }
     }

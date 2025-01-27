@@ -32,9 +32,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization
         {
             AccountTypes = new List<AccountTypeMenuItem>()
             {
-                new AccountTypeMenuItem("NightWorld", "pack://Application:,,,/Assets/images/icons/nightworld.png", toNightWorldForm),
-                new AccountTypeMenuItem("Microsoft", "pack://Application:,,,/Assets/images/icons/microsoft.png", toMicrosoftForm),
-                new AccountTypeMenuItem("Offline", "pack://Application:,,,/Assets/images/icons/non_image1.png", toOffline),
+                new AccountTypeMenuItem("ViaNightWorld", "pack://Application:,,,/Assets/images/icons/nightworld.png", toNightWorldForm),
+                new AccountTypeMenuItem("ViaMicrosoft", "pack://Application:,,,/Assets/images/icons/microsoft.png", toMicrosoftForm),
+                new AccountTypeMenuItem("WithoutAccount", "pack://Application:,,,/Assets/images/icons/non_image1.png", toOffline),
             };
 
             var loadedNWAccount = LoadSavedAccount(AccountType.NightWorld);

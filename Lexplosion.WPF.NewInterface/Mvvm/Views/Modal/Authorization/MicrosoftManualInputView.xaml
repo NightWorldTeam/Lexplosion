@@ -52,7 +52,7 @@
                         FontSize="18"
                         FontWeight="Medium"
                         Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                        Text="Ручной ввод токена Microsoft" />
+                        Text="{DynamicResource ManualInputMicrosoftTokenTitle}" />
 
                     <!--  Close Button  -->
                     <controls:AdvancedButton
@@ -100,7 +100,7 @@
                                 FontSize="16"
                                 FontWeight="Medium"
                                 Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                Text="Важно!" />
+                                Text="{DynamicResource Important}" />
                         </StackPanel>
 
 
@@ -111,7 +111,7 @@
                                 FontSize="16"
                                 FontWeight="Normal"
                                 Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                Text="Никогда и никому не передавайте/показывайте свой аутентификационный токен. Если токен получат третьи лица, они получат доступ к вашему аккаунту!"
+                                Text="{DynamicResource MicrosoftManualInputImportantMessage}"
                                 TextWrapping="WrapWithOverflow" />
                         </StackPanel>
                     </StackPanel>
@@ -140,7 +140,7 @@
                                     FontSize="14"
                                     FontWeight="Medium"
                                     Foreground="Green"
-                                    Text="Формат токена верный" />
+                                    Text="{DynamicResource CorrectTokenFormat}" />
 
 
                             </StackPanel>
@@ -150,14 +150,14 @@
                                 FontSize="14"
                                 FontWeight="Medium"
                                 Foreground="Red"
-                                Text="Формат токена неверный" />
+                                Text="{DynamicResource WrongTokenFormat}" />
                         </core:If.False>
                     </core:If>
 
                     <controls:AdvancedTextBox
                         Grid.Row="1"
                         VerticalAlignment="Stretch"
-                        Placeholder="Введите microsoft токен в данное поле"
+                        Placeholder="{DynamicResource ManualInputTokenPlaceholder}"
                         Text="{Binding Model.MicrosoftToken, UpdateSourceTrigger=PropertyChanged}"
                         TextWrapping="WrapWithOverflow" />
                 </Grid>
@@ -170,7 +170,7 @@
                     Command="{Binding ActionCommand}"
                     IsEnabled="{Binding Model.IsTokenValid}"
                     Style="{StaticResource DefaultAdvancedButton}"
-                    Text="Применить" />
+                    Text="{DynamicResource Apply}" />
             </Grid>
         </Grid>
     </Border>

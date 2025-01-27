@@ -513,5 +513,29 @@
     <s:String x:Key="CreateAccount">Create Account</s:String>
     <s:String x:Key="AlreadyHaveAnyAccount">Already have any account?</s:String>
 
+    <s:String x:Key="ViaNightWorld">Via NightWorld</s:String>
+    <s:String x:Key="ViaMicrosoft">Via Microsoft</s:String>
+    <s:String x:Key="WithoutAccount">Without account</s:String>
+
+
+    <s:String x:Key="AuthorizationWithoutAccountTitle">Authorization without account</s:String>
+    <s:String x:Key="AuthorizationWithoutAccountDescription">For authorization without account select any nickname.</s:String>
+    <s:String x:Key="AuthorizationWithoutAccountNicknamePlaceholder">Type the desired nickname</s:String>
+    <s:String x:Key="Continue">Continue</s:String>
+
+    <s:String x:Key="AuthorizationMicrosoftTitle">Authorization via Microsoft</s:String>
+    <s:String x:Key="AuthorizationMicrosoftAccountDescription">Authorization through Microsoft is expected to end</s:String>
+    <s:String x:Key="ManualInput">Manual input</s:String>
+    <s:String x:Key="ManualInputMicrosoftTokenTitle">Manual input Microsoft token</s:String>
+    <s:String x:Key="WrongTokenFormat">Wrong token format</s:String>
+    <s:String x:Key="CorrectTokenFormat">Token is correct</s:String>
+    <s:String x:Key="ManualInputTokenPlaceholder">Type microsoft token here</s:String>
+    <s:String x:Key="Apply">Apply</s:String>
+    <s:String x:Key="Cancel">Cancel</s:String>
+
+    <s:String x:Key="Important">Important!</s:String>
+    <s:String x:Key="MicrosoftManualInputImportantMessage">Never give/show your authentication token to anyone. If third parties receive the token, they will gain access to your account!</s:String>
+
     <!--  endregion Authorization  -->
+
 </ResourceDictionary>

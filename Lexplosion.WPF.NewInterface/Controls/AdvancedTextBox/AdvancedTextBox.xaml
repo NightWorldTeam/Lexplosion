@@ -76,7 +76,7 @@
                                     Name="PART_Placeholder"
                                     Grid.Column="1"
                                     Margin="0,0,0,0"
-                                    HorizontalAlignment="Left"
+                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                     VerticalAlignment="Top"
                                     FontSize="12"
                                     Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
