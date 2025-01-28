@@ -10,7 +10,7 @@
     xmlns:enums="clr-namespace:Lexplosion;assembly=Lexplosion.Core"
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Modal"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:modal="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal" d:DataContext="{d:DesignInstance Type=modal:AccountFactoryViewModel}"
     mc:Ignorable="d">
 
     <UserControl.Resources>
@@ -255,6 +255,7 @@
                                         FontWeight="Medium"
                                         Text="Информация" />
 
+                                    <!--  TODO: Translate  -->
                                     <TextBlock
                                         Margin="0,16,0,0"
                                         FontSize="16"
@@ -269,6 +270,7 @@
                         <controls:AdvancedButton
                             Grid.Row="1"
                             Command="{Binding ActionCommand}"
+                            IsEnabled="{Binding Model.IsAllFieldCorrect}"
                             Style="{DynamicResource sm-default}"
                             Text="{DynamicResource AddAccount}" />
                     </Grid>

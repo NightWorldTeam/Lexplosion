@@ -2,6 +2,7 @@
 using Lexplosion.Logic.Network;
 using Lexplosion.WPF.NewInterface.Core;
 using System;
+using System.Windows.Forms;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Modal
 {
@@ -16,6 +17,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Modal
             get => _accountType; set
             {
                 _accountType = value;
+                CheckAllFieldCorrect();
                 OnPropertyChanged();
             }
         }
@@ -26,6 +28,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Modal
             get => _login; set
             {
                 _login = value;
+
+                CheckAllFieldCorrect();
                 OnPropertyChanged();
             }
         }
@@ -36,6 +40,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Modal
             get => _password; set
             {
                 _password = value;
+                CheckAllFieldCorrect();
                 OnPropertyChanged();
             }
         }
@@ -49,6 +54,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Modal
                 OnPropertyChanged();
             }
         }
+
+
+        public bool IsAllFieldCorrect { get; private set; } = false;
 
 
         #endregion Properties
@@ -134,6 +142,54 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Modal
             CommandReceiver.MicrosoftAuthPassed += successAuth;
             // TODO: Засунуть это в констану.
             System.Diagnostics.Process.Start("https://login.live.com/oauth20_authorize.srf?client_id=ed0f84c7-4bf4-4a97-96c7-8c82b1e4ea0b&response_type=code&redirect_uri=https://night-world.org/requestProcessing/microsoftOAuth.php&scope=XboxLive.signin%20offline_access&state=NOT_NEEDED");
+        }
+
+
+
+        private bool CheckAllFieldCorrect() 
+        {
+            var loginFlag = true;
+            var passwordFlag = true;
+
+            if (AccountType == AccountType.Microsoft) 
+            {
+                IsAllFieldCorrect = true;
+                OnPropertyChanged(nameof(IsAllFieldCorrect));
+                return true;
+            }
+
+            loginFlag = IsLoginCorrect(Login);
+
+            if (AccountType != AccountType.NoAuth) 
+            {
+                passwordFlag = IsPasswordCorrect(Password);
+            }
+
+            IsAllFieldCorrect = loginFlag && passwordFlag;
+            OnPropertyChanged(nameof(IsAllFieldCorrect));
+
+            return IsAllFieldCorrect;
+        }
+
+
+
+        private bool IsLoginCorrect(string value) 
+        {
+            if (string.IsNullOrEmpty(value)) 
+                return false;
+
+            if (value.Length < 3 || value.Length > 16)
+                return false;
+
+            return true;
+        }
+
+        private bool IsPasswordCorrect(string value) 
+        {
+            if (string.IsNullOrEmpty(value))
+                return false;
+
+            return true;
         }
     }
 }
