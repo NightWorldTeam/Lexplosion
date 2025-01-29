@@ -87,6 +87,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
         private TextBlock _mainActionButtonPercentage;
         private TextBlock _mainActionButtonPercentageHover;
 
+        private Border _modloaderIconContainer;
 
         private bool _isDownloadCanceling;
         private bool _isLaunching;
@@ -241,6 +242,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
             _dropdownMenu = Template.FindName(PART_DROPDOWNMENU, this) as DropdownMenu;
             _dropdownMenuItemsControl = Template.FindName(PART_DROPDOWNMENU_CONTENT, this) as ItemsControl;
             _mainActionButton = Template.FindName(PART_MAIN_ACTION_BUTTON, this) as Button;
+            _modloaderIconContainer = Template.FindName("ModloaderIcon", this) as Border;
 
             // TODO: сделать адекватно, чтобы после обновления индикатор пропадал
             var _updateIndicator = Template.FindName("UpdateIndicator", this) as Border;
@@ -301,10 +303,29 @@ namespace Lexplosion.WPF.NewInterface.Controls
             InstanceModel.GameLaunchCompleted += OnLaunchedCompleted;
             InstanceModel.GameClosed += OnGameClosed;
             InstanceModel.DownloadCanceled += OnDownloadCanceled;
+            InstanceModel.ModloaderChanged += InstanceModel_ModloaderChanged;
 
             base.OnApplyTemplate();
             ApplyTemplateExecuted?.Invoke();
-            //Runtime.DebugWrite("OnApplyTemplate");
+            //Runtime.DebugWrite("OnApplyTemplate
+            InstanceModel_ModloaderChanged();
+        }
+
+        private void InstanceModel_ModloaderChanged()
+        {
+            var basePath = "pack://application:,,,/Assets/images/icons/";
+
+            if (InstanceModel.InstanceData.Modloader != ClientType.Vanilla)
+            {
+                var icon = new Border();
+                icon.Background = new ImageBrush(new BitmapImage(new Uri($"{basePath}{InstanceModel.InstanceData.Modloader.ToString().ToLower()}.png", UriKind.Absolute)));
+
+                _modloaderIconContainer.Child = icon;
+                _modloaderIconContainer.Visibility = Visibility.Visible;
+                return;
+            }
+
+            _modloaderIconContainer.Visibility = Visibility.Collapsed;
         }
 
         private void OnInstanceModelStateChanged()
@@ -337,7 +358,8 @@ namespace Lexplosion.WPF.NewInterface.Controls
                                 PrepareVisualState();
                             }
                             break;
-                        }IsEnabled = false;
+                        }
+                        IsEnabled = false;
                     case InstanceState.Downloading:
                         {
                             _isPreparing = false;
@@ -823,7 +845,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
                 {
                     case StageType.Prepare:
                         {
-                            if (!_isPrepareDonwloadStage) 
+                            if (!_isPrepareDonwloadStage)
                             {
                                 _isPrepareDonwloadStage = true;
                                 _isJavaDonwloadStage = false;
