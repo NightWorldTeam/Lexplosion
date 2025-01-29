@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lexplosion.Core", "Lexplosi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lexplosion.WPF.NewInterface", "Lexplosion.WPF.NewInterface\Lexplosion.WPF.NewInterface.csproj", "{C7328845-AB10-4FAC-99D8-F52FE705B628}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LexplosionTesting", "LexplosionTest\LexplosionTesting.csproj", "{2712F494-DD49-4375-944D-30C448947D92}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lexplosion.Tests", "Lexplosion.Tests\Lexplosion.Tests.csproj", "{2712F494-DD49-4375-944D-30C448947D92}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

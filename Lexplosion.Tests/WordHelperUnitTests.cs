@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LexplosionTest
+namespace Lexplosion.Tests
 {
     [TestClass]
     public class WordHelperTests

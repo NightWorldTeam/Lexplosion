@@ -1,8 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Lexplosion.Common.Models.ShowCaseMenu;
 using Lexplosion.Core.Tools;
 
-namespace LexplosionTest
+namespace Lexplosion.Tests
 {
     [TestClass]
     public class JavaPathTests
