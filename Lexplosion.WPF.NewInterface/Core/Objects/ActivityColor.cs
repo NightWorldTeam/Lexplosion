@@ -1,4 +1,5 @@
-﻿using Lexplosion.WPF.NewInterface.Core.ViewModel;
+﻿using Lexplosion.Core.Extensions;
+using Lexplosion.WPF.NewInterface.Core.ViewModel;
 using System;
 using System.Windows.Media;
 
@@ -20,6 +21,10 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
                 OnPropertyChanged();
             }
         }
+
+
+        #region Constructors
+
 
         public ActivityColor(SolidColorBrush brush, bool isSelected = false) : this(isSelected)
         {
@@ -43,10 +48,34 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
             IsSelected = isSelected;
         }
 
+
+        #endregion Constructors
+
+
         private void OnIsSelectedChanged()
         {
             SelectedEvent?.Invoke(this, IsSelected);
             OnPropertyChanged();
         }
+
+        public static bool TryCreateColor(string value, out ActivityColor? color) 
+        {
+            if (value.IsHexColor()) 
+            {
+                color = new(value);
+                return true;
+            }
+
+            try
+            {
+                color = new((SolidColorBrush)new BrushConverter().ConvertFrom(value));
+                return true;
+            }
+            catch
+            {
+                color = null;
+                return false;
+            }
+        } 
     }
 }

@@ -85,7 +85,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             {
                 Runtime.DebugWrite($"{acc.AccountType} {acc.Login} executed.");
 
-                _modalNavigationStore.Open(new ConfirmActionViewModel("Удаление аккаунта", "", 
+                _modalNavigationStore.Open(new ConfirmActionViewModel("Удаление аккаунта", "ха-ха-ха", 
                     (obj) => 
                     {
                         Model.RemoveAccount(acc);

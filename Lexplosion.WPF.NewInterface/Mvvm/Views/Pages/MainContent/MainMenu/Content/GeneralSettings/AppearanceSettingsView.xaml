@@ -355,39 +355,88 @@
                     </Grid.RowDefinitions>
 
                     <Border
-                        Padding="0,0,0,16"
+                        Padding="0,0,0,8"
                         BorderBrush="{DynamicResource SeparateSolidColorBrush}"
                         BorderThickness="0,0,0,2">
                         <StackPanel>
-                            <TextBlock
-                                extensions:TextBlockExtensions.TextByKey="AccentColor"
-                                FontSize="16"
-                                FontWeight="Medium"
-                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
-                            <TextBlock
-                                extensions:TextBlockExtensions.TextByKey="ChooseAccentColor"
-                                FontSize="14"
-                                FontWeight="Medium"
-                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
 
-                            <StackPanel Orientation="Horizontal">
+                            <Border
+                                Padding="0,0,0,16"
+                                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                BorderThickness="0,0,0,2">
+                                <Grid>
 
-                                <ItemsControl ItemsSource="{Binding Model.Colors}">
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <WrapPanel Margin="0,8,0,0" IsItemsHost="True" />
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                </ItemsControl>
 
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="Custom" />
+                                    <StackPanel Orientation="Vertical">
+
+                                        <TextBlock
+                                            extensions:TextBlockExtensions.TextByKey="AccentColor"
+                                            FontSize="16"
+                                            FontWeight="Medium"
+                                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                        <TextBlock
+                                            extensions:TextBlockExtensions.TextByKey="ChooseAccentColor"
+                                            FontSize="14"
+                                            FontWeight="Medium"
+                                            Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                                    </StackPanel>
+
+                                    <ItemsControl HorizontalAlignment="Right" ItemsSource="{Binding Model.Colors}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel Margin="0,8,0,0" IsItemsHost="True" />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                    </ItemsControl>
+                                </Grid>
+                            </Border>
+
+                            <!--  Custom Color  -->
+
+                            <!--  TODO: IMPORTRANT! Сюда лучше бы подошел 14/12 размер шрифта, думаю нужно завернуть это в переменные и дать возможность редактировать  -->
+
+                            <Grid Margin="0,16,0,0">
+                                <StackPanel Orientation="Vertical">
+
+                                    <TextBlock
+                                        extensions:TextBlockExtensions.TextByKey="CustomColor"
+                                        FontSize="16"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                    <TextBlock
+                                        extensions:TextBlockExtensions.TextByKey="CustomColorDescription"
+                                        FontSize="14"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                                </StackPanel>
+
+                                <StackPanel
+                                    Margin="0,8,0,8"
+                                    HorizontalAlignment="Right"
+                                    Orientation="Horizontal">
+
+                                    <TextBlock
+                                        VerticalAlignment="Center"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                        Text="Свой цвет:" />
+
                                     <controls:AdvancedTextBox
                                         Width="80"
-                                        Placeholder="#ffffff"
+                                        Margin="8,0,8,0"
+                                        Placeholder="#167FFC"
                                         Text="{Binding Model.NewHexActivityColor, UpdateSourceTrigger=PropertyChanged}" />
+
+                                    <Border
+                                        Width="28"
+                                        Height="28"
+                                        VerticalAlignment="Center"
+                                        Background="{DynamicResource ActivitySolidColorBrush}"
+                                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                        BorderThickness="2"
+                                        CornerRadius="5" />
                                 </StackPanel>
-                            </StackPanel>
+                            </Grid>
                         </StackPanel>
                     </Border>
 

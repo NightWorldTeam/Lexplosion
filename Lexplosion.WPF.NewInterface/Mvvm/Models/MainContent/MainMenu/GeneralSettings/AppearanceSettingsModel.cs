@@ -1,8 +1,10 @@
-﻿using Lexplosion.Global;
+﻿using Lexplosion.Core.Extensions;
+using Lexplosion.Global;
 using Lexplosion.Logic;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Objects;
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -31,14 +33,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
             {
                 _newHexActivityColor = value;
 
-                if (!string.IsNullOrWhiteSpace(value))
+                if (ActivityColor.TryCreateColor(value, out var color))
                 {
-                    if ((value.Contains("#") && value.Length == 4) || (value.Contains("#") && value.Length == 7) || value.Length == 3 || value.Length == 6) 
-                    {
-                        SelectedColorChanged(new ActivityColor(value), true);
-                    }
+                    SelectedColorChanged(color, true);
                 }
-                else 
+                else
                 {
                     SelectedColorChanged(SelectedColor, true);
                 }
@@ -63,20 +62,20 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
 
 
         private int _initialShowDelay;
-        public int InitialShowDelay 
+        public int InitialShowDelay
         {
-            get => _initialShowDelay; set 
+            get => _initialShowDelay; set
             {
                 _initialShowDelay = value;
                 OnPropertyChanged();
                 OnInitialShowDelayChanged();
             }
-        }       
-        
+        }
+
         private int _betweenShowDelay;
         public int BetweenShowDelay
         {
-            get => _betweenShowDelay; set 
+            get => _betweenShowDelay; set
             {
                 _betweenShowDelay = value;
                 OnPropertyChanged();
@@ -164,13 +163,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
         /// <summary>
         /// Изменяет состояние всплывающих подсказок
         /// </summary>
-        private void OnToolTipStateChanged() 
+        private void OnToolTipStateChanged()
         {
             RuntimeApp.ChangeToolTipState(IsToolTipsEnabled);
         }
 
 
-        private void OnInitialShowDelayChanged() 
+        private void OnInitialShowDelayChanged()
         {
             RuntimeApp.ChangeSettingInitialShowDelay(InitialShowDelay);
         }
