@@ -11,6 +11,8 @@
     xmlns:localVM="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:objects="clr-namespace:Lexplosion.WPF.NewInterface.Core.Objects"
+    xmlns:valueconverters="clr-namespace:Lexplosion.WPF.NewInterface.Core.Converters"
+    d:DataContext="{d:DesignInstance Type=localVM:LeftPanelViewModel}"
     mc:Ignorable="d">
 
     <UserControl.Resources>
@@ -57,10 +59,8 @@
     <Grid>
         <Border
             Padding="15,16"
-            Background="{DynamicResource PrimarySolidColorBrush}"
             BorderBrush="{DynamicResource SeparateSolidColorBrush}"
             BorderThickness="0,0,2,0">
-            <Grid Background="{DynamicResource PrimarySolidColorBrush}">
 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -85,14 +85,37 @@
                             </Grid.ColumnDefinitions>
 
                             <!--  Avatar  -->
+
                             <Border
                                 Width="40"
                                 Height="40"
                                 CornerRadius="5">
                                 <Border.Background>
-                                    <ImageBrush ImageSource="{Binding UserAvatar}" />
+                                    <ImageBrush ImageSource="pack://Application:,,,/Assets/images/icons/non_image.png" />
                                 </Border.Background>
                             </Border>
+
+                            <Border
+                                x:Name="LogoBorder"
+                                Width="40"
+                                Height="40"
+                                Background="{Binding UserAvatar, Converter={valueconverters:ImageSourceNullValidateConverter}}"
+                                CornerRadius="5" />
+
+                            <controls:CircleLoader
+                                Width="40"
+                                Height="40"
+                                Padding="8"
+                                VerticalAlignment="Center"
+                                BlurTarget="{Binding ElementName=LogoBorder}"
+                                CornerRadius="5"
+                                IconHeight="12"
+                                IconWidth="12"
+                                IsActive="{Binding UserAvatar, Converter={valueconverters:IsStringNullOrEmptyConverter}}">
+                                <controls:CircleLoader.Background>
+                                    <SolidColorBrush Opacity="0.8" Color="Black" />
+                                </controls:CircleLoader.Background>
+                            </controls:CircleLoader>
 
                             <Grid Grid.Column="1" Margin="10,0,0,0">
                                 <TextBlock
