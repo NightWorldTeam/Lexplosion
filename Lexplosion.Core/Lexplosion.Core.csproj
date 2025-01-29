@@ -100,7 +100,6 @@
     <Compile Include="Logic\Management\Authentication\IAuthHandler.cs" />
     <Compile Include="Logic\Management\Authentication\LocalAuth.cs" />
     <Compile Include="Logic\Management\Authentication\MicrosoftAuth.cs" />
-    <Compile Include="Logic\Management\Authentication\MojangAuth.cs" />
     <Compile Include="Logic\Management\Authentication\NightWorldAuth.cs" />
     <Compile Include="Logic\Management\CategoriesManager.cs" />
     <Compile Include="Logic\Management\Delegates.cs" />

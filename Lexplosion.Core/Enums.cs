@@ -237,7 +237,6 @@
         NoAuth,
         NightWorld,
         Microsoft,
-        Mojang
     }
 
     public enum InstanceChangelog

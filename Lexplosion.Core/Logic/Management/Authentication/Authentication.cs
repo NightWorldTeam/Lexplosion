@@ -71,9 +71,6 @@ namespace Lexplosion.Logic.Management.Authentication
                 case AccountType.NightWorld:
                     authHandler = new NightWorldAuth();
                     break;
-                case AccountType.Mojang:
-                    authHandler = new MojangAuth();
-                    break;
                 case AccountType.Microsoft:
                     authHandler = new MicrosoftAuth();
                     break;
