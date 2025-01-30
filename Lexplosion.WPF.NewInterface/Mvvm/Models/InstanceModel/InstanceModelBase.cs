@@ -267,8 +267,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 
             Runtime.TaskRun(() =>
             {
-                //PageData = _instanceClient.GetFullInfo();
-                TotalDonwloads = "0"; //PageData.TotalDownloads.ToString();
+                PageData = _instanceClient.GetFullInfo();
+                PageData.TotalDownloads.ToString();
                 OnPropertyChanged(nameof(TotalDonwloads));
             });
         }

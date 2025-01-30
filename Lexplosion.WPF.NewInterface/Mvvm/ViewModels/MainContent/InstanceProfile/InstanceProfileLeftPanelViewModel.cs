@@ -14,6 +14,7 @@ using Lexplosion.WPF.NewInterface.Core.Notifications;
 using System;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Addons;
+using Lexplosion.WPF.NewInterface.Core.Converters;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile
 {
@@ -173,7 +174,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             }
             else 
             {
-                _additionalInfo.Add(new InstanceFieldInfo<int>("DownloadCount:", 100000000, DownloadsCountToString));
+                if (int.TryParse(DownloadCount, out var downloads)) 
+                {
+                    _additionalInfo.Add(new InstanceFieldInfo<int>("DownloadCount:", downloads, DownloadsCountToString));
+                }
             }
         }
 
@@ -189,6 +193,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
 
         string DownloadsCountToString(int number) 
         {
+            if (number == 0)
+                return "0";
+
             if (number < 10000)
                 return number.ToString();
 
