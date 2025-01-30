@@ -10,7 +10,9 @@
     xmlns:enums="clr-namespace:Lexplosion;assembly=Lexplosion.Core"
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Modal"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:modal="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal" d:DataContext="{d:DesignInstance Type=modal:AccountFactoryViewModel}"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:modal="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal"
+    d:DataContext="{d:DesignInstance Type=modal:AccountFactoryViewModel}"
     mc:Ignorable="d">
 
     <UserControl.Resources>
@@ -125,7 +127,13 @@
                                         HorizontalAlignment="Stretch"
                                         FontSize="14"
                                         ItemsSource="{Binding Source={StaticResource AccountTypeEnum}}"
-                                        SelectedValue="{Binding Model.AccountType, UpdateSourceTrigger=PropertyChanged}" />
+                                        SelectedValue="{Binding Model.AccountType, UpdateSourceTrigger=PropertyChanged}">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock extensions:TextBlockExtensions.TextByKey="{Binding}" Foreground="Red" />
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
                                 </Grid>
                             </Border>
 

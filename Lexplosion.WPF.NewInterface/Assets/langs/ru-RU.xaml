@@ -523,6 +523,8 @@
     <s:String x:Key="ViaMicrosoft">Через Microsoft</s:String>
     <s:String x:Key="WithoutAccount">Без аккаунта</s:String>
 
+    <s:String x:Key="Microsoft">Microsoft</s:String>
+    <s:String x:Key="NoAuth">Без аккаунта</s:String>
 
     <s:String x:Key="AuthorizationWithoutAccountTitle">Авторизация без аккаунта</s:String>
     <s:String x:Key="AuthorizationWithoutAccountDescription">Для авторизации без аккаунта выберите желаемый ник.</s:String>
@@ -556,5 +558,9 @@
 
 
     <!--  endregion Notifications Content  -->
+
+
+    <s:String x:Key="CustomColor">Свой цвет</s:String>
+    <s:String x:Key="CustomColorDescription">Выберите свой акцентный цвет</s:String>
 
 </ResourceDictionary>

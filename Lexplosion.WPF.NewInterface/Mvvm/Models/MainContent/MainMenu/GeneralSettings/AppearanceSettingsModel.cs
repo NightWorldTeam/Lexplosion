@@ -41,6 +41,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
                 {
                     SelectedColorChanged(SelectedColor, true);
                 }
+
                 OnPropertyChanged();
             }
         }
@@ -130,12 +131,17 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
                 color.SelectedEvent += SelectedColorChanged;
             }
 
-            var savedColorBrush = new BrushConverter().ConvertFrom(GlobalData.GeneralSettings.AccentColor);
-            var savedColor = _colors.FirstOrDefault(c => c.Brush.ToString() == savedColorBrush.ToString());
-            if (savedColor == null)
+            var savedColorBrush = (SolidColorBrush)new BrushConverter().ConvertFrom(GlobalData.GeneralSettings.AccentColor);
+            var savedColor = new ActivityColor(savedColorBrush);
+            savedColor.SelectedEvent += SelectedColorChanged;
+            if (savedColorBrush == null) 
+            {
                 _colors[0].IsSelected = true;
-            else
+            }
+            else 
+            {
                 savedColor.IsSelected = true;
+            }
 
         }
 

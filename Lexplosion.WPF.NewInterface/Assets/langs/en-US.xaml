@@ -517,6 +517,8 @@
     <s:String x:Key="ViaMicrosoft">Via Microsoft</s:String>
     <s:String x:Key="WithoutAccount">Without account</s:String>
 
+    <s:String x:Key="Microsoft">Microsoft</s:String>
+    <s:String x:Key="NoAuth">Without account</s:String>
 
     <s:String x:Key="AuthorizationWithoutAccountTitle">Authorization without account</s:String>
     <s:String x:Key="AuthorizationWithoutAccountDescription">For authorization without account select any nickname.</s:String>

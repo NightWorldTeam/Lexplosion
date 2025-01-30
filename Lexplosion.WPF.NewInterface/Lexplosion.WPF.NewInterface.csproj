@@ -1049,5 +1049,13 @@
   <ItemGroup>
     <Resource Include="Assets\images\icons\nightworld.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\images\icons\forge.png" />
+    <Resource Include="Assets\images\icons\quilt.png" />
+    <Resource Include="Assets\images\icons\fabric.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\images\icons\neoforge.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

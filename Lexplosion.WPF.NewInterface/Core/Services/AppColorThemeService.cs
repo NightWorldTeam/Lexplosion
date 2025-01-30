@@ -8,10 +8,12 @@ using Lexplosion.WPF.NewInterface.Extensions;
 using System.Linq;
 using Lexplosion.WPF.NewInterface.NWColorTools;
 using System.Threading;
+using Lexplosion.Global;
+using Lexplosion.WPF.NewInterface.Core.ViewModel;
 
 namespace Lexplosion.WPF.NewInterface.Core.Services
 {
-    public class AppColorThemeService
+    public class AppColorThemeService : ObservableObject
     {
         public event Action ColorThemeChanged;
         public event Action ActivityColorChanged;
@@ -38,7 +40,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Services
 
         public AppColorThemeService()
         {
-
+            
         }
 
 
@@ -76,6 +78,8 @@ namespace Lexplosion.WPF.NewInterface.Core.Services
                         _selectedThemeResourceDictionary["ActivitySolidColorBrush"] = new SolidColorBrush(color);
                         ActivityColorChanged?.Invoke();
                         _selectedActivityColor = color;
+                        SelectedActivityColor = new(_selectedActivityColor, true);
+                        OnPropertyChanged(nameof(SelectedActivityColor));
 
                         ChangeDefaultAdvancedButtonColors(color);
                     });
@@ -134,6 +138,9 @@ namespace Lexplosion.WPF.NewInterface.Core.Services
                 _selectedActivityColor = (Color)_selectedThemeResourceDictionary["ActivityColor"];
             else
                 _selectedThemeResourceDictionary["ActivityColor"] = _selectedActivityColor;
+
+            SelectedActivityColor = new(_selectedActivityColor, true);
+            OnPropertyChanged(nameof(SelectedActivityColor));
 
             App.Current.Resources.MergedDictionaries.Add(_selectedThemeResourceDictionary);
 
