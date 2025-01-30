@@ -540,4 +540,10 @@
 
     <!--  endregion Authorization  -->
 
+    <!--  Instance Configuration  -->
+    <s:String x:Key="SaveChanges">Save Changes</s:String>
+    <s:String x:Key="LoadYourLogo">Load your logo</s:String>
+    <s:String x:Key="UnsavedChangesWarningText">Be careful you didn't save the changes!</s:String>
+    <s:String x:Key="Reset">Reset</s:String>
+
 </ResourceDictionary>

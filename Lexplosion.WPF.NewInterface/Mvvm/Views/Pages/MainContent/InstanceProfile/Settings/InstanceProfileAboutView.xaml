@@ -5,8 +5,10 @@
     xmlns:controls="clr-namespace:Lexplosion.WPF.NewInterface.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
+    xmlns:instanceprofile="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.InstanceProfile"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DataContext="{d:DesignInstance Type=instanceprofile:InstanceProfileAboutViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
@@ -57,14 +59,12 @@
                                 </StackPanel>
 
                                 <!--  TODO: Translate  -->
-                                <Button
+                                <controls:AdvancedButton
                                     Grid.Column="1"
-                                    HorizontalContentAlignment="Center"
-                                    VerticalContentAlignment="Center"
                                     Command="{Binding SetLogoPathCommand}"
-                                    Content="Load your Logo"
+                                    Content="{DynamicResource LoadYourLogo}"
                                     FontSize="14"
-                                    Foreground="{DynamicResource BrandColorForegroundSolidColorBrush}" />
+                                    Style="{StaticResource sm-default}" />
                             </Grid>
 
                             <!--  Previews  -->
@@ -283,27 +283,27 @@
                     FontSize="14"
                     FontWeight="Medium"
                     Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                    Text="Аккуратинее вы не сохранили изменения!" />
+                    Text="{DynamicResource UnsavedChangesWarningText}" />
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal">
 
                     <Button
                         Padding="8,8"
                         Command="{Binding RebootChangesCommand}"
-                        Content="Сброс"
+                        Content="{DynamicResource Reset}"
                         FontWeight="Medium"
-                        Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
                         Style="{StaticResource TextButton}" />
 
                     <!--  Save Button  -->
-                    <Button
+                    <controls:AdvancedButton
                         Height="32"
                         Margin="8,0,0,0"
                         Padding="16,8"
                         Command="{Binding SaveChangesCommand}"
-                        FontWeight="Medium">
-                        <TextBlock Foreground="{DynamicResource BrandColorForegroundSolidColorBrush}" Text="Сохранить изменения" />
-                    </Button>
+                        Content="{DynamicResource SaveChanges}"
+                        FontSize="12"
+                        Style="{StaticResource sm-default}" />
                 </StackPanel>
             </Grid>
         </Border>

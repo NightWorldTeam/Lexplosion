@@ -43,21 +43,29 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
 
         private string _userLogin = "Unknown";
-        public string UserLogin 
+        public string UserLogin
         {
-            get => _userLogin; private set 
+            get => _userLogin; private set
             {
                 _userLogin = value;
                 OnPropertyChanged();
             }
         }
 
-        private string _userAvatar = "pack://Application:,,,/Assets/images/icons/non_image1.png";
+        public bool IsUserAvatarLoaded { get; private set; } = false;
+
+        private string _userAvatar;// = "pack://Application:,,,/Assets/images/icons/non_image1.png";
         public string UserAvatar
         {
             get => _userAvatar; private set
             {
                 _userAvatar = value;
+
+                if (!string.IsNullOrEmpty(_userAvatar))
+                {
+                    IsUserAvatarLoaded = true;
+                    OnPropertyChanged(nameof(IsUserAvatarLoaded));
+                }
                 OnPropertyChanged();
             }
         }
@@ -132,7 +140,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
         public void AddTabItems(IEnumerable<LeftPanelMenuItem> em)
         {
-            foreach (var tabItem in em) 
+            foreach (var tabItem in em)
             {
                 AddTabItem(tabItem);
             }
@@ -143,7 +151,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         /// Индексация как у обычной коллекции с нуля.
         /// </summary>
         /// <param name="index">Индекс элемента</param>
-        public void SelectItem(int index) 
+        public void SelectItem(int index)
         {
             //WaitHandler.WaitOne();
             if (SelectedItem != null)
@@ -168,7 +176,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             _items[_items.Count - 1].IsSelected = true;
         }
 
-        public LeftPanelMenuItem GetByContentType(Type type) 
+        public LeftPanelMenuItem GetByContentType(Type type)
         {
             return _items.FirstOrDefault(t => t.Content.GetType() == type);
         }
@@ -185,7 +193,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             SelectedItem = instance;
         }
 
-        private void SetUserDataToHeader() 
+        private void SetUserDataToHeader()
         {
             if (Account.ActiveAccount != null)
             {
@@ -195,7 +203,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
                 return;
             }
 
-            if (Account.LaunchAccount != null) 
+            if (Account.LaunchAccount != null)
             {
                 UserLogin = Account.LaunchAccount.Login;
                 UserAvatar = Account.LaunchAccount.HeadImageUrl;

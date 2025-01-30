@@ -64,7 +64,8 @@
 
                                 <Grid Grid.Column="1">
                                     <ComboBox
-                                        Width="215" Height="32"
+                                        Width="215"
+                                        Height="32"
                                         HorizontalAlignment="Right"
                                         IsSynchronizedWithCurrentItem="True"
                                         ItemsSource="{Binding Model.GameVersions}"
@@ -179,6 +180,15 @@
                                 Content="Quilt"
                                 GroupName="GameType"
                                 IsChecked="{Binding IsQuilt}"
+                                IsEnabled="{Binding Model.ModloaderManager.IsQuiltAvaliable}"
+                                Style="{StaticResource HighlightRadioButton}" />
+                            <RadioButton
+                                Margin="8,0,0,0"
+                                Command="{Binding ChangeInstanceClientTypeCommand, Mode=OneWay}"
+                                CommandParameter="{x:Static objects:ClientType.NeoForge}"
+                                Content="Neoforged"
+                                GroupName="GameType"
+                                IsChecked="{Binding IsNeoforged}"
                                 IsEnabled="{Binding Model.ModloaderManager.IsQuiltAvaliable}"
                                 Style="{StaticResource HighlightRadioButton}" />
                         </StackPanel>
@@ -370,27 +380,27 @@
                     FontSize="14"
                     FontWeight="Medium"
                     Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                    Text="Аккуратинее вы не сохранили изменения!" />
+                    Text="{DynamicResource UnsavedChangesWarningText}" />
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal">
 
                     <Button
                         Padding="8,8"
                         Command="{Binding RebootChangesCommand}"
-                        Content="Сброс"
+                        Content="{DynamicResource Reset}"
                         FontWeight="Medium"
                         Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
                         Style="{StaticResource TextButton}" />
 
                     <!--  Save Button  -->
-                    <Button
+                    <controls:AdvancedButton
                         Height="32"
                         Margin="8,0,0,0"
                         Padding="16,8"
                         Command="{Binding SaveChangesCommand}"
-                        FontWeight="Medium">
-                        <TextBlock Foreground="White" Text="Сохранить изменения" />
-                    </Button>
+                        Content="{DynamicResource SaveChanges}"
+                        FontSize="12"
+                        Style="{StaticResource sm-default}" />
                 </StackPanel>
             </Grid>
         </Border>

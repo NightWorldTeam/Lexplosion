@@ -61,6 +61,7 @@
             Padding="15,16"
             BorderBrush="{DynamicResource SeparateSolidColorBrush}"
             BorderThickness="0,0,2,0">
+            <Grid>
 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />

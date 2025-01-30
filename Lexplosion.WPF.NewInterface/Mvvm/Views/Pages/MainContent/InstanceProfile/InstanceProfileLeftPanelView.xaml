@@ -267,6 +267,7 @@
                                     Background="{DynamicResource PrimarySolidColorBrush}"
                                     BorderBrush="{DynamicResource SeparateSolidColorBrush}"
                                     BorderThickness="1"
+                                    Foreground="{DynamicResource DefaultButtonForegroundColorBrush}"
                                     PopupPlacement="Bottom"
                                     PopupVerticalOffset="5">
                                     <ItemsControl x:Name="Buttons" ItemsSource="{Binding InstanceActions}" />

@@ -317,6 +317,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             OnPropertyChanged(nameof(InstanceVersion));
             OnPropertyChanged(nameof(InstanceModloader));
             OnPropertyChanged(nameof(IsInstalled));
+
+            GenerateAdditionalInfo();
         }
 
 

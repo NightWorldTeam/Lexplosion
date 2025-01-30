@@ -222,6 +222,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
             {
                 UpdateModloaderManager(GameExtension.Quilt, Version, _instanceData.ModloaderVersion);
             }
+            else if (_instanceData.Modloader == ClientType.NeoForge)
+            {
+                UpdateModloaderManager(GameExtension.Neoforge, Version, _instanceData.ModloaderVersion);
+            }
         }
 
         #endregion Constructors

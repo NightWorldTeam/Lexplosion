@@ -563,4 +563,11 @@
     <s:String x:Key="CustomColor">Свой цвет</s:String>
     <s:String x:Key="CustomColorDescription">Выберите свой акцентный цвет</s:String>
 
+
+
+    <!--  Instance Configuration  -->
+    <s:String x:Key="SaveChanges">Сохранить изменения</s:String>
+    <s:String x:Key="LoadYourLogo">Загрузить лого</s:String>
+    <s:String x:Key="UnsavedChangesWarningText">Аккуратнее вы не сохранили изменения!</s:String>
+    <s:String x:Key="Reset">Сброс</s:String>
 </ResourceDictionary>
