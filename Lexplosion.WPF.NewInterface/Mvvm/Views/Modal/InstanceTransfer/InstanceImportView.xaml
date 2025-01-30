@@ -165,9 +165,8 @@
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
                                     Command="{Binding BrowseFileFromLocalCommand}"
-                                    Foreground="{DynamicResource BrandColorForegroundSolidColorBrush}"
-                                    Style="{StaticResource DefaultAdvancedButton}"
-                                    Text="{DynamicResource Review}" />
+                                    Content="{DynamicResource Review}"
+                                    Style="{StaticResource sm-default}" />
                             </StackPanel>
                         </Grid>
                     </Border>

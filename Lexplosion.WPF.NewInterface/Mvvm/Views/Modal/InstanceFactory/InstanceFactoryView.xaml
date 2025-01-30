@@ -372,17 +372,15 @@
                     </StackPanel>
                 </StackPanel>
 
-                <Button
+                <controls:AdvancedButton
                     Grid.Row="1"
                     Height="32"
                     Margin="0,8,0,8"
                     VerticalAlignment="Bottom"
-                    HorizontalContentAlignment="Center"
-                    VerticalContentAlignment="Center"
                     Command="{Binding ActionCommand}"
                     Content="{DynamicResource CreateInstance}"
                     FontSize="13"
-                    FontWeight="Medium" />
+                    Style="{StaticResource sm-default}" />
             </Grid>
         </ScrollViewer>
     </Grid>

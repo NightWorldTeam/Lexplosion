@@ -17,6 +17,7 @@
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="BorderBrush" Value="{DynamicResource ActivitySolidColorBrush}" />
+                <Setter Property="Foreground" Value="{DynamicResource ActivitySolidColorBrush}" />
             </Trigger>
         </Style.Triggers>
     </Style>

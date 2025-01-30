@@ -38,7 +38,7 @@
                                     <Path
                                         x:Name="path"
                                         extensions:PathExtensions.StringKeyData="{TemplateBinding Content,
-                                                                                        Converter={converters:ToStringConverter}}"
+                                                                                                  Converter={converters:ToStringConverter}}"
                                         Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
                                         Stretch="Fill" />
                                 </Viewbox>
@@ -48,7 +48,7 @@
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsChecked" Value="True">
                                 <Setter TargetName="border" Property="Background" Value="{DynamicResource ActivitySolidColorBrush}" />
-                                <Setter TargetName="path" Property="Fill" Value="{DynamicResource BrandColorForegroundSolidColorBrush}" />
+                                <Setter TargetName="path" Property="Fill" Value="{DynamicResource DefaultButtonForegroundColorBrush}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>

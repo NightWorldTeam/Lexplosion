@@ -79,7 +79,8 @@
                 <TextBlock
                     FontSize="16"
                     Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                    Text="{Binding Model.InstanceData.Summary}" />
+                    Text="{Binding Model.InstanceData.Summary}"
+                    TextWrapping="WrapWithOverflow" />
             </StackPanel>
         </StackPanel>
     </Grid>

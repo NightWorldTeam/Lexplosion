@@ -130,14 +130,13 @@
 
 
         <!--  Export Button  -->
-        <Button
+        <controls:AdvancedButton
             Grid.Row="2"
             Height="32"
             Margin="0,10,0,8"
             Command="{Binding ActionCommand}"
             Content="{DynamicResource InstanceExport}"
-            FontWeight="Medium"
-            Foreground="{DynamicResource BrandColorForegroundSolidColorBrush}"
-            Style="{StaticResource x32DefaultIconButton}" />
+            FontSize="13"
+            Style="{StaticResource sm-default}" />
     </Grid>
 </UserControl>

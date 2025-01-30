@@ -43,7 +43,7 @@
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsSelected" Value="True">
                                 <Setter TargetName="border" Property="Background" Value="{DynamicResource ActivitySolidColorBrush}" />
-                                <Setter TargetName="path" Property="Fill" Value="{DynamicResource BrandColorForegroundSolidColorBrush}" />
+                                <Setter TargetName="path" Property="Fill" Value="{DynamicResource DefaultButtonForegroundColorBrush}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>

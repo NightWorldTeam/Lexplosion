@@ -130,7 +130,7 @@
                                         SelectedValue="{Binding Model.AccountType, UpdateSourceTrigger=PropertyChanged}">
                                         <ComboBox.ItemTemplate>
                                             <DataTemplate>
-                                                <TextBlock extensions:TextBlockExtensions.TextByKey="{Binding}" Foreground="Red" />
+                                                <TextBlock extensions:TextBlockExtensions.TextByKey="{Binding}" />
                                             </DataTemplate>
                                         </ComboBox.ItemTemplate>
                                     </ComboBox>

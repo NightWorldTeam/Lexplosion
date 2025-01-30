@@ -110,10 +110,8 @@
             RenderTransformOrigin="0.5, 0.5">
 
             <!--  Content  -->
-            <ContentControl
-                Content="{Binding CurrentViewModel, Source={StaticResource MainViewModel}}"
-                IsEnabled="{Binding IsModalOpen, Converter={converters:NegativeBooleanValueConverter}, Source={StaticResource MainViewModel}}"
-                KeyboardNavigation.IsTabStop="False" />
+            <!--  IsEnabled="{Binding IsModalOpen, Converter={converters:NegativeBooleanValueConverter}, Source={StaticResource MainViewModel}}"  -->
+            <ContentControl Content="{Binding CurrentViewModel, Source={StaticResource MainViewModel}}" KeyboardNavigation.IsTabStop="False" />
 
             <!--<pages:WelcomeView />-->
 

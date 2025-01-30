@@ -5,7 +5,7 @@
     <Style TargetType="{x:Type TreeViewItem}">
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="TextOptions.TextFormattingMode" Value="Display" />
-        <Setter Property="Foreground" Value="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource DefaultButtonForegroundColorBrush}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TreeViewItem}">
@@ -45,11 +45,8 @@
                                                         Margin="1,1,1,1"
                                                         HorizontalAlignment="Left"
                                                         VerticalAlignment="Center"
-                                                        Data="M 4 0 L 8 4 L 4 8 Z">
-                                                        <Path.Fill>
-                                                            <SolidColorBrush Color="{DynamicResource ActivityColor}" />
-                                                        </Path.Fill>
-                                                    </Path>
+                                                        Data="M 4 0 L 8 4 L 4 8 Z"
+                                                        Fill="{DynamicResource ActivitySolidColorBrush}" />
 
                                                     <Path
                                                         x:Name="Expanded"
@@ -57,11 +54,8 @@
                                                         HorizontalAlignment="Left"
                                                         VerticalAlignment="Center"
                                                         Data="M 0 4 L 8 4 L 4 8 Z"
-                                                        Visibility="Hidden">
-                                                        <Path.Fill>
-                                                            <SolidColorBrush Color="{DynamicResource ActivityColor}" />
-                                                        </Path.Fill>
-                                                    </Path>
+                                                        Fill="{DynamicResource ActivitySolidColorBrush}"
+                                                        Visibility="Hidden" />
                                                     <VisualStateManager.VisualStateGroups>
                                                         <VisualStateGroup x:Name="CheckStates">
                                                             <VisualState x:Name="Checked">
