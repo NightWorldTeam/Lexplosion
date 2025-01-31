@@ -205,7 +205,7 @@
     <!--  Visit Offical Page  -->
     <s:String x:Key="VisitCurseforge">Перейти на Curseforge</s:String>
     <s:String x:Key="VisitModrinth">Перейти на Modrinth</s:String>
-    <s:String x:Key="VisitNightWorld">Перейти на NightWorld</s:String>
+    <s:String x:Key="VisitNightworld">Перейти на NightWorld</s:String>
 
 
     <!--    -->

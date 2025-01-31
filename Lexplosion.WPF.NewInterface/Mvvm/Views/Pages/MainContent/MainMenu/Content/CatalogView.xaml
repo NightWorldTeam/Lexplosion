@@ -8,10 +8,12 @@
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
     xmlns:instanceModel="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu"
+    xmlns:mainmenu="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:objects="clr-namespace:Lexplosion.Logic.Objects;assembly=Lexplosion.Core"
     xmlns:translatable="clr-namespace:Lexplosion.WPF.NewInterface.Core.Objects.TranslatableObjects"
     xmlns:virtualization="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
+    d:DataContext="{d:DesignInstance Type=mainmenu:CatalogViewModel}"
     d:DesignHeight="528"
     d:DesignWidth="694"
     mc:Ignorable="d">
@@ -212,7 +214,8 @@
                                     <Border
                                         Grid.Row="1"
                                         BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                                        BorderThickness="0,0,1,1">
+                                        BorderThickness="0,0,1,1"
+                                        Visibility="{Binding Model.FilterPanel.SortByParams.Count, Converter={converters:CountToVisibilityConverter}}">
                                         <Grid Margin="8">
 
                                             <Grid.RowDefinitions>

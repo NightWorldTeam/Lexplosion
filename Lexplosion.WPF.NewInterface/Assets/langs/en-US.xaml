@@ -206,7 +206,7 @@
     <!--  Visit Offical Page  -->
     <s:String x:Key="VisitCurseforge">Visit Curseforge</s:String>
     <s:String x:Key="VisitModrinth">Visit Modrinth</s:String>
-    <s:String x:Key="VisitNightWorld">Visit NightWorld</s:String>
+    <s:String x:Key="VisitNightworld">Visit NightWorld</s:String>
 
 
     <!--    -->
