@@ -191,21 +191,14 @@
         </DataTemplate>
     </UserControl.Resources>
 
-    <Grid Height="350">
-
-        <!--    -->
+    <Grid>
         <core:If Condition="{Binding Model.IsEmpty}">
             <core:If.False>
                 <ItemsControl ItemsSource="{Binding Model.DistributedInstances}" />
             </core:If.False>
             <core:If.True>
                 <!--  TODO: Translate  -->
-                <TextBlock
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    FontSize="16"
-                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
-                    Text="Активные раздачи отсутсвуют" />
+                <controls:Empty Description="Ваши активные раздачи отсутсвуют" />
             </core:If.True>
         </core:If>
     </Grid>

@@ -29,7 +29,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
 
         public FiltableObservableCollection Distributions { get; set; } = new FiltableObservableCollection();
 
-        public bool IsEmpty { get; }
+        public bool IsEmpty { get => _sharesController.AvailableInstanceDistribution.Count == 0; }
 
         public InstanceDistributionModel(LibraryController controller, InstanceSharesController instanceSharesController)
         {
@@ -73,6 +73,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
 
             Distributions.Source = _sharesController.AvailableInstanceDistribution;
             Distributions.Filter = DistFilter;
+
+            OnPropertyChanged(nameof(IsEmpty));
         }
 
         public void Download(InstanceDistribution instanceDistribution)

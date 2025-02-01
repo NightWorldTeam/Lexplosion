@@ -21,8 +21,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
         public IReadOnlyCollection<DistributedInstance> ActiveShares { get => _activeShares; }
         public IReadOnlyCollection<InstanceDistribution> AvailableInstanceDistribution { get => _availableInstanceDistribution; }
 
-
-
         public InstanceSharesController()
         {
 

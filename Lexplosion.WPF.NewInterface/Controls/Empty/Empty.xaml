@@ -26,17 +26,18 @@
 
                             <TextBlock
                                 x:Name="Title"
-                                Margin="0,32,0,0"
+                                Margin="0,0,0,0"
                                 HorizontalAlignment="Center"
                                 FontSize="20"
                                 FontWeight="Bold"
                                 Foreground="{TemplateBinding TitleForeground}"
-                                Text="Библиотека пуста" />
+                                Text="Библиотека пуста"
+                                TextWrapping="WrapWithOverflow" />
 
                             <TextBlock
                                 x:Name="Description"
-                                Width="400"
-                                Margin="0,4,0,0"
+                                MaxWidth="{TemplateBinding DescriptionMaxWidth}"
+                                Margin="0,0,0,0"
                                 FontSize="{TemplateBinding FontSize}"
                                 FontWeight="{TemplateBinding FontWeight}"
                                 Foreground="{TemplateBinding Foreground}"

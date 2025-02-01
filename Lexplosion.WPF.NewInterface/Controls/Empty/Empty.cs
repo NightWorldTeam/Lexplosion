@@ -35,6 +35,10 @@ namespace Lexplosion.WPF.NewInterface.Controls
         public static readonly DependencyProperty TitleForegroundProperty
             = DependencyProperty.Register(nameof(TitleForeground), typeof(Brush), typeof(Empty));
 
+        public static readonly DependencyProperty DescriptionMaxWidthProperty
+            = DependencyProperty.Register(nameof(DescriptionMaxWidth), typeof(double), typeof(Empty),
+                new FrameworkPropertyMetadata(defaultValue: 400d, FrameworkPropertyMetadataOptions.AffectsMeasure));
+
         public string Description 
         {
             get => (string)GetValue(DescriptionProperty);
@@ -57,6 +61,12 @@ namespace Lexplosion.WPF.NewInterface.Controls
         {
             get => (string)GetValue(TitleProperty);
             set => SetValue(TitleProperty, value);
+        }
+
+        public double DescriptionMaxWidth
+        {
+            get => (double)GetValue(DescriptionMaxWidthProperty);
+            set => SetValue(DescriptionMaxWidthProperty, value);
         }
 
         public Brush TitleForeground 

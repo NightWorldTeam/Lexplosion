@@ -107,8 +107,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
             foreach (var theme in _themes)
             {
                 theme.SelectedEvent += SelectedThemeChanged;
+                Runtime.DebugWrite(theme.Name + " >>> " + GlobalData.GeneralSettings.ThemeName, color: System.ConsoleColor.Red);
             }
-
             var savedTheme = _themes.FirstOrDefault(t => t.Name == GlobalData.GeneralSettings.ThemeName);
 
             if (savedTheme == null)
@@ -134,11 +134,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
             var savedColorBrush = (SolidColorBrush)new BrushConverter().ConvertFrom(GlobalData.GeneralSettings.AccentColor);
             var savedColor = new ActivityColor(savedColorBrush);
             savedColor.SelectedEvent += SelectedColorChanged;
-            if (savedColorBrush == null) 
+            if (savedColorBrush == null)
             {
                 _colors[0].IsSelected = true;
             }
-            else 
+            else
             {
                 savedColor.IsSelected = true;
             }
