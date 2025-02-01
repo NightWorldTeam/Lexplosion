@@ -197,6 +197,9 @@ namespace Lexplosion.WPF.NewInterface.Core.Services
             var foregroundColor = ColorTools.ForegroundByColor(color);
             _selectedThemeResourceDictionary["DefaultButtonForegroundColor"] = foregroundColor;
             _selectedThemeResourceDictionary["DefaultButtonForegroundColorBrush"] = new SolidColorBrush(foregroundColor);
+            
+            _selectedThemeResourceDictionary["BrandColorForegroundColor"] = foregroundColor;
+            _selectedThemeResourceDictionary["BrandColorForegroundSolidColorBrush"] = new SolidColorBrush(foregroundColor);
 
 
         }
