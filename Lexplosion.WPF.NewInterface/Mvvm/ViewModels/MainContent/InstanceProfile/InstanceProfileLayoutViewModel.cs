@@ -71,7 +71,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         /// </summary>
         public void OpenAddonContainerPage() 
         {
-            if (_instanceModel.IsInstalled) 
+            if (_instanceModel.IsInstalled || _instanceModel.InLibrary) 
             {
                 LeftPanel.SelectItem(1);
             }

@@ -1,5 +1,11 @@
 ﻿namespace Lexplosion.WPF.NewInterface.Core.ViewModel
 {
+    public interface ILimitedAccessLayout : ILimitedAccess
+    {
+        public ILimitedAccess Content { get; }
+    }
+
+
     public interface ILimitedAccess
     {
         /// <summary>

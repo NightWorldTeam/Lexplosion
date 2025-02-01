@@ -103,6 +103,7 @@
     <Compile Include="Controls\LaunchButton\LaunchButton.cs" />
     <Compile Include="Controls\Message\MessageItem.cs" />
     <Compile Include="Controls\Paginator\PaginatorOptions.cs" />
+    <Compile Include="Controls\Result\Result.cs" />
     <Compile Include="Controls\ToastMessage\ToastMessage.cs" />
     <Compile Include="Core\AppCore.cs" />
     <Compile Include="Core\AppSettings.cs" />
@@ -139,6 +140,7 @@
     <Compile Include="Core\SegmentItem.cs" />
     <Compile Include="Core\Switch.cs" />
     <Compile Include="Core\ViewModel\ILimitedAccess.cs" />
+    <Compile Include="Core\ViewModel\LimitedContentViewModelBase.cs" />
     <Compile Include="Extensions\ResourceDictionaryExtensions.cs" />
     <Compile Include="Extensions\ScrollViewerExtensions.cs" />
     <Compile Include="Extensions\StyleSelectors\LastRowItemWrapPanelStyleSelector.cs" />
@@ -159,6 +161,8 @@
     <Compile Include="Mvvm\ViewModels\Authorization\NightWorldRegistrationViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Authorization\NoAccountAuthorizationViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Authorization\OAuth2\MicrosoftAuthorizationViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\Limited\LimitedContentLayoutViewModelBase.cs" />
+    <Compile Include="Mvvm\ViewModels\Limited\NightWorldLimitedContentLayoutViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\ModalFactory\ModalFactoryBase.cs" />
     <Compile Include="Mvvm\ViewModels\ModalFactory\ModalInstanceCreatorFactory.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\ConfirmActionViewModel.cs" />
@@ -205,6 +209,15 @@
     </Compile>
     <Compile Include="Mvvm\Views\Pages\Authorization\NoAccountAuthorizationView.xaml.cs">
       <DependentUpon>NoAccountAuthorizationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Views\Pages\NightWorldLimitedContentLayoutView.xaml.cs">
+      <DependentUpon>NightWorldLimitedContentLayoutView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Views\Pages\PageCurtains\NightWorld\NightWorldModalPageCurtainsView.xaml.cs">
+      <DependentUpon>NightWorldModalPageCurtainsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Views\Pages\PageCurtains\NightWorld\NightWorldPageCurtainsView.xaml.cs">
+      <DependentUpon>NightWorldPageCurtainsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Mvvm\Views\Pages\WelcomeView.xaml.cs">
       <DependentUpon>WelcomeView.xaml</DependentUpon>
@@ -632,6 +645,18 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\Friends\Friend.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Mvvm\Views\Pages\NightWorldLimitedContentLayoutView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Mvvm\Views\Pages\PageCurtains\NightWorld\NightWorldModalPageCurtainsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Mvvm\Views\Pages\PageCurtains\NightWorld\NightWorldPageCurtainsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

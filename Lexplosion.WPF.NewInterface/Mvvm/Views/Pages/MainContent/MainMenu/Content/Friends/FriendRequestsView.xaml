@@ -448,8 +448,8 @@
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsSelected" Value="True">
                                 <Setter TargetName="border" Property="Background" Value="{DynamicResource ActivitySolidColorBrush}" />
-                                <Setter Property="Foreground" Value="{DynamicResource BrandColorForegroundSolidColorBrush}" />
-                                <Setter Property="TextBlock.Foreground" Value="{DynamicResource BrandColorForegroundSolidColorBrush}" />
+                                <Setter Property="Foreground" Value="{DynamicResource DefaultButtonForegroundColorBrush}" />
+                                <Setter Property="TextBlock.Foreground" Value="{DynamicResource DefaultButtonForegroundColorBrush}" />
                                 <Setter TargetName="border" Property="CornerRadius" Value="2" />
                             </Trigger>
                         </ControlTemplate.Triggers>

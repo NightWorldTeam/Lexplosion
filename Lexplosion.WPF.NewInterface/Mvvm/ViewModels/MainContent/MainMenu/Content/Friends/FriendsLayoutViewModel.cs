@@ -9,16 +9,6 @@ using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 {
-    public class LimitedLayoutContentLayoutViewModelBase : ILimitedAccess
-    {
-        public bool HasAccess => throw new NotImplementedException();
-
-        public void RefreshAccessData()
-        {
-            throw new NotImplementedException();
-        }
-    }
-
     public class FriendsLayoutViewModel : ContentLayoutViewModelBase, ILimitedAccess
     {
         private FriendsViewModel _friendsViewModel;
@@ -61,15 +51,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         public FriendsLayoutViewModel(Action openFactoryAction) : base()
         {
             _openAccountFactory = openFactoryAction;
-
-            Account.ActiveAccountChanged += (acc) =>
-            {
-                ThreadPool.QueueUserWorkItem((obj) => { 
-                    App.Current.Dispatcher.Invoke(() => { 
-                        RefreshAccessData();
-                    });
-                });
-            };
 
             HasAccess = Account.ActiveAccount?.AccountType == AccountType.NightWorld;
 

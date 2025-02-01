@@ -1,13 +1,14 @@
 ﻿using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Objects;
+using Lexplosion.WPF.NewInterface.Core.ViewModel;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer;
 using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer
 {
-    public sealed class InstanceDistributionViewModel : ViewModelBase
+    public sealed class InstanceDistributionViewModel : ViewModelBase, ILimitedAccess
     {
         public InstanceDistributionModel Model { get; }
 
@@ -36,6 +37,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer
             get => RelayCommand.GetCommand<InstanceDistribution>(ref _cancelDownloadInstanceCommand, Model.CancelDownloadInstance);
         }
 
+        public bool HasAccess { get; private set; }
+
 
         #endregion Commands
 
@@ -44,6 +47,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer
         public InstanceDistributionViewModel(LibraryController controller, InstanceSharesController instanceSharesController)
         {
             Model = new InstanceDistributionModel(controller, instanceSharesController);
+        }
+
+        public void RefreshAccessData()
+        {
+
         }
     }
 }

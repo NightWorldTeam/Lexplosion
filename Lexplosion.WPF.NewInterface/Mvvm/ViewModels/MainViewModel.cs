@@ -98,7 +98,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
                 new ModalInstanceCreatorFactory(Model.LibraryController as LibraryController, Model.InstanceSharesController)
             );
 
-            var mainMenuLayout = new MainMenuLayoutViewModel(NavigationStore, ModalNavigationStore, Model);
+            var mainMenuLayout = new MainMenuLayoutViewModel(appCore, NavigationStore, ModalNavigationStore, Model);
             ToMainMenu = new NavigateCommand<ViewModelBase>(NavigationStore, () => mainMenuLayout);
         }
 

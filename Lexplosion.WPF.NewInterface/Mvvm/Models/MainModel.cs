@@ -4,6 +4,7 @@ using Lexplosion.WPF.NewInterface.Core.Notifications;
 using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Core.Services;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers;
+using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Limited;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer;
 using Lexplosion.WPF.NewInterface.Stores;
@@ -61,8 +62,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models
             leftmenu.AddTabItems(new ModalLeftMenuTabItem[]
             {
                 new ModalLeftMenuTabItem(0, "Export", "Download", exportVM, true),
-                new ModalLeftMenuTabItem(1, "Share", "Share", instanceShare, true),
-                new ModalLeftMenuTabItem(2, "ActiveShares", "ActiveShares", activeShares, true)
+                new ModalLeftMenuTabItem(1, "Share", "Share", new NightWorldLimitedContentLayoutViewModel(instanceShare, true), true),
+                new ModalLeftMenuTabItem(2, "ActiveShares", "ActiveShares", new NightWorldLimitedContentLayoutViewModel(activeShares, true), true)
             }, true);
 
             leftmenu.LoaderPlaceholderKey = "ExportProcessActive";

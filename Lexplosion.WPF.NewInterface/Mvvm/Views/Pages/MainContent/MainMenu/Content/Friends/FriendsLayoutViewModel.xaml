@@ -9,6 +9,7 @@
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu"
     xmlns:localVM="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DataContext="{d:DesignInstance Type=localVM:FriendsLayoutViewModel}"
     d:DesignWidth="694"
     mc:Ignorable="d">
 
@@ -40,7 +41,5 @@
                 </controls:UIUnderlineTabControl.ItemContainerStyle>
             </controls:UIUnderlineTabControl>
         </Grid>
-
-        <controls:PageCurtains IsActive="{Binding HasAccess, Converter={converters:NegativeBooleanValueConverter}}" />
     </Grid>
 </UserControl>

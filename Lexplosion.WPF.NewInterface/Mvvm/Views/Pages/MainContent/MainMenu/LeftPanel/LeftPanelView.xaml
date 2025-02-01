@@ -33,7 +33,7 @@
                     IconHeight="{Binding IconHeight}"
                     IconKey="{Binding Icon}"
                     IconWidth="{Binding IconWidth}"
-                    IsChecked="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"
+                    IsChecked="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                     TextKey="{Binding TextKey}" />
                 <Border.Style>
                     <Style TargetType="{x:Type Border}">

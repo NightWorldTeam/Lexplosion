@@ -2,6 +2,7 @@
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Mvvm.Models;
+using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Limited;
 using Lexplosion.WPF.NewInterface.Stores;
 using System;
 using System.Linq;
@@ -40,17 +41,17 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         #region Constructors
 
 
-        public MainMenuLayoutViewModel(INavigationStore navigationStore, ModalNavigationStore modalNavStore, MainModel mainModel)
+        public MainMenuLayoutViewModel(AppCore appCore, INavigationStore navigationStore, ModalNavigationStore modalNavStore, MainModel mainModel)
         {
             Func<ViewModelBase> s = () => this;
             var ToMainMenuLayoutCommand = new NavigateCommand<ViewModelBase>(navigationStore, s);
             _catalogViewModel = new CatalogViewModel(navigationStore, ToMainMenuLayoutCommand, mainModel.CatalogController);
             _libraryViewModel = new LibraryViewModel(navigationStore, ToMainMenuLayoutCommand, modalNavStore, mainModel.LibraryController, OpenCatalog);
 
-            _multiplayerLayoutViewModel = new MultiplayerLayoutViewModel(OpenAccountFactory);
-            _friendsLayoutViewModel = new FriendsLayoutViewModel(OpenAccountFactory);
+            _multiplayerLayoutViewModel = new NightWorldLimitedContentLayoutViewModel(new MultiplayerLayoutViewModel(OpenAccountFactory));
+            _friendsLayoutViewModel = new NightWorldLimitedContentLayoutViewModel(new FriendsLayoutViewModel(OpenAccountFactory));
 
-            _generalSettingsLayoutViewModel = new GeneralSettingsLayoutViewModel(modalNavStore);
+            _generalSettingsLayoutViewModel = new GeneralSettingsLayoutViewModel(appCore);
 
             Content = _catalogViewModel;
 

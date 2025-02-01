@@ -5,6 +5,7 @@ using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Modal;
 using Lexplosion.WPF.NewInterface.Core.Notifications;
+using Lexplosion.WPF.NewInterface.Core.ViewModel;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer;
 using System;
@@ -131,9 +132,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer
         #endregion Public Methods
     }
 
-    public sealed class InstanceShareViewModel : ActionModalViewModelBase
+    public sealed class InstanceShareViewModel : ActionModalViewModelBase, ILimitedAccess
     {
         public InstanceShareModel Model { get; }
+        public bool HasAccess => throw new NotImplementedException();
 
 
         #region  Commands
@@ -160,6 +162,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer
         private void OnInstanceShareActionCommandExecuted(object obj)
         {
             Model.Share();
+        }
+
+        public void RefreshAccessData()
+        {
+
         }
     }
 }

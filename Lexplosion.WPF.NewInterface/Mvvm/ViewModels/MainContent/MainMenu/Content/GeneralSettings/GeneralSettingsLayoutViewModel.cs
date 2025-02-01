@@ -13,9 +13,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         private readonly ViewModelBase _accountsViewModel;
         private readonly ViewModelBase _aboutViewModel = new AboutUsViewModel();
 
-        public GeneralSettingsLayoutViewModel(ModalNavigationStore modalNavigationStore) : base()
+        public GeneralSettingsLayoutViewModel(AppCore appCore) : base()
         {
-            _accountsViewModel = new AccountsSettingsViewModel(modalNavigationStore);
+            _accountsViewModel = new AccountsSettingsViewModel(appCore);
 
             InitDefaultSettingsTabMenu();
         }

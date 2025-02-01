@@ -7,7 +7,7 @@
         BasedOn="{StaticResource {x:Type controls:AdvancedToggleButton}}"
         TargetType="{x:Type controls:AdvancedToggleButton}">
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Foreground" Value="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource DefaultButtonForegroundColorBrush}" />
         <Setter Property="Height" Value="32" />
         <Setter Property="FontSize" Value="14" />
         <Setter Property="VerticalContentAlignment" Value="Center" />

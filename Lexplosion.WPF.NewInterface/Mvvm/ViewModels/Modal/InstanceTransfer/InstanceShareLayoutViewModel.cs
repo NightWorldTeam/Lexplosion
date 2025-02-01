@@ -3,13 +3,13 @@ using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Notifications;
 using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers;
-using System;
 using System.Collections.Generic;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer
 {
     public sealed class InstanceShareLayoutViewModel : ViewModelBase
     {
+        // TODO: Для чего этот класс?
         public IEnumerable<TabItemModel> Tabs { get; }
 
 

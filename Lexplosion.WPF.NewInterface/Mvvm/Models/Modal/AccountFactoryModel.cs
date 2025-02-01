@@ -109,6 +109,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Modal
                 {
                     App.Current.Dispatcher.Invoke(() =>
                     {
+                        if (Account.ActiveAccount == null) 
+                        {
+                            account.IsActive = true;
+                        }
+
                         account.Save();
                         IsAuthorizationInProcess = false;
                     });

@@ -10,10 +10,12 @@
     xmlns:instanceTransferViewModel="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer"
     xmlns:instanceprofileview="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.InstanceProfile"
     xmlns:instanceprofilevm="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile"
+    xmlns:limited="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Limited"
     xmlns:mainmenuview="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu"
     xmlns:mainmenuvm="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu"
     xmlns:modalviews="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Modal"
     xmlns:modalvm="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal"
+    xmlns:pages="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages"
     xmlns:s="clr-namespace:System;assembly=mscorlib"
     xmlns:viewmodels="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels">
 
@@ -45,6 +47,11 @@
         <authviews:NoAccountAuthorizationView />
     </DataTemplate>
 
+
+    <!--  Limited  -->
+    <DataTemplate DataType="{x:Type limited:NightWorldLimitedContentLayoutViewModel}">
+        <pages:NightWorldLimitedContentLayoutView />
+    </DataTemplate>
 
     <!--  MainContent  -->
 

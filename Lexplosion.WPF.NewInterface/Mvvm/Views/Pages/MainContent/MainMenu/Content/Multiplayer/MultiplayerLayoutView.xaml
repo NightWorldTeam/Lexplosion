@@ -7,7 +7,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu"
+    xmlns:mainmenu="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DataContext="{d:DesignInstance Type=mainmenu:MultiplayerLayoutViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
@@ -39,7 +41,5 @@
                 </controls:UIUnderlineTabControl.ItemContainerStyle>
             </controls:UIUnderlineTabControl>
         </Grid>
-
-        <controls:PageCurtains IsActive="{Binding HasAccess, Converter={converters:NegativeBooleanValueConverter}, UpdateSourceTrigger=PropertyChanged}" />
     </Grid>
 </UserControl>

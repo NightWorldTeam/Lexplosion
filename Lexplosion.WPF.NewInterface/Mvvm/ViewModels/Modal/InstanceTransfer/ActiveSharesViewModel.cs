@@ -1,6 +1,7 @@
 ﻿using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Notifications;
+using Lexplosion.WPF.NewInterface.Core.ViewModel;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer;
 using System.Collections.Generic;
@@ -37,7 +38,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer
     }
 
 
-    public sealed class ActiveSharesViewModel : ViewModelBase
+    public sealed class ActiveSharesViewModel : ViewModelBase, ILimitedAccess
     {
         public ActiveSharesModel Model { get; }
 
@@ -58,6 +59,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer
         public ActiveSharesViewModel(InstanceSharesController controller, NotifyCallback notify = null)
         {
             Model = new ActiveSharesModel(controller, notify);
+        }
+
+        public bool HasAccess => throw new System.NotImplementedException();
+
+        public void RefreshAccessData()
+        {
+            
         }
     }
 }
