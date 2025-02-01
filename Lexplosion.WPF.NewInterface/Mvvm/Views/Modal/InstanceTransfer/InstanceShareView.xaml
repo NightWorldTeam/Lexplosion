@@ -5,6 +5,7 @@
     xmlns:controls="clr-namespace:Lexplosion.WPF.NewInterface.Controls"
     xmlns:core="clr-namespace:Lexplosion.WPF.NewInterface.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
     xmlns:instancetransfer="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Modal.InstanceTransfer"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -150,11 +151,38 @@
 
             <core:If.True>
                 <!--    -->
-                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <StackPanel
+                    Margin="0,-64,0,0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+
+                    <Border
+                        Width="64"
+                        Height="64"
+                        Margin="0,0,0,16"
+                        Background="{DynamicResource ActivitySolidColorBrush}"
+                        CornerRadius="100">
+                        <Viewbox Height="15" Margin="0,2,0,0">
+                            <Path
+                                extensions:PathExtensions.StringKeyData="CheckMark"
+                                Fill="{DynamicResource DefaultButtonForegroundColorBrush}"
+                                Stretch="Fill" />
+                        </Viewbox>
+                    </Border>
+
+                    <!--  TODO: Translate  -->
                     <TextBlock
+                        Margin="0,0,0,8"
                         FontSize="18"
                         Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                        Text="Вы уже раздаете данный клиент" />
+                        Text="Вы уже раздаете данный клиент"
+                        TextAlignment="Center" />
+
+                    <TextBlock
+                        Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                        Text="Данная страница будет разблокирована как только вы остановите активную раздачу в разделе 'Ваши раздачи'"
+                        TextAlignment="Center"
+                        TextWrapping="WrapWithOverflow" />
                     <!--<controls:AdvancedButton Text="Остановить активную раздачу." Style="{StaticResource DefaultAdvancedButton}"  />-->
                 </StackPanel>
             </core:If.True>

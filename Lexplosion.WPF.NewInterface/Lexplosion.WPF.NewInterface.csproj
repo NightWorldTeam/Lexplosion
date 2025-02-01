@@ -103,7 +103,6 @@
     <Compile Include="Controls\LaunchButton\LaunchButton.cs" />
     <Compile Include="Controls\Message\MessageItem.cs" />
     <Compile Include="Controls\Paginator\PaginatorOptions.cs" />
-    <Compile Include="Controls\Result\Result.cs" />
     <Compile Include="Controls\ToastMessage\ToastMessage.cs" />
     <Compile Include="Core\AppCore.cs" />
     <Compile Include="Core\AppSettings.cs" />
