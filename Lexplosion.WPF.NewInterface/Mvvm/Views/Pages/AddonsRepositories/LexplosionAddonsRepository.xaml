@@ -533,13 +533,13 @@
                     Margin="0,0,0,16"
                     VerticalAlignment="Top"
                     Orientation="Horizontal">
-                    <Button
+                    <controls:AdvancedButton
                         Width="32"
                         Height="32"
                         Command="{Binding BackToInstanceProfileCommand}"
-                        Content="Close"
+                        IconData="{StaticResource PDClose}"
                         IsCancel="True"
-                        Style="{StaticResource x32IconButton}" />
+                        Style="{StaticResource sm-button-icon}" />
                     <core:If Condition="{Binding Model.IsAddonTypeMaps}">
                         <core:If.True>
                             <ComboBox
@@ -649,16 +649,14 @@
         </Grid>
 
         <!--  Apply Categories  -->
-        <Button
-            Height="32"
+        <controls:AdvancedButton
             Margin="16,0,16,16"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Bottom"
-            HorizontalContentAlignment="Center"
-            VerticalContentAlignment="Center"
             Command="{Binding ApplySelectedCategoriesCommand}"
             Content="{DynamicResource Accept}"
-            FontWeight="Medium"
+            FontSize="12"
+            Style="{StaticResource sm-default}"
             Visibility="{Binding Model.HasUnconfirmChanges, Converter={converters:BooleanToVisibilityConverter}}" />
     </Grid>
 </UserControl>

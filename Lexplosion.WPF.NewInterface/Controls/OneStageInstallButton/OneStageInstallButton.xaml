@@ -44,10 +44,11 @@
     </Style>
 
     <Style TargetType="{x:Type local:OneStageInstallButton}">
+        <Setter Property="Background" Value="{DynamicResource ActivitySolidColorBrush}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:OneStageInstallButton}">
-                    <Border Background="{DynamicResource ActivitySolidColorBrush}" CornerRadius="5">
+                    <Border Background="{TemplateBinding Background}" CornerRadius="5">
                         <Grid>
                             <!--  Before/After Install  -->
                             <ContentPresenter x:Name="PART_Content" />
@@ -68,6 +69,15 @@
                             </Grid>
                         </Grid>
                     </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="{DynamicResource DefaultButtonHoverBackgroundColorBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Background" Value="{DynamicResource DefaultButtonPressedBackgroundColorBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
