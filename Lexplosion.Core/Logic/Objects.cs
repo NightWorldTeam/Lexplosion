@@ -134,7 +134,7 @@ namespace Lexplosion.Logic.Objects
     {
         public string JavaName;
         public long LastUpdate;
-        public string ExecutableFile = "/bin/javaw.exe";
+		public string ExecutableFile { get; set; } = "/bin/java.exe";
         public string ManifestUrl;
 
         public JavaVersion(string name, JavaVersionManifest.JavaVersionDesc javaManifest)
