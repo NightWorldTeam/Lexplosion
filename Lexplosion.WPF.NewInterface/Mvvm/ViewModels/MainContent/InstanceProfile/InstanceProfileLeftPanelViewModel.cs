@@ -9,12 +9,11 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Threading;
-using Lexplosion.Logic.Management.Instances;
 using Lexplosion.WPF.NewInterface.Core.Notifications;
 using System;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Addons;
-using Lexplosion.WPF.NewInterface.Core.Converters;
+using Lexplosion.WPF.NewInterface.Core;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile
 {
@@ -34,13 +33,15 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
     {
         private readonly InstanceFieldInfo _info;
 
-        public InstanceFieldInfo(string name, T value, Func<T, string>? converter = null) 
-            : base(name, converter == null ? value.ToString() : converter(value)) 
+        public InstanceFieldInfo(string name, T value, Func<T, string>? converter = null)
+            : base(name, converter == null ? value.ToString() : converter(value))
         { }
     }
 
     public class InstanceProfileLeftPanelViewModel : LeftPanelViewModel
     {
+        private readonly AppCore _appCore;
+
         private InstanceModelBase _instanceModel;
         private INavigationStore _navigationStore;
 
@@ -68,13 +69,33 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         public IEnumerable<FrameworkElementModel> InstanceActions { get => _instanceActions; }
 
 
-        private ObservableCollection<InstanceFieldInfo> _additionalInfo = []; 
+        private ObservableCollection<InstanceFieldInfo> _additionalInfo = [];
         public IEnumerable<InstanceFieldInfo> AdditionalInfo { get => _additionalInfo; }
 
 
-        public int ProgressValue 
+        public int ProgressValue
         {
             get; private set;
+        }
+
+        private bool _isLaunching;
+        public bool IsLaunching
+        {
+            get => _isLaunching; set
+            {
+                _isLaunching = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _isDownloading;
+        public bool IsDownloading
+        {
+            get => _isDownloading; set
+            {
+                _isDownloading = value;
+                OnPropertyChanged();
+            }
         }
 
 
@@ -90,20 +111,28 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         /// </summary>
         public ICommand PlayCommand
         {
-            get => RelayCommand.GetCommand(ref _playCommand, _instanceModel.Run);
+            get => RelayCommand.GetCommand(ref _playCommand, () =>
+            {
+                IsLaunching = true;
+                _instanceModel.Run();
+            });
         }
 
         private RelayCommand _installCommand;
         /// <summary>
         /// Устанавливает клиент, если клиент не добавлен в библиотеку добавляет.
         /// </summary>
-        public ICommand InstallCommand 
+        public ICommand InstallCommand
         {
-            get => RelayCommand.GetCommand(ref _installCommand, _instanceModel.Download);
+            get => RelayCommand.GetCommand(ref _installCommand, () =>
+            {
+                IsDownloading = true;
+                _instanceModel.Download();
+            });
         }
 
         public ICommand BackCommand { get; }
-        
+
 
 
         #endregion Commands
@@ -112,8 +141,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         #region Contructors
 
 
-        public InstanceProfileLeftPanelViewModel(INavigationStore navigationStore, ICommand toMainMenuLayoutCommand, InstanceModelBase instanceModelBase, NotifyCallback? notify = null)
+        public InstanceProfileLeftPanelViewModel(AppCore appCore, INavigationStore navigationStore, ICommand toMainMenuLayoutCommand, InstanceModelBase instanceModelBase, NotifyCallback? notify = null)
         {
+            _appCore = appCore;
             Notify = notify;
             BackCommand = new RelayCommand((obj) =>
             {
@@ -130,29 +160,52 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             _instanceModel.GameVersionChanged += OnVersionChanged;
             _instanceModel.ModloaderChanged += OnModloaderChanged;
             _instanceModel.StateChanged += OnStateChanged;
-            _instanceModel.DownloadProgressChanged += (type, progressArgs) =>
-            {
-                // TODO: сделать прогресс бар для кнопки запуска.
-                if (type == StageType.Java)
-                {
-                    ProgressValue = progressArgs.Procents / 3;
-                }
-                else if (type == StageType.Prepare)
-                {
-                    ProgressValue = 33 + progressArgs.Procents / 3;
-                }
-                else 
-                {
-                    ProgressValue = 66 + progressArgs.Procents / 3;
-                }
+            _instanceModel.DownloadProgressChanged += OnDownloadProgressChanged;
 
-                OnPropertyChanged(nameof(ProgressValue));
-            };
+            _instanceModel.GameLaunchCompleted += OnGameLaunchCompleted;
+            _instanceModel.DownloadComplited += OnDownloadComplited;
 
             _instanceModel.DataChanged += OnInstanceModelDataChanged;
 
             UpdateFrameworkElementModels();
             GenerateAdditionalInfo();
+
+            if (_instanceModel.IsDownloading)
+                IsDownloading = true;
+        }
+
+        private void OnDownloadComplited(InstanceInit arg1, IEnumerable<string> arg2, bool arg3)
+        {
+            IsDownloading = false;
+            _appCore.MessageService.Error($"Неудалось установить {_instanceModel.Name}.");
+        }
+
+        private void OnDownloadProgressChanged(StageType type, ProgressHandlerArguments progressArgs)
+        {
+            if (IsDownloading == false)
+                IsDownloading = true;
+
+            Runtime.DebugWrite($"{_instanceModel.Name} {type} {progressArgs.Procents}");
+            // TODO: сделать прогресс бар для кнопки запуска.
+            if (type == StageType.Java)
+            {
+                ProgressValue = progressArgs.Procents;
+            }
+            else if (type == StageType.Prepare)
+            {
+                ProgressValue = progressArgs.Procents;
+            }
+            else
+            {
+                ProgressValue = progressArgs.Procents;
+            }
+
+            OnPropertyChanged(nameof(ProgressValue));
+        }
+
+        private void OnGameLaunchCompleted(bool value)
+        {
+            IsLaunching = false;
         }
 
 
@@ -162,23 +215,26 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         #region Private Methods
 
 
-        private void GenerateAdditionalInfo() 
+        private void GenerateAdditionalInfo()
         {
-            _additionalInfo.Clear();
-            _additionalInfo.Add(new InstanceFieldInfo<MinecraftVersion>("Version:", _instanceModel.GameVersion));
-            _additionalInfo.Add(new InstanceFieldInfo("GameType:", _instanceModel.InstanceData.Modloader.ToString()));
+            _appCore.UIThread.Invoke(() =>
+            {
+                _additionalInfo.Clear();
+                _additionalInfo.Add(new InstanceFieldInfo<MinecraftVersion>("Version:", _instanceModel.GameVersion));
+                _additionalInfo.Add(new InstanceFieldInfo("GameType:", _instanceModel.InstanceData.Modloader.ToString()));
 
-            if (_instanceModel.IsInstalled)
-            {
-                _additionalInfo.Add(new InstanceFieldInfo<long>("PlayedTime:", 100000, SecondsToPlayTime));
-            }
-            else 
-            {
-                if (int.TryParse(DownloadCount, out var downloads)) 
+                if (_instanceModel.IsInstalled)
                 {
-                    _additionalInfo.Add(new InstanceFieldInfo<int>("DownloadCount:", downloads, DownloadsCountToString));
+                    _additionalInfo.Add(new InstanceFieldInfo<long>("PlayedTime:", 100000, SecondsToPlayTime));
                 }
-            }
+                else
+                {
+                    if (int.TryParse(DownloadCount, out var downloads))
+                    {
+                        _additionalInfo.Add(new InstanceFieldInfo<int>("DownloadCount:", downloads, DownloadsCountToString));
+                    }
+                }
+            });
         }
 
 
@@ -191,7 +247,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             return $"{seconds / 60}мин";
         }
 
-        string DownloadsCountToString(int number) 
+        string DownloadsCountToString(int number)
         {
             if (number == 0)
                 return "0";
@@ -232,7 +288,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             OnPropertyChanged(nameof(InstanceName));
         }
 
-        private void OnLogoChanged() 
+        private void OnLogoChanged()
         {
             OnPropertyChanged(nameof(InstanceImage));
         }
@@ -249,8 +305,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
 
         private void OnStateChanged()
         {
-            App.Current.Dispatcher.Invoke(() => 
-            { 
+            App.Current.Dispatcher.Invoke(() =>
+            {
                 UpdateFrameworkElementModels();
                 GenerateAdditionalInfo();
             });
@@ -300,25 +356,25 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         }
 
 
-        private void DeleteInstance() 
+        private void DeleteInstance()
         {
             // возвращаем пользователя обратно на страницу библиотеки, потом проиграываем задержку, после чего вызываем удаление.
             // P.S задержка нужна, чтобы анимация проигрывалась без косяков.
             BackCommand?.Execute(null);
             // запускаем задержку и удаляем сборку.
-            Runtime.TaskRun(() => 
+            Runtime.TaskRun(() =>
             {
                 // TODO: поработать на задержкой.
                 Thread.Sleep(10);
-                App.Current.Dispatcher?.Invoke(() => 
-                { 
+                App.Current.Dispatcher?.Invoke(() =>
+                {
                     _instanceModel.Delete();
                 });
             });
         }
 
 
-        private void OnInstanceModelDataChanged() 
+        private void OnInstanceModelDataChanged()
         {
             OnPropertyChanged(nameof(InstanceName));
             OnPropertyChanged(nameof(InstanceVersion));

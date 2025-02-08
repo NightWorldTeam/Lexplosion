@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -21,6 +23,8 @@ namespace Lexplosion.WPF.NewInterface.Controls
         private Viewbox _iconViewBox;
         private Path _iconPath;
         private TextBlock _textBlock;
+        private Grid _loadingContent;
+        private Grid _mainContent;
 
 
         #region Properties
@@ -63,6 +67,82 @@ namespace Lexplosion.WPF.NewInterface.Controls
                 new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.None));
 
         public static readonly DependencyProperty HasIconProperty = HasIconPropertyKey.DependencyProperty;
+
+
+        /*** Loading ***/
+
+
+        public static readonly DependencyProperty IsLoadingProperty
+            = DependencyProperty.Register(nameof(IsLoading), typeof(bool), typeof(AdvancedButton),
+            new FrameworkPropertyMetadata(false, propertyChangedCallback: OnIsLoadingPropertyChanged));
+
+        public static readonly DependencyProperty LoadingTextProperty
+            = DependencyProperty.Register(nameof(LoadingText), typeof(string), typeof(AdvancedButton),
+            new FrameworkPropertyMetadata(string.Empty));
+
+        public static readonly DependencyProperty LoadingActionProperty
+            = DependencyProperty.Register(nameof(LoadingAction), typeof(ICommand), typeof(AdvancedButton),
+            new FrameworkPropertyMetadata(null, propertyChangedCallback: OnIsLoadingPropertyChanged));
+
+        /// <summary>
+        /// Идет ли загрузка
+        /// </summary>
+        public bool IsLoading
+        {
+            get => (bool)GetValue(IsLoadingProperty);
+            set => SetValue(IsLoadingProperty, value);
+        }
+
+        public string LoadingText
+        {
+            get => (string)GetValue(LoadingTextProperty);
+            set => SetValue(LoadingTextProperty, value);
+        }
+
+        public ICommand LoadingAction
+        {
+            get => (ICommand)GetValue(LoadingActionProperty);
+            set => SetValue(LoadingActionProperty, value);
+        }
+
+        private void OnIsLoadingPropertyChanged(bool newValue)
+        {
+            //if ((bool)newValue)
+            //{
+            //    _loadingContent.Visibility = Visibility.Visible;
+            //    _mainContent.Visibility = Visibility.Collapsed;
+            //}
+            //else
+            //{
+            //    _loadingContent.Visibility = Visibility.Collapsed;
+            //    _mainContent.Visibility = Visibility.Visible;
+            //}
+        }
+
+
+        private static void OnIsLoadingPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is AdvancedButton _this)
+            {
+                if (_this._loadingContent == null || _this._mainContent == null)
+                    return;
+
+                _this.OnIsLoadingPropertyChanged((bool)e.NewValue);
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         public bool HasIcon
         {
@@ -155,6 +235,8 @@ namespace Lexplosion.WPF.NewInterface.Controls
             }
 
             _textBlock = Template.FindName(PART_TEXT_NAME, this) as TextBlock;
+            _loadingContent = Template.FindName("PART_LoadingContent", this) as Grid;
+            _mainContent = Template.FindName("DefaultContent", this) as Grid;
 
             if (_textBlock != null)
             {
@@ -162,6 +244,8 @@ namespace Lexplosion.WPF.NewInterface.Controls
             }
 
             HasIcon = IconData != null;
+
+            OnIsLoadingPropertyChanged(IsLoading);
         }
 
 
@@ -293,6 +377,16 @@ namespace Lexplosion.WPF.NewInterface.Controls
             }
         }
 
+        protected override void OnClick()
+        {
+            if (IsLoading) 
+            {
+                LoadingAction?.Execute(null);
+                return;
+            }
+
+            base.OnClick();
+        }
 
         #endregion Private Methods
     }

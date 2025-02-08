@@ -50,46 +50,75 @@
                             HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                             Background="Transparent"
                             ShowGridLines="False">
+                            <Grid x:Name="DefaultContent">
 
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
 
-                            <!--  Icon  -->
-                            <Border
-                                Padding="{TemplateBinding IconPadding}"
-                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
-                                <Viewbox x:Name="PATH_Icon">
-                                    <Path
-                                        Fill="{TemplateBinding Foreground}"
-                                        RenderTransformOrigin="0.5, 0.5"
-                                        Stretch="Fill">
-                                        <Path.RenderTransform>
-                                            <ScaleTransform ScaleX="0.7" ScaleY="0.7" />
-                                        </Path.RenderTransform>
-                                    </Path>
-                                </Viewbox>
-                            </Border>
+                                <!--  Icon  -->
+                                <Border
+                                    Padding="{TemplateBinding IconPadding}"
+                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                                    <Viewbox x:Name="PATH_Icon">
+                                        <Path
+                                            Fill="{TemplateBinding Foreground}"
+                                            RenderTransformOrigin="0.5, 0.5"
+                                            Stretch="Fill">
+                                            <Path.RenderTransform>
+                                                <ScaleTransform ScaleX="0.7" ScaleY="0.7" />
+                                            </Path.RenderTransform>
+                                        </Path>
+                                    </Viewbox>
+                                </Border>
 
-                            <!--  TextBlock  -->
-                            <Border
-                                Grid.Column="1"
-                                Padding="{TemplateBinding TextPadding}"
-                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
-                                <TextBlock
-                                    x:Name="PATH_Text"
-                                    FontSize="{TemplateBinding FontSize}"
-                                    Foreground="{TemplateBinding Foreground}" />
-                            </Border>
+                                <!--  TextBlock  -->
+                                <Border
+                                    Grid.Column="1"
+                                    Padding="{TemplateBinding TextPadding}"
+                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                                    <TextBlock
+                                        x:Name="PATH_Text"
+                                        FontSize="{TemplateBinding FontSize}"
+                                        Foreground="{TemplateBinding Foreground}" />
+                                </Border>
 
-                            <!--  Button Content Property  -->
-                            <ContentPresenter
-                                Grid.ColumnSpan="2"
+                                <!--  Button Content Property  -->
+                                <ContentPresenter
+                                    Grid.ColumnSpan="2"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    RecognizesAccessKey="True" />
+                            </Grid>
+
+                            <Grid
+                                x:Name="PART_LoadingContent"
                                 HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                RecognizesAccessKey="True" />
+                                Background="Transparent"
+                                Visibility="Collapsed">
+
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <local:CircleLoader
+                                    Width="16"
+                                    Height="16"
+                                    VerticalAlignment="Center"
+                                    CornerRadius="5"
+                                    Foreground="{TemplateBinding Foreground}"
+                                    IsActive="{TemplateBinding IsLoading}" />
+
+                                <TextBlock
+                                    Grid.Column="1"
+                                    Margin="8,0,0,0"
+                                    VerticalAlignment="Center"
+                                    Foreground="{TemplateBinding Foreground}"
+                                    Text="{TemplateBinding LoadingText}" />
+                            </Grid>
                         </Grid>
                     </Border>
 
@@ -97,6 +126,10 @@
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter TargetName="PATH_Text" Property="Opacity" Value="0.3" />
                             <Setter TargetName="PATH_Icon" Property="Opacity" Value="0.3" />
+                        </Trigger>
+                        <Trigger Property="IsLoading" Value="True">
+                            <Setter TargetName="PART_LoadingContent" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="DefaultContent" Property="Visibility" Value="Collapsed" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

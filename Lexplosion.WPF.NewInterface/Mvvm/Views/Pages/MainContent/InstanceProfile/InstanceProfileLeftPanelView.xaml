@@ -219,33 +219,75 @@
                             <core:If Condition="{Binding IsInstalled, UpdateSourceTrigger=PropertyChanged}">
                                 <core:If.True>
                                     <controls:AdvancedButton
-                                        Height="32"
-                                        HorizontalAlignment="Stretch"
-                                        VerticalContentAlignment="Center"
                                         Command="{Binding PlayCommand}"
                                         FontSize="12"
-                                        FontWeight="Medium"
                                         IconData="{StaticResource PDPlay}"
-                                        IconPadding="0,0,8,0"
+                                        IsLoading="{Binding IsLaunching}"
+                                        LoadingText="Идет запуск игры..."
                                         Style="{StaticResource sm-default}"
                                         Text="{DynamicResource Play}" />
                                 </core:If.True>
                                 <core:If.False>
-                                    <controls:OneStageInstallButton
-                                        HorizontalAlignment="Stretch"
-                                        HorizontalContentAlignment="Center"
-                                        VerticalContentAlignment="Center"
-                                        Command="{Binding InstallCommand}"
-                                        FontWeight="Medium"
-                                        Foreground="{DynamicResource BrandColorForegroundSolidColorBrush}"
-                                        ProgressValue="{Binding ProgressValue}">
-                                        <TextBlock
-                                            HorizontalAlignment="Center"
-                                            VerticalAlignment="Center"
-                                            FontWeight="Medium"
-                                            Foreground="{DynamicResource BrandColorForegroundSolidColorBrush}"
+                                    <Grid>
+                                        <controls:AdvancedButton
+                                            x:Name="DownloadButton"
+                                            Command="{Binding InstallCommand}"
+                                            FontSize="12"
+                                            IconData="{StaticResource PDDownload}"
+                                            IsLoading="{Binding IsDownloading}"
+                                            LoadingText="Скачивание сборки"
+                                            Style="{StaticResource sm-default}"
                                             Text="{DynamicResource Download}" />
-                                    </controls:OneStageInstallButton>
+
+                                        <Popup
+                                            x:Name="LoadingInfo"
+                                            Width="{Binding ActualWidth, ElementName=DownloadButton}"
+                                            MinWidth="200"
+                                            AllowsTransparency="True"
+                                            IsOpen="{Binding IsMouseOver, ElementName=DownloadButton, Mode=OneWay}"
+                                            Placement="Right"
+                                            PlacementRectangle="0,-120,0,0"
+                                            PlacementTarget="{Binding ElementName=DownloadButton}"
+                                            PopupAnimation="Fade">
+                                            <Border
+                                                Padding="8,16"
+                                                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                                BorderThickness="1"
+                                                CornerRadius="5">
+
+                                                <Border.Background>
+                                                    <SolidColorBrush Opacity="1" Color="{DynamicResource PrimaryColor}" />
+                                                </Border.Background>
+
+                                                <StackPanel>
+                                                    <TextBlock
+                                                        MaxWidth="200"
+                                                        Margin="0,0,0,4"
+                                                        HorizontalAlignment="Left"
+                                                        FontSize="14"
+                                                        TextWrapping="WrapWithOverflow">
+                                                        <Run Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="Процесс:" />
+                                                        <Run Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" Text="Установка сборки" />
+                                                    </TextBlock>
+                                                    <TextBlock
+                                                        Margin="0,0,0,4"
+                                                        HorizontalAlignment="Left"
+                                                        FontSize="14"
+                                                        Foreground="White">
+                                                        <Run Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="Этап:" />
+                                                        <Run Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" Text="1/3" />
+                                                    </TextBlock>
+                                                    <TextBlock
+                                                        HorizontalAlignment="Left"
+                                                        FontSize="14"
+                                                        Foreground="White">
+                                                        <Run Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="Итого скачено:" />
+                                                        <Run Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" Text="{Binding ProgressValue, Mode=OneWay, StringFormat='{}{0}%'}" />
+                                                    </TextBlock>
+                                                </StackPanel>
+                                            </Border>
+                                        </Popup>
+                                    </Grid>
                                 </core:If.False>
                             </core:If>
 

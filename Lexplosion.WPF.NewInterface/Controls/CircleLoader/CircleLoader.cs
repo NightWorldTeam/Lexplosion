@@ -151,6 +151,18 @@ namespace Lexplosion.WPF.NewInterface.Controls
         }
 
 
+        protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
+        {
+            if (sizeInfo.WidthChanged) 
+            {
+                IconWidth = sizeInfo.NewSize.Width * 0.5625;
+                IconHeight = sizeInfo.NewSize.Height * 0.5625;
+            }
+
+            base.OnRenderSizeChanged(sizeInfo);
+        }
+
+
         #endregion Private Methods
     }
 }

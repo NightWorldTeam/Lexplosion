@@ -158,6 +158,10 @@
                 <Setter Property="Padding" Value="8,5,10,6" />
                 <Setter Property="IconPadding" Value="0,0,8,0" />
             </Trigger>
+            <Trigger Property="IsLoading" Value="True">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="IconPadding" Value="0" />
+            </Trigger>
         </Style.Triggers>
     </Style>
 

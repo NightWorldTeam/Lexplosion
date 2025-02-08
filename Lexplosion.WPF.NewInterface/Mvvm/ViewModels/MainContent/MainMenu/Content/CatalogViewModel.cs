@@ -13,6 +13,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 {
     public sealed class CatalogViewModel : ViewModelBase
     {
+        private readonly AppCore _appCore;
         private readonly INavigationStore _navigationStore;
         private readonly NavigateCommand<ViewModelBase> _navigationCommand;
 
@@ -48,7 +49,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             {
                 var ins = (InstanceModelBase)obj;
 
-                _navigationStore.CurrentViewModel = new InstanceProfileLayoutViewModel(_navigationStore, _navigationCommand, ins);
+                _navigationStore.CurrentViewModel = new InstanceProfileLayoutViewModel(_appCore, _navigationStore, _navigationCommand, ins);
             });
         }
 
@@ -59,7 +60,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             {
                 var ins = (InstanceModelBase)obj;
 
-                _navigationStore.CurrentViewModel = new InstanceProfileLayoutViewModel(_navigationStore, _navigationCommand, ins);
+                _navigationStore.CurrentViewModel = new InstanceProfileLayoutViewModel(_appCore, _navigationStore, _navigationCommand, ins);
                 (_navigationStore.CurrentViewModel as InstanceProfileLayoutViewModel).OpenAddonContainerPage();
             });
         }
@@ -114,8 +115,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         #region Constructors
 
 
-        public CatalogViewModel(INavigationStore navigationStore, NavigateCommand<ViewModelBase> navigationCommand, IInstanceController instanceController, NotifyCallback? notify = null)
+        public CatalogViewModel(AppCore appCore, INavigationStore navigationStore, NavigateCommand<ViewModelBase> navigationCommand, IInstanceController instanceController, NotifyCallback? notify = null)
         {
+            _appCore = appCore;
             Notify = notify;
             Model = new CatalogModel(instanceController);
             _navigationCommand = navigationCommand;

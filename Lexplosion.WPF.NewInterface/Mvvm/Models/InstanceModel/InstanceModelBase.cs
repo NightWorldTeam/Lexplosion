@@ -297,6 +297,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             // если запускамый аккаунт отсутствует, то выкидываем уведомление об этом 
             if (launchAcc == null)
             {
+                _appCore.MessageService.Warning("Запускаемый аккаунт не выбран, он требуется для запуска клиента.");
                 Notify.Invoke(new SimpleNotification($"Не удалось запустить {Name}", "Запускаемый аккаунт не выбран, он требуется для запуска клиента."));
                 return;
             }
@@ -314,6 +315,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
                             LaunchModel.Run();
                             GameLaunched?.Invoke();
                         });
+                    }
+                    else 
+                    {
+                        _appCore.MessageService.Error($"Ошибка аккаунта: {authResult}");
                     }
                 });
                 return;

@@ -86,7 +86,72 @@
 
         <Grid Grid.ColumnSpan="2" Visibility="Visible">
 
-            <Border Padding="32" Background="{DynamicResource SeparateSolidColorBrush}">
+            <Border HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Grid>
+                    <controls:CircleLoader
+                        Width="32"
+                        Height="32"
+                        VerticalAlignment="Center"
+                        Background="Red"
+                        CornerRadius="5"
+                        IsActive="True" />
+
+                    <controls:AdvancedButton
+                        x:Name="LoadingButton"
+                        Padding="16,8"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Background="#167FFC"
+                        Content="Скачать"
+                        CornerRadius="5"
+                        FontWeight="Medium"
+                        Foreground="White"
+                        IsLoading="True"
+                        LoadingText="Обновление" />
+
+                    <Popup
+                        x:Name="LoadingInfo"
+                        AllowsTransparency="True"
+                        IsOpen="{Binding IsMouseOver, ElementName=LoadingButton, Mode=OneWay}"
+                        Placement="Right"
+                        PlacementRectangle="0,-100,0,0"
+                        PlacementTarget="{Binding ElementName=LoadingButton}"
+                        PopupAnimation="Fade">
+                        <Border Padding="8,16" CornerRadius="5">
+                            <Border.Background>
+                                <SolidColorBrush Opacity="0.7" Color="Black" />
+                            </Border.Background>
+
+                            <StackPanel>
+                                <TextBlock FontSize="14" Foreground="White">
+                                    <Run Text="Обновление сборки" />
+                                    <Run Text="Long Tech:" />
+                                    <Run Text="" />
+                                </TextBlock>
+                                <TextBlock
+                                    HorizontalAlignment="Left"
+                                    FontSize="14"
+                                    Foreground="White">
+                                    <Run Text="Этап" />
+                                    <Run Text="2/3" Foreground="#167FFC" />
+                                </TextBlock>
+                                <TextBlock
+                                    HorizontalAlignment="Left"
+                                    FontSize="14"
+                                    Foreground="White">
+                                    <Run Text="Итого скачено:" />
+                                    <Run Text="75%" />
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+                    </Popup>
+                </Grid>
+            </Border>
+
+            <Border
+                Padding="32"
+                Background="{DynamicResource SeparateSolidColorBrush}"
+                Visibility="Collapsed">
                 <Border.LayoutTransform>
                     <ScaleTransform ScaleX="1" ScaleY="1" />
                 </Border.LayoutTransform>

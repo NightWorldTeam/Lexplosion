@@ -13,11 +13,13 @@ using Lexplosion.WPF.NewInterface.Core.Objects.TranslatableObjects;
 using Lexplosion.Logic.Objects;
 using Lexplosion.WPF.NewInterface.Core.Notifications;
 using Lexplosion.WPF.NewInterface.Core.Objects;
+using System.Diagnostics.Eventing.Reader;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 {
     public sealed class LibraryViewModel : ViewModelBase
     {
+        private readonly AppCore _appCore;
         private readonly INavigationStore _navigationStore;
         private readonly ICommand _toMainMenuLayoutCommand;
         private readonly ModalNavigationStore _modalNavigationStore;
@@ -55,7 +57,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             {
                 var ins = (InstanceModelBase)obj;
 
-                _navigationStore.CurrentViewModel = new InstanceProfileLayoutViewModel(_navigationStore, _toMainMenuLayoutCommand, ins);
+                _navigationStore.CurrentViewModel = new InstanceProfileLayoutViewModel(_appCore, _navigationStore, _toMainMenuLayoutCommand, ins);
             });
         }
 
@@ -66,7 +68,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             {
                 var ins = (InstanceModelBase)obj;
 
-                _navigationStore.CurrentViewModel = new InstanceProfileLayoutViewModel(_navigationStore, _toMainMenuLayoutCommand, ins);
+                _navigationStore.CurrentViewModel = new InstanceProfileLayoutViewModel(_appCore, _navigationStore, _toMainMenuLayoutCommand, ins);
 
                 (_navigationStore.CurrentViewModel as InstanceProfileLayoutViewModel).OpenAddonContainerPage();
             });
@@ -122,8 +124,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
 
         // TODO: думаю делегат с инстансами это костыль ченить другое надо придумать
-        public LibraryViewModel(INavigationStore navigationStore, ICommand toMainMenuLayoutCommand, ModalNavigationStore modalNavigationStore, IInstanceController instanceController, Action moveToCatalog, NotifyCallback? notify = null)
+        public LibraryViewModel(AppCore appCore, INavigationStore navigationStore, ICommand toMainMenuLayoutCommand, ModalNavigationStore modalNavigationStore, IInstanceController instanceController, Action moveToCatalog, NotifyCallback? notify = null)
         {
+            _appCore = appCore;
             Notify = notify;
             Model = new LibraryModel(instanceController);
             _navigationStore = navigationStore;
