@@ -147,8 +147,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             Notify = notify;
             BackCommand = new RelayCommand((obj) =>
             {
+                if (instanceModelBase.IsInstalled || instanceModelBase.IsDownloading) 
+                {
                 // Останавливаем обновление директорий сборки.
                 AddonsManager.GetManager(instanceModelBase.InstanceData).StopWatchingDirectory();
+                }
                 toMainMenuLayoutCommand.Execute(obj);
             });
 
