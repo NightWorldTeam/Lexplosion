@@ -67,7 +67,7 @@
                                 Margin="0,0,0,16"
                                 FontSize="16"
                                 FontWeight="Medium"
-                                Text="Authors" />
+                                Text="Author" />
 
                             <StackPanel Orientation="Horizontal">
                                 <Border
@@ -104,7 +104,7 @@
                                                 FontSize="14"
                                                 FontWeight="Medium"
                                                 Opacity="0.7"
-                                                Text="Client / GUI / Disign" />
+                                                Text="Disign / Client / Backend" />
                                         </StackPanel>
 
                                         <Button
@@ -130,7 +130,7 @@
                                     CornerRadius="5">
                                     <StackPanel Orientation="Horizontal">
                                         <Border
-                                            x:Name="SklaipHead"
+                                            x:Name="WhoHead"
                                             Width="32"
                                             Height="32"
                                             Background="{DynamicResource BrandSolidColorBrush}"
@@ -140,7 +140,7 @@
                                                 VerticalAlignment="Center"
                                                 FontSize="16"
                                                 FontWeight="Bold"
-                                                Text="S" />
+                                                Text="?" />
                                         </Border>
 
                                         <StackPanel Margin="16,0,0,0">
@@ -149,20 +149,20 @@
                                                 FontSize="14"
                                                 FontWeight="Medium"
                                                 Foreground="#167FFC"
-                                                Text="Svyatoslav Shmelkov" />
+                                                Text="The only one who knows" />
 
                                             <TextBlock
                                                 VerticalAlignment="Center"
                                                 FontSize="14"
                                                 FontWeight="Medium"
                                                 Opacity="0.7"
-                                                Text="Client / Server / Backend" />
+                                                Text="???" />
                                         </StackPanel>
 
                                         <Button
                                             Margin="16,0,0,0"
                                             HorizontalAlignment="Right"
-                                            Click="SvyatVK_Click"
+                                            Click="Who_Click"
                                             Style="{StaticResource IconicButton}">
                                             <Viewbox Width="20" Height="20">
                                                 <Path

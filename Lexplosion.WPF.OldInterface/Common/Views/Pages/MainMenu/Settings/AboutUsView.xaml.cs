@@ -39,9 +39,9 @@ namespace Lexplosion.Common.Views.Pages.MainMenu.Settings
 
                     var sklaipBitmap = new BitmapImage();
                     sklaipBitmap.BeginInit();
-                    sklaipBitmap.UriSource = new System.Uri("https://night-world.org/requestProcessing/getUserImage.php?user_login=Sklaip");
+                    sklaipBitmap.UriSource = new System.Uri("https://night-world.org/requestProcessing/getUserImage.php?user_login=Grukez");
                     sklaipBitmap.EndInit();
-                    SklaipHead.Background = new ImageBrush(sklaipBitmap);
+                    WhoHead.Background = new ImageBrush(sklaipBitmap);
                 }
                 catch
                 {
@@ -55,9 +55,9 @@ namespace Lexplosion.Common.Views.Pages.MainMenu.Settings
             Process.Start(Constants.VKDefaultUrl + "idhel2x");
         }
 
-        private void SvyatVK_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void Who_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            Process.Start(Constants.VKDefaultUrl + "lord_of_anecdotes");
+            Process.Start("https://night-world.org/users/???");
         }
 
         private void GroupVK_Click(object sender, System.Windows.RoutedEventArgs e)
