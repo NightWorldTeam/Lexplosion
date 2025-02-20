@@ -432,7 +432,8 @@ namespace Lexplosion.Logic.Network
                 string answer;
 
                 WebRequest req = WebRequest.Create(url);
-                if (headers != null)
+				((HttpWebRequest)req).UserAgent = "Mozilla/5.0";
+				if (headers != null)
                 {
                     foreach (var header in headers)
                     {
