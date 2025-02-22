@@ -24,6 +24,8 @@ namespace Lexplosion.Logic.FileSystem
         public static string InstancesPath { get => $"{DirectoryPath}/instances/"; }
         public static string GetInstancePath(string instanceId) => $"{InstancesPath}{instanceId}/";
 
+		private static HttpClient _httpClient = new();
+
         public static void Create(string path)
         {
             try
@@ -287,75 +289,56 @@ namespace Lexplosion.Logic.FileSystem
 
         private static async Task<bool> DownloadFileAsync(string url, string savePath, TaskArgs taskArgs)
         {
-            HttpClient client;
-            using (client = new HttpClient())
-            {
-                try
-                {
-                    taskArgs.CancelToken.Register(delegate ()
-                    {
-                        client?.CancelPendingRequests();
-                    });
+			try
+			{
+				_httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0");
 
-                    client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0");
+				using (HttpResponseMessage response = await _httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, taskArgs.CancelToken))
+				{
+					response.EnsureSuccessStatusCode();
 
-                    using (HttpResponseMessage response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead))
-                    {
-                        response.EnsureSuccessStatusCode();
+					long? contentLength = response.Content.Headers.ContentLength;
 
-                        long? contentLength = response.Content.Headers.ContentLength;
+					using (var stream = await response.Content.ReadAsStreamAsync())
+					{
+						using (var fileStream = File.Create(savePath))
+						{
+							byte[] buffer = new byte[16384];
+							long bytesRead = 0;
+							int bytesReadTotal = 0;
 
-                        using (var stream = await response.Content.ReadAsStreamAsync())
-                        {
-                            using (var fileStream = File.Create(savePath))
-                            {
-                                byte[] buffer = new byte[8192];
-                                long bytesRead = 0;
-                                int bytesReadTotal = 0;
+							int bytesReadThisTime;
+							while ((bytesReadThisTime = await stream.ReadAsync(buffer, 0, buffer.Length)) != 0)
+							{
+								await fileStream.WriteAsync(buffer, 0, bytesReadThisTime);
+								bytesRead += bytesReadThisTime;
+								bytesReadTotal += bytesReadThisTime;
 
-                                int bytesReadThisTime;
-                                while ((bytesReadThisTime = await stream.ReadAsync(buffer, 0, buffer.Length)) != 0)
-                                {
-                                    await fileStream.WriteAsync(buffer, 0, bytesReadThisTime);
-                                    bytesRead += bytesReadThisTime;
-                                    bytesReadTotal += bytesReadThisTime;
+								if (contentLength.HasValue)
+								{
+									double percentage = ((double)bytesRead) / contentLength.Value * 100;
+									taskArgs.PercentHandler((int)percentage);
+								}
+							}
 
-                                    if (contentLength.HasValue)
-                                    {
-                                        double percentage = ((double)bytesRead) / contentLength.Value * 100;
-                                        taskArgs.PercentHandler((int)percentage);
-                                    }
-                                }
+							taskArgs.PercentHandler(100);
+						}
 
-                                taskArgs.PercentHandler(100);
-
-                                fileStream.Close();
-                            }
-
-                            stream.Close();
-                            return true;
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Runtime.DebugWrite("Downloading error " + savePath + " " + url + " " + ex);
-                    return false;
-                }
-                finally
-                {
-                    client = null;
-                }
-            }
-        }
+						return true;
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				Runtime.DebugWrite("Downloading error " + savePath + " " + url + " " + ex);
+				return false;
+			}
+		}
 
         public static bool DownloadFile(string url, string fileName, string tempDir, TaskArgs taskArgs)
         {
             DelFile(tempDir + fileName);
-            var task = DownloadFileAsync(url, tempDir + fileName, taskArgs);
-            task.Wait();
-
-            return task.Result;
+            return DownloadFileAsync(url, tempDir + fileName, taskArgs).Result;
         }
 
         /// <summary>

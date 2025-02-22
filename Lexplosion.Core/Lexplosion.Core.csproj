@@ -134,7 +134,6 @@
     <Compile Include="Logic\Network\Services\MinecraftInfoService.cs" />
     <Compile Include="Logic\Network\Services\NetworkServicesManager.cs" />
     <Compile Include="Logic\Network\SMP\SmpClient_Objects.cs" />
-    <Compile Include="Logic\Network\SMP\Synchronizer.cs" />
     <Compile Include="Logic\Objects\CatalogResult.cs" />
     <Compile Include="Logic\Objects\FreeSource.cs" />
     <Compile Include="Logic\Objects\ISearchParams.cs" />
