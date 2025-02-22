@@ -480,15 +480,11 @@ namespace Lexplosion.WPF.NewInterface
 
         private static void ResourcesDictionariesRegister()
         {
+
             // Languages //
             _app.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
                 Source = new Uri(AssetsPath + "LanguagesRegister.xaml")
-            });
-            // Themes //
-            _app.Resources.MergedDictionaries.Add(new ResourceDictionary()
-            {
-                Source = new Uri(ResourcePath + "ThemesRegistry.xaml")
             });
             // TODO: Избавить Control от зависимости от цветов тем.
             // Controls //
@@ -506,6 +502,7 @@ namespace Lexplosion.WPF.NewInterface
             {
                 Source = new Uri("pack://application:,,,/DataTemplates.xaml")
             });
+            Runtime.DebugWrite("Загрузились ресурсы");
         }
 
         private static Assembly AssemblyResolve(object sender, ResolveEventArgs args)

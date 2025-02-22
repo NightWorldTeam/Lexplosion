@@ -136,5 +136,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu
                 ScrollViewerExtensions.GetScrollBar(ContainerPage_ScrollViewer).Minimum
             );
         }
+
+
     }
 }

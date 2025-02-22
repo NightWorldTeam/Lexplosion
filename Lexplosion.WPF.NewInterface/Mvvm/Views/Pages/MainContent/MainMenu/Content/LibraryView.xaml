@@ -418,6 +418,7 @@
                     </ListBox>
                 </core:If.False>
                 <core:If.True>
+                    <!-- TODO: Translate --> 
                     <controls:Empty Description="Вы можете добавить сборки в библиотеку через каталог или создания своей сборки" TitleForeground="{DynamicResource PrimaryForegroundSolidColorBrush}">
                         <WrapPanel Margin="0,16,0,0">
                             <controls:AdvancedButton

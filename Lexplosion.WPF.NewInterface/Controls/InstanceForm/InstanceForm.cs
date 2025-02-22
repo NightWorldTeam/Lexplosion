@@ -1,10 +1,10 @@
 ﻿using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Objects;
+using Lexplosion.WPF.NewInterface.Extensions;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -30,7 +30,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
     [TemplatePart(Name = PART_PROGRESSBAR, Type = typeof(ProgressBar))]
     [TemplatePart(Name = PART_MAIN_BUTTON_PERCENTAGE, Type = typeof(TextBlock))]
     [TemplatePart(Name = PART_MAIN_BUTTON_PERCENTAGE_ACTIVITY_COLOR, Type = typeof(TextBlock))]
-    public sealed partial class InstanceForm : Control
+    public sealed class InstanceForm : Control
     {
         private const string PART_LOGOBLOCK = "PART_LogoBlock";
 
@@ -54,13 +54,6 @@ namespace Lexplosion.WPF.NewInterface.Controls
         private const string IK_PLAY = "Play";
         private const string IK_DOWNLOAD = "Download";
         private const string IK_CLOSE = "Cancel";
-        private const string IK_LANG = "Lang";
-        private const string IK_DELETE = "Delete";
-        private const string IK_EXPORT = "Export";
-        private const string IK_OPENFOLDER = "Folder";
-        private const string IK_DLC = "Dlc";
-        private const string IK_ADD_TO_LIBRARY = "AddToLibrary";
-        private const string IK_REMOVE_FROM_LIBRARY = "RemoveFromLibrary";
 
         private const string PART_MAIN_BUTTON_PERCENTAGE = "Percentage";
         private const string PART_MAIN_BUTTON_PERCENTAGE_ACTIVITY_COLOR = "PercentageActivityColor";
@@ -86,6 +79,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
         private TextBlock _mainActionButtonPercentage;
         private TextBlock _mainActionButtonPercentageHover;
+        private AdvancedButton _visitWebsiteButton;
 
         private Border _modloaderIconContainer;
 
@@ -244,6 +238,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
             _mainActionButton = Template.FindName(PART_MAIN_ACTION_BUTTON, this) as Button;
             _modloaderIconContainer = Template.FindName("ModloaderIcon", this) as Border;
 
+
             // TODO: сделать адекватно, чтобы после обновления индикатор пропадал
             var _updateIndicator = Template.FindName("UpdateIndicator", this) as Border;
             _updateIndicator.Visibility = InstanceModel.HasAvailableUpdate ? Visibility.Visible : Visibility.Collapsed;
@@ -270,8 +265,6 @@ namespace Lexplosion.WPF.NewInterface.Controls
             if (_dropdownMenuItemsControl != null)
             {
                 _dropdownMenuItemsControl.ItemsSource = LowerMenuButtons;
-
-                UpdateLowerButtons();
             }
 
             UpdateAllFields(InstanceModel);
@@ -305,10 +298,112 @@ namespace Lexplosion.WPF.NewInterface.Controls
             InstanceModel.DownloadCanceled += OnDownloadCanceled;
             InstanceModel.ModloaderChanged += InstanceModel_ModloaderChanged;
 
-            base.OnApplyTemplate();
+            // Регистрируем функции для кнопок выпадающего меню
+            RegisterLowerButtonFunctions();
+
             ApplyTemplateExecuted?.Invoke();
-            //Runtime.DebugWrite("OnApplyTemplate
             InstanceModel_ModloaderChanged();
+        }
+
+        private AdvancedButton _сancelDownloadButton;
+        private AdvancedButton _openFolderButton;
+        private AdvancedButton _exportButton;
+        private AdvancedButton _openAddonManagerButton;
+        private AdvancedButton _deleteButton;
+        private AdvancedButton _deleteFromLibraryButton;
+        private AdvancedButton _addToLibraryButton;
+
+        private void RegisterLowerButtonFunctions() 
+        {
+            _сancelDownloadButton = Template.FindName("CancelDownloadButton", this) as AdvancedButton;
+            _visitWebsiteButton = Template.FindName("VisitWebsiteButton", this) as AdvancedButton;
+            _openFolderButton = Template.FindName("OpenFolderButton", this) as AdvancedButton;
+            _exportButton = Template.FindName("ExportButton", this) as AdvancedButton;
+            _openAddonManagerButton = Template.FindName("OpenAddonManagerButton", this) as AdvancedButton;
+            _deleteButton = Template.FindName("DeleteButton", this) as AdvancedButton;
+            _deleteFromLibraryButton = Template.FindName("DeleteFromLibraryButton", this) as AdvancedButton;
+            _addToLibraryButton = Template.FindName("AddToLibraryButton", this) as AdvancedButton;
+
+            if (_сancelDownloadButton != null) 
+            {
+                _сancelDownloadButton.Click += (o, e) =>
+                {
+                    _dropdownMenu.IsOpen = false;
+                    InstanceModel.CancelDownload();
+                };
+            }
+
+            if (_visitWebsiteButton != null) 
+            {
+                _visitWebsiteButton.Click += (o, e) =>
+                {
+                    _dropdownMenu.IsOpen = false;
+                    InstanceModel.GoToWebsite();
+                };
+
+                Application.Current.Resources.TryGetValue($"PD{InstanceModel.Source}", out string icon);
+
+                if (icon != null)
+                {
+                    _visitWebsiteButton.SetValue(AdvancedButton.IconDataProperty, icon);
+                }
+
+                _visitWebsiteButton.SetResourceReference(AdvancedButton.TextProperty, $"Visit{InstanceModel.Source.ToString()}");
+            }
+
+            if (_openFolderButton != null) 
+            {
+                _openFolderButton.Click += (o, e) =>
+                {
+                    _dropdownMenu.IsOpen = false;
+                    InstanceModel.OpenFolder();
+                };
+            }
+
+            if (_exportButton != null) 
+            {
+                _exportButton.Click += (o, e) =>
+                {
+                    _dropdownMenu.IsOpen = false;
+                    InstanceModel.Export();
+                };
+            }
+
+            if (_openAddonManagerButton != null) 
+            {
+                _openAddonManagerButton.Click += (o, e) =>
+                {
+                    _dropdownMenu.IsOpen = false;
+                    OpenAddonsPageCommand.Execute(InstanceModel);
+                };
+            }
+
+            if (_deleteButton != null) 
+            {
+                _deleteButton.Click += (o, e) =>
+                {
+                    _dropdownMenu.IsOpen = false;
+                    InstanceModel.Delete();
+                };
+            }
+
+            if (_deleteFromLibraryButton != null) 
+            {
+                _deleteFromLibraryButton.Click += (o, e) =>
+                {
+                    _dropdownMenu.IsOpen = false;
+                    InstanceModel.Delete();
+                };
+            }
+
+            if (_addToLibraryButton != null) 
+            {
+                _addToLibraryButton.Click += (o, e) =>
+                {
+                    _dropdownMenu.IsOpen = false;
+                    InstanceModel.AddToLibrary();
+                };
+            }
         }
 
         private void InstanceModel_ModloaderChanged()
@@ -344,8 +439,6 @@ namespace Lexplosion.WPF.NewInterface.Controls
                             else
                                 ChangeMainActionButtonIcon(IK_DOWNLOAD);
 
-                            UpdateLowerButtons();
-
                             break;
                         }
                     case InstanceState.Preparing:
@@ -359,7 +452,6 @@ namespace Lexplosion.WPF.NewInterface.Controls
                             }
                             break;
                         }
-                        IsEnabled = false;
                     case InstanceState.Downloading:
                         {
                             _isPreparing = false;
@@ -370,7 +462,6 @@ namespace Lexplosion.WPF.NewInterface.Controls
                                 ChangeMainActionButtonIcon(string.Empty);
                                 _mainActionButton.IsEnabled = true;
                                 SetMainActionButtonPercentageValue("0");
-                                UpdateLowerButtons();
                             }
                             break;
                         }
@@ -387,7 +478,6 @@ namespace Lexplosion.WPF.NewInterface.Controls
                                 ChangeMainActionButtonIcon(string.Empty);
                                 // убираем проценты
                                 SetMainActionButtonTextValue();
-                                UpdateLowerButtons();
                             }
                             break;
                         }
@@ -399,7 +489,6 @@ namespace Lexplosion.WPF.NewInterface.Controls
                                 _isLaunching = true;
                                 ChangeMainActionButtonIcon(IK_CLOSE);
                                 _mainActionButton.IsEnabled = true;
-                                UpdateLowerButtons();
                             }
                             break;
                         }
@@ -410,7 +499,6 @@ namespace Lexplosion.WPF.NewInterface.Controls
                             {
                                 _isLaunched = true;
                                 ChangeMainActionButtonIcon(IK_CLOSE);
-                                UpdateLowerButtons();
                             }
                             break;
                         }
@@ -571,7 +659,6 @@ namespace Lexplosion.WPF.NewInterface.Controls
             var instanceForm = d as InstanceForm;
             var instanceModelBase = ((InstanceModelBase)e.NewValue);
 
-
             if (instanceModelBase != null)
             {
                 instanceModelBase.NameChanged += () => { App.Current.Dispatcher.Invoke(() => { instanceForm.SetName(instanceModelBase.Name); }); };
@@ -583,8 +670,6 @@ namespace Lexplosion.WPF.NewInterface.Controls
         /// <summary>
         /// Отрабатывает при нажатии на Logo Grid, выполняет Command если оно было задано.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void _logoGridBlock_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (LogoButtonCommand == null) return;
@@ -592,56 +677,15 @@ namespace Lexplosion.WPF.NewInterface.Controls
             LogoButtonCommand.Execute(LogoButtonCommandParameter);
         }
 
-        /// <summary>
-        /// Отменяет скачивание клиента игры.
-        /// </summary>
-        private void CancelDownload()
-        {
-            InstanceModel.CancelDownload();
-        }
 
-        /// <summary>
-        /// Обновляет список lowerbutton, в зависимости от состояния InstanceModel.
-        /// </summary>
-        private void UpdateLowerButtons()
-        {
-            _lowerMenuButtons.Clear();
+        #region Readonly Properties
 
-            if (InstanceModel.State == InstanceState.Downloading)
-            {
-                _lowerMenuButtons.Add(new LowerMenuButton(0, "Cancel", "CancelDownload", CancelDownload, LowerButtonClicked));
-            }
+        #endregion 
 
-            if (InstanceModel.Source != InstanceSource.Local)
-            {
-                _lowerMenuButtons.Add(new LowerMenuButton(0, InstanceModel.Source.ToString(), "Visit" + InstanceModel.Source.ToString(), InstanceModel.GoToWebsite, LowerButtonClicked));
-            }
 
-            if (!InstanceModel.IsInstalled && !InstanceModel.InLibrary)
-            {
-                _lowerMenuButtons.Add(new LowerMenuButton(1, "AddToLibrary", "AddToLibrary", InstanceModel.AddToLibrary, LowerButtonClicked));
-            }
-
-            if (InstanceModel.InLibrary)
-            {
-                _lowerMenuButtons.Add(new LowerMenuButton(2, "Folder", "OpenFolder", InstanceModel.OpenFolder, LowerButtonClicked));
-
-                if (InstanceModel.InLibrary)
-                {
-                    _lowerMenuButtons.Add(new LowerMenuButton(3, "Export", "Export", InstanceModel.Export, LowerButtonClicked));
-                }
-                _lowerMenuButtons.Add(new LowerMenuButton(4, "Addons", "Addons", () => OpenAddonsPageCommand?.Execute(InstanceModel), LowerButtonClicked));
-            }
-
-            if (!InstanceModel.IsInstalled && InstanceModel.InLibrary)
-            {
-                _lowerMenuButtons.Add(new LowerMenuButton(5, "Delete", "RemoveFromLibrary", InstanceModel.Delete, LowerButtonClicked));
-            }
-            else if (InstanceModel.IsInstalled)
-            {
-                _lowerMenuButtons.Add(new LowerMenuButton(5, "Delete", "DeleteInstance", InstanceModel.Delete, LowerButtonClicked));
-            }
-        }
+        public bool IsLocal { get; set; }
+        public bool OnlyInCatalog { get; set; }
+        public bool IsLibrary { get; set; }
 
         /// <summary>
         /// Вызывается при клике на MainButtonю
@@ -977,14 +1021,6 @@ namespace Lexplosion.WPF.NewInterface.Controls
             });
         }
 
-        /// <summary>
-        /// Вызывается, когда клиент игры была закрыта.
-        /// </summary>
-        private void OnGameClosed()
-        {
-            //Runtime.DebugWrite("Game Exit");
-        }
-
 
         ///
         /// <!-- Properties Handlers --> ///
@@ -1033,6 +1069,25 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
 
         #endregion Private Methods
+
+
+        #region Lower Menu Button
+
+
+
+
+        /// <summary>
+        /// Вызывается, когда клиент игры была закрыта.
+        /// </summary>
+        private void OnGameClosed()
+        {
+            //Runtime.DebugWrite("Game Exit");
+        }
+
+
+
+        #endregion Lower Menu Button
+
 
 
         #region Animations

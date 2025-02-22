@@ -9,65 +9,59 @@
     xmlns:objects="clr-namespace:Lexplosion.Logic.Objects;assembly=Lexplosion.Core"
     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
-    <DataTemplate DataType="{x:Type local:LowerMenuButton}">
-        <Button Command="{Binding ExecuteAction}">
-            <Button.Template>
-                <ControlTemplate TargetType="{x:Type Button}">
-                    <Border
-                        x:Name="border"
-                        Margin="1"
-                        Padding="5,2,5,2"
-                        Background="Transparent"
-                        CornerRadius="5">
+    <ControlTemplate x:Key="DropDownButton" TargetType="{x:Type controls:AdvancedButton}">
+        <Border
+            x:Name="border"
+            Margin="1"
+            Padding="5,2,5,2"
+            Background="Transparent"
+            CornerRadius="5">
 
-                        <Grid Margin="5,3,5,3" ShowGridLines="False">
+            <Grid Margin="5,3,5,3" ShowGridLines="False">
 
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="30" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="30" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
-                            <Border
-                                Padding="2"
-                                Background="Transparent"
-                                CornerRadius="5">
-                                <Viewbox Width="20" Height="20">
-                                    <Path
-                                        x:Name="Path"
-                                        HorizontalAlignment="Center"
-                                        extensions:PathExtensions.StringKeyData="{Binding IconKey}"
-                                        Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                        Stretch="Fill" />
-                                </Viewbox>
-                            </Border>
+                <Border
+                    Padding="2"
+                    Background="Transparent"
+                    CornerRadius="5">
+                    <Viewbox Width="20" Height="20">
+                        <Path
+                            x:Name="Path"
+                            HorizontalAlignment="Center"
+                            extensions:PathExtensions.StringData="{TemplateBinding IconData}"
+                            Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                            Stretch="Fill" />
+                    </Viewbox>
+                </Border>
 
-                            <TextBlock
-                                x:Name="TextBlock"
-                                Grid.Column="1"
-                                Margin="7,0,5,0"
-                                extensions:TextBlockExtensions.TextByKey="{Binding TextKey}"
-                                FontSize="12pt"
-                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                TextAlignment="Justify" />
-                        </Grid>
-                    </Border>
+                <TextBlock
+                    x:Name="TextBlock"
+                    Grid.Column="1"
+                    Margin="7,0,5,0"
+                    FontSize="12pt"
+                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                    Text="{TemplateBinding Text}"
+                    TextAlignment="Justify" />
+            </Grid>
+        </Border>
 
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="border" Property="Background">
-                                <Setter.Value>
-                                    <SolidColorBrush Opacity="0.1" Color="{DynamicResource ActivityColor}" />
-                                </Setter.Value>
-                            </Setter>
-                            <Setter TargetName="TextBlock" Property="TextElement.Foreground" Value="{DynamicResource ActivitySolidColorBrush}" />
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="border" Property="Background">
+                    <Setter.Value>
+                        <SolidColorBrush Opacity="0.1" Color="{DynamicResource ActivityColor}" />
+                    </Setter.Value>
+                </Setter>
+                <Setter TargetName="TextBlock" Property="TextElement.Foreground" Value="{DynamicResource ActivitySolidColorBrush}" />
 
-                            <Setter TargetName="Path" Property="Fill" Value="{DynamicResource ActivitySolidColorBrush}" />
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Button.Template>
-        </Button>
-    </DataTemplate>
+                <Setter TargetName="Path" Property="Fill" Value="{DynamicResource ActivitySolidColorBrush}" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
 
     <!--<DataTemplate DataType="{x:Type local:}" />-->
 
@@ -387,7 +381,11 @@
                                     <RowDefinition Height="*" />
                                 </Grid.RowDefinitions>
 
-                                <Button x:Name="PART_MainActionButton" Style="{StaticResource InstanceFormMainActionButtonStyle}" />
+                                <Button x:Name="PART_MainActionButton" Style="{StaticResource InstanceFormMainActionButtonStyle}">
+                                    <!--<Button.CacheMode>
+                                        <BitmapCache />
+                                    </Button.CacheMode>-->
+                                </Button>
 
                                 <controls:DropdownMenu
                                     x:Name="PART_DropDownMenu"
@@ -395,13 +393,90 @@
                                     Background="{DynamicResource PrimarySolidColorBrush}"
                                     BorderBrush="{DynamicResource SeparateSolidColorBrush}"
                                     BorderThickness="1">
-                                    <ItemsControl x:Name="PART_DropdownMenuContent">
-                                        <ItemsControl.ItemsPanel>
-                                            <ItemsPanelTemplate>
-                                                <StackPanel IsItemsHost="True" />
-                                            </ItemsPanelTemplate>
-                                        </ItemsControl.ItemsPanel>
-                                    </ItemsControl>
+                                    <StackPanel>
+
+                                        <core:If Condition="{Binding IsDownloading}">
+                                            <core:If.True>
+
+                                                <!--  Отмена скачивания  -->
+                                                <controls:AdvancedButton
+                                                    x:Name="CancelDownloadButton"
+                                                    IconData="{DynamicResource PDCancel}"
+                                                    Template="{StaticResource DropDownButton}"
+                                                    Text="{DynamicResource CancelDownload}" />
+
+                                            </core:If.True>
+                                        </core:If>
+                                        <core:If Condition="{Binding IsLocal}">
+                                            <core:If.False>
+
+                                                <!--  Посетить сайт  -->
+                                                <controls:AdvancedButton x:Name="VisitWebsiteButton" Template="{StaticResource DropDownButton}" />
+
+                                            </core:If.False>
+                                        </core:If>
+
+                                        <core:If Condition="{Binding InLibrary}">
+                                            <core:If.True>
+                                                <StackPanel>
+
+                                                    <!--  Открыть папку  -->
+                                                    <controls:AdvancedButton
+                                                        x:Name="OpenFolderButton"
+                                                        IconData="{DynamicResource PDFolder}"
+                                                        Template="{StaticResource DropDownButton}"
+                                                        Text="{DynamicResource OpenFolder}" />
+
+                                                    <!--  Экспорт  -->
+                                                    <controls:AdvancedButton
+                                                        x:Name="ExportButton"
+                                                        IconData="{DynamicResource PDExport}"
+                                                        Template="{StaticResource DropDownButton}"
+                                                        Text="{DynamicResource Export}" />
+
+                                                    <!--  Дополнения  -->
+                                                    <controls:AdvancedButton
+                                                        x:Name="OpenAddonManagerButton"
+                                                        IconData="{DynamicResource PDAddons}"
+                                                        Template="{StaticResource DropDownButton}"
+                                                        Text="{DynamicResource Addons}" />
+
+                                                    <core:If Condition="{Binding IsInstalled}">
+                                                        <core:If.True>
+
+                                                            <!--  Удалить  -->
+                                                            <controls:AdvancedButton
+                                                                x:Name="DeleteButton"
+                                                                IconData="{DynamicResource PDDelete}"
+                                                                Template="{StaticResource DropDownButton}"
+                                                                Text="{DynamicResource DeleteInstance}" />
+
+                                                        </core:If.True>
+                                                        <core:If.False>
+
+                                                            <!--  Удалить из библиотеки  -->
+                                                            <controls:AdvancedButton
+                                                                x:Name="DeleteFromLibraryButton"
+                                                                IconData="{DynamicResource PDDelete}"
+                                                                Template="{StaticResource DropDownButton}"
+                                                                Text="{DynamicResource RemoveFromLibrary}" />
+
+                                                        </core:If.False>
+                                                    </core:If>
+                                                </StackPanel>
+                                            </core:If.True>
+                                            <core:If.False>
+
+                                                <!--  Добавить в библиотеку  -->
+                                                <controls:AdvancedButton
+                                                    x:Name="AddToLibraryButton"
+                                                    IconData="{DynamicResource PDAddToLibrary}"
+                                                    Template="{StaticResource DropDownButton}"
+                                                    Text="{DynamicResource AddToLibrary}" />
+
+                                            </core:If.False>
+                                        </core:If>
+                                    </StackPanel>
                                 </controls:DropdownMenu>
                             </Grid>
                         </Grid>

@@ -4,20 +4,13 @@ using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Objects;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Notifications;
-using Lexplosion.WPF.NewInterface.Core.Services;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal;
-using Lexplosion.WPF.NewInterface.Stores;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 {
-    public class InstancePresentationInfo
-    {
-
-    }
-
     public enum InstanceModelStateProperty
     {
         Name,
@@ -169,6 +162,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         public IEnumerable<IProjectCategory> Tags { get; }
         public InstanceSource Source { get => _instanceClient.Type; }
         public string TotalDonwloads { get; private set; }
+        public bool IsLocal { get => Source == InstanceSource.Local; }
 
         public InstanceData PageData { get; private set; }
 
@@ -177,7 +171,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         public bool InLibrary { get => _instanceClient.InLibrary; }
         public string DirectoryPath { get => _instanceClient.GetDirectoryPath(); }
         public bool HasAvailableUpdate { get => _instanceClient.UpdateAvailable; }
-
 
         public MinecraftVersion GameVersion { get => _instanceClient.GameVersion ?? new MinecraftVersion("1.20.1"); }
 
@@ -228,42 +221,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             _instanceClient.StateChanged += OnStateClientChanged;
 
             Logo = _instanceClient.Logo;
-            //Runtime.DebugWrite(Logo == null ? "Null" : Logo.Length.ToString());
             Tags = _instanceClient.Categories ?? new List<CategoryBase>();
-
-            if (instanceClient.Type == InstanceSource.Local)
-            {
-                //var s = _instanceClient.GetFullInfo;
-                /*                         
-                 * InstanceSource !
-                 * GameVersion !
-                 * LocalId 
-                 * ExternalId 
-                 * InLibrary 
-                 * Name 
-                 * Description !
-                 * Summary 
-                 * Categories !
-                 * Author 
-                 * Modloader 
-                 * ModloaderVersion 
-                 * OptifineVersion
-                 */
-
-                /*
-                 * InstanceSource 
-                 * GameVersion 
-                 * LastUpdate 
-                 * TotalDownloads 
-                 * Modloader !
-                 * Description !
-                 * Categories !
-                 * Images 
-                 * WebsiteUrl  
-                 * Summary !
-                 * Changelog 
-                 */
-            }
         }
 
 
@@ -346,6 +304,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             }
 
             DownloadModel.Download();
+
+            OnPropertyChanged(nameof(IsDownloading));
+
             DataChanged?.Invoke();
         }
 
@@ -357,6 +318,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             DownloadModel.DownloadCancel();
             if (State != InstanceState.DownloadCanceling)
                 SetState(InstanceState.DownloadCanceling);
+
+            OnPropertyChanged(nameof(IsDownloading));
 
             DownloadCanceled?.Invoke();
             DataChanged?.Invoke();
@@ -606,6 +569,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         private void OnStateClientChanged()
         {
             //StateChanged?.Invoke();
+            OnPropertyChanged(string.Empty);
         }
 
         public bool Equals(InstanceClient other)
