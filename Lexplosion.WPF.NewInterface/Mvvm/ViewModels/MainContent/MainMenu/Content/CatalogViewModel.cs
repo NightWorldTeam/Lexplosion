@@ -48,7 +48,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             get => RelayCommand.GetCommand(ref _openInstanceProfileMenu, (obj) =>
             {
                 var ins = (InstanceModelBase)obj;
-
+                ins.PrepareDataForProfile();
                 _navigationStore.CurrentViewModel = new InstanceProfileLayoutViewModel(_appCore, _navigationStore, _navigationCommand, ins);
             });
         }

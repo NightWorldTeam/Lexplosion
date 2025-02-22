@@ -264,13 +264,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
                  * Changelog 
                  */
             }
-
-            Runtime.TaskRun(() =>
-            {
-                PageData = _instanceClient.GetFullInfo();
-                PageData.TotalDownloads.ToString();
-                OnPropertyChanged(nameof(TotalDonwloads));
-            });
         }
 
 
@@ -484,6 +477,16 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         public void InstallAddon()
         {
 
+        }
+
+        public void PrepareDataForProfile() 
+        {
+            Runtime.TaskRun(() =>
+            {
+                PageData = _instanceClient.GetFullInfo();
+                PageData.TotalDownloads.ToString();
+                OnPropertyChanged(nameof(TotalDonwloads));
+            });
         }
 
 
