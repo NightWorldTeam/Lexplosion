@@ -423,12 +423,9 @@
                         Width="48"
                         Height="48"
                         Margin="4,0,0,0"
-                        Padding="8"
                         VerticalAlignment="Center"
                         BlurTarget="{Binding ElementName=LogoBorder}"
                         CornerRadius="5"
-                        IconHeight="16"
-                        IconWidth="16"
                         IsActive="{Binding Logo, Converter={valueconverters:IsValueNullConverter}}">
                         <controls:CircleLoader.Background>
                             <SolidColorBrush Opacity="0.8" Color="Black" />
