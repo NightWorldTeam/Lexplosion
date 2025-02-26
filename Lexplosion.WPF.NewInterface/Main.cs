@@ -265,7 +265,7 @@ namespace Lexplosion.WPF.NewInterface
 
                 if (gameManager.ClientSettings.IsShowConsole == true)
                 {
-                    //App.Current.Dispatcher.Invoke(() => ConsoleWindow.SetWindow(gameManager));
+                    App.Current.Dispatcher.Invoke(() => ConsoleWindow.SetWindow(gameManager));
                 }
             };
 
@@ -317,7 +317,7 @@ namespace Lexplosion.WPF.NewInterface
             {
                 if (isShow && _activeGameManager != null)
                 {
-                    //App.Current.Dispatcher.Invoke(() => ConsoleWindow.SetWindow(_activeGameManager));
+                    App.Current.Dispatcher.Invoke(() => ConsoleWindow.SetWindow(_activeGameManager));
                 }
             };
 
@@ -326,7 +326,7 @@ namespace Lexplosion.WPF.NewInterface
             {
                 if (isShow && _activeGameManager != null && _activeGameManager.InstanceId == instanceId)
                 {
-                    //App.Current.Dispatcher.Invoke(() => ConsoleWindow.SetWindow(_activeGameManager));
+                    App.Current.Dispatcher.Invoke(() => ConsoleWindow.SetWindow(_activeGameManager));
                 }
             };
 

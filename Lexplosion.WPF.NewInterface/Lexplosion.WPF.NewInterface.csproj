@@ -106,6 +106,7 @@
     <Compile Include="Controls\ToastMessage\ToastMessage.cs" />
     <Compile Include="Core\AppCore.cs" />
     <Compile Include="Core\AppSettings.cs" />
+    <Compile Include="Core\ConsoleLog.cs" />
     <Compile Include="Core\Converters\MultiValueConverter\StyleSelectorConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\CollectionToStringWithBreaklineConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\CountToVisibilityConverter.cs" />
