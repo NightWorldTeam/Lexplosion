@@ -22,7 +22,7 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
         }
     }
 
-    public sealed class SelectMenuInstanceForServerModel
+    public sealed class SelectMenuInstanceForServerModel : VMBase
     {
         private readonly MinecraftServerInstance _minecraftServerInstance;
 
@@ -39,6 +39,7 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
                     .GetInstances(ic => ic.GameVersion.ToString() == _minecraftServerInstance.GameVersion)
                     .Select(i => new InstanceForServer(i))
                 );
+            OnPropertyChanged(nameof(AvailableInstances));
         }
 
         public void AddNewInstance() 

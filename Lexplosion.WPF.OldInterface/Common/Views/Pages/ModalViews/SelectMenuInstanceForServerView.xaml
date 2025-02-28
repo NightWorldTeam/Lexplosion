@@ -63,9 +63,10 @@
 
                                     <TextBlock
                                         Grid.Column="1"
+                                        MaxHeight="32"
                                         Margin="0,4,0,0"
                                         Foreground="#ededed"
-                                        Text="{Binding InstanceFormViewModel.Client.Summary}"
+                                        Text="{Binding InstanceFormViewModel.Client.Description}"
                                         TextTrimming="WordEllipsis"
                                         TextWrapping="WrapWithOverflow" />
                                 </StackPanel>
@@ -188,20 +189,17 @@
                 FontSize="20"
                 Foreground="LightGray"
                 Text="{DynamicResource notAvailableClients}">
-                <TextBlock>
-                    <TextBlock.Style>
-                        <Style TargetType="{x:Type TextBlock}">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding Model.AvailableInstances.Count}" Value="0">
-                                    <Setter Property="Visibility" Value="Visible" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                            <Style.Setters>
-                                <Setter Property="Visibility" Value="Collapsed" />
-                            </Style.Setters>
-                        </Style>
-                    </TextBlock.Style>
-                </TextBlock>
+                <TextBlock.Style>
+                    <Style TargetType="{x:Type TextBlock}">
+                        <Setter Property="Visibility" Value="Collapsed" />
+
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Model.AvailableInstances.Count}" Value="0">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
             </TextBlock>
 
             <StackPanel
