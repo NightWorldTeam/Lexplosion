@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:Lexplosion.WPF.NewInterface.Controls"
+    xmlns:converters="clr-namespace:Lexplosion.WPF.NewInterface.Core.Converters"
     xmlns:core="clr-namespace:Lexplosion.WPF.NewInterface.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Windows"
@@ -14,48 +15,47 @@
 
     <Window.Resources>
         <DataTemplate DataType="{x:Type core:ConsoleLog}">
-            <Grid Margin="0,2">
 
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
+            <Grid Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={converters:WindowWidthToXProcentWidth}, ConverterParameter=90}">
+                <!--<Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <Border
-                    x:Name="Type"
-                    Padding="8,4"
-                    CornerRadius="5">
-                    <TextBlock
-                        x:Name="TypeName"
-                        FontSize="14"
-                        Text="{Binding Type}" />
-                </Border>
+                <Label Content="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplatedParent.(ItemsControl.AlternationIndex)}" Foreground="{DynamicResource LatestForegroundSolidColorBrush}" />-->
 
-                <TextBlock
-                    Grid.Column="1"
-                    Margin="8,0,0,0"
-                    VerticalAlignment="Center"
-                    FontSize="14"
-                    Foreground="Purple"
-                    Text="{Binding Time}" />
-
-                <TextBlock
+                <TextBox
                     x:Name="TextBlock"
-                    Grid.Column="2"
+                    Grid.Column="1"
+                    MaxWidth="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={converters:WindowWidthToXProcentWidth}, ConverterParameter=85}"
                     Margin="8,0,0,0"
+                    HorizontalAlignment="Left"
                     VerticalAlignment="Center"
+                    AcceptsReturn="True"
+                    AcceptsTab="False"
+                    Background="Transparent"
+                    BorderThickness="0"
                     FontSize="14"
+                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                    HorizontalScrollBarVisibility="Disabled"
+                    IsReadOnly="True"
+                    IsUndoEnabled="False"
+                    SpellCheck.IsEnabled="False"
                     Text="{Binding Message}"
-                    TextWrapping="WrapWithOverflow" />
+                    TextWrapping="Wrap"
+                    UndoLimit="0"
+                    VerticalScrollBarVisibility="Auto" />
             </Grid>
 
             <DataTemplate.Triggers>
 
+
+                <!--<Trigger Property="IsFocused" Value="False">
+                    <Setter TargetName="TextBox" Property="Visibility" Value="Collapsed" />
+                </Trigger>-->
+
                 <DataTrigger Binding="{Binding Type}" Value="{x:Static core:LogType.Info}">
                     <Setter TargetName="TextBlock" Property="Foreground" Value="{DynamicResource PrimaryForegroundSolidColorBrush}" />
-                    <Setter TargetName="Type" Property="Background" Value="LightGray" />
-                    <Setter TargetName="TypeName" Property="Foreground" Value="Black" />
                     <!--<Setter TargetName="TextBlock" Property="Background">
                         <Setter.Value>
                             <SolidColorBrush Opacity="0.3" Color="#e59f38" />
@@ -65,9 +65,6 @@
 
                 <DataTrigger Binding="{Binding Type}" Value="{x:Static core:LogType.InfoGame}">
                     <Setter TargetName="TextBlock" Property="Foreground" Value="#007BFF" />
-                    <Setter TargetName="Type" Property="Background" Value="#007BFF" />
-                    <Setter TargetName="TypeName" Property="Foreground" Value="White" />
-                    <Setter TargetName="TypeName" Property="Text" Value="Game Info" />
                     <!--<Setter TargetName="TextBlock" Property="Background">
                         <Setter.Value>
                             <SolidColorBrush Opacity="0.3" Color="#e59f38" />
@@ -76,8 +73,6 @@
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Type}" Value="{x:Static core:LogType.Warning}">
                     <Setter TargetName="TextBlock" Property="Foreground" Value="#FFC107" />
-                    <Setter TargetName="Type" Property="Background" Value="#FFC107" />
-                    <Setter TargetName="TypeName" Property="Background" Value="Black" />
                     <!--<Setter TargetName="TextBlock" Property="Background">
                         <Setter.Value>
                             <SolidColorBrush Opacity="0.1" Color="#167FFC" />
@@ -86,8 +81,6 @@
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Type}" Value="{x:Static core:LogType.Error}">
                     <Setter TargetName="TextBlock" Property="Foreground" Value="#DC3545" />
-                    <Setter TargetName="Type" Property="Background" Value="#DC3545" />
-                    <Setter TargetName="TypeName" Property="Foreground" Value="#fff" />
                     <!--<Setter TargetName="TextBlock" Property="Background">
                         <Setter.Value>
                             <SolidColorBrush Opacity="0.3" Color="#c94b4b" />
@@ -98,8 +91,35 @@
             </DataTemplate.Triggers>
 
         </DataTemplate>
+
+        <Style TargetType="{x:Type ListBoxItem}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Border
+                            x:Name="Border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <!--  Триггер для выделенного состояния  -->
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Border" Property="Background">
+                                    <Setter.Value>
+                                        <SolidColorBrush Opacity="0.1" Color="{DynamicResource ActivityColor}" />
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
 
+    <!--  ConsoleBackground  -->
     <Border Background="{DynamicResource SecondarySolidColorBrush}">
 
         <Grid Margin="16,16,0,0">
@@ -108,25 +128,109 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <controls:SearchBox />
+            <Grid Height="32" Margin="0,0,16,0">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <controls:SearchBox Style="{StaticResource sm-searchbox-default}" />
+
+                <Border
+                    Grid.Column="1"
+                    Margin="4,0,0,0"
+                    Background="{DynamicResource PrimarySolidColorBrush}"
+                    CornerRadius="0">
+                    <StackPanel Orientation="Horizontal">
+                        <Border
+                            Padding="2,0"
+                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                            BorderThickness="1,0,0,0">
+                            <Button
+                                x:Name="FragmentCopyButton"
+                                Height="20"
+                                Click="FragmentCopyButton_Click"
+                                Content="Copy"
+                                Cursor="Hand"
+                                Style="{StaticResource x32IconButtonWithHover}"
+                                ToolTip="Copy"
+                                Visibility="Collapsed" />
+                        </Border>
+                        <Border
+                            Padding="2,0"
+                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                            BorderThickness="1,0,0,0">
+                            <Button
+                                x:Name="CopyAllButton"
+                                Height="20"
+                                Click="CopyAllButton_Click"
+                                Content="CopyAll"
+                                Cursor="Hand"
+                                Style="{StaticResource x32IconButtonWithHover}"
+                                ToolTip="Copy All" />
+                        </Border>
+                        <Border
+                            Padding="2,0"
+                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                            BorderThickness="1,0,0,0">
+                            <Button
+                                Height="20"
+                                Content="FileUpload"
+                                Cursor="Hand"
+                                Style="{StaticResource x32IconButtonWithHover}"
+                                ToolTip="Save to file" />
+                        </Border>
+                        <Border
+                            Padding="2,0"
+                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                            BorderThickness="1,0,0,0">
+                            <Grid>
+                                <Button
+                                    x:Name="SelectAllButton"
+                                    Height="20"
+                                    Click="SelectAllButton_Click"
+                                    Content="SelectAll"
+                                    Cursor="Hand"
+                                    Style="{StaticResource x32IconButtonWithHover}"
+                                    ToolTip="Select All" />
+                                <Button
+                                    x:Name="UnselectAllButton"
+                                    Height="20"
+                                    Click="UnselectAllButton_Click"
+                                    Content="CloseAll"
+                                    Cursor="Hand"
+                                    Style="{StaticResource x32IconButtonWithHover}"
+                                    ToolTip="Unselect All"
+                                    Visibility="Collapsed" />
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                </Border>
+            </Grid>
 
             <Border
                 Grid.Row="1"
                 Margin="0,8,0,0"
-                Padding="0,16,0,8"
+                Padding="0,8,0,8"
                 BorderBrush="{DynamicResource SeparateSolidColorBrush}"
                 BorderThickness="1"
                 CornerRadius="10">
 
-                <ItemsControl x:Name="LogsContainer">
+                <ListBox
+                    x:Name="LogsContainer"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    KeyDown="LogsContainer_KeyDown"
+                    SelectionMode="Extended">
 
-                    <ItemsControl.ItemsPanel>
+                    <ListBox.ItemsPanel>
                         <ItemsPanelTemplate>
                             <VirtualizingStackPanel IsVirtualizing="True" VirtualizationMode="Recycling" />
                         </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
+                    </ListBox.ItemsPanel>
 
-                    <ItemsControl.Template>
+                    <ListBox.Template>
                         <ControlTemplate TargetType="ItemsControl">
                             <Border
                                 Background="{TemplateBinding Background}"
@@ -140,8 +244,8 @@
                                 </ScrollViewer>
                             </Border>
                         </ControlTemplate>
-                    </ItemsControl.Template>
-                </ItemsControl>
+                    </ListBox.Template>
+                </ListBox>
             </Border>
 
         </Grid>
