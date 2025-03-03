@@ -212,4 +212,11 @@
     <DataTemplate DataType="{x:Type modalvm:AccountFactoryViewModel}">
         <modalviews:AccountFactoryView />
     </DataTemplate>
+
+
+    <!--  Ad Servers  -->
+    <DataTemplate DataType="{x:Type mainmenuvm:AdServersViewModel}">
+        <mainmenuview:AdServersView />
+    </DataTemplate>
+
 </ResourceDictionary>

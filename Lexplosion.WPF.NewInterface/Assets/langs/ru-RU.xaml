@@ -573,4 +573,9 @@
 
     <s:String x:Key="Files">Файлов</s:String>
     <s:String x:Key="Files_LowerCase">файлы</s:String>
+
+
+    <!--  Ad Servers  -->
+    <s:String x:Key="PartnerServers">Сервера партнёров</s:String>
+    <s:String x:Key="Add">Добавить</s:String>
 </ResourceDictionary>

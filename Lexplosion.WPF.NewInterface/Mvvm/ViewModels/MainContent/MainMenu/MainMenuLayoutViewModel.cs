@@ -48,7 +48,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             _catalogViewModel = new CatalogViewModel(appCore, navigationStore, ToMainMenuLayoutCommand, mainModel.CatalogController);
             _libraryViewModel = new LibraryViewModel(appCore, navigationStore, ToMainMenuLayoutCommand, modalNavStore, mainModel.LibraryController, OpenCatalog);
 
-            _multiplayerLayoutViewModel = new NightWorldLimitedContentLayoutViewModel(new MultiplayerLayoutViewModel(OpenAccountFactory));
+            _multiplayerLayoutViewModel = new NightWorldLimitedContentLayoutViewModel(new MultiplayerLayoutViewModel(appCore, OpenAccountFactory));
             _friendsLayoutViewModel = new NightWorldLimitedContentLayoutViewModel(new FriendsLayoutViewModel(OpenAccountFactory));
 
             _generalSettingsLayoutViewModel = new GeneralSettingsLayoutViewModel(appCore);

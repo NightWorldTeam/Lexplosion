@@ -11,8 +11,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 {
     public sealed class MultiplayerLayoutViewModel : ContentLayoutViewModelBase, ILimitedAccess
     {
-        private ViewModelBase _generalMultiplayerViewModel = new MultiplayerViewModel();
+        private readonly AppCore _appCore;
         private readonly Action _openAccountFactory;
+
+        private ViewModelBase _generalMultiplayerViewModel = new MultiplayerViewModel();
+        private ViewModelBase _adServersViewModel;
 
         #region Properties
 
@@ -42,8 +45,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         #region Constructors
 
 
-        public MultiplayerLayoutViewModel(Action openAccountFactory) : base()
+        public MultiplayerLayoutViewModel(AppCore appCore, Action openAccountFactory) : base()
         {
+            _appCore = appCore;
+            _adServersViewModel = new AdServersViewModel(appCore);
             _openAccountFactory = openAccountFactory;
             Account.ActiveAccountChanged += (acc) =>
             {
@@ -93,7 +98,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             {
                 _tabs.Clear();
                 _generalMultiplayerViewModel = new MultiplayerViewModel();
-                _tabs.Add(new TabItemModel { TextKey = "General", Content = _generalMultiplayerViewModel, IsSelected = true });
+                _tabs.Add(new TabItemModel { TextKey = "PartnerServers", Content = _adServersViewModel, IsSelected = true });
+                _tabs.Add(new TabItemModel { TextKey = "General", Content = _generalMultiplayerViewModel, IsSelected = false });
             }
         }
 

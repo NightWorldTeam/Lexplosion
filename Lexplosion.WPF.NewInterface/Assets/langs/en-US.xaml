@@ -548,4 +548,8 @@
 
     <s:String x:Key="Files">Files</s:String>
     <s:String x:Key="Files_LowerCase">files</s:String>
+
+    <!--  Ad Servers  -->
+    <s:String x:Key="PartnerServers">Partner Servers</s:String>
+    <s:String x:Key="Add">Add</s:String>
 </ResourceDictionary>
