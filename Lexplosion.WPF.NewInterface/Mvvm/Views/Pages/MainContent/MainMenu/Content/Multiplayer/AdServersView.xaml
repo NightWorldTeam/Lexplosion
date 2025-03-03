@@ -69,7 +69,7 @@
                                 <Border
                                     x:Name="ContentBorder"
                                     Grid.Row="2"
-                                    Padding="12,6,12,6"
+                                    Padding="12,4,12,6"
                                     Background="{DynamicResource SepSolidColorBrush}"
                                     CornerRadius="0,0,5,5">
                                     <Grid ShowGridLines="False">
@@ -125,6 +125,37 @@
                                                 Style="{StaticResource sm-default}"
                                                 Text="{DynamicResource Add}" />
                                         </StackPanel>
+
+                                        <ItemsControl
+                                            Grid.Row="2"
+                                            MaxWidth="600"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Bottom"
+                                            Background="Transparent"
+                                            ItemsSource="{Binding Tags}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border
+                                                        Height="17"
+                                                        Margin="0,0,4,0"
+                                                        Padding="5,2"
+                                                        Background="{DynamicResource SeparateSolidColorBrush}"
+                                                        CornerRadius="5">
+                                                        <TextBlock
+                                                            FontSize="10"
+                                                            FontWeight="Medium"
+                                                            Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                                            Text="{Binding Name}" />
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <WrapPanel IsItemsHost="True" Orientation="Horizontal" />
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                        </ItemsControl>
                                     </Grid>
                                 </Border>
 
@@ -141,7 +172,7 @@
                                     Margin="12,0,0,0"
                                     Padding="12,6"
                                     HorizontalAlignment="Left"
-                                    Background="{DynamicResource SeparateSolidColorBrush}"
+                                    Background="{DynamicResource PrimarySolidColorBrush}"
                                     CornerRadius="5">
                                     <TextBlock
                                         VerticalAlignment="Center"
