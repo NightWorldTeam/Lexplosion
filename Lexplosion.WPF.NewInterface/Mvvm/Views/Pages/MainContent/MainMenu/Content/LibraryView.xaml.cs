@@ -1,17 +1,17 @@
 ﻿using Lexplosion.WPF.NewInterface.Controls;
-using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
+using System.Windows.Forms;
+using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
+using ListBox = System.Windows.Controls.ListBox;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu
 {
     /// <summary>
     /// Логика взаимодействия для LibraryView.xaml
     /// </summary>
-    public partial class LibraryView : UserControl
+    public partial class LibraryView : System.Windows.Controls.UserControl
     {
         double filterHeight = 0;
         bool _isFilterHidden = false;

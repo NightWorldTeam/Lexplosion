@@ -620,7 +620,8 @@
                             HorizontalAlignment="Right"
                             VerticalAlignment="Bottom">
 
-                            <controls:LaunchButton
+                            <!--  TODO: Addon Catalog Launch Button  -->
+                            <!--<controls:LaunchButton
                                 Width="40"
                                 Height="40"
                                 Background="{DynamicResource PrimarySolidColorBrush}"
@@ -628,7 +629,7 @@
                                 BorderThickness="1"
                                 Command="{Binding LaunchInstanceCommand}"
                                 Foreground="{DynamicResource ActivitySolidColorBrush}"
-                                IsLoaded="{Binding Model.IsGameLoaded}" />
+                                IsLoaded="{Binding Model.IsGameLoaded}" />-->
 
                             <controls:BackTop
                                 Grid.Column="1"

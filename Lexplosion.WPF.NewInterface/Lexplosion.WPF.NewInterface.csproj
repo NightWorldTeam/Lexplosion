@@ -157,6 +157,9 @@
     <Compile Include="Mvvm\Models\MainContent\MainMenu\Friends\FriendRequestsModel.cs" />
     <Compile Include="Mvvm\Models\MainContent\MainMenu\Friends\FriendsModel.cs" />
     <Compile Include="Mvvm\Models\MainContent\MainMenu\GeneralSettings\AccountsSettingsModel.cs" />
+    <Compile Include="Mvvm\OldInstanceForm.xaml.cs">
+      <DependentUpon>OldInstanceForm.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Mvvm\ViewModels\Authorization\Modal\MicrosoftManualInputViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Authorization\NightWorldRegistrationViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Authorization\NoAccountAuthorizationViewModel.cs" />
@@ -571,6 +574,10 @@
     <Page Include="DataTemplates.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Mvvm\OldInstanceForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Mvvm\Views\Modal\AccountFactoryView.xaml">
       <SubType>Designer</SubType>

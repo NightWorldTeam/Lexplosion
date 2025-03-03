@@ -54,37 +54,25 @@
             <!--<Setter Property="Width" Value="{Binding ActualWidth, ElementName=TestWindowName, Converter={converters:WindowWidthToXProcentWidth}, ConverterParameter=60}" />-->
         </Style>
 
-
+        <!--  Базовый стиль для CustomTextContainer  -->
+        <!--<Style TargetType="{x:Type controls:ConsoleTextContainer}">-->
+        <!--<Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type controls:ConsoleTextContainer}">
+                        <Border>
+                            <ScrollViewer x:Name="PART_ScrollViewer">
+                                <ScrollViewer />
+                            </ScrollViewer>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>-->
     </Window.Resources>
 
     <Grid>
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-
-        <StackPanel Visibility="Collapsed">
-            <TextBox x:Name="StartTB" />
-            <TextBox x:Name="EndTB" />
-            <Button Click="Button_Click_1" Content="Apply" />
-        </StackPanel>
-
-        <ScrollViewer Grid.Column="1" Visibility="Collapsed">
-            <ItemsControl x:Name="Colors">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate DataType="{x:Type Color}">
-                        <Border Width="400" Height="32">
-                            <Border.Background>
-                                <SolidColorBrush Color="{Binding}" />
-                            </Border.Background>
-                        </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
-
-        <Grid Grid.ColumnSpan="2" Visibility="Visible">
+        <Grid Grid.ColumnSpan="2" Visibility="Collapsed">
 
             <Border HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Grid>
@@ -133,7 +121,7 @@
                                     FontSize="14"
                                     Foreground="White">
                                     <Run Text="Этап" />
-                                    <Run Text="2/3" Foreground="#167FFC" />
+                                    <Run Foreground="#167FFC" Text="2/3" />
                                 </TextBlock>
                                 <TextBlock
                                     HorizontalAlignment="Left"

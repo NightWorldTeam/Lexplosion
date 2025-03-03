@@ -15,6 +15,7 @@
     xmlns:mainmenu="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:objects="clr-namespace:Lexplosion.Logic.Objects;assembly=Lexplosion.Core"
+    xmlns:oldinstanceform="clr-namespace:Lexplosion.WPF.NewInterface.Controls.OldInstanceForm"
     xmlns:translatable="clr-namespace:Lexplosion.WPF.NewInterface.Core.Objects.TranslatableObjects"
     d:DataContext="{d:DesignInstance Type=mainmenu:LibraryViewModel}"
     d:DesignHeight="450"
@@ -68,7 +69,13 @@
         <core:BindingProxy x:Key="Test" Data="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={converters:WindowWidthToXProcentWidth}, ConverterParameter=30}" />
 
         <DataTemplate DataType="{x:Type instanceModel:InstanceModelBase}">
-            <controls:InstanceForm
+            <oldinstanceform:OldInstanceForm
+                Margin="0,0,0,16"
+                CanBeDeleted="True"
+                LogoButtonCommand="{Binding DataContext.OpenInstanceProfileMenuCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
+                LogoButtonCommandParameter="{Binding}"
+                OpenAddonsPageCommand="{Binding DataContext.OpenAddonsPageCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
+            <!--<controls:InstanceForm
                 MinWidth="600"
                 MaxWidth="610"
                 Margin="0,0,0,16"
@@ -77,7 +84,7 @@
                 LogoButtonCommand="{Binding DataContext.OpenInstanceProfileMenuCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
                 LogoButtonCommandParameter="{Binding}"
                 MouseDown="InstanceForm_MouseDown"
-                OpenAddonsPageCommand="{Binding DataContext.OpenAddonsPageCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
+                OpenAddonsPageCommand="{Binding DataContext.OpenAddonsPageCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />-->
         </DataTemplate>
     </UserControl.Resources>
 
@@ -418,7 +425,7 @@
                     </ListBox>
                 </core:If.False>
                 <core:If.True>
-                    <!-- TODO: Translate --> 
+                    <!--  TODO: Translate  -->
                     <controls:Empty Description="Вы можете добавить сборки в библиотеку через каталог или создания своей сборки" TitleForeground="{DynamicResource PrimaryForegroundSolidColorBrush}">
                         <WrapPanel Margin="0,16,0,0">
                             <controls:AdvancedButton

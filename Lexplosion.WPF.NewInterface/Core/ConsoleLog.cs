@@ -25,12 +25,6 @@ namespace Lexplosion.WPF.NewInterface.Core
             if (message.Contains("/INFO"))
             {
                 Type = LogType.InfoGame;
-
-                var logInfo = Message.Split(new string[] { "/INFO]:" }, StringSplitOptions.None);
-                var time = logInfo[0].Split(' ')[0];
-                Message = Message.Replace($"{time} ", "");
-                Time = time.Replace("[", "").Replace("]", "");
-                HasTime = true;
             }
             else if (message.Contains("/WARN"))
             {

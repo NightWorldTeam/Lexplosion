@@ -22,10 +22,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         /// Процесс скачивания клиента игры запущен.
         /// </summary>
         public event Action Started;
-        /// <summary>
-        /// Процесс отмены скачивания клиента игры был завершен.
-        /// </summary>
-        public event Action Canceled;
 
 
         private bool _isActive;
@@ -50,7 +46,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             // pha - Progress Handler Arguments
             _instanceClient.ProgressHandler += (st, pha) => ProgressChanged?.Invoke(st, pha);
             _instanceClient.DownloadComplited += OnDownloadCompleted;
-            _instanceClient.DownloadCanceled += OnDownloadCanceled; 
         }
 
 
@@ -59,28 +54,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 
         #region Public Methods
 
-
-        /// <summary>
-        /// Запускает скачивание сборки.
-        /// </summary>
-        /// <param name="version">Версия сборки сборки (not minecraft)</param>
-        public void Download(string version = null)
-        {
-            IsActive = true;
-            Lexplosion.Runtime.TaskRun(() =>
-            {
-                _instanceClient.Update(version);
-            });
-        }
-
-        /// <summary>
-        /// Отменяет текущие скачивание
-        /// </summary>
-        public async void DownloadCancel()
-        {
-            IsActive = false;
-            await Task.Run(_instanceClient.CancelDownload);
-        }
 
 
         #endregion Public Methods
@@ -151,15 +124,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
                     }
                     break;
             }
-        }
-
-
-        /// <summary>
-        /// Вызывается, когда процесс отмены скачивания клиента сборки был завершен.
-        /// </summary>
-        private void OnDownloadCanceled()
-        {
-            Canceled?.Invoke();
         }
 
 

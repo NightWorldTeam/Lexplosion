@@ -217,15 +217,110 @@
 
                             <!--  TODO:  add ProgressBar  -->
                             <core:If Condition="{Binding IsInstalled, UpdateSourceTrigger=PropertyChanged}">
+
+
+
                                 <core:If.True>
-                                    <controls:AdvancedButton
-                                        Command="{Binding PlayCommand}"
-                                        FontSize="12"
-                                        IconData="{StaticResource PDPlay}"
-                                        IsLoading="{Binding IsLaunching}"
-                                        LoadingText="Идет запуск игры..."
-                                        Style="{StaticResource sm-default}"
-                                        Text="{DynamicResource Play}" />
+                                    <Grid>
+                                        <controls:AdvancedButton
+                                            x:Name="PlayButton"
+                                            Command="{Binding PlayCommand}"
+                                            FontSize="12"
+                                            IconData="{StaticResource PDPlay}"
+                                            IsLoading="{Binding IsLaunching}"
+                                            LoadingText="Запуск игры..."
+                                            Style="{StaticResource sm-default}"
+                                            Text="{DynamicResource Play}" />
+
+                                        <Popup
+                                            Width="{Binding ActualWidth, ElementName=PlayButton}"
+                                            MinWidth="200"
+                                            AllowsTransparency="True"
+                                            Placement="Right"
+                                            PlacementRectangle="0,-130,0,0"
+                                            PlacementTarget="{Binding ElementName=PlayButton}"
+                                            PopupAnimation="Fade">
+
+                                            <Popup.Style>
+                                                <Style TargetType="Popup">
+                                                    <Setter Property="IsOpen" Value="False" />
+                                                    <Style.Triggers>
+                                                        <!--  Триггер, который открывает Popup, если IsLoading=True и курсор на кнопке  -->
+                                                        <MultiDataTrigger>
+                                                            <MultiDataTrigger.Conditions>
+                                                                <!--  Условие 1: IsLoading = True  -->
+                                                                <Condition Binding="{Binding IsJustLaunching}" Value="False" />
+                                                                <Condition Binding="{Binding IsLoading, ElementName=PlayButton}" Value="True" />
+                                                                <!--  Условие 2: Кнопка под курсором  -->
+                                                                <Condition Binding="{Binding IsMouseOver, ElementName=PlayButton}" Value="True" />
+                                                            </MultiDataTrigger.Conditions>
+                                                            <Setter Property="IsOpen" Value="True" />
+                                                        </MultiDataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Popup.Style>
+
+                                            <Border
+                                                Padding="8,8"
+                                                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                                BorderThickness="1"
+                                                CornerRadius="5">
+
+                                                <Border.Background>
+                                                    <SolidColorBrush Opacity="1" Color="{DynamicResource PrimaryColor}" />
+                                                </Border.Background>
+
+                                                <StackPanel>
+                                                    <TextBlock
+                                                        MaxWidth="200"
+                                                        Margin="0,0,0,4"
+                                                        HorizontalAlignment="Left"
+                                                        FontSize="14"
+                                                        TextWrapping="WrapWithOverflow">
+                                                        <Run Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="Процесс:" />
+                                                        <Run Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" Text="Обновление файлов" />
+                                                    </TextBlock>
+                                                    <TextBlock
+                                                        Margin="0,0,0,4"
+                                                        HorizontalAlignment="Left"
+                                                        FontSize="14"
+                                                        Foreground="White">
+                                                        <Run Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="Этап:" />
+                                                        <Run Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}">
+                                                            <Run.Text>
+                                                                <MultiBinding StringFormat="{}{0}/{1}">
+                                                                    <Binding Path="CurrentStage" />
+                                                                    <Binding Path="TotalStageCount" />
+                                                                </MultiBinding>
+                                                            </Run.Text>
+                                                        </Run>
+                                                    </TextBlock>
+                                                    <TextBlock
+                                                        Margin="0,0,0,4"
+                                                        HorizontalAlignment="Left"
+                                                        FontSize="14"
+                                                        Foreground="White">
+                                                        <Run Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="Файлы:" />
+                                                        <Run Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}">
+                                                            <Run.Text>
+                                                                <MultiBinding StringFormat="{}{0}/{1}">
+                                                                    <Binding Path="CurrectFilesCount" />
+                                                                    <Binding Path="TotalFilesCount" />
+                                                                </MultiBinding>
+                                                            </Run.Text>
+                                                        </Run>
+                                                    </TextBlock>
+                                                    <TextBlock
+                                                        HorizontalAlignment="Left"
+                                                        FontSize="14"
+                                                        Foreground="White">
+                                                        <Run Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="Итого скачено:" />
+                                                        <Run Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" Text="{Binding ProgressValue, Mode=OneWay, StringFormat='{}{0}%'}" />
+                                                    </TextBlock>
+                                                </StackPanel>
+                                            </Border>
+                                        </Popup>
+                                    </Grid>
                                 </core:If.True>
                                 <core:If.False>
                                     <Grid>
@@ -240,17 +335,34 @@
                                             Text="{DynamicResource Download}" />
 
                                         <Popup
-                                            x:Name="LoadingInfo"
                                             Width="{Binding ActualWidth, ElementName=DownloadButton}"
                                             MinWidth="200"
                                             AllowsTransparency="True"
-                                            IsOpen="{Binding IsMouseOver, ElementName=DownloadButton, Mode=OneWay}"
                                             Placement="Right"
                                             PlacementRectangle="0,-120,0,0"
                                             PlacementTarget="{Binding ElementName=DownloadButton}"
                                             PopupAnimation="Fade">
+
+                                            <Popup.Style>
+                                                <Style TargetType="Popup">
+                                                    <Setter Property="IsOpen" Value="False" />
+                                                    <Style.Triggers>
+                                                        <!--  Триггер, который открывает Popup, если IsLoading=True и курсор на кнопке  -->
+                                                        <MultiDataTrigger>
+                                                            <MultiDataTrigger.Conditions>
+                                                                <!--  Условие 1: IsLoading = True  -->
+                                                                <Condition Binding="{Binding IsLoading, ElementName=DownloadButton}" Value="True" />
+                                                                <!--  Условие 2: Кнопка под курсором  -->
+                                                                <Condition Binding="{Binding IsMouseOver, ElementName=DownloadButton}" Value="True" />
+                                                            </MultiDataTrigger.Conditions>
+                                                            <Setter Property="IsOpen" Value="True" />
+                                                        </MultiDataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Popup.Style>
+
                                             <Border
-                                                Padding="8,16"
+                                                Padding="8,8"
                                                 BorderBrush="{DynamicResource SeparateSolidColorBrush}"
                                                 BorderThickness="1"
                                                 CornerRadius="5">
@@ -275,7 +387,29 @@
                                                         FontSize="14"
                                                         Foreground="White">
                                                         <Run Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="Этап:" />
-                                                        <Run Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" Text="1/3" />
+                                                        <Run Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}">
+                                                            <Run.Text>
+                                                                <MultiBinding StringFormat="{}{0}/{1}">
+                                                                    <Binding Path="CurrentStage" />
+                                                                    <Binding Path="TotalStageCount" />
+                                                                </MultiBinding>
+                                                            </Run.Text>
+                                                        </Run>
+                                                    </TextBlock>
+                                                    <TextBlock
+                                                        Margin="0,0,0,4"
+                                                        HorizontalAlignment="Left"
+                                                        FontSize="14"
+                                                        Foreground="White">
+                                                        <Run Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="Файлы:" />
+                                                        <Run Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}">
+                                                            <Run.Text>
+                                                                <MultiBinding StringFormat="{}{0}/{1}">
+                                                                    <Binding Path="CurrectFilesCount" />
+                                                                    <Binding Path="TotalFilesCount" />
+                                                                </MultiBinding>
+                                                            </Run.Text>
+                                                        </Run>
                                                     </TextBlock>
                                                     <TextBlock
                                                         HorizontalAlignment="Left"

@@ -86,7 +86,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Tools
 
             while (EnumDisplaySettings(null, i, ref vDevMode))
             {
-                Console.WriteLine(vDevMode.dmPelsWidth + "x" + vDevMode.dmPelsHeight + " - " + vDevMode.dmBitsPerPel + ", " + vDevMode.dmDisplayFrequency);
+                //Console.WriteLine(vDevMode.dmPelsWidth + "x" + vDevMode.dmPelsHeight + " - " + vDevMode.dmBitsPerPel + ", " + vDevMode.dmDisplayFrequency);
                 hs.Add(vDevMode.dmPelsWidth + "x" + vDevMode.dmPelsHeight);
                 i++;
             }

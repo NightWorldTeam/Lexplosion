@@ -72,45 +72,33 @@
                     <Grid>
                         <Border
                             x:Name="ActivityColorBorder"
-                            Background="{DynamicResource ActivitySolidColorBrush}"
-                            CornerRadius="0,5,0,0"
-                            Opacity="0" />
+                            Background="Transparent"
+                            CornerRadius="0,5,0,0" />
 
-                        <Grid x:Name="IconGrid">
-                            <Viewbox Width="24" Height="24">
-                                <Path
-                                    x:Name="Icon"
-                                    extensions:PathExtensions.StringKeyData="Download"
-                                    Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                    Stretch="Fill" />
-                            </Viewbox>
-                            <Viewbox Width="24" Height="24">
-                                <Path
-                                    x:Name="IconActivityColor"
-                                    extensions:PathExtensions.StringKeyData="Download"
-                                    Fill="{DynamicResource CheckBoxMarkSolidColorBrush}"
-                                    Opacity="0"
-                                    Stretch="Fill" />
-                            </Viewbox>
-                        </Grid>
+                        <core:If Condition="{TemplateBinding Content, Converter={converters:IsValueNullConverter}}">
+                            <core:If.True>
 
-                        <!--  Percentages  -->
-                        <Grid>
-                            <TextBlock
-                                x:Name="Percentage"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                FontSize="18"
-                                FontWeight="SemiBold"
-                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
-                            <TextBlock
-                                x:Name="PercentageActivityColor"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                FontSize="18"
-                                FontWeight="SemiBold"
-                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
-                        </Grid>
+                                <Viewbox Width="24" Height="24">
+                                    <Path
+                                        x:Name="Icon"
+                                        extensions:PathExtensions.StringKeyData="Download"
+                                        Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                        Stretch="Fill" />
+                                </Viewbox>
+                            </core:If.True>
+                            <core:If.False>
+
+                                <!--  Percentages  -->
+                                <TextBlock
+                                    x:Name="Percentage"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontSize="18"
+                                    FontWeight="SemiBold"
+                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                    Text="{TemplateBinding Content}" />
+                            </core:If.False>
+                        </core:If>
                     </Grid>
 
                     <ControlTemplate.Triggers>
@@ -118,39 +106,9 @@
                             <Setter Property="Opacity" Value="0.3" />
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Trigger.EnterActions>
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <DoubleAnimation
-                                            Storyboard.TargetName="ActivityColorBorder"
-                                            Storyboard.TargetProperty="Opacity"
-                                            To="1"
-                                            Duration="0:0:0.15" />
-                                        <DoubleAnimation
-                                            Storyboard.TargetName="IconActivityColor"
-                                            Storyboard.TargetProperty="Opacity"
-                                            To="1"
-                                            Duration="0:0:0.35" />
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </Trigger.EnterActions>
-                            <Trigger.ExitActions>
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <DoubleAnimation
-                                            Storyboard.TargetName="ActivityColorBorder"
-                                            Storyboard.TargetProperty="Opacity"
-                                            To="0"
-                                            Duration="0:0:0.15" />
-                                        <DoubleAnimation
-                                            Storyboard.TargetName="IconActivityColor"
-                                            Storyboard.TargetProperty="Opacity"
-                                            To="0"
-                                            Duration="0:0:0.35" />
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </Trigger.ExitActions>
-                            <Setter TargetName="IconActivityColor" Property="Opacity" Value="1" />
+                            <Setter TargetName="ActivityColorBorder" Property="Background" Value="{DynamicResource ActivitySolidColorBrush}" />
+                            <Setter TargetName="Icon" Property="Fill" Value="{DynamicResource BrandColorForegroundSolidColorBrush}" />
+                            <Setter TargetName="Percentage" Property="Foreground" Value="{DynamicResource BrandColorForegroundSolidColorBrush}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

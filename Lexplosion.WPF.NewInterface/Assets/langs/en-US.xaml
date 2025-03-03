@@ -546,4 +546,6 @@
     <s:String x:Key="UnsavedChangesWarningText">Be careful you didn't save the changes!</s:String>
     <s:String x:Key="Reset">Reset</s:String>
 
+    <s:String x:Key="Files">Files</s:String>
+    <s:String x:Key="Files_LowerCase">files</s:String>
 </ResourceDictionary>

@@ -98,6 +98,21 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             }
         }
 
+        private bool _isJustLaunching;
+        public bool IsJustLaunching 
+        { 
+            get => _isJustLaunching; set 
+            {
+                _isJustLaunching = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int TotalStageCount { get; set; }
+        public int CurrentStage { get; set; }
+        public int TotalFilesCount { get; set; }
+        public int CurrectFilesCount { get; set; }
+
 
         #endregion Properties
 
@@ -114,6 +129,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             get => RelayCommand.GetCommand(ref _playCommand, () =>
             {
                 IsLaunching = true;
+                IsJustLaunching = true;
                 _instanceModel.Run();
             });
         }
@@ -149,8 +165,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             {
                 if (instanceModelBase.IsInstalled || instanceModelBase.IsDownloading) 
                 {
-                // Останавливаем обновление директорий сборки.
-                AddonsManager.GetManager(instanceModelBase.InstanceData).StopWatchingDirectory();
+                    // Останавливаем обновление директорий сборки.
+                    AddonsManager.GetManager(instanceModelBase.InstanceData).StopWatchingDirectory();
                 }
                 toMainMenuLayoutCommand.Execute(obj);
             });
@@ -173,20 +189,36 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             UpdateFrameworkElementModels();
             GenerateAdditionalInfo();
 
-            if (_instanceModel.IsDownloading)
-                IsDownloading = true;
+            IsDownloading = _instanceModel.IsDownloading;
+            IsLaunching = _instanceModel.IsLaunching;
         }
 
-        private void OnDownloadComplited(InstanceInit arg1, IEnumerable<string> arg2, bool arg3)
+        private void OnDownloadComplited(InstanceInit instanceInit, IEnumerable<string> arg2, bool isLaunching)
         {
             IsDownloading = false;
-            _appCore.MessageService.Error($"Неудалось установить {_instanceModel.Name}.");
+            IsJustLaunching = true;
+            //IsInstalled = true;
+
+            if (instanceInit == InstanceInit.Successful)
+            {
+                _appCore.MessageService.Success($"Сборка {_instanceModel.Name} успешно установлена.");
+            }
+            else 
+            {
+                _appCore.MessageService.Error($"Неудалось установить {_instanceModel.Name}.");
+            }
         }
 
         private void OnDownloadProgressChanged(StageType type, ProgressHandlerArguments progressArgs)
         {
+            if (IsInstalled)
+                OnPropertyChanged(nameof(IsInstalled));
+
             if (IsDownloading == false)
                 IsDownloading = true;
+
+            if (IsJustLaunching) 
+                IsJustLaunching = false;
 
             Runtime.DebugWrite($"{_instanceModel.Name} {type} {progressArgs.Procents}");
             // TODO: сделать прогресс бар для кнопки запуска.
@@ -202,6 +234,18 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             {
                 ProgressValue = progressArgs.Procents;
             }
+
+            TotalStageCount = progressArgs.StagesCount;
+            OnPropertyChanged(nameof(TotalStageCount));
+
+            CurrentStage = progressArgs.Stage;
+            OnPropertyChanged(nameof(CurrentStage));
+
+            TotalFilesCount = progressArgs.TotalFilesCount;
+            OnPropertyChanged(nameof(TotalFilesCount));
+
+            CurrectFilesCount = progressArgs.FilesCount;
+            OnPropertyChanged(nameof(CurrectFilesCount));
 
             OnPropertyChanged(nameof(ProgressValue));
         }

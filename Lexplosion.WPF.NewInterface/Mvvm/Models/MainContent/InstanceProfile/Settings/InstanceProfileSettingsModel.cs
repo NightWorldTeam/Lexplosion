@@ -57,7 +57,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
                 InstanceSettings.WindowHeight = value;
                 _instanceSettingsCopy.WindowHeight = value;
                 OnPropertyChanged();
-                _instanceModel.SaveSettings(_instanceSettingsCopy);
+                _instanceModel.Settings = _instanceSettingsCopy;
             }
         }
 
@@ -68,7 +68,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
                 InstanceSettings.WindowWidth = value;
                 _instanceSettingsCopy.WindowWidth = value;
                 OnPropertyChanged();
-                _instanceModel.SaveSettings(_instanceSettingsCopy);
+                _instanceModel.Settings = _instanceSettingsCopy;
             }
         }
 
@@ -102,7 +102,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
                 InstanceSettings.Xmx = value;
                 _instanceSettingsCopy.Xmx = value;
                 OnPropertyChanged();
-                _instanceModel.SaveSettings(_instanceSettingsCopy);
+                _instanceModel.Settings = _instanceSettingsCopy;
             }
         }
 
@@ -113,7 +113,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
                 InstanceSettings.Xms = value;
                 _instanceSettingsCopy.Xms = value;
                 OnPropertyChanged();
-                _instanceModel.SaveSettings(_instanceSettingsCopy);
+                _instanceModel.Settings = _instanceSettingsCopy;
             }
         }
 
@@ -137,7 +137,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
                 else
                     InstanceSettings.IsCustomJava = true;
 
-                _instanceModel.SaveSettings(_instanceSettingsCopy);
+                _instanceModel.Settings = _instanceSettingsCopy;
             }
         }
 
@@ -147,8 +147,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
             {
                 InstanceSettings.GameArgs = value;
                 _instanceSettingsCopy.JavaPath = value;
-                OnPropertyChanged();
-                _instanceModel.SaveSettings(_instanceSettingsCopy);
+                _instanceModel.Settings = _instanceSettingsCopy;
             }
         }
 
@@ -166,7 +165,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
                 InstanceSettings.IsShowConsole = value;
                 _instanceSettingsCopy.IsShowConsole = value;
                 OnPropertyChanged();
-                _instanceModel.SaveSettings(_instanceSettingsCopy);
+                _instanceModel.Settings = _instanceSettingsCopy;
 
                 ConsoleParameterChanged?.Invoke(value == true, _instanceModel.LocalId);
             }
@@ -179,7 +178,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
                 InstanceSettings.IsHiddenMode = value;
                 _instanceSettingsCopy.IsHiddenMode = value;
                 OnPropertyChanged();
-                _instanceModel.SaveSettings(_instanceSettingsCopy);
+                _instanceModel.Settings = _instanceSettingsCopy;
             }
         }
 
@@ -190,7 +189,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
                 InstanceSettings.IsAutoUpdate = value;
                 _instanceSettingsCopy.IsAutoUpdate = value;
                 OnPropertyChanged();
-                _instanceModel.SaveSettings(_instanceSettingsCopy);
+                _instanceModel.Settings = _instanceSettingsCopy;
             }
         }
 
@@ -218,7 +217,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
         public InstanceProfileSettingsModel(InstanceModelBase instanceModel)
         {
             _instanceModel = instanceModel;
-            _instanceSettings = instanceModel.GetSettings();
+            _instanceSettings = instanceModel.Settings;
             _instanceSettingsCopy = _instanceSettings.Copy();
             InstanceSettings.Merge(GlobalData.GeneralSettings, true);
 

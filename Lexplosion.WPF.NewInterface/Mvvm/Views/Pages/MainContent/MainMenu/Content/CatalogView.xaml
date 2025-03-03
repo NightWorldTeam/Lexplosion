@@ -11,6 +11,7 @@
     xmlns:mainmenu="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:objects="clr-namespace:Lexplosion.Logic.Objects;assembly=Lexplosion.Core"
+    xmlns:oldinstanceform="clr-namespace:Lexplosion.WPF.NewInterface.Controls.OldInstanceForm"
     xmlns:translatable="clr-namespace:Lexplosion.WPF.NewInterface.Core.Objects.TranslatableObjects"
     xmlns:virtualization="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
     d:DataContext="{d:DesignInstance Type=mainmenu:CatalogViewModel}"
@@ -54,13 +55,18 @@
         </Style>
 
         <DataTemplate DataType="{x:Type instanceModel:InstanceModelBase}">
-            <controls:InstanceForm
+            <oldinstanceform:OldInstanceForm
+                Margin="0,0,0,16"
+                LogoButtonCommand="{Binding DataContext.OpenInstanceProfileMenu, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                LogoButtonCommandParameter="{Binding}"
+                OpenAddonsPageCommand="{Binding DataContext.OpenAddonsPageCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
+            <!--<controls:InstanceForm
                 Margin="0,0,0,16"
                 InstanceModel="{Binding}"
                 LogoButtonCommand="{Binding DataContext.OpenInstanceProfileMenu, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
                 LogoButtonCommandParameter="{Binding}"
                 MouseDown="InstanceForm_MouseDown"
-                OpenAddonsPageCommand="{Binding DataContext.OpenAddonsPageCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                OpenAddonsPageCommand="{Binding DataContext.OpenAddonsPageCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />-->
         </DataTemplate>
     </UserControl.Resources>
 

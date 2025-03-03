@@ -25,7 +25,7 @@
                             </Border.RenderTransform>
 
                             <Path
-                                Width="{TemplateBinding IconWidth}"
+                                Width="{Binding IconWidth}"
                                 Height="{TemplateBinding IconHeight}"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Top"

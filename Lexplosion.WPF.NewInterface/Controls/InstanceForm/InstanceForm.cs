@@ -5,6 +5,7 @@ using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -25,7 +26,6 @@ namespace Lexplosion.WPF.NewInterface.Controls
     [TemplatePart(Name = PART_TAGS_PANEL, Type = typeof(ItemsControl))]
     [TemplatePart(Name = PART_MAIN_ACTION_BUTTON, Type = typeof(Button))]
     [TemplatePart(Name = PART_DROPDOWNMENU, Type = typeof(DropdownMenu))]
-    [TemplatePart(Name = PART_DROPDOWNMENU_CONTENT, Type = typeof(ItemsControl))]
 
     [TemplatePart(Name = PART_PROGRESSBAR, Type = typeof(ProgressBar))]
     [TemplatePart(Name = PART_MAIN_BUTTON_PERCENTAGE, Type = typeof(TextBlock))]
@@ -44,7 +44,6 @@ namespace Lexplosion.WPF.NewInterface.Controls
         // Buttons
         private const string PART_MAIN_ACTION_BUTTON = "PART_MainActionButton";
         private const string PART_DROPDOWNMENU = "PART_DropDownMenu";
-        private const string PART_DROPDOWNMENU_CONTENT = "PART_DropdownMenuContent";
 
         // Download Info
         private const string PART_PROGRESSBAR = "PART_ProgressBar";
@@ -69,7 +68,6 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
         private Button _mainActionButton;
         private DropdownMenu _dropdownMenu;
-        private ItemsControl _dropdownMenuItemsControl;
 
         private ProgressBar _progressBar;
         private TextBlock _filesCountLabel;
@@ -212,8 +210,20 @@ namespace Lexplosion.WPF.NewInterface.Controls
         {
             Loaded += (object sender, RoutedEventArgs e) =>
             {
-                IsProcessActive = false;
-                IsDownloading = false;
+                //IsProcessActive = false;
+                //IsDownloading = false;
+
+                IsProcessActive = InstanceModel.IsDownloading || InstanceModel.IsLaunching;
+                IsDownloading = InstanceModel.IsDownloading;
+
+                if (IsDownloading)
+                {
+                    OnProcessActive();
+                    PrepareVisualState();
+                    OnDownloadingChanged();
+                }
+
+
                 OnInstanceModelStateChanged();
             };
         }
@@ -227,6 +237,11 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
         public override void OnApplyTemplate()
         {
+            if (InstanceModel.IsDownloading)
+            {
+                Runtime.DebugWrite($"Downloading [{DateTime.Now.Ticks}]");
+            }
+
             _logoGridBlock = Template.FindName(PART_LOGOBLOCK, this) as Grid;
             _logoBorder = Template.FindName(PART_LOGO, this) as Border;
             _nameTextBlock = Template.FindName(PART_NAME, this) as TextBlock;
@@ -234,10 +249,8 @@ namespace Lexplosion.WPF.NewInterface.Controls
             _shortDescriptionTextBlock = Template.FindName(PART_SHORT_DESCRIPTION, this) as TextBlock;
             _tagsPanel = Template.FindName(PART_TAGS_PANEL, this) as ItemsControl;
             _dropdownMenu = Template.FindName(PART_DROPDOWNMENU, this) as DropdownMenu;
-            _dropdownMenuItemsControl = Template.FindName(PART_DROPDOWNMENU_CONTENT, this) as ItemsControl;
             _mainActionButton = Template.FindName(PART_MAIN_ACTION_BUTTON, this) as Button;
             _modloaderIconContainer = Template.FindName("ModloaderIcon", this) as Border;
-
 
             // TODO: сделать адекватно, чтобы после обновления индикатор пропадал
             var _updateIndicator = Template.FindName("UpdateIndicator", this) as Border;
@@ -262,10 +275,8 @@ namespace Lexplosion.WPF.NewInterface.Controls
                 LowerButtonClicked += () => _dropdownMenu.IsOpen = false;
             }
 
-            if (_dropdownMenuItemsControl != null)
-            {
-                _dropdownMenuItemsControl.ItemsSource = LowerMenuButtons;
-            }
+            IsProcessActive = InstanceModel.IsDownloading || InstanceModel.IsLaunching;
+            IsDownloading = InstanceModel.IsDownloading;
 
             UpdateAllFields(InstanceModel);
 
@@ -286,9 +297,6 @@ namespace Lexplosion.WPF.NewInterface.Controls
                 OnInstanceModelStateChanged();
             };
 
-            IsProcessActive = false;
-            IsDownloading = false;
-
             InstanceModel.DownloadProgressChanged += OnDownloadProcessChanged;
             InstanceModel.DownloadComplited += OnDownloadCompleted;
 
@@ -298,11 +306,19 @@ namespace Lexplosion.WPF.NewInterface.Controls
             InstanceModel.DownloadCanceled += OnDownloadCanceled;
             InstanceModel.ModloaderChanged += InstanceModel_ModloaderChanged;
 
+
+            //InstanceModel.UpdateInLibrary();
+
             // Регистрируем функции для кнопок выпадающего меню
             RegisterLowerButtonFunctions();
 
             ApplyTemplateExecuted?.Invoke();
             InstanceModel_ModloaderChanged();
+
+            if (InstanceModel.IsDownloading)
+            {
+                Runtime.DebugWrite($"Downloading [{DateTime.Now.Ticks}]");
+            }
         }
 
         private AdvancedButton _сancelDownloadButton;
@@ -313,7 +329,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
         private AdvancedButton _deleteFromLibraryButton;
         private AdvancedButton _addToLibraryButton;
 
-        private void RegisterLowerButtonFunctions() 
+        private void RegisterLowerButtonFunctions()
         {
             _сancelDownloadButton = Template.FindName("CancelDownloadButton", this) as AdvancedButton;
             _visitWebsiteButton = Template.FindName("VisitWebsiteButton", this) as AdvancedButton;
@@ -324,7 +340,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
             _deleteFromLibraryButton = Template.FindName("DeleteFromLibraryButton", this) as AdvancedButton;
             _addToLibraryButton = Template.FindName("AddToLibraryButton", this) as AdvancedButton;
 
-            if (_сancelDownloadButton != null) 
+            if (_сancelDownloadButton != null)
             {
                 _сancelDownloadButton.Click += (o, e) =>
                 {
@@ -333,7 +349,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
                 };
             }
 
-            if (_visitWebsiteButton != null) 
+            if (_visitWebsiteButton != null)
             {
                 _visitWebsiteButton.Click += (o, e) =>
                 {
@@ -351,7 +367,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
                 _visitWebsiteButton.SetResourceReference(AdvancedButton.TextProperty, $"Visit{InstanceModel.Source.ToString()}");
             }
 
-            if (_openFolderButton != null) 
+            if (_openFolderButton != null)
             {
                 _openFolderButton.Click += (o, e) =>
                 {
@@ -360,7 +376,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
                 };
             }
 
-            if (_exportButton != null) 
+            if (_exportButton != null)
             {
                 _exportButton.Click += (o, e) =>
                 {
@@ -369,7 +385,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
                 };
             }
 
-            if (_openAddonManagerButton != null) 
+            if (_openAddonManagerButton != null)
             {
                 _openAddonManagerButton.Click += (o, e) =>
                 {
@@ -378,7 +394,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
                 };
             }
 
-            if (_deleteButton != null) 
+            if (_deleteButton != null)
             {
                 _deleteButton.Click += (o, e) =>
                 {
@@ -387,7 +403,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
                 };
             }
 
-            if (_deleteFromLibraryButton != null) 
+            if (_deleteFromLibraryButton != null)
             {
                 _deleteFromLibraryButton.Click += (o, e) =>
                 {
@@ -396,7 +412,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
                 };
             }
 
-            if (_addToLibraryButton != null) 
+            if (_addToLibraryButton != null)
             {
                 _addToLibraryButton.Click += (o, e) =>
                 {
@@ -432,7 +448,6 @@ namespace Lexplosion.WPF.NewInterface.Controls
                     case InstanceState.Default:
                         {
                             IsDownloading = false;
-                            _mainActionButton.IsEnabled = true;
                             SetShortDescription(InstanceModel.Description);
                             if (InstanceModel.IsInstalled)
                                 ChangeMainActionButtonIcon(IK_PLAY);
@@ -459,9 +474,6 @@ namespace Lexplosion.WPF.NewInterface.Controls
                             {
                                 IsProcessActive = true;
                                 IsDownloading = true;
-                                ChangeMainActionButtonIcon(string.Empty);
-                                _mainActionButton.IsEnabled = true;
-                                SetMainActionButtonPercentageValue("0");
                             }
                             break;
                         }
@@ -473,7 +485,6 @@ namespace Lexplosion.WPF.NewInterface.Controls
                                 IsProcessActive = true;
                                 // TODO: Translate
                                 SetShortDescription("DownloadCanceling");
-                                _mainActionButton.IsEnabled = false;
                                 // убираем иконку
                                 ChangeMainActionButtonIcon(string.Empty);
                                 // убираем проценты
@@ -488,7 +499,6 @@ namespace Lexplosion.WPF.NewInterface.Controls
                             {
                                 _isLaunching = true;
                                 ChangeMainActionButtonIcon(IK_CLOSE);
-                                _mainActionButton.IsEnabled = true;
                             }
                             break;
                         }
@@ -551,14 +561,8 @@ namespace Lexplosion.WPF.NewInterface.Controls
         /// <param name="value">Значение</param>
         private void SetName(string value)
         {
-            if (_nameTextBlock == null)
+            if (_nameTextBlock == null || string.IsNullOrWhiteSpace(value))
                 return;
-
-            // todo: IMPORTANT сделать привязку свойств aka binding
-            //Binding binding = new Binding();
-            //binding.Source = InstanceModel;
-            //binding.Path = new PropertyPath("Text");
-            //_nameTextBlock.SetBinding(TextBlock.TextProperty, binding);
 
             _nameTextBlock.Text = InstanceModel.Name;
         }
@@ -682,10 +686,6 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
         #endregion 
 
-
-        public bool IsLocal { get; set; }
-        public bool OnlyInCatalog { get; set; }
-        public bool IsLibrary { get; set; }
 
         /// <summary>
         /// Вызывается при клике на MainButtonю
@@ -861,8 +861,11 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
             App.Current.Dispatcher.Invoke(() =>
             {
-                _mainActionButtonPercentage.Text = value;
-                _mainActionButtonPercentageHover.Text = value;
+                if (_mainActionButtonPercentage != null && _mainActionButtonPercentageHover != null)
+                {
+                    _mainActionButtonPercentage.Text = value;
+                    _mainActionButtonPercentageHover.Text = value;
+                }
             });
         }
 
@@ -882,6 +885,9 @@ namespace Lexplosion.WPF.NewInterface.Controls
         {
             App.Current.Dispatcher.Invoke(() =>
             {
+                if (IsDownloading == false)
+                    IsDownloading = true;
+
                 if (!IsProcessActive)
                     IsProcessActive = true;
 
@@ -911,8 +917,6 @@ namespace Lexplosion.WPF.NewInterface.Controls
                                 _isJavaDonwloadStage = true;
                                 _isClientDonwloadStage = false;
 
-                                if (!IsDownloading)
-                                    IsDownloading = true;
                                 if (_progressBar.IsIndeterminate)
                                     _progressBar.IsIndeterminate = false;
 
@@ -934,8 +938,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
                                 _isClientDonwloadStage = true;
 
                                 _isClientDonwloadStage = true;
-                                if (!IsDownloading)
-                                    IsDownloading = true;
+
                                 if (_progressBar.IsIndeterminate)
                                     _progressBar.IsIndeterminate = false;
                             }
@@ -966,22 +969,22 @@ namespace Lexplosion.WPF.NewInterface.Controls
             {
                 SetMainActionButtonTextValue();
                 _progressBar.IsIndeterminate = true;
+
+                IsDownloading = false;
+
                 if (isGameRunning)
                 {
-                    IsDownloading = false;
-                    _mainActionButton.IsEnabled = true;
                     SetShortDescription("GameLaunching");
                     return;
                 }
 
-                IsDownloading = false;
                 IsProcessActive = false;
                 SetShortDescription(InstanceModel.Summary);
             });
         }
 
         /// <summary>
-        /// Вызывается, когда было запущенно отмена скачинвания клиента.
+        /// Вызывается, когда было запущена отмена скачинвания клиента.
         /// </summary>
         private void OnDownloadCanceled()
         {
@@ -1058,7 +1061,10 @@ namespace Lexplosion.WPF.NewInterface.Controls
             {
                 if (IsDownloading)
                 {
+                    OnProcessActive();
                     _filesCountLabel.Visibility = Visibility.Visible;
+                    ChangeMainActionButtonIcon(string.Empty);
+                    SetMainActionButtonPercentageValue("0");
                 }
                 else
                 {

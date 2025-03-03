@@ -64,7 +64,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
         public GeneralSettingsViewModel()
         {
-            Runtime.DebugWrite("General Settings ViewModel Init");
             Model = new GeneralSettingsModel();
         }
     }

@@ -1,8 +1,15 @@
-﻿using Lexplosion.WPF.NewInterface.NWColorTools;
+﻿using Lexplosion.WPF.NewInterface.Core;
+using Lexplosion.WPF.NewInterface.NWColorTools;
 using Lexplosion.WPF.NewInterface.Tools;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
@@ -15,12 +22,31 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
         public TestWindow()
         {
             InitializeComponent();
-            
-            hex.TextChanged += Hex_TextChanged;
-            var newColor = Color.FromRgb(19, 242, 135);
-            Console.WriteLine(ColorTools.GetDarkerColor(newColor, 10));
-            Console.WriteLine(ColorTools.GetDarkerColor(newColor, 20));
-            Console.WriteLine(ColorTools.GetDarkerColor(newColor, 70));
+
+            //hex.TextChanged += Hex_TextChanged;
+            //var newColor = Color.FromRgb(19, 242, 135);
+            //Console.WriteLine(ColorTools.GetDarkerColor(newColor, 10));
+            //Console.WriteLine(ColorTools.GetDarkerColor(newColor, 20));
+            //Console.WriteLine(ColorTools.GetDarkerColor(newColor, 70));
+
+            var list = new List<ConsoleLog>();
+
+
+            for (var i = 0; i < 10000; i++) 
+            {
+                list.Add(new ConsoleLog(RandomString(random.Next(60, 700))));
+            }
+
+            //LogsContainer.ItemsSource = list;
+        }
+
+        private static Random random = new Random();
+
+        public static string RandomString(int length)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return new string(Enumerable.Repeat(chars, length)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
         }
 
         private void Hex_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
@@ -82,16 +108,16 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(StartTB.Text))
-                StartTB.Text = "#6501FF";
-            if (string.IsNullOrEmpty(EndTB.Text))
-                EndTB.Text = "#FEFF01";
+            //if (string.IsNullOrEmpty(StartTB.Text))
+            //    StartTB.Text = "#6501FF";
+            //if (string.IsNullOrEmpty(EndTB.Text))
+            //    EndTB.Text = "#FEFF01";
 
 
-                var start = (Color)ColorConverter.ConvertFromString(StartTB.Text);
-            var end = (Color)ColorConverter.ConvertFromString(EndTB.Text);
+            //    var start = (Color)ColorConverter.ConvertFromString(StartTB.Text);
+            //var end = (Color)ColorConverter.ConvertFromString(EndTB.Text);
 
-            Colors.ItemsSource = Gradient.GenerateGradient(start, end, 50);
+            //Colors.ItemsSource = Gradient.GenerateGradient(start, end, 50);
         }
     }
 }

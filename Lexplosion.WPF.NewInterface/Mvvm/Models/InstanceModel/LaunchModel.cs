@@ -26,30 +26,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         public event Action Closed;
 
 
-        private bool _isLaunching;
-        /// <summary>
-        /// Запускается ли игра.
-        /// </summary>
-        public bool IsLaunching 
-        { 
-            get => _isLaunching; private set 
-            {
-                _isLaunching = value;
-                OnPropertyChanged();
-            }
-        }
-        /// <summary>
-        /// Запущена ли игра.
-        /// </summary>
-        private bool _isRunning;
-        public bool IsRunning
-        {
-            get => _isRunning; private set
-            {
-                _isRunning = value;
-                OnPropertyChanged();
-            }
-        }
+
 
 
         #region Constructors
@@ -57,12 +34,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 
         public LaunchModel(InstanceClient instanceClient, NotifyCallback notify)
         {
-            _notify = notify;
-            _instanceClient = instanceClient;
-            // эвент завершения запуска.
-            _instanceClient.LaunchComplited += OnLaunchFinished;
-            // эвент закрытия игры.
-            _instanceClient.GameExited += OnGameExited;
+
         }
 
 
@@ -72,29 +44,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         #region Public Methods
 
 
-        /// <summary>
-        /// Запускает сборку.
-        /// </summary>
-        public void Run()
-        {
-            if (!IsLaunching) 
-            { 
-                IsLaunching = true;
-                LaunchStarted?.Invoke();
-                Runtime.TaskRun(_instanceClient.Run);
-            }
-        }
 
-        /// <summary>
-        /// Закрывает сборку. 
-        /// После того как метод отработает вызывается эвент InstanceModel GameExited.
-        /// </summary>
-        public void Close()
-        {
-            _instanceClient.StopGame();
-            IsLaunching = false;
-            Runtime.DebugWrite("Game Close Func");
-        }
 
 
         #endregion Public Methods
@@ -103,38 +53,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         #region Private Methods
 
 
-        /// <summary>
-        /// Обратывает результат запуска.
-        /// </summary>
-        /// <param name="id">ID сборки</param>
-        /// <param name="isSuccessful">Успешен ли запуск?</param>
-        private void OnLaunchFinished(string id, bool isSuccessful)
-        {
-            LaunchCompleted?.Invoke(isSuccessful);
-            if (isSuccessful)
-            {
-                IsLaunching = false;
-                IsRunning = true;
-            }
-            else
-            {
-                IsLaunching = false;
-                _notify.Invoke(new SimpleNotification($"Не удалось запустить {_instanceClient.Name}", "Причины хз"));
-            }
-            Runtime.DebugWrite("Game Launch Finished");
-        }
 
-
-        /// <summary>
-        /// Отрабатывает после закрытия сборки.
-        /// </summary>
-        /// <param name="id">id закрытой сборки</param>
-        private void OnGameExited(string id)
-        {
-            IsRunning = false;
-            Closed?.Invoke();
-            Runtime.DebugWrite("Game Exited");
-        }
 
 
         #endregion Private Methods

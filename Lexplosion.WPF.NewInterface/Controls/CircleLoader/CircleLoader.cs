@@ -153,6 +153,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
         protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
         {
+            Runtime.DebugWrite("Circle Loader OnRenderSizeChanged");
             if (sizeInfo.WidthChanged) 
             {
                 IconWidth = sizeInfo.NewSize.Width * 0.5625;
