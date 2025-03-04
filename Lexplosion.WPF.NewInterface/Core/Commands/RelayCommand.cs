@@ -30,22 +30,22 @@ namespace Lexplosion.WPF.NewInterface.Commands
             _execute(parameter);
         }
 
-        public static ICommand GetCommand(ref RelayCommand variable, Action action)
+        public static ICommand GetCommand(ref RelayCommand variable, Action action, Func<object, bool> canExecute = null)
         {
-            return GetCommand(ref variable, (obj) => action());
+            return GetCommand(ref variable, (obj) => action(), canExecute);
         }
 
-        public static ICommand GetCommand(ref RelayCommand variable, Action<object> action)
+        public static ICommand GetCommand(ref RelayCommand variable, Action<object> action, Func<object, bool> canExecute = null)
         {
-            return variable ?? (variable = new RelayCommand(action));
+            return variable ?? (variable = new RelayCommand(action, canExecute));
         }
 
-        public static ICommand GetCommand<T>(ref RelayCommand variable, Action<T> action)
+        public static ICommand GetCommand<T>(ref RelayCommand variable, Action<T> action, Func<object, bool> canExecute = null)
         {
             return variable ?? (variable = new RelayCommand((obj) =>
             {
                 action((T)obj);
-            }));
+            }, canExecute));
         }
     }
 }

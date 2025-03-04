@@ -552,4 +552,10 @@
     <!--  Ad Servers  -->
     <s:String x:Key="PartnerServers">Partner Servers</s:String>
     <s:String x:Key="Add">Add</s:String>
+
+    <s:String x:Key="AutoConnectToServer">Auto connect to server</s:String>
+    <s:String x:Key="AvailableGameClientsNotFound">Available clients not found</s:String>
+    <s:String x:Key="SelectInstanceForServer">Select instance for server</s:String>
+    <s:String x:Key="ConfirmSelection">Сonfirm selection</s:String>
+    <s:String x:Key="CreateNewInstanceForServer">Create new instance for server</s:String>
 </ResourceDictionary>

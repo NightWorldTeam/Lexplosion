@@ -38,8 +38,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models
         public MainModel(AppCore appCore)
         {
             _appCore = appCore;
-            CatalogController = new CatalogController(appCore, Export, NotificationService.Notify);
-            LibraryController = new LibraryController(appCore, Export, NotificationService.Notify);
+            CatalogController = new CatalogController(appCore, Export);
+            LibraryController = new LibraryController(appCore, Export);
             InstanceSharesController = new InstanceSharesController();
 
             OnPropertyChanged(nameof(NotificationService));

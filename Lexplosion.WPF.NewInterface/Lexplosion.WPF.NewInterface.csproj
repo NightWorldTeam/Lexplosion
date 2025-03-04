@@ -111,6 +111,7 @@
     <Compile Include="Core\Converters\ValueConverters\CollectionToStringWithBreaklineConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\CountToVisibilityConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\ImagePathValidateConverter.cs" />
+    <Compile Include="Core\Converters\ValueConverters\IsCollectionEmptyConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\RowElementCountConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\StringCollectionToShortString.cs" />
     <Compile Include="Core\FiltableObservableCollection.cs" />
@@ -160,6 +161,8 @@
     <Compile Include="Mvvm\OldInstanceForm.xaml.cs">
       <DependentUpon>OldInstanceForm.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Mvvm\ViewModels\Args\MultiplayerSection\MultiplayerLayoutArgs.cs" />
+    <Compile Include="Mvvm\ViewModels\Args\MultiplayerSection\SelectInstanceForServerArgs.cs" />
     <Compile Include="Mvvm\ViewModels\Authorization\Modal\MicrosoftManualInputViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Authorization\NightWorldRegistrationViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Authorization\NoAccountAuthorizationViewModel.cs" />
@@ -169,6 +172,7 @@
     <Compile Include="Mvvm\ViewModels\MainContent\MainMenu\Content\Multiplayer\AdServersViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\ModalFactory\ModalFactoryBase.cs" />
     <Compile Include="Mvvm\ViewModels\ModalFactory\ModalInstanceCreatorFactory.cs" />
+    <Compile Include="Mvvm\ViewModels\Modal\AdServers\SelectInstanceForServerViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\ConfirmActionViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\GroupFactory\GroupFactoryViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\ActiveSharesViewModel.cs" />
@@ -195,6 +199,9 @@
     </Compile>
     <Compile Include="Mvvm\Views\Modal\InstanceTransfer\InstanceShareView.xaml.cs">
       <DependentUpon>InstanceShareView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Views\Modal\AdServers\SelectInstanceForServerView.xaml.cs">
+      <DependentUpon>SelectInstanceForServerView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Mvvm\Views\Pages\AddonsRepositories\Lexplosion\AddonRepositoryCatalogView.xaml.cs">
       <DependentUpon>AddonRepositoryCatalogView.xaml</DependentUpon>
@@ -377,9 +384,7 @@
     <Compile Include="Mvvm\Models\Authorization\BasicAuthorization\IBasicAuthModel.cs" />
     <Compile Include="Mvvm\Models\Authorization\OAuth2\IOAuth2Model.cs" />
     <Compile Include="Mvvm\Models\Authorization\OAuth2\MicrosoftAuthorizationModel.cs" />
-    <Compile Include="Mvvm\Models\InstanceModel\DownloadModel.cs" />
     <Compile Include="Mvvm\Models\InstanceModel\InstanceModelBase.cs" />
-    <Compile Include="Mvvm\Models\InstanceModel\LaunchModel.cs" />
     <Compile Include="Mvvm\Models\MainContent\InstanceProfile\Settings\InstanceProfileConfigurationModel.cs" />
     <Compile Include="Mvvm\Models\MainContent\InstanceProfile\Settings\InstanceProfileSettingsModel.cs" />
     <Compile Include="Mvvm\Models\MainContent\MainMenu\GeneralSettings\AppearanceSettingsModel.cs" />
@@ -620,6 +625,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Mvvm\Views\Modal\InstanceTransfer\InstanceShareView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Mvvm\Views\Modal\AdServers\SelectInstanceForServerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

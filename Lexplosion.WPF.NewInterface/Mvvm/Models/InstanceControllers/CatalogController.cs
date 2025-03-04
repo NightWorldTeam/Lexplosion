@@ -26,7 +26,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
 
         
         public IReadOnlyCollection<InstanceModelBase> Instances { get => _instances; }
-        public NotifyCallback? Notify { get; }
 
 
         #endregion Properties
@@ -35,10 +34,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
         #region Constructors
 
 
-        public CatalogController(AppCore appCore, Action<InstanceClient> exportFunc, NotifyCallback? notify = null)
+        public CatalogController(AppCore appCore, Action<InstanceClient> exportFunc)
         {
             _appCore = appCore;
-            Notify = notify;
 
             //InstanceModelBase.GlobalAddedToLibrary += Add;
             // Лол, а зачем удалять из каталога?
@@ -63,13 +61,17 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
             });
         }
 
-        public void Add(InstanceClient instanceClient, [CallerMemberName] string member = "")
+        public InstanceModelBase? Add(InstanceClient instanceClient, [CallerMemberName] string member = "")
         {
+            InstanceModelBase? instanceModelBase = null;
             Runtime.DebugWrite($"{member} {instanceClient.Name}");
             App.Current.Dispatcher.Invoke(() =>
             {
-                _instances.Add(new InstanceModelBase(_appCore, instanceClient, _exportFunc, Notify));
+                instanceModelBase = new InstanceModelBase(_appCore, instanceClient, _exportFunc);
+                _instances.Add(instanceModelBase);
             });
+
+            return instanceModelBase;
         }
 
         public void Remove(InstanceClient instanceClient)

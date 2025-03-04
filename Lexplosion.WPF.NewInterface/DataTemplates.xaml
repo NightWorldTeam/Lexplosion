@@ -219,4 +219,7 @@
         <mainmenuview:AdServersView />
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type modalvm:SelectInstanceForServerViewModel}">
+        <modalviews:SelectInstanceForServerView />
+    </DataTemplate>
 </ResourceDictionary>

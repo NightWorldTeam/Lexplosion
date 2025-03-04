@@ -1,10 +1,14 @@
-﻿using Lexplosion.WPF.NewInterface.Commands;
+﻿using Lexplosion.Logic.Management.Instances;
+using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Mvvm.Models;
+using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
+using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Args;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Limited;
 using Lexplosion.WPF.NewInterface.Stores;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 
@@ -45,12 +49,22 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         {
             Func<ViewModelBase> s = () => this;
             var ToMainMenuLayoutCommand = new NavigateCommand<ViewModelBase>(navigationStore, s);
+
+            // Catalog Section
             _catalogViewModel = new CatalogViewModel(appCore, navigationStore, ToMainMenuLayoutCommand, mainModel.CatalogController);
+
+            // Library Section
             _libraryViewModel = new LibraryViewModel(appCore, navigationStore, ToMainMenuLayoutCommand, modalNavStore, mainModel.LibraryController, OpenCatalog);
 
-            _multiplayerLayoutViewModel = new NightWorldLimitedContentLayoutViewModel(new MultiplayerLayoutViewModel(appCore, OpenAccountFactory));
+            // Multiplayer Section
+            var selectInstanceForServerArgs = new SelectInstanceForServerArgs(() => mainModel.LibraryController.Instances, (ic) => mainModel.LibraryController.Add(ic));
+            var multiplayerLayoutArgs = new MultiplayerLayoutArgs(OpenAccountFactory, selectInstanceForServerArgs);
+            _multiplayerLayoutViewModel = new NightWorldLimitedContentLayoutViewModel(new MultiplayerLayoutViewModel(appCore, multiplayerLayoutArgs));
+
+            // Friends Section
             _friendsLayoutViewModel = new NightWorldLimitedContentLayoutViewModel(new FriendsLayoutViewModel(OpenAccountFactory));
 
+            // Settings Section
             _generalSettingsLayoutViewModel = new GeneralSettingsLayoutViewModel(appCore);
 
             Content = _catalogViewModel;

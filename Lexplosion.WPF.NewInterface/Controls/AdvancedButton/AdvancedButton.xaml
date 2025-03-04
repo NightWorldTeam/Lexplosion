@@ -126,6 +126,7 @@
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter TargetName="PATH_Text" Property="Opacity" Value="0.3" />
                             <Setter TargetName="PATH_Icon" Property="Opacity" Value="0.3" />
+                            <Setter Property="Cursor" Value="No" />
                         </Trigger>
                         <Trigger Property="IsLoading" Value="True">
                             <Setter TargetName="PART_LoadingContent" Property="Visibility" Value="Visible" />

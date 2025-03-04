@@ -578,4 +578,10 @@
     <!--  Ad Servers  -->
     <s:String x:Key="PartnerServers">Сервера партнёров</s:String>
     <s:String x:Key="Add">Добавить</s:String>
+
+    <s:String x:Key="AutoConnectToServer">Автоматически заходить на сервер</s:String>
+    <s:String x:Key="AvailableGameClientsNotFound">Подходящие клиенты не найдены</s:String>
+    <s:String x:Key="SelectInstanceForServer">Выберите клиенты для добавления сервера</s:String>
+    <s:String x:Key="ConfirmSelection">Подтвердить выбор</s:String>
+    <s:String x:Key="CreateNewInstanceForServer">Создать новый клиент для сервера</s:String>
 </ResourceDictionary>

@@ -25,17 +25,19 @@
                 CommandParameter="{Binding}">
                 <Button.Template>
                     <ControlTemplate>
-                        <Grid Margin="0,0,0,8">
+                        <Grid
+                            MaxWidth="650"
+                            MaxHeight="200"
+                            Margin="0,0,0,8"
+                            Background="Transparent">
 
                             <Border
                                 MaxWidth="650"
                                 MaxHeight="200"
                                 HorizontalAlignment="Stretch"
-                                Background="{DynamicResource PrimarySolidColorBrush}"
-                                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                Background="Transparent"
                                 BorderThickness="1"
                                 CornerRadius="5" />
-
 
                             <Grid
                                 MaxWidth="650"
@@ -70,7 +72,8 @@
                                     x:Name="ContentBorder"
                                     Grid.Row="2"
                                     Padding="12,4,12,6"
-                                    Background="{DynamicResource SepSolidColorBrush}"
+                                    Background="{DynamicResource PrimarySolidColorBrush}"
+                                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
                                     CornerRadius="0,0,5,5">
                                     <Grid ShowGridLines="False">
 
@@ -120,6 +123,8 @@
                                             <controls:AdvancedButton
                                                 Height="26"
                                                 Padding="6,4,12,4"
+                                                Command="{Binding DataContext.ConnectToServerCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                CommandParameter="{Binding}"
                                                 FontSize="12"
                                                 IconData="{StaticResource PDAddToLibrary}"
                                                 Style="{StaticResource sm-default}"
@@ -160,7 +165,6 @@
                                 </Border>
 
                             </Grid>
-
 
                             <!--  Main Tags  -->
                             <Grid

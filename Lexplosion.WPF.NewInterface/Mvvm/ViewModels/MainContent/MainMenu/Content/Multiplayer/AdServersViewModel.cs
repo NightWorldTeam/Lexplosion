@@ -3,6 +3,8 @@ using Lexplosion.Logic.Objects;
 using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.ViewModel;
+using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Args;
+using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
@@ -12,12 +14,14 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
     public class AdServersModel : ObservableObject
     {
         private readonly AppCore _appCore;
+        private readonly SelectInstanceForServerArgs _selectInstanceForServerArgs;
 
         public ObservableCollection<MinecraftServerInstance> Servers { get; }
 
-        public AdServersModel(AppCore appCore)
+        public AdServersModel(AppCore appCore, SelectInstanceForServerArgs selectInstanceForServerArgs)
         {
             _appCore = appCore;
+            _selectInstanceForServerArgs = selectInstanceForServerArgs;
 
             var servers = ToServer.GetMinecraftServersList();
 
@@ -45,7 +49,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             // vanilla
             if (server.InstanceSource == InstanceSource.None || server.InstanceSource == InstanceSource.Local)
             {
-                _appCore.ModalNavigationStore.Open(null);//(new SelectMenuInstanceForServerViewModel(server));
+                _appCore.ModalNavigationStore.Open(new SelectInstanceForServerViewModel(server, _selectInstanceForServerArgs));//(new SelectMenuInstanceForServerViewModel(server));
             }
             else // modded
             {
@@ -109,9 +113,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         #endregion Commands
 
 
-        public AdServersViewModel(AppCore appCore)
+        public AdServersViewModel(AppCore appCore, SelectInstanceForServerArgs selectInstanceForServerArgs)
         {
-            Model = new(appCore);
+            Model = new(appCore, selectInstanceForServerArgs);
         }
     }
 }

@@ -7,16 +7,9 @@ namespace Lexplosion.WPF.NewInterface.Stores
 {
     public sealed class ModalNavigationStore
     {
-        public ModalNavigationStore()
-        {
-            
-        }
-
+        public event CurrentViewModelChangedEventHandler CurrentViewModelChanged;
 
         private static readonly Dictionary<Type, Func<IModalViewModel>> _modalAbstractFactoriesByType = new();
-
-
-        public event CurrentViewModelChangedEventHandler CurrentViewModelChanged;
 
 
         private IModalViewModel _currentViewModel;

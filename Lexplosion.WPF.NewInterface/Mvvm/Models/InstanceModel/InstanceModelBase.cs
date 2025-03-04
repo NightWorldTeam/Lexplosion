@@ -120,8 +120,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
     public class InstanceModelBase : ViewModelBase, IEquatable<InstanceClient>
     {
         private readonly InstanceClient _instanceClient;
-        private readonly LaunchModel LaunchModel;
-        private readonly DownloadModel DownloadModel;
         private readonly Action<InstanceClient> _exportFunc;
 
         private readonly AppCore _appCore;
@@ -361,30 +359,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         #region Constructors
 
 
-        public InstanceModelBase(AppCore appCore, InstanceClient instanceClient, Action<InstanceClient> exportFunc, NotifyCallback notify)
+        public InstanceModelBase(AppCore appCore, InstanceClient instanceClient, Action<InstanceClient> exportFunc)
         {
             _appCore = appCore;
-            Notify = notify;
 
             _instanceClient = instanceClient;
             _exportFunc = exportFunc;
-            LaunchModel = new LaunchModel(instanceClient, notify);
-
-            LaunchModel.LaunchStarted += OnLaunchStarted;
-            LaunchModel.LaunchCompleted += OnLaunchCompleted;
-            LaunchModel.Closed += OnGameClosed;
-
-            DownloadModel = new DownloadModel(instanceClient);
-
-            DownloadModel.Started += () => 
-            {
-                OnPropertyChanged(nameof(IsDownloading));
-                OnPropertyChanged(nameof(AnyProcessActive));
-                OnDownloadStarted();
-            };
-
-            DownloadModel.Completed += OnDownloadCompleted;
-            DownloadModel.ProgressChanged += OnDownloadProgressChanged; 
 
             _instanceClient.NameChanged += OnNameChanged;
             _instanceClient.LogoChanged += OnLogoChanged;
@@ -649,6 +629,15 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         }
 
 
+        /// <summary>
+        /// Добавить сервер в игру
+        /// </summary>
+        public void AddServer(MinecraftServerInstance server, bool isAutoLogin)
+        {
+            _instanceClient.AddGameServer(server, isAutoLogin);
+        }
+
+
         #endregion Public Methods
 
 
@@ -730,8 +719,63 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             OnPropertyChanged(nameof(IsDownloading));
             DownloadComplited?.Invoke(init, errors, isRun);
             DataChanged?.Invoke();
-        }
 
+            switch (init)
+            {
+                case InstanceInit.Successful:
+                    {
+                    }
+                    break;
+                case InstanceInit.DownloadFilesError:
+                    {
+                    }
+                    break;
+                case InstanceInit.CurseforgeIdError:
+                    {
+                    }
+                    break;
+                case InstanceInit.NightworldIdError:
+                    {
+                    }
+                    break;
+                case InstanceInit.ServerError:
+                    {
+                    }
+                    break;
+                case InstanceInit.GuardError:
+                    {
+                    }
+                    break;
+                case InstanceInit.VersionError:
+                    {
+                    }
+                    break;
+                case InstanceInit.ForgeVersionError:
+                    {
+                    }
+                    break;
+                case InstanceInit.GamePathError:
+                    {
+                    }
+                    break;
+                case InstanceInit.ManifestError:
+                    {
+                    }
+                    break;
+                case InstanceInit.JavaDownloadError:
+                    {
+                    }
+                    break;
+                case InstanceInit.IsCancelled:
+                    {
+                        break;
+                    }
+                default:
+                    {
+                    }
+                    break;
+            }
+        }
 
         private void OnLaunchStarted()
         {

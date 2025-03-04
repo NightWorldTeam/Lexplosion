@@ -390,4 +390,62 @@
         </Style.Triggers>
     </Style>
 
+    <Style x:Key="ModalCloseButton" TargetType="{x:Type controls:AdvancedButton}">
+        <Setter Property="FocusVisualStyle" Value="{StaticResource ButtonFocusVisual}" />
+        <Setter Property="IconData" Value="{StaticResource PDClose}" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:AdvancedButton}">
+                    <Border
+                        x:Name="border"
+                        Width="{TemplateBinding Width}"
+                        Height="{TemplateBinding Height}"
+                        CornerRadius="{TemplateBinding CornerRadius}">
+                        <Grid
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            Background="Transparent"
+                            ShowGridLines="False">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Border
+                                x:Name="Back"
+                                Width="{TemplateBinding Width}"
+                                Height="{TemplateBinding Height}"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="50"
+                                Visibility="Collapsed" />
+
+                            <!--  Icon  -->
+                            <Border Padding="{TemplateBinding IconPadding}">
+                                <Viewbox x:Name="PATH_Icon" VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                                    <Path Fill="{TemplateBinding Foreground}" Stretch="Fill" />
+                                </Viewbox>
+                            </Border>
+                        </Grid>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="PATH_Icon" Property="Opacity" Value="0.3" />
+                        </Trigger>
+
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Back" Property="Visibility" Value="Visible" />
+                        </Trigger>
+
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
 </ResourceDictionary>

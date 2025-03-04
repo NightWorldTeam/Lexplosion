@@ -24,7 +24,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
         #region Properties
 
 
-        public NotifyCallback Notify { get; }
         public IReadOnlyCollection<InstanceModelBase> Instances { get => _instances; }
 
 
@@ -34,10 +33,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
         #region Constructors
 
 
-        public LibraryController(AppCore appCore, Action<InstanceClient> export, NotifyCallback? notify = null)
+        public LibraryController(AppCore appCore, Action<InstanceClient> export)
         {
             _appCore = appCore;
-            Notify = notify;
 
             InstanceModelBase.GlobalAddedToLibrary += (str) => Add(str);
             InstanceModelBase.GlobalDeletedEvent += Remove;
@@ -66,12 +64,16 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
             });
         }
 
-        public void Add(InstanceClient instanceClient, [CallerMemberName] string member = "")
+        public InstanceModelBase? Add(InstanceClient instanceClient, [CallerMemberName] string member = "")
         {
+            InstanceModelBase? instanceModelBase = null;
             App.Current.Dispatcher.Invoke(() =>
             {
-                Add(new InstanceModelBase(_appCore, instanceClient, _exportFunc, Notify));
+                instanceModelBase = new InstanceModelBase(_appCore, instanceClient, _exportFunc);
+                Add(instanceModelBase);
             });
+
+            return instanceModelBase;
         }
 
         public void Remove(InstanceClient instanceClient)
