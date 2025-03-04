@@ -584,4 +584,10 @@
     <s:String x:Key="SelectInstanceForServer">Выберите клиенты для добавления сервера</s:String>
     <s:String x:Key="ConfirmSelection">Подтвердить выбор</s:String>
     <s:String x:Key="CreateNewInstanceForServer">Создать новый клиент для сервера</s:String>
+
+
+    <s:String x:Key="InstallServerInstance">Установка сборки сервера</s:String>
+    <s:String x:Key="InstallServerInstanceDescription">Для игры на данном сервере требуется установить сборку, желаете установить данную сборку?</s:String>
+    <s:String x:Key="InstanceForServerAddedToLibrary">Сборка {0} успешно добавлена в библиотеку!</s:String>
+    <s:String x:Key="ServerIpAddressCopied">IP-Адрес сервера скопирован</s:String>
 </ResourceDictionary>

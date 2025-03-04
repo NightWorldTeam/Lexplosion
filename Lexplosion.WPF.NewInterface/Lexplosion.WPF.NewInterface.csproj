@@ -172,6 +172,7 @@
     <Compile Include="Mvvm\ViewModels\MainContent\MainMenu\Content\Multiplayer\AdServersViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\ModalFactory\ModalFactoryBase.cs" />
     <Compile Include="Mvvm\ViewModels\ModalFactory\ModalInstanceCreatorFactory.cs" />
+    <Compile Include="Mvvm\ViewModels\Modal\AdServers\AskServerInstanceInstallingViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\AdServers\SelectInstanceForServerViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\ConfirmActionViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\GroupFactory\GroupFactoryViewModel.cs" />
@@ -179,6 +180,9 @@
     <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\InstanceDistributionViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\InstanceShareLayoutViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\InstanceShareViewModel.cs" />
+    <Compile Include="Mvvm\Views\Modal\AdServers\AskServerInstanceInstallingView.xaml.cs">
+      <DependentUpon>AskServerInstanceInstallingView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Mvvm\Views\Modal\Authorization\MicrosoftManualInputView.xaml.cs">
       <DependentUpon>MicrosoftManualInputView.xaml</DependentUpon>
     </Compile>
@@ -589,6 +593,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Mvvm\Views\Modal\AccountFactoryView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Mvvm\Views\Modal\AdServers\AskServerInstanceInstallingView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

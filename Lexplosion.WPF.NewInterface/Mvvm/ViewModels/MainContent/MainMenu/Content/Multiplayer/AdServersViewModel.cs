@@ -1,10 +1,12 @@
-﻿using Lexplosion.Logic.Network;
+﻿using Lexplosion.Logic.Management.Instances;
+using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
 using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.ViewModel;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Args;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal;
+using System.Collections;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
@@ -40,8 +42,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         public void CopyServerIpAddress(MinecraftServerInstance server)
         {
             Clipboard.SetText(server.Address);
-            // TODO
-            //MainViewModel.ShowToastMessage(ResourceGetter.GetString("coping"), ResourceGetter.GetString("ipAddressCopiedSuccessfully"), 3, 0);
+            _appCore.MessageService.Success("ServerIpAddressCopied", true);
         }
 
         public void ConnectToServer(MinecraftServerInstance server)
@@ -49,16 +50,16 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             // vanilla
             if (server.InstanceSource == InstanceSource.None || server.InstanceSource == InstanceSource.Local)
             {
-                _appCore.ModalNavigationStore.Open(new SelectInstanceForServerViewModel(server, _selectInstanceForServerArgs));//(new SelectMenuInstanceForServerViewModel(server));
+                _appCore.ModalNavigationStore.Open(new SelectInstanceForServerViewModel(server, _selectInstanceForServerArgs));
             }
             else // modded
             {
-                //var dialog = new DialogViewModel(350, 220, true);
-                //dialog.ShowDialog(ResourceGetter.GetString("serverInstanceInstallingTitle"), string.Format(ResourceGetter.GetString("serverInstanceInstallingDescription"), server.InstanceName), () =>
-                //{
-                //    var ic = InstanceClient.CreateClient(server, dialog.IsCheckBoxChecked);
-                //    MainModel.Instance.AddInstanceForm(ic);
-                //});
+                _appCore.ModalNavigationStore.Open(new AskServerInstanceInstallingViewModel(_appCore, (isAutoConnectToServer) => 
+                {
+                    var ic = InstanceClient.CreateClient(server, isAutoConnectToServer);
+                    _selectInstanceForServerArgs.AddNewInstanceInLibrary(ic);
+                    _appCore.MessageService.Success("InstanceForServerAddedToLibrary", true, server.Name);
+                }));
             }
         }
 

@@ -558,4 +558,9 @@
     <s:String x:Key="SelectInstanceForServer">Select instance for server</s:String>
     <s:String x:Key="ConfirmSelection">Сonfirm selection</s:String>
     <s:String x:Key="CreateNewInstanceForServer">Create new instance for server</s:String>
+
+    <s:String x:Key="InstallServerInstance">Install Server Instance</s:String>
+    <s:String x:Key="InstallServerInstanceDescription">To play on this server you need to install the assembly, do you want to install this instance?</s:String>
+    <s:String x:Key="InstanceForServerAddedToLibrary">Instance {0} successfully added to the library!</s:String>
+    <s:String x:Key="ServerIpAddressCopied">Server IP address copied</s:String>
 </ResourceDictionary>

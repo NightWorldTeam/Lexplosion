@@ -222,4 +222,8 @@
     <DataTemplate DataType="{x:Type modalvm:SelectInstanceForServerViewModel}">
         <modalviews:SelectInstanceForServerView />
     </DataTemplate>
+
+    <DataTemplate DataType="{x:Type modalvm:AskServerInstanceInstallingViewModel}">
+        <modalviews:AskServerInstanceInstallingView />
+    </DataTemplate>
 </ResourceDictionary>
