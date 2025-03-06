@@ -351,7 +351,6 @@
                     Margin="-32,-32,0,0"
                     Background="Black"
                     BackgroundOpacity="0.3"
-                    BlurTarget="{Binding ElementName=Content}"
                     IsActive="{Binding Model.IsLoading}"
                     Placeholder="{DynamicResource LoadingInstanceClientVersions}" />
             </core:If.True>

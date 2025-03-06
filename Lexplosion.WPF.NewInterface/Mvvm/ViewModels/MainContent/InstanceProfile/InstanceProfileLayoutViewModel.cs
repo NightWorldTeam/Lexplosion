@@ -70,9 +70,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         /// <summary>
         /// Делает активным вкладку с Аддонами, если сборка установлена или в библиотеке.
         /// </summary>
-        public void OpenAddonContainerPage() 
+        public void OpenAddonContainerPage()
         {
-            if (_instanceModel.IsInstalled || _instanceModel.InLibrary) 
+            if (_instanceModel.IsInstalled || _instanceModel.InLibrary)
             {
                 LeftPanel.SelectItem(1);
             }
@@ -93,7 +93,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         private void InitDefaultLeftPanelTabs()
         {
             _overviewViewModel = new InstanceProfileOverviewViewModel(_instanceModel);
-            _instanceVersionsViewModel = new InstanceProfileVersionsViewModel(_instanceModel);
 
             if (_instanceModel.InLibrary)
             {
@@ -101,19 +100,21 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
                 _settingsLayoutViewModel = new InstanceProfileSettingsLayoutViewModel(_instanceModel);
             }
 
-            //Lexplosion.Runtime.TaskRun(() =>
-            //{
-                LeftPanel.AddTabItem("Overview", "Services", _overviewViewModel);
-                LeftPanel.AddTabItem("Versions", "Library", _instanceVersionsViewModel);
+            LeftPanel.AddTabItem("Overview", "Services", _overviewViewModel);
 
-                if (_instanceModel.InLibrary)
-                {
-                    LeftPanel.AddTabItem("Addons", "Addons", _addonsViewModel);
-                    LeftPanel.AddTabItem("Settings", "Settings", _settingsLayoutViewModel);
-                }
-                //LeftPanel.WaitHandler.Set();
-                LeftPanel.SelectFirst();
-            //});
+            if (!_instanceModel.IsLocal) 
+            {
+                _instanceVersionsViewModel = new InstanceProfileVersionsViewModel(_instanceModel);
+                LeftPanel.AddTabItem("Versions", "Library", _instanceVersionsViewModel);
+            }
+
+            if (_instanceModel.InLibrary)
+            {
+                LeftPanel.AddTabItem("Addons", "Addons", _addonsViewModel);
+                LeftPanel.AddTabItem("Settings", "Settings", _settingsLayoutViewModel);
+            }
+
+            LeftPanel.SelectFirst();
         }
 
         private void OnLeftPanelSelectedItemChanged(ViewModelBase content)
