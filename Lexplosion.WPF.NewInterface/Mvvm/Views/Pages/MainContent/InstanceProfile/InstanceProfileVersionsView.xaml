@@ -345,9 +345,22 @@
 
 
     <Grid Margin="32,32,0,0" Grid.IsSharedSizeScope="True">
-        <ListBox
-            Padding="0,0,16,0"
-            ItemsSource="{Binding Model.Versions}"
-            Style="{StaticResource TransparentListBox}" />
+        <core:If Condition="{Binding Model.IsLoading}">
+            <core:If.True>
+                <controls:LoadingBoard
+                    Margin="-32,-32,0,0"
+                    Background="Black"
+                    BackgroundOpacity="0.3"
+                    BlurTarget="{Binding ElementName=Content}"
+                    IsActive="{Binding Model.IsLoading}"
+                    Placeholder="{DynamicResource LoadingInstanceClientVersions}" />
+            </core:If.True>
+            <core:If.False>
+                <ListBox
+                    Padding="0,0,16,0"
+                    ItemsSource="{Binding Model.Versions}"
+                    Style="{StaticResource TransparentListBox}" />
+            </core:If.False>
+        </core:If>
     </Grid>
 </UserControl>

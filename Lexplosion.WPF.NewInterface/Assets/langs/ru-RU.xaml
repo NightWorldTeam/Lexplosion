@@ -590,4 +590,7 @@
     <s:String x:Key="InstallServerInstanceDescription">Для игры на данном сервере требуется установить сборку, желаете установить данную сборку?</s:String>
     <s:String x:Key="InstanceForServerAddedToLibrary">Сборка {0} успешно добавлена в библиотеку!</s:String>
     <s:String x:Key="ServerIpAddressCopied">IP-Адрес сервера скопирован</s:String>
+
+
+    <s:String x:Key="LoadingInstanceClientVersions">Загрузка версий сборки</s:String>
 </ResourceDictionary>

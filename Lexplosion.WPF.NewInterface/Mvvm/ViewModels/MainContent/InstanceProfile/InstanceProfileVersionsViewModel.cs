@@ -32,13 +32,20 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
                     OnPropertyChanged(nameof(Versions));
                     if (instanceModelBase.IsInstalled || instanceModelBase.InLibrary)
                         UpdateVersionStates();
+
+                    if (InstanceModel.IsDownloading) 
+                    {
+                        var version = Versions.FirstOrDefault(i => i.Id == InstanceModel.ClientVersion);
+
+                        if (version != null) 
+                        {
+                            version.IsDownloading = true;
+                        }
+                    }
+
+                    IsLoading = false;
+                    OnPropertyChanged(nameof(IsLoading));
                 });
-
-
-                IsLoading = false;
-                OnPropertyChanged(nameof(IsLoading));
-                //lock (ViewModel.Model.DownloadModel.СomplitedDownloadActionsLocker)
-                //    ViewModel.Model.DownloadModel.ComplitedDownloadActions.Add(ComplitedInstalled);
             });
         }
 
