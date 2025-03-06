@@ -125,10 +125,10 @@
             <Grid
                 x:Name="WindowHeaderPanelButtonsGrid"
                 Margin="16,12"
-                HorizontalAlignment="Left"
+                HorizontalAlignment="Right"
                 VerticalAlignment="Top"
                 KeyboardNavigation.IsTabStop="False"
-                ShowGridLines="True"
+                ShowGridLines="False"
                 Visibility="Visible">
 
                 <Grid.ColumnDefinitions>
@@ -186,7 +186,7 @@
                     Grid.Column="1"
                     Margin="0,0,8,0"
                     Orientation="Horizontal"
-                    Visibility="Visible">
+                    Visibility="Collapsed">
 
 
                     <!--  Change Theme Color  -->
@@ -302,7 +302,8 @@
                 Margin="16,12"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
-                RenderTransformOrigin="0.5, 0.5">
+                RenderTransformOrigin="0.5, 0.5"
+                Visibility="Collapsed">
 
                 <StackPanel HorizontalAlignment="{Binding HorizontalAlignment, ElementName=AddtionalFuncs}" Orientation="Horizontal">
                     <!--  Notifications  -->

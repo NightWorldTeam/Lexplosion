@@ -145,13 +145,13 @@ namespace Lexplosion.WPF.NewInterface
             }
         }
 
-        public static void ChangeToolTipState(bool state) 
+        public static void ChangeToolTipState(bool state)
         {
             Style style = (App.Current.Resources[state ? "DefaulToolTip" : "HiddenToolTip"] as Style);
             App.Current.Resources[typeof(ToolTip)] = style;
         }
 
-        public static void ChangeSettingInitialShowDelay(int value) 
+        public static void ChangeSettingInitialShowDelay(int value)
         {
             App.Current.Resources["SettingInitialShowDelay"] = value;
         }
@@ -178,13 +178,21 @@ namespace Lexplosion.WPF.NewInterface
 
             ViewModelBase viewmodel = mainViewModel;
 
-            if (Account.List.Count() == 0)
+            bool firstLaunch = true;
+            if (firstLaunch)
             {
-                viewmodel = GetAuthorizationViewModel(mainViewModel.ToMainMenu);
+                viewmodel = GetWelcomeViewModel(GetAuthorizationViewModel(mainViewModel.ToMainMenu));
             }
-            else 
+            else
             {
-                mainViewModel.ToMainMenu.Execute(null);
+                if (Account.List.Count() == 0)
+                {
+                    viewmodel = GetAuthorizationViewModel(mainViewModel.ToMainMenu);
+                }
+                else
+                {
+                    mainViewModel.ToMainMenu.Execute(null);
+                }
             }
 
             var mainWindow = new MainWindow()
@@ -210,19 +218,21 @@ namespace Lexplosion.WPF.NewInterface
             //(App.Current.MainWindow as SplashWindow).SmoothClosing();
             App.Current.MainWindow = mainWindow;
             App.Current.Run(mainWindow);
-            /*
-                        _app.MainWindow = new MainWindow();//new TestWindow();
-                        //_app.MainWindow = new TestWindow();
-                        _app.MainWindow.Show();
-                        _app.Run(_app.MainWindow);*/
         }
 
 
-        private static ViewModelBase GetAuthorizationViewModel(ICommand toMainMenu) 
+        private static ViewModelBase GetAuthorizationViewModel(ICommand toMainMenu)
         {
             ViewModelBase viewmodel = new AuthorizationMenuViewModel(_appCore, toMainMenu);
             _appCore.NavigationStore.CurrentViewModel = viewmodel;
             return viewmodel;
+        }
+
+        private static ViewModelBase GetWelcomeViewModel(ViewModelBase authViewModel)
+        {
+            ViewModelBase welcomePageViewmodel = new WelcomeViewModel(_appCore, authViewModel);
+            _appCore.NavigationStore.CurrentViewModel = welcomePageViewmodel;
+            return welcomePageViewmodel;
         }
 
         private static void InitializedSystem()
@@ -337,7 +347,8 @@ namespace Lexplosion.WPF.NewInterface
 
         private static void InitializedAccountSystem()
         {
-            Runtime.TaskRun(() => {
+            Runtime.TaskRun(() =>
+            {
                 var latestActiveAccount = Account.ActiveAccount;
                 if (latestActiveAccount != null)
                 {

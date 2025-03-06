@@ -149,7 +149,7 @@
         </DataTemplate>
     </UserControl.Resources>
 
-    <Grid>
+    <Grid Loaded="Grid_Loaded">
         <Grid ShowGridLines="False">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />

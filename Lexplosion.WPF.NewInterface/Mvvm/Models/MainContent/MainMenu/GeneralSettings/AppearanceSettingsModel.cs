@@ -1,10 +1,7 @@
-﻿using Lexplosion.Core.Extensions;
-using Lexplosion.Global;
-using Lexplosion.Logic;
+﻿using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Objects;
-using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;

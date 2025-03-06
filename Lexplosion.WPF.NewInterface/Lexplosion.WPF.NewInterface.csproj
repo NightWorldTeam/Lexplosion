@@ -181,6 +181,8 @@
     <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\InstanceDistributionViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\InstanceShareLayoutViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\InstanceShareViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\WelcomePageThemeSelectViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\WelcomeViewModel.cs" />
     <Compile Include="Mvvm\Views\Modal\AdServers\AskServerInstanceInstallingView.xaml.cs">
       <DependentUpon>AskServerInstanceInstallingView.xaml</DependentUpon>
     </Compile>
@@ -241,7 +243,10 @@
     <Compile Include="Mvvm\Views\Pages\PageCurtains\NightWorld\NightWorldPageCurtainsView.xaml.cs">
       <DependentUpon>NightWorldPageCurtainsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Mvvm\Views\Pages\WelcomeView.xaml.cs">
+    <Compile Include="Mvvm\Views\Pages\WelcomePage\WelcomePageThemeSelectView.xaml.cs">
+      <DependentUpon>WelcomePageThemeSelectView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Views\Pages\WelcomePage\WelcomeView.xaml.cs">
       <DependentUpon>WelcomeView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Mvvm\Views\Windows\ConsoleWindow.xaml.cs">
@@ -700,7 +705,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Mvvm\Views\Pages\WelcomeView.xaml">
+    <Page Include="Mvvm\Views\Pages\WelcomePage\WelcomePageThemeSelectView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Mvvm\Views\Pages\WelcomePage\WelcomeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1076,6 +1085,7 @@
   <ItemGroup>
     <Folder Include="Core\Extensions\" />
     <Folder Include="Core\StyleSelectors\" />
+    <Folder Include="Mvvm\ViewModels\Welcome\" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\images\background\authBG.png" />

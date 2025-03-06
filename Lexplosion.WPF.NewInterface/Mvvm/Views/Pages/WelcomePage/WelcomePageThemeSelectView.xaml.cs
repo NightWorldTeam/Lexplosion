@@ -1,20 +1,21 @@
 ﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
 
-namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.Authorization
+namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages
 {
     /// <summary>
-    /// Логика взаимодействия для AuthorizationMenuView.xaml
+    /// Interaction logic for WelcomePageThemeSelectView.xaml
     /// </summary>
-    public partial class AuthorizationMenuView : UserControl
+    public partial class WelcomePageThemeSelectView : UserControl
     {
-        public AuthorizationMenuView()
+        public WelcomePageThemeSelectView()
         {
             InitializeComponent();
         }
 
-        private void Grid_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        private void Grid_Loaded(object sender, RoutedEventArgs e)
         {
             var grid = sender as Grid;
             var da = new DoubleAnimation()

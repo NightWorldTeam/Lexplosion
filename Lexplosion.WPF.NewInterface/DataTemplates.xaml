@@ -229,4 +229,13 @@
     <DataTemplate DataType="{x:Type modalvm:AskServerInstanceInstallingViewModel}">
         <modalviews:AskServerInstanceInstallingView />
     </DataTemplate>
+
+
+    <!--  Welcome  -->
+    <DataTemplate DataType="{x:Type viewmodels:WelcomeViewModel}">
+        <pages:WelcomeView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type viewmodels:WelcomePageThemeSelectViewModel}">
+        <pages:WelcomePageThemeSelectView />
+    </DataTemplate>
 </ResourceDictionary>
