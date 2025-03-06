@@ -6,29 +6,12 @@ namespace Lexplosion.Global
 {
     public static class GlobalData
     {
-        private static User _user;
-
-        public static User User
-        {
-            get => _user;
-        }
-
-        public static void SetUser(User user)
-        {
-            _user = user;
-        }
-
         public static Settings GeneralSettings { get; private set; } // инициализируется в методе Main
 
         public static void InitSetting()
         {
             GeneralSettings = Settings.GetDefault();
             var loadedSettings = DataFilesManager.GetSettings();
-            Runtime.DebugWrite($"loadedSettings GamePath: {loadedSettings?.GamePath}, theme: {loadedSettings?.ThemeName}");
-            if (string.IsNullOrWhiteSpace(loadedSettings?.ThemeName))
-            {
-
-            }
             GeneralSettings.Merge(loadedSettings);
             Runtime.DebugWrite($"GamePath: {GlobalData.GeneralSettings?.GamePath}, theme: {GlobalData.GeneralSettings?.ThemeName}");
         }
@@ -54,7 +37,7 @@ namespace Lexplosion.Global
         public static string LauncherDataPath = Environment.ExpandEnvironmentVariables("%appdata%") + "/lexplosion-data";
         public static string gamePath = Environment.ExpandEnvironmentVariables("%appdata%") + "/." + GAME_FOLDER_NAME;
 
-        public const string secretWord = "iDRCQxDMwGVCjWVe0ZEJ4u9DeG38BNL52x777trQ";
+        public const string secretWord = "iDRCQxDMwGVCjWVe0ZEJ4u9DeG38BNL52x777trQ"; // на самом деле нихуя не сикрет
         public const string passwordKey = "ZEmMJ0ZaXQXuHu8tUnfdaCLCQaFgRjOP";
         public const int version = 1739900884;
         public const int CommandServerPort = 54352;

@@ -586,6 +586,8 @@ namespace Lexplosion.Logic.Management
 				_process.EnableRaisingEvents = true;
 				_process.StartInfo.EnvironmentVariables["_JAVA_OPTIONS"] = "";
 				_process.StartInfo.UseShellExecute = false;
+				_process.StartInfo.CreateNoWindow = true;
+				_process.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
 
 				_process.Exited += (sender, ea) =>
 				{
@@ -622,7 +624,7 @@ namespace Lexplosion.Logic.Management
 
 					if (!gameVisible)
 					{
-						ComplitedLaunch(_instanceId, false);
+						ComplitedLaunch?.Invoke(_instanceId, false);
 					}
 
 					_classInstance = null;
@@ -643,7 +645,7 @@ namespace Lexplosion.Logic.Management
 						{
 							if (GuiIsExists(_process.Id))
 							{
-								ComplitedLaunch(_instanceId, true);
+								ComplitedLaunch?.Invoke(_instanceId, true);
 								OnGameStarted?.Invoke(this);
 
 								gameVisible = true;
@@ -931,24 +933,29 @@ namespace Lexplosion.Logic.Management
 			}
 		}
 
+		private void _RebotOnlineGame()
+		{
+			if (_gameGateway != null)
+			{
+				try
+				{
+					_gameGateway.StopWork();
+				}
+				catch { }
+
+				var serverData = new ControlServerData(LaunсherSettings.ServerIp);
+				_gameGateway = new OnlineGameGateway(_activeAccount.UUID, _activeAccount.SessionToken, serverData, _generalSettings.NetworkDirectConnection);
+				_gameGateway.Initialization(_classInstance._process.Id);
+			}
+		}
+
 		public static void RebootOnlineGame()
 		{
 			if (_classInstance != null)
 			{
 				lock (loocker)
 				{
-					if (_classInstance._gameGateway != null)
-					{
-						try
-						{
-							_classInstance._gameGateway.StopWork();
-						}
-						catch { }
-
-						var serverData = new ControlServerData(LaunсherSettings.ServerIp);
-						_classInstance._gameGateway = new OnlineGameGateway(GlobalData.User.UUID, GlobalData.User.SessionToken, serverData, GlobalData.GeneralSettings.NetworkDirectConnection);
-						_classInstance._gameGateway.Initialization(_classInstance._process.Id);
-					}
+					_classInstance._RebotOnlineGame();
 				}
 				StateChanged?.Invoke(OnlineGameStatus.None, string.Empty);
 			}

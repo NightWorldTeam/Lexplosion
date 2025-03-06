@@ -165,7 +165,7 @@ namespace Lexplosion.Logic.Objects
         public string Changelog { get; set; }
     }
 
-    public class AcccountsFormat
+    public class OldAcccountsFormat
     {
         public class Profile
         {
@@ -175,19 +175,6 @@ namespace Lexplosion.Logic.Objects
 
         public AccountType SelectedProfile;
         public Dictionary<AccountType, Profile> Profiles;
-    }
-
-    public class Test
-    {
-        public class Profile
-        {
-            public string Login;
-            public string AccessData;
-            public AccountType Type;
-            public bool IsSelected;
-        }
-
-        public List<Profile> Profiles;
     }
 
     /// <summary>

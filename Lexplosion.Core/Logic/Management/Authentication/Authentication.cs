@@ -11,12 +11,13 @@ namespace Lexplosion.Logic.Management.Authentication
         public static Authentication Instance { get; } = new Authentication();
 
 
-        private AcccountsFormat _accounts;
+        private OldAcccountsFormat _accounts;
 
 
         private Authentication()
         {
-            _accounts = DataFilesManager.GetFile<AcccountsFormat>(LaunсherSettings.LauncherDataPath + "/account.json");
+			Runtime.DebugWrite("OLD AUTH");
+            _accounts = DataFilesManager.GetFile<OldAcccountsFormat>(LaunсherSettings.LauncherDataPath + "/account.json");
         }
 
         /// <summary>
@@ -36,7 +37,7 @@ namespace Lexplosion.Logic.Management.Authentication
 
                 if (_accounts.Profiles.ContainsKey(selectedAccount))
                 {
-                    AcccountsFormat.Profile profile = _accounts.Profiles[selectedAccount];
+                    OldAcccountsFormat.Profile profile = _accounts.Profiles[selectedAccount];
 
                     if (!string.IsNullOrWhiteSpace(profile.Login) && !string.IsNullOrWhiteSpace(profile.AccessData))
                     {
@@ -114,8 +115,6 @@ namespace Lexplosion.Logic.Management.Authentication
 
             if (result == AuthCode.Successfully)
             {
-                GlobalData.SetUser(user);
-
                 if (saveUser)
                 {
                     DataFilesManager.SaveAccount(login, accessData, accountType);

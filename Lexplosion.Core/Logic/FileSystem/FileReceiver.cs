@@ -21,14 +21,6 @@ namespace Lexplosion.Logic.FileSystem
 
         private static object _dataClientInitLocker = new object();
 
-
-        // TODO: потом не забыть убрать этот метод к хуям собачим
-        [Obsolete("Это метод нужен только для совместимости со старым интерфейсом. Вскоре он будет удалён.")]
-        public static List<FileReceiver> GetDistributors()
-        {
-            return GetDistributors(GlobalData.User.UUID, GlobalData.User.SessionToken);
-        }
-
         public static List<FileReceiver> GetDistributors(string uuid, string sessionToken)
         {
             var data = new List<FileReceiver>();

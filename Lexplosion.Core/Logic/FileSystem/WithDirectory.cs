@@ -13,7 +13,6 @@ using Lexplosion.Global;
 using Lexplosion.Tools;
 using Lexplosion.Logic.Objects;
 using static Lexplosion.Logic.FileSystem.DataFilesManager;
-using System.Diagnostics;
 
 namespace Lexplosion.Logic.FileSystem
 {

@@ -178,7 +178,7 @@ namespace Lexplosion.WPF.NewInterface
 
             ViewModelBase viewmodel = mainViewModel;
 
-            bool firstLaunch = true;
+            bool firstLaunch = Runtime.IsFirtsLaunch;
             if (firstLaunch)
             {
                 viewmodel = GetWelcomeViewModel(GetAuthorizationViewModel(mainViewModel.ToMainMenu));
@@ -355,8 +355,12 @@ namespace Lexplosion.WPF.NewInterface
                     var code = latestActiveAccount.Auth();
                     if (code != AuthCode.Successfully)
                     {
-
+						// TODO: тебе тут явно че-то делать надо
                     }
+					else
+					{
+						Account.SaveAll();
+					}
                 }
             });
         }

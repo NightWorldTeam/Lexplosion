@@ -22,11 +22,11 @@ namespace Lexplosion.Logic.FileSystem
 
             accessData = Convert.ToBase64String(Cryptography.AesEncode(accessData, Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey), Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey.Substring(0, 16))));
 
-            var data = GetFile<AcccountsFormat>(LaunсherSettings.LauncherDataPath + "/account.json");
+            var data = GetFile<OldAcccountsFormat>(LaunсherSettings.LauncherDataPath + "/account.json");
             if (data != null && data.Profiles != null && data.Profiles.Count > 0)
             {
                 data.SelectedProfile = accountType;
-                data.Profiles[accountType] = new AcccountsFormat.Profile
+                data.Profiles[accountType] = new OldAcccountsFormat.Profile
                 {
                     Login = login,
                     AccessData = accessData
@@ -34,12 +34,12 @@ namespace Lexplosion.Logic.FileSystem
             }
             else
             {
-                data = new AcccountsFormat
+                data = new OldAcccountsFormat
                 {
                     SelectedProfile = accountType,
-                    Profiles = new Dictionary<AccountType, AcccountsFormat.Profile>
+                    Profiles = new Dictionary<AccountType, OldAcccountsFormat.Profile>
                     {
-                        [accountType] = new AcccountsFormat.Profile
+                        [accountType] = new OldAcccountsFormat.Profile
                         {
                             Login = login,
                             AccessData = accessData
@@ -54,8 +54,9 @@ namespace Lexplosion.Logic.FileSystem
         public static void SaveSettings(Settings data, string instanceId = "")
         {
             string file;
+			data.ItIsNotShit = true;
 
-            if (instanceId == "")
+			if (instanceId == "")
             {
                 string path = LaunсherSettings.LauncherDataPath;
                 if (!Directory.Exists(path))
@@ -76,10 +77,6 @@ namespace Lexplosion.Logic.FileSystem
 
             try
             {
-                if (string.IsNullOrEmpty(data?.ThemeName))
-                {
-
-                }
                 Settings settings = GetSettings(instanceId);
                 if (settings != null)
                 {
@@ -88,11 +85,6 @@ namespace Lexplosion.Logic.FileSystem
                 else
                 {
                     settings = data;
-                }
-
-                if (string.IsNullOrEmpty(settings?.ThemeName))
-                {
-
                 }
 
                 using (FileStream fstream = new FileStream(file, FileMode.Create))

@@ -60,6 +60,11 @@ namespace Lexplosion.Logic
         /// </summary>
         public string AutoLoginServer = null;
 
+		/// <summary>
+		/// Указывает новый ли это интерфейс. null или false - старый. В новом ставится true
+		/// </summary>
+		public bool? ItIsNotShit = null;
+
         /// <summary>
         /// Выполняет слияние с другим экземпляром настроек.
         /// Если режим приоритетный, то в данном экземпляре будут заменены только пустые поля на поля из settings,
@@ -113,7 +118,9 @@ namespace Lexplosion.Logic
             }
 
             NetworkDirectConnection = settings.NetworkDirectConnection;
-        }
+			ItIsNotShit = settings.ItIsNotShit;
+
+		}
 
         public Settings Copy()
         {
@@ -151,8 +158,9 @@ namespace Lexplosion.Logic
                 NwClientByDefault = true,
                 LanguageId = "ru-RU",
                 ThemeName = "DarkColorTheme",
-                AccentColor = "#167ffc"
-            };
+                AccentColor = "#167ffc",
+				ItIsNotShit = true
+			};
         }
     }
 }

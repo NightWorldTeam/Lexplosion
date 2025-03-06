@@ -14,6 +14,7 @@ namespace Lexplosion
 {
     public static partial class Runtime
     {
+		public static bool IsFirtsLaunch { get; private set; }
         public static Process CurrentProcess { get; private set; }
 
         /// <summary>
@@ -68,7 +69,7 @@ namespace Lexplosion
             GlobalData.InitSetting();
             WithDirectory.Create(GlobalData.GeneralSettings.GamePath);
 
-            CurrentProcess = Process.GetCurrentProcess();
+			CurrentProcess = Process.GetCurrentProcess();
 
             // Проверяем запущен ли лаунчер.
             if (!InstanceCheck())
@@ -103,10 +104,15 @@ namespace Lexplosion
                 });
             }
 
+			IsFirtsLaunch = GlobalData.GeneralSettings.ItIsNotShit != true;
+			if (IsFirtsLaunch)
+			{
+				// При сохранении он автоматом пометит ItIsNotShit как true
+				DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+			}
+
             //подписываемся на эвент открытия второй копии лаунчера
             CommandReceiver.OnLexplosionOpened += OnLexplosionOpened;
-
-            //InstanceClient.Import(@"C:\Users\Grey_Eminence\Downloads\Fabulously Optimized-6.1.0-beta.3.mrpack", (ImportResult test) => { });
         }
 
         private static bool LauncherUpdate(int version, int updaterOffsetLeft, int updaterOffsetRight)
