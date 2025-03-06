@@ -833,7 +833,14 @@ namespace Lexplosion.Logic.Management.Instances
             InitData data = launchGame.Update(ProgressHandler, FileDownloadEvent, DownloadStarted, instanceVersion);
 
             UpdateAvailable = data.UpdatesAvailable;
-            ProfileVersion = data.ClientVersion;
+            if (data.InitResult == InstanceInit.IsCancelled)
+            {
+                ProfileVersion = string.IsNullOrWhiteSpace(data.ClientVersion) ? ProfileVersion : data.ClientVersion;
+            }
+            else 
+            {
+                ProfileVersion = data.ClientVersion;
+            }
 
             if (data.InitResult == InstanceInit.Successful)
             {

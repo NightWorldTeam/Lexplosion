@@ -119,7 +119,7 @@
                             HorizontalAlignment="Right"
                             Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
 
-                        <!--  Speed & Persentages  -->
+                        <!--  Speed & Percentages  -->
                         <Grid x:Name="SpeedPersentagesBlock" Visibility="Collapsed">
 
                             <Grid.ColumnDefinitions>

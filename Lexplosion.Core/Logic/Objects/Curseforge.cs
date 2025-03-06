@@ -191,7 +191,7 @@ namespace Lexplosion.Logic.Objects.Curseforge
         public string displayName;
         public List<Dictionary<string, string>> dependencies;
         public List<string> gameVersions;
-        public string fileDate;
+        public DateTime fileDate;
         public int releaseType;
         public List<Hashes> hashes;
         public long fileLength;

@@ -427,7 +427,7 @@
                     <ProgressBar
                         Grid.Row="3"
                         Height="5"
-                        Value="{Binding DownloadingData.Persentages}">
+                        Value="{Binding DownloadingData.Percentages}">
                         <ProgressBar.Style>
                             <Style BasedOn="{StaticResource {x:Type ProgressBar}}" TargetType="{x:Type ProgressBar}">
                                 <Setter Property="Visibility" Value="Collapsed" />
@@ -499,7 +499,7 @@
                                                     FontSize="18"
                                                     FontWeight="SemiBold"
                                                     Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                                    Text="{Binding DownloadingData.Persentages, StringFormat='{}{0}%'}"
+                                                    Text="{Binding DownloadingData.Percentages, StringFormat='{}{0}%'}"
                                                     Visibility="Collapsed" />
 
                                             </Grid>

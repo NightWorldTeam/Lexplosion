@@ -169,6 +169,7 @@
     <Compile Include="Mvvm\ViewModels\Authorization\OAuth2\MicrosoftAuthorizationViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Limited\LimitedContentLayoutViewModelBase.cs" />
     <Compile Include="Mvvm\ViewModels\Limited\NightWorldLimitedContentLayoutViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\MainContent\InstanceProfile\InstanceProfileVersionsViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\MainContent\MainMenu\Content\Multiplayer\AdServersViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\ModalFactory\ModalFactoryBase.cs" />
     <Compile Include="Mvvm\ViewModels\ModalFactory\ModalInstanceCreatorFactory.cs" />
@@ -224,6 +225,9 @@
     </Compile>
     <Compile Include="Mvvm\Views\Pages\Authorization\NoAccountAuthorizationView.xaml.cs">
       <DependentUpon>NoAccountAuthorizationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Views\Pages\MainContent\InstanceProfile\InstanceProfileVersionsView.xaml.cs">
+      <DependentUpon>InstanceProfileVersionsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\Multiplayer\AdServersView.xaml.cs">
       <DependentUpon>AdServersView.xaml</DependentUpon>
@@ -665,6 +669,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Mvvm\Views\Pages\Authorization\NoAccountAuthorizationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Mvvm\Views\Pages\MainContent\InstanceProfile\InstanceProfileVersionsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

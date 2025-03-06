@@ -340,10 +340,9 @@
                                         <controls:AdvancedToolTip
                                             Background="Transparent"
                                             BorderThickness="0"
-                                            Placement="Right"
-                                            PlacementRectangle="20,-10,0,0"
-                                            PlacementTarget="{Binding ElementName=MainPanel}">
-
+                                            Placement="Left"
+                                            PlacementRectangle="-10,-15,0,0">
+                                            <!--  TODO: Translate  -->
                                             <TextBlock
                                                 Padding="15,14,15,14"
                                                 VerticalAlignment="Center"

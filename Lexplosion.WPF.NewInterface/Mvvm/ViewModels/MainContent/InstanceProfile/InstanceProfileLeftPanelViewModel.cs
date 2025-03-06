@@ -65,53 +65,23 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         public bool IsInstalled { get => _instanceModel.IsInstalled; }
 
 
-        private ObservableCollection<FrameworkElementModel> _instanceActions = new ObservableCollection<FrameworkElementModel>();
-        public IEnumerable<FrameworkElementModel> InstanceActions { get => _instanceActions; }
-
-
         private ObservableCollection<InstanceFieldInfo> _additionalInfo = [];
         public IEnumerable<InstanceFieldInfo> AdditionalInfo { get => _additionalInfo; }
 
 
-        public int ProgressValue
-        {
-            get; private set;
-        }
+        public DownloadingData DownloadingData { get => _instanceModel.DownloadingData; }
+        public InstanceModelBase InstanceModel { get => _instanceModel; }
 
-        private bool _isLaunching;
-        public bool IsLaunching
-        {
-            get => _isLaunching; set
-            {
-                _isLaunching = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private bool _isDownloading;
-        public bool IsDownloading
-        {
-            get => _isDownloading; set
-            {
-                _isDownloading = value;
-                OnPropertyChanged();
-            }
-        }
 
         private bool _isJustLaunching;
-        public bool IsJustLaunching 
-        { 
-            get => _isJustLaunching; set 
+        public bool IsJustLaunching
+        {
+            get => _isJustLaunching; set
             {
                 _isJustLaunching = value;
                 OnPropertyChanged();
             }
         }
-
-        public int TotalStageCount { get; set; }
-        public int CurrentStage { get; set; }
-        public int TotalFilesCount { get; set; }
-        public int CurrectFilesCount { get; set; }
 
 
         #endregion Properties
@@ -128,7 +98,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         {
             get => RelayCommand.GetCommand(ref _playCommand, () =>
             {
-                IsLaunching = true;
                 IsJustLaunching = true;
                 _instanceModel.Run();
             });
@@ -140,11 +109,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         /// </summary>
         public ICommand InstallCommand
         {
-            get => RelayCommand.GetCommand(ref _installCommand, () =>
-            {
-                IsDownloading = true;
-                _instanceModel.Download();
-            });
+            get => RelayCommand.GetCommand(ref _installCommand, () => _instanceModel.Download());
         }
 
         public ICommand BackCommand { get; }
@@ -163,7 +128,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             Notify = notify;
             BackCommand = new RelayCommand((obj) =>
             {
-                if (instanceModelBase.IsInstalled || instanceModelBase.IsDownloading) 
+                if (instanceModelBase.IsInstalled || instanceModelBase.IsDownloading)
                 {
                     // Останавливаем обновление директорий сборки.
                     AddonsManager.GetManager(instanceModelBase.InstanceData).StopWatchingDirectory();
@@ -181,29 +146,20 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             _instanceModel.StateChanged += OnStateChanged;
             _instanceModel.DownloadProgressChanged += OnDownloadProgressChanged;
 
-            _instanceModel.GameLaunchCompleted += OnGameLaunchCompleted;
             _instanceModel.DownloadComplited += OnDownloadComplited;
 
-            _instanceModel.DataChanged += OnInstanceModelDataChanged;
+            //_instanceModel.DataChanged += OnInstanceModelDataChanged;
 
-            UpdateFrameworkElementModels();
             GenerateAdditionalInfo();
-
-            IsDownloading = _instanceModel.IsDownloading;
-            IsLaunching = _instanceModel.IsLaunching;
         }
 
         private void OnDownloadComplited(InstanceInit instanceInit, IEnumerable<string> arg2, bool isLaunching)
         {
-            IsDownloading = false;
-            IsJustLaunching = true;
-            //IsInstalled = true;
-
             if (instanceInit == InstanceInit.Successful)
             {
                 _appCore.MessageService.Success($"Сборка {_instanceModel.Name} успешно установлена.");
             }
-            else 
+            else
             {
                 _appCore.MessageService.Error($"Неудалось установить {_instanceModel.Name}.");
             }
@@ -214,45 +170,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             if (IsInstalled)
                 OnPropertyChanged(nameof(IsInstalled));
 
-            if (IsDownloading == false)
-                IsDownloading = true;
-
-            if (IsJustLaunching) 
+            if (IsJustLaunching)
                 IsJustLaunching = false;
 
-            Runtime.DebugWrite($"{_instanceModel.Name} {type} {progressArgs.Procents}");
-            // TODO: сделать прогресс бар для кнопки запуска.
-            if (type == StageType.Java)
-            {
-                ProgressValue = progressArgs.Procents;
-            }
-            else if (type == StageType.Prepare)
-            {
-                ProgressValue = progressArgs.Procents;
-            }
-            else
-            {
-                ProgressValue = progressArgs.Procents;
-            }
-
-            TotalStageCount = progressArgs.StagesCount;
-            OnPropertyChanged(nameof(TotalStageCount));
-
-            CurrentStage = progressArgs.Stage;
-            OnPropertyChanged(nameof(CurrentStage));
-
-            TotalFilesCount = progressArgs.TotalFilesCount;
-            OnPropertyChanged(nameof(TotalFilesCount));
-
-            CurrectFilesCount = progressArgs.FilesCount;
-            OnPropertyChanged(nameof(CurrectFilesCount));
-
-            OnPropertyChanged(nameof(ProgressValue));
-        }
-
-        private void OnGameLaunchCompleted(bool value)
-        {
-            IsLaunching = false;
+            OnPropertyChanged(nameof(DownloadingData));
         }
 
 
@@ -354,56 +275,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         {
             App.Current.Dispatcher.Invoke(() =>
             {
-                UpdateFrameworkElementModels();
                 GenerateAdditionalInfo();
             });
         }
 
-        private void UpdateFrameworkElementModels()
-        {
-            _instanceActions.Clear();
-
-            if (!_instanceModel.IsInstalled && !_instanceModel.InLibrary)
-            {
-                _instanceActions.Add(new FrameworkElementModel("AddToLibrary", _instanceModel.AddToLibrary, "AddToLibrary"));
-            }
-
-            if (_instanceModel.Source != InstanceSource.Local)
-            {
-                _instanceActions.Add(new FrameworkElementModel("Visit" + _instanceModel.Source.ToString(), _instanceModel.GoToWebsite, _instanceModel.Source.ToString(), 20, 20));
-            }
-
-            //if (!_instanceModel.IsInstalled && !_instanceModel.InLibrary)
-            //    return;
-
-            // 1. Website
-            // 2. AddToLibrary
-            // 2. OpenFolder
-            // 3. Export
-            // 4. RemoveFromLibrary / Delete (Перед удаление переводим пользователя в обратно библиотеку.)
-
-
-            if (_instanceModel.InLibrary)
-            {
-                _instanceActions.Add(new FrameworkElementModel("OpenFolder", _instanceModel.OpenFolder, "Folder"));
-                if (_instanceModel.IsInstalled)
-                {
-                    _instanceActions.Add(new FrameworkElementModel("Export", _instanceModel.Export, "Export"));
-                }
-            }
-
-            if (!_instanceModel.IsInstalled && _instanceModel.InLibrary)
-            {
-                _instanceActions.Add(new FrameworkElementModel("RemoveFromLibrary", DeleteInstance, "Delete"));
-            }
-            else if (_instanceModel.IsInstalled)
-            {
-                _instanceActions.Add(new FrameworkElementModel("DeleteInstance", DeleteInstance, "Delete"));
-            }
-        }
-
-
-        private void DeleteInstance()
+        public void DeleteInstance()
         {
             // возвращаем пользователя обратно на страницу библиотеки, потом проиграываем задержку, после чего вызываем удаление.
             // P.S задержка нужна, чтобы анимация проигрывалась без косяков.

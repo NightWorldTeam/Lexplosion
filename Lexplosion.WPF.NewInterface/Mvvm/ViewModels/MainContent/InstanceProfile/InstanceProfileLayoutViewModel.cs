@@ -12,6 +12,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         private readonly INavigationStore _navigationStore;
 
         private ViewModelBase _overviewViewModel = null;
+        private ViewModelBase _instanceVersionsViewModel = null;
         private ViewModelBase _settingsLayoutViewModel = null;
         private ViewModelBase _addonsViewModel = null;
 
@@ -92,6 +93,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         private void InitDefaultLeftPanelTabs()
         {
             _overviewViewModel = new InstanceProfileOverviewViewModel(_instanceModel);
+            _instanceVersionsViewModel = new InstanceProfileVersionsViewModel(_instanceModel);
 
             if (_instanceModel.InLibrary)
             {
@@ -102,6 +104,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             //Lexplosion.Runtime.TaskRun(() =>
             //{
                 LeftPanel.AddTabItem("Overview", "Services", _overviewViewModel);
+                LeftPanel.AddTabItem("Versions", "Library", _instanceVersionsViewModel);
 
                 if (_instanceModel.InLibrary)
                 {

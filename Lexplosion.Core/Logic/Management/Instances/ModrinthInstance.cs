@@ -7,6 +7,8 @@ using Lexplosion.Tools;
 using System;
 using System.Collections.Generic;
 using System.Net;
+using static Lexplosion.Logic.Objects.Curseforge.CurseforgeProjectInfo;
+using static Lexplosion.Logic.Objects.Curseforge.InstanceManifest;
 
 namespace Lexplosion.Logic.Management.Instances
 {
@@ -135,22 +137,17 @@ namespace Lexplosion.Logic.Management.Instances
             {
                 if (file == null) continue;
 
-                string date;
-                try
-                {
-                    date = (file.Date != null) ? DateTime.Parse(file.Date).ToString("dd MMM yyyy") : "";
-                }
-                catch
-                {
-                    date = "";
-                }
+                var date = (file.Date != null) ? file.Date : DateTime.MinValue;
 
                 data.Add(new InstanceVersion
                 {
                     FileName = file.Name,
                     Date = date,
                     Id = file.FileId,
-                    Status = (file.Status == "release") ? ReleaseType.Release : ((file.Status == "beta") ? ReleaseType.Beta : ReleaseType.Alpha)
+                    Status = (file.Status == "release") ? ReleaseType.Release : ((file.Status == "beta") ? ReleaseType.Beta : ReleaseType.Alpha),
+                    GameVersion = file.GameVersions[0],
+                    Modloader = file.Modloaders[0],
+                    VersionNumber = file.VersionNumber
                 });
             }
 

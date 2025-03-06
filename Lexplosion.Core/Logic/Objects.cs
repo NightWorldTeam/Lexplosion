@@ -190,13 +190,30 @@ namespace Lexplosion.Logic.Objects
         public List<Profile> Profiles;
     }
 
-    public class InstanceVersion
+    /// <summary>
+    /// TODO: В будущем когда будет разделение на модули
+    /// Использовать ObservableObject.
+    /// </summary>
+    public class InstanceVersion : VMBase
     {
         public string FileName { get; set; }
         public string Id { get; set; }
-        public string Date { get; set; }
+        public DateTime Date { get; set; }
         public ReleaseType Status { get; set; }
         public bool CanInstall { get; set; } = true;
+        public string GameVersion { get; set; }
+        public string Modloader { get; set; }
+        public string? VersionNumber { get; set; }
+
+        private bool _isDownloading;
+        public bool IsDownloading 
+        { 
+            get => _isDownloading; set 
+            {
+                _isDownloading = value;
+                OnPropertyChanged();
+            }
+        }
     }
 
     /// <summary>

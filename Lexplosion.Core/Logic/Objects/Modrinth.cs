@@ -1,6 +1,7 @@
 ﻿using Lexplosion.Logic.Management.Addons;
 using Lexplosion.Tools;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 
@@ -200,10 +201,19 @@ namespace Lexplosion.Logic.Objects.Modrinth
         public List<Dependencie> Dependencies;
 
         [JsonProperty("date_published")]
-        public string Date;
+        public DateTime Date;
 
         [JsonProperty("version_type")]
         public string Status;
+
+        [JsonProperty("game_versions")]
+        public string[] GameVersions;
+        
+        [JsonProperty("loaders")]
+        public string[] Modloaders;
+
+        [JsonProperty("version_number")]
+        public string? VersionNumber;
     }
 
     public class InstanceManifest

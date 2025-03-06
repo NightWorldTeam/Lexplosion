@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network.Web;
@@ -132,12 +133,17 @@ namespace Lexplosion.Logic.Management.Instances
                         status = ReleaseType.Alpha;
                     }
 
+                    // Example: 1.20.1, Fabric
+                    var gameVersions = file.gameVersions.OrderBy(s => s);
+
                     versions.Add(new InstanceVersion
                     {
                         FileName = file.fileName,
                         Id = file.id.ToString(),
                         Status = status,
-                        Date = file.fileDate
+                        Date = file.fileDate,
+                        GameVersion = gameVersions.First(),
+                        Modloader = gameVersions.Last()
                     });
 
                     Runtime.DebugWrite(file.fileName + " " + file.id);

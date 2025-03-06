@@ -85,7 +85,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         /// Процент скачивания
         /// </summary>
         private int _persentages;
-        public int Persentages
+        public int Percentages
         {
             get => _persentages; set
             {
@@ -99,7 +99,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 
         public DownloadingData()
         {
-            StageFormatted = $"{CurrentStage}/{TotalFiles}";
+            StageFormatted = $"{FilesCounts}/{TotalFiles}";
             OnPropertyChanged(string.Empty);
         }
     }
@@ -223,6 +223,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         }
 
         public string LocalId { get => _instanceClient.LocalId; }
+        public string WebsiteUrl { get => _instanceClient.WebsiteUrl;}
 
 
         #region Visual Data
@@ -237,7 +238,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         public InstanceSource Source { get => _instanceClient.Type; }
         public string TotalDonwloads { get; private set; }
         public bool IsLocal { get => Source == InstanceSource.Local; }
-
+        public string ClientVersion { get => _instanceClient.ProfileVersion; }
         public InstanceData PageData { get; private set; }
 
 
@@ -370,6 +371,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             _instanceClient.LogoChanged += OnLogoChanged;
             _instanceClient.StateChanged += OnStateClientChanged;
             _instanceClient.DownloadCanceled += OnDownloadCanceled;
+            _instanceClient.ProgressHandler += OnDownloadProgressChanged;
+            _instanceClient.DownloadComplited += OnDownloadCompleted;
 
             Logo = _instanceClient.Logo;
             Tags = _instanceClient.Categories ?? new List<CategoryBase>();
@@ -404,6 +407,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             {
                 _instanceClient.Update(version);
             });
+            DownloadStarted?.Invoke();
 
             OnPropertyChanged(nameof(AnyProcessActive));
             DataChanged?.Invoke();
@@ -637,6 +641,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             _instanceClient.AddGameServer(server, isAutoLogin);
         }
 
+        /// <summary>
+        /// Получить все версии сборки
+        /// </summary>
+        public IEnumerable<InstanceVersion> GetInstanceVersions() 
+        {
+            return _instanceClient.GetVersions();
+        }
 
         #endregion Public Methods
 
@@ -692,7 +703,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             DownloadingData.TotalStages = progressHandlerArguments.StagesCount;
             DownloadingData.FilesCounts = progressHandlerArguments.FilesCount;
             DownloadingData.TotalFiles = progressHandlerArguments.TotalFilesCount;
-            DownloadingData.Persentages = progressHandlerArguments.Procents;
+            DownloadingData.Percentages = progressHandlerArguments.Procents;
 
             DownloadProgressChanged?.Invoke(stageType, progressHandlerArguments);
             DataChanged?.Invoke();
