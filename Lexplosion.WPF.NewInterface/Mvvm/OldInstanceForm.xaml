@@ -19,8 +19,9 @@
     mc:Ignorable="d">
     <Grid>
         <Border
-            Width="600"
+            Width="597"
             Height="120"
+            MaxWidth="597"
             Background="{DynamicResource PrimarySolidColorBrush}"
             BorderBrush="{DynamicResource SeparateSolidColorBrush}"
             BorderThickness="1"
