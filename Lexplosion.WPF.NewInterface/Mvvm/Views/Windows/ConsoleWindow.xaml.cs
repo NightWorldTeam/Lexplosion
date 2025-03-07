@@ -2,16 +2,12 @@
 using Lexplosion.WPF.NewInterface.Core;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Security.Cryptography;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
 {
@@ -28,6 +24,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
         private bool _hasSelectedItems;
         private ICollection _selectedLogs;
 
+        // TODO: Подумать, возможно код отсюда вынести в ViewModel, для большей расширяемости
+
+        #region Constructors
+
+
         public ConsoleWindow(LaunchGame gameManager)
         {
             InitializeComponent();
@@ -36,36 +37,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
             LogsContainer.ItemsSource = Logs;
             Logs.CollectionChanged += Logs_CollectionChanged;
             LogsContainer.SelectionChanged += LogsContainer_SelectionChanged;
+            Closed += OnClosed;
         }
 
-        private void LogsContainer_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            _selectedLogs = LogsContainer.SelectedItems as ICollection;
 
-            _hasSelectedItems = _selectedLogs.Count > 0;
+        #endregion Constructors
 
-            if (_hasSelectedItems)
-            {
-                FragmentCopyButton.Visibility = Visibility.Visible;
-
-                if (Logs.Count == _selectedLogs.Count)
-                {
-                    SelectAllButton.Visibility = Visibility.Collapsed;
-                    UnselectAllButton.Visibility = Visibility.Visible;
-                }
-            }
-            else 
-            {
-                SelectAllButton.Visibility = Visibility.Visible;
-                UnselectAllButton.Visibility = Visibility.Collapsed;
-                FragmentCopyButton.Visibility = Visibility.Collapsed;
-            }
-        }
-
-        private void Logs_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            LogsContainer.AlternationCount = Logs.Count;
-        }
 
         public static void SetWindow(LaunchGame gameManager)
         {
@@ -87,7 +64,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
             _classInstance.SetGameManager(gameManager);
         }
 
+
         #region Private Methods
+
 
         private void SetGameManager(LaunchGame gameManager)
         {
@@ -106,10 +85,65 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
             {
                 Logs.Add(new(text));
                 _allStringContent.AppendLine(text);
+
+                if (VisualTreeHelper.GetChildrenCount(LogsContainer) > 0)
+                {
+                    Border border = (Border)VisualTreeHelper.GetChild(LogsContainer, 0);
+                    ScrollViewer scrollViewer = (ScrollViewer)VisualTreeHelper.GetChild(border, 0);
+                    scrollViewer.ScrollToBottom();
+                }
             });
         }
 
+        /// <summary>
+        /// Закрывает окно консоли.
+        /// </summary>
+        internal void Exit(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void OnClosed(object sender, EventArgs e)
+        {
+            _classInstance = null;
+            _gameManager.ProcessDataReceived -= AddNewLine;
+            _allStringContent.Clear();
+        }
+
+        private void LogsContainer_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            _selectedLogs = LogsContainer.SelectedItems as ICollection;
+
+            _hasSelectedItems = _selectedLogs.Count > 0;
+
+            if (_hasSelectedItems)
+            {
+                FragmentCopyButton.Visibility = Visibility.Visible;
+
+                if (Logs.Count == _selectedLogs.Count)
+                {
+                    SelectAllButton.Visibility = Visibility.Collapsed;
+                    UnselectAllButton.Visibility = Visibility.Visible;
+                }
+            }
+            else
+            {
+                SelectAllButton.Visibility = Visibility.Visible;
+                UnselectAllButton.Visibility = Visibility.Collapsed;
+                FragmentCopyButton.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void Logs_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            LogsContainer.AlternationCount = Logs.Count;
+        }
+
+
         #endregion
+
+
+        #region Button Click
 
 
         private void SelectAllButton_Click(object sender, RoutedEventArgs e)
@@ -120,11 +154,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
         private void UnselectAllButton_Click(object sender, RoutedEventArgs e)
         {
             LogsContainer.UnselectAll();
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-
         }
 
         private void CopyAllButton_Click(object sender, RoutedEventArgs e)
@@ -170,5 +199,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
                 }
             }
         }
+
+
+        #endregion Button Clicked
     }
 }
