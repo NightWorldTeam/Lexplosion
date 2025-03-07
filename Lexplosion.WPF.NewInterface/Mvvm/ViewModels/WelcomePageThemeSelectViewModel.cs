@@ -29,10 +29,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
         #endregion Commands
 
 
-        public WelcomePageThemeSelectViewModel(AppCore appCore, Action navigateToAuth)
+        public WelcomePageThemeSelectViewModel(AppCore appCore, Action navigate)
         {
             _appCore = appCore;
-            _navigateToAuth = navigateToAuth;
+            _navigateToAuth = navigate;
 
             Themes.Add(new Theme("Light Punch", "LightColorTheme.xaml"));
             Themes.Add(new Theme("Open Space", "DarkColorTheme.xaml"));

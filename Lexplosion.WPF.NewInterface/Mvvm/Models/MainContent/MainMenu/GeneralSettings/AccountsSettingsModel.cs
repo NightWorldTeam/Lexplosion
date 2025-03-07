@@ -42,6 +42,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.GeneralSe
 
         public AccountsSettingsModel(AppCore appCore)
         {
+            _appCore = appCore;
             Accounts.Source = _accounts;
 
             foreach (var account in Account.List)

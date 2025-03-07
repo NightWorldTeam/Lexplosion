@@ -178,21 +178,14 @@ namespace Lexplosion.WPF.NewInterface
 
             ViewModelBase viewmodel = mainViewModel;
 
-            bool firstLaunch = Runtime.IsFirtsLaunch;
+            bool firstLaunch = true;//Runtime.IsFirtsLaunch;
             if (firstLaunch)
             {
-                viewmodel = GetWelcomeViewModel(GetAuthorizationViewModel(mainViewModel.ToMainMenu));
+                viewmodel = GetWelcomeViewModel(() => NavigateAfterWelcomePage(mainViewModel.ToMainMenu));
             }
             else
             {
-                if (Account.List.Count() == 0)
-                {
-                    viewmodel = GetAuthorizationViewModel(mainViewModel.ToMainMenu);
-                }
-                else
-                {
-                    mainViewModel.ToMainMenu.Execute(null);
-                }
+                NavigateAfterWelcomePage(mainViewModel.ToMainMenu);
             }
 
             var mainWindow = new MainWindow()
@@ -220,6 +213,17 @@ namespace Lexplosion.WPF.NewInterface
             App.Current.Run(mainWindow);
         }
 
+        private static void NavigateAfterWelcomePage(ICommand toMainMenu) 
+        {
+            if (Account.List.Count() == 0)
+            {
+                GetAuthorizationViewModel(toMainMenu);
+            }
+            else
+            {
+                toMainMenu.Execute(null);
+            }
+        }
 
         private static ViewModelBase GetAuthorizationViewModel(ICommand toMainMenu)
         {
@@ -228,9 +232,9 @@ namespace Lexplosion.WPF.NewInterface
             return viewmodel;
         }
 
-        private static ViewModelBase GetWelcomeViewModel(ViewModelBase authViewModel)
+        private static ViewModelBase GetWelcomeViewModel(Action navigate)
         {
-            ViewModelBase welcomePageViewmodel = new WelcomeViewModel(_appCore, authViewModel);
+            ViewModelBase welcomePageViewmodel = new WelcomeViewModel(_appCore, navigate);
             _appCore.NavigationStore.CurrentViewModel = welcomePageViewmodel;
             return welcomePageViewmodel;
         }

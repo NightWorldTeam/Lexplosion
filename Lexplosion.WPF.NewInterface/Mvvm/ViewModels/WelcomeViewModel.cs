@@ -1,5 +1,6 @@
 ﻿using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
+using System;
 using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
@@ -7,12 +8,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
     public class WelcomeViewModel : ViewModelBase
     {
         private readonly AppCore _appCore;
-        private readonly ViewModelBase _authViewModel;
+        private readonly Action _navigate;
 
-        public WelcomeViewModel(AppCore appCore, ViewModelBase authViewModel)
+        public WelcomeViewModel(AppCore appCore, Action navigate)
         {
             _appCore = appCore;
-            _authViewModel = authViewModel;
+            _navigate = navigate;
         }
 
         #region Commands
@@ -27,14 +28,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
 
         #endregion Commands
 
-        private void ToAuthMenu() 
-        {
-            _appCore.NavigationStore.CurrentViewModel = _authViewModel;
-        }
 
         private void ToSelectTheme() 
         {
-            _appCore.NavigationStore.CurrentViewModel = new WelcomePageThemeSelectViewModel(_appCore, ToAuthMenu);
+            _appCore.NavigationStore.CurrentViewModel = new WelcomePageThemeSelectViewModel(_appCore, _navigate);
             OnPropertyChanged(nameof(_appCore.NavigationStore.CurrentViewModel));
         }
     }
