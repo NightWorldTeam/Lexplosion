@@ -1,6 +1,8 @@
 ﻿using Lexplosion.WPF.NewInterface.Controls;
 using Lexplosion.WPF.NewInterface.Extensions;
+using System;
 using System.Windows.Controls;
+using System.Windows.Media.Animation;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.AddonsRepositories
 {
@@ -43,6 +45,19 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.AddonsRepositories
                 Scroll,
                 ScrollViewerExtensions.GetScrollBar(Scroll).Minimum
             );
+        }
+
+        private void Grid_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            var grid = sender as Grid;
+            var da = new DoubleAnimation()
+            {
+                From = 0,
+                To = 1,
+                Duration = TimeSpan.FromSeconds(0.5)
+            };
+
+            grid.BeginAnimation(OpacityProperty, da);
         }
     }
 }

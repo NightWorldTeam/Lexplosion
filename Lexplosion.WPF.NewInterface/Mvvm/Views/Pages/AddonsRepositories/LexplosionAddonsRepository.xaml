@@ -504,7 +504,7 @@
         </DataTemplate>
     </UserControl.Resources>
 
-    <Grid Background="{DynamicResource PrimarySolidColorBrush}" ShowGridLines="False">
+    <Grid Background="{DynamicResource PrimarySolidColorBrush}" ShowGridLines="False" Loaded="Grid_Loaded">
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="250" />

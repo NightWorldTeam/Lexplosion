@@ -9,7 +9,7 @@
     d:DesignHeight="528"
     d:DesignWidth="944"
     mc:Ignorable="d">
-    <Grid MouseDown="Grid_MouseDown">
+    <Grid MouseDown="Grid_MouseDown" Loaded="Grid_Loaded">
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.363*" MaxWidth="350" />
