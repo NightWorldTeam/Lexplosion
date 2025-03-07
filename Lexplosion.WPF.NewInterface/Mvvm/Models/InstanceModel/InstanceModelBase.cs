@@ -381,7 +381,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 
         private void OnLaunchComplited(string instanceId, bool successful)
         {
-            throw new NotImplementedException();
+            // TODO: Notifications
         }
 
 
