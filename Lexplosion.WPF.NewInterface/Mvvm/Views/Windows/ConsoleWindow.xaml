@@ -6,12 +6,24 @@
     xmlns:converters="clr-namespace:Lexplosion.WPF.NewInterface.Core.Converters"
     xmlns:core="clr-namespace:Lexplosion.WPF.NewInterface.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Windows"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="ConsoleWindow"
-    Width="800"
-    Height="450"
+    MinWidth="800"
+    MinHeight="450"
+    ResizeMode="CanResize"
+    SnapsToDevicePixels="True"
+    UseLayoutRounding="True"
+    WindowStyle="SingleBorderWindow"
     mc:Ignorable="d">
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome
+            CaptionHeight="0"
+            NonClientFrameEdges="None"
+            UseAeroCaptionButtons="False" />
+    </WindowChrome.WindowChrome>
 
     <Window.Resources>
         <DataTemplate DataType="{x:Type core:ConsoleLog}">
@@ -119,135 +131,260 @@
         </Style>
     </Window.Resources>
 
-    <!--  ConsoleBackground  -->
-    <Border Background="{DynamicResource SecondarySolidColorBrush}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
-        <Grid Margin="16,16,0,0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
+        <!--  Window Header Panel Margin="16,12"  -->
+        <Grid
+            x:Name="WindowHeaderPanelButtonsGrid"
+            Margin="16,12"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            KeyboardNavigation.IsTabStop="False"
+            ShowGridLines="False"
+            Visibility="Visible">
 
-            <Grid Height="32" Margin="0,0,16,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
 
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
 
-                <controls:SearchBox Style="{StaticResource sm-searchbox-default}" />
+            <!--  Close & Hide Buttons  -->
+
+            <StackPanel
+                x:Name="WindowHeaderPanelButtons"
+                Orientation="Horizontal"
+                RenderTransformOrigin="0.5, 0.5">
+
+
+                <!--  Close Button  -->
+
+                <Button
+                    Width="15"
+                    Height="15"
+                    Margin="0,0,10,0"
+                    Background="#FF0B00"
+                    Click="CloseWindow_Click"
+                    Style="{StaticResource ColoredWindowsButton}" />
+
+
+                <!--  Maximized Button  -->
+
+                <Button
+                    Width="15"
+                    Height="15"
+                    Margin="0,0,10,0"
+                    Background="Orange"
+                    Click="MaximazedWindow_Click"
+                    Style="{StaticResource ColoredWindowsButton}" />
+
+
+                <!--  Minimaze Button  -->
+
+                <Button
+                    Width="15"
+                    Height="15"
+                    Margin="0,0,10,0"
+                    Background="#009DFF"
+                    Click="MinimazedWindow_Click"
+                    Style="{StaticResource ColoredWindowsButton}" />
+            </StackPanel>
+
+
+            <!--  Debug Tools  -->
+
+            <StackPanel
+                x:Name="DebugPanel"
+                Grid.Column="1"
+                Margin="0,0,8,0"
+                Orientation="Horizontal"
+                Visibility="Visible">
+
+
+                <!--  Change Panel Orintation  -->
+                <!--  TODO: Translate  -->
+                <Border
+                    Width="20"
+                    Height="20"
+                    Margin="8,0,0,0"
+                    Padding="2"
+                    Background="{DynamicResource SeparateSolidColorBrush}"
+                    CornerRadius="2"
+                    MouseDown="ChangeWHPOrintation_MouseDown"
+                    ToolTip="Изменить положение меню"
+                    ToolTipService.BetweenShowDelay="0"
+                    ToolTipService.InitialShowDelay="0"
+                    ToolTipService.PlacementRectangle="7,40,0,0">
+                    <Viewbox Height="14">
+                        <Path
+                            extensions:PathExtensions.StringKeyData="IndentDecrease"
+                            Fill="{DynamicResource ActivitySolidColorBrush}"
+                            Stretch="Fill" />
+                    </Viewbox>
+                </Border>
+
+
+                <!--  Change Scale  -->
 
                 <Border
-                    Grid.Column="1"
-                    Margin="4,0,0,0"
-                    Background="{DynamicResource PrimarySolidColorBrush}"
-                    CornerRadius="0">
-                    <StackPanel Orientation="Horizontal">
-                        <Border
-                            Padding="2,0"
-                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                            BorderThickness="1,0,0,0">
-                            <Button
-                                x:Name="FragmentCopyButton"
-                                Height="20"
-                                Click="FragmentCopyButton_Click"
-                                Content="Copy"
-                                Cursor="Hand"
-                                Style="{StaticResource x32IconButtonWithHover}"
-                                ToolTip="Copy"
-                                Visibility="Collapsed" />
-                        </Border>
-                        <Border
-                            Padding="2,0"
-                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                            BorderThickness="1,0,0,0">
-                            <Button
-                                x:Name="CopyAllButton"
-                                Height="20"
-                                Click="CopyAllButton_Click"
-                                Content="CopyAll"
-                                Cursor="Hand"
-                                Style="{StaticResource x32IconButtonWithHover}"
-                                ToolTip="Copy All" />
-                        </Border>
-                        <Border
-                            Padding="2,0"
-                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                            BorderThickness="1,0,0,0">
-                            <Button
-                                Height="20"
-                                Content="FileUpload"
-                                Cursor="Hand"
-                                Style="{StaticResource x32IconButtonWithHover}"
-                                ToolTip="Save to file" />
-                        </Border>
-                        <Border
-                            Padding="2,0"
-                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                            BorderThickness="1,0,0,0">
-                            <Grid>
-                                <Button
-                                    x:Name="SelectAllButton"
-                                    Height="20"
-                                    Click="SelectAllButton_Click"
-                                    Content="SelectAll"
-                                    Cursor="Hand"
-                                    Style="{StaticResource x32IconButtonWithHover}"
-                                    ToolTip="Select All" />
-                                <Button
-                                    x:Name="UnselectAllButton"
-                                    Height="20"
-                                    Click="UnselectAllButton_Click"
-                                    Content="CloseAll"
-                                    Cursor="Hand"
-                                    Style="{StaticResource x32IconButtonWithHover}"
-                                    ToolTip="Unselect All"
-                                    Visibility="Collapsed" />
-                            </Grid>
-                        </Border>
-                    </StackPanel>
+                    Width="20"
+                    Height="20"
+                    Margin="8,0,0,0"
+                    Padding="2"
+                    Background="{DynamicResource SeparateSolidColorBrush}"
+                    CornerRadius="2"
+                    MouseDown="ScaleFit_MouseDown"
+                    ToolTipService.BetweenShowDelay="0"
+                    ToolTipService.InitialShowDelay="0"
+                    ToolTipService.PlacementRectangle="7,40,0,0">
+
+                    <Viewbox Height="14">
+                        <Path
+                            extensions:PathExtensions.StringKeyData="ScaleFit"
+                            Fill="{DynamicResource ActivitySolidColorBrush}"
+                            Stretch="Fill" />
+                    </Viewbox>
                 </Border>
-            </Grid>
-
-            <Border
-                Grid.Row="1"
-                Margin="0,8,0,0"
-                Padding="0,8,0,8"
-                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                BorderThickness="1"
-                CornerRadius="10">
-
-                <ListBox
-                    x:Name="LogsContainer"
-                    Background="Transparent"
-                    BorderThickness="0"
-                    KeyDown="LogsContainer_KeyDown"
-                    SelectionMode="Extended">
-
-                    <ListBox.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <VirtualizingStackPanel IsVirtualizing="True" VirtualizationMode="Recycling" />
-                        </ItemsPanelTemplate>
-                    </ListBox.ItemsPanel>
-
-                    <ListBox.Template>
-                        <ControlTemplate TargetType="ItemsControl">
-                            <Border
-                                Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}">
-                                <ScrollViewer
-                                    Padding="{TemplateBinding Padding}"
-                                    CanContentScroll="True"
-                                    Focusable="False">
-                                    <ItemsPresenter />
-                                </ScrollViewer>
-                            </Border>
-                        </ControlTemplate>
-                    </ListBox.Template>
-                </ListBox>
-            </Border>
-
+            </StackPanel>
         </Grid>
-    </Border>
+
+        <!--  ConsoleBackground  -->
+        <Border
+            x:Name="ContentContainer"
+            Grid.Row="1"
+            Background="{DynamicResource SecondarySolidColorBrush}">
+
+            <Grid Margin="16,16,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Grid Height="32" Margin="0,0,16,0">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <controls:SearchBox Style="{StaticResource sm-searchbox-default}" />
+
+                    <Border
+                        Grid.Column="1"
+                        Margin="4,0,0,0"
+                        Background="{DynamicResource PrimarySolidColorBrush}"
+                        CornerRadius="0">
+                        <StackPanel Orientation="Horizontal">
+                            <Border
+                                Padding="2,0"
+                                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                BorderThickness="1,0,0,0">
+                                <Button
+                                    x:Name="FragmentCopyButton"
+                                    Height="20"
+                                    Click="FragmentCopyButton_Click"
+                                    Content="Copy"
+                                    Cursor="Hand"
+                                    Style="{StaticResource x32IconButtonWithHover}"
+                                    ToolTip="Copy"
+                                    Visibility="Collapsed" />
+                            </Border>
+                            <Border
+                                Padding="2,0"
+                                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                BorderThickness="1,0,0,0">
+                                <Button
+                                    x:Name="CopyAllButton"
+                                    Height="20"
+                                    Click="CopyAllButton_Click"
+                                    Content="CopyAll"
+                                    Cursor="Hand"
+                                    Style="{StaticResource x32IconButtonWithHover}"
+                                    ToolTip="Copy All" />
+                            </Border>
+                            <Border
+                                Padding="2,0"
+                                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                BorderThickness="1,0,0,0">
+                                <Button
+                                    Height="20"
+                                    Content="FileUpload"
+                                    Cursor="Hand"
+                                    Style="{StaticResource x32IconButtonWithHover}"
+                                    ToolTip="Save to file" />
+                            </Border>
+                            <Border
+                                Padding="2,0"
+                                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                BorderThickness="1,0,0,0">
+                                <Grid>
+                                    <Button
+                                        x:Name="SelectAllButton"
+                                        Height="20"
+                                        Click="SelectAllButton_Click"
+                                        Content="SelectAll"
+                                        Cursor="Hand"
+                                        Style="{StaticResource x32IconButtonWithHover}"
+                                        ToolTip="Select All" />
+                                    <Button
+                                        x:Name="UnselectAllButton"
+                                        Height="20"
+                                        Click="UnselectAllButton_Click"
+                                        Content="CloseAll"
+                                        Cursor="Hand"
+                                        Style="{StaticResource x32IconButtonWithHover}"
+                                        ToolTip="Unselect All"
+                                        Visibility="Collapsed" />
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <Border
+                    Grid.Row="1"
+                    Margin="0,8,0,0"
+                    Padding="0,8,0,8"
+                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                    BorderThickness="1"
+                    CornerRadius="10">
+
+                    <ListBox
+                        x:Name="LogsContainer"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        KeyDown="LogsContainer_KeyDown"
+                        SelectionMode="Extended">
+
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel IsVirtualizing="True" VirtualizationMode="Recycling" />
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+
+                        <ListBox.Template>
+                            <ControlTemplate TargetType="ItemsControl">
+                                <Border
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}">
+                                    <ScrollViewer
+                                        Padding="{TemplateBinding Padding}"
+                                        CanContentScroll="True"
+                                        Focusable="False">
+                                        <ItemsPresenter />
+                                    </ScrollViewer>
+                                </Border>
+                            </ControlTemplate>
+                        </ListBox.Template>
+                    </ListBox>
+                </Border>
+
+            </Grid>
+        </Border>
+    </Grid>
 </Window>
