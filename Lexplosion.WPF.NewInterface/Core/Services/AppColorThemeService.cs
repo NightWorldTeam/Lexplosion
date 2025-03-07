@@ -108,12 +108,13 @@ namespace Lexplosion.WPF.NewInterface.Core.Services
             ChangeTheme(_themes[_themes.Count - 1]);
         }
 
-        public void ChangeTheme(Theme theme)
+        public void ChangeTheme(Theme theme, bool playAnimations = true)
         {
             var currentThemeName = string.Empty;
             var resourceDictionaries = new List<ResourceDictionary>();
 
-            BeforeAnimations.ForEach(item => item?.Invoke());
+            if (playAnimations)
+                BeforeAnimations.ForEach(item => item?.Invoke());
 
             foreach (var md in App.Current.Resources.MergedDictionaries)
             {
@@ -149,7 +150,8 @@ namespace Lexplosion.WPF.NewInterface.Core.Services
             ColorThemeChanged?.Invoke();
 
             // TODO: При быстрых вызовах смены темы, будет происходить утечка памяти июо circle animation создает brush в виде image картинки.
-            Animations.ForEach(item => item?.Invoke());
+            if (playAnimations)
+                Animations.ForEach(item => item?.Invoke());
         }
 
 

@@ -1,8 +1,10 @@
-﻿using Lexplosion.WPF.NewInterface.Commands;
+﻿using Lexplosion.Global;
+using Lexplosion.Logic.FileSystem;
+using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Objects;
-using System;
 using System.Collections.ObjectModel;
+using System;
 using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
@@ -36,6 +38,23 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
 
             Themes.Add(new Theme("Light Punch", "LightColorTheme.xaml"));
             Themes.Add(new Theme("Open Space", "DarkColorTheme.xaml"));
+
+            foreach (var theme in Themes)
+            {
+                theme.SelectedEvent += SelectedThemeChanged;
+            }
+
+            Themes[0].IsSelected = true;
+        }
+
+        private void SelectedThemeChanged(Theme theme, bool isSelected)
+        {
+            if (isSelected)
+            {
+                RuntimeApp.Settings.ThemeService.ChangeTheme(theme, false);
+                GlobalData.GeneralSettings.ThemeName = theme.Name;
+                DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+            }
         }
     }
 }

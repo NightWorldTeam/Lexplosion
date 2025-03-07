@@ -373,9 +373,15 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             _instanceClient.DownloadCanceled += OnDownloadCanceled;
             _instanceClient.ProgressHandler += OnDownloadProgressChanged;
             _instanceClient.DownloadComplited += OnDownloadCompleted;
+            _instanceClient.LaunchComplited += OnLaunchComplited;
 
             Logo = _instanceClient.Logo;
             Tags = _instanceClient.Categories ?? new List<CategoryBase>();
+        }
+
+        private void OnLaunchComplited(string instanceId, bool successful)
+        {
+            throw new NotImplementedException();
         }
 
 
