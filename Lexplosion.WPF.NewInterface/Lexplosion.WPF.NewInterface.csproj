@@ -250,6 +250,14 @@
     <Compile Include="Mvvm\Views\Pages\WelcomePage\WelcomeView.xaml.cs">
       <DependentUpon>WelcomeView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="WindowComponents\Header\Variants\HeaderBase.cs" />
+    <Compile Include="WindowComponents\Header\Variants\MacOSHeader.xaml.cs">
+      <DependentUpon>MacOSHeader.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WindowComponents\Header\WindowHeaderArgs.cs" />
+    <Compile Include="WindowComponents\Header\WindowHeaderContainer.xaml.cs">
+      <DependentUpon>WindowHeaderContainer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Mvvm\Views\Windows\ConsoleWindow.xaml.cs">
       <DependentUpon>ConsoleWindow.xaml</DependentUpon>
     </Compile>
@@ -714,6 +722,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="WindowComponents\Header\Variants\MacOSHeader.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WindowComponents\Header\WindowHeaderContainer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Mvvm\Views\Windows\ConsoleWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1087,6 +1103,7 @@
     <Folder Include="Core\Extensions\" />
     <Folder Include="Core\StyleSelectors\" />
     <Folder Include="Mvvm\ViewModels\Welcome\" />
+    <Folder Include="Mvvm\Views\Windows\Components\" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\images\background\authBG.png" />

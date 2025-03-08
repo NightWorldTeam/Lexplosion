@@ -6,6 +6,7 @@
     xmlns:converters="clr-namespace:Lexplosion.WPF.NewInterface.Core.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
+    xmlns:header="clr-namespace:Lexplosion.WPF.NewInterface.WindowComponents.Header"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:message="clr-namespace:Lexplosion.WPF.NewInterface.Controls.Message.Core"
     xmlns:notification="clr-namespace:Lexplosion.WPF.NewInterface.Core.Notifications"
@@ -122,14 +123,15 @@
                 KeyboardNavigation.IsTabStop="False" />
 
             <!--  Window Header Panel Margin="16,12"  -->
+            <header:WindowHeaderContainer x:Name="HeaderContainer" />
             <Grid
                 x:Name="WindowHeaderPanelButtonsGrid"
                 Margin="16,12"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 KeyboardNavigation.IsTabStop="False"
-                ShowGridLines="False"
-                Visibility="Visible">
+                ShowGridLines="True"
+                Visibility="Collapsed">
 
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -224,8 +226,162 @@
                                 Stretch="Fill" />
                         </Viewbox>
                     </Border>
+
+
+                    <!--  Change Panel Orintation  -->
+
+                    <Border
+                        Width="20"
+                        Height="20"
+                        Margin="8,0,0,0"
+                        Padding="2"
+                        Background="{DynamicResource SeparateSolidColorBrush}"
+                        CornerRadius="2"
+                        MouseDown="Border_MouseDown_2"
+                        ToolTipService.BetweenShowDelay="0"
+                        ToolTipService.InitialShowDelay="0">
+                        <Viewbox Height="14">
+                            <Path
+                                extensions:PathExtensions.StringKeyData="IndentDecrease"
+                                Fill="{DynamicResource ActivitySolidColorBrush}"
+                                Stretch="Fill" />
+                        </Viewbox>
+
+                        <Border.ToolTip>
+                            <ToolTip
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Placement="Center"
+                                PlacementRectangle="7,40,0,0"
+                                PlacementTarget="{Binding ElementName=MainPanel}">
+
+                                <!--  Custom ToolTip  -->
+
+                                <Grid
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    MouseDown="Grid_MouseDown"
+                                    Visibility="Visible">
+
+
+                                    <!--
+                                        Top / Bottom -> 40
+                                        Left / Right -> 44
+                                    -->
+
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <Border
+                                        Grid.Row="1"
+                                        Height="32"
+                                        Background="Black"
+                                        CornerRadius="5">
+                                        <TextBlock
+                                            Padding="15,14,15,14"
+                                            VerticalAlignment="Center"
+                                            FontSize="12"
+                                            FontWeight="Medium"
+                                            Foreground="{DynamicResource CheckBoxMarkSolidColorBrush}"
+                                            Text="Изменить положение меню" />
+                                    </Border>
+
+                                    <Polygon
+                                        Grid.Row="0"
+                                        HorizontalAlignment="Center"
+                                        Fill="Black"
+                                        Points="5,10, 10, 5, 15,10" />
+                                </Grid>
+                            </ToolTip>
+                        </Border.ToolTip>
+                    </Border>
+
+
+                    <!--  Change Scale  -->
+
+                    <Border
+                        Width="20"
+                        Height="20"
+                        Margin="8,0,0,0"
+                        Padding="2"
+                        Background="{DynamicResource SeparateSolidColorBrush}"
+                        CornerRadius="2"
+                        MouseDown="ScaleFit_MouseDown"
+                        ToolTipService.BetweenShowDelay="0"
+                        ToolTipService.InitialShowDelay="0">
+
+                        <Viewbox Height="14">
+                            <Path
+                                extensions:PathExtensions.StringKeyData="ScaleFit"
+                                Fill="{DynamicResource ActivitySolidColorBrush}"
+                                Stretch="Fill" />
+                        </Viewbox>
+
+                        <Border.ToolTip>
+                            <ToolTip
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Placement="Center"
+                                PlacementRectangle="7,40,0,0"
+                                PlacementTarget="{Binding ElementName=MainPanel}">
+
+                                <!--  Custom ToolTip  -->
+
+                                <Grid
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    MouseDown="Grid_MouseDown"
+                                    Visibility="Visible">
+
+
+                                    <!--
+                                        Top / Bottom -> 40
+                                        Left / Right -> 44
+                                    -->
+
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <Border
+                                        Grid.Row="1"
+                                        Height="32"
+                                        Background="Black"
+                                        CornerRadius="5">
+                                        <TextBlock
+                                            Padding="15,14,15,14"
+                                            VerticalAlignment="Center"
+                                            FontSize="12"
+                                            FontWeight="Medium"
+                                            Foreground="{DynamicResource CheckBoxMarkSolidColorBrush}"
+                                            Text="Увеличить интерфейс" />
+                                    </Border>
+
+                                    <Polygon
+                                        Grid.Row="0"
+                                        HorizontalAlignment="Center"
+                                        Fill="Black"
+                                        Points="5,10, 10, 5, 15,10" />
+                                </Grid>
+                            </ToolTip>
+                        </Border.ToolTip>
+                    </Border>
                 </StackPanel>
             </Grid>
+
 
             <!--  Toast Message Notification Panel  -->
             <ItemsControl
@@ -256,7 +412,7 @@
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
                 RenderTransformOrigin="0.5, 0.5"
-                Visibility="Visible">
+                Visibility="Collapsed">
 
                 <StackPanel HorizontalAlignment="{Binding HorizontalAlignment, ElementName=AddtionalFuncs}" Orientation="Horizontal">
                     <!--  Ожидается добавление realtime обновлений  -->

@@ -21,6 +21,7 @@ using Lexplosion.WPF.NewInterface.Core.Resources;
 using Lexplosion.Core.Resources;
 using Lexplosion.WPF.NewInterface.Core.Objects;
 using System.Resources;
+using Lexplosion.WPF.NewInterface.WindowComponents.Header;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
 {
@@ -77,6 +78,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
 
             MouseDown += delegate { try { DragMove(); } catch { } };
             this.Closing += MainWindow_Closing;
+
+            HeaderContainer.DataContext = new WindowHeaderArgs(Close, Maximized, Minimized);
         }
         private void Scalling()
         {
@@ -125,6 +128,29 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             MainViewModel.ChangeColor(ColorTools.GetColorByHex("#167FFC"));
+        }
+
+        private void Close() 
+        {
+            App.Current.MainWindow.Close();
+        }
+
+        private void Maximized()
+        {
+            if (this.WindowState == WindowState.Maximized)
+            {
+                this.WindowState = WindowState.Normal;
+                Runtime.DebugWrite(this.ActualWidth.ToString() + " x " + this.ActualHeight.ToString());
+            }
+            else
+            {
+                this.WindowState = WindowState.Maximized;
+            }
+        }
+
+        private void Minimized()
+        {
+            this.WindowState = WindowState.Minimized;
         }
 
         private void CloseWindow_Click(object sender, RoutedEventArgs e)
