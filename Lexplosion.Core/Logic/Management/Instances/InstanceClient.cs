@@ -50,27 +50,40 @@ namespace Lexplosion.Logic.Management.Instances
         private static Dictionary<string, string> _idsPairs = new Dictionary<string, string>();
 
         #region events
+		/// <summary>
+		/// Вызывается когда происходит обновление состояния инициализации
+		/// </summary>
         public event ProgressHandlerCallback ProgressHandler;
-        public event DownloadComplitedCallback DownloadComplited;
+		/// <summary>
+		/// Вызывается когда инициализация закончена
+		/// </summary>
+        public event InitializedCallback Initialized;
+		/// <summary>
+		/// Вызывается когда запуск игры выполнен
+		/// </summary>
         public event LaunchComplitedCallback LaunchComplited;
+		/// <summary>
+		/// Вызывается когда игра закрывается
+		/// </summary>
         public event GameExitedCallback GameExited;
-
-        /// <summary>
-        /// Используется, для того чтобы сообщить InstanceFormViewModel,
-        /// что данные обновились, и нужно обновить инфу о данных.
-        /// </summary>
-        public event Action StateChanged;
+		/// <summary>
+		/// Вызывается если начинается скачивание
+		/// </summary>
+		public event Action DownloadStarted;
+		/// <summary>
+		/// Используется, для того чтобы сообщить InstanceFormViewModel,
+		/// что данные обновились, и нужно обновить инфу о данных.
+		/// </summary>
+		public event Action StateChanged;
         /// <summary>
         /// Обновляется после того как InstanceClient будет иметь завершенную версию;
         /// </summary>
         public event Action BuildFinished;
-        public event Action<string, int, DownloadFileProgress> FileDownloadEvent;
-        public event Action DownloadStarted;
-        public event Action DownloadCanceled;
-        public static event Action Created;
-        /// <summary>
-        /// 
-        /// </summary>
+		/// <summary>
+		/// Вызывается прискачивании одного из файлов сборки. string - имя файла, int - процент скачивания, DownloadFileProgress - стадия
+		/// </summary>
+		public event Action<string, int, DownloadFileProgress> FileDownloadEvent;
+
         public event Action NameChanged;
         public event Action SummaryChanged;
         public event Action DescriptionChanged;
@@ -235,17 +248,6 @@ namespace Lexplosion.Logic.Management.Instances
             }
         }
 
-        private bool _isUpdating = false;
-        public bool IsUpdating
-        {
-            get => _isUpdating;
-            private set
-            {
-                _isUpdating = value;
-                OnPropertyChanged();
-            }
-        }
-
         public bool IsSharing { get; private set; } = false;
 
         public bool IsInstalled { get; private set; } = false;
@@ -394,8 +396,6 @@ namespace Lexplosion.Logic.Management.Instances
                     addon.InstallLatestVersion(stateData, downloadDependencies: true);
                 });
             }
-
-            Created?.Invoke();
 
             return client;
         }
@@ -818,8 +818,6 @@ namespace Lexplosion.Logic.Management.Instances
             _cancelTokenSource = new CancellationTokenSource();
             ProgressHandler?.Invoke(StageType.Prepare, new ProgressHandlerArguments());
 
-            IsUpdating = true;
-
             Settings instanceSettings = GetSettings();
             instanceSettings.Merge(GlobalData.GeneralSettings, true);
 
@@ -849,14 +847,8 @@ namespace Lexplosion.Logic.Management.Instances
 
                 SaveInstalledInstancesList(); // чтобы если сборка установилась то флаг IsInstalled сохранился
             }
-            else if (data.InitResult == InstanceInit.IsCancelled)
-            {
-                DownloadCanceled?.Invoke();
-            }
 
-            IsUpdating = false;
-
-            DownloadComplited?.Invoke(data.InitResult, data.DownloadErrors, false);
+            Initialized?.Invoke(data.InitResult, data.DownloadErrors, false);
             Runtime.DebugWrite("UpdateInstance-end " + data.InitResult);
 
             _cancelTokenSource = null;
@@ -871,8 +863,6 @@ namespace Lexplosion.Logic.Management.Instances
             _cancelTokenSource = new CancellationTokenSource();
 
             ProgressHandler?.Invoke(StageType.Prepare, new ProgressHandlerArguments());
-
-            IsUpdating = true;
 
             Settings instanceSettings = GetSettings();
             instanceSettings.Merge(GlobalData.GeneralSettings, true);
@@ -891,7 +881,7 @@ namespace Lexplosion.Logic.Management.Instances
             {
                 IsInstalled = true;
                 SaveInstalledInstancesList(); // чтобы если сборка установилась то флаг IsInstalled сохранился
-                DownloadComplited?.Invoke(data.InitResult, data.DownloadErrors, true);
+                Initialized?.Invoke(data.InitResult, data.DownloadErrors, true);
 
                 _gameManager.Run(data, LaunchComplited, GameExited, Name);
                 DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
@@ -899,10 +889,8 @@ namespace Lexplosion.Logic.Management.Instances
             }
             else
             {
-                DownloadComplited?.Invoke(data.InitResult, data.DownloadErrors, false);
+                Initialized?.Invoke(data.InitResult, data.DownloadErrors, false);
             }
-
-            IsUpdating = false;
 
             Runtime.DebugWrite("Run-end " + data.InitResult);
 
@@ -1358,7 +1346,7 @@ namespace Lexplosion.Logic.Management.Instances
             client.CreateFileStruct(ClientType.Vanilla, string.Empty);
             res = executor.Import(client._localId, out IReadOnlyCollection<string> errors);
 
-            client.DownloadComplited?.Invoke(InstanceInit.Successful, (List<string>)errors, false);
+            client.Initialized?.Invoke(InstanceInit.Successful, (List<string>)errors, false);
 
             if (res != ImportResult.Successful) return res;
 
@@ -1445,14 +1433,12 @@ namespace Lexplosion.Logic.Management.Instances
                 InLibrary = true,
                 Author = UnknownAuthor,
                 Summary = string.Empty,
-                IsComplete = false,
-                IsUpdating = true
+                IsComplete = false
             };
 
             Lexplosion.Runtime.TaskRun(delegate ()
             {
                 callback(Import(client, zipFile));
-                client.IsUpdating = false;
             });
 
             return client;
@@ -1471,8 +1457,7 @@ namespace Lexplosion.Logic.Management.Instances
                 InLibrary = true,
                 Author = UnknownAuthor,
                 Summary = string.Empty,
-                IsComplete = false,
-                IsUpdating = true
+                IsComplete = false
             };
 
             Lexplosion.Runtime.TaskRun(delegate ()
@@ -1507,8 +1492,6 @@ namespace Lexplosion.Logic.Management.Instances
                 {
                     callback(result == FileRecvResult.Canceled ? ImportResult.Canceled : ImportResult.DownloadError);
                 }
-
-                client.IsUpdating = false;
             });
 
             return client;
@@ -1522,8 +1505,7 @@ namespace Lexplosion.Logic.Management.Instances
                 InLibrary = true,
                 Author = UnknownAuthor,
                 Summary = string.Empty,
-                IsComplete = false,
-                IsUpdating = true
+                IsComplete = false
             };
 
             Lexplosion.Runtime.TaskRun(delegate ()
@@ -1647,7 +1629,6 @@ namespace Lexplosion.Logic.Management.Instances
                 }
 
                 callback(impurtRes);
-                client.IsUpdating = false;
             });
 
             return client;
