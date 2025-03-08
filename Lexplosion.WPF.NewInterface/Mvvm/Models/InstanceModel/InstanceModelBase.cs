@@ -370,7 +370,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             _instanceClient.NameChanged += OnNameChanged;
             _instanceClient.LogoChanged += OnLogoChanged;
             _instanceClient.StateChanged += OnStateClientChanged;
-            _instanceClient.DownloadCanceled += OnDownloadCanceled;
             _instanceClient.ProgressHandler += OnDownloadProgressChanged;
             _instanceClient.DownloadStarted += OnDownloadStarted;
             _instanceClient.DownloadComplited += OnDownloadCompleted;
@@ -788,6 +787,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
                     break;
                 case InstanceInit.IsCancelled:
                     {
+                        OnDownloadCanceled();
                         break;
                     }
                 default:
