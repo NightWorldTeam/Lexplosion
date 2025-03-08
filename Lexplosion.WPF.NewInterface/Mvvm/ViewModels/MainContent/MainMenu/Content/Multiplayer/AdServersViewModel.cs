@@ -6,10 +6,12 @@ using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.ViewModel;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Args;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal;
+using System;
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
+using System.Xml.Schema;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 {
@@ -80,6 +82,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             server.OnlineCount = await ToServer.GetMcServerOnline(server);
         }
 
+        internal void OnServerBannerLoaded(MinecraftServerInstance instance)
+        {
+            instance.IsBannerLoaded = true;
+            OnPropertyChanged(nameof(instance.IsBannerLoaded));
+        }
+
 
         #endregion Private Methods
     }
@@ -108,6 +116,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         public ICommand CopyAddressCommand
         {
             get => RelayCommand.GetCommand<MinecraftServerInstance>(ref _copyAddressCommand, Model.CopyServerIpAddress);
+        }
+
+        private RelayCommand _serverBannerLoadedCommand;
+        public ICommand ServerBannerLoadedCommand 
+        { 
+            get => RelayCommand.GetCommand<MinecraftServerInstance>(ref _serverBannerLoadedCommand, Model.OnServerBannerLoaded); 
         }
 
 

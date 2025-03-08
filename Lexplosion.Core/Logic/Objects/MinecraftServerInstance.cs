@@ -165,6 +165,17 @@ namespace Lexplosion.Logic.Objects
             }
         }
 
+        private bool _isBannerLoaded;
+        [JsonIgnore]
+        public bool IsBannerLoaded 
+        { 
+            get => _isBannerLoaded; set 
+            {
+                _isBannerLoaded = value;
+                OnPropertyChanged();
+            }
+        } 
+
 
         #endregion Properties
 
