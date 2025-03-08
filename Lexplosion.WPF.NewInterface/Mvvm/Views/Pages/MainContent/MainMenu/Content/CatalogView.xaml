@@ -60,13 +60,6 @@
                 LogoButtonCommand="{Binding DataContext.OpenInstanceProfileMenu, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
                 LogoButtonCommandParameter="{Binding}"
                 OpenAddonsPageCommand="{Binding DataContext.OpenAddonsPageCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
-            <!--<controls:InstanceForm
-                Margin="0,0,0,16"
-                InstanceModel="{Binding}"
-                LogoButtonCommand="{Binding DataContext.OpenInstanceProfileMenu, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
-                LogoButtonCommandParameter="{Binding}"
-                MouseDown="InstanceForm_MouseDown"
-                OpenAddonsPageCommand="{Binding DataContext.OpenAddonsPageCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />-->
         </DataTemplate>
     </UserControl.Resources>
 
@@ -368,7 +361,13 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
-                            <ItemsControl ItemsSource="{Binding Model.Instances}" />
+                            <ItemsControl ItemsSource="{Binding Model.Instances}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <virtualization:VirtualizingWrapPanel Margin="0,0,0,0" IsItemsHost="True" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
 
                             <controls:Paginator
                                 Grid.Row="1"
