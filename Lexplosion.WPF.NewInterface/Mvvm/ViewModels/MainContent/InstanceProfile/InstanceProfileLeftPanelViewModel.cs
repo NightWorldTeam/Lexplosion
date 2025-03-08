@@ -98,7 +98,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         {
             get => RelayCommand.GetCommand(ref _playCommand, () =>
             {
-                IsJustLaunching = true;
                 _instanceModel.Run();
             });
         }
@@ -149,6 +148,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             _instanceModel.DownloadComplited += OnDownloadComplited;
 
             //_instanceModel.DataChanged += OnInstanceModelDataChanged;
+
 
             GenerateAdditionalInfo();
         }

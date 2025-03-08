@@ -178,7 +178,7 @@ namespace Lexplosion.WPF.NewInterface
 
             ViewModelBase viewmodel = mainViewModel;
 
-            bool firstLaunch = true;//Runtime.IsFirtsLaunch;
+            bool firstLaunch = Runtime.IsFirtsLaunch;
             if (firstLaunch)
             {
                 viewmodel = GetWelcomeViewModel(() => NavigateAfterWelcomePage(mainViewModel.ToMainMenu));

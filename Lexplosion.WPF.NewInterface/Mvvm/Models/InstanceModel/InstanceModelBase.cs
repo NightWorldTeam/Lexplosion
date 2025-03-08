@@ -372,11 +372,20 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             _instanceClient.StateChanged += OnStateClientChanged;
             _instanceClient.DownloadCanceled += OnDownloadCanceled;
             _instanceClient.ProgressHandler += OnDownloadProgressChanged;
+            _instanceClient.DownloadStarted += OnDownloadStarted;
             _instanceClient.DownloadComplited += OnDownloadCompleted;
             _instanceClient.LaunchComplited += OnLaunchComplited;
 
             Logo = _instanceClient.Logo;
             Tags = _instanceClient.Categories ?? new List<CategoryBase>();
+        }
+
+        private void OnDownloadStarted()
+        {
+            IsDownloading = true;
+
+            DownloadStarted?.Invoke();
+            DataChanged?.Invoke();
         }
 
         private void OnLaunchComplited(string instanceId, bool successful)
@@ -671,14 +680,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         #endregion Handlers
 
 
-
-        private void OnDownloadStarted()
-        {
-            DownloadStarted?.Invoke();
-            DataChanged?.Invoke();
-        }
-
-
         private void OnDownloadProgressChanged(StageType stageType, ProgressHandlerArguments progressHandlerArguments)
         {
             // Данный код вызывается при скачивании и запуске.
@@ -717,6 +718,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 
         private void OnDownloadCompleted(InstanceInit init, IEnumerable<string> errors, bool isRun)
         {
+            IsDownloading = false;
+
             if (IsPrepare)
             {
                 IsPrepare = false;

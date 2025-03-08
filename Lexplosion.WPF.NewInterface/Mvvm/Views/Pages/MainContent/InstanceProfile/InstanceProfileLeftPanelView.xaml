@@ -223,7 +223,7 @@
                                             Command="{Binding PlayCommand}"
                                             FontSize="12"
                                             IconData="{StaticResource PDPlay}"
-                                            IsLoading="{Binding IsLaunching}"
+                                            IsLoading="{Binding InstanceModel.IsLaunching}"
                                             LoadingText="Запуск игры..."
                                             Style="{StaticResource sm-default}"
                                             Text="{DynamicResource Play}" />
@@ -245,8 +245,8 @@
                                                         <MultiDataTrigger>
                                                             <MultiDataTrigger.Conditions>
                                                                 <!--  Условие 1: IsLoading = True  -->
-                                                                <Condition Binding="{Binding IsJustLaunching}" Value="False" />
-                                                                <Condition Binding="{Binding IsLoading, Source={x:Reference PlayButton}}" Value="True" />
+                                                                <Condition Binding="{Binding InstanceModel.IsLaunching, UpdateSourceTrigger=PropertyChanged}" Value="True" />
+                                                                <Condition Binding="{Binding InstanceModel.IsDownloading, UpdateSourceTrigger=PropertyChanged}" Value="True" />
                                                                 <!--  Условие 2: Кнопка под курсором  -->
                                                                 <Condition Binding="{Binding IsMouseOver, Source={x:Reference PlayButton}}" Value="True" />
                                                             </MultiDataTrigger.Conditions>
