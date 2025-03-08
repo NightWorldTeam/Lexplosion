@@ -125,7 +125,7 @@
             <Grid
                 x:Name="WindowHeaderPanelButtonsGrid"
                 Margin="16,12"
-                HorizontalAlignment="Right"
+                HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 KeyboardNavigation.IsTabStop="False"
                 ShowGridLines="False"
@@ -186,7 +186,7 @@
                     Grid.Column="1"
                     Margin="0,0,8,0"
                     Orientation="Horizontal"
-                    Visibility="Collapsed">
+                    Visibility="Visible">
 
 
                     <!--  Change Theme Color  -->
@@ -224,52 +224,6 @@
                                 Stretch="Fill" />
                         </Viewbox>
                     </Border>
-
-
-                    <!--  Change Panel Orintation  -->
-
-                    <Border
-                        Width="20"
-                        Height="20"
-                        Margin="8,0,0,0"
-                        Padding="2"
-                        Background="{DynamicResource SeparateSolidColorBrush}"
-                        CornerRadius="2"
-                        MouseDown="Border_MouseDown_2"
-                        ToolTip="Изменить положение меню"
-                        ToolTipService.BetweenShowDelay="0"
-                        ToolTipService.InitialShowDelay="0"
-                        ToolTipService.PlacementRectangle="7,40,0,0">
-                        <Viewbox Height="14">
-                            <Path
-                                extensions:PathExtensions.StringKeyData="IndentDecrease"
-                                Fill="{DynamicResource ActivitySolidColorBrush}"
-                                Stretch="Fill" />
-                        </Viewbox>
-                    </Border>
-
-
-                    <!--  Change Scale  -->
-
-                    <Border
-                        Width="20"
-                        Height="20"
-                        Margin="8,0,0,0"
-                        Padding="2"
-                        Background="{DynamicResource SeparateSolidColorBrush}"
-                        CornerRadius="2"
-                        MouseDown="ScaleFit_MouseDown"
-                        ToolTipService.BetweenShowDelay="0"
-                        ToolTipService.InitialShowDelay="0"
-                        ToolTipService.PlacementRectangle="7,40,0,0">
-
-                        <Viewbox Height="14">
-                            <Path
-                                extensions:PathExtensions.StringKeyData="ScaleFit"
-                                Fill="{DynamicResource ActivitySolidColorBrush}"
-                                Stretch="Fill" />
-                        </Viewbox>
-                    </Border>
                 </StackPanel>
             </Grid>
 
@@ -279,8 +233,7 @@
                 Margin="0,22,-14,0"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
-                ItemsSource="{Binding Model.NotificationService.Notifications, Source={StaticResource MainViewModel}}"
-                Visibility="Visible">
+                ItemsSource="{Binding Model.NotificationService.Notifications, Source={StaticResource MainViewModel}}">
 
                 <ItemsControl.Resources>
 
@@ -303,11 +256,15 @@
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
                 RenderTransformOrigin="0.5, 0.5"
-                Visibility="Collapsed">
+                Visibility="Visible">
 
                 <StackPanel HorizontalAlignment="{Binding HorizontalAlignment, ElementName=AddtionalFuncs}" Orientation="Horizontal">
+                    <!--  Ожидается добавление realtime обновлений  -->
                     <!--  Notifications  -->
-                    <ToggleButton x:Name="notify" Margin="0,0,0,0">
+                    <ToggleButton
+                        x:Name="notify"
+                        Margin="0,0,0,0"
+                        Visibility="Collapsed">
                         <ToggleButton.Template>
                             <ControlTemplate>
                                 <Border
@@ -358,6 +315,50 @@
                         </ToggleButton.Template>
                     </ToggleButton>
 
+                    <!--  Change Panel Orintation  -->
+
+                    <Border
+                        Width="20"
+                        Height="20"
+                        Margin="8,0,0,0"
+                        Padding="2"
+                        Background="{DynamicResource SeparateSolidColorBrush}"
+                        CornerRadius="2"
+                        MouseDown="Border_MouseDown_2"
+                        ToolTip="Изменить положение меню"
+                        ToolTipService.BetweenShowDelay="0"
+                        ToolTipService.InitialShowDelay="0"
+                        ToolTipService.PlacementRectangle="7,40,0,0">
+                        <Viewbox Height="14">
+                            <Path
+                                extensions:PathExtensions.StringKeyData="IndentDecrease"
+                                Fill="{DynamicResource ActivitySolidColorBrush}"
+                                Stretch="Fill" />
+                        </Viewbox>
+                    </Border>
+
+
+                    <!--  Change Scale  -->
+
+                    <Border
+                        Width="20"
+                        Height="20"
+                        Margin="8,0,0,0"
+                        Padding="2"
+                        Background="{DynamicResource SeparateSolidColorBrush}"
+                        CornerRadius="2"
+                        MouseDown="ScaleFit_MouseDown"
+                        ToolTipService.BetweenShowDelay="0"
+                        ToolTipService.InitialShowDelay="0"
+                        ToolTipService.PlacementRectangle="7,40,0,0">
+
+                        <Viewbox Height="14">
+                            <Path
+                                extensions:PathExtensions.StringKeyData="ScaleFit"
+                                Fill="{DynamicResource ActivitySolidColorBrush}"
+                                Stretch="Fill" />
+                        </Viewbox>
+                    </Border>
                 </StackPanel>
 
                 <!--  Notification Window  -->
