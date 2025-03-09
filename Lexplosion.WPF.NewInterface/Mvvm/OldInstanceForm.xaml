@@ -528,7 +528,7 @@
                                                     CornerRadius="0,5,0,0" />
 
 
-                                                <Viewbox Width="24" Height="24">
+                                                <Viewbox Height="{TemplateBinding FontSize}">
                                                     <Path
                                                         x:Name="Icon"
                                                         Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
@@ -570,6 +570,7 @@
                                                         <Condition Binding="{Binding IsInstalled}" Value="False" />
                                                     </MultiDataTrigger.Conditions>
                                                     <Setter TargetName="Icon" Property="extensions:PathExtensions.StringKeyData" Value="Download" />
+                                                    <Setter Property="FontSize" Value="20" />
                                                 </MultiDataTrigger>
 
                                                 <!--  Default Not Installed  -->
@@ -579,6 +580,7 @@
                                                         <Condition Binding="{Binding IsInstalled}" Value="True" />
                                                     </MultiDataTrigger.Conditions>
                                                     <Setter TargetName="Icon" Property="extensions:PathExtensions.StringKeyData" Value="Play" />
+                                                    <Setter Property="FontSize" Value="24" />
                                                 </MultiDataTrigger>
 
                                                 <!--  Prepare  -->
@@ -623,6 +625,7 @@
                                                 <!--  Подготовка к скачиванию  -->
                                                 <DataTrigger Binding="{Binding State}" Value="{x:Static instancemodel:InstanceState.Launching}">
                                                     <Setter TargetName="Icon" Property="extensions:PathExtensions.StringKeyData" Value="Cancel" />
+                                                    <Setter Property="FontSize" Value="20" />
                                                 </DataTrigger>
 
                                             </ControlTemplate.Triggers>
