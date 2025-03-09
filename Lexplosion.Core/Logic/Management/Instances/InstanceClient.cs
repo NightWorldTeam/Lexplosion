@@ -1475,7 +1475,7 @@ namespace Lexplosion.Logic.Management.Instances
                             resState = DownloadShareState.InConnect;
                             break;
                         case FileReceiver.DistributionState.InProcess:
-                            resState = DownloadShareState.PostProcessing;
+                            resState = DownloadShareState.InProcess;
                             break;
                     }
 

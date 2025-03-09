@@ -72,6 +72,8 @@ namespace Lexplosion.Logic.Network
         {
             try
             {
+				Runtime.DebugWrite("Start init");
+
                 // получаем кодовое слово
                 Bridge.Receive(out byte[] data);
 
