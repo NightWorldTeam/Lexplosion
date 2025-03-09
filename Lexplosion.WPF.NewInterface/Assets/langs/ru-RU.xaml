@@ -21,6 +21,7 @@
     <s:String x:Key="Friends">Друзья</s:String>
     <s:String x:Key="Multiplayer">Сетевая игра</s:String>
     <s:String x:Key="Settings">Настройки</s:String>
+    <s:String x:Key="GladToSeeYou">Рады тебя видеть,</s:String>
 
 
     <!--    -->

@@ -121,7 +121,7 @@
                             </Ellipse.Stroke>
                         </Ellipse>
 
-                        <ContentPresenter />
+                        <ContentPresenter x:Name="Content" Visibility="Collapsed" />
                     </Grid>
 
                     <ControlTemplate.Resources>
@@ -145,6 +145,8 @@
                     <ControlTemplate.Triggers>
 
                         <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Content" Property="Visibility" Value="Visible" />
+
                             <Trigger.EnterActions>
                                 <BeginStoryboard Storyboard="{StaticResource MouseOverAnimation}" />
                             </Trigger.EnterActions>

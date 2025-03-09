@@ -54,6 +54,46 @@
             </Border>
         </DataTemplate>
 
+        <ControlTemplate x:Key="QuestionMenuItem" TargetType="{x:Type controls:AdvancedButton}">
+            <Border Background="Transparent">
+                <Border
+                    x:Name="Border"
+                    MinWidth="200"
+                    Padding="8">
+                    <StackPanel Orientation="Horizontal">
+                        <Viewbox
+                            Height="{TemplateBinding MinHeight}"
+                            Margin="0,0,16,0"
+                            Stretch="Fill">
+                            <Path
+                                x:Name="Icon"
+                                extensions:PathExtensions.StringData="{TemplateBinding IconData}"
+                                Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                Stretch="Fill" />
+                        </Viewbox>
+                        <TextBlock
+                            x:Name="Text"
+                            Margin="0,0,0,2"
+                            FontSize="14"
+                            FontWeight="Medium"
+                            Text="{TemplateBinding Text}" />
+                    </StackPanel>
+                </Border>
+            </Border>
+
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter TargetName="Text" Property="TextBlock.Foreground" Value="{DynamicResource ActivitySolidColorBrush}" />
+                    <Setter TargetName="Border" Property="Background">
+                        <Setter.Value>
+                            <SolidColorBrush Opacity="0.1" Color="{DynamicResource ActivityColor}" />
+                        </Setter.Value>
+                    </Setter>
+                    <Setter TargetName="Icon" Property="Fill" Value="{DynamicResource ActivitySolidColorBrush}" />
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+
     </UserControl.Resources>
 
     <Grid>
@@ -71,6 +111,7 @@
                 </Grid.RowDefinitions>
 
                 <!--  Header  -->
+                <!--  TODO: В будущем можно будет сделать выпадающие меню с аккаунтами  -->
                 <Grid
                     x:Name="Header"
                     Height="80"
@@ -122,12 +163,13 @@
                             </controls:CircleLoader>
 
                             <Grid Grid.Column="1" Margin="10,0,0,0">
+                                <!--    -->
                                 <TextBlock
                                     VerticalAlignment="Top"
                                     FontSize="12"
                                     FontWeight="SemiBold"
                                     Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
-                                    Text="Рады тебя видеть," />
+                                    Text="{DynamicResource GladToSeeYou}" />
                                 <StackPanel VerticalAlignment="Bottom" Orientation="Horizontal">
                                     <Border
                                         Width="16"
@@ -169,29 +211,6 @@
                         </Grid>
                     </Border>
                 </Grid>
-
-                <Popup IsOpen="False" PlacementTarget="{Binding ElementName=Header}">
-                    <Border
-                        Width="220"
-                        Padding="20"
-                        Background="{DynamicResource SecondarySolidColorBrush}"
-                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                        BorderThickness="1">
-                        <Border.Effect>
-                            <DropShadowEffect
-                                BlurRadius="4"
-                                ShadowDepth="2"
-                                Color="Black" />
-                        </Border.Effect>
-                        <StackPanel>
-                            <TextBlock Text="хУЙНЯ 1" />
-                            <TextBlock Text="хУЙНЯ 2" />
-                            <TextBlock Text="хУЙНЯ 3" />
-                            <TextBlock Text="хУЙНЯ 4" />
-                            <TextBlock Text="хУЙНЯ 5" />
-                        </StackPanel>
-                    </Border>
-                </Popup>
 
                 <!--  Tabs  -->
                 <ItemsControl
@@ -273,42 +292,18 @@
                         </Border>
 
                         <StackPanel Margin="8,8">
-                            <Border MinWidth="200" Padding="8">
-                                <StackPanel Orientation="Horizontal">
-                                    <Viewbox
-                                        Height="14"
-                                        Margin="0,0,16,0"
-                                        Stretch="Fill">
-                                        <Path
-                                            extensions:PathExtensions.StringKeyData="Library"
-                                            Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                            Stretch="Fill" />
-                                    </Viewbox>
-                                    <TextBlock
-                                        Margin="0,0,0,2"
-                                        FontSize="14"
-                                        FontWeight="Medium"
-                                        Text="API docs" />
-                                </StackPanel>
-                            </Border>
-                            <Border MinWidth="200" Padding="8">
-                                <StackPanel Orientation="Horizontal">
-                                    <Viewbox
-                                        Height="14"
-                                        Margin="0,0,16,0"
-                                        Stretch="Fill">
-                                        <Path
-                                            extensions:PathExtensions.StringKeyData="Help"
-                                            Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                            Stretch="Fill" />
-                                    </Viewbox>
-                                    <TextBlock
-                                        Margin="0,0,0,2"
-                                        FontSize="14"
-                                        FontWeight="Medium"
-                                        Text="Support docs" />
-                                </StackPanel>
-                            </Border>
+                            <controls:AdvancedButton
+                                MinHeight="12"
+                                Command="{Binding ToUserHowToPlayGuideCommand}"
+                                IconData="{DynamicResource PDBookMenu}"
+                                Template="{StaticResource QuestionMenuItem}"
+                                Text="Как играть" />
+                            <controls:AdvancedButton
+                                MinHeight="16"
+                                Command="{Binding ToSupportCommand}"
+                                IconData="{DynamicResource PDVKontakte}"
+                                Template="{StaticResource QuestionMenuItem}"
+                                Text="Поддержка" />
 
                             <TextBlock
                                 Grid.Row="2"
@@ -316,7 +311,7 @@
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Bottom"
                                 Foreground="{DynamicResource LatestForegroundSolidColorBrush}"
-                                Text="© 2024 NightWorld" />
+                                Text="© 2025 NightWorld" />
                         </StackPanel>
                     </Grid>
                 </Popup>

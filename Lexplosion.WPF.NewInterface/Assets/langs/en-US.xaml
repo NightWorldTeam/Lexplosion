@@ -23,6 +23,7 @@
     <s:String x:Key="Friends">Friends</s:String>
     <s:String x:Key="Multiplayer">Multiplayer</s:String>
     <s:String x:Key="Settings">Settings</s:String>
+    <s:String x:Key="GladToSeeYou">We are glad to see you</s:String>
 
 
     <!--    -->

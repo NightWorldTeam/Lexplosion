@@ -1,4 +1,6 @@
 ﻿using Lexplosion.Logic.Management.Accounts;
+using Lexplosion.Logic.Management.Instances;
+using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Objects;
 using System;
@@ -6,6 +8,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
+using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 {
@@ -85,6 +88,39 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
 
         #endregion Properties
+
+
+        #region Commands
+
+
+        private RelayCommand _toUserHowToPlayGuideCommand;
+        public ICommand ToUserHowToPlayGuideCommand
+        {
+            get => RelayCommand.GetCommand(ref _toUserHowToPlayGuideCommand, () => 
+            {
+                try
+                {
+                    System.Diagnostics.Process.Start("https://vk.com/@nightworld_offical-instrukciya-k-launcheru-lexplosion");
+                }
+                catch { }
+            });
+        }
+
+        private RelayCommand _toSupportCommand;
+        public ICommand ToSupportCommand
+        {
+            get => RelayCommand.GetCommand(ref _toSupportCommand, () =>
+            {
+                try
+                {
+                    System.Diagnostics.Process.Start("https://vk.com/im?media=&sel=-155979422");
+                }
+                catch { }
+            });
+        }
+
+
+        #endregion Commands
 
 
         #region Constructors
