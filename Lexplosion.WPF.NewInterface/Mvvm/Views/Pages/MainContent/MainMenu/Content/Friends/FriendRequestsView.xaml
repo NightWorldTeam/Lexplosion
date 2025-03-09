@@ -10,8 +10,10 @@
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
     xmlns:lexplosion="clr-namespace:Lexplosion;assembly=Lexplosion.Core"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu"
+    xmlns:mainmenu="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:objects="clr-namespace:Lexplosion.WPF.NewInterface.Core.Objects"
+    d:DataContext="{d:DesignInstance Type=mainmenu:FriendRequestsViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
@@ -92,8 +94,8 @@
                                                 <BlurEffect />
                                             </Setter.Value>
                                         </Setter>
-
-                                        <Setter TargetName="IconBorder" Property="Visibility" Value="Visible" />
+                                        <!--  TODO: Для профиля пользователей вернуть на Visible  -->
+                                        <Setter TargetName="IconBorder" Property="Visibility" Value="Collapsed" />
                                     </Trigger>
 
                                     <DataTrigger Binding="{Binding AvatarUrl}" Value="{x:Null}">
@@ -303,7 +305,8 @@
                                             </Setter.Value>
                                         </Setter>
 
-                                        <Setter TargetName="IconBorder" Property="Visibility" Value="Visible" />
+                                        <!--  TODO: Для профиля пользователей вернуть на Visible  -->
+                                        <Setter TargetName="IconBorder" Property="Visibility" Value="Collapsed" />
                                     </Trigger>
 
                                     <DataTrigger Binding="{Binding AvatarUrl}" Value="{x:Null}">
@@ -534,6 +537,7 @@
 
         <core:Switch
             Grid.Row="1"
+            Margin="0,0,-32,0"
             VerticalAlignment="Stretch"
             FocusVisualStyle="{x:Null}"
             SelectedExpression="{Binding SelectedItem.Value, ElementName=segmented}">
@@ -550,7 +554,6 @@
 
                         <ListBox
                             Grid.Row="1"
-                            Margin="0,0,0,8"
                             HorizontalAlignment="Stretch"
                             AlternationCount="3"
                             ItemTemplate="{StaticResource PendingRequestUser}"
@@ -572,7 +575,6 @@
 
                 <core:SwitchCaseItem Key="Outgoing">
                     <Grid>
-
                         <!--  TODO: Translate  -->
                         <controls:Empty
                             Grid.Row="1"
@@ -581,7 +583,6 @@
 
                         <ListBox
                             Grid.Row="1"
-                            Margin="0,0,0,8"
                             HorizontalAlignment="Stretch"
                             ItemTemplate="{StaticResource OutgoingRequestUser}"
                             ItemsSource="{Binding Model.Outgoing}"

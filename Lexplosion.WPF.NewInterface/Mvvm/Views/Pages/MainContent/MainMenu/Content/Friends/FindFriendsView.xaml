@@ -90,7 +90,8 @@
                                             </Setter.Value>
                                         </Setter>
 
-                                        <Setter TargetName="IconBorder" Property="Visibility" Value="Visible" />
+                                        <!--  TODO: Для профиля пользователей вернуть на Visible  -->
+                                        <Setter TargetName="IconBorder" Property="Visibility" Value="Collapsed" />
                                     </Trigger>
 
                                     <DataTrigger Binding="{Binding AvatarUrl}" Value="{x:Null}">
