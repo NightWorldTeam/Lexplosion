@@ -2,6 +2,7 @@
     x:Class="Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.AddonsRepositories.ModrinthRepositoryView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:addonsrepositories="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories"
     xmlns:controls="clr-namespace:Lexplosion.WPF.NewInterface.Controls"
     xmlns:converters="clr-namespace:Lexplosion.WPF.NewInterface.Core.Converters"
     xmlns:core="clr-namespace:Lexplosion;assembly=Lexplosion.Core"
@@ -11,6 +12,7 @@
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.AddonsRepositories"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:objects="clr-namespace:Lexplosion.WPF.NewInterface.Core.Objects"
+    d:DataContext="{d:DesignInstance Type=addonsrepositories:ModrinthRepositoryViewModel}"
     mc:Ignorable="d">
 
     <UserControl.Resources>
@@ -657,7 +659,7 @@
 
                 <Grid
                     Grid.Row="2"
-                    Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Window}}"
+                    Height="{Binding DataContext.ActualHeight, RelativeSource={RelativeSource AncestorType=Window}}"
                     Margin="0,16,0,0"
                     ShowGridLines="False">
 

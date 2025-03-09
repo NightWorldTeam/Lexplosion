@@ -594,4 +594,5 @@
 
 
     <s:String x:Key="LoadingInstanceClientVersions">Загрузка версий сборки</s:String>
+    <s:String x:Key="NoDistributionsAvailableForDownload">Доступные для скачивания раздачи отсутствуют</s:String>
 </ResourceDictionary>

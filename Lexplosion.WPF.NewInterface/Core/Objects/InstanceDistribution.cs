@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Management.Instances;
+using Lexplosion.WPF.NewInterface.Core.ViewModel;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using System;
@@ -47,8 +48,10 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
         public InstanceSharesController InstanceSharesController { get; }
     }
 
-    public sealed class InstanceDistribution : VMBase
+    public sealed class InstanceDistribution : ObservableObject
     {
+        public event Action<ImportResult> DownloadFinished;
+
         private readonly InstanceDistributionArgs _args;
         private readonly FileReceiver _receiver;
         private readonly Action<ImportResult> _resultHandler;
@@ -148,7 +151,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
         {
             _instanceClient = InstanceClient.Import(_receiver, DownloadResultHandler, (state) => { InstanceState = state; });
             IsDownloadStarted = true;
-            _args.LibraryController.Add(_instanceClient);
+            _args.LibraryController.Add(_instanceClient, this);
 
             var s = _args.LibraryController.GetByInstanceClient(_instanceClient);
             s.DeletedEvent += OnDeletedInstance;
@@ -195,6 +198,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
         /// <param name="result"></param>
         private void DownloadResultHandler(ImportResult result)
         {
+            DownloadFinished?.Invoke(result);
             IsDownloadStarted = false;
             if (result == ImportResult.Successful)
             {

@@ -392,7 +392,7 @@
                 </Border>
             </Grid>
 
-            <controls:LoadingBoard
+            <controls:LoadingBoard Margin="0,-40,0,0"
                 Background="Black"
                 BackgroundOpacity="0.3"
                 BlurTarget="{Binding ElementName=Context}"

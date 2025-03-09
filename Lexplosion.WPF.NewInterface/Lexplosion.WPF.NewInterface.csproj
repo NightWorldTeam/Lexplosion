@@ -288,8 +288,6 @@
     <Compile Include="Controls\DigitCodeBox\DigitCodeBox.cs" />
     <Compile Include="Controls\AdvancedTextBox\AdvancedTextBox.cs" />
     <Compile Include="Controls\DropdownMenu\DropdownMenu.cs" />
-    <Compile Include="Controls\InstanceForm\InstanceForm.cs" />
-    <Compile Include="Controls\InstanceForm\LowerMenuButton.cs" />
     <Compile Include="Controls\Loader\Loader.cs" />
     <Compile Include="Controls\ModalControl\ModalControl.cs" />
     <Compile Include="Controls\Paginator\Paginator.cs" />
@@ -547,10 +545,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Empty\Empty.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\InstanceForm\InstanceForm.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

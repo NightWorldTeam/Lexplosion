@@ -6,11 +6,13 @@ using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Objects;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Notifications;
+using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Core.ViewModel;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal;
 using Lexplosion.WPF.NewInterface.Properties;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design.Serialization;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using static Lexplosion.Logic.Objects.Nightworld.NightWorldManifest;
@@ -240,6 +242,17 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         public bool IsLocal { get => Source == InstanceSource.Local; }
         public string ClientVersion { get => _instanceClient.ProfileVersion; }
         public InstanceData PageData { get; private set; }
+        public bool IsInstanceCompleted { get => _instanceClient.IsComplete; }
+
+        private bool _isShareDownloading;
+        public bool IsShareDownloading 
+        { 
+            get => _isShareDownloading; set 
+            {
+                _isShareDownloading = value;
+                OnPropertyChanged(nameof(IsShareDownloading));
+            } 
+        }
 
 
         #endregion Visual Data
@@ -352,7 +365,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         /// Данные скачивания
         /// </summary>
         public DownloadingData DownloadingData { get; set; } = new();
-
+        public InstanceDistribution InstanceDistribution { get; set; }
 
         #endregion Properties
 
@@ -360,12 +373,19 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         #region Constructors
 
 
-        public InstanceModelBase(AppCore appCore, InstanceClient instanceClient, Action<InstanceClient> exportFunc)
+        public InstanceModelBase(AppCore appCore, InstanceClient instanceClient, Action<InstanceClient> exportFunc, InstanceDistribution instanceDistribution = null)
         {
             _appCore = appCore;
 
             _instanceClient = instanceClient;
             _exportFunc = exportFunc;
+            InstanceDistribution = instanceDistribution;
+
+            if (instanceDistribution != null) 
+            {
+                instanceDistribution.DownloadFinished += OnShareDownloadFinished;
+                IsShareDownloading = true;
+            }
 
             _instanceClient.NameChanged += OnNameChanged;
             _instanceClient.LogoChanged += OnLogoChanged;
@@ -374,9 +394,23 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             _instanceClient.DownloadStarted += OnDownloadStarted;
             _instanceClient.Initialized += OnDownloadCompleted;
             _instanceClient.LaunchComplited += OnLaunchComplited;
+            _instanceClient.BuildFinished += OnBuildFinished;
 
             Logo = _instanceClient.Logo;
             Tags = _instanceClient.Categories ?? new List<CategoryBase>();
+        }
+
+        /// <summary>
+        /// Скачивание раздачи завершено
+        /// </summary>
+        private void OnShareDownloadFinished(ImportResult obj)
+        {
+            IsShareDownloading = false;
+        }
+
+        private void OnSharingStateChanged()
+        {
+            OnPropertyChanged(nameof(IsShareDownloading));
         }
 
         private void OnDownloadStarted()
@@ -598,10 +632,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
                     }));
         }
 
-
-        // TODO: Переделать настройки в getter/setter;
-
-
         public Logic.Settings Settings 
         { 
             get => _instanceClient.GetSettings(); set 
@@ -661,6 +691,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         public IEnumerable<InstanceVersion> GetInstanceVersions() 
         {
             return _instanceClient.GetVersions();
+        }
+
+        public void CancelShareInstanceDownloading() 
+        {
+            InstanceDistribution.CancelDownload();
         }
 
         #endregion Public Methods
@@ -893,6 +928,15 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         {
             Runtime.DebugWrite(_state + " " + methodName);
             State = state;
+        }
+
+        /// <summary>
+        /// Вызывается в момент когда InstanceClient получает статус завершенной/незавершенной версии версию;
+        /// </summary>
+        /// <exception cref="NotImplementedException"></exception>
+        private void OnBuildFinished()
+        {
+            OnPropertyChanged(nameof(IsInstanceCompleted));
         }
 
 

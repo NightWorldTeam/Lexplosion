@@ -497,6 +497,8 @@
 
     <s:String x:Key="SearchAddonByNamePlaceholder">Addon name</s:String>
 
+    <s:String x:Key="Completed">Завершено</s:String>
+
 
     <!--  region Authorization  -->
 
@@ -566,4 +568,5 @@
     <s:String x:Key="ServerIpAddressCopied">Server IP address copied</s:String>
 
     <s:String x:Key="LoadingInstanceClientVersions">Loading Client Versions</s:String>
+    <s:String x:Key="NoDistributionsAvailableForDownload">There are no distributions available for download</s:String>
 </ResourceDictionary>

@@ -29,12 +29,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu
             this.BeginAnimation(FrameworkElement.OpacityProperty, doubleAnimation);
         }
 
-        private void InstanceForm_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            var if_ = (InstanceForm)sender;
-            Runtime.DebugWrite(if_.ActualWidth);
-        }
-
         private void Paginator_PageChanged(uint obj)
         {
             ScrollViewerExtensions.ScroollToPosAnimated(

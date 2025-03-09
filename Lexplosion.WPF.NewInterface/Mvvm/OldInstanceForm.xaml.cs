@@ -99,22 +99,27 @@ namespace Lexplosion.WPF.NewInterface.Controls.OldInstanceForm
 
         private void PART_MainActionButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_model.IsInstalled && !_model.IsLaunching) 
+            if (_model.IsInstalled && !_model.IsLaunching)
             {
                 _model.Run();
                 return;
             }
 
-            if (_model.IsDownloading) 
+            if (_model.IsDownloading)
             {
                 // TODO: Открыть меню со списком файлов
                 return;
             }
 
-            if (_model.IsLaunched || _model.IsLaunching) 
+            if (_model.IsLaunched || _model.IsLaunching)
             {
                 _model.Close();
                 return;
+            }
+
+            if (_model.IsShareDownloading) 
+            {
+                _model.CancelShareInstanceDownloading();
             }
 
             _model.Download();

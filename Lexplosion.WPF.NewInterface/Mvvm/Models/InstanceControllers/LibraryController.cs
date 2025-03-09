@@ -1,6 +1,7 @@
 ﻿using Lexplosion.Logic.Management.Instances;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Notifications;
+using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using System;
 using System.Collections.Generic;
@@ -70,6 +71,18 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
             App.Current.Dispatcher.Invoke(() =>
             {
                 instanceModelBase = new InstanceModelBase(_appCore, instanceClient, _exportFunc);
+                Add(instanceModelBase);
+            });
+
+            return instanceModelBase;
+        }
+
+        public InstanceModelBase? Add(InstanceClient instanceClient, InstanceDistribution instanceDistribution, [CallerMemberName] string member = "")
+        {
+            InstanceModelBase? instanceModelBase = null;
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                instanceModelBase = new InstanceModelBase(_appCore, instanceClient, _exportFunc, instanceDistribution);
                 Add(instanceModelBase);
             });
 

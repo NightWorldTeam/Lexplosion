@@ -218,7 +218,7 @@
             Condition="{Binding Model.IsEmpty}">
 
             <core:If.True>
-                <controls:Empty Description="Доступные для скачивания раздачи отсутствуют" DescriptionMaxWidth="300" />
+                <controls:Empty Description="{DynamicResource NoDistributionsAvailableForDownload}" DescriptionMaxWidth="300" />
             </core:If.True>
 
             <core:If.False>

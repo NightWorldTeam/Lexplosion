@@ -75,16 +75,6 @@
                 LogoButtonCommand="{Binding DataContext.OpenInstanceProfileMenuCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
                 LogoButtonCommandParameter="{Binding}"
                 OpenAddonsPageCommand="{Binding DataContext.OpenAddonsPageCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
-            <!--<controls:InstanceForm
-                MinWidth="600"
-                MaxWidth="610"
-                Margin="0,0,0,16"
-                CanBeDeleted="True"
-                InstanceModel="{Binding}"
-                LogoButtonCommand="{Binding DataContext.OpenInstanceProfileMenuCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
-                LogoButtonCommandParameter="{Binding}"
-                MouseDown="InstanceForm_MouseDown"
-                OpenAddonsPageCommand="{Binding DataContext.OpenAddonsPageCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />-->
         </DataTemplate>
     </UserControl.Resources>
 
@@ -413,6 +403,7 @@
                         ItemsSource="{Binding Model.InstancesCollectionViewSource.Filtered}"
                         KeyboardNavigation.IsTabStop="False"
                         ScrollViewer.CanContentScroll="True"
+                        ScrollViewer.ScrollChanged="ListBox_ScrollChanged"
                         VirtualizingPanel.CacheLength="1,5"
                         VirtualizingPanel.CacheLengthUnit="Page"
                         VirtualizingPanel.IsVirtualizing="True"

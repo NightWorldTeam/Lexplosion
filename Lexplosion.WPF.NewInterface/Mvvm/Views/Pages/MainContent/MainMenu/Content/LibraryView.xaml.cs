@@ -60,15 +60,5 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu
                 Runtime.DebugWrite(i.ActualWidth);
             }
         }
-
-        private void InstanceForm_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            var grid = sender as InstanceForm;
-
-            var actualHeight = grid.ActualHeight;
-            var actualWidth = grid.ActualWidth;
-
-            Runtime.DebugWrite($"{actualWidth} x {actualHeight}");
-        }
     }
 }

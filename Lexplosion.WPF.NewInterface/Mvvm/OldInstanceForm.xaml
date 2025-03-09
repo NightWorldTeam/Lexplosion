@@ -17,6 +17,63 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <ControlTemplate x:Key="DropDownButton" TargetType="{x:Type controls:AdvancedButton}">
+            <Border
+                x:Name="border"
+                Margin="1"
+                Padding="5,2,5,2"
+                Background="Transparent"
+                CornerRadius="5">
+
+                <Grid Margin="5,3,5,3" ShowGridLines="False">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="30" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Border
+                        Padding="2"
+                        Background="Transparent"
+                        CornerRadius="5">
+                        <Viewbox Width="20" Height="20">
+                            <Path
+                                x:Name="Path"
+                                HorizontalAlignment="Center"
+                                extensions:PathExtensions.StringData="{TemplateBinding IconData}"
+                                Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                Stretch="Fill" />
+                        </Viewbox>
+                    </Border>
+
+                    <TextBlock
+                        x:Name="TextBlock"
+                        Grid.Column="1"
+                        Margin="7,0,5,0"
+                        FontSize="12pt"
+                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                        Text="{TemplateBinding Text}"
+                        TextAlignment="Justify" />
+                </Grid>
+            </Border>
+
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter TargetName="border" Property="Background">
+                        <Setter.Value>
+                            <SolidColorBrush Opacity="0.1" Color="{DynamicResource ActivityColor}" />
+                        </Setter.Value>
+                    </Setter>
+                    <Setter TargetName="TextBlock" Property="TextElement.Foreground" Value="{DynamicResource ActivitySolidColorBrush}" />
+
+                    <Setter TargetName="Path" Property="Fill" Value="{DynamicResource ActivitySolidColorBrush}" />
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+    </UserControl.Resources>
+
     <Grid>
         <Border
             Width="597"
@@ -43,6 +100,15 @@
                         Background="{Binding Logo, Converter={converters:ImageSourceNullValidateConverter}}"
                         CornerRadius="5" />
 
+                    <core:If Condition="{Binding IsShareDownloading}">
+                        <core:If.True>
+                            <controls:CircleLoader
+                                Width="32"
+                                Height="32"
+                                Padding="0" BlurTarget="{Binding ElementName=PART_Logo}"
+                                IsActive="{Binding IsShareDownloading}" />
+                        </core:If.True>
+                    </core:If>
 
                     <!--  Update Button  -->
                     <core:If Condition="{Binding HasAvailableUpdate}">
@@ -278,11 +344,16 @@
                                         <Setter Property="Text" Value="{DynamicResource DownloadCanceling}" />
                                         <Setter Property="Visibility" Value="Visible" />
                                     </DataTrigger>
+
+                                    <DataTrigger Binding="{Binding IsInstanceCompleted}" Value="False">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
                                 </Style.Triggers>
                             </Style>
                         </TextBlock.Style>
                     </TextBlock>
 
+                    <!--  Downloading Message  -->
                     <TextBlock
                         Grid.Row="1"
                         Margin="0,0,0,4"
@@ -326,6 +397,24 @@
                         </TextBlock.Style>
 
                     </TextBlock>
+
+                    <!--  Download Share Message  -->
+                    <core:If
+                        Grid.Row="1"
+                        Margin="0,0,0,4"
+                        Condition="{Binding IsShareDownloading}">
+                        <core:If.True>
+                            <TextBlock
+                                Background="Transparent"
+                                FontSize="16"
+                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                TextTrimming="WordEllipsis"
+                                TextWrapping="WrapWithOverflow">
+                                <Run Text="{DynamicResource Completed}" />
+                                <Run Text="{Binding InstanceDistribution.Percentages, Mode=OneWay, StringFormat='{}{0}%'}" />
+                            </TextBlock>
+                        </core:If.True>
+                    </core:If>
 
                     <!--  Tags  -->
                     <ItemsControl
@@ -413,27 +502,20 @@
                     </TextBlock>
 
                     <!--  Download Import Speed  -->
-                    <TextBlock
+                    <core:If
                         Grid.Row="2"
                         Margin="0,0,4,8"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Bottom"
-                        FontSize="14"
-                        Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
-                        Text="3.563 Mbit/s">
-                        <TextBlock.Style>
-                            <Style TargetType="{x:Type TextBlock}">
+                        Condition="{Binding IsShareDownloading}">
+                        <core:If.True>
+                            <TextBlock FontSize="14" Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}">
+                                <Run Text="{Binding InstanceDistribution.Speed, Mode=OneWay}" />
+                                <Run Text="Mbit/s" />
+                            </TextBlock>
+                        </core:If.True>
 
-                                <Setter Property="Visibility" Value="Collapsed" />
-
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsImporting}" Value="True">
-                                        <Setter Property="Visibility" Value="Visible" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </TextBlock.Style>
-                    </TextBlock>
+                    </core:If>
 
                     <ProgressBar
                         Grid.Row="3"
@@ -500,6 +582,13 @@
                                         </MultiDataTrigger.Setters>
                                     </MultiDataTrigger>
 
+
+                                    <DataTrigger Binding="{Binding IsShareDownloading}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                        <Setter Property="Value" Value="{Binding InstanceDistribution.Percentages}" />
+                                        <Setter Property="IsIndeterminate" Value="False" />
+                                    </DataTrigger>
+
                                 </Style.Triggers>
 
                             </Style>
@@ -542,7 +631,7 @@
                                                     FontSize="18"
                                                     FontWeight="SemiBold"
                                                     Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                                    Text="{Binding DownloadingData.Percentages, StringFormat='{}{0}%'}"
+                                                    Text="{Binding DownloadingData.Percentages, Mode=OneWay, StringFormat='{}{0}%'}"
                                                     Visibility="Collapsed" />
 
                                             </Grid>
@@ -628,6 +717,11 @@
                                                     <Setter Property="FontSize" Value="20" />
                                                 </DataTrigger>
 
+                                                <DataTrigger Binding="{Binding IsShareDownloading}" Value="True">
+                                                    <Setter TargetName="Icon" Property="extensions:PathExtensions.StringKeyData" Value="Cancel" />
+                                                    <Setter Property="FontSize" Value="20" />
+                                                </DataTrigger>
+
                                             </ControlTemplate.Triggers>
                                         </ControlTemplate>
                                     </Setter.Value>
@@ -642,7 +736,8 @@
                         Grid.Row="1"
                         Background="{DynamicResource PrimarySolidColorBrush}"
                         BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                        BorderThickness="1">
+                        BorderThickness="1"
+                        Visibility="{Binding IsInstanceCompleted, Converter={converters:BooleanToVisibilityConverter}}">
                         <StackPanel>
 
                             <core:If Condition="{Binding IsDownloading}">
