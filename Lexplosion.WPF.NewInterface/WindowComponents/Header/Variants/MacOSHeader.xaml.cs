@@ -1,4 +1,6 @@
-﻿using Lexplosion.WPF.NewInterface.WindowComponents.Header.Variants;
+﻿using Lexplosion.Global;
+using Lexplosion.Logic.FileSystem;
+using Lexplosion.WPF.NewInterface.WindowComponents.Header.Variants;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -14,6 +16,9 @@ namespace Lexplosion.WPF.NewInterface.WindowComponents.Header.Variants
         public MacOSHeader()
         {
             InitializeComponent();
+
+            WindowHeaderPanelButtonsGrid.HorizontalAlignment = GlobalData.GeneralSettings.NavBarInLeft ? HorizontalAlignment.Left : HorizontalAlignment.Right;
+            ChangeOrintation(null, null);
         }
 
         public override void ChangeOrintation(object sender, MouseButtonEventArgs e)
@@ -25,7 +30,7 @@ namespace Lexplosion.WPF.NewInterface.WindowComponents.Header.Variants
 
                 AddtionalFuncs.HorizontalAlignment = HorizontalAlignment.Left;
 
-                RuntimeApp.HeaderState = HeaderState.Right;
+                GlobalData.GeneralSettings.NavBarInLeft = true;
             }
             else
             {
@@ -34,8 +39,10 @@ namespace Lexplosion.WPF.NewInterface.WindowComponents.Header.Variants
 
                 AddtionalFuncs.HorizontalAlignment = HorizontalAlignment.Right;
 
-                RuntimeApp.HeaderState = HeaderState.Left;
+                GlobalData.GeneralSettings.NavBarInLeft = false;
             }
+
+            DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
         }
     }
 }
