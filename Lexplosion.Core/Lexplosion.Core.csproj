@@ -96,11 +96,6 @@
     <Compile Include="Logic\Management\Addons\CurseforgeAddon.cs" />
     <Compile Include="Logic\Management\Addons\IPrototypeAddon.cs" />
     <Compile Include="Logic\Management\Addons\ModrinthAddon.cs" />
-    <Compile Include="Logic\Management\Authentication\Authentication.cs" />
-    <Compile Include="Logic\Management\Authentication\IAuthHandler.cs" />
-    <Compile Include="Logic\Management\Authentication\LocalAuth.cs" />
-    <Compile Include="Logic\Management\Authentication\MicrosoftAuth.cs" />
-    <Compile Include="Logic\Management\Authentication\NightWorldAuth.cs" />
     <Compile Include="Logic\Management\CategoriesManager.cs" />
     <Compile Include="Logic\Management\Delegates.cs" />
     <Compile Include="Logic\Management\Importers\ArchiveImportManager.cs" />
@@ -144,7 +139,6 @@
     <Compile Include="Logic\Management\Sources\LocalSource.cs" />
     <Compile Include="Logic\Management\Sources\ModrinthSource.cs" />
     <Compile Include="Logic\Management\Sources\NightWorldSource.cs" />
-    <Compile Include="Logic\Management\User.cs" />
     <Compile Include="Logic\Management\Utils.cs" />
     <Compile Include="Logic\Network\ClientBridge.cs" />
     <Compile Include="Logic\Network\CommandReceiver.cs" />

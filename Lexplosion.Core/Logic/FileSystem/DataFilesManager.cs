@@ -12,45 +12,6 @@ namespace Lexplosion.Logic.FileSystem
 {
     public static class DataFilesManager
     {
-        public static void SaveAccount(string login, string accessData, AccountType accountType)
-        {
-            //костыль и мне похуй, лень проверку делать
-            if (accountType == AccountType.NoAuth)
-            {
-                accessData = "zhopa";
-            }
-
-            accessData = Convert.ToBase64String(Cryptography.AesEncode(accessData, Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey), Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey.Substring(0, 16))));
-
-            var data = GetFile<OldAcccountsFormat>(LaunсherSettings.LauncherDataPath + "/account.json");
-            if (data != null && data.Profiles != null && data.Profiles.Count > 0)
-            {
-                data.SelectedProfile = accountType;
-                data.Profiles[accountType] = new OldAcccountsFormat.Profile
-                {
-                    Login = login,
-                    AccessData = accessData
-                };
-            }
-            else
-            {
-                data = new OldAcccountsFormat
-                {
-                    SelectedProfile = accountType,
-                    Profiles = new Dictionary<AccountType, OldAcccountsFormat.Profile>
-                    {
-                        [accountType] = new OldAcccountsFormat.Profile
-                        {
-                            Login = login,
-                            AccessData = accessData
-                        }
-                    }
-                };
-            }
-
-            SaveFile(LaunсherSettings.LauncherDataPath + "/account.json", JsonConvert.SerializeObject(data));
-        }
-
         public static void SaveSettings(Settings data, string instanceId = "")
         {
             string file;
