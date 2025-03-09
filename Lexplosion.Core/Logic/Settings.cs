@@ -65,6 +65,8 @@ namespace Lexplosion.Logic
 		/// </summary>
 		public bool? ItIsNotShit = null;
 
+		public bool NavBarInLeft = false;
+
         /// <summary>
         /// Выполняет слияние с другим экземпляром настроек.
         /// Если режим приоритетный, то в данном экземпляре будут заменены только пустые поля на поля из settings,
@@ -119,7 +121,7 @@ namespace Lexplosion.Logic
 
             NetworkDirectConnection = settings.NetworkDirectConnection;
 			ItIsNotShit = settings.ItIsNotShit;
-
+			NavBarInLeft = settings.NavBarInLeft;
 		}
 
         public Settings Copy()
@@ -159,7 +161,8 @@ namespace Lexplosion.Logic
                 LanguageId = "ru-RU",
                 ThemeName = "DarkColorTheme",
                 AccentColor = "#167ffc",
-				ItIsNotShit = true
+				ItIsNotShit = true,
+				NavBarInLeft = false
 			};
         }
     }
