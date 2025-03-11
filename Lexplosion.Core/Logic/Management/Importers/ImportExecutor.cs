@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Threading;
+using static Lexplosion.Logic.Management.ImportInterruption;
 
 namespace Lexplosion.Logic.Management.Importers
 {
@@ -13,15 +14,17 @@ namespace Lexplosion.Logic.Management.Importers
         private Settings _settings;
         private IImportManager _importManager;
         private ProgressHandlerCallback _progressHandler;
-        private CancellationToken _cancellationToken;
+		private readonly DynamicStateHandler<ImportInterruption, InterruptionType> _interruptionHandler;
+		private CancellationToken _cancellationToken;
         private bool _fileAddrIsLocalPath;
 
-        public ImportExecutor(string fileAddr, bool fileAddrIsLocalPath, Settings settings, CancellationToken cancellationToken, ProgressHandlerCallback progressHandler)
+        public ImportExecutor(string fileAddr, bool fileAddrIsLocalPath, Settings settings, CancellationToken cancellationToken, ProgressHandlerCallback progressHandler, DynamicStateHandler<ImportInterruption, InterruptionType> interruptionHandler)
         {
             _filePath = fileAddr;
             _settings = settings;
             _progressHandler = progressHandler;
-            _cancellationToken = cancellationToken;
+			_interruptionHandler = interruptionHandler;
+			_cancellationToken = cancellationToken;
             _fileAddrIsLocalPath = fileAddrIsLocalPath;
         }
 
@@ -62,7 +65,9 @@ namespace Lexplosion.Logic.Management.Importers
                             _importManager = new CurseforgeImportManager(_filePath, _settings, _cancellationToken);
                             return;
                         }
-                    }
+
+						_importManager = new SimpleArchiveImportManager(_filePath, _settings, _cancellationToken, _interruptionHandler);
+					}
                 }
             }
             catch { }

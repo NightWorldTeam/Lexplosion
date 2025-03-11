@@ -20,6 +20,7 @@ using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.Logic.Management.Importers;
 using Lexplosion.Logic.Management.Addons;
+using static Lexplosion.Logic.Management.ImportInterruption;
 
 namespace Lexplosion.Logic.Management.Instances
 {
@@ -1315,11 +1316,11 @@ namespace Lexplosion.Logic.Management.Instances
             return res;
         }
 
-        private static ImportResult Import(in InstanceClient client, string zipFile)
+        private static ImportResult Import(in InstanceClient client, string zipFile, DynamicStateHandler<ImportInterruption, InterruptionType> interruptionHandler)
         {
             CancellationTokenSource tes = new CancellationTokenSource();
 
-            var executor = new ImportExecutor(zipFile, true, GlobalData.GeneralSettings, tes.Token, client.ProgressHandler);
+            var executor = new ImportExecutor(zipFile, true, GlobalData.GeneralSettings, tes.Token, client.ProgressHandler, interruptionHandler);
             ImportResult res = executor.Prepeare(out PrepeareResult result);
 
             if (res != ImportResult.Successful) return res;
@@ -1425,7 +1426,7 @@ namespace Lexplosion.Logic.Management.Instances
             //return res;
         }
 
-        public static InstanceClient Import(string zipFile, Action<ImportResult> callback)
+        public static InstanceClient Import(string zipFile, Action<ImportResult> callback, DynamicStateHandler<ImportInterruption, InterruptionType> interruptionHandler)
         {
             var client = new InstanceClient(CreateSourceFactory(InstanceSource.Local))
             {
@@ -1438,18 +1439,13 @@ namespace Lexplosion.Logic.Management.Instances
 
             Lexplosion.Runtime.TaskRun(delegate ()
             {
-                callback(Import(client, zipFile));
+                callback(Import(client, zipFile, interruptionHandler));
             });
 
             return client;
         }
 
-        public static InstanceClient Import(FileReceiver reciver, Action<ImportResult> callback)
-        {
-            return Import(reciver, callback, (_) => { });
-        }
-
-        public static InstanceClient Import(FileReceiver reciver, Action<ImportResult> callback, Action<DownloadShareState> stateHandler)
+        public static InstanceClient Import(FileReceiver reciver, Action<ImportResult> callback, Action<DownloadShareState> stateHandler, DynamicStateHandler<ImportInterruption, InterruptionType> interruptionHandler)
         {
             var client = new InstanceClient(CreateSourceFactory(InstanceSource.Local))
             {
@@ -1486,7 +1482,7 @@ namespace Lexplosion.Logic.Management.Instances
                 if (result == FileRecvResult.Successful)
                 {
                     stateHandler(DownloadShareState.PostProcessing);
-                    callback(Import(in client, file));
+                    callback(Import(in client, file, interruptionHandler));
                 }
                 else
                 {
@@ -1497,7 +1493,7 @@ namespace Lexplosion.Logic.Management.Instances
             return client;
         }
 
-        public static InstanceClient Import(Uri fileURL, Action<ImportResult> callback)
+        public static InstanceClient Import(Uri fileURL, Action<ImportResult> callback, DynamicStateHandler<ImportInterruption, InterruptionType> interruptionHandler)
         {
             var client = new InstanceClient(CreateSourceFactory(InstanceSource.Local))
             {
@@ -1614,7 +1610,7 @@ namespace Lexplosion.Logic.Management.Instances
                     return;
                 }
 
-                ImportResult impurtRes = Import(client, tempDir + "instance_file");
+                ImportResult impurtRes = Import(client, tempDir + "instance_file", interruptionHandler);
 
                 try
                 {

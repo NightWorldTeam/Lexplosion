@@ -76,7 +76,6 @@ namespace Lexplosion.Logic.Network
                     WaitClient.WaitOne(); //ждём первого авторизированного клиента
                 }
 
-
                 IEnumerable<ClientDesc> clients = Server.WaitSendAvailable();
 
                 SendingBlock.WaitOne();

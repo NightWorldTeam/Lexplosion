@@ -101,6 +101,7 @@
     <Compile Include="Logic\Management\Importers\ArchiveImportManager.cs" />
     <Compile Include="Logic\Management\Importers\NWPackImportManager.cs" />
     <Compile Include="Logic\Management\Importers\SimpleArchiveImportManager.cs" />
+    <Compile Include="Logic\Management\ImportInterruption.cs" />
     <Compile Include="Logic\Management\Installers\FreeSourceInstanceInstallManager.cs" />
     <Compile Include="Logic\Management\Importers\IImportManager.cs" />
     <Compile Include="Logic\Management\Instances\FreeInstance.cs" />

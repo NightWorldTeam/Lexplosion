@@ -507,20 +507,21 @@ namespace Lexplosion.Logic.FileSystem
 			parameters = default(T);
 			resultingDirectory = CreateTempDir() + "import/";
 
-			if (!Directory.Exists(resultingDirectory))
+			try
 			{
-				try
+				if (!Directory.Exists(resultingDirectory))
 				{
 					Directory.CreateDirectory(resultingDirectory);
 				}
-				catch
+				else
 				{
-					return ImportResult.DirectoryCreateError;
+					Directory.Delete(resultingDirectory, true);
 				}
 			}
-			else
+			catch (Exception ex)
 			{
-				Directory.Delete(resultingDirectory, true);
+				Runtime.DebugWrite("Exception " + ex);
+				return ImportResult.DirectoryCreateError;
 			}
 
 			try
