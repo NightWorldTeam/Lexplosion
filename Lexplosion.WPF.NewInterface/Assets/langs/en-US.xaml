@@ -436,10 +436,6 @@
     <s:String x:Key="ActiveShares">Active Shares</s:String>
 
 
-
-    <!--  Instance Addons  -->
-    <s:String x:Key="FileName">File Name</s:String>
-
     <!--  Account Funcs  -->
     <s:String x:Key="LaunchAccount">Set the game to launch via account</s:String>
     <s:String x:Key="MakeAccountActive">Set account active</s:String>
