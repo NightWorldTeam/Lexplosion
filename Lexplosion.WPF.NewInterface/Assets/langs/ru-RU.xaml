@@ -239,8 +239,28 @@
     <s:String x:Key="Maps">Карты</s:String>
     <s:String x:Key="Shaders">Шейдеры</s:String>
 
+    <!--  Sort By  -->
     <s:String x:Key="Name">Название</s:String>
     <s:String x:Key="Author">Автор</s:String>
+    <s:String x:Key="FileName">Имя файла</s:String>
+
+    <!--  By Name  -->
+    <s:String x:Key="ModName">Название мода</s:String>
+    <s:String x:Key="ResourcepackName">Название ресурспака</s:String>
+    <s:String x:Key="MapName">Название карты</s:String>
+    <s:String x:Key="ShaderName">Название шейдера</s:String>
+
+    <!--  By Author  -->
+    <s:String x:Key="ModAuthor">Автор мода</s:String>
+    <s:String x:Key="ResourcepackAuthor">Автор ресурспака</s:String>
+    <s:String x:Key="MapAuthor">Автор карты</s:String>
+    <s:String x:Key="ShaderAuthor">Автор шейдера</s:String>
+
+    <!--  By Author  -->
+    <s:String x:Key="ModFileName">Название файла мода</s:String>
+    <s:String x:Key="ResourcepackFileName">Название файла ресурспака</s:String>
+    <s:String x:Key="MapFileName">Название файла карты</s:String>
+    <s:String x:Key="ShaderFileName">Название файла шейдера</s:String>
 
 
     <!--    -->
@@ -408,11 +428,6 @@
 
 
     <s:String x:Key="CurseforgeCatalogLoading">Идет загрузка каталога Curseforge</s:String>
-
-
-    <!--  Instance Addons  -->
-    <s:String x:Key="FileName">Имя файла</s:String>
-
 
 
     <!--  Account Funcs  -->
@@ -589,10 +604,55 @@
 
     <s:String x:Key="InstallServerInstance">Установка сборки сервера</s:String>
     <s:String x:Key="InstallServerInstanceDescription">Для игры на данном сервере требуется установить сборку, желаете установить данную сборку?</s:String>
-    <s:String x:Key="InstanceForServerAddedToLibrary">Сборка {0} успешно добавлена в библиотеку!</s:String>
     <s:String x:Key="ServerIpAddressCopied">IP-Адрес сервера скопирован</s:String>
 
 
     <s:String x:Key="LoadingInstanceClientVersions">Загрузка версий сборки</s:String>
     <s:String x:Key="NoDistributionsAvailableForDownload">Доступные для скачивания раздачи отсутствуют</s:String>
+
+
+    <!--  region Notifications  -->
+
+
+    <!--    -->
+    <!--  Ad Server  -->
+    <!--    -->
+
+    <s:String x:Key="InstanceForServerAddedToLibrary">Сборка {0} успешно добавлена в библиотеку!</s:String>
+
+
+    <!--    -->
+    <!--  Multiplayer  -->
+    <!--    -->
+    <s:String x:Key="MultiplayerReloaded">Сетевая игра перезапущена</s:String>
+
+
+    <!--    -->
+    <!--  InstanceForm  -->
+    <!--    -->
+
+
+    <!--  Instance Launch  -->
+    <s:String x:Key="InstanceLaunchedSuccessfulNotification">Сборка {0} успешно запущена.</s:String>
+    <s:String x:Key="InstanceLaunchedUnsuccessfulNotification">Не удалось запустить сборка {0}.</s:String>
+
+    <!--  Instance Installing  -->
+    <s:String x:Key="DownloadCompletedSuccessfully">Скачивание сборки {0} было успешно завершено.</s:String>
+
+    <s:String x:Key="FailedToDownloadFollowingFiles">Не удалось скачать следующие файлы</s:String>
+    <s:String x:Key="FailedToDownloadSomeFiles">Не удалось скачать некоторые файлы</s:String>
+    <s:String x:Key="RedownloadingMaySolveTheProblem">Повторное скачивание может решить проблему, но это не точно.</s:String>
+    <s:String x:Key="ExternalIdIncorrect">Внешний id сборки некорректен.</s:String>
+    <s:String x:Key="ServerError">Ошибка сервера.</s:String>
+    <s:String x:Key="FailedToGetDataFromServer">Не удалось получить данные с сервера.</s:String>
+    <s:String x:Key="FileVerificationFailed">Не удалось выполнить проверку файла.</s:String>
+    <s:String x:Key="VersionVerificationFailed">Не удалось определить версию игры.</s:String>
+    <s:String x:Key="ModloaderVerificationFailed">Не удалось определить версию модлоадера.</s:String>
+    <s:String x:Key="InvalidGameDirectory">Недействительная директория игры</s:String>
+    <s:String x:Key="FailedLoadInstanceManifest">Не удалось загрузить манифест сборки.</s:String>
+    <s:String x:Key="TrySetCustomJavaPath">Попробуйте поставить свой путь до джавы в настройках.</s:String>
+    <s:String x:Key="InstanceDownloadCanceledSuccessfully">Скачивание сборки {0} было успешно отменено.</s:String>
+    <s:String x:Key="UnknownErrorTryRestartLauncher">Что-то непонятное произошло... Советуем выключить и включить.</s:String>
+
+    <!--  endregion Notifications  -->
 </ResourceDictionary>

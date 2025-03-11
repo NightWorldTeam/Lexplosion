@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Lexplosion.WPF.NewInterface.Controls;
+using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile;
+using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.InstanceProfile
 {
@@ -9,9 +12,18 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.InstanceProfi
     /// </summary>
     public partial class InstanceProfileAddonsView : UserControl
     {
+        private InstanceAddonsContainerViewModel _model;
+
         public InstanceProfileAddonsView()
         {
             InitializeComponent();
+            DataContextChanged += OnDataContextChanged;
+        }
+
+        private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            _model = (InstanceAddonsContainerViewModel)DataContext;
+            SetSearchBoxPlaceholder(_model.Model.SelectedSortByParam);
         }
 
         private void Grid_DragEnter(object sender, System.Windows.DragEventArgs e)
@@ -30,6 +42,24 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.InstanceProfi
             Console.WriteLine(e.Data);
 
             fe.Visibility = System.Windows.Visibility.Collapsed;
+        }
+
+        private void OnAddonsSearchSortParamChangedChanged(object sender, SelectionChangedEventArgs e)
+        {
+            SetSearchBoxPlaceholder((sender as ComboBox).SelectedItem.ToString());
+        }
+
+        private void SetSearchBoxPlaceholder(string sortParam) 
+        {
+            var addonType = _model.Model.Type switch
+            {
+                AddonType.Mods => "Mod",
+                AddonType.Resourcepacks => "Resourcepack",
+                AddonType.Maps => "Map",
+                AddonType.Shaders => "Shader"
+            };
+
+            SearchBox.SetResourceReference(SearchBox.PlaceholderProperty, $"{addonType}{sortParam}");
         }
     }
 }

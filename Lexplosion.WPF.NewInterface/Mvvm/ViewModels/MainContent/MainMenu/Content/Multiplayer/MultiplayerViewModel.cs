@@ -25,9 +25,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
         #region Constructors
 
-        public MultiplayerViewModel()
+        public MultiplayerViewModel(AppCore appCore)
         {
-            Model = new MultiplayerModel();
+            Model = new MultiplayerModel(appCore);
         }
 
 

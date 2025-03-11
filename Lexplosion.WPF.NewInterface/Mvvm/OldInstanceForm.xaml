@@ -105,7 +105,8 @@
                             <controls:CircleLoader
                                 Width="32"
                                 Height="32"
-                                Padding="0" BlurTarget="{Binding ElementName=PART_Logo}"
+                                Padding="0"
+                                BlurTarget="{Binding ElementName=PART_Logo}"
                                 IsActive="{Binding IsShareDownloading}" />
                         </core:If.True>
                     </core:If>

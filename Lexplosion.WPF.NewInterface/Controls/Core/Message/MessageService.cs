@@ -67,7 +67,7 @@ namespace Lexplosion.WPF.NewInterface.Controls.Message.Core
                 _messages.Add(new()
                 {
                     Text = !isResourceKey ? message : (string)App.Current.Resources[message],
-                    Type = MessageType.Warning,
+                    Type = type,
                     CreationDate = System.DateTime.Now
                 });
             });

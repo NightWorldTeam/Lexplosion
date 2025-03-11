@@ -421,9 +421,24 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             DataChanged?.Invoke();
         }
 
-        private void OnLaunchComplited(string instanceId, bool successful)
+        private void OnLaunchComplited(string instanceId, bool isSuccessful)
         {
-            // TODO: Notifications
+            if (isSuccessful)
+            {
+                SetState(InstanceState.Running);
+
+                _appCore.MessageService.Success("InstanceLaunchedSuccessfulNotification", true, _instanceClient.Name);
+            }
+            else
+            {
+                SetState(InstanceState.Default);
+                _appCore.MessageService.Error("InstanceLaunchedUnsuccessfulNotification", true, _instanceClient.Name);
+                IsLaunched = false;
+            }
+
+            IsLaunching = false;
+            GameLaunchCompleted?.Invoke(isSuccessful);
+            DataChanged?.Invoke();
         }
 
 
@@ -704,7 +719,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         #region Private Methods
 
 
-
         #region Handlers
 
 
@@ -750,6 +764,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             DataChanged?.Invoke();
         }
 
+        /// <summary>
+        /// Завершнение скачивание файлов
+        /// </summary>
+        /// <param name="init"></param>
+        /// <param name="errors"></param>
+        /// <param name="isRun"></param>
         private void OnDownloadCompleted(InstanceInit init, IEnumerable<string> errors, bool isRun)
         {
             IsDownloading = false;
@@ -774,10 +794,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             DownloadComplited?.Invoke(init, errors, isRun);
             DataChanged?.Invoke();
 
+            // TODO: Notifications
             switch (init)
             {
                 case InstanceInit.Successful:
                     {
+                        //_appCore.MessageService.Success();
                     }
                     break;
                 case InstanceInit.DownloadFilesError:
@@ -838,23 +860,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             DataChanged?.Invoke();
         }
 
-        private void OnLaunchCompleted(bool isSuccessful)
-        {
-            if (isSuccessful)
-            {
-                SetState(InstanceState.Running);
-            }
-            IsLaunching = false;
-            GameLaunchCompleted?.Invoke(isSuccessful);
-            DataChanged?.Invoke();
-        }
-
+        // TODO: Notifications
         private void OnGameClosed()
         {
             IsLaunching = false;
             IsLaunched = false;
-
-            
 
             GameClosed?.Invoke();
             Runtime.DebugWrite("Game Closed");

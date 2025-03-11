@@ -11,6 +11,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu
 {
     public sealed class MultiplayerModel : ViewModelBase
     {
+        private readonly AppCore _appCore;
         private ObservableCollection<PlayerWrapper> _players = new ObservableCollection<PlayerWrapper>();
 
 
@@ -68,8 +69,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu
         #region Constructors
 
 
-        public MultiplayerModel()
+        public MultiplayerModel(AppCore appCore)
         {
+            _appCore = appCore;
+
             LaunchGame.StateChanged += LaunchGame_StateChanged;
             LaunchGame.UserConnected += LaunchGame_UserConnected;
             LaunchGame.UserDisconnected += LaunchGame_UserDisconnected;
@@ -88,8 +91,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu
         public void Reboot() 
         {
             LaunchGame.RebootOnlineGame();
+            _appCore.MessageService.Success("MultiplayerReloaded", true);
         }
-
 
         #endregion Public Methods
 

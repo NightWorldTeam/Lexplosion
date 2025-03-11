@@ -18,7 +18,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         private readonly AppCore _appCore;
         private readonly Action _openAccountFactory;
 
-        private ViewModelBase _generalMultiplayerViewModel = new MultiplayerViewModel();
+        private ViewModelBase _generalMultiplayerViewModel;
         private ViewModelBase _adServersViewModel;
 
         #region Properties
@@ -66,6 +66,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             };
 
             HasAccess = Account.ActiveAccount?.AccountType == AccountType.NightWorld;
+
+            if (HasAccess) 
+            {
+                _generalMultiplayerViewModel = new MultiplayerViewModel(appCore);
+            }
             OnAccessChanged();
         }
 
@@ -101,7 +106,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             if (HasAccess)
             {
                 _tabs.Clear();
-                _generalMultiplayerViewModel = new MultiplayerViewModel();
+                _generalMultiplayerViewModel = new MultiplayerViewModel(_appCore);
                 _tabs.Add(new TabItemModel { TextKey = "PartnerServers", Content = _adServersViewModel, IsSelected = true });
                 _tabs.Add(new TabItemModel { TextKey = "General", Content = _generalMultiplayerViewModel, IsSelected = false });
             }

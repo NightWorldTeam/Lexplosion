@@ -242,8 +242,28 @@
     <s:String x:Key="Maps">Maps</s:String>
     <s:String x:Key="Shaders">Shaders</s:String>
 
+    <!--  Sort By  -->
     <s:String x:Key="Name">Name</s:String>
     <s:String x:Key="Author">Author</s:String>
+    <s:String x:Key="FileName">File Name</s:String>
+
+    <!--  By Name  -->
+    <s:String x:Key="ModName">Mod name</s:String>
+    <s:String x:Key="ResourcepackName">Resourcepack name</s:String>
+    <s:String x:Key="MapName">Map name</s:String>
+    <s:String x:Key="ShaderName">Shader name</s:String>
+
+    <!--  By Author  -->
+    <s:String x:Key="ModAuthor">Author of the mod</s:String>
+    <s:String x:Key="ResourcepackAuthor">Author of the Resourcepack</s:String>
+    <s:String x:Key="MapAuthor">Author of the map</s:String>
+    <s:String x:Key="ShaderAuthor">Author of the shader</s:String>
+
+    <!--  By File name  -->
+    <s:String x:Key="ModFileName">Mod file name</s:String>
+    <s:String x:Key="ResourcepackFileName">Resourcepack file name</s:String>
+    <s:String x:Key="MapFileName">Map file name</s:String>
+    <s:String x:Key="ShaderFileName">Shader file name</s:String>
 
 
     <!--    -->

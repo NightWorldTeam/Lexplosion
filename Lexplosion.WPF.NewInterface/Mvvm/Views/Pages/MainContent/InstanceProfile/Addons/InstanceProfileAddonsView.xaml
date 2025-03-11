@@ -620,7 +620,8 @@
                     Height="40"
                     ItemsSource="{Binding Model.SortByList}"
                     SelectedIndex="0"
-                    SelectedValue="{Binding Model.SelectedSortByParam, UpdateSourceTrigger=PropertyChanged}">
+                    SelectedValue="{Binding Model.SelectedSortByParam, UpdateSourceTrigger=PropertyChanged}"
+                    SelectionChanged="OnAddonsSearchSortParamChangedChanged">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock extensions:TextBlockExtensions.TextByKey="{Binding}" Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
