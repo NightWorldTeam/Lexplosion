@@ -1,5 +1,7 @@
 ﻿using Lexplosion.Logic.FileSystem;
+using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Instances;
+using Lexplosion.Tools;
 using Lexplosion.WPF.NewInterface.Core.ViewModel;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
@@ -9,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Documents;
+using static Lexplosion.Logic.Management.ImportInterruption;
 using static System.Windows.Forms.AxHost;
 
 namespace Lexplosion.WPF.NewInterface.Core.Objects
@@ -149,7 +152,8 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
         /// </summary>
         public void Download()
         {
-            _instanceClient = InstanceClient.Import(_receiver, DownloadResultHandler, (state) => { InstanceState = state; });
+            var dynamicStateHandler = new DynamicStateData<ImportInterruption, InterruptionType>();
+            _instanceClient = InstanceClient.Import(_receiver, DownloadResultHandler, (state) => { InstanceState = state; }, dynamicStateHandler.GetHandler);
             IsDownloadStarted = true;
             _args.LibraryController.Add(_instanceClient, this);
 

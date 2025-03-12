@@ -1,9 +1,12 @@
-﻿using Lexplosion.Logic.Management.Instances;
+﻿using Lexplosion.Logic.Management;
+using Lexplosion.Logic.Management.Instances;
+using Lexplosion.Tools;
 using Lexplosion.WPF.NewInterface.Core;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Forms;
+using static Lexplosion.Logic.Management.ImportInterruption;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
 {
@@ -68,10 +71,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
 
             InstanceClient instanceClient = null;
             // Запускаем импорт
+            var dynamicStateHandler = new DynamicStateData<ImportInterruption, InterruptionType>();
             instanceClient = InstanceClient.Import(path, (ir) =>
             {
                 ImportResultHandler(ir, importFile, instanceClient);
-            });
+            }, dynamicStateHandler.GetHandler);
 
             // Добавляем в библиотеку.
             // TODO: IMPORTANT синхронизировать import и instanceform.
