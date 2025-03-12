@@ -585,4 +585,15 @@
 
     <s:String x:Key="LoadingInstanceClientVersions">Loading Client Versions</s:String>
     <s:String x:Key="NoDistributionsAvailableForDownload">There are no distributions available for download</s:String>
+
+
+
+    <!--  region ServerProfile  -->
+
+
+    <s:String x:Key="Status:">Status:</s:String>
+    <s:String x:Key="Online:">Online:</s:String>
+
+
+    <!--  endregion ServerProfile  -->
 </ResourceDictionary>

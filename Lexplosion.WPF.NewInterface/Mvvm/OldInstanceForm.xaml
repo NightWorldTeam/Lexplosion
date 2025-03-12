@@ -106,7 +106,7 @@
                                 Width="32"
                                 Height="32"
                                 Padding="0"
-                                BlurTarget="{Binding ElementName=PART_Logo}"
+                                BlurTarget="{Binding Source={x:Reference PART_Logo}}"
                                 IsActive="{Binding IsShareDownloading}" />
                         </core:If.True>
                     </core:If>

@@ -1,5 +1,4 @@
 ﻿using Lexplosion.WPF.NewInterface.Commands;
-using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Core.Tools;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using Lexplosion.WPF.NewInterface.Stores;
@@ -17,21 +16,9 @@ using Lexplosion.WPF.NewInterface.Core;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile
 {
-    public class InstanceFieldInfo
+    public class InstanceFieldInfo<T> : LeftPanelFieldInfo
     {
-        public string Name { get; }
-        public string Value { get; }
-
-        public InstanceFieldInfo(string name, string value)
-        {
-            Name = name;
-            Value = value;
-        }
-    }
-
-    public class InstanceFieldInfo<T> : InstanceFieldInfo
-    {
-        private readonly InstanceFieldInfo _info;
+        private readonly LeftPanelFieldInfo _info;
 
         public InstanceFieldInfo(string name, T value, Func<T, string>? converter = null)
             : base(name, converter == null ? value.ToString() : converter(value))
@@ -65,8 +52,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         public bool IsInstalled { get => _instanceModel.IsInstalled; }
 
 
-        private ObservableCollection<InstanceFieldInfo> _additionalInfo = [];
-        public IEnumerable<InstanceFieldInfo> AdditionalInfo { get => _additionalInfo; }
+        private ObservableCollection<LeftPanelFieldInfo> _additionalInfo = [];
+        public IEnumerable<LeftPanelFieldInfo> AdditionalInfo { get => _additionalInfo; }
 
 
         public DownloadingData DownloadingData { get => _instanceModel.DownloadingData; }
@@ -189,7 +176,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             {
                 _additionalInfo.Clear();
                 _additionalInfo.Add(new InstanceFieldInfo<MinecraftVersion>("Version:", _instanceModel.GameVersion));
-                _additionalInfo.Add(new InstanceFieldInfo("GameType:", _instanceModel.InstanceData.Modloader.ToString()));
+                _additionalInfo.Add(new LeftPanelFieldInfo("GameType:", _instanceModel.InstanceData.Modloader.ToString()));
 
                 if (_instanceModel.IsInstalled)
                 {

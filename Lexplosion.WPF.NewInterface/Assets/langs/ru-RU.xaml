@@ -655,4 +655,14 @@
     <s:String x:Key="UnknownErrorTryRestartLauncher">Что-то непонятное произошло... Советуем выключить и включить.</s:String>
 
     <!--  endregion Notifications  -->
+
+
+    <!--  region ServerProfile  -->
+
+
+    <s:String x:Key="Status:">Статус:</s:String>
+    <s:String x:Key="Online:">Онлайн:</s:String>
+
+
+    <!--  endregion ServerProfile  -->
 </ResourceDictionary>

@@ -25,7 +25,7 @@
             Style="{StaticResource EveryPair}" />
 
 
-        <DataTemplate DataType="{x:Type instanceprofile:InstanceFieldInfo}">
+        <DataTemplate DataType="{x:Type core:LeftPanelFieldInfo}">
             <TextBlock
                 FontSize="13"
                 FontWeight="Medium"

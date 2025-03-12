@@ -117,6 +117,7 @@
     <Compile Include="Core\Converters\ValueConverters\StringCollectionToShortString.cs" />
     <Compile Include="Core\FiltableObservableCollection.cs" />
     <Compile Include="Core\IRefreshable.cs" />
+    <Compile Include="Core\LeftPanelFieldInfo.cs" />
     <Compile Include="Core\Notifications\IActionNotification.cs" />
     <Compile Include="Core\Notifications\INotificable.cs" />
     <Compile Include="Core\Notifications\INotification.cs" />
@@ -172,6 +173,11 @@
     <Compile Include="Mvvm\ViewModels\Limited\NightWorldLimitedContentLayoutViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\MainContent\InstanceProfile\InstanceProfileVersionsViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\MainContent\MainMenu\Content\Multiplayer\AdServersViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\MainContent\ServerProfile\Overview\ServerProfileOverviewGalleryViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\MainContent\ServerProfile\ServerProfileLayoutViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\MainContent\ServerProfile\ServerProfileLeftPanelViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\MainContent\ServerProfile\Overview\ServerProfileOverviewLayoutViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\MainContent\ServerProfile\Overview\ServerProfileOverviewViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\ModalFactory\ModalFactoryBase.cs" />
     <Compile Include="Mvvm\ViewModels\ModalFactory\ModalInstanceCreatorFactory.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\AdServers\AskServerInstanceInstallingViewModel.cs" />
@@ -234,6 +240,21 @@
     </Compile>
     <Compile Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\Multiplayer\AdServersView.xaml.cs">
       <DependentUpon>AdServersView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Views\Pages\MainContent\ServerProfile\ServerProfileLayoutView.xaml.cs">
+      <DependentUpon>ServerProfileLayoutView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Views\Pages\MainContent\ServerProfile\ServerProfileLeftPanelView.xaml.cs">
+      <DependentUpon>ServerProfileLeftPanelView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Views\Pages\MainContent\ServerProfile\Overview\ServerProfileOverviewGalleryView.xaml.cs">
+      <DependentUpon>ServerProfileOverviewGalleryView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Views\Pages\MainContent\ServerProfile\Overview\ServerProfileOverviewLayoutView.xaml.cs">
+      <DependentUpon>ServerProfileOverviewLayoutView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Views\Pages\MainContent\ServerProfile\Overview\ServerProfileOverviewView.xaml.cs">
+      <DependentUpon>ServerProfileOverviewView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Mvvm\Views\Pages\NightWorldLimitedContentLayoutView.xaml.cs">
       <DependentUpon>NightWorldLimitedContentLayoutView.xaml</DependentUpon>
@@ -693,6 +714,26 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\Multiplayer\AdServersView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Mvvm\Views\Pages\MainContent\ServerProfile\ServerProfileLayoutView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Mvvm\Views\Pages\MainContent\ServerProfile\ServerProfileLeftPanelView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Mvvm\Views\Pages\MainContent\ServerProfile\Overview\ServerProfileOverviewGalleryView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Mvvm\Views\Pages\MainContent\ServerProfile\Overview\ServerProfileOverviewLayoutView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Mvvm\Views\Pages\MainContent\ServerProfile\Overview\ServerProfileOverviewView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

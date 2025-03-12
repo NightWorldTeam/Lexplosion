@@ -5,13 +5,11 @@ using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.ViewModel;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Args;
+using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.ServerProfile;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal;
-using System;
-using System.Collections;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
-using System.Xml.Schema;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 {
@@ -67,7 +65,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
         public void OpenServerPage(MinecraftServerInstance server) 
         {
-            
+            _appCore.NavigationStore.CurrentViewModel = new ServerProfileLayoutViewModel(_appCore, server);
         }
 
 

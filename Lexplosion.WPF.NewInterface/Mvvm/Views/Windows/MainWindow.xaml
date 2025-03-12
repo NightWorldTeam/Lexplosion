@@ -611,6 +611,59 @@
                     <EllipseGeometry x:Name="CircleReveal" Center="101,22" />
                 </Grid.Clip>
             </Grid>
+
+            <!--  Image Overview  -->
+
+            <Border x:Name="ImageViewer" Padding="16">
+                <Border.Background>
+                    <SolidColorBrush Opacity="0.6" Color="Black" />
+                </Border.Background>
+                <Grid>
+                    <Border CornerRadius="5">
+                        <Border.Background>
+                            <ImageBrush x:Name="Image" />
+                        </Border.Background>
+                    </Border>
+
+                    <Border
+                        Margin="0,0,0,-12"
+                        Padding="16,8"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Bottom"
+                        Background="{DynamicResource PrimarySolidColorBrush}"
+                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                        BorderThickness="1"
+                        CornerRadius="10">
+                        <StackPanel Orientation="Horizontal">
+                            <controls:AdvancedButton
+                                x:Name="CloseImage"
+                                Width="32"
+                                Height="32"
+                                Margin="0,0,9,0"
+                                IconData="{DynamicResource PDClose}"
+                                Style="{StaticResource sm-button-icon}" />
+                            <controls:AdvancedButton
+                                x:Name="PrevImage"
+                                Width="32"
+                                Height="32"
+                                IconData="{DynamicResource PDLeftBackArrow}"
+                                Style="{StaticResource sm-button-icon}" />
+                            <controls:AdvancedButton
+                                x:Name="NextImage"
+                                Width="32"
+                                Height="32"
+                                Margin="8,0,0,0"
+                                IconData="{DynamicResource PDLeftBackArrow}"
+                                RenderTransformOrigin="0.5,0.5"
+                                Style="{StaticResource sm-button-icon}">
+                                <controls:AdvancedButton.RenderTransform>
+                                    <RotateTransform Angle="180" />
+                                </controls:AdvancedButton.RenderTransform>
+                            </controls:AdvancedButton>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Border>
         </Grid>
     </Grid>
 </Window>

@@ -17,6 +17,8 @@
     xmlns:modalvm="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal"
     xmlns:pages="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages"
     xmlns:s="clr-namespace:System;assembly=mscorlib"
+    xmlns:serverprofile="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.ServerProfile"
+    xmlns:serverprofileview="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.ServerProfile"
     xmlns:viewmodels="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels">
 
     <ImageBrush x:Key="NoneImageBrush" ImageSource="pack://Application:,,,/Assets/images/icons/non_image.png" />
@@ -237,5 +239,26 @@
     </DataTemplate>
     <DataTemplate DataType="{x:Type viewmodels:WelcomePageThemeSelectViewModel}">
         <pages:WelcomePageThemeSelectView />
+    </DataTemplate>
+
+
+    <!--    -->
+    <!--  Server Profile  -->
+    <!--    -->
+
+    <DataTemplate DataType="{x:Type serverprofile:ServerProfileLayoutViewModel}">
+        <serverprofileview:ServerProfileLayoutView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type serverprofile:ServerProfileLeftPanelViewModel}">
+        <serverprofileview:ServerProfileLeftPanelView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type serverprofile:ServerProfileOverviewLayoutViewModel}">
+        <serverprofileview:ServerProfileOverviewLayoutView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type serverprofile:ServerProfileOverviewViewModel}">
+        <serverprofileview:ServerProfileOverviewView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type serverprofile:ServerProfileOverviewGalleryViewModel}">
+        <serverprofileview:ServerProfileOverviewGalleryView />
     </DataTemplate>
 </ResourceDictionary>

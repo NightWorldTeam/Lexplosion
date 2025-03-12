@@ -22,6 +22,10 @@ using Lexplosion.Core.Resources;
 using Lexplosion.WPF.NewInterface.Core.Objects;
 using System.Resources;
 using Lexplosion.WPF.NewInterface.WindowComponents.Header;
+using Lexplosion.WPF.NewInterface.Core;
+using System.Data;
+using static Lexplosion.Logic.Objects.Nightworld.NightWorldManifest;
+using System.Windows.Data;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
 {
@@ -53,10 +57,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
             { EasingMode = EasingMode.EaseInOut }
         };
 
-        public MainWindow()
+        private Gallery _gallery;
+
+        public MainWindow(Gallery gallery)
         {
             InitializeComponent();
-
             _defaultChangeThemeAnimation.Completed += (sender, e) =>
             {
                 PaintArea.Visibility = Visibility.Hidden;
@@ -80,7 +85,74 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
             this.Closing += MainWindow_Closing;
 
             HeaderContainer.DataContext = new WindowHeaderArgs(Close, Maximized, Minimized);
+            
+            _gallery = gallery;
+            InitGallery();
         }
+
+        private void InitGallery() 
+        {
+            ImageViewer.Visibility = _gallery.HasSelectedImage ? Visibility.Visible : Visibility.Collapsed;
+
+            _gallery.StateChanged += OnGalleryStateChanged;
+
+            CloseImage.Click += OnCloseImageClicked;
+            NextImage.Click += OnNextImageClicked;
+            PrevImage.Click += OnPrevImageClicked;
+
+            // Создаем привязку
+            Binding hasPrevBinding = new Binding("HasPrev")
+            {
+                Source = _gallery, // Источник данных
+                Mode = BindingMode.OneWay, // Режим привязки (двусторонний)
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged // Обновление источника при изменении текста
+            };
+
+            // Создаем привязку
+            Binding hasNextBinding = new Binding("HasNext")
+            {
+                Source = _gallery, // Источник данных
+                Mode = BindingMode.OneWay, // Режим привязки (двусторонний)
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged // Обновление источника при изменении текста
+            };
+
+            // Устанавливаем привязку для свойства Text
+            PrevImage.SetBinding(FrameworkElement.IsEnabledProperty, hasPrevBinding);
+            NextImage.SetBinding(FrameworkElement.IsEnabledProperty, hasNextBinding);
+        }
+
+        private void OnGalleryStateChanged()
+        {
+            ImageViewer.Visibility = _gallery.HasSelectedImage ? Visibility.Visible : Visibility.Collapsed;
+
+            //if (!_gallery.HasSelectedImage) 
+            //{
+            //    Image.Background.s = null;
+            //}
+        }
+
+        #region Image Viewer
+
+
+        private void OnPrevImageClicked(object sender, RoutedEventArgs e)
+        {
+            _gallery.Prev();
+        }
+
+        private void OnNextImageClicked(object sender, RoutedEventArgs e)
+        {
+            _gallery.Next();
+        }
+
+        private void OnCloseImageClicked(object sender, RoutedEventArgs e)
+        {
+            _gallery.CloseImage();
+        }
+
+
+        #endregion ImageViewer
+
+
         private void Scalling()
         {
             double factor = 0.25;

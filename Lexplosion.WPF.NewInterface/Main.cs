@@ -188,7 +188,7 @@ namespace Lexplosion.WPF.NewInterface
                 NavigateAfterWelcomePage(mainViewModel.ToMainMenu);
             }
 
-            var mainWindow = new MainWindow()
+            var mainWindow = new MainWindow(_appCore.GalleryManager)
             {
                 Left = App.Current.MainWindow.Left - 322,
                 Top = App.Current.MainWindow.Top - 89,
@@ -415,7 +415,7 @@ namespace Lexplosion.WPF.NewInterface
                     return;
                 }
 
-                App.Current.MainWindow = new MainWindow()
+                App.Current.MainWindow = new MainWindow(_appCore.GalleryManager)
                 {
                     Left = _leftPos,
                     Top = _topPos

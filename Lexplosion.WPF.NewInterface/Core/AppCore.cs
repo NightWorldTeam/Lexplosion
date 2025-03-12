@@ -1,15 +1,121 @@
 ﻿
 using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Controls.Message.Core;
-using Lexplosion.WPF.NewInterface.Core.Services;
+using Lexplosion.WPF.NewInterface.Core.ViewModel;
 using Lexplosion.WPF.NewInterface.Stores;
 using System;
-using System.Threading;
-using System.Windows.Documents;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Core
 {
+    public class Gallery : ObservableObject
+    {
+        public event Action StateChanged;
+
+
+        private int _imageSourceIndex;
+
+        /// <summary>
+        /// ImageSources требуется для возможности листать избражения.
+        /// Image Sources не будет иметь возможно изменяться из вне в обход метода ChangeContext.
+        /// </summary>
+        private List<object> _imageSources = [];
+        public IReadOnlyCollection<object> ImageSources { get => _imageSources; }
+
+        public object SelectedImageSource { get; private set; }
+        /// <summary>
+        /// Наличие следующего изображения.
+        /// </summary>
+        public bool HasNext { get => _imageSourceIndex < _imageSources.Count - 1; }
+        /// <summary>
+        /// Наличие предыдущего изображения.
+        /// </summary>
+        public bool HasPrev { get => _imageSourceIndex > 0; }
+        /// <summary>
+        /// Наличие выбранного изображения
+        /// </summary>
+        public bool HasSelectedImage { get => SelectedImageSource != null; }
+
+
+        public Gallery()
+        {
+            
+        }
+
+        /// <summary>
+        /// Закрывает изображение и очищает ImageSources
+        /// </summary>
+        public void CloseImage() 
+        {
+            _imageSources.Clear();
+            OnPropertyChanged(null);
+        }
+        
+        /// <summary>
+        /// Заменяет контекст
+        /// </summary>
+        public void ChangeContext(IEnumerable<object> imageSources) 
+        {
+            _imageSources.Clear();
+            _imageSources = new(imageSources);
+            OnPropertyChanged(null);
+        }
+
+        /// <summary>
+        /// Пытается найти изображение в ресурсах заданных при контексте. Сохраняет индекс.
+        /// Если изображение не найдено в ресурсах, отрисовывает изображение.
+        /// </summary>
+        public void SelectImage(object imageSource) 
+        {
+            _imageSourceIndex = -1;
+
+            if (imageSource is string) 
+            {
+                _imageSourceIndex = _imageSources.FindIndex(i => i == imageSource);
+            }
+            else
+            {
+                if (imageSource is IEnumerable<byte> bytes) 
+                {
+                    _imageSourceIndex = _imageSources.FindIndex(i => i is IEnumerable<byte> && (i as IEnumerable<byte>).SequenceEqual(bytes));
+                }
+            }
+
+
+            SelectedImageSource = imageSource;
+
+            UpdateState();
+        }
+
+        public void Next() 
+        {
+            if (_imageSourceIndex == -1 || !HasNext)
+                return;
+
+            _imageSourceIndex++;
+            SelectedImageSource = _imageSources[_imageSourceIndex];
+            UpdateState();
+        }
+
+        public void Prev()
+        {
+            if (_imageSourceIndex == -1 || !HasPrev)
+                return;
+
+            _imageSourceIndex--;
+            SelectedImageSource = _imageSources[_imageSourceIndex];
+            UpdateState();
+        }
+
+        private void UpdateState() 
+        {
+            OnPropertyChanged(null);
+            StateChanged?.Invoke();
+        }
+    }
+
     public sealed class AppCore
     {
         /// <summary>
@@ -37,8 +143,10 @@ namespace Lexplosion.WPF.NewInterface.Core
 
         public INavigationStore NavigationStore { get; } = new NavigationStore();
 
-
         public IMessageService MessageService { get; }
+
+
+        public Gallery GalleryManager { get; } = new();
 
 
         #endregion Properties

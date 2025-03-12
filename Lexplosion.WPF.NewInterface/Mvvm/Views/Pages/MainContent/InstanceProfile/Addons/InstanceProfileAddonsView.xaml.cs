@@ -56,7 +56,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.InstanceProfi
                 AddonType.Mods => "Mod",
                 AddonType.Resourcepacks => "Resourcepack",
                 AddonType.Maps => "Map",
-                AddonType.Shaders => "Shader"
+                AddonType.Shaders => "Shader",
+                _ => string.Empty
             };
 
             SearchBox.SetResourceReference(SearchBox.PlaceholderProperty, $"{addonType}{sortParam}");
