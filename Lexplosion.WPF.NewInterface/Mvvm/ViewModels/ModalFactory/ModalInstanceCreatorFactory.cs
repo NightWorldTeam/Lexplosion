@@ -14,10 +14,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.ModalFactory
     {
         private readonly LibraryController _libraryController;
         private readonly InstanceSharesController _shareController;
+        private readonly AppCore _appCore;
 
 
-        public ModalInstanceCreatorFactory(LibraryController controller, InstanceSharesController sharesController)
+        public ModalInstanceCreatorFactory(AppCore appCore, LibraryController controller, InstanceSharesController sharesController)
         {
+            _appCore = appCore;
             _libraryController = controller;
             _shareController = sharesController;
         }
@@ -44,7 +46,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.ModalFactory
                 TitleKey = "Import",
                 IsEnable = true,
                 IsSelected = false,
-                Content = new InstanceImportViewModel((i) => _libraryController.Add(i), _libraryController.Remove)
+                Content = new InstanceImportViewModel(_appCore, (i) => _libraryController.Add(i), _libraryController.Remove)
             });
 
             menuItems.Add(new ModalLeftMenuTabItem()

@@ -95,7 +95,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
             // Register Modal Window Contents
             ModalNavigationStore.RegisterAbstractFactory(
                 typeof(InstanceFactoryViewModel), 
-                new ModalInstanceCreatorFactory(Model.LibraryController as LibraryController, Model.InstanceSharesController)
+                new ModalInstanceCreatorFactory(appCore, Model.LibraryController as LibraryController, Model.InstanceSharesController)
             );
 
             var mainMenuLayout = new MainMenuLayoutViewModel(appCore, NavigationStore, ModalNavigationStore, Model);

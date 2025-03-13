@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Logic.Management.Instances;
 using Lexplosion.WPF.NewInterface.Commands;
+using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Modal;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer;
 using System;
@@ -42,9 +43,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer
         #region Contructors
 
 
-        public InstanceImportViewModel(Action<InstanceClient> addToLibrary, Action<InstanceClient> removeFromLibrary)
+        public InstanceImportViewModel(AppCore appCore, Action<InstanceClient> addToLibrary, Action<InstanceClient> removeFromLibrary)
         {
-            Model = new InstanceImportModel(addToLibrary, removeFromLibrary);
+            Model = new InstanceImportModel(appCore, addToLibrary, removeFromLibrary);
             ActionCommandExecutedEvent += Action;
         }
 

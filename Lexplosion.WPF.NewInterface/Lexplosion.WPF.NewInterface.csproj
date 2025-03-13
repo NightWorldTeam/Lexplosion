@@ -185,6 +185,7 @@
     <Compile Include="Mvvm\ViewModels\Modal\ConfirmActionViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\GroupFactory\GroupFactoryViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\ActiveSharesViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\Import\InstanceImportFillDataViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\InstanceDistributionViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\InstanceShareLayoutViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\InstanceShareViewModel.cs" />
@@ -216,6 +217,9 @@
     </Compile>
     <Compile Include="Mvvm\Views\Modal\AdServers\SelectInstanceForServerView.xaml.cs">
       <DependentUpon>SelectInstanceForServerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Views\Modal\InstanceTransfer\InstanceImport\InstanceImportFillDataView.xaml.cs">
+      <DependentUpon>InstanceImportFillDataView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Mvvm\Views\Pages\AddonsRepositories\Lexplosion\AddonRepositoryCatalogView.xaml.cs">
       <DependentUpon>AddonRepositoryCatalogView.xaml</DependentUpon>
@@ -384,14 +388,14 @@
     <Compile Include="Mvvm\ViewModels\MainContent\MainMenu\Content\Friends\FindFriendsViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\AccountFactoryViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\InstanceExportViewModel.cs" />
-    <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\InstanceImportViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\Import\InstanceImportViewModel.cs" />
     <Compile Include="Mvvm\Views\Modal\AccountFactoryView.xaml.cs">
       <DependentUpon>AccountFactoryView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Mvvm\Views\Modal\InstanceTransfer\InstanceExportView.xaml.cs">
       <DependentUpon>InstanceExportView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Mvvm\Views\Modal\InstanceTransfer\InstanceImportView.xaml.cs">
+    <Compile Include="Mvvm\Views\Modal\InstanceTransfer\InstanceImport\InstanceImportView.xaml.cs">
       <DependentUpon>InstanceImportView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Mvvm\Views\Pages\AddonsRepositories\LexplosionAddonsRepository.xaml.cs">
@@ -657,7 +661,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Mvvm\Views\Modal\InstanceTransfer\InstanceImportView.xaml">
+    <Page Include="Mvvm\Views\Modal\InstanceTransfer\InstanceImport\InstanceImportView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -670,6 +674,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Mvvm\Views\Modal\AdServers\SelectInstanceForServerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Mvvm\Views\Modal\InstanceTransfer\InstanceImport\InstanceImportFillDataView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

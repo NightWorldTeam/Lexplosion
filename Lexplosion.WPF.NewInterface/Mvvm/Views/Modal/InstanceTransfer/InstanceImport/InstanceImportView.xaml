@@ -18,7 +18,7 @@
     <UserControl.Resources>
         <DataTemplate DataType="{x:Type models:ImportProcess}">
             <Border
-                Margin="0,0,0,8"
+                Margin="0,8,0,0"
                 Padding="8"
                 Background="{DynamicResource SecondarySolidColorBrush}"
                 BorderBrush="{DynamicResource SeparateSolidColorBrush}"
@@ -108,7 +108,6 @@
             </Grid.RowDefinitions>
 
             <Border Margin="0,16,0,16" VerticalAlignment="Stretch">
-                <!--  Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}, Converter={converters:WindowHeightToXProcentHeight}, ConverterParameter=60}"  -->
                 <controls:DragDropBoard Background="Transparent" ImportAction="{Binding Model.ImportAction}">
                     <Border
                         AllowDrop="True"
@@ -118,7 +117,7 @@
                         <Border.BorderBrush>
                             <DrawingBrush
                                 TileMode="Tile"
-                                Viewport="0,0,12,13"
+                                Viewport="0,0,14,14"
                                 ViewportUnits="Absolute">
                                 <DrawingBrush.Drawing>
                                     <DrawingGroup>
@@ -176,10 +175,14 @@
             <Border
                 Grid.Row="1"
                 Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}, Converter={converters:WindowHeightToXProcentHeight}, ConverterParameter=30}"
+                Margin="0,0,0,8"
                 BorderBrush="{DynamicResource SeparateSolidColorBrush}"
                 BorderThickness="0,1,0,0"
                 Visibility="{Binding Model.ImportProcesses.Count, Converter={converters:CountToVisibilityConverter}}">
-                <ItemsControl Margin="0,16,0,0" ItemsSource="{Binding Model.ImportProcesses}" />
+                <!--  TODO: Virtualization  -->
+                <ScrollViewer>
+                    <ItemsControl Margin="0,8,0,0" ItemsSource="{Binding Model.ImportProcesses}" />
+                </ScrollViewer>
             </Border>
         </Grid>
     </ScrollViewer>

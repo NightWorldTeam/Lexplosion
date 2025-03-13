@@ -1,4 +1,5 @@
 ﻿using Lexplosion.WPF.NewInterface.Core.ViewModel;
+using System;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
 {
@@ -7,6 +8,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
         #region Properties
 
 
+        public Guid Id { get; } = new Guid();
         public string Name { get; }
         public string Path { get; }
 

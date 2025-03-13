@@ -2,6 +2,8 @@
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Tools;
 using Lexplosion.WPF.NewInterface.Core;
+using Lexplosion.WPF.NewInterface.Core.Modal;
+using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,26 +16,36 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
     {
         private readonly Action<InstanceClient> _addToLibrary;
         private readonly Action<InstanceClient> _removeFromLibrary;
+        private readonly AppCore _appCore;
+        private IModalViewModel _currentModalViewModelBase;
 
 
-        public ObservableCollection<ImportProcess> ImportProcesses { get; } = new ();
+        public ObservableCollection<ImportProcess> ImportProcesses { get; } = new();
         public Action<IEnumerable<string>> ImportAction { get; }
+
+        public Queue<InstanceImportFillDataViewModel> FillDataViewModels { get; } = [];
 
 
         #region Constructors
 
 
-        public InstanceImportModel(Action<InstanceClient> addToLibrary, Action<InstanceClient> removeFromLibrary)
+        public InstanceImportModel(AppCore appCore, Action<InstanceClient> addToLibrary, Action<InstanceClient> removeFromLibrary)
         {
+            _appCore = appCore;
             _addToLibrary = addToLibrary;
             _removeFromLibrary = removeFromLibrary;
-
+            _appCore.ModalNavigationStore.CurrentViewModelChanged += OnCurrentViewModelChanged;
 
             ImportAction = (filePaths) =>
             {
                 foreach (var path in filePaths)
                     Import(path);
             };
+        }
+
+        private void OnCurrentViewModelChanged()
+        {
+            _currentModalViewModelBase = _currentModalViewModelBase ?? _appCore.ModalNavigationStore.CurrentViewModel;
         }
 
 
@@ -72,6 +84,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
             InstanceClient instanceClient = null;
             // Запускаем импорт
             var dynamicStateHandler = new DynamicStateData<ImportInterruption, InterruptionType>();
+
+            dynamicStateHandler.StateChanged += OnImportDynamicStateHandlerStateChanged;
+
             instanceClient = InstanceClient.Import(path, (ir) =>
             {
                 ImportResultHandler(ir, importFile, instanceClient);
@@ -82,7 +97,38 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
             _addToLibrary(instanceClient);
         }
 
-        public void CancelImport(ImportProcess importProcess) 
+        private void OnImportDynamicStateHandlerStateChanged(ImportInterruption importInterruption, InterruptionType arg2)
+        {
+            // Если в очереди пусто, окрываем модальное окно.
+            // Если в очереди есть элементы, добавляем новый в очередью.
+            // Если элемены в очереди закончились, и на момент открытия
+            // было открыто модальное окно импорта возвращаем пользователя туда
+            // Иначе, закрываем все модальные окна.
+
+            var vm = new InstanceImportFillDataViewModel(_appCore, (baseInstanceData) =>
+            {
+                importInterruption.BaseData = baseInstanceData;
+
+                if (FillDataViewModels.Count > 0)
+                {
+                    var vm = FillDataViewModels.Dequeue();
+                    _appCore.ModalNavigationStore.Open(vm);
+                    return;
+                }
+                _appCore.ModalNavigationStore.Open(_currentModalViewModelBase);
+            });
+
+            if (FillDataViewModels.Count == 0)
+            {
+                _appCore.ModalNavigationStore.Open(vm);
+            }
+            else
+            {
+                FillDataViewModels.Enqueue(vm);
+            }
+        }
+
+        public void CancelImport(ImportProcess importProcess)
         {
             if (!importProcess.IsImporing)
                 return;
