@@ -73,6 +73,7 @@
     <Compile Include="Logic\Management\Addons\IAddonProjectInfo.cs" />
     <Compile Include="Logic\Management\Addons\InstaceAddonsSynchronizer.cs" />
     <Compile Include="Logic\Management\Addons\InstanceAddon.cs" />
+    <Compile Include="Logic\Management\ImportData.cs" />
     <Compile Include="Logic\Management\Importers\CurseforgeImportManager.cs" />
     <Compile Include="Logic\Management\Importers\ImportExecutor.cs" />
     <Compile Include="Logic\Management\Importers\ModrinthImportManager.cs" />
@@ -175,6 +176,7 @@
     <Compile Include="Logic\Settings.cs" />
     <Compile Include="Logic\Cryptography.cs" />
     <Compile Include="NightWorld\Collections\Concurrent\ConcurrentHashSet.cs" />
+    <Compile Include="NightWorld\Collections\Generic\PairsList.cs" />
     <Compile Include="NightWorld\Tools\Minecraft\NBT\INbtNode.cs" />
     <Compile Include="NightWorld\Tools\Minecraft\NBT\NbtDocoder.cs" />
     <Compile Include="NightWorld\Tools\Minecraft\NBT\NbtEncoder.cs" />
@@ -211,9 +213,7 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="NightWorld\Collections\Generic\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

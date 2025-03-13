@@ -36,7 +36,18 @@ namespace Lexplosion.Logic.Management.Importers
 		public ImportResult Import(ProgressHandlerCallback progressHandler, out IReadOnlyCollection<string> errors)
 		{
 			errors = new List<string>();
-			WithDirectory.MoveUnpackedInstance(_localId, _unzipPath);
+			ImportResult result = WithDirectory.MoveUnpackedInstance(_localId, _unzipPath);
+			if (result != ImportResult.Successful)
+			{
+				try
+				{
+					string dir = WithDirectory.GetInstancePath(_localId);
+					if (Directory.Exists(dir)) Directory.Delete(dir, true);
+				}
+				catch { }
+
+				return result;
+			}
 
 			DataFilesManager.SaveManifest(_localId, _versionManifest);
 
@@ -55,16 +66,17 @@ namespace Lexplosion.Logic.Management.Importers
 			});
 
 			_unzipPath = WithDirectory.CreateTempDir() + "import/";
+			string activeUnzipPath = _unzipPath + "files";
 
 			try
 			{
-				if (!Directory.Exists(_unzipPath))
+				if (!Directory.Exists(activeUnzipPath))
 				{
-					Directory.CreateDirectory(_unzipPath);
+					Directory.CreateDirectory(activeUnzipPath);
 				}
 				else
 				{
-					Directory.Delete(_unzipPath, true);
+					Directory.Delete(activeUnzipPath, true);
 				}
 			}
 			catch (Exception ex)
@@ -75,7 +87,11 @@ namespace Lexplosion.Logic.Management.Importers
 
 			try
 			{
-				ZipFile.ExtractToDirectory(_fileAddres, _unzipPath);
+				ZipFile.ExtractToDirectory(_fileAddres, activeUnzipPath);
+
+				// во избежание приколов удаляеем файл manifest.json, если он есть
+				string manifestFile = activeUnzipPath + "/manifest.json";
+				if (File.Exists(manifestFile)) File.Delete(manifestFile);
 			}
 			catch (Exception ex)
 			{
@@ -90,6 +106,7 @@ namespace Lexplosion.Logic.Management.Importers
 			BaseInstanceData data = interruption.BaseData;
 			if (_cancelToken.IsCancellationRequested) return ImportResult.Canceled;
 
+			result.Name = data.Name ?? "Pochemy";
 			result.Author = data.Author;
 			result.Description = data.Description;
 			result.Summary = data.Summary;
