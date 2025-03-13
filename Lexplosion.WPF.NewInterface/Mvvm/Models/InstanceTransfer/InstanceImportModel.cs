@@ -84,13 +84,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
             InstanceClient instanceClient = null;
             // Запускаем импорт
             var dynamicStateHandler = new DynamicStateData<ImportInterruption, InterruptionType>();
-
             dynamicStateHandler.StateChanged += OnImportDynamicStateHandlerStateChanged;
 
-            instanceClient = InstanceClient.Import(path, (ir) =>
+			var importData = new ImportData(dynamicStateHandler.GetHandler);
+			instanceClient = InstanceClient.Import(path, (ir) =>
             {
                 ImportResultHandler(ir, importFile, instanceClient);
-            }, dynamicStateHandler.GetHandler);
+            }, importData);
 
             // Добавляем в библиотеку.
             // TODO: IMPORTANT синхронизировать import и instanceform.

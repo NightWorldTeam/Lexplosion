@@ -17,8 +17,9 @@ namespace Lexplosion.Logic.Management
 			BasicDataRequired
 		}
 
-		public ImportInterruption()
+		public ImportInterruption(Guid importId)
 		{
+			ImportId = importId;
 		}
 
 		private BaseInstanceData _baseInstanceData;
@@ -35,5 +36,7 @@ namespace Lexplosion.Logic.Management
 				_baseDataEvent.Set();
 			}
 		}
+
+		public Guid ImportId { get; }
 	}
 }

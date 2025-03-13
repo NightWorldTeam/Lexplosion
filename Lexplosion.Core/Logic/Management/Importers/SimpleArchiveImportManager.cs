@@ -16,6 +16,7 @@ namespace Lexplosion.Logic.Management.Importers
 	{
 		private readonly string _fileAddres;
 		private readonly Settings _settings;
+		private readonly Guid _importId;
 		private readonly CancellationToken _cancelToken;
 		private readonly DynamicStateHandler<ImportInterruption, InterruptionType> _interruptionHandler;
 
@@ -23,10 +24,11 @@ namespace Lexplosion.Logic.Management.Importers
 		private string _localId;
 		private string _unzipPath;
 
-		public SimpleArchiveImportManager(string fileAddres, Settings settings, CancellationToken cancelToken, DynamicStateHandler<ImportInterruption, InterruptionType> interruptionHandler)
+		public SimpleArchiveImportManager(string fileAddres, Settings settings, Guid importId, CancellationToken cancelToken, DynamicStateHandler<ImportInterruption, InterruptionType> interruptionHandler)
 		{
 			_fileAddres = fileAddres;
 			_settings = settings;
+			_importId = importId;
 			_cancelToken = cancelToken;
 			_interruptionHandler = interruptionHandler;
 		}
@@ -100,7 +102,7 @@ namespace Lexplosion.Logic.Management.Importers
 			}
 
 			//Вызываем эвент, говорящий что нам нужны данные для сборки
-			var interruption = new ImportInterruption();
+			var interruption = new ImportInterruption(_importId);
 			_interruptionHandler.ChangeState(interruption, InterruptionType.BasicDataRequired);
 
 			BaseInstanceData data = interruption.BaseData;

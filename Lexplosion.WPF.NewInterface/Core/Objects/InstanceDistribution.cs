@@ -153,7 +153,8 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
         public void Download()
         {
             var dynamicStateHandler = new DynamicStateData<ImportInterruption, InterruptionType>();
-            _instanceClient = InstanceClient.Import(_receiver, DownloadResultHandler, (state) => { InstanceState = state; }, dynamicStateHandler.GetHandler);
+			var importData = new ImportData(dynamicStateHandler.GetHandler);
+            _instanceClient = InstanceClient.Import(_receiver, DownloadResultHandler, (state) => { InstanceState = state; }, importData);
             IsDownloadStarted = true;
             _args.LibraryController.Add(_instanceClient, this);
 

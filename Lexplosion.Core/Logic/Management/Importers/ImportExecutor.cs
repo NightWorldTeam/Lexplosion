@@ -1,9 +1,10 @@
-﻿using Lexplosion.Logic.FileSystem;
-using Lexplosion.Tools;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Threading;
+using Lexplosion.Logic.FileSystem;
+using Lexplosion.Tools;
 using static Lexplosion.Logic.Management.ImportInterruption;
 
 namespace Lexplosion.Logic.Management.Importers
@@ -15,18 +16,20 @@ namespace Lexplosion.Logic.Management.Importers
         private IImportManager _importManager;
         private ProgressHandlerCallback _progressHandler;
 		private readonly DynamicStateHandler<ImportInterruption, InterruptionType> _interruptionHandler;
+		private readonly Guid _importId;
 		private CancellationToken _cancellationToken;
         private bool _fileAddrIsLocalPath;
 
-        public ImportExecutor(string fileAddr, bool fileAddrIsLocalPath, Settings settings, CancellationToken cancellationToken, ProgressHandlerCallback progressHandler, DynamicStateHandler<ImportInterruption, InterruptionType> interruptionHandler)
+        public ImportExecutor(string fileAddr, bool fileAddrIsLocalPath, Settings settings, ProgressHandlerCallback progressHandler, ImportData importData)
         {
             _filePath = fileAddr;
             _settings = settings;
             _progressHandler = progressHandler;
-			_interruptionHandler = interruptionHandler;
-			_cancellationToken = cancellationToken;
+			_interruptionHandler = importData.InterruptionHandler;
+			_cancellationToken = importData.CancelToken;
             _fileAddrIsLocalPath = fileAddrIsLocalPath;
-        }
+			_importId = importData.ImportId;
+		}
 
         private void DefineManagerType()
         {
@@ -66,7 +69,7 @@ namespace Lexplosion.Logic.Management.Importers
                             return;
                         }
 
-						_importManager = new SimpleArchiveImportManager(_filePath, _settings, _cancellationToken, _interruptionHandler);
+						_importManager = new SimpleArchiveImportManager(_filePath, _settings, _importId, _cancellationToken, _interruptionHandler);
 					}
                 }
             }
