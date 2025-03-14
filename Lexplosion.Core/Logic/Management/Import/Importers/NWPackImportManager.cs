@@ -4,7 +4,7 @@ using System.Threading;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Objects.CommonClientData;
 
-namespace Lexplosion.Logic.Management.Importers
+namespace Lexplosion.Logic.Management.Import.Importers
 {
 	class NWPackImportManager : IImportManager
 	{

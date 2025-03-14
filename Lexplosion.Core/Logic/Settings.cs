@@ -65,7 +65,8 @@ namespace Lexplosion.Logic
 		/// </summary>
 		public bool? ItIsNotShit = null;
 
-		public bool NavBarInLeft = false;
+		public bool NavBarInLeft = true;
+		public bool IsPortableMode = false;
 
         /// <summary>
         /// Выполняет слияние с другим экземпляром настроек.
@@ -162,7 +163,8 @@ namespace Lexplosion.Logic
                 ThemeName = "DarkColorTheme",
                 AccentColor = "#167ffc",
 				ItIsNotShit = true,
-				NavBarInLeft = false
+				NavBarInLeft = true,
+				IsPortableMode = false
 			};
         }
     }

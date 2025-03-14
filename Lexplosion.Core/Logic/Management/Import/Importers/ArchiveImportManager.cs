@@ -6,7 +6,7 @@ using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Tools;
 
-namespace Lexplosion.Logic.Management.Importers
+namespace Lexplosion.Logic.Management.Import.Importers
 {
     abstract class ArchiveImportManager<TManifest> : IImportManager
     {

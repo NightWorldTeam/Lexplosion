@@ -3,7 +3,7 @@ using System.Threading;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Objects.Modrinth;
 
-namespace Lexplosion.Logic.Management.Importers
+namespace Lexplosion.Logic.Management.Import.Importers
 {
     class ModrinthImportManager : ArchiveImportManager<InstanceManifest>
     {

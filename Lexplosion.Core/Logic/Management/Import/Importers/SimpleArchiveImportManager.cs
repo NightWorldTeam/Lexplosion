@@ -8,9 +8,9 @@ using Lexplosion.Logic.Management.Instances;
 using System.Security.Cryptography;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Objects.CommonClientData;
-using static Lexplosion.Logic.Management.ImportInterruption;
+using static Lexplosion.Logic.Management.Import.ImportInterruption;
 
-namespace Lexplosion.Logic.Management.Importers
+namespace Lexplosion.Logic.Management.Import.Importers
 {
 	internal class SimpleArchiveImportManager : IImportManager
 	{

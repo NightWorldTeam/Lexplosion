@@ -1,4 +1,5 @@
 ﻿using Lexplosion.Logic.Management;
+using Lexplosion.Logic.Management.Import;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Tools;
 using Lexplosion.WPF.NewInterface.Core;
@@ -9,7 +10,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Forms;
-using static Lexplosion.Logic.Management.ImportInterruption;
+using static Lexplosion.Logic.Management.Import.ImportInterruption;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
 {

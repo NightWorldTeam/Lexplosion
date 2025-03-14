@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Management;
+using Lexplosion.Logic.Management.Import;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Tools;
 using Lexplosion.WPF.NewInterface.Core.ViewModel;
@@ -11,7 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Documents;
-using static Lexplosion.Logic.Management.ImportInterruption;
+using static Lexplosion.Logic.Management.Import.ImportInterruption;
 using static System.Windows.Forms.AxHost;
 
 namespace Lexplosion.WPF.NewInterface.Core.Objects

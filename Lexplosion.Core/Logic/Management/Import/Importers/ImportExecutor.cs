@@ -5,9 +5,9 @@ using System.IO.Compression;
 using System.Threading;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Tools;
-using static Lexplosion.Logic.Management.ImportInterruption;
+using static Lexplosion.Logic.Management.Import.ImportInterruption;
 
-namespace Lexplosion.Logic.Management.Importers
+namespace Lexplosion.Logic.Management.Import.Importers
 {
     class ImportExecutor
     {

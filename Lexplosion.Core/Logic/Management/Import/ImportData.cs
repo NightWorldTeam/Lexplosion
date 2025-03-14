@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading;
 using Lexplosion.Tools;
-using static Lexplosion.Logic.Management.ImportInterruption;
+using static Lexplosion.Logic.Management.Import.ImportInterruption;
 
-namespace Lexplosion.Logic.Management
+namespace Lexplosion.Logic.Management.Import
 {
 	public struct ImportData
 	{

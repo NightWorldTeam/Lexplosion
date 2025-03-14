@@ -3,7 +3,7 @@ using System.Threading;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Objects.Curseforge;
 
-namespace Lexplosion.Logic.Management.Importers
+namespace Lexplosion.Logic.Management.Import.Importers
 {
     internal class CurseforgeImportManager : ArchiveImportManager<InstanceManifest>
     {

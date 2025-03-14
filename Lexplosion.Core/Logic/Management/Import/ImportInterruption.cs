@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Lexplosion.Logic.Management
+namespace Lexplosion.Logic.Management.Import
 {
 	public class ImportInterruption
 	{

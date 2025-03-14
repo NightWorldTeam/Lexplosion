@@ -18,9 +18,9 @@ using Lexplosion.Logic.Management.Sources;
 using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Management.Accounts;
-using Lexplosion.Logic.Management.Importers;
 using Lexplosion.Logic.Management.Addons;
-using static Lexplosion.Logic.Management.ImportInterruption;
+using Lexplosion.Logic.Management.Import;
+using Lexplosion.Logic.Management.Import.Importers;
 
 namespace Lexplosion.Logic.Management.Instances
 {

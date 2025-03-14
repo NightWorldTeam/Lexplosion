@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Lexplosion.Logic.Management.Importers
+namespace Lexplosion.Logic.Management.Import.Importers
 {
     interface IImportManager
     {
