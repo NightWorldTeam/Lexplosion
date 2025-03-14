@@ -404,6 +404,7 @@
                         KeyboardNavigation.IsTabStop="False"
                         ScrollViewer.CanContentScroll="True"
                         ScrollViewer.ScrollChanged="ListBox_ScrollChanged"
+                        ScrollViewer.VerticalScrollBarVisibility="Visible"
                         VirtualizingPanel.CacheLength="1,5"
                         VirtualizingPanel.CacheLengthUnit="Page"
                         VirtualizingPanel.IsVirtualizing="True"
