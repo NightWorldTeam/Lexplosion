@@ -323,13 +323,21 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer
         #region Constructors
 
 
-        public InstanceImportFillDataViewModel(AppCore appCore, Action<BaseInstanceData> apply)
+        public InstanceImportFillDataViewModel(AppCore appCore, Action<BaseInstanceData> apply, Action cancelImport)
         {
             Model = new InstanceImportFillDataModel(appCore);
 
             ActionCommandExecutedEvent += (obj) =>
             {
                 apply(Model.BuildBaseInstanceData());
+            };
+
+            CloseCommandExecutedEvent += (cancel) =>
+            {
+                if (cancel != null && (bool)cancel) 
+                {
+                    cancelImport.Invoke();
+                }
             };
 
             Model.GameTypeChanged += UpdateSelectedGameType;

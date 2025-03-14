@@ -65,6 +65,7 @@
                                 HorizontalAlignment="Right"
                                 Panel.ZIndex="10000"
                                 Command="{Binding CloseCommand}"
+                                CommandParameter="{StaticResource TrueValue}"
                                 IconData="{DynamicResource PDClose}"
                                 IsCancel="True"
                                 Style="{StaticResource TransparentAdvancedButton}" />
@@ -393,7 +394,8 @@
 
                             <controls:AdvancedButton
                                 Height="32"
-                                Command="{Binding ActionCommand}"
+                                Command="{Binding CloseCommand}"
+                                CommandParameter="{StaticResource TrueValue}"
                                 Content="{DynamicResource Cancel}"
                                 FontSize="13"
                                 Style="{StaticResource sm-ghost}" />

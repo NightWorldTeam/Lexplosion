@@ -7,6 +7,7 @@ using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Forms;
 using static Lexplosion.Logic.Management.ImportInterruption;
 
@@ -77,24 +78,38 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
 
         public void Import(string path)
         {
-            var importFile = new ImportProcess(path);
-
-            ImportProcesses.Add(importFile);
-
             InstanceClient instanceClient = null;
+
             // Запускаем импорт
             var dynamicStateHandler = new DynamicStateData<ImportInterruption, InterruptionType>();
             dynamicStateHandler.StateChanged += OnImportDynamicStateHandlerStateChanged;
 
 			var importData = new ImportData(dynamicStateHandler.GetHandler);
-			instanceClient = InstanceClient.Import(path, (ir) =>
+
+            var importFile = new ImportProcess(importData.ImportId, path, importData.CancelImport);
+            importFile.ImportCancelled += OnImportCancelled;
+            ImportProcesses.Add(importFile);
+
+            instanceClient = InstanceClient.Import(path, (ir) =>
             {
                 ImportResultHandler(ir, importFile, instanceClient);
             }, importData);
+            importFile.TargetInstanceClient = instanceClient;
 
             // Добавляем в библиотеку.
             // TODO: IMPORTANT синхронизировать import и instanceform.
             _addToLibrary(instanceClient);
+        }
+
+        /// <summary>
+        /// Импорт отменен
+        /// </summary>
+        private void OnImportCancelled(Guid id)
+        {
+            // TODO: Translate
+            var importProcess = ImportProcesses.FirstOrDefault(i => i.Id == id);
+            CancelImport(importProcess);
+            _appCore.MessageService.Info("Импорт сборки был успешно отменен");
         }
 
         private void OnImportDynamicStateHandlerStateChanged(ImportInterruption importInterruption, InterruptionType arg2)
@@ -116,7 +131,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
                     return;
                 }
                 _appCore.ModalNavigationStore.Open(_currentModalViewModelBase);
-            });
+            }, ImportProcesses.FirstOrDefault(i => i.Id == importInterruption.ImportId).Cancel);
 
             if (FillDataViewModels.Count == 0)
             {
@@ -139,6 +154,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
                 return;
 
             ImportProcesses.RemoveAt(index);
+            _removeFromLibrary?.Invoke(importProcess.TargetInstanceClient);
         }
 
 
