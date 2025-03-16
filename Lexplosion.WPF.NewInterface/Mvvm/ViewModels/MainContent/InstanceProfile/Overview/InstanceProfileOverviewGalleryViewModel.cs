@@ -22,7 +22,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             get => _isLoading; private set
             {
                 _isLoading = value;
-                Console.WriteLine("Test");
                 OnPropertyChanged();
             }
         }

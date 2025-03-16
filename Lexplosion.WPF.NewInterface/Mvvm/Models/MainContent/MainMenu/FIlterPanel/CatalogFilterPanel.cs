@@ -96,9 +96,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.FIlterPan
                             {
                                 var name = Enum.GetName(typeof(CfSortField), index);
 
-                                _sortByParams.Add(new SortByParamObject($"Curseforge{name}", (int)index));
+								var elem = new SortByParamObject($"Curseforge{name}", (int)index);
+								if ((int)index == (int)CfSortField.Popularity) SelectedSortByParam = elem;
+
+								_sortByParams.Add(elem);
                             }
-                            SelectedSortByParam = _sortByParams.First();
+
                         }
                         break;
                     case InstanceSource.Nightworld:

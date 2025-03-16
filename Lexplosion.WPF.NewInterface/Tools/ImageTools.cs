@@ -27,18 +27,25 @@ namespace Lexplosion.WPF.NewInterface.Core.Tools
         /// </summary>
         /// <param name="bytes">Массив байт изображения</param>
         /// <returns>Итоговое изображение</returns>
-        public static BitmapImage ToImageWithoutValidate(byte[] bytes) 
+        private static BitmapImage ToImageWithoutValidate(byte[] bytes) 
         {
-            using (var stream = new System.IO.MemoryStream(bytes))
-            {
-                var image = new BitmapImage();
-                image.BeginInit();
-                image.CacheOption = BitmapCacheOption.OnLoad;
-                image.StreamSource = stream;
-                image.EndInit();
-                image.Freeze();
-                return image;
-            }
+			try
+			{
+				using (var stream = new System.IO.MemoryStream(bytes))
+				{
+					var image = new BitmapImage();
+					image.BeginInit();
+					image.CacheOption = BitmapCacheOption.OnLoad;
+					image.StreamSource = stream;
+					image.EndInit();
+					image.Freeze();
+					return image;
+				}
+			}
+			catch
+			{
+				return defaultBitmapImage;
+			}
         }
     }
 }

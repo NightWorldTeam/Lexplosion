@@ -121,7 +121,7 @@ namespace Lexplosion.Logic.Network.Web
             queryBuilder.Add("classId", "4471");
             queryBuilder.Add("sortOrder", "desc");
             queryBuilder.Add("pageSize", searchParams.PageSize);
-            queryBuilder.Add("index", searchParams.PageIndex);
+            queryBuilder.Add("index", searchParams.PageSize * searchParams.PageIndex);
             
             if (!string.IsNullOrWhiteSpace(searchParams.SearchFilter))
                 queryBuilder.Add("searchFilter", WebUtility.UrlEncode(searchParams.SearchFilter));
@@ -166,7 +166,7 @@ namespace Lexplosion.Logic.Network.Web
             queryBuilder.Add("classId", (int)type);
             queryBuilder.Add("sortOrder", "desc");
             queryBuilder.Add("pageSize", searchParams.PageSize);
-            queryBuilder.Add("index", searchParams.PageIndex);
+            queryBuilder.Add("index", searchParams.PageIndex * searchParams.PageSize);
 
             if (!string.IsNullOrWhiteSpace(searchParams.SearchFilter))
                 queryBuilder.Add("searchFilter", WebUtility.UrlEncode(searchParams.SearchFilter));

@@ -108,9 +108,11 @@ namespace Lexplosion.Logic.Objects
         [JsonProperty("imagesUrls")]
         public List<string> ImagesUrls { get; }
 
+		[JsonIgnore]
+		public List<byte[]> Images { get; }
+
         [JsonProperty("socialLinks")]
         public Links SocialLinks { get; set; }
-
 
         [JsonProperty("instanceId")]
         public string InstanceId { get; }

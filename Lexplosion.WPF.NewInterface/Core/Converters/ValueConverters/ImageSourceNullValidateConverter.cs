@@ -26,7 +26,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Converters
                 if (value is byte[])
                 {
                     var bytes = value as byte[];
-                    resBitmapImage = ImageTools.ToImageWithoutValidate(bytes);
+                    resBitmapImage = ImageTools.ToImage(bytes);
                 }
                 else if (value is string)
                 {
