@@ -8,6 +8,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
 {
     public class InstanceProfileLayoutViewModel : ViewModelBase, ILayoutViewModel
     {
+        private readonly AppCore _appCore;
+
+
         private readonly InstanceModelBase _instanceModel;
         private readonly INavigationStore _navigationStore;
 
@@ -51,6 +54,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
 
         public InstanceProfileLayoutViewModel(AppCore appCore, INavigationStore navigationStore, ICommand toMainMenuLayoutCommand, InstanceModelBase instanceModelBase, NotifyCallback? notify = null)
         {
+            _appCore = appCore;
             _instanceModel = instanceModelBase;
             _navigationStore = navigationStore;
             LeftPanel = new InstanceProfileLeftPanelViewModel(appCore, navigationStore, toMainMenuLayoutCommand, _instanceModel);
@@ -92,7 +96,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
 
         private void InitDefaultLeftPanelTabs()
         {
-            _overviewViewModel = new InstanceProfileOverviewViewModel(_instanceModel);
+            _overviewViewModel = new InstanceProfileOverviewLayoutViewModel(_appCore, _instanceModel);
 
             if (_instanceModel.InLibrary)
             {
@@ -101,12 +105,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             }
 
             LeftPanel.AddTabItem("Overview", "Services", _overviewViewModel);
-
-            if (!_instanceModel.IsLocal) 
-            {
-                _instanceVersionsViewModel = new InstanceProfileVersionsViewModel(_instanceModel);
-                LeftPanel.AddTabItem("Versions", "Library", _instanceVersionsViewModel);
-            }
 
             if (_instanceModel.InLibrary)
             {

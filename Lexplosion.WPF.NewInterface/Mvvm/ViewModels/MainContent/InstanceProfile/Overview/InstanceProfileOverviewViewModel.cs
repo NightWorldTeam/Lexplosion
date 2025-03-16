@@ -1,0 +1,67 @@
+﻿using Lexplosion.Logic.Management.Instances;
+using Lexplosion.Logic.Objects;
+using Lexplosion.WPF.NewInterface.Core;
+using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
+using System;
+using System.Threading.Tasks;
+
+namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile
+{
+    public sealed class InstanceProfileOverviewModel : ViewModelBase
+    {
+        public InstanceModelBase InstanceModel { get; }
+        public InstanceData InstanceData { get => InstanceModel.PageData; }
+        public BaseInstanceData BaseInstanceData { get; }
+
+        private bool _isLoading;
+        public bool IsLoading
+        {
+            get => _isLoading; private set
+            {
+                _isLoading = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Lazy<Task<InstanceData>> AdditionalDataLazy
+        {
+            get => new Lazy<Task<InstanceData>>(() => Task.Run(() => InstanceModel.AdditionalData));
+        }
+
+        private InstanceData _additionalData;
+        public InstanceData AdditionalData
+        {
+            get
+            {
+                if (_additionalData == null)
+                {
+                    App.Current.Dispatcher.InvokeAsync(async () => AdditionalData = await AdditionalDataLazy.Value);
+                }
+                return _additionalData;
+            }
+
+            private set
+            {
+                _additionalData = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public InstanceProfileOverviewModel(InstanceModelBase instanceModel)
+        {
+            IsLoading = true;
+            InstanceModel = instanceModel;
+            BaseInstanceData = instanceModel.BaseData;
+        }
+    }
+
+    public sealed class InstanceProfileOverviewViewModel : ViewModelBase
+    {
+        public InstanceProfileOverviewModel Model { get; }
+
+        public InstanceProfileOverviewViewModel(InstanceModelBase instanceModel)
+        {
+            Model = new InstanceProfileOverviewModel(instanceModel);
+        }
+    }
+}

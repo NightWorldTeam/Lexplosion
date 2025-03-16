@@ -155,7 +155,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
 
             BackToInstanceProfileCommand = new RelayCommand((obj) =>
             {
-                AddonsManager.GetManager(instanceModelBase.InstanceData).ClearAddonsListCache();
+                AddonsManager.GetManager(instanceModelBase.BaseData).ClearAddonsListCache();
                 backCommand.Execute(null);
             });
             _navigationStore = navigationStore;
@@ -164,7 +164,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
 
             Runtime.TaskRun(() =>
             {
-                var instanceData = instanceModelBase.InstanceData;
+                var instanceData = instanceModelBase.BaseData;
 
                 App.Current.Dispatcher.Invoke(() =>
                 {

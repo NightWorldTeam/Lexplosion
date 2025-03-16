@@ -295,13 +295,22 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         public MinecraftVersion GameVersion { get => _instanceClient.GameVersion ?? new MinecraftVersion("1.20.1"); }
 
 
-        public BaseInstanceData InstanceData
+        public BaseInstanceData BaseData
         {
             get
             {
                 var s = _instanceClient.GetBaseData;
                 Runtime.DebugWrite(s.GetHashCode());
                 return s;
+            }
+        }
+
+        private InstanceData _addionalData;
+        public InstanceData AdditionalData 
+        {
+            get 
+            {
+                return _addionalData ?? (_addionalData = _instanceClient.GetFullInfo());
             }
         }
 

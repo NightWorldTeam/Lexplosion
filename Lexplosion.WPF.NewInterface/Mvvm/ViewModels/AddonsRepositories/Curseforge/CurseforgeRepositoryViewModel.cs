@@ -64,7 +64,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
 
             Runtime.TaskRun(() =>
             {
-                var instanceData = instanceModel.InstanceData;
+                var instanceData = instanceModel.BaseData;
                 App.Current.Dispatcher.Invoke(() =>
                 {
                     var toCurseforgeNavCommand = new NavigateCommand<ViewModelBase>(navigationStore, () => this);

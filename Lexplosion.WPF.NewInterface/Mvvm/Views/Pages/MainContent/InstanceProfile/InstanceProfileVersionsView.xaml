@@ -21,10 +21,10 @@
 
         <DataTemplate DataType="{x:Type objects:InstanceVersion}">
             <Border
-                Margin="0,0,0,16"
-                Padding="0,16,0,0"
+                Margin="0,16,0,0"
+                Padding="0,0,0,16"
                 BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                BorderThickness="0,1,0,0">
+                BorderThickness="0,0,0,1">
                 <Grid Height="36">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -344,11 +344,11 @@
     </UserControl.Resources>
 
 
-    <Grid Margin="32,32,0,0" Grid.IsSharedSizeScope="True">
+    <Grid Margin="32,0,0,0" Grid.IsSharedSizeScope="True">
         <core:If Condition="{Binding Model.IsLoading}">
             <core:If.True>
                 <controls:LoadingBoard
-                    Margin="-32,-32,0,0"
+                    Margin="-32,0,0,0"
                     Background="Black"
                     BackgroundOpacity="0.3"
                     IsActive="{Binding Model.IsLoading}"
@@ -356,7 +356,7 @@
             </core:If.True>
             <core:If.False>
                 <ListBox
-                    Padding="0,0,16,0"
+                    Padding="0,0,32,0"
                     ItemsSource="{Binding Model.Versions}"
                     Style="{StaticResource TransparentListBox}" />
             </core:If.False>

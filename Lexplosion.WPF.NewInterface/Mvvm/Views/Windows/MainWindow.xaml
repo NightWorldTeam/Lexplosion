@@ -642,7 +642,7 @@
                                 Margin="0,0,9,0"
                                 IconData="{DynamicResource PDClose}"
                                 Style="{StaticResource sm-button-icon}" />
-                            <controls:AdvancedButton
+                            <!--<controls:AdvancedButton
                                 x:Name="PrevImage"
                                 Width="32"
                                 Height="32"
@@ -659,7 +659,7 @@
                                 <controls:AdvancedButton.RenderTransform>
                                     <RotateTransform Angle="180" />
                                 </controls:AdvancedButton.RenderTransform>
-                            </controls:AdvancedButton>
+                            </controls:AdvancedButton>-->
                         </StackPanel>
                     </Border>
                 </Grid>

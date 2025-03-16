@@ -158,7 +158,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
 
             Runtime.TaskRun(() =>
             {
-                _baseInstanceData = instanceModelBase.InstanceData;
+                _baseInstanceData = instanceModelBase.BaseData;
                 var instanceAddons = AddonsManager.GetManager(_baseInstanceData).GetInstalledAddons(type);
 
                 App.Current.Dispatcher.Invoke(() => 

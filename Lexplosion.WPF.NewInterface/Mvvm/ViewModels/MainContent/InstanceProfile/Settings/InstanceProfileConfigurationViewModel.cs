@@ -100,7 +100,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         {
             Model = new InstanceProfileConfigurationModel(instanceModelBase);
             Model.GameTypeChanged += UpdateSelectedGameType;
-            UpdateSelectedGameType(instanceModelBase.InstanceData.Modloader);
+            UpdateSelectedGameType(instanceModelBase.BaseData.Modloader);
             // устанавливаем кнопку с типом игры в активное положение.
         }
 

@@ -87,9 +87,9 @@ namespace Lexplosion.WPF.NewInterface.Controls.OldInstanceForm
         {
             var basePath = "pack://application:,,,/Assets/images/icons/";
 
-            if (_model.InstanceData.Modloader != ClientType.Vanilla)
+            if (_model.BaseData.Modloader != ClientType.Vanilla)
             {
-                ModloaderIcon.Background = new ImageBrush(new BitmapImage(new Uri($"{basePath}{_model.InstanceData.Modloader.ToString().ToLower()}.png", UriKind.Absolute)));
+                ModloaderIcon.Background = new ImageBrush(new BitmapImage(new Uri($"{basePath}{_model.BaseData.Modloader.ToString().ToLower()}.png", UriKind.Absolute)));
                 ModloaderIcon.Visibility = Visibility.Visible;
                 return;
             }

@@ -50,7 +50,8 @@ namespace Lexplosion.WPF.NewInterface.Core
         public void CloseImage() 
         {
             _imageSources.Clear();
-            OnPropertyChanged(null);
+            SelectedImageSource = false;
+            UpdateState();
         }
         
         /// <summary>
@@ -91,22 +92,12 @@ namespace Lexplosion.WPF.NewInterface.Core
 
         public void Next() 
         {
-            if (_imageSourceIndex == -1 || !HasNext)
-                return;
-
-            _imageSourceIndex++;
-            SelectedImageSource = _imageSources[_imageSourceIndex];
-            UpdateState();
+            throw new NotImplementedException();
         }
 
         public void Prev()
         {
-            if (_imageSourceIndex == -1 || !HasPrev)
-                return;
-
-            _imageSourceIndex--;
-            SelectedImageSource = _imageSources[_imageSourceIndex];
-            UpdateState();
+            throw new NotImplementedException();
         }
 
         private void UpdateState() 

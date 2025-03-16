@@ -150,7 +150,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
 
             Runtime.TaskRun(() => 
             {
-                var instanceData = instanceModelBase.InstanceData;
+                var instanceData = instanceModelBase.BaseData;
                 App.Current.Dispatcher.Invoke(() => 
                 {
                     var toModrinthNavCommand = new NavigateCommand<ViewModelBase>(_navigationStore, () => this);

@@ -187,8 +187,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
         {
             _instanceModelBase = instanceModelBase;
 
-            _instanceData = instanceModelBase.InstanceData;
-            _oldInstanceData = instanceModelBase.InstanceData;
+            _instanceData = instanceModelBase.BaseData;
+            _oldInstanceData = instanceModelBase.BaseData;
 
             IsShowSnapshots = _instanceData.GameVersion.Type == MinecraftVersion.VersionType.Snapshot;
 
@@ -276,7 +276,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
             _instanceModelBase.ChangeOverviewParameters(_instanceData);
             
            /* _instanceData = _instanceModelBase.InstanceData;*/
-            _oldInstanceData = _instanceModelBase.InstanceData;
+            _oldInstanceData = _instanceModelBase.BaseData;
             OnPropertyChanged(nameof(HasChanges));
         }
 
@@ -285,7 +285,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
         /// </summary>
         public void ResetChanges()
         {
-            _instanceData = _instanceModelBase.InstanceData;
+            _instanceData = _instanceModelBase.BaseData;
             IsShowSnapshots = _instanceData.GameVersion.Type == MinecraftVersion.VersionType.Snapshot;
             Version = _instanceData.GameVersion ?? GameVersions[0];
             ClientType = _instanceData.Modloader;

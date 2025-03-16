@@ -138,7 +138,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
                 // categories with or/and operators
 
                 // skip first element because its version.
-                var categories = instanceModelBase.InstanceData.Categories.Skip(0);
+                var categories = instanceModelBase.BaseData.Categories.Skip(0);
                 
                 var selectedCategoriesRes = false;
                 if (FilterPanel.SelectedCategories.Count == 0) 

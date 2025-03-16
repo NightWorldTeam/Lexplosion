@@ -78,8 +78,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
         public InstanceProfileAboutModel(InstanceModelBase instanceModel)
         {
             _instanceModel = instanceModel;
-            _instanceData = instanceModel.InstanceData;
-            _oldInstanceData = instanceModel.InstanceData;
+            _instanceData = instanceModel.BaseData;
+            _oldInstanceData = instanceModel.BaseData;
             LogoBytes = ImageTools.ToImage(instanceModel.Logo);
             Name = _instanceData.Name;
             Summary = _instanceData.Summary;
@@ -107,7 +107,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
         public void SaveData()
         {
             _instanceModel.ChangeOverviewParameters(_instanceData, _logoPath);
-            _oldInstanceData = _instanceModel.InstanceData;
+            _oldInstanceData = _instanceModel.BaseData;
             OnPropertyChanged(nameof(HasChanges));
         }
 
@@ -116,12 +116,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
         /// </summary>
         public void ResetChanges()
         {
-            _instanceData = _instanceModel.InstanceData;
+            _instanceData = _instanceModel.BaseData;
             Name = _instanceData.Name;
             Summary = _instanceData.Summary;
             Description = _instanceData.Description;
 
-            _oldInstanceData = _instanceModel.InstanceData;
+            _oldInstanceData = _instanceModel.BaseData;
             OnPropertyChanged(nameof(HasChanges));
         }
 

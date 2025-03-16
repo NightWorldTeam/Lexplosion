@@ -45,8 +45,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         }
 
         public string InstanceName { get => _instanceModel.Name; }
-        public string InstanceVersion { get => _instanceModel.InstanceData.GameVersion?.Id; }
-        public string InstanceModloader { get => _instanceModel.InstanceData.Modloader.ToString(); }
+        public string InstanceVersion { get => _instanceModel.BaseData.GameVersion?.Id; }
+        public string InstanceModloader { get => _instanceModel.BaseData.Modloader.ToString(); }
         public string PlayerPlayedTime { get => _instanceModel.IsInstalled ? "10ч" : DownloadCount; }
         public string DownloadCount { get => _instanceModel.TotalDonwloads; }
         public bool IsInstalled { get => _instanceModel.IsInstalled; }
@@ -117,7 +117,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
                 if (instanceModelBase.IsInstalled || instanceModelBase.IsDownloading)
                 {
                     // Останавливаем обновление директорий сборки.
-                    AddonsManager.GetManager(instanceModelBase.InstanceData).StopWatchingDirectory();
+                    AddonsManager.GetManager(instanceModelBase.BaseData).StopWatchingDirectory();
                 }
                 toMainMenuLayoutCommand.Execute(obj);
             });
@@ -176,7 +176,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             {
                 _additionalInfo.Clear();
                 _additionalInfo.Add(new InstanceFieldInfo<MinecraftVersion>("Version:", _instanceModel.GameVersion));
-                _additionalInfo.Add(new LeftPanelFieldInfo("GameType:", _instanceModel.InstanceData.Modloader.ToString()));
+                _additionalInfo.Add(new LeftPanelFieldInfo("GameType:", _instanceModel.BaseData.Modloader.ToString()));
 
                 if (_instanceModel.IsInstalled)
                 {

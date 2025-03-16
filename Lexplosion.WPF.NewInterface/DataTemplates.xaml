@@ -180,6 +180,14 @@
         <instanceprofileview:InstanceProfileVersionsView />
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type instanceprofilevm:InstanceProfileOverviewLayoutViewModel}">
+        <instanceprofileview:InstanceProfileOverviewLayoutView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type instanceprofilevm:InstanceProfileOverviewGalleryViewModel}">
+        <instanceprofileview:InstanceProfileOverviewGalleryView />
+    </DataTemplate>
+
 
     <!--  Instance Transfer  -->
     <DataTemplate DataType="{x:Type instanceTransferViewModel:InstanceExportViewModel}">
@@ -263,6 +271,9 @@
         <serverprofileview:ServerProfileOverviewView />
     </DataTemplate>
     <DataTemplate DataType="{x:Type serverprofile:ServerProfileOverviewGalleryViewModel}">
-        <serverprofileview:ServerProfileOverviewGalleryView />
+        <serverprofileview:InstanceProfileOverviewGalleryView />
     </DataTemplate>
+
+
+
 </ResourceDictionary>

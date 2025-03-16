@@ -26,6 +26,7 @@ using Lexplosion.WPF.NewInterface.Core;
 using System.Data;
 using static Lexplosion.Logic.Objects.Nightworld.NightWorldManifest;
 using System.Windows.Data;
+using Lexplosion.WPF.NewInterface.Core.Tools;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
 {
@@ -85,50 +86,70 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
             this.Closing += MainWindow_Closing;
 
             HeaderContainer.DataContext = new WindowHeaderArgs(Close, Maximized, Minimized);
-            
+
             _gallery = gallery;
             InitGallery();
         }
 
-        private void InitGallery() 
+        private void InitGallery()
         {
             ImageViewer.Visibility = _gallery.HasSelectedImage ? Visibility.Visible : Visibility.Collapsed;
 
             _gallery.StateChanged += OnGalleryStateChanged;
 
             CloseImage.Click += OnCloseImageClicked;
-            NextImage.Click += OnNextImageClicked;
-            PrevImage.Click += OnPrevImageClicked;
+            //NextImage.Click += OnNextImageClicked;
+            //PrevImage.Click += OnPrevImageClicked;
 
-            // Создаем привязку
-            Binding hasPrevBinding = new Binding("HasPrev")
-            {
-                Source = _gallery, // Источник данных
-                Mode = BindingMode.OneWay, // Режим привязки (двусторонний)
-                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged // Обновление источника при изменении текста
-            };
+            //// Создаем привязку
+            //Binding hasPrevBinding = new Binding("HasPrev")
+            //{
+            //    Source = _gallery, // Источник данных
+            //    Mode = BindingMode.OneWay, // Режим привязки (двусторонний)
+            //    UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged // Обновление источника при изменении текста
+            //};
 
-            // Создаем привязку
-            Binding hasNextBinding = new Binding("HasNext")
-            {
-                Source = _gallery, // Источник данных
-                Mode = BindingMode.OneWay, // Режим привязки (двусторонний)
-                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged // Обновление источника при изменении текста
-            };
+            //// Создаем привязку
+            //Binding hasNextBinding = new Binding("HasNext")
+            //{
+            //    Source = _gallery, // Источник данных
+            //    Mode = BindingMode.OneWay, // Режим привязки (двусторонний)
+            //    UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged // Обновление источника при изменении текста
+            //};
 
-            // Устанавливаем привязку для свойства Text
-            PrevImage.SetBinding(FrameworkElement.IsEnabledProperty, hasPrevBinding);
-            NextImage.SetBinding(FrameworkElement.IsEnabledProperty, hasNextBinding);
+            //// Устанавливаем привязку для свойства Text
+            //PrevImage.SetBinding(FrameworkElement.IsEnabledProperty, hasPrevBinding);
+            //NextImage.SetBinding(FrameworkElement.IsEnabledProperty, hasNextBinding);
         }
 
         private void OnGalleryStateChanged()
         {
             ImageViewer.Visibility = _gallery.HasSelectedImage ? Visibility.Visible : Visibility.Collapsed;
 
-            //if (!_gallery.HasSelectedImage) 
-            //{
-            //    Image.Background.s = null;
-            //}
+            if (!_gallery.HasSelectedImage)
+                Image.ImageSource = null;
+            if (Image.ImageSource == null)
+            {
+                BitmapImage image = ImageTools.defaultBitmapImage;
+
+                Runtime.TaskRun(() =>
+                {
+                    if (_gallery.SelectedImageSource is byte[] byteImage)
+                    {
+                        image = ImageTools.ToImage(byteImage) ?? image;
+                    }
+                    else if (_gallery.SelectedImageSource is string stringImage)
+                    {
+                        image = new BitmapImage(new Uri(stringImage)) ?? image;
+                    }
+
+                    App.Current.Dispatcher.Invoke(() =>
+                    {
+                        Image.ImageSource = image;
+                    });
+                });
+
+            }
         }
 
         #region Image Viewer
@@ -136,12 +157,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
 
         private void OnPrevImageClicked(object sender, RoutedEventArgs e)
         {
-            _gallery.Prev();
+            throw new NotImplementedException();
         }
 
         private void OnNextImageClicked(object sender, RoutedEventArgs e)
         {
-            _gallery.Next();
+            throw new NotImplementedException();
         }
 
         private void OnCloseImageClicked(object sender, RoutedEventArgs e)
@@ -202,7 +223,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
             MainViewModel.ChangeColor(ColorTools.GetColorByHex("#167FFC"));
         }
 
-        private void Close() 
+        private void Close()
         {
             App.Current.MainWindow.Close();
         }
@@ -356,7 +377,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
             {
                 selectedTheme = themeService.Themes.FirstOrDefault(t => t.Name == "Open Space");
             }
-            else 
+            else
             {
                 selectedTheme = themeService.Themes.FirstOrDefault(t => t.Name == "Light Punch");
             }

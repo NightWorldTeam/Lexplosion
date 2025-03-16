@@ -101,7 +101,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         public InstanceProfileAddonsLayoutViewModel(INavigationStore navigationStore, InstanceModelBase instanceModelBase) : base()
         {
             HeaderKey = "Addons";
-            if (instanceModelBase.InstanceData.Modloader != ClientType.Vanilla)
+            if (instanceModelBase.BaseData.Modloader != ClientType.Vanilla)
             {
                 _modsViewModel = new InstanceAddonsContainerViewModel(navigationStore, AddonType.Mods, instanceModelBase);
                 _shadersViewModel = new InstanceAddonsContainerViewModel(navigationStore, AddonType.Shaders, instanceModelBase);
@@ -118,7 +118,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
 
         private void InitAddonsTabMenu(InstanceModelBase instanceModelBase)
         {
-            if (instanceModelBase.InstanceData.Modloader != ClientType.Vanilla)
+            if (instanceModelBase.BaseData.Modloader != ClientType.Vanilla)
             {
                 _tabs.Add(new TabItemModel { Id = 0, TextKey = "Mods", Content = _modsViewModel });
                 _tabs.Add(new TabItemModel { Id = 3, TextKey = "Shaders", Content = _shadersViewModel });
