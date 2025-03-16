@@ -128,9 +128,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
 
             if (!_gallery.HasSelectedImage)
                 Image.ImageSource = null;
-            if (Image.ImageSource == null)
+            if (Image.ImageSource == null || Image.ImageSource.ToString() == "pack://Application:,,,/Assets/images/icons/non_image.png")
             {
-                BitmapImage image = ImageTools.defaultBitmapImage;
+                BitmapImage image = null;
 
                 Runtime.TaskRun(() =>
                 {

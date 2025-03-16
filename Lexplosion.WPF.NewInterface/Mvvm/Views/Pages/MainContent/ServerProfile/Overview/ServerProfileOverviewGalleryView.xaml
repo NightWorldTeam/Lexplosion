@@ -26,8 +26,9 @@
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Button
-                        Width="200"
-                        Height="110"
+                        MaxWidth="200"
+                        MaxHeight="110"
+                        Background="Transparent"
                         Click="Button_Click"
                         Command="{Binding Data.OpenImageCommand, Source={StaticResource ViewModel}}"
                         CommandParameter="{Binding}"
@@ -38,15 +39,9 @@
                                 <Grid Margin="0,8,8,0">
 
                                     <Border
-                                        Width="{Binding ActualWidth, ElementName=Border}"
-                                        Height="{Binding ActualHeight, ElementName=Border}"
-                                        Background="Black"
-                                        CornerRadius="5" />
-
-                                    <Border
                                         x:Name="Border"
-                                        Width="200"
-                                        Height="110"
+                                        MaxWidth="200"
+                                        MaxHeight="110"
                                         CornerRadius="5">
 
                                         <Border.Background>
@@ -58,7 +53,15 @@
 
                                 <ControlTemplate.Triggers>
                                     <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter TargetName="Border" Property="Opacity" Value="0.3" />
+                                        <Setter TargetName="Border" Property="OpacityMask">
+                                            <Setter.Value>
+                                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                    <GradientStop Offset="0" Color="Black" />
+                                                    <GradientStop Offset="0.8" Color="Black" />
+                                                    <GradientStop Offset="1" Color="Transparent" />
+                                                </LinearGradientBrush>
+                                            </Setter.Value>
+                                        </Setter>
                                     </Trigger>
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>

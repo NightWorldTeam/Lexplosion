@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Windows.Data;
 
@@ -146,13 +147,15 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
                     break;
                 case AddonType.Shaders:
                     {
-                        folderName = "shaders";
+                        folderName = "shaderpacks";
                         AvailableImportFileExtensions = [".zip"];
                     }
                     break;
                 default:
                     break;
             };
+
+            GetDirectoryPath = getDirectoryPath;
 
             _directoryPath = $"{getDirectoryPath()}\\{folderName}";
 
@@ -209,7 +212,14 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
 
             try
             {
-                Process.Start("explorer", _directoryPath);
+                if (Directory.Exists(_directoryPath))
+                {
+                    Process.Start("explorer", _directoryPath);
+                }
+                else 
+                {
+                    Process.Start("explorer", GetDirectoryPath());
+                }
             }
             catch
             {

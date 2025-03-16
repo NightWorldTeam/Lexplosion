@@ -6,6 +6,7 @@ using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.ServerProfile
 {
@@ -28,9 +29,20 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.ServerProfile
         public IEnumerable<LeftPanelFieldInfo> AdditionalInfo { get => _additionalInfo; }
 
 
-        public ServerProfileLeftPanelViewModel(AppCore appCore, MinecraftServerInstance minecraftServerInstance)
+
+        #region Commands
+
+
+        public ICommand BackCommand { get; }
+
+
+        #endregion Commands
+
+
+        public ServerProfileLeftPanelViewModel(AppCore appCore, MinecraftServerInstance minecraftServerInstance, ICommand backCommand)
         {
             _appCore = appCore;
+            BackCommand = backCommand;
             ServerModel = minecraftServerInstance;
             GenerateAdditionalInfo();
         }

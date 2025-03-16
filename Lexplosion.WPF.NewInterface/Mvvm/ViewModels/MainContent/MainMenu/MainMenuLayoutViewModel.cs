@@ -59,7 +59,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             // Multiplayer Section
             var selectInstanceForServerArgs = new SelectInstanceForServerArgs(() => mainModel.LibraryController.Instances, (ic) => mainModel.LibraryController.Add(ic));
             var multiplayerLayoutArgs = new MultiplayerLayoutArgs(OpenAccountFactory, selectInstanceForServerArgs);
-            _multiplayerLayoutViewModel = new NightWorldLimitedContentLayoutViewModel(new MultiplayerLayoutViewModel(appCore, multiplayerLayoutArgs));
+            _multiplayerLayoutViewModel = new NightWorldLimitedContentLayoutViewModel(new MultiplayerLayoutViewModel(appCore, ToMainMenuLayoutCommand, multiplayerLayoutArgs));
 
             // Friends Section
             _friendsLayoutViewModel = new NightWorldLimitedContentLayoutViewModel(new FriendsLayoutViewModel(OpenAccountFactory));

@@ -206,28 +206,29 @@
                     </Grid.ColumnDefinitions>
 
                     <!--  Logo  -->
-                    <Border
-                        x:Name="LogoBorder"
+                    <Grid
                         Width="90"
                         Height="90"
-                        VerticalAlignment="Top"
-                        Background="{Binding Logo, Converter={converters:ImageSourceNullValidateConverter}}"
-                        CornerRadius="5" />
-                    <!--  Loader  -->
-                    <controls:CircleLoader
-                        Width="90"
-                        Height="90"
-                        Padding="19"
-                        VerticalAlignment="Top"
-                        BlurTarget="{Binding ElementName=LogoBorder}"
-                        CornerRadius="5"
-                        IconHeight="26"
-                        IconWidth="26"
-                        IsActive="{Binding Logo, Converter={converters:IsValueNullConverter}}">
-                        <controls:CircleLoader.Background>
-                            <SolidColorBrush Opacity="0.5" Color="Black" />
-                        </controls:CircleLoader.Background>
-                    </controls:CircleLoader>
+                        VerticalAlignment="Top">
+
+                        <Border
+                            x:Name="LogoBorder"
+                            Width="90"
+                            Height="90"
+                            Background="{Binding Logo, Converter={converters:ImageSourceNullValidateConverter}}"
+                            CornerRadius="5">
+                            <!--  Loader  -->
+                        </Border>
+
+                        <controls:CircleLoader
+                            Width="45"
+                            Height="45"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            BlurTarget="{Binding ElementName=LogoBorder}"
+                            CornerRadius="5"
+                            IsActive="True" />
+                    </Grid>
 
                     <!--  Content  -->
                     <Grid
@@ -504,7 +505,10 @@
         </DataTemplate>
     </UserControl.Resources>
 
-    <Grid Background="{DynamicResource PrimarySolidColorBrush}" ShowGridLines="False" Loaded="Grid_Loaded">
+    <Grid
+        Background="{DynamicResource PrimarySolidColorBrush}"
+        Loaded="Grid_Loaded"
+        ShowGridLines="False">
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="250" />

@@ -635,13 +635,15 @@
                         BorderThickness="1"
                         CornerRadius="10">
                         <StackPanel Orientation="Horizontal">
+                            <!--  TODO: Translate  -->
                             <controls:AdvancedButton
                                 x:Name="CloseImage"
                                 Width="32"
                                 Height="32"
-                                Margin="0,0,9,0"
+                                Margin="0,0,0,0"
                                 IconData="{DynamicResource PDClose}"
-                                Style="{StaticResource sm-button-icon}" />
+                                Style="{StaticResource sm-button-icon}"
+                                ToolTip="Закрыть" />
                             <!--<controls:AdvancedButton
                                 x:Name="PrevImage"
                                 Width="32"

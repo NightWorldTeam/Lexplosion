@@ -16,14 +16,16 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
     public class AdServersModel : ObservableObject
     {
         private readonly AppCore _appCore;
+        private readonly ICommand _backCommand;
         private readonly SelectInstanceForServerArgs _selectInstanceForServerArgs;
 
         public ObservableCollection<MinecraftServerInstance> Servers { get; }
 
-        public AdServersModel(AppCore appCore, SelectInstanceForServerArgs selectInstanceForServerArgs)
+        public AdServersModel(AppCore appCore, ICommand backCommand, SelectInstanceForServerArgs selectInstanceForServerArgs)
         {
             _appCore = appCore;
             _selectInstanceForServerArgs = selectInstanceForServerArgs;
+            _backCommand = backCommand;
 
             var servers = ToServer.GetMinecraftServersList();
 
@@ -65,7 +67,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
         public void OpenServerPage(MinecraftServerInstance server) 
         {
-            _appCore.NavigationStore.CurrentViewModel = new ServerProfileLayoutViewModel(_appCore, server);
+            _appCore.NavigationStore.CurrentViewModel = new ServerProfileLayoutViewModel(_appCore, _backCommand,  server);
         }
 
 
@@ -126,9 +128,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         #endregion Commands
 
 
-        public AdServersViewModel(AppCore appCore, SelectInstanceForServerArgs selectInstanceForServerArgs)
+        public AdServersViewModel(AppCore appCore, ICommand backCommand, SelectInstanceForServerArgs selectInstanceForServerArgs)
         {
-            Model = new(appCore, selectInstanceForServerArgs);
+            Model = new(appCore, backCommand, selectInstanceForServerArgs);
         }
     }
 }

@@ -23,7 +23,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.InstanceProfi
         private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             _model = (InstanceAddonsContainerViewModel)DataContext;
-            SetSearchBoxPlaceholder(_model.Model.SelectedSortByParam);
+            if (_model != null) 
+            {
+                SetSearchBoxPlaceholder(_model.Model.SelectedSortByParam);
+            }
         }
 
         private void Grid_DragEnter(object sender, System.Windows.DragEventArgs e)
@@ -46,7 +49,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.InstanceProfi
 
         private void OnAddonsSearchSortParamChangedChanged(object sender, SelectionChangedEventArgs e)
         {
-            SetSearchBoxPlaceholder((sender as ComboBox).SelectedItem.ToString());
+            var selectedItem = (sender as ComboBox).SelectedItem;
+            if (selectedItem != null)
+                SetSearchBoxPlaceholder(selectedItem.ToString());
         }
 
         private void SetSearchBoxPlaceholder(string sortParam) 

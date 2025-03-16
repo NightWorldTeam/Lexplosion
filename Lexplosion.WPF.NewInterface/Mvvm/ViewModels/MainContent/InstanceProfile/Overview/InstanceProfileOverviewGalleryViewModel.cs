@@ -5,9 +5,6 @@ using Lexplosion.WPF.NewInterface.Core.ViewModel;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -25,6 +22,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             get => _isLoading; private set
             {
                 _isLoading = value;
+                Console.WriteLine("Test");
                 OnPropertyChanged();
             }
         }
@@ -49,7 +47,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             private set
             {
                 _additionalData = value;
+                OnPropertyChanged(nameof(AdditionalData.Images));
                 OnPropertyChanged();
+                IsLoading = false;
             }
         }
 
@@ -57,6 +57,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         {
             _appCore = appCore;
             InstanceModel = instanceModelBase;
+            IsLoading = true;
         }
 
         public void OpenImage(object value)

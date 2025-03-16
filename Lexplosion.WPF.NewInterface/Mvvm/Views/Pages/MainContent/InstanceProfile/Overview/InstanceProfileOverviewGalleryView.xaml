@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
     xmlns:controls1="clr-namespace:Lexplosion.WPF.NewInterface.Controls"
+    xmlns:converters="clr-namespace:Lexplosion.WPF.NewInterface.Core.Converters"
     xmlns:core="clr-namespace:Lexplosion.WPF.NewInterface.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:instanceprofile="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile"
@@ -19,11 +20,8 @@
     </UserControl.Resources>
 
     <Grid>
-        <core:If Condition="{Binding Model.IsLoading, UpdateSourceTrigger=PropertyChanged}">
-            <core:If.True>
-                <!--  TODO: Translate  -->
-                <controls1:LoadingBoard IsActive="{Binding Model.IsLoading}" Placeholder="Загрузка изображений..." />
-            </core:If.True>
+
+        <core:If x:Name="ContainerIf" Condition="{Binding Model.AdditionalData.Images, Converter={converters:IsCollectionEmptyConverter}}">
             <core:If.False>
                 <ListBox
                     x:Name="ImageList"
@@ -69,7 +67,7 @@
 
                                         <ControlTemplate.Triggers>
                                             <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter TargetName="Border" Property="Opacity" Value="0.3" />
+                                                <Setter TargetName="Border" Property="Opacity" Value="0.7" />
                                             </Trigger>
                                         </ControlTemplate.Triggers>
                                     </ControlTemplate>
@@ -88,6 +86,19 @@
                     </ListBox.ItemsPanel>
                 </ListBox>
             </core:If.False>
+
+            <core:If.True>
+                <!--  TODO: Translate  -->
+                <controls1:Empty Description="Изображения отсутствуют" />
+            </core:If.True>
         </core:If>
+
+        <!--  TODO: Translate  -->
+        <controls1:LoadingBoard
+            Background="Black"
+            BackgroundOpacity="0.3"
+            BlurTarget="{Binding ElementName=ContainerIf}"
+            IsActive="{Binding Model.IsLoading, UpdateSourceTrigger=PropertyChanged}"
+            Placeholder="Загрузка изображений..." />
     </Grid>
 </UserControl>

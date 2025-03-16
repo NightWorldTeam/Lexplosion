@@ -15,8 +15,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.ServerProfile
             _overviewViewModel = new ServerProfileOverviewViewModel(appCore, minecraftServerInstance);
             _galleryViewModel = new ServerProfileOverviewGalleryViewModel(appCore, minecraftServerInstance);
 
-            _tabs.Add(new TabItemModel { Id = 0, TextKey = "Overview", Content = _overviewViewModel });
-            _tabs.Add(new TabItemModel { Id = 0, TextKey = "Gallery", Content = _galleryViewModel });
+            _tabs.Add(new TabItemModel { Id = 0, TextKey = "Overview", Content = _overviewViewModel, IsSelected = true });
+            _tabs.Add(new TabItemModel { Id = 1, TextKey = "Gallery", Content = _galleryViewModel });
         }
     }
 }

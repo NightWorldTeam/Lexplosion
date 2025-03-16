@@ -49,10 +49,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         #region Constructors
 
 
-        public MultiplayerLayoutViewModel(AppCore appCore, MultiplayerLayoutArgs multiplayerLayoutArgs) : base()
+        public MultiplayerLayoutViewModel(AppCore appCore, ICommand backCommand, MultiplayerLayoutArgs multiplayerLayoutArgs) : base()
         {
             _appCore = appCore;
-            _adServersViewModel = new AdServersViewModel(appCore, multiplayerLayoutArgs.SelectInstanceForServerArgs);
+            _adServersViewModel = new AdServersViewModel(appCore, backCommand, multiplayerLayoutArgs.SelectInstanceForServerArgs);
             _openAccountFactory = multiplayerLayoutArgs.OpenAccountFactory;
             Account.ActiveAccountChanged += (acc) =>
             {

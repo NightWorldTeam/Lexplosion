@@ -11,7 +11,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
     {
         public InstanceModelBase InstanceModel { get; }
         public InstanceData InstanceData { get => InstanceModel.PageData; }
-        public BaseInstanceData BaseInstanceData { get; }
+        public BaseInstanceData BaseInstanceData { get => InstanceModel.BaseData; }
 
         private bool _isLoading;
         public bool IsLoading
@@ -51,7 +51,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         {
             IsLoading = true;
             InstanceModel = instanceModel;
-            BaseInstanceData = instanceModel.BaseData;
+
+            instanceModel.DataChanged += OnDataChanged;
+        }
+
+        private void OnDataChanged()
+        {
+            OnPropertyChanged(nameof(BaseInstanceData));
         }
     }
 

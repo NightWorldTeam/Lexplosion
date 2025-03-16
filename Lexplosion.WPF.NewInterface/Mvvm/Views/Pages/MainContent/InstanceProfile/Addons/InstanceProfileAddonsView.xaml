@@ -224,29 +224,22 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <Border
-                                x:Name="LogoBorder"
-                                Width="64"
-                                Height="64"
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Center"
-                                Background="{Binding Logo, Converter={valueconverters:ImageSourceNullValidateConverter}}"
-                                CornerRadius="5" />
+                            <Grid HorizontalAlignment="Left" VerticalAlignment="Center">
+                                <Border
+                                    x:Name="LogoBorder"
+                                    Width="64"
+                                    Height="64"
+                                    Background="{Binding Logo, Converter={valueconverters:ImageSourceNullValidateConverter}}"
+                                    CornerRadius="5" />
 
-                            <controls:CircleLoader
-                                Width="64"
-                                Height="64"
-                                Padding="16"
-                                VerticalAlignment="Center"
-                                BlurTarget="{Binding ElementName=LogoBorder}"
-                                CornerRadius="5"
-                                IconHeight="16"
-                                IconWidth="16"
-                                IsActive="{Binding Logo, Converter={valueconverters:IsValueNullConverter}}">
-                                <controls:CircleLoader.Background>
-                                    <SolidColorBrush Opacity="0.8" Color="Black" />
-                                </controls:CircleLoader.Background>
-                            </controls:CircleLoader>
+                                <controls:CircleLoader
+                                    Width="32"
+                                    Height="32"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    BlurTarget="{Binding ElementName=LogoBorder}"
+                                    IsActive="True" />
+                            </Grid>
 
                             <StackPanel Grid.Column="1" Margin="8,0,0,0">
 
@@ -410,30 +403,26 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <Border
-                        x:Name="LogoBorder"
-                        Width="48"
-                        Height="48"
-                        Margin="4,0,0,0"
-                        VerticalAlignment="Center"
-                        Background="{Binding Logo, Converter={valueconverters:ImageSourceNullValidateConverter}}"
-                        CornerRadius="5" />
+                    <Grid>
+                        <Border
+                            x:Name="LogoBorder"
+                            Width="48"
+                            Height="48"
+                            Margin="4,0,0,0"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Background="{Binding Logo, Converter={valueconverters:ImageSourceNullValidateConverter}}"
+                            CornerRadius="5" />
 
-                    <controls:CircleLoader
-                        Width="48"
-                        Height="48"
-                        Margin="4,0,0,0"
-                        Padding="16"
-                        VerticalAlignment="Center"
-                        BlurTarget="{Binding ElementName=LogoBorder}"
-                        CornerRadius="5"
-                        IconHeight="16"
-                        IconWidth="16"
-                        IsActive="{Binding Logo, Converter={valueconverters:IsValueNullConverter}}">
-                        <controls:CircleLoader.Background>
-                            <SolidColorBrush Opacity="0.8" Color="Black" />
-                        </controls:CircleLoader.Background>
-                    </controls:CircleLoader>
+                        <controls:CircleLoader
+                            Width="24"
+                            Height="24"
+                            Margin="4,0,0,0"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            BlurTarget="{Binding ElementName=LogoBorder}"
+                            IsActive="{Binding Logo, Converter={valueconverters:IsValueNullConverter}}" />
+                    </Grid>
 
                     <Grid
                         Grid.Column="1"

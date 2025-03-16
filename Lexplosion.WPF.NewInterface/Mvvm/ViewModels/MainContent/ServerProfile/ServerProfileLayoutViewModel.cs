@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.ServerProfile
 {
@@ -40,11 +41,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.ServerProfile
         #region Constructors
 
 
-        public ServerProfileLayoutViewModel(AppCore appCore, MinecraftServerInstance minecraftServerInstance)
+        public ServerProfileLayoutViewModel(AppCore appCore, ICommand backCommand, MinecraftServerInstance minecraftServerInstance)
         {
             _appCore = appCore;
 
-            LeftPanel = new ServerProfileLeftPanelViewModel(appCore, minecraftServerInstance);
+            LeftPanel = new ServerProfileLeftPanelViewModel(appCore, minecraftServerInstance, backCommand);
             LeftPanel.SelectedItemChanged += OnLeftPanelSelectedItemChanged;
 
             InitDefaultLeftPanelTabs(minecraftServerInstance);

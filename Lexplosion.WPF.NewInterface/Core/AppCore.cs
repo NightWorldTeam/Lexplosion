@@ -50,7 +50,7 @@ namespace Lexplosion.WPF.NewInterface.Core
         public void CloseImage() 
         {
             _imageSources.Clear();
-            SelectedImageSource = false;
+            SelectedImageSource = null;
             UpdateState();
         }
         

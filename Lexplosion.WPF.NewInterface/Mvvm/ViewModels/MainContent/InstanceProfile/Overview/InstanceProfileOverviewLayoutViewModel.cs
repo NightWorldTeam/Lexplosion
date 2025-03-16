@@ -1,10 +1,6 @@
-﻿using Lexplosion.Logic.Objects;
-using Lexplosion.WPF.NewInterface.Core;
+﻿using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
-using System;
-using System.Threading;
-using System.Windows.Documents;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile
 {
