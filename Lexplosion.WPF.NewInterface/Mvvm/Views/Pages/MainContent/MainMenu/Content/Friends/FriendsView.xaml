@@ -41,7 +41,8 @@
             Grid.Row="1"
             ItemsSource="{Binding Source={StaticResource FriendsViewSource}}"
             Style="{StaticResource TransparentListBox}"
-            VirtualizingPanel.IsVirtualizingWhenGrouping="True">
+            VirtualizingPanel.IsVirtualizingWhenGrouping="True"
+            VirtualizingPanel.ScrollUnit="Pixel">
 
             <ListBox.GroupStyle>
                 <GroupStyle>
