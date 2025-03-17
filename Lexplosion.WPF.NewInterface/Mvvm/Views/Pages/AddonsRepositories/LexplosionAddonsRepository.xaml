@@ -227,7 +227,7 @@
                             VerticalAlignment="Center"
                             BlurTarget="{Binding ElementName=LogoBorder}"
                             CornerRadius="5"
-                            IsActive="True" />
+                            IsActive="{Binding Logo, Converter={converters:IsValueNullConverter}}" />
                     </Grid>
 
                     <!--  Content  -->

@@ -353,6 +353,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
 
         private void InstanceAddon_AddonAdded(InstanceAddon obj)
         {
+            if (obj.Type != Type) 
+            {
+                return;
+            }
+
             App.Current.Dispatcher.Invoke(() =>
             {
                 _addonsList.Add(obj);
