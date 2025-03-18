@@ -113,7 +113,7 @@ namespace Lexplosion.Logic.FileSystem
 			return path_;
 		}
 
-		public static string ValidateGamePath(string path, out bool newDirIsEmpty)
+		public static string CreateAcceptableGamePath(string path, out bool newDirIsEmpty)
 		{
 			try
 			{
@@ -126,7 +126,7 @@ namespace Lexplosion.Logic.FileSystem
 				// убираем слеш в конце
 				path = path.TrimEnd('/');
 
-				if (!Directory.Exists(path) || IsDirectoryEmpty(path)) return path;
+				if (!Directory.Exists(path) || DirectoryHelper.IsDirectoryEmpty(path)) return path;
 
 				string instancesPath = path + "/instances";
 				if (!Directory.Exists(instancesPath)) return CreateValidPath(path);
@@ -194,15 +194,6 @@ namespace Lexplosion.Logic.FileSystem
 			catch
 			{
 				return null;
-			}
-		}
-
-		public static bool IsDirectoryEmpty(string path)
-		{
-			IEnumerable<string> items = Directory.EnumerateFileSystemEntries(path);
-			using (IEnumerator<string> en = items.GetEnumerator())
-			{
-				return !en.MoveNext();
 			}
 		}
 
