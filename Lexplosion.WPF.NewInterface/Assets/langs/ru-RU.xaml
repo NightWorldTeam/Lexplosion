@@ -700,6 +700,8 @@
     <s:String x:Key="NightWorldClient">Клиент NightWorld</s:String>
     <s:String x:Key="NightWorldClientDescription">Включает косметику и прочие функции NW</s:String>
 
+    <s:String x:Key="GamePathEmptyOrHasInvalidChars">Путь до папки пустой или содержит запрещенные символы: {0}</s:String>
+
 
     <!--  endregion Settings  -->
 </ResourceDictionary>

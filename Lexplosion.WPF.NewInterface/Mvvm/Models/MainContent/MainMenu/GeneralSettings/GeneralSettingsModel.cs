@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Net.Http.Headers;
 using System.Windows.Forms;
 
@@ -61,14 +62,14 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
         {
             get => GlobalData.GeneralSettings.GamePath.Replace('\\', '/'); set
             {
-                if (string.IsNullOrWhiteSpace(value) || value.IndexOfAny(Path.GetInvalidPathChars()) != -1)
-                {
-                    return;
-                }
+                var correctPath = WithDirectory.ValidateGamePath(value, out bool isNewDirEmpty);
 
-                GlobalData.GeneralSettings.GamePath = value.Replace('\\', '/');
-                OnPropertyChanged();
-                DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+                if (isNewDirEmpty)
+                {
+                    GlobalData.GeneralSettings.GamePath = correctPath;
+                    OnPropertyChanged();
+                    DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+                }
             }
         }
 

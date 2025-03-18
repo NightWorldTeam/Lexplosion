@@ -1,7 +1,9 @@
 ﻿using Lexplosion.Core.Tools;
 using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
+using Lexplosion.WPF.NewInterface.Core.ViewModel;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSettings;
+using System.IO;
 using System.Windows.Input;
 using static Lexplosion.Core.Tools.JavaHelper;
 
@@ -78,9 +80,17 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
         private void OnModelNotify(object obj)
         {
-            if (obj is JavaPathCheckResult javaPathCheckResult) 
+          if (obj is JavaPathCheckResult javaPathCheckResult) 
             {
                 JavaPathCheckResultHandler(javaPathCheckResult);
+            }
+
+            if (obj is string stringError) 
+            {
+                if (stringError == "EmptyOrHasInvalidPathChars") 
+                {
+                    _appCore.MessageService.Error("GamePathEmptyOrHasInvalidChars", true, string.Join(" ", Path.GetInvalidFileNameChars()));
+                }
             }
         }
 
