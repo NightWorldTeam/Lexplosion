@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using static Lexplosion.Logic.Objects.Curseforge.CurseforgeProjectInfo;
 using System.Net;
+using Lexplosion.Tools;
+using System.Collections.Concurrent;
 
 namespace Lexplosion.Logic.Objects
 {
@@ -213,14 +215,29 @@ namespace Lexplosion.Logic.Objects
 
 		public IEnumerable<byte[]> GetImages()
 		{
-			foreach (string url in ImagesUrls)
+			var images = new ConcurrentBag<byte[]>();
+			var perfomer = new TasksPerfomer(3, ImagesUrls.Count);
+			foreach (var url in ImagesUrls)
 			{
-				using (var webClient = new WebClient())
+				perfomer.ExecuteTask(() =>
 				{
-					webClient.Proxy = null;
-					yield return webClient.DownloadData(url);
-				}
+					using (var webClient = new WebClient())
+					{
+						webClient.Proxy = null;
+						byte[] data = null;
+						try
+						{
+							webClient.DownloadData(url);
+						}
+						catch { }
+
+						if (data != null) images.Add(data);
+					}
+				});
 			}
+
+			perfomer.WaitEnd();
+			return images;
 		}
 	}
 
