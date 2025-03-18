@@ -1,6 +1,7 @@
 ﻿using Lexplosion.Logic;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Network;
+using Lexplosion.WPF.NewInterface.Core.ViewModel;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace Lexplosion.WPF.NewInterface.Core.GameExtensions
     /// <summary>
     /// Загружает, хранит версии модлоадера.
     /// </summary>
-    public abstract class ExtensionManagerBase : VMBase
+    public abstract class ExtensionManagerBase : ObservableObject
     {
         /// <summary>
         /// GameExtension (Fabric, Optifine, etc)

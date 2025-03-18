@@ -1,13 +1,12 @@
 ﻿using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Objects;
-using Lexplosion.WPF.NewInterface.Stores;
 using System.Linq;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 {
     public sealed class GeneralSettingsLayoutViewModel : ContentLayoutViewModelBase
     {
-        private readonly ViewModelBase _generalSettingsViewModel = new GeneralSettingsViewModel();
+        private readonly ViewModelBase _generalSettingsViewModel;
         private readonly ViewModelBase _appearanceViewModel = new AppearanceSettingsViewModel();
         private readonly ViewModelBase _languageViewModel = new LanguageSettingsViewModel();
         private readonly ViewModelBase _accountsViewModel;
@@ -16,6 +15,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         public GeneralSettingsLayoutViewModel(AppCore appCore) : base()
         {
             _accountsViewModel = new AccountsSettingsViewModel(appCore);
+
+            _generalSettingsViewModel = new GeneralSettingsViewModel(appCore);
 
             InitDefaultSettingsTabMenu();
         }

@@ -1,12 +1,15 @@
-﻿using Lexplosion.WPF.NewInterface.Commands;
+﻿using Lexplosion.Core.Tools;
+using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSettings;
 using System.Windows.Input;
+using static Lexplosion.Core.Tools.JavaHelper;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 {
     public sealed class GeneralSettingsViewModel : ViewModelBase
     {
+        private readonly AppCore _appCore;
         public GeneralSettingsModel Model { get; }
 
 
@@ -62,9 +65,53 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         #endregion Commands
 
 
-        public GeneralSettingsViewModel()
+        public GeneralSettingsViewModel(AppCore appCore)
         {
+            _appCore = appCore;
             Model = new GeneralSettingsModel();
+            Model.Notify += OnModelNotify;
         }
+
+
+        #region Private Methods
+
+
+        private void OnModelNotify(object obj)
+        {
+            if (obj is JavaPathCheckResult javaPathCheckResult) 
+            {
+                JavaPathCheckResultHandler(javaPathCheckResult);
+            }
+        }
+
+        private void JavaPathCheckResultHandler(JavaPathCheckResult javaPathCheckResult) 
+        {
+            switch (javaPathCheckResult)
+            {
+                case JavaHelper.JavaPathCheckResult.EmptyOrNull:
+                    {
+                        _appCore.MessageService.Error("WrongJavaPathFormat", true);
+                        break;
+                    }
+                case JavaHelper.JavaPathCheckResult.JaveExeDoesNotExists:
+                    {
+                        _appCore.MessageService.Error("JavaPathExeDoesNotExists", true);
+                        break;
+                    }
+                case JavaHelper.JavaPathCheckResult.WrongExe:
+                    {
+                        _appCore.MessageService.Error("JavaPathWrongExe", true);
+                        break;
+                    }
+                case JavaHelper.JavaPathCheckResult.PathDoesNotExists:
+                    {
+                        _appCore.MessageService.Error("JavaPathPathDoesNotExists", true);
+                        break;
+                    }
+            }
+        }
+
+
+        #endregion Private Methods
     }
 }

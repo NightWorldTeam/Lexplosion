@@ -596,4 +596,28 @@
 
 
     <!--  endregion ServerProfile  -->
+
+
+    <!--  region Settings  -->
+
+
+    <!--  Java Errors  -->
+    <s:String x:Key="WrongJavaPathFormat">Wrong Java path format.</s:String>
+    <s:String x:Key="JavaPathEmptyOrNull">Selected java Path was empty!</s:String>
+    <s:String x:Key="JavaPathExeDoesNotExists">Selected java path had not jave.exe or javaw.exe does not exist!</s:String>
+    <s:String x:Key="JavaPathWrongExe">Selected java Path had wrong ".exe". Java path must be contains java.exe or javaw.exe!</s:String>
+    <s:String x:Key="JavaPathPathDoesNotExists">Selected java path does not exist!</s:String>
+
+
+    <!--  endregion Settings  -->
+
+
+    <!--  region Instance Profile  -->
+
+
+    <s:String x:Key="OptifineVersion">Optifine version</s:String>
+    <s:String x:Key="OptifineVersionDescription">Select optifine version</s:String>
+
+
+    <!--  endregion Instance Profile  -->
 </ResourceDictionary>

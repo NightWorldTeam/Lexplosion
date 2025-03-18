@@ -15,6 +15,7 @@
     <Grid>
 
         <ScrollViewer
+            x:Name="Scroll"
             Background="{DynamicResource PrimarySolidColorBrush}"
             CanContentScroll="False"
             Focusable="False"
@@ -192,6 +193,17 @@
                         Padding="0,16,0,8"
                         BorderBrush="{DynamicResource SeparateSolidColorBrush}"
                         BorderThickness="0,0,0,0">
+
+                        <Border.Style>
+                            <Style TargetType="{x:Type Border}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Model.HasChanges}" Value="True">
+                                        <Setter Property="Margin" Value="0,0,0,48" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+
                         <Grid>
 
                             <Grid.RowDefinitions>
@@ -215,10 +227,12 @@
 
                             <!--  Content  -->
                             <controls:AdvancedTextBox
+                                x:Name="DescriptionField"
                                 Grid.Row="1"
                                 Height="128"
                                 Margin="0,8,0,0"
                                 AcceptsReturn="True"
+                                IsMultiLine="True"
                                 Text="{Binding Model.Description, UpdateSourceTrigger=PropertyChanged}"
                                 TextWrapping="Wrap" />
                         </Grid>
@@ -243,6 +257,7 @@
                 <Style TargetType="{x:Type Border}">
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding Model.HasChanges}" Value="True">
+
                             <DataTrigger.EnterActions>
                                 <BeginStoryboard>
                                     <Storyboard>
@@ -266,6 +281,7 @@
                                 </BeginStoryboard>
                             </DataTrigger.ExitActions>
                         </DataTrigger>
+
                     </Style.Triggers>
                 </Style>
             </Border.Style>

@@ -207,7 +207,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
             if (ClientType == ClientType.Vanilla)
             {
                 IsOptifine = !string.IsNullOrEmpty(_oldInstanceData.OptifineVersion);
-                UpdateOptimizationModManager(Version, _instanceData.OptifineVersion);
+                UpdateOptimizationModManager(Version, _oldInstanceData.OptifineVersion);
             }
 
             if (_instanceData.Modloader == ClientType.Forge)
@@ -360,6 +360,18 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
             // (пере)Создаём менеджер
             ModloaderManager = new ModloaderManager(type, version);
 
+            if (ExtensionManagerBase.IsExtensionLoaded(GameExtension.Optifine, version))
+            {
+                if (ModloaderManager.CurrentMinecraftExtension.IsAvaliable && string.IsNullOrEmpty(modloaderVersion))
+                {
+                    ModloaderVersion = OptimizationModManager.CurrentMinecraftExtension.Versions[0];
+                }
+                else if (!string.IsNullOrEmpty(modloaderVersion))
+                {
+                    ModloaderVersion = modloaderVersion;
+                }
+            }
+
             ModloaderManager.MinecraftExtensionLoaded += (mExtension) =>
             {
                 if (ModloaderManager.CurrentMinecraftExtension.IsAvaliable && string.IsNullOrEmpty(modloaderVersion))
@@ -394,6 +406,18 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
         private void UpdateOptimizationModManager(MinecraftVersion minecraftVersion, string optifimizationModVersion = null)
         {
             OptimizationModManager = new OptimizationModManager(minecraftVersion);
+
+            if (ExtensionManagerBase.IsExtensionLoaded(GameExtension.Optifine, minecraftVersion)) 
+            {
+                if (OptimizationModManager.CurrentMinecraftExtension.IsAvaliable && string.IsNullOrEmpty(optifimizationModVersion))
+                {
+                    OptifineVersion = OptimizationModManager.CurrentMinecraftExtension.Versions[0];
+                }
+                else if (!string.IsNullOrEmpty(optifimizationModVersion))
+                {
+                    OptifineVersion = optifimizationModVersion;
+                }
+            }
 
             OptimizationModManager.MinecraftExtensionLoaded += (mExtension) =>
             {

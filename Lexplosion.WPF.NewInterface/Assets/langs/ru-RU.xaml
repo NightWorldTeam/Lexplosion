@@ -665,4 +665,28 @@
 
 
     <!--  endregion ServerProfile  -->
+
+
+    <!--  region Settings  -->
+
+
+    <!--  Java Errors  -->
+    <s:String x:Key="WrongJavaPathFormat">Неверный формат пути до Java</s:String>
+    <s:String x:Key="JavaPathEmptyOrNull">Выбранный путь не должен быть пустым!</s:String>
+    <s:String x:Key="JavaPathExeDoesNotExists">Файл java.exe или javaw.exe не существует в данном выбранном пути!</s:String>
+    <s:String x:Key="JavaPathWrongExe">Выбранный путь указывает на неправильный .exe файл!</s:String>
+    <s:String x:Key="JavaPathPathDoesNotExists">Выбранный путь не существует!</s:String>
+
+
+    <!--  endregion Settings  -->
+
+
+    <!--  region Instance Profile  -->
+
+
+    <s:String x:Key="OptifineVersion">Версия оптифайн</s:String>
+    <s:String x:Key="OptifineVersionDescription">Выберите желаемую версию оптифайн</s:String>
+
+
+    <!--  endregion Instance Profile  -->
 </ResourceDictionary>

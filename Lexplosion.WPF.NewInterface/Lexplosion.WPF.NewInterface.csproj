@@ -134,6 +134,7 @@
     <Compile Include="Core\Objects\Modloader.cs" />
     <Compile Include="Core\Objects\SelecteableItem.cs" />
     <Compile Include="Core\Objects\Test.cs" />
+    <Compile Include="Core\ObservableModelBase.cs" />
     <Compile Include="Core\Resources\IResourceLoader.cs" />
     <Compile Include="Core\Resources\Language\LanguageItem.cs" />
     <Compile Include="Core\Resources\Language\LanguageLoader.cs" />

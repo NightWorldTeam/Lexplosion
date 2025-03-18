@@ -87,12 +87,18 @@
                                     Grid.Column="1"
                                     Margin="0,-1,0,0"
                                     VerticalAlignment="Top"
-                                    VerticalScrollBarVisibility="Auto" />
+                                    VerticalScrollBarVisibility="Disabled" />
                             </Grid>
                         </Border>
                     </Grid>
 
                     <ControlTemplate.Triggers>
+                        <Trigger Property="IsMultiLine" Value="true">
+                            <Setter TargetName="PART_ContentHost" Property="VerticalScrollBarVisibility" Value="Auto" />
+                            <Setter Property="AcceptsReturn" Value="True" />
+                            <Setter Property="AcceptsTab" Value="True" />
+                        </Trigger>
+
                         <!--  When is it focused  -->
                         <Trigger Property="IsFocused" Value="True">
                             <Trigger.EnterActions>

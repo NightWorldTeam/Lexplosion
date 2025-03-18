@@ -1,4 +1,5 @@
-﻿using Lexplosion.Global;
+﻿using Lexplosion.Core.Tools;
+using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Tools;
@@ -12,10 +13,13 @@ using System.Windows.Forms;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSettings
 {
-    public sealed class GeneralSettingsModel : ViewModelBase
+    public sealed class GeneralSettingsModel : ObservableModelBase
     {
         public static event Action<bool> ConsoleParameterChanged;
 
+        public override event Action<object> Notify;
+
+        private readonly AppCore _appCore;
         private readonly ComputerInfo ci = new ComputerInfo();
 
         public IEnumerable<string> Resolutions { get; }
@@ -57,7 +61,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
         {
             get => GlobalData.GeneralSettings.GamePath.Replace('\\', '/'); set
             {
-                if (string.IsNullOrWhiteSpace(value) || value.IndexOfAny(Path.GetInvalidPathChars()) != -1) 
+                if (string.IsNullOrWhiteSpace(value) || value.IndexOfAny(Path.GetInvalidPathChars()) != -1)
                 {
                     return;
                 }
@@ -155,15 +159,22 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
         {
             get => GlobalData.GeneralSettings.JavaPath; set
             {
-                GlobalData.GeneralSettings.JavaPath = value;
-                OnPropertyChanged();
+                var javaPathResult = JavaHelper.TryValidateJavaPath(value, out value);
 
-                if (value.Length == 0)
-                    GlobalData.GeneralSettings.IsCustomJava = false;
-                else
+                if (javaPathResult == JavaHelper.JavaPathCheckResult.Success)
+                {
+                    GlobalData.GeneralSettings.JavaPath = value;
                     GlobalData.GeneralSettings.IsCustomJava = true;
+                }
+                else if (javaPathResult == JavaHelper.JavaPathCheckResult.EmptyOrNull)
+                {
+                    GlobalData.GeneralSettings.JavaPath = value;
+                    GlobalData.GeneralSettings.IsCustomJava = false;
+                }
 
+                Notify?.Invoke(javaPathResult);
                 DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+                OnPropertyChanged();
             }
         }
 
@@ -172,19 +183,22 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
         {
             get => GlobalData.GeneralSettings.Java17Path; set
             {
-                GlobalData.GeneralSettings.Java17Path = value;
-                OnPropertyChanged();
+                var javaPathResult = JavaHelper.TryValidateJavaPath(value, out value);
 
-                if (value.Length == 0)
+                if (javaPathResult == JavaHelper.JavaPathCheckResult.Success)
                 {
+                    GlobalData.GeneralSettings.Java17Path = value;
                     GlobalData.GeneralSettings.IsCustomJava17 = false;
                 }
-                else
+                else if (javaPathResult == JavaHelper.JavaPathCheckResult.EmptyOrNull)
                 {
+                    GlobalData.GeneralSettings.Java17Path = value;
                     GlobalData.GeneralSettings.IsCustomJava17 = true;
                 }
 
+                Notify?.Invoke(javaPathResult);
                 DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+                OnPropertyChanged();
             }
         }
 

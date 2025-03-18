@@ -192,6 +192,7 @@
     </UserControl.Resources>
 
     <ScrollViewer
+        x:Name="Scroll"
         Grid.Row="1"
         CanContentScroll="False"
         Focusable="False"
@@ -501,7 +502,7 @@
                                 Margin="0,8,0,0"
                                 HorizontalAlignment="Stretch"
                                 Placeholder="Default"
-                                Text="{Binding Model.JavaPath}" />
+                                Text="{Binding Model.JavaPath, UpdateSourceTrigger=Default}" />
 
                         </Grid>
                     </Border>

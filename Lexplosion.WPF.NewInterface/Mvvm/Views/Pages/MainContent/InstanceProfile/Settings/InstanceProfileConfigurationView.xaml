@@ -301,15 +301,15 @@
                             <!--  Header  -->
                             <StackPanel>
                                 <TextBlock
-                                    extensions:TextBlockExtensions.TextByKey="ModloaderVersion"
                                     FontSize="14"
                                     FontWeight="Medium"
-                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                    Text="{DynamicResource OptifineVersion}" />
                                 <TextBlock
-                                    extensions:TextBlockExtensions.TextByKey="ModloaderVersionDescription"
                                     FontSize="14"
                                     FontWeight="Medium"
-                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                    Text="{DynamicResource OptifineVersionDescription}" />
                             </StackPanel>
 
                             <ComboBox
