@@ -346,6 +346,46 @@
                     </Border>
 
 
+                    <!--  Minecraft Arguments  -->
+                    <Border
+                        Padding="0,16,0,8"
+                        BorderBrush="{DynamicResource LightSeparateSolidColorBrush}"
+                        BorderThickness="0,0,0,2">
+                        <Grid>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <!--  Header  -->
+                            <StackPanel>
+                                <TextBlock
+                                    FontSize="14"
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                    Text="{DynamicResource MinecraftArguments}" />
+                                <TextBlock
+                                    MaxHeight="300"
+                                    FontSize="14"
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                    Text="{DynamicResource MinecraftArgumentsDescription}"
+                                    TextWrapping="Wrap" />
+                            </StackPanel>
+
+                            <!--  Content  -->
+                            <controls:AdvancedTextBox
+                                Grid.Column="1"
+                                Width="300"
+                                Height="32"
+                                Margin="16,0,0,0"
+                                HorizontalAlignment="Right"
+                                Text="{Binding Model.MinecraftArgs}" />
+                        </Grid>
+                    </Border>
+
+
                     <!--  Game Directory  -->
                     <Border
                         Padding="0,16,0,8"
@@ -740,15 +780,46 @@
                             <!--  Header  -->
                             <StackPanel>
                                 <TextBlock
-                                    extensions:TextBlockExtensions.TextByKey="NightWorldSkins"
                                     FontSize="14"
                                     FontWeight="Medium"
-                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                    Text="{DynamicResource NightWorldSkins}" />
                                 <TextBlock
-                                    extensions:TextBlockExtensions.TextByKey="NightWorldSkinsDescription"
                                     FontSize="14"
                                     FontWeight="Medium"
-                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                    Text="{DynamicResource NightWorldSkinsDescription}" />
+                            </StackPanel>
+
+
+                            <!--  Content  -->
+                            <ToggleButton
+                                HorizontalAlignment="Right"
+                                IsChecked="{Binding Model.IsNightWorldSkinSystemEnabled}"
+                                Style="{StaticResource SwitchButton}" />
+                        </Grid>
+                    </Border>
+
+                    <!--  NightWorld Client  -->
+
+                    <Border
+                        Padding="0,16,0,8"
+                        BorderBrush="{DynamicResource LightSeparateSolidColorBrush}"
+                        BorderThickness="0,0,0,0">
+                        <Grid>
+
+                            <!--  Header  -->
+                            <StackPanel>
+                                <TextBlock
+                                    FontSize="14"
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                    Text="{DynamicResource NightWorldClient}" />
+                                <TextBlock
+                                    FontSize="14"
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                    Text="{DynamicResource NightWorldClientDescription}" />
                             </StackPanel>
 
 

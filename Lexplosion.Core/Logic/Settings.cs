@@ -65,6 +65,16 @@ namespace Lexplosion.Logic
 		/// </summary>
 		public bool? ItIsNotShit = null;
 
+        /// <summary>
+        /// Использовать систему скинов NightWorld
+        /// </summary>
+        public bool? IsNightWorldSkinSystem = false;
+
+        /// <summary>
+        /// Аргументы JVM
+        /// </summary>
+        public string JVMArgs = null;
+
 		public bool NavBarInLeft = true;
 		public bool IsPortableMode = false;
 
@@ -164,7 +174,8 @@ namespace Lexplosion.Logic
                 AccentColor = "#167ffc",
 				ItIsNotShit = true,
 				NavBarInLeft = true,
-				IsPortableMode = false
+				IsPortableMode = false,
+                IsNightWorldSkinSystem = false,
 			};
         }
     }

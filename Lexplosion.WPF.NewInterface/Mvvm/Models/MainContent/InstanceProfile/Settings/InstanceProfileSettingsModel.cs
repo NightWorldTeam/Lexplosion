@@ -1,4 +1,6 @@
-﻿using Lexplosion.Global;
+﻿using Lexplosion.Core.Tools;
+using Lexplosion.Global;
+using Lexplosion.Logic.FileSystem;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Tools;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
@@ -9,9 +11,11 @@ using System.Windows.Forms;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Settings
 {
-    public sealed class InstanceProfileSettingsModel : ViewModelBase
+    public sealed class InstanceProfileSettingsModel : ObservableModelBase
     {
         public static event Action<bool, string> ConsoleParameterChanged;
+
+        public override event Action<object> Notify;
 
         private InstanceModelBase _instanceModel;
         private Lexplosion.Logic.Settings _instanceSettings;
@@ -128,25 +132,50 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
         {
             get => InstanceSettings.JavaPath; set
             {
-                InstanceSettings.JavaPath = value;
-                _instanceSettingsCopy.JavaPath = value;
-                OnPropertyChanged();
+                var javaPathResult = JavaHelper.TryValidateJavaPath(value, out value);
 
-                if (value.Length == 0)
-                    InstanceSettings.IsCustomJava = false;
-                else
+                if (javaPathResult == JavaHelper.JavaPathCheckResult.Success)
+                {
+                    InstanceSettings.JavaPath = value;
+                    _instanceSettingsCopy.JavaPath = value;
                     InstanceSettings.IsCustomJava = true;
+                }
+                else if (javaPathResult == JavaHelper.JavaPathCheckResult.EmptyOrNull)
+                {
+                    InstanceSettings.JavaPath = value;
+                    _instanceSettingsCopy.JavaPath = value;
+                    InstanceSettings.IsCustomJava = false;
+                }
 
+                Notify?.Invoke(javaPathResult);
                 _instanceModel.Settings = _instanceSettingsCopy;
+                OnPropertyChanged();
             }
         }
 
-        public string JVMArgs
+
+        /// <summary>
+        /// Аргументы для Minecraft
+        /// </summary>
+        public string MinecraftArgs
         {
             get => InstanceSettings.GameArgs; set
             {
                 InstanceSettings.GameArgs = value;
                 _instanceSettingsCopy.JavaPath = value;
+                _instanceModel.Settings = _instanceSettingsCopy;
+            }
+        }
+
+        /// <summary>
+        /// Аргументы для JVM
+        /// </summary>
+        public string JVMArgs
+        {
+            get => InstanceSettings.JVMArgs; set 
+            {
+                InstanceSettings.JVMArgs = value;
+                _instanceSettingsCopy.JVMArgs = value;
                 _instanceModel.Settings = _instanceSettingsCopy;
             }
         }
@@ -193,14 +222,25 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
             }
         }
 
-        public bool IsNightWorldSkinSystemEnabled
+        public bool? IsNightWorldSkinSystemEnabled
         {
-            get => true; set//(bool)InstanceSettings.IsAutoUpdate; set
+            get => InstanceSettings.IsNightWorldSkinSystem; set
             {
-                //InstanceSettings.IsAutoUpdate = value;
-                //_instanceSettingsCopy.IsAutoUpdate = value;
-                //OnPropertyChanged();
-                //_instanceModel.SaveSettings(_instanceSettingsCopy);
+                InstanceSettings.IsNightWorldSkinSystem = value;
+                _instanceSettingsCopy.IsAutoUpdate = value;
+                _instanceModel.Settings = _instanceSettingsCopy;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool? IsNightWorldClientEnabled 
+        {
+            get => InstanceSettings.NwClientByDefault; set
+            {
+                InstanceSettings.NwClientByDefault = value;
+                _instanceSettingsCopy.NwClientByDefault = value;
+                _instanceModel.Settings = _instanceSettingsCopy;
+                OnPropertyChanged();
             }
         }
 

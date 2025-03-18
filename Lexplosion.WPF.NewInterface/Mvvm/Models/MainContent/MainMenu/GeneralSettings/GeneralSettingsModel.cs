@@ -146,12 +146,21 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
 
         public bool? IsNightWorldSkinSystemEnabled
         {
-            get => true; set
+            get => GlobalData.GeneralSettings.IsNightWorldSkinSystem; set
             {
-                // TODO: Когда будет функционал подрубить его сюда
-                //GlobalData.GeneralSettings.IsAutoUpdate = value;
+                GlobalData.GeneralSettings.IsNightWorldSkinSystem = value;
+                DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
                 OnPropertyChanged();
-                //DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+            }
+        }
+
+        public bool? IsNightWorldClientEnabled
+        {
+            get => GlobalData.GeneralSettings.NwClientByDefault; set
+            {
+                GlobalData.GeneralSettings.NwClientByDefault = value;
+                DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+                OnPropertyChanged();
             }
         }
 
@@ -202,11 +211,21 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
             }
         }
 
-        public string JVMArgs
+        public string MinecraftArgs
         {
             get => GlobalData.GeneralSettings.GameArgs; set
             {
                 GlobalData.GeneralSettings.GameArgs = value;
+                OnPropertyChanged();
+                DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+            }
+        }
+
+        public string JVMArgs 
+        {
+            get => GlobalData.GeneralSettings.JVMArgs; set 
+            {
+                GlobalData.GeneralSettings.JVMArgs = value;
                 OnPropertyChanged();
                 DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
             }

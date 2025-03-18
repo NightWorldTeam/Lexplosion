@@ -689,4 +689,17 @@
 
 
     <!--  endregion Instance Profile  -->
+
+
+    <!--  region Settings  -->
+
+
+    <s:String x:Key="MinecraftArguments">Аргументы для Minecraft</s:String>
+    <s:String x:Key="MinecraftArgumentsDescription">Позволяет более гибко настроить параметры игры</s:String>
+
+    <s:String x:Key="NightWorldClient">Клиент NightWorld</s:String>
+    <s:String x:Key="NightWorldClientDescription">Включает косметику и прочие функции NW</s:String>
+
+
+    <!--  endregion Settings  -->
 </ResourceDictionary>
