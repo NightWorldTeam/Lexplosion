@@ -1,6 +1,7 @@
 ﻿using Lexplosion.Core.Tools;
 using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
+using Lexplosion.Tools;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Tools;
 using Microsoft.VisualBasic.Devices;
@@ -62,11 +63,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
         {
             get => GlobalData.GeneralSettings.GamePath.Replace('\\', '/'); set
             {
-                var correctPath = WithDirectory.ValidateGamePath(value, out bool isNewDirEmpty);
+                var isCorrectPath = DirectoryHelper.DirectoryNameIsValid(value);
 
-                if (isNewDirEmpty)
+                if (isCorrectPath)
                 {
-                    GlobalData.GeneralSettings.GamePath = correctPath;
+                    GlobalData.GeneralSettings.GamePath = WithDirectory.CreateAcceptableGamePath(value, out var _);
                     OnPropertyChanged();
                     DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
                 }

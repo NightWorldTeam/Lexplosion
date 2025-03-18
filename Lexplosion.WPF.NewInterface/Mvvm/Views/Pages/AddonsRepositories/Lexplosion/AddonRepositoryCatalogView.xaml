@@ -134,15 +134,15 @@
             Margin="0,16,0,0"
             Condition="{Binding Model.IsLoading}">
             <core:If.True>
-                <controls:LoadingBoard
+                <controls:CircleLoader
+                    Width="32"
+                    Height="32"
                     Background="Transparent"
-                    BackgroundOpacity="0.6"
-                    IsActive="True"
-                    Placeholder="Загрузка аддонов" />
+                    IsActive="{Binding Model.IsLoading}" />
             </core:If.True>
 
             <core:If.False>
-                <Grid>
+                <Grid Background="Transparent">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
@@ -163,7 +163,14 @@
                         PageChanged="Paginator_PageChanged"
                         PageCount="{Binding Model.PageCount}"
                         PrevCommand="{Binding PrevPageCommand}"
-                        ToCommand="{Binding ToPageCommand}" />
+                        ToCommand="{Binding ToPageCommand}"
+                        Visibility="{Binding Model.AddonsList.Count, Converter={converters:CountToVisibilityConverter}}" />
+
+                    <controls:Empty
+                        Grid.ColumnSpan="2"
+                        VerticalAlignment="Center"
+                        CollectionCount="{Binding Model.AddonsList.Count}"
+                        Description="Не удалось загрузить аддоны" />
                 </Grid>
             </core:If.False>
         </core:If>
