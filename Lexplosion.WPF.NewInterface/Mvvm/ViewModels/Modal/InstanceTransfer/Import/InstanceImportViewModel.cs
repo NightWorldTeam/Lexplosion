@@ -37,6 +37,17 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer
             get => RelayCommand.GetCommand<ImportProcess>(ref _cancelImportCommand, Model.CancelImport);
         }
 
+
+        private RelayCommand _importByUrlCommand;
+        /// <summary>
+        /// Запускает импорт по ссылке
+        /// </summary>
+        public ICommand ImportByUrlCommand 
+        {
+            get => RelayCommand.GetCommand(ref _importByUrlCommand, Model.ImportByUrl);
+        }
+
+
         #endregion Commands
 
 

@@ -108,68 +108,94 @@
             </Grid.RowDefinitions>
 
             <Border Margin="0,16,0,16" VerticalAlignment="Stretch">
-                <controls:DragDropBoard Background="Transparent" ImportAction="{Binding Model.ImportAction}">
-                    <Border
-                        AllowDrop="True"
-                        BorderThickness="2,2,2,2"
-                        CornerRadius="5">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
 
-                        <Border.BorderBrush>
-                            <DrawingBrush
-                                TileMode="Tile"
-                                Viewport="0,0,14,14"
-                                ViewportUnits="Absolute">
-                                <DrawingBrush.Drawing>
-                                    <DrawingGroup>
-                                        <GeometryDrawing Brush="{DynamicResource ActivitySolidColorBrush}">
-                                            <GeometryDrawing.Geometry>
-                                                <GeometryGroup>
-                                                    <RectangleGeometry Rect="0,0,50,50" />
-                                                    <RectangleGeometry Rect="50,50,50,50" />
-                                                </GeometryGroup>
-                                            </GeometryDrawing.Geometry>
-                                        </GeometryDrawing>
-                                    </DrawingGroup>
-                                </DrawingBrush.Drawing>
-                            </DrawingBrush>
-                        </Border.BorderBrush>
+                    <controls:DragDropBoard
+                        Margin="0,0,0,16"
+                        Background="Transparent"
+                        ImportAction="{Binding Model.ImportAction}">
+                        <Border
+                            AllowDrop="True"
+                            BorderThickness="2,2,2,2"
+                            CornerRadius="5">
 
-                        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <StackPanel>
+                            <Border.BorderBrush>
+                                <DrawingBrush
+                                    TileMode="Tile"
+                                    Viewport="0,0,14,14"
+                                    ViewportUnits="Absolute">
+                                    <DrawingBrush.Drawing>
+                                        <DrawingGroup>
+                                            <GeometryDrawing Brush="{DynamicResource ActivitySolidColorBrush}">
+                                                <GeometryDrawing.Geometry>
+                                                    <GeometryGroup>
+                                                        <RectangleGeometry Rect="0,0,100,100" />
+                                                        <RectangleGeometry Rect="100,100,100,100" />
+                                                    </GeometryGroup>
+                                                </GeometryDrawing.Geometry>
+                                            </GeometryDrawing>
+                                        </DrawingGroup>
+                                    </DrawingBrush.Drawing>
+                                </DrawingBrush>
+                            </Border.BorderBrush>
 
-                                <!--  Acrhive Icon  -->
-                                <Viewbox Width="48">
-                                    <Path
-                                        Data="M7 40q-1.15 0-2.075-.925Q4 38.15 4 37V11q0-1.15.925-2.075Q5.85 8 7 8h14l3 3h17q1.15 0 2.075.925Q44 12.85 44 14v23q0 1.15-.925 2.075Q42.15 40 41 40Zm25-3h9V14h-9v4.6h4.6v4.6H32v4.6h4.6v4.6H32ZM7 37h20.4v-4.6H32v-4.6h-4.6v-4.6H32v-4.6h-4.6V14h-4.65l-3-3H7v26Zm0-23v-3 26-23Z"
-                                        Fill="{DynamicResource ActivitySolidColorBrush}"
-                                        Stretch="Fill" />
-                                </Viewbox>
+                            <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <StackPanel>
 
-                                <!--  Import Drag Drop Guide  -->
-                                <TextBlock
-                                    MaxWidth="280"
-                                    Margin="10"
-                                    FontSize="14"
-                                    FontWeight="Medium"
-                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
-                                    Text="{DynamicResource ImportDragDropFieldDescription}"
-                                    TextAlignment="Center"
-                                    TextWrapping="WrapWithOverflow" />
+                                    <!--  Acrhive Icon  -->
+                                    <Viewbox Width="48">
+                                        <Path
+                                            Data="M7 40q-1.15 0-2.075-.925Q4 38.15 4 37V11q0-1.15.925-2.075Q5.85 8 7 8h14l3 3h17q1.15 0 2.075.925Q44 12.85 44 14v23q0 1.15-.925 2.075Q42.15 40 41 40Zm25-3h9V14h-9v4.6h4.6v4.6H32v4.6h4.6v4.6H32ZM7 37h20.4v-4.6H32v-4.6h-4.6v-4.6H32v-4.6h-4.6V14h-4.65l-3-3H7v26Zm0-23v-3 26-23Z"
+                                            Fill="{DynamicResource ActivitySolidColorBrush}"
+                                            Stretch="Fill" />
+                                    </Viewbox>
 
-                                <!--  Browse Button  -->
-                                <controls:AdvancedButton
-                                    Height="32"
-                                    Margin="0,10,0,0"
-                                    Padding="8,4"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    Command="{Binding BrowseFileFromLocalCommand}"
-                                    Content="{DynamicResource Review}"
-                                    Style="{StaticResource sm-default}" />
-                            </StackPanel>
-                        </Grid>
-                    </Border>
-                </controls:DragDropBoard>
+                                    <!--  Import Drag Drop Guide  -->
+                                    <TextBlock
+                                        MaxWidth="280"
+                                        Margin="10"
+                                        FontSize="14"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                        Text="{DynamicResource ImportDragDropFieldDescription}"
+                                        TextAlignment="Center"
+                                        TextWrapping="WrapWithOverflow" />
+
+                                    <!--  Browse Button  -->
+                                    <controls:AdvancedButton
+                                        Height="32"
+                                        Margin="0,10,0,0"
+                                        Padding="8,4"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Command="{Binding BrowseFileFromLocalCommand}"
+                                        Content="{DynamicResource Review}"
+                                        Style="{StaticResource sm-default}" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </controls:DragDropBoard>
+
+                    <Grid Grid.Row="1" Margin="0,8,0,0">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <controls:AdvancedTextBox Placeholder="{DynamicResource ImportByUrlDescriptionPlaceholder}" Text="{Binding Model.ImportURL}" />
+                        <controls:AdvancedButton
+                            Grid.Column="1"
+                            Margin="8,0,0,0"
+                            Command="{Binding ImportByUrlCommand}"
+                            Content="{DynamicResource Import}"
+                            Style="{StaticResource sm-default}" />
+                    </Grid>
+                </Grid>
             </Border>
 
             <Border

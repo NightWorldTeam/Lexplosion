@@ -620,4 +620,45 @@
 
 
     <!--  endregion Instance Profile  -->
+
+
+    <!--  region Settings  -->
+
+
+    <s:String x:Key="MinecraftArguments">Minecraft arguments</s:String>
+    <s:String x:Key="MinecraftArgumentsDescription">Allows you to customize game parameters more flexibly</s:String>
+
+    <s:String x:Key="NightWorldClient">NightWorld Client</s:String>
+    <s:String x:Key="NightWorldClientDescription">Enable cosmetic and other NW feature</s:String>
+
+    <s:String x:Key="GamePathEmptyOrHasInvalidChars">The path to the folder is empty or contains illegal characters: {0}</s:String>
+
+
+    <!--  endregion Settings  -->
+
+
+    <!--  region Import  -->
+
+
+    <s:String x:Key="ImportByUrlDescriptionPlaceholder">Or Google Drive or YANDEX Disk url</s:String>
+    <s:String x:Key="ImportCancelledNotification">Импорт сборки был успешно отменен</s:String>
+    <s:String x:Key="ImportUrlWrongPathNotification">Неверный формат ссылки</s:String>
+
+
+    <s:String x:Key="ImportResultZipFileError">Ошибка открытия zip файла</s:String>
+    <s:String x:Key="ImportResultGameVersionError">Ошибка версии игры</s:String>
+    <s:String x:Key="ImportResultJavaDownloadError">Проблема со скачиванием Java</s:String>
+    <s:String x:Key="ImportResultIsOfflineMode">Оффлайн мод</s:String>
+    <s:String x:Key="ImportResultMovingFilesError">Ошибка при перемещении файлов</s:String>
+    <s:String x:Key="ImportResultDownloadError">Ошибка скачивания</s:String>
+    <s:String x:Key="ImportResultDirectoryCreateError">Ошибка с создание директории</s:String>
+    <s:String x:Key="ImportResultWrongUrl">URL-адрес для импорта файла неверен. На данный момент мы поддерживаем только Яндекс Диск и Google Диск.</s:String>
+    <s:String x:Key="ImportResultManifestError">Ошибка манифест-файла.</s:String>
+    <s:String x:Key="ImportResultUnknownFileType">Неизвестный тип файла.</s:String>
+    <s:String x:Key="ImportResultUnknownError">Неизвестная ошибка</s:String>
+
+
+    <!--  endregion Import  -->
+
+
 </ResourceDictionary>

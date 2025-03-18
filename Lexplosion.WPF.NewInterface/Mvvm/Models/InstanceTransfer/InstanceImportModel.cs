@@ -28,6 +28,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
         public Queue<InstanceImportFillDataViewModel> FillDataViewModels { get; } = [];
 
 
+        public string ImportURL { get; set; }
+
+
         #region Constructors
 
 
@@ -110,7 +113,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
             // TODO: Translate
             var importProcess = ImportProcesses.FirstOrDefault(i => i.Id == id);
             CancelImport(importProcess);
-            _appCore.MessageService.Info("Импорт сборки был успешно отменен");
+            _appCore.MessageService.Info("ImportCancelledNotification", true);
         }
 
         private void OnImportDynamicStateHandlerStateChanged(ImportInterruption importInterruption, InterruptionType arg2)
@@ -159,6 +162,40 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
         }
 
 
+        public void ImportByUrl() 
+        {
+            if (string.IsNullOrEmpty(ImportURL))
+            {
+                _appCore.MessageService.Info("ImportCancelledNotification", true);
+                return;
+            }
+
+            
+            InstanceClient instanceClient = null;
+
+            // Запускаем импорт
+            var dynamicStateHandler = new DynamicStateData<ImportInterruption, InterruptionType>();
+            dynamicStateHandler.StateChanged += OnImportDynamicStateHandlerStateChanged;
+
+            var importData = new ImportData(dynamicStateHandler.GetHandler);
+
+            var uri = new Uri(ImportURL);
+            var importFile = new ImportProcess(importData.ImportId, uri, importData.CancelImport);
+            importFile.ImportCancelled += OnImportCancelled;
+            ImportProcesses.Add(importFile);
+
+            instanceClient = InstanceClient.Import(uri, (ir) =>
+            {
+                ImportResultHandler(ir, importFile, instanceClient);
+            }, importData);
+            importFile.TargetInstanceClient = instanceClient;
+
+            // Добавляем в библиотеку.
+            // TODO: IMPORTANT синхронизировать import и instanceform.
+            _addToLibrary(instanceClient);
+        }
+
+
         #endregion Public Methods
 
 
@@ -175,7 +212,50 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
             if (importResult != ImportResult.Successful)
             {
                 importFile.IsSuccessful = false;
+                ImportProcesses.Remove(importFile);
                 _removeFromLibrary(instanceClient);
+            }
+
+            switch (importResult)
+            {
+                case ImportResult.Successful:
+                    break;
+                case ImportResult.ZipFileError:
+                    _appCore.MessageService.Error("ImportResultZipFileError", true);
+                    break;
+                case ImportResult.GameVersionError:
+                    _appCore.MessageService.Error("ImportResultGameVersionError", true);
+                    break;
+                case ImportResult.ManifestError:
+                    _appCore.MessageService.Error("ImportResultManifestError", true);
+                    break;
+                case ImportResult.JavaDownloadError:
+                    _appCore.MessageService.Error("ImportResultJavaDownloadError", true);
+                    break;
+                case ImportResult.IsOfflineMode:
+                    _appCore.MessageService.Error("ImportResultIsOfflineMode", true);
+                    break;
+                case ImportResult.MovingFilesError:
+                    _appCore.MessageService.Error("ImportResultMovingFilesError", true);
+                    break;
+                case ImportResult.DownloadError:
+                    _appCore.MessageService.Error("ImportResultDownloadError", true);
+                    break;
+                case ImportResult.DirectoryCreateError:
+                    _appCore.MessageService.Error("ImportResultDirectoryCreateError", true);
+                    break;
+                case ImportResult.WrongUrl:
+                    _appCore.MessageService.Error("ImportResultWrongUrl", true);
+                    break;
+                case ImportResult.UnknownFileType:
+                    _appCore.MessageService.Error("ImportResultUnknownFileType", true);
+                    break;
+                case ImportResult.Canceled:
+                    _appCore.MessageService.Error("ImportCancelledNotification", true);
+                    break;
+                default:
+                    _appCore.MessageService.Error("ImportResultUnknownError", true);
+                    break;
             }
         }
 

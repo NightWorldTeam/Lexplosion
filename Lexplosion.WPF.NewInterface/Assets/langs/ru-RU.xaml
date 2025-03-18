@@ -704,4 +704,28 @@
 
 
     <!--  endregion Settings  -->
+
+
+    <!--  region Import  -->
+
+
+    <s:String x:Key="ImportByUrlDescriptionPlaceholder">Или ссылка на Google Drive или Яндекс Disk</s:String>
+    <s:String x:Key="ImportCancelledNotification">Импорт сборки был успешно отменен</s:String>
+    <s:String x:Key="ImportUrlWrongPathNotification">Неверный формат ссылки</s:String>
+
+
+    <s:String x:Key="ImportResultZipFileError">Ошибка открытия zip файла</s:String>
+    <s:String x:Key="ImportResultGameVersionError">Ошибка версии игры</s:String>
+    <s:String x:Key="ImportResultJavaDownloadError">Проблема со скачиванием Java</s:String>
+    <s:String x:Key="ImportResultIsOfflineMode">Оффлайн мод</s:String>
+    <s:String x:Key="ImportResultMovingFilesError">Ошибка при перемещении файлов</s:String>
+    <s:String x:Key="ImportResultDownloadError">Ошибка скачивания</s:String>
+    <s:String x:Key="ImportResultDirectoryCreateError">Ошибка с создание директории</s:String>
+    <s:String x:Key="ImportResultWrongUrl">URL-адрес для импорта файла неверен. На данный момент мы поддерживаем только Яндекс Диск и Google Диск.</s:String>
+    <s:String x:Key="ImportResultManifestError">Ошибка манифест-файла.</s:String>
+    <s:String x:Key="ImportResultUnknownFileType">Неизвестный тип файла.</s:String>
+    <s:String x:Key="ImportResultUnknownError">Неизвестная ошибка</s:String>
+
+
+    <!--  endregion Import  -->
 </ResourceDictionary>

@@ -72,6 +72,16 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
             _cancelImport = cancel;
         }
 
+        public ImportProcess(Guid id, Uri url, Action cancel, bool isImporting = true, bool isSuccessful = false)
+        {
+            Id = id;
+            Name = System.IO.Path.GetFileName(url.LocalPath);
+            Path = url.OriginalString;
+            IsImporing = isImporting;
+            IsSuccessful = isSuccessful;
+            _cancelImport = cancel;
+        }
+
 
         #endregion Constructors
 
