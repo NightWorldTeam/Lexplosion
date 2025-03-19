@@ -332,6 +332,7 @@
                 Width="32"
                 Height="32"
                 Margin="8,0,0,0"
+                Command="{Binding SingOutAllCommand}"
                 Content="AccountGroupRemove"
                 Foreground="Red"
                 Style="{StaticResource x32IconButtonActivityColor}"

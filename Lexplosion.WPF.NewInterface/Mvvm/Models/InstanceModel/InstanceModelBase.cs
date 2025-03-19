@@ -13,6 +13,7 @@ using Lexplosion.WPF.NewInterface.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design.Serialization;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using static Lexplosion.Logic.Objects.Nightworld.NightWorldManifest;
@@ -26,9 +27,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         /// Текущий этап
         /// </summary>
         private StageType _stage;
-        public StageType Stage 
+        public StageType Stage
         {
-            get => _stage; set 
+            get => _stage; set
             {
                 _stage = value;
                 OnPropertyChanged();
@@ -38,9 +39,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         /// Всего этапов
         /// </summary>
         private int _totalStages;
-        public int TotalStages 
+        public int TotalStages
         {
-            get => _totalStages; set 
+            get => _totalStages; set
             {
                 _totalStages = value;
                 OnPropertyChanged();
@@ -225,7 +226,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         }
 
         public string LocalId { get => _instanceClient.LocalId; }
-        public string WebsiteUrl { get => _instanceClient.WebsiteUrl;}
+        public string WebsiteUrl { get => _instanceClient.WebsiteUrl; }
 
 
         #region Visual Data
@@ -245,13 +246,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         public bool IsInstanceCompleted { get => _instanceClient.IsComplete; }
 
         private bool _isShareDownloading;
-        public bool IsShareDownloading 
-        { 
-            get => _isShareDownloading; set 
+        public bool IsShareDownloading
+        {
+            get => _isShareDownloading; set
             {
                 _isShareDownloading = value;
                 OnPropertyChanged(nameof(IsShareDownloading));
-            } 
+            }
         }
 
 
@@ -306,9 +307,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         }
 
         private InstanceData _addionalData;
-        public InstanceData AdditionalData 
+        public InstanceData AdditionalData
         {
-            get 
+            get
             {
                 return _addionalData ?? (_addionalData = _instanceClient.GetFullInfo());
             }
@@ -356,9 +357,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         /// <summary>
         /// Процесс отмены скачивания
         /// </summary>
-        public bool DownloadCancelling 
+        public bool DownloadCancelling
         {
-            get => _downloadCancelling; set 
+            get => _downloadCancelling; set
             {
                 _downloadCancelling = value;
                 OnPropertyChanged(nameof(AnyProcessActive));
@@ -390,7 +391,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             _exportFunc = exportFunc;
             InstanceDistribution = instanceDistribution;
 
-            if (instanceDistribution != null) 
+            if (instanceDistribution != null)
             {
                 instanceDistribution.DownloadFinished += OnShareDownloadFinished;
                 IsShareDownloading = true;
@@ -646,7 +647,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         /// </summary>
         public void Delete()
         {
-            _appCore.ModalNavigationStore.Open(new ConfirmActionViewModel("Удаление сборки", "",
+            _appCore.ModalNavigationStore.Open(new ConfirmActionViewModel(
+                    _appCore.Resources("RemoveInstance") as string, 
+                    string.Format(_appCore.Resources("RemoveInstanceDescription") as string, Name),
+                    _appCore.Resources("YesIWantRemoveInstance") as string,
                     (obj) =>
                     {
                         _instanceClient.Delete();
@@ -656,9 +660,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
                     }));
         }
 
-        public Logic.Settings Settings 
-        { 
-            get => _instanceClient.GetSettings(); set 
+        public Logic.Settings Settings
+        {
+            get => _instanceClient.GetSettings(); set
             {
                 _instanceClient.SaveSettings(value);
             }
@@ -679,7 +683,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         /// <summary>
         /// Загружает данные о сборке которые необходимы только профилю
         /// </summary>
-        public void PrepareDataForProfile() 
+        public void PrepareDataForProfile()
         {
             Runtime.TaskRun(() =>
             {
@@ -712,12 +716,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         /// <summary>
         /// Получить все версии сборки
         /// </summary>
-        public IEnumerable<InstanceVersion> GetInstanceVersions() 
+        public IEnumerable<InstanceVersion> GetInstanceVersions()
         {
             return _instanceClient.GetVersions();
         }
 
-        public void CancelShareInstanceDownloading() 
+        public void CancelShareInstanceDownloading()
         {
             InstanceDistribution.CancelDownload();
         }

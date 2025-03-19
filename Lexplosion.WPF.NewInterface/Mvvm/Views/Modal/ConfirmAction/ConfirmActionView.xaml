@@ -4,17 +4,20 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:Lexplosion.WPF.NewInterface.Controls"
     xmlns:converters="clr-namespace:Lexplosion.WPF.NewInterface.Core.Converters"
+    xmlns:core="clr-namespace:Lexplosion.WPF.NewInterface.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Modal"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:modal="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal"
+    d:DataContext="{d:DesignInstance Type=modal:ConfirmActionViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
 
     <Border
-        Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={converters:WindowWidthToXProcentWidth}, ConverterParameter=48}"
-        Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={converters:WindowHeightToXProcentHeight}, ConverterParameter=57}"
+        MaxWidth="450"
+        MaxHeight="200"
         Padding="20,0,20,16"
         Background="{DynamicResource PrimarySolidColorBrush}"
         CornerRadius="10">
@@ -23,17 +26,13 @@
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <!--  Header  -->
-            <Border
-                Margin="-20,16,-20,0"
-                Padding="0,0,0,10"
-                VerticalAlignment="Top"
-                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                BorderThickness="0,0,0,1">
+            <Border Margin="-20,16,-20,0" VerticalAlignment="Top">
                 <Grid>
 
                     <Grid.ColumnDefinitions>
@@ -43,12 +42,13 @@
 
                     <!--  Selected Page Title  -->
                     <TextBlock
-                        Margin="20,0"
+                        Grid.Row="1"
+                        Margin="20,0,0,0"
                         VerticalAlignment="Top"
-                        FontSize="20"
+                        FontSize="18"
                         FontWeight="Medium"
                         Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                        Text="Удаление аккаунта" />
+                        Text="{Binding Title}" />
 
                     <!--  Close Button  -->
                     <controls:AdvancedButton
@@ -65,21 +65,26 @@
             </Border>
 
             <!--  Content  -->
-            <Grid Grid.Row="1">
-                <!--  Todo придумать как сюда пихать контент  -->
+            <Grid Grid.Row="2" Margin="0,8,0,0">
+                <TextBlock
+                    FontSize="14"
+                    FontWeight="Medium"
+                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                    Text="{Binding Text}"
+                    TextWrapping="Wrap" />
             </Grid>
 
             <Border
-                Grid.Row="2"
+                Grid.Row="3"
                 Margin="-20"
                 Padding="20,8,20,16"
                 BorderBrush="{DynamicResource SeparateSolidColorBrush}"
                 BorderThickness="0,1,0,0">
                 <controls:AdvancedButton
                     Command="{Binding ActionCommand}"
+                    Content="{Binding ActionButtonText}"
                     FontWeight="Medium"
-                    Style="{StaticResource DefaultAdvancedButton}"
-                    Text="Я хочу удалить аккаунт" />
+                    Style="{StaticResource DefaultAdvancedButton}" />
             </Border>
         </Grid>
     </Border>

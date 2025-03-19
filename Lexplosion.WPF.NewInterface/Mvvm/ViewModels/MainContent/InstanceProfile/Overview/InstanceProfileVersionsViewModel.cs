@@ -54,7 +54,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             if (Versions.FirstOrDefault(i => i.IsDownloading) == null)
             {
                 var version = Versions.FirstOrDefault(i => i.Id == InstanceModel.ClientVersion);
-                version.IsDownloading = true;
+                if (version != null) 
+                {
+                    version.IsDownloading = true;
+                }
             }
         }
 

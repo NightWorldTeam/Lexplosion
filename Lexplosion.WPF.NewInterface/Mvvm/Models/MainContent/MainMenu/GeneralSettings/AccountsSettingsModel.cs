@@ -4,7 +4,9 @@ using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Xml.Linq;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.GeneralSettings
 {
@@ -106,7 +108,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.GeneralSe
             {
                 if (res == MicrosoftAuthRes.Successful)
                 {
-                    Runtime.TaskRun(() => {
+                    Runtime.TaskRun(() =>
+                    {
                         var code = account.Auth(token);
                         if (code == AuthCode.Successfully)
                         {
@@ -149,7 +152,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.GeneralSe
             Account.SaveAll();
         }
 
-        public void DoAccountLauncherCommand(Account acc) 
+        public void DoAccountLauncherCommand(Account acc)
         {
             if (!acc.IsAuthed)
             {
@@ -173,13 +176,30 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.GeneralSe
 
         public void SignOut(Account acc)
         {
-            Runtime.DebugWrite($"{acc.AccountType} {acc.Login} executed.");
+            _appCore.ModalNavigationStore.Open(new ConfirmActionViewModel(
+                    _appCore.Resources("RemoveAccount") as string,
+                    string.Format(_appCore.Resources("RemoveAccountDescription") as string, acc.Login),
+                    _appCore.Resources("YesIWantRemoveAccount") as string,
+                    (obj) =>
+                    {
+                        RemoveAccount(acc);
+                        Account.SaveAll();
+                    }));
+        }
 
-            _appCore.ModalNavigationStore.Open(new ConfirmActionViewModel("Удаление аккаунта", "ха-ха-ха",
+        public void SingOutAllAccounts()
+        {
+            _appCore.ModalNavigationStore.Open(new ConfirmActionViewModel(
+                _appCore.Resources("RemoveAllAccount") as string,
+                _appCore.Resources("RemoveAllAccountDescription") as string,
+                _appCore.Resources("YesIWantRemoveAllAccount") as string,
                 (obj) =>
                 {
-                    RemoveAccount(acc);
-                    Account.SaveAll();
+                    foreach (var acc in new List<AccountItem>(_accounts)) 
+                    {
+                        RemoveAccount(acc.Account);
+                        Account.SaveAll();
+                    }
                 }));
         }
     }

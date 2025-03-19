@@ -728,4 +728,39 @@
 
 
     <!--  endregion Import  -->
+
+
+    <!--  region Accounts  -->
+
+
+    <s:String x:Key="RemoveAccount">Удаление аккаунта</s:String>
+    <s:String x:Key="RemoveAccountDescription">
+        Вы действительно хотите аккаунт: {0}.
+        Восстановить доступ к аккаунта будет возможно только после повторной авторизации!
+    </s:String>
+    <s:String x:Key="YesIWantRemoveAccount">Да, я хочу удалить аккаунт</s:String>
+
+    <s:String x:Key="RemoveAllAccount">Удаление всех аккаунтов</s:String>
+    <s:String x:Key="RemoveAllAccountDescription">
+        Вы действительно хотите удалить все аккаунты!.
+        Восстановить доступ к аккаунтам будет возможно только после повторной авторизации!
+    </s:String>
+    <s:String x:Key="YesIWantRemoveAllAccount">Да, я хочу удалить все аккаунты</s:String>
+
+
+    <!--  endregion Accounts  -->
+
+
+    <!--  region Library  -->
+
+
+    <s:String x:Key="RemoveInstance">Удаление сборки</s:String>
+    <s:String x:Key="RemoveInstanceDescription">
+        Вы действительно хотите удалить сборку: {0}.
+        Восстановить её будет не возможно!
+    </s:String>
+    <s:String x:Key="YesIWantRemoveInstance">Да, я хочу удалить сборку</s:String>
+
+
+    <!--  endregion Library  -->
 </ResourceDictionary>

@@ -38,6 +38,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             get => RelayCommand.GetCommand<Account>(ref _singOutCommand, Model.SignOut);
         }
 
+        private RelayCommand _singOutAllCommand;
+        public ICommand SingOutAllCommand
+        {
+            get => RelayCommand.GetCommand(ref _singOutAllCommand, Model.SingOutAllAccounts);
+        }
+
 
         private RelayCommand _reauthAccountCommand;
         public ICommand ReauthAccountCommand

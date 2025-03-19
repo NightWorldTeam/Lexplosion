@@ -115,6 +115,10 @@ namespace Lexplosion.WPF.NewInterface.Core
         /// без четкой зависимости на них.
         /// </summary>
         public readonly Action<Action> UIThread;
+        /// <summary>
+        /// Метод для получения ресурсов приложения по ключу.
+        /// </summary>
+        public readonly Func<object, object> Resources;
 
 
         #region Properties
@@ -143,8 +147,9 @@ namespace Lexplosion.WPF.NewInterface.Core
         #endregion Properties
 
 
-        public AppCore(Action<Action> uiThread)
+        public AppCore(Action<Action> uiThread, Func<object, object> getResource)
         {
+            Resources = getResource;
             UIThread = uiThread;
             MessageService = new MessageService();
         }

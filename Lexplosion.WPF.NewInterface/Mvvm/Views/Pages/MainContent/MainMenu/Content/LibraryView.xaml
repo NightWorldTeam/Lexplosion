@@ -80,10 +80,7 @@
 
     <Grid>
 
-        <Grid
-            Margin="0,40,0,0"
-            MouseDown="Grid_MouseDown"
-            ShowGridLines="False">
+        <Grid Margin="0,40,0,0" ShowGridLines="False">
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
