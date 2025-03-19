@@ -38,63 +38,9 @@ namespace Lexplosion.Logic.Network
             }
         }
 
-        public static List<MCVersionInfo> GetVersionsList()
-        {
-            try
-            {
-                string answer = HttpGet(LaunсherSettings.URL.VersionsData);
-                if (answer != null)
-                {
-                    List<MCVersionInfo> data = JsonConvert.DeserializeObject<List<MCVersionInfo>>(answer);
-                    return data ?? new List<MCVersionInfo>();
-                }
-                else
-                {
-                    return new List<MCVersionInfo>();
-                }
-            }
-            catch
-            {
-                return new List<MCVersionInfo>();
-            }
-
-        }
-
         public static bool ServerIsOnline()
         {
             return HttpPost(LaunсherSettings.URL.Base + "api/onlineStatus") == "online";
-        }
-
-        public static List<string> GetModloadersList(string gameVersion, ClientType modloaderType)
-        {
-            string modloader;
-            if (modloaderType != ClientType.Vanilla)
-            {
-                modloader = "/" + modloaderType.ToString().ToLower() + "/";
-            }
-            else
-            {
-                return new List<string>();
-            }
-
-            try
-            {
-                string answer = HttpGet(LaunсherSettings.URL.VersionsData + gameVersion + modloader);
-                if (answer != null)
-                {
-                    List<string> data = JsonConvert.DeserializeObject<List<string>>(answer);
-                    Runtime.DebugWrite("Return " + modloaderType + ", Count: " + data.Count);
-                    return data ?? new List<string>();
-                }
-                else
-                {
-                    return new List<string>();
-                }
-            }
-            catch
-            {
-                return new List<string>();
-            }
         }
 
         public static async Task<int> GetMcServerOnline(MinecraftServerInstance server)
@@ -142,27 +88,6 @@ namespace Lexplosion.Logic.Network
             catch
             {
                 return new List<MinecraftServerInstance>();
-            }
-        }
-
-        public static List<string> GetOptifineVersions(string gameVersion)
-        {
-            try
-            {
-                string answer = HttpGet(LaunсherSettings.URL.InstallersData + gameVersion + "/optifine");
-                if (answer != null)
-                {
-                    List<string> data = JsonConvert.DeserializeObject<List<string>>(answer);
-                    return data ?? new List<string>();
-                }
-                else
-                {
-                    return new List<string>();
-                }
-            }
-            catch
-            {
-                return new List<string>();
             }
         }
 

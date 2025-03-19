@@ -20,6 +20,7 @@ namespace Lexplosion.Logic.Objects.CommonClientData
 			public List<string> accountTypes = null;
 			public bool? nightWorldClient = null;
 			public List<string> clientTypes = null;
+			public bool? nightWorldSkinSystem = null;
 		}
 
 		public bool notArchived;

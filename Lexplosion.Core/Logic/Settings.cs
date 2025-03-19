@@ -68,7 +68,7 @@ namespace Lexplosion.Logic
         /// <summary>
         /// Использовать систему скинов NightWorld
         /// </summary>
-        public bool? IsNightWorldSkinSystem = false;
+        public bool? IsNightWorldSkinSystem = null;
 
         /// <summary>
         /// Аргументы JVM
@@ -102,8 +102,10 @@ namespace Lexplosion.Logic
                 if (IsHiddenMode == null) IsHiddenMode = settings.IsHiddenMode;
                 if (IsAutoUpdate == null) IsAutoUpdate = settings.IsAutoUpdate;
                 if (NwClientByDefault == null) NwClientByDefault = settings.NwClientByDefault;
-                if (GameArgs == null) GameArgs = settings.GameArgs;
-                if (string.IsNullOrWhiteSpace(AutoLoginServer)) AutoLoginServer = settings.AutoLoginServer;
+				if (IsNightWorldSkinSystem == null) IsNightWorldSkinSystem = settings.IsNightWorldSkinSystem;
+				if (GameArgs == null) GameArgs = settings.GameArgs;
+				if (JVMArgs == null) JVMArgs = settings.JVMArgs;
+				if (string.IsNullOrWhiteSpace(AutoLoginServer)) AutoLoginServer = settings.AutoLoginServer;
                 if (string.IsNullOrWhiteSpace(LanguageId)) LanguageId = settings.LanguageId;
                 if (string.IsNullOrWhiteSpace(ThemeName)) ThemeName = settings.ThemeName;
                 if (string.IsNullOrWhiteSpace(AccentColor)) AccentColor = settings.AccentColor;
@@ -122,9 +124,10 @@ namespace Lexplosion.Logic
                 if (settings.IsShowConsole != null) IsShowConsole = settings.IsShowConsole;
                 if (settings.IsHiddenMode != null) IsHiddenMode = settings.IsHiddenMode;
                 if (settings.IsAutoUpdate != null) IsAutoUpdate = settings.IsAutoUpdate;
-                if (settings.NwClientByDefault != null) NwClientByDefault = settings.NwClientByDefault;
-                if (settings.GameArgs != null) GameArgs = settings.GameArgs;
-                if (!string.IsNullOrWhiteSpace(settings.LanguageId)) LanguageId = settings.LanguageId;
+				if (settings.IsNightWorldSkinSystem != null) IsNightWorldSkinSystem = settings.IsNightWorldSkinSystem;
+				if (settings.GameArgs != null) GameArgs = settings.GameArgs;
+				if (settings.JVMArgs != null) JVMArgs = settings.JVMArgs;
+				if (!string.IsNullOrWhiteSpace(settings.LanguageId)) LanguageId = settings.LanguageId;
                 if (!string.IsNullOrWhiteSpace(settings.ThemeName)) ThemeName = settings.ThemeName;
                 if (!string.IsNullOrWhiteSpace(settings.AccentColor)) AccentColor = settings.AccentColor;
                 AutoLoginServer = settings.AutoLoginServer;
@@ -133,6 +136,7 @@ namespace Lexplosion.Logic
             NetworkDirectConnection = settings.NetworkDirectConnection;
 			ItIsNotShit = settings.ItIsNotShit;
 			NavBarInLeft = settings.NavBarInLeft;
+			NwClientByDefault = settings.NwClientByDefault;
 		}
 
         public Settings Copy()
@@ -166,16 +170,17 @@ namespace Lexplosion.Logic
                 IsShowConsole = false,
                 IsHiddenMode = false,
                 GameArgs = "",
+				JVMArgs = "",
                 IsAutoUpdate = false,
                 NetworkDirectConnection = true,
-                NwClientByDefault = true,
+                NwClientByDefault = null,
                 LanguageId = "ru-RU",
                 ThemeName = "DarkColorTheme",
                 AccentColor = "#167ffc",
 				ItIsNotShit = true,
 				NavBarInLeft = true,
 				IsPortableMode = false,
-                IsNightWorldSkinSystem = false,
+                IsNightWorldSkinSystem = true,
 			};
         }
     }

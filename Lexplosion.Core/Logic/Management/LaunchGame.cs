@@ -240,6 +240,7 @@ namespace Lexplosion.Logic.Management
 				_settings.GameArgs += " ";
 
 			bool isNwClient = (data.VersionFile?.NightWorldClientData != null) && data.VersionFile.IsNightWorldClient;
+			bool isNwSkinSystem = _launchAccount.AccountType == AccountType.NightWorld && _settings.IsNightWorldSkinSystem != false;
 
 			string accountType = _launchAccount.AccountType.ToString();
 			string libs = string.Empty;
@@ -250,8 +251,12 @@ namespace Lexplosion.Logic.Management
 				bool byAccountType = (activation?.accountTypes == null || activation.accountTypes.Contains(accountType));
 				bool byNwClient = activation?.nightWorldClient == null || (activation.nightWorldClient == isNwClient);
 				bool byClientType = (activation?.clientTypes == null || activation.clientTypes.Contains(data.VersionFile.ModloaderType.ToString()));
+				bool bySkinSystem = activation?.nightWorldSkinSystem == null || (activation.nightWorldSkinSystem == isNwSkinSystem);
 
-				if (byAccountType && byNwClient && byClientType && !data.Libraries[lib].notLaunch)
+				if (lib.Contains("authlib"))
+					byAccountType = true;
+
+				if (byAccountType && byNwClient && byClientType && bySkinSystem && !data.Libraries[lib].notLaunch)
 				{
 					libs += "\"" + gamePath + "libraries/" + lib + "\";";
 				}
