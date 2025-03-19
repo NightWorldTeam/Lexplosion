@@ -9,6 +9,11 @@ namespace Lexplosion.WPF.NewInterface.Core.Converters
     {
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            if (value == null) 
+            {
+                return true;
+            }
+
             if (value is IEnumerable collection)
             {
                 return collection.Cast<object>().Count() == 0;

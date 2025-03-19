@@ -21,12 +21,13 @@
 
     <Grid>
 
-        <core:If x:Name="ContainerIf" Condition="{Binding Model.ServerModel.Images, Converter={converters:IsCollectionEmptyConverter}}">
+        <core:If x:Name="ContainerIf" Condition="{Binding Model.Images, UpdateSourceTrigger=PropertyChanged, Converter={converters:IsCollectionEmptyConverter}}">
             <core:If.False>
                 <ListBox
                     x:Name="ImageList"
                     Margin="35,0,0,0"
-                    ItemsSource="{Binding Model.ServerModel.Images}"
+                    Background="Transparent"
+                    ItemsSource="{Binding Model.Images}"
                     Style="{StaticResource TransparentListBox}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
@@ -36,6 +37,7 @@
                                 Click="Button_Click"
                                 Command="{Binding Data.OpenImageCommand, Source={StaticResource ViewModel}}"
                                 CommandParameter="{Binding}"
+                                Cursor="Hand"
                                 Focusable="True">
                                 <Button.Template>
                                     <ControlTemplate TargetType="{x:Type Button}">
@@ -89,7 +91,7 @@
 
             <core:If.True>
                 <!--  TODO: Translate  -->
-                <controls:Empty Description="Изображения отсутствуют" />
+                <controls:Empty Description="Изображения отсутствуют" IsContentLoading="{Binding Model.IsLoading}" />
             </core:If.True>
         </core:If>
 
