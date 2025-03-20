@@ -407,7 +407,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             _instanceClient.BuildFinished += OnBuildFinished;
 
             Logo = _instanceClient.Logo;
-            Tags = _instanceClient.Categories ?? new List<CategoryBase>();
+            var versionTag = new SimpleCategory { Name = GameVersion?.Id ?? "" };
+            var tags = _instanceClient.Categories.ToList() ?? new List<CategoryBase>();
+            tags.Insert(0, versionTag);
+            Tags = tags;
         }
 
         /// <summary>
