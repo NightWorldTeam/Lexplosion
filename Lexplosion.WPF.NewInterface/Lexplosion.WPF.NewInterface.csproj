@@ -285,6 +285,9 @@
     <Compile Include="Mvvm\Views\Pages\WelcomePage\WelcomeView.xaml.cs">
       <DependentUpon>WelcomeView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Mvvm\Views\Windows\SplashWindow.xaml.cs">
+      <DependentUpon>SplashWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WindowComponents\Header\Variants\HeaderBase.cs" />
     <Compile Include="WindowComponents\Header\Variants\MacOSHeader.xaml.cs">
       <DependentUpon>MacOSHeader.xaml</DependentUpon>
@@ -780,6 +783,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Mvvm\Views\Pages\WelcomePage\WelcomeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Mvvm\Views\Windows\SplashWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

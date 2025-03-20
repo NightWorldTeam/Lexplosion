@@ -4,11 +4,8 @@ using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.Tools;
-using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Notifications;
-using Lexplosion.WPF.NewInterface.Core.Objects;
-using Lexplosion.WPF.NewInterface.Core.Services;
 using Lexplosion.WPF.NewInterface.Extensions;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSettings;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Settings;
@@ -20,11 +17,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Net;
-using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -61,6 +55,7 @@ namespace Lexplosion.WPF.NewInterface
         private static double _leftPos;
         private static double _topPos;
 
+        private static SplashWindow _splashWindow;
         private static double _splashWindowLeft;
         private static double _splashWindowTop;
 
@@ -83,35 +78,29 @@ namespace Lexplosion.WPF.NewInterface
 
             _appCore = new AppCore(App.Current.Dispatcher.Invoke, (key) => App.Current.Resources[key]);
 
-            //var title = "TKESKLTSRLK ALLALA";
-            //var message = "Действие фильма будет происходить после событий, рассказанных в фильме «Миссия невыполнима: Последствия». В центре истории новые приключения агента Итана Ханта.";
-
-            //Notification.Add(new InstanceNotification(title, message, NotificationType.Info, TimeSpan.MaxValue));
             // Подписываемся на эвент для загрузки всех строенных dll'ников
             AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
 
-            //app.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+            App.Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
-            //_splashWindow = new SplashWindow();
-            //_splashWindow.ChangeLoadingBoardPlaceholder();
+            _splashWindow = new SplashWindow();
+            _splashWindow.ChangeLoadingBoardPlaceholder();
 
-            //_splashWindowLeft = _splashWindow.Left;
-            //_splashWindowTop = _splashWindow.Top;
+            _splashWindowLeft = _splashWindow.Left;
+            _splashWindowTop = _splashWindow.Top;
 
             ResourceDictionariesLoaded += SetMainWindow;
 
             _app.ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
-            InitializedSystem();
-
             //ResourcesDictionariesRegister();
             //SetMainWindow();
 
-            //Thread thread = new Thread(InitializedSystem);
-            // thread.SetApartmentState(ApartmentState.STA);
-            // thread.Start();
+            Thread thread = new Thread(InitializedSystem);
+            thread.SetApartmentState(ApartmentState.STA);
+            thread.Start();
 
-            //app.Run(_splashWindow);
+            App.Current.Run(_splashWindow);
         }
 
         private static void SetupTestEnviroment()
@@ -207,10 +196,9 @@ namespace Lexplosion.WPF.NewInterface
             _leftPos = mainWindow.Left;
             _topPos = mainWindow.Top;
 
+            (App.Current.MainWindow as SplashWindow).SmoothClosing();
             mainWindow.Show();
-            //(App.Current.MainWindow as SplashWindow).SmoothClosing();
             App.Current.MainWindow = mainWindow;
-            App.Current.Run(mainWindow);
         }
 
         private static void NavigateAfterWelcomePage(ICommand toMainMenu) 
