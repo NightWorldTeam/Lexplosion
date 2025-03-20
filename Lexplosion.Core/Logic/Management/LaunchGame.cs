@@ -828,7 +828,7 @@ namespace Lexplosion.Logic.Management
 				}
 				else
 				{
-					if (files?.version != null && files.libraries != null)
+					if (files?.version?.MinecraftJar != null && files.libraries != null)
 					{
 						bool javaIsNotDefined = true;
 						if (_settings.IsCustomJava == true || _settings.IsCustomJava17 == true)
