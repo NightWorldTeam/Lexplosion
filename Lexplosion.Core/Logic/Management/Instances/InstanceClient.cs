@@ -21,6 +21,7 @@ using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.Logic.Management.Addons;
 using Lexplosion.Logic.Management.Import;
 using Lexplosion.Logic.Management.Import.Importers;
+using System.Diagnostics.SymbolStore;
 
 namespace Lexplosion.Logic.Management.Instances
 {
@@ -347,7 +348,7 @@ namespace Lexplosion.Logic.Management.Instances
         /// <param name="modloaderVersion">Версия модлоадера. Это поле необходимо только если есть модлоадер</param>
         /// <param name="optifineVersion">Версия оптифайна. Если оптифайн не нужен - то null.</param>
         /// <param name="sodium">Устанавливать ли sodium</param>
-        public static InstanceClient CreateClient(string name, InstanceSource type, MinecraftVersion gameVersion, ClientType modloader, string logoPath = null, string modloaderVersion = null, string optifineVersion = null, bool sodium = false)
+        public static InstanceClient CreateClient(string name, InstanceSource type, MinecraftVersion gameVersion, ClientType modloader, bool isNwClient, string logoPath = null, string modloaderVersion = null, string optifineVersion = null, bool sodium = false)
         {
             return CreateClient(CreateSourceFactory(type), name, type, gameVersion, modloader, logoPath: logoPath, modloaderVersion: modloaderVersion, optifineVersion: optifineVersion, sodium: sodium);
         }
