@@ -39,6 +39,17 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         public ViewModelBase Content { get; private set; }
 
 
+        private bool _isLoading;
+        public bool IsLoading 
+        {
+            get => _isLoading; set 
+            {
+                _isLoading = value;
+                OnPropertyChanged();
+            }
+        }
+
+
         #endregion Properties
 
 

@@ -296,50 +296,66 @@
                     </Border>
 
                     <!--  NWClient  -->
-                    <Border
-                        Padding="0,8,0,8"
-                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                        BorderThickness="0,0,0,2">
+                    <Grid>
+                        <TextBlock
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            FontSize="14"
+                            FontWeight="Medium"
+                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                            Text="NWClient не доступен на данную версию" />
+                        <!--  TODO: Translate  -->
 
-                        <Border.Style>
-                            <Style TargetType="{x:Type Border}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Model.IsNWClientAvailable, Mode=OneWay}" Value="False">
-                                        <Setter Property="Opacity" Value="0.4" />
-                                        <Setter Property="IsEnabled" Value="False" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Border.Style>
+                        <Border
+                            Padding="0,8,0,8"
+                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                            BorderThickness="0,0,0,2">
 
-                        <Grid>
+                            <Border.Style>
+                                <Style TargetType="{x:Type Border}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Model.IsNWClientAvailable, Mode=OneWay}" Value="False">
+                                            <Setter Property="Opacity" Value="0.2" />
+                                            <Setter Property="IsEnabled" Value="False" />
+                                            <Setter Property="Effect">
+                                                <Setter.Value>
+                                                    <BlurEffect />
+                                                </Setter.Value>
+                                            </Setter>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
 
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
+                            <Grid>
 
-                            <!--  Header  -->
-                            <StackPanel>
-                                <TextBlock
-                                    FontSize="13"
-                                    FontWeight="Medium"
-                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                    Text="{DynamicResource NightWorldClient}" />
-                                <TextBlock
-                                    FontSize="12"
-                                    FontWeight="Medium"
-                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
-                                    Text="{DynamicResource NightWorldClientDescription}" />
-                            </StackPanel>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
 
-                            <ToggleButton
-                                Grid.Column="1"
-                                HorizontalAlignment="Right"
-                                IsChecked="{Binding Model.IsNWClientEnabled}"
-                                Style="{StaticResource SwitchButton}" />
-                        </Grid>
-                    </Border>
+                                <!--  Header  -->
+                                <StackPanel>
+                                    <TextBlock
+                                        FontSize="13"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                        Text="{DynamicResource NightWorldClient}" />
+                                    <TextBlock
+                                        FontSize="12"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                        Text="{DynamicResource NightWorldClientDescription}" />
+                                </StackPanel>
+
+                                <ToggleButton
+                                    Grid.Column="1"
+                                    HorizontalAlignment="Right"
+                                    IsChecked="{Binding Model.IsNWClientEnabled}"
+                                    Style="{StaticResource SwitchButton}" />
+                            </Grid>
+                        </Border>
+                    </Grid>
 
                     <!--  OptimizationMods  -->
                     <StackPanel Visibility="{Binding Model.OptimizationModManager.IsAvaliable, Converter={converters:BooleanToVisibilityConverter}}">

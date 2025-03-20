@@ -13,6 +13,7 @@ using System;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Addons;
 using Lexplosion.WPF.NewInterface.Core;
+using Lexplosion.Logic.Objects;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile
 {
@@ -144,6 +145,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         {
             if (instanceInit == InstanceInit.Successful)
             {
+                // TODO: Translate
                 _appCore.MessageService.Success($"Сборка {_instanceModel.Name} успешно установлена.");
             }
             else
@@ -172,6 +174,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
 
         private void GenerateAdditionalInfo()
         {
+            InstanceData additionalInfo = null;
+
+            if (!_instanceModel.IsInstalled)
+            {
+            }
+
             _appCore.UIThread.Invoke(() =>
             {
                 _additionalInfo.Clear();
@@ -184,10 +192,18 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
                 }
                 else
                 {
-                    if (int.TryParse(DownloadCount, out var downloads))
+                    Runtime.TaskRun(() =>
                     {
-                        _additionalInfo.Add(new InstanceFieldInfo<int>("DownloadCount:", downloads, DownloadsCountToString));
-                    }
+                        additionalInfo = _instanceModel.AdditionalData;
+                        _appCore.UIThread.Invoke(() =>
+                        {
+                            if (additionalInfo != null)
+                            {
+                                _additionalInfo.Add(new InstanceFieldInfo<long>("DownloadCount:", additionalInfo.TotalDownloads, DownloadsCountToString));
+                            }
+
+                        });
+                    });
                 }
             });
         }
@@ -202,7 +218,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             return $"{seconds / 60}мин";
         }
 
-        string DownloadsCountToString(int number)
+        string DownloadsCountToString(long number)
         {
             if (number == 0)
                 return "0";
@@ -210,7 +226,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             if (number < 10000)
                 return number.ToString();
 
-            var size = (int)Math.Log10(number);
+            var size = (long)Math.Log10(number);
 
             switch (size)
             {

@@ -39,6 +39,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
         /// </summary>
         public bool HasChanges { get => HasIntermediateChanged(); }
 
+        public bool IsExternal { get; }
+
 
         #region Versions
 
@@ -215,6 +217,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
 
         public InstanceProfileConfigurationModel(InstanceModelBase instanceModelBase)
         {
+            IsExternal = 
+                instanceModelBase.Source == InstanceSource.Modrinth ||
+                instanceModelBase.Source == InstanceSource.Curseforge ||
+                instanceModelBase.Source == InstanceSource.Nightworld; 
             _instanceModelBase = instanceModelBase;
 
             _instanceData = instanceModelBase.BaseData;
@@ -408,11 +414,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
             // (пере)Создаём менеджер
             ModloaderManager = new ModloaderManager(type, version);
 
-            if (ExtensionManagerBase.IsExtensionLoaded(GameExtension.Optifine, version))
+            if (ExtensionManagerBase.IsExtensionLoaded(type, version))
             {
                 if (ModloaderManager.CurrentMinecraftExtension.IsAvaliable && string.IsNullOrEmpty(modloaderVersion))
                 {
-                    ModloaderVersion = OptimizationModManager.CurrentMinecraftExtension.Versions[0];
+                    ModloaderVersion = ModloaderManager.CurrentMinecraftExtension.Versions[0];
                 }
                 else if (!string.IsNullOrEmpty(modloaderVersion))
                 {
