@@ -113,33 +113,6 @@
                         </core:If.True>
                     </core:If>
 
-                    <!--  Update Button  -->
-                    <core:If Condition="{Binding HasAvailableUpdate}">
-                        <core:If.True>
-
-                            <Border
-                                x:Name="UpdateIndicator"
-                                Width="28"
-                                Height="28"
-                                HorizontalAlignment="Right"
-                                VerticalAlignment="Bottom"
-                                CornerRadius="5,0,0,0">
-
-                                <Border.Background>
-                                    <SolidColorBrush Opacity="0.5" Color="Black" />
-                                </Border.Background>
-
-                                <Viewbox Width="22" Height="22">
-                                    <Path
-                                        Data="M 24.15 42 q -3.75 0 -7.05 -1.425 T 11.325 36.7 q -2.475 -2.45 -3.9 -5.75 Q 6 27.65 6 23.9 t 1.425 -7 q 1.425 -3.25 3.9 -5.675 Q 13.8 8.8 17.1 7.4 Q 20.4 6 24.15 6 q 4 0 7.575 1.75 t 6.175 4.8 v -5.3 h 3 v 10.4 H 30.45 v -3 h 5.25 q -2.2 -2.55 -5.175 -4.1 Q 27.55 9 24.15 9 q -6.25 0 -10.7 4.275 Q 9 17.55 9 23.75 q 0 6.35 4.4 10.8 Q 17.8 39 24.15 39 q 6.25 0 10.55 -4.4 Q 39 30.2 39 23.95 h 3 q 0 7.5 -5.2 12.775 T 24.15 42 Z m 6.1 -9.85 l -7.7 -7.6 v -10.7 h 3 v 9.45 L 32.4 30 Z"
-                                        Fill="{DynamicResource CheckBoxMarkSolidColorBrush}"
-                                        Stretch="Fill" />
-                                </Viewbox>
-                            </Border>
-
-                        </core:If.True>
-                    </core:If>
-
                     <!--  More Button  -->
                     <Grid Opacity="0">
                         <Border CornerRadius="5">
@@ -206,6 +179,39 @@
                         Background="Transparent"
                         CornerRadius="0,5,0,5"
                         ToolTip="Neoforge" />
+
+                    <!--  Update Button  -->
+                    <core:If Condition="{Binding HasAvailableUpdate}">
+                        <core:If.True>
+                            <Button
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Bottom"
+                                Cursor="Hand"
+                                MouseDown="UpdateIndicatorMouseDown">
+                                <Button.Template>
+                                    <ControlTemplate>
+                                        <Border
+                                            x:Name="UpdateIndicator"
+                                            Width="28"
+                                            Height="28"
+                                            CornerRadius="5,0,0,0">
+
+                                            <Border.Background>
+                                                <SolidColorBrush Opacity="0.5" Color="Black" />
+                                            </Border.Background>
+
+                                            <Viewbox Width="22" Height="22">
+                                                <Path
+                                                    Data="M 24.15 42 q -3.75 0 -7.05 -1.425 T 11.325 36.7 q -2.475 -2.45 -3.9 -5.75 Q 6 27.65 6 23.9 t 1.425 -7 q 1.425 -3.25 3.9 -5.675 Q 13.8 8.8 17.1 7.4 Q 20.4 6 24.15 6 q 4 0 7.575 1.75 t 6.175 4.8 v -5.3 h 3 v 10.4 H 30.45 v -3 h 5.25 q -2.2 -2.55 -5.175 -4.1 Q 27.55 9 24.15 9 q -6.25 0 -10.7 4.275 Q 9 17.55 9 23.75 q 0 6.35 4.4 10.8 Q 17.8 39 24.15 39 q 6.25 0 10.55 -4.4 Q 39 30.2 39 23.95 h 3 q 0 7.5 -5.2 12.775 T 24.15 42 Z m 6.1 -9.85 l -7.7 -7.6 v -10.7 h 3 v 9.45 L 32.4 30 Z"
+                                                    Fill="{DynamicResource CheckBoxMarkSolidColorBrush}"
+                                                    Stretch="Fill" />
+                                            </Viewbox>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                        </core:If.True>
+                    </core:If>
                 </Grid>
 
                 <!--  Center Block  -->

@@ -207,5 +207,11 @@ namespace Lexplosion.WPF.NewInterface.Controls.OldInstanceForm
 
 
         #endregion Lower Button Click
+
+        private void UpdateIndicatorMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (_model.State == InstanceState.Default)
+                _model.Update();
+        }
     }
 }
