@@ -350,10 +350,10 @@ namespace Lexplosion.Logic.Management.Instances
         /// <param name="sodium">Устанавливать ли sodium</param>
         public static InstanceClient CreateClient(string name, InstanceSource type, MinecraftVersion gameVersion, ClientType modloader, bool isNwClient, string logoPath = null, string modloaderVersion = null, string optifineVersion = null, bool sodium = false)
         {
-            return CreateClient(CreateSourceFactory(type), name, type, gameVersion, modloader, logoPath: logoPath, modloaderVersion: modloaderVersion, optifineVersion: optifineVersion, sodium: sodium);
+            return CreateClient(CreateSourceFactory(type), name, type, gameVersion, modloader, isNwClient, logoPath: logoPath, modloaderVersion: modloaderVersion, optifineVersion: optifineVersion, sodium: sodium);
         }
 
-        private static InstanceClient CreateClient(IInstanceSource source, string name, InstanceSource type, MinecraftVersion gameVersion, ClientType modloader, string logoPath = null, string modloaderVersion = null, string optifineVersion = null, bool sodium = false, string externalId = null)
+        private static InstanceClient CreateClient(IInstanceSource source, string name, InstanceSource type, MinecraftVersion gameVersion, ClientType modloader, bool isNwClient, string logoPath = null, string modloaderVersion = null, string optifineVersion = null, bool sodium = false, string externalId = null)
         {
             if (modloaderVersion == null) modloader = ClientType.Vanilla;
 
@@ -382,7 +382,7 @@ namespace Lexplosion.Logic.Management.Instances
                 installer = AdditionalInstallerType.Optifine;
             }
 
-            client.CreateFileStruct(modloader, modloaderVersion, installer, installerVer);
+            client.CreateFileStruct(modloader, modloaderVersion, isNwClient, installer, installerVer);
             client.SaveAssets();
 
             _installedInstances[client._localId] = client;
@@ -422,7 +422,8 @@ namespace Lexplosion.Logic.Management.Instances
             externalId = server.ModpackInfo.ModpackId;
             modpackVersion = server.ModpackInfo.Version;
 
-            var client = CreateClient(source, name, server.InstanceSource, minecraftVersion, ClientType.Vanilla, externalId: externalId);
+			bool isNwClient = GlobalData.GeneralSettings.NwClientByDefault == true;
+            var client = CreateClient(source, name, server.InstanceSource, minecraftVersion, ClientType.Vanilla, isNwClient, externalId: externalId);
             client.AddGameServer(server, autoLogin);
             client._instanceVersionToDownload = modpackVersion;
 
@@ -474,7 +475,8 @@ namespace Lexplosion.Logic.Management.Instances
                     Summary = _summary,
                     ModloaderVersion = manifest?.version?.ModloaderVersion ?? string.Empty,
                     Modloader = manifest?.version.ModloaderType ?? ClientType.Vanilla,
-                    OptifineVersion = manifest?.version?.AdditionalInstaller?.installerVersion
+                    OptifineVersion = manifest?.version?.AdditionalInstaller?.installerVersion,
+					IsNwClient = manifest?.version?.IsNightWorldClient == true
                 };
             }
         }
@@ -759,6 +761,7 @@ namespace Lexplosion.Logic.Management.Instances
                 manifest.version.ModloaderType = data.Modloader;
                 manifest.version.ModloaderVersion = data.ModloaderVersion;
                 manifest.version.GameVersionInfo = data.GameVersion;
+				manifest.version.IsNightWorldClient = data.IsNwClient;
 
                 if (manifest.version.ModloaderType == ClientType.Vanilla && data.OptifineVersion != null)
                 {
@@ -908,7 +911,8 @@ namespace Lexplosion.Logic.Management.Instances
             if (!InLibrary)
             {
                 GenerateInstanceId();
-                CreateFileStruct(ClientType.Vanilla, string.Empty);
+				bool isNwClient = GlobalData.GeneralSettings.NwClientByDefault == true;
+				CreateFileStruct(ClientType.Vanilla, string.Empty, isNwClient);
                 _installedInstances[_localId] = this;
                 _idsPairs[_externalId] = _localId;
                 SaveInstalledInstancesList();
@@ -1059,7 +1063,7 @@ namespace Lexplosion.Logic.Management.Instances
         /// <param name="modloaderVersion">Версия модлоадера</param>
         /// <param name="additionalInstaller">Оптифайн. Если не нужен, то null</param>
         /// <param name="additionalInstallerVer">Версия оптифайна. null если не нужен</param>
-        private void CreateFileStruct(ClientType modloader, string modloaderVersion, AdditionalInstallerType? additionalInstaller = null, string additionalInstallerVer = null)
+        private void CreateFileStruct(ClientType modloader, string modloaderVersion, bool isNwClient, AdditionalInstallerType? additionalInstaller = null, string additionalInstallerVer = null)
         {
             // TODO: тут надо трай. И если будет исключение надо передавать ошибку
 
@@ -1071,7 +1075,8 @@ namespace Lexplosion.Logic.Management.Instances
                 {
                     GameVersionInfo = GameVersion,
                     ModloaderVersion = modloaderVersion,
-                    ModloaderType = modloader
+                    ModloaderType = modloader,
+					IsNightWorldClient = isNwClient,
                 }
             };
 
@@ -1343,7 +1348,8 @@ namespace Lexplosion.Logic.Management.Instances
             client.Logo = logo;
             client.GenerateInstanceId();
 
-            client.CreateFileStruct(ClientType.Vanilla, string.Empty);
+			bool isNwClient = GlobalData.GeneralSettings.NwClientByDefault == true;
+			client.CreateFileStruct(ClientType.Vanilla, string.Empty, isNwClient);
             res = executor.Import(client._localId, out IReadOnlyCollection<string> errors);
 
             client.Initialized?.Invoke(InstanceInit.Successful, (List<string>)errors, false);
