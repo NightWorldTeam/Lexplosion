@@ -233,17 +233,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
             }
         }
 
-        public bool? IsNightWorldClientEnabled 
-        {
-            get => InstanceSettings.NwClientByDefault; set
-            {
-                InstanceSettings.NwClientByDefault = value;
-                _instanceSettingsCopy.NwClientByDefault = value;
-                _instanceModel.Settings = _instanceSettingsCopy;
-                OnPropertyChanged();
-            }
-        }
-
 
         #endregion Launcher Properties
 

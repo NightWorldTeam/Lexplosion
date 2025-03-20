@@ -148,6 +148,7 @@
     <Compile Include="Extensions\ResourceDictionaryExtensions.cs" />
     <Compile Include="Extensions\ScrollViewerExtensions.cs" />
     <Compile Include="Extensions\StyleSelectors\LastRowItemWrapPanelStyleSelector.cs" />
+    <Compile Include="Extensions\VisualExtensions.cs" />
     <Compile Include="Mvvm\Models\Authorization\AuthorizationMenuModel.cs" />
     <Compile Include="Mvvm\Models\Authorization\Modal\MicrosoftManualInputModal.cs" />
     <Compile Include="Mvvm\Models\Authorization\NightWorldRegistrationModel.cs" />

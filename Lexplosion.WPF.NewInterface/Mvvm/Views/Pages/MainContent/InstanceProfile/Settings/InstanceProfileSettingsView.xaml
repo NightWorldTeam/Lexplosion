@@ -653,37 +653,6 @@
                             Style="{StaticResource SwitchButton}" />
                     </Grid>
                 </Border>
-
-                <!--  NightWorld Client  -->
-
-                <Border
-                    Padding="0,16,0,8"
-                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                    BorderThickness="0,0,0,0">
-                    <Grid>
-
-                        <!--  Header  -->
-                        <StackPanel>
-                            <TextBlock
-                                FontSize="14"
-                                FontWeight="Medium"
-                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                Text="{DynamicResource NightWorldClient}" />
-                            <TextBlock
-                                FontSize="14"
-                                FontWeight="Medium"
-                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
-                                Text="{DynamicResource NightWorldClientDescription}" />
-                        </StackPanel>
-
-
-                        <!--  Content  -->
-                        <ToggleButton
-                            HorizontalAlignment="Right"
-                            IsChecked="{Binding Model.IsNightWorldSkinSystemEnabled}"
-                            Style="{StaticResource SwitchButton}" />
-                    </Grid>
-                </Border>
             </StackPanel>
         </StackPanel>
     </ScrollViewer>

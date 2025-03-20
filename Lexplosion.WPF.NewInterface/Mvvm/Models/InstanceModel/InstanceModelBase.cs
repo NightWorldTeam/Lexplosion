@@ -949,7 +949,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 
         private void SetState(InstanceState state, [CallerMemberName] string methodName = null)
         {
-            Runtime.DebugWrite(_state + " " + methodName);
             State = state;
         }
 

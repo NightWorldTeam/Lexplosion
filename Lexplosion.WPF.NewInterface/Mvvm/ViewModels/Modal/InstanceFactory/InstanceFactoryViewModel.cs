@@ -6,6 +6,10 @@ using Lexplosion.WPF.NewInterface.Core.GameExtensions;
 using Lexplosion.WPF.NewInterface.Core.Modal;
 using System;
 using System.Windows.Input;
+using Lexplosion.Global;
+using Lexplosion.Logic.Network.Services;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
 {
@@ -155,6 +159,23 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
         #endregion OptimizationMods
 
 
+        #region NWClient
+
+
+        /// <summary>
+        /// Modloader Manager (for fabric, forge...)
+        /// </summary>
+        public bool IsNWClientEnabled { get; set; }
+
+        public bool IsNWClientAvailable { get; private set; }
+
+
+        public HashSet<string> NWClientSupportedVersions { get; private set; } = [];
+
+
+        #endregion  NWClient
+
+
         #endregion Properties
 
 
@@ -163,14 +184,21 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
 
         public InstanceFactoryModel()
         {
-            //_instanceModelBase = instanceModelBase;
-
-            //_instanceData = instanceModelBase.InstanceData;
-            //_oldInstanceData = instanceModelBase.InstanceData;
-
             ModloaderManager = new ModloaderManager(GameExtension.Forge, Version);
             Version = GameVersions[0];
             ClientType = ClientType.Vanilla;
+
+            Runtime.TaskRun(() => 
+            {
+                NWClientSupportedVersions = NetworkServicesManager.MinecraftInfo.GetNwClientGameVersions();
+                OnPropertyChanged(nameof(NWClientSupportedVersions));
+
+                IsNWClientAvailable = NWClientSupportedVersions.FirstOrDefault(verStr => verStr == Version.Id) != null;
+                OnPropertyChanged(nameof(IsNWClientAvailable));
+
+                IsNWClientEnabled = GlobalData.GeneralSettings.NwClientByDefault == true;
+                OnPropertyChanged(nameof(IsNWClientEnabled));
+            });
         }
 
 
@@ -207,6 +235,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
                 InstanceSource.Local,
                 Version,
                 ClientType,
+                IsNWClientAvailable ? IsNWClientEnabled : false,
                 null,
                 ModloaderVersion,
                 ClientType == ClientType.Vanilla && IsOptifine ? OptifineVersion : null,
@@ -229,6 +258,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
         {
             UpdateModloaderManager(ClientType, Version);
             UpdateOptimizationModManager(Version);
+
+            IsNWClientAvailable = NWClientSupportedVersions.FirstOrDefault(verStr => verStr == Version.Id) != null;
+            OnPropertyChanged(nameof(IsNWClientAvailable));
         }
 
         /// <summary>
@@ -246,7 +278,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
         /// Изменяет выбранный модлоадер в зависимости его типа и версии игры.<br/>
         /// Вызывает метод OnPropertyChanged() для свойства ModloaderManager и HasChanges.
         /// </summary>
-        /// <param name="type">Тип модлоадера (игнорирует GameExtension.Optifine)</param>
+        /// <param name="type">Тип модлоадера (игнорирует GameExtension.Optifine, GameExtension.NWClient)</param>
         /// <param name="version">Версия игры</param>
         private void UpdateModloaderManager(GameExtension type, MinecraftVersion version, string modloaderVersion = null)
         {

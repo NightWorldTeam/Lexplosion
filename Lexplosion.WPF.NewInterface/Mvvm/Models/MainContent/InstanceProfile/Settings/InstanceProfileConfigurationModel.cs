@@ -1,10 +1,13 @@
-﻿using Lexplosion.Logic.Management;
+﻿using Lexplosion.Global;
+using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Instances;
+using Lexplosion.Logic.Network.Services;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.GameExtensions;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Settings
@@ -40,7 +43,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
         #region Versions
 
 
-        /// <summary>
+        /// <summary>ы
         /// Список версий майнкрафта
         /// </summary>
         public MinecraftVersion[] GameVersions { get => IsShowSnapshots ? MainViewModel.AllGameVersions : MainViewModel.ReleaseGameVersions; }
@@ -177,6 +180,33 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
         #endregion OptimizationMods
 
 
+        #region NWClient
+
+
+        /// <summary>
+        /// Modloader Manager (for fabric, forge...)
+        /// </summary>
+        private bool _isNWClientEnabled;
+        public bool IsNWClientEnabled 
+        { 
+            get => _isNWClientEnabled; set 
+            {
+                _isNWClientEnabled = value;
+                _instanceData.IsNwClient = value;
+                OnPropertyChanged(nameof(HasChanges));
+                OnPropertyChanged();
+            }
+        }
+
+        public bool IsNWClientAvailable { get; private set; }
+
+
+        public HashSet<string> NWClientSupportedVersions { get; private set; } = [];
+
+
+        #endregion  NWClient
+
+
         #endregion Properties
 
 
@@ -198,6 +228,18 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
 
             ClientType = _instanceData.Modloader;
             LoadInstanceDefaultExtension(ClientType);
+
+            Runtime.TaskRun(() =>
+            {
+                NWClientSupportedVersions = NetworkServicesManager.MinecraftInfo.GetNwClientGameVersions();
+                OnPropertyChanged(nameof(NWClientSupportedVersions));
+
+                IsNWClientAvailable = NWClientSupportedVersions.FirstOrDefault(verStr => verStr == Version.Id) != null;
+                OnPropertyChanged(nameof(IsNWClientAvailable));
+
+                IsNWClientEnabled = GlobalData.GeneralSettings.NwClientByDefault == true;
+                OnPropertyChanged(nameof(IsNWClientEnabled));
+            });
         }
 
 
@@ -289,6 +331,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
             IsShowSnapshots = _instanceData.GameVersion.Type == MinecraftVersion.VersionType.Snapshot;
             Version = _instanceData.GameVersion ?? GameVersions[0];
             ClientType = _instanceData.Modloader;
+            IsNWClientEnabled = _instanceData.IsNwClient;
             _isOptifine = _instanceData.OptifineVersion != null;
             OnPropertyChanged(nameof(_isOptifine));
             LoadInstanceDefaultExtension(ClientType);
@@ -312,6 +355,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
             OnPropertyChanged(nameof(HasChanges));
             UpdateModloaderManager(_instanceData.Modloader, Version);
             UpdateOptimizationModManager(Version);
+
+            IsNWClientAvailable = NWClientSupportedVersions.FirstOrDefault(verStr => verStr == Version.Id) != null;
+            OnPropertyChanged(nameof(IsNWClientAvailable));
         }
 
         /// <summary>
@@ -327,6 +373,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
             if (ModloaderVersion != null && !_oldInstanceData.ModloaderVersion.Equals(ModloaderVersion) && ClientType != ClientType.Vanilla)
                 return true;
             if (_oldInstanceData.OptifineVersion != (IsOptifine ? OptifineVersion : null))
+                return true;
+            if (_oldInstanceData.IsNwClient != IsNWClientEnabled)
                 return true;
             
             return false;
