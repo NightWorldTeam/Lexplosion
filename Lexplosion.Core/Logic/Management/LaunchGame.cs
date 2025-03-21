@@ -183,7 +183,7 @@ namespace Lexplosion.Logic.Management
 					{
 						if ((isX64System && rule.Os.Arch == MinecraftArgumentObject.Rule.OS.SysArch.x64) || (!isX64System && rule.Os.Arch != MinecraftArgumentObject.Rule.OS.SysArch.x64))
 						{
-							//бидность ситемы подходит
+							//битность ситемы подходит
 							isAllowed = true;
 							break;
 						}
@@ -232,12 +232,16 @@ namespace Lexplosion.Logic.Management
 
 		private string CreateCommand(InitData data)
 		{
+			// TODO: отрефакторить всю эту хуйню. Сделать класс билдер
 			string gamePath = _settings.GamePath.Replace('\\', '/') + "/";
 			gamePath = gamePath.Replace("//", "/");
 			string versionPath = gamePath + "instances/" + _instanceId + "/version/" + data.VersionFile.MinecraftJar.name;
 
 			if (_settings.GameArgs.Length > 0 && _settings.GameArgs[_settings.GameArgs.Length - 1] != ' ')
 				_settings.GameArgs += " ";
+
+			if (_settings.JVMArgs.Length > 0 && _settings.JVMArgs[_settings.JVMArgs.Length - 1] != ' ')
+				_settings.JVMArgs += " ";
 
 			bool isNwClient = (data.VersionFile?.NightWorldClientData != null) && data.VersionFile.IsNightWorldClient;
 			bool isNwSkinSystem = _launchAccount.AccountType == AccountType.NightWorld && _settings.IsNightWorldSkinSystem != false;
@@ -341,7 +345,8 @@ namespace Lexplosion.Logic.Management
 				{
 					command += " -Djavax.net.ssl.trustStore=\"" + _keyStorePath + "\"";
 				}
-				command += @" -Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true -XX:TargetSurvivorRatio=90";
+				command += " " + _settings.JVMArgs;
+				command += @"-Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true -XX:TargetSurvivorRatio=90";
 				command += " -Dhttp.agent=\"Mozilla/5.0\"";
 				command += " -Djava.net.preferIPv4Stack=true";
 				command += " -Xmx" + _settings.Xmx + "M -Xms" + _settings.Xms + "M " + _settings.GameArgs;
@@ -383,6 +388,7 @@ namespace Lexplosion.Logic.Management
 
 				command += additionalInstallerArgumentsBefore;
 				command += jvmArgs + " ";
+				command += _settings.JVMArgs;
 				command += nwClientJvmArgs;
 
 				if (_keyStorePath != null)

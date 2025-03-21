@@ -335,7 +335,7 @@ namespace Lexplosion.Logic.FileSystem
 		/// <summary>
 		/// Ффункция для скачивания файлов клиента в zip формате, без проверки хеша
 		/// </summary>
-		/// <param name="url">Ссылка на файл, охуеть, да? Без .zip в конце.</param>
+		/// <param name="url">Ссылка на файл, охуеть, да? C .zip в конце.</param>
 		/// <param name="file">Имя файла</param>
 		/// <param name="to">Путь куда скачать (без имени файла), должен заканчиваться на слеш.</param>
 		/// <param name="temp">Временная директория (без имени файла), должена заканчиваться на слеш.</param>
@@ -355,7 +355,7 @@ namespace Lexplosion.Logic.FileSystem
 
 				//пробуем скачать 4 раза
 				int i = 0;
-				while (!DownloadFile(url + ".zip", zipFile, temp, taskArgs) && i < 4 && !taskArgs.CancelToken.IsCancellationRequested)
+				while (!DownloadFile(url, zipFile, temp, taskArgs) && i < 4 && !taskArgs.CancelToken.IsCancellationRequested)
 				{
 					Thread.Sleep(1500);
 					i++;
@@ -689,15 +689,18 @@ namespace Lexplosion.Logic.FileSystem
 				if (libsToDownload.Count > 0)
 					tasksPerfomer = new TasksPerfomer(7, libsToDownload.Count);
 
+				long librariesVersion = updates["libraries"];
 				foreach (string lib in libsToDownload)
 				{
 					if (cancelToken.IsCancellationRequested) return errors;
 
 					tasksPerfomer.ExecuteTask(() =>
 					{
+						bool isNwDownload = false;
 						if (_libraries[lib].url == null)
 						{
 							addr = LaunсherSettings.URL.Upload + "libraries/";
+							isNwDownload = true;
 						}
 						else
 						{
@@ -727,10 +730,14 @@ namespace Lexplosion.Logic.FileSystem
 
 						if (_libraries[lib].notArchived)
 						{
+							if (isNwDownload) addr += "?" + librariesVersion;
+
 							isDownload = UnsafeDownloadJar(addr, fileDir, name, tempDir, taskArgs, true);
 						}
 						else
 						{
+							if (isNwDownload) addr += ".zip?" + librariesVersion;
+
 							isDownload = UnsafeDownloadZip(addr, fileDir, name, tempDir, taskArgs);
 						}
 

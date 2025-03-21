@@ -75,10 +75,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer
                     Directory.CreateDirectory(exportDirPath);
 
                 saveFileDialog.InitialDirectory = exportDirPath;
-                saveFileDialog.Filter = "zip files (*.zip)|*.zip";
+                saveFileDialog.Filter = "nwpk files (*.nwpk)|*.nwpk";
                 saveFileDialog.FilterIndex = 2;
                 saveFileDialog.RestoreDirectory = true;
-                saveFileDialog.FileName = Model.InstanceName + ".zip";
+                saveFileDialog.FileName = Model.InstanceName + ".nwpk";
 
 
                 if (saveFileDialog.ShowDialog() == DialogResult.OK) 

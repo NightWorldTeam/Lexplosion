@@ -70,6 +70,7 @@ namespace Lexplosion.Logic.Management.Import.Importers
 			result.Author = parameters.Author;
 			result.Summary = parameters.Summary;
 			result.GameVersionInfo = parameters.GameVersionInfo;
+			result.LogoPath = _unzipPath + parameters.LogoFileName;
 
 			return ImportResult.Successful;
 		}
