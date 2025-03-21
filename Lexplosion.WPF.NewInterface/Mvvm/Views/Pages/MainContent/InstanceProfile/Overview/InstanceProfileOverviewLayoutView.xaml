@@ -26,6 +26,7 @@
             Text="{DynamicResource Overview}" />
 
         <controls:UIUnderlineTabControl
+            x:Name="Tabs"
             Grid.Row="1"
             Background="Transparent"
             ItemsSource="{Binding Tabs}"
@@ -37,6 +38,14 @@
                 </Style>
             </controls:UIUnderlineTabControl.ItemContainerStyle>
         </controls:UIUnderlineTabControl>
+
+        <controls:LoadingBoard
+            Grid.RowSpan="2"
+            Background="Black"
+            BackgroundOpacity="0.2"
+            BlurTarget="{Binding ElementName=Tabs}"
+            Content="Загрузка описания..."
+            IsActive="{Binding IsLoading}" />
     </Grid>
 
 </UserControl>

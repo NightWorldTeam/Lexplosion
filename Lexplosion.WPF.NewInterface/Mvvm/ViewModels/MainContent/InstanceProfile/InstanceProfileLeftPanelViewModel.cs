@@ -24,6 +24,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         public InstanceFieldInfo(string name, T value, Func<T, string>? converter = null)
             : base(name, converter == null ? value.ToString() : converter(value))
         { }
+
+        public InstanceFieldInfo(string name, Func<object> loadValue): base(name, loadValue)
+        { }
     }
 
     public class InstanceProfileLeftPanelViewModel : LeftPanelViewModel
@@ -192,18 +195,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
                 }
                 else
                 {
-                    Runtime.TaskRun(() =>
-                    {
+                    _additionalInfo.Add(new InstanceFieldInfo<long>("DownloadCount:", () => 
+                    { 
                         additionalInfo = _instanceModel.AdditionalData;
-                        _appCore.UIThread.Invoke(() =>
-                        {
-                            if (additionalInfo != null)
-                            {
-                                _additionalInfo.Add(new InstanceFieldInfo<long>("DownloadCount:", additionalInfo.TotalDownloads, DownloadsCountToString));
-                            }
-
-                        });
-                    });
+                        return DownloadsCountToString(additionalInfo.TotalDownloads);
+                    }));
                 }
             });
         }
@@ -237,7 +233,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
                     }
                 case 5:
                     {
-                        return (number / 100).ToString("###.###k");
+                        return (number / 1000).ToString("###.###k");
                     }
                 // M
                 case 7:

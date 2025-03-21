@@ -10,10 +10,20 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         private ViewModelBase _galleryViewModel;
         private ViewModelBase _versionViewModel;
 
+        private bool _isLoading;
+        public bool IsLoading 
+        {
+            get => _isLoading; private set 
+            {
+                _isLoading = value;
+                OnPropertyChanged();
+            }
+        }
+
         public InstanceProfileOverviewLayoutViewModel(AppCore appCore, InstanceModelBase instanceModelBase)
         {
-
-            _overviewViewModel = new InstanceProfileOverviewViewModel(instanceModelBase);
+            IsLoading = true;
+            _overviewViewModel = new InstanceProfileOverviewViewModel(instanceModelBase, ChangeLoadingStatus);
             _galleryViewModel = new InstanceProfileOverviewGalleryViewModel(appCore, instanceModelBase);
 
             _tabs.Add(new TabItemModel { Id = 0, TextKey = "Description", Content = _overviewViewModel, IsSelected = true });
@@ -25,6 +35,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
                 _versionViewModel = new InstanceProfileVersionsViewModel(instanceModelBase);
                 _tabs.Add(new TabItemModel { Id = 0, TextKey = "Versions", Content = _versionViewModel });
             }
+        }
+
+        private void ChangeLoadingStatus(bool newStatus) 
+        {
+            IsLoading = newStatus;
         }
     }
 }

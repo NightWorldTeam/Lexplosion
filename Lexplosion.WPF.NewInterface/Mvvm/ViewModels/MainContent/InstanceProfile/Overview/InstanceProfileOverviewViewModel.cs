@@ -13,16 +13,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         public InstanceData InstanceData { get => InstanceModel.PageData; }
         public BaseInstanceData BaseInstanceData { get => InstanceModel.BaseData; }
 
-        private bool _isLoading;
-        public bool IsLoading
-        {
-            get => _isLoading; private set
-            {
-                _isLoading = value;
-                OnPropertyChanged();
-            }
-        }
-
         public Lazy<Task<InstanceData>> AdditionalDataLazy
         {
             get => new Lazy<Task<InstanceData>>(() => Task.Run(() => InstanceModel.AdditionalData));
@@ -44,14 +34,16 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             {
                 _additionalData = value;
                 OnPropertyChanged();
+                _changeLoadingStatus?.Invoke(false);
             }
         }
 
-        public InstanceProfileOverviewModel(InstanceModelBase instanceModel)
-        {
-            IsLoading = true;
-            InstanceModel = instanceModel;
+        private readonly Action<bool> _changeLoadingStatus;
 
+        public InstanceProfileOverviewModel(InstanceModelBase instanceModel, Action<bool> changeLoadingStatus)
+        {
+            InstanceModel = instanceModel;
+            _changeLoadingStatus = changeLoadingStatus;
             instanceModel.DataChanged += OnDataChanged;
         }
 
@@ -65,9 +57,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
     {
         public InstanceProfileOverviewModel Model { get; }
 
-        public InstanceProfileOverviewViewModel(InstanceModelBase instanceModel)
+        public InstanceProfileOverviewViewModel(InstanceModelBase instanceModel, Action<bool> changeLoadingStatus)
         {
-            Model = new InstanceProfileOverviewModel(instanceModel);
+            Model = new InstanceProfileOverviewModel(instanceModel, changeLoadingStatus);
         }
     }
 }
