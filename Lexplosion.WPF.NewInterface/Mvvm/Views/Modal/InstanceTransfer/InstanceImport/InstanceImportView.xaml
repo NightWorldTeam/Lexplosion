@@ -116,6 +116,7 @@
 
                     <controls:DragDropBoard
                         Margin="0,0,0,16"
+                        AvailableFileExtensions="{Binding Model.AvailableFileExtensions}"
                         Background="Transparent"
                         ImportAction="{Binding Model.ImportAction}">
                         <Border

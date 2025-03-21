@@ -27,6 +27,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
 
         public Queue<InstanceImportFillDataViewModel> FillDataViewModels { get; } = [];
 
+        public IEnumerable<string> AvailableFileExtensions { get; } = ["zip", "nwpk", "mrpack"];
 
         public string ImportURL { get; set; }
 
