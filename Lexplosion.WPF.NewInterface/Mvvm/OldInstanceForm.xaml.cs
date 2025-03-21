@@ -6,6 +6,7 @@ using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using System.Windows.Media;
 using System.Runtime.CompilerServices;
+using System.Windows.Media.Animation;
 
 namespace Lexplosion.WPF.NewInterface.Controls.OldInstanceForm
 {
@@ -73,6 +74,7 @@ namespace Lexplosion.WPF.NewInterface.Controls.OldInstanceForm
         private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             _model = (InstanceModelBase)DataContext;
+            _model.DeletedEvent += OnInstanceDeleted;
             InstanceModel_ModloaderChanged();
             SetVisitButtonIconAndText();
         }
@@ -205,6 +207,35 @@ namespace Lexplosion.WPF.NewInterface.Controls.OldInstanceForm
             LogoButtonCommand.Execute(LogoButtonCommandParameter);
         }
 
+
+        private void OnInstanceDeleted(object obj) 
+        {
+            PlayDeleteAnimation();
+            _model.DeletedEvent -= OnInstanceDeleted;
+        }
+
+        private void PlayDeleteAnimation() 
+        {
+            var doubleAnim = new DoubleAnimation()
+            {
+                From = 1,
+                To = 0.9,
+                Duration = TimeSpan.FromSeconds(0.20)
+            };
+
+            doubleAnim.Completed += (e, e1) =>
+            {
+                var doubleAnim1 = new DoubleAnimation()
+                {
+                    From = this.ActualHeight,
+                    To = 0,
+                    Duration = TimeSpan.FromSeconds(0.10)
+                };
+                this.BeginAnimation(HeightProperty, doubleAnim1);
+            };
+
+            this.BeginAnimation(OpacityProperty, doubleAnim);
+        }
 
         #endregion Lower Button Click
 
