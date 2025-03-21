@@ -19,6 +19,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 {
     public sealed class LibraryViewModel : ViewModelBase
     {
+
+        public event Action<InstanceModelBase> InstanceProfileOpened;
+
         private readonly AppCore _appCore;
         private readonly INavigationStore _navigationStore;
         private readonly ICommand _toMainMenuLayoutCommand;
@@ -57,7 +60,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             get => RelayCommand.GetCommand(ref _openInstanceProfileMenuCommand, (obj) =>
             {
                 var ins = (InstanceModelBase)obj;
-
+                InstanceProfileOpened?.Invoke(ins);
                 _navigationStore.CurrentViewModel = new InstanceProfileLayoutViewModel(_appCore, _navigationStore, _toMainMenuLayoutCommand, ins);
             });
         }
@@ -68,7 +71,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             get => RelayCommand.GetCommand(ref _openAddonsPageCommand, (obj) =>
             {
                 var ins = (InstanceModelBase)obj;
-
+                InstanceProfileOpened?.Invoke(ins);
                 _navigationStore.CurrentViewModel = new InstanceProfileLayoutViewModel(_appCore, _navigationStore, _toMainMenuLayoutCommand, ins);
 
                 (_navigationStore.CurrentViewModel as InstanceProfileLayoutViewModel).OpenAddonContainerPage();

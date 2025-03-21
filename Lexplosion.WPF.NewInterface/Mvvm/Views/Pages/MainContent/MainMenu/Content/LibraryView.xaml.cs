@@ -29,11 +29,18 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu
         private void OnDataContextChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
         {
             _viewModel = (LibraryViewModel)DataContext;
+
             if (_viewModel == null)
             {
                 posIndex = GetFirstVisibleItemIndex();
                 Runtime.DebugWrite($"Pos: {posIndex}", color: System.ConsoleColor.Red);
+                return;
             }
+
+            _viewModel.InstanceProfileOpened += (instanceModel) => 
+            {
+                posIndex = GetFirstVisibleItemIndex();
+            };
         }
 
         private int GetFirstVisibleItemIndex()
