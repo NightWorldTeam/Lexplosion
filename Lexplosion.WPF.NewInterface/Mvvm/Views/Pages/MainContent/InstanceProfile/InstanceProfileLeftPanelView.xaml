@@ -271,6 +271,7 @@
                             <core:If Condition="{Binding InstanceModel.IsInstalled, UpdateSourceTrigger=PropertyChanged}">
                                 <core:If.True>
                                     <Grid>
+                                        <!--  TODO: Translate  -->
                                         <controls:AdvancedButton
                                             x:Name="PlayButton"
                                             Command="{Binding PlayCommand}"

@@ -32,6 +32,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         public LibraryModel Model { get; }
         public NotifyCallback Notify { get; }
 
+        public bool IsScrollToEnd { get; set; }
 
         private bool _isCategoriesListOpen;
         public bool IsCategoriesListOpen

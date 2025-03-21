@@ -187,13 +187,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         /// Индексация как у обычной коллекции с нуля.
         /// </summary>
         /// <param name="index">Индекс элемента</param>
-        public void SelectItem(int index)
+        public LeftPanelMenuItem SelectItem(int index)
         {
-            //WaitHandler.WaitOne();
             if (SelectedItem != null)
                 SelectedItem.IsSelected = false;
-            Console.WriteLine($"{_items.Count} {index}");
             _items[index].IsSelected = true;
+            return _items[index];
         }
 
         public void SelectFirst()

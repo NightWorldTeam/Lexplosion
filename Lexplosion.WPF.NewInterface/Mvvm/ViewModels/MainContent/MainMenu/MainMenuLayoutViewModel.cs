@@ -55,9 +55,16 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
             // Library Section
             _libraryViewModel = new LibraryViewModel(appCore, navigationStore, ToMainMenuLayoutCommand, modalNavStore, mainModel.LibraryController, OpenCatalog);
+            var toLibraryCommand = new NavigateCommand<ViewModelBase>(navigationStore, () => _libraryViewModel);
 
             // Multiplayer Section
-            var selectInstanceForServerArgs = new SelectInstanceForServerArgs(() => mainModel.LibraryController.Instances, (ic) => mainModel.LibraryController.Add(ic));
+            var selectInstanceForServerArgs = new SelectInstanceForServerArgs(() => mainModel.LibraryController.Instances, (ic) => 
+            {
+                var instanceModel = mainModel.LibraryController.Add(ic);
+                var item = LeftPanel.SelectItem(1);
+                (item.Content as LibraryViewModel).IsScrollToEnd = true;
+                return instanceModel;
+            });
             var multiplayerLayoutArgs = new MultiplayerLayoutArgs(OpenAccountFactory, selectInstanceForServerArgs);
             _multiplayerLayoutViewModel = new NightWorldLimitedContentLayoutViewModel(new MultiplayerLayoutViewModel(appCore, ToMainMenuLayoutCommand, multiplayerLayoutArgs));
 
