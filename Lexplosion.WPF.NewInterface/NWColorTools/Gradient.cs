@@ -35,7 +35,6 @@ namespace Lexplosion.WPF.NewInterface.NWColorTools
             var hues = LinearInterpolate((int)startHSV.Hue, (int)endHSV.Hue, length);
             var saturations = LinearInterpolate(startHSV.Saturation, endHSV.Saturation, length);
             var values = LinearInterpolate(startHSV.Value, endHSV.Value, length);
-            Console.WriteLine("Linear Interpolate executed");
 
             var colors = new Color[length];
             var HSVs = new ColorModel[length];
@@ -48,7 +47,6 @@ namespace Lexplosion.WPF.NewInterface.NWColorTools
             var greens = ColorModel.GetGreensFromArray(HSVs);
             var blues = ColorModel.GetBluesFromArray(HSVs);
 
-            Console.WriteLine("Building Colors...");
             for (var i = 0; i < length; i++)
             {
                 colors[i] = Color.FromRgb(reds[i], greens[i], blues[i]);

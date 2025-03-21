@@ -86,8 +86,6 @@ namespace Lexplosion.WPF.NewInterface.Core.Resources.Theme
                     var key = element.Attributes().FirstOrDefault(a => a.Name.LocalName == "key").Value;
                     var value = element.Value;
 
-                    Console.WriteLine($"{key}: {value}");
-
                     Content.Add(new(key, value));
                 }
 

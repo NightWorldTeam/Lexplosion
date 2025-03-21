@@ -38,7 +38,6 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
         protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
         {
-            Console.WriteLine(sizeInfo.NewSize.ToString());
             base.OnRenderSizeChanged(sizeInfo);
         }
 

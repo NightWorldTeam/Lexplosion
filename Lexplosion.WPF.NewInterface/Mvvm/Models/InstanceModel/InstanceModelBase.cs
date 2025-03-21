@@ -301,7 +301,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             get
             {
                 var s = _instanceClient.GetBaseData;
-                Runtime.DebugWrite(s.GetHashCode());
                 return s;
             }
         }

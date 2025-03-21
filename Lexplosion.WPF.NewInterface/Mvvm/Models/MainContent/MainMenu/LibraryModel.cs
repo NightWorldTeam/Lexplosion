@@ -58,7 +58,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
             FilterPanel.FilterChanged += OnFilterChanged;
 
             InstancesCollectionViewSource.Source = instanceController.Instances;
-            Console.WriteLine("library loading test");
 
             if (_instanceController.Instances is INotifyCollectionChanged notifyChangeCollection) 
             {

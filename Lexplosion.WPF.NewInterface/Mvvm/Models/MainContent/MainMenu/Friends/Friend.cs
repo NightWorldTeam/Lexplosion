@@ -58,7 +58,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends
 
         public Friend(string name, FriendStatus status, FriendState state, string avatar, string runningClientName)
         {
-            Console.WriteLine(name + " " + status.Priority);
             Name = name;
             Status = status;
             State = state;

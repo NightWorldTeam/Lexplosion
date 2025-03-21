@@ -42,7 +42,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.InstanceProfi
         private void DragDropField_Drop(object sender, System.Windows.DragEventArgs e)
         {
             var fe = sender as FrameworkElement;
-            Console.WriteLine(e.Data);
 
             fe.Visibility = System.Windows.Visibility.Collapsed;
         }

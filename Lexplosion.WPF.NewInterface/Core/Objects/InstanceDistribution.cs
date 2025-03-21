@@ -107,7 +107,6 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
             get => _instanceState; private set
             {
                 _instanceState = value;
-                Console.WriteLine(_instanceState);
                 OnPropertyChanged();
             }
         }

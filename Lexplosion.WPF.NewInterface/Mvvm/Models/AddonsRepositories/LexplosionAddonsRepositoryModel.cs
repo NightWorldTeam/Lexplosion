@@ -274,7 +274,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
             Runtime.TaskRun(() =>
             {
                 var categories = GetCategories();
-                Console.WriteLine(categories.Count);
 
                 App.Current.Dispatcher.Invoke(() =>
                 {
@@ -341,7 +340,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
             {
                 if (i.GetHashCode() == category.GetHashCode())
                     i.IsSelected = true;
-                Console.WriteLine($"{i.Name} {i.GetHashCode()} == {i.GetHashCode()} {i.Name}");
             }
         }
 

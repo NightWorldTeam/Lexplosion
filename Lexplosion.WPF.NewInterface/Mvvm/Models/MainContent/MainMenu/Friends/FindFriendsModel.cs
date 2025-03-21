@@ -181,7 +181,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends
                 }
                 else
                 {
-                    Console.WriteLine(searchFilter);
                     _usersCatalogPage = NightWorldApi.FindUsers(activeAccount.UUID, activeAccount.SessionToken, (uint)CurrentPageIndex, searchFilter ?? string.Empty);
                 }
 

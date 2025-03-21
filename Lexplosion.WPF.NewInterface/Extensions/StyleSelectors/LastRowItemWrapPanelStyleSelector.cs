@@ -16,8 +16,6 @@ namespace Lexplosion.WPF.NewInterface.Extensions
             var itemsControl = ItemsControl.ItemsControlFromItemContainer(container);
             var index = itemsControl.ItemContainerGenerator.IndexFromContainer(container);
 
-            Console.WriteLine(itemsControl.ActualWidth / ElementWidth);
-
             if ((itemsControl.ActualWidth / ElementWidth) % index == 0)
                 return LastRowElementStyle;
 
