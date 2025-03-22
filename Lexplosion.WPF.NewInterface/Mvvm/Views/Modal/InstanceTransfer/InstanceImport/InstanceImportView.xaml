@@ -43,8 +43,8 @@
                     <!--  Name & Status | Progress Bar  -->
                     <Grid Grid.Column="1" Margin="0,5,0,0">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
                         <TextBlock
@@ -53,6 +53,8 @@
                             Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
                             Text="{Binding Name}" />
 
+                        <!--  TODO: Translate  -->
+                        <!--  Возможно чуть доработать дизайн нужен  -->
                         <TextBlock
                             x:Name="Status"
                             Grid.Row="1"
@@ -99,7 +101,7 @@
         </DataTemplate>
     </UserControl.Resources>
 
-    <ScrollViewer>
+    <ScrollViewer Margin="0,0,-10,4">
         <Grid Background="Transparent" ShowGridLines="False">
 
             <Grid.RowDefinitions>
@@ -107,7 +109,12 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <Border Margin="0,16,0,16" VerticalAlignment="Stretch">
+            <Border
+                MinWidth="424"
+                MinHeight="342"
+                Margin="0,16,10,16"
+                VerticalAlignment="Stretch"
+                MouseDown="Border_MouseDown">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
@@ -201,15 +208,14 @@
 
             <Border
                 Grid.Row="1"
-                Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}, Converter={converters:WindowHeightToXProcentHeight}, ConverterParameter=30}"
-                Margin="0,0,0,8"
+                Margin="0,0,10,8"
+                VerticalAlignment="Stretch"
                 BorderBrush="{DynamicResource SeparateSolidColorBrush}"
                 BorderThickness="0,1,0,0"
                 Visibility="{Binding Model.ImportProcesses.Count, Converter={converters:CountToVisibilityConverter}}">
                 <!--  TODO: Virtualization  -->
-                <ScrollViewer>
-                    <ItemsControl Margin="0,8,0,0" ItemsSource="{Binding Model.ImportProcesses}" />
-                </ScrollViewer>
+
+                <ItemsControl Margin="0,8,0,0" ItemsSource="{Binding Model.ImportProcesses}" />
             </Border>
         </Grid>
     </ScrollViewer>

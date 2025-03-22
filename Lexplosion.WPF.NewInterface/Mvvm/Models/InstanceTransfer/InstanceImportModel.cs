@@ -205,21 +205,25 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
 
         private void ImportResultHandler(ImportResult importResult, ImportProcess importFile, InstanceClient instanceClient)
         {
-            importFile.IsImporing = false;
-
-            // TODO: Send Notification
-            OnPropertyChanged(nameof(instanceClient.Name));
-
-            if (importResult != ImportResult.Successful)
+            _appCore.UIThread(() =>
             {
-                importFile.IsSuccessful = false;
-                ImportProcesses.Remove(importFile);
-                _removeFromLibrary(instanceClient);
-            }
+                importFile.IsImporing = false;
+                importFile.IsSuccessful = true;
+
+                // TODO: Send Notification
+                OnPropertyChanged(nameof(instanceClient.Name));
+
+                if (importResult != ImportResult.Successful)
+                {
+                    importFile.IsSuccessful = false;
+                    _removeFromLibrary(instanceClient);
+                }
+            });
 
             switch (importResult)
             {
                 case ImportResult.Successful:
+                    _appCore.MessageService.Success("ImportResultSuccessful", true, importFile.Name);
                     break;
                 case ImportResult.ZipFileError:
                     _appCore.MessageService.Error("ImportResultZipFileError", true);

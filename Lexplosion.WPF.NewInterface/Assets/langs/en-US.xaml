@@ -645,6 +645,7 @@
     <s:String x:Key="ImportUrlWrongPathNotification">Неверный формат ссылки</s:String>
 
 
+    <s:String x:Key="ImportResultSuccessful">Сборка {0} успешно импортирована и ожидает вас в библиотеке</s:String>
     <s:String x:Key="ImportResultZipFileError">Ошибка открытия zip файла</s:String>
     <s:String x:Key="ImportResultGameVersionError">Ошибка версии игры</s:String>
     <s:String x:Key="ImportResultJavaDownloadError">Проблема со скачиванием Java</s:String>
