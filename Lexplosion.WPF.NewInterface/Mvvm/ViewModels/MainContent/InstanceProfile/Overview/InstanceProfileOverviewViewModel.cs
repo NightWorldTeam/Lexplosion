@@ -45,6 +45,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             InstanceModel = instanceModel;
             _changeLoadingStatus = changeLoadingStatus;
             instanceModel.DataChanged += OnDataChanged;
+
+            if (instanceModel.IsLocal) 
+            {
+                changeLoadingStatus?.Invoke(false);
+            }
         }
 
         private void OnDataChanged()

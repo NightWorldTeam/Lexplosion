@@ -39,6 +39,7 @@
             </controls:UIUnderlineTabControl.ItemContainerStyle>
         </controls:UIUnderlineTabControl>
 
+        <!--  TODO: Translate  -->
         <controls:LoadingBoard
             Grid.RowSpan="2"
             Background="Black"
