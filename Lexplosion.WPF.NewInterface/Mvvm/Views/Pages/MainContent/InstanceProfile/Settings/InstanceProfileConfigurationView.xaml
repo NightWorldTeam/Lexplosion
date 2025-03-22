@@ -275,7 +275,7 @@
 
                 <!--  NWClient  -->
                 <Grid>
-
+                    <!--  TODO: Translate  -->
                     <TextBlock
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center"
@@ -284,7 +284,6 @@
                         Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
                         Text="NWClient не доступен на данную версию"
                         Visibility="{Binding Model.IsNWClientAvailable, Mode=OneWay, Converter={converters:NegativeBooleanToVisibilityConverter}}" />
-                    <!--  TODO: Translate  -->
                     <Border
                         Padding="0,8,0,8"
                         BorderBrush="{DynamicResource SeparateSolidColorBrush}"
