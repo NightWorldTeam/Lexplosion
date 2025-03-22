@@ -13,6 +13,10 @@ namespace Lexplosion.Logic.Management.Addons
 
         void DefineLatestVersion();
 
+		void DefineSpecificVersion(object versionInfo);
+
+		IDictionary<string, object> GetAllVersions();
+
         /// <summary>
         /// Добавляет допустимый модлоадер. При скачивании мода идёт поиск самой подходящей версии мода, учитывая модлоадер клиента.
         /// Этот метод добавляет модлоадер, версии мода с которым будут пропускаться.
@@ -30,12 +34,12 @@ namespace Lexplosion.Logic.Management.Addons
 
         SetValues<InstalledAddonInfo, DownloadAddonRes> Install(TaskArgs taskArgs);
 
-        /// <summary>
-        /// Сравнивает самую последнюю версию версию файла аддона с переданной.
-        /// </summary>
-        /// <param name="addonFileId">Айдишник файла аддона</param>
-        /// <param name="actionIfTrue">Метод, который будет вызван если последняя версия новее преденной.</param>
-        void CompareVersions(string addonFileId, Action actionIfTrue);
+		/// <summary>
+		/// Сравнивает самую последнюю версию версию файла аддона с переданной.
+		/// </summary>
+		/// <param name="addonFileId">Айдишник файла аддона</param>
+		/// <param name="actionIfTrue">Метод, который будет вызван если последняя версия новее преденной.</param>
+		void CompareVersions(string addonFileId, Action actionIfTrue);
 
         string ProjectId { get; }
         string FileId { get; }
