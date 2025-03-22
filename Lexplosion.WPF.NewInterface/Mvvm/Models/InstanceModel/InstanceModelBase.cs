@@ -803,13 +803,15 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
                 IsPrepare = false;
             }
 
-            if (isRun)
+            if (isRun && init == InstanceInit.Successful)
             {
                 SetState(InstanceState.Launching);
             }
             else
             {
                 SetState(InstanceState.Default);
+                IsLaunched = false;
+                IsLaunching = false;
             }
 
             DownloadingData = null;
