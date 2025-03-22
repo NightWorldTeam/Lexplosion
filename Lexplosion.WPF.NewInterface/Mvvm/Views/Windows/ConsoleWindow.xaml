@@ -30,7 +30,7 @@
     <Window.Resources>
         <DataTemplate DataType="{x:Type core:ConsoleLog}">
 
-            <Grid Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={converters:WindowWidthToXProcentWidth}, ConverterParameter=90}">
+            <Grid FocusVisualStyle="{x:Null}" KeyboardNavigation.TabNavigation="None" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={converters:WindowWidthToXProcentWidth}, ConverterParameter=90}">
                 <!--<Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
@@ -357,33 +357,13 @@
 
                     <ListBox
                         x:Name="LogsContainer"
-                        Background="Transparent"
-                        BorderThickness="0"
+                        ItemContainerStyle="{StaticResource {x:Type ListBoxItem}}"
                         KeyDown="LogsContainer_KeyDown"
-                        SelectionMode="Extended">
-
-                        <ListBox.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <VirtualizingStackPanel IsVirtualizing="True" VirtualizationMode="Recycling" />
-                            </ItemsPanelTemplate>
-                        </ListBox.ItemsPanel>
-
-                        <ListBox.Template>
-                            <ControlTemplate TargetType="ItemsControl">
-                                <Border
-                                    Background="{TemplateBinding Background}"
-                                    BorderBrush="{TemplateBinding BorderBrush}"
-                                    BorderThickness="{TemplateBinding BorderThickness}">
-                                    <ScrollViewer
-                                        Padding="{TemplateBinding Padding}"
-                                        CanContentScroll="True"
-                                        Focusable="False">
-                                        <ItemsPresenter />
-                                    </ScrollViewer>
-                                </Border>
-                            </ControlTemplate>
-                        </ListBox.Template>
-                    </ListBox>
+                        SelectionMode="Extended"
+                        Style="{StaticResource TransparentListBox}"
+                        VirtualizingPanel.CacheLength="1,5"
+                        VirtualizingPanel.CacheLengthUnit="Page"
+                        VirtualizingPanel.ScrollUnit="Pixel" />
                 </Border>
 
             </Grid>

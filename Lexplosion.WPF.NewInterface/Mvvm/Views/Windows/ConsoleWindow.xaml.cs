@@ -76,6 +76,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
 
         private void SetGameManager(LaunchGame gameManager)
         {
+            Logs.Clear();
             _gameManager = gameManager;
             gameManager.ProcessDataReceived += AddNewLine;
         }
