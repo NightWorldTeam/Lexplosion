@@ -101,7 +101,7 @@ namespace Lexplosion.WPF.NewInterface.Controls.OldInstanceForm
 
         private void PART_MainActionButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_model.IsInstalled && !_model.IsLaunching)
+            if (_model.IsInstalled && !_model.IsLaunching && !_model.IsLaunched)
             {
                 _model.Run();
                 return;

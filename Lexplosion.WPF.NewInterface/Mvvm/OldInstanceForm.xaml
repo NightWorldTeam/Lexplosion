@@ -551,16 +551,18 @@
 
                                     <Style.Triggers>
 
+                                        <!--    -->
                                         <DataTrigger Binding="{Binding IsDownloading}" Value="True">
                                             <Setter Property="Visibility" Value="Visible" />
                                         </DataTrigger>
 
-
+                                        <!--  Запуск  -->
                                         <DataTrigger Binding="{Binding IsLaunching}" Value="True">
                                             <Setter Property="Visibility" Value="Visible" />
                                             <Setter Property="IsIndeterminate" Value="True" />
                                         </DataTrigger>
 
+                                        <!--  Отмена скачивания  -->
                                         <DataTrigger Binding="{Binding DownloadCancelling}" Value="True">
                                             <Setter Property="Visibility" Value="Visible" />
                                             <Setter Property="IsIndeterminate" Value="True" />
@@ -686,14 +688,14 @@
                                                     <Setter Property="FontSize" Value="20" />
                                                 </MultiDataTrigger>
 
-                                                <!--  Default Not Installed  -->
+                                                <!--  Default Installed  -->
                                                 <MultiDataTrigger>
                                                     <MultiDataTrigger.Conditions>
                                                         <Condition Binding="{Binding State}" Value="{x:Static instancemodel:InstanceState.Default}" />
                                                         <Condition Binding="{Binding IsInstalled}" Value="True" />
                                                     </MultiDataTrigger.Conditions>
                                                     <Setter TargetName="Icon" Property="extensions:PathExtensions.StringKeyData" Value="Play" />
-                                                    <Setter Property="FontSize" Value="24" />
+                                                    <Setter Property="FontSize" Value="22" />
                                                 </MultiDataTrigger>
 
                                                 <!--  Prepare  -->
@@ -729,6 +731,7 @@
                                                     <Setter TargetName="Percentage" Property="Foreground" Value="{DynamicResource PrimaryForegroundSolidColorBrush}" />
                                                 </MultiDataTrigger>
 
+                                                <!--  Download Cancelling  -->
                                                 <DataTrigger Binding="{Binding DownloadCancelling}" Value="True">
                                                     <Setter TargetName="Icon" Property="Visibility" Value="Collapsed" />
                                                     <Setter TargetName="Percentage" Property="Visibility" Value="Collapsed" />
@@ -742,6 +745,12 @@
                                                 </DataTrigger>
 
                                                 <DataTrigger Binding="{Binding IsShareDownloading}" Value="True">
+                                                    <Setter TargetName="Icon" Property="extensions:PathExtensions.StringKeyData" Value="Cancel" />
+                                                    <Setter Property="FontSize" Value="20" />
+                                                </DataTrigger>
+
+                                                <!--    -->
+                                                <DataTrigger Binding="{Binding IsLaunched}" Value="True">
                                                     <Setter TargetName="Icon" Property="extensions:PathExtensions.StringKeyData" Value="Cancel" />
                                                     <Setter Property="FontSize" Value="20" />
                                                 </DataTrigger>

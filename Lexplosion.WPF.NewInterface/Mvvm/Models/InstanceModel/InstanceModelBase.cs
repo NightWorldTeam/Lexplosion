@@ -16,6 +16,7 @@ using System.ComponentModel.Design.Serialization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using static Lexplosion.Logic.Objects.Nightworld.NightWorldManifest;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolTip;
 
@@ -404,12 +405,19 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             _instanceClient.Initialized += OnDownloadCompleted;
             _instanceClient.LaunchComplited += OnLaunchComplited;
             _instanceClient.BuildFinished += OnBuildFinished;
+            _instanceClient.GameExited += OnGameExited;
 
             Logo = _instanceClient.Logo;
             var versionTag = new SimpleCategory { Name = GameVersion?.Id ?? "" };
             var tags = _instanceClient.Categories.ToList() ?? new List<CategoryBase>();
             tags.Insert(0, versionTag);
             Tags = tags;
+        }
+
+        private void OnGameExited(string instanceId)
+        {
+            IsLaunched = false;
+            State = InstanceState.Default;
         }
 
         /// <summary>
@@ -437,6 +445,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         {
             if (isSuccessful)
             {
+                IsLaunched = true;
                 SetState(InstanceState.Running);
 
                 _appCore.MessageService.Success("InstanceLaunchedSuccessfulNotification", true, _instanceClient.Name);
