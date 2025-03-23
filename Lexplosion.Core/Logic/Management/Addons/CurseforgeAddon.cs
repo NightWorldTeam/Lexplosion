@@ -205,7 +205,7 @@ namespace Lexplosion.Logic.Management.Addons
 			var result = new Dictionary<string, object>();
 			foreach (var file in files)
 			{
-				result[file.fileName] = file;
+				result[file.displayName] = file;
 			}
 
 			return result;
