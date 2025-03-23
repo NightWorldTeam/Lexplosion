@@ -17,7 +17,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
         public SplashWindow()
         {
             InitializeComponent();
-            MouseDown += delegate { DragMove(); };
+            MouseDown += delegate { try { DragMove(); } catch { } };
 
             this.LoadingBoard.Placeholder = loadingPlaceholder;
         }

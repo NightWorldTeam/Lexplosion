@@ -7,7 +7,6 @@ using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile;
 using Lexplosion.WPF.NewInterface.Stores;
 using System.Collections.Generic;
-using System.Windows.Forms;
 using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
@@ -43,20 +42,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
                 OnPropertyChanged();
             }
         }
-
-
-        private RelayCommand _launchInstance;
-        public ICommand LaunchInstanceCommand
-        {
-            get; private set;
-        }
-
-        private RelayCommand _stopProcessCommand;
-        public ICommand StopProcessCommand
-        {
-            get; private set;
-        }
-
 
         public IEnumerable<ProjectSource> ProjectSources { get; }
 
@@ -102,7 +87,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
         private RelayCommand _installAddonCommand;
         public ICommand InstallAddonCommand
         {
-            get => RelayCommand.GetCommand<InstanceAddon>(ref _installAddonCommand, Model.InstallAddon);
+            get => RelayCommand.GetCommand<InstanceAddon>(ref _installAddonCommand, Model.InstallAddonCurrentVersion);
         }
 
         private RelayCommand _uninstallAddonCommand;
@@ -139,8 +124,20 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
         }
 
 
-
         private List<LexplosionAddonsRepositoryModel> _repositoriesList = new();
+
+
+        private RelayCommand _launchInstance;
+        public ICommand LaunchInstanceCommand
+        {
+            get; private set;
+        }
+
+        private RelayCommand _stopProcessCommand;
+        public ICommand StopProcessCommand
+        {
+            get; private set;
+        }
 
 
         #endregion Commands
@@ -149,7 +146,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
         #region Constructors
 
 
-        public LexplosionAddonsRepositoryViewModel(InstanceModelBase instanceModelBase, AddonType addonType, ICommand backCommand, INavigationStore navigationStore)
+        public LexplosionAddonsRepositoryViewModel(AppCore appCore, InstanceModelBase instanceModelBase, AddonType addonType, ICommand backCommand, INavigationStore navigationStore)
         {
             IsLoading = true;
 
@@ -170,12 +167,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
                 {
                     if (addonType == AddonType.Maps)
                     {
-                        _repositoriesList.Add(new LexplosionAddonsRepositoryModel(ProjectSource.Curseforge, instanceData, addonType, instanceModelBase, true));
+                        _repositoriesList.Add(new LexplosionAddonsRepositoryModel(appCore, ProjectSource.Curseforge, instanceData, addonType, instanceModelBase, true));
                     }
                     else
                     {
-                        _repositoriesList.Add(new LexplosionAddonsRepositoryModel(ProjectSource.Modrinth, instanceData, addonType, instanceModelBase, true));
-                        _repositoriesList.Add(new LexplosionAddonsRepositoryModel(ProjectSource.Curseforge, instanceData, addonType, instanceModelBase));
+                        _repositoriesList.Add(new LexplosionAddonsRepositoryModel(appCore, ProjectSource.Modrinth, instanceData, addonType, instanceModelBase, true));
+                        _repositoriesList.Add(new LexplosionAddonsRepositoryModel(appCore, ProjectSource.Curseforge, instanceData, addonType, instanceModelBase));
                     }
 
                     SelectedAddonsRepositoryIndex = 0;
@@ -186,7 +183,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
             });
 
 
-            _modsViewModel = new InstanceAddonsContainerViewModel(navigationStore, AddonType.Mods, instanceModelBase);
+            _modsViewModel = new InstanceAddonsContainerViewModel(appCore, AddonType.Mods, instanceModelBase);
 
 
             IsLoading = false;

@@ -6,6 +6,7 @@ using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.Tools;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Notifications;
+using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Extensions;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSettings;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Settings;
@@ -77,6 +78,15 @@ namespace Lexplosion.WPF.NewInterface
             Settings = new AppSettings();
 
             _appCore = new AppCore(App.Current.Dispatcher.Invoke, (key) => App.Current.Resources[key]);
+
+            _app.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            {
+                Source = new Uri(ResourcePath + "ThemesRegistry.xaml")
+            });
+
+            var s = new Theme("Light Punch", "LightColorTheme.xaml");
+            //_themes.Add(new Theme("Open Space", "DarkColorTheme.xaml"));
+            s.IsSelected = true;
 
             // Подписываемся на эвент для загрузки всех строенных dll'ников
             AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;

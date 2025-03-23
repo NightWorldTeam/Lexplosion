@@ -13,11 +13,14 @@ using Lexplosion.WPF.NewInterface.Core.GameExtensions;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using Lexplosion.Logic.Management.Addons;
 using Lexplosion.Logic.Management;
+using Lexplosion.WPF.NewInterface.Core;
+using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 {
     public sealed class LexplosionAddonsRepositoryModel : AddonsRepositoryModelBase
     {
+        private readonly AppCore _appCore;
         private readonly ICollection<IProjectCategory> _latestApplyCategories = new List<IProjectCategory>();
         private readonly ICollection<object> _latestApplyFilterChanges = new List<object>();
         private readonly Dictionary<string, List<CategoryWrapper>> _categoriesGroupsByName = new();
@@ -53,9 +56,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
         #region Constructors
 
 
-        public LexplosionAddonsRepositoryModel(ProjectSource projectSource, BaseInstanceData instanceData, AddonType addonType, InstanceModelBase instanceModelBase, bool isDefaultSelected = false)
+        public LexplosionAddonsRepositoryModel(AppCore appCore, ProjectSource projectSource, BaseInstanceData instanceData, AddonType addonType, InstanceModelBase instanceModelBase, bool isDefaultSelected = false)
             : base(projectSource, instanceData, addonType, isDefaultSelected)
         {
+            _appCore = appCore;
             _instanceModelBase = instanceModelBase;
             PageSizes = projectSource switch
             {
@@ -100,7 +104,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 
         #region Public & Protected Methods
 
-        public void InstallAddon(InstanceAddon instanceAddon)
+        public void InstallAddon(InstanceAddon instanceAddon, object addonVersion = null)
         {
             var stateData = new DynamicStateData<SetValues<InstanceAddon, DownloadAddonRes>, InstanceAddon.InstallAddonState>();
             var downloableAddonFile = new DownloableAddonFile(instanceAddon);
@@ -124,8 +128,22 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
                 var acceptableModloaders = SelectedModloaders
                     .Where(i => (int)i.EnumValue != (int)_instanceModelBase.BaseData.Modloader)
                     .Select(i => i.EnumValue);
-                instanceAddon.InstallLatestVersion(stateData.GetHandler, acceptableModloaders: acceptableModloaders);
+
+                if (addonVersion == null)
+                {
+                    instanceAddon.InstallLatestVersion(stateData.GetHandler, acceptableModloaders: acceptableModloaders);
+                }
+                else 
+                {
+                    instanceAddon.InstallSpecificVersion(stateData.GetHandler, acceptableModloaders: acceptableModloaders, versionInfo: addonVersion);
+                }
             });
+        }
+
+
+        public void InstallAddonCurrentVersion(InstanceAddon instanceAddon) 
+        {
+            _appCore.ModalNavigationStore.Open(new SelectAddonVersionViewModel(instanceAddon, InstallAddon));
         }
 
 

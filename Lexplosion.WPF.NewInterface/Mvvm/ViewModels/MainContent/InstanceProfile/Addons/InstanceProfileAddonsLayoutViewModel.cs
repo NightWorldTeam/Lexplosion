@@ -98,16 +98,16 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         #region Constructors
 
 
-        public InstanceProfileAddonsLayoutViewModel(INavigationStore navigationStore, InstanceModelBase instanceModelBase) : base()
+        public InstanceProfileAddonsLayoutViewModel(AppCore appCore, InstanceModelBase instanceModelBase) : base()
         {
             HeaderKey = "Addons";
             if (instanceModelBase.BaseData.Modloader != ClientType.Vanilla)
             {
-                _modsViewModel = new InstanceAddonsContainerViewModel(navigationStore, AddonType.Mods, instanceModelBase);
-                _shadersViewModel = new InstanceAddonsContainerViewModel(navigationStore, AddonType.Shaders, instanceModelBase);
+                _modsViewModel = new InstanceAddonsContainerViewModel(appCore, AddonType.Mods, instanceModelBase);
+                _shadersViewModel = new InstanceAddonsContainerViewModel(appCore, AddonType.Shaders, instanceModelBase);
             }
-            _resourcepacksViewModel = new InstanceAddonsContainerViewModel(navigationStore, AddonType.Resourcepacks, instanceModelBase);
-            _mapsViewModel = new InstanceAddonsContainerViewModel(navigationStore, AddonType.Maps, instanceModelBase);
+            _resourcepacksViewModel = new InstanceAddonsContainerViewModel(appCore, AddonType.Resourcepacks, instanceModelBase);
+            _mapsViewModel = new InstanceAddonsContainerViewModel(appCore, AddonType.Maps, instanceModelBase);
 
             InitAddonsTabMenu(instanceModelBase);
         }

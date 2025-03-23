@@ -353,5 +353,5 @@ namespace Lexplosion.Logic.Management.Addons
 		}
 
 		public event Action OnInfoUpdated;
-	}
+    }
 }

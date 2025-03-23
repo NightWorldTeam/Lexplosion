@@ -21,6 +21,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
 
     public sealed class InstanceAddonsContainerViewModel : ViewModelBase, IVisualFormat<VisualFormat>, IInstanceAddonContainerActions
     {
+        private readonly AppCore _appCore;
         private readonly INavigationStore _navigationStore;
         private readonly InstanceModelBase _instanceModelBase;
 
@@ -59,13 +60,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         {
             get => RelayCommand.GetCommand(ref _uninstallCommand, (obj) =>
             {
-/*                var dialogViewModel = new DialogBoxViewModel("delete", "delete",
-                (obj) =>
-                {
-                    
-                }, (obj) => { //ModalNavigationStore.Close();
-                });
-                ModalNavigationStore.Instance.Open(dialogViewModel);*/
                 Model.UninstallAddon(obj);
             });
         }
@@ -77,9 +71,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         #region Constructors
 
 
-        public InstanceAddonsContainerViewModel(INavigationStore navigationStore, AddonType addonType, InstanceModelBase instanceModelBase)
+        public InstanceAddonsContainerViewModel(AppCore appCore, AddonType addonType, InstanceModelBase instanceModelBase)
         {
-            _navigationStore = navigationStore;
+            _appCore = appCore;
+            _navigationStore = _appCore.NavigationStore;
             _instanceModelBase = instanceModelBase;
             Model = new InstanceAddonsContainerModel(addonType, instanceModelBase, () => instanceModelBase.DirectoryPath);
         }
@@ -116,7 +111,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             var backNavCommand = new NavigateCommand<ViewModelBase>(_navigationStore, () => currentViewModel);
             // TODO: Давать возможно назначать репозиторий по-умолчанию
             // Возможно даже делать параметр по умолчанию
-            _navigationStore.CurrentViewModel = new LexplosionAddonsRepositoryViewModel(_instanceModelBase, Model.Type, backNavCommand, _navigationStore); //new ModrinthRepositoryViewModel(_instanceModelBase, Model.Type, backNavCommand, _navigationStore);
+            _navigationStore.CurrentViewModel = new LexplosionAddonsRepositoryViewModel(_appCore, _instanceModelBase, Model.Type, backNavCommand, _navigationStore); //new ModrinthRepositoryViewModel(_instanceModelBase, Model.Type, backNavCommand, _navigationStore);
         }
 
         /// <summary>

@@ -225,6 +225,11 @@ namespace Lexplosion.Logic.Objects.Curseforge
                 }
             }
         }
+
+        public override string ToString()
+        {
+            return displayName;
+        }
     }
 
     public class InstanceManifest

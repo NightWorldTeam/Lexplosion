@@ -890,6 +890,7 @@ namespace Lexplosion.Logic.Management.Instances
 			UpdateAvailable = data.UpdatesAvailable;
 			ProfileVersion = data.ClientVersion;
 
+			data.InitResult = InstanceInit.UnknownError;
 			if (data.InitResult == InstanceInit.Successful)
 			{
 				IsInstalled = true;

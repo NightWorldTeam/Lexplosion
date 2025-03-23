@@ -184,6 +184,7 @@
     <Compile Include="Mvvm\ViewModels\MainContent\ServerProfile\Overview\ServerProfileOverviewViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\ModalFactory\ModalFactoryBase.cs" />
     <Compile Include="Mvvm\ViewModels\ModalFactory\ModalInstanceCreatorFactory.cs" />
+    <Compile Include="Mvvm\ViewModels\Modal\AddonRepository\SelectAddonVersionViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\AdServers\AskServerInstanceInstallingViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\AdServers\SelectInstanceForServerViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\ConfirmActionViewModel.cs" />
@@ -195,6 +196,9 @@
     <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\InstanceShareViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\WelcomePageThemeSelectViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\WelcomeViewModel.cs" />
+    <Compile Include="Mvvm\Views\Modal\AddonRepository\SelectAddonVersionView.xaml.cs">
+      <DependentUpon>SelectAddonVersionView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Mvvm\Views\Modal\AdServers\AskServerInstanceInstallingView.xaml.cs">
       <DependentUpon>AskServerInstanceInstallingView.xaml</DependentUpon>
     </Compile>
@@ -643,6 +647,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Mvvm\Views\Modal\AccountFactoryView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Mvvm\Views\Modal\AddonRepository\SelectAddonVersionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -111,7 +111,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
 
             if (_instanceModel.InLibrary)
             {
-                _addonsViewModel = new InstanceProfileAddonsLayoutViewModel(_navigationStore, _instanceModel);
+                _addonsViewModel = new InstanceProfileAddonsLayoutViewModel(_appCore, _instanceModel);
                 _settingsLayoutViewModel = new InstanceProfileSettingsLayoutViewModel(_instanceModel);
             }
 

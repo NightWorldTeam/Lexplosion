@@ -225,6 +225,11 @@
         <addonsrepositoriesviews:LexplosionAddonsRepository />
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type modalvm:SelectAddonVersionViewModel}">
+        <modalviews:SelectAddonVersionView />
+    </DataTemplate>
+
+
     <!--  Accounts  -->
     <DataTemplate DataType="{x:Type modalvm:AccountFactoryViewModel}">
         <modalviews:AccountFactoryView />

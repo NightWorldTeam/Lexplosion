@@ -6,12 +6,11 @@
 
 
     <Style TargetType="{x:Type local:LoadingBoard}">
-
+        <Setter Property="Foreground" Value="White" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:LoadingBoard}">
                     <Grid>
-
 
                         <Border
                             Grid.Row="1"
@@ -49,7 +48,7 @@
                                     HorizontalAlignment="Center"
                                     FontSize="14"
                                     FontWeight="Medium"
-                                    Foreground="White"
+                                    Foreground="{DynamicResource Foreground}"
                                     SnapsToDevicePixels="False"
                                     Text="{TemplateBinding Placeholder}" />
 

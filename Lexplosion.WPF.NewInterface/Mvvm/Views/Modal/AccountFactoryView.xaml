@@ -234,6 +234,7 @@
                                         Grid.Column="1"
                                         Height="34"
                                         HorizontalAlignment="Stretch"
+                                        FontFamily="{StaticResource Passdots}"
                                         Text="{Binding Model.Password, UpdateSourceTrigger=PropertyChanged}" />
                                 </Grid>
                             </Border>

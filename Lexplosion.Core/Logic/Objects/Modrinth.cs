@@ -214,6 +214,11 @@ namespace Lexplosion.Logic.Objects.Modrinth
 
         [JsonProperty("version_number")]
         public string? VersionNumber;
+
+        public override string ToString()
+        {
+            return VersionNumber;
+        }
     }
 
     public class InstanceManifest

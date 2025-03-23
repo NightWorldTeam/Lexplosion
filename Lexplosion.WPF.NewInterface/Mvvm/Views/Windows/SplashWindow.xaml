@@ -15,17 +15,24 @@
     WindowStartupLocation="CenterScreen"
     WindowStyle="None"
     mc:Ignorable="d">
-    <Border CornerRadius="5">
-        <Grid Background="#0B101C">
+    <Border
+        Padding="16"
+        Background="#0E1422"
+        CornerRadius="5">
+        <Grid>
             <controls:LoadingBoard
                 x:Name="LoadingBoard"
                 Margin="0,80,0,0"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Top"
-                Opacity="0.8" />
+                BorderBrush="#167FFC"
+                BorderColor="#167FFC"
+                Foreground="White"
+                IsActive="True"
+                RectangeColor="#167FFC" />
 
             <StackPanel
-                Margin="0,0,0,13"
+                Margin="0,0,0,0"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Bottom"
                 Orientation="Horizontal">
@@ -33,18 +40,16 @@
                 <TextBlock
                     FontSize="12"
                     FontWeight="Medium"
-                    Foreground="White"
-                    Opacity="0.4"
+                    Foreground="LightGray"
                     Text="Powered by " />
 
                 <TextBlock
-                    Margin="0,0,0,0"
+                    Margin="0,2,0,0"
                     VerticalAlignment="Center"
                     FontFamily="pack://application:,,,/assets/fonts/#Casper Bold"
                     FontSize="12"
                     FontWeight="Bold"
-                    Foreground="White"
-                    Opacity="0.4"
+                    Foreground="Gray"
                     Text="NightWorld" />
             </StackPanel>
         </Grid>
