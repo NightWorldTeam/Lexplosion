@@ -142,15 +142,8 @@ namespace Lexplosion.Logic.Network.Web
 
         private static string BuildCategoriesToQuery(IEnumerable<IProjectCategory> categories) 
         {
-            var ctrs = string.Empty;
-            foreach (var ct in categories)
-            {
-                if (ct.Id == "-1") return string.Empty;
-
-                ctrs += $"{ct.Id},";
-            }
-
-            return ctrs;
+			string ctrs = string.Join(",", categories.Select(x => x.Id != "-1"));
+			return "[" + ctrs + "]";
         }
 
         public static CatalogResult<CurseforgeAddonInfo> GetAddonsList(AddonType type, CurseforgeSearchParams searchParams)
