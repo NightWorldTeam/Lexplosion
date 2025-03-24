@@ -1,31 +1,17 @@
 ﻿using Lexplosion.WPF.NewInterface.Tools;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels;
 using System;
-using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
-using System.IO;
-using System.Xml;
-using System.Windows.Markup;
-using System.Xml.Linq;
-using System.Runtime.InteropServices;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Collections;
-using DiscordRPC.Events;
-using Lexplosion.WPF.NewInterface.Core.Resources;
-using Lexplosion.Core.Resources;
 using Lexplosion.WPF.NewInterface.Core.Objects;
-using System.Resources;
 using Lexplosion.WPF.NewInterface.WindowComponents.Header;
 using Lexplosion.WPF.NewInterface.Core;
-using System.Data;
-using static Lexplosion.Logic.Objects.Nightworld.NightWorldManifest;
-using System.Windows.Data;
 using Lexplosion.WPF.NewInterface.Core.Tools;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows

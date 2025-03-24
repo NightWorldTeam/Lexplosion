@@ -11,6 +11,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 {
     public class FriendsLayoutViewModel : ContentLayoutViewModelBase, ILimitedAccess
     {
+        private readonly AppCore _appCore;
+
         private FriendsViewModel _friendsViewModel;
         private FriendRequestsViewModel _friendsRequestsViewModel;
         private FindFriendsViewModel _findFriendsViewModel;
@@ -48,8 +50,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         #region Constructors
 
 
-        public FriendsLayoutViewModel(Action openFactoryAction) : base()
+        public FriendsLayoutViewModel(AppCore appCore, Action openFactoryAction) : base()
         {
+            _appCore = appCore;
             _openAccountFactory = openFactoryAction;
 
             HasAccess = Account.ActiveAccount?.AccountType == AccountType.NightWorld;
@@ -95,7 +98,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
                 _friendsViewModel = new FriendsViewModel();
                 _friendsRequestsViewModel = new FriendRequestsViewModel();
-                _findFriendsViewModel = new FindFriendsViewModel();
+                _findFriendsViewModel = new FindFriendsViewModel(_appCore);
 
                 _friendsViewModel.Model.Unfriended += (user) =>
                 {

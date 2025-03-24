@@ -8,7 +8,6 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Threading;
-using Lexplosion.WPF.NewInterface.Core.Notifications;
 using System;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Addons;
@@ -38,9 +37,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
 
 
         #region Properties
-
-
-        public NotifyCallback Notify { get; }
 
 
         public ImageBrush InstanceImage
@@ -112,10 +108,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         #region Contructors
 
 
-        public InstanceProfileLeftPanelViewModel(AppCore appCore, INavigationStore navigationStore, ICommand toMainMenuLayoutCommand, InstanceModelBase instanceModelBase, NotifyCallback? notify = null)
+        public InstanceProfileLeftPanelViewModel(AppCore appCore, INavigationStore navigationStore, ICommand toMainMenuLayoutCommand, InstanceModelBase instanceModelBase)
         {
             _appCore = appCore;
-            Notify = notify;
             BackCommand = new RelayCommand((obj) =>
             {
                 if (instanceModelBase.IsInstalled || instanceModelBase.IsDownloading)

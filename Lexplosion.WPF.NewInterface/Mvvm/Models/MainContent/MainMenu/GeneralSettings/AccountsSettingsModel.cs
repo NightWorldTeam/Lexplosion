@@ -87,17 +87,48 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.GeneralSe
             {
                 var authResult = acc.Auth();
 
-                if (authResult == AuthCode.Successfully)
-                    Account.SaveAll();
-
-                else if (acc.AccountType == AccountType.Microsoft && (authResult == AuthCode.TokenError || authResult == AuthCode.SessionExpired))
+                switch (authResult)
                 {
-                    AuthMicrosoftAccount(acc);
-                }
-                else
-                {
-                    // TODO: Notification
-                    // TODO: Error Handler
+                    case AuthCode.Successfully:
+                        Account.SaveAll();
+                        break;
+                    case AuthCode.DataError:
+                        _appCore.MessageService.Error("WrongLoginOrPassword", true);
+                        break;
+                    case AuthCode.NoConnect:
+                        _appCore.MessageService.Error("NoConnectionToTheServer", true);
+                        break;
+                    case AuthCode.TokenError:
+                        {
+                            if (acc.AccountType == AccountType.Microsoft)
+                            {
+                                AuthMicrosoftAccount(acc);
+                                _appCore.MessageService.Warning("TokenErrorRedirectToMicrosoft", true);
+                            }
+                            else
+                            {
+                                _appCore.MessageService.Error("TokenErrorTryAuthAgain", true);
+                            }
+                            break;
+                        }
+                    case AuthCode.SessionExpired:
+                        {
+                            if (acc.AccountType == AccountType.Microsoft)
+                            {
+                                AuthMicrosoftAccount(acc);
+                                _appCore.MessageService.Warning("SessionExpiredRedirectToMicrosoft", true);
+                            }
+                            else
+                            {
+                                _appCore.MessageService.Error("SessionExpiredTryAuthAgain", true);
+                            }
+                            break;
+                        }
+                    case AuthCode.NeedMicrosoftAuth:
+                        break;
+                    default:
+                        _appCore.MessageService.Error("UnknownError", true);
+                        break;
                 }
             });
         }
@@ -195,7 +226,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.GeneralSe
                 _appCore.Resources("YesIWantRemoveAllAccount") as string,
                 (obj) =>
                 {
-                    foreach (var acc in new List<AccountItem>(_accounts)) 
+                    foreach (var acc in new List<AccountItem>(_accounts))
                     {
                         RemoveAccount(acc.Account);
                         Account.SaveAll();

@@ -212,9 +212,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         #region Properties
 
 
-        public NotifyCallback Notify { get; }
-
-
         private InstanceState _state;
         public InstanceState State
         {
@@ -556,9 +553,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             // если запускамый аккаунт отсутствует, то выкидываем уведомление об этом 
             if (launchAcc == null)
             {
-                // TODO: Translate
-                _appCore.MessageService.Warning("Запускаемый аккаунт не выбран, он требуется для запуска клиента.");
-                Notify.Invoke(new SimpleNotification($"Не удалось запустить {Name}", "Запускаемый аккаунт не выбран, он требуется для запуска клиента."));
+                _appCore.MessageService.Warning("$\"Не удалось запустить {Name}\", \"Запускаемый аккаунт не выбран, он требуется для запуска клиента.\"");
                 return;
             }
 
@@ -659,7 +654,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         public void Delete()
         {
             _appCore.ModalNavigationStore.Open(new ConfirmActionViewModel(
-                    _appCore.Resources("RemoveInstance") as string, 
+                    _appCore.Resources("RemoveInstance") as string,
                     string.Format(_appCore.Resources("RemoveInstanceDescription") as string, Name),
                     _appCore.Resources("YesIWantRemoveInstance") as string,
                     (obj) =>
@@ -825,56 +820,107 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             {
                 case InstanceInit.Successful:
                     {
-                        //_appCore.MessageService.Success();
+                        _appCore.MessageService.Success("Instance_HasBeenInstalledSuccessful", true, Name);
                     }
                     break;
                 case InstanceInit.DownloadFilesError:
                     {
+                        // TODO: В будещем переделать ToastMessage на работу с ключами
+                        var title = _appCore.Resources("FailedToDownloadSomeFiles") as string;
+                        var notifyContent = _appCore.Resources("FailedToDownloadFollowingFiles:_") as string;
+                        notifyContent = string.Format(notifyContent, errors.Cast<object>().ToArray());
+
+                        _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent));
                     }
                     break;
                 case InstanceInit.CurseforgeIdError:
                     {
+                        var title = _appCore.Resources("CurseforgeErrorTitle") as string;
+                        var notifyContent = _appCore.Resources("ExternalIdIncorrect") as string;
+
+                        _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent));
                     }
                     break;
                 case InstanceInit.NightworldIdError:
                     {
+                        var title = _appCore.Resources("NightWorldErrorTitle") as string;
+                        var notifyContent = _appCore.Resources("ExternalIdIncorrect") as string;
+
+                        _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent));
                     }
                     break;
                 case InstanceInit.ServerError:
                     {
+                        var title = _appCore.Resources("ServerError") as string;
+                        var notifyContent = _appCore.Resources("FailedGetDataFromServer") as string;
+
+                        _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent));
                     }
                     break;
                 case InstanceInit.GuardError:
                     {
+                        var title = _appCore.Resources("GuardErrorTitle") as string;
+                        var notifyContent = _appCore.Resources("FileVerificationFailed") as string;
+
+                        _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent));
                     }
                     break;
                 case InstanceInit.VersionError:
                     {
+                        var title = _appCore.Resources("VersionErrorTitle") as string;
+                        var notifyContent = _appCore.Resources("VersionVerificationFailed") as string;
+
+                        _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent));
                     }
                     break;
                 case InstanceInit.ForgeVersionError:
                     {
+                        var title = _appCore.Resources("ForgeVersionErrorTitle") as string;
+                        var notifyContent = _appCore.Resources("ModloaderVerificationFailed") as string;
+
+                        _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent));
                     }
                     break;
                 case InstanceInit.GamePathError:
                     {
+                        var title = _appCore.Resources("GamePathErrorTitle") as string;
+                        var notifyContent = _appCore.Resources("InvalidGameDirectory") as string;
+
+                        _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent));
                     }
                     break;
                 case InstanceInit.ManifestError:
                     {
+                        var title = _appCore.Resources("ManifestErrorTitle") as string;
+                        var notifyContent = _appCore.Resources("FailedLoadInstanceManifest") as string;
+
+                        _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent));
                     }
                     break;
                 case InstanceInit.JavaDownloadError:
                     {
+                        var title = _appCore.Resources("JavaDownloadErrorTitle") as string;
+                        var notifyContent = _appCore.Resources("TrySetCustomJavaPath") as string;
+
+                        _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent));
                     }
                     break;
                 case InstanceInit.IsCancelled:
                     {
+                        var title = _appCore.Resources("InstanceDownloadCanceledSuccessfully") as string;
+                        var notifyContent = string.Format(_appCore.Resources("InstanceName:_") as string, Name);
+
+                        _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent));
+
                         OnDownloadCanceled();
                         break;
                     }
                 default:
                     {
+                        var title = _appCore.Resources("UnknownErrorTitle") as string;
+                        var notifyContent = _appCore.Resources("UnknownErrorTryRestartLauncher") as string;
+
+                        _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent));
                     }
                     break;
             }

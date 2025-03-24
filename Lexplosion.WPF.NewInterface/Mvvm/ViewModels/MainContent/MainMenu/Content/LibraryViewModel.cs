@@ -33,7 +33,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
 
         public LibraryModel Model { get; }
-        public NotifyCallback Notify { get; }
 
         public bool IsScrollToEnd { get; set; }
 
@@ -128,10 +127,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
 
         // TODO: думаю делегат с инстансами это костыль ченить другое надо придумать
-        public LibraryViewModel(AppCore appCore, INavigationStore navigationStore, ICommand toMainMenuLayoutCommand, ModalNavigationStore modalNavigationStore, IInstanceController instanceController, Action moveToCatalog, NotifyCallback? notify = null)
+        public LibraryViewModel(AppCore appCore, INavigationStore navigationStore, ICommand toMainMenuLayoutCommand, ModalNavigationStore modalNavigationStore, IInstanceController instanceController, Action moveToCatalog)
         {
             _appCore = appCore;
-            Notify = notify;
             Model = new LibraryModel(instanceController);
             _navigationStore = navigationStore;
             _toMainMenuLayoutCommand = toMainMenuLayoutCommand;

@@ -1,6 +1,8 @@
 ﻿
 using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Controls.Message.Core;
+using Lexplosion.WPF.NewInterface.Core.Notifications;
+using Lexplosion.WPF.NewInterface.Core.Services;
 using Lexplosion.WPF.NewInterface.Core.ViewModel;
 using Lexplosion.WPF.NewInterface.Stores;
 using System;
@@ -140,6 +142,8 @@ namespace Lexplosion.WPF.NewInterface.Core
 
         public IMessageService MessageService { get; }
 
+        public INotificationService NotificationService { get; }
+
 
         public Gallery GalleryManager { get; } = new();
 
@@ -152,6 +156,7 @@ namespace Lexplosion.WPF.NewInterface.Core
             Resources = getResource;
             UIThread = uiThread;
             MessageService = new MessageService();
+            NotificationService = new NotificationService();
         }
 
 

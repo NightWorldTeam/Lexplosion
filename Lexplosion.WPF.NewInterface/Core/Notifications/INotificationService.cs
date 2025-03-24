@@ -9,5 +9,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Notifications
 
         IEnumerable<INotification> Notifications { get; }
         void Notify(INotification notification);
+
+        void Success(string title, string message);
     }
 }

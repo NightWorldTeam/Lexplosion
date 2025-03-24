@@ -12,17 +12,15 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer
     public sealed class ActiveSharesModel : ViewModelBase
     {
         private readonly InstanceSharesController _controller;
-        private readonly NotifyCallback _nofity;
 
 
         public IReadOnlyCollection<DistributedInstance> DistributedInstances { get => _controller.ActiveShares; }
         public bool IsEmpty { get => DistributedInstances.Count == 0;}
 
 
-        public ActiveSharesModel(InstanceSharesController controller, NotifyCallback notify = null)
+        public ActiveSharesModel(InstanceSharesController controller)
         {
             _controller = controller;
-            _nofity = notify;
             _controller.ActiveSharesListChanged += () =>
             {
                 OnPropertyChanged(nameof(DistributedInstances));
@@ -56,9 +54,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer
         #endregion Commands
 
 
-        public ActiveSharesViewModel(InstanceSharesController controller, NotifyCallback notify = null)
+        public ActiveSharesViewModel(InstanceSharesController controller)
         {
-            Model = new ActiveSharesModel(controller, notify);
+            Model = new ActiveSharesModel(controller);
         }
 
         public bool HasAccess => throw new System.NotImplementedException();

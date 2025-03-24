@@ -11,31 +11,39 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
 {
     public sealed class LanguageSettingsModel : ViewModelBase
     {
-        private ObservableCollection<LanguageModel> _languages = new ObservableCollection<LanguageModel>();
-        public IEnumerable<LanguageModel> Languages { get => _languages; }
-
-
-        public static readonly string[] AvaliableLanguages = new string[2]
+        public static readonly string[] AvailableLanguages = new string[2]
         {
             "ru-RU", "en-US"
         };
 
+        private LanguageModel _selectedLang;
+        private LanguageModel selectedLang;
+
+
+        private ObservableCollection<LanguageModel> _languages = new ObservableCollection<LanguageModel>();
+        public IEnumerable<LanguageModel> Languages { get => _languages; }
+
+
+        #region Constructors
+
+
         public LanguageSettingsModel()
         {
-            foreach (var al in AvaliableLanguages)
+            foreach (var al in AvailableLanguages)
             {
                 var languageModel = new LanguageModel(al, al == GlobalData.GeneralSettings.LanguageId);
+
+                if (languageModel.IsSelected)
+                    _selectedLang = languageModel;
+
                 languageModel.SelectedEvent += OnLanguageModelChanged;
                 _languages.Add(languageModel);
             }
         }
 
-        private void OnLanguageModelChanged(string cultureId)
-        {
-            ChangeLangauge(cultureId);
-            GlobalData.GeneralSettings.LanguageId = cultureId;
-            DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
-        }
+
+        #endregion Constructors
+
 
         public void ChangeLangauge(string cultureId)
         {
@@ -43,6 +51,15 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
             {
                 Source = new Uri("pack://application:,,,/Assets/langs/" + cultureId + ".xaml")
             });
+        }
+
+        private void OnLanguageModelChanged(LanguageModel langModel, string cultureId)
+        {
+            _selectedLang.IsSelected = false;
+            _selectedLang = langModel;
+            ChangeLangauge(cultureId);
+            GlobalData.GeneralSettings.LanguageId = cultureId;
+            DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
         }
     }
 }

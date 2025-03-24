@@ -31,8 +31,8 @@ namespace Lexplosion.WPF.NewInterface.Core.Notifications
         {
             Id = Guid.NewGuid();
             Type = type;
-            Title = title;
-            Content = content;
+            Title = title ?? App.Current.Resources[title] as string;
+            Content = content ?? App.Current.Resources[content] as string;
             VisibleTime = visibleTime ?? TimeSpan.FromSeconds(5);
             Time = time ?? DateTime.Now;
             MemberName = memberName;

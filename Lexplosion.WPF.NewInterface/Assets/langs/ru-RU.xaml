@@ -639,7 +639,7 @@
     <!--  Instance Installing  -->
     <s:String x:Key="DownloadCompletedSuccessfully">Скачивание сборки {0} было успешно завершено.</s:String>
 
-    <s:String x:Key="FailedToDownloadFollowingFiles">Не удалось скачать следующие файлы</s:String>
+    <s:String x:Key="FailedToDownloadFollowingFiles:_">Не удалось скачать следующие файлы:{0}</s:String>
     <s:String x:Key="FailedToDownloadSomeFiles">Не удалось скачать некоторые файлы</s:String>
     <s:String x:Key="RedownloadingMaySolveTheProblem">Повторное скачивание может решить проблему, но это не точно.</s:String>
     <s:String x:Key="ExternalIdIncorrect">Внешний id сборки некорректен.</s:String>
@@ -651,8 +651,19 @@
     <s:String x:Key="InvalidGameDirectory">Недействительная директория игры</s:String>
     <s:String x:Key="FailedLoadInstanceManifest">Не удалось загрузить манифест сборки.</s:String>
     <s:String x:Key="TrySetCustomJavaPath">Попробуйте поставить свой путь до джавы в настройках.</s:String>
-    <s:String x:Key="InstanceDownloadCanceledSuccessfully">Скачивание сборки {0} было успешно отменено.</s:String>
+    <s:String x:Key="InstanceDownloadCanceledSuccessfully">Скачивание сборки было успешно отменено.</s:String>
     <s:String x:Key="UnknownErrorTryRestartLauncher">Что-то непонятное произошло... Советуем выключить и включить.</s:String>
+
+    <s:String x:Key="CurseforgeErrorTitle">Ошибка Curseforge</s:String>
+    <s:String x:Key="NightWorldErrorTitle">Ошибка NightWorld</s:String>
+    <s:String x:Key="GuardErrorTitle">Guard Error</s:String>
+    <s:String x:Key="VersionErrorTitle">Ошибка версии</s:String>
+    <s:String x:Key="ForgeVersionErrorTitle">Ошибка версии Forge</s:String>
+    <s:String x:Key="GamePathErrorTitle">Ошибка директории игры</s:String>
+    <s:String x:Key="ManifestErrorTitle">Ошибка манифест-файла</s:String>
+    <s:String x:Key="JavaDownloadErrorTitle">Ошибка уставноки java</s:String>
+    <s:String x:Key="UnknownErrorTitle">Неизвестная ошибка</s:String>
+    <s:String x:Key="InstanceName:_">Название сборки: {0}</s:String>
 
     <!--  endregion Notifications  -->
 
@@ -748,6 +759,15 @@
     </s:String>
     <s:String x:Key="YesIWantRemoveAllAccount">Да, я хочу удалить все аккаунты</s:String>
 
+    <!--  Notification  -->
+    <s:String x:Key="WrongLoginOrPassword">Неверный логин или пароль.</s:String>
+    <s:String x:Key="NoConnectionToTheServer">Нет соединения с сервером!</s:String>
+    <s:String x:Key="TokenError">Ошибка токена!</s:String>
+    <s:String x:Key="UnknownError">Неизвестная ошибка!</s:String>
+    <s:String x:Key="SessionExpiredRedirectToMicrosoft">Сессия истекла. Перенаправляем на страницу авторизации Microsoft</s:String>
+    <s:String x:Key="TokenErrorRedirectToMicrosoft">Ошибка токена. Перенаправляем на страницу авторизации Microsoft</s:String>
+    <s:String x:Key="SessionExpiredTryAuthAgain">Сессия истекла. Стоит попробовать авторизировать снова</s:String>
+    <s:String x:Key="TokenErrorTryAuthAgain">Ошибка токена. Стоит попробовать авторизировать снова</s:String>
 
     <!--  endregion Accounts  -->
 
@@ -764,4 +784,24 @@
 
 
     <!--  endregion Library  -->
+
+    <!--  region Friends  -->
+
+
+    <!--  Notifications  -->
+    <s:String x:Key="FriendRequestHasBeenSent">Запрос в друзья был отправлен.</s:String>
+    <s:String x:Key="FriendRequestWasCancelled">Запрос на добавление в друзья был отменен.</s:String>
+    <s:String x:Key="YouAnd_AreFriendsNow">Вы и {0} теперь друзья!</s:String>
+    <s:String x:Key="YouHaveDeclinedYourFriendRequest_">Вы отклонили заявку в друзья {0}.</s:String>
+
+
+    <!--  endregion Friends  -->
+
+
+    <!--  region Instance  -->
+
+    <!--  Notification  -->
+    <s:String x:Key="Instance_HasBeenInstalledSuccessful">Сборка {0} успешно установлена</s:String>
+
+    <!--  endregion Instance  -->
 </ResourceDictionary>

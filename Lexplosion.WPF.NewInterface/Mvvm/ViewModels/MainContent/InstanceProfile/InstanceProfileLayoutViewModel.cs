@@ -23,9 +23,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         #region Properties
 
 
-        public NotifyCallback Notify { get; }
-
-
         private InstanceProfileLeftPanelViewModel _leftPanel;
         public InstanceProfileLeftPanelViewModel LeftPanel
         {
@@ -63,7 +60,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         #region Constructors
 
 
-        public InstanceProfileLayoutViewModel(AppCore appCore, INavigationStore navigationStore, ICommand toMainMenuLayoutCommand, InstanceModelBase instanceModelBase, NotifyCallback? notify = null)
+        public InstanceProfileLayoutViewModel(AppCore appCore, INavigationStore navigationStore, ICommand toMainMenuLayoutCommand, InstanceModelBase instanceModelBase)
         {
             _appCore = appCore;
             _instanceModel = instanceModelBase;

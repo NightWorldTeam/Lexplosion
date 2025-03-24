@@ -853,7 +853,8 @@ namespace Lexplosion.Logic.Management.Instances
 				ProfileVersion = data.ClientVersion;
 			}
 
-			if (data.InitResult == InstanceInit.Successful)
+			data.InitResult = InstanceInit.DownloadFilesError;
+            if (data.InitResult == InstanceInit.Successful)
 			{
 				IsInstalled = (data.InitResult == InstanceInit.Successful);
 				_instanceVersionToDownload = null;

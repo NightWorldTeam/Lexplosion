@@ -119,12 +119,10 @@
     <Compile Include="Core\IRefreshable.cs" />
     <Compile Include="Core\LeftPanelFieldInfo.cs" />
     <Compile Include="Core\Notifications\IActionNotification.cs" />
-    <Compile Include="Core\Notifications\INotificable.cs" />
     <Compile Include="Core\Notifications\INotification.cs" />
     <Compile Include="Core\Notifications\INotificationAction.cs" />
     <Compile Include="Core\Notifications\INotificationService.cs" />
     <Compile Include="Core\Notifications\NotificationType.cs" />
-    <Compile Include="Core\Notifications\NotifyCallback.cs" />
     <Compile Include="Core\Notifications\SimpleNotification.cs" />
     <Compile Include="Core\Objects\AccountItem.cs" />
     <Compile Include="Core\Objects\Accounts.cs" />
@@ -1176,7 +1174,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Core\Extensions\" />
     <Folder Include="Core\StyleSelectors\" />
     <Folder Include="Mvvm\ViewModels\Welcome\" />
     <Folder Include="Mvvm\Views\Windows\Components\" />

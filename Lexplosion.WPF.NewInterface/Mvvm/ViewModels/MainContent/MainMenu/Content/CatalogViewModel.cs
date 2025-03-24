@@ -22,7 +22,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
 
         public CatalogModel Model { get; }
-        public NotifyCallback Notify { get; }
 
 
         private bool _isCategoriesListOpen;
@@ -115,10 +114,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         #region Constructors
 
 
-        public CatalogViewModel(AppCore appCore, INavigationStore navigationStore, NavigateCommand<ViewModelBase> navigationCommand, IInstanceController instanceController, NotifyCallback? notify = null)
+        public CatalogViewModel(AppCore appCore, INavigationStore navigationStore, NavigateCommand<ViewModelBase> navigationCommand, IInstanceController instanceController)
         {
             _appCore = appCore;
-            Notify = notify;
             Model = new CatalogModel(instanceController);
             _navigationCommand = navigationCommand;
             _navigationStore = navigationStore;

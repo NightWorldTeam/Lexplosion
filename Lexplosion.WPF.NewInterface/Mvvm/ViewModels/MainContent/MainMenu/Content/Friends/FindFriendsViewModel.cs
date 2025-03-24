@@ -60,9 +60,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         #endregion Commands
 
 
-        public FindFriendsViewModel()
+        public FindFriendsViewModel(AppCore appCore)
         {
-            Model = new FindFriendsModel();
+            Model = new FindFriendsModel(appCore);
         }
 
         public void Refresh()

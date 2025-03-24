@@ -68,6 +68,11 @@ namespace Lexplosion.WPF.NewInterface.Core.Services
             _notifications.Remove(_notifications.FirstOrDefault(i => i.Id == notificationId));
         }
 
+        public void Success(string title, string message)
+        {
+            throw new NotImplementedException();
+        }
+
 
         #endregion Public & Protected Methods
     }

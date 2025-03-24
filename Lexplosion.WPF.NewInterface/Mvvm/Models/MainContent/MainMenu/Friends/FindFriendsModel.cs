@@ -4,7 +4,6 @@ using Lexplosion.WPF.NewInterface.Core;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading;
-using System.Windows.Data;
 using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.Logic.Network;
 
@@ -14,7 +13,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends
     {
         public event Action<NightWorldUser> FriendRequestSent;
 
-
+        private readonly AppCore _appCore;
         private CancellationTokenSource _cancellationToken = new();
 
 
@@ -86,8 +85,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends
         #region Constructors
 
 
-        public FindFriendsModel()
+        public FindFriendsModel(AppCore appCore)
         {
+            _appCore = appCore;
             Users.Source = _users;
             LoadUsersList();
         }
@@ -130,8 +130,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends
         {
             user.SendFriendRequest();
             FriendRequestSent?.Invoke(user);
-            // TODO: Notification
-            //DoNotification(ResourceGetter.GetString("friendsChanged"), user.Login + " " + ResourceGetter.GetString("requestsWasSend"), 5, 0);
+            _appCore.MessageService.Success("FriendRequestHasBeenSent", true);
         }
 
         /// <summary>
@@ -140,8 +139,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends
         public void CancelFriendRequest(NightWorldUser user)
         {
             user.CancelFriendRequest();
-            // TODO: Notification
-            //DoNotification(ResourceGetter.GetString("friendsChanged"), user.Login + " " + ResourceGetter.GetString("requestsWasCancel"), 5, 0);
+            _appCore.MessageService.Info("FriendRequestWasCancelled", true);
         }
 
 

@@ -389,7 +389,7 @@
                 Margin="0,22,-14,0"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
-                ItemsSource="{Binding Model.NotificationService.Notifications, Source={StaticResource MainViewModel}}">
+                ItemsSource="{Binding AppCore.NotificationService.Notifications, Source={StaticResource MainViewModel}}">
 
                 <ItemsControl.Resources>
 

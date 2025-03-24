@@ -32,9 +32,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models
         public IInstanceController LibraryController { get; }
         public InstanceSharesController InstanceSharesController { get; }
 
-
-        public INotificationService NotificationService { get; } = new NotificationService();
-
         public MainModel(AppCore appCore)
         {
             _appCore = appCore;
@@ -56,8 +53,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models
             var leftmenu = new LeftMenuControl();
 
             var exportVM = new InstanceExportViewModel(instanceClient);
-            var instanceShare = new InstanceShareViewModel(instanceClient, InstanceSharesController, leftmenu.NavigateTo, NotificationService.Notify);
-            var activeShares = new ActiveSharesViewModel(InstanceSharesController, NotificationService.Notify);
+            var instanceShare = new InstanceShareViewModel(instanceClient, InstanceSharesController, leftmenu.NavigateTo);
+            var activeShares = new ActiveSharesViewModel(InstanceSharesController);
 
             leftmenu.AddTabItems(new ModalLeftMenuTabItem[]
             {

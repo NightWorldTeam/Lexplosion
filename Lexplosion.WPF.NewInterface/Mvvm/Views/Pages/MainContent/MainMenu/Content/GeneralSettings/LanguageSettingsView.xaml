@@ -5,8 +5,10 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu"
+    xmlns:mainmenu="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:objects="clr-namespace:Lexplosion.WPF.NewInterface.Core.Objects"
+    d:DataContext="{d:DesignInstance Type=mainmenu:LanguageSettingsViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
@@ -16,7 +18,7 @@
             <RadioButton
                 Margin="0,8,0,0"
                 GroupName="Language"
-                IsChecked="{Binding IsSelected}"
+                IsChecked="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"
                 Style="{StaticResource LanguageSelectorButton}">
                 <Grid ShowGridLines="False">
 
@@ -59,14 +61,14 @@
     <Grid Margin="45,32,45,8">
         <StackPanel>
             <TextBlock
-                extensions:TextBlockExtensions.TextByKey="Language"
                 FontSize="16"
                 FontWeight="Medium"
-                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                Text="{DynamicResource Language}" />
             <TextBlock
-                extensions:TextBlockExtensions.TextByKey="ChooseLanguage"
                 FontSize="14"
-                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                Text="{DynamicResource ChooseLanguage}" />
 
 
             <ItemsControl ItemsSource="{Binding Model.Languages}" />

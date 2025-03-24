@@ -8,6 +8,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 {
     public sealed class FriendRequestsViewModel : ViewModelBase, IRefreshable
     {
+        private readonly AppCore _appCore;
+
         public FriendRequestsModel Model { get; }
 
 
@@ -20,8 +22,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             get => RelayCommand.GetCommand<NightWorldUserRequest>(ref _declineFriendRequestCommand, friend =>
             {
                 Model.DeclineFriend(friend);
-                // TODO: Notification
-                // TODO: Friends Translate
+                _appCore.MessageService.Info("YouHaveDeclinedYourFriendRequest_", true, friend.Login);
             });
         }
 
@@ -34,8 +35,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             get => RelayCommand.GetCommand<NightWorldUserRequest>(ref _addFriendCommand, friend =>
             {
                 Model.AddFriend(friend);
-                // TODO: Notification
-                // TODO: Friends Translate
+                _appCore.MessageService.Info("YouAnd_AreFriendsNow", true, friend.Login);
             });
         }
 

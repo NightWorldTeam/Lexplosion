@@ -31,32 +31,27 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization
                     }
                 case AuthCode.DataError:
                     {
-                        // TODO: Translate
-                        _appCore.MessageService.Error("Ошибка авторизации");
+                        _appCore.MessageService.Error("WrongLoginOrPassword", true);
                         break;
                     }
                 case AuthCode.NoConnect:
                     {
-                        // TODO: Translate
-                        _appCore.MessageService.Error("Не удалось соединиться с сервером");
+                        _appCore.MessageService.Error("NoConnectionToTheServer", true);
                         break;
                     }
                 case AuthCode.TokenError:
                     {
-                        // TODO: Translate
-                        _appCore.MessageService.Error("Ошибка токена");
+                        _appCore.MessageService.Error("TokenErrorTryAuthAgain", true);
                         break;
                     }
                 case AuthCode.SessionExpired:
                     {
-                        // TODO: Translate
-                        _appCore.MessageService.Error("Сессия истекла");
+                        _appCore.MessageService.Error("SessionExpiredTryAuthAgain", true);
                         break;
                     }
                 default:
                     {
-                        // TODO: Translate
-                        _appCore.MessageService.Error("Unknown error");
+                        _appCore.MessageService.Error("UnknownError", true);
                         break;
                     }
             }

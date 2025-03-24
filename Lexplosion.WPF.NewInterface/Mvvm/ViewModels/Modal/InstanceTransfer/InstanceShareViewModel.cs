@@ -1,20 +1,12 @@
-﻿using Lexplosion.Global;
-using Lexplosion.Logic.FileSystem;
+﻿using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Modal;
-using Lexplosion.WPF.NewInterface.Core.Notifications;
 using Lexplosion.WPF.NewInterface.Core.ViewModel;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer
@@ -27,7 +19,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer
 
         private readonly Action<int> _navigateTo;
         private readonly InstanceClient _instanceClient;
-        private readonly NotifyCallback _notify;
 
 
         private readonly InstanceSharesController _instanceSharesController;
@@ -64,7 +55,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer
         #region Constructors
 
 
-        public InstanceShareModel(InstanceClient instanceClient, InstanceSharesController controller, Action<int> navigateTo, NotifyCallback notify = null)
+        public InstanceShareModel(InstanceClient instanceClient, InstanceSharesController controller, Action<int> navigateTo)
         {
             _instanceClient = instanceClient;
             InstanceName = _instanceClient.Name;
@@ -153,7 +144,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer
         #endregion Commands
 
 
-        public InstanceShareViewModel(InstanceClient instanceClient, InstanceSharesController controller, Action<int> navigateTo, NotifyCallback notify = null)
+        public InstanceShareViewModel(InstanceClient instanceClient, InstanceSharesController controller, Action<int> navigateTo)
         {
             Model = new InstanceShareModel(instanceClient, controller, navigateTo);
             ActionCommandExecutedEvent += OnInstanceShareActionCommandExecuted;
