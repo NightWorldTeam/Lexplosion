@@ -183,7 +183,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
             });
 
 
-            _modsViewModel = new InstanceAddonsContainerViewModel(appCore, AddonType.Mods, instanceModelBase);
+            _modsViewModel = new InstanceAddonsContainerViewModel(appCore, addonType, instanceModelBase);
 
 
             IsLoading = false;
