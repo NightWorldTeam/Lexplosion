@@ -283,59 +283,59 @@
                         <Grid Grid.RowSpan="2" Grid.Column="2">
                             <StackPanel Background="Transparent">
                                 <WrapPanel>
-                                    <controls:OneStageInstallButton
-                                        Command="{Binding DataContext.InstallAddonCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
-                                        CommandParameter="{Binding}"
-                                        Foreground="{DynamicResource BrandColorForegroundSolidColorBrush}"
-                                        ProgressValue="{Binding DownloadPercentages}">
+                                    <Grid>
+                                        <controls:AdvancedButton
+                                            x:Name="InstallButton"
+                                            Padding="16,8"
+                                            Command="{Binding DataContext.InstallAddonCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                            CommandParameter="{Binding}"
+                                            FontSize="12"
+                                            FontWeight="Normal"
+                                            LoadingText="{DynamicResource Installing...}">
+                                            <controls:AdvancedButton.Style>
+                                                <Style BasedOn="{StaticResource sm-default}" TargetType="{x:Type controls:AdvancedButton}">
+                                                    <Setter Property="Content" Value="{DynamicResource Install}" />
 
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsLoading}" Value="True">
+                                                            <Setter Property="Padding" Value="0,8,16,8" />
+                                                            <Setter Property="IsLoading" Value="True" />
+                                                        </DataTrigger>
 
-                                        <controls:OneStageInstallButton.Style>
-                                            <Style BasedOn="{StaticResource {x:Type controls:OneStageInstallButton}}" TargetType="{x:Type controls:OneStageInstallButton}">
-                                                <Setter Property="IsInstalled" Value="{Binding IsInstalled}" />
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsInstalled}" Value="False">
-                                                        <Setter Property="IsInstalled" Value="False" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding UpdateAvailable}" Value="True">
-                                                        <Setter Property="IsInstalled" Value="False" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </controls:OneStageInstallButton.Style>
+                                                        <DataTrigger Binding="{Binding IsInstalled}" Value="True">
+                                                            <Setter Property="IsEnabled" Value="False" />
+                                                            <Setter Property="Content" Value="{DynamicResource Installed}" />
+                                                        </DataTrigger>
 
-                                        <controls:OneStageInstallButton.BeforeInstallContent>
+                                                        <DataTrigger Binding="{Binding UpdateAvailable}" Value="True">
+                                                            <Setter Property="Content" Value="{DynamicResource Update}" />
+                                                        </DataTrigger>
 
-                                            <core:If Condition="{Binding UpdateAvailable}">
-                                                <core:If.True>
-                                                    <TextBlock
-                                                        Margin="16,8"
-                                                        HorizontalAlignment="Center"
-                                                        VerticalAlignment="Center"
-                                                        Foreground="{DynamicResource BrandColorForegroundSolidColorBrush}"
-                                                        Text="{DynamicResource Update}" />
-                                                </core:If.True>
-                                                <core:If.False>
-
-                                                    <TextBlock
-                                                        Margin="16,8"
-                                                        HorizontalAlignment="Center"
-                                                        VerticalAlignment="Center"
-                                                        Foreground="{DynamicResource BrandColorForegroundSolidColorBrush}"
-                                                        Text="{DynamicResource Install}" />
-                                                </core:If.False>
-                                            </core:If>
-
-                                        </controls:OneStageInstallButton.BeforeInstallContent>
-                                        <controls:OneStageInstallButton.AfterInstallContent>
-                                            <Border Background="{DynamicResource DisableControlIconSolidColorBrush}" CornerRadius="5">
-                                                <TextBlock
-                                                    Margin="16,8"
-                                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                                    Text="{DynamicResource Installed}" />
-                                            </Border>
-                                        </controls:OneStageInstallButton.AfterInstallContent>
-                                    </controls:OneStageInstallButton>
+                                                        <MultiDataTrigger>
+                                                            <MultiDataTrigger.Conditions>
+                                                                <Condition Binding="{Binding Path=IsMouseOver, RelativeSource={RelativeSource Mode=Self}}" Value="True" />
+                                                                <Condition Binding="{Binding IsLoading}" Value="True" />
+                                                            </MultiDataTrigger.Conditions>
+                                                            <MultiDataTrigger.Setters>
+                                                                <Setter Property="IsLoading" Value="False" />
+                                                                <Setter Property="Content">
+                                                                    <Setter.Value>
+                                                                        <TextBlock
+                                                                            HorizontalAlignment="Left"
+                                                                            FontSize="12"
+                                                                            TextWrapping="WrapWithOverflow">
+                                                                            <Run Foreground="{DynamicResource DefaultButtonForegroundColorBrush}" Text="{DynamicResource Downloaded}" />
+                                                                            <Run Foreground="{DynamicResource DefaultButtonForegroundColorBrush}" Text="{Binding DownloadPercentages, StringFormat='{}{0}%'}" />
+                                                                        </TextBlock>
+                                                                    </Setter.Value>
+                                                                </Setter>
+                                                            </MultiDataTrigger.Setters>
+                                                        </MultiDataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </controls:AdvancedButton.Style>
+                                        </controls:AdvancedButton>
+                                    </Grid>
 
                                     <controls:DropdownMenu
                                         x:Name="DropdownMenuButton"

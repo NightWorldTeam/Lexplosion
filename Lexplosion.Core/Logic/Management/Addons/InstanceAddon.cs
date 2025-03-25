@@ -158,7 +158,17 @@ namespace Lexplosion.Logic.Management.Addons
 			}
 		}
 
-		private string _websiteUrl = null;
+        private bool _isLoading;
+        public bool IsLoading
+        {
+            get => _isLoading; set
+            {
+                _isLoading = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _websiteUrl = null;
 		public string WebsiteUrl
 		{
 			get => _websiteUrl; set
@@ -327,7 +337,9 @@ namespace Lexplosion.Logic.Management.Addons
 			// если такой аддон уже скачивается - выходим нахуй
 			if (!isDependencie && _synchronizer.CheckAddonInstalling(_addonPrototype.ProjectId)) return;
 
-			_cancelTokenSource = new CancellationTokenSource();
+            IsLoading = true;
+
+            _cancelTokenSource = new CancellationTokenSource();
 			stateHandler.ChangeState(new SetValues<InstanceAddon, DownloadAddonRes>
 			{
 				Value1 = this,
@@ -527,6 +539,7 @@ namespace Lexplosion.Logic.Management.Addons
 			}, InstallAddonState.EndDownload);
 
 			_synchronizer.AddonInstallingFinished();
+			IsLoading = false;
 		}
 
 		/// <summary>

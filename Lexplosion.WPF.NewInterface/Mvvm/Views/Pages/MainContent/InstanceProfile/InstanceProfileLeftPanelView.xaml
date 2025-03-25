@@ -359,6 +359,7 @@
                                                         HorizontalAlignment="Left"
                                                         FontSize="14"
                                                         TextWrapping="WrapWithOverflow">
+                                                        <!--  TODO: Translate  -->
                                                         <Run Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="Процесс:" />
                                                         <Run Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" Text="Обновление файлов" />
                                                     </TextBlock>

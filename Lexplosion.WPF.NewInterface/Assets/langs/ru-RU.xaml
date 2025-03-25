@@ -299,6 +299,7 @@
     <s:String x:Key="SortBy">Сортировать по</s:String>
     <s:String x:Key="ShowPerPage">Показать на странице</s:String>
     <s:String x:Key="Accept">Принять</s:String>
+    <s:String x:Key="Installing...">Установка...</s:String>
 
 
     <!--    -->
