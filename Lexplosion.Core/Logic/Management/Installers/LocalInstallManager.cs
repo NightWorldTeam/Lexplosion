@@ -62,7 +62,7 @@ namespace Lexplosion.Logic.Management.Installers
 
 			if (Manifest != null)
 			{
-				Updates = WithDirectory.GetLastUpdates(InstanceId);
+				Updates = DataFilesManager.GetLastUpdates(InstanceId);
 				updatesCount = installer.CheckBaseFiles(Manifest, ref Updates); // проверяем основные файлы клиента на обновление
 
 				if (updatesCount == -1)

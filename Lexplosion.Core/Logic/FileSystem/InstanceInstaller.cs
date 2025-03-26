@@ -632,7 +632,7 @@ namespace Lexplosion.Logic.FileSystem
 
 				if (cancelToken.IsCancellationRequested)
 				{
-					SaveFile(InstancesPath + instanceId + "/lastUpdates.json", JsonConvert.SerializeObject(updates));
+					DataFilesManager.SaveLastUpdates(instanceId, updates);
 					return errors;
 				}
 
@@ -642,7 +642,7 @@ namespace Lexplosion.Logic.FileSystem
 
 				if (downloadResult == DownloadFileProgress.Error)
 				{
-					SaveFile(InstancesPath + instanceId + "/lastUpdates.json", JsonConvert.SerializeObject(updates));
+					DataFilesManager.SaveLastUpdates(instanceId,updates);
 					return errors;
 				}
 			}
@@ -834,7 +834,7 @@ namespace Lexplosion.Logic.FileSystem
 			finally
 			{
 				_librariesBlock.Release(gameVersionName);
-			}			
+			}
 
 			//скачиваем assets
 			_assetsBlock.WaitOne(gameVersionName);
@@ -952,7 +952,7 @@ namespace Lexplosion.Logic.FileSystem
 			_assetsBlock.Release(gameVersionName);
 
 			//сохраняем lastUpdates
-			SaveFile(InstancesPath + instanceId + "/lastUpdates.json", JsonConvert.SerializeObject(updates));
+			DataFilesManager.SaveLastUpdates(instanceId, updates);
 
 			return errors;
 		}

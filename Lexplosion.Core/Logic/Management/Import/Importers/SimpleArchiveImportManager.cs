@@ -92,7 +92,7 @@ namespace Lexplosion.Logic.Management.Import.Importers
 				ZipFile.ExtractToDirectory(_fileAddres, activeUnzipPath);
 
 				// во избежание приколов удаляеем файл manifest.json, если он есть
-				string manifestFile = activeUnzipPath + "/manifest.json";
+				string manifestFile = activeUnzipPath + "/" + DataFilesManager.MANIFEST_FILE;
 				if (File.Exists(manifestFile)) File.Delete(manifestFile);
 			}
 			catch (Exception ex)

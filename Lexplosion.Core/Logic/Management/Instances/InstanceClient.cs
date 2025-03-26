@@ -542,7 +542,7 @@ namespace Lexplosion.Logic.Management.Instances
 						//получаем вншний айдшник и версию, если этот модпак не локлаьный
 						if (list[localId].Type != InstanceSource.Local)
 						{
-							InstancePlatformData data = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.InstancesPath + localId + "/instancePlatformData.json");
+							InstancePlatformData data = DataFilesManager.GetPlatfromData(localId);
 							if (data?.instanceVersion != null && data.id != null)
 							{
 								externalID = data.id;
@@ -853,8 +853,7 @@ namespace Lexplosion.Logic.Management.Instances
 				ProfileVersion = data.ClientVersion;
 			}
 
-			data.InitResult = InstanceInit.DownloadFilesError;
-            if (data.InitResult == InstanceInit.Successful)
+			if (data.InitResult == InstanceInit.Successful)
 			{
 				IsInstalled = (data.InitResult == InstanceInit.Successful);
 				_instanceVersionToDownload = null;
@@ -938,7 +937,7 @@ namespace Lexplosion.Logic.Management.Instances
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		private static bool ForbiddenIsCharsExists(string str)
 		{
-			str = str.Replace("_", "").Replace("[", "").Replace("]", "").Replace("{", "").Replace("}", "").Replace(" ", "").Replace(".", "");
+			str = str.Replace("_", "").Replace("[", "").Replace("]", "").Replace("{", "").Replace("}", "").Replace(" ", "").Replace(".", "").Replace("(", "").Replace(")", "");
 			return Regex.IsMatch(str, @"[^a-zA-Z0-9]");
 		}
 
@@ -1105,7 +1104,7 @@ namespace Lexplosion.Logic.Management.Instances
 				InstancePlatformData instanceData = _instanceSource.CreateInstancePlatformData(_externalId, _localId, null);
 				if (instanceData != null)
 				{
-					DataFilesManager.SaveFile(FolderPath + "/instancePlatformData.json", JsonConvert.SerializeObject(instanceData));
+					DataFilesManager.SavePlatfromData(_localId, instanceData);
 				}
 			}
 			else if (Type != InstanceSource.Local)
@@ -1115,7 +1114,7 @@ namespace Lexplosion.Logic.Management.Instances
 					id = _externalId
 				};
 
-				DataFilesManager.SaveFile(FolderPath + "/instancePlatformData.json", JsonConvert.SerializeObject(instanceData));
+				DataFilesManager.SavePlatfromData(_localId, instanceData);
 			}
 		}
 
@@ -1180,9 +1179,15 @@ namespace Lexplosion.Logic.Management.Instances
 
 				try
 				{
+					string installedAddons = DataFilesManager.INSTALLED_ADDONS_FILE;
+					string instancePlatformData = DataFilesManager.INSTANCE_PLATFORM_DATA_FILE;
+					string instanceContent = DataFilesManager.INSTANCE_CONTENT_FILE;
+					string lastUpdates = DataFilesManager.LAST_UPDATES_FILE;
+					string manifest = DataFilesManager.MANIFEST_FILE;
+
 					foreach (var item in dir.GetFiles())
 					{
-						if (item.Name != "installedAddons.json" && item.Name != "lastUpdates.json" && item.Name != "manifest.json" && item.Name != "instanceContent.json" && item.Name != "instancePlatformData.json")
+						if (item.Name != installedAddons && item.Name != lastUpdates && item.Name != manifest && item.Name != instanceContent && item.Name != instancePlatformData)
 							pathContent["/" + item.Name] = new PathLevel(item.Name, true, path + "/" + item.Name);
 					}
 				}
@@ -1301,9 +1306,9 @@ namespace Lexplosion.Logic.Management.Instances
 			List<string> filesList = new List<string>();
 			ParsePathLevel(ref filesList, exportList);
 
-			if (File.Exists(dirPath + "/installedAddons.json"))
+			if (File.Exists(dirPath + "/" + DataFilesManager.INSTALLED_ADDONS_FILE))
 			{
-				filesList.Add(dirPath + "/installedAddons.json");
+				filesList.Add(dirPath + "/" + DataFilesManager.INSTALLED_ADDONS_FILE);
 			}
 
 			VersionManifest instanceManifest = DataFilesManager.GetManifest(_localId, false);

@@ -353,46 +353,6 @@ namespace Lexplosion.Logic.FileSystem
 			}
 		}
 
-		public static LastUpdates GetLastUpdates(string instanceId)
-		{
-			LastUpdates updates = new LastUpdates();
-
-			try
-			{
-				if (!File.Exists(InstancesPath + instanceId + "/" + "lastUpdates.json"))
-				{
-					if (!Directory.Exists(InstancesPath + instanceId))
-					{
-						Directory.CreateDirectory(InstancesPath + instanceId); //создаем папку с модпаком, если её нет
-					}
-				}
-
-				using (FileStream fstream = new FileStream(InstancesPath + instanceId + "/lastUpdates.json", FileMode.OpenOrCreate, FileAccess.Read)) //открываем файл с последними обновлениями
-				{
-					byte[] fileBytes = new byte[fstream.Length];
-					fstream.Read(fileBytes, 0, fileBytes.Length);
-					fstream.Close();
-
-					try
-					{
-						var data = JsonConvert.DeserializeObject<LastUpdates>(Encoding.UTF8.GetString(fileBytes));
-						if (data != null)
-						{
-							updates = data;
-						}
-					}
-					catch
-					{
-						File.Delete(InstancesPath + instanceId + "/lastUpdates.json");
-					}
-				}
-
-			}
-			catch { }
-
-			return updates;
-		}
-
 		public static ExportResult ExportInstance<T>(string instanceId, List<string> filesList, string exportFile, T parameters, string logoPath = null)
 		{
 			// TODO: удалять временную папку в конце

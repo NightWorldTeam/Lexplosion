@@ -107,7 +107,7 @@ namespace Lexplosion.Logic.FileSystem
                         }
 
                         //отрываем файл с последними обновлениями и записываем туда updates, который уже содержит последнюю версию папки. Папка сейчас будет пустой, поэтому метод Update в любом случае скачает нужные файлы
-                        SaveFile(InstancesPath + instanceId + "/lastUpdates.json", JsonConvert.SerializeObject(updates));
+                        DataFilesManager.SaveLastUpdates(instanceId, updates);
                     }
                     catch { }
 
@@ -369,8 +369,8 @@ namespace Lexplosion.Logic.FileSystem
                         updated++;
                         FilesDownloadEvent?.Invoke(updatesCount, updated);
 
-                        //сохарняем updates
-                        SaveFile(instancePath + "lastUpdates.json", JsonConvert.SerializeObject(updates));
+						//сохарняем updates
+						DataFilesManager.SaveLastUpdates(instanceId, updates);
                     }
                 }
 
@@ -422,7 +422,7 @@ namespace Lexplosion.Logic.FileSystem
             }
 
             //сохарняем updates
-            SaveFile(instancePath + "lastUpdates.json", JsonConvert.SerializeObject(updates));
+            DataFilesManager.SaveLastUpdates(instanceId, updates);
 
             Directory.Delete(tempDir, true);
 

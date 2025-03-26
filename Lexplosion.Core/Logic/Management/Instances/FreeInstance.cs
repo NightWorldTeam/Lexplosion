@@ -23,7 +23,7 @@ namespace Lexplosion.Logic.Management.Instances
         {
             try
             {
-                var infoData = DataFilesManager.GetFile<FreeSourcePlatformData>(WithDirectory.InstancesPath + localId + "/instancePlatformData.json");
+                var infoData = DataFilesManager.GetExtendedPlatfromData<FreeSourcePlatformData>(localId);
                 if (infoData == null || !infoData.IsValid())
                 {
                     return false;
@@ -59,7 +59,7 @@ namespace Lexplosion.Logic.Management.Instances
         {
             if (localId == null) return null;
 
-            var content = DataFilesManager.GetFile<FreeSourcePlatformData>(WithDirectory.InstancesPath + localId + "/instancePlatformData.json");
+            var content = DataFilesManager.GetExtendedPlatfromData<FreeSourcePlatformData>(localId);
             string url = _urlGetter(content)?.GetModpackManifestUrl(externalId);
 
             ModpackManifest manifest = null;

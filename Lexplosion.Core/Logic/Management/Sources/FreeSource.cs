@@ -94,7 +94,7 @@ namespace Lexplosion.Logic.Management.Sources
 
         public IInstallManager GetInstaller(string localId, bool updateOnlyBase, CancellationToken updateCancelToken)
         {
-            var content = DataFilesManager.GetFile<FreeSourcePlatformData>(WithDirectory.InstancesPath + localId + "/instancePlatformData.json");
+            var content = DataFilesManager.GetExtendedPlatfromData<FreeSourcePlatformData>(localId);
             return new FreeSourceInstanceInstallManager(GetSourceMap(content), localId, updateOnlyBase, updateCancelToken);
         }
 

@@ -10,322 +10,401 @@ using static Lexplosion.Logic.FileSystem.WithDirectory;
 
 namespace Lexplosion.Logic.FileSystem
 {
-    public static class DataFilesManager
-    {
-        public static void SaveSettings(Settings data, string instanceId = "")
-        {
-            string file;
+	public static class DataFilesManager
+	{
+		public static void SaveSettings(Settings data, string instanceId = "")
+		{
+			string file;
 			data.ItIsNotShit = true;
 
 			if (instanceId == "")
-            {
-                string path = LaunсherSettings.LauncherDataPath;
-                if (!Directory.Exists(path))
-                    Directory.CreateDirectory(path);
+			{
+				string path = LaunсherSettings.LauncherDataPath;
+				if (!Directory.Exists(path))
+					Directory.CreateDirectory(path);
 
-                file = path + "/settings.json";
-            }
-            else
-            {
-                data.GamePath = null;
+				file = path + "/settings.json";
+			}
+			else
+			{
+				data.GamePath = null;
 
-                string path = InstancesPath + instanceId;
-                if (!Directory.Exists(path))
-                    Directory.CreateDirectory(path);
+				string path = InstancesPath + instanceId;
+				if (!Directory.Exists(path))
+					Directory.CreateDirectory(path);
 
-                file = path + "/instanceSettings.json";
-            }
+				file = path + "/instanceSettings.json";
+			}
 
-            try
-            {
-                Settings settings = GetSettings(instanceId);
-                if (settings != null)
-                {
-                    settings.Merge(data);
-                }
-                else
-                {
-                    settings = data;
-                }
+			try
+			{
+				Settings settings = GetSettings(instanceId);
+				if (settings != null)
+				{
+					settings.Merge(data);
+				}
+				else
+				{
+					settings = data;
+				}
 
-                using (FileStream fstream = new FileStream(file, FileMode.Create))
-                {
-                    byte[] bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(settings));
-                    fstream.Write(bytes, 0, bytes.Length);
-                    fstream.Close();
-                }
+				using (FileStream fstream = new FileStream(file, FileMode.Create))
+				{
+					byte[] bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(settings));
+					fstream.Write(bytes, 0, bytes.Length);
+					fstream.Close();
+				}
 
-            }
-            catch { }
-        }
+			}
+			catch { }
+		}
 
-        public static Settings GetSettings(string instanceId = "")
-        {
-            string file;
-            if (instanceId == "")
-            {
-                file = LaunсherSettings.LauncherDataPath + "/settings.json";
-            }
-            else
-            {
-                file = InstancesPath + instanceId + "/instanceSettings.json";
+		public static Settings GetSettings(string instanceId = "")
+		{
+			string file;
+			if (instanceId == "")
+			{
+				file = LaunсherSettings.LauncherDataPath + "/settings.json";
+			}
+			else
+			{
+				file = InstancesPath + instanceId + "/instanceSettings.json";
 
-                if (!File.Exists(file))
-                {
-                    return new Settings();
-                }
-            }
+				if (!File.Exists(file))
+				{
+					return new Settings();
+				}
+			}
 
-            try
-            {
-                using (FileStream fstream = File.OpenRead(file))
-                {
-                    byte[] fileBytes = new byte[fstream.Length];
-                    fstream.Read(fileBytes, 0, fileBytes.Length);
-                    fstream.Close();
+			try
+			{
+				using (FileStream fstream = File.OpenRead(file))
+				{
+					byte[] fileBytes = new byte[fstream.Length];
+					fstream.Read(fileBytes, 0, fileBytes.Length);
+					fstream.Close();
 
-                    Settings settings = JsonConvert.DeserializeObject<Settings>(Encoding.UTF8.GetString(fileBytes));
-                    if (instanceId != "") settings.GamePath = null;
+					Settings settings = JsonConvert.DeserializeObject<Settings>(Encoding.UTF8.GetString(fileBytes));
+					if (instanceId != "") settings.GamePath = null;
 
-                    return settings ?? new Settings();
-                }
-            }
-            catch (Exception ex)
-            {
-                Runtime.DebugWrite("Exception " + ex);
-                return new Settings();
-            }
-        }
+					return settings ?? new Settings();
+				}
+			}
+			catch (Exception ex)
+			{
+				Runtime.DebugWrite("Exception " + ex);
+				return new Settings();
+			}
+		}
 
-        public static bool DeleteLastUpdates(string instanceId) //Эта функция удаляет файл lastUpdates.json
-        {
-            try
-            {
-                if (File.Exists(InstancesPath + instanceId + "/lastUpdates.json"))
-                {
-                    File.Delete(InstancesPath + instanceId + "/lastUpdates.json");
-                }
+		public static bool DeleteLastUpdates(string instanceId) //Эта функция удаляет файл lastUpdates.json
+		{
+			try
+			{
+				string instancePath = WithDirectory.GetInstancePath(instanceId);
+				if (File.Exists(instancePath + LAST_UPDATES_FILE))
+				{
+					File.Delete(instancePath + LAST_UPDATES_FILE);
+				}
 
-                return true;
+				return true;
 
-            }
-            catch { return false; }
-        }
+			}
+			catch { return false; }
+		}
 
-        public static int GetUpgradeToolVersion()
-        {
-            if (!File.Exists(DirectoryPath + "/up-version.txt"))
-                return -1;
+		public static LastUpdates GetLastUpdates(string instanceId)
+		{
+			LastUpdates updates = new LastUpdates();
+			string instancePath = WithDirectory.GetInstancePath(instanceId);
 
-            try
-            {
-                using (FileStream fstream = File.OpenRead(DirectoryPath + "/up-version.txt"))
-                {
-                    byte[] fileBytes = new byte[fstream.Length];
-                    fstream.Read(fileBytes, 0, fileBytes.Length);
-                    fstream.Close();
+			try
+			{
+				if (!File.Exists(instancePath + LAST_UPDATES_FILE))
+				{
+					if (!Directory.Exists(instancePath))
+					{
+						Directory.CreateDirectory(instancePath); //создаем папку с модпаком, если её нет
+					}
+				}
 
-                    return Int32.Parse(Encoding.UTF8.GetString(fileBytes));
+				using (FileStream fstream = new FileStream(instancePath + LAST_UPDATES_FILE, FileMode.OpenOrCreate, FileAccess.Read)) //открываем файл с последними обновлениями
+				{
+					byte[] fileBytes = new byte[fstream.Length];
+					fstream.Read(fileBytes, 0, fileBytes.Length);
+					fstream.Close();
 
-                }
+					try
+					{
+						var data = JsonConvert.DeserializeObject<LastUpdates>(Encoding.UTF8.GetString(fileBytes));
+						if (data != null)
+						{
+							updates = data;
+						}
+					}
+					catch
+					{
+						File.Delete(instancePath + LAST_UPDATES_FILE);
+					}
+				}
 
-            }
-            catch { return -1; }
+			}
+			catch { }
 
-        }
+			return updates;
+		}
 
-        public static void SetUpgradeToolVersion(int version)
-        {
-            try
-            {
-                if (!File.Exists(DirectoryPath + "/up-version.txt"))
-                    File.Create(DirectoryPath + "/up-version.txt").Close();
+		public static void SaveLastUpdates(string instanceId, LastUpdates updates)
+		{
+			SaveFile(GetInstancePath(instanceId) + LAST_UPDATES_FILE, JsonConvert.SerializeObject(updates));
+		}
 
-                using (FileStream fstream = new FileStream(DirectoryPath + "/up-version.txt", FileMode.Create))
-                {
-                    byte[] bytes = Encoding.UTF8.GetBytes(version.ToString());
-                    fstream.Write(bytes, 0, bytes.Length);
-                    fstream.Close();
-                }
+		public static int GetUpgradeToolVersion()
+		{
+			if (!File.Exists(DirectoryPath + "/up-version.txt"))
+				return -1;
 
-            }
-            catch { }
+			try
+			{
+				using (FileStream fstream = File.OpenRead(DirectoryPath + "/up-version.txt"))
+				{
+					byte[] fileBytes = new byte[fstream.Length];
+					fstream.Read(fileBytes, 0, fileBytes.Length);
+					fstream.Close();
 
-        }
+					return Int32.Parse(Encoding.UTF8.GetString(fileBytes));
 
-        public static bool SaveFile(string name, string content)
-        {
-            try
-            {
-                string dirName = Path.GetDirectoryName(name);
-                if (!Directory.Exists(dirName))
-                {
-                    Directory.CreateDirectory(dirName);
-                }
+				}
 
-                using (FileStream fstream = new FileStream(name, FileMode.Create, FileAccess.Write))
-                {
-                    byte[] bytes = Encoding.UTF8.GetBytes(content);
-                    fstream.Write(bytes, 0, bytes.Length);
-                    fstream.Close();
-                }
+			}
+			catch { return -1; }
 
-                return true;
+		}
 
-            }
-            catch
-            {
-                return false;
-            }
-        }
+		public static void SetUpgradeToolVersion(int version)
+		{
+			try
+			{
+				if (!File.Exists(DirectoryPath + "/up-version.txt"))
+					File.Create(DirectoryPath + "/up-version.txt").Close();
 
-        /// <summary>
-        /// Получет и декодирует содержиоме JSON файла
-        /// </summary>
-        /// <typeparam name="T">Тип, к которому привести JSON</typeparam>
-        /// <param name="file">Путь до файла</param>
-        /// <returns>Декодированные данные</returns>
-        public static T GetFile<T>(string file)
-        {
-            try
-            {
-                string fileContent = GetFile(file);
-                return fileContent != null ? JsonConvert.DeserializeObject<T>(fileContent) : default;
-            }
-            catch (Exception ex)
-            {
-                Runtime.DebugWrite("Exception " + ex);
-                return default;
-            }
-        }
+				using (FileStream fstream = new FileStream(DirectoryPath + "/up-version.txt", FileMode.Create))
+				{
+					byte[] bytes = Encoding.UTF8.GetBytes(version.ToString());
+					fstream.Write(bytes, 0, bytes.Length);
+					fstream.Close();
+				}
 
-        /// <summary>
-        /// Получет содержимое текстового файла
-        /// </summary>
-        /// <param name="file">Путь до файла</param>
-        /// <returns>Текстовые данные</returns>
-        public static string GetFile(string file)
-        {
-            try
-            {
-                if (File.Exists(file))
-                {
-                    using (FileStream fstream = File.OpenRead(file))
-                    {
-                        byte[] fileBytes = new byte[fstream.Length];
-                        fstream.Read(fileBytes, 0, fileBytes.Length);
-                        fstream.Close();
+			}
+			catch { }
 
-                        return Encoding.UTF8.GetString(fileBytes);
-                    }
-                }
+		}
 
-                return null;
-            }
-            catch (Exception ex)
-            {
-                Runtime.DebugWrite("Exception " + ex);
-                if (File.Exists(file))
-                {
-                    File.Delete(file);
-                }
+		public static bool SaveFile(string name, string content)
+		{
+			try
+			{
+				string dirName = Path.GetDirectoryName(name);
+				if (!Directory.Exists(dirName))
+				{
+					Directory.CreateDirectory(dirName);
+				}
 
-                return null;
-            }
-        }
+				using (FileStream fstream = new FileStream(name, FileMode.Create, FileAccess.Write))
+				{
+					byte[] bytes = Encoding.UTF8.GetBytes(content);
+					fstream.Write(bytes, 0, bytes.Length);
+					fstream.Close();
+				}
 
-        public static void SaveManifest(string instanceId, VersionManifest data)
-        {
-            SaveFile(InstancesPath + instanceId + "/" + "manifest.json", JsonConvert.SerializeObject(data));
-            if (data.libraries != null)
-            {
-                if (data.version.AdditionalInstaller != null)
-                {
-                    var baseLibs = new Dictionary<string, LibInfo>();
-                    var additionalLibs = new Dictionary<string, LibInfo>();
+				return true;
 
-                    // в этом цикле разъединяем либрариесы и дополнительный отправляем в отадельные файлы
-                    foreach (var key in data.libraries.Keys)
-                    {
-                        LibInfo value = data.libraries[key];
-                        if (value.additionalInstallerType == null)
-                        {
-                            baseLibs[key] = value;
-                        }
-                        else
-                        {
-                            additionalLibs[key] = value;
-                        }
-                    }
+			}
+			catch
+			{
+				return false;
+			}
+		}
 
-                    SaveFile(DirectoryPath + "/versions/libraries/" + data.version.GetLibName + ".json", JsonConvert.SerializeObject(baseLibs));
+		/// <summary>
+		/// Получет и декодирует содержиоме JSON файла
+		/// </summary>
+		/// <typeparam name="T">Тип, к которому привести JSON</typeparam>
+		/// <param name="file">Путь до файла</param>
+		/// <returns>Декодированные данные</returns>
+		public static T GetFile<T>(string file)
+		{
+			try
+			{
+				string fileContent = GetFile(file);
+				return fileContent != null ? JsonConvert.DeserializeObject<T>(fileContent) : default;
+			}
+			catch (Exception ex)
+			{
+				Runtime.DebugWrite("Exception " + ex);
+				return default;
+			}
+		}
 
-                    if (additionalLibs != null && additionalLibs.Count > 0)
-                    {
-                        SaveFile(DirectoryPath + "/versions/additionalLibraries/" + data.version.AdditionalInstaller.GetLibName + ".json", JsonConvert.SerializeObject(additionalLibs));
-                    }
-                }
-                else
-                {
-                    SaveFile(DirectoryPath + "/versions/libraries/" + data.version.GetLibName + ".json", JsonConvert.SerializeObject(data.libraries));
-                }
-            }
-        }
+		/// <summary>
+		/// Получет содержимое текстового файла
+		/// </summary>
+		/// <param name="file">Путь до файла</param>
+		/// <returns>Текстовые данные</returns>
+		public static string GetFile(string file)
+		{
+			try
+			{
+				if (File.Exists(file))
+				{
+					using (FileStream fstream = File.OpenRead(file))
+					{
+						byte[] fileBytes = new byte[fstream.Length];
+						fstream.Read(fileBytes, 0, fileBytes.Length);
+						fstream.Close();
 
-        public static VersionManifest GetManifest(string instanceId, bool includingLibraries)
-        {
-            VersionManifest data = GetFile<VersionManifest>(InstancesPath + instanceId + "/" + "manifest.json");
-            if (data == null)
-            {
-                return null;
-            }
+						return Encoding.UTF8.GetString(fileBytes);
+					}
+				}
 
-            if (includingLibraries)
-            {
-                var librariesData = GetFile<Dictionary<string, LibInfo>>(DirectoryPath + "/versions/libraries/" + data.version.GetLibName + ".json") ?? new Dictionary<string, LibInfo>();
+				return null;
+			}
+			catch (Exception ex)
+			{
+				Runtime.DebugWrite("Exception " + ex);
+				if (File.Exists(file))
+				{
+					File.Delete(file);
+				}
 
-                var installer = data.version?.AdditionalInstaller;
-                if (installer != null)
-                {
-                    var additionallibrarieData = GetFile<Dictionary<string, LibInfo>>(DirectoryPath + "/versions/additionalLibraries/" + installer?.GetLibName + ".json");
+				return null;
+			}
+		}
 
-                    if (additionallibrarieData != null)
-                    {
-                        foreach (var lib in additionallibrarieData.Keys)
-                        {
-                            librariesData[lib] = additionallibrarieData[lib];
-                            librariesData[lib].additionalInstallerType = installer.type;
-                        }
-                    }
-                    else
-                    {
-                        return null;
-                    }
-                }
+		public static void SaveManifest(string instanceId, VersionManifest data)
+		{
+			SaveFile(WithDirectory.GetInstancePath(instanceId) + MANIFEST_FILE, JsonConvert.SerializeObject(data));
+			if (data.libraries != null)
+			{
+				if (data.version.AdditionalInstaller != null)
+				{
+					var baseLibs = new Dictionary<string, LibInfo>();
+					var additionalLibs = new Dictionary<string, LibInfo>();
 
-                data.libraries = librariesData;
-            }
+					// в этом цикле разъединяем либрариесы и дополнительный отправляем в отадельные файлы
+					foreach (var key in data.libraries.Keys)
+					{
+						LibInfo value = data.libraries[key];
+						if (value.additionalInstallerType == null)
+						{
+							baseLibs[key] = value;
+						}
+						else
+						{
+							additionalLibs[key] = value;
+						}
+					}
 
-            return data;
-        }
+					SaveFile(DirectoryPath + "/versions/libraries/" + data.version.GetLibName + ".json", JsonConvert.SerializeObject(baseLibs));
 
-        public static InstalledAddonsFormat GetInstalledAddons(string instanceId)
-        {
-            string path = WithDirectory.InstancesPath + instanceId + "/installedAddons.json";
+					if (additionalLibs != null && additionalLibs.Count > 0)
+					{
+						SaveFile(DirectoryPath + "/versions/additionalLibraries/" + data.version.AdditionalInstaller.GetLibName + ".json", JsonConvert.SerializeObject(additionalLibs));
+					}
+				}
+				else
+				{
+					SaveFile(DirectoryPath + "/versions/libraries/" + data.version.GetLibName + ".json", JsonConvert.SerializeObject(data.libraries));
+				}
+			}
+		}
 
-            var data = DataFilesManager.GetFile<InstalledAddonsFormat>(path);
-            if (data == null)
-            {
-                return new InstalledAddonsFormat();
-            }
+		public static VersionManifest GetManifest(string instanceId, bool includingLibraries)
+		{
+			VersionManifest data = GetFile<VersionManifest>(WithDirectory.GetInstancePath(instanceId) + MANIFEST_FILE);
+			if (data == null)
+			{
+				return null;
+			}
 
-            return data;
-        }
+			if (includingLibraries)
+			{
+				var librariesData = GetFile<Dictionary<string, LibInfo>>(DirectoryPath + "/versions/libraries/" + data.version.GetLibName + ".json") ?? new Dictionary<string, LibInfo>();
 
-        public static void SaveInstalledAddons(string instanceId, InstalledAddonsFormat data)
-        {
-            string path = WithDirectory.InstancesPath + instanceId + "/installedAddons.json";
-            DataFilesManager.SaveFile(path, JsonConvert.SerializeObject(data));
-        }
-    }
+				var installer = data.version?.AdditionalInstaller;
+				if (installer != null)
+				{
+					var additionallibrarieData = GetFile<Dictionary<string, LibInfo>>(DirectoryPath + "/versions/additionalLibraries/" + installer?.GetLibName + ".json");
+
+					if (additionallibrarieData != null)
+					{
+						foreach (var lib in additionallibrarieData.Keys)
+						{
+							librariesData[lib] = additionallibrarieData[lib];
+							librariesData[lib].additionalInstallerType = installer.type;
+						}
+					}
+					else
+					{
+						return null;
+					}
+				}
+
+				data.libraries = librariesData;
+			}
+
+			return data;
+		}
+
+		public static InstalledAddonsFormat GetInstalledAddons(string instanceId)
+		{
+			string path = WithDirectory.GetInstancePath(instanceId) + INSTALLED_ADDONS_FILE;
+
+			var data = DataFilesManager.GetFile<InstalledAddonsFormat>(path);
+			if (data == null)
+			{
+				return new InstalledAddonsFormat();
+			}
+
+			return data;
+		}
+
+		public static void SaveInstalledAddons(string instanceId, InstalledAddonsFormat data)
+		{
+			string path = WithDirectory.GetInstancePath(instanceId) + INSTALLED_ADDONS_FILE;
+			DataFilesManager.SaveFile(path, JsonConvert.SerializeObject(data));
+		}
+
+		public static InstancePlatformData GetPlatfromData(string instanceId)
+		{
+			return GetFile<InstancePlatformData>(WithDirectory.GetInstancePath(instanceId) + INSTANCE_PLATFORM_DATA_FILE);
+		}
+
+		public static T GetExtendedPlatfromData<T>(string instanceId) where T : InstancePlatformData
+		{
+			return GetFile<T>(WithDirectory.GetInstancePath(instanceId) + INSTANCE_PLATFORM_DATA_FILE);
+		}
+
+		public static void SavePlatfromData(string instanceId, InstancePlatformData content)
+		{
+			SaveFile(WithDirectory.GetInstancePath(instanceId) + INSTANCE_PLATFORM_DATA_FILE, JsonConvert.SerializeObject(content));
+		}
+
+		public static InstanceContentFile GetInstanceContent(string instanceId)
+		{
+			return GetFile<InstanceContentFile>(WithDirectory.GetInstancePath(instanceId) + INSTANCE_CONTENT_FILE);
+		}
+
+		public static void SaveInstanceContent(string instanceId, InstanceContentFile content)
+		{
+			SaveFile(WithDirectory.GetInstancePath(instanceId) + INSTANCE_CONTENT_FILE, JsonConvert.SerializeObject(content));
+		}
+
+		public const string INSTALLED_ADDONS_FILE = "installedAddons.json";
+		public const string INSTANCE_PLATFORM_DATA_FILE = "instancePlatformData.json";
+		public const string INSTANCE_CONTENT_FILE = "instanceContent.json";
+		public const string LAST_UPDATES_FILE = "lastUpdates.json";
+		public const string MANIFEST_FILE = "manifest.json";
+
+	}
 }
