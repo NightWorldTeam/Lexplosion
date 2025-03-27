@@ -9,6 +9,7 @@ using Lexplosion.Logic.Objects.Curseforge;
 using Lexplosion.Logic.Objects.CommonClientData;
 using static Lexplosion.Logic.FileSystem.WithDirectory;
 using static Lexplosion.Logic.FileSystem.DataFilesManager;
+using System.Linq;
 
 namespace Lexplosion.Logic.FileSystem
 {
@@ -54,7 +55,8 @@ namespace Lexplosion.Logic.FileSystem
             {
                 if (Path.GetFileName(path) != "manifest.json")
                 {
-                    File.Copy(path, path.Replace(sourcePath, destinationPath), true);
+					string destPath = path.Replace(sourcePath, destinationPath);
+					File.Copy(path, destPath, true);
                     files.Add(path.Replace(sourcePath, "/").Replace("\\", "/"));
                 }
             }
@@ -71,7 +73,7 @@ namespace Lexplosion.Logic.FileSystem
             InstalledAddonsFormat installedAddons = null;
             installedAddons = localFiles.InstalledAddons;
 
-            var errors = new List<string>();
+			var errors = new List<string>();
 
             try
             {
@@ -105,7 +107,7 @@ namespace Lexplosion.Logic.FileSystem
                         }
                     }
 
-                    foreach (string addonId in installedAddons.Keys) // проходимя по списку установленных аддонов
+					foreach (string addonId in installedAddons.Keys) // проходимя по списку установленных аддонов
                     {
                         if (!existsAddons.Contains(addonId)) // если аддона нету в этом списке, значит его нету в списке, полученном с курсфорджа (ну или нам не подходит его версия, или же файла нету). Поэтому удаляем
                         {

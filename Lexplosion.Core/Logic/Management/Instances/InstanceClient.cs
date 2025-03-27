@@ -468,24 +468,41 @@ namespace Lexplosion.Logic.Management.Instances
 		{
 			get
 			{
-				VersionManifest manifest = DataFilesManager.GetManifest(_localId, false);
+				MinecraftVersion gameVersion = null;
+				string modloaderVersion = string.Empty;
+				ClientType clientType = ClientType.Vanilla;
+				string optifineVersion = null;
+				bool IsNwClient = false;
+
+				if (_localId != null)
+				{
+					VersionManifest manifest = DataFilesManager.GetManifest(_localId, false);
+					if (manifest?.version != null)
+					{
+						gameVersion = manifest.version.GameVersionInfo;
+						modloaderVersion = manifest.version.ModloaderVersion ?? string.Empty;
+						clientType = manifest.version.ModloaderType;
+						optifineVersion = manifest.version.AdditionalInstaller?.installerVersion;
+						IsNwClient = manifest.version.IsNightWorldClient == true;
+					}
+				}
 
 				return new BaseInstanceData
 				{
 					LocalId = _localId,
 					ExternalId = _externalId,
 					Type = Type,
-					GameVersion = manifest?.version?.GameVersionInfo,
+					GameVersion = gameVersion,
 					InLibrary = InLibrary,
 					Author = Author,
 					Categories = Categories,
 					Description = Description,
 					Name = _name,
 					Summary = _summary,
-					ModloaderVersion = manifest?.version?.ModloaderVersion ?? string.Empty,
-					Modloader = manifest?.version.ModloaderType ?? ClientType.Vanilla,
-					OptifineVersion = manifest?.version?.AdditionalInstaller?.installerVersion,
-					IsNwClient = manifest?.version?.IsNightWorldClient == true
+					ModloaderVersion = modloaderVersion,
+					Modloader = clientType,
+					OptifineVersion = optifineVersion,
+					IsNwClient = IsNwClient
 				};
 			}
 		}

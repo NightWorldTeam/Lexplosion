@@ -204,6 +204,7 @@ namespace Lexplosion.Logic.Management.Installers
 			//нашелся id, который больше id установленной версии. Значит доступно обновление. Или же отсуствуют некоторые файлы модпака. Обновляем
 			if (ProjectInfo != null || _installer.InvalidStruct(localFiles))
 			{
+				Runtime.DebugWrite("ProjectInfo != null " + (ProjectInfo != null));
 				DownloadStartedCall();
 
 				if (ProjectInfo == null)

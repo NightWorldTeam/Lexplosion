@@ -115,43 +115,8 @@ namespace Lexplosion.Logic.FileSystem
 
 		public static LastUpdates GetLastUpdates(string instanceId)
 		{
-			LastUpdates updates = new LastUpdates();
-			string instancePath = WithDirectory.GetInstancePath(instanceId);
-
-			try
-			{
-				if (!File.Exists(instancePath + LAST_UPDATES_FILE))
-				{
-					if (!Directory.Exists(instancePath))
-					{
-						Directory.CreateDirectory(instancePath); //создаем папку с модпаком, если её нет
-					}
-				}
-
-				using (FileStream fstream = new FileStream(instancePath + LAST_UPDATES_FILE, FileMode.OpenOrCreate, FileAccess.Read)) //открываем файл с последними обновлениями
-				{
-					byte[] fileBytes = new byte[fstream.Length];
-					fstream.Read(fileBytes, 0, fileBytes.Length);
-					fstream.Close();
-
-					try
-					{
-						var data = JsonConvert.DeserializeObject<LastUpdates>(Encoding.UTF8.GetString(fileBytes));
-						if (data != null)
-						{
-							updates = data;
-						}
-					}
-					catch
-					{
-						File.Delete(instancePath + LAST_UPDATES_FILE);
-					}
-				}
-
-			}
-			catch { }
-
-			return updates;
+			var data = TryGetFile<LastUpdates>(instanceId, LAST_UPDATES_FILE, LAST_UPDATES_FILE_OLD);
+			return data ?? new LastUpdates();
 		}
 
 		public static void SaveLastUpdates(string instanceId, LastUpdates updates)
@@ -173,7 +138,6 @@ namespace Lexplosion.Logic.FileSystem
 					fstream.Close();
 
 					return Int32.Parse(Encoding.UTF8.GetString(fileBytes));
-
 				}
 
 			}
@@ -321,11 +285,8 @@ namespace Lexplosion.Logic.FileSystem
 
 		public static VersionManifest GetManifest(string instanceId, bool includingLibraries)
 		{
-			VersionManifest data = GetFile<VersionManifest>(WithDirectory.GetInstancePath(instanceId) + MANIFEST_FILE);
-			if (data == null)
-			{
-				return null;
-			}
+			VersionManifest data = TryGetFile<VersionManifest>(instanceId, MANIFEST_FILE, MANIFEST_FILE_OLD);
+			if (data == null) return null;
 
 			if (includingLibraries)
 			{
@@ -356,33 +317,50 @@ namespace Lexplosion.Logic.FileSystem
 			return data;
 		}
 
-		public static InstalledAddonsFormat GetInstalledAddons(string instanceId)
+		private static T TryGetFile<T>(string instanceId, string fileName, string oldFileName)
 		{
-			string path = WithDirectory.GetInstancePath(instanceId) + INSTALLED_ADDONS_FILE;
+			string filePath = WithDirectory.GetInstancePath(instanceId) + fileName;
 
-			var data = DataFilesManager.GetFile<InstalledAddonsFormat>(path);
+			var data = GetFile<T>(filePath);
 			if (data == null)
 			{
-				return new InstalledAddonsFormat();
+				string oldFilePath = WithDirectory.GetInstancePath(instanceId) + oldFileName;
+				data = GetFile<T>(oldFilePath);
+				if (data == null) return default(T);
+
+				try
+				{
+					File.Move(oldFilePath, filePath);
+				}
+				catch (Exception ex)
+				{
+					Runtime.DebugWrite("Exception " + ex);
+				}
 			}
 
 			return data;
 		}
 
+		public static InstalledAddonsFormat GetInstalledAddons(string instanceId)
+		{
+			var data = TryGetFile<InstalledAddonsFormat>(instanceId, INSTALLED_ADDONS_FILE, INSTALLED_ADDONS_FILE_OLD);
+			return data ?? new InstalledAddonsFormat();
+		}
+
 		public static void SaveInstalledAddons(string instanceId, InstalledAddonsFormat data)
 		{
 			string path = WithDirectory.GetInstancePath(instanceId) + INSTALLED_ADDONS_FILE;
-			DataFilesManager.SaveFile(path, JsonConvert.SerializeObject(data));
+			SaveFile(path, JsonConvert.SerializeObject(data));
 		}
 
 		public static InstancePlatformData GetPlatfromData(string instanceId)
 		{
-			return GetFile<InstancePlatformData>(WithDirectory.GetInstancePath(instanceId) + INSTANCE_PLATFORM_DATA_FILE);
+			return TryGetFile<InstancePlatformData>(instanceId, INSTANCE_PLATFORM_DATA_FILE, INSTALLED_ADDONS_FILE_OLD);
 		}
 
 		public static T GetExtendedPlatfromData<T>(string instanceId) where T : InstancePlatformData
 		{
-			return GetFile<T>(WithDirectory.GetInstancePath(instanceId) + INSTANCE_PLATFORM_DATA_FILE);
+			return TryGetFile<T>(instanceId, INSTANCE_PLATFORM_DATA_FILE, INSTANCE_PLATFORM_DATA_FILE_OLD);
 		}
 
 		public static void SavePlatfromData(string instanceId, InstancePlatformData content)
@@ -392,7 +370,7 @@ namespace Lexplosion.Logic.FileSystem
 
 		public static InstanceContentFile GetInstanceContent(string instanceId)
 		{
-			return GetFile<InstanceContentFile>(WithDirectory.GetInstancePath(instanceId) + INSTANCE_CONTENT_FILE);
+			return TryGetFile<InstanceContentFile>(instanceId, INSTANCE_CONTENT_FILE, INSTANCE_CONTENT_FILE_OLD);
 		}
 
 		public static void SaveInstanceContent(string instanceId, InstanceContentFile content)
@@ -400,11 +378,17 @@ namespace Lexplosion.Logic.FileSystem
 			SaveFile(WithDirectory.GetInstancePath(instanceId) + INSTANCE_CONTENT_FILE, JsonConvert.SerializeObject(content));
 		}
 
-		public const string INSTALLED_ADDONS_FILE = "installedAddons.json";
-		public const string INSTANCE_PLATFORM_DATA_FILE = "instancePlatformData.json";
-		public const string INSTANCE_CONTENT_FILE = "instanceContent.json";
-		public const string LAST_UPDATES_FILE = "lastUpdates.json";
-		public const string MANIFEST_FILE = "manifest.json";
+		public const string INSTALLED_ADDONS_FILE = "installedAddons.nwdat";
+		public const string INSTANCE_PLATFORM_DATA_FILE = "instancePlatformData.nwdat";
+		public const string INSTANCE_CONTENT_FILE = "instanceContent.nwdat";
+		public const string LAST_UPDATES_FILE = "lastUpdates.nwdat";
+		public const string MANIFEST_FILE = "manifest.nwdat";
+
+		public const string INSTALLED_ADDONS_FILE_OLD = "installedAddons.json";
+		public const string INSTANCE_PLATFORM_DATA_FILE_OLD = "instancePlatformData.json";
+		public const string INSTANCE_CONTENT_FILE_OLD = "instanceContent.json";
+		public const string LAST_UPDATES_FILE_OLD = "lastUpdates.json";
+		public const string MANIFEST_FILE_OLD = "manifest.json";
 
 	}
 }
