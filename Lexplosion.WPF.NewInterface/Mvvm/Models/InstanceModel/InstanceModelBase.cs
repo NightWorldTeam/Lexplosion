@@ -820,7 +820,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
                         // TODO: В будещем переделать ToastMessage на работу с ключами
                         var title = _appCore.Resources("FailedToDownloadSomeFiles") as string;
                         var notifyContent = _appCore.Resources("FailedToDownloadFollowingFiles:_") as string;
-                        notifyContent = string.Format(notifyContent, errors.Cast<object>().ToArray());
+                        if (errors.Count() > 0) 
+                        {
+                            notifyContent = string.Format(notifyContent, errors.Cast<object>().ToArray());
+                        }
 
                         _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent));
                     }

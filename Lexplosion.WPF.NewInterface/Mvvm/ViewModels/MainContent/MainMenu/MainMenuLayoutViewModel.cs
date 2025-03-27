@@ -1,6 +1,7 @@
 ﻿using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Mvvm.Models;
+using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Args;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Limited;
 using Lexplosion.WPF.NewInterface.Stores;
@@ -31,6 +32,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         }
 
         public ViewModelBase Content { get; private set; }
+
+
+        public Action<InstanceModelBase> ToInstanceProfile { get; }
 
 
         #endregion Properties
@@ -72,6 +76,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
             LeftPanel = new LeftPanelViewModel();
             LeftPanel.SelectedItemChanged += OnLeftPanelSelectedItemChanged;
+
+            ToInstanceProfile = (instanceModel) => (_libraryViewModel as LibraryViewModel).OpenInstanceProfileMenuCommand.Execute(instanceModel);
 
             InitDefaultLeftPanelTabs();
         }

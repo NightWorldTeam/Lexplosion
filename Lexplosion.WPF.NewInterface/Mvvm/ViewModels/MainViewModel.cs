@@ -13,6 +13,11 @@ using System;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.ModalFactory;
 using Lexplosion.Logic;
+using Lexplosion.Logic.Management.Instances;
+using Lexplosion.Tools;
+using System.Windows.Forms;
+using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
+using System.Linq;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
 {
@@ -22,6 +27,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
 
 
         public AppCore AppCore { get; private set; }
+
+        private readonly MainMenuLayoutViewModel _mainMenuLayoutViewModel;
 
 
         #region Properties
@@ -85,6 +92,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
             AppCore = appCore;
             Model = new MainModel(appCore);
 
+            SubscribeToOpenModpackEvent();
+
             NavigationStore = appCore.NavigationStore;
 
             // так как грузится в отдельном потоке, может загрузится позже чем создатся экземпляр класса InstanceFactory!!!
@@ -98,8 +107,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
                 new ModalInstanceCreatorFactory(appCore, Model.LibraryController as LibraryController, Model.InstanceSharesController)
             );
 
-            var mainMenuLayout = new MainMenuLayoutViewModel(appCore, NavigationStore, ModalNavigationStore, Model);
-            ToMainMenu = new NavigateCommand<ViewModelBase>(NavigationStore, () => mainMenuLayout);
+            _mainMenuLayoutViewModel = new MainMenuLayoutViewModel(appCore, NavigationStore, ModalNavigationStore, Model);
+            ToMainMenu = new NavigateCommand<ViewModelBase>(NavigationStore, () => _mainMenuLayoutViewModel);
         }
 
 
@@ -158,6 +167,30 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
 
                 AllVersionsLoaded?.Invoke();
             });
+        }
+
+
+        private void SubscribeToOpenModpackEvent()
+        {
+            CommandReceiver.OpenModpackPage += delegate (string modpackId)
+            {
+                InstanceClient instanceClient = InstanceClient.GetInstance(InstanceSource.Nightworld, modpackId);
+                if (instanceClient != null)
+                {
+                    InstanceModelBase viewModel = Model.LibraryController.Instances.FirstOrDefault(i => i.CheckInstanceClient(instanceClient));
+                    if (viewModel == null)
+                    {
+                        viewModel = Model.CatalogController.Instances.FirstOrDefault(i => i.CheckInstanceClient(instanceClient));
+
+                        if (viewModel == null) 
+                        {
+                            viewModel = new InstanceModelBase(AppCore, instanceClient, Model.Export);
+                        }
+                    }
+                    _mainMenuLayoutViewModel.ToInstanceProfile(viewModel);
+                    NativeMethods.ShowProcessWindows(Runtime.CurrentProcess.MainWindowHandle);
+                }
+            };
         }
 
 
