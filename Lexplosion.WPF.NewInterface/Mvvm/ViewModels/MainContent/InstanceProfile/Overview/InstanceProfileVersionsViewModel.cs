@@ -51,9 +51,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
 
         private void OnDownloadStarted()
         {
+            if (Versions == null || Versions.Count() == 0)
+                return;
+
             if (Versions.FirstOrDefault(i => i.IsDownloading) == null)
             {
                 var version = Versions.FirstOrDefault(i => i.Id == InstanceModel.ClientVersion);
+
                 if (version != null) 
                 {
                     version.IsDownloading = true;
@@ -70,7 +74,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         private void OnInstanceVersionDownloadComplited(InstanceInit arg1, System.Collections.Generic.IEnumerable<string> arg2, bool arg3)
         {
             var version = Versions.FirstOrDefault(i => i.IsDownloading);
-            version.IsDownloading = false;
+
+            if (version != null) 
+            {
+                version.IsDownloading = false;
+            }
 
             if (arg1 == InstanceInit.IsCancelled)
             {

@@ -16,7 +16,6 @@
 
         <ScrollViewer
             x:Name="Scroll"
-            Background="{DynamicResource PrimarySolidColorBrush}"
             CanContentScroll="False"
             Focusable="False"
             ScrollViewer.VerticalScrollBarVisibility="Visible">
@@ -27,7 +26,7 @@
                     <!--  Logo  -->
                     <Border
                         Padding="0,0,0,8"
-                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                        BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
                         BorderThickness="0,0,0,2">
 
                         <Grid ShowGridLines="False">
@@ -46,17 +45,15 @@
 
                                 <StackPanel>
                                     <TextBlock
-                                        extensions:TextBlockExtensions.TextByKey="Image"
                                         FontSize="14"
                                         FontWeight="Medium"
                                         Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                        Text="Image" />
+                                        Text="{DynamicResource Image}" />
                                     <TextBlock
-                                        extensions:TextBlockExtensions.TextByKey="ImageDescription"
                                         FontSize="14"
                                         FontWeight="Medium"
                                         Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
-                                        Text="Some Text Desctiiopn" />
+                                        Text="{DynamicResource ImageDescription}" />
                                 </StackPanel>
 
                                 <!--  TODO: Translate  -->
@@ -118,8 +115,8 @@
                     <!--  Name  -->
                     <Border
                         Padding="0,16,0,8"
-                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                        BorderThickness="0,0,0,2">
+                        BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
+                        BorderThickness="0,0,0,1">
                         <Grid ShowGridLines="False">
 
                             <Grid.ColumnDefinitions>
@@ -130,15 +127,15 @@
                             <!--  Header  -->
                             <StackPanel>
                                 <TextBlock
-                                    extensions:TextBlockExtensions.TextByKey="Name"
                                     FontSize="14"
                                     FontWeight="Medium"
-                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                    Text="{DynamicResource Name}" />
                                 <TextBlock
-                                    extensions:TextBlockExtensions.TextByKey="InstanceNameDescription"
                                     FontSize="14"
                                     FontWeight="Medium"
-                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                    Text="{DynamicResource InstanceNameDescription}" />
                             </StackPanel>
 
                             <!--  Content  -->
@@ -154,8 +151,8 @@
                     <!--  Summary  -->
                     <Border
                         Padding="0,16,0,8"
-                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                        BorderThickness="0,0,0,2">
+                        BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
+                        BorderThickness="0,0,0,1">
                         <Grid>
 
                             <Grid.RowDefinitions>
@@ -166,15 +163,15 @@
                             <!--  Header  -->
                             <StackPanel>
                                 <TextBlock
-                                    extensions:TextBlockExtensions.TextByKey="Summary"
                                     FontSize="14"
                                     FontWeight="Medium"
-                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                    Text="{DynamicResource Summary}" />
                                 <TextBlock
-                                    extensions:TextBlockExtensions.TextByKey="SummaryDescription"
                                     FontSize="14"
                                     FontWeight="Medium"
-                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                    Text="{DynamicResource SummaryDescription}" />
                             </StackPanel>
 
                             <!--  Content  -->
@@ -214,15 +211,15 @@
                             <!--  Header  -->
                             <StackPanel>
                                 <TextBlock
-                                    extensions:TextBlockExtensions.TextByKey="Description"
                                     FontSize="14"
                                     FontWeight="Medium"
-                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                    Text="{DynamicResource Description}" />
                                 <TextBlock
-                                    extensions:TextBlockExtensions.TextByKey="DescriptionAdditional"
                                     FontSize="14"
                                     FontWeight="Medium"
-                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                    Text="{DynamicResource DescriptionAdditional}" />
                             </StackPanel>
 
                             <!--  Content  -->
@@ -248,8 +245,8 @@
             Margin="32,-48"
             Padding="16,5"
             VerticalAlignment="Bottom"
-            Background="{DynamicResource SecondarySolidColorBrush}"
-            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+            Background="{DynamicResource ConfirmAlertSolidColorBrush}"
+            BorderBrush="{DynamicResource ConfirmAlertBorderSolidColorBrush}"
             BorderThickness="1"
             CornerRadius="10">
 

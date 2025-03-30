@@ -23,7 +23,7 @@
             <Border
                 Margin="0,16,0,0"
                 Padding="0,0,0,16"
-                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
                 BorderThickness="0,0,0,1">
                 <Grid Height="36">
                     <Grid.ColumnDefinitions>

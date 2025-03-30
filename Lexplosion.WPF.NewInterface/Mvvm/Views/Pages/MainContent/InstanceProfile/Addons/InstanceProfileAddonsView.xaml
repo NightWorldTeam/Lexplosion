@@ -193,23 +193,18 @@
                 Margin="0,8,8,0"
                 Padding="8"
                 HorizontalAlignment="Center"
-                Background="{DynamicResource PrimarySolidColorBrush}"
-                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                Background="Transparent"
+                BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
                 BorderThickness="1"
                 CornerRadius="10">
+
+                <!--  TODO: Background в отдельный цвет  -->
 
                 <Border.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform />
                     </TransformGroup>
                 </Border.RenderTransform>
-
-                <!--<Border.Triggers>
-                    <EventTrigger RoutedEvent="Loaded">
-                        <BeginStoryboard>
-                        </BeginStoryboard>
-                    </EventTrigger>
-                </Border.Triggers>-->
 
                 <Grid>
                     <Grid.RowDefinitions>
@@ -238,7 +233,7 @@
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
                                     BlurTarget="{Binding ElementName=LogoBorder}"
-                                    IsActive="True" />
+                                    IsActive="{Binding Logo, Converter={valueconverters:IsValueNullConverter}}" />
                             </Grid>
 
                             <StackPanel Grid.Column="1" Margin="8,0,0,0">
@@ -285,7 +280,7 @@
                         Grid.Row="1"
                         Padding="8,4,4,0"
                         HorizontalAlignment="Stretch"
-                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                        BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
                         BorderThickness="0,1,0,0"
                         CornerRadius="10">
                         <Grid>
@@ -389,7 +384,7 @@
         <DataTemplate x:Key="LineInstanceAddon" DataType="{x:Type logicInstances:InstanceAddon}">
             <Border
                 x:Name="AnimatableUIElement"
-                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
                 BorderThickness="0,0,0,1">
                 <Grid
                     MinHeight="60"

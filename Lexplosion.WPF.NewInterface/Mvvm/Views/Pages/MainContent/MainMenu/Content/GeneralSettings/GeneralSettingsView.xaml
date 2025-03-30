@@ -214,7 +214,7 @@
                     <!--  Header  -->
                     <Border
                         Padding="0,0,0,8"
-                        BorderBrush="{DynamicResource LightSeparateSolidColorBrush}"
+                        BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
                         BorderThickness="0,0,0,2">
                         <StackPanel>
                             <TextBlock
@@ -234,8 +234,8 @@
                     <!--  Window Size  -->
                     <Border
                         Padding="0,16,0,8"
-                        BorderBrush="{DynamicResource LightSeparateSolidColorBrush}"
-                        BorderThickness="0,0,0,2">
+                        BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
+                        BorderThickness="0,0,0,1">
                         <Grid>
 
                             <Grid.ColumnDefinitions>
@@ -294,8 +294,8 @@
                     <!--  Ram  -->
                     <Border
                         Padding="0,16,0,8"
-                        BorderBrush="{DynamicResource LightSeparateSolidColorBrush}"
-                        BorderThickness="0,0,0,2">
+                        BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
+                        BorderThickness="0,0,0,1">
                         <Grid>
 
                             <Grid.ColumnDefinitions>
@@ -349,8 +349,8 @@
                     <!--  Minecraft Arguments  -->
                     <Border
                         Padding="0,16,0,8"
-                        BorderBrush="{DynamicResource LightSeparateSolidColorBrush}"
-                        BorderThickness="0,0,0,2">
+                        BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
+                        BorderThickness="0,0,0,1">
                         <Grid>
 
                             <Grid.ColumnDefinitions>
@@ -389,8 +389,8 @@
                     <!--  Game Directory  -->
                     <Border
                         Padding="0,16,0,8"
-                        BorderBrush="{DynamicResource LightSeparateSolidColorBrush}"
-                        BorderThickness="0,0,0,2">
+                        BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
+                        BorderThickness="0,0,0,1">
                         <Grid>
 
                             <Grid.RowDefinitions>
@@ -464,19 +464,19 @@
 
                     <Border
                         Padding="0,0,0,8"
-                        BorderBrush="{DynamicResource LightSeparateSolidColorBrush}"
+                        BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
                         BorderThickness="0,0,0,2">
                         <StackPanel>
                             <TextBlock
-                                extensions:TextBlockExtensions.TextByKey="JavaProperties"
                                 FontSize="16"
                                 FontWeight="Bold"
-                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                Text="{DynamicResource JavaProperties}" />
                             <TextBlock
-                                extensions:TextBlockExtensions.TextByKey="JavaPropertiesDescription"
                                 FontSize="14"
                                 FontWeight="Medium"
-                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                Text="{DynamicResource JavaPropertiesDescription}" />
                         </StackPanel>
                     </Border>
 
@@ -485,8 +485,8 @@
 
                     <Border
                         Padding="0,16,0,8"
-                        BorderBrush="{DynamicResource LightSeparateSolidColorBrush}"
-                        BorderThickness="0,0,0,2">
+                        BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
+                        BorderThickness="0,0,0,1">
                         <Grid>
 
                             <Grid.RowDefinitions>
@@ -504,15 +504,15 @@
                                 <!--  Header  -->
                                 <StackPanel>
                                     <TextBlock
-                                        extensions:TextBlockExtensions.TextByKey="JavaPath"
                                         FontSize="14"
                                         FontWeight="Medium"
-                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                        Text="{DynamicResource JavaPath}" />
                                     <TextBlock
-                                        extensions:TextBlockExtensions.TextByKey="JavaPathDescription"
                                         FontSize="14"
                                         FontWeight="Medium"
-                                        Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                                        Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                        Text="{DynamicResource JavaPathDescription}" />
                                 </StackPanel>
 
 
@@ -552,8 +552,8 @@
 
                     <Border
                         Padding="0,16,0,8"
-                        BorderBrush="{DynamicResource LightSeparateSolidColorBrush}"
-                        BorderThickness="0,0,0,2">
+                        BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
+                        BorderThickness="0,0,0,1">
                         <Grid>
 
                             <Grid.RowDefinitions>
@@ -571,15 +571,15 @@
                                 <!--  Header  -->
                                 <StackPanel>
                                     <TextBlock
-                                        extensions:TextBlockExtensions.TextByKey="JavaPathHigher"
                                         FontSize="14"
                                         FontWeight="Medium"
-                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                        Text="{DynamicResource JavaPathHigher}" />
                                     <TextBlock
-                                        extensions:TextBlockExtensions.TextByKey="JavaPathHigherDescription"
                                         FontSize="14"
                                         FontWeight="Medium"
-                                        Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                                        Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                        Text="{DynamicResource JavaPathHigherDescription}" />
                                 </StackPanel>
 
 
@@ -588,14 +588,14 @@
                                         Command="{Binding OpenJavaFolderBrowserCommand}"
                                         Content="Folder"
                                         FontSize="16"
-                                        Foreground="{DynamicResource CheckBoxMarkSolidColorBrush}"
+                                        Foreground="{DynamicResource ActivitySolidColorBrush}"
                                         Style="{StaticResource x32IconButtonActivityColor}" />
                                     <Button
                                         Margin="8,0,0,0"
                                         Command="{Binding ResetJava17PathCommand}"
                                         Content="Reload"
                                         FontSize="16"
-                                        Foreground="{DynamicResource CheckBoxMarkSolidColorBrush}"
+                                        Foreground="{DynamicResource ActivitySolidColorBrush}"
                                         Style="{StaticResource x32IconButtonActivityColor}" />
                                 </WrapPanel>
 
@@ -615,7 +615,7 @@
                     <!--  JVMArguments  -->
                     <Border
                         Padding="0,16,0,8"
-                        BorderBrush="{DynamicResource LightSeparateSolidColorBrush}"
+                        BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
                         BorderThickness="0,0,0,2">
                         <Grid>
 
@@ -657,7 +657,7 @@
                     <!--  Header  -->
                     <Border
                         Padding="0,0,0,8"
-                        BorderBrush="{DynamicResource LightSeparateSolidColorBrush}"
+                        BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
                         BorderThickness="0,0,0,2">
                         <StackPanel>
                             <TextBlock
@@ -678,8 +678,8 @@
 
                     <Border
                         Padding="0,16,0,8"
-                        BorderBrush="{DynamicResource LightSeparateSolidColorBrush}"
-                        BorderThickness="0,0,0,2">
+                        BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
+                        BorderThickness="0,0,0,1">
                         <Grid>
 
                             <!--  Header  -->
@@ -710,8 +710,8 @@
 
                     <Border
                         Padding="0,16,0,8"
-                        BorderBrush="{DynamicResource LightSeparateSolidColorBrush}"
-                        BorderThickness="0,0,0,2">
+                        BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
+                        BorderThickness="0,0,0,1">
                         <Grid>
 
                             <!--  Header  -->
@@ -742,8 +742,8 @@
 
                     <Border
                         Padding="0,16,0,8"
-                        BorderBrush="{DynamicResource LightSeparateSolidColorBrush}"
-                        BorderThickness="0,0,0,0">
+                        BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
+                        BorderThickness="0,0,0,1">
                         <Grid>
 
                             <!--  Header  -->
@@ -773,8 +773,8 @@
 
                     <Border
                         Padding="0,16,0,8"
-                        BorderBrush="{DynamicResource LightSeparateSolidColorBrush}"
-                        BorderThickness="0,0,0,0">
+                        BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
+                        BorderThickness="0,0,0,1">
                         <Grid>
 
                             <!--  Header  -->
@@ -804,7 +804,7 @@
 
                     <Border
                         Padding="0,16,0,8"
-                        BorderBrush="{DynamicResource LightSeparateSolidColorBrush}"
+                        BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
                         BorderThickness="0,0,0,0">
                         <Grid>
 

@@ -45,7 +45,7 @@
                             <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentPresenter}}, Path=(ItemsControl.AlternationIndex)}" Value="1">
                                 <Setter Property="Padding" Value="0,0,0,8" />
                                 <Setter Property="Margin" Value="0,0,0,8" />
-                                <Setter Property="BorderBrush" Value="{DynamicResource LightSeparateSolidColorBrush}" />
+                                <Setter Property="BorderBrush" Value="{DynamicResource LeftPanelItemsSeparateSolidColorBrush}" />
                                 <Setter Property="BorderThickness" Value="0,0,0,1" />
                             </DataTrigger>
                         </Style.Triggers>
@@ -99,8 +99,8 @@
     <Grid>
         <Border
             Padding="15,16"
-            Background="{DynamicResource PrimarySolidColorBrush}"
-            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+            Background="{DynamicResource LeftPanelSolidColorBrush}"
+            BorderBrush="{DynamicResource LeftPanelOutsideBorderSolidColorBrush}"
             BorderThickness="0,0,2,0">
             <Grid>
 

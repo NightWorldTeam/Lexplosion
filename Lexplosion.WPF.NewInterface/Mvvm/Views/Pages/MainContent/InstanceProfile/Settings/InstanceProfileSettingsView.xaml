@@ -192,7 +192,6 @@
     </UserControl.Resources>
 
     <ScrollViewer
-        Background="{DynamicResource PrimarySolidColorBrush}"
         CanContentScroll="False"
         Focusable="False"
         ScrollViewer.VerticalScrollBarVisibility="Visible">
@@ -204,19 +203,19 @@
                 <!--  Header  -->
                 <Border
                     Padding="0,0,0,8"
-                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                    BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
                     BorderThickness="0,0,0,2">
                     <StackPanel>
                         <TextBlock
-                            extensions:TextBlockExtensions.TextByKey="GameProperties"
                             FontSize="16"
                             FontWeight="Bold"
-                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                            Text="{DynamicResource GameProperties}" />
                         <TextBlock
-                            extensions:TextBlockExtensions.TextByKey="GamePropertiesDescription"
                             FontSize="14"
                             FontWeight="Medium"
-                            Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                            Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                            Text="{DynamicResource GamePropertiesDescription}" />
                     </StackPanel>
                 </Border>
 
@@ -224,8 +223,8 @@
                 <!--  Window Size  -->
                 <Border
                     Padding="0,16,0,8"
-                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                    BorderThickness="0,0,0,2">
+                    BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
+                    BorderThickness="0,0,0,1">
                     <Grid>
 
                         <Grid.ColumnDefinitions>
@@ -236,15 +235,15 @@
                         <!--  Header  -->
                         <StackPanel>
                             <TextBlock
-                                extensions:TextBlockExtensions.TextByKey="WindowSize"
                                 FontSize="14"
                                 FontWeight="Medium"
-                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                Text="{DynamicResource WindowSize}" />
                             <TextBlock
-                                extensions:TextBlockExtensions.TextByKey="WindowSizeDescription"
                                 FontSize="14"
                                 FontWeight="Medium"
-                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                Text="{DynamicResource WindowSizeDescription}" />
                         </StackPanel>
 
                         <StackPanel
@@ -285,8 +284,8 @@
                 <!--  Ram  -->
                 <Border
                     Padding="0,16,0,8"
-                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                    BorderThickness="0,0,0,2">
+                    BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
+                    BorderThickness="0,0,0,1">
                     <Grid>
 
                         <Grid.ColumnDefinitions>
@@ -298,15 +297,15 @@
                         <!--  Header  -->
                         <StackPanel>
                             <TextBlock
-                                extensions:TextBlockExtensions.TextByKey="Ram"
                                 FontSize="14"
                                 FontWeight="Medium"
-                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                Text="{DynamicResource Ram}" />
                             <TextBlock
-                                extensions:TextBlockExtensions.TextByKey="RamDescription"
                                 FontSize="14"
                                 FontWeight="Medium"
-                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                Text="{DynamicResource RamDescription}" />
                         </StackPanel>
 
                         <Slider
@@ -339,7 +338,7 @@
                 <!--  Minecraft Arguments  -->
                 <Border
                     Padding="0,16,0,8"
-                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                    BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
                     BorderThickness="0,0,0,2">
                     <Grid>
 
@@ -382,19 +381,19 @@
 
                 <Border
                     Padding="0,0,0,8"
-                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                    BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
                     BorderThickness="0,0,0,2">
                     <StackPanel>
                         <TextBlock
-                            extensions:TextBlockExtensions.TextByKey="JavaProperties"
                             FontSize="16"
                             FontWeight="Bold"
-                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                            Text="{DynamicResource JavaProperties}" />
                         <TextBlock
-                            extensions:TextBlockExtensions.TextByKey="JavaPropertiesDescription"
                             FontSize="14"
                             FontWeight="Medium"
-                            Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                            Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                            Text="{DynamicResource JavaPropertiesDescription}" />
                     </StackPanel>
                 </Border>
 
@@ -403,8 +402,8 @@
 
                 <Border
                     Padding="0,16,0,8"
-                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                    BorderThickness="0,0,0,2">
+                    BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
+                    BorderThickness="0,0,0,1">
                     <Grid>
 
                         <Grid.RowDefinitions>
@@ -422,15 +421,15 @@
                             <!--  Header  -->
                             <StackPanel>
                                 <TextBlock
-                                    extensions:TextBlockExtensions.TextByKey="JavaPath"
                                     FontSize="14"
                                     FontWeight="Medium"
-                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                    Text="{DynamicResource JavaPath}" />
                                 <TextBlock
-                                    extensions:TextBlockExtensions.TextByKey="JavaPathDescription"
                                     FontSize="14"
                                     FontWeight="Medium"
-                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                    Text="{DynamicResource JavaPathDescription}" />
                             </StackPanel>
 
 
@@ -468,7 +467,7 @@
                 <!--  JVMArguments  -->
                 <Border
                     Padding="0,16,0,8"
-                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                    BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
                     BorderThickness="0,0,0,2">
                     <Grid>
 
@@ -480,15 +479,15 @@
                         <!--  Header  -->
                         <StackPanel>
                             <TextBlock
-                                extensions:TextBlockExtensions.TextByKey="JVMArguments"
                                 FontSize="14"
                                 FontWeight="Medium"
-                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                Text="{DynamicResource JVMArguments}" />
                             <TextBlock
-                                extensions:TextBlockExtensions.TextByKey="JVMArgumentsDescription"
                                 FontSize="14"
                                 FontWeight="Medium"
-                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                Text="{DynamicResource JVMArgumentsDescription}" />
                         </StackPanel>
 
                         <!--  Content  -->
@@ -510,19 +509,19 @@
                 <!--  Header  -->
                 <Border
                     Padding="0,0,0,8"
-                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                    BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
                     BorderThickness="0,0,0,2">
                     <StackPanel>
                         <TextBlock
-                            extensions:TextBlockExtensions.TextByKey="LauncherProperties"
                             FontSize="16"
                             FontWeight="Bold"
-                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                            Text="{DynamicResource LauncherProperties}" />
                         <TextBlock
-                            extensions:TextBlockExtensions.TextByKey="LauncherPropertiesDescription"
                             FontSize="14"
                             FontWeight="Medium"
-                            Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                            Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                            Text="{DynamicResource LauncherPropertiesDescription}" />
                     </StackPanel>
                 </Border>
 
@@ -531,22 +530,22 @@
 
                 <Border
                     Padding="0,16,0,8"
-                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                    BorderThickness="0,0,0,2">
+                    BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
+                    BorderThickness="0,0,0,1">
                     <Grid>
 
                         <!--  Header  -->
                         <StackPanel>
                             <TextBlock
-                                extensions:TextBlockExtensions.TextByKey="Console"
                                 FontSize="14"
                                 FontWeight="Medium"
-                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                Text="{DynamicResource Console}" />
                             <TextBlock
-                                extensions:TextBlockExtensions.TextByKey="ConsoleDescription"
                                 FontSize="14"
                                 FontWeight="Medium"
-                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                Text="{DynamicResource ConsoleDescription}" />
                         </StackPanel>
 
 
@@ -563,8 +562,8 @@
 
                 <Border
                     Padding="0,16,0,8"
-                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                    BorderThickness="0,0,0,2">
+                    BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
+                    BorderThickness="0,0,0,1">
                     <Grid>
 
                         <!--  Header  -->
@@ -595,8 +594,8 @@
 
                 <Border
                     Padding="0,16,0,8"
-                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                    BorderThickness="0,0,0,0">
+                    BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
+                    BorderThickness="0,0,0,1">
                     <Grid>
 
                         <!--  Header  -->
@@ -627,7 +626,7 @@
 
                 <Border
                     Padding="0,16,0,8"
-                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                    BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
                     BorderThickness="0,0,0,0">
                     <Grid>
 

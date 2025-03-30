@@ -16,7 +16,6 @@
     d:DataContext="{d:DesignInstance Type=localVm:AccountsSettingsViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
-    Background="{DynamicResource PrimarySolidColorBrush}"
     mc:Ignorable="d">
 
     <UserControl.Resources>
@@ -63,7 +62,7 @@
         <DataTemplate DataType="{x:Type objects:AccountItem}">
             <Border
                 Padding="8,8,0,8"
-                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
                 BorderThickness="0,0,0,1">
                 <Grid ShowGridLines="False">
 
@@ -355,7 +354,7 @@
                                 Margin="0,0,32,0"
                                 Padding="0,0,0,8"
                                 VerticalAlignment="Top"
-                                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
                                 BorderThickness="0,0,0,2">
                                 <StackPanel Orientation="Horizontal">
                                     <Border

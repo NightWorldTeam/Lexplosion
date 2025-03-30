@@ -13,33 +13,35 @@
     d:DesignWidth="694"
     mc:Ignorable="d">
 
-    <Grid>
-        <Grid Background="{DynamicResource PrimarySolidColorBrush}" IsEnabled="{Binding HasAccess}">
+    <Grid Background="{DynamicResource PageSolidColorBrush}" IsEnabled="{Binding HasAccess}">
 
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
+        <Grid Background="{DynamicResource LayoutTabSolidColorBrush}">
             <TextBlock
                 Margin="45,32,0,8"
-                extensions:TextBlockExtensions.TextByKey="Friends"
                 FontSize="20"
                 FontWeight="Bold"
-                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
-
-            <controls:UIUnderlineTabControl
-                Grid.Row="1"
-                Background="Transparent"
-                ItemsSource="{Binding Tabs}"
-                TabPanelPadding="45,16,45,0">
-                <controls:UIUnderlineTabControl.ItemContainerStyle>
-                    <Style BasedOn="{StaticResource UITabItem}" TargetType="TabItem">
-                        <Setter Property="Header" Value="{Binding TextKey}" />
-                        <Setter Property="Content" Value="{Binding Content}" />
-                    </Style>
-                </controls:UIUnderlineTabControl.ItemContainerStyle>
-            </controls:UIUnderlineTabControl>
+                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                Text="{DynamicResource Friends}" />
         </Grid>
+
+        <controls:UIUnderlineTabControl
+            Grid.Row="1"
+            Background="{DynamicResource LayoutTabSolidColorBrush}"
+            BorderBrush="{DynamicResource LayoutTabBorderSolidColorBrush}"
+            BorderThickness="0,0,0,1"
+            ItemsSource="{Binding Tabs}"
+            TabPanelPadding="45,16,45,0">
+            <controls:UIUnderlineTabControl.ItemContainerStyle>
+                <Style BasedOn="{StaticResource UITabItem}" TargetType="TabItem">
+                    <Setter Property="Header" Value="{Binding TextKey}" />
+                    <Setter Property="Content" Value="{Binding Content}" />
+                </Style>
+            </controls:UIUnderlineTabControl.ItemContainerStyle>
+        </controls:UIUnderlineTabControl>
     </Grid>
 </UserControl>

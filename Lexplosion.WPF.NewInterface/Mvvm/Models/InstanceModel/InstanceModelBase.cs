@@ -998,6 +998,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             OnPropertyChanged(nameof(IsLaunching));
             OnPropertyChanged(nameof(IsLaunched));
             OnPropertyChanged(nameof(IsDownloading));
+            OnPropertyChanged(nameof(AnyProcessActive));
         }
 
 

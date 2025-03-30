@@ -184,7 +184,7 @@
         </DataTemplate>
     </UserControl.Resources>
 
-    <Grid Background="{DynamicResource PrimarySolidColorBrush}">
+    <Grid Background="{DynamicResource PageSolidColorBrush}">
 
         <Border Padding="32,32,32,8">
             <Grid ShowGridLines="False">

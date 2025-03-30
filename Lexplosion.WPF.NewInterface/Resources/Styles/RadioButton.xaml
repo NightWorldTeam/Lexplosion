@@ -72,8 +72,8 @@
                 <ControlTemplate TargetType="RadioButton">
                     <Border
                         Padding="8,0,8,0"
-                        Background="{DynamicResource SecondarySolidColorBrush}"
-                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                        Background="{DynamicResource LanguageSelectorSolidColorBrush}"
+                        BorderBrush="{DynamicResource LanguageSelectorBorderSolidColorBrush}"
                         BorderThickness="2"
                         CornerRadius="5">
 
@@ -90,9 +90,9 @@
                                 Height="20"
                                 Margin="0,0,8,0"
                                 VerticalAlignment="Center"
-                                Fill="{DynamicResource SecondarySolidColorBrush}"
+                                Fill="{DynamicResource LanguageSelectorUnselectedSolidColorBrush}"
                                 SnapsToDevicePixels="False"
-                                Stroke="{DynamicResource SeparateSolidColorBrush}"
+                                Stroke="{DynamicResource LanguageSelectorUnselectedBorderSolidColorBrush}"
                                 StrokeThickness="1" />
 
                             <Ellipse
@@ -104,7 +104,7 @@
                                 Fill="Transparent"
                                 Opacity="0"
                                 SnapsToDevicePixels="False"
-                                Stroke="{DynamicResource ActivitySolidColorBrush}"
+                                Stroke="{DynamicResource LanguageSelectorSelectedSolidColorBrush}"
                                 StrokeThickness="0" />
 
                             <ContentPresenter Grid.Column="1" VerticalAlignment="Center" />

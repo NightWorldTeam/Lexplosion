@@ -11,23 +11,27 @@
     d:DesignWidth="694"
     mc:Ignorable="d">
 
-    <Grid>
+    <Grid Background="{DynamicResource PageSolidColorBrush}">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <TextBlock
-            Margin="45,32,0,8"
-            FontSize="20"
-            FontWeight="Bold"
-            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-            Text="{DynamicResource Settings}" />
+        <Grid Background="{DynamicResource LayoutTabSolidColorBrush}">
+            <TextBlock
+                Margin="45,32,0,8"
+                FontSize="20"
+                FontWeight="Bold"
+                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                Text="{DynamicResource Settings}" />
+        </Grid>
 
         <controls:UIUnderlineTabControl
             Grid.Row="1"
-            Background="Transparent"
+            Background="{DynamicResource LayoutTabSolidColorBrush}"
+            BorderBrush="{DynamicResource LayoutTabBorderSolidColorBrush}"
+            BorderThickness="0,0,0,1"
             ItemsSource="{Binding Tabs}"
             SelectedItem="{Binding SelectedItem, UpdateSourceTrigger=PropertyChanged}"
             TabPanelPadding="45,16,45,0">

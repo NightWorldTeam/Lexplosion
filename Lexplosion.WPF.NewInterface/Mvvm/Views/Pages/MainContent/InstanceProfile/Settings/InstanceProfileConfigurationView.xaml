@@ -19,7 +19,6 @@
 
     <Grid>
         <ScrollViewer
-            Background="{DynamicResource PrimarySolidColorBrush}"
             CanContentScroll="False"
             Focusable="False"
             ScrollViewer.VerticalScrollBarVisibility="Visible">
@@ -28,8 +27,8 @@
                 <!--  Versions  -->
                 <Border
                     Padding="0,0,0,8"
-                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                    BorderThickness="0,0,0,2">
+                    BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
+                    BorderThickness="0,0,0,1">
 
                     <Border.Style>
                         <Style TargetType="{x:Type Border}">
@@ -52,7 +51,7 @@
                         <!--  Game Versions  -->
                         <Border
                             Padding="0,16,0,8"
-                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                            BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
                             BorderThickness="0,0,0,1">
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -133,8 +132,8 @@
                 <!--  GameType  -->
                 <Border
                     Padding="0,16,0,8"
-                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                    BorderThickness="0,0,0,2">
+                    BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
+                    BorderThickness="0,0,0,1">
 
                     <Border.Style>
                         <Style TargetType="{x:Type Border}">
@@ -157,15 +156,15 @@
                         <!--  Header  -->
                         <StackPanel>
                             <TextBlock
-                                extensions:TextBlockExtensions.TextByKey="GameType"
                                 FontSize="14"
                                 FontWeight="Medium"
-                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                Text="{DynamicResource GameType}" />
                             <TextBlock
-                                extensions:TextBlockExtensions.TextByKey="GameTypeDescription"
                                 FontSize="14"
                                 FontWeight="Medium"
-                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                Text="{DynamicResource GameTypeDescription}" />
                         </StackPanel>
 
                         <StackPanel
@@ -222,8 +221,8 @@
                 <!--  Modloader Version  -->
                 <Border
                     Padding="0,16,0,8"
-                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                    BorderThickness="0,0,0,2"
+                    BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
+                    BorderThickness="0,0,0,1"
                     Visibility="{Binding IsVanilla, Converter={converters:NegativeBooleanToVisibilityConverter}}">
 
                     <Grid>
@@ -286,8 +285,8 @@
                         Visibility="{Binding Model.IsNWClientAvailable, Mode=OneWay, Converter={converters:NegativeBooleanToVisibilityConverter}}" />
                     <Border
                         Padding="0,8,0,8"
-                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                        BorderThickness="0,0,0,2">
+                        BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
+                        BorderThickness="0,0,0,1">
 
                         <Border.Style>
                             <Style TargetType="{x:Type Border}">
@@ -339,8 +338,8 @@
                     <!--  Optifine  -->
                     <Border
                         Padding="0,16,0,8"
-                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                        BorderThickness="0,0,0,2"
+                        BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
+                        BorderThickness="0,0,0,1"
                         Visibility="{Binding IsVanilla, Converter={converters:BooleanToVisibilityConverter}}">
                         <Grid>
 
@@ -357,10 +356,10 @@
                                     Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
                                     Text="Optifine" />
                                 <TextBlock
-                                    extensions:TextBlockExtensions.TextByKey="OptifineDescription"
                                     FontSize="14"
                                     FontWeight="Medium"
-                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                    Text="{DynamicResource OptifineDescription}" />
                             </StackPanel>
 
                             <ToggleButton
@@ -373,9 +372,9 @@
 
                     <!--  Optifine Version  -->
                     <Border
-                        Padding="0,16,0,8"
-                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                        BorderThickness="0,0,0,2"
+                        Padding="0,16,0,64"
+                        BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
+                        BorderThickness="0,0,0,0"
                         Visibility="{Binding Model.IsOptifine, Converter={converters:BooleanToVisibilityConverter}}">
                         <Grid>
 
@@ -418,8 +417,8 @@
             Margin="32,-48"
             Padding="16,5"
             VerticalAlignment="Bottom"
-            Background="{DynamicResource SecondarySolidColorBrush}"
-            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+            Background="{DynamicResource ConfirmAlertSolidColorBrush}"
+            BorderBrush="{DynamicResource ConfirmAlertBorderSolidColorBrush}"
             BorderThickness="1"
             CornerRadius="10">
 

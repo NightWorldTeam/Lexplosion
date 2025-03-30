@@ -178,6 +178,7 @@
                         Text="Вы уже раздаете данный клиент"
                         TextAlignment="Center" />
 
+                    <!--  TODO: Translate  -->
                     <TextBlock
                         Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
                         Text="Данная страница будет разблокирована как только вы остановите активную раздачу в разделе 'Ваши раздачи'"

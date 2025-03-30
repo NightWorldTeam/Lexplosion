@@ -19,6 +19,7 @@
     xmlns:s="clr-namespace:System;assembly=mscorlib"
     xmlns:serverprofile="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.ServerProfile"
     xmlns:serverprofileview="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.ServerProfile"
+    xmlns:tb="http://www.hardcodet.net/taskbar"
     xmlns:viewmodels="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels">
 
     <ImageBrush x:Key="NoneImageBrush" ImageSource="pack://Application:,,,/Assets/images/icons/non_image.png" />
@@ -279,6 +280,15 @@
         <serverprofileview:InstanceProfileOverviewGalleryView />
     </DataTemplate>
 
+    <!--  LeftClickCommand="{Binding Source={StaticResource MainVM}, Path=ShowMainWindowCommand}"  -->
 
+    <tb:TaskbarIcon
+        x:Key="NofityIcon"
+        IconSource="pack://Application:,,,/Assets/images/icons/logo.ico"
+        PopupActivation="RightClick">
+        <tb:TaskbarIcon.TrayPopup>
+            <Border Padding="10" Background="#161819" />
+        </tb:TaskbarIcon.TrayPopup>
+    </tb:TaskbarIcon>
 
 </ResourceDictionary>

@@ -221,15 +221,15 @@
                     </Grid.RowDefinitions>
 
                     <Border
-                        Padding="0,0,0,8"
-                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                        BorderThickness="0,0,0,2">
+                        Padding="0,0,0,0"
+                        BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
+                        BorderThickness="0,0,0,1">
                         <StackPanel>
 
                             <Border
-                                Padding="0,0,0,16"
-                                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                                BorderThickness="0,0,0,2">
+                                Padding="0,0,0,8"
+                                BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
+                                BorderThickness="0,0,0,1">
                                 <Grid>
 
 
@@ -265,15 +265,15 @@
                                 <StackPanel Orientation="Vertical">
 
                                     <TextBlock
-                                        extensions:TextBlockExtensions.TextByKey="CustomColor"
                                         FontSize="16"
                                         FontWeight="Medium"
-                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                        Text="{DynamicResource CustomColor}" />
                                     <TextBlock
-                                        extensions:TextBlockExtensions.TextByKey="CustomColorDescription"
                                         FontSize="14"
                                         FontWeight="Medium"
-                                        Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                                        Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                        Text="{DynamicResource CustomColorDescription}" />
                                 </StackPanel>
 
                                 <StackPanel
@@ -281,6 +281,7 @@
                                     HorizontalAlignment="Right"
                                     Orientation="Horizontal">
 
+                                    <!--  TODO: Translate  -->
                                     <TextBlock
                                         VerticalAlignment="Center"
                                         FontWeight="Medium"
@@ -310,20 +311,20 @@
                         Grid.Row="1"
                         Margin="0,16,0,0"
                         Padding="0,0,0,16"
-                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                        BorderThickness="0,0,0,2">
+                        BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
+                        BorderThickness="0,0,0,0">
                         <StackPanel Orientation="Vertical">
 
                             <TextBlock
-                                extensions:TextBlockExtensions.TextByKey="InterfaceTheme"
                                 FontSize="16"
                                 FontWeight="Medium"
-                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                Text="{DynamicResource InterfaceTheme}" />
                             <TextBlock
-                                extensions:TextBlockExtensions.TextByKey="ChooseTheme"
                                 FontSize="14"
                                 FontWeight="Medium"
-                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                Text="{DynamicResource ChooseTheme}" />
 
 
                             <ItemsControl
@@ -343,8 +344,7 @@
                         Grid.Row="2"
                         Margin="0,16,0,32"
                         Padding="0,0,0,16"
-                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                        BorderThickness="0,0,0,2">
+                        Visibility="Collapsed">
                         <StackPanel Orientation="Vertical">
 
                             <Border
@@ -378,15 +378,15 @@
                                         <!--  Header  -->
                                         <StackPanel>
                                             <TextBlock
-                                                extensions:TextBlockExtensions.TextByKey="AutoInstanceUpdate"
                                                 FontSize="14"
                                                 FontWeight="Medium"
-                                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                                Text="{DynamicResource AutoInstanceUpdate}" />
                                             <TextBlock
-                                                extensions:TextBlockExtensions.TextByKey="AutoInstanceUpdateDescription"
                                                 FontSize="14"
                                                 FontWeight="Medium"
-                                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                                Text="{DynamicResource AutoInstanceUpdateDescription}" />
                                         </StackPanel>
 
 

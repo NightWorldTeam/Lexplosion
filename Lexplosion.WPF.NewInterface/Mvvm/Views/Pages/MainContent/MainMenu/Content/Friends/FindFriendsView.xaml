@@ -28,8 +28,8 @@
                 Margin="0,0,4,4"
                 Padding="16,13"
                 HorizontalAlignment="Stretch"
-                Background="{DynamicResource SecondarySolidColorBrush}"
-                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                Background="{DynamicResource FriendSolidColorBrush}"
+                BorderBrush="{DynamicResource FriendBorderSolidColorBrush}"
                 BorderThickness="1"
                 CornerRadius="5">
                 <Grid HorizontalAlignment="Stretch">
@@ -259,7 +259,6 @@
             <controls:SearchBox
                 Margin="0,0,0,12"
                 HorizontalAlignment="Stretch"
-                Background="{DynamicResource SecondarySolidColorBrush}"
                 Placeholder="{DynamicResource TypingNicknamePlaceholder}"
                 SearchCommand="{Binding SearchCommand}"
                 Style="{StaticResource sm-searchbox-default}" />

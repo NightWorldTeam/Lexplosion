@@ -11,7 +11,7 @@
     <Duration x:Key="FastAnimationSpeed">0:0:0.15</Duration>
 
     <!--  Activity Colors  -->
-    <Color x:Key="ActivityColor" x:Shared="True">#13f287</Color>
+    <Color x:Key="ActivityColor" x:Shared="True">#167FFC</Color>
     <Color x:Key="Color1">#8500aa</Color>
     <Color x:Key="Color2">#13f287</Color>
 
@@ -75,7 +75,7 @@
 
     <!--  Separate Color  -->
     <Color x:Key="SeparateColor">
-        #181818
+        #161f34
     </Color>
 
     <Color x:Key="LightSeparateColor">
@@ -268,7 +268,7 @@
 
     <!--  DoNotDisturb  -->
     <Color x:Key="DoNotDisturbColor">
-        Orange
+        rED
     </Color>
 
     <sys:Double x:Key="DoNotDisturbColorOpacity">
@@ -338,4 +338,225 @@
         x:Shared="False"
         Opacity="{DynamicResource DisableControlIconColorOpacity}"
         Color="{StaticResource DisableControlIconColor}" />
+
+
+    <!--  region Page  -->
+
+
+    <SolidColorBrush
+        x:Key="PageSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource PrimaryColor}" />
+    <SolidColorBrush
+        x:Key="PageItemSeparatorSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource SeparateColor}" />
+
+    <SolidColorBrush
+        x:Key="LayoutTabSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource PrimaryColor}" />
+    <SolidColorBrush
+        x:Key="LayoutTabBorderSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource SecondaryColor}" />
+    <Color x:Key="LayoutShadowColor" x:Shared="False">#167FFC</Color>
+
+
+    <!--  endregion Page  -->
+
+
+    <!--  region LeftPanel  -->
+
+
+    <SolidColorBrush
+        x:Key="LeftPanelSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource PrimaryColor}" />
+    <SolidColorBrush
+        x:Key="LeftPanelOutsideBorderSolidColorBrush"
+        x:Shared="False"
+        Color="#12192a" />
+    <SolidColorBrush
+        x:Key="LeftPanelItemsSeparateSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource SeparateColor}" />
+
+
+    <!--  endregion LeftPanel  -->
+
+
+    <!--  region InstanceForm  -->
+
+
+    <SolidColorBrush
+        x:Key="InstanceFormSolidColorBrush"
+        x:Shared="False"
+        Color="#12162a" />
+    <SolidColorBrush
+        x:Key="InstanceFormBorderSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource SeparateColor}" />
+    <SolidColorBrush
+        x:Key="InstanceFormTagSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource SeparateColor}" />
+    <SolidColorBrush
+        x:Key="InstanceFormTagForegroundSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource PrimaryForegroundColor}" />
+
+
+    <!--  endregion InstanceForm  -->
+
+
+    <!--  region AddonForm  -->
+
+
+    <SolidColorBrush
+        x:Key="AddomFormSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource SecondaryColor}" />
+    <SolidColorBrush
+        x:Key="AddomFormTagSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource SecondaryColor}" />
+    <SolidColorBrush
+        x:Key="AddomFormBorderSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource SeparateColor}" />
+
+
+    <!--  endregion AddonForm  -->
+
+
+    <!--  region ServerForm  -->
+
+
+    <SolidColorBrush
+        x:Key="ServerFormSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource SecondaryColor}" />
+    <SolidColorBrush
+        x:Key="ServerFormBorderSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource SeparateColor}" />
+    <SolidColorBrush
+        x:Key="ServerFormTagSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource SeparateColor}" />
+
+
+    <!--  endregion ServerForm  -->
+
+
+    <!--  region TextBox  -->
+
+
+    <SolidColorBrush
+        x:Key="TextBoxSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource PrimaryColor}" />
+    <SolidColorBrush
+        x:Key="TextBoxBorderSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource SeparateColor}" />
+    <SolidColorBrush
+        x:Key="TextBoxCaretSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource ActivityColor}" />
+    <SolidColorBrush
+        x:Key="TextBoxSelectionSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource ActivityColor}" />
+    <SolidColorBrush
+        x:Key="TextBoxFocusedSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource ActivityColor}" />
+    <SolidColorBrush
+        x:Key="TextBoxForegroundSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource PrimaryForegroundColor}" />
+    <SolidColorBrush
+        x:Key="TextBoxPlaceholderSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource SecondaryForegroundColor}" />
+
+
+    <!--  endregion TextBox  -->
+
+    <!--  region ConfirmAlert  -->
+
+
+    <SolidColorBrush
+        x:Key="ConfirmAlertSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource SecondaryForegroundColor}" />
+    <SolidColorBrush
+        x:Key="ConfirmAlertBorderSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource SecondaryForegroundColor}" />
+
+
+    <!--  endregion Confirm Alert  -->
+
+
+    <!--  region FriendForm  -->
+
+
+    <SolidColorBrush
+        x:Key="FriendSolidColorBrush"
+        x:Shared="False"
+        Color="#12162a" />
+    <SolidColorBrush
+        x:Key="FriendBorderSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource SeparateColor}" />
+
+
+    <!--  endregion FriendForm  -->
+
+
+    <!--  region Language  -->
+
+
+    <SolidColorBrush
+        x:Key="LanguageSelectorSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource SecondaryColor}" />
+    <SolidColorBrush
+        x:Key="LanguageSelectorBorderSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource SeparateColor}" />
+    <SolidColorBrush
+        x:Key="LanguageSelectorUnselectedSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource PrimaryColor}" />
+    <SolidColorBrush
+        x:Key="LanguageSelectorUnselectedBorderSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource SeparateColor}" />
+    <SolidColorBrush
+        x:Key="LanguageSelectorSelectedSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource ActivityColor}" />
+
+
+    <!--  endregion Language  -->
+
+
+    <!--  region Instances Filter  -->
+
+
+    <SolidColorBrush
+        x:Key="InstancesFilterSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource PrimaryColor}" />
+    <SolidColorBrush
+        x:Key="InstancesFilterBorderSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource SeparateColor}" />
+
+
+    <!--  endregion Instances Filter  -->
 </ResourceDictionary>

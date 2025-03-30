@@ -56,7 +56,7 @@
                         <Border
                             Margin="0,16,0,0"
                             Padding="0,16,0,0"
-                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                            BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
                             BorderThickness="0,1,0,0">
                             <StackPanel>
                                 <TextBlock
@@ -178,15 +178,15 @@
                         <Border
                             Margin="0,16,0,0"
                             Padding="0,16,0,16"
-                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                            BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
                             BorderThickness="0,1,0,0">
                             <StackPanel>
                                 <TextBlock
                                     Margin="0,0,0,16"
-                                    extensions:TextBlockExtensions.TextByKey="Contacts"
                                     FontSize="16"
                                     FontWeight="Medium"
-                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                    Text="{DynamicResource Contacts}" />
 
                                 <StackPanel
                                     Margin="2,0,0,0"
@@ -219,32 +219,32 @@
                         <Border
                             Margin="0,0,0,0"
                             Padding="0,8,0,0"
-                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                            BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
                             BorderThickness="0,1,0,0">
                             <StackPanel Margin="0,8,0,0">
                                 <TextBlock
                                     x:Name="CopyrightTextBlock"
-                                    extensions:TextBlockExtensions.TextByKey="Copyright"
                                     FontSize="13"
-                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                    Text="{DynamicResource Copyright}" />
                                 <TextBlock
                                     x:Name="ProtectionTextBlock"
                                     Margin="0,8,0,0"
-                                    extensions:TextBlockExtensions.TextByKey="Protection"
                                     FontSize="13"
                                     Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                    Text="{DynamicResource Protection}"
                                     TextWrapping="WrapWithOverflow" />
                             </StackPanel>
                         </Border>
                         <Border
                             Margin="0,8,0,0"
                             Padding="0,8,0,16"
-                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                            BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
                             BorderThickness="0,1,0,0">
                             <TextBlock
-                                extensions:TextBlockExtensions.TextByKey="DenialOfResponsibility"
                                 FontSize="13"
                                 Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                Text="{DynamicResource DenialOfResponsibility}"
                                 TextWrapping="WrapWithOverflow" />
                         </Border>
                     </StackPanel>

@@ -18,8 +18,8 @@
         Height="64"
         Padding="16,12"
         VerticalAlignment="Top"
-        Background="{DynamicResource SecondarySolidColorBrush}"
-        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+        Background="{DynamicResource FriendSolidColorBrush}"
+        BorderBrush="{DynamicResource FriendBorderSolidColorBrush}"
         BorderThickness="1"
         CornerRadius="5">
         <Grid>
