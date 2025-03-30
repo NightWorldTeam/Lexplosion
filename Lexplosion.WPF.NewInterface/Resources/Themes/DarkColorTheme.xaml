@@ -42,7 +42,7 @@
 
     <!--  Primary Color  -->
     <Color x:Key="PrimaryColor">
-        #0E1422
+        #0e1523
     </Color>
 
 
@@ -59,7 +59,7 @@
 
     <!--  Secondary Color  -->
     <Color x:Key="SecondaryColor">
-        #0A0F1B
+        #0a0f1b
     </Color>
 
     <sys:Double x:Key="SecondaryColorOpacity">
@@ -79,7 +79,7 @@
     </Color>
 
     <Color x:Key="LightSeparateColor">
-        #172036
+        #191819
     </Color>
 
     <sys:Double x:Key="SeparateColorOpacity">
@@ -346,7 +346,7 @@
     <SolidColorBrush
         x:Key="PageSolidColorBrush"
         x:Shared="False"
-        Color="{DynamicResource PrimaryColor}" />
+        Color="{DynamicResource SecondaryColor}" />
     <SolidColorBrush
         x:Key="PageItemSeparatorSolidColorBrush"
         x:Shared="False"
@@ -355,7 +355,7 @@
     <SolidColorBrush
         x:Key="LayoutTabSolidColorBrush"
         x:Shared="False"
-        Color="{DynamicResource PrimaryColor}" />
+        Color="{DynamicResource SecondaryColor}" />
     <SolidColorBrush
         x:Key="LayoutTabBorderSolidColorBrush"
         x:Shared="False"
@@ -392,11 +392,11 @@
     <SolidColorBrush
         x:Key="InstanceFormSolidColorBrush"
         x:Shared="False"
-        Color="#12162a" />
+        Color="{DynamicResource PrimaryColor}" />
     <SolidColorBrush
         x:Key="InstanceFormBorderSolidColorBrush"
         x:Shared="False"
-        Color="{DynamicResource SeparateColor}" />
+        Color="{DynamicResource LightSeparateColor}" />
     <SolidColorBrush
         x:Key="InstanceFormTagSolidColorBrush"
         x:Shared="False"
