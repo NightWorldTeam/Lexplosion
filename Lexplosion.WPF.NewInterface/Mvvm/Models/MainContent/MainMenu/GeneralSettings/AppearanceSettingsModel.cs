@@ -119,9 +119,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
         {
             _colors.Add(new ActivityColor("#167ffc"));
             _colors.Add(new ActivityColor("#A020F0"));
-            _colors.Add(new ActivityColor("#FFE600"));
-            _colors.Add(new ActivityColor("#40A710"));
-            _colors.Add(new ActivityColor("#000"));
 
             foreach (var color in _colors)
             {

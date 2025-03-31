@@ -10,6 +10,11 @@ namespace Lexplosion.WPF.NewInterface.Core.Converters
         // TODO: Need to know scalling coef;
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            if (value == null) 
+            {
+                return string.Empty;
+            }
+
             if (value is IEnumerable<string> items) 
             {
                 return $"{items.FirstOrDefault()} + {items.Count() - 1}";

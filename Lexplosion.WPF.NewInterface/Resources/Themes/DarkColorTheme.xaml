@@ -12,8 +12,6 @@
 
     <!--  Activity Colors  -->
     <Color x:Key="ActivityColor" x:Shared="True">#167FFC</Color>
-    <Color x:Key="Color1">#8500aa</Color>
-    <Color x:Key="Color2">#13f287</Color>
 
     <sys:Double x:Key="ActivityColorOpacity">1</sys:Double>
     <SolidColorBrush
@@ -298,13 +296,13 @@
 
     <SolidColorBrush x:Key="DefaultButtonBackgroundColorBrush" Color="{DynamicResource ActivityColor}" />
 
-    <Color x:Key="DefaultButtonHoverBackgroundColor" x:Shared="True">#11DA79</Color>
+    <Color x:Key="DefaultButtonHoverBackgroundColor" x:Shared="True">#167FFC</Color>
     <SolidColorBrush
         x:Key="DefaultButtonHoverBackgroundColorBrush"
         x:Shared="True"
         Color="{DynamicResource DefaultButtonHoverBackgroundColor}" />
 
-    <Color x:Key="DefaultButtonPressedBackgroundColor" x:Shared="True">#0FC26C</Color>
+    <Color x:Key="DefaultButtonPressedBackgroundColor" x:Shared="True">#167FFC</Color>
     <SolidColorBrush
         x:Key="DefaultButtonPressedBackgroundColorBrush"
         x:Shared="True"
@@ -359,8 +357,9 @@
     <SolidColorBrush
         x:Key="LayoutTabBorderSolidColorBrush"
         x:Shared="False"
-        Color="{DynamicResource SecondaryColor}" />
-    <Color x:Key="LayoutShadowColor" x:Shared="False">#167FFC</Color>
+        Color="{DynamicResource SeparateColor}" />
+
+    <Color x:Key="LayoutShadowColor" x:Shared="False">Black</Color>
 
 
     <!--  endregion Page  -->
@@ -416,11 +415,11 @@
     <SolidColorBrush
         x:Key="AddomFormSolidColorBrush"
         x:Shared="False"
-        Color="{DynamicResource SecondaryColor}" />
+        Color="{DynamicResource PrimaryColor}" />
     <SolidColorBrush
         x:Key="AddomFormTagSolidColorBrush"
         x:Shared="False"
-        Color="{DynamicResource SecondaryColor}" />
+        Color="{DynamicResource SeparateColor}" />
     <SolidColorBrush
         x:Key="AddomFormBorderSolidColorBrush"
         x:Shared="False"
@@ -436,7 +435,7 @@
     <SolidColorBrush
         x:Key="ServerFormSolidColorBrush"
         x:Shared="False"
-        Color="{DynamicResource SecondaryColor}" />
+        Color="{DynamicResource PrimaryColor}" />
     <SolidColorBrush
         x:Key="ServerFormBorderSolidColorBrush"
         x:Shared="False"
@@ -491,11 +490,11 @@
     <SolidColorBrush
         x:Key="ConfirmAlertSolidColorBrush"
         x:Shared="False"
-        Color="{DynamicResource SecondaryForegroundColor}" />
+        Color="{DynamicResource PrimaryColor}" />
     <SolidColorBrush
         x:Key="ConfirmAlertBorderSolidColorBrush"
         x:Shared="False"
-        Color="{DynamicResource SecondaryForegroundColor}" />
+        Color="{DynamicResource SeparateColor}" />
 
 
     <!--  endregion Confirm Alert  -->
@@ -507,7 +506,7 @@
     <SolidColorBrush
         x:Key="FriendSolidColorBrush"
         x:Shared="False"
-        Color="#12162a" />
+        Color="{DynamicResource PrimaryColor}" />
     <SolidColorBrush
         x:Key="FriendBorderSolidColorBrush"
         x:Shared="False"
@@ -523,7 +522,7 @@
     <SolidColorBrush
         x:Key="LanguageSelectorSolidColorBrush"
         x:Shared="False"
-        Color="{DynamicResource SecondaryColor}" />
+        Color="{DynamicResource PrimaryColor}" />
     <SolidColorBrush
         x:Key="LanguageSelectorBorderSolidColorBrush"
         x:Shared="False"
@@ -531,7 +530,7 @@
     <SolidColorBrush
         x:Key="LanguageSelectorUnselectedSolidColorBrush"
         x:Shared="False"
-        Color="{DynamicResource PrimaryColor}" />
+        Color="{DynamicResource SecondaryColor}" />
     <SolidColorBrush
         x:Key="LanguageSelectorUnselectedBorderSolidColorBrush"
         x:Shared="False"

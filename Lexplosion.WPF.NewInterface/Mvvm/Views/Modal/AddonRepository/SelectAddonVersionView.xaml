@@ -82,7 +82,10 @@
                         </Grid.ColumnDefinitions>
 
                         <!--  TODO: Translate  -->
-                        <TextBlock FontSize="14" Text="Установить последнию версию?" />
+                        <TextBlock
+                            FontSize="14"
+                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                            Text="Установить последнию версию?" />
                         <ToggleButton
                             x:Name="SelectVersionSwitch"
                             Grid.Column="1"

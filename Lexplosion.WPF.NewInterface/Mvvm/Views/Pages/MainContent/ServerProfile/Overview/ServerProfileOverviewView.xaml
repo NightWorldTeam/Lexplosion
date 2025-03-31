@@ -19,6 +19,7 @@
                 <TextBlock
                     Margin="0,0,45,16"
                     FontSize="14"
+                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
                     Text="{Binding Model.ServerModel.Description}"
                     TextWrapping="WrapWithOverflow" />
             </ScrollViewer>

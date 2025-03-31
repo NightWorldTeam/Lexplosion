@@ -150,6 +150,7 @@
             </Border>
 
             <DataTemplate.Triggers>
+                <!--  TODO: Translate  -->
                 <!--  In Queue Text  -->
                 <DataTrigger Binding="{Binding InstanceState}" Value="{x:Static lexplosion:DownloadShareState.InQueue}">
                     <Setter TargetName="StatusTextBlock" Property="Text" Value="В очереди" />
@@ -176,7 +177,7 @@
         </DataTemplate>
     </UserControl.Resources>
 
-    <Grid Margin="0,8,0,0">
+    <Grid Margin="0,8,0,0" Background="{DynamicResource PrimarySolidColorBrush}">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="32" />
