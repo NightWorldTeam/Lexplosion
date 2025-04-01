@@ -386,7 +386,7 @@
     <SolidColorBrush
         x:Key="InstanceFormSolidColorBrush"
         x:Shared="False"
-        Color="{DynamicResource SecondaryColor}" />
+        Color="{DynamicResource PrimaryColor}" />
     <SolidColorBrush
         x:Key="InstanceFormBorderSolidColorBrush"
         x:Shared="False"
@@ -394,7 +394,7 @@
     <SolidColorBrush
         x:Key="InstanceFormTagSolidColorBrush"
         x:Shared="False"
-        Color="{DynamicResource SeparateColor}" />
+        Color="{DynamicResource SecondaryColor}" />
     <SolidColorBrush
         x:Key="InstanceFormTagForegroundSolidColorBrush"
         x:Shared="False"
@@ -501,7 +501,7 @@
     <SolidColorBrush
         x:Key="FriendSolidColorBrush"
         x:Shared="False"
-        Color="{DynamicResource SecondaryColor}" />
+        Color="{DynamicResource PrimaryColor}" />
     <SolidColorBrush
         x:Key="FriendBorderSolidColorBrush"
         x:Shared="False"
@@ -517,7 +517,7 @@
     <SolidColorBrush
         x:Key="LanguageSelectorSolidColorBrush"
         x:Shared="False"
-        Color="{DynamicResource SecondaryColor}" />
+        Color="{DynamicResource PrimaryColor}" />
     <SolidColorBrush
         x:Key="LanguageSelectorBorderSolidColorBrush"
         x:Shared="False"
