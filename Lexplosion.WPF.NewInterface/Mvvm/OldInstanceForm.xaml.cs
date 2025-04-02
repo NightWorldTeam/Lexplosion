@@ -92,6 +92,7 @@ namespace Lexplosion.WPF.NewInterface.Controls.OldInstanceForm
             if (_model.BaseData.Modloader != ClientType.Vanilla)
             {
                 ModloaderIcon.Background = new ImageBrush(new BitmapImage(new Uri($"{basePath}{_model.BaseData.Modloader.ToString().ToLower()}.png", UriKind.Absolute)));
+                ModloaderIcon.ToolTip = _model.BaseData.Modloader.ToString();
                 ModloaderIcon.Visibility = Visibility.Visible;
                 return;
             }
