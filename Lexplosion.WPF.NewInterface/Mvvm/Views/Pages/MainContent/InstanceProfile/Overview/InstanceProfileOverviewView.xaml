@@ -17,7 +17,7 @@
     <Grid Margin="32,16,32,0">
         <StackPanel>
 
-            <core:If Condition="{Binding Model.InstanceModel.IsLocal}">
+            <core:If Condition="{Binding Model.IsLocal}">
                 <core:If.False>
 
                     <Border
@@ -145,7 +145,7 @@
                 </core:If.False>
             </core:If>
 
-            <core:If Condition="{Binding Model.InstanceModel.IsLocal}">
+            <core:If Condition="{Binding Model.IsLocal}">
                 <core:If.False>
                     <StackPanel Margin="4,0,0,0">
                         <Border

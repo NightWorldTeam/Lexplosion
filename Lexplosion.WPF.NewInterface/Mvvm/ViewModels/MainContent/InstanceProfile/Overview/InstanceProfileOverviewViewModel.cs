@@ -13,6 +13,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         public InstanceData InstanceData { get => InstanceModel.PageData; }
         public BaseInstanceData BaseInstanceData { get => InstanceModel.BaseData; }
 
+        public bool IsLocal { get; set; }
+
         public Lazy<Task<InstanceData>> AdditionalDataLazy
         {
             get => new Lazy<Task<InstanceData>>(() => Task.Run(() => InstanceModel.AdditionalData));
@@ -43,11 +45,20 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         public InstanceProfileOverviewModel(InstanceModelBase instanceModel, Action<bool> changeLoadingStatus)
         {
             InstanceModel = instanceModel;
+
+            IsLocal = instanceModel.IsLocal;
+
             _changeLoadingStatus = changeLoadingStatus;
             instanceModel.DataChanged += OnDataChanged;
 
             if (instanceModel.IsLocal) 
             {
+                changeLoadingStatus?.Invoke(false);
+            }
+
+            if (instanceModel.Source == InstanceSource.Nightworld)
+            {
+                IsLocal = true;
                 changeLoadingStatus?.Invoke(false);
             }
         }
