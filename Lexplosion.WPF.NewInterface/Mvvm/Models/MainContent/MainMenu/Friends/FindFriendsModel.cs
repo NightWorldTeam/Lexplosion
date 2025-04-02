@@ -61,7 +61,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends
         /// Существует ли предыдущая страница.
         /// </summary>
         public bool IsPrevPageExist { get; private set; }
-
         /// <summary>
         /// Индекс выбранной страницы.
         /// </summary>
@@ -74,7 +73,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends
                 OnPropertyChanged();
             }
         }
-
+        /// <summary>
+        /// Количество страниц
+        /// </summary>
+        public int PageCount { get; private set; }
 
         private UsersCatalogPage _usersCatalogPage;
 
@@ -193,7 +195,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends
                         _users.Add(new NightWorldUser(user));
                     }
                 });
-
+                PageCount = _usersCatalogPage.PagesCount;
+                OnPropertyChanged(nameof(PageCount));
                 Thread.Sleep(250);
                 IsLoading = false;
             });
