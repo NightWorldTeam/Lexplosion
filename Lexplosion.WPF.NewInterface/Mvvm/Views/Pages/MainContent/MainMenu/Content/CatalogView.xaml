@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:Lexplosion.WPF.NewInterface.Controls"
     xmlns:converters="clr-namespace:Lexplosion.WPF.NewInterface.Core.Converters"
+    xmlns:core="clr-namespace:Lexplosion.WPF.NewInterface.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
     xmlns:instanceModel="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel"
@@ -80,7 +81,6 @@
 
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
 
@@ -122,15 +122,19 @@
                                     Style="{StaticResource FilterIconToggleButton}" />
 
 
-                                <ToggleButton
-                                    x:Name="HeadPaginatorSwitch"
-                                    Width="40"
-                                    Height="40"
-                                    Margin="15,0,0,0"
-                                    Background="{DynamicResource PrimarySolidColorBrush}"
-                                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                                    Content="Numbers123"
-                                    Style="{StaticResource FilterIconToggleButton}" />
+                                <core:If Condition="{Binding Model.Instances, Converter={converters:IsCollectionEmptyConverter}}">
+                                    <core:If.False>
+                                        <ToggleButton
+                                            x:Name="HeadPaginatorSwitch"
+                                            Width="40"
+                                            Height="40"
+                                            Margin="15,0,0,0"
+                                            Background="{DynamicResource PrimarySolidColorBrush}"
+                                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                            Content="Numbers123"
+                                            Style="{StaticResource FilterIconToggleButton}" />
+                                    </core:If.False>
+                                </core:If>
                             </StackPanel>
 
                             <!--  Filter Panel  -->
@@ -353,33 +357,43 @@
                                 Visibility="{Binding IsChecked, ElementName=HeadPaginatorSwitch, Converter={converters:BooleanToVisibilityConverter}}" />
                         </Grid>
 
-                        <!--  Instance Clients List  -->
-                        <Grid Grid.Row="1" Grid.Column="1">
+                        <core:If
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Condition="{Binding Model.Instances, Converter={converters:IsCollectionEmptyConverter}}">
+                            <core:If.True>
+                                <controls:Empty VerticalAlignment="Stretch" Description="Каталог оказался пуст" />
+                            </core:If.True>
+                            <core:If.False>
+                                <!--  Instance Clients List  -->
+                                <Grid>
 
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
 
-                            <ItemsControl ItemsSource="{Binding Model.Instances}">
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <virtualization:VirtualizingWrapPanel Margin="0,0,0,0" IsItemsHost="True" />
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                            </ItemsControl>
+                                    <ItemsControl ItemsSource="{Binding Model.Instances}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <virtualization:VirtualizingWrapPanel Margin="0,0,0,0" IsItemsHost="True" />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                    </ItemsControl>
 
-                            <controls:Paginator
-                                Grid.Row="1"
-                                Grid.Column="1"
-                                Margin="0,16,0,32"
-                                CurrentPageIndex="{Binding Model.CurrentPageIndex}"
-                                NextCommand="{Binding NextPageCommand}"
-                                PageChanged="Paginator_PageChanged"
-                                PageCount="{Binding Model.PageCount}"
-                                PrevCommand="{Binding PrevPageCommand}"
-                                ToCommand="{Binding ToCurrentPageIndexCommand}" />
-                        </Grid>
+                                    <controls:Paginator
+                                        Grid.Row="1"
+                                        Grid.Column="1"
+                                        Margin="0,16,0,32"
+                                        CurrentPageIndex="{Binding Model.CurrentPageIndex}"
+                                        NextCommand="{Binding NextPageCommand}"
+                                        PageChanged="Paginator_PageChanged"
+                                        PageCount="{Binding Model.PageCount}"
+                                        PrevCommand="{Binding PrevPageCommand}"
+                                        ToCommand="{Binding ToCurrentPageIndexCommand}" />
+                                </Grid>
+                            </core:If.False>
+                        </core:If>
                     </Grid>
                 </ScrollViewer>
 
