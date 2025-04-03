@@ -2,6 +2,7 @@
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.ModalFactory;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Lexplosion.WPF.NewInterface.Stores
 {
@@ -11,6 +12,7 @@ namespace Lexplosion.WPF.NewInterface.Stores
 
         private static readonly Dictionary<Type, Func<IModalViewModel>> _modalAbstractFactoriesByType = new();
 
+        public string LatestModal;
 
         private IModalViewModel _currentViewModel;
         public IModalViewModel CurrentViewModel
@@ -25,6 +27,10 @@ namespace Lexplosion.WPF.NewInterface.Stores
         public void Open(IModalViewModel viewModel)
         {
             CurrentViewModel = viewModel;
+            if (viewModel != null) 
+            {
+                LatestModal = viewModel.ToString().Split('.').LastOrDefault();
+            }
             CurrentViewModel.CloseCommandExecutedEvent += CloseInternal;
         }
 

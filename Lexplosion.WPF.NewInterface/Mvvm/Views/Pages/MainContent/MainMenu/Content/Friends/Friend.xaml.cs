@@ -128,11 +128,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu
 
         private static void OnAvatarChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is Friend) 
-            {
-                var f = (Friend)d;
-                f.AvatarBorder.Background = new ImageBrush() { ImageSource = f.Avatar };
-            }
+            //if (d is Friend) 
+            //{
+            //    var f = (Friend)d;
+            //    f.AvatarBorder.Background = new ImageBrush() { ImageSource = f.Avatar };
+            //}
         }
 
         private static string GetStatusColorKey(ActivityStatus status) 

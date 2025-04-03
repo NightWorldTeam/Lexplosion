@@ -8,6 +8,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Authorization
     public class MicrosoftManualInputViewModel : ActionModalViewModelBase
     {
         public event Action<string> TokenEntered;
+        public event Action Closed;
 
         public MicrosoftManualInputModel Model { get; }
 
@@ -18,6 +19,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Authorization
             ActionCommandExecutedEvent += (obj) =>
             {
                 TokenEntered?.Invoke(Model.MicrosoftToken);
+            };
+
+            CloseCommandExecutedEvent += (obj) => 
+            {
+                Closed?.Invoke();
             };
         }
     }

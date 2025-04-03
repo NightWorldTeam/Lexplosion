@@ -292,11 +292,34 @@
                 Margin="-20,0,-20,-16"
                 Panel.ZIndex="10000"
                 Background="Black"
-                BackgroundOpacity="0.3"
+                BackgroundOpacity="0.8"
                 BlurTarget="{Binding ElementName=AccountFactoryForm}"
                 CornerRadius="10"
                 IsActive="{Binding Model.IsAuthorizationInProcess}"
-                Placeholder="Идет процесс авторизации..." />
+                Placeholder="Идет процесс авторизации...">
+                <Grid HorizontalAlignment="Center" Margin="0,16,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <!--  TODO: Translate  -->
+                    <controls:AdvancedButton
+                        Padding="16,0"
+                        HorizontalAlignment="Left"
+                        Command="{Binding ManualInputCommand}"
+                        Content="{DynamicResource ManualInput}"
+                        Style="{StaticResource sm-default}" />
+
+                    <controls:AdvancedButton
+                        Grid.Column="1"
+                        Margin="8,0,0,0"
+                        Padding="16,0"
+                        HorizontalAlignment="Right"
+                        Command="{Binding CancelCommand}"
+                        Content="{DynamicResource Cancel}"
+                        Style="{StaticResource sm-ghost}" />
+                </Grid>
+            </controls:LoadingBoard>
         </Grid>
     </Border>
 </UserControl>

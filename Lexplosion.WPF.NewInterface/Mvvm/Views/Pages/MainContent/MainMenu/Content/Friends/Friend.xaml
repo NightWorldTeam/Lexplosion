@@ -8,6 +8,7 @@
     xmlns:lexplosion="clr-namespace:Lexplosion;assembly=Lexplosion.Core"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:valueconverters="clr-namespace:Lexplosion.WPF.NewInterface.Core.Converters"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
@@ -29,15 +30,31 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <Border
-                x:Name="AvatarBorder"
-                Width="38"
-                Height="38"
-                CornerRadius="2">
-                <Border.Background>
-                    <ImageBrush ImageSource="pack://Application:,,,/Assets/images/icons/non_image.png" />
-                </Border.Background>
-            </Border>
+            <Grid HorizontalAlignment="Left" VerticalAlignment="Center">
+
+                <Border
+                    Width="38"
+                    Height="38"
+                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                    BorderThickness="1"
+                    CornerRadius="2" />
+
+                <Border
+                    x:Name="AvatarBorder"
+                    Width="38"
+                    Height="38"
+                    Background="{Binding Avatar, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={valueconverters:ImageSourceNullValidateConverter}}"
+                    CornerRadius="2" />
+
+                <controls:CircleLoader
+                    x:Name="AvatarLoader"
+                    Width="16"
+                    Height="16"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    BlurTarget="{Binding ElementName=AvatarBorder}"
+                    IsActive="{Binding Avatar, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={valueconverters:IsValueNullConverter}}" />
+            </Grid>
 
             <StackPanel Grid.Column="1" Margin="12,0">
                 <!--  Name & Status  -->

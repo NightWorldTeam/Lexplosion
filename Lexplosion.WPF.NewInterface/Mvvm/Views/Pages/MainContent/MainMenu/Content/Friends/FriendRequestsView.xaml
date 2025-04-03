@@ -55,15 +55,30 @@
                                 <Grid Width="38" Height="38">
 
                                     <!--  Avatar  -->
-                                    <Border
-                                        x:Name="AvatarBorder"
-                                        Width="38"
-                                        Height="38"
-                                        CornerRadius="5">
-                                        <Border.Background>
-                                            <ImageBrush ImageSource="{Binding AvatarUrl}" />
-                                        </Border.Background>
-                                    </Border>
+                                    <Grid HorizontalAlignment="Left" VerticalAlignment="Center">
+                                        <Border
+                                            Width="38"
+                                            Height="38"
+                                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="2" />
+
+                                        <Border
+                                            x:Name="AvatarBorder"
+                                            Width="38"
+                                            Height="38"
+                                            Background="{Binding AvatarUrl, Converter={converters:ImageSourceNullValidateConverter}}"
+                                            CornerRadius="2" />
+
+                                        <controls:CircleLoader
+                                            x:Name="AvatarLoader"
+                                            Width="16"
+                                            Height="16"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            BlurTarget="{Binding ElementName=AvatarBorder}"
+                                            IsActive="{Binding AvatarUrl, Converter={converters:IsValueNullConverter}}" />
+                                    </Grid>
 
                                     <Border
                                         x:Name="IconBorder"
@@ -88,23 +103,25 @@
 
                                 <ControlTemplate.Triggers>
                                     <!--  TODO: Smooth Animation  -->
-                                    <Trigger Property="IsMouseOver" Value="True">
+                                    <!--<Trigger Property="IsMouseOver" Value="True">
                                         <Setter TargetName="AvatarBorder" Property="Effect">
                                             <Setter.Value>
                                                 <BlurEffect />
                                             </Setter.Value>
                                         </Setter>
-                                        <!--  TODO: Для профиля пользователей вернуть на Visible  -->
+                                    -->
+                                    <!--  TODO: Для профиля пользователей вернуть на Visible  -->
+                                    <!--
                                         <Setter TargetName="IconBorder" Property="Visibility" Value="Collapsed" />
-                                    </Trigger>
+                                    </Trigger>-->
 
-                                    <DataTrigger Binding="{Binding AvatarUrl}" Value="{x:Null}">
+                                    <!--<DataTrigger Binding="{Binding AvatarUrl}" Value="{x:Null}">
                                         <Setter TargetName="AvatarBorder" Property="Background">
                                             <Setter.Value>
                                                 <ImageBrush ImageSource="pack://Application:,,,/Assets/images/icons/non_image.png" />
                                             </Setter.Value>
                                         </Setter>
-                                    </DataTrigger>
+                                    </DataTrigger>-->
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
                         </Button.Template>
@@ -265,17 +282,32 @@
                                 <Grid Width="38" Height="38">
 
                                     <!--  Avatar  -->
-                                    <Border
-                                        x:Name="AvatarBorder"
-                                        Width="38"
-                                        Height="38"
-                                        CornerRadius="5">
-                                        <Border.Background>
-                                            <ImageBrush ImageSource="{Binding AvatarUrl}" />
-                                        </Border.Background>
-                                    </Border>
+                                    <Grid HorizontalAlignment="Left" VerticalAlignment="Center">
+                                        <Border
+                                            Width="38"
+                                            Height="38"
+                                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="2" />
 
-                                    <Border
+                                        <Border
+                                            x:Name="AvatarBorder"
+                                            Width="38"
+                                            Height="38"
+                                            Background="{Binding AvatarUrl, Converter={converters:ImageSourceNullValidateConverter}}"
+                                            CornerRadius="2" />
+
+                                        <controls:CircleLoader
+                                            x:Name="AvatarLoader"
+                                            Width="16"
+                                            Height="16"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            BlurTarget="{Binding ElementName=AvatarBorder}"
+                                            IsActive="{Binding AvatarUrl, Converter={converters:IsValueNullConverter}}" />
+                                    </Grid>
+
+                                    <!--<Border
                                         x:Name="IconBorder"
                                         CornerRadius="5"
                                         Visibility="Collapsed">
@@ -293,19 +325,21 @@
                                                 Fill="{DynamicResource CheckBoxMarkSolidColorBrush}"
                                                 Stretch="Fill" />
                                         </Viewbox>
-                                    </Border>
+                                    </Border>-->
                                 </Grid>
 
                                 <ControlTemplate.Triggers>
                                     <!--  TODO: Smooth Animation  -->
-                                    <Trigger Property="IsMouseOver" Value="True">
+                                    <!--<Trigger Property="IsMouseOver" Value="True">
                                         <Setter TargetName="AvatarBorder" Property="Effect">
                                             <Setter.Value>
                                                 <BlurEffect />
                                             </Setter.Value>
                                         </Setter>
 
-                                        <!--  TODO: Для профиля пользователей вернуть на Visible  -->
+                                    -->
+                                    <!--  TODO: Для профиля пользователей вернуть на Visible  -->
+                                    <!--
                                         <Setter TargetName="IconBorder" Property="Visibility" Value="Collapsed" />
                                     </Trigger>
 
@@ -315,7 +349,7 @@
                                                 <ImageBrush ImageSource="pack://Application:,,,/Assets/images/icons/non_image.png" />
                                             </Setter.Value>
                                         </Setter>
-                                    </DataTrigger>
+                                    </DataTrigger>-->
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
                         </Button.Template>
