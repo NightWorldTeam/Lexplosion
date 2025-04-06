@@ -129,7 +129,7 @@ namespace Lexplosion.Logic.Network
             try
             {
                 //присоединяемся к мультикасту для Loopback адаптера
-                var optionValue = new MulticastOption(IPAddress.Parse("224.0.2.60"));
+                var optionValue = new MulticastOption(IPAddress.Parse("224.0.2.60"), NetworkInterface.LoopbackInterfaceIndex);
                 client.Client.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, optionValue);
             }
             catch (Exception ex)
@@ -165,7 +165,7 @@ namespace Lexplosion.Logic.Network
 
                 InformingThread = new Thread(delegate ()
                 {
-                    Dictionary<string, string> input = new Dictionary<string, string>
+                    var input = new Dictionary<string, string>
                     {
                         ["UUID"] = UUID,
                         ["sessionToken"] = sessionToken
