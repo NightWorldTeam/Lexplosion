@@ -168,7 +168,7 @@
     <s:String x:Key="Contacts">Контакты</s:String>
     <s:String x:Key="OurVkontakteGroup">Наша группа Вконтакте</s:String>
     <s:String x:Key="Protection">Данная программа защищена законами об авторских правах и международными соглашениями. Незаконное воспроизведение или распространение данной программы или любой ее части влечет гражданскую и уголовную ответственность.</s:String>
-    <s:String x:Key="Copyright">© NightWorld, 2022г. Все права защищены.</s:String>
+    <s:String x:Key="Copyright">© NightWorld, 2025г. Все права защищены.</s:String>
     <s:String x:Key="DenialOfResponsibility">НЕ ЯВЛЯЕТСЯ ОФИЦИАЛЬНЫМ [ПРОДУКТОМ/УСЛУГОЙ/СОБЫТИЕМ И т. п.] MINECRAFT. НЕ ОДОБРЕНО И НЕ СВЯЗАНО С КОМПАНИЕЙ MOJANG ИЛИ MICROSOFT</s:String>
 
 
@@ -277,7 +277,7 @@
     <!--  Instance Profile Configuration  -->
     <!--    -->
     <s:String x:Key="GameType">Тип игры</s:String>
-    <s:String x:Key="GameTypeDescription">Тип игры описание.</s:String>
+    <s:String x:Key="GameTypeDescription">Ванилла или модлоадер.</s:String>
 
     <s:String x:Key="VersionDescription">Версия описание.</s:String>
 
@@ -491,7 +491,6 @@
     <s:String x:Key="InstanceDownloading">Сборка устанавливается...</s:String>
     <s:String x:Key="Stage">Этап</s:String>
     <s:String x:Key="VerifyIntegrityGameFiles">Проверка целостности игровых файлов...</s:String>
-    <s:String x:Key="GameLaunching">Идет запуск игры...</s:String>
     <s:String x:Key="DownloadCanceling">Отмена скачивания...</s:String>
 
     <s:String x:Key="AddonsListLoadingPlaceholder">Загрузка списков аддонов...</s:String>
@@ -748,14 +747,14 @@
 
     <s:String x:Key="RemoveAccount">Удаление аккаунта</s:String>
     <s:String x:Key="RemoveAccountDescription">
-        Вы действительно хотите аккаунт: {0}.
+        Вы действительно хотите аккаунт: {0}?
         Восстановить доступ к аккаунта будет возможно только после повторной авторизации!
     </s:String>
     <s:String x:Key="YesIWantRemoveAccount">Да, я хочу удалить аккаунт</s:String>
 
     <s:String x:Key="RemoveAllAccount">Удаление всех аккаунтов</s:String>
     <s:String x:Key="RemoveAllAccountDescription">
-        Вы действительно хотите удалить все аккаунты!.
+        Вы действительно хотите удалить все аккаунты?
         Восстановить доступ к аккаунтам будет возможно только после повторной авторизации!
     </s:String>
     <s:String x:Key="YesIWantRemoveAllAccount">Да, я хочу удалить все аккаунты</s:String>
@@ -776,12 +775,12 @@
     <!--  region Library  -->
 
 
-    <s:String x:Key="RemoveInstance">Удаление сборки</s:String>
-    <s:String x:Key="RemoveInstanceDescription">
-        Вы действительно хотите удалить сборку: {0}.
+    <s:String x:Key="DeletingInstance">Удаление сборки</s:String>
+    <s:String x:Key="DeleteInstanceDescription">
+        Вы действительно хотите удалить сборку: {0}?
         Восстановить её будет не возможно!
     </s:String>
-    <s:String x:Key="YesIWantRemoveInstance">Да, я хочу удалить сборку</s:String>
+    <s:String x:Key="YesIWantDeleteInstance">Да, я хочу удалить сборку</s:String>
 
 
     <!--  endregion Library  -->
@@ -803,6 +802,51 @@
 
     <!--  Notification  -->
     <s:String x:Key="Instance_HasBeenInstalledSuccessful">Сборка {0} успешно установлена</s:String>
+    <s:String x:Key="FailedToInstallColon_">Неудалось установить: {0}</s:String>
 
     <!--  endregion Instance  -->
+
+    <s:String x:Key="LoginOrPasswordNotFilled">Логин или пароль не заполнены!</s:String>
+
+    <s:String x:Key="AuthorizationProcessInProgress">Идет процесс авторизации...</s:String>
+
+    <s:String x:Key="Information">Информация</s:String>
+    <s:String x:Key="MicrosoftAccountAuthorizationDescription">Для авторизации лицензионого аккаунта вы будете автоматически перенаправлены на страницу авторизации Microsoft.</s:String>
+    <s:String x:Key="DoInstallTheLatestVersion">Установить последнию версию?</s:String>
+    <s:String x:Key="NWClientNotAvailableForThisVersion">NWClient недоступен на данную версию</s:String>
+    <s:String x:Key="YouHaveNoActiveDistributions">У вас отсутсвуют активные раздачи</s:String>
+
+
+    <s:String x:Key="InQueue">В очереди</s:String>
+    <s:String x:Key="InConnect">Идёт соединение</s:String>
+    <s:String x:Key="PostProcessing">Обработка файлов</s:String>
+    <s:String x:Key="InProcess">В очереди</s:String>
+    <s:String x:Key="Successful">Успешно</s:String>
+
+
+    <s:String x:Key="UnableToDetermineDataForImport">Не удалось определить данные для импорта сборки, введите данные вручную!</s:String>
+    <s:String x:Key="YouAreAlreadyDistributingToThisClient">Вы уже раздаете данный клиент.</s:String>
+    <s:String x:Key="ActiveDistributingDescription">Данная страница будет разблокирована как только вы остановите активную раздачу в разделе 'Ваши раздачи'</s:String>
+    <s:String x:Key="ThereAreNotAddons">Дополнения отсутствуют</s:String>
+    <s:String x:Key="GameLaunching">Запуск игры...</s:String>
+    <s:String x:Key="ProcessColon">Процесс:</s:String>
+    <s:String x:Key="UpdatingFiles">Обновление файлов</s:String>
+    <s:String x:Key="StageColon">Этап:</s:String>
+    <s:String x:Key="FilesColon">Файлы:</s:String>
+    <s:String x:Key="TotalDonwloadedColon">Итого скачено:</s:String>
+    <s:String x:Key="InstallingTheInstance">Установка сборки</s:String>
+    <s:String x:Key="ThereAreNotImages">Изображения отсутствуют</s:String>
+    <s:String x:Key="ImagesLoading">Загрузка изображений...</s:String>
+    <s:String x:Key="DescriptionLoading">Загрузка описания...</s:String>
+    <s:String x:Key="DownloadingTheInstance">Скачивание сборки</s:String>
+    <s:String x:Key="LoadingEllipsis">Загрузка...</s:String>
+    <s:String x:Key="WeDidNotFindAnythingForThisRequest">Мы ничего не нашли по данному запросу</s:String>
+    <s:String x:Key="ThereAreNoIncomingFriendRequests">Входящие заявки в друзья отсутствуют.</s:String>
+    <s:String x:Key="ThereAreNoOutgoingFriendRequests">Исходящие заявки в друзья отсутствуют.</s:String>
+    <s:String x:Key="Close">Закрыть</s:String>
+    <s:String x:Key="Notifications">Уведомления</s:String>
+    <s:String x:Key="LibraryEmptyDescription">Вы можете добавить сборки в библиотеку через каталог или создания своей сборки</s:String>
+    <s:String x:Key="CreateNewInstance">Создать новую сборку</s:String>
+    <s:String x:Key="MinecraftNotRunning">Minercaft не запущен.</s:String>
+    <s:String x:Key="InstanceDash_">Сборка - {0}</s:String>
 </ResourceDictionary>

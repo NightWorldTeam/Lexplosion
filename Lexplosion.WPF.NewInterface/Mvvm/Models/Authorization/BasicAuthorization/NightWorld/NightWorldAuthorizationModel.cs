@@ -64,8 +64,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization.BasicAuthorizati
         {
             if (string.IsNullOrWhiteSpace(Login) || string.IsNullOrWhiteSpace(Password)) 
             {
-                // TODO: Translate
-                _appCore.MessageService.Info("Логин или пароль не заполнены!");
+                _appCore.MessageService.Info("LoginOrPasswordNotFilled", true);
                 return;
             }
 

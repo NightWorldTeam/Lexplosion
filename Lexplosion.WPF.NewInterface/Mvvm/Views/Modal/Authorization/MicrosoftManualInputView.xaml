@@ -43,8 +43,6 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <!--  TODO: Translate  -->
-
                     <!--  Selected Page Title  -->
                     <TextBlock
                         Margin="20,0"
@@ -105,7 +103,7 @@
 
 
                         <StackPanel>
-                            <!--  TODO: Translate  -->
+
                             <TextBlock
                                 Margin="0,8,0,0"
                                 FontSize="16"

@@ -49,7 +49,6 @@
                             </Grid.ColumnDefinitions>
 
                             <!--  Selected Page Title  -->
-                            <!--  TODO: Translate  -->
                             <TextBlock
                                 Margin="20,0"
                                 VerticalAlignment="Top"
@@ -94,14 +93,13 @@
                                         <TextBlock
                                             FontSize="14"
                                             FontWeight="Medium"
-                                            Text="Информация" />
+                                            Text="{DynamicResource Information}" />
 
-                                        <!--  TODO: Translate  -->
                                         <TextBlock
                                             Margin="0,0,0,0"
                                             FontSize="14"
                                             FontWeight="Normal"
-                                            Text="Не удалось определить данные для импорта сборки, введите данные вручную!"
+                                            Text="{DynamicResource UnableToDetermineDataForImport}"
                                             TextWrapping="WrapWithOverflow" />
                                     </StackPanel>
                                 </Border>
@@ -123,15 +121,15 @@
                                         <!--  Header  -->
                                         <StackPanel>
                                             <TextBlock
-                                                extensions:TextBlockExtensions.TextByKey="InstanceName"
                                                 FontSize="13"
                                                 FontWeight="Medium"
-                                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                                Text="{DynamicResource InstanceName}" />
                                             <TextBlock
-                                                extensions:TextBlockExtensions.TextByKey="NameDescription"
                                                 FontSize="12"
                                                 FontWeight="Medium"
-                                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                                Text="{DynamicResource NameDescription}" />
                                         </StackPanel>
 
                                         <controls:AdvancedTextBox
@@ -170,15 +168,15 @@
                                                 <!--  Header  -->
                                                 <StackPanel>
                                                     <TextBlock
-                                                        extensions:TextBlockExtensions.TextByKey="Version"
                                                         FontSize="13"
                                                         FontWeight="Medium"
-                                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                                        Text="{DynamicResource Version}" />
                                                     <TextBlock
-                                                        extensions:TextBlockExtensions.TextByKey="VersionDescription"
                                                         FontSize="12"
                                                         FontWeight="Medium"
-                                                        Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                                                        Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                                        Text="{DynamicResource VersionDescription}" />
                                                 </StackPanel>
 
                                                 <Grid Grid.Column="1">
@@ -217,15 +215,15 @@
 
                                             <StackPanel>
                                                 <TextBlock
-                                                    extensions:TextBlockExtensions.TextByKey="IsShowSnapshots"
                                                     FontSize="13"
                                                     FontWeight="Medium"
-                                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                                    Text="{DynamicResource IsShowSnapshots}" />
                                                 <TextBlock
-                                                    extensions:TextBlockExtensions.TextByKey="IsShowSnapshotsDescription"
                                                     FontSize="12"
                                                     FontWeight="Medium"
                                                     Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                                    Text="{DynamicResource IsShowSnapshotsDescription}"
                                                     TextWrapping="WrapWithOverflow" />
                                             </StackPanel>
 
@@ -253,15 +251,15 @@
                                         <!--  Header  -->
                                         <StackPanel>
                                             <TextBlock
-                                                extensions:TextBlockExtensions.TextByKey="GameType"
                                                 FontSize="13"
                                                 FontWeight="Medium"
-                                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                                Text="{DynamicResource GameType}" />
                                             <TextBlock
-                                                extensions:TextBlockExtensions.TextByKey="GameTypeDescription"
                                                 FontSize="12"
                                                 FontWeight="Medium"
-                                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                                Text="{DynamicResource GameTypeDescription}" />
                                         </StackPanel>
 
                                         <WrapPanel
@@ -334,15 +332,15 @@
                                         <!--  Header  -->
                                         <StackPanel>
                                             <TextBlock
-                                                extensions:TextBlockExtensions.TextByKey="ModloaderVersion"
                                                 FontSize="13"
                                                 FontWeight="Medium"
-                                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                                Text="{DynamicResource ModloaderVersion}" />
                                             <TextBlock
-                                                extensions:TextBlockExtensions.TextByKey="ModloaderVersionDescription"
                                                 FontSize="12"
                                                 FontWeight="Medium"
                                                 Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                                Text="{DynamicResource ModloaderVersionDescription}"
                                                 TextWrapping="WrapWithOverflow" />
                                         </StackPanel>
 

@@ -56,7 +56,6 @@
                                         Text="{DynamicResource ImageDescription}" />
                                 </StackPanel>
 
-                                <!--  TODO: Translate  -->
                                 <controls:AdvancedButton
                                     Grid.Column="1"
                                     Command="{Binding SetLogoPathCommand}"

@@ -303,13 +303,12 @@
                 PrevCommand="{Binding MovePrevPageCommand}" />
         </Grid>
 
-        <!--  TODO: Translate  -->
-        <controls:Empty CollectionCount="{Binding Model.Users.Count}" Description="Мы ничего не нашли по данному запросу" />
+        <controls:Empty CollectionCount="{Binding Model.Users.Count}" Description="{DynamicResource WeDidNotFindAnythingForThisRequest}" />
 
         <controls:LoadingBoard
             Background="Black"
             BackgroundOpacity="0.3"
             IsActive="{Binding Model.IsLoading}"
-            Placeholder="Загрузка..." />
+            Placeholder="{DynamicResource LoadingEllipsis}" />
     </Grid>
 </UserControl>

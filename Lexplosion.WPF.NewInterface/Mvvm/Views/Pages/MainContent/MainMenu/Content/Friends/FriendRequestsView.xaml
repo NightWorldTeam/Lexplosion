@@ -579,12 +579,10 @@
 
                 <core:SwitchCaseItem Key="Pending">
                     <Grid>
-
-                        <!--  TODO: Translate  -->
                         <controls:Empty
                             Grid.Row="1"
                             CollectionCount="{Binding Model.Incoming.Count}"
-                            Description="Входящие заявки в друзья отсутствуют." />
+                            Description="{DynamicResource ThereAreNoIncomingFriendRequests}" />
 
                         <ListBox
                             Grid.Row="1"
@@ -609,11 +607,10 @@
 
                 <core:SwitchCaseItem Key="Outgoing">
                     <Grid>
-                        <!--  TODO: Translate  -->
                         <controls:Empty
                             Grid.Row="1"
                             CollectionCount="{Binding Model.Outgoing.Count}"
-                            Description="Исходящие заявки в друзья отсутствуют." />
+                            Description="{DynamicResource ThereAreNoOutgoingFriendRequests}" />
 
                         <ListBox
                             Grid.Row="1"

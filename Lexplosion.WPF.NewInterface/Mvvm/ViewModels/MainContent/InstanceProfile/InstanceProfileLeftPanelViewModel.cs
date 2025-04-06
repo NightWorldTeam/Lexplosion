@@ -143,12 +143,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         {
             if (instanceInit == InstanceInit.Successful)
             {
-                // TODO: Translate
-                _appCore.MessageService.Success($"Сборка {_instanceModel.Name} успешно установлена.");
+                _appCore.MessageService.Success("Instance_HasBeenInstalledSuccessful", true, _instanceModel.Name);
             }
             else
             {
-                _appCore.MessageService.Error($"Неудалось установить {_instanceModel.Name}.");
+                _appCore.MessageService.Error("FailedToInstallColon_", true, _instanceModel.Name);
             }
         }
 

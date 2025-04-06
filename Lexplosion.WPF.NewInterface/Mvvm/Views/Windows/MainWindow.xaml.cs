@@ -407,63 +407,63 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
 
         private void ChangeWHPHorizontalOrintationAnimation()
         {
-            var opacityAdditionalFuncsHideAnimation = new DoubleAnimation()
-            {
-                Duration = TimeSpan.FromSeconds(0.35 / 2),
-                To = 0
-            };
+            //var opacityAdditionalFuncsHideAnimation = new DoubleAnimation()
+            //{
+            //    Duration = TimeSpan.FromSeconds(0.35 / 2),
+            //    To = 0
+            //};
 
-            var opacityHideAnimation = new DoubleAnimation()
-            {
-                Duration = TimeSpan.FromSeconds(0.35 / 2),
-                To = 0
-            };
+            //var opacityHideAnimation = new DoubleAnimation()
+            //{
+            //    Duration = TimeSpan.FromSeconds(0.35 / 2),
+            //    To = 0
+            //};
 
-            var opacityShowAnimation = new DoubleAnimation()
-            {
-                Duration = TimeSpan.FromSeconds(0.35 / 2),
-                To = 1
-            };
+            //var opacityShowAnimation = new DoubleAnimation()
+            //{
+            //    Duration = TimeSpan.FromSeconds(0.35 / 2),
+            //    To = 1
+            //};
 
-            // перемещаем кнопки и панель в нужную сторону.
-            opacityHideAnimation.Completed += (object sender, EventArgs e) =>
-            {
-                ChangeWHPHorizontalOrintation();
-                WindowHeaderPanelButtonsGrid.BeginAnimation(OpacityProperty, opacityShowAnimation);
-                AddtionalFuncs.BeginAnimation(OpacityProperty, opacityShowAnimation);
-            };
+            //// перемещаем кнопки и панель в нужную сторону.
+            //opacityHideAnimation.Completed += (object sender, EventArgs e) =>
+            //{
+            //    ChangeWHPHorizontalOrintation();
+            //    WindowHeaderPanelButtonsGrid.BeginAnimation(OpacityProperty, opacityShowAnimation);
+            //    AddtionalFuncs.BeginAnimation(OpacityProperty, opacityShowAnimation);
+            //};
 
-            // скрываем 
-            WindowHeaderPanelButtonsGrid.BeginAnimation(OpacityProperty, opacityHideAnimation);
-            AddtionalFuncs.BeginAnimation(OpacityProperty, opacityAdditionalFuncsHideAnimation);
+            //// скрываем 
+            //WindowHeaderPanelButtonsGrid.BeginAnimation(OpacityProperty, opacityHideAnimation);
+            //AddtionalFuncs.BeginAnimation(OpacityProperty, opacityAdditionalFuncsHideAnimation);
         }
 
         private void ChangeWHPHorizontalOrintation()
         {
-            if (WindowHeaderPanelButtonsGrid.HorizontalAlignment == HorizontalAlignment.Left)
-            {
-                WindowHeaderPanelButtons.RenderTransform = new RotateTransform(180);
-                WindowHeaderPanelButtonsGrid.HorizontalAlignment = HorizontalAlignment.Right;
+            //if (WindowHeaderPanelButtonsGrid.HorizontalAlignment == HorizontalAlignment.Left)
+            //{
+            //    WindowHeaderPanelButtons.RenderTransform = new RotateTransform(180);
+            //    WindowHeaderPanelButtonsGrid.HorizontalAlignment = HorizontalAlignment.Right;
 
-                AddtionalFuncs.HorizontalAlignment = HorizontalAlignment.Left;
+            //    AddtionalFuncs.HorizontalAlignment = HorizontalAlignment.Left;
 
-                Grid.SetColumn(DebugPanel, 0);
-                Grid.SetColumn(WindowHeaderPanelButtons, 1);
+            //    Grid.SetColumn(DebugPanel, 0);
+            //    Grid.SetColumn(WindowHeaderPanelButtons, 1);
 
-                RuntimeApp.HeaderState = HeaderState.Right;
-            }
-            else
-            {
-                WindowHeaderPanelButtons.RenderTransform = new RotateTransform(360);
-                WindowHeaderPanelButtonsGrid.HorizontalAlignment = HorizontalAlignment.Left;
+            //    RuntimeApp.HeaderState = HeaderState.Right;
+            //}
+            //else
+            //{
+            //    WindowHeaderPanelButtons.RenderTransform = new RotateTransform(360);
+            //    WindowHeaderPanelButtonsGrid.HorizontalAlignment = HorizontalAlignment.Left;
 
-                AddtionalFuncs.HorizontalAlignment = HorizontalAlignment.Right;
+            //    AddtionalFuncs.HorizontalAlignment = HorizontalAlignment.Right;
 
-                Grid.SetColumn(DebugPanel, 1);
-                Grid.SetColumn(WindowHeaderPanelButtons, 0);
+            //    Grid.SetColumn(DebugPanel, 1);
+            //    Grid.SetColumn(WindowHeaderPanelButtons, 0);
 
-                RuntimeApp.HeaderState = HeaderState.Left;
-            }
+            //    RuntimeApp.HeaderState = HeaderState.Left;
+            //}
         }
 
         private void ScaleFit_MouseDown(object sender, MouseButtonEventArgs e)

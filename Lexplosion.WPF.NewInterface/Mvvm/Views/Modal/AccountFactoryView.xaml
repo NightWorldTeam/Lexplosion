@@ -262,14 +262,13 @@
                                     <TextBlock
                                         FontSize="16"
                                         FontWeight="Medium"
-                                        Text="Информация" />
+                                        Text="{DynamicResource Information}" />
 
-                                    <!--  TODO: Translate  -->
                                     <TextBlock
                                         Margin="0,16,0,0"
                                         FontSize="16"
                                         FontWeight="Normal"
-                                        Text="Для авторизации лицензионого аккаунта вы будете автоматически перенаправлены на страницу авторизации Microsoft."
+                                        Text="{DynamicResource MicrosoftAccountAuthorizationDescription}"
                                         TextWrapping="WrapWithOverflow" />
                                 </StackPanel>
                             </Border>
@@ -296,13 +295,14 @@
                 BlurTarget="{Binding ElementName=AccountFactoryForm}"
                 CornerRadius="10"
                 IsActive="{Binding Model.IsAuthorizationInProcess}"
-                Placeholder="Идет процесс авторизации...">
-                <Grid HorizontalAlignment="Center" Margin="0,16,0,0">
+                Placeholder="{DynamicResource AuthorizationProcessInProgress}">
+                <Grid Margin="0,16,0,0" HorizontalAlignment="Center">
+
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <!--  TODO: Translate  -->
+
                     <controls:AdvancedButton
                         Padding="16,0"
                         HorizontalAlignment="Left"

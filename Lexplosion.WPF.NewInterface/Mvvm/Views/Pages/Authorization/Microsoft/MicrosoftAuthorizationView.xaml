@@ -85,7 +85,7 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <!--  TODO: Translate  -->
+
                         <controls:AdvancedButton
                             Padding="16,0"
                             HorizontalAlignment="Left"

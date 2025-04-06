@@ -170,18 +170,16 @@
                         </Viewbox>
                     </Border>
 
-                    <!--  TODO: Translate  -->
                     <TextBlock
                         Margin="0,0,0,8"
                         FontSize="18"
                         Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                        Text="Вы уже раздаете данный клиент"
+                        Text="{DynamicResource YouAreAlreadyDistributingToThisClient}"
                         TextAlignment="Center" />
 
-                    <!--  TODO: Translate  -->
                     <TextBlock
                         Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
-                        Text="Данная страница будет разблокирована как только вы остановите активную раздачу в разделе 'Ваши раздачи'"
+                        Text="{DynamicResource ActiveDistributingDescription}"
                         TextAlignment="Center"
                         TextWrapping="WrapWithOverflow" />
                     <!--<controls:AdvancedButton Text="Остановить активную раздачу." Style="{StaticResource DefaultAdvancedButton}"  />-->

@@ -111,7 +111,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
         /// </summary>
         private void OnImportCancelled(Guid id)
         {
-            // TODO: Translate
             var importProcess = ImportProcesses.FirstOrDefault(i => i.Id == id);
             CancelImport(importProcess);
             _appCore.MessageService.Info("ImportCancelledNotification", true);

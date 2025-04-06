@@ -646,9 +646,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         public void Delete()
         {
             _appCore.ModalNavigationStore.Open(new ConfirmActionViewModel(
-                    _appCore.Resources("RemoveInstance") as string,
-                    string.Format(_appCore.Resources("RemoveInstanceDescription") as string, Name),
-                    _appCore.Resources("YesIWantRemoveInstance") as string,
+                    _appCore.Resources("DeletingInstance") as string,
+                    string.Format(_appCore.Resources("DeletingInstanceDescription") as string, Name),
+                    _appCore.Resources("YesIWantDeleteInstance") as string,
                     (obj) =>
                     {
                         _instanceClient.Delete();

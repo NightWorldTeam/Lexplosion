@@ -53,14 +53,13 @@
                             Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
                             Text="{Binding Name}" />
 
-                        <!--  TODO: Translate  -->
                         <!--  Возможно чуть доработать дизайн нужен  -->
                         <TextBlock
                             x:Name="Status"
                             Grid.Row="1"
                             FontWeight="Medium"
                             Foreground="Green"
-                            Text="Successful"
+                            Text="{DynamicResource Successful}"
                             Visibility="Collapsed" />
                         <ProgressBar
                             x:Name="ProgressBar"

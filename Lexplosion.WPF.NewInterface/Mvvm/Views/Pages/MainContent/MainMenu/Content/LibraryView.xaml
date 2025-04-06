@@ -415,7 +415,7 @@
                 </core:If.False>
                 <core:If.True>
                     <!--  TODO: Translate  -->
-                    <controls:Empty Description="Вы можете добавить сборки в библиотеку через каталог или создания своей сборки" TitleForeground="{DynamicResource PrimaryForegroundSolidColorBrush}">
+                    <controls:Empty Description="{DynamicResource LibraryEmptyDescription}" TitleForeground="{DynamicResource PrimaryForegroundSolidColorBrush}">
                         <WrapPanel Margin="0,16,0,0">
                             <controls:AdvancedButton
                                 Margin="0,0,8,0"
@@ -423,13 +423,13 @@
                                 FontSize="12"
                                 IconData="{StaticResource PDCatalog}"
                                 Style="{StaticResource sm-ghost}"
-                                Text="Перейти в каталог" />
+                                Text="{DynamicResource GoToCatalog}" />
                             <controls:AdvancedButton
                                 Command="{Binding OpenInstanceFactoryCommand}"
                                 FontSize="12"
                                 IconData="{StaticResource PDAddCircle}"
                                 Style="{StaticResource sm-default}"
-                                Text="Создать новую сборку" />
+                                Text="{DynamicResource CreateNewInstance}" />
                         </WrapPanel>
                     </controls:Empty>
                 </core:If.True>

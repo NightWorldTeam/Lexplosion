@@ -281,12 +281,11 @@
                                     HorizontalAlignment="Right"
                                     Orientation="Horizontal">
 
-                                    <!--  TODO: Translate  -->
                                     <TextBlock
                                         VerticalAlignment="Center"
                                         FontWeight="Medium"
                                         Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                        Text="Свой цвет:" />
+                                        Text="{DynamicResource YourColor}" />
 
                                     <controls:AdvancedTextBox
                                         Width="80"

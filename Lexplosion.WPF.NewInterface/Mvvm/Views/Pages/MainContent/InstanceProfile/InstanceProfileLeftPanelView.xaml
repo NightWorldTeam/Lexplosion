@@ -303,14 +303,13 @@
                             <core:If Condition="{Binding InstanceModel.IsInstalled, UpdateSourceTrigger=PropertyChanged}">
                                 <core:If.True>
                                     <Grid>
-                                        <!--  TODO: Translate  -->
                                         <controls:AdvancedButton
                                             x:Name="PlayButton"
                                             Command="{Binding PlayCommand}"
                                             FontSize="12"
                                             IconData="{StaticResource PDPlay}"
                                             IsLoading="{Binding InstanceModel.IsLaunching}"
-                                            LoadingText="Запуск игры..."
+                                            LoadingText="{DynamicResource GameLaunching}"
                                             Style="{StaticResource sm-default}"
                                             Text="{DynamicResource Play}" />
 
@@ -359,16 +358,15 @@
                                                         HorizontalAlignment="Left"
                                                         FontSize="14"
                                                         TextWrapping="WrapWithOverflow">
-                                                        <!--  TODO: Translate  -->
-                                                        <Run Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="Процесс:" />
-                                                        <Run Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" Text="Обновление файлов" />
+                                                        <Run Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="{DynamicResource ProcessColon}" />
+                                                        <Run Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" Text="{DynamicResource UpdatingFiles}" />
                                                     </TextBlock>
                                                     <TextBlock
                                                         Margin="0,0,0,4"
                                                         HorizontalAlignment="Left"
                                                         FontSize="14"
                                                         Foreground="White">
-                                                        <Run Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="Этап:" />
+                                                        <Run Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="{DynamicResource StageColon}" />
                                                         <Run Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}">
                                                             <Run.Text>
                                                                 <MultiBinding StringFormat="{}{0}/{1}">
@@ -383,7 +381,7 @@
                                                         HorizontalAlignment="Left"
                                                         FontSize="14"
                                                         Foreground="White">
-                                                        <Run Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="Файлы:" />
+                                                        <Run Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="{DynamicResource FilesColon:}" />
                                                         <Run Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}">
                                                             <Run.Text>
                                                                 <MultiBinding StringFormat="{}{0}/{1}">
@@ -397,7 +395,7 @@
                                                         HorizontalAlignment="Left"
                                                         FontSize="14"
                                                         Foreground="White">
-                                                        <Run Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="Итого скачено:" />
+                                                        <Run Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="{DynamicResource TotalDonwloadedColon}" />
                                                         <Run Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" Text="{Binding DownloadingData.Percentages, Mode=OneWay, StringFormat='{}{0}%'}" />
                                                     </TextBlock>
                                                 </StackPanel>
@@ -410,14 +408,13 @@
                                         <core:If Condition="{Binding InstanceModel.DownloadCancelling}">
                                             <core:If.False>
                                                 <Grid>
-                                                    <!--  TODO: Translate  -->
                                                     <controls:AdvancedButton
                                                         x:Name="DownloadButton"
                                                         Command="{Binding InstallCommand}"
                                                         FontSize="12"
                                                         IconData="{StaticResource PDDownload}"
                                                         IsLoading="{Binding InstanceModel.IsDownloading}"
-                                                        LoadingText="Скачивание сборки"
+                                                        LoadingText="{DynamicResource DownloadingTheInstance}"
                                                         Style="{StaticResource sm-default}"
                                                         Text="{DynamicResource Download}" />
 
@@ -515,7 +512,7 @@
                                                     x:Name="Cancel"
                                                     FontSize="12"
                                                     IsLoading="{Binding InstanceModel.DownloadCancelling}"
-                                                    LoadingText="Отмена скачивания"
+                                                    LoadingText="{DynamicResource DownloadCanceling}"
                                                     Style="{StaticResource sm-default}"
                                                     Text="{DynamicResource Download}" />
                                             </core:If.True>

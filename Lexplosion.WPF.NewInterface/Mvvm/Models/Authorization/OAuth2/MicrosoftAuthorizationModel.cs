@@ -46,7 +46,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization.OAuth2
 
         protected virtual void PerformMicrosoftAuthCode(MicrosoftAuthRes authCode, string microsoftData = "")
         {
-            //TODO: Translate (Check it)
             switch (authCode)
             {
                 case MicrosoftAuthRes.Successful:

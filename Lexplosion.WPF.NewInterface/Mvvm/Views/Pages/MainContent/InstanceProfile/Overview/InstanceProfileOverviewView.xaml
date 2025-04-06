@@ -153,12 +153,12 @@
                             Padding="0,0,0,8"
                             BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
                             BorderThickness="0,0,0,1">
-                            <!--  TODO: Translate  -->
+
                             <TextBlock
                                 FontSize="16"
                                 FontWeight="Medium"
                                 Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                Text="Краткое описание" />
+                                Text="{DynamicResource Summary}" />
                         </Border>
 
                         <TextBlock

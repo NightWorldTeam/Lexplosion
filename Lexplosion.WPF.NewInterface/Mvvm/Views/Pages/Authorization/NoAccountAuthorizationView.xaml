@@ -137,7 +137,6 @@
                         Placeholder="{DynamicResource AuthorizationWithoutAccountNicknamePlaceholder}"
                         Text="{Binding Model.Nickname, UpdateSourceTrigger=PropertyChanged}" />
 
-                    <!--  TODO: Translate  -->
                     <controls:AdvancedButton
                         Margin="0,16,0,0"
                         Command="{Binding LoginCommand}"

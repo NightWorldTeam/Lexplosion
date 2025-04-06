@@ -293,7 +293,7 @@ namespace Lexplosion.WPF.NewInterface
                 discordClient?.SetPresence(new RichPresence()
                 {
                     State = "Minecraft " + gameManager.GameVersion,
-                    Details = "Сборка - " + gameManager.GameClientName,
+                    Details = string.Format((_appCore.Resources("InstanceDash_") as string), gameManager.GameClientName),
                     Timestamps = Timestamps.Now,
                     Assets = new Assets()
                     {
@@ -312,10 +312,9 @@ namespace Lexplosion.WPF.NewInterface
                     ShowMainWindow();
                 }
 
-                // TODO: Translate
                 discordClient?.SetPresence(new RichPresence()
                 {
-                    State = "Minercaft не запущен.",
+                    State = _appCore.Resources("MinecraftNotRunning") as string,
                     Timestamps = Timestamps.Now,
                     Assets = new Assets()
                     {
@@ -378,7 +377,7 @@ namespace Lexplosion.WPF.NewInterface
 
             client.SetPresence(new RichPresence()
             {
-                State = "Minecraft не запущен",
+                State = _appCore.Resources("MinecraftNotRunning") as string,
                 Timestamps = Timestamps.Now,
                 Assets = new Assets()
                 {

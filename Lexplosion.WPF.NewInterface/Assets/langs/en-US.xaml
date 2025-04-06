@@ -1,5 +1,4 @@
-﻿
-<ResourceDictionary
+﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:s="clr-namespace:System;assembly=mscorlib">
@@ -81,8 +80,8 @@
     <s:String x:Key="PriorityConnetionMethod">Priority Connetion Method</s:String>
     <s:String x:Key="DirectConnection">Direct</s:String>
     <s:String x:Key="ViaRepeater">Via Repeater</s:String>
-    <s:String x:Key="ConnectedPlayers">Подключенные игроки</s:String>
-    <s:String x:Key="NoConnectedPlayers">Отсутствуют подключенные игроки</s:String>
+    <s:String x:Key="ConnectedPlayers">Connected players</s:String>
+    <s:String x:Key="NoConnectedPlayers">There are no connected players.</s:String>
     <s:String x:Key="ReloadMutlplayer">Reload Multiplayer</s:String>
 
     <!--  Status  -->
@@ -169,7 +168,7 @@
     <s:String x:Key="Developers">Developers</s:String>
     <s:String x:Key="Contacts">Contacts</s:String>
     <s:String x:Key="OurVkontakteGroup">Out VKontakte Group</s:String>
-    <s:String x:Key="Copyright">Copyright © 2022 NightWorld. All rights reserved.</s:String>
+    <s:String x:Key="Copyright">Copyright © 2025 NightWorld. All rights reserved.</s:String>
     <s:String x:Key="Protection">This program is protected by copyright laws and international treaties. Illegal reproduction or distribution of this software or any part of it is subject to civil and criminal liability.</s:String>
     <s:String x:Key="DenialOfResponsibility">NOT AN OFFICIAL MINECRAFT [PRODUCT/SERVICE/EVENT/etc.]. NOT APPROVED BY OR ASSOCIATED WITH MOJANG OR MICROSOFT</s:String>
 
@@ -270,7 +269,6 @@
     <!--  Instance Profile Settings  -->
     <!--    -->
     <s:String x:Key="Configuration">Configuration</s:String>
-    <s:String x:Key="InstanceNameDescription">Your instance would call so in the library.</s:String>
     <s:String x:Key="Summary">Summary</s:String>
     <s:String x:Key="SummaryDescription">Summary for this instance.</s:String>
     <s:String x:Key="Description">Description</s:String>
@@ -280,18 +278,18 @@
     <!--  Instance Profile Configuration  -->
     <!--    -->
     <s:String x:Key="GameType">Game Type</s:String>
-    <s:String x:Key="GameTypeDescription">Тип игры описание.</s:String>
+    <s:String x:Key="GameTypeDescription">Vanilla or Modloader</s:String>
 
-    <s:String x:Key="VersionDescription">Версия описание.</s:String>
+    <s:String x:Key="VersionDescription">Game Version</s:String>
 
     <s:String x:Key="ModloaderVersion">Modloader Version</s:String>
-    <s:String x:Key="ModloaderVersionDescription">Выбор версии для выбраного модлоадера.</s:String>
+    <s:String x:Key="ModloaderVersionDescription">Select version for modloader.</s:String>
 
     <s:String x:Key="IsShowSnapshots">Show snapshots?</s:String>
     <s:String x:Key="IsShowSnapshotsDescription">Snapshots are shown in the drop-down menu with game versions..</s:String>
 
     <s:String x:Key="Optifine">Optifine</s:String>
-    <s:String x:Key="OptifineDescription">Устанавливает оптифайн на данную сборку.</s:String>
+    <s:String x:Key="OptifineDescription">Enable optifine for this instance.</s:String>
 
 
     <!--    -->
@@ -491,7 +489,6 @@
     <s:String x:Key="InstanceDownloading">Instance is downloading...</s:String>
     <s:String x:Key="Stage">Stage</s:String>
     <s:String x:Key="VerifyIntegrityGameFiles">Verify integrity of game files...</s:String>
-    <s:String x:Key="GameLaunching">Game launching...</s:String>
     <s:String x:Key="DownloadCanceling">Download canceling...</s:String>
 
     <s:String x:Key="AddonsListLoadingPlaceholder">Addons List Loading...</s:String>
@@ -556,6 +553,10 @@
 
     <s:String x:Key="Important">Important!</s:String>
     <s:String x:Key="MicrosoftManualInputImportantMessage">Never give/show your authentication token to anyone. If third parties receive the token, they will gain access to your account!</s:String>
+
+
+    <s:String x:Key="CustomColor">Custom color</s:String>
+    <s:String x:Key="CustomColorDescription">Select custom color</s:String>
 
     <!--  endregion Authorization  -->
 
@@ -641,22 +642,22 @@
 
 
     <s:String x:Key="ImportByUrlDescriptionPlaceholder">Or Google Drive or YANDEX Disk url</s:String>
-    <s:String x:Key="ImportCancelledNotification">Импорт сборки был успешно отменен</s:String>
-    <s:String x:Key="ImportUrlWrongPathNotification">Неверный формат ссылки</s:String>
+    <s:String x:Key="ImportCancelledNotification">The import was successfully cancelled.</s:String>
+    <s:String x:Key="ImportUrlWrongPathNotification">Wrong url format</s:String>
 
 
-    <s:String x:Key="ImportResultSuccessful">Сборка {0} успешно импортирована и ожидает вас в библиотеке</s:String>
-    <s:String x:Key="ImportResultZipFileError">Ошибка открытия zip файла</s:String>
-    <s:String x:Key="ImportResultGameVersionError">Ошибка версии игры</s:String>
-    <s:String x:Key="ImportResultJavaDownloadError">Проблема со скачиванием Java</s:String>
-    <s:String x:Key="ImportResultIsOfflineMode">Оффлайн мод</s:String>
-    <s:String x:Key="ImportResultMovingFilesError">Ошибка при перемещении файлов</s:String>
-    <s:String x:Key="ImportResultDownloadError">Ошибка скачивания</s:String>
-    <s:String x:Key="ImportResultDirectoryCreateError">Ошибка с создание директории</s:String>
-    <s:String x:Key="ImportResultWrongUrl">URL-адрес для импорта файла неверен. На данный момент мы поддерживаем только Яндекс Диск и Google Диск.</s:String>
-    <s:String x:Key="ImportResultManifestError">Ошибка манифест-файла.</s:String>
-    <s:String x:Key="ImportResultUnknownFileType">Неизвестный тип файла.</s:String>
-    <s:String x:Key="ImportResultUnknownError">Неизвестная ошибка</s:String>
+    <s:String x:Key="ImportResultSuccessful">Instance {0} has been successfully imported and is waiting for you in the library.</s:String>
+    <s:String x:Key="ImportResultZipFileError">Error opening zip file</s:String>
+    <s:String x:Key="ImportResultGameVersionError">Game version error</s:String>
+    <s:String x:Key="ImportResultJavaDownloadError">Java downloading problem</s:String>
+    <s:String x:Key="ImportResultIsOfflineMode">Offline mode</s:String>
+    <s:String x:Key="ImportResultMovingFilesError">Error while moving files</s:String>
+    <s:String x:Key="ImportResultDownloadError">Download error</s:String>
+    <s:String x:Key="ImportResultDirectoryCreateError">Error creating directory</s:String>
+    <s:String x:Key="ImportResultWrongUrl">The URL for importing the file is incorrect. We currently only support Yandex Disk and Google Drive.</s:String>
+    <s:String x:Key="ImportResultManifestError">Manifest file error.</s:String>
+    <s:String x:Key="ImportResultUnknownFileType">Unknown file type.</s:String>
+    <s:String x:Key="ImportResultUnknownError">Unknown Error</s:String>
 
 
     <!--  endregion Import  -->
@@ -665,19 +666,19 @@
     <!--  region Accounts  -->
 
 
-    <s:String x:Key="RemoveAccount">Удаление аккаунта</s:String>
+    <s:String x:Key="RemoveAccount">Remove account</s:String>
     <s:String x:Key="RemoveAccountDescription">
-        Вы действительно хотите аккаунт: {0}.
-        Восстановить доступ к аккаунта будет возможно только после повторной авторизации!
+        Do you really want to remove account: {0}?
+        Access to your account can only be restored after re-authorization!
     </s:String>
-    <s:String x:Key="YesIWantRemoveAccount">Да, я хочу удалить аккаунт</s:String>
+    <s:String x:Key="YesIWantRemoveAccount">I want to remove this account</s:String>
 
-    <s:String x:Key="RemoveAllAccount">Удаление всех аккаунтов</s:String>
+    <s:String x:Key="RemoveAllAccount">Removing all account</s:String>
     <s:String x:Key="RemoveAllAccountDescription">
-        Вы действительно хотите удалить все аккаунты!.
-        Восстановить доступ к аккаунтам будет возможно только после повторной авторизации!
+        Do you really want to remove all accounts?
+        Access to your accounts can only be restored after re-authorization!
     </s:String>
-    <s:String x:Key="YesIWantRemoveAllAccount">Да, я хочу удалить все аккаунты</s:String>
+    <s:String x:Key="YesIWantRemoveAllAccount">Yes, I want to remove all accounts</s:String>
 
 
     <!--  endregion Accounts  -->
@@ -685,15 +686,59 @@
 
     <!--  region Library  -->
 
-
-    <s:String x:Key="RemoveInstance">Удаление сборки</s:String>
-    <s:String x:Key="RemoveInstanceDescription">
-        Вы действительно хотите удалить сборку: {0}.
-        Восстановить её будет не возможно!
+    <s:String x:Key="DeletingInstance">Deleting instance</s:String>
+    <s:String x:Key="DeletingInstanceDescription">
+        Do you really want to delete instance: {0}?
+        It will be impossible to restore it!
     </s:String>
-    <s:String x:Key="YesIWantRemoveInstance">Да, я хочу удалить сборку</s:String>
+    <s:String x:Key="YesIWantDeleteInstance">Yes, I want to delete this instance</s:String>
 
 
     <!--  endregion Library  -->
 
+
+    <s:String x:Key="LoginOrPasswordNotFilled">Login or password is not filled in</s:String>
+
+    <s:String x:Key="AuthorizationProcessInProgress">The authorization process is in progress...</s:String>
+
+    <s:String x:Key="Information">Information</s:String>
+    <s:String x:Key="MicrosoftAccountAuthorizationDescription">To authorize your license account, you will be automatically redirected to the Microsoft authorization page.</s:String>
+    <s:String x:Key="DoInstallTheLatestVersion">Install the latest version?</s:String>
+    <s:String x:Key="NWClientNotAvailableForThisVersion">NWClient not available for this version</s:String>
+    <s:String x:Key="YouHaveNoActiveDistributions">You have no active distributions</s:String>
+
+
+    <s:String x:Key="InQueue">In Queue</s:String>
+    <s:String x:Key="InConnect">In Connect</s:String>
+    <s:String x:Key="PostProcessing">Post Processing</s:String>
+    <s:String x:Key="InProcess">In Process</s:String>
+    <s:String x:Key="Successful">Successful</s:String>
+
+
+    <s:String x:Key="UnableToDetermineDataForImport">Unable to determine data for assembly import, please enter data manually!</s:String>
+    <s:String x:Key="YouAreAlreadyDistributingToThisClient">You are already distributing to this client.</s:String>
+    <s:String x:Key="ActiveDistributingDescription">This page will be unlocked as soon as you stop the active distribution in the 'Your Distributions' section</s:String>
+    <s:String x:Key="ThereAreNotAddons">There are not addons</s:String>
+    <s:String x:Key="GameLaunching">Game Launching...</s:String>
+    <s:String x:Key="ProcessColon">Process:</s:String>
+    <s:String x:Key="UpdatingFiles">Updating Files</s:String>
+    <s:String x:Key="StageColon">Stage:</s:String>
+    <s:String x:Key="FilesColon">Files:</s:String>
+    <s:String x:Key="TotalDonwloadedColon">Total Donwloaded:</s:String>
+    <s:String x:Key="InstallingTheInstance">Installing the instance</s:String>
+    <s:String x:Key="ThereAreNotImages">There are not images</s:String>
+    <s:String x:Key="ImagesLoading">Images loading...</s:String>
+    <s:String x:Key="DescriptionLoading">Description loading...</s:String>
+    <s:String x:Key="DownloadingTheInstance">Instance downloading</s:String>
+    <s:String x:Key="LoadingEllipsis">Loading...</s:String>
+    <s:String x:Key="WeDidNotFindAnythingForThisRequest">We did not find anything for this request</s:String>
+    <s:String x:Key="ThereAreNoIncomingFriendRequests">There are no incoming friend requests.</s:String>
+    <s:String x:Key="ThereAreNoOutgoingFriendRequests">There are no outgoing friend requests.</s:String>
+    <s:String x:Key="Close">Close</s:String>
+    <s:String x:Key="Notifications">Notifications</s:String>
+    <s:String x:Key="LibraryEmptyDescription">You can add instance to the library via the catalog or by creating your own instance.</s:String>
+    <s:String x:Key="CreateNewInstance">Create a new instance</s:String>
+    <s:String x:Key="YourColorColon:">Your color:</s:String>
+    <s:String x:Key="MinecraftNotRunning">Minercaft not running.</s:String>
+    <s:String x:Key="InstanceDash_">Instance - {0}</s:String>
 </ResourceDictionary>

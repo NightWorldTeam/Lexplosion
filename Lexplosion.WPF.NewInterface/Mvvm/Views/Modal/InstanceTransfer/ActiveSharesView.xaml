@@ -197,8 +197,7 @@
                 <ItemsControl ItemsSource="{Binding Model.DistributedInstances}" />
             </core:If.False>
             <core:If.True>
-                <!--  TODO: Translate  -->
-                <controls:Empty Description="Ваши активные раздачи отсутсвуют" />
+                <controls:Empty Description="{DynamicResource YouHaveNoActiveDistributions}" />
             </core:If.True>
         </core:If>
     </Grid>

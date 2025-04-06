@@ -90,17 +90,15 @@
             </core:If.False>
 
             <core:If.True>
-                <!--  TODO: Translate  -->
-                <controls:Empty Description="Изображения отсутствуют" IsContentLoading="{Binding Model.IsLoading}" />
+                <controls:Empty Description="{DynamicResource ThereAreNotImages}" IsContentLoading="{Binding Model.IsLoading}" />
             </core:If.True>
         </core:If>
 
-        <!--  TODO: Translate  -->
         <controls:LoadingBoard
             Background="Black"
             BackgroundOpacity="0.3"
             BlurTarget="{Binding ElementName=ContainerIf}"
             IsActive="{Binding Model.IsLoading, UpdateSourceTrigger=PropertyChanged}"
-            Placeholder="Загрузка изображений..." />
+            Placeholder="{DynamicResource ImagesLoading}" />
     </Grid>
 </UserControl>

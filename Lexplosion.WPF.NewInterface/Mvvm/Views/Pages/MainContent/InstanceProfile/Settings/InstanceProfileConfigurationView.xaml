@@ -235,15 +235,15 @@
                         <!--  Header  -->
                         <StackPanel>
                             <TextBlock
-                                extensions:TextBlockExtensions.TextByKey="ModloaderVersion"
                                 FontSize="14"
                                 FontWeight="Medium"
-                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                Text="{DynamicResource ModloaderVersion}" />
                             <TextBlock
-                                extensions:TextBlockExtensions.TextByKey="ModloaderVersionDescription"
                                 FontSize="14"
                                 FontWeight="Medium"
-                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                Text="{DynamicResource ModloaderVersionDescription}" />
                         </StackPanel>
 
 
@@ -274,14 +274,14 @@
 
                 <!--  NWClient  -->
                 <Grid>
-                    <!--  TODO: Translate  -->
+
                     <TextBlock
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center"
                         FontSize="14"
                         FontWeight="Medium"
                         Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                        Text="NWClient не доступен на данную версию"
+                        Text="{DynamicResource NWClientNotAvailableForThisVersion}"
                         Visibility="{Binding Model.IsNWClientAvailable, Mode=OneWay, Converter={converters:NegativeBooleanToVisibilityConverter}}" />
                     <Border
                         Padding="0,8,0,8"

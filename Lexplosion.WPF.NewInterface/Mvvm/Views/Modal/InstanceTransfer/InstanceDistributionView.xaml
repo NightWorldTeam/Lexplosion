@@ -150,20 +150,19 @@
             </Border>
 
             <DataTemplate.Triggers>
-                <!--  TODO: Translate  -->
                 <!--  In Queue Text  -->
                 <DataTrigger Binding="{Binding InstanceState}" Value="{x:Static lexplosion:DownloadShareState.InQueue}">
-                    <Setter TargetName="StatusTextBlock" Property="Text" Value="В очереди" />
+                    <Setter TargetName="StatusTextBlock" Property="Text" Value="{DynamicResource InQueue}" />
                 </DataTrigger>
 
                 <!--  In Connect Text  -->
                 <DataTrigger Binding="{Binding InstanceState}" Value="{x:Static lexplosion:DownloadShareState.InConnect}">
-                    <Setter TargetName="StatusTextBlock" Property="Text" Value="Идёт соединение" />
+                    <Setter TargetName="StatusTextBlock" Property="Text" Value="{DynamicResource InConnect}" />
                 </DataTrigger>
 
                 <!--  Post Processing Text  -->
                 <DataTrigger Binding="{Binding InstanceState}" Value="{x:Static lexplosion:DownloadShareState.PostProcessing}">
-                    <Setter TargetName="StatusTextBlock" Property="Text" Value="Обработка файлов" />
+                    <Setter TargetName="StatusTextBlock" Property="Text" Value="{DynamicResource PostProcessing}" />
                 </DataTrigger>
 
                 <!--  In Process Hide  -->

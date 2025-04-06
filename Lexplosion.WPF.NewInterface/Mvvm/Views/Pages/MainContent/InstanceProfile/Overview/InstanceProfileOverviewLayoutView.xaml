@@ -43,13 +43,12 @@
             </controls:UIUnderlineTabControl.ItemContainerStyle>
         </controls:UIUnderlineTabControl>
 
-        <!--  TODO: Translate  -->
         <controls:LoadingBoard
             Grid.RowSpan="2"
             Background="Black"
             BackgroundOpacity="0.2"
             BlurTarget="{Binding ElementName=Tabs}"
-            Content="Загрузка описания..."
+            Content="{DynamicResource DescriptionLoading}"
             IsActive="{Binding IsLoading}" />
     </Grid>
 
