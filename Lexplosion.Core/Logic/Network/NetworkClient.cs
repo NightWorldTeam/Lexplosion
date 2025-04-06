@@ -21,13 +21,19 @@ namespace Lexplosion.Logic.Network
         protected Thread readingThread;
         protected Thread sendingThread;
 
-        public NetworkClient(string clientType, ControlServerData controlServer)
+		protected (string, int) SelectedStunServer;
+		protected (string, int)[] StunServers;
+
+		public NetworkClient(string clientType, ControlServerData controlServer)
         {
             ClientType = clientType;
             ControlServer = controlServer;
-        }
 
-        public virtual bool Initialization(string UUID, string sessionToken, string serverUUID)
+			StunServers = controlServer.StunServers;
+			SelectedStunServer = controlServer.StunServers[0];
+		}
+
+		public virtual bool Initialization(string UUID, string sessionToken, string serverUUID)
         {
             bool directConnectPossible = true; //описывает возможно ли прямое подключение через smp. Если оно не возможно и SmpConnection true, то трафик будет гнаться через Smp ретранслятор
             string myExternalPort = null;
@@ -63,7 +69,7 @@ namespace Lexplosion.Logic.Network
 
                                 if (directConnectPossible)
                                 {
-                                    STUN_Result result = STUN_Client.Query("stun.l.google.com", 19302, udpSocket);
+                                    STUN_Result result = StunQuery(udpSocket);
                                     if (result?.PublicEndPoint != null)
                                     {
                                         myExternalPort = result.PublicEndPoint.Port.ToString();
@@ -211,7 +217,31 @@ namespace Lexplosion.Logic.Network
             }
         }
 
-        protected abstract void Close(IPEndPoint point);
+		private STUN_Result StunQuery(Socket udpSocket)
+		{
+			STUN_Result result = null;
+			foreach (var stunServ in StunServers)
+			{
+				Runtime.DebugConsoleWrite("Check stun server: " + stunServ);
+				try
+				{
+					result = STUN_Client.Query(stunServ.Item1, stunServ.Item2, udpSocket); //получем наш внешний адрес
+					Runtime.DebugConsoleWrite("NatType " + result?.NetType.ToString());
+
+					if (result != null && result.NetType != STUN_NetType.UdpBlocked)
+					{
+						Runtime.DebugConsoleWrite("Selected stun server: " + stunServ);
+						SelectedStunServer = stunServ;
+						break;
+					}
+				}
+				catch { }
+			}
+
+			return result;
+		}
+
+		protected abstract void Close(IPEndPoint point);
 
         protected abstract void Sending();
 
