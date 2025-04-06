@@ -234,8 +234,8 @@ namespace Lexplosion.Logic.Network
 
             try
             {
-                //присоединяемся к мультикасту для Loopback адаптера
-                var optionValue = new MulticastOption(IPAddress.Parse("224.0.2.60"), NetworkInterface.LoopbackInterfaceIndex);
+                //присоединяемся к мультикасту
+                var optionValue = new MulticastOption(IPAddress.Parse("224.0.2.60"));
                 client.Client.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, optionValue);
             }
             catch (Exception ex)
@@ -249,13 +249,13 @@ namespace Lexplosion.Logic.Network
                 {
                     Runtime.DebugWrite("Port 4445 is used by the process");
 
-                    Dictionary<string, string> input = new Dictionary<string, string>
-                    {
-                        ["UUID"] = UUID,
-                        ["sessionToken"] = sessionToken
-                    };
+					var input = new Dictionary<string, string>
+					{
+						["UUID"] = UUID,
+						["sessionToken"] = sessionToken
+					};
 
-                    string data = ToServer.HttpPost(LaunсherSettings.URL.UserApi + "getGameServers", input);
+					string data = ToServer.HttpPost(LaunсherSettings.URL.UserApi + "getGameServers", input);
                     Dictionary<string, OnlineUserInfo> servers = null;
                     try
                     {
@@ -268,8 +268,10 @@ namespace Lexplosion.Logic.Network
 
                     if (servers != null && servers.Count > 0)
                     {
-                        Runtime.DebugWrite($"Servers count: {servers}");
+                        Runtime.DebugWrite($"Servers count: {servers.Count}");
                         Dictionary<string, int> ports = bridge.SetServers(new List<string>(servers.Keys));
+
+						Runtime.DebugWrite("Ports: " + string.Join(",", ports.Values));
 
                         //Отправляем пакеты сервера для отображения в локальных мирах
                         foreach (string uuid in ports.Keys)
