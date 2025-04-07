@@ -59,5 +59,85 @@ namespace Lexplosion.WPF.NewInterface.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
+        internal static byte[] Compression {
+            get {
+                object obj = ResourceManager.GetObject("Compression", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
+        internal static byte[] DiscordRPC {
+            get {
+                object obj = ResourceManager.GetObject("DiscordRPC", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
+        internal static byte[] LexplosionCore {
+            get {
+                object obj = ResourceManager.GetObject("LexplosionCore", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
+        internal static byte[] LumiSoftNet {
+            get {
+                object obj = ResourceManager.GetObject("LumiSoftNet", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
+        internal static byte[] NewtonsoftJson {
+            get {
+                object obj = ResourceManager.GetObject("NewtonsoftJson", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
+        internal static byte[] TaskbarNotification {
+            get {
+                object obj = ResourceManager.GetObject("TaskbarNotification", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
+        internal static byte[] Tommy {
+            get {
+                object obj = ResourceManager.GetObject("Tommy", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
+        internal static byte[] VirtualizingWrapPanel {
+            get {
+                object obj = ResourceManager.GetObject("VirtualizingWrapPanel", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }

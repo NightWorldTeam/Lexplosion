@@ -8,7 +8,7 @@
     <ProjectGuid>{C7328845-AB10-4FAC-99D8-F52FE705B628}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>Lexplosion.WPF.NewInterface</RootNamespace>
-    <AssemblyName>Lexplosion.WPF.NewInterface</AssemblyName>
+    <AssemblyName>Lexplosion</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -72,6 +72,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -1163,7 +1164,15 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
+    <None Include="Resources\Libraries\DiscordRPC.zip" />
+    <None Include="Resources\Libraries\Lexplosion.Core.zip" />
+    <None Include="Resources\Libraries\LumiSoft.Net.zip" />
+    <None Include="Resources\Libraries\NewtonsoftJson.zip" />
+    <None Include="Resources\Libraries\TaskbarNotification.zip" />
+    <None Include="Resources\Libraries\Tommy.zip" />
+    <None Include="Resources\Libraries\VirtualizingWrapPanel.zip" />
     <Resource Include="Assets\fonts\Arkhip.ttf" />
     <Resource Include="Assets\fonts\PassDots.ttf" />
     <Resource Include="Assets\fonts\SFProDisplay.otf" />
@@ -1225,5 +1234,11 @@
   <ItemGroup>
     <Resource Include="Assets\images\icons\neoforge.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Libraries\Compression.dll" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>copy "$(SolutionDir)DLL\Lexplosion.Core.zip" "$(ProjectDir)\Resources\Libraries\Lexplosion.Core.zip"</PreBuildEvent>
+  </PropertyGroup>
 </Project>

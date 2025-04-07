@@ -13,10 +13,13 @@ using Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Settin
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Authorization;
 using Lexplosion.WPF.NewInterface.Mvvm.Views.Windows;
+using Lexplosion.WPF.NewInterface.Properties;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
@@ -73,9 +76,12 @@ namespace Lexplosion.WPF.NewInterface
         [STAThread]
         static void Main()
         {
-            //SetupTestEnviroment();
-            //return;
-            Settings = new AppSettings();
+			// Подписываемся на эвент для загрузки всех строенных dll'ников
+			AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
+
+			//SetupTestEnviroment();
+			//return;
+			Settings = new AppSettings();
 
             _appCore = new AppCore(App.Current.Dispatcher.Invoke, (key) => App.Current.Resources[key]);
 
@@ -87,9 +93,6 @@ namespace Lexplosion.WPF.NewInterface
             var s = new Theme("Light Punch", "LightColorTheme.xaml");
             //_themes.Add(new Theme("Open Space", "DarkColorTheme.xaml"));
             s.IsSelected = true;
-
-            // Подписываемся на эвент для загрузки всех строенных dll'ников
-            AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
 
             App.Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
@@ -486,8 +489,6 @@ namespace Lexplosion.WPF.NewInterface
 
             }
 
-            //Runtime.DebugWrite(currentCultureName);
-
             App.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
                 Source = new Uri("pack://application:,,,/Assets/langs/" + selectedLangId + ".xaml")
@@ -496,7 +497,6 @@ namespace Lexplosion.WPF.NewInterface
 
         private static void ResourcesDictionariesRegister()
         {
-
             // Languages //
             _app.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
@@ -518,47 +518,73 @@ namespace Lexplosion.WPF.NewInterface
             {
                 Source = new Uri("pack://application:,,,/DataTemplates.xaml")
             });
-            Runtime.DebugWrite("Загрузились ресурсы");
         }
 
         private static Assembly AssemblyResolve(object sender, ResolveEventArgs args)
         {
-            //if (args.Name.Contains("Lexplosion.Core"))
-            //{
-            //    return Assembly.Load(UnzipBytesArray(Resources.LexplosionCore));
-            //}
+			Console.WriteLine("Load lib " + args.Name);
+			if (args.Name.Contains("Lexplosion.Core"))
+			{
+				return Assembly.Load(UnzipBytesArray(Resources.LexplosionCore));
+			}
 
-            //if (args.Name.Contains("Newtonsoft.Json"))
-            //{
-            //    return Assembly.Load(UnzipBytesArray(Resources.NewtonsoftJson));
-            //}
+			if (args.Name.Contains("Newtonsoft.Json"))
+			{
+				return Assembly.Load(UnzipBytesArray(Resources.NewtonsoftJson));
+			}
 
-            //if (args.Name.Contains("LumiSoft.Net"))
-            //{
-            //    return Assembly.Load(UnzipBytesArray(Resources.LumiSoft_Net));
-            //}
+			if (args.Name.Contains("LumiSoft.Net"))
+			{
+				return Assembly.Load(UnzipBytesArray(Resources.LumiSoftNet));
+			}
 
-            //if (args.Name.Contains("Tommy"))
-            //{
-            //    return Assembly.Load(UnzipBytesArray(Resources.Tommy));
-            //}
+			if (args.Name.Contains("Tommy"))
+			{
+				return Assembly.Load(UnzipBytesArray(Resources.Tommy));
+			}
 
-            //if (args.Name.Contains("Hardcodet.Wpf.TaskbarNotification"))
-            //{
-            //    return Assembly.Load(UnzipBytesArray(Resources.TaskbarNotification));
-            //}
+			if (args.Name.Contains("Hardcodet.Wpf.TaskbarNotification"))
+			{
+				return Assembly.Load(UnzipBytesArray(Resources.TaskbarNotification));
+			}
 
-            //if (args.Name.Contains("DiscordRPC"))
-            //{
-            //    return Assembly.Load(UnzipBytesArray(Resources.DiscordRPC));
-            //}
+			if (args.Name.Contains("DiscordRPC"))
+			{
+				return Assembly.Load(UnzipBytesArray(Resources.DiscordRPC));
+			}
 
-            //if (args.Name.Contains("System.IO.Compression"))
-            //{
-            //    return Assembly.Load(Resources.Compression);
-            //}
+			if (args.Name.Contains("VirtualizingWrapPanel"))
+			{
+				return Assembly.Load(UnzipBytesArray(Resources.VirtualizingWrapPanel));
+			}
 
-            return null;
+			if (args.Name.Contains("System.IO.Compression"))
+			{
+				return Assembly.Load(Resources.Compression);
+			}
+
+			return null;
         }
-    }
+
+		private static byte[] UnzipBytesArray(byte[] zipBytes)
+		{
+			// TODO: Использовать MemeryStream?
+			using (Stream archivedBytes = new MemoryStream(zipBytes))
+			{
+				using (var zip = new ZipArchive(archivedBytes, ZipArchiveMode.Read))
+				{
+					var entry = zip.Entries[0];
+					using (Stream stream = entry.Open())
+					{
+						using (MemoryStream fileBytes = new MemoryStream())
+						{
+							stream.CopyTo(fileBytes);
+							return fileBytes.ToArray();
+						}
+					}
+				}
+			}
+		}
+
+	}
 }
