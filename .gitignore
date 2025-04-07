@@ -7,7 +7,7 @@
 #этот файл автоматически появится при первой компиляции Lexplosion.Core
 DLL/Lexplosion.Core.zip
 /Lexplosion.WPF.NewInterface/Resources/Libraries/Lexplosion.Core.zip
-/Lexplosion.WPF.OldInterface/Resources/Libraries/Lexplosion.Core.zip
+/Lexplosion.WPF.OldInterface/Resources/Lexplosion.Core.zip
 
 # User-specific files
 *.rsuser
@@ -405,4 +405,3 @@ FodyWeavers.xsd
 /NewWPFInterface
 /Lexplosion.WPF.NewInterface/ViewModels/MainContent/MainMenu/MainMenuViewModel.cs
 /Lexplosion.Core/Lexplosion.Core.csproj.user
-/Lexplosion.WPF.OldInterface/Resources/Lexplosion.Core.zip
