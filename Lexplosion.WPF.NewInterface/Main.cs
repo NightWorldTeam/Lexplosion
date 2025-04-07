@@ -522,7 +522,6 @@ namespace Lexplosion.WPF.NewInterface
 
         private static Assembly AssemblyResolve(object sender, ResolveEventArgs args)
         {
-			Console.WriteLine("Load lib " + args.Name);
 			if (args.Name.Contains("Lexplosion.Core"))
 			{
 				return Assembly.Load(UnzipBytesArray(Resources.LexplosionCore));
