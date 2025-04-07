@@ -287,7 +287,11 @@
         IconSource="pack://Application:,,,/Assets/images/icons/logo.ico"
         PopupActivation="RightClick">
         <tb:TaskbarIcon.TrayPopup>
-            <Border Padding="10" Background="#161819" />
+            <Border
+                Width="32"
+                Height="64"
+                Padding="10"
+                Background="{DynamicResource PrimarySolidColorBrush}" />
         </tb:TaskbarIcon.TrayPopup>
     </tb:TaskbarIcon>
 

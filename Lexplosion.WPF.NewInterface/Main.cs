@@ -1,4 +1,5 @@
 ﻿using DiscordRPC;
+using Hardcodet.Wpf.TaskbarNotification;
 using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Management;
@@ -157,12 +158,12 @@ namespace Lexplosion.WPF.NewInterface
             App.Current.Resources["SettingBetweenShowDelay"] = value;
         }
 
-
+        private static TaskbarIcon _nofityIcon;
         private static void SetMainWindow()
         {
             ResourceNames = GetResourceNames();
 
-            //_nofityIcon = (TaskbarIcon)App.Current.FindResource("NofityIcon");
+            _nofityIcon = (TaskbarIcon)App.Current.FindResource("NofityIcon");
 
             // инициализируем mainViewModel.
             MainViewModel mainViewModel;

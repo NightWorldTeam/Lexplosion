@@ -22,18 +22,23 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
         #region Commands
 
 
-        public void ToDarkTheme() 
+        public void ToDarkTheme()
         {
             var themeService = _appCore.Settings.ThemeService;
 
             themeService.Themes.First().IsSelected = false;
             var darkTheme = themeService.Themes.Last();
-            themeService.ChangeTheme(darkTheme, true, ["welcome-page"], () => darkTheme.IsSelected = true);
+            darkTheme.HasChangeAnimation = false;
+            themeService.ChangeTheme(darkTheme, true, ["welcome-page"], () =>
+            {
+                darkTheme.IsSelected = true;
+                darkTheme.HasChangeAnimation = true;
+            });
         }
 
 
         private RelayCommand _toThemeSelectCommand;
-        public ICommand ToThemeSelectCommand 
+        public ICommand ToThemeSelectCommand
         {
             get => RelayCommand.GetCommand(ref _toThemeSelectCommand, ToSelectTheme);
         }
@@ -42,7 +47,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
         #endregion Commands
 
 
-        private void ToSelectTheme() 
+        private void ToSelectTheme()
         {
             _appCore.NavigationStore.CurrentViewModel = new WelcomePageThemeSelectViewModel(_appCore, _navigate);
             OnPropertyChanged(nameof(_appCore.NavigationStore.CurrentViewModel));

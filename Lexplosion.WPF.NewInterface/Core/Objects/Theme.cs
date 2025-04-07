@@ -52,6 +52,8 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
             }
         }
 
+        public bool HasChangeAnimation { get; set; } = true;
+
 
         #endregion Properties
 

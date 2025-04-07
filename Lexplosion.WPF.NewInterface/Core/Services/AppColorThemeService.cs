@@ -249,7 +249,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Services
         {
             if (isSelected)
             {
-                ChangeTheme(theme);
+                ChangeTheme(theme, theme.HasChangeAnimation);
                 GlobalData.GeneralSettings.ThemeName = theme.Name;
                 DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
             }
