@@ -3,6 +3,7 @@ using System;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels;
+using System.Threading;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages
 {
@@ -64,16 +65,30 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages
                 BeginTime = TimeSpan.FromSeconds(2)
             };
 
-            da1.Completed += ToThemeSelect;
+            _viewmodel.ToDarkTheme();
 
-            Lexplosion.BeginAnimation(OpacityProperty, da1);
-            Logo.BeginAnimation(OpacityProperty, da1);
-            WelcomeText.BeginAnimation(OpacityProperty, da1);
+            Runtime.TaskRun(() =>
+            {
+                Thread.Sleep(1000);
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    da1.Completed += ToThemeSelect;
+
+                    Lexplosion.BeginAnimation(OpacityProperty, da1);
+                    Logo.BeginAnimation(OpacityProperty, da1);
+                    WelcomeText.BeginAnimation(OpacityProperty, da1);
+                });
+            });
         }
 
         private void ToThemeSelect(object sender, EventArgs e)
         {
             _viewmodel.ToThemeSelectCommand.Execute(null);
+        }
+
+        private void Logo_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            Runtime.DebugWrite(e.GetPosition((IInputElement)this), color: ConsoleColor.Red);
         }
     }
 }

@@ -21,7 +21,7 @@
                 <Border
                     x:Name="Logo"
                     Width="64"
-                    Height="64"
+                    Height="64" MouseDown="Logo_MouseDown"
                     Margin="0,10,16,0"
                     VerticalAlignment="Center"
                     Opacity="0">
@@ -48,7 +48,7 @@
                 Opacity="0"
                 TextAlignment="Center"
                 TextWrapping="Wrap">
-                <Run Text="Добро пожаловать в новую эру" />
+                <Run Text="{DynamicResource WelcomeDescription}" />
                 <Run
                     FontWeight="Medium"
                     Foreground="#2e2e2e"

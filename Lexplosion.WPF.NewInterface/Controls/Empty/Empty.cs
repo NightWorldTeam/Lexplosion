@@ -29,7 +29,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
             new FrameworkPropertyMetadata(defaultValue: false, propertyChangedCallback: OnIsContentLoadingChanged));
 
         public static readonly DependencyProperty TitleProperty
-            = DependencyProperty.Register(nameof(Title), typeof(string), typeof(Empty), 
+            = DependencyProperty.Register(nameof(Title), typeof(string), typeof(Empty),
                 new FrameworkPropertyMetadata(propertyChangedCallback: OnTitleChanged));
 
         public static readonly DependencyProperty TitleForegroundProperty
@@ -39,13 +39,13 @@ namespace Lexplosion.WPF.NewInterface.Controls
             = DependencyProperty.Register(nameof(DescriptionMaxWidth), typeof(double), typeof(Empty),
                 new FrameworkPropertyMetadata(defaultValue: 400d, FrameworkPropertyMetadataOptions.AffectsMeasure));
 
-        public string Description 
+        public string Description
         {
             get => (string)GetValue(DescriptionProperty);
             set => SetValue(DescriptionProperty, value);
         }
 
-        public int CollectionCount 
+        public int CollectionCount
         {
             get => (int)GetValue(CollectionCountProperty);
             set => SetValue(CollectionCountProperty, value);
@@ -69,7 +69,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
             set => SetValue(DescriptionMaxWidthProperty, value);
         }
 
-        public Brush TitleForeground 
+        public Brush TitleForeground
         {
             get => (Brush)GetValue(TitleForegroundProperty);
             set => SetValue(TitleForegroundProperty, value);
@@ -87,7 +87,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
         public override void OnApplyTemplate()
         {
             _titleTextBlock = Template.FindName(PART_Title, this) as TextBlock;
-            _descriptionTextBlock = Template.FindName(PART_Title, this) as TextBlock;
+            _descriptionTextBlock = Template.FindName(PART_Description, this) as TextBlock;
         }
 
 
@@ -109,16 +109,22 @@ namespace Lexplosion.WPF.NewInterface.Controls
         private static void OnTitleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var _this = (d as Empty);
+
+            if (_this._titleTextBlock == null)
+            {
+                return;
+            }
+
             var newValue = e.NewValue as string;
 
-            if (newValue == null) 
+            if (newValue == null)
             {
                 _this._titleTextBlock.Visibility = Visibility.Collapsed;
                 return;
             }
 
-            _this._titleTextBlock.Visibility = Visibility.Collapsed;
 
+            _this._titleTextBlock.Visibility = Visibility.Collapsed;
             _this.Title = e.NewValue as string;
         }
     }

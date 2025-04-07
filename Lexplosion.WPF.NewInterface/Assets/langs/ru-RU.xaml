@@ -849,4 +849,9 @@
     <s:String x:Key="CreateNewInstance">Создать новую сборку</s:String>
     <s:String x:Key="MinecraftNotRunning">Minercaft не запущен.</s:String>
     <s:String x:Key="InstanceDash_">Сборка - {0}</s:String>
+    <s:String x:Key="GoToCatalog">Перейти в каталог</s:String>
+    <s:String x:Key="LibraryEmpty">Библиотека пуста</s:String>
+
+    <s:String x:Key="WelcomeDescription">Добро пожаловать в новую эру</s:String>
+    <s:String x:Key="WelcomePageThemeSelectDescription">Выберите предпочитаемый вами внешний вид интерфейса.</s:String>
 </ResourceDictionary>

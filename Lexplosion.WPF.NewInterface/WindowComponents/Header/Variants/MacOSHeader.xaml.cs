@@ -1,10 +1,12 @@
 ﻿using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.WPF.NewInterface.WindowComponents.Header.Variants;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 
 namespace Lexplosion.WPF.NewInterface.WindowComponents.Header.Variants
 {
@@ -22,6 +24,31 @@ namespace Lexplosion.WPF.NewInterface.WindowComponents.Header.Variants
         }
 
         public override void ChangeOrintation(object sender, MouseButtonEventArgs e)
+        {
+            var opacityHideAnimation = new DoubleAnimation()
+            {
+                Duration = TimeSpan.FromSeconds(0.35 / 2),
+                To = 0
+            };
+
+            var opacityShowAnimation = new DoubleAnimation()
+            {
+                Duration = TimeSpan.FromSeconds(0.35 / 2),
+                To = 1
+            };
+
+            // перемещаем кнопки и панель в нужную сторону.
+            opacityHideAnimation.Completed += (object sender, EventArgs e) =>
+            {
+                ChangeWHPHorizontalOrintation();
+                WindowHeaderPanelButtonsGrid.BeginAnimation(OpacityProperty, opacityShowAnimation);
+            };
+
+            // скрываем 
+            WindowHeaderPanelButtonsGrid.BeginAnimation(OpacityProperty, opacityHideAnimation);
+        }
+
+        public void ChangeWHPHorizontalOrintation() 
         {
             if (WindowHeaderPanelButtonsGrid.HorizontalAlignment == HorizontalAlignment.Left)
             {
@@ -43,6 +70,6 @@ namespace Lexplosion.WPF.NewInterface.WindowComponents.Header.Variants
             }
 
             DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
-        }
+        } 
     }
 }

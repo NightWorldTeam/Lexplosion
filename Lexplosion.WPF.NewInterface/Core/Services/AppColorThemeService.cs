@@ -10,6 +10,8 @@ using Lexplosion.WPF.NewInterface.NWColorTools;
 using System.Threading;
 using Lexplosion.Global;
 using Lexplosion.WPF.NewInterface.Core.ViewModel;
+using System.Collections.ObjectModel;
+using Lexplosion.Logic.FileSystem;
 
 namespace Lexplosion.WPF.NewInterface.Core.Services
 {
@@ -22,17 +24,24 @@ namespace Lexplosion.WPF.NewInterface.Core.Services
         private Color _selectedActivityColor;
 
 
+        public Dictionary<string, Action<Action>> AnimationsList = [];
+        public Dictionary<string, Action> BeforeAnimationsList = [];
+
+
         #region Properties
-
-
-        private List<Theme> _themes = [];
-        public IEnumerable<Theme> Themes { get => _themes; set => _themes = value.ToList(); }
 
         public List<Action> Animations { get; } = new List<Action>();
         public List<Action> BeforeAnimations { get; } = new List<Action>();
 
+        private ObservableCollection<Theme> _themes = [];
+        public IEnumerable<Theme> Themes { get => _themes; set => _themes = new ObservableCollection<Theme>(value); }
+
+        private ObservableCollection<ActivityColor> _colors = new ObservableCollection<ActivityColor>();
+        public IEnumerable<ActivityColor> Colors { get => _colors; }
+
         public Theme SelectedTheme { get; private set; }
         public ActivityColor SelectedActivityColor { get; private set; }
+
 
 
         #endregion Properties
@@ -40,12 +49,57 @@ namespace Lexplosion.WPF.NewInterface.Core.Services
 
         public AppColorThemeService()
         {
-            
+            LoadDefaultTheme();
+            LoadActivityColors();
         }
 
 
         #region Public Methods
 
+
+        public void LoadDefaultTheme()
+        {
+            _themes.Add(new Theme("Light Punch", "LightColorTheme.xaml"));
+            _themes.Add(new Theme("Open Space", "DarkColorTheme.xaml"));
+
+            foreach (var theme in _themes)
+            {
+                theme.SelectedEvent += SelectedThemeChanged;
+                //Runtime.DebugWrite(theme.Name + " >>> " + GlobalData.GeneralSettings.ThemeName, color: System.ConsoleColor.Red);
+            }
+
+            var savedTheme = _themes.FirstOrDefault(t => t.Name == GlobalData.GeneralSettings.ThemeName);
+
+            if (savedTheme == null)
+                _themes[0].IsSelected = true;
+            else
+                savedTheme.IsSelected = true;
+
+        }
+
+        public void LoadActivityColors()
+        {
+            _colors.Add(new ActivityColor("#167ffc"));
+            _colors.Add(new ActivityColor("#A020F0"));
+
+            foreach (var color in _colors)
+            {
+                color.SelectedEvent += SelectedColorChanged;
+            }
+
+            var savedColorBrush = (SolidColorBrush)new BrushConverter().ConvertFrom(GlobalData.GeneralSettings.AccentColor);
+            var savedColor = new ActivityColor(savedColorBrush);
+            savedColor.SelectedEvent += SelectedColorChanged;
+            if (savedColorBrush == null)
+            {
+                _colors[0].IsSelected = true;
+            }
+            else
+            {
+                savedColor.IsSelected = true;
+            }
+
+        }
 
         public void ChangeActivityColor(Color color, bool animatedChanging = false)
         {
@@ -108,13 +162,26 @@ namespace Lexplosion.WPF.NewInterface.Core.Services
             ChangeTheme(_themes[_themes.Count - 1]);
         }
 
-        public void ChangeTheme(Theme theme, bool playAnimations = true)
+        public void ChangeTheme(Theme theme, bool playAnimations = false, string[] animationsKeys = null, Action afterAnimation = null)
         {
             var currentThemeName = string.Empty;
             var resourceDictionaries = new List<ResourceDictionary>();
 
             if (playAnimations)
-                BeforeAnimations.ForEach(item => item?.Invoke());
+            {
+                if (animationsKeys == null)
+                    BeforeAnimations.ForEach(item => item?.Invoke());
+                else
+                {
+                    foreach (var key in animationsKeys)
+                    {
+                        if (BeforeAnimationsList.TryGetValue(key, out var action))
+                        {
+                            action();
+                        }
+                    }
+                }
+            }
 
             foreach (var md in App.Current.Resources.MergedDictionaries)
             {
@@ -151,7 +218,41 @@ namespace Lexplosion.WPF.NewInterface.Core.Services
 
             // TODO: При быстрых вызовах смены темы, будет происходить утечка памяти июо circle animation создает brush в виде image картинки.
             if (playAnimations)
-                Animations.ForEach(item => item?.Invoke());
+            {
+                if (animationsKeys == null)
+                {
+                    Animations.ForEach(item => item?.Invoke());
+                    return;
+                }
+
+                // вызываем кастомные анимации
+                foreach (var key in animationsKeys)
+                {
+                    if (AnimationsList.TryGetValue(key, out var startAnimation))
+                        startAnimation(afterAnimation);
+                }
+            }
+        }
+
+
+        public void SelectedColorChanged(ActivityColor color, bool isSelected)
+        {
+            if (isSelected && color != null)
+            {
+                ChangeActivityColor(color.Brush.Color);
+                GlobalData.GeneralSettings.AccentColor = color.Brush.Color.ToString();
+                DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+            }
+        }
+
+        public void SelectedThemeChanged(Theme theme, bool isSelected)
+        {
+            if (isSelected)
+            {
+                ChangeTheme(theme);
+                GlobalData.GeneralSettings.ThemeName = theme.Name;
+                DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+            }
         }
 
 
@@ -168,7 +269,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Services
             var pressedColor = Color.FromRgb(77, 77, 77);
             var disabledColor = Color.FromRgb(179, 179, 179);
 
-            if (color != Colors.Black)
+            if (color != System.Windows.Media.Colors.Black)
             {
                 var luminance = ColorTools.CalculateLuminance(color);
                 Func<Color, float, Color> colorSelectorByLuminance = luminance < 140 ? ColorTools.GetLighterColor : ColorTools.GetDarkerColor;
@@ -199,7 +300,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Services
             var foregroundColor = ColorTools.ForegroundByColor(color);
             _selectedThemeResourceDictionary["DefaultButtonForegroundColor"] = foregroundColor;
             _selectedThemeResourceDictionary["DefaultButtonForegroundColorBrush"] = new SolidColorBrush(foregroundColor);
-            
+
             _selectedThemeResourceDictionary["BrandColorForegroundColor"] = foregroundColor;
             _selectedThemeResourceDictionary["BrandColorForegroundSolidColorBrush"] = new SolidColorBrush(foregroundColor);
 

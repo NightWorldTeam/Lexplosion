@@ -7,6 +7,7 @@
     xmlns:core="clr-namespace:Lexplosion.WPF.NewInterface.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
+    xmlns:header="clr-namespace:Lexplosion.WPF.NewInterface.WindowComponents.Header"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Windows"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="ConsoleWindow"
@@ -117,119 +118,7 @@
         </Grid.RowDefinitions>
 
         <!--  Window Header Panel Margin="16,12"  -->
-        <Grid
-            x:Name="WindowHeaderPanelButtonsGrid"
-            Margin="16,12"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top"
-            KeyboardNavigation.IsTabStop="False"
-            ShowGridLines="False"
-            Visibility="Visible">
-
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-
-
-            <!--  Close & Hide Buttons  -->
-
-            <StackPanel
-                x:Name="WindowHeaderPanelButtons"
-                Orientation="Horizontal"
-                RenderTransformOrigin="0.5, 0.5">
-
-
-                <!--  Close Button  -->
-
-                <Button
-                    Width="15"
-                    Height="15"
-                    Margin="0,0,10,0"
-                    Background="#FF0B00"
-                    Click="CloseWindow_Click"
-                    Style="{StaticResource ColoredWindowsButton}" />
-
-
-                <!--  Maximized Button  -->
-
-                <Button
-                    Width="15"
-                    Height="15"
-                    Margin="0,0,10,0"
-                    Background="Orange"
-                    Click="MaximazedWindow_Click"
-                    Style="{StaticResource ColoredWindowsButton}" />
-
-
-                <!--  Minimaze Button  -->
-
-                <Button
-                    Width="15"
-                    Height="15"
-                    Margin="0,0,10,0"
-                    Background="#009DFF"
-                    Click="MinimazedWindow_Click"
-                    Style="{StaticResource ColoredWindowsButton}" />
-            </StackPanel>
-
-
-            <!--  Debug Tools  -->
-
-            <StackPanel
-                x:Name="DebugPanel"
-                Grid.Column="1"
-                Margin="0,0,8,0"
-                Orientation="Horizontal"
-                Visibility="Visible">
-
-
-                <!--  Change Panel Orintation  -->
-                <!--  TODO: Translate  -->
-                <Border
-                    Width="20"
-                    Height="20"
-                    Margin="8,0,0,0"
-                    Padding="2"
-                    Background="{DynamicResource SeparateSolidColorBrush}"
-                    CornerRadius="2"
-                    MouseDown="ChangeWHPOrintation_MouseDown"
-                    ToolTip="Изменить положение меню"
-                    ToolTipService.BetweenShowDelay="0"
-                    ToolTipService.InitialShowDelay="0"
-                    ToolTipService.PlacementRectangle="7,40,0,0">
-                    <Viewbox Height="14">
-                        <Path
-                            extensions:PathExtensions.StringKeyData="IndentDecrease"
-                            Fill="{DynamicResource ActivitySolidColorBrush}"
-                            Stretch="Fill" />
-                    </Viewbox>
-                </Border>
-
-
-                <!--  Change Scale  -->
-
-                <Border
-                    Width="20"
-                    Height="20"
-                    Margin="8,0,0,0"
-                    Padding="2"
-                    Background="{DynamicResource SeparateSolidColorBrush}"
-                    CornerRadius="2"
-                    MouseDown="ScaleFit_MouseDown"
-                    ToolTipService.BetweenShowDelay="0"
-                    ToolTipService.InitialShowDelay="0"
-                    ToolTipService.PlacementRectangle="7,40,0,0">
-
-                    <Viewbox Height="14">
-                        <Path
-                            extensions:PathExtensions.StringKeyData="ScaleFit"
-                            Fill="{DynamicResource ActivitySolidColorBrush}"
-                            Stretch="Fill" />
-                    </Viewbox>
-                </Border>
-            </StackPanel>
-        </Grid>
+        <header:WindowHeaderContainer x:Name="HeaderContainer1" />
 
         <!--  ConsoleBackground  -->
         <Border

@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Logic.Management;
 using Lexplosion.WPF.NewInterface.Core;
+using Lexplosion.WPF.NewInterface.WindowComponents.Header;
 using System;
 using System.Collections;
 using System.Collections.ObjectModel;
@@ -43,7 +44,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
             LogsContainer.ItemsSource = Logs;
             Logs.CollectionChanged += Logs_CollectionChanged;
             LogsContainer.SelectionChanged += LogsContainer_SelectionChanged;
-            Closed += OnClosed;
+
+            HeaderContainer1.DataContext = new WindowHeaderArgs(OnClosed, Maximized, Minimized);
         }
 
 
@@ -102,19 +104,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
             });
         }
 
-        /// <summary>
-        /// Закрывает окно консоли.
-        /// </summary>
-        internal void Exit(object sender, RoutedEventArgs e)
-        {
-            this.Close();
-        }
-
-        private void OnClosed(object sender, EventArgs e)
+        private void OnClosed()
         {
             _classInstance = null;
             _gameManager.ProcessDataReceived -= AddNewLine;
             _allStringContent.Clear();
+            Close();
         }
 
         private void LogsContainer_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -263,43 +258,43 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
                 To = 1
             };
 
-            // перемещаем кнопки и панель в нужную сторону.
-            opacityHideAnimation.Completed += (object sender, EventArgs e) =>
-            {
-                ChangeWHPHorizontalOrintation();
-                WindowHeaderPanelButtonsGrid.BeginAnimation(OpacityProperty, opacityShowAnimation);
-            };
+            //// перемещаем кнопки и панель в нужную сторону.
+            //opacityHideAnimation.Completed += (object sender, EventArgs e) =>
+            //{
+            //    ChangeWHPHorizontalOrintation();
+            //    WindowHeaderPanelButtonsGrid.BeginAnimation(OpacityProperty, opacityShowAnimation);
+            //};
 
-            // скрываем 
-            WindowHeaderPanelButtonsGrid.BeginAnimation(OpacityProperty, opacityHideAnimation);
+            //// скрываем 
+            //WindowHeaderPanelButtonsGrid.BeginAnimation(OpacityProperty, opacityHideAnimation);
         }
 
         private void ChangeWHPHorizontalOrintation()
         {
-            if (WindowHeaderPanelButtonsGrid.HorizontalAlignment == HorizontalAlignment.Left)
-            {
-                WindowHeaderPanelButtons.RenderTransform = new RotateTransform(180);
-                WindowHeaderPanelButtonsGrid.HorizontalAlignment = HorizontalAlignment.Right;
+            //if (WindowHeaderPanelButtonsGrid.HorizontalAlignment == HorizontalAlignment.Left)
+            //{
+            //    WindowHeaderPanelButtons.RenderTransform = new RotateTransform(180);
+            //    WindowHeaderPanelButtonsGrid.HorizontalAlignment = HorizontalAlignment.Right;
 
-                //AddtionalFuncs.HorizontalAlignment = HorizontalAlignment.Left;
+            //    //AddtionalFuncs.HorizontalAlignment = HorizontalAlignment.Left;
 
-                Grid.SetColumn(DebugPanel, 0);
-                Grid.SetColumn(WindowHeaderPanelButtons, 1);
+            //    Grid.SetColumn(DebugPanel, 0);
+            //    Grid.SetColumn(WindowHeaderPanelButtons, 1);
 
-                RuntimeApp.HeaderState = HeaderState.Right;
-            }
-            else
-            {
-                WindowHeaderPanelButtons.RenderTransform = new RotateTransform(360);
-                WindowHeaderPanelButtonsGrid.HorizontalAlignment = HorizontalAlignment.Left;
+            //    RuntimeApp.HeaderState = HeaderState.Right;
+            //}
+            //else
+            //{
+            //    WindowHeaderPanelButtons.RenderTransform = new RotateTransform(360);
+            //    WindowHeaderPanelButtonsGrid.HorizontalAlignment = HorizontalAlignment.Left;
 
-                //AddtionalFuncs.HorizontalAlignment = HorizontalAlignment.Right;
+            //    //AddtionalFuncs.HorizontalAlignment = HorizontalAlignment.Right;
 
-                Grid.SetColumn(DebugPanel, 1);
-                Grid.SetColumn(WindowHeaderPanelButtons, 0);
+            //    Grid.SetColumn(DebugPanel, 1);
+            //    Grid.SetColumn(WindowHeaderPanelButtons, 0);
 
-                RuntimeApp.HeaderState = HeaderState.Left;
-            }
+            //    RuntimeApp.HeaderState = HeaderState.Left;
+            //}
         }
         bool _isScalled = false;
         private void Scalling()
@@ -324,6 +319,24 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
             Left = (screenWidth - Width) / 2;
 
             _isScalled = !_isScalled;
+        }
+
+        private void Maximized()
+        {
+            if (this.WindowState == WindowState.Maximized)
+            {
+                this.WindowState = WindowState.Normal;
+                Runtime.DebugWrite(this.ActualWidth.ToString() + " x " + this.ActualHeight.ToString());
+            }
+            else
+            {
+                this.WindowState = WindowState.Maximized;
+            }
+        }
+
+        private void Minimized()
+        {
+            this.WindowState = WindowState.Minimized;
         }
     }
 }

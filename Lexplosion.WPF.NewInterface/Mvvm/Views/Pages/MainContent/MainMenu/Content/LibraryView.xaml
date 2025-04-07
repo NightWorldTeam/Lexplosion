@@ -414,8 +414,10 @@
                     </ListBox>
                 </core:If.False>
                 <core:If.True>
-                    <!--  TODO: Translate  -->
-                    <controls:Empty Description="{DynamicResource LibraryEmptyDescription}" TitleForeground="{DynamicResource PrimaryForegroundSolidColorBrush}">
+                    <controls:Empty
+                        Title="{DynamicResource LibraryEmpty}"
+                        Description="{DynamicResource LibraryEmptyDescription}"
+                        TitleForeground="{DynamicResource PrimaryForegroundSolidColorBrush}">
                         <WrapPanel Margin="0,16,0,0">
                             <controls:AdvancedButton
                                 Margin="0,0,8,0"

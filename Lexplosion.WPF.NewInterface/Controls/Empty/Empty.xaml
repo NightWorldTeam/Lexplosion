@@ -31,7 +31,7 @@
                                 FontSize="20"
                                 FontWeight="Bold"
                                 Foreground="{TemplateBinding TitleForeground}"
-                                Text="Библиотека пуста"
+                                Text="{TemplateBinding Title}"
                                 TextWrapping="WrapWithOverflow" />
 
                             <TextBlock

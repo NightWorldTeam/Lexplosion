@@ -28,13 +28,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
     /// </summary>
     public partial class MainWindow : Window, IScalable
     {
-        public double ScalingKeff { get; private set; } = 1;
-
-        public double ScalingFactor { get; private set; } = 1;
-
-        public string currentLang = "ru";
-        private bool _isScalled = false;
-
         private readonly DoubleAnimation _defaultChangeThemeAnimation = new DoubleAnimation()
         {
             From = 1700,
@@ -44,37 +37,88 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
             { EasingMode = EasingMode.EaseInOut }
         };
 
+        private readonly AppCore _appCore;
+        private bool _isScalled = false;
         private Gallery _gallery;
 
-        public MainWindow(Gallery gallery)
+
+        public string currentLang = "ru";
+
+        public double ScalingKeff { get; private set; } = 1;
+        public double ScalingFactor { get; private set; } = 1;
+
+        public MainWindow(AppCore appCore)
         {
             InitializeComponent();
-            _defaultChangeThemeAnimation.Completed += (sender, e) =>
-            {
-                PaintArea.Visibility = Visibility.Hidden;
-            };
 
-            RuntimeApp.Settings.ThemeService.BeforeAnimations.Add(() =>
-            {
-                PaintArea.Opacity = 1;
-                PaintArea.Visibility = Visibility.Visible;
-                PaintArea.Background = CreateBrushFromVisual(this);
-            });
+            _appCore = appCore;
 
-            RuntimeApp.Settings.ThemeService.Animations.Add(() =>
-            {
-                PaintArea.BeginAnimation(OpacityProperty, _defaultChangeThemeAnimation);
-                CircleReveal.BeginAnimation(EllipseGeometry.RadiusXProperty, _defaultChangeThemeAnimation);
-                CircleReveal.BeginAnimation(EllipseGeometry.RadiusYProperty, _defaultChangeThemeAnimation);
-            });
+            PrepareAnimationForThemeService();
 
             MouseDown += delegate { try { DragMove(); } catch { } };
             this.Closing += MainWindow_Closing;
 
             HeaderContainer.DataContext = new WindowHeaderArgs(Close, Maximized, Minimized);
 
-            _gallery = gallery;
+            _gallery = appCore.GalleryManager;
             InitGallery();
+        }
+
+        private void PrepareAnimationForThemeService()
+        {
+            var themeService = _appCore.Settings.ThemeService;
+
+            _defaultChangeThemeAnimation.Completed += (sender, e) =>
+            {
+                PaintArea.Visibility = Visibility.Hidden;
+            };
+
+            themeService.BeforeAnimations.Add(() =>
+            {
+                PaintArea.Opacity = 1;
+                PaintArea.Visibility = Visibility.Visible;
+                PaintArea.Background = CreateBrushFromVisual(this);
+            });
+
+            themeService.Animations.Add(() =>
+            {
+                PaintArea.BeginAnimation(OpacityProperty, _defaultChangeThemeAnimation);
+                CircleReveal.BeginAnimation(EllipseGeometry.RadiusXProperty, _defaultChangeThemeAnimation);
+                CircleReveal.BeginAnimation(EllipseGeometry.RadiusYProperty, _defaultChangeThemeAnimation);
+            });
+
+            /// 
+            /// Анимации для welcomepage
+            /// 
+
+            var welcomePageChangeThemeAnimation = new DoubleAnimation()
+            {
+                From = 1700,
+                To = 0,
+                Duration = TimeSpan.FromSeconds(0.35 * 4),
+                EasingFunction = new SineEase
+                { EasingMode = EasingMode.EaseInOut }
+            };
+
+            themeService.BeforeAnimationsList["welcome-page"] = () =>
+            {
+                CircleReveal.Center = new Point(309, 261);
+                PaintArea.Opacity = 1;
+                PaintArea.Visibility = Visibility.Visible;
+                PaintArea.Background = CreateBrushFromVisual(this);
+            };
+
+            themeService.AnimationsList["welcome-page"] = (complete) =>
+            {
+                welcomePageChangeThemeAnimation.Completed += (sender, e) => 
+                {
+                    CircleReveal.Center = new Point(101, 22);
+                    complete?.Invoke();
+                };
+                PaintArea.BeginAnimation(OpacityProperty, welcomePageChangeThemeAnimation);
+                CircleReveal.BeginAnimation(EllipseGeometry.RadiusXProperty, welcomePageChangeThemeAnimation);
+                CircleReveal.BeginAnimation(EllipseGeometry.RadiusYProperty, welcomePageChangeThemeAnimation);
+            };
         }
 
         private void InitGallery()
@@ -349,7 +393,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
 
         private void ChangeTheme_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            var themeService = RuntimeApp.Settings.ThemeService;
+            var themeService = _appCore.Settings.ThemeService;
             Theme selectedTheme = null;
             //if (themeService.SelectedTheme.Name == "Open Space")
             //{

@@ -741,4 +741,9 @@
     <s:String x:Key="YourColorColon:">Your color:</s:String>
     <s:String x:Key="MinecraftNotRunning">Minercaft not running.</s:String>
     <s:String x:Key="InstanceDash_">Instance - {0}</s:String>
+    <s:String x:Key="GoToCatalog">Go to Catalog</s:String>
+    <s:String x:Key="LibraryEmpty">Library is empty</s:String>
+
+    <s:String x:Key="WelcomeDescription">Добро пожаловать в новую эру</s:String>
+    <s:String x:Key="WelcomePageThemeSelectDescription">Choose your prefered interface apperarance. You have the option to pick a theme manually or enable automatic theme switching that aligns with your system settings.</s:String>
 </ResourceDictionary>

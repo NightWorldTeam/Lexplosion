@@ -7,9 +7,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
     {
         public AppearanceSettingsModel Model { get; }
 
-        public AppearanceSettingsViewModel()
+        public AppearanceSettingsViewModel(AppCore appCore)
         {
-            Model = new AppearanceSettingsModel();
+            Model = new AppearanceSettingsModel(appCore);
         }
     }
 }

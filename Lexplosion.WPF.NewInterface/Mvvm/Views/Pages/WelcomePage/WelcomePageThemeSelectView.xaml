@@ -162,7 +162,7 @@
                     FontSize="14"
                     FontWeight="Medium"
                     Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
-                    Text="Choose your prefered interface apperarance. You have the option to pick a theme manually or enable automatic theme switching that aligns with your system settings."
+                    Text="{DynamicResource WelcomePageThemeSelectDescription}"
                     TextWrapping="WrapWithOverflow" />
 
                 <!--  Theme List  -->

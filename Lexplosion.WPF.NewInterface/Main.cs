@@ -64,7 +64,6 @@ namespace Lexplosion.WPF.NewInterface
         private static double _splashWindowTop;
 
         //internal static AppColorThemeService AppColorThemeService { get; set; }
-        internal static AppSettings Settings { get; set; }
         internal static AppCore _appCore;
 
         public static HeaderState HeaderState;
@@ -76,12 +75,10 @@ namespace Lexplosion.WPF.NewInterface
         [STAThread]
         static void Main()
         {
-			// Подписываемся на эвент для загрузки всех строенных dll'ников
-			AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
-
-			//SetupTestEnviroment();
-			//return;
-			Settings = new AppSettings();
+            //SetupTestEnviroment();
+            //return;
+            // Подписываемся на эвент для загрузки всех строенных dll'ников
+            AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
 
             _appCore = new AppCore(App.Current.Dispatcher.Invoke, (key) => App.Current.Resources[key]);
 
@@ -90,9 +87,6 @@ namespace Lexplosion.WPF.NewInterface
                 Source = new Uri(ResourcePath + "ThemesRegistry.xaml")
             });
 
-            var s = new Theme("Light Punch", "LightColorTheme.xaml");
-            //_themes.Add(new Theme("Open Space", "DarkColorTheme.xaml"));
-            s.IsSelected = true;
 
             App.Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
@@ -190,7 +184,7 @@ namespace Lexplosion.WPF.NewInterface
                 NavigateAfterWelcomePage(mainViewModel.ToMainMenu);
             }
 
-            var mainWindow = new MainWindow(_appCore.GalleryManager)
+            var mainWindow = new MainWindow(_appCore)
             {
                 Left = App.Current.MainWindow.Left - 322,
                 Top = App.Current.MainWindow.Top - 89,
@@ -214,7 +208,7 @@ namespace Lexplosion.WPF.NewInterface
             App.Current.MainWindow = mainWindow;
         }
 
-        private static void NavigateAfterWelcomePage(ICommand toMainMenu) 
+        private static void NavigateAfterWelcomePage(ICommand toMainMenu)
         {
             if (Account.List.Count() == 0)
             {
@@ -261,6 +255,11 @@ namespace Lexplosion.WPF.NewInterface
             Runtime.OnLexplosionOpened += ShowMainWindow;
 
             Runtime.InitializedSystem((int)_splashWindowLeft, (int)_splashWindowTop);
+
+            _appCore.UIThread.Invoke(() =>
+            {
+                _appCore.Settings = new AppSettings();
+            });
 
             // Выставляем язык
             LoadCurrentLanguage();
@@ -359,12 +358,12 @@ namespace Lexplosion.WPF.NewInterface
                     var code = latestActiveAccount.Auth();
                     if (code != AuthCode.Successfully)
                     {
-						// TODO: тебе тут явно че-то делать надо
+                        // TODO: тебе тут явно че-то делать надо
                     }
-					else
-					{
-						Account.SaveAll();
-					}
+                    else
+                    {
+                        Account.SaveAll();
+                    }
                 }
             });
         }
@@ -415,7 +414,7 @@ namespace Lexplosion.WPF.NewInterface
                     return;
                 }
 
-                App.Current.MainWindow = new MainWindow(_appCore.GalleryManager)
+                App.Current.MainWindow = new MainWindow(_appCore)
                 {
                     Left = _leftPos,
                     Top = _topPos

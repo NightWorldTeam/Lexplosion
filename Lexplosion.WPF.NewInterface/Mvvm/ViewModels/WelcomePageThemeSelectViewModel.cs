@@ -6,6 +6,7 @@ using Lexplosion.WPF.NewInterface.Core.Objects;
 using System.Collections.ObjectModel;
 using System;
 using System.Windows.Input;
+using System.Collections.Generic;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
 {
@@ -15,7 +16,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
         private readonly Action _navigateToAuth;
 
 
-        public ObservableCollection<Theme> Themes { get; } = [];
+        public IEnumerable<Theme> Themes { get; }
 
 
         #region Commands
@@ -36,22 +37,14 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
             _appCore = appCore;
             _navigateToAuth = navigate;
 
-            Themes.Add(new Theme("Light Punch", "LightColorTheme.xaml"));
-            Themes.Add(new Theme("Open Space", "DarkColorTheme.xaml"));
-
-            foreach (var theme in Themes)
-            {
-                theme.SelectedEvent += SelectedThemeChanged;
-            }
-
-            Themes[0].IsSelected = true;
+            Themes = appCore.Settings.ThemeService.Themes;
         }
 
         private void SelectedThemeChanged(Theme theme, bool isSelected)
         {
             if (isSelected)
             {
-                RuntimeApp.Settings.ThemeService.ChangeTheme(theme, false);
+                _appCore.Settings.ThemeService.ChangeTheme(theme, true);
                 GlobalData.GeneralSettings.ThemeName = theme.Name;
                 DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
             }

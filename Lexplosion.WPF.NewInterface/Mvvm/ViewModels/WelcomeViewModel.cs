@@ -1,6 +1,9 @@
 ﻿using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
+using Lexplosion.WPF.NewInterface.Core.Objects;
 using System;
+using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
@@ -17,6 +20,16 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
         }
 
         #region Commands
+
+
+        public void ToDarkTheme() 
+        {
+            var themeService = _appCore.Settings.ThemeService;
+
+            themeService.Themes.First().IsSelected = false;
+            var darkTheme = themeService.Themes.Last();
+            themeService.ChangeTheme(darkTheme, true, ["welcome-page"], () => darkTheme.IsSelected = true);
+        }
 
 
         private RelayCommand _toThemeSelectCommand;

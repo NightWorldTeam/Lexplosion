@@ -129,7 +129,7 @@ namespace Lexplosion.WPF.NewInterface.Core
         /// <summary>
         /// Настройки приложения
         /// </summary>
-        public AppSettings Settings { get; }
+        public AppSettings Settings { get; set; }
         /// <summary>
         /// Диалог сервис
         /// </summary>

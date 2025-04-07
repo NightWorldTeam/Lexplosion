@@ -344,16 +344,6 @@
                 </ItemsControl>
             </Grid>
 
-            <!--  Circle Animation Block  -->
-            <Grid x:Name="PaintArea">
-                <Grid.RenderTransform>
-                    <TranslateTransform X="0" Y="0" />
-                </Grid.RenderTransform>
-                <Grid.Clip>
-                    <EllipseGeometry x:Name="CircleReveal" Center="101,22" />
-                </Grid.Clip>
-            </Grid>
-
             <!--  Image Overview  -->
 
             <Border x:Name="ImageViewer" Padding="16">
@@ -408,6 +398,16 @@
                     </Border>
                 </Grid>
             </Border>
+
+            <!--  Circle Animation Block  -->
+            <Grid x:Name="PaintArea">
+                <Grid.RenderTransform>
+                    <TranslateTransform X="0" Y="0" />
+                </Grid.RenderTransform>
+                <Grid.Clip>
+                    <EllipseGeometry x:Name="CircleReveal" Center="101,22" />
+                </Grid.Clip>
+            </Grid>
         </Grid>
     </Grid>
 </Window>
