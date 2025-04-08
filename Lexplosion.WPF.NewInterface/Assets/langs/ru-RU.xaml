@@ -708,8 +708,8 @@
     <s:String x:Key="MinecraftArguments">Аргументы для Minecraft</s:String>
     <s:String x:Key="MinecraftArgumentsDescription">Позволяет более гибко настроить параметры игры</s:String>
 
-    <s:String x:Key="NightWorldClient">Использовать NWClient</s:String>
-    <s:String x:Key="NightWorldClientDescription">Включает косметику и прочие функции NW</s:String>
+    <s:String x:Key="NightWorldClient">Использовать NWClient по умолчанию</s:String>
+    <s:String x:Key="NightWorldClientDescription">Включает косметику и прочие функции NightWorld</s:String>
 
     <s:String x:Key="GamePathEmptyOrHasInvalidChars">Путь до папки пустой или содержит запрещенные символы: {0}</s:String>
 

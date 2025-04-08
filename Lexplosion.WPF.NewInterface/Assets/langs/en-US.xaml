@@ -629,8 +629,8 @@
     <s:String x:Key="MinecraftArguments">Minecraft arguments</s:String>
     <s:String x:Key="MinecraftArgumentsDescription">Allows you to customize game parameters more flexibly</s:String>
 
-    <s:String x:Key="NightWorldClient">NightWorld Client</s:String>
-    <s:String x:Key="NightWorldClientDescription">Enable cosmetic and other NW feature</s:String>
+    <s:String x:Key="NightWorldClient">NightWorld Client by default</s:String>
+    <s:String x:Key="NightWorldClientDescription">Enable cosmetic and other NightWorld feature</s:String>
 
     <s:String x:Key="GamePathEmptyOrHasInvalidChars">The path to the folder is empty or contains illegal characters: {0}</s:String>
 
