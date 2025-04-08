@@ -3,7 +3,7 @@ using System.Threading;
 
 namespace Lexplosion.Tools
 {
-    class KeySemaphore<T>
+    public class KeySemaphore<T>
     {
         private class SemophoreData
         {

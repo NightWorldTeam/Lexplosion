@@ -79,11 +79,12 @@ namespace Lexplosion.Logic.Network.Services
 
 			try
 			{
-				string answer = ToServer.HttpGet(LaunсherSettings.URL.VersionsData + gameVersion + modloader);
+				string url = LaunсherSettings.URL.VersionsData + gameVersion + modloader;
+				string answer = ToServer.HttpGet(url);
 				if (answer != null)
 				{
 					List<string> data = JsonConvert.DeserializeObject<List<string>>(answer);
-					Runtime.DebugWrite("Return " + modloaderType + ", Count: " + data.Count);
+					Runtime.DebugWrite($"Return {gameVersion} {modloaderType}, Count: {data.Count}");
 					return data ?? new List<string>();
 				}
 				else
