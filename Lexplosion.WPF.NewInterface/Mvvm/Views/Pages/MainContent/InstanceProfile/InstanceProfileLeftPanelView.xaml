@@ -302,106 +302,119 @@
 
                             <core:If Condition="{Binding InstanceModel.IsInstalled, UpdateSourceTrigger=PropertyChanged}">
                                 <core:If.True>
-                                    <Grid>
-                                        <controls:AdvancedButton
-                                            x:Name="PlayButton"
-                                            Command="{Binding PlayCommand}"
-                                            FontSize="12"
-                                            IconData="{StaticResource PDPlay}"
-                                            IsLoading="{Binding InstanceModel.IsLaunching}"
-                                            LoadingText="{DynamicResource GameLaunching}"
-                                            Style="{StaticResource sm-default}"
-                                            Text="{DynamicResource Play}" />
+                                    <core:If Condition="{Binding InstanceModel.IsLaunched}">
+                                        <core:If.True>
+                                            <controls:AdvancedButton
+                                                x:Name="CloseButton"
+                                                Command="{Binding CloseCommand}"
+                                                FontSize="12"
+                                                IconData="{StaticResource PDCancel}"
+                                                Style="{StaticResource sm-default}"
+                                                Text="{DynamicResource Close}" />
+                                        </core:If.True>
+                                        <core:If.False>
+                                            <Grid>
+                                                <controls:AdvancedButton
+                                                    x:Name="PlayButton"
+                                                    Command="{Binding PlayCommand}"
+                                                    FontSize="12"
+                                                    IconData="{StaticResource PDPlay}"
+                                                    IsLoading="{Binding InstanceModel.IsLaunching}"
+                                                    LoadingText="{DynamicResource GameLaunching}"
+                                                    Style="{StaticResource sm-default}"
+                                                    Text="{DynamicResource Play}" />
 
-                                        <Popup
-                                            Width="{Binding ActualWidth, Source={x:Reference PlayButton}}"
-                                            MinWidth="200"
-                                            AllowsTransparency="True"
-                                            Placement="Right"
-                                            PlacementRectangle="0,-130,0,0"
-                                            PlacementTarget="{Binding Source={x:Reference PlayButton}}"
-                                            PopupAnimation="Fade">
+                                                <Popup
+                                                    Width="{Binding ActualWidth, Source={x:Reference PlayButton}}"
+                                                    MinWidth="200"
+                                                    AllowsTransparency="True"
+                                                    Placement="Right"
+                                                    PlacementRectangle="0,-130,0,0"
+                                                    PlacementTarget="{Binding Source={x:Reference PlayButton}}"
+                                                    PopupAnimation="Fade">
 
-                                            <Popup.Style>
-                                                <Style TargetType="Popup">
-                                                    <Setter Property="IsOpen" Value="False" />
-                                                    <Style.Triggers>
-                                                        <!--  Триггер, который открывает Popup, если IsLoading=True и курсор на кнопке  -->
-                                                        <MultiDataTrigger>
-                                                            <MultiDataTrigger.Conditions>
-                                                                <!--  Условие 1: IsLoading = True  -->
-                                                                <Condition Binding="{Binding InstanceModel.IsLaunching, UpdateSourceTrigger=PropertyChanged}" Value="True" />
-                                                                <Condition Binding="{Binding InstanceModel.IsDownloading, UpdateSourceTrigger=PropertyChanged}" Value="True" />
-                                                                <!--  Условие 2: Кнопка под курсором  -->
-                                                                <Condition Binding="{Binding IsMouseOver, Source={x:Reference PlayButton}}" Value="True" />
-                                                            </MultiDataTrigger.Conditions>
-                                                            <Setter Property="IsOpen" Value="True" />
-                                                        </MultiDataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </Popup.Style>
+                                                    <Popup.Style>
+                                                        <Style TargetType="Popup">
+                                                            <Setter Property="IsOpen" Value="False" />
+                                                            <Style.Triggers>
+                                                                <!--  Триггер, который открывает Popup, если IsLoading=True и курсор на кнопке  -->
+                                                                <MultiDataTrigger>
+                                                                    <MultiDataTrigger.Conditions>
+                                                                        <!--  Условие 1: IsLoading = True  -->
+                                                                        <Condition Binding="{Binding InstanceModel.IsLaunching, UpdateSourceTrigger=PropertyChanged}" Value="True" />
+                                                                        <Condition Binding="{Binding InstanceModel.IsDownloading, UpdateSourceTrigger=PropertyChanged}" Value="True" />
+                                                                        <!--  Условие 2: Кнопка под курсором  -->
+                                                                        <Condition Binding="{Binding IsMouseOver, Source={x:Reference PlayButton}}" Value="True" />
+                                                                    </MultiDataTrigger.Conditions>
+                                                                    <Setter Property="IsOpen" Value="True" />
+                                                                </MultiDataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Popup.Style>
 
-                                            <Border
-                                                Padding="8,8"
-                                                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                                                BorderThickness="1"
-                                                CornerRadius="5">
+                                                    <Border
+                                                        Padding="8,8"
+                                                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                                        BorderThickness="1"
+                                                        CornerRadius="5">
 
-                                                <Border.Background>
-                                                    <SolidColorBrush Opacity="1" Color="{DynamicResource PrimaryColor}" />
-                                                </Border.Background>
+                                                        <Border.Background>
+                                                            <SolidColorBrush Opacity="1" Color="{DynamicResource PrimaryColor}" />
+                                                        </Border.Background>
 
-                                                <StackPanel>
-                                                    <TextBlock
-                                                        MaxWidth="200"
-                                                        Margin="0,0,0,4"
-                                                        HorizontalAlignment="Left"
-                                                        FontSize="14"
-                                                        TextWrapping="WrapWithOverflow">
-                                                        <Run Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="{DynamicResource ProcessColon}" />
-                                                        <Run Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" Text="{DynamicResource UpdatingFiles}" />
-                                                    </TextBlock>
-                                                    <TextBlock
-                                                        Margin="0,0,0,4"
-                                                        HorizontalAlignment="Left"
-                                                        FontSize="14"
-                                                        Foreground="White">
-                                                        <Run Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="{DynamicResource StageColon}" />
-                                                        <Run Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}">
-                                                            <Run.Text>
-                                                                <MultiBinding StringFormat="{}{0}/{1}">
-                                                                    <Binding Path="DownloadingData.CurrentStage" />
-                                                                    <Binding Path="DownloadingData.TotalStages" />
-                                                                </MultiBinding>
-                                                            </Run.Text>
-                                                        </Run>
-                                                    </TextBlock>
-                                                    <TextBlock
-                                                        Margin="0,0,0,4"
-                                                        HorizontalAlignment="Left"
-                                                        FontSize="14"
-                                                        Foreground="White">
-                                                        <Run Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="{DynamicResource FilesColon:}" />
-                                                        <Run Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}">
-                                                            <Run.Text>
-                                                                <MultiBinding StringFormat="{}{0}/{1}">
-                                                                    <Binding Path="DownloadingData.FilesCounts" />
-                                                                    <Binding Path="DownloadingData.TotalFiles" />
-                                                                </MultiBinding>
-                                                            </Run.Text>
-                                                        </Run>
-                                                    </TextBlock>
-                                                    <TextBlock
-                                                        HorizontalAlignment="Left"
-                                                        FontSize="14"
-                                                        Foreground="White">
-                                                        <Run Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="{DynamicResource TotalDonwloadedColon}" />
-                                                        <Run Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" Text="{Binding DownloadingData.Percentages, Mode=OneWay, StringFormat='{}{0}%'}" />
-                                                    </TextBlock>
-                                                </StackPanel>
-                                            </Border>
-                                        </Popup>
-                                    </Grid>
+                                                        <StackPanel>
+                                                            <TextBlock
+                                                                MaxWidth="200"
+                                                                Margin="0,0,0,4"
+                                                                HorizontalAlignment="Left"
+                                                                FontSize="14"
+                                                                TextWrapping="WrapWithOverflow">
+                                                                <Run Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="{DynamicResource ProcessColon}" />
+                                                                <Run Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" Text="{DynamicResource UpdatingFiles}" />
+                                                            </TextBlock>
+                                                            <TextBlock
+                                                                Margin="0,0,0,4"
+                                                                HorizontalAlignment="Left"
+                                                                FontSize="14"
+                                                                Foreground="White">
+                                                                <Run Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="{DynamicResource StageColon}" />
+                                                                <Run Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}">
+                                                                    <Run.Text>
+                                                                        <MultiBinding StringFormat="{}{0}/{1}">
+                                                                            <Binding Path="DownloadingData.CurrentStage" />
+                                                                            <Binding Path="DownloadingData.TotalStages" />
+                                                                        </MultiBinding>
+                                                                    </Run.Text>
+                                                                </Run>
+                                                            </TextBlock>
+                                                            <TextBlock
+                                                                Margin="0,0,0,4"
+                                                                HorizontalAlignment="Left"
+                                                                FontSize="14"
+                                                                Foreground="White">
+                                                                <Run Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="{DynamicResource FilesColon:}" />
+                                                                <Run Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}">
+                                                                    <Run.Text>
+                                                                        <MultiBinding StringFormat="{}{0}/{1}">
+                                                                            <Binding Path="DownloadingData.FilesCounts" />
+                                                                            <Binding Path="DownloadingData.TotalFiles" />
+                                                                        </MultiBinding>
+                                                                    </Run.Text>
+                                                                </Run>
+                                                            </TextBlock>
+                                                            <TextBlock
+                                                                HorizontalAlignment="Left"
+                                                                FontSize="14"
+                                                                Foreground="White">
+                                                                <Run Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="{DynamicResource TotalDonwloadedColon}" />
+                                                                <Run Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" Text="{Binding DownloadingData.Percentages, Mode=OneWay, StringFormat='{}{0}%'}" />
+                                                            </TextBlock>
+                                                        </StackPanel>
+                                                    </Border>
+                                                </Popup>
+                                            </Grid>
+                                        </core:If.False>
+                                    </core:If>
                                 </core:If.True>
                                 <core:If.False>
                                     <Grid>

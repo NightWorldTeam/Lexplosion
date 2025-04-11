@@ -24,7 +24,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             : base(name, converter == null ? value.ToString() : converter(value))
         { }
 
-        public InstanceFieldInfo(string name, Func<object> loadValue): base(name, loadValue)
+        public InstanceFieldInfo(string name, Func<object> loadValue) : base(name, loadValue)
         { }
     }
 
@@ -79,13 +79,25 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
 
         private RelayCommand _playCommand;
         /// <summary>
-        /// Устанавливает клиент, если клиент требуется докачать, докачивает.
+        /// Запускает клиент, если клиент требуется докачать, докачивает.
         /// </summary>
         public ICommand PlayCommand
         {
             get => RelayCommand.GetCommand(ref _playCommand, () =>
             {
                 _instanceModel.Run();
+            });
+        }
+
+        private RelayCommand _closeCommand;
+        /// <summary>
+        /// Запускает клиент.
+        /// </summary>
+        public ICommand CloseCommand
+        {
+            get => RelayCommand.GetCommand(ref _closeCommand, () =>
+            {
+                _instanceModel.Close();
             });
         }
 
@@ -189,8 +201,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
                 }
                 else
                 {
-                    _additionalInfo.Add(new InstanceFieldInfo<long>("DownloadCount:", () => 
-                    { 
+                    _additionalInfo.Add(new InstanceFieldInfo<long>("DownloadCount:", () =>
+                    {
                         additionalInfo = _instanceModel.AdditionalData;
                         return DownloadsCountToString(additionalInfo.TotalDownloads);
                     }));
