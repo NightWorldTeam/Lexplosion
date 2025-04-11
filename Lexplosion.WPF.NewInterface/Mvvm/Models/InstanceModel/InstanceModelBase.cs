@@ -265,7 +265,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 
         private bool _isLaunched;
         /// <summary>
-        /// Запущена ли игра.
+        /// Запущена ли игра. TODO: Replace to "IsRunning"
         /// </summary>
         public bool IsLaunched
         {
