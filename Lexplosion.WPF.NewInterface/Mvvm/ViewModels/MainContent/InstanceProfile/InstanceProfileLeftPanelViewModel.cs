@@ -143,24 +143,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             _instanceModel.StateChanged += OnStateChanged;
             _instanceModel.DownloadProgressChanged += OnDownloadProgressChanged;
 
-            _instanceModel.DownloadComplited += OnDownloadComplited;
-
             //_instanceModel.DataChanged += OnInstanceModelDataChanged;
 
 
             GenerateAdditionalInfo();
-        }
-
-        private void OnDownloadComplited(InstanceInit instanceInit, IEnumerable<string> arg2, bool isLaunching)
-        {
-            if (instanceInit == InstanceInit.Successful)
-            {
-                _appCore.MessageService.Success("Instance_HasBeenInstalledSuccessful", true, _instanceModel.Name);
-            }
-            else
-            {
-                _appCore.MessageService.Error("FailedToInstallColon_", true, _instanceModel.Name);
-            }
         }
 
         private void OnDownloadProgressChanged(StageType type, ProgressHandlerArguments progressArgs)
