@@ -29,7 +29,6 @@
         <DataTemplate DataType="{x:Type objects:LeftPanelMenuItem}">
             <Border>
                 <controls:DefaultMainMenuTabItem
-                    GroupName="LeftPanelMainMenuItem"
                     IconHeight="{Binding IconHeight}"
                     IconKey="{Binding Icon}"
                     IconWidth="{Binding IconWidth}"

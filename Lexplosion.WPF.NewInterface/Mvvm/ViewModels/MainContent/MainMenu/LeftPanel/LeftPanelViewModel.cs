@@ -32,6 +32,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         {
             get => _selectedItem; set
             {
+                if (_selectedItem != null && _selectedItem != value) 
+                {
+                    _selectedItem.IsSelected = false;
+                }
                 _selectedItem = value;
                 SelectedItemChanged?.Invoke(value.Content);
                 OnPropertyChanged();
