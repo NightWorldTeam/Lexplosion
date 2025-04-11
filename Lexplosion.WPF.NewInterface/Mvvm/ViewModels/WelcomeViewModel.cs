@@ -27,7 +27,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
             var themeService = _appCore.Settings.ThemeService;
 
             themeService.Themes.First().IsSelected = false;
-            var darkTheme = themeService.Themes.Last();
+            var darkTheme = themeService.Themes.Single(x => x.Name == "Open Space");
             darkTheme.HasChangeAnimation = false;
             themeService.ChangeTheme(darkTheme, true, ["welcome-page"], () =>
             {

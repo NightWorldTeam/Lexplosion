@@ -58,11 +58,12 @@ namespace Lexplosion.WPF.NewInterface.Core.Services
 
 
         public void LoadDefaultTheme()
-        {
-            _themes.Add(new Theme("Light Punch", "LightColorTheme.xaml"));
-            _themes.Add(new Theme("Open Space", "DarkColorTheme.xaml"));
+        {       
+			_themes.Add(new Theme("Light Punch", "LightColorTheme.xaml"));
+			_themes.Add(new Theme("Open Space", "DarkColorTheme.xaml"));
+			_themes.Add(new Theme("Old Lexplosion", "BrownColorTheme.xaml"));
 
-            foreach (var theme in _themes)
+			foreach (var theme in _themes)
             {
                 theme.SelectedEvent += SelectedThemeChanged;
                 //Runtime.DebugWrite(theme.Name + " >>> " + GlobalData.GeneralSettings.ThemeName, color: System.ConsoleColor.Red);
