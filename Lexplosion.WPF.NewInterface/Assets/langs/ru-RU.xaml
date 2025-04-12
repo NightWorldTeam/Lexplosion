@@ -277,7 +277,7 @@
     <!--  Instance Profile Configuration  -->
     <!--    -->
     <s:String x:Key="GameType">Тип игры</s:String>
-    <s:String x:Key="GameTypeDescription">Ванилла или модлоадер.</s:String>
+    <s:String x:Key="GameTypeDescription">Ванила/модлоадер</s:String>
 
     <s:String x:Key="VersionDescription">Версия описание.</s:String>
 
