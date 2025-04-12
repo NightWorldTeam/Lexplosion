@@ -523,7 +523,7 @@ namespace Lexplosion.Logic.Management.Addons
                 AddonType.Mods => GetInstalledMods(),
                 AddonType.Maps => GetInstalledWorlds(),
                 AddonType.Resourcepacks => GetInstalledResourcepacks(),
-                AddonType.Shaders => new(),
+                AddonType.Shaders => GetInstalledShaders(),
                 _ => throw new ArgumentException("Ты еблан блять?")
             };
         }
@@ -1023,9 +1023,23 @@ namespace Lexplosion.Logic.Management.Addons
             return addons;
         }
 
-        /// <summary>
-        /// Очищает сохранённый список аддонов. Нужно вызывать при закрытии каталога чтобы очистить память.
-        /// </summary>
-        public void ClearAddonsListCache() => _synchronizer.ClearAddonsListCache();
+		public List<InstanceAddon> GetInstalledShaders()
+		{
+			IternalAddonInfoGetter addonInfo = delegate (string fileAddr, out string displayName, out string authors, out string version, out string description, out string modId)
+			{
+				displayName = UNKNOWN_NAME;
+				authors = "";
+				version = "";
+				description = "";
+				modId = "";
+			};
+
+			return InstalledAddonsHandle(AddonType.Shaders, "shaderpacks", ".zip", addonInfo);
+		}
+
+		/// <summary>
+		/// Очищает сохранённый список аддонов. Нужно вызывать при закрытии каталога чтобы очистить память.
+		/// </summary>
+		public void ClearAddonsListCache() => _synchronizer.ClearAddonsListCache();
     }
 }
