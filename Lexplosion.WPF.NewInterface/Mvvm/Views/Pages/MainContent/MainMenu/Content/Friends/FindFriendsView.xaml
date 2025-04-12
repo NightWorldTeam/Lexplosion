@@ -299,7 +299,7 @@
                 Grid.Row="2"
                 CurrentPageIndex="{Binding Model.CurrentPageIndex}"
                 NextCommand="{Binding MoveNextPageCommand}"
-                PageCount="100"
+                PageCount="{Binding Model.PageCount}"
                 PrevCommand="{Binding MovePrevPageCommand}" />
         </Grid>
 
