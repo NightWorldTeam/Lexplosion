@@ -230,7 +230,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
 		/// </summary>
 		public InstanceClient CreateInstance()
 		{
-			var instanceName = InstanceName.Trim();
+			var instanceName = InstanceName?.Trim();
 			if (string.IsNullOrWhiteSpace(instanceName)) instanceName = $"{Version.ToString()} {ClientType}";
 
 			return InstanceClient.CreateClient(
