@@ -44,8 +44,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
             LogsContainer.ItemsSource = Logs;
             Logs.CollectionChanged += Logs_CollectionChanged;
             LogsContainer.SelectionChanged += LogsContainer_SelectionChanged;
-
-            HeaderContainer1.DataContext = new WindowHeaderArgs(OnClosed, Maximized, Minimized);
         }
 
 
