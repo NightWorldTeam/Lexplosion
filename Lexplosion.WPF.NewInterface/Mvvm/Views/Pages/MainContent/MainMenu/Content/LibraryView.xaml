@@ -408,7 +408,7 @@
                         VirtualizingPanel.ScrollUnit="Pixel">
                         <ListBox.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <controls1:VirtualizingWrapPanel Margin="0,0,41,0" VirtualizingPanel.VirtualizationMode="Recycling" />
+                                <controls1:VirtualizingWrapPanel Margin="0,0,41,0" VirtualizingPanel.VirtualizationMode="Recycling" ScrollViewer.CanContentScroll="True" />
                             </ItemsPanelTemplate>
                         </ListBox.ItemsPanel>
                     </ListBox>

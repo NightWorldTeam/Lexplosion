@@ -94,8 +94,8 @@ namespace Lexplosion.WPF.NewInterface
             thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
 
-            App.Current.Run(_splashWindow);
-        }
+			App.Current.Run(_splashWindow);
+		}
 
         private static void SetupTestEnviroment()
         {

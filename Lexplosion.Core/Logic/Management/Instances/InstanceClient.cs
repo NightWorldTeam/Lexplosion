@@ -259,6 +259,8 @@ namespace Lexplosion.Logic.Management.Instances
 			}
 		}
 
+		public static int InstancesCount { get => _installedInstances.Count; }
+
 		public bool IsSharing { get; private set; } = false;
 
 		public bool IsInstalled { get; private set; } = false;
