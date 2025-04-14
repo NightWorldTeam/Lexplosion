@@ -129,7 +129,7 @@ namespace Lexplosion.Logic.Network
             try
             {
                 //присоединяемся к мультикасту для Loopback адаптера
-                var optionValue = new MulticastOption(IPAddress.Parse("224.0.2.60"), NetworkInterface.LoopbackInterfaceIndex);
+                var optionValue = new MulticastOption(IPAddress.Parse("224.0.2.60"));
                 client.Client.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, optionValue);
             }
             catch (Exception ex)
