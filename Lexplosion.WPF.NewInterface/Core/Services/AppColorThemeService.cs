@@ -82,6 +82,13 @@ namespace Lexplosion.WPF.NewInterface.Core.Services
         {
             _colors.Add(new ActivityColor("#167ffc"));
             _colors.Add(new ActivityColor("#A020F0"));
+            _colors.Add(new ActivityColor("#ff7601"));
+            _colors.Add(new ActivityColor("#CD0074"));
+            _colors.Add(new ActivityColor("#1bd96a"));
+            _colors.Add(new ActivityColor("#5a10ea"));
+            _colors.Add(new ActivityColor("#ebbe11"));
+            _colors.Add(new ActivityColor("#547d96"));
+            _colors.Add(new ActivityColor("#f066db"));
 
             foreach (var color in _colors)
             {
@@ -304,8 +311,6 @@ namespace Lexplosion.WPF.NewInterface.Core.Services
 
             _selectedThemeResourceDictionary["BrandColorForegroundColor"] = foregroundColor;
             _selectedThemeResourceDictionary["BrandColorForegroundSolidColorBrush"] = new SolidColorBrush(foregroundColor);
-
-
         }
     }
 }

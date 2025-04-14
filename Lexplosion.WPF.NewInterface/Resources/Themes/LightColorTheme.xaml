@@ -553,5 +553,8 @@
 
 
     <!--  endregion Instances Filter  -->
-
+    <SolidColorBrush
+        x:Key="NightWorldWelcomePageWordColor"
+        x:Shared="False"
+        Color="#2e2e2e" />
 </ResourceDictionary>

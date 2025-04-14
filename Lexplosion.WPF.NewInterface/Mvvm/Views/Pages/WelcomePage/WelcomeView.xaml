@@ -21,9 +21,10 @@
                 <Border
                     x:Name="Logo"
                     Width="64"
-                    Height="64" MouseDown="Logo_MouseDown"
+                    Height="64"
                     Margin="0,10,16,0"
                     VerticalAlignment="Center"
+                    MouseDown="Logo_MouseDown"
                     Opacity="0">
                     <Border.Background>
                         <ImageBrush ImageSource="/Assets/images/icons/logo.ico" />
@@ -51,7 +52,7 @@
                 <Run Text="{DynamicResource WelcomeDescription}" />
                 <Run
                     FontWeight="Medium"
-                    Foreground="#2e2e2e"
+                    Foreground="{DynamicResource NightWorldWelcomePageWordColor}"
                     Text="NightWorld" />
             </TextBlock>
         </StackPanel>

@@ -558,4 +558,6 @@
 
 
     <!--  endregion Instances Filter  -->
+
+    <SolidColorBrush x:Key="NightWorldWelcomePageWordColor" Color="#4f5af7" />
 </ResourceDictionary>
