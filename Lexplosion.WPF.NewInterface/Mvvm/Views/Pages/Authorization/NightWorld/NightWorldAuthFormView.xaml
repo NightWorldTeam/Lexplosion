@@ -152,7 +152,8 @@
                             <WrapPanel
                                 Grid.Row="3"
                                 Margin="0,16,0,0"
-                                HorizontalAlignment="Center">
+                                HorizontalAlignment="Center"
+                                Visibility="Collapsed">
                                 <TextBlock Margin="4,0,0,0">
                                     <Run Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="{DynamicResource DoNothaveAnyAccount}" />
                                     <Hyperlink Command="{Binding ToRegistrationCommand}">

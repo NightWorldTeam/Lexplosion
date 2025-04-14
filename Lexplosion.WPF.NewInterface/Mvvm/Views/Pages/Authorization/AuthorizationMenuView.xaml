@@ -183,7 +183,8 @@
             <WrapPanel
                 Grid.Row="3"
                 Margin="0,16,0,0"
-                HorizontalAlignment="Center">
+                HorizontalAlignment="Center"
+                Visibility="Collapsed">
                 <TextBlock
                     FontSize="13"
                     Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
