@@ -17,14 +17,16 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
         public event Action<InstanceModelBase> InstanceRemoved;
 
         private readonly AppCore _appCore;
+        private readonly Action<InstanceClient> _exportFunc;
+        private readonly Action<InstanceModelBase> _setRunningGame;
+
         private ObservableCollection<InstanceModelBase> _instances = new ObservableCollection<InstanceModelBase>();
-        private Action<InstanceClient> _exportFunc;
 
 
 
         #region Properties
 
-        
+
         public IReadOnlyCollection<InstanceModelBase> Instances { get => _instances; }
 
 
@@ -34,7 +36,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
         #region Constructors
 
 
-        public CatalogController(AppCore appCore, Action<InstanceClient> exportFunc)
+        public CatalogController(AppCore appCore, Action<InstanceClient> exportFunc, Action<InstanceModelBase> setRunningGame)
         {
             _appCore = appCore;
 
@@ -43,6 +45,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
             //InstanceModelBase.GlobalDeletedEvent += Remove;
 
             _exportFunc = exportFunc;
+            _setRunningGame = setRunningGame;
         }
 
 
@@ -67,7 +70,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
             Runtime.DebugWrite($"{member} {instanceClient.Name}");
             App.Current.Dispatcher.Invoke(() =>
             {
-                instanceModelBase = new InstanceModelBase(_appCore, instanceClient, _exportFunc);
+                instanceModelBase = new InstanceModelBase(_appCore, instanceClient, _exportFunc, _setRunningGame);
                 _instances.Add(instanceModelBase);
             });
 

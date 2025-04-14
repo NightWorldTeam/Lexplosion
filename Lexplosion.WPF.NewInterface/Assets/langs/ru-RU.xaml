@@ -81,7 +81,7 @@
     <s:String x:Key="ViaRepeater">Через Ретранслятор</s:String>
     <s:String x:Key="ConnectedPlayers">Подключенные игроки</s:String>
     <s:String x:Key="NoConnectedPlayers">Отсутствуют подключенные игроки</s:String>
-    <s:String x:Key="ReloadMutlplayer">Перезагрузить сетевую игру</s:String>
+    <s:String x:Key="ReloadMultiplayer">Перезагрузить сетевую игру</s:String>
 
     <!--  Status  -->
     <s:String x:Key="StatusNone">Нет открытых миров</s:String>
@@ -854,4 +854,11 @@
 
     <s:String x:Key="WelcomeDescription">Добро пожаловать в новую эру</s:String>
     <s:String x:Key="WelcomePageThemeSelectDescription">Выберите предпочитаемый вами внешний вид интерфейса.</s:String>
+
+    <!--  Tray  -->
+    <s:String x:Key="ContactSupport">Связаться с поддержкой</s:String>
+    <s:String x:Key="TrayHideLauncher">Скрыть лаунчер</s:String>
+    <s:String x:Key="TrayReloadMultiplayer">Перезапустить сетевую игру</s:String>
+    <s:String x:Key="MaximizeLauncher">Показать лаунчер</s:String>
+    <s:String x:Key="CloseInstance">Закрыть сборку</s:String>
 </ResourceDictionary>

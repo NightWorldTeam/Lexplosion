@@ -167,10 +167,10 @@
                         Visibility="{Binding Model.AddonsList.Count, Converter={converters:CountToVisibilityConverter}}" />
 
                     <controls:Empty
-                        Grid.ColumnSpan="2"
-                        VerticalAlignment="Center"
+                        Grid.RowSpan="2"
+                        VerticalAlignment="Stretch"
                         CollectionCount="{Binding Model.AddonsList.Count}"
-                        Description="Не удалось загрузить аддоны" />
+                        Description="{DynamicResource WeDidNotFindAnythingForThisRequest}" />
                 </Grid>
             </core:If.False>
         </core:If>

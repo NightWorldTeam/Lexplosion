@@ -746,4 +746,12 @@
 
     <s:String x:Key="WelcomeDescription">Добро пожаловать в новую эру</s:String>
     <s:String x:Key="WelcomePageThemeSelectDescription">Choose your prefered interface apperarance. You have the option to pick a theme manually or enable automatic theme switching that aligns with your system settings.</s:String>
+
+
+    <!--  Tray  -->
+    <s:String x:Key="ContactSupport">Contact Support</s:String>
+    <s:String x:Key="TrayHideLauncher">Hide Launcher</s:String>
+    <s:String x:Key="TrayReloadMultiplayer">Reload multiplayer</s:String>
+    <s:String x:Key="MaximizeLauncher">Maximize Launcher</s:String>
+    <s:String x:Key="CloseInstance">Close Instance</s:String>
 </ResourceDictionary>

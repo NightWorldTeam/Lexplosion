@@ -7,7 +7,6 @@ using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.Tools;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Notifications;
-using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Extensions;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSettings;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Settings;
@@ -27,6 +26,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace Lexplosion.WPF.NewInterface
 {
@@ -37,14 +37,6 @@ namespace Lexplosion.WPF.NewInterface
         Top,
     }
 
-    /*    public class NotificationManager : INotificationManager
-        {
-            public void Show(INotification notifiable)
-            {
-                RuntimeApp.Notification.Add(notifiable);
-            }
-        }*/
-
     internal static class RuntimeApp
     {
         internal const string ResourcePath = "pack://application:,,,/Resources/";
@@ -52,8 +44,6 @@ namespace Lexplosion.WPF.NewInterface
         internal const string ControlsPath = "pack://application:,,,/Controls/";
 
         internal static event Action MainWindowShowed;
-
-        private static event Action ResourceDictionariesLoaded;
 
         private static App _app = new App();
 
@@ -63,12 +53,13 @@ namespace Lexplosion.WPF.NewInterface
         private static SplashWindow _splashWindow;
         private static double _splashWindowLeft;
         private static double _splashWindowTop;
-
-        //internal static AppColorThemeService AppColorThemeService { get; set; }
-        internal static AppCore _appCore;
+        private static TaskbarIcon _nofityIcon;
 
         public static HeaderState HeaderState;
+        public static event Action TrayMenuElementClicked;
+        public static event Action TrayContextMenuOpened;
 
+        internal static AppCore _appCore;
         internal static string[] ResourceNames;
 
         public static ICollection<INotification> Notification = new ObservableCollection<INotification>();
@@ -97,12 +88,7 @@ namespace Lexplosion.WPF.NewInterface
             _splashWindowLeft = _splashWindow.Left;
             _splashWindowTop = _splashWindow.Top;
 
-            ResourceDictionariesLoaded += SetMainWindow;
-
             _app.ShutdownMode = ShutdownMode.OnExplicitShutdown;
-
-            //ResourcesDictionariesRegister();
-            //SetMainWindow();
 
             Thread thread = new Thread(InitializedSystem);
             thread.SetApartmentState(ApartmentState.STA);
@@ -158,12 +144,11 @@ namespace Lexplosion.WPF.NewInterface
             App.Current.Resources["SettingBetweenShowDelay"] = value;
         }
 
-        private static TaskbarIcon _nofityIcon;
-        private static void SetMainWindow()
+        private static void SetMainWindow(bool firstLaunch = false)
         {
             ResourceNames = GetResourceNames();
 
-            _nofityIcon = (TaskbarIcon)App.Current.FindResource("NofityIcon");
+            App.Current.MainWindow.Topmost = true;
 
             // инициализируем mainViewModel.
             MainViewModel mainViewModel;
@@ -173,16 +158,20 @@ namespace Lexplosion.WPF.NewInterface
                 App.Current.Resources["MainViewModel"] = mainViewModel;
             }
 
+
             ViewModelBase viewmodel = mainViewModel;
 
-            bool firstLaunch = Runtime.IsFirtsLaunch;
             if (firstLaunch)
             {
-                viewmodel = GetWelcomeViewModel(() => NavigateAfterWelcomePage(mainViewModel.ToMainMenu));
-            }
-            else
-            {
-                NavigateAfterWelcomePage(mainViewModel.ToMainMenu);
+                bool newUser = Runtime.IsFirtsLaunch;
+                if (newUser)
+                {
+                    viewmodel = GetWelcomeViewModel(() => NavigateAfterWelcomePage(mainViewModel.ToMainMenu));
+                }
+                else
+                {
+                    NavigateAfterWelcomePage(mainViewModel.ToMainMenu);
+                }
             }
 
             var mainWindow = new MainWindow(_appCore)
@@ -192,14 +181,17 @@ namespace Lexplosion.WPF.NewInterface
                 DataContext = viewmodel,
             };
 
-            Account.AccountDeleted += (account) =>
+            if (firstLaunch)
             {
-                if (Account.ListCount == 0)
+                Account.AccountDeleted += (account) =>
                 {
-                    mainWindow.DataContext = null;
-                    mainWindow.DataContext = GetAuthorizationViewModel(mainViewModel.ToMainMenu);
-                }
-            };
+                    if (Account.ListCount == 0)
+                    {
+                        mainWindow.DataContext = null;
+                        mainWindow.DataContext = GetAuthorizationViewModel(mainViewModel.ToMainMenu);
+                    }
+                };
+            }
 
             _leftPos = mainWindow.Left;
             _topPos = mainWindow.Top;
@@ -207,6 +199,7 @@ namespace Lexplosion.WPF.NewInterface
             (App.Current.MainWindow as SplashWindow).SmoothClosing();
             mainWindow.Show();
             App.Current.MainWindow = mainWindow;
+
         }
 
         private static void NavigateAfterWelcomePage(ICommand toMainMenu)
@@ -346,7 +339,28 @@ namespace Lexplosion.WPF.NewInterface
 
             Thread.Sleep(800);
 
-            _app.Dispatcher.Invoke(SetMainWindow);
+            _appCore.UIThread(() =>
+            {
+                App.Current.Resources["MainViewModel"] = new MainViewModel(_appCore);
+
+                // Загружаем Интерфейс для tray
+                _app.Resources.MergedDictionaries.Add(new ResourceDictionary()
+                {
+                    Source = new Uri(ResourcePath + "TrayView.xaml")
+                });
+
+                _nofityIcon = (TaskbarIcon)App.Current.FindResource("NofityIcon");
+                _nofityIcon.TrayContextMenuOpen += _nofityIcon_TrayContextMenuOpen;
+
+                SetMainWindow(true);
+            });
+        }
+
+        private static void _nofityIcon_TrayContextMenuOpen(object sender, RoutedEventArgs e)
+        {
+            // Обновляем элементы меню, так как ContextMenu находится в другом визуальном дереве
+            // и через DynamicResource обновление просто не сделать
+            TrayContextMenuOpened?.Invoke();
         }
 
         private static void InitializedAccountSystem()
@@ -400,7 +414,7 @@ namespace Lexplosion.WPF.NewInterface
                     window.Close();
                 }
 
-                //_nofityIcon.Dispose();
+                _nofityIcon.Dispose();
             });
         }
 
@@ -411,16 +425,17 @@ namespace Lexplosion.WPF.NewInterface
             {
                 if (App.Current.MainWindow == null)
                 {
-                    NativeMethods.ShowProcessWindows(Runtime.CurrentProcess.MainWindowHandle);
-                    return;
+                    App.Current.MainWindow = new MainWindow(_appCore)
+                    {
+                        Left = _leftPos,
+                        Top = _topPos
+                    };
+                    App.Current.MainWindow.Show();
                 }
-
-                App.Current.MainWindow = new MainWindow(_appCore)
+                else
                 {
-                    Left = _leftPos,
-                    Top = _topPos
-                };
-                App.Current.MainWindow.Show();
+                    NativeMethods.ShowProcessWindows(Runtime.CurrentProcess.MainWindowHandle);
+                }
             });
         }
 
@@ -440,11 +455,6 @@ namespace Lexplosion.WPF.NewInterface
                     try
                     {
                         App.Current.MainWindow.Close();
-                    }
-                    catch { }
-
-                    try
-                    {
                         App.Current.MainWindow = null;
                     }
                     catch { }
@@ -520,70 +530,75 @@ namespace Lexplosion.WPF.NewInterface
             });
         }
 
-        private static Assembly AssemblyResolve(object sender, ResolveEventArgs args)
+        public static void TrayMenuElementClickExecute()
         {
-			if (args.Name.Contains("Lexplosion.Core"))
-			{
-				return Assembly.Load(UnzipBytesArray(Resources.LexplosionCore));
-			}
-
-			if (args.Name.Contains("Newtonsoft.Json"))
-			{
-				return Assembly.Load(UnzipBytesArray(Resources.NewtonsoftJson));
-			}
-
-			if (args.Name.Contains("LumiSoft.Net"))
-			{
-				return Assembly.Load(UnzipBytesArray(Resources.LumiSoftNet));
-			}
-
-			if (args.Name.Contains("Tommy"))
-			{
-				return Assembly.Load(UnzipBytesArray(Resources.Tommy));
-			}
-
-			if (args.Name.Contains("Hardcodet.Wpf.TaskbarNotification"))
-			{
-				return Assembly.Load(UnzipBytesArray(Resources.TaskbarNotification));
-			}
-
-			if (args.Name.Contains("DiscordRPC"))
-			{
-				return Assembly.Load(UnzipBytesArray(Resources.DiscordRPC));
-			}
-
-			if (args.Name.Contains("VirtualizingWrapPanel"))
-			{
-				return Assembly.Load(UnzipBytesArray(Resources.VirtualizingWrapPanel));
-			}
-
-			if (args.Name.Contains("System.IO.Compression"))
-			{
-				return Assembly.Load(Resources.Compression);
-			}
-
-			return null;
+            TrayMenuElementClicked?.Invoke();
         }
 
-		private static byte[] UnzipBytesArray(byte[] zipBytes)
-		{
-			// TODO: Использовать MemeryStream?
-			using (Stream archivedBytes = new MemoryStream(zipBytes))
-			{
-				using (var zip = new ZipArchive(archivedBytes, ZipArchiveMode.Read))
-				{
-					var entry = zip.Entries[0];
-					using (Stream stream = entry.Open())
-					{
-						using (MemoryStream fileBytes = new MemoryStream())
-						{
-							stream.CopyTo(fileBytes);
-							return fileBytes.ToArray();
-						}
-					}
-				}
-			}
-		}
+        private static Assembly AssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            if (args.Name.Contains("Lexplosion.Core"))
+            {
+                return Assembly.Load(UnzipBytesArray(Resources.LexplosionCore));
+            }
 
-	}
+            if (args.Name.Contains("Newtonsoft.Json"))
+            {
+                return Assembly.Load(UnzipBytesArray(Resources.NewtonsoftJson));
+            }
+
+            if (args.Name.Contains("LumiSoft.Net"))
+            {
+                return Assembly.Load(UnzipBytesArray(Resources.LumiSoftNet));
+            }
+
+            if (args.Name.Contains("Tommy"))
+            {
+                return Assembly.Load(UnzipBytesArray(Resources.Tommy));
+            }
+
+            if (args.Name.Contains("Hardcodet.Wpf.TaskbarNotification"))
+            {
+                return Assembly.Load(UnzipBytesArray(Resources.TaskbarNotification));
+            }
+
+            if (args.Name.Contains("DiscordRPC"))
+            {
+                return Assembly.Load(UnzipBytesArray(Resources.DiscordRPC));
+            }
+
+            if (args.Name.Contains("VirtualizingWrapPanel"))
+            {
+                return Assembly.Load(UnzipBytesArray(Resources.VirtualizingWrapPanel));
+            }
+
+            if (args.Name.Contains("System.IO.Compression"))
+            {
+                return Assembly.Load(Resources.Compression);
+            }
+
+            return null;
+        }
+
+        private static byte[] UnzipBytesArray(byte[] zipBytes)
+        {
+            // TODO: Использовать MemeryStream?
+            using (Stream archivedBytes = new MemoryStream(zipBytes))
+            {
+                using (var zip = new ZipArchive(archivedBytes, ZipArchiveMode.Read))
+                {
+                    var entry = zip.Entries[0];
+                    using (Stream stream = entry.Open())
+                    {
+                        using (MemoryStream fileBytes = new MemoryStream())
+                        {
+                            stream.CopyTo(fileBytes);
+                            return fileBytes.ToArray();
+                        }
+                    }
+                }
+            }
+        }
+
+    }
 }

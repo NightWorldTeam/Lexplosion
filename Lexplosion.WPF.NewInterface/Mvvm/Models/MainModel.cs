@@ -1,31 +1,23 @@
 ﻿using Lexplosion.Logic.Management.Instances;
 using Lexplosion.WPF.NewInterface.Core;
-using Lexplosion.WPF.NewInterface.Core.Notifications;
 using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Core.Services;
+using Lexplosion.WPF.NewInterface.Core.ViewModel;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers;
+using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Limited;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer;
-using Lexplosion.WPF.NewInterface.Stores;
-using System;
 using System.Collections.Generic;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models
 {
-    public sealed class InstanceExportController 
-    {
-        
-    }
-
-    public sealed class ImportController 
-    {
-
-    }
-
-    public sealed class MainModel : ViewModelBase
+    public sealed class MainModel : ObservableObject
     {
         private readonly AppCore _appCore;
+
+        public InstanceModelBase RunningGame { get; private set; }
+
         private HashSet<object> ExportingInstances { get; } = new HashSet<object>();
 
         public IInstanceController CatalogController { get; }
@@ -35,8 +27,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models
         public MainModel(AppCore appCore)
         {
             _appCore = appCore;
-            CatalogController = new CatalogController(appCore, Export);
-            LibraryController = new LibraryController(appCore, Export);
+            CatalogController = new CatalogController(appCore, Export, SetRunningGame);
+            LibraryController = new LibraryController(appCore, Export, SetRunningGame);
             InstanceSharesController = new InstanceSharesController();
 
             OnPropertyChanged(nameof(NotificationService));
@@ -94,6 +86,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models
             };
 
             _appCore.ModalNavigationStore.Open(leftmenu);
+        }
+
+
+        public void SetRunningGame(InstanceModelBase instanceModelBase) 
+        {
+            RunningGame = instanceModelBase;
+            OnPropertyChanged(nameof(RunningGame));
         }
     }
 }

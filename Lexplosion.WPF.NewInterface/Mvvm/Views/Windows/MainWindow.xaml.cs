@@ -56,7 +56,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
             PrepareAnimationForThemeService();
 
             MouseDown += delegate { try { DragMove(); } catch { } };
-            this.Closing += MainWindow_Closing;
+            //this.Closing += MainWindow_Closing;
 
             HeaderContainer.DataContext = new WindowHeaderArgs(Close, Maximized, Minimized);
 
@@ -228,7 +228,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
             _isScalled = !_isScalled;
         }
 
-        private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void Close(object sender, System.ComponentModel.CancelEventArgs e)
         {
             Runtime.Exit();
         }
@@ -247,11 +247,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
 
         #region Window State Buttons
 
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            MainViewModel.ChangeColor(ColorTools.GetColorByHex("#167FFC"));
-        }
 
         private void Close()
         {

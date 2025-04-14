@@ -117,6 +117,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
     {
         private readonly InstanceClient _instanceClient;
         private readonly Action<InstanceClient> _exportFunc;
+        private readonly Action<InstanceModelBase> _setRunningGame;
 
         private readonly AppCore _appCore;
 
@@ -372,7 +373,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         #region Constructors
 
 
-        public InstanceModelBase(AppCore appCore, InstanceClient instanceClient, Action<InstanceClient> exportFunc, InstanceDistribution instanceDistribution = null)
+        public InstanceModelBase(AppCore appCore, InstanceClient instanceClient, Action<InstanceClient> exportFunc, Action<InstanceModelBase> setRunningGame, InstanceDistribution instanceDistribution = null)
         {
             _appCore = appCore;
 
@@ -825,7 +826,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
                             notifyContent = string.Format(notifyContent, errors.Cast<object>().ToArray());
                         }
 
-                        _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent));
+                        _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent, type: NotificationType.Error));
                     }
                     break;
                 case InstanceInit.CurseforgeIdError:
@@ -833,7 +834,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
                         var title = _appCore.Resources("CurseforgeErrorTitle") as string;
                         var notifyContent = _appCore.Resources("ExternalIdIncorrect") as string;
 
-                        _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent));
+                        _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent, type: NotificationType.Error));
                     }
                     break;
                 case InstanceInit.NightworldIdError:
@@ -841,7 +842,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
                         var title = _appCore.Resources("NightWorldErrorTitle") as string;
                         var notifyContent = _appCore.Resources("ExternalIdIncorrect") as string;
 
-                        _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent));
+                        _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent, type: NotificationType.Error));
                     }
                     break;
                 case InstanceInit.ServerError:
@@ -849,7 +850,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
                         var title = _appCore.Resources("ServerError") as string;
                         var notifyContent = _appCore.Resources("FailedGetDataFromServer") as string;
 
-                        _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent));
+                        _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent, type: NotificationType.Error));
                     }
                     break;
                 case InstanceInit.GuardError:
@@ -857,7 +858,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
                         var title = _appCore.Resources("GuardErrorTitle") as string;
                         var notifyContent = _appCore.Resources("FileVerificationFailed") as string;
 
-                        _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent));
+                        _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent, type: NotificationType.Error));
                     }
                     break;
                 case InstanceInit.VersionError:
@@ -865,7 +866,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
                         var title = _appCore.Resources("VersionErrorTitle") as string;
                         var notifyContent = _appCore.Resources("VersionVerificationFailed") as string;
 
-                        _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent));
+                        _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent, type: NotificationType.Error));
                     }
                     break;
                 case InstanceInit.ForgeVersionError:
@@ -873,7 +874,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
                         var title = _appCore.Resources("ForgeVersionErrorTitle") as string;
                         var notifyContent = _appCore.Resources("ModloaderVerificationFailed") as string;
 
-                        _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent));
+                        _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent, type: NotificationType.Error));
                     }
                     break;
                 case InstanceInit.GamePathError:
@@ -881,7 +882,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
                         var title = _appCore.Resources("GamePathErrorTitle") as string;
                         var notifyContent = _appCore.Resources("InvalidGameDirectory") as string;
 
-                        _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent));
+                        _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent, type: NotificationType.Error));
                     }
                     break;
                 case InstanceInit.ManifestError:
@@ -889,7 +890,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
                         var title = _appCore.Resources("ManifestErrorTitle") as string;
                         var notifyContent = _appCore.Resources("FailedLoadInstanceManifest") as string;
 
-                        _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent));
+                        _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent, type: NotificationType.Error));
                     }
                     break;
                 case InstanceInit.JavaDownloadError:
@@ -897,7 +898,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
                         var title = _appCore.Resources("JavaDownloadErrorTitle") as string;
                         var notifyContent = _appCore.Resources("TrySetCustomJavaPath") as string;
 
-                        _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent));
+                        _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent, type: NotificationType.Error));
                     }
                     break;
                 case InstanceInit.IsCancelled:
@@ -905,7 +906,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
                         var title = _appCore.Resources("InstanceDownloadCanceledSuccessfully") as string;
                         var notifyContent = string.Format(_appCore.Resources("InstanceName:_") as string, Name);
 
-                        _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent));
+                        _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent, type: NotificationType.Error));
 
                         OnDownloadCanceled();
                         break;
@@ -915,7 +916,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
                         var title = _appCore.Resources("UnknownErrorTitle") as string;
                         var notifyContent = _appCore.Resources("UnknownErrorTryRestartLauncher") as string;
 
-                        _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent));
+                        _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent, type: NotificationType.Error));
                     }
                     break;
             }
@@ -927,14 +928,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             DataChanged?.Invoke();
         }
 
-        // TODO: Notifications
         private void OnGameClosed()
         {
             IsLaunching = false;
             IsLaunched = false;
 
             GameClosed?.Invoke();
-            Runtime.DebugWrite("Game Closed");
             SetState(InstanceState.Default);
             DataChanged?.Invoke();
         }

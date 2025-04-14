@@ -140,15 +140,15 @@
 
                                 <StackPanel>
                                     <TextBlock
-                                        extensions:TextBlockExtensions.TextByKey="IsShowSnapshots"
                                         FontSize="13"
                                         FontWeight="Medium"
-                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                        Text="{DynamicResource IsShowSnapshots}" />
                                     <TextBlock
-                                        extensions:TextBlockExtensions.TextByKey="IsShowSnapshotsDescription"
                                         FontSize="12"
                                         FontWeight="Medium"
                                         Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                        Text="{DynamicResource IsShowSnapshotsDescription}"
                                         TextWrapping="WrapWithOverflow" />
                                 </StackPanel>
 

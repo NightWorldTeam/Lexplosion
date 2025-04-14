@@ -20,7 +20,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
 
         private readonly AppCore _appCore;
         private readonly Action<InstanceClient> _exportFunc;
+        private readonly Action<InstanceModelBase> _setRunningGame;
+
         private ObservableCollection<InstanceModelBase> _instances = new ObservableCollection<InstanceModelBase>();
+
 
         #region Properties
 
@@ -34,7 +37,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
         #region Constructors
 
 
-        public LibraryController(AppCore appCore, Action<InstanceClient> export)
+        public LibraryController(AppCore appCore, Action<InstanceClient> export, Action<InstanceModelBase> setRunningGame)
         {
             _appCore = appCore;
 
@@ -42,8 +45,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
             InstanceModelBase.GlobalDeletedEvent += Remove;
 
             _exportFunc = export;
+            _setRunningGame = setRunningGame;
 
-            foreach (var ic in InstanceClient.GetInstalledInstances()) 
+            foreach (var ic in InstanceClient.GetInstalledInstances())
             {
                 Add(ic);
             }
@@ -70,7 +74,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
             InstanceModelBase? instanceModelBase = null;
             App.Current.Dispatcher.Invoke(() =>
             {
-                instanceModelBase = new InstanceModelBase(_appCore, instanceClient, _exportFunc);
+                instanceModelBase = new InstanceModelBase(_appCore, instanceClient, _exportFunc, _setRunningGame);
                 Add(instanceModelBase);
             });
 
@@ -82,7 +86,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
             InstanceModelBase? instanceModelBase = null;
             App.Current.Dispatcher.Invoke(() =>
             {
-                instanceModelBase = new InstanceModelBase(_appCore, instanceClient, _exportFunc, instanceDistribution);
+                instanceModelBase = new InstanceModelBase(_appCore, instanceClient, _exportFunc, _setRunningGame, instanceDistribution);
                 Add(instanceModelBase);
             });
 
@@ -117,7 +121,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
         }
 
 
-        public InstanceModelBase? GetByInstanceClient(InstanceClient? instanceClient) 
+        public InstanceModelBase? GetByInstanceClient(InstanceClient? instanceClient)
         {
             if (instanceClient == null)
                 return null;

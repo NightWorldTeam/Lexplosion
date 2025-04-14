@@ -72,6 +72,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -294,6 +295,8 @@
     <Compile Include="Mvvm\Views\Windows\SplashWindow.xaml.cs">
       <DependentUpon>SplashWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TrayMenu\TrayButton.cs" />
+    <Compile Include="TrayMenu\TrayComponentBase.cs" />
     <Compile Include="WindowComponents\Header\Variants\HeaderBase.cs" />
     <Compile Include="WindowComponents\Header\Variants\MacOSHeader.xaml.cs">
       <DependentUpon>MacOSHeader.xaml</DependentUpon>
@@ -803,6 +806,10 @@
     <Page Include="Resources\Themes\BrownColorTheme.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\TrayView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="WindowComponents\Header\Variants\MacOSHeader.xaml">
       <SubType>Designer</SubType>
