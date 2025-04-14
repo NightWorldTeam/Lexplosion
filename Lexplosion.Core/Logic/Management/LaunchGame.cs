@@ -74,6 +74,7 @@ namespace Lexplosion.Logic.Management
 				if (_processDataReceived == null && _process != null)
 				{
 					_process.OutputDataReceived += ProcessDataHandle;
+					_process.ErrorDataReceived += ProcessDataHandle;
 				}
 
 				_processDataReceived += value;
@@ -85,6 +86,7 @@ namespace Lexplosion.Logic.Management
 				if (_processDataReceived == null && _process != null)
 				{
 					_process.OutputDataReceived -= ProcessDataHandle;
+					_process.ErrorDataReceived -= ProcessDataHandle;
 				}
 			}
 		}

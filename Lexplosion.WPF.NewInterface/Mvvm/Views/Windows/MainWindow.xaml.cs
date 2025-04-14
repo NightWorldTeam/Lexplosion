@@ -56,9 +56,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
             PrepareAnimationForThemeService();
 
             MouseDown += delegate { try { DragMove(); } catch { } };
-            //this.Closing += MainWindow_Closing;
+			this.Closing += Close;
 
-            HeaderContainer.DataContext = new WindowHeaderArgs(Close, Maximized, Minimized);
+			HeaderContainer.DataContext = new WindowHeaderArgs(Close, Maximized, Minimized);
 
             _gallery = appCore.GalleryManager;
             InitGallery();
