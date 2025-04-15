@@ -79,12 +79,12 @@ namespace Lexplosion
                 CurrentProcess.Kill(); //стопаем этот процесс
             }
 
-            int version = ToServer.CheckLauncherUpdates();
-            if (version != -1 && isCheckUpdate)
-            {
-                OnUpdateStart?.Invoke();
-                LauncherUpdate(version, updaterOffsetLeft, updaterOffsetRight);
-            }
+            //int version = ToServer.CheckLauncherUpdates();
+            //if (version != -1 && isCheckUpdate)
+            //{
+            //    OnUpdateStart?.Invoke();
+            //    LauncherUpdate(version, updaterOffsetLeft, updaterOffsetRight);
+            //}
 
             InstanceClient.DefineInstalledInstances();
 
