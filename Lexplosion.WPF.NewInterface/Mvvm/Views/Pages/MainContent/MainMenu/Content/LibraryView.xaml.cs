@@ -54,6 +54,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu
 
 		private void InstanceModelBase_GlobalDeletedEvent(InstanceModelBase obj)
 		{
+			//if (_viewModel.Model.InstancesCollectionViewSource.Count == 1)
+			//{
+			//	Runtime.DebugWrite("Clear VirtualizingWrapPanel cache");
+			//	var panel = InstanceList.FindVisualDescendant<VirtualizingWrapPanel>();
+			//	panel.ClearItemSizeCache();
+			//}
 		}
 
 		private int GetFirstVisibleItemIndex()
