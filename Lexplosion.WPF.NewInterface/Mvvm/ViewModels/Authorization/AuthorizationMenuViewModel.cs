@@ -1,80 +1,25 @@
-﻿using Lexplosion.Logic.Management.Authentication;
-using Lexplosion.WPF.NewInterface.Commands;
+﻿using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.WPF.NewInterface.Core;
-using Lexplosion.WPF.NewInterface.Stores;
+using Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization;
 using System;
+using System.Collections.Generic;
 using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Authorization
 {
-    public class AccountTypeMenuItem
-    {
-        public string Name { get; set; }
-        public byte[] Logo { get; set; }
-    }
-
-
-    public sealed class AuthorizationMenuModel
-    {
-        #region Constructors
-
-
-        public AuthorizationMenuModel()
-        {
-            var loadedNWAccount = LoadSavedAccount(AccountType.NightWorld);
-            var loadedMSAccount = LoadSavedAccount(AccountType.Microsoft);
-        }
-
-
-        #endregion Constructors
-
-
-        #region Public & Protected Methods
-
-
-        /// <summary>
-        /// Возвращает тип аккаунта, логин, и ответ на вопрос существует ли не пустой логин.
-        /// </summary>
-        /// <param name="accountType"></param>
-        /// <returns>AccountType, string, bool</returns>
-        protected Tuple<AccountType, string, bool> LoadSavedAccount(AccountType? accountType)
-        {
-            AccountType type = Authentication.Instance.GetAccount(accountType, out string _loadedLogin);
-            return new Tuple<AccountType, string, bool>(type, _loadedLogin, string.IsNullOrEmpty(_loadedLogin));
-        }
-
-
-        #endregion Public & Protected Methods
-    }
-
     public sealed class AuthorizationMenuViewModel : ViewModelBase
     {
-        private readonly INavigationStore _navigationStore;
-        private readonly ICommand _toMainMenu;
-
-        private readonly ViewModelBase _microsoft;
-        private readonly ViewModelBase _nightWorld;
-        private readonly ViewModelBase _withoutAccount;
+        private readonly AppCore _appCore;
+        private readonly Dictionary<Type, Action> _navigationByType = new();
+        
+     
+        public AuthorizationMenuModel Model { get; }
 
 
         #region Commands
 
 
-        private RelayCommand _openAccountAuthFormCommand;
-        public ICommand OpenAccountAuthFormCommand
-        {
-            get => RelayCommand.GetCommand(ref _openAccountAuthFormCommand, () => 
-            {
-                _navigationStore.CurrentViewModel = new NightWorldAuthorizationViewModel();
-            });
-        }
-
-        private RelayCommand _toNightWorldCommand;
-        public ICommand ToNightWorldCommand 
-        {
-            get => RelayCommand.GetCommand(ref _toNightWorldCommand, () => { });
-        }
-
+        public ICommand ToRegisterCommand { get; }
 
 
         #endregion Commands
@@ -83,13 +28,40 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Authorization
         #region Constructors
 
 
-        public AuthorizationMenuViewModel(INavigationStore navigationStore, ICommand toMainMenu)
+        public AuthorizationMenuViewModel(AppCore appCore, ICommand toMainMenu)
         {
-            _navigationStore = navigationStore;
-            _toMainMenu = toMainMenu;
+            _appCore = appCore;
+
+            Account.AccountAdded += (account) => 
+            {
+                toMainMenu.Execute(null);
+            };
+
+            var backCommand = _appCore.BuildNavigationCommand(this);
+
+            ToRegisterCommand = _appCore.BuildNavigationCommand(new NightWorldRegistrationViewModel(appCore, backCommand, NavigateTo));
+
+            var toNightWorldForm = _appCore.BuildNavigationCommand(new NightWorldAuthorizationViewModel(appCore, NavigateTo, ToRegisterCommand));
+            var toMicrosoftForm = _appCore.BuildNavigationCommand(new MicrosoftAuthorizationViewModel(appCore, NavigateTo, backCommand), (vm) => vm.Model.LogIn());
+            var toNoAccountForm = _appCore.BuildNavigationCommand(new NoAccountAuthorizationViewModel(appCore, NavigateTo));
+
+            _navigationByType[typeof(NightWorldAuthorizationViewModel)] = () => toNightWorldForm?.Execute(null);
+            _navigationByType[typeof(MicrosoftAuthorizationViewModel)] = () => toMicrosoftForm?.Execute(null);
+            _navigationByType[typeof(NoAccountAuthorizationViewModel)] = () => toNoAccountForm?.Execute(null);
+
+            Model = new AuthorizationMenuModel(toNightWorldForm, toMicrosoftForm, toNoAccountForm);
         }
 
 
         #endregion Constructors
+
+
+        void NavigateTo(Type type) 
+        {
+            if (_navigationByType.TryGetValue(type, out var navigate)) 
+            {
+                navigate();
+            }
+        }
     }
 }

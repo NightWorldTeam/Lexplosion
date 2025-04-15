@@ -56,7 +56,7 @@ namespace Lexplosion.Logic.FileSystem
         /// </returns>
         public int CheckInstance(NightWorldManifest filesInfo, ref LastUpdates updates, Dictionary<string, string> content)
         {
-            string instancePath = DirectoryPath + "/instances/" + instanceId + "/";
+            string instancePath = InstancesPath + instanceId + "/";
             using (InstalledAddons installedAddons = InstalledAddons.Get(instanceId))
             {
                 //Проходимся по списку папок(data) из класса instanceFiles
@@ -107,7 +107,7 @@ namespace Lexplosion.Logic.FileSystem
                         }
 
                         //отрываем файл с последними обновлениями и записываем туда updates, который уже содержит последнюю версию папки. Папка сейчас будет пустой, поэтому метод Update в любом случае скачает нужные файлы
-                        SaveFile(DirectoryPath + "/instances/" + instanceId + "/lastUpdates.json", JsonConvert.SerializeObject(updates));
+                        DataFilesManager.SaveLastUpdates(instanceId, updates);
                     }
                     catch { }
 
@@ -293,7 +293,7 @@ namespace Lexplosion.Logic.FileSystem
             string addr;
             List<string> errors = new List<string>();
 
-            string instancePath = DirectoryPath + "/instances/" + instanceId + "/";
+            string instancePath = InstancesPath + instanceId + "/";
 
             FilesDownloadEvent?.Invoke(updatesCount, 0);
 
@@ -369,8 +369,8 @@ namespace Lexplosion.Logic.FileSystem
                         updated++;
                         FilesDownloadEvent?.Invoke(updatesCount, updated);
 
-                        //сохарняем updates
-                        SaveFile(instancePath + "lastUpdates.json", JsonConvert.SerializeObject(updates));
+						//сохарняем updates
+						DataFilesManager.SaveLastUpdates(instanceId, updates);
                     }
                 }
 
@@ -422,7 +422,7 @@ namespace Lexplosion.Logic.FileSystem
             }
 
             //сохарняем updates
-            SaveFile(instancePath + "lastUpdates.json", JsonConvert.SerializeObject(updates));
+            DataFilesManager.SaveLastUpdates(instanceId, updates);
 
             Directory.Delete(tempDir, true);
 
@@ -434,7 +434,7 @@ namespace Lexplosion.Logic.FileSystem
         /// </summary>
         public bool InvalidStruct(LastUpdates updates, Dictionary<string, string> content)
         {
-            string instancePath = DirectoryPath + "/instances/" + instanceId + "/";
+            string instancePath = InstancesPath + instanceId + "/";
 
             using (InstalledAddons installedAddons = InstalledAddons.Get(instanceId))
             {

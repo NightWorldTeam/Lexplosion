@@ -16,7 +16,7 @@
                             x:Name="Border"
                             Padding="0,8,32,8"
                             BorderBrush="{DynamicResource SeparateSolidColorBrush}">
-                            <TextBlock x:Name="HeaderTB" extensions:TextBlock.TextByKey="{TemplateBinding Header}" />
+                            <TextBlock x:Name="HeaderTB" extensions:TextBlockExtensions.TextByKey="{TemplateBinding Header}" />
                         </Border>
                     </Grid>
                     <ControlTemplate.Triggers>
@@ -44,9 +44,25 @@
                         </Grid.RowDefinitions>
 
                         <Border
+                            Panel.ZIndex="1"
+                            Background="Transparent"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="0,0,0,2">
+                            <Border.Effect>
+                                <DropShadowEffect
+                                    BlurRadius="10"
+                                    Direction="280"
+                                    Opacity="0.1"
+                                    ShadowDepth="3"
+                                    Color="{DynamicResource LayoutShadowColor}" />
+                            </Border.Effect>
+                        </Border>
+
+                        <Border
                             x:Name="PART_Header"
+                            Panel.ZIndex="2"
                             Background="{TemplateBinding Background}"
-                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="0,0,0,2">
                             <Grid>
                                 <Border
@@ -64,7 +80,7 @@
                                 <TabPanel
                                     x:Name="HeaderPanel"
                                     Grid.Row="0"
-                                    Panel.ZIndex="1"
+                                    Panel.ZIndex="2"
                                     Background="{TemplateBinding Background}"
                                     IsItemsHost="True"
                                     KeyboardNavigation.TabIndex="1" />

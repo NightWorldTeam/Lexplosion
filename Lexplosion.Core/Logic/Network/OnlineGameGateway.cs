@@ -110,13 +110,16 @@ namespace Lexplosion.Logic.Network
                         continue;
                     }
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    Runtime.DebugWrite($"Exception: {ex}");
+                }
             }
 
             return false;
         }
 
-        // Симуляция майнкрафт клиента. То есть используется если наш макрафт является сервером
+        // Симуляция майнкрафт клиента. То есть используется если наш майнкрафт является сервером
         public void ClientSimulator(int pid)
         {
             UdpClient client = new UdpClient();
@@ -162,7 +165,7 @@ namespace Lexplosion.Logic.Network
 
                 InformingThread = new Thread(delegate ()
                 {
-                    Dictionary<string, string> input = new Dictionary<string, string>
+                    var input = new Dictionary<string, string>
                     {
                         ["UUID"] = UUID,
                         ["sessionToken"] = sessionToken
@@ -222,6 +225,7 @@ namespace Lexplosion.Logic.Network
         // Симуляция майнкрафт сервера. То есть используется если наш макрафт является клиентом
         public void ServerSimulator(int pid)
         {
+            Runtime.DebugWrite("Start server simulator");
             ClientBridge bridge = new ClientBridge(UUID, sessionToken, _controlServer);
 
             UdpClient client = new UdpClient();
@@ -230,8 +234,8 @@ namespace Lexplosion.Logic.Network
 
             try
             {
-                //присоединяемся к мультикасту для Loopback адаптера
-                var optionValue = new MulticastOption(IPAddress.Parse("224.0.2.60"), NetworkInterface.LoopbackInterfaceIndex);
+                //присоединяемся к мультикасту
+                var optionValue = new MulticastOption(IPAddress.Parse("224.0.2.60"));
                 client.Client.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, optionValue);
             }
             catch (Exception ex)
@@ -243,23 +247,31 @@ namespace Lexplosion.Logic.Network
             {
                 if (Utils.ContainsUdpPort(pid, 4445))
                 {
-                    Dictionary<string, string> input = new Dictionary<string, string>
-                    {
-                        ["UUID"] = UUID,
-                        ["sessionToken"] = sessionToken
-                    };
+                    Runtime.DebugWrite("Port 4445 is used by the process");
 
-                    string data = ToServer.HttpPost(LaunсherSettings.URL.UserApi + "getGameServers", input);
+					var input = new Dictionary<string, string>
+					{
+						["UUID"] = UUID,
+						["sessionToken"] = sessionToken
+					};
+
+					string data = ToServer.HttpPost(LaunсherSettings.URL.UserApi + "getGameServers", input);
                     Dictionary<string, OnlineUserInfo> servers = null;
                     try
                     {
                         servers = JsonConvert.DeserializeObject<Dictionary<string, OnlineUserInfo>>(data);
                     }
-                    catch { }
+                    catch (Exception ex)
+                    {
+                        Runtime.DebugWrite($"Exception {ex}");
+                    }
 
                     if (servers != null && servers.Count > 0)
                     {
+                        Runtime.DebugWrite($"Servers count: {servers.Count}");
                         Dictionary<string, int> ports = bridge.SetServers(new List<string>(servers.Keys));
+
+						Runtime.DebugWrite("Ports: " + string.Join(",", ports.Values));
 
                         //Отправляем пакеты сервера для отображения в локальных мирах
                         foreach (string uuid in ports.Keys)
@@ -272,6 +284,10 @@ namespace Lexplosion.Logic.Network
                             byte[] _data = Encoding.UTF8.GetBytes("[MOTD]§3" + text + "[/MOTD][AD]" + ports[uuid] + "[/AD]");
                             client.Send(_data, _data.Length, new IPEndPoint(IPAddress.Parse("224.0.2.60"), 4445));
                         }
+                    }
+                    else
+                    {
+                        Runtime.DebugWrite($"servers == null: {servers == null}");
                     }
                 }
 

@@ -1,24 +1,33 @@
 ﻿using Lexplosion.WPF.NewInterface.Tools;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels;
 using System;
-using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
+using System.Linq;
+using System.Collections;
+using Lexplosion.WPF.NewInterface.Core.Objects;
+using Lexplosion.WPF.NewInterface.WindowComponents.Header;
+using Lexplosion.WPF.NewInterface.Core;
+using Lexplosion.WPF.NewInterface.Core.Tools;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
 {
+    public interface IScalable
+    {
+        double ActualWidth { get; }
+        double ActualHeight { get; }
+        double ScalingFactor { get; }
+    }
+
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, IScalable
     {
-        public string currentLang = "ru";
-        private bool _isScalled = false;
-
         private readonly DoubleAnimation _defaultChangeThemeAnimation = new DoubleAnimation()
         {
             From = 1700,
@@ -28,46 +37,188 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
             { EasingMode = EasingMode.EaseInOut }
         };
 
-        public MainWindow()
+        private readonly AppCore _appCore;
+        private bool _isScalled = false;
+        private Gallery _gallery;
+
+
+        public string currentLang = "ru";
+
+        public double ScalingKeff { get; private set; } = 1;
+        public double ScalingFactor { get; private set; } = 1;
+
+        public MainWindow(AppCore appCore)
         {
             InitializeComponent();
 
-            _defaultChangeThemeAnimation.Completed += (sender, e) => 
+            _appCore = appCore;
+
+            PrepareAnimationForThemeService();
+
+            MouseDown += delegate { try { DragMove(); } catch { } };
+			this.Closing += Close;
+
+			HeaderContainer.DataContext = new WindowHeaderArgs(Close, Maximized, Minimized);
+
+            _gallery = appCore.GalleryManager;
+            InitGallery();
+        }
+
+        private void PrepareAnimationForThemeService()
+        {
+            var themeService = _appCore.Settings.ThemeService;
+
+            _defaultChangeThemeAnimation.Completed += (sender, e) =>
             {
                 PaintArea.Visibility = Visibility.Hidden;
             };
 
-            RuntimeApp.AppColorThemeService.BeforeAnimations.Add(() => 
+            themeService.BeforeAnimations.Add(() =>
             {
                 PaintArea.Opacity = 1;
                 PaintArea.Visibility = Visibility.Visible;
                 PaintArea.Background = CreateBrushFromVisual(this);
             });
 
-            RuntimeApp.AppColorThemeService.Animations.Add(() => 
+            themeService.Animations.Add(() =>
             {
                 PaintArea.BeginAnimation(OpacityProperty, _defaultChangeThemeAnimation);
                 CircleReveal.BeginAnimation(EllipseGeometry.RadiusXProperty, _defaultChangeThemeAnimation);
                 CircleReveal.BeginAnimation(EllipseGeometry.RadiusYProperty, _defaultChangeThemeAnimation);
             });
 
-            MouseDown += delegate { try { DragMove(); } catch { } };
+            /// 
+            /// Анимации для welcomepage
+            /// 
+
+            var welcomePageChangeThemeAnimation = new DoubleAnimation()
+            {
+                From = 1700,
+                To = 0,
+                Duration = TimeSpan.FromSeconds(0.35 * 4),
+                EasingFunction = new SineEase
+                { EasingMode = EasingMode.EaseInOut }
+            };
+
+            themeService.BeforeAnimationsList["welcome-page"] = () =>
+            {
+                CircleReveal.Center = new Point(309, 261);
+                PaintArea.Opacity = 1;
+                PaintArea.Visibility = Visibility.Visible;
+                PaintArea.Background = CreateBrushFromVisual(this);
+            };
+
+            themeService.AnimationsList["welcome-page"] = (complete) =>
+            {
+                welcomePageChangeThemeAnimation.Completed += (sender, e) => 
+                {
+                    CircleReveal.Center = new Point(101, 22);
+                    complete?.Invoke();
+                };
+                PaintArea.BeginAnimation(OpacityProperty, welcomePageChangeThemeAnimation);
+                CircleReveal.BeginAnimation(EllipseGeometry.RadiusXProperty, welcomePageChangeThemeAnimation);
+                CircleReveal.BeginAnimation(EllipseGeometry.RadiusYProperty, welcomePageChangeThemeAnimation);
+            };
         }
+
+        private void InitGallery()
+        {
+            ImageViewer.Visibility = _gallery.HasSelectedImage ? Visibility.Visible : Visibility.Collapsed;
+
+            _gallery.StateChanged += OnGalleryStateChanged;
+
+            CloseImage.Click += OnCloseImageClicked;
+            //NextImage.Click += OnNextImageClicked;
+            //PrevImage.Click += OnPrevImageClicked;
+
+            //// Создаем привязку
+            //Binding hasPrevBinding = new Binding("HasPrev")
+            //{
+            //    Source = _gallery, // Источник данных
+            //    Mode = BindingMode.OneWay, // Режим привязки (двусторонний)
+            //    UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged // Обновление источника при изменении текста
+            //};
+
+            //// Создаем привязку
+            //Binding hasNextBinding = new Binding("HasNext")
+            //{
+            //    Source = _gallery, // Источник данных
+            //    Mode = BindingMode.OneWay, // Режим привязки (двусторонний)
+            //    UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged // Обновление источника при изменении текста
+            //};
+
+            //// Устанавливаем привязку для свойства Text
+            //PrevImage.SetBinding(FrameworkElement.IsEnabledProperty, hasPrevBinding);
+            //NextImage.SetBinding(FrameworkElement.IsEnabledProperty, hasNextBinding);
+        }
+
+        private void OnGalleryStateChanged()
+        {
+            ImageViewer.Visibility = _gallery.HasSelectedImage ? Visibility.Visible : Visibility.Collapsed;
+
+            if (!_gallery.HasSelectedImage)
+                Image.ImageSource = null;
+            if (Image.ImageSource == null || Image.ImageSource.ToString() == "pack://Application:,,,/Assets/images/icons/non_image.png")
+            {
+                BitmapImage image = null;
+
+                Runtime.TaskRun(() =>
+                {
+                    if (_gallery.SelectedImageSource is byte[] byteImage)
+                    {
+                        image = ImageTools.ToImage(byteImage) ?? image;
+                    }
+                    else if (_gallery.SelectedImageSource is string stringImage)
+                    {
+                        image = new BitmapImage(new Uri(stringImage)) ?? image;
+                    }
+
+                    App.Current.Dispatcher.Invoke(() =>
+                    {
+                        Image.ImageSource = image;
+                    });
+                });
+
+            }
+        }
+
+        #region Image Viewer
+
+
+        private void OnPrevImageClicked(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void OnNextImageClicked(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void OnCloseImageClicked(object sender, RoutedEventArgs e)
+        {
+            _gallery.CloseImage();
+        }
+
+
+        #endregion ImageViewer
+
+
         private void Scalling()
         {
-            double keff = 0.25;
-            var yScale = keff + 1;
+            double factor = 0.25;
+            var yScale = factor + 1;
 
             if (_isScalled)
             {
-                keff *= -1;
+                factor *= -1;
                 yScale = 1;
             }
 
             ContainerGrid.LayoutTransform = new ScaleTransform(yScale, yScale);
-            this.Width += Width * keff;
-            this.Height += Height * keff;
-
+            this.Width += Width * factor;
+            this.Height += Height * factor;
+            ScalingFactor = factor;
             // Bring window center screen
             var screenHeight = System.Windows.SystemParameters.PrimaryScreenHeight;
             var screenWidth = System.Windows.SystemParameters.PrimaryScreenWidth;
@@ -77,6 +228,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
             _isScalled = !_isScalled;
         }
 
+        private void Close(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            Runtime.Exit();
+        }
+
 
         private void Grid_MouseEnter(object sender, MouseEventArgs e)
         {
@@ -84,7 +240,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
 
             for (int i = 0; i < grid.ColumnDefinitions.Count; i++)
             {
-                Runtime.DebugWrite(i.ToString() + " " + grid.ColumnDefinitions[i].ActualWidth.ToString());
+                //Runtime.DebugWrite(i.ToString() + " " + grid.ColumnDefinitions[i].ActualWidth.ToString());
             }
         }
 
@@ -92,9 +248,27 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
         #region Window State Buttons
 
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Close()
         {
-            MainViewModel.ChangeColor(ColorTools.GetColorByHex("#167FFC"));
+            App.Current.MainWindow.Close();
+        }
+
+        private void Maximized()
+        {
+            if (this.WindowState == WindowState.Maximized)
+            {
+                this.WindowState = WindowState.Normal;
+                Runtime.DebugWrite(this.ActualWidth.ToString() + " x " + this.ActualHeight.ToString());
+            }
+            else
+            {
+                this.WindowState = WindowState.Maximized;
+            }
+        }
+
+        private void Minimized()
+        {
+            this.WindowState = WindowState.Minimized;
         }
 
         private void CloseWindow_Click(object sender, RoutedEventArgs e)
@@ -194,63 +368,46 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
         }
 
 
-        private void ChangeTheme_MouseDown(object sender, MouseButtonEventArgs e)
+        public static bool Contains(ICollection collection, string key)
         {
-            var border = (Border)sender;
-            border.IsEnabled = false;
+            if (collection == null || collection.Count == 0)
+                return false;
 
-            PaintArea.Opacity = 1;
-            PaintArea.Visibility = Visibility.Visible;
-            PaintArea.Background = CreateBrushFromVisual(this);
-
-            DoubleAnimation dba;
-
-            var resourceDictionaries = new List<ResourceDictionary>();
-
-            var currentThemeName = "";
-
-            foreach (var s in App.Current.Resources.MergedDictionaries)
+            foreach (var item in collection)
             {
-                if (s.Source.ToString().Contains("ColorTheme"))
+                if (item is string str)
                 {
-                    currentThemeName = s.Source.ToString();
-                    resourceDictionaries.Add(s);
+                    if (str.Contains(key))
+                    {
+                        return true;
+                    }
                 }
             }
+            return false;
+        }
 
-            foreach (var s in resourceDictionaries)
+        private void ChangeTheme_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            var themeService = _appCore.Settings.ThemeService;
+            Theme selectedTheme = null;
+            //if (themeService.SelectedTheme.Name == "Open Space")
+            //{
+            //    var resourceLoader = new ResourcesLoader();
+            //    var newTheme = resourceLoader.LoadThemeFromPath("D:\\EmptyFolder\\Theme1.xml");
+            //    themeService.AddAndActiveTheme(newTheme.Item2);
+            //    return;
+            //}
+            //else 
+            if (themeService.SelectedTheme.Name == "Light Punch")
             {
-                App.Current.Resources.MergedDictionaries.Remove(s);
-            }
-
-            if (currentThemeName.Contains("Light"))
-            {
-                App.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
-                {
-                    Source = new Uri("pack://application:,,,/Resources/Themes/DarkColorTheme.xaml")
-                });
+                selectedTheme = themeService.Themes.FirstOrDefault(t => t.Name == "Open Space");
             }
             else
             {
-                App.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
-                {
-                    Source = new Uri("pack://application:,,,/Resources/Themes/LightColorTheme.xaml")
-                });
+                selectedTheme = themeService.Themes.FirstOrDefault(t => t.Name == "Light Punch");
             }
 
-            dba = new DoubleAnimation()
-            {
-                From = 1700,
-                To = 0,
-                Duration = TimeSpan.FromSeconds(0.35 * 1.5),
-                EasingFunction = new SineEase
-                { EasingMode = EasingMode.EaseInOut }
-            };
-
-            dba.Completed += (s, e) => Dba_Completed(s, e, border);
-            //PaintArea.BeginAnimation(OpacityProperty, dba);
-            CircleReveal.BeginAnimation(EllipseGeometry.RadiusXProperty, dba);
-            CircleReveal.BeginAnimation(EllipseGeometry.RadiusYProperty, dba);
+            themeService.ChangeTheme(selectedTheme);
         }
 
         private void Dba_Completed(object sender, EventArgs e, Border border)
@@ -289,63 +446,63 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
 
         private void ChangeWHPHorizontalOrintationAnimation()
         {
-            var opacityAdditionalFuncsHideAnimation = new DoubleAnimation()
-            {
-                Duration = TimeSpan.FromSeconds(0.35 / 2),
-                To = 0
-            };
+            //var opacityAdditionalFuncsHideAnimation = new DoubleAnimation()
+            //{
+            //    Duration = TimeSpan.FromSeconds(0.35 / 2),
+            //    To = 0
+            //};
 
-            var opacityHideAnimation = new DoubleAnimation()
-            {
-                Duration = TimeSpan.FromSeconds(0.35 / 2),
-                To = 0
-            };
+            //var opacityHideAnimation = new DoubleAnimation()
+            //{
+            //    Duration = TimeSpan.FromSeconds(0.35 / 2),
+            //    To = 0
+            //};
 
-            var opacityShowAnimation = new DoubleAnimation()
-            {
-                Duration = TimeSpan.FromSeconds(0.35 / 2),
-                To = 1
-            };
+            //var opacityShowAnimation = new DoubleAnimation()
+            //{
+            //    Duration = TimeSpan.FromSeconds(0.35 / 2),
+            //    To = 1
+            //};
 
-            // перемещаем кнопки и панель в нужную сторону.
-            opacityHideAnimation.Completed += (object sender, EventArgs e) =>
-            {
-                ChangeWHPHorizontalOrintation();
-                WindowHeaderPanelButtonsGrid.BeginAnimation(OpacityProperty, opacityShowAnimation);
-                AddtionalFuncs.BeginAnimation(OpacityProperty, opacityShowAnimation);
-            };
+            //// перемещаем кнопки и панель в нужную сторону.
+            //opacityHideAnimation.Completed += (object sender, EventArgs e) =>
+            //{
+            //    ChangeWHPHorizontalOrintation();
+            //    WindowHeaderPanelButtonsGrid.BeginAnimation(OpacityProperty, opacityShowAnimation);
+            //    AddtionalFuncs.BeginAnimation(OpacityProperty, opacityShowAnimation);
+            //};
 
-            // скрываем 
-            WindowHeaderPanelButtonsGrid.BeginAnimation(OpacityProperty, opacityHideAnimation);
-            AddtionalFuncs.BeginAnimation(OpacityProperty, opacityAdditionalFuncsHideAnimation);
+            //// скрываем 
+            //WindowHeaderPanelButtonsGrid.BeginAnimation(OpacityProperty, opacityHideAnimation);
+            //AddtionalFuncs.BeginAnimation(OpacityProperty, opacityAdditionalFuncsHideAnimation);
         }
 
         private void ChangeWHPHorizontalOrintation()
         {
-            if (WindowHeaderPanelButtonsGrid.HorizontalAlignment == HorizontalAlignment.Left)
-            {
-                WindowHeaderPanelButtons.RenderTransform = new RotateTransform(180);
-                WindowHeaderPanelButtonsGrid.HorizontalAlignment = HorizontalAlignment.Right;
+            //if (WindowHeaderPanelButtonsGrid.HorizontalAlignment == HorizontalAlignment.Left)
+            //{
+            //    WindowHeaderPanelButtons.RenderTransform = new RotateTransform(180);
+            //    WindowHeaderPanelButtonsGrid.HorizontalAlignment = HorizontalAlignment.Right;
 
-                AddtionalFuncs.HorizontalAlignment = HorizontalAlignment.Left;
+            //    AddtionalFuncs.HorizontalAlignment = HorizontalAlignment.Left;
 
-                Grid.SetColumn(DebugPanel, 0);
-                Grid.SetColumn(WindowHeaderPanelButtons, 1);
+            //    Grid.SetColumn(DebugPanel, 0);
+            //    Grid.SetColumn(WindowHeaderPanelButtons, 1);
 
-                RuntimeApp.HeaderState = HeaderState.Right;
-            }
-            else
-            {
-                WindowHeaderPanelButtons.RenderTransform = new RotateTransform(360);
-                WindowHeaderPanelButtonsGrid.HorizontalAlignment = HorizontalAlignment.Left;
+            //    RuntimeApp.HeaderState = HeaderState.Right;
+            //}
+            //else
+            //{
+            //    WindowHeaderPanelButtons.RenderTransform = new RotateTransform(360);
+            //    WindowHeaderPanelButtonsGrid.HorizontalAlignment = HorizontalAlignment.Left;
 
-                AddtionalFuncs.HorizontalAlignment = HorizontalAlignment.Right;
+            //    AddtionalFuncs.HorizontalAlignment = HorizontalAlignment.Right;
 
-                Grid.SetColumn(DebugPanel, 1);
-                Grid.SetColumn(WindowHeaderPanelButtons, 0);
+            //    Grid.SetColumn(DebugPanel, 1);
+            //    Grid.SetColumn(WindowHeaderPanelButtons, 0);
 
-                RuntimeApp.HeaderState = HeaderState.Left;
-            }
+            //    RuntimeApp.HeaderState = HeaderState.Left;
+            //}
         }
 
         private void ScaleFit_MouseDown(object sender, MouseButtonEventArgs e)
@@ -356,7 +513,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
         private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
         {
             var grid = (Grid)sender;
-            Runtime.DebugWrite(grid.ActualWidth.ToString() + "x" + grid.ActualHeight.ToString());
+            //Runtime.DebugWrite(grid.ActualWidth.ToString() + "x" + grid.ActualHeight.ToString());
         }
     }
 }

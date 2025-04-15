@@ -1,28 +1,18 @@
 ﻿using Lexplosion.WPF.NewInterface.Core.Modal;
-using Lexplosion.WPF.NewInterface.Mvvm.ViewModels;
+using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.ModalFactory;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Lexplosion.WPF.NewInterface.Stores
 {
     public sealed class ModalNavigationStore
     {
-        private static ModalNavigationStore _modalNavigationStore;
-        public static ModalNavigationStore Instance { get => _modalNavigationStore ?? new ModalNavigationStore(); }
-
-
-
-        private ModalNavigationStore()
-        {
-            _modalNavigationStore = this;
-        }
-
+        public event CurrentViewModelChangedEventHandler CurrentViewModelChanged;
 
         private static readonly Dictionary<Type, Func<IModalViewModel>> _modalAbstractFactoriesByType = new();
 
-
-        public event CurrentViewModelChangedEventHandler CurrentViewModelChanged;
-
+        public string LatestModal;
 
         private IModalViewModel _currentViewModel;
         public IModalViewModel CurrentViewModel
@@ -37,10 +27,14 @@ namespace Lexplosion.WPF.NewInterface.Stores
         public void Open(IModalViewModel viewModel)
         {
             CurrentViewModel = viewModel;
-            CurrentViewModel.CloseCommandExecutedEvent += Close;
+            if (viewModel != null) 
+            {
+                LatestModal = viewModel.ToString().Split('.').LastOrDefault();
+            }
+            CurrentViewModel.CloseCommandExecutedEvent += CloseInternal;
         }
 
-        public void RegisterAbstractFactory(Type type, ModalAbstractFactory factory) 
+        public void RegisterAbstractFactory(Type type, ModalFactoryBase factory) 
         {
             if (_modalAbstractFactoriesByType.ContainsKey(type))
                 throw new ArgumentException($"{type.ToString()} уже существует в словаре абстрактных фабрик модального окна");
@@ -64,10 +58,20 @@ namespace Lexplosion.WPF.NewInterface.Stores
             Open(_modalAbstractFactoriesByType[type]?.Invoke());
         }
 
-        public void Close(object obj)
+        public void Close()
         {
-            CurrentViewModel.CloseCommandExecutedEvent -= Close;
+            if (CurrentViewModel == null) 
+            {
+                return;
+            }
+
+            CurrentViewModel.CloseCommandExecutedEvent -= CloseInternal;
             CurrentViewModel = null;
+        }
+
+        private void CloseInternal(object obj) 
+        {
+            Close();
         }
 
         private void OnCurrentViewModelChanged()

@@ -12,13 +12,28 @@ using Lexplosion.Tools;
 
 namespace Lexplosion.Logic.Network.Web
 {
-    public static class CurseforgeApi
+	public static class CurseforgeApi
     {
         private const string Token = "$2a$10$Ky9zG9R9.ha.kf5BRrvwU..OGSvC0I2Wp56hgXI/4aRtGbizrm3we";
 
-        public class DataContainer<T>
+        private class DataContainer<T>
         {
-            public T data;
+            [JsonProperty("data")]
+            public T Data;
+            [JsonProperty("pagination")]
+            public Pagination Paginator { get; set; }
+        }
+
+        private class Pagination
+        {
+            [JsonProperty("index")]
+            public int Index { get; set; }
+            [JsonProperty("pageSize")]
+            public int PageSize { get; set; }
+            [JsonProperty("resultCount")]
+            public int ResultCount { get; set; }
+            [JsonProperty("totalCount")]
+            public int TotalCount { get; set; }
         }
 
         public class FingerprintSearchAnswer
@@ -33,8 +48,10 @@ namespace Lexplosion.Logic.Network.Web
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static T GetApiData<T>(string url) where T : new()
+        private static T GetApiData<T>(string url, out Pagination pagination) where T : new()
         {
+            pagination = null;
+
             try
             {
                 var headers = new Dictionary<string, string>()
@@ -45,8 +62,11 @@ namespace Lexplosion.Logic.Network.Web
                 string answer = ToServer.HttpGet(url, headers);
                 if (answer != null)
                 {
-                    var data = JsonConvert.DeserializeObject<DataContainer<T>>(answer).data;
-                    return data ?? new T();
+                    var data = JsonConvert.DeserializeObject<DataContainer<T>>(answer);
+                    if (data == null) return new T();
+
+                    pagination = data.Paginator;
+                    return data.Data ?? new T();
                 }
 
                 return new T();
@@ -58,8 +78,10 @@ namespace Lexplosion.Logic.Network.Web
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static T GetApiData<T>(string url, string jsonInputData) where T : new()
+        private static T GetApiData<T>(string url, string jsonInputData, out Pagination pagination) where T : new()
         {
+            pagination = null;
+
             try
             {
                 var headers = new Dictionary<string, string>()
@@ -70,9 +92,11 @@ namespace Lexplosion.Logic.Network.Web
                 string answer = ToServer.HttpPostJson(url, jsonInputData, out _, headers);
                 if (answer != null)
                 {
-                    var test = JsonConvert.DeserializeObject<DataContainer<T>>(answer);
-                    var data = test.data;
-                    return data ?? new T();
+                    var data = JsonConvert.DeserializeObject<DataContainer<T>>(answer);
+                    if (data == null) return new T();
+
+                    pagination = data.Paginator;
+                    return data.Data ?? new T();
                 }
 
                 return new T();
@@ -83,73 +107,90 @@ namespace Lexplosion.Logic.Network.Web
             }
         }
 
-        public static List<CurseforgeInstanceInfo> GetInstances(int pageSize, int index, string categoriy, CfSortField sortField, string searchFilter, string gameVersion)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static T GetApiData<T>(string url, string jsonInputData) where T : new() => GetApiData<T>(url, jsonInputData, out _);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static T GetApiData<T>(string url) where T : new() => GetApiData<T>(url, out _);
+
+        public static CatalogResult<CurseforgeInstanceInfo> GetInstances(CurseforgeSearchParams searchParams)
         {
-            Runtime.DebugWrite(categoriy);
-            if (gameVersion != "")
-            {
-                gameVersion = "&gameVersion=" + gameVersion;
-            }
+            var queryBuilder = new QueryApiBuilder("https://api.curseforge.com/v1/mods/search");
 
-            string url = "https://api.curseforge.com/v1/mods/search?";
+            queryBuilder.Add("gameId", "432");
+            queryBuilder.Add("classId", "4471");
+            queryBuilder.Add("sortOrder", "desc");
+            queryBuilder.Add("pageSize", searchParams.PageSize);
+            queryBuilder.Add("index", searchParams.PageSize * searchParams.PageIndex);
+            
+            if (!string.IsNullOrWhiteSpace(searchParams.SearchFilter))
+                queryBuilder.Add("searchFilter", WebUtility.UrlEncode(searchParams.SearchFilter));
 
-            if (!string.IsNullOrWhiteSpace(searchFilter))
-            {
-                url += "searchFilter=" + WebUtility.UrlEncode(searchFilter) + "&";
-            }
+            if (!string.IsNullOrWhiteSpace(searchParams.GameVersion))
+                queryBuilder.Add("gameVersion", searchParams.GameVersion);
 
-            if (categoriy == "-1")
-            {
-                url += "gameId=432&classId=4471&sortOrder=desc&pageSize=" + pageSize + "&index=" + index + gameVersion + "&sortField=" + (int)sortField;
-            }
-            else
-            {
-                url += "gameId=432&classId=4471&sortOrder=desc&pageSize=" + pageSize + "&index=" + index + gameVersion + "&sortField=" + (int)sortField + "&categoryId=" + categoriy;
-            }
+            queryBuilder.Add("categoryIds", BuildCategoriesToQuery(searchParams.Categories));
+            queryBuilder.Add("sortField", (int)searchParams.SortField);
 
-            Runtime.DebugWrite(url);
+            var url = queryBuilder.Build();
 
-            return GetApiData<List<CurseforgeInstanceInfo>>(url);
+            Runtime.DebugWrite(url, color: ConsoleColor.Cyan);
+
+            var result = GetApiData<List<CurseforgeInstanceInfo>>(url, out Pagination paginator);
+            return new(result, paginator?.TotalCount ?? 1);
         }
 
-        public static List<CurseforgeAddonInfo> GetAddonsList(int pageSize, int index, AddonType type, IEnumerable<IProjectCategory> category, IEnumerable<string> modloaders, string searchFilter = "", string gameVersion = "")
+        private static string BuildCategoriesToQuery(IEnumerable<IProjectCategory> categories) 
         {
-            if (gameVersion != "")
-            {
-                gameVersion = "&gameVersion=" + gameVersion;
-            }
+			string ctrs = string.Join(",", categories.Select(x => x.Id != "-1"));
+			return "[" + ctrs + "]";
+        }
 
-            string ctrs = string.Empty;
-            foreach (var ct in category)
-            {
-                if (ct.Id == "-1")
-                {
-                    ctrs = string.Empty;
-                    break;
-                }
+        public static CatalogResult<CurseforgeAddonInfo> GetAddonsList(AddonType type, CurseforgeSearchParams searchParams)
+        {
+            /*
+             https://api.curseforge.com/v1/mods/search?gameId=432&classId=12&sortOrder=desc&pageSize=10&index=0&gameVersion=1.20.1&categoryIds=%5B%5D&sortField=0&searchFilter=
+             https://api.curseforge.com/v1/mods/search?gameId=432&classId=12&sortOrder=desc&pageSize=10&index=0&gameVersion=1.20.1&categoryIds=&sortField=0
+             */
 
-                ctrs += ct.Id + ",";
-            }
+            var queryBuilder = new QueryApiBuilder("https://api.curseforge.com/v1/mods/search");
 
-            string categoryStr = "&categoryIds=" + WebUtility.UrlEncode("[" + ctrs.RemoveLastChars(1) + "]");
+            queryBuilder.Add("gameId", "432");
+            queryBuilder.Add("classId", (int)type);
+            queryBuilder.Add("sortOrder", "desc");
+            queryBuilder.Add("pageSize", searchParams.PageSize);
+            queryBuilder.Add("index", searchParams.PageIndex * searchParams.PageSize);
 
-            string _modloader = string.Empty;
+            if (!string.IsNullOrWhiteSpace(searchParams.SearchFilter))
+                queryBuilder.Add("searchFilter", WebUtility.UrlEncode(searchParams.SearchFilter));
+
+            if (!string.IsNullOrWhiteSpace(searchParams.GameVersion))
+                queryBuilder.Add("gameVersion", searchParams.GameVersion);
+
+            if (searchParams.Categories.Count() > 0) 
+                queryBuilder.Add("categoryIds", BuildCategoriesToQuery(searchParams.Categories));
+
+            queryBuilder.Add("sortField", (int)searchParams.SortField);
+
             if (type == AddonType.Mods)
             {
-                _modloader = "&modLoaderTypes=" + WebUtility.UrlEncode("[" + string.Join(",", modloaders) + "]");
+                queryBuilder.Add("modLoaderTypes", WebUtility.UrlEncode("[" + string.Join(",", searchParams.Modloaders) + "]"));
             }
 
-            string url = "https://api.curseforge.com/v1/mods/search?gameId=432&sortField=1&sortOrder=desc&classId=" + (int)type + "&pageSize=" + pageSize + "&index=" + index + gameVersion + categoryStr + _modloader + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);
+            var url = queryBuilder.Build();
+
             Runtime.DebugWrite(url);
-            return GetApiData<List<CurseforgeAddonInfo>>(url);
+
+            var result = GetApiData<List<CurseforgeAddonInfo>>(url, out Pagination paginator);
+            return new(result, paginator?.TotalCount ?? 1);
         }
 
-        public static List<CurseforgeFileInfo> GetProjectFiles(string projectId, string gameVersion, ClientType modloader)
+        public static List<CurseforgeFileInfo> GetProjectFiles(string projectId, string gameVersion, int modloader)
         {
             string modloaderStr = "";
-            if (modloader != ClientType.Vanilla)
+            if (modloader != (int)ClientType.Vanilla)
             {
-                modloaderStr = "&modLoaderType=" + (int)modloader;
+                modloaderStr = "&modLoaderType=" + modloader;
             }
 
             // TODO: у курсфорджа ограничения на 50 файлов, поэтому нужный нам файл иногда может просто не найтись
@@ -213,6 +254,26 @@ namespace Lexplosion.Logic.Network.Web
             //return ToServer.HttpGet("https://api.curseforge.com/v1/mods/" + projectID + "/files/" + fileID + "/changelog");
             // TODO: придумать как эту хуйню красиво сделать
             return "";
+        }
+
+        public static string GetProjectDescription(string projectId)
+        {
+            try
+            {
+                string result = ToServer.HttpGet($"https://api.curseforge.com/v1/mods/{projectId}/description", new Dictionary<string, string>()
+                {
+                    ["x-api-key"] = Token
+                });
+
+                if (result == null) return string.Empty;
+
+                var data = JsonConvert.DeserializeObject<DataContainer<string>>(result);
+                return data?.Data ?? string.Empty;
+            }
+            catch
+            {
+                return string.Empty;
+            }
         }
 
         public static List<CurseforgeCategory> GetCategories(CfProjectType type)

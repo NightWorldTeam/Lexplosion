@@ -1,0 +1,407 @@
+﻿<UserControl
+    x:Class="Lexplosion.WPF.NewInterface.Mvvm.Views.Modal.InstanceTransfer.InstanceImportFillDataView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Lexplosion.WPF.NewInterface.Controls"
+    xmlns:converters="clr-namespace:Lexplosion.WPF.NewInterface.Core.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
+    xmlns:instancetransfer="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer"
+    xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Modal.InstanceTransfer"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:objects="clr-namespace:Lexplosion;assembly=Lexplosion.Core"
+    d:DataContext="{d:DesignInstance Type=instancetransfer:InstanceImportFillDataViewModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <Border
+        Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={converters:WindowWidthToXProcentWidth}, ConverterParameter=60}"
+        Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={converters:WindowHeightToXProcentHeight}, ConverterParameter=90}"
+        MaxWidth="700"
+        MaxHeight="528"
+        Padding="20,0,20,0"
+        Background="{DynamicResource PrimarySolidColorBrush}"
+        CornerRadius="10">
+
+        <Grid>
+            <Grid x:Name="Content">
+
+                <Grid>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <!--  Header  -->
+                    <Border
+                        Margin="-20,16,-20,0"
+                        Padding="0,0,0,10"
+                        VerticalAlignment="Top"
+                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                        BorderThickness="0,0,0,1">
+                        <Grid>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <!--  Selected Page Title  -->
+                            <TextBlock
+                                Margin="20,0"
+                                VerticalAlignment="Top"
+                                FontSize="18"
+                                FontWeight="Medium"
+                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                Text="{DynamicResource AddingAccount}" />
+
+                            <!--  Close Button  -->
+                            <controls:AdvancedButton
+                                Margin="0,0,20,0"
+                                Padding="8"
+                                HorizontalAlignment="Right"
+                                Panel.ZIndex="10000"
+                                Command="{Binding CloseCommand}"
+                                CommandParameter="{StaticResource TrueValue}"
+                                IconData="{DynamicResource PDClose}"
+                                IsCancel="True"
+                                Style="{StaticResource TransparentAdvancedButton}" />
+                        </Grid>
+
+                    </Border>
+
+                    <Grid Grid.Row="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <ScrollViewer Margin="0,0,-20,0">
+                            <StackPanel Margin="0,0,10,0">
+
+                                <!--  Microsoft Authorization Info Message  -->
+                                <!--  TODO: Вынести в отдельный компонент  -->
+                                <Border
+                                    Margin="0,8,0,8"
+                                    Padding="16,12"
+                                    Background="#d7eaf8"
+                                    CornerRadius="5">
+
+                                    <StackPanel>
+                                        <TextBlock
+                                            FontSize="14"
+                                            FontWeight="Medium"
+                                            Text="{DynamicResource Information}" />
+
+                                        <TextBlock
+                                            Margin="0,0,0,0"
+                                            FontSize="14"
+                                            FontWeight="Normal"
+                                            Text="{DynamicResource UnableToDetermineDataForImport}"
+                                            TextWrapping="WrapWithOverflow" />
+                                    </StackPanel>
+                                </Border>
+
+                                <!--  Name  -->
+                                <Border
+                                    Padding="0,8"
+                                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                    BorderThickness="0,0,0,1">
+
+                                    <!--  Game Versions  -->
+
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <!--  Header  -->
+                                        <StackPanel>
+                                            <TextBlock
+                                                FontSize="13"
+                                                FontWeight="Medium"
+                                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                                Text="{DynamicResource InstanceName}" />
+                                            <TextBlock
+                                                FontSize="12"
+                                                FontWeight="Medium"
+                                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                                Text="{DynamicResource NameDescription}" />
+                                        </StackPanel>
+
+                                        <controls:AdvancedTextBox
+                                            Grid.Column="1"
+                                            Width="215"
+                                            HorizontalAlignment="Right"
+                                            FontSize="13"
+                                            Placeholder="{DynamicResource InstanceName}"
+                                            Text="{Binding Model.InstanceName, UpdateSourceTrigger=PropertyChanged}" />
+                                    </Grid>
+                                </Border>
+
+                                <!--  Versions  -->
+                                <Border
+                                    Padding="0,0,0,8"
+                                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                    BorderThickness="0,0,0,1">
+                                    <Grid ShowGridLines="False">
+
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+
+                                        <!--  Game Versions  -->
+                                        <Border
+                                            Padding="0,8,0,8"
+                                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                            BorderThickness="0,0,0,1">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <!--  Header  -->
+                                                <StackPanel>
+                                                    <TextBlock
+                                                        FontSize="13"
+                                                        FontWeight="Medium"
+                                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                                        Text="{DynamicResource Version}" />
+                                                    <TextBlock
+                                                        FontSize="12"
+                                                        FontWeight="Medium"
+                                                        Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                                        Text="{DynamicResource VersionDescription}" />
+                                                </StackPanel>
+
+                                                <Grid Grid.Column="1">
+                                                    <ComboBox
+                                                        Width="215"
+                                                        HorizontalAlignment="Right"
+                                                        IsSynchronizedWithCurrentItem="True"
+                                                        ItemsSource="{Binding Model.GameVersions}"
+                                                        MaxDropDownHeight="300"
+                                                        SelectedItem="{Binding Model.Version, UpdateSourceTrigger=PropertyChanged}"
+                                                        Visibility="{Binding Model.IsGameVersionsAvaliable, Converter={converters:BooleanToVisibilityConverter}}" />
+
+                                                    <!--  Only version when GameVersions count = 0  -->
+                                                    <Border
+                                                        Width="215"
+                                                        Padding="8"
+                                                        HorizontalAlignment="Right"
+                                                        VerticalAlignment="Center"
+                                                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                                        BorderThickness="1"
+                                                        CornerRadius="5"
+                                                        Visibility="{Binding Model.IsGameVersionsAvaliable, Converter={converters:NegativeBooleanToVisibilityConverter}}">
+                                                        <TextBlock FontWeight="Medium" Text="1.20.2" />
+                                                    </Border>
+                                                </Grid>
+                                            </Grid>
+                                        </Border>
+
+                                        <!--  Is Show Snapshots  -->
+                                        <Grid Grid.Row="1" Margin="0,8,0,0">
+
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="0.3*" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <StackPanel>
+                                                <TextBlock
+                                                    FontSize="13"
+                                                    FontWeight="Medium"
+                                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                                    Text="{DynamicResource IsShowSnapshots}" />
+                                                <TextBlock
+                                                    FontSize="12"
+                                                    FontWeight="Medium"
+                                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                                    Text="{DynamicResource IsShowSnapshotsDescription}"
+                                                    TextWrapping="WrapWithOverflow" />
+                                            </StackPanel>
+
+                                            <ToggleButton
+                                                Grid.Column="1"
+                                                HorizontalAlignment="Right"
+                                                IsChecked="{Binding Model.IsShowSnapshots}"
+                                                Style="{StaticResource SwitchButton}" />
+                                        </Grid>
+                                    </Grid>
+                                </Border>
+
+                                <!--  GameType  -->
+                                <Border
+                                    Padding="0,8,0,8"
+                                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                    BorderThickness="0,0,0,1">
+                                    <Grid>
+
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <!--  Header  -->
+                                        <StackPanel>
+                                            <TextBlock
+                                                FontSize="13"
+                                                FontWeight="Medium"
+                                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                                Text="{DynamicResource GameType}" />
+                                            <TextBlock
+                                                FontSize="12"
+                                                FontWeight="Medium"
+                                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                                Text="{DynamicResource GameTypeDescription}" />
+                                        </StackPanel>
+
+                                        <WrapPanel
+                                            Grid.Column="1"
+                                            HorizontalAlignment="Right"
+                                            Orientation="Horizontal">
+                                            <RadioButton
+                                                Command="{Binding ChangeInstanceClientTypeCommand, Mode=OneWay}"
+                                                CommandParameter="{x:Static objects:ClientType.Vanilla}"
+                                                Content="Vanilla"
+                                                GroupName="GameType"
+                                                IsChecked="{Binding IsVanilla}"
+                                                Style="{StaticResource HighlightRadioButton}"
+                                                TextBlock.FontSize="12" />
+                                            <RadioButton
+                                                Margin="8,0,0,0"
+                                                Command="{Binding ChangeInstanceClientTypeCommand, Mode=OneWay}"
+                                                CommandParameter="{x:Static objects:ClientType.Forge}"
+                                                Content="Forge"
+                                                GroupName="GameType"
+                                                IsChecked="{Binding IsForge}"
+                                                IsEnabled="{Binding Model.ModloaderManager.IsForgeAvaliable}"
+                                                Style="{StaticResource HighlightRadioButton}" />
+                                            <RadioButton
+                                                Margin="8,0,0,0"
+                                                Command="{Binding ChangeInstanceClientTypeCommand, Mode=OneWay}"
+                                                CommandParameter="{x:Static objects:ClientType.Fabric}"
+                                                Content="Fabric"
+                                                GroupName="GameType"
+                                                IsChecked="{Binding IsFabric}"
+                                                IsEnabled="{Binding Model.ModloaderManager.IsFabricAvaliable}"
+                                                Style="{StaticResource HighlightRadioButton}" />
+                                            <RadioButton
+                                                Margin="8,0,0,0"
+                                                Command="{Binding ChangeInstanceClientTypeCommand, Mode=OneWay}"
+                                                CommandParameter="{x:Static objects:ClientType.Quilt}"
+                                                Content="Quilt"
+                                                GroupName="GameType"
+                                                IsChecked="{Binding IsQuilt}"
+                                                IsEnabled="{Binding Model.ModloaderManager.IsQuiltAvaliable}"
+                                                Style="{StaticResource HighlightRadioButton}" />
+                                            <RadioButton
+                                                Margin="8,0,0,0"
+                                                Command="{Binding ChangeInstanceClientTypeCommand, Mode=OneWay}"
+                                                CommandParameter="{x:Static objects:ClientType.NeoForge}"
+                                                Content="NeoForged"
+                                                GroupName="GameType"
+                                                IsChecked="{Binding IsNeoForged}"
+                                                IsEnabled="{Binding Model.ModloaderManager.IsNeoForgedAvailable}"
+                                                Style="{StaticResource HighlightRadioButton}" />
+                                        </WrapPanel>
+                                    </Grid>
+                                </Border>
+
+                                <!--  Modloader Version  -->
+                                <Border
+                                    Margin="0,0,0,8"
+                                    Padding="0,8,0,8"
+                                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                    BorderThickness="0,0,0,1"
+                                    Visibility="{Binding IsVanilla, Converter={converters:NegativeBooleanToVisibilityConverter}}">
+
+                                    <Grid>
+
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <!--  Header  -->
+                                        <StackPanel>
+                                            <TextBlock
+                                                FontSize="13"
+                                                FontWeight="Medium"
+                                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                                Text="{DynamicResource ModloaderVersion}" />
+                                            <TextBlock
+                                                FontSize="12"
+                                                FontWeight="Medium"
+                                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                                Text="{DynamicResource ModloaderVersionDescription}"
+                                                TextWrapping="WrapWithOverflow" />
+                                        </StackPanel>
+
+
+                                        <Grid Grid.Column="1">
+                                            <ComboBox
+                                                x:Name="ModloaderVersion"
+                                                Width="215"
+                                                Height="32"
+                                                HorizontalAlignment="Right"
+                                                IsSynchronizedWithCurrentItem="True"
+                                                ItemsSource="{Binding Model.ModloaderManager.CurrentMinecraftExtension.Versions}"
+                                                SelectedValue="{Binding Model.ModloaderVersion, UpdateSourceTrigger=PropertyChanged}"
+                                                Visibility="{Binding Model.ModloaderManager.IsCurrentAvaliable, Mode=OneWay, Converter={converters:BooleanToVisibilityConverter}}" />
+
+                                            <!--  Only version when GameVersions count = 0  -->
+                                            <Border
+                                                Width="215"
+                                                Height="{Binding ActualHeight, ElementName=ModloaderVersion}"
+                                                Padding="8"
+                                                HorizontalAlignment="Right"
+                                                VerticalAlignment="Center"
+                                                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                                BorderThickness="1"
+                                                CornerRadius="5"
+                                                Visibility="{Binding Model.ModloaderManager.IsCurrentAvaliable, Mode=OneWay, Converter={converters:NegativeBooleanToVisibilityConverter}}">
+                                                <TextBlock FontWeight="Medium" Text="{Binding Model.ModloaderVersion}" />
+                                            </Border>
+                                        </Grid>
+                                    </Grid>
+                                </Border>
+                            </StackPanel>
+                        </ScrollViewer>
+
+                        <StackPanel
+                            Grid.Row="2"
+                            Margin="0,8,0,8"
+                            VerticalAlignment="Bottom"
+                            Orientation="Horizontal">
+
+                            <controls:AdvancedButton
+                                Height="32"
+                                Margin="0,0,8,0"
+                                Command="{Binding ActionCommand}"
+                                Content="{DynamicResource Apply}"
+                                FontSize="13"
+                                IsEnabled="{Binding Model.AllFieldsFilled}"
+                                Style="{StaticResource sm-default}" />
+
+                            <controls:AdvancedButton
+                                Height="32"
+                                Command="{Binding CloseCommand}"
+                                CommandParameter="{StaticResource TrueValue}"
+                                Content="{DynamicResource Cancel}"
+                                FontSize="13"
+                                Style="{StaticResource sm-ghost}" />
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+
+            </Grid>
+        </Grid>
+    </Border>
+</UserControl>

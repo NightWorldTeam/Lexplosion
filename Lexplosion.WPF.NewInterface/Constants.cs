@@ -12,8 +12,9 @@
         public const string BoostyUrl = "";
         public const string NightWorldOfficalWebsiteUrl = "https://night-world.org/";
 
-
-        public const string ImportFileExtension = ".zip";
-        public const string ImportFileDialogFilters = "Acrhives files (.zip)|*.zip";
+        public const string ImportFileExtensionZip = ".zip";
+        public const string ImportFileExtensionNWPack = ".nwpk";
+        public const string ImportFileExtensionMRPack = ".mrpack";
+        public const string ImportFileDialogFilters = "NightWorld packs (.nwpk)|*.nwpk|Zip files (.zip)|*.zip|Modrinth packs (.mrpack)|*.mrpack";
     }
 }

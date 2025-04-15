@@ -3,45 +3,102 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:Lexplosion.WPF.NewInterface.Controls"
+    xmlns:converters="clr-namespace:Lexplosion.WPF.NewInterface.Core.Converters"
+    xmlns:core="clr-namespace:Lexplosion.WPF.NewInterface.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Windows"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Name="TestWindowName"
     Title="TestWindow"
-    Width="800"
-    Height="450"
+    MinWidth="944"
+    MinHeight="528"
+    MaxWidth="944"
+    MaxHeight="528"
     mc:Ignorable="d">
-    <Grid Margin="16">
+    <Grid Background="white" Loaded="Grid_Loaded">
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-
-        <ItemsControl
-            Grid.Row="1"
-            ItemsSource="{Binding SelectedItems, ElementName=CategoriesList}"
-            Visibility="Collapsed" />
-
-        <ListBox
-            x:Name="ListBox1"
-            Grid.Row="1"
-            Grid.Column="1"
-            SelectionChanged="ListBox1_SelectionChanged"
-            SelectionMode="Multiple"
-            Visibility="Collapsed" />
+        <Border>
+            <Grid>
 
 
-        <ComboBox
-            x:Name="multiSelectComboBox"
-            IsEditable="True"
-            IsTextSearchCaseSensitive="False"
-            IsTextSearchEnabled="False"
-            StaysOpenOnEdit="True"
-            TextSearch.TextPath="Name" />
+                <Grid
+                    x:Name="ThemeSelect"
+                    HorizontalAlignment="Center"
+                    Visibility="Collapsed">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <TextBlock FontSize="24" Text="Внешний вид" />
+                    <TextBlock
+                        Grid.Row="1"
+                        Width="600"
+                        FontSize="16"
+                        Text="Выберите тему которую желаете видить в нашем лаунчере. В будущем мы появится возможно создавать свои темы."
+                        TextWrapping="Wrap" />
+
+                    <StackPanel Grid.Row="2" Margin="0,16,0,0" />
+
+                </Grid>
+
+                <StackPanel
+                    x:Name="WelcomePage"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Background="Transparent">
+
+                    <StackPanel x:Name="LogoName" Orientation="Horizontal">
+
+                        <Border
+                            x:Name="Logo"
+                            Width="64"
+                            Height="64"
+                            Margin="0,10,16,0"
+                            VerticalAlignment="Center"
+                            Opacity="0">
+                            <Border.Background>
+                                <ImageBrush ImageSource="/Assets/images/icons/logo.ico" />
+                            </Border.Background>
+                        </Border>
+                        <TextBlock
+                            x:Name="Lexplosion"
+                            FontSize="64"
+                            FontWeight="Medium"
+                            Foreground="#167FFC"
+                            Opacity="0"
+                            Text="Lexplosion" />
+                        <!--<TextBlock
+                    FontSize="32"
+                    Foreground="#44698E"
+                    Visibility="Collapsed">
+                    <Run Text="Добро пожаловать в новую эру" />
+                    <Run
+                        FontFamily="{StaticResource Arkhip}"
+                        FontWeight="Bold"
+                        Text="NightWorld" />
+                </TextBlock>-->
+                    </StackPanel>
+
+                    <TextBlock
+                        x:Name="WelcomeText"
+                        Margin="0,0,0,0"
+                        HorizontalAlignment="Right"
+                        FontSize="16"
+                        FontWeight="Medium"
+                        Foreground="#8f8f8f"
+                        Opacity="0"
+                        TextAlignment="Center"
+                        TextWrapping="Wrap">
+                        <Run Text="Добро пожаловать в новую эру" />
+                        <Run
+                            FontWeight="Medium"
+                            Foreground="#2e2e2e"
+                            Text="NightWorld" />
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+        </Border>
     </Grid>
 </Window>

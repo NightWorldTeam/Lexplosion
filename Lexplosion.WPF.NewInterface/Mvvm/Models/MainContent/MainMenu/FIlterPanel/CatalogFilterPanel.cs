@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Windows.Data;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.FIlterPanel
@@ -40,7 +42,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.FIlterPan
             get => _selectedSortByParam; set
             {
                 _selectedSortByParam = value;
-                FilterChanged?.Invoke();
+                FilterChangedExecuteEvent();
                 OnPropertyChanged();
             }
         }
@@ -57,7 +59,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.FIlterPan
             get => _selectedVersion; set
             {
                 _selectedVersion = value;
-                FilterChanged?.Invoke();
+                FilterChangedExecuteEvent();
                 OnPropertyChanged();
             }
         }
@@ -94,17 +96,20 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.FIlterPan
                             {
                                 var name = Enum.GetName(typeof(CfSortField), index);
 
-                                _sortByParams.Add(new SortByParamObject($"Curseforge{name}", (int)index));
-                                SelectedSortByParam = _sortByParams.First();
+								var elem = new SortByParamObject($"Curseforge{name}", (int)index);
+								if ((int)index == (int)CfSortField.Popularity) SelectedSortByParam = elem;
+
+								_sortByParams.Add(elem);
                             }
+
                         }
                         break;
                     case InstanceSource.Nightworld:
                         _sortByParams.Clear();
+                        FilterChangedExecuteEvent();
                         break;
                 }
 
-                FilterChanged?.Invoke();
 
                 OnPropertyChanged();
             }
@@ -117,29 +122,38 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.FIlterPan
         #region Constructors
 
 
-        public CatalogFilterPanel()
+        public CatalogFilterPanel(Action filterChange)
         {
-            MainViewModel.AllVersionsLoaded += (() => 
-            {
-                App.Current.Dispatcher.Invoke(() => 
-                { 
-                    var versions = new ObservableCollection<MinecraftVersion>(MainViewModel.AllGameVersions);
-                    versions.Insert(0, AllVersion);
-                    SelectedVersion = versions[0];
-
-                    VersionCollectionViewSource.Source = versions;
-                    VersionCollectionViewSource.View.Filter = (mv) => ((mv as MinecraftVersion).Type == MinecraftVersion.VersionType.Release);
-                });
-            });
-
-            UpdateCategories(InstanceSource.Modrinth);
-
-            Sources.Add(new InstanceSourceObject("Modrinth", InstanceSource.Modrinth));
             Sources.Add(new InstanceSourceObject("Curseforge", InstanceSource.Curseforge));
+            Sources.Add(new InstanceSourceObject("Modrinth", InstanceSource.Modrinth));
             Sources.Add(new InstanceSourceObject("NightWorld", InstanceSource.Nightworld));
 
+            UpdateCategories(Sources[0].Value);
             SelectedSource = Sources[0];
-            SelectedSortByParam = SortByParams.First();
+
+            FilterChanged += filterChange;
+
+            if (MainViewModel.AllGameVersions == null)
+            {
+                MainViewModel.AllVersionsLoaded += MainViewModel_AllVersionsLoaded;
+            }
+            else 
+            {
+                MainViewModel_AllVersionsLoaded();
+            }
+        }
+
+        private void MainViewModel_AllVersionsLoaded()
+        {
+            App.Current.Dispatcher.Invoke(() => 
+            { 
+                var versions = new ObservableCollection<MinecraftVersion>(MainViewModel.AllGameVersions);
+                versions.Insert(0, AllVersion);
+                SelectedVersion = versions[0];
+
+                VersionCollectionViewSource.Source = versions;
+                VersionCollectionViewSource.View.Filter = (mv) => ((mv as MinecraftVersion).Type == MinecraftVersion.VersionType.Release);
+            });
         }
 
 
@@ -160,9 +174,16 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.FIlterPan
         #region Public Methods
 
 
-        public void FilterChangedExecuteEvent()
+        public void ExecuteFilter() 
+        {
+            SelectedSource = Sources[0];
+        }
+
+
+        public void FilterChangedExecuteEvent([CallerMemberName] string member = "")
         {
             FilterChanged?.Invoke();
+            Runtime.DebugWrite($"{member} FilterChanged Executed");
         }
 
 

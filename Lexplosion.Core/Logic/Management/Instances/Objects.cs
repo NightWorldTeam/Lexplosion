@@ -100,5 +100,6 @@ namespace Lexplosion.Logic.Management.Instances
         public ClientType Modloader { get; set; }
         public string ModloaderVersion { get; set; }
         public string OptifineVersion { get; set; } = null;
+		public bool IsNwClient { get; set; }
     }
 }

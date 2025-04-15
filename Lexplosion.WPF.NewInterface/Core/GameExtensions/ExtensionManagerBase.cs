@@ -1,5 +1,8 @@
-﻿using Lexplosion.Logic.Management;
+﻿using Lexplosion.Logic;
+using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Network;
+using Lexplosion.Tools;
+using Lexplosion.WPF.NewInterface.Core.ViewModel;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -10,7 +13,7 @@ namespace Lexplosion.WPF.NewInterface.Core.GameExtensions
     /// <summary>
     /// Загружает, хранит версии модлоадера.
     /// </summary>
-    public abstract class ExtensionManagerBase : VMBase
+    public abstract class ExtensionManagerBase : ObservableObject
     {
         /// <summary>
         /// GameExtension (Fabric, Optifine, etc)
@@ -84,33 +87,44 @@ namespace Lexplosion.WPF.NewInterface.Core.GameExtensions
         /// </summary>
         protected abstract void OnPropertiesChanged();
 
+        private static KeySemaphore<GameExtension> _loadExtensionVersionsSync = new();
 
-        /// <summary>
-        /// Возвращает класс для расширения майнкрафта.
-        /// Также сохраняет класс в словарь.
-        /// </summary>
-        /// <param name="extension">Расширение игры (optifine, fabric, etc)</param>
-        /// <param name="gameVersion">Версия майнкрафта</param>
-        /// <returns>MinecraftExtension</returns>
-        public static MinecraftExtension LoadExtensionVersions(GameExtension extension, MinecraftVersion minecraftVersion)
+
+		/// <summary>
+		/// Возвращает класс для расширения майнкрафта.
+		/// Также сохраняет класс в словарь.
+		/// </summary>
+		/// <param name="extension">Расширение игры (optifine, fabric, etc)</param>
+		/// <param name="gameVersion">Версия майнкрафта</param>
+		/// <returns>MinecraftExtension</returns>
+		public static MinecraftExtension LoadExtensionVersions(GameExtension extension, MinecraftVersion minecraftVersion)
         {
-            // Todo: optimize code, do not save empty value, just return constant for it.
+            _loadExtensionVersionsSync.WaitOne(extension);
 
-            // if current game version is not contains extension versions 
-            if (!_extensionVersions[extension].ContainsKey(minecraftVersion))
+            try
             {
-                IList<string> extensionVersion;
+				// Todo: optimize code, do not save empty value, just return constant for it.
 
-                // if optifine
-                if (GameExtension.Optifine == extension)
-                    extensionVersion = ToServer.GetOptifineVersions(minecraftVersion.Id);
-                else
-                    extensionVersion = ToServer.GetModloadersList(minecraftVersion.Id, (ClientType)extension);
+				// if current game version is not contains extension versions 
+				if (!_extensionVersions[extension].ContainsKey(minecraftVersion))
+				{
+					IList<string> extensionVersion;
 
-                _extensionVersions[extension].TryAdd(minecraftVersion, new MinecraftExtension(new ReadOnlyCollection<string>(extensionVersion), extension));
-            }
-            return _extensionVersions[extension][minecraftVersion];
-        }
+					// if optifine
+					if (GameExtension.Optifine == extension)
+						extensionVersion = CoreServicesManager.MinecraftInfo.GetOptifineVersions(minecraftVersion.Id);
+					else
+						extensionVersion = CoreServicesManager.MinecraftInfo.GetModloadersList(minecraftVersion.Id, (ClientType)extension);
+
+					_extensionVersions[extension].TryAdd(minecraftVersion, new MinecraftExtension(new ReadOnlyCollection<string>(extensionVersion), extension));
+				}
+				return _extensionVersions[extension][minecraftVersion];
+			}
+            finally
+            {
+				_loadExtensionVersionsSync.Release(extension);
+			}			
+		}
 
         /// <summary>
         /// Загружены ли версии расширения для данной версии игры.

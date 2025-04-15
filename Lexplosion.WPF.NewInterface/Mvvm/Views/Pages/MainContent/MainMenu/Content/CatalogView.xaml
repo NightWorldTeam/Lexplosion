@@ -4,13 +4,18 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:Lexplosion.WPF.NewInterface.Controls"
     xmlns:converters="clr-namespace:Lexplosion.WPF.NewInterface.Core.Converters"
+    xmlns:core="clr-namespace:Lexplosion.WPF.NewInterface.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
     xmlns:instanceModel="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu"
+    xmlns:mainmenu="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:objects="clr-namespace:Lexplosion.Logic.Objects;assembly=Lexplosion.Core"
+    xmlns:oldinstanceform="clr-namespace:Lexplosion.WPF.NewInterface.Controls.OldInstanceForm"
     xmlns:translatable="clr-namespace:Lexplosion.WPF.NewInterface.Core.Objects.TranslatableObjects"
+    xmlns:virtualization="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
+    d:DataContext="{d:DesignInstance Type=mainmenu:CatalogViewModel}"
     d:DesignHeight="528"
     d:DesignWidth="694"
     mc:Ignorable="d">
@@ -18,7 +23,6 @@
     <UserControl.Resources>
         <Style x:Key="FilterIconRadioButton" TargetType="{x:Type ListViewItem}">
             <Setter Property="DataContext" Value="{Binding}" />
-            <Setter Property="Content" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ListViewItem}">
@@ -33,7 +37,7 @@
                                 <Viewbox Width="24" Height="20">
                                     <Path
                                         x:Name="path"
-                                        extensions:Path.StringKeyData="{TemplateBinding Content}"
+                                        extensions:PathExtensions.StringKeyData="{TemplateBinding Content}"
                                         Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
                                         Stretch="Fill" />
                                 </Viewbox>
@@ -43,319 +47,372 @@
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsSelected" Value="True">
                                 <Setter TargetName="border" Property="Background" Value="{DynamicResource ActivitySolidColorBrush}" />
-                                <Setter TargetName="path" Property="Fill" Value="{DynamicResource BrandColorForegroundSolidColorBrush}" />
+                                <Setter TargetName="path" Property="Fill" Value="{DynamicResource DefaultButtonForegroundColorBrush}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <DataTemplate DataType="{x:Type instanceModel:InstanceModelBase}">
+            <oldinstanceform:OldInstanceForm
+                Margin="0,0,0,16"
+                LogoButtonCommand="{Binding DataContext.OpenInstanceProfileMenu, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                LogoButtonCommandParameter="{Binding}"
+                OpenAddonsPageCommand="{Binding DataContext.OpenAddonsPageCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
+        </DataTemplate>
     </UserControl.Resources>
 
-    <Border Padding="0,40,0,0">
-        <Grid Background="Transparent">
+    <Border Padding="0,40,0,0" Focusable="True">
+        <Grid>
 
-            <ScrollViewer KeyboardNavigation.IsTabStop="False" KeyboardNavigation.TabNavigation="None">
+            <Grid x:Name="Context" Background="Transparent">
 
-                <Grid>
+                <ScrollViewer
+                    x:Name="ContainerPage_ScrollViewer"
+                    extensions:ScrollViewerExtensions.ChildItemsUpdated="{Binding IsLoaded}"
+                    extensions:ScrollViewerExtensions.OnScrollCommand="{Binding OnScrollCommand}"
+                    IsTabStop="False"
+                    KeyboardNavigation.IsTabStop="False"
+                    KeyboardNavigation.TabNavigation="None">
+                    <!--  ScrollChanged="ContainerPage_ScrollChanged"  -->
+                    <Grid Focusable="True">
 
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="0.0715*" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="0.0715*" />
-                    </Grid.ColumnDefinitions>
-
-
-                    <!--  Search Box & Filters  -->
-                    <Grid Grid.Column="1">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
 
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.0715*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="0.0715*" />
+                        </Grid.ColumnDefinitions>
 
-                        <StackPanel
-                            Margin="0,0,0,16"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Top"
-                            Orientation="Horizontal">
 
-                            <controls:SearchBox
-                                Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={StaticResource WindowWidthToXProcentWidth}, ConverterParameter=40}"
-                                Placeholder="{DynamicResource Search}"
-                                SearchCommand="{Binding SearchCommand}"
-                                Text="{Binding Model.SearchFilter, UpdateSourceTrigger=PropertyChanged}" />
+                        <!--  Search Box & Filters  -->
+                        <Grid Grid.Column="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
 
-                            <ToggleButton
-                                x:Name="FiltersButton"
-                                Width="40"
-                                Height="40"
-                                Margin="15,0,0,0"
-                                Background="{DynamicResource PrimarySolidColorBrush}"
-                                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                                Style="{StaticResource FilterIconToggleButton}" />
 
+                            <StackPanel
+                                Margin="0,0,0,16"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Top"
+                                Orientation="Horizontal">
+
+                                <controls:SearchBox
+                                    Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={converters:WindowWidthToXProcentWidth}, ConverterParameter=40}"
+                                    Placeholder="{DynamicResource Search}"
+                                    SearchCommand="{Binding SearchCommand}"
+                                    Text="{Binding Model.SearchFilter, UpdateSourceTrigger=PropertyChanged}" />
+
+                                <ToggleButton
+                                    x:Name="FiltersButton"
+                                    Width="40"
+                                    Height="40"
+                                    Margin="15,0,0,0"
+                                    Background="{DynamicResource PrimarySolidColorBrush}"
+                                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                    Style="{StaticResource FilterIconToggleButton}" />
+
+
+                                <core:If Condition="{Binding Model.Instances, Converter={converters:IsCollectionEmptyConverter}}">
+                                    <core:If.False>
+                                        <ToggleButton
+                                            x:Name="HeadPaginatorSwitch"
+                                            Width="40"
+                                            Height="40"
+                                            Margin="15,0,0,0"
+                                            Background="{DynamicResource PrimarySolidColorBrush}"
+                                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                            Content="Numbers123"
+                                            Style="{StaticResource FilterIconToggleButton}" />
+                                    </core:If.False>
+                                </core:If>
+                            </StackPanel>
+
+                            <!--  Filter Panel  -->
                             <Border
-                                Width="40"
-                                Height="40"
-                                Margin="15,0,0,0"
-                                Background="{DynamicResource PrimarySolidColorBrush}"
-                                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                                CornerRadius="5" />
-                        </StackPanel>
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Margin="0,0,0,16"
+                                HorizontalAlignment="Stretch"
+                                Background="{DynamicResource InstancesFilterSolidColorBrush}"
+                                BorderBrush="{DynamicResource InstancesFilterBorderSolidColorBrush}"
+                                BorderThickness="1"
+                                CornerRadius="10"
+                                Visibility="{Binding IsChecked, ElementName=FiltersButton, Converter={converters:BooleanToVisibilityConverter}}">
+                                <Grid HorizontalAlignment="Stretch" ShowGridLines="False">
 
-                        <!--  Filter Panel  -->
-                        <Border
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <!--  Source  -->
+
+                                    <Border BorderBrush="{DynamicResource SeparateSolidColorBrush}" BorderThickness="0,0,1,1">
+                                        <Grid Margin="8">
+
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+
+                                            <Grid Margin="0,0,0,8">
+                                                <TextBlock
+                                                    FontSize="14"
+                                                    FontWeight="Medium"
+                                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                                    Text="{DynamicResource Source}" />
+                                                <TextBlock
+                                                    HorizontalAlignment="Right"
+                                                    extensions:TextBlockExtensions.TextByKey="{Binding Model.FilterPanel.SelectedSource.TranslateKey}"
+                                                    FontSize="14"
+                                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                            </Grid>
+
+                                            <Border
+                                                Grid.Row="1"
+                                                Background="{DynamicResource SecondarySolidColorBrush}"
+                                                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                                BorderThickness="1"
+                                                CornerRadius="5">
+
+                                                <ListView
+                                                    Background="Transparent"
+                                                    BorderThickness="0"
+                                                    ItemsSource="{Binding Model.FilterPanel.Sources}"
+                                                    SelectedItem="{Binding Model.FilterPanel.SelectedSource}">
+
+                                                    <ListView.ItemContainerStyle>
+                                                        <Style BasedOn="{StaticResource FilterIconRadioButton}" TargetType="{x:Type ListViewItem}">
+                                                            <Setter Property="Content" Value="{Binding Value, Converter={converters:ToStringConverter}}" />
+                                                        </Style>
+                                                    </ListView.ItemContainerStyle>
+
+                                                    <ListView.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <WrapPanel IsItemsHost="True" />
+                                                        </ItemsPanelTemplate>
+                                                    </ListView.ItemsPanel>
+                                                </ListView>
+                                            </Border>
+                                        </Grid>
+                                    </Border>
+
+                                    <!--  Sorting  -->
+                                    <Border
+                                        Grid.Row="1"
+                                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                        BorderThickness="0,0,1,1"
+                                        Visibility="{Binding Model.FilterPanel.SortByParams.Count, Converter={converters:CountToVisibilityConverter}}">
+                                        <Grid Margin="8">
+
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+
+                                            <Grid Margin="0,0,0,8">
+                                                <TextBlock
+                                                    FontSize="14"
+                                                    FontWeight="Medium"
+                                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                                    Text="{DynamicResource Sorting}" />
+                                                <TextBlock
+                                                    HorizontalAlignment="Right"
+                                                    extensions:TextBlockExtensions.TextByKey="{Binding Model.FilterPanel.SelectedSortByParam.TranslateKey}"
+                                                    FontSize="14"
+                                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                            </Grid>
+
+                                            <Border
+                                                Grid.Row="1"
+                                                Background="{DynamicResource SecondarySolidColorBrush}"
+                                                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                                BorderThickness="1"
+                                                CornerRadius="5">
+                                                <ListView
+                                                    Background="Transparent"
+                                                    BorderThickness="0"
+                                                    ItemsSource="{Binding Model.FilterPanel.SortByParams}"
+                                                    SelectedItem="{Binding Model.FilterPanel.SelectedSortByParam}">
+
+                                                    <ListView.ItemContainerStyle>
+                                                        <Style BasedOn="{StaticResource FilterIconRadioButton}" TargetType="{x:Type ListViewItem}">
+                                                            <Setter Property="Content" Value="{Binding TranslateKey}" />
+                                                        </Style>
+                                                    </ListView.ItemContainerStyle>
+
+                                                    <ListView.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <WrapPanel IsItemsHost="True" />
+                                                        </ItemsPanelTemplate>
+                                                    </ListView.ItemsPanel>
+                                                </ListView>
+                                            </Border>
+                                        </Grid>
+                                    </Border>
+
+                                    <!--  Version  -->
+                                    <Border
+                                        Grid.Row="2"
+                                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                        BorderThickness="0,0,1,0">
+                                        <Grid Grid.Row="2" Margin="8">
+
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+
+                                            <Grid Margin="0,0,0,8">
+                                                <TextBlock
+                                                    FontSize="14"
+                                                    FontWeight="Medium"
+                                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                                    Text="{DynamicResource Version}" />
+                                            </Grid>
+
+                                            <ComboBox
+                                                Grid.Row="1"
+                                                ItemsSource="{Binding Model.FilterPanel.VersionCollectionViewSource.View}"
+                                                SelectedValue="{Binding Model.FilterPanel.SelectedVersion, UpdateSourceTrigger=PropertyChanged}" />
+                                        </Grid>
+                                    </Border>
+
+                                    <!--  Categories  -->
+                                    <Grid
+                                        Grid.RowSpan="3"
+                                        Grid.Column="1"
+                                        Margin="8">
+
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+
+                                        <Grid Margin="0,0,0,8">
+                                            <TextBlock
+                                                FontSize="14"
+                                                FontWeight="Medium"
+                                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                                Text="{DynamicResource Categories}" />
+                                        </Grid>
+
+                                        <Grid Grid.Row="1">
+
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+
+                                            <!--  categories list  -->
+
+                                            <!--  selected categories  -->
+                                            <ItemsControl Grid.Row="1" ItemsSource="{Binding Model.FilterPanel.AvailableCategories}">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <WrapPanel IsItemsHost="true" />
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate DataType="{x:Type objects:CategoryBase}">
+                                                        <ToggleButton
+                                                            Margin="0,4,4,0"
+                                                            Command="{Binding DataContext.SelectCategoryCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                            CommandParameter="{Binding}"
+                                                            Content="{Binding Name}"
+                                                            Style="{StaticResource CategoryToggleButton}" />
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                            </Border>
+
+                            <controls:Paginator
+                                Grid.Row="2"
+                                Margin="0,0,0,16"
+                                CurrentPageIndex="{Binding Model.CurrentPageIndex}"
+                                NextCommand="{Binding NextPageCommand}"
+                                PageChanged="Paginator_PageChanged"
+                                PageCount="{Binding Model.PageCount}"
+                                PrevCommand="{Binding PrevPageCommand}"
+                                ToCommand="{Binding ToCurrentPageIndexCommand}"
+                                Visibility="{Binding IsChecked, ElementName=HeadPaginatorSwitch, Converter={converters:BooleanToVisibilityConverter}}" />
+                        </Grid>
+
+                        <core:If
                             Grid.Row="1"
                             Grid.Column="1"
-                            Margin="0,0,0,16"
-                            HorizontalAlignment="Stretch"
-                            Background="{DynamicResource PrimarySolidColorBrush}"
-                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                            BorderThickness="1"
-                            CornerRadius="10"
-                            Visibility="{Binding IsChecked, ElementName=FiltersButton, Converter={converters:BooleanToVisibilityConverter}}">
-                            <Grid HorizontalAlignment="Stretch" ShowGridLines="False">
-
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-
-                                <!--  Source  -->
-
-                                <Border BorderBrush="{DynamicResource SeparateSolidColorBrush}" BorderThickness="0,0,1,1">
-                                    <Grid Margin="8">
-
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                        </Grid.RowDefinitions>
-
-                                        <Grid Margin="0,0,0,8">
-                                            <TextBlock
-                                                FontSize="14"
-                                                FontWeight="Medium"
-                                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                                Text="{DynamicResource Source}" />
-                                            <TextBlock
-                                                HorizontalAlignment="Right"
-                                                extensions:TextBlock.TextByKey="{Binding Model.FilterPanel.SelectedSource.TranslateKey}"
-                                                FontSize="14"
-                                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
-                                        </Grid>
-
-                                        <Border
-                                            Grid.Row="1"
-                                            Background="{DynamicResource SecondarySolidColorBrush}"
-                                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                                            BorderThickness="1"
-                                            CornerRadius="5">
-
-                                            <ListView
-                                                Background="Transparent"
-                                                BorderThickness="0"
-                                                ItemsSource="{Binding Model.FilterPanel.Sources}"
-                                                SelectedItem="{Binding Model.FilterPanel.SelectedSource}">
-
-                                                <ListView.ItemContainerStyle>
-                                                    <Style BasedOn="{StaticResource FilterIconRadioButton}" TargetType="{x:Type ListViewItem}">
-                                                        <Setter Property="Content" Value="{Binding Value, Converter={converters:ToStringConverter}}" />
-                                                    </Style>
-                                                </ListView.ItemContainerStyle>
-
-                                                <ListView.ItemsPanel>
-                                                    <ItemsPanelTemplate>
-                                                        <WrapPanel IsItemsHost="True" />
-                                                    </ItemsPanelTemplate>
-                                                </ListView.ItemsPanel>
-                                            </ListView>
-                                        </Border>
-                                    </Grid>
-                                </Border>
-
-                                <!--  Sorting  -->
-                                <Border
-                                    Grid.Row="1"
-                                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                                    BorderThickness="0,0,1,1">
-                                    <Grid Margin="8">
-
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                        </Grid.RowDefinitions>
-
-                                        <Grid Margin="0,0,0,8">
-                                            <TextBlock
-                                                FontSize="14"
-                                                FontWeight="Medium"
-                                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                                Text="{DynamicResource Sorting}" />
-                                            <TextBlock
-                                                HorizontalAlignment="Right"
-                                                extensions:TextBlock.TextByKey="{Binding Model.FilterPanel.SelectedSortByParam.TranslateKey}"
-                                                FontSize="14"
-                                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
-                                        </Grid>
-
-                                        <Border
-                                            Grid.Row="1"
-                                            Background="{DynamicResource SecondarySolidColorBrush}"
-                                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                                            BorderThickness="1"
-                                            CornerRadius="5">
-                                            <ListView
-                                                Background="Transparent"
-                                                BorderThickness="0"
-                                                ItemsSource="{Binding Model.FilterPanel.SortByParams}"
-                                                SelectedItem="{Binding Model.FilterPanel.SelectedSortByParam}">
-
-                                                <ListView.ItemContainerStyle>
-                                                    <Style BasedOn="{StaticResource FilterIconRadioButton}" TargetType="{x:Type ListViewItem}">
-                                                        <Setter Property="Content" Value="{Binding TranslateKey}" />
-                                                    </Style>
-                                                </ListView.ItemContainerStyle>
-
-                                                <ListView.ItemsPanel>
-                                                    <ItemsPanelTemplate>
-                                                        <WrapPanel IsItemsHost="True" />
-                                                    </ItemsPanelTemplate>
-                                                </ListView.ItemsPanel>
-                                            </ListView>
-                                        </Border>
-                                    </Grid>
-                                </Border>
-
-                                <!--  Version  -->
-                                <Border
-                                    Grid.Row="2"
-                                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                                    BorderThickness="0,0,1,0">
-                                    <Grid Grid.Row="2" Margin="8">
-
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                        </Grid.RowDefinitions>
-
-                                        <Grid Margin="0,0,0,8">
-                                            <TextBlock
-                                                FontSize="14"
-                                                FontWeight="Medium"
-                                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                                Text="{DynamicResource Version}" />
-                                        </Grid>
-
-                                        <ComboBox
-                                            Grid.Row="1"
-                                            ItemsSource="{Binding Model.FilterPanel.VersionCollectionViewSource.View}"
-                                            SelectedValue="{Binding Model.FilterPanel.SelectedVersion, UpdateSourceTrigger=PropertyChanged}" />
-                                    </Grid>
-                                </Border>
-
-                                <!--  Categories  -->
-                                <Grid
-                                    Grid.RowSpan="3"
-                                    Grid.Column="1"
-                                    Margin="8">
+                            Condition="{Binding Model.Instances, Converter={converters:IsCollectionEmptyConverter}}">
+                            <core:If.True>
+                                <controls:Empty VerticalAlignment="Stretch" Description="Каталог оказался пуст" />
+                            </core:If.True>
+                            <core:If.False>
+                                <!--  Instance Clients List  -->
+                                <Grid>
 
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
 
-                                    <Grid Margin="0,0,0,8">
-                                        <TextBlock
-                                            FontSize="14"
-                                            FontWeight="Medium"
-                                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                            Text="{DynamicResource Categories}" />
-                                    </Grid>
+                                    <ItemsControl ItemsSource="{Binding Model.Instances}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <virtualization:VirtualizingWrapPanel Margin="0,0,0,0" IsItemsHost="True" />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                    </ItemsControl>
 
-                                    <Grid Grid.Row="1">
-
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                        </Grid.RowDefinitions>
-
-                                        <!--  categories list  -->
-
-                                        <!--  selected categories  -->
-                                        <ItemsControl Grid.Row="1" ItemsSource="{Binding Model.FilterPanel.AvailableCategories}">
-                                            <ItemsControl.ItemsPanel>
-                                                <ItemsPanelTemplate>
-                                                    <WrapPanel IsItemsHost="true" />
-                                                </ItemsPanelTemplate>
-                                            </ItemsControl.ItemsPanel>
-                                            <ItemsControl.ItemTemplate>
-                                                <DataTemplate DataType="{x:Type objects:CategoryBase}">
-                                                    <ToggleButton
-                                                        Margin="0,4,4,0"
-                                                        Command="{Binding DataContext.SelectCategoryCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
-                                                        CommandParameter="{Binding}"
-                                                        Content="{Binding Name}"
-                                                        Style="{StaticResource CategoryToggleButton}" />
-                                                </DataTemplate>
-                                            </ItemsControl.ItemTemplate>
-                                        </ItemsControl>
-                                    </Grid>
+                                    <controls:Paginator
+                                        Grid.Row="1"
+                                        Grid.Column="1"
+                                        Margin="0,16,0,32"
+                                        CurrentPageIndex="{Binding Model.CurrentPageIndex}"
+                                        NextCommand="{Binding NextPageCommand}"
+                                        PageChanged="Paginator_PageChanged"
+                                        PageCount="{Binding Model.PageCount}"
+                                        PrevCommand="{Binding PrevPageCommand}"
+                                        ToCommand="{Binding ToCurrentPageIndexCommand}" />
                                 </Grid>
-                            </Grid>
-                        </Border>
-
+                            </core:If.False>
+                        </core:If>
                     </Grid>
+                </ScrollViewer>
 
-                    <!--  Instance Clients List  -->
-                    <Grid Grid.Row="1" Grid.Column="1">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
+                <Border
+                    Margin="0,0,12,16"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom">
 
-                        <ItemsControl
-                            Grid.Column="1"
-                            ItemsSource="{Binding Model.Instances}"
-                            KeyboardNavigation.IsTabStop="False"
-                            KeyboardNavigation.TabNavigation="None">
+                    <controls:BackTop Style="{StaticResource sm-backtop-default}" TargetScroll="{Binding ElementName=ContainerPage_ScrollViewer}" />
+                </Border>
+            </Grid>
 
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate DataType="{x:Type instanceModel:InstanceModelBase}">
-                                    <controls:InstanceForm
-                                        Margin="0,0,0,16"
-                                        InstanceModel="{Binding}"
-                                        LogoButtonCommand="{Binding DataContext.OpenInstanceProfileMenu, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
-                                        LogoButtonCommandParameter="{Binding}"
-                                        MouseDown="InstanceForm_MouseDown" />
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-
-                        <controls:Paginator
-                            Grid.Row="1"
-                            Grid.Column="1"
-                            Margin="0,16,0,32"
-                            CurrentPageIndex="{Binding Model.CurrentPageIndex}"
-                            NextCommand="{Binding NextPageCommand}"
-                            PageCount="{Binding Model.PageCount}"
-                            PrevCommand="{Binding PrevPageCommand}"
-                            ToCommand="{Binding ToCurrentPageIndexCommand}" />
-                    </Grid>
-                </Grid>
-            </ScrollViewer>
+            <controls:LoadingBoard
+                Margin="0,-40,0,0"
+                Background="Black"
+                BackgroundOpacity="0.3"
+                BlurTarget="{Binding ElementName=Context}"
+                IsActive="{Binding Model.IsLoading}"
+                Placeholder="Идет загрузка каталога Curseforge" />
         </Grid>
     </Border>
 </UserControl>

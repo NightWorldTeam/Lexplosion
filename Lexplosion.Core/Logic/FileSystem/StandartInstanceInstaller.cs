@@ -13,189 +13,216 @@ using static Lexplosion.Logic.FileSystem.WithDirectory;
 
 namespace Lexplosion.Logic.FileSystem
 {
-    abstract class StandartInstanceInstaller<TManifest> : InstanceInstaller, IArchivedInstanceInstaller<TManifest>
-    {
-        public StandartInstanceInstaller(string instanceId) : base(instanceId) { }
+	abstract class StandartInstanceInstaller<TManifest> : InstanceInstaller, IArchivedInstanceInstaller<TManifest>
+	{
+		public StandartInstanceInstaller(string instanceId) : base(instanceId) { }
 
-        public event Action<int> MainFileDownloadEvent;
-        public event ProcentUpdate AddonsDownloadEvent;
+		public event Action<int> MainFileDownload;
+		public event ProcentUpdate AddonsDownload;
 
-        /// <summary>
-        /// Вызывает когда нужно обработать разорхивированный архив со сборкой. 
-        /// </summary>
-        /// <param name="unzupArchivePath">Путь до папки, содержащей разорхивированный архив.</param>
-        /// <param name="files">Список файлов клиента.</param>
-        /// <returns>Манифест</returns>
-        protected abstract TManifest ArchiveHadnle(string unzupArchivePath, out List<string> files);
+		/// <summary>
+		/// Вызывается, когда необходимо загрузить манифест из разорхивированного файла со сборкой. 
+		/// </summary>
+		/// <param name="unzupArchivePath"></param>
+		/// <returns>Манифест</returns>
+		protected abstract TManifest LoadManifest(string unzupArchivePath);
 
-        public abstract List<string> InstallInstance(TManifest data, InstanceContent localFiles, CancellationToken cancelToken);
+		/// <summary>
+		/// Вызывается когда нужно обработать разорхивированный архив со сборкой. 
+		/// </summary>
+		/// <param name="unzupArchivePath">Путь до папки, содержащей разорхивированный архив.</param>
+		/// <param name="files">Список файлов клиента.</param>
+		/// <returns>Манифест</returns>
+		protected abstract void ArchiveHadnle(string unzupArchivePath, out List<string> files);
 
-        protected void AddonsDownloadEventInvoke(int totalDataCount, int nowDataCount)
-        {
-            AddonsDownloadEvent?.Invoke(totalDataCount, nowDataCount);
-        }
+		public abstract List<string> Install(TManifest data, InstanceContent localFiles, CancellationToken cancelToken);
 
-        public InstanceContent GetInstanceContent()
-        {
-            var content = DataFilesManager.GetFile<InstanceContentFile>(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/instanceContent.json");
-            using (InstalledAddons installedAddons = InstalledAddons.Get(instanceId))
-            {
-                if (content != null)
-                {
-                    var data = new InstanceContent
-                    {
-                        Files = content.Files,
-                        FullClient = content.FullClient,
-                        InstalledAddons = null
-                    };
+		protected void AddonsDownloadEventInvoke(int totalDataCount, int nowDataCount)
+		{
+			AddonsDownload?.Invoke(totalDataCount, nowDataCount);
+		}
 
-                    if (content.InstalledAddons != null)
-                    {
-                        data.InstalledAddons = new InstalledAddonsFormat();
+		public InstanceContent GetInstanceContent()
+		{
+			var content = DataFilesManager.GetInstanceContent(instanceId);
+			using (InstalledAddons installedAddons = InstalledAddons.Get(instanceId))
+			{
+				if (content != null)
+				{
+					var data = new InstanceContent
+					{
+						Files = content.Files,
+						FullClient = content.FullClient,
+						InstalledAddons = null
+					};
 
-                        foreach (string addonId in content.InstalledAddons)
-                        {
-                            if (installedAddons.ContainsKey(addonId))
-                            {
-                                data.InstalledAddons[addonId] = installedAddons[addonId];
-                            }
-                        }
-                    }
+					if (content.InstalledAddons != null)
+					{
+						data.InstalledAddons = new InstalledAddonsFormat();
 
-                    return data;
-                }
-                else
-                {
-                    return new InstanceContent();
-                }
-            }
-        }
+						foreach (string addonId in content.InstalledAddons)
+						{
+							if (installedAddons.ContainsKey(addonId))
+							{
+								data.InstalledAddons[addonId] = installedAddons[addonId];
+							}
+						}
+					}
 
-        public void SaveInstanceContent(InstanceContent content)
-        {
-            DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/instanceContent.json",
-                JsonConvert.SerializeObject(new InstanceContentFile
-                {
-                    FullClient = content.FullClient,
-                    Files = content.Files,
-                    InstalledAddons = new List<string>(content.InstalledAddons.Keys.ToArray())
-                })
-            );
+					return data;
+				}
+				else
+				{
+					return new InstanceContent();
+				}
+			}
+		}
 
-            using (InstalledAddons installedAddons = InstalledAddons.Get(instanceId))
-            {
-                foreach (var key in content.InstalledAddons.Keys)
-                {
-                    var elem = content.InstalledAddons[key];
-                    if (elem != null)
-                    {
-                        installedAddons[key] = elem;
-                    }
-                }
+		public void SaveInstanceContent(InstanceContent content)
+		{
+			DataFilesManager.SaveInstanceContent(instanceId, new InstanceContentFile
+			{
+				FullClient = content.FullClient,
+				Files = content.Files,
+				InstalledAddons = new List<string>(content.InstalledAddons.Keys.ToArray())
+			});
 
-                installedAddons.Save();
-            }
-        }
+			using (InstalledAddons installedAddons = InstalledAddons.Get(instanceId))
+			{
+				foreach (var key in content.InstalledAddons.Keys)
+				{
+					var elem = content.InstalledAddons[key];
+					if (elem != null)
+					{
+						installedAddons[key] = elem;
+					}
+				}
 
-        public bool InvalidStruct(InstanceContent localFiles)
-        {
-            if (localFiles == null || localFiles.Files == null || localFiles.InstalledAddons == null || !localFiles.FullClient)
-            {
-                return true;
-            }
+				installedAddons.Save();
+			}
+		}
 
-            foreach (InstalledAddonInfo addon in localFiles.InstalledAddons.Values)
-            {
-                if (addon == null)
-                {
-                    return true;
-                }
+		public bool InvalidStruct(InstanceContent localFiles)
+		{
+			if (localFiles == null || localFiles.Files == null || localFiles.InstalledAddons == null || !localFiles.FullClient)
+			{
+				return true;
+			}
 
-                string instancePath = DirectoryPath + "/instances/" + instanceId + "/";
+			foreach (InstalledAddonInfo addon in localFiles.InstalledAddons.Values)
+			{
+				if (addon == null)
+				{
+					return true;
+				}
 
-                if (!addon.IsExists(instancePath))
-                {
-                    return true;
-                }
-            }
+				string instancePath = InstancesPath + instanceId + "/";
 
-            foreach (string file in localFiles.Files)
-            {
-                if (!File.Exists(DirectoryPath + "/instances/" + instanceId + file))
-                {
-                    return true;
-                }
-            }
+				if (!addon.IsExists(instancePath))
+				{
+					return true;
+				}
+			}
 
-            return false;
-        }
+			foreach (string file in localFiles.Files)
+			{
+				if (!File.Exists(InstancesPath + instanceId + file))
+				{
+					return true;
+				}
+			}
 
-        public TManifest DownloadInstance(string downloadUrl, string fileName, ref InstanceContent localFiles, CancellationToken cancelToken)
-        {
-            try
-            {
-                //удаляем старые файлы
-                if (localFiles.Files != null)
-                {
-                    foreach (string file in localFiles.Files)
-                    {
-                        DelFile(DirectoryPath + "/instances/" + instanceId + file);
-                    }
-                }
+			return false;
+		}
 
-                string tempDir = CreateTempDir();
+		private string _extractedFilesDir;
 
-                MainFileDownloadEvent?.Invoke(0);
+		public TManifest Extraction(InstanceFileGetter instanceFileGetter, CancellationToken cancelToken)
+		{
+			TaskArgs BuildTaskArgs(string fileName)
+			{
+				return new TaskArgs
+				{
+					PercentHandler = delegate (int percent)
+					{
+						_fileDownloadHandler?.Invoke(fileName, percent, DownloadFileProgress.PercentagesChanged);
+						MainFileDownload?.Invoke(percent);
+					},
+					CancelToken = cancelToken
+				};
+			}
 
-                var taskArgs = new TaskArgs
-                {
-                    PercentHandler = delegate (int percent)
-                    {
-                        _fileDownloadHandler?.Invoke(fileName, percent, DownloadFileProgress.PercentagesChanged);
-                        MainFileDownloadEvent?.Invoke(percent);
-                    },
-                    CancelToken = cancelToken
-                };
+			try
+			{
+				_extractedFilesDir = CreateTempDir();
 
-                // скачивание архива
-                bool res = DownloadFile(downloadUrl, fileName, tempDir, taskArgs);
+				MainFileDownload?.Invoke(0);
 
-                if (!res)
-                {
-                    _fileDownloadHandler?.Invoke(fileName, 100, DownloadFileProgress.Error);
-                    return default;
-                }
-                _fileDownloadHandler?.Invoke(fileName, 100, DownloadFileProgress.Successful);
+				(bool, string, string) res = instanceFileGetter(_extractedFilesDir, BuildTaskArgs);
 
-                if (Directory.Exists(tempDir + "dataDownload"))
-                {
-                    Directory.Delete(tempDir + "dataDownload", true);
-                }
+				if (!res.Item1)
+				{
+					_fileDownloadHandler?.Invoke(res.Item3, 100, DownloadFileProgress.Error);
+					return default;
+				}
+				_fileDownloadHandler?.Invoke(res.Item3, 100, DownloadFileProgress.Successful);
 
-                // Извлекаем содержимое этого архима
-                Directory.CreateDirectory(tempDir + "dataDownload");
-                ZipFile.ExtractToDirectory(tempDir + fileName, tempDir + "dataDownload");
-                DelFile(tempDir + fileName);
+				if (Directory.Exists(_extractedFilesDir + "dataDownload"))
+				{
+					Directory.Delete(_extractedFilesDir + "dataDownload", true);
+				}
 
-                var manifest = ArchiveHadnle(tempDir + "dataDownload/", out List<string> files);
-                localFiles.Files = files;
+				// Извлекаем содержимое этого архима
+				Directory.CreateDirectory(_extractedFilesDir + "dataDownload");
+				ZipFile.ExtractToDirectory(res.Item2, _extractedFilesDir + "dataDownload");
 
-                try
-                {
-                    if (Directory.Exists(tempDir))
-                    {
-                        Directory.Delete(tempDir, true);
-                    }
-                }
-                catch { }
+				return LoadManifest(_extractedFilesDir + "dataDownload/");
+			}
+			catch (Exception ex)
+			{
+				Runtime.DebugWrite("Exception " + ex);
+				return default;
+			}
+		}
 
-                return manifest;
-            }
-            catch (Exception ex)
-            {
-                Runtime.DebugWrite("Exception " + ex);
-                return default;
-            }
-        }
-    }
+		public bool HandleExtractedFiles(ref InstanceContent localFiles, CancellationToken cancelToken)
+		{
+			try
+			{
+				//удаляем старые файлы
+				if (localFiles.Files != null)
+				{
+					foreach (string file in localFiles.Files)
+					{
+						DelFile(InstancesPath + instanceId + file);
+					}
+				}
+
+				ArchiveHadnle(_extractedFilesDir + "dataDownload/", out List<string> files);
+				localFiles.Files = files;
+
+				try
+				{
+					if (Directory.Exists(_extractedFilesDir))
+					{
+						Directory.Delete(_extractedFilesDir, true);
+					}
+				}
+				catch { }
+
+				return true;
+			}
+			catch (Exception ex)
+			{
+				Runtime.DebugWrite("Exception " + ex);
+				return false;
+			}
+		}
+
+		public void SetInstanceId(string id)
+		{
+			ChangeInstanceId(id);
+			instanceId = id;
+		}
+	}
 }

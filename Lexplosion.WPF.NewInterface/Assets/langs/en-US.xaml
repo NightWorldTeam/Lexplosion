@@ -22,6 +22,7 @@
     <s:String x:Key="Friends">Friends</s:String>
     <s:String x:Key="Multiplayer">Multiplayer</s:String>
     <s:String x:Key="Settings">Settings</s:String>
+    <s:String x:Key="GladToSeeYou">We are glad to see you</s:String>
 
 
     <!--    -->
@@ -64,6 +65,13 @@
     <s:String x:Key="AddFriend">Add Friend</s:String>
     <s:String x:Key="Unfriends">Unfriends</s:String>
 
+    <!--  Status  -->
+    <s:String x:Key="Online">Online</s:String>
+    <s:String x:Key="Offline">Offline</s:String>
+    <s:String x:Key="PlayingIn">Playing in</s:String>
+    <s:String x:Key="InGame">In Game</s:String>
+    <s:String x:Key="DoNotDisturb">Do not Disturb</s:String>
+
 
     <!--    -->
     <!--  Multiplayer  -->
@@ -72,8 +80,8 @@
     <s:String x:Key="PriorityConnetionMethod">Priority Connetion Method</s:String>
     <s:String x:Key="DirectConnection">Direct</s:String>
     <s:String x:Key="ViaRepeater">Via Repeater</s:String>
-    <s:String x:Key="ConnectedPlayers">Подключенные игроки</s:String>
-    <s:String x:Key="NoConnectedPlayers">Отсутствуют подключенные игроки</s:String>
+    <s:String x:Key="ConnectedPlayers">Connected players</s:String>
+    <s:String x:Key="NoConnectedPlayers">There are no connected players.</s:String>
     <s:String x:Key="ReloadMutlplayer">Reload Multiplayer</s:String>
 
     <!--  Status  -->
@@ -160,7 +168,7 @@
     <s:String x:Key="Developers">Developers</s:String>
     <s:String x:Key="Contacts">Contacts</s:String>
     <s:String x:Key="OurVkontakteGroup">Out VKontakte Group</s:String>
-    <s:String x:Key="Copyright">Copyright © 2022 NightWorld. All rights reserved.</s:String>
+    <s:String x:Key="Copyright">Copyright © 2025 NightWorld. All rights reserved.</s:String>
     <s:String x:Key="Protection">This program is protected by copyright laws and international treaties. Illegal reproduction or distribution of this software or any part of it is subject to civil and criminal liability.</s:String>
     <s:String x:Key="DenialOfResponsibility">NOT AN OFFICIAL MINECRAFT [PRODUCT/SERVICE/EVENT/etc.]. NOT APPROVED BY OR ASSOCIATED WITH MOJANG OR MICROSOFT</s:String>
 
@@ -198,14 +206,14 @@
     <!--  Visit Offical Page  -->
     <s:String x:Key="VisitCurseforge">Visit Curseforge</s:String>
     <s:String x:Key="VisitModrinth">Visit Modrinth</s:String>
-    <s:String x:Key="VisitNightWorld">Visit NightWorld</s:String>
+    <s:String x:Key="VisitNightworld">Visit NightWorld</s:String>
 
 
     <!--    -->
     <!--  Instance Overview Menu  -->
     <!--    -->
     <s:String x:Key="Version">Version</s:String>
-
+    <s:String x:Key="Download">Download</s:String>
 
     <!--    -->
     <!--  Instance Profile  -->
@@ -222,6 +230,7 @@
     <s:String x:Key="Version:">Version:</s:String>
     <s:String x:Key="GameType:">Game Type:</s:String>
     <s:String x:Key="PlayedTime:">Played Time:</s:String>
+    <s:String x:Key="DownloadCount:">Downloads:</s:String>
 
 
     <!--    -->
@@ -232,15 +241,34 @@
     <s:String x:Key="Maps">Maps</s:String>
     <s:String x:Key="Shaders">Shaders</s:String>
 
+    <!--  Sort By  -->
     <s:String x:Key="Name">Name</s:String>
     <s:String x:Key="Author">Author</s:String>
+    <s:String x:Key="FileName">File Name</s:String>
+
+    <!--  By Name  -->
+    <s:String x:Key="ModName">Mod name</s:String>
+    <s:String x:Key="ResourcepackName">Resourcepack name</s:String>
+    <s:String x:Key="MapName">Map name</s:String>
+    <s:String x:Key="ShaderName">Shader name</s:String>
+
+    <!--  By Author  -->
+    <s:String x:Key="ModAuthor">Author of the mod</s:String>
+    <s:String x:Key="ResourcepackAuthor">Author of the Resourcepack</s:String>
+    <s:String x:Key="MapAuthor">Author of the map</s:String>
+    <s:String x:Key="ShaderAuthor">Author of the shader</s:String>
+
+    <!--  By File name  -->
+    <s:String x:Key="ModFileName">Mod file name</s:String>
+    <s:String x:Key="ResourcepackFileName">Resourcepack file name</s:String>
+    <s:String x:Key="MapFileName">Map file name</s:String>
+    <s:String x:Key="ShaderFileName">Shader file name</s:String>
 
 
     <!--    -->
     <!--  Instance Profile Settings  -->
     <!--    -->
     <s:String x:Key="Configuration">Configuration</s:String>
-    <s:String x:Key="InstanceNameDescription">Your instance would call so in the library.</s:String>
     <s:String x:Key="Summary">Summary</s:String>
     <s:String x:Key="SummaryDescription">Summary for this instance.</s:String>
     <s:String x:Key="Description">Description</s:String>
@@ -250,18 +278,18 @@
     <!--  Instance Profile Configuration  -->
     <!--    -->
     <s:String x:Key="GameType">Game Type</s:String>
-    <s:String x:Key="GameTypeDescription">Тип игры описание.</s:String>
+    <s:String x:Key="GameTypeDescription">Vanilla or Modloader</s:String>
 
-    <s:String x:Key="VersionDescription">Версия описание.</s:String>
+    <s:String x:Key="VersionDescription">Game Version</s:String>
 
     <s:String x:Key="ModloaderVersion">Modloader Version</s:String>
-    <s:String x:Key="ModloaderVersionDescription">Выбор версии для выбраного модлоадера.</s:String>
+    <s:String x:Key="ModloaderVersionDescription">Select version for modloader.</s:String>
 
     <s:String x:Key="IsShowSnapshots">Show snapshots?</s:String>
     <s:String x:Key="IsShowSnapshotsDescription">Snapshots are shown in the drop-down menu with game versions..</s:String>
 
     <s:String x:Key="Optifine">Optifine</s:String>
-    <s:String x:Key="OptifineDescription">Устанавливает оптифайн на данную сборку.</s:String>
+    <s:String x:Key="OptifineDescription">Enable optifine for this instance.</s:String>
 
 
     <!--    -->
@@ -318,13 +346,6 @@
     <s:String x:Key="InstanceName">Instance Name</s:String>
     <s:String x:Key="CreateInstance">Create Instance</s:String>
 
-
-    <!--  Instance Form Download Process  -->
-    <s:String x:Key="DownloadPreparing">Download preparing...</s:String>
-    <s:String x:Key="JavaInstalling">Java downloading...</s:String>
-    <s:String x:Key="InstanceDownloading">Instance is downloading... Stage {0}/{1}</s:String>
-
-
     <!--  Export  -->
     <s:String x:Key="ExportProperties">Export Properties</s:String>
     <s:String x:Key="ExportInstanceNameDescription">Write name which you want to see after export in library.</s:String>
@@ -367,14 +388,370 @@
     <s:String x:Key="CurseforgeTotalDownloads">TotalDownloads</s:String>
     <s:String x:Key="CurseforgeName">A-Z</s:String>
 
-    <!--
-        Featured = 1,
-        Popularity,
-        LastUpdated,
-        Name,
-        Author,
-        TotalDownloads,
-        Category,
-        GameVersion
-    -->
+
+    <!--  Accounts  -->
+    <s:String x:Key="Active">Active</s:String>
+    <s:String x:Key="NotActive">Not active</s:String>
+
+    <!--  Funcs  -->
+    <s:String x:Key="Activate">Activate</s:String>
+    <s:String x:Key="DoGameLauncher">Do game launcher</s:String>
+    <s:String x:Key="Signout">Sign-out</s:String>
+    <s:String x:Key="TypingNicknamePlaceholder">Typing nickname...</s:String>
+
+    <s:String x:Key="GameLauncher">Game Launch</s:String>
+
+
+    <!--  Account Factory  -->
+    <s:String x:Key="AddingAccount">Adding an account</s:String>
+    <s:String x:Key="Login">Login</s:String>
+    <s:String x:Key="Password">Password</s:String>
+    <s:String x:Key="AccountType">Account Type</s:String>
+    <s:String x:Key="AccountTypeDescription">Authorization Service</s:String>
+    <s:String x:Key="LoginAccountFactoryDescription">Account Login or email</s:String>
+    <s:String x:Key="PasswordAccountFactoryDescription">Account password</s:String>
+    <s:String x:Key="AddAccount">Add account</s:String>
+    <s:String x:Key="LoginExample">For example: _Hel2x_</s:String>
+
+
+    <!--  Nightworld Limited Pages Curtains  -->
+    <s:String x:Key="OnlyAvailableWithNightWorldAccount">Only available with a NightWorld account</s:String>
+    <s:String x:Key="OnlyAvailableWithNightWorldAccountDescription">
+        This launch feature is only available if you are logged in through your NightWorld account;
+        P.S you don't need to run it.
+    </s:String>
+    <s:String x:Key="CreateNightWorldAccount">Create a NightWorld account</s:String>
+    <s:String x:Key="LoginWithYourNightWorldAccount">Login with your NightWorld account</s:String>
+
+    <!--  Friends More  -->
+    <s:String x:Key="Unfriend">Unfriend</s:String>
+    <s:String x:Key="ViewProfile">View Profile</s:String>
+
+
+    <!--  Instance Share  -->
+    <s:String x:Key="Share">Shares</s:String>
+    <s:String x:Key="ShareInstance">Share this instance</s:String>
+    <s:String x:Key="ActiveShares">Active Shares</s:String>
+
+
+    <!--  Account Funcs  -->
+    <s:String x:Key="LaunchAccount">Set the game to launch via account</s:String>
+    <s:String x:Key="MakeAccountActive">Set account active</s:String>
+    <s:String x:Key="ReloadAccount">Reload Account</s:String>
+    <s:String x:Key="LogoutAccount">Logout account</s:String>
+    <s:String x:Key="LogoutAllAccounts">Logout of all accounts</s:String>
+    <s:String x:Key="AddNewAccount">Add new account</s:String>
+
+    <!--  Addon ToolTip  -->
+    <s:String x:Key="AddNewAddon">Install</s:String>
+    <s:String x:Key="AddonOpenFolder">Open folder</s:String>
+    <s:String x:Key="AddonReloadList">Reload list</s:String>
+    <s:String x:Key="AddonChangeView">Change view</s:String>
+
+    <!--  Instance Settings  -->
+    <s:String x:Key="DisplayResolution">Display resolutions</s:String>
+    <s:String x:Key="Browse">Browse</s:String>
+    <s:String x:Key="JavaResetPath">Reset java path</s:String>
+
+
+    <s:String x:Key="AcceptFriendRequest">Accept friend request</s:String>
+    <s:String x:Key="DeclineFriendRequest">Decline friend request</s:String>
+    <s:String x:Key="CancelFriendRequest">Cancel friend request</s:String>
+    <s:String x:Key="SendFriendRequest">Send friend request</s:String>
+
+
+    <!--  Paginator  -->
+    <s:String x:Key="PaginatorPrevious">Previous</s:String>
+    <s:String x:Key="PaginatorNext">Next</s:String>
+    <s:String x:Key="PaginatorPage">Page</s:String>
+    <s:String x:Key="PaginatorPageOf">of</s:String>
+
+    <!--  ToolTip Appearance Settings  -->
+
+    <s:String x:Key="Tooltip">Tooltip</s:String>
+    <s:String x:Key="TooltipDescription">Settings tooltips</s:String>
+
+    <s:String x:Key="ToolTipState">Tooltip state</s:String>
+    <s:String x:Key="ToolTipStateDescription">This parameter is responsible for the state of pop-up hints (on/off)</s:String>
+
+    <s:String x:Key="InitialShowDelay">InitialShowDelay</s:String>
+    <s:String x:Key="InitialShowDelayDescription">The delay (in milliseconds) before the tooltip is displayed after the mouse pointer hovers over the element.</s:String>
+    <s:String x:Key="BetweenShowDelay">BetweenShowDelay</s:String>
+    <s:String x:Key="BetweenShowDelayDescription">
+        The time interval (in milliseconds) during which the tooltip can move from one tooltip to another without the delay specified by the InitialShowDelay property.
+    </s:String>
+
+    <!--  InstanceForm  -->
+    <s:String x:Key="Downloaded">Downloaded</s:String>
+    <!--  Instance Form Download Process  -->
+    <s:String x:Key="DownloadPreparing">Download preparing...</s:String>
+    <s:String x:Key="JavaInstalling">Java downloading...</s:String>
+    <s:String x:Key="InstanceDownloading">Instance is downloading...</s:String>
+    <s:String x:Key="Stage">Stage</s:String>
+    <s:String x:Key="VerifyIntegrityGameFiles">Verify integrity of game files...</s:String>
+    <s:String x:Key="DownloadCanceling">Download canceling...</s:String>
+
+    <s:String x:Key="AddonsListLoadingPlaceholder">Addons List Loading...</s:String>
+
+    <s:String x:Key="Technology">Technology</s:String>
+    <s:String x:Key="WorldGen">World Gen</s:String>
+    <s:String x:Key="All">All</s:String>
+
+    <s:String x:Key="Features">Features</s:String>
+    <s:String x:Key="Performanceimpact">Performance Impact</s:String>
+    <s:String x:Key="Resolutions">Resolutions</s:String>
+
+    <s:String x:Key="Website">Website</s:String>
+    <s:String x:Key="Installed">Installed</s:String>
+
+    <s:String x:Key="Paginator">Paginator</s:String>
+    <s:String x:Key="Searchbox">Searchbox</s:String>
+    <s:String x:Key="InstalledList">Installed</s:String>
+
+    <s:String x:Key="SearchAddonByNamePlaceholder">Addon name</s:String>
+
+    <s:String x:Key="Completed">Завершено</s:String>
+
+
+    <!--  region Authorization  -->
+
+    <s:String x:Key="DoNothaveAnyAccount">Don't have any account?</s:String>
+    <s:String x:Key="ForgotPassword">Forgot password?</s:String>
+    <s:String x:Key="SingUp">Sign Up</s:String>
+    <s:String x:Key="SelectAuthorizationMethod">Select Authorization Method</s:String>
+    <s:String x:Key="AuthorizationViaNightWorld">Authorization via NightWorld</s:String>
+    <s:String x:Key="Via">Via</s:String>
+    <s:String x:Key="RememberMe">Remember Me</s:String>
+    <s:String x:Key="LogIn">Log In</s:String>
+
+    <s:String x:Key="RegistrationInNightWorld">SignUp NightWorld</s:String>
+    <s:String x:Key="EmailAddress">Email Address</s:String>
+    <s:String x:Key="CreateAccount">Create Account</s:String>
+    <s:String x:Key="AlreadyHaveAnyAccount">Already have any account?</s:String>
+
+    <s:String x:Key="ViaNightWorld">Via NightWorld</s:String>
+    <s:String x:Key="ViaMicrosoft">Via Microsoft</s:String>
+    <s:String x:Key="WithoutAccount">Without account</s:String>
+
+    <s:String x:Key="Microsoft">Microsoft</s:String>
+    <s:String x:Key="NoAuth">Without account</s:String>
+
+    <s:String x:Key="AuthorizationWithoutAccountTitle">Authorization without account</s:String>
+    <s:String x:Key="AuthorizationWithoutAccountDescription">For authorization without account select any nickname.</s:String>
+    <s:String x:Key="AuthorizationWithoutAccountNicknamePlaceholder">Type the desired nickname</s:String>
+    <s:String x:Key="Continue">Continue</s:String>
+
+    <s:String x:Key="AuthorizationMicrosoftTitle">Authorization via Microsoft</s:String>
+    <s:String x:Key="AuthorizationMicrosoftAccountDescription">Authorization through Microsoft is expected to end</s:String>
+    <s:String x:Key="ManualInput">Manual input</s:String>
+    <s:String x:Key="ManualInputMicrosoftTokenTitle">Manual input Microsoft token</s:String>
+    <s:String x:Key="WrongTokenFormat">Wrong token format</s:String>
+    <s:String x:Key="CorrectTokenFormat">Token is correct</s:String>
+    <s:String x:Key="ManualInputTokenPlaceholder">Type microsoft token here</s:String>
+    <s:String x:Key="Apply">Apply</s:String>
+    <s:String x:Key="Cancel">Cancel</s:String>
+
+    <s:String x:Key="Important">Important!</s:String>
+    <s:String x:Key="MicrosoftManualInputImportantMessage">Never give/show your authentication token to anyone. If third parties receive the token, they will gain access to your account!</s:String>
+
+
+    <s:String x:Key="CustomColor">Custom color</s:String>
+    <s:String x:Key="CustomColorDescription">Select custom color</s:String>
+
+    <!--  endregion Authorization  -->
+
+    <!--  Instance Configuration  -->
+    <s:String x:Key="SaveChanges">Save Changes</s:String>
+    <s:String x:Key="LoadYourLogo">Load your logo</s:String>
+    <s:String x:Key="UnsavedChangesWarningText">Be careful you didn't save the changes!</s:String>
+    <s:String x:Key="Reset">Reset</s:String>
+
+    <s:String x:Key="Files">Files</s:String>
+    <s:String x:Key="Files_LowerCase">files</s:String>
+
+    <!--  Ad Servers  -->
+    <s:String x:Key="PartnerServers">Partner Servers</s:String>
+    <s:String x:Key="Add">Add</s:String>
+
+    <s:String x:Key="AutoConnectToServer">Auto connect to server</s:String>
+    <s:String x:Key="AvailableGameClientsNotFound">Available clients not found</s:String>
+    <s:String x:Key="SelectInstanceForServer">Select instance for server</s:String>
+    <s:String x:Key="ConfirmSelection">Сonfirm selection</s:String>
+    <s:String x:Key="CreateNewInstanceForServer">Create new instance for server</s:String>
+
+    <s:String x:Key="InstallServerInstance">Install Server Instance</s:String>
+    <s:String x:Key="InstallServerInstanceDescription">To play on this server you need to install the assembly, do you want to install this instance?</s:String>
+    <s:String x:Key="InstanceForServerAddedToLibrary">Instance {0} successfully added to the library!</s:String>
+    <s:String x:Key="ServerIpAddressCopied">Server IP address copied</s:String>
+
+    <s:String x:Key="LoadingInstanceClientVersions">Loading Client Versions</s:String>
+    <s:String x:Key="NoDistributionsAvailableForDownload">There are no distributions available for download</s:String>
+
+
+
+    <!--  region ServerProfile  -->
+
+
+    <s:String x:Key="Status:">Status:</s:String>
+    <s:String x:Key="Online:">Online:</s:String>
+
+
+    <!--  endregion ServerProfile  -->
+
+
+    <!--  region Settings  -->
+
+
+    <!--  Java Errors  -->
+    <s:String x:Key="WrongJavaPathFormat">Wrong Java path format.</s:String>
+    <s:String x:Key="JavaPathEmptyOrNull">Selected java Path was empty!</s:String>
+    <s:String x:Key="JavaPathExeDoesNotExists">Selected java path had not jave.exe or javaw.exe does not exist!</s:String>
+    <s:String x:Key="JavaPathWrongExe">Selected java Path had wrong ".exe". Java path must be contains java.exe or javaw.exe!</s:String>
+    <s:String x:Key="JavaPathPathDoesNotExists">Selected java path does not exist!</s:String>
+
+
+    <!--  endregion Settings  -->
+
+
+    <!--  region Instance Profile  -->
+
+
+    <s:String x:Key="OptifineVersion">Optifine version</s:String>
+    <s:String x:Key="OptifineVersionDescription">Select optifine version</s:String>
+
+
+    <!--  endregion Instance Profile  -->
+
+
+    <!--  region Settings  -->
+
+
+    <s:String x:Key="MinecraftArguments">Minecraft arguments</s:String>
+    <s:String x:Key="MinecraftArgumentsDescription">Allows you to customize game parameters more flexibly</s:String>
+
+    <s:String x:Key="NightWorldClient">NightWorld Client by default</s:String>
+    <s:String x:Key="NightWorldClientDescription">Enable cosmetic and other NightWorld feature</s:String>
+
+    <s:String x:Key="GamePathEmptyOrHasInvalidChars">The path to the folder is empty or contains illegal characters: {0}</s:String>
+
+
+    <!--  endregion Settings  -->
+
+
+    <!--  region Import  -->
+
+
+    <s:String x:Key="ImportByUrlDescriptionPlaceholder">Or Google Drive or YANDEX Disk url</s:String>
+    <s:String x:Key="ImportCancelledNotification">The import was successfully cancelled.</s:String>
+    <s:String x:Key="ImportUrlWrongPathNotification">Wrong url format</s:String>
+
+
+    <s:String x:Key="ImportResultSuccessful">Instance {0} has been successfully imported and is waiting for you in the library.</s:String>
+    <s:String x:Key="ImportResultZipFileError">Error opening zip file</s:String>
+    <s:String x:Key="ImportResultGameVersionError">Game version error</s:String>
+    <s:String x:Key="ImportResultJavaDownloadError">Java downloading problem</s:String>
+    <s:String x:Key="ImportResultIsOfflineMode">Offline mode</s:String>
+    <s:String x:Key="ImportResultMovingFilesError">Error while moving files</s:String>
+    <s:String x:Key="ImportResultDownloadError">Download error</s:String>
+    <s:String x:Key="ImportResultDirectoryCreateError">Error creating directory</s:String>
+    <s:String x:Key="ImportResultWrongUrl">The URL for importing the file is incorrect. We currently only support Yandex Disk and Google Drive.</s:String>
+    <s:String x:Key="ImportResultManifestError">Manifest file error.</s:String>
+    <s:String x:Key="ImportResultUnknownFileType">Unknown file type.</s:String>
+    <s:String x:Key="ImportResultUnknownError">Unknown Error</s:String>
+
+
+    <!--  endregion Import  -->
+
+
+    <!--  region Accounts  -->
+
+
+    <s:String x:Key="RemoveAccount">Remove account</s:String>
+    <s:String x:Key="RemoveAccountDescription">
+        Do you really want to remove account: {0}?
+        Access to your account can only be restored after re-authorization!
+    </s:String>
+    <s:String x:Key="YesIWantRemoveAccount">I want to remove this account</s:String>
+
+    <s:String x:Key="RemoveAllAccount">Removing all account</s:String>
+    <s:String x:Key="RemoveAllAccountDescription">
+        Do you really want to remove all accounts?
+        Access to your accounts can only be restored after re-authorization!
+    </s:String>
+    <s:String x:Key="YesIWantRemoveAllAccount">Yes, I want to remove all accounts</s:String>
+
+
+    <!--  endregion Accounts  -->
+
+
+    <!--  region Library  -->
+
+    <s:String x:Key="DeletingInstance">Deleting instance</s:String>
+    <s:String x:Key="DeletingInstanceDescription">
+        Do you really want to delete instance: {0}?
+        It will be impossible to restore it!
+    </s:String>
+    <s:String x:Key="YesIWantDeleteInstance">Yes, I want to delete this instance</s:String>
+
+
+    <!--  endregion Library  -->
+
+
+    <s:String x:Key="LoginOrPasswordNotFilled">Login or password is not filled in</s:String>
+
+    <s:String x:Key="AuthorizationProcessInProgress">The authorization process is in progress...</s:String>
+
+    <s:String x:Key="Information">Information</s:String>
+    <s:String x:Key="MicrosoftAccountAuthorizationDescription">To authorize your license account, you will be automatically redirected to the Microsoft authorization page.</s:String>
+    <s:String x:Key="DoInstallTheLatestVersion">Install the latest version?</s:String>
+    <s:String x:Key="NWClientNotAvailableForThisVersion">NWClient not available for this version</s:String>
+    <s:String x:Key="YouHaveNoActiveDistributions">You have no active distributions</s:String>
+
+
+    <s:String x:Key="InQueue">In Queue</s:String>
+    <s:String x:Key="InConnect">In Connect</s:String>
+    <s:String x:Key="PostProcessing">Post Processing</s:String>
+    <s:String x:Key="InProcess">In Process</s:String>
+    <s:String x:Key="Successful">Successful</s:String>
+
+
+    <s:String x:Key="UnableToDetermineDataForImport">Unable to determine data for assembly import, please enter data manually!</s:String>
+    <s:String x:Key="YouAreAlreadyDistributingToThisClient">You are already distributing to this client.</s:String>
+    <s:String x:Key="ActiveDistributingDescription">This page will be unlocked as soon as you stop the active distribution in the 'Your Distributions' section</s:String>
+    <s:String x:Key="ThereAreNotAddons">There are not addons</s:String>
+    <s:String x:Key="GameLaunching">Game Launching...</s:String>
+    <s:String x:Key="ProcessColon">Process:</s:String>
+    <s:String x:Key="UpdatingFiles">Updating Files</s:String>
+    <s:String x:Key="StageColon">Stage:</s:String>
+    <s:String x:Key="FilesColon">Files:</s:String>
+    <s:String x:Key="TotalDonwloadedColon">Total Donwloaded:</s:String>
+    <s:String x:Key="InstallingTheInstance">Installing the instance</s:String>
+    <s:String x:Key="ThereAreNotImages">There are not images</s:String>
+    <s:String x:Key="ImagesLoading">Images loading...</s:String>
+    <s:String x:Key="DescriptionLoading">Description loading...</s:String>
+    <s:String x:Key="DownloadingTheInstance">Instance downloading</s:String>
+    <s:String x:Key="LoadingEllipsis">Loading...</s:String>
+    <s:String x:Key="WeDidNotFindAnythingForThisRequest">We did not find anything for this request</s:String>
+    <s:String x:Key="ThereAreNoIncomingFriendRequests">There are no incoming friend requests.</s:String>
+    <s:String x:Key="ThereAreNoOutgoingFriendRequests">There are no outgoing friend requests.</s:String>
+    <s:String x:Key="Close">Close</s:String>
+    <s:String x:Key="Notifications">Notifications</s:String>
+    <s:String x:Key="LibraryEmptyDescription">You can add instance to the library via the catalog or by creating your own instance.</s:String>
+    <s:String x:Key="CreateNewInstance">Create a new instance</s:String>
+    <s:String x:Key="YourColorColon:">Your color:</s:String>
+    <s:String x:Key="MinecraftNotRunning">Minercaft not running.</s:String>
+    <s:String x:Key="InstanceDash_">Instance - {0}</s:String>
+    <s:String x:Key="GoToCatalog">Go to Catalog</s:String>
+    <s:String x:Key="LibraryEmpty">Library is empty</s:String>
+
+    <s:String x:Key="WelcomeDescription">Добро пожаловать в новую эру</s:String>
+    <s:String x:Key="WelcomePageThemeSelectDescription">Choose your prefered interface apperarance. You have the option to pick a theme manually or enable automatic theme switching that aligns with your system settings.</s:String>
+
+
+    <!--  Tray  -->
+    <s:String x:Key="ContactSupport">Contact Support</s:String>
+    <s:String x:Key="TrayHideLauncher">Hide Launcher</s:String>
+    <s:String x:Key="TrayReloadMultiplayer">Reload multiplayer</s:String>
+    <s:String x:Key="MaximizeLauncher">Maximize Launcher</s:String>
+    <s:String x:Key="CloseInstance">Close Instance</s:String>
 </ResourceDictionary>

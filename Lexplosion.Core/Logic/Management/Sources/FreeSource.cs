@@ -13,7 +13,7 @@ using System;
 
 namespace Lexplosion.Logic.Management.Sources
 {
-    class FreeSource : IInstanceSource
+	class FreeSource : IInstanceSource
     {
         private static object _locker = new();
         private static Dictionary<string, SourceMap> _maps = new();
@@ -87,14 +87,14 @@ namespace Lexplosion.Logic.Management.Sources
 
         public InstanceSource SourceType => InstanceSource.FreeSource;
 
-        public List<InstanceInfo> GetCatalog(InstanceSource type, ISearchParams searchParams)
+        public CatalogResult<InstanceInfo> GetCatalog(InstanceSource type, ISearchParams searchParams)
         {
-            return new List<InstanceInfo>();
+            return new();
         }
 
         public IInstallManager GetInstaller(string localId, bool updateOnlyBase, CancellationToken updateCancelToken)
         {
-            var content = DataFilesManager.GetFile<FreeSourcePlatformData>(WithDirectory.DirectoryPath + "/instances/" + localId + "/instancePlatformData.json");
+            var content = DataFilesManager.GetExtendedPlatfromData<FreeSourcePlatformData>(localId);
             return new FreeSourceInstanceInstallManager(GetSourceMap(content), localId, updateOnlyBase, updateCancelToken);
         }
 

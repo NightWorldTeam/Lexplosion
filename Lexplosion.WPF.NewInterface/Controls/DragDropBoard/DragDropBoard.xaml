@@ -6,7 +6,10 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:DragDropBoard}">
-                    <Border AllowDrop="True" Background="{TemplateBinding Background}">
+                    <Border
+                        VerticalAlignment="{TemplateBinding VerticalAlignment}"
+                        AllowDrop="True"
+                        Background="{TemplateBinding Background}">
                         <ContentPresenter x:Name="PART_ContentHost" AllowDrop="True" />
                     </Border>
                 </ControlTemplate>

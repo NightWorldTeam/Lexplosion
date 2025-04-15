@@ -2,12 +2,11 @@
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
-using System.Collections.Generic;
 using System.Threading;
 
 namespace Lexplosion.Logic.Management.Sources
 {
-    internal class LocalSource : IInstanceSource
+	internal class LocalSource : IInstanceSource
     {
         public PrototypeInstance ContentManager { get => new LocalInstance(); }
 
@@ -16,9 +15,9 @@ namespace Lexplosion.Logic.Management.Sources
             return new LocalInstallManager(localId, updateCancelToken);
         }
 
-        public List<InstanceInfo> GetCatalog(InstanceSource type, ISearchParams searchParams)
+        public CatalogResult<InstanceInfo> GetCatalog(InstanceSource type, ISearchParams searchParams)
         {
-            return new List<InstanceInfo>();
+            return new();
         }
 
         public InstancePlatformData CreateInstancePlatformData(string externalId, string localId, string instanceVersion)

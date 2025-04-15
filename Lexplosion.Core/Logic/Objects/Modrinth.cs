@@ -1,10 +1,13 @@
-﻿using Newtonsoft.Json;
+﻿using Lexplosion.Logic.Management.Addons;
+using Lexplosion.Tools;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 
 namespace Lexplosion.Logic.Objects.Modrinth
 {
-    public enum ModrinthProjectType
+	public enum ModrinthProjectType
     {
         Unknown,
         Mod,
@@ -29,6 +32,29 @@ namespace Lexplosion.Logic.Objects.Modrinth
 
         [JsonProperty("icon_url")]
         public string LogoUrl;
+
+        /// <summary>
+        /// Нужен для аддонов. Пробразует Type в AddonType.
+        /// Если использовать для модпака, то в ебало прилетит AddonType.Unknown
+        /// </summary>
+        [JsonIgnore]
+        public AddonType GetAddonType
+        {
+            get
+            {
+                switch (Type)
+                {
+                    case "mod":
+                        return AddonType.Mods;
+                    case "resourcepack":
+                        return AddonType.Resourcepacks;
+                    case "shader":
+                        return AddonType.Shaders;
+                    default:
+                        return AddonType.Unknown;
+                }
+            }
+        }
     }
 
     public class ModrinthCtalogUnit : ModrinthProject
@@ -55,10 +81,10 @@ namespace Lexplosion.Logic.Objects.Modrinth
         public int Downloads;
 
         [JsonProperty("date_modified")]
-        public new string Updated;        
+        public new string Updated;
     }
 
-    public class ModrinthProjectInfo : ModrinthProject
+    public class ModrinthProjectInfo : ModrinthProject, IAddonProjectInfo
     {
         [JsonProperty("id")]
         public string ProjectId;
@@ -99,6 +125,7 @@ namespace Lexplosion.Logic.Objects.Modrinth
         public ModrinthProjectInfo(ModrinthCtalogUnit catalogUnit)
         {
             ProjectId = catalogUnit.ProjectId;
+            Categories = catalogUnit.Categories;
             Summary = catalogUnit.Summary;
             Downloads = catalogUnit.Downloads;
             GameVersions = catalogUnit.GameVersions;
@@ -131,8 +158,13 @@ namespace Lexplosion.Logic.Objects.Modrinth
             [JsonProperty("url")]
             public string Url;
 
+            private string _filename;
             [JsonProperty("filename")]
-            public string Filename;
+            public string Filename
+            {
+                get => _filename;
+                set => _filename = PathNameTools.EasyValidation(value);
+            }
 
             [JsonProperty("size")]
             public int Size;
@@ -169,23 +201,47 @@ namespace Lexplosion.Logic.Objects.Modrinth
         public List<Dependencie> Dependencies;
 
         [JsonProperty("date_published")]
-        public string Date;
+        public DateTime Date;
 
         [JsonProperty("version_type")]
         public string Status;
+
+        [JsonProperty("game_versions")]
+        public string[] GameVersions;
+        
+        [JsonProperty("loaders")]
+        public string[] Modloaders;
+
+        [JsonProperty("version_number")]
+        public string? VersionNumber;
+
+        public override string ToString()
+        {
+            return VersionNumber;
+        }
     }
 
     public class InstanceManifest
     {
         public class FileData
         {
-            public string path;
+            private string _path;
+            [JsonProperty("path")]
+            public string Path
+            {
+                get => _path; 
+                set
+                {
+                    _path = PathNameTools.EasyValidation(value);
+                }
+            }
             public int fileSize;
             public List<string> downloads;
             public Dictionary<string, string> hashes;
         }
 
         public string name;
+        public string summary;
         public string versionId;
         public List<FileData> files;
         public Dictionary<string, string> dependencies;

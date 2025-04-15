@@ -1,59 +1,57 @@
-﻿using Lexplosion;
-using Lexplosion.Core.Tools.Notification;
-using Lexplosion.Global;
+﻿using Lexplosion.Core.Tools.Notification;
+using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.WPF.NewInterface.Core;
-using System;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization
 {
     public delegate void DoNotificationCallback(string titleKey, string messageKey, uint time, NotificationType type);
 
-    public abstract class AuthModelBase : VMBase
+    public abstract class AuthModelBase : ViewModelBase
     {
-        private readonly DoNotificationCallback _doNotification = (header, message, time, type) => { };
+        protected readonly AppCore _appCore;
 
-        protected AuthModelBase(DoNotificationCallback doNotification)
+        protected AuthModelBase(AppCore appCore)
         {
-            _doNotification = doNotification;
+            _appCore = appCore;
         }
 
         /// <summary>
-        /// Обрабатывает результат авторизации
+        /// Обрабатывает результат авторизации NightWorld
         /// </summary>
         /// <param name="accountType">Тип аккаунта авторизации</param>
         /// <param name="authCode">Код результата авторизации</param>
-        protected void PerformAuthCode(AccountType accountType, AuthCode authCode, bool isOAuth2 = false)
+        protected virtual void PerformNightWorldAuthCode(Account account, AuthCode authCode, bool isOAuth2 = false)
         {
             switch (authCode)
             {
                 case AuthCode.Successfully:
                     {
-                        SuccessfulAuthorization(GlobalData.User.Login, accountType);
+                        SuccessfulAuthorization(account);
                         break;
                     }
                 case AuthCode.DataError:
                     {
-                        _doNotification("authError", "wrongLoginOrPassword", 8, NotificationType.Error);
+                        _appCore.MessageService.Error("WrongLoginOrPassword", true);
                         break;
                     }
                 case AuthCode.NoConnect:
                     {
-                        _doNotification("authError", "noConnectionsToTheServer", 8, NotificationType.Error);
+                        _appCore.MessageService.Error("NoConnectionToTheServer", true);
                         break;
                     }
                 case AuthCode.TokenError:
                     {
-                        _doNotification("authError", "tokenError", 8, NotificationType.Error);
+                        _appCore.MessageService.Error("TokenErrorTryAuthAgain", true);
                         break;
                     }
                 case AuthCode.SessionExpired:
                     {
-                        _doNotification("loginFailed", "sessionExpiredPleaseTryAgainFillPassword", 8, NotificationType.Error);
+                        _appCore.MessageService.Error("SessionExpiredTryAuthAgain", true);
                         break;
                     }
                 default:
                     {
-                        _doNotification("someError", authCode.ToString(), 8, NotificationType.Error);
+                        _appCore.MessageService.Error("UnknownError", true);
                         break;
                     }
             }
@@ -64,11 +62,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization
         /// </summary>
         /// <param name="name">Никнейм игрока</param>
         /// <param name="accountType">Тип аккаунта которым пользователь авторизировался</param>
-        private void SuccessfulAuthorization(string name, AccountType accountType)
+        private void SuccessfulAuthorization(Account account)
         {
-            UserData.Instance.Nickname = name;
-            UserData.Instance.IsAuthrized = true;
-            UserData.Instance.CurrentAccountType = accountType;
+            account.IsActive = true;
+            account.IsLaunch = true;
+            account.Save();
         }
     }
 }

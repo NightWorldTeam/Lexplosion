@@ -1,13 +1,22 @@
-﻿using Lexplosion.WPF.NewInterface.Core;
+﻿using Lexplosion.Logic.Management.Accounts;
+using Lexplosion.Logic.Management.Instances;
+using Lexplosion.WPF.NewInterface.Commands;
+using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Objects;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading;
+using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 {
     public class LeftPanelViewModel : ViewModelBase
     {
+        public AutoResetEvent WaitHandler = new AutoResetEvent(false);
+
+
         public event Action<ViewModelBase> SelectedItemChanged;
 
 
@@ -23,6 +32,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         {
             get => _selectedItem; set
             {
+                if (_selectedItem != null && _selectedItem != value) 
+                {
+                    _selectedItem.IsSelected = false;
+                }
                 _selectedItem = value;
                 SelectedItemChanged?.Invoke(value.Content);
                 OnPropertyChanged();
@@ -30,7 +43,88 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         }
 
 
+        #region Header Data
+
+
+        //TODO: вынести header в отдельный компонетн.
+
+
+        private string _userLogin = "Unknown";
+        public string UserLogin
+        {
+            get => _userLogin; private set
+            {
+                _userLogin = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool IsUserAvatarLoaded { get; private set; } = false;
+
+        private string _userAvatar;// = "pack://Application:,,,/Assets/images/icons/non_image1.png";
+        public string UserAvatar
+        {
+            get => _userAvatar; private set
+            {
+                _userAvatar = value;
+
+                if (!string.IsNullOrEmpty(_userAvatar))
+                {
+                    IsUserAvatarLoaded = true;
+                    OnPropertyChanged(nameof(IsUserAvatarLoaded));
+                }
+                OnPropertyChanged();
+            }
+        }
+
+        private AccountType _userAccountType = AccountType.NoAuth;
+        public AccountType UserAccountType
+        {
+            get => _userAccountType; private set
+            {
+                _userAccountType = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+        #endregion Header Data
+
+
         #endregion Properties
+
+
+        #region Commands
+
+
+        private RelayCommand _toUserHowToPlayGuideCommand;
+        public ICommand ToUserHowToPlayGuideCommand
+        {
+            get => RelayCommand.GetCommand(ref _toUserHowToPlayGuideCommand, () => 
+            {
+                try
+                {
+                    System.Diagnostics.Process.Start("https://vk.com/@nightworld_offical-instrukciya-k-launcheru-lexplosion");
+                }
+                catch { }
+            });
+        }
+
+        private RelayCommand _toSupportCommand;
+        public ICommand ToSupportCommand
+        {
+            get => RelayCommand.GetCommand(ref _toSupportCommand, () =>
+            {
+                try
+                {
+                    System.Diagnostics.Process.Start("https://vk.com/im?media=&sel=-155979422");
+                }
+                catch { }
+            });
+        }
+
+
+        #endregion Commands
 
 
         #region Constructors
@@ -38,7 +132,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
         public LeftPanelViewModel()
         {
+            Account.LaunchAccountChanged += (acc) => SetUserDataToHeader();
+            Account.ActiveAccountChanged += (acc) => SetUserDataToHeader();
 
+            SetUserDataToHeader();
         }
 
 
@@ -83,17 +180,44 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
         public void AddTabItems(IEnumerable<LeftPanelMenuItem> em)
         {
+            foreach (var tabItem in em)
+            {
+                AddTabItem(tabItem);
+            }
+        }
 
+        /// <summary>
+        /// Выбирает элемент по индексу в коллекции.
+        /// Индексация как у обычной коллекции с нуля.
+        /// </summary>
+        /// <param name="index">Индекс элемента</param>
+        public LeftPanelMenuItem SelectItem(int index)
+        {
+            if (SelectedItem != null)
+                SelectedItem.IsSelected = false;
+            _items[index].IsSelected = true;
+            return _items[index];
         }
 
         public void SelectFirst()
         {
+            if (SelectedItem != null)
+                SelectedItem.IsSelected = false;
+
             _items[0].IsSelected = true;
         }
 
         public void SelectLast()
         {
-            _items[_items.Count - 1].IsSelected = false;
+            if (SelectedItem != null)
+                SelectedItem.IsSelected = false;
+
+            _items[_items.Count - 1].IsSelected = true;
+        }
+
+        public LeftPanelMenuItem GetByContentType(Type type)
+        {
+            return _items.FirstOrDefault(t => t.Content.GetType() == type);
         }
 
 
@@ -106,6 +230,29 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         private void OnSelectedTabItemChanged(LeftPanelMenuItem instance)
         {
             SelectedItem = instance;
+        }
+
+        private void SetUserDataToHeader()
+        {
+            if (Account.ActiveAccount != null)
+            {
+                UserLogin = Account.ActiveAccount.Login;
+                UserAvatar = Account.ActiveAccount.HeadImageUrl;
+                UserAccountType = AccountType.NightWorld;
+                return;
+            }
+
+            if (Account.LaunchAccount != null)
+            {
+                UserLogin = Account.LaunchAccount.Login;
+                UserAvatar = Account.LaunchAccount.HeadImageUrl;
+                UserAccountType = Account.LaunchAccount.AccountType;
+                return;
+            }
+
+            UserLogin = "Unknown";
+            UserAvatar = "pack://Application:,,,/Assets/images/icons/non_image1.png";
+            UserAccountType = AccountType.NoAuth;
         }
 
 

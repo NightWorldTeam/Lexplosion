@@ -1,10 +1,14 @@
-﻿using Lexplosion.Logic.Management;
+﻿using Lexplosion.Global;
+using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Instances;
+using Lexplosion.Logic.Network.Services;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.GameExtensions;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Settings
 {
@@ -35,11 +39,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
         /// </summary>
         public bool HasChanges { get => HasIntermediateChanged(); }
 
+        public bool IsExternal { get; }
+
 
         #region Versions
 
 
-        /// <summary>
+        /// <summary>ы
         /// Список версий майнкрафта
         /// </summary>
         public MinecraftVersion[] GameVersions { get => IsShowSnapshots ? MainViewModel.AllGameVersions : MainViewModel.ReleaseGameVersions; }
@@ -135,7 +141,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
         #endregion Modloader
 
 
-
         #region OptimizationMods
 
 
@@ -152,6 +157,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
             get => _isOptifine && ClientType == ClientType.Vanilla; set
             {
                 _isOptifine = value;
+                _instanceData.OptifineVersion = _optifineVersion;
                 OnPropertyChanged(nameof(HasChanges));
                 OnPropertyChanged(nameof(OptifineVersion));
                 OnPropertyChanged();
@@ -176,6 +182,33 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
         #endregion OptimizationMods
 
 
+        #region NWClient
+
+
+        /// <summary>
+        /// Modloader Manager (for fabric, forge...)
+        /// </summary>
+        private bool _isNWClientEnabled;
+        public bool IsNWClientEnabled 
+        { 
+            get => _isNWClientEnabled; set 
+            {
+                _isNWClientEnabled = value;
+                _instanceData.IsNwClient = value;
+                OnPropertyChanged(nameof(HasChanges));
+                OnPropertyChanged();
+            }
+        }
+
+        public bool IsNWClientAvailable { get; private set; }
+
+
+        public HashSet<string> NWClientSupportedVersions { get; private set; } = [];
+
+
+        #endregion  NWClient
+
+
         #endregion Properties
 
 
@@ -184,10 +217,14 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
 
         public InstanceProfileConfigurationModel(InstanceModelBase instanceModelBase)
         {
+            IsExternal = 
+                instanceModelBase.Source == InstanceSource.Modrinth ||
+                instanceModelBase.Source == InstanceSource.Curseforge ||
+                instanceModelBase.Source == InstanceSource.Nightworld; 
             _instanceModelBase = instanceModelBase;
 
-            _instanceData = instanceModelBase.InstanceData;
-            _oldInstanceData = instanceModelBase.InstanceData;
+            _instanceData = instanceModelBase.BaseData;
+            _oldInstanceData = instanceModelBase.BaseData;
 
             IsShowSnapshots = _instanceData.GameVersion.Type == MinecraftVersion.VersionType.Snapshot;
 
@@ -197,6 +234,18 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
 
             ClientType = _instanceData.Modloader;
             LoadInstanceDefaultExtension(ClientType);
+
+            Runtime.TaskRun(() =>
+            {
+                NWClientSupportedVersions = NetworkServicesManager.MinecraftInfo.GetNwClientGameVersions();
+                OnPropertyChanged(nameof(NWClientSupportedVersions));
+
+                IsNWClientAvailable = NWClientSupportedVersions.FirstOrDefault(verStr => verStr == Version.Id) != null;
+                OnPropertyChanged(nameof(IsNWClientAvailable));
+
+                IsNWClientEnabled = GlobalData.GeneralSettings.NwClientByDefault == true;
+                OnPropertyChanged(nameof(IsNWClientEnabled));
+            });
         }
 
 
@@ -206,7 +255,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
             if (ClientType == ClientType.Vanilla)
             {
                 IsOptifine = !string.IsNullOrEmpty(_oldInstanceData.OptifineVersion);
-                UpdateOptimizationModManager(Version, _instanceData.OptifineVersion);
+                UpdateOptimizationModManager(Version, _oldInstanceData.OptifineVersion);
             }
 
             if (_instanceData.Modloader == ClientType.Forge)
@@ -220,6 +269,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
             else if (_instanceData.Modloader == ClientType.Quilt)
             {
                 UpdateModloaderManager(GameExtension.Quilt, Version, _instanceData.ModloaderVersion);
+            }
+            else if (_instanceData.Modloader == ClientType.NeoForge)
+            {
+                UpdateModloaderManager(GameExtension.Neoforge, Version, _instanceData.ModloaderVersion);
             }
         }
 
@@ -262,9 +315,16 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
             {
                 OptifineVersion = IsOptifine ? OptifineVersion : string.Empty;
             }
+
+            if (!IsOptifine)
+            {
+                _instanceData.OptifineVersion = null;
+            }
+
             _instanceModelBase.ChangeOverviewParameters(_instanceData);
-            _instanceData = _instanceModelBase.InstanceData;
-            _oldInstanceData = _instanceModelBase.InstanceData;
+            
+           /* _instanceData = _instanceModelBase.InstanceData;*/
+            _oldInstanceData = _instanceModelBase.BaseData;
             OnPropertyChanged(nameof(HasChanges));
         }
 
@@ -273,10 +333,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
         /// </summary>
         public void ResetChanges()
         {
-            _instanceData = _instanceModelBase.InstanceData;
+            _instanceData = _instanceModelBase.BaseData;
             IsShowSnapshots = _instanceData.GameVersion.Type == MinecraftVersion.VersionType.Snapshot;
             Version = _instanceData.GameVersion ?? GameVersions[0];
             ClientType = _instanceData.Modloader;
+            IsNWClientEnabled = _instanceData.IsNwClient;
+            _isOptifine = _instanceData.OptifineVersion != null;
+            OnPropertyChanged(nameof(_isOptifine));
             LoadInstanceDefaultExtension(ClientType);
             OnPropertyChanged(nameof(HasChanges));
         }
@@ -298,6 +361,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
             OnPropertyChanged(nameof(HasChanges));
             UpdateModloaderManager(_instanceData.Modloader, Version);
             UpdateOptimizationModManager(Version);
+
+            IsNWClientAvailable = NWClientSupportedVersions.FirstOrDefault(verStr => verStr == Version.Id) != null;
+            OnPropertyChanged(nameof(IsNWClientAvailable));
         }
 
         /// <summary>
@@ -312,11 +378,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
                 return true;
             if (ModloaderVersion != null && !_oldInstanceData.ModloaderVersion.Equals(ModloaderVersion) && ClientType != ClientType.Vanilla)
                 return true;
-            if (_oldInstanceData.OptifineVersion != null)
-            {
-                if (!_oldInstanceData.OptifineVersion.Equals(IsOptifine ? OptifineVersion : ""))
-                    return true;
-            }
+            if (_oldInstanceData.OptifineVersion != (IsOptifine ? OptifineVersion : null))
+                return true;
+            if (_oldInstanceData.IsNwClient != IsNWClientEnabled)
+                return true;
+            
             return false;
         }
 
@@ -347,6 +413,18 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
 
             // (пере)Создаём менеджер
             ModloaderManager = new ModloaderManager(type, version);
+
+            if (ExtensionManagerBase.IsExtensionLoaded(type, version))
+            {
+                if (ModloaderManager.CurrentMinecraftExtension.IsAvaliable && string.IsNullOrEmpty(modloaderVersion))
+                {
+                    ModloaderVersion = ModloaderManager.CurrentMinecraftExtension.Versions[0];
+                }
+                else if (!string.IsNullOrEmpty(modloaderVersion))
+                {
+                    ModloaderVersion = modloaderVersion;
+                }
+            }
 
             ModloaderManager.MinecraftExtensionLoaded += (mExtension) =>
             {
@@ -382,6 +460,18 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
         private void UpdateOptimizationModManager(MinecraftVersion minecraftVersion, string optifimizationModVersion = null)
         {
             OptimizationModManager = new OptimizationModManager(minecraftVersion);
+
+            if (ExtensionManagerBase.IsExtensionLoaded(GameExtension.Optifine, minecraftVersion)) 
+            {
+                if (OptimizationModManager.CurrentMinecraftExtension.IsAvaliable && string.IsNullOrEmpty(optifimizationModVersion))
+                {
+                    OptifineVersion = OptimizationModManager.CurrentMinecraftExtension.Versions[0];
+                }
+                else if (!string.IsNullOrEmpty(optifimizationModVersion))
+                {
+                    OptifineVersion = optifimizationModVersion;
+                }
+            }
 
             OptimizationModManager.MinecraftExtensionLoaded += (mExtension) =>
             {

@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 namespace Lexplosion.Logic.Management
 {
     //TODO: перенести в пространсво имён Lexplosion.Logic.Objects
-    public sealed class MinecraftVersion : IComparable<MinecraftVersion>, IEquatable<MinecraftVersion>
+    public sealed class MinecraftVersion : IComparable, IComparable<MinecraftVersion>, IEquatable<MinecraftVersion>
     {
         public enum VersionType
         {
@@ -17,6 +17,8 @@ namespace Lexplosion.Logic.Management
 
         [JsonIgnore]
         public bool IsNan { get => string.IsNullOrWhiteSpace(Id); }
+        [JsonIgnore]
+        public int Weight { get; }
 
 
         #region Constructors
@@ -28,10 +30,21 @@ namespace Lexplosion.Logic.Management
             Type = VersionType.Release;
         }
 
-        public MinecraftVersion(string id, VersionType versionType)
+        public MinecraftVersion(string id, VersionType versionType, int weight = -4)
         {
             Id = id;
             Type = versionType;
+
+            if (weight != -4)
+            {
+                Weight = weight;
+                return;
+            }
+
+            if (!string.IsNullOrWhiteSpace(id))
+            {
+                Weight = CalcWeight(id);
+            }
         }
 
         public MinecraftVersion(string id)
@@ -39,22 +52,10 @@ namespace Lexplosion.Logic.Management
             Type = VersionType.Release;
             if (!string.IsNullOrWhiteSpace(id))
             {
-                string[] parts = id.Split('.');
-                if (parts.Length < 1)
-                {
+                if (!id.Contains("."))
                     Type = VersionType.Snapshot;
-                }
-                else
-                {
-                    foreach (string part in parts)
-                    {
-                        if (!Int32.TryParse(part, out _))
-                        {
-                            Type = VersionType.Snapshot;
-                            break;
-                        }
-                    }
-                }
+
+                Weight = CalcWeight(id);
             }
 
             Id = id;
@@ -74,12 +75,33 @@ namespace Lexplosion.Logic.Management
 
         public string ToFullString()
         {
-            return Type + " " + Id;
+            return $"{Type} {Id}";
+        }
+
+        public int CompareTo(object obj)
+        {
+            if (obj == null || !(obj is MinecraftVersion))
+                return 1;
+
+            return CompareTo(obj as MinecraftVersion);
         }
 
         public int CompareTo(MinecraftVersion other)
         {
-            return (Id, Type).CompareTo((other.Id, other.Type));
+            if (other == null)
+                return -1;
+
+            if (Type == other.Type)
+            {
+                return Weight.CompareTo(other.Weight);
+            }
+
+            if (Type == VersionType.Release)
+            {
+                return 1;
+            }
+
+            return -1;
         }
 
         public override int GetHashCode()
@@ -97,7 +119,7 @@ namespace Lexplosion.Logic.Management
             if (obj == null || !(obj is MinecraftVersion))
                 return false;
 
-            return Equals((MinecraftVersion)obj);
+            return Equals(obj as MinecraftVersion);
         }
 
         public bool Equals(MinecraftVersion other)
@@ -107,7 +129,7 @@ namespace Lexplosion.Logic.Management
                 return false;
             }
 
-            return this.Id == other.Id && this.Type == other.Type;
+            return CompareTo(other) == 0;
         }
 
         public static bool IsValidRelease(string gameVersion)
@@ -135,5 +157,75 @@ namespace Lexplosion.Logic.Management
 
 
         #endregion Public Methods
+
+
+        #region Private Methods
+
+
+        private int CalcWeight(string id)
+        {
+            if (id == "All")
+                return -1;
+
+            if (Type == VersionType.Release)
+            {
+                return CalcWeight(id.Split('.'));
+            }
+            else
+            {
+                return -2;// CalcWeight(id.Replace("a", "").Split('w'));
+            }
+        }
+
+        private int CalcWeight(string[] parts)
+        {
+            var weight = 0;
+            var i = 100000000;
+            foreach (var part in parts)
+            {
+                weight += int.Parse(part) * i;
+                i /= 10000;
+            }
+            return weight;
+        }
+
+
+        #endregion Private Methods
+
+
+        #region Math Operators
+
+
+        public static bool operator <(MinecraftVersion mv1, MinecraftVersion mv2)
+        {
+            return mv1.CompareTo(mv2) < 0;
+        }
+
+        public static bool operator >(MinecraftVersion mv1, MinecraftVersion mv2)
+        {
+            return mv1.CompareTo(mv2) > 0;
+        }
+
+        public static bool operator <=(MinecraftVersion mv1, MinecraftVersion mv2)
+        {
+            return !(mv1 > mv2);
+        }
+
+        public static bool operator >=(MinecraftVersion mv1, MinecraftVersion mv2)
+        {
+            return !(mv1 < mv2);
+        }
+
+        public static bool operator ==(MinecraftVersion mv1, MinecraftVersion mv2)
+        {
+            return mv1?.Id == mv2?.Id;
+        }
+
+        public static bool operator !=(MinecraftVersion mv1, MinecraftVersion mv2)
+        {
+            return mv1.Id != mv2.Id;
+        }
+
+        #endregion Math Operators
     }
 }

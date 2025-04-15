@@ -1,0 +1,163 @@
+﻿<UserControl
+    x:Class="Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.ServerProfile.ServerProfileLeftPanelView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Lexplosion.WPF.NewInterface.Controls"
+    xmlns:converters="clr-namespace:Lexplosion.WPF.NewInterface.Core.Converters"
+    xmlns:core="clr-namespace:Lexplosion.WPF.NewInterface.Core"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
+    xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.ServerProfile"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:objects="clr-namespace:Lexplosion.WPF.NewInterface.Core.Objects"
+    xmlns:serverprofile="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.ServerProfile"
+    d:DataContext="{d:DesignInstance Type=serverprofile:ServerProfileLeftPanelViewModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <DataTemplate DataType="{x:Type objects:LeftPanelMenuItem}">
+            <Border>
+                <controls:DefaultMainMenuTabItem
+                    GroupName="LeftPanelInstanceProfileItem"
+                    IconHeight="{Binding IconHeight}"
+                    IconKey="{Binding Icon}"
+                    IconWidth="{Binding IconWidth}"
+                    IsChecked="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"
+                    TextKey="{Binding TextKey}" />
+                <Border.Style>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="BorderBrush" Value="Transparent" />
+                        <Setter Property="BorderThickness" Value="0" />
+                        <Style.Triggers>
+                            <!--  nth-child with alternative index  -->
+                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentPresenter}}, Path=(ItemsControl.AlternationIndex)}" Value="1">
+                                <Setter Property="Padding" Value="0,0,0,8" />
+                                <Setter Property="Margin" Value="0,0,0,8" />
+                                <Setter Property="BorderBrush" Value="{DynamicResource LeftPanelItemsSeparateSolidColorBrush}" />
+                                <Setter Property="BorderThickness" Value="0,0,0,1" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+            </Border>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type core:LeftPanelFieldInfo}">
+            <TextBlock
+                FontSize="13"
+                FontWeight="Medium"
+                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                TextWrapping="WrapWithOverflow">
+                <!--  TODO: Language Key Here  -->
+                <Run extensions:TextBlockExtensions.RunByKey="{Binding Name, Mode=OneWay}" />
+                <Run Foreground="{DynamicResource ActivitySolidColorBrush}" Text="{Binding Value, Mode=OneWay}" />
+            </TextBlock>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Grid>
+        <Border
+            Background="{DynamicResource LeftPanelSolidColorBrush}"
+            BorderBrush="{DynamicResource LeftPanelOutsideBorderSolidColorBrush}"
+            BorderThickness="0,0,2,0">
+            <Grid>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!--  Back Button  -->
+                <Grid Margin="16,48,16,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button
+                        Command="{Binding BackCommand}"
+                        Content="{DynamicResource Back}"
+                        IsCancel="True"
+                        Style="{DynamicResource GhostButton}" />
+                </Grid>
+
+                <!--  Header  -->
+                <Grid
+                    x:Name="Header"
+                    Grid.Row="1"
+                    Margin="16,16,0,0"
+                    HorizontalAlignment="Stretch">
+                    <Grid ShowGridLines="False">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <!--  Avatar  -->
+                        <Border
+                            Padding="12,0,0,0"
+                            BorderBrush="{DynamicResource ActivitySolidColorBrush}"
+                            BorderThickness="4,0,0,0"
+                            CornerRadius="2,0,0,2">
+
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Border
+                                        Width="54"
+                                        Height="54"
+                                        Background="{Binding ServerModel.IconUrl, Mode=OneWay, Converter={converters:ImageSourceNullValidateConverter}}"
+                                        CornerRadius="5" />
+
+                                    <ItemsControl Margin="8,0,0,0" ItemsSource="{Binding AdditionalInfo}" />
+                                </StackPanel>
+
+                                <Grid
+                                    Grid.Row="2"
+                                    Margin="0,8,32,8"
+                                    HorizontalAlignment="Stretch">
+
+                                    <TextBlock
+                                        VerticalAlignment="Center"
+                                        FontSize="14"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                        Text="{Binding ServerModel.Name}"
+                                        TextAlignment="Left"
+                                        TextWrapping="WrapWithOverflow" />
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <Grid
+                            Grid.Row="2"
+                            Margin="16,16,16,0"
+                            VerticalAlignment="Center">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+
+                        </Grid>
+                    </Grid>
+                </Grid>
+
+                <!--  Tabs  -->
+                <ItemsControl
+                    Grid.Row="3"
+                    Margin="16,32,0,0"
+                    AlternationCount="2"
+                    ItemsSource="{Binding Items}"
+                    KeyboardNavigation.IsTabStop="False" />
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

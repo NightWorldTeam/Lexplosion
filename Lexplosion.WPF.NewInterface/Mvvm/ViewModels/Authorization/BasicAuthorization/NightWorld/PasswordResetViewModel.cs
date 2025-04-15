@@ -33,9 +33,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Authorization
         #region Constructors
 
 
-        public PasswordResetViewModel(INavigationStore navigationStore)
+        public PasswordResetViewModel(AppCore appCore, INavigationStore navigationStore)
         {
-            Model = new PasswordResetModel();
+            Model = new PasswordResetModel(appCore);
             _navigationStore = navigationStore;
         }
 

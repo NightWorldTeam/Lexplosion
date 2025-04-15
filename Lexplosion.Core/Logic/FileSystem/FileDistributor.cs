@@ -7,6 +7,8 @@ using Newtonsoft.Json;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Network;
 using Lexplosion.Global;
+using Lexplosion.Logic.Management;
+using System.Collections.Concurrent;
 
 namespace Lexplosion.Logic.FileSystem
 {
@@ -17,14 +19,19 @@ namespace Lexplosion.Logic.FileSystem
         private static string _confirmWord;
         private static int _distributionsCount = 0;
         private static object _createLock = new object();
-        private static HashSet<FileDistributor> _distributors = new();
+        private static ConcurrentDictionary<string, FileDistributor> _distributors = new();
         private static bool _isWork = true;
         private static List<string> _files = new();
 
         private Thread _informingThread;
         private AutoResetEvent _waitingInforming;
+        private ConcurrentDictionary<string, Player> _connectedUsers = new();
+        private string _fileId;
 
         public event Action OnClosed;
+
+        public event Action<Player> UserConnected;
+        public event Action<Player> UserDisconnected;
 
         public static string SharesDir
         {
@@ -36,6 +43,7 @@ namespace Lexplosion.Logic.FileSystem
 
         private FileDistributor(string fileId, string UUID, string sessionToken)
         {
+            _fileId = fileId;
             _waitingInforming = new AutoResetEvent(false);
 
             _informingThread = new Thread(() =>
@@ -66,7 +74,7 @@ namespace Lexplosion.Logic.FileSystem
             _informingThread.Start();
         }
 
-        public static FileDistributor CreateDistribution(string filePath, string name)
+        public static FileDistributor CreateDistribution(string filePath, string name, string userUUID, string userSessionToken)
         {
             if (!_isWork) return null;
 
@@ -80,7 +88,36 @@ namespace Lexplosion.Logic.FileSystem
                     _confirmWord = new Random().GenerateString(32);
 
                     var serverData = new ControlServerData(LaunсherSettings.ServerIp);
-                    _dataServer = new DataServer(privateKey, _confirmWord, GlobalData.User.UUID, GlobalData.User.SessionToken, serverData);
+                    _dataServer = new DataServer(privateKey, _confirmWord, userUUID, userSessionToken, serverData);
+
+                    _dataServer.ClientStartedDownloading += (string uuid, string fileId) =>
+                    {
+                        var user = new Player(uuid,
+                            () =>
+                            {
+                                _dataServer.KickClient(uuid);
+                            },
+                            () =>
+                            {
+                                _dataServer.UnkickClient(uuid);
+                            }
+                        );
+
+                        _distributors.TryGetValue(fileId, out FileDistributor distributor);
+                        if (distributor == null) return;
+
+                        distributor._connectedUsers[uuid] = user;
+                        distributor.UserConnected?.Invoke(user);
+                    };
+
+                    _dataServer.ClientFinishedDownloading += (string uuid, string fileId) =>
+                    {
+                        _distributors.TryGetValue(fileId, out FileDistributor distributor);
+                        if (distributor == null) return;
+
+                        distributor._connectedUsers.TryRemove(uuid, out Player user);
+                        distributor.UserDisconnected?.Invoke(user);
+                    };
                 }
 
                 //Получаем хэш файла
@@ -97,8 +134,8 @@ namespace Lexplosion.Logic.FileSystem
 
                 string answer = ToServer.HttpPost(LaunсherSettings.URL.UserApi + "setFileDistribution", new Dictionary<string, string>
                 {
-                    ["UUID"] = GlobalData.User.UUID,
-                    ["sessionToken"] = GlobalData.User.SessionToken,
+                    ["UUID"] = userUUID,
+                    ["sessionToken"] = userSessionToken,
                     ["FileId"] = hash,
                     ["Parameters"] = JsonConvert.SerializeObject(new DistributionData
                     {
@@ -112,8 +149,8 @@ namespace Lexplosion.Logic.FileSystem
 
                 _distributionsCount++;
 
-                var dstr = new FileDistributor(hash, GlobalData.User.UUID, GlobalData.User.SessionToken);
-                _distributors.Add(dstr);
+                var dstr = new FileDistributor(hash, userUUID, userSessionToken);
+                _distributors[dstr._fileId] = dstr;
 
                 return dstr;
             }
@@ -135,7 +172,7 @@ namespace Lexplosion.Logic.FileSystem
 
                 if (_isWork)
                 {
-                    _distributors.Remove(this);
+                    _distributors.TryRemove(this._fileId, out _);
 
                     ThreadPool.QueueUserWorkItem(delegate (object state)
                     {
@@ -149,11 +186,12 @@ namespace Lexplosion.Logic.FileSystem
         {
             _isWork = false;
 
+            // TODO: тут пихнуть какой-нибудь лукер, ибо в _distributors может null присвоится во время работы CreateDistribution
             if (_distributors != null)
             {
                 foreach (var distributor in _distributors)
                 {
-                    distributor.Stop();
+                    distributor.Value.Stop();
                 }
 
                 _distributors = null;

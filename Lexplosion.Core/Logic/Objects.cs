@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.IO;
 using Lexplosion.Logic.Management;
 using Newtonsoft.Json;
@@ -109,7 +108,7 @@ namespace Lexplosion.Logic.Objects
 
         public void RemoveFromDir(string instancePath)
         {
-            if (Type == AddonType.Mods || Type == AddonType.Resourcepacks)
+            if (Type == AddonType.Mods || Type == AddonType.Resourcepacks || Type == AddonType.Shaders)
             {
                 try
                 {
@@ -135,7 +134,7 @@ namespace Lexplosion.Logic.Objects
     {
         public string JavaName;
         public long LastUpdate;
-        public string ExecutableFile = "/bin/javaw.exe";
+		public string ExecutableFile { get; set; } = "/bin/java.exe";
         public string ManifestUrl;
 
         public JavaVersion(string name, JavaVersionManifest.JavaVersionDesc javaManifest)
@@ -166,7 +165,7 @@ namespace Lexplosion.Logic.Objects
         public string Changelog { get; set; }
     }
 
-    public class AcccountsFormat
+    public class OldAcccountsFormat
     {
         public class Profile
         {
@@ -178,26 +177,30 @@ namespace Lexplosion.Logic.Objects
         public Dictionary<AccountType, Profile> Profiles;
     }
 
-    public class Test
-    {
-        public class Profile
-        {
-            public string Login;
-            public string AccessData;
-            public AccountType Type;
-            public bool IsSelected;
-        }
-
-        public List<Profile> Profiles;
-    }
-
-    public class InstanceVersion
+    /// <summary>
+    /// TODO: В будущем когда будет разделение на модули
+    /// Использовать ObservableObject.
+    /// </summary>
+    public class InstanceVersion : VMBase
     {
         public string FileName { get; set; }
         public string Id { get; set; }
-        public string Date { get; set; }
+        public DateTime Date { get; set; }
         public ReleaseType Status { get; set; }
         public bool CanInstall { get; set; } = true;
+        public string GameVersion { get; set; }
+        public string Modloader { get; set; }
+        public string? VersionNumber { get; set; }
+
+        private bool _isDownloading;
+        public bool IsDownloading 
+        { 
+            get => _isDownloading; set 
+            {
+                _isDownloading = value;
+                OnPropertyChanged();
+            }
+        }
     }
 
     /// <summary>
@@ -234,7 +237,7 @@ namespace Lexplosion.Logic.Objects
         public abstract string Name { get; set; }
         public abstract string ClassId { get; set; }
         public abstract string ParentCategoryId { get; set; }
-        
+
         public override string ToString()
         {
             return Name;

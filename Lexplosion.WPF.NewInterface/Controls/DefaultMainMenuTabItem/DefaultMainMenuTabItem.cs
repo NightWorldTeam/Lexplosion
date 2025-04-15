@@ -45,11 +45,5 @@ namespace Lexplosion.WPF.NewInterface.Controls
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(DefaultMainMenuTabItem), new FrameworkPropertyMetadata(typeof(DefaultMainMenuTabItem)));
         }
-
-        protected override void OnChecked(RoutedEventArgs e)
-        {
-            base.OnChecked(e);
-            Runtime.DebugWrite("test");
-        }
     }
 }

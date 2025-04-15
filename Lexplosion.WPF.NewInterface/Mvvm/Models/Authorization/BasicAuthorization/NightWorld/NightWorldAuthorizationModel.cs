@@ -1,10 +1,13 @@
-﻿using Lexplosion.Logic.Management.Authentication;
+﻿using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.WPF.NewInterface.Core;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization.BasicAuthorization
 {
-    public class NightWorldAuthorizationModel : AuthModelBase, IBasicAuthModel
+    public sealed class NightWorldAuthorizationModel : AuthModelBase, IBasicAuthModel
     {
+        private readonly AppCore _appCore;
+
+
         #region Properties
 
 
@@ -18,7 +21,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization.BasicAuthorizati
             }
         }
 
-        private string _password = null;
+        private string _password = string.Empty;
         public string Password
         {
             get => _password; set
@@ -28,7 +31,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization.BasicAuthorizati
             }
         }
 
-        private bool _isRememberMe = false;
+        private bool _isRememberMe;
         public bool IsRememberMe
         {
             get => _isRememberMe; set
@@ -44,10 +47,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization.BasicAuthorizati
 
         #region Constuctors
 
-        public NightWorldAuthorizationModel(DoNotificationCallback doNotification, string loadedLogin = "") : base(doNotification)
+
+        public NightWorldAuthorizationModel(AppCore appCore) : base(appCore)
         {
-            Login = loadedLogin;
+            _appCore = appCore;
         }
+
 
         #endregion Constructors
 
@@ -57,22 +62,25 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization.BasicAuthorizati
 
         public void LogIn()
         {
-            AuthCode authCode = Authentication.Instance.Auth(
-                AccountType.NightWorld,
-                Login?.Length == 0 ? null : Login,
-                Password?.Length == 0 ? null : Password,
-                IsRememberMe
-                );
+            if (string.IsNullOrWhiteSpace(Login) || string.IsNullOrWhiteSpace(Password)) 
+            {
+                _appCore.MessageService.Info("LoginOrPasswordNotFilled", true);
+                return;
+            }
+
+            var account = new Account(AccountType.NightWorld, Login);
+
+            Runtime.TaskRun(() =>
+            {
+                var authCode = account.Auth(Password);
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    PerformNightWorldAuthCode(account, authCode);
+                });
+            });
         }
 
 
         #endregion Public & Protected Methods
-
-
-        #region Private Methods
-
-
-
-        #endregion Private Methods
     }
 }

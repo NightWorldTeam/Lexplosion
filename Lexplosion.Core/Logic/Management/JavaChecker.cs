@@ -8,6 +8,7 @@ using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Tools;
 using Lexplosion.Global;
+using Lexplosion.Logic.Network.Services;
 
 namespace Lexplosion.Logic.Management
 {
@@ -105,7 +106,7 @@ namespace Lexplosion.Logic.Management
             }
             else //не нашли, получаем данные с сервера
             {
-                JavaVersionManifest versions = ToServer.GetJavaVersions();
+                JavaVersionManifest versions = NetworkServicesManager.MinecraftInfo.GetJavaVersions();
 
                 if (versions == null)
                 {

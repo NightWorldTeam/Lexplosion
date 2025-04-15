@@ -8,14 +8,17 @@ namespace Lexplosion.WPF.NewInterface.Controls
 {
     [TemplatePart(Name = PART_PLACEHOLDER_NAME, Type = typeof(TextBlock))]
     [TemplatePart(Name = PART_SEARCH_BUTTON_NAME, Type = typeof(Button))]
+    [TemplatePart(Name = PART_CLEAR_BUTTON_NAME, Type = typeof(Button))]
     public class SearchBox : TextBox
     {
         private const string PART_PLACEHOLDER_NAME = "PART_Placeholder";
         private const string PART_SEARCH_BUTTON_NAME = "PART_Search_Button";
+        private const string PART_CLEAR_BUTTON_NAME = "PART_Clear_Button";
 
 
         private TextBlock _placeholderBlock;
         private Button _searchButton;
+        private Button _clearButton;
 
         private string _lastRequests = string.Empty;
 
@@ -53,9 +56,9 @@ namespace Lexplosion.WPF.NewInterface.Controls
             set => SetValue(PlaceholderProperty, value);
         }
 
-        protected bool IsEmpty
+        public bool IsEmpty
         {
-            get; set;
+            get => (bool)string.IsNullOrEmpty(Text);
         }
 
 
@@ -90,19 +93,31 @@ namespace Lexplosion.WPF.NewInterface.Controls
         {
             _searchButton = Template.FindName(PART_SEARCH_BUTTON_NAME, this) as Button;
             _placeholderBlock = Template.FindName(PART_PLACEHOLDER_NAME, this) as TextBlock;
-
+            _clearButton = Template.FindName(PART_CLEAR_BUTTON_NAME, this) as Button;
 
             if (_searchButton == null)
             {
-                new Exception("Search Button is not exists");
+                throw new Exception("Search Button is not exists");
             }
 
             if (_placeholderBlock == null)
             {
-                new Exception("PlaceholderKey is not exists");
+                throw new Exception("PlaceholderKey is not exists");
+            }
+
+            if (_clearButton == null)
+            {
+                throw new Exception("Clear Button is not exists");
             }
 
             _searchButton.Click += searchButton_Click;
+            
+            _clearButton.Click += _clearButton_Click;
+            _clearButton.Loaded += (sender, e) =>
+            {
+                _clearButton.Margin = new Thickness(0, 0, -(16 + _clearButton.ActualHeight), 0);
+            };
+
             this.KeyDown += inputField_KeyDown;
             _placeholderBlock.Text = Placeholder;
 
@@ -159,6 +174,17 @@ namespace Lexplosion.WPF.NewInterface.Controls
             e.Handled = true;
         }
 
+        private void _clearButton_Click(object sender, RoutedEventArgs e)
+        {
+            Text = string.Empty;
+            UpdateIsEmpty();
+
+            if (_lastRequests == Text)
+                return;
+
+            _lastRequests = Text;
+            ExecuteSearchCommand();
+        }
 
         private void ExecuteSearchCommand()
         {
@@ -187,19 +213,24 @@ namespace Lexplosion.WPF.NewInterface.Controls
         /// </summary>
         private void UpdateIsEmpty()
         {
-            IsEmpty = string.IsNullOrEmpty(Text);
-
-            if (_placeholderBlock != null)
+            if (_placeholderBlock == null)
             {
+                return;
+            }
+
                 if (IsEmpty)
                 {
-                    ShowPlaceholderBox();
+                    if (this.IsFocused)
+                        HidePlaceholderBox();
+                    else
+                        ShowPlaceholderBox();
+                    HideClearButton();
                 }
                 else
                 {
                     HidePlaceholderBox();
+                    ShowClearButton();
                 }
-            }
         }
 
         private void HidePlaceholderBox()
@@ -224,6 +255,32 @@ namespace Lexplosion.WPF.NewInterface.Controls
             };
 
             _placeholderBlock.BeginAnimation(FrameworkElement.OpacityProperty, dA);
+        }
+
+        private void ShowClearButton() 
+        {
+            var tA = new ThicknessAnimation()
+            {
+                From = _clearButton.Margin,
+                To = new Thickness(0, 0, -4, 0),
+                Duration = new TimeSpan(0, 0, 0, 0, 250),
+                EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut }
+            };
+
+            _clearButton.BeginAnimation(FrameworkElement.MarginProperty, tA);
+        }
+
+        private void HideClearButton()
+        {
+            var tA = new ThicknessAnimation()
+            {
+                From = _clearButton.Margin,
+                To = new Thickness(0, 0, -(16 + _clearButton.ActualHeight), 0),
+                Duration = new TimeSpan(0, 0, 0, 0, 250),
+                EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut },
+            };
+
+            _clearButton.BeginAnimation(FrameworkElement.MarginProperty, tA);
         }
 
 

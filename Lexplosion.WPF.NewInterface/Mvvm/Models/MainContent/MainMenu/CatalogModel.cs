@@ -5,10 +5,11 @@ using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.FIlterPanel;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
 {
-    public sealed class CatalogModel : VMBase
+	public sealed class CatalogModel : VMBase
     {
         private static readonly SimpleCategory AllCategory = new SimpleCategory()
         {
@@ -20,6 +21,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
 
 
         private readonly IInstanceController _instanceController;
+
+
+        private readonly ManualResetEvent _resetEvent = new ManualResetEvent(false);
 
 
         #region Properties
@@ -62,7 +66,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
             }
         }
 
-        private uint _pageCount = 500;
+        private uint _pageCount = 100;
         public uint PageCount
         {
             get => _pageCount; set 
@@ -72,6 +76,15 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
             }
         }
 
+        private bool _isLoading;
+        public bool IsLoading 
+        {
+            get => _isLoading; set 
+            {
+                _isLoading = value;
+                OnPropertyChanged();
+            }
+        }
 
         #endregion Properties
 
@@ -82,9 +95,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
         public CatalogModel(IInstanceController instanceController)
         {
             _instanceController = instanceController;
-            FilterPanel = new CatalogFilterPanel();
-            FilterPanel.FilterChanged += OnFilterChanged;
-            LoadPageContent();
+            FilterPanel = new CatalogFilterPanel(OnFilterChanged);
+            _resetEvent.Set();
         }
 
 
@@ -96,9 +108,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
 
         private void OnFilterChanged() 
         {
+            IsLoading = true;
+            _instanceController.Clear();
             Runtime.TaskRun(() =>
             {
-                var instanceClientsTuple = GetInstanceClients(
+                _resetEvent.WaitOne();
+                var catalogResult = GetInstanceClients(
                     SearchFilter, 
                     (int)CurrentPageIndex,
                     FilterPanel.SelectedSource.Value, 
@@ -107,16 +122,17 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
                     FilterPanel.SelectedVersion, 
                     false);
 
-                IsEmptyPage = instanceClientsTuple.Item2 == 0;
+                IsEmptyPage = catalogResult.Count == 0;
 
-                if (PageCount != instanceClientsTuple.Item2)
-                    PageCount = instanceClientsTuple.Item2;
+                if (PageCount != catalogResult.TotalCount)
+                    PageCount = (uint)(catalogResult.TotalCount > 10 ? (catalogResult.TotalCount / ItemsPerPage) : catalogResult.TotalCount);
 
                 _instanceController.Clear();
 
-                foreach (var i in instanceClientsTuple.Item1)
+                foreach (var i in catalogResult)
                     _instanceController.Add(i);
                 OnPropertyChanged(nameof(Instances));
+                IsLoading = false;
             });
         }
 
@@ -133,31 +149,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
             OnFilterChanged();
         }
 
-        private void LoadPageContent() 
-        {
-            Runtime.TaskRun(() => 
-            {
-                var instanceClientsTuple = GetInstanceClients(
-                    SearchFilter,
-                    (int)CurrentPageIndex,
-                    InstanceSource.Modrinth, 
-                    new IProjectCategory[] { AllCategory },
-                    (int)ModrinthSortField.Relevance,
-                    new MinecraftVersion(), false);
-
-                IsEmptyPage = instanceClientsTuple.Item2 == 0;
-
-                if (PageCount != instanceClientsTuple.Item2)
-                    PageCount = instanceClientsTuple.Item2;
-
-                foreach (var i in instanceClientsTuple.Item1)
-                    _instanceController.Add(i);
-
-                OnPropertyChanged(nameof(Instances));
-            });
-        }
-
-
         /// TODO: Сделать метод приватным
         /// <summary>
         /// Return a list of instances from curseforge/modrinth
@@ -170,7 +161,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
         /// <param name="gameVersion">version of minecraft</param>
         /// <param name="isPaginatorInvoke">Is page index changed?</param>
         /// <returns>Tuple[IEnumerable InstanceClient & InstanceClient count </returns>
-        public (IEnumerable<InstanceClient>, uint) GetInstanceClients(string searchInput, int scrollTo, InstanceSource source, IEnumerable<IProjectCategory> selectedCategories, int sortBy, MinecraftVersion gameVersion, bool isPaginatorInvoke = false)
+        public CatalogResult<InstanceClient> GetInstanceClients(string searchInput, int scrollTo, InstanceSource source, IEnumerable<IProjectCategory> selectedCategories, int sortBy, MinecraftVersion gameVersion, bool isPaginatorInvoke = false)
         {
             ISearchParams searchParams = null;
 

@@ -8,7 +8,7 @@ using System.Threading;
 
 namespace Lexplosion.Logic.Management.Sources
 {
-    class CurseforgeSource : IInstanceSource
+	class CurseforgeSource : IInstanceSource
     {
         // чтобы не создавать объект каждый вызов метода GetCatalog 
         private readonly IProjectCategory _modpacksAllCategory = new SimpleCategory()
@@ -26,7 +26,7 @@ namespace Lexplosion.Logic.Management.Sources
             return new CurseforgeInstallManager(localId, updateOnlyBase, updateCancelToken);
         }
 
-        public List<InstanceInfo> GetCatalog(InstanceSource type, ISearchParams searchParams)
+        public CatalogResult<InstanceInfo> GetCatalog(InstanceSource type, ISearchParams searchParams)
         {
             IProjectCategory category = _modpacksAllCategory;
 
@@ -46,13 +46,13 @@ namespace Lexplosion.Logic.Management.Sources
                 if (iter.MoveNext())
                 {
                     category = (IProjectCategory)iter.Current;
-                }       
+                }
             }
 
-            var curseforgeInstances = CurseforgeApi.GetInstances(sParams.PageSize, sParams.LastIndexInPage, category.Id, sParams.SortField, sParams.SearchFilter, sParams.GameVersion);
+            var catalogResult = CurseforgeApi.GetInstances(sParams);
             var result = new List<InstanceInfo>();
 
-            foreach (var instance in curseforgeInstances)
+            foreach (var instance in catalogResult.Collection)
             {
                 // проверяем версию игры
                 if (instance.latestFilesIndexes != null && instance.latestFilesIndexes.Count > 0 && instance.latestFilesIndexes[0].gameVersion != null)
@@ -78,7 +78,7 @@ namespace Lexplosion.Logic.Management.Sources
                 }
             }
 
-            return result;
+            return new(result, catalogResult.TotalCount);
         }
 
         public InstancePlatformData CreateInstancePlatformData(string externalId, string localId, string instanceVersion)

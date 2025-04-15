@@ -2,73 +2,38 @@
 using Lexplosion.Logic.Network;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Modal;
-using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Stores;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal;
 using System.Collections.Generic;
-using System.Windows.Media;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu;
-using Lexplosion.Logic.Management.Instances;
 using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Mvvm.Models;
 using System;
-using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer;
+using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers;
+using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.ModalFactory;
+using Lexplosion.Logic;
+using Lexplosion.Logic.Management.Instances;
+using Lexplosion.Tools;
+using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
+using System.Linq;
+using System.Collections.ObjectModel;
+using Lexplosion.WPF.NewInterface.TrayMenu;
+using System.Windows.Input;
+using Lexplosion.Logic.Management.Accounts;
+using System.Diagnostics;
+using System.Windows.Controls;
+using Lexplosion.WPF.NewInterface.Mvvm.Views.Windows;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
 {
-    public abstract class ModalAbstractFactory 
-    {
-        public abstract IModalViewModel Create();
-    }
-
-    public sealed class ModalInstanceCreatorFactory : ModalAbstractFactory
-    {
-        private readonly Action<InstanceClient> _addToLibrary;
-        private readonly Action<InstanceClient> _removeFromLibrary;
-
-        public ModalInstanceCreatorFactory(Action<InstanceClient> addToLibrary, Action<InstanceClient> removeFromLibrary)
-        {
-            _addToLibrary = addToLibrary;
-            _removeFromLibrary = removeFromLibrary;
-        }
-
-        public override IModalViewModel Create()
-        {
-            return new LeftMenuControl(
-                new ModalLeftMenuTabItem[3]
-                {
-                    new ModalLeftMenuTabItem()
-                    {
-                        IconKey = "AddCircle",
-                        TitleKey = "Create",
-                        IsEnable = true,
-                        IsSelected = true,
-                        Content = new InstanceFactoryViewModel(_addToLibrary)
-                    },
-                    new ModalLeftMenuTabItem()
-                    {
-                        IconKey = "PlaceItem",
-                        TitleKey = "Import",
-                        IsEnable = true,
-                        IsSelected = false,
-                        Content = new InstanceImportViewModel(_addToLibrary, _removeFromLibrary)
-                    },
-                    new ModalLeftMenuTabItem()
-                    {
-                        IconKey = "DownloadCloud",
-                        TitleKey = "Distributions",
-                        IsEnable = true,
-                        IsSelected = false
-                    }
-                }
-                );
-        }
-    }
-
-
-    public sealed class MainViewModel : VMBase
+    public sealed class MainViewModel : ViewModelBase
     {
         public static event Action AllVersionsLoaded;
+
+        private readonly MainMenuLayoutViewModel _mainMenuLayoutViewModel;
+
+        public AppCore AppCore { get; private set; }
+
 
         #region Properties
 
@@ -85,7 +50,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
         /// </summary>
         public ViewModelBase CurrentViewModel => NavigationStore.CurrentViewModel;
 
-        internal ModalNavigationStore ModalNavigationStore { get => ModalNavigationStore.Instance; }
+        internal ModalNavigationStore ModalNavigationStore { get => AppCore.ModalNavigationStore; }
 
         /// <summary>
         /// Выбранный в данный момент viewmodel для модального окна.
@@ -97,6 +62,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
         /// </summary>
         public bool IsModalOpen { get => ModalNavigationStore.CurrentViewModel != null; }
 
+
+        public NavigateCommand<ViewModelBase> ToMainMenu { get; }
 
 
         // Данное свойство содержит в себе версии игры.
@@ -116,6 +83,23 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
         #endregion Properties
 
 
+        #region Commands
+
+
+        private RelayCommand _showMainWindowCommand;
+        public ICommand ShowMainWindowCommand
+        {
+            get => RelayCommand.GetCommand(ref _showMainWindowCommand, (obj) =>
+            {
+                RuntimeApp.ShowMainWindow();
+                InitTrayComponents();
+            });
+        }
+
+
+        #endregion Commands
+
+
         #region Constructors
 
 
@@ -124,35 +108,34 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
             PreLoadGameVersions();
         }
 
-        public MainViewModel()
+        public MainViewModel(AppCore appCore)
         {
-            Model = new MainModel();
+            AppCore = appCore;
+            Model = new MainModel(appCore);
+
+            SubscribeToOpenModpackEvent();
+
+            NavigationStore = appCore.NavigationStore;
+
             // так как грузится в отдельном потоке, может загрузится позже чем создатся экземпляр класса InstanceFactory!!!
-            ModalNavigationStore.Instance.CurrentViewModelChanged += Instance_CurrentViewModelChanged;
+            ModalNavigationStore.CurrentViewModelChanged += Instance_CurrentViewModelChanged;
             NavigationStore.CurrentViewModelChanged += NavigationStore_CurrentViewModelChanged;
 
 
             // Register Modal Window Contents
-            ModalNavigationStore.Instance.RegisterAbstractFactory(typeof(InstanceFactoryViewModel), new ModalInstanceCreatorFactory(Model.LibraryController.Add, Model.LibraryController.Remove));
+            ModalNavigationStore.RegisterAbstractFactory(
+                typeof(InstanceFactoryViewModel),
+                new ModalInstanceCreatorFactory(appCore, Model.LibraryController as LibraryController, Model.InstanceSharesController)
+            );
 
+            _mainMenuLayoutViewModel = new MainMenuLayoutViewModel(appCore, NavigationStore, ModalNavigationStore, Model);
+            ToMainMenu = new NavigateCommand<ViewModelBase>(NavigationStore, () => _mainMenuLayoutViewModel);
 
-            //ModalNavigationStore.Close();
-            //ModalNavigationStore.Open(new DialogBoxViewModel("Library", "Protection", (obj) => { }, (obj) => { }));
-            //ModalNavigationStore.Close();
-
-            var mainMenuLayout = new MainMenuLayoutViewModel(NavigationStore, ModalNavigationStore, Model);
-            var toMainMenu = new NavigateCommand<ViewModelBase>(NavigationStore, () => mainMenuLayout);
-            toMainMenu?.Execute(null);
-            //var toAuthForms = new NavigateCommand<ViewModelBase>(NavigationStore, () => new AuthorizationMenuViewModel(NavigationStore, toMainMenu));
-
-            //toAuthForms.Execute(null);
-
-            //NavigationStore.CurrentViewModel = new ModrinthAddonPageViewModel(null);
-            //NavigationStore.CurrentViewModel = new CurseforgeRepositoryViewModel(InstanceClient.GetInstalledInstances()[0].GetBaseData);
-            //new MainMenuLayoutViewModel(NavigationStore); 
-            //NavigationStore.CurrentViewModel = new InstanceProfileLayoutViewModel(null, null, LibraryController.Instance.Instances.Last());
-            //new InstanceModelBase(InstanceClient.GetOutsideInstances( InstanceSource.Modrinth, 2, 0, new IProjectCategory[] { new SimpleCategory() { Name = "All", Id = "-1", ClassId = "", ParentCategoryId = "" }}, "", CfSortField.Featured, "1.19.4")[1])); //new MainMenuLayoutViewModel(); //new ModrinthRepositoryViewModel(AddonType.Mods, ClientType.Fabric, "1.19.4");
-            //NavigationStore.Content = new AuthorizationMenuViewModel(NavigationStore);
+            InitTrayComponents();
+            RuntimeApp.TrayMenuElementClicked += InitTrayComponents;
+            // Обновляем элементы меню, так как ContextMenu находится в другом визуальном дереве
+            // и через DynamicResource обновление просто не сделать
+            RuntimeApp.TrayContextMenuOpened += InitTrayComponents;
         }
 
 
@@ -170,10 +153,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
             OnPropertyChanged(nameof(CurrentViewModel));
         }
 
-        public static void ChangeColor(Color color)
-        {
-        }
-
 
         #region Private Methods
 
@@ -186,7 +165,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
         {
             Lexplosion.Runtime.TaskRun(() =>
             {
-                var versionsList = ToServer.GetVersionsList();
+                var versionsList = CoreServicesManager.MinecraftInfo.GetVersionsList();
                 var releaseOnlyVersions = new List<MinecraftVersion>();
                 var allVersions = new MinecraftVersion[versionsList.Count];
                 var i = 0;
@@ -214,6 +193,92 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
         }
 
 
+        private void SubscribeToOpenModpackEvent()
+        {
+            CommandReceiver.OpenModpackPage += delegate (string modpackId)
+            {
+                InstanceClient instanceClient = InstanceClient.GetInstance(InstanceSource.Nightworld, modpackId);
+                if (instanceClient != null)
+                {
+                    InstanceModelBase viewModel = Model.LibraryController.Instances.FirstOrDefault(i => i.CheckInstanceClient(instanceClient));
+                    if (viewModel == null)
+                    {
+                        viewModel = Model.CatalogController.Instances.FirstOrDefault(i => i.CheckInstanceClient(instanceClient));
+
+                        if (viewModel == null)
+                        {
+                            viewModel = new InstanceModelBase(AppCore, instanceClient, Model.Export, Model.SetRunningGame);
+                        }
+                    }
+                    _mainMenuLayoutViewModel.ToInstanceProfile(viewModel);
+                    NativeMethods.ShowProcessWindows(Runtime.CurrentProcess.MainWindowHandle);
+                }
+            };
+        }
+
+
         #endregion Private Methods
+
+
+        internal void InitTrayComponents()
+        {
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                InitTrayComponentsInternal(Model.RunningGame);
+            });
+        }
+
+        public ObservableCollection<TrayComponentBase> TrayComponents { get; } = new();
+
+        private void InitTrayComponentsInternal(InstanceModelBase instanceModel)
+        {
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                var resources = AppCore.Resources;
+
+                TrayComponents.Clear();
+
+                if (instanceModel != null)
+                {
+                    TrayComponents.Add(new TrayButton(0, "CloseInstance", instanceModel.Close)
+                    {
+                        IsEnabled = Model.RunningGame == null
+                    });
+                }
+
+                TrayComponents.Add(new TrayButton(1, (string)resources("TrayHideLauncher"), RuntimeApp.CloseMainWindow)
+                {
+                    IsEnabled = App.Current.MainWindow?.GetType() == typeof(MainWindow)
+                });
+                TrayComponents.Add(new TrayButton(2, (string)resources("MaximizeLauncher"), RuntimeApp.ShowMainWindow)
+                {
+                    IsEnabled = App.Current.MainWindow?.GetType() != typeof(MainWindow)
+                });
+                TrayComponents.Add(new TrayButton(3, (string)resources("TrayReloadMultiplayer"), LaunchGame.RebootOnlineGame)
+                {
+                    IsEnabled = Account.ActiveAccount != null && Account.ActiveAccount.AccountType == AccountType.NightWorld
+                });
+                TrayComponents.Add(new TrayButton(4, (string)resources("ContactSupport"), ContentSupport)
+                {
+                    IsEnabled = true
+                });
+                TrayComponents.Add(new TrayButton(5, (string)resources("Close"), Runtime.KillApp)
+                {
+                    IsEnabled = true
+                });
+            });
+        }
+
+        void ContentSupport()
+        {
+            try
+            {
+                Process.Start(Constants.VKGroupToChatUrl);
+            }
+            catch
+            {
+
+            }
+        }
     }
 }

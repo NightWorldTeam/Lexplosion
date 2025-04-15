@@ -5,28 +5,34 @@
     xmlns:controls="clr-namespace:Lexplosion.WPF.NewInterface.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
+    xmlns:instanceprofile="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.InstanceProfile"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DataContext="{d:DesignInstance Type=instanceprofile:InstanceProfileSettingsLayoutViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <Grid Background="{DynamicResource PrimarySolidColorBrush}">
+    <Grid Background="{DynamicResource PageSolidColorBrush}">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <TextBlock
-            Margin="45,32,0,8"
-            extensions:TextBlock.TextByKey="Settings"
-            FontSize="20"
-            FontWeight="Bold"
-            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+        <Grid Background="{DynamicResource LayoutTabSolidColorBrush}">
+            <TextBlock
+                Margin="45,32,0,8"
+                extensions:TextBlockExtensions.TextByKey="Settings"
+                FontSize="20"
+                FontWeight="Bold"
+                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+        </Grid>
 
         <controls:UIUnderlineTabControl
             Grid.Row="1"
-            Background="Transparent"
+            Background="{DynamicResource LayoutTabSolidColorBrush}"
+            BorderBrush="{DynamicResource LayoutTabBorderSolidColorBrush}"
+            BorderThickness="0,0,0,1"
             ItemsSource="{Binding Tabs}"
             TabPanelPadding="45,16,45,0">
             <controls:UIUnderlineTabControl.ItemContainerStyle>

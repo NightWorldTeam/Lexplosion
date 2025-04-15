@@ -1,12 +1,21 @@
-﻿using Lexplosion.WPF.NewInterface.Core.ViewModel;
+﻿using Lexplosion.Logic.Management.Instances;
+using Lexplosion.WPF.NewInterface.Core.ViewModel;
+using System;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
 {
     public class ImportProcess : ObservableObject
     {
+        public event Action<Guid> ImportCancelled;
+
+
+        private readonly Action _cancelImport;
+
+
         #region Properties
 
 
+        public Guid Id { get; }
         public string Name { get; }
         public string Path { get; }
 
@@ -32,21 +41,55 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
         }
 
 
+        private InstanceClient _targetInstanceClient;
+        public InstanceClient TargetInstanceClient 
+        {
+            get => _targetInstanceClient; set
+            {
+                if (_targetInstanceClient != null)
+                {
+                    return;
+                }
+
+                _targetInstanceClient = value;
+            }
+        }
+
+
         #endregion Properties 
 
 
         #region Constructors
 
 
-        public ImportProcess(string path, bool isImporting = true, bool isSuccessful = false)
+        public ImportProcess(Guid id, string path, Action cancel, bool isImporting = true, bool isSuccessful = false)
         {
+            Id = id;
             Name = System.IO.Path.GetFileName(path);
             Path = path;
             IsImporing = isImporting;
             IsSuccessful = isSuccessful;
+            _cancelImport = cancel;
+        }
+
+        public ImportProcess(Guid id, Uri url, Action cancel, bool isImporting = true, bool isSuccessful = false)
+        {
+            Id = id;
+            Name = System.IO.Path.GetFileName(url.LocalPath);
+            Path = url.OriginalString;
+            IsImporing = isImporting;
+            IsSuccessful = isSuccessful;
+            _cancelImport = cancel;
         }
 
 
         #endregion Constructors
+
+
+        public void Cancel() 
+        {
+            _cancelImport?.Invoke();
+            ImportCancelled?.Invoke(Id);
+        }
     }
 }

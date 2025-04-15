@@ -1,18 +1,27 @@
-﻿using Lexplosion.Global;
+﻿using Lexplosion.Core.Tools;
+using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
+using Lexplosion.Tools;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Tools;
 using Microsoft.VisualBasic.Devices;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
+using System.Linq;
+using System.Net.Http.Headers;
 using System.Windows.Forms;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSettings
 {
-    public sealed class GeneralSettingsModel : ViewModelBase
+    public sealed class GeneralSettingsModel : ObservableModelBase
     {
         public static event Action<bool> ConsoleParameterChanged;
 
+        public override event Action<object> Notify;
+
+        private readonly AppCore _appCore;
         private readonly ComputerInfo ci = new ComputerInfo();
 
         public IEnumerable<string> Resolutions { get; }
@@ -54,9 +63,14 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
         {
             get => GlobalData.GeneralSettings.GamePath.Replace('\\', '/'); set
             {
-                GlobalData.GeneralSettings.GamePath = value.Replace('\\', '/');
-                OnPropertyChanged();
-                DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+                var isCorrectPath = DirectoryHelper.DirectoryNameIsValid(value);
+
+                if (isCorrectPath)
+                {
+                    GlobalData.GeneralSettings.GamePath = WithDirectory.CreateAcceptableGamePath(value, out var _);
+                    OnPropertyChanged();
+                    DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+                }
             }
         }
 
@@ -132,14 +146,23 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
             }
         }
 
-        public bool? IsNightWorldEnable
+        public bool? IsNightWorldSkinSystemEnabled
         {
-            get => true; set
+            get => GlobalData.GeneralSettings.IsNightWorldSkinSystem; set
             {
-                // TODO: Когда будет функционал подрубить его сюда
-                //GlobalData.GeneralSettings.IsAutoUpdate = value;
+                GlobalData.GeneralSettings.IsNightWorldSkinSystem = value;
+                DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
                 OnPropertyChanged();
-                //DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+            }
+        }
+
+        public bool? IsNightWorldClientEnabled
+        {
+            get => GlobalData.GeneralSettings.NwClientByDefault; set
+            {
+                GlobalData.GeneralSettings.NwClientByDefault = value;
+                DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+                OnPropertyChanged();
             }
         }
 
@@ -147,15 +170,22 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
         {
             get => GlobalData.GeneralSettings.JavaPath; set
             {
-                GlobalData.GeneralSettings.JavaPath = value;
-                OnPropertyChanged();
+                var javaPathResult = JavaHelper.TryValidateJavaPath(value, out value);
 
-                if (value.Length == 0)
-                    GlobalData.GeneralSettings.IsCustomJava = false;
-                else
+                if (javaPathResult == JavaHelper.JavaPathCheckResult.Success)
+                {
+                    GlobalData.GeneralSettings.JavaPath = value;
                     GlobalData.GeneralSettings.IsCustomJava = true;
+                }
+                else if (javaPathResult == JavaHelper.JavaPathCheckResult.EmptyOrNull)
+                {
+                    GlobalData.GeneralSettings.JavaPath = value;
+                    GlobalData.GeneralSettings.IsCustomJava = false;
+                }
 
+                Notify?.Invoke(javaPathResult);
                 DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+                OnPropertyChanged();
             }
         }
 
@@ -164,23 +194,26 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
         {
             get => GlobalData.GeneralSettings.Java17Path; set
             {
-                GlobalData.GeneralSettings.Java17Path = value;
-                OnPropertyChanged();
+                var javaPathResult = JavaHelper.TryValidateJavaPath(value, out value);
 
-                if (value.Length == 0)
+                if (javaPathResult == JavaHelper.JavaPathCheckResult.Success)
                 {
+                    GlobalData.GeneralSettings.Java17Path = value;
                     GlobalData.GeneralSettings.IsCustomJava17 = false;
                 }
-                else
+                else if (javaPathResult == JavaHelper.JavaPathCheckResult.EmptyOrNull)
                 {
+                    GlobalData.GeneralSettings.Java17Path = value;
                     GlobalData.GeneralSettings.IsCustomJava17 = true;
                 }
 
+                Notify?.Invoke(javaPathResult);
                 DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+                OnPropertyChanged();
             }
         }
 
-        public string JVMArgs
+        public string MinecraftArgs
         {
             get => GlobalData.GeneralSettings.GameArgs; set
             {
@@ -190,6 +223,15 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
             }
         }
 
+        public string JVMArgs 
+        {
+            get => GlobalData.GeneralSettings.JVMArgs; set 
+            {
+                GlobalData.GeneralSettings.JVMArgs = value;
+                OnPropertyChanged();
+                DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+            }
+        }
 
         public void ResetJavaPath()
         {

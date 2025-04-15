@@ -7,13 +7,19 @@ using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile;
 using System.Windows.Input;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers;
 using Lexplosion.Logic.Objects;
+using Lexplosion.WPF.NewInterface.Core.Notifications;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 {
     public sealed class CatalogViewModel : ViewModelBase
     {
+        private readonly AppCore _appCore;
         private readonly INavigationStore _navigationStore;
         private readonly NavigateCommand<ViewModelBase> _navigationCommand;
+
+
+        #region Properties
+
 
         public CatalogModel Model { get; }
 
@@ -29,6 +35,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         }
 
 
+        #endregion Properties
+
+
         #region Commands
 
 
@@ -38,8 +47,20 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             get => RelayCommand.GetCommand(ref _openInstanceProfileMenu, (obj) =>
             {
                 var ins = (InstanceModelBase)obj;
+                ins.PrepareDataForProfile();
+                _navigationStore.CurrentViewModel = new InstanceProfileLayoutViewModel(_appCore, _navigationStore, _navigationCommand, ins);
+            });
+        }
 
-                _navigationStore.CurrentViewModel = new InstanceProfileLayoutViewModel(_navigationStore, _navigationCommand, ins);
+        private RelayCommand _openAddonsPageCommand;
+        public ICommand OpenAddonsPageCommand
+        {
+            get => RelayCommand.GetCommand(ref _openAddonsPageCommand, (obj) =>
+            {
+                var ins = (InstanceModelBase)obj;
+
+                _navigationStore.CurrentViewModel = new InstanceProfileLayoutViewModel(_appCore, _navigationStore, _navigationCommand, ins);
+                (_navigationStore.CurrentViewModel as InstanceProfileLayoutViewModel).OpenAddonContainerPage();
             });
         }
 
@@ -93,8 +114,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         #region Constructors
 
 
-        public CatalogViewModel(INavigationStore navigationStore, NavigateCommand<ViewModelBase> navigationCommand, IInstanceController instanceController)
+        public CatalogViewModel(AppCore appCore, INavigationStore navigationStore, NavigateCommand<ViewModelBase> navigationCommand, IInstanceController instanceController)
         {
+            _appCore = appCore;
             Model = new CatalogModel(instanceController);
             _navigationCommand = navigationCommand;
             _navigationStore = navigationStore;

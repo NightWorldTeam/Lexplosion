@@ -5,12 +5,12 @@ using System.Windows;
 // Общие сведения об этой сборке предоставляются следующим набором
 // набор атрибутов. Измените значения этих атрибутов, чтобы изменить сведения,
 // связанные со сборкой.
-[assembly: AssemblyTitle("Lexplosion.NewWPF")]
+[assembly: AssemblyTitle("NW Lexplosion")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Lexplosion.NewWPF")]
-[assembly: AssemblyCopyright("Copyright ©  2023")]
+[assembly: AssemblyProduct("NW Lexplosion")]
+[assembly: AssemblyCopyright("Copyright ©  2025")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

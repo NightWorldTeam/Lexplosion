@@ -89,7 +89,10 @@ namespace Lexplosion.Logic.Objects.Nightworld
         /// </summary>
         [JsonProperty("nextPage")]
         public bool NextPage { get; set; }
-    }
+
+		[JsonProperty("pagesCount")]
+		public int PagesCount { get; set; }
+	}
 
     public struct FriendRequests
     {

@@ -5,13 +5,16 @@
         Successful,
         ZipFileError,
         GameVersionError,
+        ManifestError,
         JavaDownloadError,
         IsOfflineMode,
         MovingFilesError,
         DownloadError,
         DirectoryCreateError,
         WrongUrl,
-        Canceled
+        UnknownFileType,
+        Canceled,
+        UnknownError
     }
 
     public enum ExportResult
@@ -20,7 +23,8 @@
         TempPathError,
         FileCopyError,
         InfoFileError,
-        ZipFileError
+        ZipFileError,
+        NotExistsValidAccount
     }
 
     public enum AuthCode
@@ -73,8 +77,10 @@
                     return CfProjectType.Resourcepacks;
                 case AddonType.Maps:
                     return CfProjectType.Maps;
-                default:
-                    return CfProjectType.Mods;
+                case AddonType.Shaders:
+                    return CfProjectType.Shaders;
+                default: 
+                    return CfProjectType.Maps;
             }
         }
 
@@ -121,14 +127,14 @@
         TotalDownloads = 6,
         //Category,
         //GameVersion
-    }   
+    }
 
     public enum ModrinthSortField
     {
         Relevance,
         Downloads,
         Newest,
-        Updated, 
+        Updated,
         Follows
     }
 
@@ -146,6 +152,7 @@
         ManifestError,
         JavaDownloadError,
         IsCancelled,
+        MoveFilesError,
         UnknownError
     }
 
@@ -154,7 +161,8 @@
         Vanilla,
         Forge,
         Fabric = 4,
-        Quilt
+        Quilt,
+        NeoForge = 6
     }
 
     public enum AdditionalInstallerType
@@ -172,7 +180,8 @@
     {
         Forge = 1,
         Fabric = 4,
-        Quilt
+        Quilt,
+        NeoForge = 6
     }
 
     public enum GameExtension
@@ -181,7 +190,7 @@
         Forge,
         Fabric = 4,
         Quilt,
-        Neoforged
+        Neoforge
     }
 
     /// <summary>
@@ -204,7 +213,8 @@
         Mods = 6,
         Resourcepacks = 12,
         Maps = 17,
-        Modpacks = 4471
+        Modpacks = 4471,
+        Shaders = 6552
     }
 
     public enum StageType
@@ -227,7 +237,6 @@
         NoAuth,
         NightWorld,
         Microsoft,
-        Mojang
     }
 
     public enum InstanceChangelog
@@ -299,10 +308,12 @@
         Successful
     }
 
-    public enum DistributionState
+    public enum DownloadShareState
     {
         InQueue,
-        InProcess
+        InConnect,
+        InProcess,
+        PostProcessing
     }
 
     public enum FileRecvResult

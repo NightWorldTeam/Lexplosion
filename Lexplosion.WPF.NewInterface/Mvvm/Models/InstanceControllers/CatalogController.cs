@@ -1,34 +1,51 @@
 ﻿using Lexplosion.Logic.Management.Instances;
+using Lexplosion.WPF.NewInterface.Core;
+using Lexplosion.WPF.NewInterface.Core.Notifications;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
 {
     public sealed class CatalogController : IInstanceController
     {
+        public event Action<InstanceModelBase> InstanceAdded;
+        public event Action<InstanceModelBase> InstanceRemoved;
+
+        private readonly AppCore _appCore;
+        private readonly Action<InstanceClient> _exportFunc;
+        private readonly Action<InstanceModelBase> _setRunningGame;
+
         private ObservableCollection<InstanceModelBase> _instances = new ObservableCollection<InstanceModelBase>();
+
+
+
+        #region Properties
+
+
         public IReadOnlyCollection<InstanceModelBase> Instances { get => _instances; }
 
 
-        private Action<InstanceClient> _exportFunc;
-
-        public event Action<InstanceModelBase> InstanceAdded;
-        public event Action<InstanceModelBase> InstanceRemoved;
+        #endregion Properties
 
 
         #region Constructors
 
 
-        public CatalogController(Action<InstanceClient> exportFunc)
+        public CatalogController(AppCore appCore, Action<InstanceClient> exportFunc, Action<InstanceModelBase> setRunningGame)
         {
-            InstanceModelBase.GlobalAddedToLibrary += Add;
-            InstanceModelBase.GlobalDeletedEvent += Remove;
+            _appCore = appCore;
+
+            //InstanceModelBase.GlobalAddedToLibrary += Add;
+            // Лол, а зачем удалять из каталога?
+            //InstanceModelBase.GlobalDeletedEvent += Remove;
 
             _exportFunc = exportFunc;
+            _setRunningGame = setRunningGame;
         }
 
 
@@ -38,20 +55,26 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
         #region Public Methods
 
 
-        public void Add(InstanceModelBase instanceModelBase)
+        public void Add(InstanceModelBase instanceModelBase, [CallerMemberName] string member = "")
         {
+            Runtime.DebugWrite($"{member} {instanceModelBase.Name}");
             App.Current.Dispatcher.Invoke(() =>
             {
                 _instances.Add(instanceModelBase);
             });
         }
 
-        public void Add(InstanceClient instanceClient)
+        public InstanceModelBase? Add(InstanceClient instanceClient, [CallerMemberName] string member = "")
         {
+            InstanceModelBase? instanceModelBase = null;
+            Runtime.DebugWrite($"{member} {instanceClient.Name}");
             App.Current.Dispatcher.Invoke(() =>
             {
-                _instances.Add(new InstanceModelBase(instanceClient, _exportFunc));
+                instanceModelBase = new InstanceModelBase(_appCore, instanceClient, _exportFunc, _setRunningGame);
+                _instances.Add(instanceModelBase);
             });
+
+            return instanceModelBase;
         }
 
         public void Remove(InstanceClient instanceClient)

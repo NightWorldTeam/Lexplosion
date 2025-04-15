@@ -1,0 +1,22 @@
+﻿<UserControl
+    x:Class="Lexplosion.WPF.NewInterface.WindowComponents.Header.WindowHeaderContainer"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:core="clr-namespace:Lexplosion.WPF.NewInterface.Core"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.WindowComponents.Header"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:variants="clr-namespace:Lexplosion.WPF.NewInterface.WindowComponents.Header.Variants"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <Grid>
+        <core:Switch SelectedExpression="Macos">
+            <core:Switch.Cases>
+                <core:SwitchCaseItem Key="Macos">
+                    <variants:MacOSHeader DataContext="{Binding}" />
+                </core:SwitchCaseItem>
+            </core:Switch.Cases>
+        </core:Switch>
+    </Grid>
+</UserControl>

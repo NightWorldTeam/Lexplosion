@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -32,6 +35,11 @@ namespace Lexplosion.WPF.NewInterface.Controls
                 new FrameworkPropertyMetadata(defaultValue: string.Empty, propertyChangedCallback: OnPlaceholderChanged));
 
 
+        public static readonly DependencyProperty IsMultiLineProperty
+            = DependencyProperty.Register(nameof(IsMultiLine), typeof(bool), typeof(AdvancedTextBox),
+                new FrameworkPropertyMetadata(defaultValue: false, propertyChangedCallback: OnIsMultiLineChanged));
+
+
         /// ----- Readonly Properties ----- ///
 
 
@@ -46,6 +54,13 @@ namespace Lexplosion.WPF.NewInterface.Controls
                 new FrameworkPropertyMetadata(defaultValue: false));
 
         private static readonly DependencyProperty IsIconEmptyProperty = IsIconEmptyPropertyKey.DependencyProperty;
+
+
+        public bool IsMultiLine
+        {
+            get => (bool)GetValue(IsMultiLineProperty);
+            set => SetValue(IsMultiLineProperty, value);
+        }
 
 
         public string IconKey
@@ -129,6 +144,9 @@ namespace Lexplosion.WPF.NewInterface.Controls
             IsEmpty = string.IsNullOrEmpty(Text);
             if (_placeholder != null)
                 _placeholder.Visibility = IsEmpty ? Visibility.Visible : Visibility.Collapsed;
+
+            var s = new List<string>();
+            s.Where(i => i == "a");
         }
 
         private static void OnIsIconKeyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -141,6 +159,12 @@ namespace Lexplosion.WPF.NewInterface.Controls
         {
             var instance = d as AdvancedTextBox;
             instance.UpdatePlaceholder(e.NewValue);
+        }
+
+
+        private static void OnIsMultiLineChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var _this = d as AdvancedTextBox;
         }
 
 
@@ -173,6 +197,15 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
             _placeholder.Visibility = Visibility.Visible;
             _placeholder.Text = newValue as string;
+        }
+
+
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                FocusManager.SetFocusedElement(FocusManager.GetFocusScope(this), null);
+            }
         }
 
 

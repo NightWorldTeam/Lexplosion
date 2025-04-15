@@ -54,36 +54,19 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             }
         }
 
+        private bool _isNeoforged;
+        public bool IsNeoforged
+        {
+            get => _isNeoforged; set
+            {
+                _isNeoforged = value;
+                OnPropertyChanged();
+            }
+        }
+
 
         #endregion Properties
 
-
-        #region Constructors
-
-
-        public InstanceProfileConfigurationViewModel(InstanceModelBase instanceModelBase)
-        {
-            Model = new InstanceProfileConfigurationModel(instanceModelBase);
-            Model.GameTypeChanged += UpdateSelectedGameType;
-            UpdateSelectedGameType(instanceModelBase.InstanceData.Modloader);
-            // устанавливаем кнопку с типом игры в активное положение.
-
-        }
-
-
-        #endregion Constructors
-
-
-        private void UpdateSelectedGameType(ClientType clientType)
-        {
-            switch (clientType)
-            {
-                case ClientType.Vanilla: IsVanilla = true; break;
-                case ClientType.Forge: IsForge = true; break;
-                case ClientType.Fabric: IsFabric = true; break;
-                case ClientType.Quilt: IsQuilt = true; break;
-            }
-        }
 
         #region Commands
 
@@ -108,5 +91,33 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
 
 
         #endregion Commands
+
+
+        #region Constructors
+
+
+        public InstanceProfileConfigurationViewModel(InstanceModelBase instanceModelBase)
+        {
+            Model = new InstanceProfileConfigurationModel(instanceModelBase);
+            Model.GameTypeChanged += UpdateSelectedGameType;
+            UpdateSelectedGameType(instanceModelBase.BaseData.Modloader);
+            // устанавливаем кнопку с типом игры в активное положение.
+        }
+
+
+        #endregion Constructors
+
+
+        private void UpdateSelectedGameType(ClientType clientType)
+        {
+            switch (clientType)
+            {
+                case ClientType.Vanilla: IsVanilla = true; break;
+                case ClientType.Forge: IsForge = true; break;
+                case ClientType.Fabric: IsFabric = true; break;
+                case ClientType.Quilt: IsQuilt = true; break;
+                case ClientType.NeoForge: IsNeoforged = true; break;
+            }
+        }
     }
 }

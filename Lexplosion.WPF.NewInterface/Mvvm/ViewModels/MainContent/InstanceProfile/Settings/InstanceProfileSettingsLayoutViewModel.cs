@@ -29,11 +29,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             if (instanceModelBase.Source == InstanceSource.Local)
             {
                 _aboutViewModel = new InstanceProfileAboutViewModel(instanceModelBase);
-                _configurationViewModel = new InstanceProfileConfigurationViewModel(instanceModelBase);
-
                 _tabs.Add(new TabItemModel { TextKey = "AboutInstance", Content = _aboutViewModel });
-                _tabs.Add(new TabItemModel { TextKey = "Configuration", Content = _configurationViewModel });
             }
+
+            _configurationViewModel = new InstanceProfileConfigurationViewModel(instanceModelBase);
+            _tabs.Add(new TabItemModel { TextKey = "Configuration", Content = _configurationViewModel });
         }
     }
 }

@@ -9,7 +9,7 @@
     <RootNamespace>Lexplosion.Core</RootNamespace>
     <AssemblyName>Lexplosion.Core</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <LangVersion>10.0</LangVersion>
+    <LangVersion>preview</LangVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
@@ -62,8 +62,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Global.cs" />
+    <Compile Include="Logic\CoreServicesManager.cs" />
     <Compile Include="Logic\FileSystem\FreeSourceInstanceInstaller.cs" />
+    <Compile Include="Logic\Management\Addons\AddonsCatalogParams\AddonsCatalogParamsBase.cs" />
+    <Compile Include="Logic\Management\Addons\AddonsCatalogParams\CurseforgeAddonsCatalogParams.cs" />
+    <Compile Include="Logic\Management\Addons\AddonsCatalogParams\ModrinthAddonsCatalogParams.cs" />
+    <Compile Include="Logic\Management\Addons\AddonsManager.cs" />
+    <Compile Include="Logic\Management\Addons\IAddonProjectInfo.cs" />
+    <Compile Include="Logic\Management\Addons\InstaceAddonsSynchronizer.cs" />
+    <Compile Include="Logic\Management\Addons\InstanceAddon.cs" />
+    <Compile Include="Logic\Management\Import\ImportData.cs" />
+    <Compile Include="Logic\Management\Import\Importers\CurseforgeImportManager.cs" />
+    <Compile Include="Logic\Management\Import\Importers\ImportExecutor.cs" />
+    <Compile Include="Logic\Management\Import\Importers\ModrinthImportManager.cs" />
     <Compile Include="Logic\FileSystem\StandartInstanceInstaller.cs" />
     <Compile Include="Logic\FileSystem\IArchivedInstanceInstaller.cs" />
     <Compile Include="Logic\FileSystem\CurseforgeInstaller.cs" />
@@ -82,19 +95,18 @@
     <Compile Include="Logic\Management\Addons\AddonDependencie.cs" />
     <Compile Include="Logic\Management\Addons\AddonsPrototypesCreater.cs" />
     <Compile Include="Logic\Management\Addons\CurseforgeAddon.cs" />
-    <Compile Include="Logic\Management\Addons\InstanceAddon.cs" />
     <Compile Include="Logic\Management\Addons\IPrototypeAddon.cs" />
     <Compile Include="Logic\Management\Addons\ModrinthAddon.cs" />
-    <Compile Include="Logic\Management\Authentication\Authentication.cs" />
-    <Compile Include="Logic\Management\Authentication\IAuthHandler.cs" />
-    <Compile Include="Logic\Management\Authentication\LocalAuth.cs" />
-    <Compile Include="Logic\Management\Authentication\MicrosoftAuth.cs" />
-    <Compile Include="Logic\Management\Authentication\MojangAuth.cs" />
-    <Compile Include="Logic\Management\Authentication\NightWorldAuth.cs" />
     <Compile Include="Logic\Management\CategoriesManager.cs" />
     <Compile Include="Logic\Management\Delegates.cs" />
+    <Compile Include="Logic\Management\Import\Importers\ArchiveImportManager.cs" />
+    <Compile Include="Logic\Management\Import\Importers\NWPackImportManager.cs" />
+    <Compile Include="Logic\Management\Import\Importers\SimpleArchiveImportManager.cs" />
+    <Compile Include="Logic\Management\Import\ImportInterruption.cs" />
     <Compile Include="Logic\Management\Installers\FreeSourceInstanceInstallManager.cs" />
+    <Compile Include="Logic\Management\Import\Importers\IImportManager.cs" />
     <Compile Include="Logic\Management\Instances\FreeInstance.cs" />
+    <Compile Include="Logic\Management\Instances\InstanceGroup.cs" />
     <Compile Include="Logic\Management\MinecraftVersion.cs" />
     <Compile Include="Logic\Management\Sources\CurseforgeSource.cs" />
     <Compile Include="Logic\Management\Sources\FreeSource.cs" />
@@ -115,7 +127,12 @@
     <Compile Include="Logic\Management\Instances\PrototypeInstance.cs" />
     <Compile Include="Logic\Management\JavaChecker.cs" />
     <Compile Include="Logic\Management\LaunchGame.cs" />
-    <Compile Include="Logic\Network\SMP\Synchronizer.cs" />
+    <Compile Include="Logic\Network\QueryApiBuilder.cs" />
+    <Compile Include="Logic\Network\Services\MinecraftInfoService.cs" />
+    <Compile Include="Logic\Network\Services\NetworkServicesManager.cs" />
+    <Compile Include="Logic\Network\SMP\SmpClient_Objects.cs" />
+    <Compile Include="Logic\Network\SMP\SmpReceiveService.cs" />
+    <Compile Include="Logic\Objects\CatalogResult.cs" />
     <Compile Include="Logic\Objects\FreeSource.cs" />
     <Compile Include="Logic\Objects\ISearchParams.cs" />
     <Compile Include="Logic\Objects\MinecraftServerInstance.cs" />
@@ -124,7 +141,6 @@
     <Compile Include="Logic\Management\Sources\LocalSource.cs" />
     <Compile Include="Logic\Management\Sources\ModrinthSource.cs" />
     <Compile Include="Logic\Management\Sources\NightWorldSource.cs" />
-    <Compile Include="Logic\Management\User.cs" />
     <Compile Include="Logic\Management\Utils.cs" />
     <Compile Include="Logic\Network\ClientBridge.cs" />
     <Compile Include="Logic\Network\CommandReceiver.cs" />
@@ -159,6 +175,8 @@
     <Compile Include="Logic\Objects\Nightworld.cs" />
     <Compile Include="Logic\Settings.cs" />
     <Compile Include="Logic\Cryptography.cs" />
+    <Compile Include="NightWorld\Collections\Concurrent\ConcurrentHashSet.cs" />
+    <Compile Include="NightWorld\Collections\Generic\PairsList.cs" />
     <Compile Include="NightWorld\Tools\Minecraft\NBT\INbtNode.cs" />
     <Compile Include="NightWorld\Tools\Minecraft\NBT\NbtDocoder.cs" />
     <Compile Include="NightWorld\Tools\Minecraft\NBT\NbtEncoder.cs" />
@@ -169,6 +187,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="NightWorld\Tools\ByteConverter\ByteConverter_BigEndian.cs" />
     <Compile Include="NightWorld\Tools\ByteConverter\ByteConverter_LittleEndian.cs" />
+    <Compile Include="Tools\DirectoryHelper.cs" />
     <Compile Include="Tools\DynamicStateData.cs" />
     <Compile Include="Tools\IListExtensions.cs" />
     <Compile Include="Tools\ImageTools.cs" />
@@ -179,6 +198,7 @@
     <Compile Include="Tools\Notification\INotificable.cs" />
     <Compile Include="Tools\Notification\INotificationManager.cs" />
     <Compile Include="Tools\Notification\NotificationType.cs" />
+    <Compile Include="Tools\PathNameTools.cs" />
     <Compile Include="Tools\Pointer.cs" />
     <Compile Include="Tools\RandomExtensions.cs" />
     <Compile Include="Tools\RuntimeTools.cs" />

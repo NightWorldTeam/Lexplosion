@@ -9,6 +9,7 @@ using Lexplosion.Logic.Objects.Curseforge;
 using Lexplosion.Logic.Objects.CommonClientData;
 using static Lexplosion.Logic.FileSystem.WithDirectory;
 using static Lexplosion.Logic.FileSystem.DataFilesManager;
+using System.Linq;
 
 namespace Lexplosion.Logic.FileSystem
 {
@@ -16,15 +17,24 @@ namespace Lexplosion.Logic.FileSystem
     {
         public CurseforgeInstaller(string instanceId) : base(instanceId) { }
 
-        protected override InstanceManifest ArchiveHadnle(string unzupArchivePath, out List<string> files)
+        protected override InstanceManifest LoadManifest(string unzupArchivePath)
+        {
+            return GetFile<InstanceManifest>(unzupArchivePath + "manifest.json");
+        }
+
+        protected override void ArchiveHadnle(string unzupArchivePath, out List<string> files)
         {
             files = new List<string>();
-            var data = GetFile<InstanceManifest>(unzupArchivePath + "manifest.json");
 
             // тут переосим нужные файлы из этого архива
 
             string sourcePath = unzupArchivePath + "overrides/";
-            string destinationPath = DirectoryPath + "/instances/" + instanceId + "/";
+            string destinationPath = WithDirectory.GetInstancePath(instanceId);
+
+            if (!Directory.Exists(destinationPath))
+            {
+                Directory.CreateDirectory(destinationPath);
+            }
 
             //если архив нового типа, то папки overrides не будет. Все папки сборки будут храниться рядом с манифестом 
             if (!Directory.Exists(sourcePath))
@@ -43,14 +53,13 @@ namespace Lexplosion.Logic.FileSystem
 
             foreach (string path in Directory.GetFiles(sourcePath, "*.*", SearchOption.AllDirectories))
             {
-                if (Path.GetFileName(path) != "manifest.jaon")
+                if (Path.GetFileName(path) != "manifest.json")
                 {
-                    File.Copy(path, path.Replace(sourcePath, destinationPath), true);
+					string destPath = path.Replace(sourcePath, destinationPath);
+					File.Copy(path, destPath, true);
                     files.Add(path.Replace(sourcePath, "/").Replace("\\", "/"));
                 }
             }
-
-            return data;
         }
 
         /// <summary>
@@ -59,12 +68,12 @@ namespace Lexplosion.Logic.FileSystem
         /// <returns>
         /// Возвращает список ошибок.
         /// </returns>
-        public override List<string> InstallInstance(InstanceManifest data, InstanceContent localFiles, CancellationToken cancelToken)
+        public override List<string> Install(InstanceManifest data, InstanceContent localFiles, CancellationToken cancelToken)
         {
             InstalledAddonsFormat installedAddons = null;
             installedAddons = localFiles.InstalledAddons;
 
-            var errors = new List<string>();
+			var errors = new List<string>();
 
             try
             {
@@ -87,7 +96,7 @@ namespace Lexplosion.Logic.FileSystem
                         }
                         else
                         {
-                            if (installedAddons[file.projectID].FileID != file.fileID || !installedAddons[file.projectID].IsExists(DirectoryPath + "/instances/" + instanceId + "/"))
+                            if (installedAddons[file.projectID].FileID != file.fileID || !installedAddons[file.projectID].IsExists(InstancesPath + instanceId + "/"))
                             {
                                 downloadList.Add(file);
                             }
@@ -98,14 +107,14 @@ namespace Lexplosion.Logic.FileSystem
                         }
                     }
 
-                    foreach (string addonId in installedAddons.Keys) // проходимя по списку установленных аддонов
+					foreach (string addonId in installedAddons.Keys) // проходимя по списку установленных аддонов
                     {
                         if (!existsAddons.Contains(addonId)) // если аддона нету в этом списке, значит его нету в списке, полученном с курсфорджа (ну или нам не подходит его версия, или же файла нету). Поэтому удаляем
                         {
                             if (installedAddons[addonId].ActualPath != null)
                             {
-                                Runtime.DebugWrite("Delete file: " + DirectoryPath + "/instances/" + instanceId + "/" + installedAddons[addonId].ActualPath);
-                                DelFile(DirectoryPath + "/instances/" + instanceId + "/" + installedAddons[addonId].ActualPath);
+                                Runtime.DebugWrite("Delete file: " + InstancesPath + instanceId + "/" + installedAddons[addonId].ActualPath);
+                                DelFile(InstancesPath + instanceId + "/" + installedAddons[addonId].ActualPath);
                             }
                         }
                         else
@@ -192,6 +201,12 @@ namespace Lexplosion.Logic.FileSystem
 
                             if (result.Value2 == DownloadAddonRes.Successful)
                             {
+                                if (!file.required && !result.Value1.IsDisable)
+                                {
+                                    File.Move(WithDirectory.GetInstancePath(instanceId) + result.Value1.ActualPath, WithDirectory.GetInstancePath(instanceId) + result.Value1.ActualPath + ".disable");
+                                    result.Value1.IsDisable = true;
+                                }
+
                                 downloadedCount++;
                                 AddonsDownloadEventInvoke(filesCount, downloadedCount);
 

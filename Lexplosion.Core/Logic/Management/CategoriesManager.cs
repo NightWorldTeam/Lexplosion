@@ -1,18 +1,31 @@
 ﻿using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.Modrinth;
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Lexplosion.Logic.Management
 {
     public static class CategoriesManager
     {
+        private static ConcurrentDictionary<ProjectSource, IEnumerable<CategoryBase>> _modpacksCategoriesChache = new();
+        private static ConcurrentDictionary<ValueTuple<ProjectSource, AddonType>, IEnumerable<CategoryBase>> _addonsCategoriesChache = new();
+
         public static IEnumerable<CategoryBase> GetModpackCategories(ProjectSource source)
         {
+            if (_modpacksCategoriesChache.ContainsKey(source)) return _modpacksCategoriesChache[source];
+
             switch (source)
             {
                 case ProjectSource.Curseforge:
-                    return CurseforgeApi.GetCategories(CfProjectType.Modpacks);
+                    {
+                        var result = CurseforgeApi.GetCategories(CfProjectType.Modpacks);
+                        _modpacksCategoriesChache[source] = result;
+
+                        return result;
+                    }
                 case ProjectSource.Modrinth:
                     {
                         var result = new List<CategoryBase>();
@@ -34,6 +47,8 @@ namespace Lexplosion.Logic.Management
                             }
                         }
 
+                        _modpacksCategoriesChache[source] = result;
+
                         return result;
                     }
                 default:
@@ -43,6 +58,9 @@ namespace Lexplosion.Logic.Management
 
         public static IEnumerable<CategoryBase> GetAddonsCategories(ProjectSource source, AddonType addonType)
         {
+            var key = ValueTuple.Create(source, addonType);
+            if (_addonsCategoriesChache.ContainsKey(key)) return _addonsCategoriesChache[key];
+
             switch (source)
             {
                 case ProjectSource.Curseforge:
@@ -57,7 +75,11 @@ namespace Lexplosion.Logic.Management
                             projectType = CfProjectType.Mods;
                         }
 
-                        return CurseforgeApi.GetCategories(projectType);
+                        var result = CurseforgeApi.GetCategories(projectType)
+                            .OrderBy(i => i.Name);
+                        _addonsCategoriesChache[key] = result;
+
+                        return result;
                     }
                 case ProjectSource.Modrinth:
                     {
@@ -89,11 +111,29 @@ namespace Lexplosion.Logic.Management
                             }
                         }
 
+                        _addonsCategoriesChache[key] = result;
                         return result;
                     }
                 default:
                     return null;
             }
+        }
+
+        public static IEnumerable<CategoryBase> FindAddonsCategoriesById(ProjectSource source, AddonType addonType, IEnumerable<string> ids)
+        {
+            if (ids == null) return null;
+
+            IEnumerable<CategoryBase> allCategories = GetAddonsCategories(source, addonType);
+
+            var res = new List<CategoryBase>();
+            foreach (string id in ids)
+            {
+                var category = allCategories.FirstOrDefault(x => x.Id == id);
+                if (category == null) continue;
+                res.Add(category);
+            }
+
+            return res;
         }
     }
 }

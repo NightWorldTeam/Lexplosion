@@ -73,8 +73,9 @@ namespace Lexplosion.WPF.NewInterface.Core.GameExtensions
             {
                 case GameExtension.Forge: return version[0] >= 1 && version[1] >= 1;
                 case GameExtension.Fabric: return version[0] >= 1 && version[1] >= 13;
-                case GameExtension.Quilt: return version[0] >= 1 && version[1] > 14 || (version[1] == 14 && version[2] >= 4);
+                case GameExtension.Quilt: return minecraftVersion >= new MinecraftVersion("1.14.4");/*version[0] >= 1 && version[1] > 14 || (version[1] == 14 && version[2] >= 4);*/
                 case GameExtension.Optifine: return version[0] >= 1 && version[1] > 7 || (version[1] == 7 && version[2] >= 2);
+                case GameExtension.Neoforge: return minecraftVersion >= new MinecraftVersion("1.20.2");
                 default: return false;
             }
         }

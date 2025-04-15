@@ -10,8 +10,12 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
     {
         public readonly CultureInfo _cultureInfo = null;
 
-        public event Action<string> SelectedEvent = null;
+        public event Action<LanguageModel, string> SelectedEvent = null;
         public event PropertyChangedEventHandler PropertyChanged = null;
+
+
+        #region Properties
+
 
         private bool _isSelected = false;
         public bool IsSelected
@@ -21,7 +25,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
                 _isSelected = value;
                 if (_isSelected)
                 {
-                    SelectedEvent?.Invoke(_cultureInfo.Name);
+                    SelectedEvent?.Invoke(this, _cultureInfo.Name);
                 }
                 OnPropertyChanged();
             }
@@ -30,6 +34,13 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
         public string CurrentLangNameKey { get; }
         public string NativeName { get; }
         public string LangLogoPath { get; }
+
+
+        #endregion Properties
+
+
+        #region Constructors
+
 
         public LanguageModel(string cultureId, bool isSelected = false)
         {
@@ -49,6 +60,10 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
             LangLogoPath = "pack://application:,,,/Assets/images/icons/countries/" + _cultureInfo.Name + ".png";
             IsSelected = GlobalData.GeneralSettings.LanguageId == _cultureInfo.Name;
         }
+
+
+        #endregion Constructors
+
 
         private void OnPropertyChanged([CallerMemberName] string prop = "")
         {

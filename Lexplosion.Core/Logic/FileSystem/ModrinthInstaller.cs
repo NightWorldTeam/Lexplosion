@@ -16,33 +16,42 @@ namespace Lexplosion.Logic.FileSystem
     {
         public ModrinthInstaller(string instanceId) : base(instanceId) { }
 
-        protected override InstanceManifest ArchiveHadnle(string unzupArchivePath, out List<string> files)
+        protected override InstanceManifest LoadManifest(string unzupArchivePath)
+        {
+            return GetFile<InstanceManifest>(unzupArchivePath + "modrinth.index.json");
+        }
+
+        protected override void ArchiveHadnle(string unzupArchivePath, out List<string> files)
         {
             files = new List<string>();
-            var data = GetFile<InstanceManifest>(unzupArchivePath + "modrinth.index.json");
 
             // тут переосим нужные файлы из этого архива
 
-            string SourcePath = unzupArchivePath + "overrides/";
-            string DestinationPath = DirectoryPath + "/instances/" + instanceId + "/";
+            string sourcePath = unzupArchivePath + "overrides/";
+            string destinationPath = WithDirectory.GetInstancePath(instanceId);
 
-            foreach (string dirPath in Directory.GetDirectories(SourcePath, "*", SearchOption.AllDirectories))
+            if (!Directory.Exists(destinationPath))
             {
-                string dir = dirPath.Replace(SourcePath, DestinationPath);
-                if (!Directory.Exists(dir))
+                Directory.CreateDirectory(destinationPath);
+            }
+
+            if (Directory.Exists(sourcePath))
+            {
+                foreach (string dirPath in Directory.GetDirectories(sourcePath, "*", SearchOption.AllDirectories))
                 {
-                    Directory.CreateDirectory(dir);
+                    string dir = dirPath.Replace(sourcePath, destinationPath);
+                    if (!Directory.Exists(dir))
+                    {
+                        Directory.CreateDirectory(dir);
+                    }
+                }
+
+                foreach (string newPath in Directory.GetFiles(sourcePath, "*.*", SearchOption.AllDirectories))
+                {
+                    File.Copy(newPath, newPath.Replace(sourcePath, destinationPath), true);
+                    files.Add(newPath.Replace(sourcePath, "/").Replace("\\", "/"));
                 }
             }
-
-            foreach (string newPath in Directory.GetFiles(SourcePath, "*.*", SearchOption.AllDirectories))
-            {
-                File.Copy(newPath, newPath.Replace(SourcePath, DestinationPath), true);
-                files.Add(newPath.Replace(SourcePath, "/").Replace("\\", "/"));
-            }
-
-            return data;
-
         }
 
         private struct AddonInstallingInfo
@@ -57,7 +66,7 @@ namespace Lexplosion.Logic.FileSystem
         /// <returns>
         /// Возвращает список ошибок.
         /// </returns>
-        public override List<string> InstallInstance(InstanceManifest data, InstanceContent localFiles, CancellationToken cancelToken)
+        public override List<string> Install(InstanceManifest data, InstanceContent localFiles, CancellationToken cancelToken)
         {
             InstalledAddonsFormat installedAddons = null;
             installedAddons = localFiles.InstalledAddons;
@@ -93,18 +102,18 @@ namespace Lexplosion.Logic.FileSystem
                         if ((file.hashes?.ContainsKey("sha512") ?? false) && projectFiles.ContainsKey(file.hashes["sha512"]))
                         {
                             // проверяем path файла
-                            if (file.path != null)
+                            if (file.Path != null)
                             {
-                                string[] segments = file.path.Split('/');
+                                string[] segments = file.Path.Split('/');
                                 if (segments.Length == 2) // path должен быть в виде: имя_папки/имя_файла
                                 {
                                     // проверяем имя файла на валидность
                                     if (Path.GetInvalidFileNameChars().Any(s => segments[1].Contains(s))) // если имя файла на валидно возращаем ошибку
                                     {
                                         // тут ошибка
-                                        errors.Add("File: " + file.path);
-                                        Runtime.DebugWrite("ERROR " + file.path);
-                                        _fileDownloadHandler?.Invoke(file.path, 100, DownloadFileProgress.Error);
+                                        errors.Add("File: " + file.Path);
+                                        Runtime.DebugWrite("ERROR " + file.Path);
+                                        _fileDownloadHandler?.Invoke(file.Path, 100, DownloadFileProgress.Error);
                                     }
 
                                     string folderName = segments[0];
@@ -144,9 +153,9 @@ namespace Lexplosion.Logic.FileSystem
                             }
                             else
                             {
-                                errors.Add("File: " + file.path);
-                                Runtime.DebugWrite("ERROR " + file.path);
-                                _fileDownloadHandler?.Invoke(file.path, 100, DownloadFileProgress.Error);
+                                errors.Add("File: " + file.Path);
+                                Runtime.DebugWrite("ERROR " + file.Path);
+                                _fileDownloadHandler?.Invoke(file.Path, 100, DownloadFileProgress.Error);
                             }
                         }
                         else
@@ -155,9 +164,9 @@ namespace Lexplosion.Logic.FileSystem
 
                             try
                             {
-                                if (file.path != null)
+                                if (file.Path != null)
                                 {
-                                    string fileName = Path.GetFileName(file.path);
+                                    string fileName = Path.GetFileName(file.Path);
                                     fileNameIsValid = !Path.GetInvalidFileNameChars().Any(s => fileName.Contains(s));
                                 }
                             }
@@ -169,9 +178,9 @@ namespace Lexplosion.Logic.FileSystem
                             }
                             else
                             {
-                                errors.Add("File: " + file.path);
-                                Runtime.DebugWrite("ERROR " + file.path);
-                                _fileDownloadHandler?.Invoke(file.path, 100, DownloadFileProgress.Error);
+                                errors.Add("File: " + file.Path);
+                                Runtime.DebugWrite("ERROR " + file.Path);
+                                _fileDownloadHandler?.Invoke(file.Path, 100, DownloadFileProgress.Error);
                             }
                         }
                     }
@@ -194,7 +203,7 @@ namespace Lexplosion.Logic.FileSystem
                         else
                         {
                             InstalledAddonInfo addonInfo = installedAddons[projectId];
-                            if (addonInfo.FileID != addonData.Value1.FileId || !addonInfo.IsExists(DirectoryPath + "/instances/" + instanceId + "/"))
+                            if (addonInfo.FileID != addonData.Value1.FileId || !addonInfo.IsExists(InstancesPath + instanceId + "/"))
                             {
                                 // версия не сходится или нет файла. Тоже кидаем на обновление
                                 downloadList.Add(addonData);
@@ -212,8 +221,8 @@ namespace Lexplosion.Logic.FileSystem
                         {
                             if (installedAddons[addonId].ActualPath != null)
                             {
-                                Runtime.DebugWrite("Delete file: " + DirectoryPath + "/instances/" + instanceId + "/" + installedAddons[addonId].ActualPath);
-                                DelFile(DirectoryPath + "/instances/" + instanceId + "/" + installedAddons[addonId].ActualPath);
+                                Runtime.DebugWrite("Delete file: " + InstancesPath + instanceId + "/" + installedAddons[addonId].ActualPath);
+                                DelFile(InstancesPath + instanceId + "/" + installedAddons[addonId].ActualPath);
                             }
                         }
                         else
@@ -347,8 +356,8 @@ namespace Lexplosion.Logic.FileSystem
                 {
                     if (cancelToken.IsCancellationRequested) break;
 
-                    string fileName = Path.GetFileName(fileData.path);
-                    string folderName = "/instances/" + instanceId + "/" + Path.GetDirectoryName(fileData.path) + "/";
+                    string fileName = Path.GetFileName(fileData.Path);
+                    string folderName = "/instances/" + instanceId + "/" + Path.GetDirectoryName(fileData.Path) + "/";
 
                     var taskArgs = new TaskArgs
                     {
@@ -361,7 +370,7 @@ namespace Lexplosion.Logic.FileSystem
 
                     if (WithDirectory.InstallFile(fileData.downloads[0], fileName, folderName, taskArgs))
                     {
-                        string filePath = "/" + fileData.path;
+                        string filePath = "/" + fileData.Path;
                         if (!existsFiles.Contains(filePath))
                         {
                             compliteDownload.Files.Add(filePath);

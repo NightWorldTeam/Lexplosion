@@ -1,13 +1,14 @@
-﻿using Newtonsoft.Json;
+﻿using Lexplosion.Logic.Management.Addons;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
 namespace Lexplosion.Logic.Objects.Curseforge
 {
-    /// <summary>
-    /// Описывает проект курсфорджа. Дочерние классы используются при декодировании Json
-    /// </summary>
-    public abstract class CurseforgeProjectInfo
+	/// <summary>
+	/// Описывает проект курсфорджа. Дочерние классы используются при декодировании Json
+	/// </summary>
+	public abstract class CurseforgeProjectInfo
     {
         public class GameVersion
         {
@@ -145,7 +146,7 @@ namespace Lexplosion.Logic.Objects.Curseforge
     /// <summary>
     /// Описывает мод с курсфорджа. Используются при декодировании Json
     /// </summary>
-    public class CurseforgeAddonInfo : CurseforgeProjectInfo
+    public class CurseforgeAddonInfo : CurseforgeProjectInfo, IAddonProjectInfo
     {
         public class GameVersionAddon : GameVersion
         {
@@ -190,7 +191,7 @@ namespace Lexplosion.Logic.Objects.Curseforge
         public string displayName;
         public List<Dictionary<string, string>> dependencies;
         public List<string> gameVersions;
-        public string fileDate;
+        public DateTime fileDate;
         public int releaseType;
         public List<Hashes> hashes;
         public long fileLength;
@@ -224,6 +225,11 @@ namespace Lexplosion.Logic.Objects.Curseforge
                 }
             }
         }
+
+        public override string ToString()
+        {
+            return displayName;
+        }
     }
 
     public class InstanceManifest
@@ -244,6 +250,7 @@ namespace Lexplosion.Logic.Objects.Curseforge
         {
             public string projectID;
             public string fileID;
+            public bool required;
         }
 
         public McVersionInfo minecraft;

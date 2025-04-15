@@ -1,24 +1,53 @@
-﻿using Lexplosion.WPF.NewInterface.Core;
+﻿using Lexplosion.WPF.NewInterface.Commands;
+using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 {
-    public class FriendsViewModel : ViewModelBase
+    public sealed class FriendsViewModel : ViewModelBase, IRefreshable
     {
-        private ObservableCollection<Friend> _friends = new ObservableCollection<Friend>();
-        public IEnumerable<Friend> Friends { get => _friends; }
+        public FriendsModel Model { get; private set; }
+
+
+        #region Commands
+
+
+        private RelayCommand _viewProfileCommand;
+        public ICommand ViewProfileCommand
+        {
+            get => RelayCommand.GetCommand<Friend>(ref _viewProfileCommand, (friend) =>
+            {
+                // TODO: Open Profile Page here.
+                Process.Start($"https://night-world.org/users/{friend.Name}");
+            });
+        }
+
+        private RelayCommand _unfriendCommand;
+        public ICommand UnfriendCommand
+        {
+            get => RelayCommand.GetCommand<Friend>(ref _unfriendCommand, (friend) =>
+            {
+                friend.Unfriend();
+                Model.UpdateRequestsData();
+            });
+        }
+
+
+        #endregion Commands
 
 
         public FriendsViewModel()
         {
+            App.Current.Dispatcher.Invoke(() => {
+                Model = new FriendsModel();
+            });
+        }
 
-
-            for (var i = 0; i < 3; i++) 
-            {
-                _friends.Add(new Friend($"Person {i}", "Online", (Friend.FriendState)i));
-            }
+        public void Refresh()
+        {
+            Model.UpdateRequestsData();
         }
     }
 }

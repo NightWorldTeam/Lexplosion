@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network.Web;
@@ -10,145 +11,155 @@ using Lexplosion.Tools;
 
 namespace Lexplosion.Logic.Management.Instances
 {
-    class CurseforgeInstance : PrototypeInstance
-    {
-        public override bool CheckUpdates(string localId)
-        {
-            var infoData = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.DirectoryPath + "/instances/" + localId + "/instancePlatformData.json");
-            if (string.IsNullOrWhiteSpace(infoData?.id))
-            {
-                return false;
-            }
+	class CurseforgeInstance : PrototypeInstance
+	{
+		public override bool CheckUpdates(string localId)
+		{
+			var infoData = DataFilesManager.GetPlatfromData(localId);
+			if (string.IsNullOrWhiteSpace(infoData?.id))
+			{
+				return false;
+			}
 
-            var content = DataFilesManager.GetFile<InstanceContentFile>(WithDirectory.DirectoryPath + "/instances/" + localId + "/instanceContent.json");
-            if (content != null && !content.FullClient)
-            {
-                return true;
-            }
+			var content = DataFilesManager.GetInstanceContent(localId);
+			if (content != null && !content.FullClient)
+			{
+				return true;
+			}
 
-            if (!Int32.TryParse(infoData.id, out _))
-            {
-                return true;
-            }
+			if (!Int32.TryParse(infoData.id, out _))
+			{
+				return true;
+			}
 
-            List<CurseforgeFileInfo> instanceVersionsInfo = CurseforgeApi.GetProjectFiles(infoData.id); //получем информацию об этом модпаке
+			List<CurseforgeFileInfo> instanceVersionsInfo = CurseforgeApi.GetProjectFiles(infoData.id); //получем информацию об этом модпаке
 
-            //проходимся по каждой версии модпака, ищем самый большой id. Это будет последняя версия. Причем этот id должен быть больше, чем id уже установленной версии 
-            foreach (CurseforgeFileInfo ver in instanceVersionsInfo)
-            {
-                if (ver.id > infoData.instanceVersion.ToInt32())
-                {
-                    return true;
-                }
-            }
+			//проходимся по каждой версии модпака, ищем самый большой id. Это будет последняя версия. Причем этот id должен быть больше, чем id уже установленной версии 
+			foreach (CurseforgeFileInfo ver in instanceVersionsInfo)
+			{
+				if (ver.id > infoData.instanceVersion.ToInt32())
+				{
+					return true;
+				}
+			}
 
-            return false;
-        }
+			return false;
+		}
 
-        public override InstanceData GetFullInfo(string localId, string externalId)
-        {
-            var data = CurseforgeApi.GetInstance(externalId);
+		public override InstanceData GetFullInfo(string localId, string externalId)
+		{
+			var data = CurseforgeApi.GetInstance(externalId);
 
-            if (data == null)
-            {
-                return null;
-            }
+			if (data == null)
+			{
+				return null;
+			}
 
-            var images = new List<byte[]>();
-            if (data.screenshots != null && data.screenshots.Count > 0)
-            {
-                var perfomer = new TasksPerfomer(3, data.screenshots.Count);
-                foreach (var item in data.screenshots)
-                {
-                    perfomer.ExecuteTask(delegate ()
-                    {
-                        using (var webClient = new WebClient())
-                        {
-                            try
-                            {
-                                webClient.Proxy = null;
-                                images.Add(webClient.DownloadData(item.url));
-                            }
-                            catch { }
-                        }
-                    });
-                }
+			var images = new List<byte[]>();
+			if (data.screenshots != null && data.screenshots.Count > 0)
+			{
+				var perfomer = new TasksPerfomer(3, data.screenshots.Count);
+				foreach (var item in data.screenshots)
+				{
+					perfomer.ExecuteTask(delegate ()
+					{
+						using (var webClient = new WebClient())
+						{
+							try
+							{
+								webClient.Proxy = null;
+								images.Add(webClient.DownloadData(item.url));
+							}
+							catch { }
+						}
+					});
+				}
 
-                perfomer.WaitEnd();
-            }
+				perfomer.WaitEnd();
+			}
 
-            int? projectFileId = null;
-            if (data.latestFilesIndexes?.Count > 0)
-            {
-                projectFileId = data.latestFilesIndexes[0]?.fileId;
-            }
+			int? projectFileId = null;
+			if (data.latestFilesIndexes?.Count > 0)
+			{
+				projectFileId = data.latestFilesIndexes[0]?.fileId;
+			}
 
-            string date;
-            try
-            {
-                date = (data.dateModified != null) ? DateTime.Parse(data.dateModified).ToString("dd MMM yyyy") : "";
-            }
-            catch
-            {
-                date = "";
-            }
+			string date;
+			try
+			{
+				date = (data.dateModified != null) ? DateTime.Parse(data.dateModified).ToString("dd MMM yyyy") : "";
+			}
+			catch
+			{
+				date = "";
+			}
 
-            return new InstanceData
-            {
-                Source = InstanceSource.Curseforge,
-                Categories = data.categories,
-                Description = data.summary,
-                Summary = data.summary,
-                TotalDownloads = (long)data.downloadCount,
-                GameVersion = (data.latestFilesIndexes != null && data.latestFilesIndexes.Count > 0) ? data.latestFilesIndexes[0].gameVersion : "",
-                LastUpdate = date,
-                Modloader = data.ModloaderType,
-                Images = images,
-                WebsiteUrl = data.links?.websiteUrl,
-                Changelog = (projectFileId != null) ? (CurseforgeApi.GetProjectChangelog(externalId, projectFileId?.ToString()) ?? "") : ""
-            };
-        }
+			return new InstanceData
+			{
+				Source = InstanceSource.Curseforge,
+				Categories = data.categories,
+				Description = data.summary,
+				Summary = data.summary,
+				TotalDownloads = (long)data.downloadCount,
+				GameVersion = (data.latestFilesIndexes != null && data.latestFilesIndexes.Count > 0) ? data.latestFilesIndexes[0].gameVersion : "",
+				LastUpdate = date,
+				Modloader = data.ModloaderType,
+				Images = images,
+				WebsiteUrl = data.links?.websiteUrl,
+				Changelog = (projectFileId != null) ? (CurseforgeApi.GetProjectChangelog(externalId, projectFileId?.ToString()) ?? "") : ""
+			};
+		}
 
-        public override List<InstanceVersion> GetVersions(string externalId)
-        {
-            List<CurseforgeFileInfo> files = CurseforgeApi.GetProjectFiles(externalId);
+		public override List<InstanceVersion> GetVersions(string externalId)
+		{
+			List<CurseforgeFileInfo> files = CurseforgeApi.GetProjectFiles(externalId);
 
-            if (files != null)
-            {
-                var versions = new List<InstanceVersion>();
-                foreach (var file in files)
-                {
-                    ReleaseType status;
-                    if (file.releaseType == 1)
-                    {
-                        status = ReleaseType.Release;
-                    }
-                    else if (file.releaseType == 2)
-                    {
-                        status = ReleaseType.Beta;
-                    }
-                    else
-                    {
-                        status = ReleaseType.Alpha;
-                    }
+			HashSet<string> clientTypes = new(Enum.GetNames(typeof(ClientType)).Select(x => x.ToLower()));
 
-                    versions.Add(new InstanceVersion
-                    {
-                        FileName = file.fileName,
-                        Id = file.id.ToString(),
-                        Status = status,
-                        Date = file.fileDate
-                    });
+			if (files != null)
+			{
+				var versions = new List<InstanceVersion>();
+				foreach (var file in files)
+				{
+					ReleaseType status;
+					if (file.releaseType == 1)
+					{
+						status = ReleaseType.Release;
+					}
+					else if (file.releaseType == 2)
+					{
+						status = ReleaseType.Beta;
+					}
+					else
+					{
+						status = ReleaseType.Alpha;
+					}
 
-                    Runtime.DebugWrite(file.fileName + " " + file.id);
-                }
+					// Example: 1.20.1, Fabric
+					var gameVersions = file.gameVersions.OrderBy(s => s);
 
-                return versions;
-            }
-            else
-            {
-                return null;
-            }
-        }
-    }
+					string allegedModloader = gameVersions.LastOrDefault();
+					string modloader = clientTypes.Contains(allegedModloader?.ToLower()) ? allegedModloader : "—";
+
+					versions.Add(new InstanceVersion
+					{
+						FileName = file.fileName,
+						Id = file.id.ToString(),
+						Status = status,
+						Date = file.fileDate,
+						GameVersion = gameVersions.FirstOrDefault() ?? "—",
+						Modloader = modloader
+					});
+
+					Runtime.DebugWrite(file.fileName + " " + file.id);
+				}
+
+				return versions;
+			}
+			else
+			{
+				return null;
+			}
+		}
+	}
 }

@@ -1,6 +1,7 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:Lexplosion.WPF.NewInterface.Core.Converters"
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Controls">
     <Style TargetType="{x:Type local:DefaultMainMenuTabItem}">
@@ -35,7 +36,7 @@
                             <Viewbox Width="{TemplateBinding IconWidth}" Height="{TemplateBinding IconHeight}">
                                 <Path
                                     x:Name="Icon"
-                                    extensions:Path.StringKeyData="{TemplateBinding IconKey}"
+                                    extensions:PathExtensions.StringKeyData="{TemplateBinding IconKey}"
                                     Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
                                     Stretch="Fill" />
                             </Viewbox>
@@ -45,7 +46,7 @@
                                 Grid.Column="1"
                                 Margin="10,0,0,0"
                                 HorizontalAlignment="Center"
-                                extensions:TextBlock.TextByKey="{TemplateBinding TextKey}"
+                                extensions:TextBlockExtensions.TextByKey="{TemplateBinding TextKey}"
                                 FontSize="16"
                                 FontWeight="SemiBold"
                                 Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />

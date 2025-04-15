@@ -118,7 +118,7 @@ namespace Lexplosion.Logic.Network.TURN
                     while (buffer.Count > 0 && IsWork)
                     {
                         buffer.TryDequeue(out byte[] package);
-                        sock.Send(package);
+                        int sendCount = sock.Send(package);
                         data.BufferSize -= package.Length;
                     }
                 }
@@ -173,7 +173,7 @@ namespace Lexplosion.Logic.Network.TURN
                 try
                 {
                     data = new byte[sock.Available];
-                    sock.Receive(data);
+                    int recvCount = sock.Receive(data);
                 }
                 catch (Exception e)
                 {
@@ -260,6 +260,38 @@ namespace Lexplosion.Logic.Network.TURN
             Runtime.DebugConsoleWrite("TURN END CLOSE ");
 
             return true;
+        }
+
+        private HashSet<ClientDesc> _sendAvailableClients = new();
+
+        public IReadOnlyCollection<ClientDesc> WaitSendAvailable()
+        {
+            _sendAvailableClients.Clear();
+
+            while (IsWork)
+            {
+                _waitConnections.WaitOne(); // тут метод остановится, если нет ни одного клиента
+
+                try
+                {
+                    List<Socket> sockets_;
+                    lock (_waitDeletingLoocker)
+                        sockets_ = new List<Socket>(_sockets);
+
+                    Socket.Select(null, sockets_, null, -1);
+                    if (sockets_.Count < 1) continue;
+
+                    foreach (var socket in sockets_)
+                    {
+                        if (_clientsPoints.TryGetValue(socket, out ClientDesc value)) _sendAvailableClients.Add(value);
+                    }
+                }
+                catch { }
+
+                return _sendAvailableClients;
+            }
+
+            return _sendAvailableClients;
         }
 
         public event ClientPointHandle ClientClosing;

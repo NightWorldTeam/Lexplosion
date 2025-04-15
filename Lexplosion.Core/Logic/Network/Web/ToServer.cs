@@ -14,36 +14,6 @@ namespace Lexplosion.Logic.Network
 {
     public static class ToServer
     {
-        public static JavaVersionManifest GetJavaVersions()
-        {
-            string answer = null;
-            try
-            {
-                try
-                {
-                    answer = HttpGet(LaunсherSettings.URL.JavaData);
-                }
-                catch (Exception ex)
-                {
-                    Runtime.DebugWrite(ex);
-                }
-
-                if (answer == null)
-                {
-                    string url = LaunсherSettings.URL.MirrorUrl + LaunсherSettings.URL.JavaData.Replace("https://", "");
-                    Runtime.DebugWrite("Try mirror, url " + url);
-                    answer = HttpGet(url);
-                }
-
-                return JsonConvert.DeserializeObject<JavaVersionManifest>(answer);
-            }
-            catch (Exception ex)
-            {
-                Runtime.DebugWrite("answer is null " + (answer == null) + ", exception: " + ex);
-                return null;
-            }
-        }
-
         /// <summary>
         /// Проверяет есть ли на сервере новая версия лаунчера
         /// </summary>
@@ -68,63 +38,9 @@ namespace Lexplosion.Logic.Network
             }
         }
 
-        public static List<MCVersionInfo> GetVersionsList()
-        {
-            try
-            {
-                string answer = HttpGet(LaunсherSettings.URL.VersionsData);
-                if (answer != null)
-                {
-                    List<MCVersionInfo> data = JsonConvert.DeserializeObject<List<MCVersionInfo>>(answer);
-                    return data ?? new List<MCVersionInfo>();
-                }
-                else
-                {
-                    return new List<MCVersionInfo>();
-                }
-            }
-            catch
-            {
-                return new List<MCVersionInfo>();
-            }
-
-        }
-
         public static bool ServerIsOnline()
         {
             return HttpPost(LaunсherSettings.URL.Base + "api/onlineStatus") == "online";
-        }
-
-        public static List<string> GetModloadersList(string gameVersion, ClientType modloaderType)
-        {
-            string modloader;
-            if (modloaderType != ClientType.Vanilla)
-            {
-                modloader = "/" + modloaderType.ToString().ToLower() + "/";
-            }
-            else
-            {
-                return new List<string>();
-            }
-
-            try
-            {
-                string answer = HttpGet(LaunсherSettings.URL.VersionsData + gameVersion + modloader);
-                if (answer != null)
-                {
-                    List<string> data = JsonConvert.DeserializeObject<List<string>>(answer);
-                    Runtime.DebugWrite("Return " + modloaderType + ", Count: " + data.Count);
-                    return data ?? new List<string>();
-                }
-                else
-                {
-                    return new List<string>();
-                }
-            }
-            catch
-            {
-                return new List<string>();
-            }
         }
 
         public static async Task<int> GetMcServerOnline(MinecraftServerInstance server)
@@ -172,27 +88,6 @@ namespace Lexplosion.Logic.Network
             catch
             {
                 return new List<MinecraftServerInstance>();
-            }
-        }
-
-        public static List<string> GetOptifineVersions(string gameVersion)
-        {
-            try
-            {
-                string answer = HttpGet(LaunсherSettings.URL.InstallersData + gameVersion + "/optifine");
-                if (answer != null)
-                {
-                    List<string> data = JsonConvert.DeserializeObject<List<string>>(answer);
-                    return data ?? new List<string>();
-                }
-                else
-                {
-                    return new List<string>();
-                }
-            }
-            catch
-            {
-                return new List<string>();
             }
         }
 
@@ -302,20 +197,19 @@ namespace Lexplosion.Logic.Network
                     if (optifineVersion != null)
                     {
                         var optifineData = ProtectedRequest<ProtectedInstallerManifest>(LaunсherSettings.URL.InstallersData + WebUtility.UrlEncode(version) + "/optifine/" + optifineVersion);
-                        if (optifineData != null)
-                        {
-                            foreach (string lib in optifineData.libraries.Keys)
-                            {
-                                if (optifineData.libraries[lib].os == null || optifineData.libraries[lib].os.Contains("windows"))
-                                {
-                                    libraries[lib] = optifineData.libraries[lib].GetLibInfo;
-                                    libraries[lib].additionalInstallerType = AdditionalInstallerType.Optifine;
-                                }
-                            }
+                        if (optifineData == null) return null;
 
-                            optifineData.version.installerVersion = optifineVersion;
-                            manifest.version.AdditionalInstaller = optifineData.version;
+                        foreach (string lib in optifineData.libraries.Keys)
+                        {
+                            if (optifineData.libraries[lib].os == null || optifineData.libraries[lib].os.Contains("windows"))
+                            {
+                                libraries[lib] = optifineData.libraries[lib].GetLibInfo;
+                                libraries[lib].additionalInstallerType = AdditionalInstallerType.Optifine;
+                            }
                         }
+
+                        optifineData.version.installerVersion = optifineVersion;
+                        manifest.version.AdditionalInstaller = optifineData.version;
                     }
 
                     return manifest;
@@ -463,7 +357,8 @@ namespace Lexplosion.Logic.Network
                 string answer;
 
                 WebRequest req = WebRequest.Create(url);
-                if (headers != null)
+				((HttpWebRequest)req).UserAgent = "Mozilla/5.0";
+				if (headers != null)
                 {
                     foreach (var header in headers)
                     {
@@ -486,7 +381,7 @@ namespace Lexplosion.Logic.Network
             }
             catch (Exception ex)
             {
-                Runtime.DebugWrite("url: " + url + ", Exception: " + ex);
+                Runtime.DebugWrite($"url: {url}, Exception: {ex}, stack trace: {new System.Diagnostics.StackTrace()}");
                 return null;
             }
         }

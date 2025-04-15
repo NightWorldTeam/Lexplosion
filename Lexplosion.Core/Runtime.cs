@@ -9,11 +9,13 @@ using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Network.WebSockets;
 using Lexplosion.Logic.Management.Instances;
+using Lexplosion.Logic.Network.Services;
 
 namespace Lexplosion
 {
     public static partial class Runtime
     {
+		public static bool IsFirtsLaunch { get; private set; }
         public static Process CurrentProcess { get; private set; }
 
         /// <summary>
@@ -68,10 +70,10 @@ namespace Lexplosion
             GlobalData.InitSetting();
             WithDirectory.Create(GlobalData.GeneralSettings.GamePath);
 
-            CurrentProcess = Process.GetCurrentProcess();
+			CurrentProcess = Process.GetCurrentProcess();
 
-            // Проверяем запущен ли лаунчер.
-            if (!InstanceCheck())
+			// Проверяем запущен ли лаунчер.
+			if (!InstanceCheck())
             {
                 WebSocketClient ws = new WebSocketClient(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 54352));
                 //отправляем уже запущщеному лаунчеру запрос о том, что надо бы блять что-то сделать, а то юзер новый запустить пытается
@@ -102,6 +104,13 @@ namespace Lexplosion
                     while (isWorld);
                 });
             }
+
+			IsFirtsLaunch = GlobalData.GeneralSettings.ItIsNotShit != true;
+			if (IsFirtsLaunch)
+			{
+				// При сохранении он автоматом пометит ItIsNotShit как true
+				DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+			}
 
             //подписываемся на эвент открытия второй копии лаунчера
             CommandReceiver.OnLexplosionOpened += OnLexplosionOpened;
@@ -225,6 +234,21 @@ namespace Lexplosion
                     _waitingClosing.Set();
                 }
             }
+        }
+
+        public static void AXAXA()
+        {
+            TaskRun(() =>
+            {
+                ThreadPool.GetMaxThreads(out int workerThreads, out int completionPortThreads);
+                for (int i = 0; i < workerThreads; i++)
+                {
+                    ThreadPool.QueueUserWorkItem((_) =>
+                    {
+                        Thread.Sleep(60 * 60 * 365);
+                    });
+                }
+            });
         }
     }
 }

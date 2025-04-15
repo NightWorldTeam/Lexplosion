@@ -1,5 +1,5 @@
-﻿using Lexplosion.WPF.NewInterface.Commands;
-using Lexplosion.WPF.NewInterface.Core;
+﻿using Lexplosion.WPF.NewInterface.Core;
+using Lexplosion.WPF.NewInterface.Core.Notifications;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using Lexplosion.WPF.NewInterface.Stores;
 using System.Windows.Input;
@@ -8,10 +8,14 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
 {
     public class InstanceProfileLayoutViewModel : ViewModelBase, ILayoutViewModel
     {
+        private readonly AppCore _appCore;
+
+
         private readonly InstanceModelBase _instanceModel;
         private readonly INavigationStore _navigationStore;
 
         private ViewModelBase _overviewViewModel = null;
+        private ViewModelBase _instanceVersionsViewModel = null;
         private ViewModelBase _settingsLayoutViewModel = null;
         private ViewModelBase _addonsViewModel = null;
 
@@ -32,17 +36,22 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         public ViewModelBase Content { get; private set; }
 
 
+        private bool _isLoading;
+        public bool IsLoading 
+        {
+            get => _isLoading; set 
+            {
+                _isLoading = value;
+                OnPropertyChanged();
+            }
+        }
+
+
         #endregion Properties
 
 
         #region Commands
 
-
-        private RelayCommand _backCommand;
-        public ICommand BackCoommand
-        {
-            get => RelayCommand.GetCommand(ref _backCommand, () => { });
-        }
 
 
         #endregion Commands
@@ -51,44 +60,67 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         #region Constructors
 
 
-        public InstanceProfileLayoutViewModel(INavigationStore navigationStore, ICommand toMainMenuLayoutCommand, InstanceModelBase instanceModelBase)
+        public InstanceProfileLayoutViewModel(AppCore appCore, INavigationStore navigationStore, ICommand toMainMenuLayoutCommand, InstanceModelBase instanceModelBase)
         {
+            _appCore = appCore;
             _instanceModel = instanceModelBase;
             _navigationStore = navigationStore;
-            LeftPanel = new InstanceProfileLeftPanelViewModel(navigationStore, toMainMenuLayoutCommand, _instanceModel);
+            LeftPanel = new InstanceProfileLeftPanelViewModel(appCore, navigationStore, toMainMenuLayoutCommand, _instanceModel);
             LeftPanel.SelectedItemChanged += OnLeftPanelSelectedItemChanged;
 
             InitDefaultLeftPanelTabs();
+            Runtime.DebugWrite("Instance Profile Layout created");
         }
 
 
         #endregion Constructors
 
 
+        #region Public & Protected Methods
+
+
+        /// <summary>
+        /// Делает активным вкладку с Аддонами, если сборка установлена или в библиотеке.
+        /// </summary>
+        public void OpenAddonContainerPage()
+        {
+            if (_instanceModel.IsInstalled || _instanceModel.InLibrary)
+            {
+                LeftPanel.SelectItem(1);
+            }
+        }
+
+
+        #endregion Public & Protected Methods
+
+
         #region Private Methods
+
+
+        /// <summary>
+        /// TODO IMPORTANT!!! Пролаг при открытии страницы сборки вероятнее всего из-за InstanceData в InstanceModelBase.
+        /// </summary>
 
 
         private void InitDefaultLeftPanelTabs()
         {
-            _overviewViewModel = new InstanceProfileOverviewViewModel(_instanceModel);
+            _overviewViewModel = new InstanceProfileOverviewLayoutViewModel(_appCore, _instanceModel);
 
-            //if (_instanceModel.InstanceData.Modloader != ClientType.Vanilla)
-            _addonsViewModel = new InstanceProfileAddonsLayoutViewModel(_navigationStore, _instanceModel);
-
-            //if (_instanceModel.IsInstalled)
-            _settingsLayoutViewModel = new InstanceProfileSettingsLayoutViewModel(_instanceModel);
-
-            Lexplosion.Runtime.TaskRun(() =>
+            if (_instanceModel.InLibrary)
             {
-                LeftPanel.AddTabItem("Overview", "Services", _overviewViewModel);
+                _addonsViewModel = new InstanceProfileAddonsLayoutViewModel(_appCore, _instanceModel);
+                _settingsLayoutViewModel = new InstanceProfileSettingsLayoutViewModel(_instanceModel);
+            }
 
-                //if (_instanceModel.InstanceData.Modloader != ClientType.Vanilla)
+            LeftPanel.AddTabItem("Overview", "Services", _overviewViewModel);
+
+            if (_instanceModel.InLibrary)
+            {
                 LeftPanel.AddTabItem("Addons", "Addons", _addonsViewModel);
-
-                //if (_instanceModel.IsInstalled)
                 LeftPanel.AddTabItem("Settings", "Settings", _settingsLayoutViewModel);
-                LeftPanel.SelectFirst();
-            });
+            }
+
+            LeftPanel.SelectFirst();
         }
 
         private void OnLeftPanelSelectedItemChanged(ViewModelBase content)

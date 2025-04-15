@@ -1,76 +1,117 @@
-﻿using Lexplosion.WPF.NewInterface.Core;
+﻿using Lexplosion.Global;
+using Lexplosion.Logic.FileSystem;
+using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Objects;
+using Lexplosion.WPF.NewInterface.Core.Services;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Media;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSettings
 {
     public sealed class AppearanceSettingsModel : ViewModelBase
     {
-        public Theme SelectedTheme { get => RuntimeApp.AppColorThemeService.SelectedTheme; }
-        public ActivityColor SelectedColor { get => RuntimeApp.AppColorThemeService.SelectedActivityColor; }
+        private readonly AppCore _appCore;
+        private readonly AppColorThemeService _themeService;
+        
+
+        public Theme SelectedTheme { get => _themeService.SelectedTheme; }
+        public ActivityColor SelectedColor { get => _themeService.SelectedActivityColor; }
 
 
-        private ObservableCollection<ActivityColor> _colors = new ObservableCollection<ActivityColor>();
-        public IEnumerable<ActivityColor> Colors { get => _colors; }
+        public IEnumerable<ActivityColor> Colors { get => _themeService.Colors; }
+        public IEnumerable<Theme> Themes { get => _themeService.Themes; }
 
 
-        private ObservableCollection<Theme> _themes = new ObservableCollection<Theme>();
-        public IEnumerable<Theme> Themes { get => _themes; }
-
-
-        public AppearanceSettingsModel()
+        private string _newHexActivityColor;
+        public string NewHexActivityColor
         {
-            LoadActivityColors();
-            LoadThemes();
+            get => _newHexActivityColor; set
+            {
+                _newHexActivityColor = value;
+
+                if (ActivityColor.TryCreateColor(value, out var color))
+                {
+                    _themeService.SelectedColorChanged(color, true);
+                }
+                else
+                {
+                    _themeService.SelectedColorChanged(SelectedColor, true);
+                }
+
+                OnPropertyChanged();
+            }
+        }
+
+
+        #region Tooltip
+
+
+        private bool _isToolTipsEnabled;
+        public bool IsToolTipsEnabled
+        {
+            get => _isToolTipsEnabled; set
+            {
+                _isToolTipsEnabled = value;
+                OnPropertyChanged();
+                OnToolTipStateChanged();
+            }
+        }
+
+
+        private int _initialShowDelay;
+        public int InitialShowDelay
+        {
+            get => _initialShowDelay; set
+            {
+                _initialShowDelay = value;
+                OnPropertyChanged();
+                OnInitialShowDelayChanged();
+            }
+        }
+
+        private int _betweenShowDelay;
+        public int BetweenShowDelay
+        {
+            get => _betweenShowDelay; set
+            {
+                _betweenShowDelay = value;
+                OnPropertyChanged();
+                OnBetweenShowDelayChanged();
+            }
+        }
+
+
+        #endregion Tooltip
+
+
+        public AppearanceSettingsModel(AppCore appCore)
+        {
+            _appCore = appCore;
+            _themeService = _appCore.Settings.ThemeService;
         }
 
 
         #region Private Methods
 
 
-        private void LoadThemes()
+        /// <summary>
+        /// Изменяет состояние всплывающих подсказок
+        /// </summary>
+        private void OnToolTipStateChanged()
         {
-            _themes.Add(new Theme("Light Punch", "LightColorTheme.xaml"));
-            _themes.Add(new Theme("Open Space", "DarkColorTheme.xaml"));
-
-            foreach (var theme in _themes)
-            {
-                theme.SelectedEvent += SelectedThemeChanged;
-            }
-
-            _themes[0].IsSelected = true;
+            RuntimeApp.ChangeToolTipState(IsToolTipsEnabled);
         }
 
-        private void LoadActivityColors()
+        private void OnInitialShowDelayChanged()
         {
-            _colors.Add(new ActivityColor("#167ffc"));
-            _colors.Add(new ActivityColor("#A020F0"));
-            _colors.Add(new ActivityColor("#FFE600"));
-            _colors.Add(new ActivityColor("#40A710"));
-            _colors.Add(new ActivityColor("#FF0000"));
-
-            foreach (var color in _colors)
-            {
-                color.SelectedEvent += SelectedColorChanged;
-            }
+            RuntimeApp.ChangeSettingInitialShowDelay(InitialShowDelay);
         }
 
-        private void SelectedColorChanged(ActivityColor color, bool isSelected)
+        private void OnBetweenShowDelayChanged()
         {
-            if (isSelected)
-            {
-                RuntimeApp.AppColorThemeService.ChangeActivityColor(color.Brush.Color);
-            }
-        }
-
-        private void SelectedThemeChanged(Theme theme, bool isSelected)
-        {
-            if (isSelected) 
-            {
-                RuntimeApp.AppColorThemeService.ChangeTheme(theme);
-            }
+            RuntimeApp.ChangeSettingBetweenShowDelay(BetweenShowDelay);
         }
 
 

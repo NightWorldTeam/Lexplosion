@@ -3,14 +3,15 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
+    <sys:String x:Key="__Name">Open Space</sys:String>
+    <sys:String x:Key="__Type">_ColorTheme</sys:String>
+
     <Duration x:Key="SlowAnimationSpeed">0:0:0.35</Duration>
     <Duration x:Key="MediumAnimationSpeed">0:0:0.25</Duration>
     <Duration x:Key="FastAnimationSpeed">0:0:0.15</Duration>
 
     <!--  Activity Colors  -->
-    <Color x:Key="ActivityColor" x:Shared="True">#13f287</Color>
-    <Color x:Key="Color1">#8500aa</Color>
-    <Color x:Key="Color2">#13f287</Color>
+    <Color x:Key="ActivityColor" x:Shared="True">#167FFC</Color>
 
     <sys:Double x:Key="ActivityColorOpacity">1</sys:Double>
     <SolidColorBrush
@@ -39,7 +40,7 @@
 
     <!--  Primary Color  -->
     <Color x:Key="PrimaryColor">
-        #0E1422
+        #0e1523
     </Color>
 
 
@@ -56,7 +57,7 @@
 
     <!--  Secondary Color  -->
     <Color x:Key="SecondaryColor">
-        #0A0F1B
+        #0a0f1b
     </Color>
 
     <sys:Double x:Key="SecondaryColorOpacity">
@@ -72,7 +73,11 @@
 
     <!--  Separate Color  -->
     <Color x:Key="SeparateColor">
-        #303030
+        #161f34
+    </Color>
+
+    <Color x:Key="LightSeparateColor">
+        #191819
     </Color>
 
     <sys:Double x:Key="SeparateColorOpacity">
@@ -84,6 +89,18 @@
         x:Shared="False"
         Opacity="{DynamicResource SeparateColorOpacity}"
         Color="{StaticResource SeparateColor}" />
+
+    <SolidColorBrush
+        x:Key="LightSeparateSolidColorBrush"
+        x:Shared="False"
+        Opacity="{DynamicResource SeparateColorOpacity}"
+        Color="{StaticResource LightSeparateColor}" />
+
+    <SolidColorBrush
+        x:Key="TagsColorBrush"
+        x:Shared="False"
+        Opacity="{DynamicResource SeparateColorOpacity}"
+        Color="#151e33" />
 
 
     <!--    -->
@@ -154,7 +171,7 @@
 
     <!--  Brand Color Foreground  -->
     <Color x:Key="BrandColorForegroundColor">
-        #000
+        #fff
     </Color>
 
     <sys:Double x:Key="BrandColorForegroundColorOpacity">
@@ -213,4 +230,334 @@
         x:Shared="False"
         Opacity="{DynamicResource ImportSuccessColorOpacity}"
         Color="{StaticResource ImportSuccessColor}" />
+
+    <!--    -->
+    <!--  User status color  -->
+    <!--    -->
+    <!--  Online  -->
+    <Color x:Key="OnlineColor">
+        #009834
+    </Color>
+
+    <sys:Double x:Key="OnlineColorOpacity">
+        1
+    </sys:Double>
+
+    <SolidColorBrush
+        x:Key="OnlineSolidColorBrush"
+        x:Shared="False"
+        Opacity="{DynamicResource OnlineColorOpacity}"
+        Color="{StaticResource OnlineColor}" />
+
+    <!--  Offline  -->
+    <Color x:Key="OfflineColor">
+        Gray
+    </Color>
+
+    <sys:Double x:Key="OfflineColorOpacity">
+        1
+    </sys:Double>
+
+    <SolidColorBrush
+        x:Key="OfflineSolidColorBrush"
+        x:Shared="False"
+        Opacity="{DynamicResource OfflineColorOpacity}"
+        Color="{StaticResource OfflineColor}" />
+
+    <!--  DoNotDisturb  -->
+    <Color x:Key="DoNotDisturbColor">
+        rED
+    </Color>
+
+    <sys:Double x:Key="DoNotDisturbColorOpacity">
+        1
+    </sys:Double>
+
+    <SolidColorBrush
+        x:Key="DoNotDisturbSolidColorBrush"
+        x:Shared="False"
+        Opacity="{DynamicResource DoNotDisturbColorOpacity}"
+        Color="{StaticResource DoNotDisturbColor}" />
+
+    <!--  InGame  -->
+    <sys:Double x:Key="InGameColorOpacity">
+        1
+    </sys:Double>
+
+    <SolidColorBrush
+        x:Key="InGameSolidColorBrush"
+        x:Shared="False"
+        Opacity="{DynamicResource InGameColorOpacity}"
+        Color="{StaticResource ActivityColor}" />
+
+
+    <!--  AdvancedButton  -->
+
+
+    <SolidColorBrush x:Key="DefaultButtonBackgroundColorBrush" Color="{DynamicResource ActivityColor}" />
+
+    <Color x:Key="DefaultButtonHoverBackgroundColor" x:Shared="True">#167FFC</Color>
+    <SolidColorBrush
+        x:Key="DefaultButtonHoverBackgroundColorBrush"
+        x:Shared="True"
+        Color="{DynamicResource DefaultButtonHoverBackgroundColor}" />
+
+    <Color x:Key="DefaultButtonPressedBackgroundColor" x:Shared="True">#167FFC</Color>
+    <SolidColorBrush
+        x:Key="DefaultButtonPressedBackgroundColorBrush"
+        x:Shared="True"
+        Color="{DynamicResource DefaultButtonPressedBackgroundColor}" />
+
+    <Color x:Key="DefaultButtonDisableBackgroundColor">#434343</Color>
+    <SolidColorBrush x:Key="DefaultButtonDisableBackgroundColorBrush" Color="{DynamicResource DefaultButtonDisableBackgroundColor}" />
+
+    <Color x:Key="DefaultButtonForegroundColor">Black</Color>
+    <SolidColorBrush x:Key="DefaultButtonForegroundColorBrush" Color="{DynamicResource DefaultButtonForegroundColor}" />
+
+    <Color x:Key="DefaultBackgroundCheckedColor">Black</Color>
+    <SolidColorBrush x:Key="DefaultBackgroundCheckedColorBrush" Color="{DynamicResource DefaultButtonForegroundColor}" />
+
+    <!--  Advanced Toggle Button  -->
+    <Color x:Key="TransparentAdvnacedToggleButtonBackgroundCheckedColor">#303030</Color>
+    <SolidColorBrush x:Key="TransparentAdvnacedToggleButtonBackgroundCheckedColorBrush" Color="{DynamicResource TransparentAdvnacedToggleButtonBackgroundCheckedColor}" />
+
+
+    <!--  Disable Control Icon  -->
+    <Color x:Key="DisableControlIconColor">
+        Gray
+    </Color>
+
+    <sys:Double x:Key="DisableControlIconColorOpacity">
+        1
+    </sys:Double>
+
+    <SolidColorBrush
+        x:Key="DisableControlIconSolidColorBrush"
+        x:Shared="False"
+        Opacity="{DynamicResource DisableControlIconColorOpacity}"
+        Color="{StaticResource DisableControlIconColor}" />
+
+
+    <!--  region Page  -->
+
+
+    <SolidColorBrush
+        x:Key="PageSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource SecondaryColor}" />
+    <SolidColorBrush
+        x:Key="PageItemSeparatorSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource SeparateColor}" />
+
+    <SolidColorBrush
+        x:Key="LayoutTabSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource SecondaryColor}" />
+    <SolidColorBrush
+        x:Key="LayoutTabBorderSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource SeparateColor}" />
+
+    <Color x:Key="LayoutShadowColor" x:Shared="False">Black</Color>
+
+
+    <!--  endregion Page  -->
+
+
+    <!--  region LeftPanel  -->
+
+
+    <SolidColorBrush
+        x:Key="LeftPanelSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource PrimaryColor}" />
+    <SolidColorBrush
+        x:Key="LeftPanelOutsideBorderSolidColorBrush"
+        x:Shared="False"
+        Color="#12192a" />
+    <SolidColorBrush
+        x:Key="LeftPanelItemsSeparateSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource SeparateColor}" />
+
+
+    <!--  endregion LeftPanel  -->
+
+
+    <!--  region InstanceForm  -->
+
+
+    <SolidColorBrush
+        x:Key="InstanceFormSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource PrimaryColor}" />
+    <SolidColorBrush
+        x:Key="InstanceFormBorderSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource LightSeparateColor}" />
+    <SolidColorBrush
+        x:Key="InstanceFormTagSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource SeparateColor}" />
+    <SolidColorBrush
+        x:Key="InstanceFormTagForegroundSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource PrimaryForegroundColor}" />
+
+
+    <!--  endregion InstanceForm  -->
+
+
+    <!--  region AddonForm  -->
+
+
+    <SolidColorBrush
+        x:Key="AddomFormSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource PrimaryColor}" />
+    <SolidColorBrush
+        x:Key="AddomFormTagSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource SeparateColor}" />
+    <SolidColorBrush
+        x:Key="AddomFormBorderSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource SeparateColor}" />
+
+
+    <!--  endregion AddonForm  -->
+
+
+    <!--  region ServerForm  -->
+
+
+    <SolidColorBrush
+        x:Key="ServerFormSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource PrimaryColor}" />
+    <SolidColorBrush
+        x:Key="ServerFormBorderSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource SeparateColor}" />
+    <SolidColorBrush
+        x:Key="ServerFormTagSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource SeparateColor}" />
+
+
+    <!--  endregion ServerForm  -->
+
+
+    <!--  region TextBox  -->
+
+
+    <SolidColorBrush
+        x:Key="TextBoxSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource PrimaryColor}" />
+    <SolidColorBrush
+        x:Key="TextBoxBorderSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource SeparateColor}" />
+    <SolidColorBrush
+        x:Key="TextBoxCaretSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource ActivityColor}" />
+    <SolidColorBrush
+        x:Key="TextBoxSelectionSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource ActivityColor}" />
+    <SolidColorBrush
+        x:Key="TextBoxFocusedSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource ActivityColor}" />
+    <SolidColorBrush
+        x:Key="TextBoxForegroundSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource PrimaryForegroundColor}" />
+    <SolidColorBrush
+        x:Key="TextBoxPlaceholderSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource SecondaryForegroundColor}" />
+
+
+    <!--  endregion TextBox  -->
+
+    <!--  region ConfirmAlert  -->
+
+
+    <SolidColorBrush
+        x:Key="ConfirmAlertSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource PrimaryColor}" />
+    <SolidColorBrush
+        x:Key="ConfirmAlertBorderSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource SeparateColor}" />
+
+
+    <!--  endregion Confirm Alert  -->
+
+
+    <!--  region FriendForm  -->
+
+
+    <SolidColorBrush
+        x:Key="FriendSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource PrimaryColor}" />
+    <SolidColorBrush
+        x:Key="FriendBorderSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource SeparateColor}" />
+
+
+    <!--  endregion FriendForm  -->
+
+
+    <!--  region Language  -->
+
+
+    <SolidColorBrush
+        x:Key="LanguageSelectorSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource PrimaryColor}" />
+    <SolidColorBrush
+        x:Key="LanguageSelectorBorderSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource SeparateColor}" />
+    <SolidColorBrush
+        x:Key="LanguageSelectorUnselectedSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource SecondaryColor}" />
+    <SolidColorBrush
+        x:Key="LanguageSelectorUnselectedBorderSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource SeparateColor}" />
+    <SolidColorBrush
+        x:Key="LanguageSelectorSelectedSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource ActivityColor}" />
+
+
+    <!--  endregion Language  -->
+
+
+    <!--  region Instances Filter  -->
+
+
+    <SolidColorBrush
+        x:Key="InstancesFilterSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource PrimaryColor}" />
+    <SolidColorBrush
+        x:Key="InstancesFilterBorderSolidColorBrush"
+        x:Shared="False"
+        Color="{DynamicResource SeparateColor}" />
+
+
+    <!--  endregion Instances Filter  -->
+
+    <SolidColorBrush x:Key="NightWorldWelcomePageWordColor" Color="#4f5af7" />
 </ResourceDictionary>

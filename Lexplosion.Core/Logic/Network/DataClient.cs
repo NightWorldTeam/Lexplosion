@@ -72,6 +72,8 @@ namespace Lexplosion.Logic.Network
         {
             try
             {
+				Runtime.DebugWrite("Start init");
+
                 // получаем кодовое слово
                 Bridge.Receive(out byte[] data);
 
@@ -108,6 +110,7 @@ namespace Lexplosion.Logic.Network
                 _calculateThread = new Thread(SpeedClaculate);
                 _calculateThread.Start();
 
+				Runtime.DebugWrite("Start file download");
                 using (AesCryptoServiceProvider aesAlg = new AesCryptoServiceProvider())
                 {
                     aesAlg.Key = _aesKey;
@@ -131,7 +134,6 @@ namespace Lexplosion.Logic.Network
                         _fstream.Write(data, 0, data.Length);
                     }
                 }
-
 
                 Runtime.DebugConsoleWrite("End reading cycle");
             }
@@ -165,6 +167,7 @@ namespace Lexplosion.Logic.Network
                 double bitToSec = (byteToMillSec * 8) * 1000;
 
                 SpeedUpdate?.Invoke((bitToSec / (1024 * 1014)));
+				Runtime.DebugWrite($"Speed Update {(bitToSec / (1024 * 1014))}");
             }
         }
 

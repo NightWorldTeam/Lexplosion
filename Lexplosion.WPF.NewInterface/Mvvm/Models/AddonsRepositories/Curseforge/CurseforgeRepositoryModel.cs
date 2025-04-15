@@ -1,17 +1,16 @@
-﻿using Lexplosion.Logic.Management.Instances;
+﻿using Lexplosion.Logic.Management.Addons;
+using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects;
-using Lexplosion.WPF.NewInterface.Commands;
+using Lexplosion.Tools;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Objects;
-using Lexplosion.WPF.NewInterface.Core.Paginator;
 using Lexplosion.WPF.NewInterface.Core.ViewModel;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Windows.Input;
-using static Lexplosion.Logic.Network.Web.ModrinthApi;
+using System.Windows.Media.Effects;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 {
@@ -78,7 +77,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 
     public sealed class CurseforgeRepositoryModel : ViewModelBase
     {
-        public static ReadOnlyCollection<string> SortByArgs { get; } = new ReadOnlyCollection<string>(new string[] 
+        public static ReadOnlyCollection<string> SortByArgs { get; } = new ReadOnlyCollection<string>(new string[]
         {
             "Relevancy",
             "Popularity",
@@ -96,33 +95,31 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 
 
         private readonly BaseInstanceData _instanceData;
-
-
-
-
+        private readonly AddonType _addonType;
 
         #region Properties
 
 
-        public List<string> SelectedCategories { get; } = new List<string>(1) { "Adventure and RPG" };
+        public List<string> SelectedCategories { get; } = new List<string>();//(1) { "Adventure and RPG" };
         public List<string> Categories { get; }
 
 
 
         private string _searchFilter = string.Empty;
-        public string SearchFilter 
+        public string SearchFilter
         {
-            get => _searchFilter; set 
+            get => _searchFilter; set
             {
                 _searchFilter = value;
+                Runtime.DebugWrite(_searchFilter);
                 OnPropertyChanged();
-            } 
+            }
         }
 
         private uint _currentPageIndex = 0;
-        public uint CurrentPageIndex 
-        { 
-            get => _currentPageIndex; set 
+        public uint CurrentPageIndex
+        {
+            get => _currentPageIndex; set
             {
                 _currentPageIndex = value;
                 OnPropertyChanged();
@@ -135,6 +132,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
             get => _selectedSortByArg; set
             {
                 _selectedSortByArg = value;
+                LoadPageContent();
                 OnPropertyChanged();
             }
         }
@@ -145,6 +143,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
             get => _pageSize; set
             {
                 _pageSize = value;
+                LoadPageContent();
                 OnPropertyChanged();
             }
         }
@@ -155,25 +154,33 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
         public IReadOnlyCollection<CurseforgeAddon> AddonList { get => _addonsList; }
 
 
+        public bool IsContentLoading { get; private set; }
+
+
         #endregion Properties
 
 
         #region Constructors
 
 
-        public CurseforgeRepositoryModel(BaseInstanceData baseInstanceData)
+        public CurseforgeRepositoryModel(BaseInstanceData baseInstanceData, AddonType addonType)
         {
             _instanceData = baseInstanceData;
-            Categories = new List<string>(
-                "Addons|Adventure and RPG|API and Library|Armor, Tools, and Weapons|Cosmetic|Education|Food|Magic|Map and Information|MCreator|Miscellaneous|Redstone|Server Utility|Storage|Technology|Twitch Integration|Utility & QoL|World Gen".Split('|'));
             LoadPageContent();
+            _addonType = addonType;
         }
 
 
         #endregion Constructors
 
 
-        public void OnPageIndexChanged(uint index) 
+        public void Search()
+        {
+            LoadPageContent();
+        }
+
+
+        public void OnPageIndexChanged(uint index)
         {
             CurrentPageIndex = index;
             LoadPageContent();
@@ -182,18 +189,43 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 
         private void LoadPageContent()
         {
+            IsContentLoading = true;
+            OnPropertyChanged(nameof(IsContentLoading));
             Lexplosion.Runtime.TaskRun(() =>
             {
-                var addonsList = InstanceAddon.GetAddonsCatalog(
-                    _instanceData, (int)PageSize, (int)CurrentPageIndex, AddonType.Mods, CurseforgeApi.GetCategories(CfProjectType.Mods)[0], SearchFilter
-                    );
+                var searchParams = new CurseforgeSearchParams(SearchFilter, string.Empty, [CurseforgeApi.GetCategories(_addonType.ToCfProjectType())[0]], (int)PageSize, (int)CurrentPageIndex, CfSortField.Featured);
+
+                var addonsList = AddonsManager.GetManager(_instanceData).GetAddonsCatalog(ProjectSource.Curseforge, _addonType, searchParams);
 
                 App.Current.Dispatcher.Invoke(() =>
                 {
                     _addonsList = new ObservableCollection<CurseforgeAddon>(addonsList.Select(i => new CurseforgeAddon(i)));
                     OnPropertyChanged(nameof(AddonList));
+                    IsContentLoading = false;
+                    OnPropertyChanged(nameof(IsContentLoading));
                 });
             });
+        }
+
+        public void InstallAddon(InstanceAddon addon)
+        {
+            var stateData = new DynamicStateData<SetValues<InstanceAddon, DownloadAddonRes>, InstanceAddon.InstallAddonState>();
+            stateData.StateChanged += OnInstanceAddonInstallingStateChanged;
+
+            addon.InstallLatestVersion(stateData.GetHandler);
+        }
+
+        private void OnInstanceAddonInstallingStateChanged(SetValues<InstanceAddon, DownloadAddonRes> arg, InstanceAddon.InstallAddonState state)
+        {
+            switch (state)
+            {
+                case InstanceAddon.InstallAddonState.StartDownload:
+
+                    break;
+                case InstanceAddon.InstallAddonState.EndDownload:
+
+                    break;
+            }
         }
     }
 }

@@ -45,6 +45,7 @@ namespace Lexplosion.Logic
         public bool? IsShowConsole = null;
         public bool? IsHiddenMode = null;
         public bool? IsAutoUpdate = null;
+        public bool? NwClientByDefault = null;
         public string GameArgs = null;
         /// <summary>
         /// Использовать ли в приоритете в сетевой игре прямое подключение.
@@ -52,16 +53,35 @@ namespace Lexplosion.Logic
         public bool NetworkDirectConnection = true;
         public string LanguageId = "";
         public string AccentColor = "";
+        public string ThemeName = "";
         /// <summary>
         /// Адрес сервера для автовхода при запуске майкрафта.
         /// Параметр только для настроек конкретного клиента. 
         /// </summary>
         public string AutoLoginServer = null;
 
+		/// <summary>
+		/// Указывает новый ли это интерфейс. null или false - старый. В новом ставится true
+		/// </summary>
+		public bool? ItIsNotShit = null;
+
+        /// <summary>
+        /// Использовать систему скинов NightWorld
+        /// </summary>
+        public bool? IsNightWorldSkinSystem = null;
+
+        /// <summary>
+        /// Аргументы JVM
+        /// </summary>
+        public string JVMArgs = null;
+
+		public bool NavBarInLeft = true;
+		public bool IsPortableMode = false;
+
         /// <summary>
         /// Выполняет слияние с другим экземпляром настроек.
         /// Если режим приоритетный, то в данном экземпляре будут заменены только пустые поля на поля из settings,
-        /// Если режим не приоритетный, то в дааном экземпляре будут заменены все поля, которые в settings не пустые.
+        /// Если режим не приоритетный, то в даном экземпляре будут заменены все поля, которые в settings не пустые.
         /// </summary>
         /// <param name="settings">Экземпляр, с которым нужно выполнить слияние</param>
         /// <param name="priority">Приоритетный ли режим</param>
@@ -81,8 +101,14 @@ namespace Lexplosion.Logic
                 if (IsShowConsole == null) IsShowConsole = settings.IsShowConsole;
                 if (IsHiddenMode == null) IsHiddenMode = settings.IsHiddenMode;
                 if (IsAutoUpdate == null) IsAutoUpdate = settings.IsAutoUpdate;
-                if (GameArgs == null) GameArgs = settings.GameArgs;
-                if (string.IsNullOrWhiteSpace(AutoLoginServer)) AutoLoginServer = settings.AutoLoginServer;
+                if (NwClientByDefault == null) NwClientByDefault = settings.NwClientByDefault;
+				if (IsNightWorldSkinSystem == null) IsNightWorldSkinSystem = settings.IsNightWorldSkinSystem;
+				if (GameArgs == null) GameArgs = settings.GameArgs;
+				if (JVMArgs == null) JVMArgs = settings.JVMArgs;
+				if (string.IsNullOrWhiteSpace(AutoLoginServer)) AutoLoginServer = settings.AutoLoginServer;
+                if (string.IsNullOrWhiteSpace(LanguageId)) LanguageId = settings.LanguageId;
+                if (string.IsNullOrWhiteSpace(ThemeName)) ThemeName = settings.ThemeName;
+                if (string.IsNullOrWhiteSpace(AccentColor)) AccentColor = settings.AccentColor;
             }
             else
             {
@@ -98,14 +124,20 @@ namespace Lexplosion.Logic
                 if (settings.IsShowConsole != null) IsShowConsole = settings.IsShowConsole;
                 if (settings.IsHiddenMode != null) IsHiddenMode = settings.IsHiddenMode;
                 if (settings.IsAutoUpdate != null) IsAutoUpdate = settings.IsAutoUpdate;
-                if (settings.GameArgs != null) GameArgs = settings.GameArgs;
+				if (settings.IsNightWorldSkinSystem != null) IsNightWorldSkinSystem = settings.IsNightWorldSkinSystem;
+				if (settings.GameArgs != null) GameArgs = settings.GameArgs;
+				if (settings.JVMArgs != null) JVMArgs = settings.JVMArgs;
+				if (!string.IsNullOrWhiteSpace(settings.LanguageId)) LanguageId = settings.LanguageId;
+                if (!string.IsNullOrWhiteSpace(settings.ThemeName)) ThemeName = settings.ThemeName;
+                if (!string.IsNullOrWhiteSpace(settings.AccentColor)) AccentColor = settings.AccentColor;
                 AutoLoginServer = settings.AutoLoginServer;
             }
 
             NetworkDirectConnection = settings.NetworkDirectConnection;
-            LanguageId = settings.LanguageId;
-            AccentColor = settings.AccentColor;
-        }
+			ItIsNotShit = settings.ItIsNotShit;
+			NavBarInLeft = settings.NavBarInLeft;
+			NwClientByDefault = settings.NwClientByDefault;
+		}
 
         public Settings Copy()
         {
@@ -138,9 +170,18 @@ namespace Lexplosion.Logic
                 IsShowConsole = false,
                 IsHiddenMode = false,
                 GameArgs = "",
+				JVMArgs = "",
                 IsAutoUpdate = false,
-                NetworkDirectConnection = true
-            };
+                NetworkDirectConnection = true,
+                NwClientByDefault = null,
+                LanguageId = "ru-RU",
+                ThemeName = "DarkColorTheme",
+                AccentColor = "#167ffc",
+				ItIsNotShit = true,
+				NavBarInLeft = true,
+				IsPortableMode = false,
+                IsNightWorldSkinSystem = true,
+			};
         }
     }
 }

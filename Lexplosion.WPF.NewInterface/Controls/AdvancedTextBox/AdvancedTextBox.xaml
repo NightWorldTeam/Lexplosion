@@ -12,9 +12,9 @@
         <Setter Property="FontSize" Value="14" />
         <Setter Property="FontWeight" Value="Medium" />
         <Setter Property="MinHeight" Value="32" />
-        <Setter Property="SelectionBrush" Value="{DynamicResource ActivitySolidColorBrush}" />
-        <Setter Property="Foreground" Value="{DynamicResource PrimaryForegroundSolidColorBrush}" />
-        <Setter Property="CaretBrush" Value="{DynamicResource ActivitySolidColorBrush}" />
+        <Setter Property="SelectionBrush" Value="{DynamicResource TextBoxSelectionSolidColorBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextBoxForegroundSolidColorBrush}" />
+        <Setter Property="CaretBrush" Value="{DynamicResource TextBoxCaretSolidColorBrush}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:AdvancedTextBox}">
@@ -23,7 +23,7 @@
                         <Border
                             x:Name="Border"
                             Background="Transparent"
-                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                            BorderBrush="{DynamicResource TextBoxBorderSolidColorBrush}"
                             BorderThickness="2"
                             CornerRadius="5" />
 
@@ -38,7 +38,7 @@
                         <Border
                             x:Name="BorderFocused"
                             Background="Transparent"
-                            BorderBrush="{DynamicResource ActivitySolidColorBrush}"
+                            BorderBrush="{DynamicResource TextBoxFocusedSolidColorBrush}"
                             BorderThickness="2"
                             CornerRadius="5"
                             Opacity="0" />
@@ -66,7 +66,7 @@
                                         HorizontalAlignment="Center">
                                         <Path
                                             x:Name="PART_Icon"
-                                            Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                            Fill="{DynamicResource TextBoxForegroundSolidColorBrush}"
                                             Stretch="Fill" />
                                     </Viewbox>
                                 </Border>
@@ -76,10 +76,10 @@
                                     Name="PART_Placeholder"
                                     Grid.Column="1"
                                     Margin="0,0,0,0"
-                                    HorizontalAlignment="Left"
+                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                     VerticalAlignment="Top"
                                     FontSize="12"
-                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                                    Foreground="{DynamicResource TextBoxPlaceholderSolidColorBrush}" />
 
                                 <!--  Text  -->
                                 <ScrollViewer
@@ -87,12 +87,18 @@
                                     Grid.Column="1"
                                     Margin="0,-1,0,0"
                                     VerticalAlignment="Top"
-                                    VerticalScrollBarVisibility="Auto" />
+                                    VerticalScrollBarVisibility="Disabled" />
                             </Grid>
                         </Border>
                     </Grid>
 
                     <ControlTemplate.Triggers>
+                        <Trigger Property="IsMultiLine" Value="true">
+                            <Setter TargetName="PART_ContentHost" Property="VerticalScrollBarVisibility" Value="Auto" />
+                            <Setter Property="AcceptsReturn" Value="True" />
+                            <Setter Property="AcceptsTab" Value="True" />
+                        </Trigger>
+
                         <!--  When is it focused  -->
                         <Trigger Property="IsFocused" Value="True">
                             <Trigger.EnterActions>
@@ -118,39 +124,6 @@
                                 </BeginStoryboard>
                             </Trigger.ExitActions>
                         </Trigger>
-
-                        <!--<Trigger Property="IsError" Value="True">
-
-                            <Setter TargetName="BorderFocused" Property="Visibility" Value="Collapsed" />
-
-                            <Trigger.EnterActions>
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <DoubleAnimation
-                                            Storyboard.TargetName="BorderError"
-                                            Storyboard.TargetProperty="Opacity"
-                                            To="1"
-                                            Duration="0:0:0.35" />
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </Trigger.EnterActions>
-
-                            <Trigger.ExitActions>
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <DoubleAnimation
-                                            Storyboard.TargetName="BorderError"
-                                            Storyboard.TargetProperty="Opacity"
-                                            To="0"
-                                            Duration="0:0:0.35" />
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </Trigger.ExitActions>
-                        </Trigger>-->
-
-                        <!--<Trigger Property="IsError" Value="False">
-                            <Setter TargetName="BorderFocused" Property="Visibility" Value="Visible" />
-                        </Trigger>-->
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>

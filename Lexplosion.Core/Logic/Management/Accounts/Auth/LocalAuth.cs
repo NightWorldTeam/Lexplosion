@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Lexplosion.Logic.Management.Accounts.Auth
+﻿namespace Lexplosion.Logic.Management.Accounts.Auth
 {
     class LocalAuth : IAuthHandler
     {
@@ -12,10 +6,10 @@ namespace Lexplosion.Logic.Management.Accounts.Auth
         {
             return new IAuthHandler.AuthResult
             {
-                Login = login, 
-                UUID = "00000000-0000-0000-0000-000000000000", 
-                AccessToken = "null", 
-                SessionToken = null, 
+                Login = login,
+                UUID = "00000000-0000-0000-0000-000000000000",
+                AccessToken = "null",
+                SessionToken = null,
                 AccessData = null,
                 Status = ActivityStatus.Offline
             };

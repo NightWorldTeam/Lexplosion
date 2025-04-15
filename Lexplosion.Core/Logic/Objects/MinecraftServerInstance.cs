@@ -3,7 +3,10 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
+using static Lexplosion.Logic.Objects.Curseforge.CurseforgeProjectInfo;
+using System.Net;
+using Lexplosion.Tools;
+using System.Collections.Concurrent;
 
 namespace Lexplosion.Logic.Objects
 {
@@ -109,9 +112,9 @@ namespace Lexplosion.Logic.Objects
         [JsonProperty("imagesUrls")]
         public List<string> ImagesUrls { get; }
 
+
         [JsonProperty("socialLinks")]
         public Links SocialLinks { get; set; }
-
 
         [JsonProperty("instanceId")]
         public string InstanceId { get; }
@@ -166,6 +169,17 @@ namespace Lexplosion.Logic.Objects
             }
         }
 
+        private bool _isBannerLoaded;
+        [JsonIgnore]
+        public bool IsBannerLoaded
+        {
+            get => _isBannerLoaded; set
+            {
+                _isBannerLoaded = value;
+                OnPropertyChanged();
+            }
+        }
+
 
         #endregion Properties
 
@@ -197,6 +211,31 @@ namespace Lexplosion.Logic.Objects
                 && !Address.Contains(" ")
                 && MinecraftVersion.IsValidRelease(GameVersion)
                 && (InstanceSource == InstanceSource.Local || (ModpackInfo != null && ModpackInfo.IsValid()));
+        }
+
+        public IEnumerable<byte[]> GetImages()
+        {
+            var images = new List<byte[]>();
+            foreach (var url in ImagesUrls)
+            {
+                using (var webClient = new WebClient())
+                {
+                    webClient.Proxy = null;
+                    byte[] data = null;
+                    try
+                    {
+                        data = webClient.DownloadData(url);
+                    }
+                    catch (Exception e)
+                    {
+                        Runtime.DebugWrite(e.Message, color: ConsoleColor.Red);
+                    }
+
+                    if (data != null) images.Add(data);
+                }
+            }
+
+            return images;
         }
     }
 

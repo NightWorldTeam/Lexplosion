@@ -61,7 +61,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
         protected override void OnInitialized(EventArgs e)
         {
-            Runtime.DebugWrite(nameof(OnInitialized));
+            //Runtime.DebugWrite(nameof(OnInitialized));
             base.OnInitialized(e);
         }
 
@@ -76,7 +76,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
             
             if (_header != null)
             {
-                Runtime.DebugWrite(_header);
+                //Runtime.DebugWrite(_header);
                 _header.Padding = _loadedTabPanelPadding;
             }
 
@@ -230,7 +230,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
         {
             if (to == 0) return;
 
-            Runtime.DebugWrite(to);
+            //Runtime.DebugWrite(to);
             var changeWidthTranslate = new DoubleAnimation()
             {
                 From = target.ActualWidth,

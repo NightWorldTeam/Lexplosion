@@ -5,15 +5,17 @@
     xmlns:controls="clr-namespace:Lexplosion.WPF.NewInterface.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
+    xmlns:instanceprofile="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.InstanceProfile"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DataContext="{d:DesignInstance Type=instanceprofile:InstanceProfileAboutViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
     <Grid>
 
         <ScrollViewer
-            Background="{DynamicResource PrimarySolidColorBrush}"
+            x:Name="Scroll"
             CanContentScroll="False"
             Focusable="False"
             ScrollViewer.VerticalScrollBarVisibility="Visible">
@@ -24,7 +26,7 @@
                     <!--  Logo  -->
                     <Border
                         Padding="0,0,0,8"
-                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                        BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
                         BorderThickness="0,0,0,2">
 
                         <Grid ShowGridLines="False">
@@ -43,27 +45,23 @@
 
                                 <StackPanel>
                                     <TextBlock
-                                        extensions:TextBlock.TextByKey="Image"
                                         FontSize="14"
                                         FontWeight="Medium"
                                         Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                        Text="Image" />
+                                        Text="{DynamicResource Image}" />
                                     <TextBlock
-                                        extensions:TextBlock.TextByKey="ImageDescription"
                                         FontSize="14"
                                         FontWeight="Medium"
                                         Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
-                                        Text="Some Text Desctiiopn" />
+                                        Text="{DynamicResource ImageDescription}" />
                                 </StackPanel>
 
-                                <Button
+                                <controls:AdvancedButton
                                     Grid.Column="1"
-                                    HorizontalContentAlignment="Center"
-                                    VerticalContentAlignment="Center"
                                     Command="{Binding SetLogoPathCommand}"
-                                    Content="Load your Logo"
+                                    Content="{DynamicResource LoadYourLogo}"
                                     FontSize="14"
-                                    Foreground="{DynamicResource CheckBoxMarkSolidColorBrush}" />
+                                    Style="{StaticResource sm-default}" />
                             </Grid>
 
                             <!--  Previews  -->
@@ -116,9 +114,9 @@
                     <!--  Name  -->
                     <Border
                         Padding="0,16,0,8"
-                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                        BorderThickness="0,0,0,2">
-                        <Grid>
+                        BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
+                        BorderThickness="0,0,0,1">
+                        <Grid ShowGridLines="False">
 
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -128,24 +126,23 @@
                             <!--  Header  -->
                             <StackPanel>
                                 <TextBlock
-                                    extensions:TextBlock.TextByKey="Name"
                                     FontSize="14"
                                     FontWeight="Medium"
-                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                    Text="{DynamicResource Name}" />
                                 <TextBlock
-                                    extensions:TextBlock.TextByKey="InstanceNameDescription"
                                     FontSize="14"
                                     FontWeight="Medium"
-                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                    Text="{DynamicResource InstanceNameDescription}" />
                             </StackPanel>
 
                             <!--  Content  -->
                             <controls:AdvancedTextBox
                                 Grid.Column="1"
-                                Width="300"
                                 Height="32"
                                 Margin="16,0,0,0"
-                                HorizontalAlignment="Right"
+                                HorizontalAlignment="Stretch"
                                 Text="{Binding Model.Name, UpdateSourceTrigger=PropertyChanged}" />
                         </Grid>
                     </Border>
@@ -153,8 +150,8 @@
                     <!--  Summary  -->
                     <Border
                         Padding="0,16,0,8"
-                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                        BorderThickness="0,0,0,2">
+                        BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
+                        BorderThickness="0,0,0,1">
                         <Grid>
 
                             <Grid.RowDefinitions>
@@ -165,15 +162,15 @@
                             <!--  Header  -->
                             <StackPanel>
                                 <TextBlock
-                                    extensions:TextBlock.TextByKey="Summary"
                                     FontSize="14"
                                     FontWeight="Medium"
-                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                    Text="{DynamicResource Summary}" />
                                 <TextBlock
-                                    extensions:TextBlock.TextByKey="SummaryDescription"
                                     FontSize="14"
                                     FontWeight="Medium"
-                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                    Text="{DynamicResource SummaryDescription}" />
                             </StackPanel>
 
                             <!--  Content  -->
@@ -191,7 +188,18 @@
                     <Border
                         Padding="0,16,0,8"
                         BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                        BorderThickness="0,0,0,2">
+                        BorderThickness="0,0,0,0">
+
+                        <Border.Style>
+                            <Style TargetType="{x:Type Border}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Model.HasChanges}" Value="True">
+                                        <Setter Property="Margin" Value="0,0,0,48" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+
                         <Grid>
 
                             <Grid.RowDefinitions>
@@ -202,23 +210,25 @@
                             <!--  Header  -->
                             <StackPanel>
                                 <TextBlock
-                                    extensions:TextBlock.TextByKey="Description"
                                     FontSize="14"
                                     FontWeight="Medium"
-                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                    Text="{DynamicResource Description}" />
                                 <TextBlock
-                                    extensions:TextBlock.TextByKey="DescriptionAdditional"
                                     FontSize="14"
                                     FontWeight="Medium"
-                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                    Text="{DynamicResource DescriptionAdditional}" />
                             </StackPanel>
 
                             <!--  Content  -->
                             <controls:AdvancedTextBox
+                                x:Name="DescriptionField"
                                 Grid.Row="1"
                                 Height="128"
                                 Margin="0,8,0,0"
                                 AcceptsReturn="True"
+                                IsMultiLine="True"
                                 Text="{Binding Model.Description, UpdateSourceTrigger=PropertyChanged}"
                                 TextWrapping="Wrap" />
                         </Grid>
@@ -227,14 +237,15 @@
             </Grid>
         </ScrollViewer>
 
+        <!--  TODO: Возможно эту панель плохо видно на темной теме, подумать над этим.  -->
         <Border
             x:Name="ChangesAlertBorder"
             Height="48"
             Margin="32,-48"
             Padding="16,5"
             VerticalAlignment="Bottom"
-            Background="{DynamicResource SecondarySolidColorBrush}"
-            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+            Background="{DynamicResource ConfirmAlertSolidColorBrush}"
+            BorderBrush="{DynamicResource ConfirmAlertBorderSolidColorBrush}"
             BorderThickness="1"
             CornerRadius="10">
 
@@ -242,6 +253,7 @@
                 <Style TargetType="{x:Type Border}">
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding Model.HasChanges}" Value="True">
+
                             <DataTrigger.EnterActions>
                                 <BeginStoryboard>
                                     <Storyboard>
@@ -265,6 +277,7 @@
                                 </BeginStoryboard>
                             </DataTrigger.ExitActions>
                         </DataTrigger>
+
                     </Style.Triggers>
                 </Style>
             </Border.Style>
@@ -282,27 +295,27 @@
                     FontSize="14"
                     FontWeight="Medium"
                     Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                    Text="Аккуратинее вы не сохранили изменения!" />
+                    Text="{DynamicResource UnsavedChangesWarningText}" />
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal">
 
                     <Button
                         Padding="8,8"
                         Command="{Binding RebootChangesCommand}"
-                        Content="Сброс"
+                        Content="{DynamicResource Reset}"
                         FontWeight="Medium"
                         Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
                         Style="{StaticResource TextButton}" />
 
                     <!--  Save Button  -->
-                    <Button
+                    <controls:AdvancedButton
                         Height="32"
                         Margin="8,0,0,0"
                         Padding="16,8"
                         Command="{Binding SaveChangesCommand}"
-                        FontWeight="Medium">
-                        <TextBlock Foreground="White" Text="Сохранить изменения" />
-                    </Button>
+                        Content="{DynamicResource SaveChanges}"
+                        FontSize="12"
+                        Style="{StaticResource sm-default}" />
                 </StackPanel>
             </Grid>
         </Border>

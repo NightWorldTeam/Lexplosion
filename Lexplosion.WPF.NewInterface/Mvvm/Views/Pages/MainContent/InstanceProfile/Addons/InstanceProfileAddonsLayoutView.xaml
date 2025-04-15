@@ -5,29 +5,38 @@
     xmlns:controls="clr-namespace:Lexplosion.WPF.NewInterface.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
+    xmlns:instanceprofile="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.InstanceProfile"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:valueconverters="clr-namespace:Lexplosion.WPF.NewInterface.Core.Converters"
+    d:DataContext="{d:DesignInstance Type=instanceprofile:InstanceProfileAddonsLayoutViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <Grid Background="{DynamicResource PrimarySolidColorBrush}">
+
+    <Grid Background="{DynamicResource PageSolidColorBrush}" ShowGridLines="False">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <TextBlock
-            Margin="45,32,0,8"
-            extensions:TextBlock.TextByKey="{Binding HeaderKey}"
-            FontSize="20"
-            FontWeight="Bold"
-            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+        <Grid Background="{DynamicResource LayoutTabSolidColorBrush}">
+            <TextBlock
+                Margin="45,32,0,8"
+                extensions:TextBlockExtensions.TextByKey="{Binding HeaderKey}"
+                FontSize="20"
+                FontWeight="Bold"
+                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+        </Grid>
 
         <controls:UIUnderlineTabControl
             Grid.Row="1"
-            Background="{DynamicResource PrimarySolidColorBrush}"
+            Background="{DynamicResource LayoutTabSolidColorBrush}"
+            BorderBrush="{DynamicResource LayoutTabBorderSolidColorBrush}"
+            BorderThickness="0,0,0,1"
             ItemsSource="{Binding Tabs}"
+            SelectedItem="{Binding SelectedItem}"
             TabPanelPadding="45,16,45,0">
             <controls:UIUnderlineTabControl.ItemContainerStyle>
                 <Style BasedOn="{StaticResource UITabItem}" TargetType="TabItem">
@@ -36,5 +45,88 @@
                 </Style>
             </controls:UIUnderlineTabControl.ItemContainerStyle>
         </controls:UIUnderlineTabControl>
+
+        <StackPanel
+            Grid.Row="1"
+            Margin="45,16,16,0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Orientation="Horizontal">
+
+            <Border
+                Padding="2,0"
+                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                BorderThickness="1,0,0,0">
+                <ToggleButton
+                    x:Name="SearchToggleButton"
+                    Width="32"
+                    Height="32"
+                    Command="{Binding SearchStateChangedCommand, UpdateSourceTrigger=PropertyChanged}"
+                    Content="Search"
+                    Cursor="Hand"
+                    IsChecked="{Binding IsSearchEnable, UpdateSourceTrigger=PropertyChanged}"
+                    Style="{StaticResource IconToggleButton}" />
+
+                <!--
+                    IsChecked="{Binding DataContext.Model.IsSearchEnabled, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                    IsEnabled="{Binding DataContext.Model.IsAddonsLoading, Converter={valueconverters:NegativeBooleanValueConverter}, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                -->
+
+            </Border>
+
+            <!--  Add  -->
+            <Border
+                Padding="2,0"
+                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                BorderThickness="1,0,0,0">
+                <Button
+                    Height="20"
+                    Command="{Binding OpenMarketCommand, UpdateSourceTrigger=PropertyChanged}"
+                    Content="AddCircle"
+                    Cursor="Hand"
+                    Style="{StaticResource x32IconButtonWithHover}"
+                    ToolTip="{DynamicResource AddNewAddon}" />
+            </Border>
+
+            <!--  Open Folder  -->
+            <Border
+                Padding="2,0"
+                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                BorderThickness="1,0,0,0">
+                <Button
+                    Height="18"
+                    Command="{Binding OpenFolderCommand, UpdateSourceTrigger=PropertyChanged}"
+                    Content="Folder"
+                    Cursor="Hand"
+                    Style="{StaticResource x32IconButtonWithHover}"
+                    ToolTip="{DynamicResource AddonOpenFolder}" />
+            </Border>
+
+            <!--  Reload  -->
+            <Border
+                Padding="2,0"
+                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                BorderThickness="1,0,0,0">
+                <Button
+                    Height="18"
+                    Command="{Binding ReloadCommand, UpdateSourceTrigger=PropertyChanged}"
+                    Content="Reload"
+                    Cursor="Hand"
+                    Style="{StaticResource x32IconButtonWithHover}"
+                    ToolTip="{DynamicResource AddonReloadList}" />
+            </Border>
+
+            <Border
+                Padding="2,0"
+                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                BorderThickness="1,0">
+                <ToggleButton
+                    Width="32"
+                    Content="Services"
+                    IsChecked="{Binding IsLargeBlocks, UpdateSourceTrigger=PropertyChanged}"
+                    Style="{StaticResource IconToggleButton}"
+                    ToolTip="{DynamicResource AddonChangeView}" />
+            </Border>
+        </StackPanel>
     </Grid>
 </UserControl>

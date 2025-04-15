@@ -3,16 +3,24 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:Lexplosion.WPF.NewInterface.Controls"
+    xmlns:converters="clr-namespace:Lexplosion.WPF.NewInterface.Core.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
+    xmlns:header="clr-namespace:Lexplosion.WPF.NewInterface.WindowComponents.Header"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:message="clr-namespace:Lexplosion.WPF.NewInterface.Controls.Message.Core"
+    xmlns:notification="clr-namespace:Lexplosion.WPF.NewInterface.Core.Notifications"
     xmlns:objects="clr-namespace:Lexplosion.WPF.NewInterface.Core.Objects"
+    xmlns:pages="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages"
     xmlns:runtime="clr-namespace:Lexplosion.WPF.NewInterface"
+    xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+    xmlns:viewmodels="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels"
     Title="Lexplosion New Interface Debug"
     Width="944"
     Height="528"
     MinWidth="944"
     MinHeight="528"
+    d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
     ResizeMode="CanResize"
     SnapsToDevicePixels="True"
     UseLayoutRounding="True"
@@ -103,7 +111,10 @@
             RenderTransformOrigin="0.5, 0.5">
 
             <!--  Content  -->
+            <!--  IsEnabled="{Binding IsModalOpen, Converter={converters:NegativeBooleanValueConverter}, Source={StaticResource MainViewModel}}"  -->
             <ContentControl Content="{Binding CurrentViewModel, Source={StaticResource MainViewModel}}" KeyboardNavigation.IsTabStop="False" />
+
+            <!--<pages:WelcomeView />-->
 
             <!--  Modal Control  -->
             <controls:ModalControl
@@ -111,173 +122,96 @@
                 IsOpen="{Binding IsModalOpen, Source={StaticResource MainViewModel}}"
                 KeyboardNavigation.IsTabStop="False" />
 
-            <Border Background="{DynamicResource PrimaryForegroundSolidColorBrush}" Visibility="Collapsed">
-
-                <Grid HorizontalAlignment="Center" ShowGridLines="True">
-
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-
-                    <Button
-                        Width="200"
-                        Height="124"
-                        Content="Some Button">
-                        <Button.ToolTip>
-                            <ToolTip
-                                Background="Transparent"
-                                BorderThickness="0"
-                                Placement="Center"
-                                PlacementRectangle="32,-22,0,0"
-                                PlacementTarget="{Binding ElementName=MainPanel}">
-                                <!--  Custom ToolTip  -->
-                                <Grid
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    MouseDown="Grid_MouseDown"
-                                    Visibility="Visible">
-
-                                    <!--  Top / Bottom -> 40  -->
-                                    <!--  Left / Right -> 44  -->
-
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
-
-                                    <Border
-                                        Height="32"
-                                        Background="Black"
-                                        CornerRadius="5">
-                                        <TextBlock
-                                            Padding="16"
-                                            VerticalAlignment="Center"
-                                            FontSize="13"
-                                            FontWeight="Medium"
-                                            Foreground="White"
-                                            Text="Direct Messages" />
-                                    </Border>
-
-                                    <Polygon
-                                        Grid.Row="1"
-                                        HorizontalAlignment="Center"
-                                        Fill="Black"
-                                        Points="10,0 5,5, 0,0" />
-                                </Grid>
-                            </ToolTip>
-                        </Button.ToolTip>
-                    </Button>
-                </Grid>
-            </Border>
-
             <!--  Window Header Panel Margin="16,12"  -->
-            <Grid
-                x:Name="WindowHeaderPanelButtonsGrid"
-                Margin="16,12"
-                HorizontalAlignment="Left"
+            <header:WindowHeaderContainer x:Name="HeaderContainer" />
+
+            <!--  Toast Message Notification Panel  -->
+            <ItemsControl
+                Height="300"
+                Margin="0,22,-14,0"
+                HorizontalAlignment="Right"
                 VerticalAlignment="Top"
-                KeyboardNavigation.IsTabStop="False"
-                ShowGridLines="True"
-                Visibility="Visible">
+                ItemsSource="{Binding AppCore.NotificationService.Notifications, Source={StaticResource MainViewModel}}">
 
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
+                <ItemsControl.Resources>
 
+                    <DataTemplate DataType="{x:Type notification:SimpleNotification}">
+                        <controls:ToastMessage
+                            Title="{Binding Title}"
+                            CloseCommand="{Binding CloseCommand}"
+                            Message="{Binding Content}"
+                            State="Notification"
+                            VisibilityTime="{Binding VisibleTime}" />
+                    </DataTemplate>
 
-                <!--  Close & Hide Buttons  -->
+                </ItemsControl.Resources>
 
-                <StackPanel
-                    x:Name="WindowHeaderPanelButtons"
-                    Orientation="Horizontal"
-                    RenderTransformOrigin="0.5, 0.5">
+            </ItemsControl>
 
+            <Grid
+                x:Name="AddtionalFuncs"
+                Margin="16,12"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                RenderTransformOrigin="0.5, 0.5"
+                Visibility="Collapsed">
 
-                    <!--  Close Button  -->
+                <StackPanel HorizontalAlignment="{Binding HorizontalAlignment, ElementName=AddtionalFuncs}" Orientation="Horizontal">
+                    <!--  Ожидается добавление realtime обновлений  -->
+                    <!--  Notifications  -->
+                    <ToggleButton
+                        x:Name="notify"
+                        Margin="0,0,0,0"
+                        Visibility="Collapsed">
+                        <ToggleButton.Template>
+                            <ControlTemplate>
+                                <Border
+                                    Width="20"
+                                    Height="20"
+                                    Padding="2"
+                                    VerticalAlignment="Top"
+                                    Background="{DynamicResource SeparateSolidColorBrush}"
+                                    CornerRadius="2">
 
-                    <Button
-                        Width="15"
-                        Height="15"
-                        Margin="0,0,10,0"
-                        Background="#FF0B00"
-                        Click="CloseWindow_Click"
-                        Style="{StaticResource ColoredWindowsButton}" />
+                                    <Grid>
+                                        <Viewbox Height="16">
+                                            <Path
+                                                Data="M160-200v-80h80v-280q0-83 50-147.5T420-792v-28q0-25 17.5-42.5T480-880q25 0 42.5 17.5T540-820v28q80 20 130 84.5T720-560v280h80v80H160Zm320-300Zm0 420q-33 0-56.5-23.5T400-160h160q0 33-23.5 56.5T480-80ZM320-280h320v-280q0-66-47-113t-113-47q-66 0-113 47t-47 113v280Z"
+                                                Fill="{DynamicResource ActivitySolidColorBrush}"
+                                                Stretch="Fill" />
+                                        </Viewbox>
 
+                                        <Border
+                                            Width="6"
+                                            Height="6"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Top"
+                                            Background="Red"
+                                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="50" />
+                                    </Grid>
+                                    <Border.ToolTip>
 
-                    <!--  Maximized Button  -->
+                                        <controls:AdvancedToolTip
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            Placement="Left"
+                                            PlacementRectangle="-10,-15,0,0">
 
-                    <Button
-                        Width="15"
-                        Height="15"
-                        Margin="0,0,10,0"
-                        Background="Orange"
-                        Click="MaximazedWindow_Click"
-                        Style="{StaticResource ColoredWindowsButton}" />
-
-
-                    <!--  Minimaze Button  -->
-
-                    <Button
-                        Width="15"
-                        Height="15"
-                        Margin="0,0,10,0"
-                        Background="#009DFF"
-                        Click="MinimazedWindow_Click"
-                        Style="{StaticResource ColoredWindowsButton}" />
-                </StackPanel>
-
-
-                <!--  Debug Tools  -->
-
-                <StackPanel
-                    x:Name="DebugPanel"
-                    Grid.Column="1"
-                    Margin="0,0,8,0"
-                    Orientation="Horizontal"
-                    Visibility="Visible">
-
-
-                    <!--  Change Theme Color  -->
-
-                    <Border
-                        x:Name="ChangeColorThemeButton"
-                        Width="20"
-                        Height="20"
-                        Background="{DynamicResource SeparateSolidColorBrush}"
-                        CornerRadius="2"
-                        MouseDown="ChangeTheme_MouseDown">
-                        <Viewbox Height="14">
-                            <Path
-                                x:Name="PalettPath"
-                                extensions:Path.StringKeyData="Palette"
-                                Fill="{DynamicResource ActivitySolidColorBrush}"
-                                Stretch="Fill" />
-                        </Viewbox>
-                    </Border>
-
-
-                    <!--  Translate Button  -->
-
-                    <Border
-                        Width="20"
-                        Height="20"
-                        Margin="8,0,0,0"
-                        Background="{DynamicResource SeparateSolidColorBrush}"
-                        CornerRadius="2"
-                        MouseDown="ChangeLanguage_MouseDown">
-                        <Viewbox Height="14">
-                            <Path
-                                extensions:Path.StringKeyData="Translate"
-                                Fill="{DynamicResource ActivitySolidColorBrush}"
-                                Stretch="Fill" />
-                        </Viewbox>
-                    </Border>
-
+                                            <TextBlock
+                                                Padding="15,14,15,14"
+                                                VerticalAlignment="Center"
+                                                FontSize="12"
+                                                FontWeight="Medium"
+                                                Foreground="{DynamicResource CheckBoxMarkSolidColorBrush}"
+                                                Text="{DynamicResource Notifications}" />
+                                        </controls:AdvancedToolTip>
+                                    </Border.ToolTip>
+                                </Border>
+                            </ControlTemplate>
+                        </ToggleButton.Template>
+                    </ToggleButton>
 
                     <!--  Change Panel Orintation  -->
 
@@ -289,69 +223,16 @@
                         Background="{DynamicResource SeparateSolidColorBrush}"
                         CornerRadius="2"
                         MouseDown="Border_MouseDown_2"
+                        ToolTip="Изменить положение меню"
                         ToolTipService.BetweenShowDelay="0"
-                        ToolTipService.InitialShowDelay="0">
+                        ToolTipService.InitialShowDelay="0"
+                        ToolTipService.PlacementRectangle="7,40,0,0">
                         <Viewbox Height="14">
                             <Path
-                                extensions:Path.StringKeyData="IndentDecrease"
+                                extensions:PathExtensions.StringKeyData="IndentDecrease"
                                 Fill="{DynamicResource ActivitySolidColorBrush}"
                                 Stretch="Fill" />
                         </Viewbox>
-
-                        <Border.ToolTip>
-                            <ToolTip
-                                Background="Transparent"
-                                BorderThickness="0"
-                                Placement="Center"
-                                PlacementRectangle="7,40,0,0"
-                                PlacementTarget="{Binding ElementName=MainPanel}">
-
-                                <!--  Custom ToolTip  -->
-
-                                <Grid
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    MouseDown="Grid_MouseDown"
-                                    Visibility="Visible">
-
-
-                                    <!--
-                                        Top / Bottom -> 40
-                                        Left / Right -> 44
-                                    -->
-
-
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
-
-                                    <Border
-                                        Grid.Row="1"
-                                        Height="32"
-                                        Background="Black"
-                                        CornerRadius="5">
-                                        <TextBlock
-                                            Padding="15,14,15,14"
-                                            VerticalAlignment="Center"
-                                            FontSize="12"
-                                            FontWeight="Medium"
-                                            Foreground="{DynamicResource CheckBoxMarkSolidColorBrush}"
-                                            Text="Изменить положение меню" />
-                                    </Border>
-
-                                    <Polygon
-                                        Grid.Row="0"
-                                        HorizontalAlignment="Center"
-                                        Fill="Black"
-                                        Points="5,10, 10, 5, 15,10" />
-                                </Grid>
-                            </ToolTip>
-                        </Border.ToolTip>
                     </Border>
 
 
@@ -366,122 +247,16 @@
                         CornerRadius="2"
                         MouseDown="ScaleFit_MouseDown"
                         ToolTipService.BetweenShowDelay="0"
-                        ToolTipService.InitialShowDelay="0">
+                        ToolTipService.InitialShowDelay="0"
+                        ToolTipService.PlacementRectangle="7,40,0,0">
 
                         <Viewbox Height="14">
                             <Path
-                                extensions:Path.StringKeyData="ScaleFit"
+                                extensions:PathExtensions.StringKeyData="ScaleFit"
                                 Fill="{DynamicResource ActivitySolidColorBrush}"
                                 Stretch="Fill" />
                         </Viewbox>
-
-                        <Border.ToolTip>
-                            <ToolTip
-                                Background="Transparent"
-                                BorderThickness="0"
-                                Placement="Center"
-                                PlacementRectangle="7,40,0,0"
-                                PlacementTarget="{Binding ElementName=MainPanel}">
-
-                                <!--  Custom ToolTip  -->
-
-                                <Grid
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    MouseDown="Grid_MouseDown"
-                                    Visibility="Visible">
-
-
-                                    <!--
-                                        Top / Bottom -> 40
-                                        Left / Right -> 44
-                                    -->
-
-
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
-
-                                    <Border
-                                        Grid.Row="1"
-                                        Height="32"
-                                        Background="Black"
-                                        CornerRadius="5">
-                                        <TextBlock
-                                            Padding="15,14,15,14"
-                                            VerticalAlignment="Center"
-                                            FontSize="12"
-                                            FontWeight="Medium"
-                                            Foreground="{DynamicResource CheckBoxMarkSolidColorBrush}"
-                                            Text="Увеличить интерфейс" />
-                                    </Border>
-
-                                    <Polygon
-                                        Grid.Row="0"
-                                        HorizontalAlignment="Center"
-                                        Fill="Black"
-                                        Points="5,10, 10, 5, 15,10" />
-                                </Grid>
-                            </ToolTip>
-                        </Border.ToolTip>
                     </Border>
-                </StackPanel>
-            </Grid>
-
-            <Grid
-                x:Name="AddtionalFuncs"
-                Margin="16,12"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Top"
-                RenderTransformOrigin="0.5, 0.5">
-
-                <StackPanel HorizontalAlignment="{Binding HorizontalAlignment, ElementName=AddtionalFuncs}" Orientation="Horizontal">
-                    <!--  Notifications  -->
-                    <ToggleButton x:Name="notify" Margin="0,0,0,0">
-                        <ToggleButton.Template>
-                            <ControlTemplate>
-                                <Border
-                                    Width="20"
-                                    Height="20"
-                                    Padding="2"
-                                    VerticalAlignment="Top"
-                                    Background="{DynamicResource SeparateSolidColorBrush}"
-                                    CornerRadius="2">
-
-                                    <Viewbox Height="14">
-                                        <Path
-                                            Data="M160-200v-80h80v-280q0-83 50-147.5T420-792v-28q0-25 17.5-42.5T480-880q25 0 42.5 17.5T540-820v28q80 20 130 84.5T720-560v280h80v80H160Zm320-300Zm0 420q-33 0-56.5-23.5T400-160h160q0 33-23.5 56.5T480-80ZM320-280h320v-280q0-66-47-113t-113-47q-66 0-113 47t-47 113v280Z"
-                                            Fill="{DynamicResource ActivitySolidColorBrush}"
-                                            Stretch="Fill" />
-                                    </Viewbox>
-
-                                    <Border.ToolTip>
-                                        <controls:AdvancedToolTip
-                                            Background="Transparent"
-                                            BorderThickness="0"
-                                            Placement="Right"
-                                            PlacementRectangle="20,-10,0,0"
-                                            PlacementTarget="{Binding ElementName=MainPanel}">
-
-                                            <TextBlock
-                                                Padding="15,14,15,14"
-                                                VerticalAlignment="Center"
-                                                FontSize="12"
-                                                FontWeight="Medium"
-                                                Foreground="{DynamicResource CheckBoxMarkSolidColorBrush}"
-                                                Text="Уведомления" />
-                                        </controls:AdvancedToolTip>
-                                    </Border.ToolTip>
-                                </Border>
-                            </ControlTemplate>
-                        </ToggleButton.Template>
-                    </ToggleButton>
-
                 </StackPanel>
 
                 <!--  Notification Window  -->
@@ -493,7 +268,7 @@
                     BorderBrush="{DynamicResource SeparateSolidColorBrush}"
                     BorderThickness="1"
                     CornerRadius="5"
-                    Visibility="{Binding IsChecked, ElementName=notify, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    Visibility="{Binding IsChecked, ElementName=notify, Converter={converters:BooleanToVisibilityConverter}}">
 
                     <Border.Effect>
                         <DropShadowEffect Opacity="0.1" Color="Black" />
@@ -525,22 +300,106 @@
                             <ItemsControl
                                 Margin="0,0,0,0"
                                 Background="Transparent"
-                                ItemsSource="{x:Static runtime:RuntimeApp.Notification}" />
+                                ItemsSource="{Binding Model.NotificationService.Notifications}" />
                         </ScrollViewer>
                     </Grid>
                 </Border>
             </Grid>
 
-            <ItemsControl
-                Width="300"
-                Height="300"
-                Margin="0,40,0,0"
-                HorizontalAlignment="Right"
+            <Grid
+                Margin="16,12"
+                HorizontalAlignment="Center"
                 VerticalAlignment="Top"
-                Background="Transparent"
-                ItemsSource="{x:Static runtime:RuntimeApp.Notification}"
-                Visibility="Collapsed" />
+                Background="Transparent">
 
+                <Grid.Resources>
+                    <CollectionViewSource x:Key="Messages" Source="{Binding AppCore.MessageService.Messages, Source={StaticResource MainViewModel}}">
+                        <CollectionViewSource.SortDescriptions>
+                            <scm:SortDescription Direction="Ascending" PropertyName="CreationDate" />
+                        </CollectionViewSource.SortDescriptions>
+                    </CollectionViewSource>
+                </Grid.Resources>
+
+                <ItemsControl
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    ItemsSource="{Binding Source={StaticResource Messages}}">
+
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel IsItemsHost="True" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+
+                    <ItemsControl.Resources>
+
+                        <DataTemplate DataType="{x:Type message:MessageItemModel}">
+                            <controls:MessageItem
+                                Margin="0,0,0,16"
+                                Text="{Binding Text}"
+                                Type="{Binding Type}" />
+                        </DataTemplate>
+
+                    </ItemsControl.Resources>
+                </ItemsControl>
+            </Grid>
+
+            <!--  Image Overview  -->
+
+            <Border x:Name="ImageViewer" Padding="16">
+                <Border.Background>
+                    <SolidColorBrush Opacity="0.6" Color="Black" />
+                </Border.Background>
+                <Grid>
+                    <Border CornerRadius="5">
+                        <Border.Background>
+                            <ImageBrush x:Name="Image" />
+                        </Border.Background>
+                    </Border>
+
+                    <Border
+                        Margin="0,0,0,-12"
+                        Padding="16,8"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Bottom"
+                        Background="{DynamicResource PrimarySolidColorBrush}"
+                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                        BorderThickness="1"
+                        CornerRadius="10">
+                        <StackPanel Orientation="Horizontal">
+
+                            <controls:AdvancedButton
+                                x:Name="CloseImage"
+                                Width="32"
+                                Height="32"
+                                Margin="0,0,0,0"
+                                IconData="{DynamicResource PDClose}"
+                                Style="{StaticResource sm-button-icon}"
+                                ToolTip="{DynamicResource Close}" />
+                            <!--<controls:AdvancedButton
+                                x:Name="PrevImage"
+                                Width="32"
+                                Height="32"
+                                IconData="{DynamicResource PDLeftBackArrow}"
+                                Style="{StaticResource sm-button-icon}" />
+                            <controls:AdvancedButton
+                                x:Name="NextImage"
+                                Width="32"
+                                Height="32"
+                                Margin="8,0,0,0"
+                                IconData="{DynamicResource PDLeftBackArrow}"
+                                RenderTransformOrigin="0.5,0.5"
+                                Style="{StaticResource sm-button-icon}">
+                                <controls:AdvancedButton.RenderTransform>
+                                    <RotateTransform Angle="180" />
+                                </controls:AdvancedButton.RenderTransform>
+                            </controls:AdvancedButton>-->
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <!--  Circle Animation Block  -->
             <Grid x:Name="PaintArea">
                 <Grid.RenderTransform>
                     <TranslateTransform X="0" Y="0" />

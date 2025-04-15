@@ -6,13 +6,17 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DataContext="{d:DesignInstance Type=local:MainMenuLayoutViewModel}"
     d:DesignHeight="528"
     d:DesignWidth="944"
     mc:Ignorable="d">
-    <Grid MouseDown="Grid_MouseDown">
+    <Grid
+        Background="{DynamicResource PageSolidColorBrush}"
+        Loaded="Grid_Loaded"
+        MouseDown="Grid_MouseDown">
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0.363*" />
+            <ColumnDefinition Width="0.363*" MaxWidth="350" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 

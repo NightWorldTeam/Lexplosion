@@ -106,6 +106,8 @@
                 CornerRadius="5">
                 <!--  !!! IMPORTANT Use StackPanel like a parent for TreeView will make a expand item delay. It'll make freeze all app. !!!  -->
                 <!--  !!! ВАЖНО Использование StackPanel в качестве родителя для TreeView создаст задержку при раскрытии элеметнов списка. Всё приложение зависнет. !!!  -->
+
+                <!--  Тут код падает (System.Windows.Markup.XamlParseException) если в студии отключена функция Enable Just My Code!!!  -->
                 <TreeView
                     Background="Transparent"
                     BorderBrush="Transparent"
@@ -128,14 +130,13 @@
 
 
         <!--  Export Button  -->
-        <Button
+        <controls:AdvancedButton
             Grid.Row="2"
             Height="32"
             Margin="0,10,0,8"
             Command="{Binding ActionCommand}"
             Content="{DynamicResource InstanceExport}"
-            FontWeight="Medium"
-            Foreground="{DynamicResource BrandColorForegroundSolidColorBrush}"
-            Style="{StaticResource x32DefaultIconButton}" />
+            FontSize="13"
+            Style="{StaticResource sm-default}" />
     </Grid>
 </UserControl>

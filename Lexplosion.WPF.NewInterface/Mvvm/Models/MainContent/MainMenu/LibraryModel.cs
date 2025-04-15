@@ -1,8 +1,12 @@
 ﻿using Lexplosion.WPF.NewInterface.Core;
+using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Windows.Data;
 
@@ -11,8 +15,18 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
     public sealed class LibraryModel : ViewModelBase
     {
         private readonly IInstanceController _instanceController;
+        private readonly ObservableCollection<InstanceGroup> _groups = [];
+
+
+        #region Properties
+
+
         public IReadOnlyCollection<InstanceModelBase> InstanceList { get => _instanceController.Instances; }
-        public CollectionViewSource InstancesCollectionViewSource { get; } = new();
+        public FiltableObservableCollection InstancesCollectionViewSource { get; } = new();
+        public IReadOnlyCollection<InstanceGroup> Groups { get => _groups; }
+        public InstanceGroup SelectedGroup { get; private set; } = null;
+        public bool HasSelectedGroup { get => SelectedGroup != null; }
+        public bool IsEmpty { get => _instanceController.Instances.Count == 0; }
 
 
         private string _searchText;
@@ -29,21 +43,54 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
         public LibraryFilterPanel FilterPanel { get; }
 
 
+        #endregion Properties
+
+
         #region Constructors
 
 
         public LibraryModel(IInstanceController instanceController)
         {
             _instanceController = instanceController;
-            InstancesCollectionViewSource.Source = _instanceController.Instances;
 
             FilterPanel = new(instanceController);
 
             FilterPanel.FilterChanged += OnFilterChanged;
+
+            InstancesCollectionViewSource.Source = instanceController.Instances;
+
+            if (_instanceController.Instances is INotifyCollectionChanged notifyChangeCollection) 
+            {
+                notifyChangeCollection.CollectionChanged += OnInstancesCollectionChanged;
+            }
+        }
+
+        private void OnInstancesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            OnPropertyChanged(nameof(IsEmpty));
         }
 
 
         #endregion Constructors
+
+
+        #region Public Methods
+
+
+        public void SelectGroup(InstanceGroup instanceGroup) 
+        {
+            SelectedGroup = instanceGroup;
+            OnPropertyChanged(nameof(SelectedGroup));
+            OnPropertyChanged(nameof(HasSelectedGroup));
+        
+            if (SelectedGroup != null) 
+            {
+                InstancesCollectionViewSource.Source = instanceGroup.Instances;
+            } 
+        }
+
+
+        #endregion Public Methods
 
 
         #region Private Methods
@@ -51,7 +98,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
 
         private void OnFilterChanged() 
         {
-            InstancesCollectionViewSource.View.Filter = (i =>
+            InstancesCollectionViewSource.Filter = (i =>
             {
                 var instanceModelBase = i as InstanceModelBase;
                 var searchBoxRes = string.IsNullOrEmpty(SearchText) ? true : instanceModelBase.Name.IndexOf(SearchText, System.StringComparison.InvariantCultureIgnoreCase) > -1;
@@ -90,7 +137,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
                 // categories with or/and operators
 
                 // skip first element because its version.
-                var categories = instanceModelBase.InstanceData.Categories.Skip(0);
+                var categories = instanceModelBase.BaseData.Categories.Skip(0);
                 
                 var selectedCategoriesRes = false;
                 if (FilterPanel.SelectedCategories.Count == 0) 

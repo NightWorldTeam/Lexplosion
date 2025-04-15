@@ -49,9 +49,9 @@
                                         Opacity="0">
                                         <Path
                                             Data="M12.782 4.721a.75.75 0 0 1 0 1.06l-6 6a.75.75 0 0 1-1.06 0l-2.502-2.5A.75.75 0 0 1 4.28 8.22l1.971 1.97 5.47-5.469a.75.75 0 0 1 1.06 0Z"
-                                            Fill="{DynamicResource CheckBoxMarkSolidColorBrush}"
+                                            Fill="{DynamicResource DefaultButtonForegroundColorBrush}"
                                             Stretch="Fill"
-                                            Stroke="{DynamicResource CheckBoxMarkSolidColorBrush}" />
+                                            Stroke="{DynamicResource DefaultButtonForegroundColorBrush}" />
                                     </Viewbox>
                                 </Border>
                             </Grid>

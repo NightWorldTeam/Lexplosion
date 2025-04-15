@@ -1,5 +1,9 @@
-﻿using System.Windows;
+﻿using Lexplosion.WPF.NewInterface.Controls;
+using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile;
+using System;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.InstanceProfile
 {
@@ -8,26 +12,59 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.InstanceProfi
     /// </summary>
     public partial class InstanceProfileAddonsView : UserControl
     {
+        private InstanceAddonsContainerViewModel _model;
+
         public InstanceProfileAddonsView()
         {
             InitializeComponent();
+            DataContextChanged += OnDataContextChanged;
         }
 
-        private void Grid_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            var grid = (Grid)sender;
-            Runtime.DebugWrite(grid.ActualWidth.ToString());
-            for (int i = 0; i < grid.ColumnDefinitions.Count; i++)
+            _model = (InstanceAddonsContainerViewModel)DataContext;
+            if (_model != null) 
             {
-                Runtime.DebugWrite(i.ToString() + " " + grid.ColumnDefinitions[i].ActualWidth.ToString());
+                SetSearchBoxPlaceholder(_model.Model.SelectedSortByParam);
             }
         }
 
-        private void ListBox_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        private void Grid_DragEnter(object sender, System.Windows.DragEventArgs e)
         {
-            var grid = (FrameworkElement)sender;
-            Runtime.DebugWrite(" lsb: " + grid.ActualWidth.ToString());
-            Runtime.DebugWrite(" usercontrol: " + this.ActualWidth.ToString());
+            DragDropField.Visibility = System.Windows.Visibility.Visible;
+        }
+
+        private void DragDropField_DragLeave(object sender, System.Windows.DragEventArgs e)
+        {
+            DragDropField.Visibility = System.Windows.Visibility.Collapsed;
+        }
+
+        private void DragDropField_Drop(object sender, System.Windows.DragEventArgs e)
+        {
+            var fe = sender as FrameworkElement;
+
+            fe.Visibility = System.Windows.Visibility.Collapsed;
+        }
+
+        private void OnAddonsSearchSortParamChangedChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var selectedItem = (sender as ComboBox).SelectedItem;
+            if (selectedItem != null)
+                SetSearchBoxPlaceholder(selectedItem.ToString());
+        }
+
+        private void SetSearchBoxPlaceholder(string sortParam) 
+        {
+            var addonType = _model.Model.Type switch
+            {
+                AddonType.Mods => "Mod",
+                AddonType.Resourcepacks => "Resourcepack",
+                AddonType.Maps => "Map",
+                AddonType.Shaders => "Shader",
+                _ => string.Empty
+            };
+
+            SearchBox.SetResourceReference(SearchBox.PlaceholderProperty, $"{addonType}{sortParam}");
         }
     }
 }

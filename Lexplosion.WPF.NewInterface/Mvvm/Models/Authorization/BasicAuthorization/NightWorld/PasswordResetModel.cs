@@ -1,28 +1,32 @@
-﻿using System;
+﻿using Lexplosion.WPF.NewInterface.Core;
+using System;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization.BasicAuthorization.NightWorld
 {
     public class PasswordResetModel : VMBase
     {
-        private string _login;
-        public string Login
+        private readonly AppCore _appCore;
+
+
+        // TODO: Change to email
+        public string Email { get; set; }
+
+
+        public PasswordResetModel(AppCore appCore)
         {
-            get => _login; set
-            {
-                _login = value;
-                OnPropertyChanged();
-            }
+            _appCore = appCore;
         }
+
 
         public void GetCode()
         {
-            if (string.IsNullOrEmpty(_login))
+            if (string.IsNullOrEmpty(Email))
             {
 
             }
             else
             {
-                new Exception("Code field is empty");
+                _appCore.MessageService.Info("Code field is empty");
             }
         }
     }

@@ -85,26 +85,28 @@
                         MinHeight="{TemplateBinding MinHeight}"
                         Background="Transparent">
                         <Grid>
-                            <Ellipse
-                                x:Name="ellipse"
-                                Width="15"
-                                Height="15"
-                                HorizontalAlignment="Right"
-                                Stroke="White"
-                                StrokeThickness="2" />
                             <Border
                                 x:Name="rect"
                                 Width="10.5"
                                 Height="9"
                                 HorizontalAlignment="Left"
-                                Background="White"
+                                Background="{DynamicResource SecondaryForegroundSolidColorBrush}"
                                 CornerRadius="3,0,0,3" />
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            <Border
+                                x:Name="ellipse"
+                                Width="15"
+                                Height="15"
+                                Margin="0,0,0,0"
+                                HorizontalAlignment="Right"
+                                Background="Transparent"
+                                BorderBrush="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                BorderThickness="2"
+                                CornerRadius="1000" />
                         </Grid>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsChecked" Value="True">
-                            <Setter TargetName="ellipse" Property="Ellipse.Stroke" Value="{DynamicResource ActivitySolidColorBrush}" />
+                            <Setter TargetName="ellipse" Property="Border.BorderBrush" Value="{DynamicResource ActivitySolidColorBrush}" />
                             <Setter TargetName="ellipse" Property="HorizontalAlignment" Value="Left" />
                             <Setter TargetName="rect" Property="Border.Background" Value="{DynamicResource ActivitySolidColorBrush}" />
                             <Setter TargetName="rect" Property="Border.CornerRadius" Value="0,3,3,0" />
@@ -116,10 +118,50 @@
         </Setter>
     </Style>
 
+    <Style x:Key="IconToggleButton" TargetType="{x:Type ToggleButton}">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="MinHeight" Value="24" />
+        <Setter Property="MinWidth" Value="24" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Border
+                        x:Name="border"
+                        Width="{TemplateBinding Width}"
+                        Height="{TemplateBinding Height}"
+                        MinWidth="{TemplateBinding MinWidth}"
+                        MinHeight="{TemplateBinding MinHeight}"
+                        Background="Transparent"
+                        CornerRadius="5">
+                        <Viewbox Height="16">
+                            <Path
+                                x:Name="IconPath"
+                                extensions:PathExtensions.StringKeyData="{TemplateBinding Content}"
+                                Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                Stretch="Fill" />
+                        </Viewbox>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="IconPath" Property="Path.Fill" Value="{DynamicResource ActivitySolidColorBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="{DynamicResource PrimarySolidColorBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="IconPath" Property="Path.Fill" Value="{DynamicResource DisableControlIconSolidColorBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <!--  Filter Panel  -->
 
     <Style x:Key="FilterIconToggleButton" TargetType="{x:Type ToggleButton}">
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Content" Value="Filter" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ToggleButton}">
@@ -134,7 +176,7 @@
                             <Viewbox>
                                 <Path
                                     x:Name="Icon"
-                                    extensions:Path.StringKeyData="Filter"
+                                    extensions:PathExtensions.StringKeyData="{TemplateBinding Content}"
                                     Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
                                     Stretch="Fill" />
                             </Viewbox>

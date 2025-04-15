@@ -1,24 +1,29 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Empty/Empty.xaml" />
         <ResourceDictionary Source="AdvancedToolTip/AdvancedToolTip.xaml" />
 
+        <!--  Core  -->
+
         <ResourceDictionary Source="AdvancedTextBox/AdvancedTextBox.xaml" />
+        <ResourceDictionary Source="AdvancedButton/AdvancedButton.xaml" />
+        <ResourceDictionary Source="AdvancedToggleButton/AdvancedToggleButton.xaml" />
+        <ResourceDictionary Source="SearchBox/SearchBox.xaml" />
+
+        <!--    -->
+
         <ResourceDictionary Source="UpperPlaceholderTextBox/UpperPlaceholderTextBox.xaml" />
         <ResourceDictionary Source="DigitCodeBox/DigitCodeBox.xaml" />
         <ResourceDictionary Source="DefaultMainMenuTabItem/DefaultMainMenuTabItem.xaml" />
-        <ResourceDictionary Source="SearchBox/SearchBox.xaml" />
 
         <ResourceDictionary Source="AnimatedContentControl/AnimatedContentControl.xaml" />
         <ResourceDictionary Source="UIUnderlineTabControl/UIUnderlineTabControl.xaml" />
 
         <ResourceDictionary Source="ModalControl/ModalControl.xaml" />
 
-
-
         <ResourceDictionary Source="DropdownMenu/DropdownMenu.xaml" />
 
-        <ResourceDictionary Source="InstanceForm/InstanceForm.xaml" />
         <ResourceDictionary Source="Loader/Loader.xaml" />
         <ResourceDictionary Source="LoadingBoard/LoadingBoard.xaml" />
         <ResourceDictionary Source="Paginator/Paginator.xaml" />
@@ -26,6 +31,12 @@
 
         <ResourceDictionary Source="TextSwitcherButton/TextSwitcherButton.xaml" />
 
+        <ResourceDictionary Source="CircleLoader/CircleLoader.xaml" />
+        <ResourceDictionary Source="OneStageInstallButton/OneStageInstallButton.xaml" />
 
+        <ResourceDictionary Source="ToastMessage/ToastMessage.xaml" />
+        <ResourceDictionary Source="BackTop/BackTop.xaml" />
+        <ResourceDictionary Source="LaunchButton/LaunchButton.xaml" />
+        <ResourceDictionary Source="Message/MessageItem.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
