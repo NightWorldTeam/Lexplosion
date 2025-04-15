@@ -1011,7 +1011,7 @@ namespace Lexplosion.Logic.Management.Instances
 						}
 						i++;
 					}
-					while (_installedInstances.ContainsKey(instanceId_));
+					while (_installedInstances.ContainsKey(instanceId_) || DirectoryIsExists(WithDirectory.GetInstancePath(instanceId_)));
 					instanceId = instanceId_;
 				}
 			}
@@ -1021,10 +1021,10 @@ namespace Lexplosion.Logic.Management.Instances
 				int i = 0;
 				do
 				{
-					instanceId_ = instanceId + "_" + i;
+					instanceId_ = instanceId + " (" + i + ")";
 					i++;
 				}
-				while (_installedInstances.ContainsKey(instanceId_));
+				while (_installedInstances.ContainsKey(instanceId_) || DirectoryIsExists(WithDirectory.GetInstancePath(instanceId_)));
 
 				instanceId = instanceId_;
 			}
