@@ -960,6 +960,18 @@ namespace Lexplosion.Logic.Management.Instances
 			return Regex.IsMatch(str, @"[^a-zA-Z0-9]");
 		}
 
+		private bool DirectoryIsExists(string path)
+		{
+			try
+			{
+				return Directory.Exists(path);
+			}
+			catch
+			{
+				return false;
+			}
+		}
+
 		private void GenerateInstanceId()
 		{
 			string instanceId = Name.ToLower();
@@ -987,7 +999,7 @@ namespace Lexplosion.Logic.Management.Instances
 					j++;
 				}
 
-				if (_installedInstances.ContainsKey(instanceId))
+				if (_installedInstances.ContainsKey(instanceId) || DirectoryIsExists(WithDirectory.GetInstancePath(instanceId)))
 				{
 					string instanceId_ = instanceId;
 					int i = 0;
@@ -1003,7 +1015,7 @@ namespace Lexplosion.Logic.Management.Instances
 					instanceId = instanceId_;
 				}
 			}
-			else if (_installedInstances.ContainsKey(instanceId))
+			else if (_installedInstances.ContainsKey(instanceId) || DirectoryIsExists(WithDirectory.GetInstancePath(instanceId)))
 			{
 				string instanceId_ = instanceId;
 				int i = 0;

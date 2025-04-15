@@ -201,7 +201,8 @@ namespace Lexplosion.Logic.FileSystem
 			try
 			{
 				string fileContent = GetFile(file);
-				return fileContent != null ? JsonConvert.DeserializeObject<T>(fileContent) : default;
+				if (fileContent == null) return default;
+				return JsonConvert.DeserializeObject<T>(fileContent);
 			}
 			catch (Exception ex)
 			{
@@ -355,7 +356,34 @@ namespace Lexplosion.Logic.FileSystem
 
 		public static InstancePlatformData GetPlatfromData(string instanceId)
 		{
-			return TryGetFile<InstancePlatformData>(instanceId, INSTANCE_PLATFORM_DATA_FILE, INSTALLED_ADDONS_FILE_OLD);
+			// Это должно было делаться методом TryGetFile, но из-за косяка с выпоском обновы пришлось делать этот костыль.
+			// TODO: где-нибудь через 2 месяца, когда большая часть пользователей уже запустит нвоый лаунчер и этот код откработает,
+			// то можно возвращаться на TryGetFile
+			string filePath = WithDirectory.GetInstancePath(instanceId) + INSTANCE_PLATFORM_DATA_FILE;
+
+			var data = GetFile<InstancePlatformData>(filePath);
+			if (data == null || string.IsNullOrWhiteSpace(data.id) || string.IsNullOrWhiteSpace(data.instanceVersion))
+			{
+				string oldFilePath = WithDirectory.GetInstancePath(instanceId) + INSTANCE_PLATFORM_DATA_FILE_OLD;
+				data = GetFile<InstancePlatformData>(oldFilePath);
+				if (data == null) return default(InstancePlatformData);
+
+				try
+				{
+					if (File.Exists(filePath))
+					{
+						File.Delete(filePath);
+					}
+
+					File.Move(oldFilePath, filePath);
+				}
+				catch (Exception ex)
+				{
+					Runtime.DebugWrite("Exception " + ex);
+				}
+			}
+
+			return data;
 		}
 
 		public static T GetExtendedPlatfromData<T>(string instanceId) where T : InstancePlatformData
