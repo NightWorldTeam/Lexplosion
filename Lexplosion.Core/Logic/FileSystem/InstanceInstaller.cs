@@ -15,6 +15,7 @@ using Lexplosion.Logic.Network;
 using Lexplosion.Tools;
 using static Lexplosion.Logic.FileSystem.WithDirectory;
 using static Lexplosion.Logic.FileSystem.DataFilesManager;
+using System.Collections.Concurrent;
 
 namespace Lexplosion.Logic.FileSystem
 {
@@ -60,7 +61,7 @@ namespace Lexplosion.Logic.FileSystem
 
 		public event ProcentUpdate BaseDownloadEvent;
 
-		private Dictionary<string, LibInfo> _libraries;
+		private ConcurrentDictionary<string, LibInfo> _libraries;
 		private bool _minecraftJar;
 		private bool _assetsIndexes;
 		private Assets _assets;
@@ -69,7 +70,7 @@ namespace Lexplosion.Logic.FileSystem
 
 		private void ResetUpdatesList()
 		{
-			_libraries = new Dictionary<string, LibInfo>();
+			_libraries = new ConcurrentDictionary<string, LibInfo>();
 			_minecraftJar = false;
 			_assetsIndexes = false;
 			_assets.objects = null;
@@ -488,6 +489,7 @@ namespace Lexplosion.Logic.FileSystem
 					return false;
 				}
 
+
 				DelFile(to + file);
 				File.Move(temp + file, to + file);
 
@@ -642,7 +644,7 @@ namespace Lexplosion.Logic.FileSystem
 
 				if (downloadResult == DownloadFileProgress.Error)
 				{
-					DataFilesManager.SaveLastUpdates(instanceId,updates);
+					DataFilesManager.SaveLastUpdates(instanceId, updates);
 					return errors;
 				}
 			}
@@ -683,8 +685,6 @@ namespace Lexplosion.Logic.FileSystem
 
 				if (cancelToken.IsCancellationRequested) return errors;
 
-				string tempDir = CreateTempDir();
-
 				TasksPerfomer tasksPerfomer = null;
 				if (libsToDownload.Count > 0)
 					tasksPerfomer = new TasksPerfomer(7, libsToDownload.Count);
@@ -696,106 +696,7 @@ namespace Lexplosion.Logic.FileSystem
 
 					tasksPerfomer.ExecuteTask(() =>
 					{
-						bool isNwDownload = false;
-						if (_libraries[lib].url == null)
-						{
-							addr = LaunсherSettings.URL.Upload + "libraries/";
-							isNwDownload = true;
-						}
-						else
-						{
-							addr = _libraries[lib].url;
-						}
-
-						string[] folders = lib.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-						string ff = lib.Replace(folders[folders.Length - 1], "");
-
-						if (addr.Length > 5 && addr.Substring(addr.Length - 4) != ".jar" && addr.Substring(addr.Length - 4) != ".zip")
-						{
-							addr = addr + lib;
-						}
-
-						bool isDownload;
-						string name = folders[folders.Length - 1];
-						string fileDir = DirectoryPath + "/libraries/" + ff;
-
-						var taskArgs = new TaskArgs
-						{
-							PercentHandler = delegate (int pr)
-							{
-								_fileDownloadHandler?.Invoke(name, pr, DownloadFileProgress.PercentagesChanged);
-							},
-							CancelToken = cancelToken
-						};
-
-						if (_libraries[lib].notArchived)
-						{
-							if (isNwDownload) addr += "?" + librariesVersion;
-
-							isDownload = UnsafeDownloadJar(addr, fileDir, name, tempDir, taskArgs, true);
-						}
-						else
-						{
-							if (isNwDownload) addr += ".zip?" + librariesVersion;
-
-							isDownload = UnsafeDownloadZip(addr, fileDir, name, tempDir, taskArgs);
-						}
-
-						if (cancelToken.IsCancellationRequested) return;
-
-						_fileDownloadHandler?.Invoke(name, 100, isDownload ? DownloadFileProgress.Successful : DownloadFileProgress.Error);
-
-						if (_libraries[lib].isNative && isDownload)
-						{
-							try
-							{
-								string tempFolder = CreateTempDir();
-								// извлекаем во временную папку
-								ZipFile.ExtractToDirectory(fileDir + "/" + name, tempFolder);
-
-								if (!Directory.Exists(DirectoryPath + "/natives/" + gameVersionName + "/"))
-								{
-									Directory.CreateDirectory(DirectoryPath + "/natives/" + gameVersionName + "/");
-								}
-
-								//Скопировать все файлы. И перезаписать(если такие существуют)
-								foreach (string newPath in Directory.GetFiles(tempFolder, "*.*", SearchOption.AllDirectories))
-								{
-									string oldPath = newPath.Replace(tempFolder, DirectoryPath + "/natives/" + gameVersionName + "/");
-									string oldPathDir = Path.GetDirectoryName(oldPath);
-
-									if (!Directory.Exists(oldPathDir))
-									{
-										Directory.CreateDirectory(oldPathDir);
-									}
-
-									File.Copy(newPath, oldPath, true);
-								}
-
-								Directory.Delete(tempFolder, true);
-							}
-							catch
-							{
-								isDownload = false;
-							}
-						}
-
-						lock (downloadedLibsLocker)
-						{
-							if (isDownload)
-							{
-								downloadedLibs.Add(lib);
-								SaveFile(downloadedLibsAddr, JsonConvert.SerializeObject(downloadedLibs));
-							}
-							else
-							{
-								errors.Add("libraries/" + lib);
-								DelFile(DirectoryPath + "/libraries/" + lib);
-							}
-						}
-
-						updated++;
-						BaseDownloadEvent?.Invoke(_updatesCount, updated);
+						LibHandle(lib, librariesVersion, cancelToken, gameVersionName, downloadedLibsLocker, downloadedLibs, downloadedLibsAddr, errors, ref updated);
 					});
 				}
 
@@ -808,17 +709,12 @@ namespace Lexplosion.Logic.FileSystem
 					if (cancelToken.IsCancellationRequested) return errors;
 
 					List<List<string>> obtainingMethod = _libraries[lib].obtainingMethod; // получаем метод
-					ObtainingMethodExecute(in manifest, obtainingMethod, executedMethods, errors, downloadedLibs, tempDir, lib, javaPath, downloadedLibsAddr, cancelToken);
+					ObtainingMethodExecute(in manifest, obtainingMethod, executedMethods, errors, downloadedLibs, lib, javaPath, downloadedLibsAddr, cancelToken);
 
 					updated++;
 					BaseDownloadEvent?.Invoke(_updatesCount, updated);
 				}
 
-				try
-				{
-					Directory.Delete(tempDir, true);
-				}
-				catch { }
 				try
 				{
 					Directory.Delete(temp, true);
@@ -957,7 +853,123 @@ namespace Lexplosion.Logic.FileSystem
 			return errors;
 		}
 
-		private void ObtainingMethodExecute(in VersionManifest manifest, List<List<string>> obtainingMethod, List<string> executedMethods, List<string> errors, List<string> downloadedLibs, string tempDir, string lib, string javaPath, string downloadedLibsAddr, CancellationToken cancelToken)
+		private void LibHandle(string lib, long librariesVersion, CancellationToken cancelToken, string gameVersionName, object downloadedLibsLocker, List<string> downloadedLibs, string downloadedLibsAddr, List<string> errors, ref int updated)
+		{
+			bool isNwDownload = false;
+			string addr;
+			LibInfo libInfo = _libraries[lib];
+
+			if (libInfo.url == null)
+			{
+				addr = LaunсherSettings.URL.Upload + "libraries/";
+				isNwDownload = true;
+			}
+			else
+			{
+				addr = libInfo.url;
+			}
+
+			string[] folders = lib.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+			string libFolder = lib.Replace(folders[folders.Length - 1], "");
+
+			if (addr.Length > 5 && addr.Substring(addr.Length - 4) != ".jar" && addr.Substring(addr.Length - 4) != ".zip")
+			{
+				addr = addr + lib;
+			}
+
+			bool isDownload;
+			string name = folders[folders.Length - 1];
+			string fileDir = DirectoryPath + "/libraries/" + libFolder;
+
+			var taskArgs = new TaskArgs
+			{
+				PercentHandler = delegate (int pr)
+				{
+					_fileDownloadHandler?.Invoke(name, pr, DownloadFileProgress.PercentagesChanged);
+				},
+				CancelToken = cancelToken
+			};
+
+			string tempDir = CreateTempDir();
+
+			if (libInfo.notArchived)
+			{
+				if (isNwDownload) addr += "?" + librariesVersion;
+
+				isDownload = UnsafeDownloadJar(addr, fileDir, name, tempDir, taskArgs, true);
+			}
+			else
+			{
+				if (isNwDownload) addr += ".zip?" + librariesVersion;
+
+				isDownload = UnsafeDownloadZip(addr, fileDir, name, tempDir, taskArgs);
+			}
+
+			try
+			{
+				Directory.Delete(tempDir, true);
+			}
+			catch { }
+
+			if (cancelToken.IsCancellationRequested) return;
+
+			_fileDownloadHandler?.Invoke(name, 100, isDownload ? DownloadFileProgress.Successful : DownloadFileProgress.Error);
+
+			if (libInfo.isNative && isDownload)
+			{
+				try
+				{
+					string tempFolder = CreateTempDir();
+					// извлекаем во временную папку
+					ZipFile.ExtractToDirectory(fileDir + "/" + name, tempFolder);
+
+					if (!Directory.Exists(DirectoryPath + "/natives/" + gameVersionName + "/"))
+					{
+						Directory.CreateDirectory(DirectoryPath + "/natives/" + gameVersionName + "/");
+					}
+
+					//Скопировать все файлы. И перезаписать (если такие существуют)
+					foreach (string newPath in Directory.GetFiles(tempFolder, "*.*", SearchOption.AllDirectories))
+					{
+						string oldPath = newPath.Replace(tempFolder, DirectoryPath + "/natives/" + gameVersionName + "/");
+						string oldPathDir = Path.GetDirectoryName(oldPath);
+
+						if (!Directory.Exists(oldPathDir))
+						{
+							Directory.CreateDirectory(oldPathDir);
+						}
+
+						File.Copy(newPath, oldPath, true);
+					}
+
+					Directory.Delete(tempFolder, true);
+				}
+				catch
+				{
+					isDownload = false;
+				}
+			}
+
+			lock (downloadedLibsLocker)
+			{
+				if (isDownload)
+				{
+					downloadedLibs.Add(lib);
+					SaveFile(downloadedLibsAddr, JsonConvert.SerializeObject(downloadedLibs));
+				}
+				else
+				{
+					errors.Add("libraries/" + lib);
+					DelFile(DirectoryPath + "/libraries/" + lib);
+				}
+			}
+
+			updated++;
+			BaseDownloadEvent?.Invoke(_updatesCount, updated);
+		}
+
+
+		private void ObtainingMethodExecute(in VersionManifest manifest, List<List<string>> obtainingMethod, List<string> executedMethods, List<string> errors, List<string> downloadedLibs, string lib, string javaPath, string downloadedLibsAddr, CancellationToken cancelToken)
 		{
 			try
 			{
@@ -965,6 +977,8 @@ namespace Lexplosion.Logic.FileSystem
 
 				if (!executedMethods.Contains(obtainingMethod[0][0])) //проверяем был ли этот метод уже выполнен
 				{
+					string tempDir = CreateTempDir();
+
 					int i = 1; //начинаем цикл с первого элемента, т.к нулевой - название метода
 					while (i < obtainingMethod.Count)
 					{
@@ -1094,6 +1108,12 @@ namespace Lexplosion.Logic.FileSystem
 						}
 						i++;
 					}
+
+					try
+					{
+						Directory.Delete(tempDir, true);
+					}
+					catch { }
 				}
 
 			//теперь добавляем этот метод в уже выполненные и если не существует файла, который мы должны получить - значит произошла ошибка
