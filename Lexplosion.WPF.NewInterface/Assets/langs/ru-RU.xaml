@@ -776,7 +776,7 @@
 
 
     <s:String x:Key="DeletingInstance">Удаление сборки</s:String>
-    <s:String x:Key="DeleteInstanceDescription">
+    <s:String x:Key="DeletingInstanceDescription">
         Вы действительно хотите удалить сборку: {0}?
         Восстановить её будет не возможно!
     </s:String>
