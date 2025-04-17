@@ -760,4 +760,8 @@
     <s:String x:Key="InstanceNameColon">Instance:</s:String>
     <s:String x:Key="VersionColon">Version:</s:String>
     <s:String x:Key="TypeColon">Type:</s:String>
+
+    <!--  LeftPanel Help Block  -->
+    <s:String x:Key="HowToPlay">How to play?</s:String>
+    <s:String x:Key="Support">Support</s:String>
 </ResourceDictionary>

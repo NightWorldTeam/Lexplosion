@@ -294,15 +294,17 @@
                             <controls:AdvancedButton
                                 MinHeight="12"
                                 Command="{Binding ToUserHowToPlayGuideCommand}"
+                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
                                 IconData="{DynamicResource PDBookMenu}"
                                 Template="{StaticResource QuestionMenuItem}"
-                                Text="Как играть" />
+                                Text="{DynamicResource HowToPlay}" />
                             <controls:AdvancedButton
                                 MinHeight="16"
                                 Command="{Binding ToSupportCommand}"
+                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
                                 IconData="{DynamicResource PDVKontakte}"
                                 Template="{StaticResource QuestionMenuItem}"
-                                Text="Поддержка" />
+                                Text="{DynamicResource Support}" />
 
                             <TextBlock
                                 Grid.Row="2"

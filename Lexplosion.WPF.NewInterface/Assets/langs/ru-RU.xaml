@@ -867,4 +867,8 @@
     <s:String x:Key="InstanceNameColon">Сборка:</s:String>
     <s:String x:Key="VersionColon">Версия:</s:String>
     <s:String x:Key="TypeColon">Тип:</s:String>
+
+    <!--  LeftPanel Help Block  -->
+    <s:String x:Key="HowToPlay">Как играть?</s:String>
+    <s:String x:Key="Support">Поддержка</s:String>
 </ResourceDictionary>
