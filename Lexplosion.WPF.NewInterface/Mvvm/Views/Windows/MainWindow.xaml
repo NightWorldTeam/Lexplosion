@@ -15,7 +15,7 @@
     xmlns:runtime="clr-namespace:Lexplosion.WPF.NewInterface"
     xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
     xmlns:viewmodels="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels"
-    Title="Lexplosion New Interface Debug"
+    Title="Lexplosion"
     Width="944"
     Height="528"
     MinWidth="944"
