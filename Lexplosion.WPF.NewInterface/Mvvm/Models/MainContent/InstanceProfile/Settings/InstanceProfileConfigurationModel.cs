@@ -189,9 +189,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
         /// Modloader Manager (for fabric, forge...)
         /// </summary>
         private bool _isNWClientEnabled;
-        public bool IsNWClientEnabled 
-        { 
-            get => _isNWClientEnabled; set 
+        public bool IsNWClientEnabled
+        {
+            get => _isNWClientEnabled; set
             {
                 _isNWClientEnabled = value;
                 _instanceData.IsNwClient = value;
@@ -217,10 +217,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
 
         public InstanceProfileConfigurationModel(InstanceModelBase instanceModelBase)
         {
-            IsExternal = 
+            IsExternal =
                 instanceModelBase.Source == InstanceSource.Modrinth ||
                 instanceModelBase.Source == InstanceSource.Curseforge ||
-                instanceModelBase.Source == InstanceSource.Nightworld; 
+                instanceModelBase.Source == InstanceSource.Nightworld;
             _instanceModelBase = instanceModelBase;
 
             _instanceData = instanceModelBase.BaseData;
@@ -242,9 +242,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
 
                 IsNWClientAvailable = NWClientSupportedVersions.FirstOrDefault(verStr => verStr == Version.Id) != null;
                 OnPropertyChanged(nameof(IsNWClientAvailable));
-
-                IsNWClientEnabled = GlobalData.GeneralSettings.NwClientByDefault == true;
-                OnPropertyChanged(nameof(IsNWClientEnabled));
+                
+                if (IsNWClientAvailable)
+                {
+                    IsNWClientEnabled = _instanceData.IsNwClient;
+                    OnPropertyChanged(nameof(IsNWClientEnabled));
+                }
             });
         }
 
@@ -322,8 +325,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
             }
 
             _instanceModelBase.ChangeOverviewParameters(_instanceData);
-            
-           /* _instanceData = _instanceModelBase.InstanceData;*/
+
+            /* _instanceData = _instanceModelBase.InstanceData;*/
             _oldInstanceData = _instanceModelBase.BaseData;
             OnPropertyChanged(nameof(HasChanges));
         }
@@ -382,7 +385,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
                 return true;
             if (_oldInstanceData.IsNwClient != IsNWClientEnabled)
                 return true;
-            
+
             return false;
         }
 
@@ -461,7 +464,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
         {
             OptimizationModManager = new OptimizationModManager(minecraftVersion);
 
-            if (ExtensionManagerBase.IsExtensionLoaded(GameExtension.Optifine, minecraftVersion)) 
+            if (ExtensionManagerBase.IsExtensionLoaded(GameExtension.Optifine, minecraftVersion))
             {
                 if (OptimizationModManager.CurrentMinecraftExtension.IsAvaliable && string.IsNullOrEmpty(optifimizationModVersion))
                 {
