@@ -270,7 +270,7 @@
                                 <Button
                                     Height="20"
                                     Content="FileUpload"
-                                    Cursor="Hand"
+                                    Cursor="Hand" Click="Button_Click"
                                     Style="{StaticResource x32IconButtonWithHover}"
                                     ToolTip="Save to file" />
                             </Border>

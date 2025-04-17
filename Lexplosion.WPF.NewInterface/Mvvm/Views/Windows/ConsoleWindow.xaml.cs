@@ -1,7 +1,10 @@
-﻿using Lexplosion.Logic.Management;
+﻿using DiscordRPC.Message;
+using Lexplosion.Logic.Management;
 using Lexplosion.WPF.NewInterface.Core;
+using System;
 using System.Collections;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -225,6 +228,26 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
             {
                 return (i as ConsoleLog).Message.IndexOf(tb.Text, System.StringComparison.InvariantCultureIgnoreCase) > -1;
             });
+        }
+        
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var stringBuilder = new StringBuilder();
+            foreach (ConsoleLog log in _selectedLogs ?? _logs)
+            {
+                stringBuilder.AppendLine(log.Message);
+            }
+
+            var dialog = new System.Windows.Forms.SaveFileDialog()
+            {
+                FileName = $"{_gameManager.GameClientName} {_gameManager.GameVersion} {DateTime.Now}".Replace(":", "_"),
+                Filter = "Text Files(*.txt)|*.txt|All(*.*)|*"
+            };
+
+            if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                File.WriteAllText(dialog.FileName, stringBuilder.ToString());
+            }
         }
     }
 }
