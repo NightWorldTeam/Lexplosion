@@ -112,12 +112,18 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
             {
                 App.Current.Dispatcher.Invoke(() =>
                 {
-
-                    if (arg.Value2 == DownloadAddonRes.Successful)
+                    if (state == InstanceAddon.InstallAddonState.StartDownload)
                     {
-                        InstalledAddons.Add(instanceAddon);
+                        InProgressAddons.Remove(new DownloableAddonFile(arg.Value1));
                     }
-                    InProgressAddons.Remove(downloableAddonFile);
+                    else if (state == InstanceAddon.InstallAddonState.EndDownload) 
+                    {
+                        if (arg.Value2 == DownloadAddonRes.Successful)
+                        {
+                            InstalledAddons.Add(instanceAddon);
+                        }
+                        InProgressAddons.Remove(new DownloableAddonFile(arg.Value1));
+                    }
                 });
             };
 
