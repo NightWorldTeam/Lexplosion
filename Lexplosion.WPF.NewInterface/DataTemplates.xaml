@@ -136,19 +136,6 @@
         <modalviews:GroupFactoryView />
     </DataTemplate>
 
-    <!--  Addons Repository  -->
-    <DataTemplate DataType="{x:Type addonsrepositoriesvm:ModrinthRepositoryViewModel}">
-        <addonsrepositoriesviews:ModrinthRepositoryView />
-    </DataTemplate>
-
-    <DataTemplate DataType="{x:Type addonsrepositoriesvm:ModrinthAddonPageViewModel}">
-        <addonsrepositoriesviews:ModrinthAddonPageView />
-    </DataTemplate>
-    <DataTemplate DataType="{x:Type addonsrepositoriesvm:CurseforgeRepositoryViewModel}">
-        <addonsrepositoriesviews:CurseforgeRepositoryView />
-    </DataTemplate>
-
-
     <!--  Instance Profile  -->
     <DataTemplate DataType="{x:Type instanceprofilevm:InstanceProfileLeftPanelViewModel}">
         <instanceprofileview:InstanceProfileLeftPanelView />

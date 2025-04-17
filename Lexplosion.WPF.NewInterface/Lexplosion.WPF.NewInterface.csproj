@@ -17,6 +17,7 @@
     <Deterministic>true</Deterministic>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <TargetFrameworkProfile />
+    <Nullable>enable</Nullable>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -31,7 +32,6 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <Nullable>enable</Nullable>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -440,9 +440,6 @@
     <Compile Include="Extensions\StyleSelectors\NthChildStyleSelector.cs" />
     <Compile Include="Extensions\TextBlockExtensions.cs" />
     <Compile Include="Main.cs" />
-    <Compile Include="Mvvm\Models\AddonsRepositories\Curseforge\CurseforgeRepositoryModel.cs" />
-    <Compile Include="Mvvm\Models\AddonsRepositories\Modrinth\ModrinthAddonPageModel.cs" />
-    <Compile Include="Mvvm\Models\AddonsRepositories\Modrinth\ModrinthRepositoryModel.cs" />
     <Compile Include="Mvvm\Models\Authorization\AuthModelBase.cs" />
     <Compile Include="Mvvm\Models\Authorization\BasicAuthorization\NightWorld\DigitCodeConfimationModel.cs" />
     <Compile Include="Mvvm\Models\Authorization\BasicAuthorization\NightWorld\NightWorldAuthorizationModel.cs" />
@@ -466,9 +463,6 @@
     <Compile Include="Mvvm\Models\UserData.cs" />
     <Compile Include="Tools\ColorTools.cs" />
     <Compile Include="Tools\WordHelper.cs" />
-    <Compile Include="Mvvm\ViewModels\AddonsRepositories\Curseforge\CurseforgeRepositoryViewModel.cs" />
-    <Compile Include="Mvvm\ViewModels\AddonsRepositories\Modrinth\ModrinthAddonPageViewModel.cs" />
-    <Compile Include="Mvvm\ViewModels\AddonsRepositories\Modrinth\ModrinthRepositoryViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Authorization\AuthorizationViewModelBase.cs" />
     <Compile Include="Mvvm\ViewModels\Authorization\BasicAuthorization\NightWorld\DigitCodeConfirmationViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Authorization\BasicAuthorization\NightWorld\NightWorldAuthorizationViewModel.cs" />
@@ -504,15 +498,6 @@
     </Compile>
     <Compile Include="Mvvm\Views\Modal\LeftMenu\LeftMenuControl.xaml.cs">
       <DependentUpon>LeftMenuControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Mvvm\Views\Pages\AddonsRepositories\Curseforge\CurseforgeRepositoryView.xaml.cs">
-      <DependentUpon>CurseforgeRepositoryView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Mvvm\Views\Pages\AddonsRepositories\Modrinth\ModrinthAddonPageView.xaml.cs">
-      <DependentUpon>ModrinthAddonPageView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Mvvm\Views\Pages\AddonsRepositories\Modrinth\ModrinthRepositoryView.xaml.cs">
-      <DependentUpon>ModrinthRepositoryView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Mvvm\Views\Pages\Authorization\AuthorizationMenuView.xaml.cs">
       <DependentUpon>AuthorizationMenuView.xaml</DependentUpon>
@@ -947,18 +932,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Mvvm\Views\Pages\AddonsRepositories\Curseforge\CurseforgeRepositoryView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Mvvm\Views\Pages\AddonsRepositories\Modrinth\ModrinthAddonPageView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Mvvm\Views\Pages\AddonsRepositories\Modrinth\ModrinthRepositoryView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Mvvm\Views\Pages\Authorization\AuthorizationMenuView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1213,7 +1186,7 @@
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.8">
       <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4.8 %28x86 и x64%29</ProductName>
+      <ProductName>Microsoft .NET Framework 4.8 %28x86 and x64%29</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
