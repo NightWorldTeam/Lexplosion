@@ -861,4 +861,10 @@
     <s:String x:Key="TrayReloadMultiplayer">Перезапустить сетевую игру</s:String>
     <s:String x:Key="MaximizeLauncher">Показать лаунчер</s:String>
     <s:String x:Key="CloseInstance">Закрыть сборку</s:String>
+
+
+    <!--  Console Header  -->
+    <s:String x:Key="InstanceNameColon">Сборка:</s:String>
+    <s:String x:Key="VersionColon">Версия:</s:String>
+    <s:String x:Key="TypeColon">Тип:</s:String>
 </ResourceDictionary>

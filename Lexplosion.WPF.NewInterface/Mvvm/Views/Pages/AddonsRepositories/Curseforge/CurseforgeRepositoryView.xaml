@@ -561,7 +561,7 @@
                         Grid.Column="1"
                         Margin="0,0,0,8"
                         VerticalAlignment="Top"
-                        ShowGridLines="True">
+                        ShowGridLines="False">
 
                         <WrapPanel>
                             <TextBlock

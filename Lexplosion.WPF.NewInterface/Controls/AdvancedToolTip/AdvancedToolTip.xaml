@@ -10,8 +10,7 @@
                     <Grid
                         x:Name="PART_Body"
                         HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        ShowGridLines="True">
+                        VerticalAlignment="Center">
 
 
                         <!--

@@ -110,4 +110,79 @@
         <Setter Property="ItemContainerStyle" Value="{StaticResource TransparentListBoxItem1}" />
     </Style>
 
+    <Style
+        x:Key="DefaultListBoxItem"
+        BasedOn="{StaticResource {x:Type ListBoxItem}}"
+        TargetType="{x:Type ListBoxItem}">
+        <Setter Property="SnapsToDevicePixels" Value="true" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListBoxItem">
+                    <Border
+                        Name="Bd"
+                        Padding="{TemplateBinding Control.Padding}"
+                        Background="{TemplateBinding Panel.Background}"
+                        BorderBrush="{TemplateBinding Border.BorderBrush}"
+                        BorderThickness="{TemplateBinding Border.BorderThickness}"
+                        SnapsToDevicePixels="True">
+                        <ContentPresenter
+                            HorizontalAlignment="{TemplateBinding Control.HorizontalContentAlignment}"
+                            VerticalAlignment="{TemplateBinding Control.VerticalContentAlignment}"
+                            Content="{TemplateBinding ContentControl.Content}"
+                            ContentStringFormat="{TemplateBinding ContentControl.ContentStringFormat}"
+                            ContentTemplate="{TemplateBinding ContentControl.ContentTemplate}"
+                            SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="Selector.IsSelectionActive" Value="False" />
+                                <Condition Property="Selector.IsSelected" Value="True" />
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="Bd" Property="Panel.Background">
+                                <Setter.Value>
+                                    <SolidColorBrush Opacity="0.3" Color="{DynamicResource ActivityColor}" />
+                                </Setter.Value>
+                            </Setter>
+                            <Setter TargetName="Bd" Property="Border.BorderBrush">
+                                <Setter.Value>
+                                    <SolidColorBrush Opacity="0.4" Color="{DynamicResource ActivityColor}" />
+                                </Setter.Value>
+                            </Setter>
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="Selector.IsSelectionActive" Value="True" />
+                                <Condition Property="Selector.IsSelected" Value="True" />
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="Bd" Property="Panel.Background">
+                                <Setter.Value>
+                                    <SolidColorBrush Opacity="0.2" Color="{DynamicResource ActivityColor}" />
+                                </Setter.Value>
+                            </Setter>
+                            <Setter TargetName="Bd" Property="Border.BorderBrush">
+                                <Setter.Value>
+                                    <SolidColorBrush Opacity="0.4" Color="{DynamicResource ActivityColor}" />
+                                </Setter.Value>
+                            </Setter>
+                        </MultiTrigger>
+                        <Trigger Property="UIElement.IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="Panel.Background">
+                                <Setter.Value>
+                                    <SolidColorBrush Opacity="0.1" Color="{DynamicResource ActivityColor}" />
+                                </Setter.Value>
+                            </Setter>
+                            <Setter TargetName="Bd" Property="Border.BorderBrush">
+                                <Setter.Value>
+                                    <SolidColorBrush Opacity="0.3" Color="{DynamicResource ActivityColor}" />
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

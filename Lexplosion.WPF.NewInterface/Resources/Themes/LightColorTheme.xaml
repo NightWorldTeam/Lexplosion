@@ -12,8 +12,6 @@
 
     <!--  Activity Colors  -->
     <Color x:Key="ActivityColor">#167FFC</Color>
-    <Color x:Key="Color1">#ff7601</Color>
-    <Color x:Key="Color2">#8500fa</Color>
 
     <sys:Double x:Key="ActivityColorOpacity">1</sys:Double>
     <SolidColorBrush

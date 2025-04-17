@@ -122,15 +122,45 @@
             x:Name="WindowHeaderPanelButtonsGrid"
             Margin="16,12,16,0"
             VerticalAlignment="Top"
-            KeyboardNavigation.IsTabStop="False"
-            ShowGridLines="True"
-            Visibility="Visible">
+            KeyboardNavigation.IsTabStop="False">
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
+
+            <StackPanel Orientation="Horizontal">
+                <TextBlock VerticalAlignment="Center" FontSize="14">
+                    <Run Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="{DynamicResource InstanceNameColon}" />
+                    <Run
+                        x:Name="InstanceNamePlaceholder"
+                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                        Text="..." />
+                </TextBlock>
+                <TextBlock
+                    Margin="8,0,0,0"
+                    VerticalAlignment="Center"
+                    FontSize="14">
+                    <Run Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="{DynamicResource VersionColon}" />
+                    <Run
+                        x:Name="GameVersionPlaceholder"
+                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                        Text="..." />
+                </TextBlock>
+
+                <!--<TextBlock
+                    Margin="8,0,0,0"
+                    VerticalAlignment="Center"
+                    FontSize="14">
+                    <Run Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="{DynamicResource TypeColon}" />
+                    <Run
+                        x:Name="ModloaderPlaceholder"
+                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                        Text="Forge 10.13.4.1614" />
+                </TextBlock>-->
+
+            </StackPanel>
 
             <!--  Close & Hide Buttons  -->
 
@@ -198,7 +228,7 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <controls:SearchBox Style="{StaticResource sm-searchbox-default}" />
+                    <controls:SearchBox Style="{StaticResource sm-searchbox-default}" TextChanged="SearchBox_TextChanged" />
 
                     <Border
                         Grid.Column="1"
@@ -282,7 +312,7 @@
 
                     <ListBox
                         x:Name="LogsContainer"
-                        ItemContainerStyle="{StaticResource {x:Type ListBoxItem}}"
+                        ItemContainerStyle="{StaticResource DefaultListBoxItem}"
                         KeyDown="LogsContainer_KeyDown"
                         SelectionMode="Extended"
                         Style="{StaticResource TransparentListBox}"
