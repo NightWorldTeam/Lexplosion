@@ -40,7 +40,7 @@
                                         MaxWidth="255"
                                         Margin="0,10,10,10"
                                         FontWeight="Bold"
-                                        Foreground="White"
+                                        Foreground="{DynamicResource DefaultButtonForegroundColorBrush}"
                                         Text="{TemplateBinding Title}"
                                         TextWrapping="WrapWithOverflow" />
 
@@ -58,7 +58,7 @@
                                             Stretch="Fill">
                                             <Path
                                                 Data="m12.45 37.65-2.1-2.1L21.9 24 10.35 12.45l2.1-2.1L24 21.9l11.55-11.55 2.1 2.1L26.1 24l11.55 11.55-2.1 2.1L24 26.1Z"
-                                                Fill="WhiteSmoke"
+                                                Fill="{DynamicResource DefaultButtonForegroundColorBrush}"
                                                 StrokeThickness="2" />
                                         </Viewbox>
                                     </Button>
@@ -75,7 +75,7 @@
                                     Width="255"
                                     Margin="0,10,10,10"
                                     Background="Transparent"
-                                    Foreground="White"
+                                    Foreground="{DynamicResource DefaultButtonForegroundColorBrush}"
                                     Text="{TemplateBinding Message}"
                                     TextWrapping="WrapWithOverflow" />
                             </Border>
