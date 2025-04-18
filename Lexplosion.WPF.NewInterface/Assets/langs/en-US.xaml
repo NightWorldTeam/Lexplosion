@@ -764,4 +764,9 @@
     <!--  LeftPanel Help Block  -->
     <s:String x:Key="HowToPlay">How to play?</s:String>
     <s:String x:Key="Support">Support</s:String>
+
+    <s:String x:Key="LoggingMode">Logging Mode</s:String>
+    <s:String x:Key="LoggingModeDescription">
+        Enables logging
+    </s:String>
 </ResourceDictionary>

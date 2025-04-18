@@ -6,6 +6,7 @@
     xmlns:converters="clr-namespace:Lexplosion.WPF.NewInterface.Core.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
+    xmlns:lexplosion="clr-namespace:Lexplosion;assembly=Lexplosion.Core"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodels="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu"
@@ -827,6 +828,38 @@
                             <ToggleButton
                                 HorizontalAlignment="Right"
                                 IsChecked="{Binding Model.IsNightWorldClientEnabled}"
+                                Style="{StaticResource SwitchButton}" />
+                        </Grid>
+                    </Border>
+
+
+                    <!--  Logging Mode  -->
+
+                    <Border
+                        Padding="0,16,0,8"
+                        BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
+                        BorderThickness="0,0,0,0">
+                        <Grid>
+
+                            <!--  Header  -->
+                            <StackPanel>
+                                <TextBlock
+                                    FontSize="14"
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                    Text="{DynamicResource LoggingMode}" />
+                                <TextBlock
+                                    FontSize="14"
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                    Text="{DynamicResource LoggingModeDescription}" />
+                            </StackPanel>
+
+
+                            <!--  Content  -->
+                            <ToggleButton
+                                HorizontalAlignment="Right"
+                                IsChecked="{Binding Path=(lexplosion:Runtime.IsDebugMode)}"
                                 Style="{StaticResource SwitchButton}" />
                         </Grid>
                     </Border>

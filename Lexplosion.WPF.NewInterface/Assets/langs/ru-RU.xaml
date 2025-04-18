@@ -871,4 +871,9 @@
     <!--  LeftPanel Help Block  -->
     <s:String x:Key="HowToPlay">Как играть?</s:String>
     <s:String x:Key="Support">Поддержка</s:String>
+
+    <s:String x:Key="LoggingMode">Режим логирования</s:String>
+    <s:String x:Key="LoggingModeDescription">
+        Включает ведения журнала логов
+    </s:String>
 </ResourceDictionary>
