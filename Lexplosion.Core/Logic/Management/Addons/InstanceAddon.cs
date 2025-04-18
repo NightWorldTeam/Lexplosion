@@ -227,7 +227,6 @@ namespace Lexplosion.Logic.Management.Addons
 			Author = addonPrototype.AuthorName;
 			Description = addonPrototype.Description;
 			Name = addonPrototype.Name;
-			WebsiteUrl = addonPrototype.WebsiteUrl;
 
 			LogoUrl = addonPrototype.LogoUrl;
 
@@ -319,6 +318,8 @@ namespace Lexplosion.Logic.Management.Addons
 			Categories = _addonPrototype.LoadCategories();
 			ThreadPool.QueueUserWorkItem(delegate (object state)
 			{
+				WebsiteUrl = _addonPrototype.LoadWebsiteUrl();
+				Runtime.DebugWrite(Name + " " + WebsiteUrl);
 				DownloadLogo(logoUrl);
 			});
 		}
@@ -448,7 +449,7 @@ namespace Lexplosion.Logic.Management.Addons
 
 				ThreadPool.QueueUserWorkItem(delegate (object state)
 				{
-					WebsiteUrl = _addonPrototype.WebsiteUrl;
+					WebsiteUrl = _addonPrototype.LoadWebsiteUrl();
 				});
 
 				_synchronizer.InstallingSemaphore.WaitOne(addonKey);

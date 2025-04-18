@@ -53,20 +53,6 @@ namespace Lexplosion.Logic.Management.Addons
 			get { return _projectId; }
 		}
 
-		public string WebsiteUrl
-		{
-			get
-			{
-				if (_addonInfo?.links?.websiteUrl != null)
-				{
-					return _addonInfo.links.websiteUrl;
-				}
-
-				var addonData = CurseforgeApi.GetAddonInfo(_projectId);
-				return addonData?.links?.websiteUrl ?? "";
-			}
-		}
-
 		public string AuthorName
 		{
 			get
@@ -314,6 +300,17 @@ namespace Lexplosion.Logic.Management.Addons
 		public void RemoveAcceptableModloader(Modloader modloader)
 		{
 			_acceptableModloaders.Remove(modloader);
+		}
+
+		public string LoadWebsiteUrl()
+		{
+			if (_addonInfo?.links?.websiteUrl != null)
+			{
+				return _addonInfo.links.websiteUrl;
+			}
+
+			var addonData = CurseforgeApi.GetAddonInfo(_projectId);
+			return addonData?.links?.websiteUrl ?? "";
 		}
 
 		public event Action OnInfoUpdated;

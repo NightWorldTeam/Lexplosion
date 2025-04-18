@@ -71,14 +71,6 @@ namespace Lexplosion.Logic.Management.Addons
 			}
 		}
 
-		public string WebsiteUrl
-		{
-			get
-			{
-				return _addonInfo?.WebsiteUrl ?? "";
-			}
-		}
-
 		public string AuthorName
 		{
 			get; private set;
@@ -350,6 +342,11 @@ namespace Lexplosion.Logic.Management.Addons
 		public void RemoveAcceptableModloader(Modloader modloader)
 		{
 			_acceptableModloaders.Remove(modloader);
+		}
+
+		public string LoadWebsiteUrl()
+		{
+			return _addonInfo?.WebsiteUrl ?? "";
 		}
 
 		public event Action OnInfoUpdated;

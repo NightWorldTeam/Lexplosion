@@ -45,8 +45,6 @@ namespace Lexplosion.Logic.Management.Addons
         string FileId { get; }
         ProjectSource Source { get; }
 
-        string WebsiteUrl { get; }
-
         string AuthorName { get; }
 
         string Description { get; }
@@ -58,6 +56,12 @@ namespace Lexplosion.Logic.Management.Addons
         event Action OnInfoUpdated;
 
         string GetFullDescription();
+
+		/// <summary>
+		/// Возвращает ссылку на страницу мода. 
+		/// Может вернуть ее моментально, а может приостанвоить выполнение делая запрос к серваку
+		/// </summary>
+		string LoadWebsiteUrl();
     }
 
 }
