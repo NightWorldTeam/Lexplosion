@@ -22,7 +22,6 @@ using ConsoleWindow = Lexplosion.Common.Views.Windows.Console;
 
 /*
  * Лаунчер Lexplosion. Разработано NightWorld Team.
- * Никакие права не защищены.
  * Главный исполняемый файл лаунчера. Здесь людей ебут
  */
 
