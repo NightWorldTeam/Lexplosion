@@ -295,6 +295,7 @@ namespace Lexplosion.Logic.Management.Addons
 		public void InstallLatestVersion(DynamicStateHandler<SetValues<InstanceAddon, DownloadAddonRes>, InstallAddonState> stateHandler, bool downloadDependencies = true, bool isDependencie = false, IEnumerable<Modloader> acceptableModloaders = null)
 		{
 			IsInstalling = true;
+			_addonPrototype.SetAcceptableModloaders(acceptableModloaders);
 			_addonPrototype.DefineLatestVersion();
 			InstallAddon(downloadDependencies, stateHandler, isDependencie, acceptableModloaders);
 			IsInstalling = false;
@@ -303,13 +304,15 @@ namespace Lexplosion.Logic.Management.Addons
 		public void InstallSpecificVersion(DynamicStateHandler<SetValues<InstanceAddon, DownloadAddonRes>, InstallAddonState> stateHandler, object versionInfo, bool downloadDependencies = true, bool isDependencie = false, IEnumerable<Modloader> acceptableModloaders = null)
 		{
 			IsInstalling = true;
+			_addonPrototype.SetAcceptableModloaders(acceptableModloaders);
 			_addonPrototype.DefineSpecificVersion(versionInfo);
 			InstallAddon(downloadDependencies, stateHandler, isDependencie, acceptableModloaders);
 			IsInstalling = false;
 		}
 
-		public IDictionary<string, object> GetAllVersion()
+		public IDictionary<string, object> GetAllVersion(IEnumerable<Modloader> acceptableModloaders = null)
 		{
+			_addonPrototype.SetAcceptableModloaders(acceptableModloaders);
 			return _addonPrototype.GetAllVersions();
 		}
 
@@ -319,7 +322,6 @@ namespace Lexplosion.Logic.Management.Addons
 			ThreadPool.QueueUserWorkItem(delegate (object state)
 			{
 				WebsiteUrl = _addonPrototype.LoadWebsiteUrl();
-				Runtime.DebugWrite(Name + " " + WebsiteUrl);
 				DownloadLogo(logoUrl);
 			});
 		}
@@ -379,6 +381,7 @@ namespace Lexplosion.Logic.Management.Addons
 					}, InstallAddonState.EndDownload);
 
 					_synchronizer.AddonInstallingFinished();
+					IsLoading = false;
 					return;
 				}
 
@@ -441,6 +444,8 @@ namespace Lexplosion.Logic.Management.Addons
 					}, InstallAddonState.EndDownload);
 
 					_synchronizer.AddonInstallingFinished();
+
+					IsLoading = false;
 					return;
 				}
 
@@ -469,6 +474,8 @@ namespace Lexplosion.Logic.Management.Addons
 						}, InstallAddonState.EndDownload);
 
 						_synchronizer.AddonInstallingFinished();
+
+						IsLoading = false;
 						return;
 					}
 
@@ -526,6 +533,8 @@ namespace Lexplosion.Logic.Management.Addons
 					}
 
 					_synchronizer.AddonInstallingFinished();
+
+					IsLoading = false;
 					return;
 				}
 

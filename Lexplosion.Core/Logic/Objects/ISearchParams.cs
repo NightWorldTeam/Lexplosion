@@ -91,11 +91,11 @@ namespace Lexplosion.Logic.Objects
             PageSize = pageSize;
             PageIndex = pageIndex;
             SortField = sortField;
-            Modloaders = modloaders?.Select(x => x.ToString()) ?? DefaultSearchParams.EmptyModloadersList;
+            Modloaders = modloaders ?? DefaultSearchParams.EmptyModloadersList;
         }
 
         public CurseforgeSearchParams(string searchFilter, string gameVersion, IEnumerable<IProjectCategory> categories, int pageSize, int pageIndex, CfSortField sortField, IEnumerable<Modloader> modloaders)
-        : this(searchFilter, gameVersion, categories, pageSize, pageIndex, sortField, modloaders?.Select(x => x.ToString()) ?? DefaultSearchParams.EmptyModloadersList) { }
+        : this(searchFilter, gameVersion, categories, pageSize, pageIndex, sortField, modloaders?.Select(x => ((int)x).ToString()) ?? DefaultSearchParams.EmptyModloadersList) { }
 
         public CurseforgeSearchParams(string searchFilter, string gameVersion, IEnumerable<IProjectCategory> categories, int pageSize, int pageIndex, CfSortField sortField, IEnumerable<ClientType> clientTypes)
         : this(searchFilter, gameVersion, categories, pageSize, pageIndex, sortField, clientTypes?.Where(x => x != ClientType.Vanilla)?.Select(x => x.ToString()) ?? DefaultSearchParams.EmptyModloadersList) { }

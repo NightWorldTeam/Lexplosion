@@ -9,6 +9,7 @@ using System;
 using System.Threading;
 using static Lexplosion.Logic.Objects.Curseforge.InstanceManifest;
 using NightWorld.Collections.Concurrent;
+using System.Linq;
 
 namespace Lexplosion.Logic.Management.Addons
 {
@@ -21,7 +22,7 @@ namespace Lexplosion.Logic.Management.Addons
 		private string _projectId;
 		private string _fileId;
 
-		private ConcurrentHashSet<Modloader> _acceptableModloaders = new();
+		private ConcurrentHashSet<Modloader> _acceptableModloaders = null;
 
 		public ModrinthAddon(BaseInstanceData instanceData, ModrinthProjectInfo addonInfo)
 		{
@@ -169,13 +170,14 @@ namespace Lexplosion.Logic.Management.Addons
 		{
 			if (_addonInfo.Type == "mod")
 			{
-				var files = ModrinthApi.GetProjectFiles(_projectId, (Modloader)_instanceData.Modloader, _instanceData.GameVersion.Id);
+				Modloader mainMoaloder = (Modloader)_instanceData.Modloader;
+				var files = ModrinthApi.GetProjectFiles(_projectId, mainMoaloder, _instanceData.GameVersion.Id);
 				if (files.Count > 0 && files[0] != null)
 				{
 					_versionInfo = files[0];
 					_fileId = _versionInfo.FileId;
 				}
-				else
+				else if (_acceptableModloaders != null)
 				{
 					foreach (var modloader in _acceptableModloaders)
 					{
@@ -257,10 +259,18 @@ namespace Lexplosion.Logic.Management.Addons
 			List<ModrinthProjectFile> files;
 			if (_addonInfo.Type == "mod")
 			{
-				var modloaders = new Modloader[_acceptableModloaders.Count + 1];
-				modloaders[0] = (Modloader)_instanceData.Modloader;
-				_acceptableModloaders.CopyTo(modloaders, 1);
-				files = ModrinthApi.GetProjectFiles(_projectId, (Modloader)_instanceData.Modloader, _instanceData.GameVersion.Id);
+				Modloader mainModloader = (Modloader)_instanceData.Modloader;
+
+				var modloaders = new List<Modloader>();
+				var acceptableModloaders = _acceptableModloaders;
+
+				modloaders.Add(mainModloader);
+				if (acceptableModloaders != null)
+				{
+					modloaders.AddRange(acceptableModloaders);
+				}
+
+				files = ModrinthApi.GetProjectFiles(_projectId, modloaders, _instanceData.GameVersion.Id);
 			}
 			else
 			{
@@ -334,14 +344,15 @@ namespace Lexplosion.Logic.Management.Addons
 			return string.Empty;
 		}
 
-		public void SetAcceptableModloader(Modloader modloader)
+		public void SetAcceptableModloaders(IEnumerable<Modloader> modloaders)
 		{
-			_acceptableModloaders.Add(modloader);
-		}
+			if (modloaders == null)
+			{
+				_acceptableModloaders = null;
+				return;
+			}
 
-		public void RemoveAcceptableModloader(Modloader modloader)
-		{
-			_acceptableModloaders.Remove(modloader);
+			_acceptableModloaders = new ConcurrentHashSet<Modloader>(modloaders);
 		}
 
 		public string LoadWebsiteUrl()
@@ -350,5 +361,5 @@ namespace Lexplosion.Logic.Management.Addons
 		}
 
 		public event Action OnInfoUpdated;
-    }
+	}
 }

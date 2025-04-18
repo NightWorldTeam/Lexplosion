@@ -185,12 +185,19 @@ namespace Lexplosion.Logic.Network.Web
             return new(result, paginator?.TotalCount ?? 1);
         }
 
-        public static List<CurseforgeFileInfo> GetProjectFiles(string projectId, string gameVersion, int modloader)
+		/// <summary>
+		/// Возвращает файлы проекта
+		/// </summary>
+		/// <param name="projectId">id проекта</param>
+		/// <param name="gameVersion">Версия игры</param>
+		/// <param name="modloader">Модлоадер. Если его не нужно учитывать, то null</param>
+		/// <returns></returns>
+        public static List<CurseforgeFileInfo> GetProjectFiles(string projectId, string gameVersion, Modloader? modloader)
         {
             string modloaderStr = "";
-            if (modloader != (int)ClientType.Vanilla)
+            if (modloader != null)
             {
-                modloaderStr = "&modLoaderType=" + modloader;
+                modloaderStr = "&modLoaderType=" + ((int)modloader);
             }
 
             // TODO: у курсфорджа ограничения на 50 файлов, поэтому нужный нам файл иногда может просто не найтись

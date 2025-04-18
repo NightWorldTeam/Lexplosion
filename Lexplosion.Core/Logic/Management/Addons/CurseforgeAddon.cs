@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Lexplosion.Logic.Management.Instances;
 using System.Runtime.CompilerServices;
 using System;
+using NightWorld.Collections.Concurrent;
 
 namespace Lexplosion.Logic.Management.Addons
 {
@@ -17,7 +18,7 @@ namespace Lexplosion.Logic.Management.Addons
 		private CurseforgeFileInfo _versionInfo;
 		private string _projectId;
 
-		private HashSet<Modloader> _acceptableModloaders = new();
+		private ConcurrentHashSet<Modloader> _acceptableModloaders = null;
 
 		public CurseforgeAddon(BaseInstanceData instanceData, CurseforgeAddonInfo addonInfo)
 		{
@@ -134,22 +135,17 @@ namespace Lexplosion.Logic.Management.Addons
 		{
 			DefineAddonInfo();
 
-			//_versionInfo = GetLastFile(_instanceData.GameVersion, _addonInfo?.latestFiles, _addonInfo?.latestFilesIndexes, (AddonType)_addonInfo?.classId);
-			//if (_versionInfo == null)
-			//{
-			//    _versionInfo = GetLastFile(_instanceData.GameVersion, CurseforgeApi.GetProjectFiles(_addonInfo.id, _instanceData.GameVersion, _instanceData.Modloader), null, (AddonType)_addonInfo?.classId);
-			//}
+			Modloader? modloader = (_addonInfo.classId == 6) ? (Modloader)_instanceData.Modloader : null; // если это мод (_addonInfo.classId == 6), то передаем модлоадер. Иначе ставим null чтобы модлоадер не учитывался
 
-			var modloader = (_addonInfo.classId == 6) ? _instanceData.Modloader : ClientType.Vanilla; // если это мод (_addonInfo.classId == 6), то передаем модлоадер. Иначе ставим Vanilla
-
-			var files = CurseforgeApi.GetProjectFiles(_addonInfo.id, _instanceData.GameVersion.Id, (int)modloader);
+			var files = CurseforgeApi.GetProjectFiles(_addonInfo.id, _instanceData.GameVersion.Id, modloader);
 			_versionInfo = GetLastFile(_instanceData.GameVersion.Id, files, null, (AddonType)_addonInfo?.classId);
 
-			if (_versionInfo == null && modloader != ClientType.Vanilla)
+			var acceptableModloaders = _acceptableModloaders;
+			if (_versionInfo == null && modloader != null && acceptableModloaders != null)
 			{
-				foreach (var newModloader in _acceptableModloaders)
+				foreach (Modloader newModloader in acceptableModloaders)
 				{
-					files = CurseforgeApi.GetProjectFiles(_addonInfo.id, _instanceData.GameVersion.Id, (int)newModloader);
+					files = CurseforgeApi.GetProjectFiles(_addonInfo.id, _instanceData.GameVersion.Id, newModloader);
 					_versionInfo = GetLastFile(_instanceData.GameVersion.Id, files, null, (AddonType)_addonInfo?.classId);
 					if (_versionInfo != null) break;
 				}
@@ -185,8 +181,8 @@ namespace Lexplosion.Logic.Management.Addons
 
 		public IDictionary<string, object> GetAllVersions()
 		{
-			var modloader = (_addonInfo.classId == 6) ? _instanceData.Modloader : ClientType.Vanilla;
-			var files = CurseforgeApi.GetProjectFiles(_addonInfo.id, _instanceData.GameVersion.Id, (int)modloader);
+			Modloader? modloader = (_addonInfo.classId == 6) ? (Modloader)_instanceData.Modloader : null;
+			var files = CurseforgeApi.GetProjectFiles(_addonInfo.id, _instanceData.GameVersion.Id, modloader);
 
 			var result = new Dictionary<string, object>();
 			foreach (var file in files)
@@ -292,14 +288,15 @@ namespace Lexplosion.Logic.Management.Addons
 			return CurseforgeApi.GetProjectDescription(_addonInfo?.id);
 		}
 
-		public void SetAcceptableModloader(Modloader modloader)
+		public void SetAcceptableModloaders(IEnumerable<Modloader> modloaders)
 		{
-			_acceptableModloaders.Add(modloader);
-		}
+			if (modloaders == null)
+			{
+				_acceptableModloaders = null;
+				return;
+			}
 
-		public void RemoveAcceptableModloader(Modloader modloader)
-		{
-			_acceptableModloaders.Remove(modloader);
+			_acceptableModloaders = new ConcurrentHashSet<Modloader>(modloaders);
 		}
 
 		public string LoadWebsiteUrl()

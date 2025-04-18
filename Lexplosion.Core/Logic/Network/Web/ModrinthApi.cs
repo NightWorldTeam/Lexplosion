@@ -99,7 +99,7 @@ namespace Lexplosion.Logic.Network.Web
 		/// <param name="projectId">id проекта</param>
 		/// <param name="modloaders">Белый список модлоадеров. Если он не нужен, то null</param>
 		/// <param name="gameVersion">Версия игры</param>
-		public static List<ModrinthProjectFile> GetProjectFiles(string projectId, Modloader[] modloaders, string gameVersion)
+		public static List<ModrinthProjectFile> GetProjectFiles(string projectId, IEnumerable<Modloader> modloaders, string gameVersion)
 		{
 			string param = "?game_versions=" + WebUtility.UrlEncode($"[\"{gameVersion}\"]");
 			if (modloaders != null)
