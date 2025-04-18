@@ -100,63 +100,22 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            //if (string.IsNullOrEmpty(StartTB.Text))
-            //    StartTB.Text = "#6501FF";
-            //if (string.IsNullOrEmpty(EndTB.Text))
-            //    EndTB.Text = "#FEFF01";
 
-
-            //    var start = (Color)ColorConverter.ConvertFromString(StartTB.Text);
-            //var end = (Color)ColorConverter.ConvertFromString(EndTB.Text);
-
-            //Colors.ItemsSource = Gradient.GenerateGradient(start, end, 50);
         }
 
         private void Grid_Loaded(object sender, RoutedEventArgs e)
         {
-            var da = new DoubleAnimation()
-            {
-                Duration = TimeSpan.FromSeconds(2),
-                From = 0,
-                To = 1,
-                BeginTime = TimeSpan.FromSeconds(0.5)
-            };
 
-            da.Completed += Da_Completed;
-
-
-
-            // Применяем анимацию к заголовку
-            Lexplosion.BeginAnimation(OpacityProperty, da);
-            Logo.BeginAnimation(OpacityProperty, da);
         }
 
         private void Da_Completed(object sender, EventArgs e)
         {
-            var da1 = new DoubleAnimation()
-            {
-                Duration = TimeSpan.FromSeconds(1),
-                From = 0,
-                To = 1,
-            };
 
-            da1.Completed += SubtitleLoaded;
-            WelcomeText.BeginAnimation(OpacityProperty, da1);
         }
 
         private void SubtitleLoaded(object sender, EventArgs e)
         {
-            var da1 = new DoubleAnimation()
-            {
-                Duration = TimeSpan.FromSeconds(1),
-                From = 1,
-                To = 0,
-                BeginTime = TimeSpan.FromSeconds(2)
-            };
 
-            Lexplosion.BeginAnimation(OpacityProperty, da1);
-            Logo.BeginAnimation(OpacityProperty, da1);
-            WelcomeText.BeginAnimation(OpacityProperty, da1);
         }
     }
 }

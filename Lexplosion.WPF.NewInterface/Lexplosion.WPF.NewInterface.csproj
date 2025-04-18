@@ -1157,7 +1157,6 @@
     <None Include="Resources\Libraries\TaskbarNotification.zip" />
     <None Include="Resources\Libraries\Tommy.zip" />
     <None Include="Resources\Libraries\VirtualizingWrapPanel.zip" />
-    <Resource Include="Assets\fonts\Arkhip.ttf" />
     <Resource Include="Assets\fonts\PassDots.ttf" />
     <Resource Include="Assets\fonts\SFProDisplay.otf" />
     <None Include="packages.config" />
