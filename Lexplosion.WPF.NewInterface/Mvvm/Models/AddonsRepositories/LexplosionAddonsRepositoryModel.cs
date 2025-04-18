@@ -257,9 +257,16 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
             
         }
 
-        public void OpenWebsite() 
+        public void OpenWebsite(InstanceAddon addon) 
         {
-            _instanceModelBase.GoToWebsite();
+            try
+            {
+                System.Diagnostics.Process.Start(addon.WebsiteUrl);
+            }
+            catch
+            {
+
+            }
         }
 
 

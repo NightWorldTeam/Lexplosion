@@ -120,7 +120,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
         private RelayCommand _openExternalResourceCommand;
         public ICommand OpenExternalResourceCommand
         {
-            get => RelayCommand.GetCommand(ref _openExternalResourceCommand, Model.OpenWebsite);
+            get => RelayCommand.GetCommand<InstanceAddon>(ref _openExternalResourceCommand, Model.OpenWebsite);
         }
 
 
@@ -203,6 +203,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.AddonsRepositories
             ApplySelectedCategoriesCommand = new RelayCommand((obj) => Model.ApplyCategories());
             NextPageCommand = new RelayCommand((obj) => Model.Paginate((uint)obj));
             PrevPageCommand = new RelayCommand((obj) => Model.Paginate((uint)obj));
+        }
+
+
+        private void OpenAddonModpack() 
+        {
+            
         }
 
 
