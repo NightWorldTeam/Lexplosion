@@ -116,7 +116,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
                     {
                         InProgressAddons.Remove(new DownloableAddonFile(arg.Value1));
                     }
-                    else if (state == InstanceAddon.InstallAddonState.EndDownload) 
+                    else if (state == InstanceAddon.InstallAddonState.EndDownload)
                     {
                         if (arg.Value2 == DownloadAddonRes.Successful)
                         {
@@ -139,7 +139,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
                 {
                     instanceAddon.InstallLatestVersion(stateData.GetHandler, acceptableModloaders: acceptableModloaders);
                 }
-                else 
+                else
                 {
                     instanceAddon.InstallSpecificVersion(stateData.GetHandler, acceptableModloaders: acceptableModloaders, versionInfo: addonVersion);
                 }
@@ -147,12 +147,16 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
         }
 
 
-        public void InstallAddonCurrentVersion(InstanceAddon instanceAddon) 
+        public void InstallAddonCurrentVersion(InstanceAddon instanceAddon)
         {
-            _appCore.ModalNavigationStore.Open(new SelectAddonVersionViewModel(instanceAddon, InstallAddon));
+            var acceptableModloaders = SelectedModloaders
+                .Where(i => (int)i.EnumValue != (int)_instanceModelBase.BaseData.Modloader)
+                .Select(i => i.EnumValue);
+
+            _appCore.ModalNavigationStore.Open(new SelectAddonVersionViewModel(instanceAddon, InstallAddon, acceptableModloaders));
         }
 
-
+         
         protected override void OnSelectedCategoryChanged(IProjectCategory category, bool isSelected)
         {
             if (!HasUnconfirmChanges)
@@ -252,12 +256,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
         }
 
 
-        public void StopInstanceProcess() 
+        public void StopInstanceProcess()
         {
-            
+
         }
 
-        public void OpenWebsite(InstanceAddon addon) 
+        public void OpenWebsite(InstanceAddon addon)
         {
             try
             {
@@ -394,51 +398,3 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
         #endregion Private Methods
     }
 }
-/*-1 All 6 6
-435 Server Utility 6 6
-4671 Twitch Integration 6 6
-424 Cosmetic 6 6
-421 API and Library 6 6
-422 Adventure and RPG 6 6
-419 Magic 6 6
-5314 KubeJS 6 426
-6821 Bug Fixes 6 6
-434 Armor, Tools, and Weapons 6 6
-429 Industrial Craft 6 426
-432 Buildcraft 6 426
-408 Ores and Resources 6 406
-411 Mobs 6 406
-420 Storage 6 6
-6484 Create 6 426
-436 Food 6 6
-407 Biomes 6 406
-415 Energy, Fluid, and Item Transport 6 412
-430 Thaumcraft 6 426
-416 Farming 6 412
-4843 Automation 6 412
-406 World Gen 6 6
-410 Dimensions 6 406
-4773 CraftTweaker 6 426
-417 Energy 6 412
-409 Structures 6 406
-433 Forestry 6 426
-423 Map and Information 6 6
-418 Genetics 6 412
-Id Name ClassId ParentCategoryId}
-426 Addons 6 6
-427 Thermal Expansion 6 426
-6814 Performance 6 6
-5299 Education 6 6
-412 Technology 6 6
-413 Processing 6 412
-4485 Blood Magic 6 426
-6145 Skyblock 6 426
-428 Tinker's Construct 6 426
-4545 Applied Energistics 2 6 426
-414 Player Transport 6 412
-5232 Galacticraft 6 426
-425 Miscellaneous 6 6
-6954 Integrated Dynamics 6 426
-4558 Redstone 6 6
-5191 Utility & QoL 6 6
-4906 MCreator 6 6*/

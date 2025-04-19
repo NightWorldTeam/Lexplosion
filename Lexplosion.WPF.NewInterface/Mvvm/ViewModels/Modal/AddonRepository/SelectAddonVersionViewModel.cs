@@ -3,12 +3,14 @@ using Lexplosion.Logic.Objects;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Modal;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
 {
-    public sealed class SelectAddonVersionModel : ViewModelBase 
+    public sealed class SelectAddonVersionModel : ViewModelBase
     {
         private readonly InstanceAddon _instanceAddon;
 
@@ -18,10 +20,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
 
         public bool CanInstall { get => (!IsInstallLatestVersion && SelectedAddonVersion != null) || IsInstallLatestVersion; }
 
+        public bool HasVersions { get; set; }
+
         private object _selectedAddonVersion;
-        public object SelectedAddonVersion 
+        public object SelectedAddonVersion
         {
-            get => _selectedAddonVersion; set 
+            get => _selectedAddonVersion; set
             {
                 _selectedAddonVersion = value;
                 OnPropertyChanged(nameof(_selectedAddonVersion));
@@ -30,9 +34,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
         }
 
         private bool _isInstallLatestVersion = true;
-        public bool IsInstallLatestVersion 
+        public bool IsInstallLatestVersion
         {
-            get => _isInstallLatestVersion; set 
+            get => _isInstallLatestVersion; set
             {
                 _isInstallLatestVersion = value;
 
@@ -40,7 +44,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
                 {
                     SelectedAddonVersion = null;
                 }
-                else 
+                else
                 {
                     SelectedAddonVersion = AddonVersions[0];
                 }
@@ -49,14 +53,17 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
             }
         }
 
-        public SelectAddonVersionModel(InstanceAddon instanceAddon)
+        public SelectAddonVersionModel(InstanceAddon instanceAddon, IEnumerable<Modloader> modloaders)
         {
             _instanceAddon = instanceAddon;
-            AddonVersions = new(instanceAddon.GetAllVersion().Values.ToArray());
+            AddonVersions = new(instanceAddon.GetAllVersion(modloaders).Values.ToArray());
             OnPropertyChanged(nameof(AddonVersions));
+
+            HasVersions = AddonVersions.Count > 0;
+            OnPropertyChanged(nameof(HasVersions));
         }
 
-        public void InstallAddon(Action<InstanceAddon, object> install) 
+        public void InstallAddon(Action<InstanceAddon, object> install)
         {
             install?.Invoke(_instanceAddon, SelectedAddonVersion);
         }
@@ -66,9 +73,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
     {
         public SelectAddonVersionModel Model { get; }
 
-        public SelectAddonVersionViewModel(InstanceAddon instanceAddon, Action<InstanceAddon, object> install)
+        public SelectAddonVersionViewModel(InstanceAddon instanceAddon, Action<InstanceAddon, object> install, IEnumerable<Modloader> modloaders)
         {
-            Model = new(instanceAddon);
+            Model = new(instanceAddon, modloaders);
 
             ActionCommandExecutedEvent += (obj) => Model.InstallAddon(install);
         }

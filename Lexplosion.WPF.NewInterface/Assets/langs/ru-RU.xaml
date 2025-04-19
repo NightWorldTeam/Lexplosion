@@ -876,4 +876,8 @@
     <s:String x:Key="LoggingModeDescription">
         Включает ведения журнала логов
     </s:String>
+
+    <s:String x:Key="ThereAreNoAddonVersion">
+        Список версий оказался пустым. Мы не знаем, что случилось(
+    </s:String>
 </ResourceDictionary>

@@ -769,4 +769,8 @@
     <s:String x:Key="LoggingModeDescription">
         Enables logging
     </s:String>
+
+    <s:String x:Key="ThereAreNoAddonVersion">
+        The version list was empty. We don't know what happened.
+    </s:String>
 </ResourceDictionary>
