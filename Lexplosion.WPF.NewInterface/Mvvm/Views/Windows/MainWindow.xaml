@@ -409,7 +409,11 @@
                 </Grid.Clip>
             </Grid>
 
-            <controls:LoadingBoard IsActive="{Binding GlobalLoadingArgs.State}" Placeholder="{Binding GlobalLoadingArgs.ProcessDescription}" />
+            <controls:LoadingBoard
+                Background="Black"
+                BackgroundOpacity="0.8"
+                IsActive="{Binding GlobalLoadingArgs.State}"
+                Placeholder="{Binding GlobalLoadingArgs.ProcessDescription}" />
         </Grid>
     </Grid>
 </Window>
