@@ -181,8 +181,27 @@ namespace Lexplosion.Logic.Management.Addons
 
 		public IDictionary<string, object> GetAllVersions()
 		{
-			Modloader? modloader = (_addonInfo.classId == 6) ? (Modloader)_instanceData.Modloader : null;
-			var files = CurseforgeApi.GetProjectFiles(_addonInfo.id, _instanceData.GameVersion.Id, modloader);
+			AddonType type = (AddonType)(_addonInfo.classId ?? 0);
+
+			List<CurseforgeFileInfo> files;
+			if (type == AddonType.Mods)
+			{
+				var modloadersList = new List<Modloader>();
+				var acceptableModloaders = _acceptableModloaders;
+
+				modloadersList.Add((Modloader)_instanceData.Modloader);
+				if (acceptableModloaders != null)
+				{
+					modloadersList.AddRange(acceptableModloaders);
+				}
+
+				files = CurseforgeApi.GetProjectFiles(_addonInfo.id, _instanceData.GameVersion.Id, modloadersList);
+			}
+			else
+			{
+				files = CurseforgeApi.GetProjectFiles(_addonInfo.id, _instanceData.GameVersion.Id, modloader: null);
+			}
+
 
 			var result = new Dictionary<string, object>();
 			foreach (var file in files)

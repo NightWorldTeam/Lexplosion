@@ -104,7 +104,7 @@ namespace Lexplosion.Logic.Network.Web
 			string param = "?game_versions=" + WebUtility.UrlEncode($"[\"{gameVersion}\"]");
 			if (modloaders != null)
 			{
-				param += "&loaders=" + WebUtility.UrlEncode($"[\"{string.Join(",", modloaders.Select(x => x.ToString().ToLower()))}\"]");
+				param += "&loaders=" + WebUtility.UrlEncode($"[{string.Join(",", modloaders.Select(x => $"\"{x.ToString().ToLower()}\""))}]");
 			}
 			string url = "https://api.modrinth.com/v2/project/" + projectId + "/version" + param;
 			return GetApiData<List<ModrinthProjectFile>>(url);

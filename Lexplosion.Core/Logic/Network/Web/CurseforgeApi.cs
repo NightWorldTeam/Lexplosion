@@ -204,7 +204,19 @@ namespace Lexplosion.Logic.Network.Web
             return GetApiData<List<CurseforgeFileInfo>>("https://api.curseforge.com/v1/mods/" + projectId + "/files?gameVersion=" + gameVersion + modloaderStr);
         }
 
-        public static List<CurseforgeFileInfo> GetFilesFromFingerprints(List<string> fingerprint)
+		public static List<CurseforgeFileInfo> GetProjectFiles(string projectId, string gameVersion, IEnumerable<Modloader> modloaders)
+		{
+			string modloaderStr = "";
+			if (modloaders != null)
+			{
+				modloaderStr = "&modLoaderTypes=" + WebUtility.UrlEncode($"[\"{string.Join(",", modloaders.Select(x => (int)x))}\"]");
+			}
+
+			// TODO: у курсфорджа ограничения на 50 файлов, поэтому нужный нам файл иногда может просто не найтись
+			return GetApiData<List<CurseforgeFileInfo>>("https://api.curseforge.com/v1/mods/" + projectId + "/files?gameVersion=" + gameVersion + modloaderStr);
+		}
+
+		public static List<CurseforgeFileInfo> GetFilesFromFingerprints(List<string> fingerprint)
         {
             var jsonContent = "{\"fingerprints\": [" + string.Join(",", fingerprint) + "]}";
 
