@@ -274,10 +274,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
         {
             using (FolderBrowserDialog dialog = new FolderBrowserDialog())
             {
-                dialog.SelectedPath = Java17Path.Replace('/', '\\');
+                dialog.SelectedPath = SystemPath.Replace('/', '\\');
                 if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
-                    Java17Path = dialog.SelectedPath;
+                    SystemPath = dialog.SelectedPath;
                 }
             }
         }
