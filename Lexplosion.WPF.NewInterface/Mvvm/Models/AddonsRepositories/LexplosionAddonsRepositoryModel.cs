@@ -129,11 +129,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 
             InProgressAddons.Add(downloableAddonFile);
 
+            var acceptableModloaders = SelectedModloaders
+                .Where(i => (int)i.EnumValue != (int)_instanceModelBase.BaseData.Modloader)
+                .Select(i => i.EnumValue);
+
             Runtime.TaskRun(() =>
             {
-                var acceptableModloaders = SelectedModloaders
-                    .Where(i => (int)i.EnumValue != (int)_instanceModelBase.BaseData.Modloader)
-                    .Select(i => i.EnumValue);
 
                 if (addonVersion == null)
                 {
@@ -156,7 +157,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
             _appCore.ModalNavigationStore.Open(new SelectAddonVersionViewModel(instanceAddon, InstallAddon, acceptableModloaders));
         }
 
-         
+
         protected override void OnSelectedCategoryChanged(IProjectCategory category, bool isSelected)
         {
             if (!HasUnconfirmChanges)
