@@ -39,7 +39,7 @@ namespace Lexplosion.Global
 
         public const string secretWord = "iDRCQxDMwGVCjWVe0ZEJ4u9DeG38BNL52x777trQ"; // на самом деле нихуя не сикрет
         public const string passwordKey = "ZEmMJ0ZaXQXuHu8tUnfdaCLCQaFgRjOP";
-        public const int version = 1744830117;
+        public const int version = 1745159825;
         public const int CommandServerPort = 54352;
         public const string DiscordAppID = "839856058703806484";
         public const string ServerIp = "79.174.92.100";
