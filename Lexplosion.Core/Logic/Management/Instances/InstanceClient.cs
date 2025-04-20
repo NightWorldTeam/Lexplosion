@@ -627,6 +627,12 @@ namespace Lexplosion.Logic.Management.Instances
 				}
 			}
 		}
+		
+
+		/// <summary>
+		/// Возвращает количество сборок в библиотеке
+		/// </summary>
+		public static int LibrarySize { get => _installedInstances.Count; }
 
 		/// <summary>
 		/// Возвращает список модпаков для библиотеки.

@@ -62,8 +62,6 @@ namespace Lexplosion.Logic.FileSystem
 			string oldDir = DirectoryPath;
 			Create(path);
 
-			bool suuccessfull = false;
-
 			try
 			{
 				foreach (string dirPath in Directory.GetDirectories(oldDir, "*", SearchOption.AllDirectories))
@@ -74,18 +72,6 @@ namespace Lexplosion.Logic.FileSystem
 				foreach (string newPath in Directory.GetFiles(oldDir, "*.*", SearchOption.AllDirectories))
 				{
 					File.Copy(newPath, newPath.Replace(oldDir, path), true);
-				}
-
-				suuccessfull = true;
-
-			}
-			catch { }
-
-			try
-			{
-				if (suuccessfull)
-				{
-					Directory.Delete(oldDir, true);
 				}
 			}
 			catch { }
