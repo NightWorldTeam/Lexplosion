@@ -3,6 +3,8 @@ using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Tools;
 using Lexplosion.WPF.NewInterface.Core;
+using Lexplosion.WPF.NewInterface.Core.Notifications;
+using Lexplosion.WPF.NewInterface.Core.Services;
 using Lexplosion.WPF.NewInterface.Core.Tools;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal;
 using Microsoft.VisualBasic.Devices;
@@ -74,8 +76,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
 
                     bool copyEntireOldDirectory = false;
 
-                    _appCore.ModalNavigationStore.Open(
-                        new ConfirmActionViewModel(
+                    var entireDirectoryCopyModal = new ConfirmActionViewModel(
                             _appCore.Resources("DirectoryTransfer") as string,
                             string.Format(_appCore.Resources("DirectoryTransferDescription") as string),
                             _appCore.Resources("DirectoryTransferAgreeButtonText") as string,
@@ -83,17 +84,20 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
                             {
                                 copyEntireOldDirectory = true;
                                 DirectoryTransfer();
-                            })
-                    );
+                            });
 
-                    if (!copyEntireOldDirectory)
+                    entireDirectoryCopyModal.Closed += () =>
                     {
-                        new ConfirmActionViewModel(
-                            _appCore.Resources("RestartLauncher") as string,
-                            string.Format(_appCore.Resources("RestartLauncherDescription") as string),
-                            _appCore.Resources("RestartLauncherButtonAction") as string,
-                            (obj) => _appCore.RestartApp());
-                    }
+                        if (!copyEntireOldDirectory)
+                        {
+                            _appCore.NotificationService.Notify(new SimpleNotification(
+                                _appCore.Resources("RestartLauncher") as string,
+                                _appCore.Resources("RestartLauncherDescription") as string)
+                                );
+                        }
+                    };
+
+                    _appCore.ModalNavigationStore.Open(entireDirectoryCopyModal);
                 }
             }
         }
@@ -355,12 +359,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
                 WithDirectory.SetNewDirectory(SystemPath);
                 _appCore.MessageService.Success("SuccessDirectoryTransfer", true);
                 _appCore.SetGlobalLoadingStatus(false);
-
-                new ConfirmActionViewModel(
+                _appCore.NotificationService.Notify(new SimpleNotification(
                     _appCore.Resources("RestartLauncher") as string,
-                    string.Format(_appCore.Resources("RestartLauncherDescription") as string),
-                    _appCore.Resources("RestartLauncherButtonAction") as string,
-                    (obj) => _appCore.RestartApp());
+                    _appCore.Resources("RestartLauncherDescription") as string)
+                    );
             });
         }
 

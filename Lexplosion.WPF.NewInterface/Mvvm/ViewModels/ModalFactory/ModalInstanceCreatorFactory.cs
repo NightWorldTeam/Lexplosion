@@ -31,12 +31,14 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.ModalFactory
 
             var menuItems = new List<ModalLeftMenuTabItem>();
 
+            var hasMinecraftVersions = !(MainViewModel.AllGameVersions == null || MainViewModel.AllGameVersions.Length == 0);
+
             menuItems.Add(new ModalLeftMenuTabItem()
             {
                 IconKey = "AddCircle",
                 TitleKey = "Create",
-                IsEnable = true,
-                IsSelected = true,
+                IsEnable = hasMinecraftVersions,
+                IsSelected = hasMinecraftVersions,
                 Content = new InstanceFactoryViewModel((i) => _libraryController.Add(i), leftMenuControl.CloseCommand)
             });
 
@@ -45,7 +47,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.ModalFactory
                 IconKey = "PlaceItem",
                 TitleKey = "Import",
                 IsEnable = true,
-                IsSelected = false,
+                IsSelected = !hasMinecraftVersions,
                 Content = new InstanceImportViewModel(_appCore, (i) => _libraryController.Add(i), _libraryController.Remove)
             });
 
@@ -53,7 +55,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.ModalFactory
             {
                 IconKey = "DownloadCloud",
                 TitleKey = "Distributions",
-                IsEnable = true,
+                IsEnable = hasMinecraftVersions,
                 IsSelected = false,
                 Content = new NightWorldLimitedContentLayoutViewModel(new InstanceDistributionViewModel(_libraryController, _shareController), true)
             });

@@ -66,7 +66,9 @@ namespace Lexplosion.WPF.NewInterface.Stores
             }
 
             CurrentViewModel.CloseCommandExecutedEvent -= CloseInternal;
+            var tmpVM = CurrentViewModel;
             CurrentViewModel = null;
+            tmpVM.ExecuteClosedEvent();
         }
 
         private void CloseInternal(object obj) 

@@ -9,6 +9,8 @@ namespace Lexplosion.WPF.NewInterface.Core.Modal
         public event Action<object> CloseCommandExecutedEvent;
         public event Action<object> ActionCommandExecutedEvent;
 
+        public event Action Closed;
+
 
         #region Commands
 
@@ -38,12 +40,18 @@ namespace Lexplosion.WPF.NewInterface.Core.Modal
 
 
         public bool IsCloseAfterCommandExecuted { get; set; } = true;
+
+        public void ExecuteClosedEvent()
+        {
+            Closed?.Invoke();
+        }
     }
 
     public abstract class ModalViewModelBase : ViewModelBase, IModalViewModel
     {
         public event Action<object> CloseCommandExecutedEvent;
 
+        public event Action Closed;
 
         #region Commands
 
@@ -59,5 +67,10 @@ namespace Lexplosion.WPF.NewInterface.Core.Modal
 
 
         #endregion Commands
+
+        public void ExecuteClosedEvent()
+        {
+            Closed?.Invoke();
+        }
     }
 }
