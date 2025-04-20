@@ -18,6 +18,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -72,7 +73,7 @@ namespace Lexplosion.WPF.NewInterface
             // Подписываемся на эвент для загрузки всех строенных dll'ников
             AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
 
-            _appCore = new AppCore(App.Current.Dispatcher.Invoke, (key) => App.Current.Resources[key]);
+            _appCore = new AppCore(App.Current.Dispatcher.Invoke, (key) => App.Current.Resources[key], RestartApp);
 
             _app.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
@@ -94,8 +95,8 @@ namespace Lexplosion.WPF.NewInterface
             thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
 
-			App.Current.Run(_splashWindow);
-		}
+            App.Current.Run(_splashWindow);
+        }
 
         private static void SetupTestEnviroment()
         {
@@ -533,6 +534,19 @@ namespace Lexplosion.WPF.NewInterface
         public static void TrayMenuElementClickExecute()
         {
             TrayMenuElementClicked?.Invoke();
+        }
+
+        private static void RestartApp()
+        {
+            try
+            {
+                Process.Start(Application.ResourceAssembly.Location);
+                Runtime.KillApp();
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Restart Launcher Error. " + e);
+            }
         }
 
         private static Assembly AssemblyResolve(object sender, ResolveEventArgs args)

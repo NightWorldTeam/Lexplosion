@@ -72,6 +72,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
                     OnPropertyChanged();
                     DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
 
+                    bool copyEntireOldDirectory = false;
+
                     _appCore.ModalNavigationStore.Open(
                         new ConfirmActionViewModel(
                             _appCore.Resources("DirectoryTransfer") as string,
@@ -79,9 +81,19 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
                             _appCore.Resources("DirectoryTransferAgreeButtonText") as string,
                             (obj) =>
                             {
+                                copyEntireOldDirectory = true;
                                 DirectoryTransfer();
                             })
                     );
+
+                    if (!copyEntireOldDirectory)
+                    {
+                        new ConfirmActionViewModel(
+                            _appCore.Resources("RestartLauncher") as string,
+                            string.Format(_appCore.Resources("RestartLauncherDescription") as string),
+                            _appCore.Resources("RestartLauncherButtonAction") as string,
+                            (obj) => _appCore.RestartApp());
+                    }
                 }
             }
         }
@@ -286,10 +298,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
         {
             using (FolderBrowserDialog dialog = new FolderBrowserDialog())
             {
-                dialog.SelectedPath = Java17Path.Replace('/', '\\');
+                dialog.SelectedPath = SystemPath.Replace('/', '\\');
                 if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
-
+                    SystemPath = dialog.SelectedPath;
                 }
             }
         }
@@ -333,17 +345,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
             WindowHeight = uint.Parse(resValues[1]);
         }
 
-
-        private bool _isDirectoryTransferring;
-        public bool IsDirectoryTransferring
-        {
-            get => _isDirectoryTransferring; set
-            {
-                _isDirectoryTransferring = value;
-                OnPropertyChanged();
-            }
-        }
-
         private void DirectoryTransfer()
         {
             _appCore.SetGlobalLoadingStatus(true, "DirectoryTransferLoading", true);
@@ -353,6 +354,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
                 WithDirectory.SetNewDirectory(SystemPath);
                 _appCore.MessageService.Success("SuccessDirectoryTransfer", true);
                 _appCore.SetGlobalLoadingStatus(false);
+
+                new ConfirmActionViewModel(
+                    _appCore.Resources("RestartLauncher") as string,
+                    string.Format(_appCore.Resources("RestartLauncherDescription") as string),
+                    _appCore.Resources("RestartLauncherButtonAction") as string,
+                    (obj) => _appCore.RestartApp());
             });
         }
 

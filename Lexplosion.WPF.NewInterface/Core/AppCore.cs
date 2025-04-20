@@ -113,6 +113,10 @@ namespace Lexplosion.WPF.NewInterface.Core
     {
         public event Action<GlobalLoadingArgs> GlobalLoadingStarted;
 
+
+        private readonly Action _restartApp;
+
+
         /// <summary>
         /// Метод для выполнения кода в потоке приложения.
         /// Требуется для возможности работать с разными MVVM фремворками
@@ -123,6 +127,7 @@ namespace Lexplosion.WPF.NewInterface.Core
         /// Метод для получения ресурсов приложения по ключу.
         /// </summary>
         public readonly Func<object, object> Resources;
+
 
 
         #region Properties
@@ -153,8 +158,9 @@ namespace Lexplosion.WPF.NewInterface.Core
         #endregion Properties
 
 
-        public AppCore(Action<Action> uiThread, Func<object, object> getResource)
+        public AppCore(Action<Action> uiThread, Func<object, object> getResource, Action restartApp)
         {
+            _restartApp = restartApp;
             Resources = getResource;
             UIThread = uiThread;
             MessageService = new MessageService();
@@ -186,6 +192,11 @@ namespace Lexplosion.WPF.NewInterface.Core
             }
 
             GlobalLoadingStarted?.Invoke(new GlobalLoadingArgs(status, description));
+        }
+
+        public void RestartApp() 
+        {
+            _restartApp();
         }
     }
 }

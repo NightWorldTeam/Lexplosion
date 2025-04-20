@@ -790,4 +790,14 @@
     <s:String x:Key="DirectoryTransferLoading">
         Copying old directory to new one...
     </s:String>
+
+    <s:String x:Key="RestartLauncher">
+        Reboot required
+    </s:String>
+    <s:String x:Key="RestartLauncherDescription">
+        For the changes to take effect, you must restart the launcher. Without a restart, the launcher may not work correctly.
+    </s:String>
+    <s:String x:Key="RestartLauncherButtonAction">
+        Yes, I want to restart the launcher now
+    </s:String>
 </ResourceDictionary>

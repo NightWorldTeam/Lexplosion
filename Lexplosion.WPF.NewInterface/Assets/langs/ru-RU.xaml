@@ -896,4 +896,14 @@
     <s:String x:Key="DirectoryTransferLoading">
         Идет копирование старой директории в новую...
     </s:String>
+
+    <s:String x:Key="RestartLauncher">
+        Необходима перезагрузка
+    </s:String>
+    <s:String x:Key="RestartLauncherDescription">
+        Чтобы изменения вступили в силу, необходимо перезапустить лаунчер. Без перезагрузки лаунчер может работать некорректно.
+    </s:String>
+    <s:String x:Key="RestartLauncherButtonAction">
+        Да, я хочу сейчас перезапустить лаунчер
+    </s:String>
 </ResourceDictionary>
