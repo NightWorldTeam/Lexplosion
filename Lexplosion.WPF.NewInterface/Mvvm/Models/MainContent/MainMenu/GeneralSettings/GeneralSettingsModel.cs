@@ -280,8 +280,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
         #region Constructors
 
 
-        public GeneralSettingsModel()
+        public GeneralSettingsModel(AppCore appCore)
         {
+            _appCore = appCore;
             Resolutions = WindowsResolutionTools.GetAvaliableResolutionsToString();
             TotalPhysicalMemoryMb = (ci.TotalPhysicalMemory) / (1 << 20);
             RamStep = TotalPhysicalMemoryMb / 16;

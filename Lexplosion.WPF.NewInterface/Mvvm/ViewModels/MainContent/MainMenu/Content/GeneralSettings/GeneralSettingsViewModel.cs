@@ -70,7 +70,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         public GeneralSettingsViewModel(AppCore appCore)
         {
             _appCore = appCore;
-            Model = new GeneralSettingsModel();
+            Model = new GeneralSettingsModel(appCore);
             Model.Notify += OnModelNotify;
         }
 
