@@ -408,6 +408,8 @@
                     <EllipseGeometry x:Name="CircleReveal" Center="101,22" />
                 </Grid.Clip>
             </Grid>
+
+            <controls:LoadingBoard IsActive="{Binding GlobalLoadingArgs.State}" Placeholder="{Binding GlobalLoadingArgs.ProcessDescription}" />
         </Grid>
     </Grid>
 </Window>

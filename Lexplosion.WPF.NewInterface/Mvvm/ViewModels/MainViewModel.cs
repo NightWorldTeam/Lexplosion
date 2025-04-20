@@ -80,6 +80,17 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
         public static MinecraftVersion[] AllGameVersions { get; private set; }
 
 
+        private GlobalLoadingArgs _globalLoadingArgs;
+        public GlobalLoadingArgs GlobalLoadingArgs
+        {
+            get => _globalLoadingArgs; set 
+            {
+                _globalLoadingArgs = value;
+                OnPropertyChanged();
+            }
+        }
+
+
         #endregion Properties
 
 
@@ -111,6 +122,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
         public MainViewModel(AppCore appCore)
         {
             AppCore = appCore;
+
+            appCore.GlobalLoadingStarted += (val) =>
+            {
+                GlobalLoadingArgs = val;
+            };
+
             Model = new MainModel(appCore);
 
             SubscribeToOpenModpackEvent();

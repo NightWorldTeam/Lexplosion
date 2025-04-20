@@ -111,6 +111,8 @@ namespace Lexplosion.WPF.NewInterface.Core
 
     public sealed class AppCore
     {
+        public event Action<GlobalLoadingArgs> GlobalLoadingStarted;
+
         /// <summary>
         /// Метод для выполнения кода в потоке приложения.
         /// Требуется для возможности работать с разными MVVM фремворками
@@ -172,6 +174,18 @@ namespace Lexplosion.WPF.NewInterface.Core
                 action?.Invoke(viewModel);
                 return viewModel;
             });
+        }
+
+        public void SetGlobalLoadingStatus(bool status, string processDescription = "", bool isProcessDescriptionKey = false) 
+        {
+            var description = processDescription;
+
+            if (isProcessDescriptionKey) 
+            {
+                description = Resources(processDescription) as string;
+            }
+
+            GlobalLoadingStarted?.Invoke(new GlobalLoadingArgs(status, description));
         }
     }
 }

@@ -880,4 +880,20 @@
     <s:String x:Key="ThereAreNoAddonVersion">
         Список версий оказался пустым. Мы не знаем, что случилось(
     </s:String>
+
+    <s:String x:Key="SuccessDirectoryTransfer">
+        Копирование данных старой директории в новую успешно завершнен.
+    </s:String>
+    <s:String x:Key="DirectoryTransfer">
+        Полное копирование старой директории
+    </s:String>
+    <s:String x:Key="DirectoryTransferDescription">
+        Желаете ли вы полностью скопировать старую директорию?
+    </s:String>
+    <s:String x:Key="DirectoryTransferAgreeButtonText">
+        Скопировать полностью
+    </s:String>
+    <s:String x:Key="DirectoryTransferLoading">
+        Идет копирование старой директории в новую...
+    </s:String>
 </ResourceDictionary>

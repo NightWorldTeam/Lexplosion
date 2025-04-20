@@ -121,6 +121,7 @@
     <Compile Include="Core\Converters\ValueConverters\RowElementCountConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\StringCollectionToShortString.cs" />
     <Compile Include="Core\FiltableObservableCollection.cs" />
+    <Compile Include="Core\GlobalLoadingArgs.cs" />
     <Compile Include="Core\IRefreshable.cs" />
     <Compile Include="Core\LeftPanelFieldInfo.cs" />
     <Compile Include="Core\Notifications\IActionNotification.cs" />

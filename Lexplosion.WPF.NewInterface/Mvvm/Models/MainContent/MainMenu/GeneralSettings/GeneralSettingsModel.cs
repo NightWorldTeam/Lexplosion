@@ -4,6 +4,7 @@ using Lexplosion.Logic.FileSystem;
 using Lexplosion.Tools;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Tools;
+using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal;
 using Microsoft.VisualBasic.Devices;
 using System;
 using System.Collections.Generic;
@@ -70,6 +71,17 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
                     GlobalData.GeneralSettings.GamePath = WithDirectory.CreateAcceptableGamePath(value, out var _);
                     OnPropertyChanged();
                     DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+
+                    _appCore.ModalNavigationStore.Open(
+                        new ConfirmActionViewModel(
+                            _appCore.Resources("DirectoryTransfer") as string,
+                            string.Format(_appCore.Resources("DirectoryTransferDescription") as string),
+                            _appCore.Resources("DirectoryTransferAgreeButtonText") as string,
+                            (obj) =>
+                            {
+                                DirectoryTransfer();
+                            })
+                    );
                 }
             }
         }
@@ -223,9 +235,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
             }
         }
 
-        public string JVMArgs 
+        public string JVMArgs
         {
-            get => GlobalData.GeneralSettings.JVMArgs; set 
+            get => GlobalData.GeneralSettings.JVMArgs; set
             {
                 GlobalData.GeneralSettings.JVMArgs = value;
                 OnPropertyChanged();
@@ -274,10 +286,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
         {
             using (FolderBrowserDialog dialog = new FolderBrowserDialog())
             {
-                dialog.SelectedPath = SystemPath.Replace('/', '\\');
+                dialog.SelectedPath = Java17Path.Replace('/', '\\');
                 if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
-                    SystemPath = dialog.SelectedPath;
+
                 }
             }
         }
@@ -321,6 +333,28 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
             WindowHeight = uint.Parse(resValues[1]);
         }
 
+
+        private bool _isDirectoryTransferring;
+        public bool IsDirectoryTransferring
+        {
+            get => _isDirectoryTransferring; set
+            {
+                _isDirectoryTransferring = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private void DirectoryTransfer()
+        {
+            _appCore.SetGlobalLoadingStatus(true, "DirectoryTransferLoading", true);
+
+            Runtime.TaskRun(() =>
+            {
+                WithDirectory.SetNewDirectory(SystemPath);
+                _appCore.MessageService.Success("SuccessDirectoryTransfer", true);
+                _appCore.SetGlobalLoadingStatus(false);
+            });
+        }
 
         #endregion Private Methods
     }

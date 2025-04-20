@@ -773,4 +773,21 @@
     <s:String x:Key="ThereAreNoAddonVersion">
         The version list was empty. We don't know what happened.
     </s:String>
+
+
+    <s:String x:Key="SuccessDirectoryTransfer">
+        The directory data transfer to the new directory has been completed successfully.
+    </s:String>
+    <s:String x:Key="DirectoryTransfer">
+        Entire directory transfer
+    </s:String>
+    <s:String x:Key="DirectoryTransferDescription">
+        Would you like to copy entire old directory?
+    </s:String>
+    <s:String x:Key="DirectoryTransferAgreeButtonText">
+        I want to transfer entire old directory
+    </s:String>
+    <s:String x:Key="DirectoryTransferLoading">
+        Copying old directory to new one...
+    </s:String>
 </ResourceDictionary>
