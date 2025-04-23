@@ -18,6 +18,8 @@ namespace Lexplosion
 		public static bool IsFirtsLaunch { get; private set; }
 		public static Process CurrentProcess { get; private set; }
 
+		public static ClientsManager ClientsManager { get; private set; }
+
 		/// <summary>
 		/// Происходит переда закрытием лаунчера
 		/// </summary>
@@ -91,7 +93,8 @@ namespace Lexplosion
 				LauncherUpdate(version, updaterOffsetLeft, updaterOffsetRight);
 			}
 
-			InstanceClient.DefineInstalledInstances();
+			ClientsManager = new ClientsManager();
+			ClientsManager.DefineInstalledInstances();
 
 			bool isStarted = CommandReceiver.StartCommandServer();
 			if (!isStarted)

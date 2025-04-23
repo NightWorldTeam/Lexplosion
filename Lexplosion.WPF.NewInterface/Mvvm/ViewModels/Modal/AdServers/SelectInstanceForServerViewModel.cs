@@ -35,9 +35,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
     {
         private readonly MinecraftServerInstance _server;
         private readonly Func<InstanceClient, InstanceModelBase> _addInstanceToLibrary;
+		private readonly ClientsManager _clientsManager = Runtime.ClientsManager;
 
 
-        private ObservableCollection<InstanceForServer> _availableInstances;
+		private ObservableCollection<InstanceForServer> _availableInstances;
         public IEnumerable<InstanceForServer> AvailableInstances { get => _availableInstances; }
 
         public SelectInstanceForServerModel(MinecraftServerInstance server, SelectInstanceForServerArgs selectInstanceForServerArgs)
@@ -57,7 +58,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
         /// </summary>
         public void AddNewInstance() 
         {
-            var newInstance = InstanceClient.CreateClient(_server, false);
+            var newInstance = _clientsManager.CreateClient(_server, false);
             var instanceModelBase = _addInstanceToLibrary(newInstance);
 
             var instanceForServer = new InstanceForServer(instanceModelBase);

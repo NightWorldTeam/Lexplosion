@@ -116,6 +116,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 	public class InstanceModelBase : ViewModelBase, IEquatable<InstanceClient>
 	{
 		private readonly InstanceClient _instanceClient;
+		private readonly ClientsManager _clientsManager = Runtime.ClientsManager;
 		private readonly Action<InstanceClient> _exportFunc;
 		private readonly Action<InstanceModelBase> _setRunningGame;
 
@@ -278,7 +279,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 		}
 
 		public bool IsInstalled { get => _instanceClient.IsInstalled; }
-		public bool InLibrary { get => _instanceClient.InLibrary; }
+		public bool InLibrary { get => _instanceClient.CreatedLocally || _instanceClient.IsFictitious; }
 		public string DirectoryPath { get => _instanceClient.GetDirectoryPath(); }
 		public bool HasAvailableUpdate { get => _instanceClient.UpdateAvailable && _instanceClient.IsInstalled; }
 
@@ -492,7 +493,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 		/// </summary>
 		public void AddToLibrary()
 		{
-			_instanceClient.AddToLibrary();
+			_clientsManager.AddToLibrary(_instanceClient);
 			GlobalAddedToLibrary?.Invoke(this);
 			AddedToLibraryEvent?.Invoke(this);
 			DataChanged?.Invoke();
@@ -646,7 +647,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 		/// </summary>
 		public void Delete()
 		{
-			if (InstanceClient.InstancesCount == 1) return;
+			if (_clientsManager.LibrarySize == 1) return;
 
 			_appCore.ModalNavigationStore.Open(new ConfirmActionViewModel(
 					_appCore.Resources("DeletingInstance") as string,
@@ -656,7 +657,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 					{
 						// TODO: ПОДПИСАТЬСЯ НА эвент и удалять через него.
 						GlobalDeletedEvent?.Invoke(this);
-						_instanceClient.Delete();
+						_clientsManager.DeleteFromLibrary(_instanceClient);
 						DeletedEvent?.Invoke(this);
 					}));
 		}

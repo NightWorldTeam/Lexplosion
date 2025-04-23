@@ -223,7 +223,7 @@ namespace Lexplosion.Logic.Management
 
 		public static bool operator !=(MinecraftVersion mv1, MinecraftVersion mv2)
 		{
-			return mv1.Id != mv2.Id;
+			return mv1?.Id != mv2?.Id;
 		}
 
 		#endregion Math Operators

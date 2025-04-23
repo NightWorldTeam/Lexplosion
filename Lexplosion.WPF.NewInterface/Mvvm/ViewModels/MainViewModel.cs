@@ -31,8 +31,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
         public static event Action AllVersionsLoaded;
 
         private readonly MainMenuLayoutViewModel _mainMenuLayoutViewModel;
+		private readonly ClientsManager _clientsManager = Runtime.ClientsManager;
 
-        public AppCore AppCore { get; private set; }
+		public AppCore AppCore { get; private set; }
 
 
         #region Properties
@@ -214,7 +215,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
         {
             CommandReceiver.OpenModpackPage += delegate (string modpackId)
             {
-                InstanceClient instanceClient = InstanceClient.GetInstance(InstanceSource.Nightworld, modpackId);
+                InstanceClient instanceClient = _clientsManager.GetInstance(InstanceSource.Nightworld, modpackId);
                 if (instanceClient != null)
                 {
                     InstanceModelBase viewModel = Model.LibraryController.Instances.FirstOrDefault(i => i.CheckInstanceClient(instanceClient));

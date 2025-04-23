@@ -27,6 +27,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
 
 		private readonly AppCore _appCore;
 		private readonly ComputerInfo ci = new ComputerInfo();
+		private readonly ClientsManager _clientsManager = Runtime.ClientsManager;
 
 		public IEnumerable<string> Resolutions { get; }
 
@@ -77,7 +78,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
 
 					bool copyEntireOldDirectory = false;
 
-					if (InstanceClient.LibrarySize > 0)
+					if (_clientsManager.LibrarySize > 0)
 					{
 						var entireDirectoryCopyModal = new ConfirmActionViewModel(
 							_appCore.Resources("DirectoryTransfer") as string,

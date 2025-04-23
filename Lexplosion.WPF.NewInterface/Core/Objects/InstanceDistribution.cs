@@ -61,6 +61,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
         private readonly Action<ImportResult> _resultHandler;
         private InstanceClient _instanceClient;
         private readonly Action<InstanceDistribution> _removeFileReceiver;
+        private readonly ClientsManager _clientsManager = Runtime.ClientsManager;
 
 
         #region Properties
@@ -154,7 +155,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
         {
             var dynamicStateHandler = new DynamicStateData<ImportInterruption, InterruptionType>();
 			var importData = new ImportData(dynamicStateHandler.GetHandler);
-            _instanceClient = InstanceClient.Import(_receiver, DownloadResultHandler, (state) => { InstanceState = state; }, importData);
+            _instanceClient = _clientsManager.Import(_receiver, DownloadResultHandler, (state) => { InstanceState = state; }, importData);
             IsDownloadStarted = true;
             _args.LibraryController.Add(_instanceClient, this);
 

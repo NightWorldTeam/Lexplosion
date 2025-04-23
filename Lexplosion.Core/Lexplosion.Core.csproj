@@ -105,6 +105,7 @@
     <Compile Include="Logic\Management\Import\ImportInterruption.cs" />
     <Compile Include="Logic\Management\Installers\FreeSourceInstanceInstallManager.cs" />
     <Compile Include="Logic\Management\Import\Importers\IImportManager.cs" />
+    <Compile Include="Logic\Management\Instances\ClientsManager.cs" />
     <Compile Include="Logic\Management\Instances\FreeInstance.cs" />
     <Compile Include="Logic\Management\Instances\InstanceGroup.cs" />
     <Compile Include="Logic\Management\MinecraftVersion.cs" />

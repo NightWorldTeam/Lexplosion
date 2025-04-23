@@ -16,6 +16,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
 	public class InstanceFactoryModel : ViewModelBase
 	{
 		public event Action<ClientType> GameTypeChanged;
+		private readonly ClientsManager _clientsManager = Runtime.ClientsManager;
 
 
 		#region Properties
@@ -233,7 +234,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
 			var instanceName = InstanceName?.Trim();
 			if (string.IsNullOrWhiteSpace(instanceName)) instanceName = $"{Version.ToString()} {ClientType}";
 
-			return InstanceClient.CreateClient(
+			return _clientsManager.CreateClient(
 				instanceName,
 				InstanceSource.Local,
 				Version,
