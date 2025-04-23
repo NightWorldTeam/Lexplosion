@@ -30,8 +30,8 @@ namespace Lexplosion.Logic.Management
 
 		private static LaunchGame _classInstance = null;
 
-		private bool _removeImportantTaskMark = true;
-		private object _removeImportantTaskLocker = new object();
+		private bool _onlineGameStopedMark = true;
+		private object _onlineGameStpedEventLocker = new object();
 
 		public string GameVersion { get; private set; } = null;
 		public string GameClientName { get; private set; } = string.Empty;
@@ -103,6 +103,14 @@ namespace Lexplosion.Logic.Management
 		/// Отрабатывает когда сетевая игра меняет свой статус
 		/// </summary>
 		public static event Action<OnlineGameStatus, string> StateChanged;
+		/// <summary>
+		/// Отрабатывает когда запускается сетевая игра
+		/// </summary>
+		public static event Action OnlineGameSystemStarted;
+		/// <summary>
+		/// Отрабатывает когда завершается сетевая игра
+		/// </summary>
+		public static event Action OnlineGameSystemStoped;
 
 		#endregion
 
@@ -144,7 +152,7 @@ namespace Lexplosion.Logic.Management
 			_processDataReceived?.Invoke(e.Data);
 		}
 
-		private static bool GuiIsExists(int processId)
+		private bool GuiIsExists(int processId)
 		{
 			bool isExists = false;
 
@@ -549,8 +557,8 @@ namespace Lexplosion.Logic.Management
 					var serverData = new ControlServerData(LaunсherSettings.ServerIp);
 					_gameGateway = new OnlineGameGateway(_activeAccount.UUID, _activeAccount.SessionToken, serverData, _generalSettings.NetworkDirectConnection);
 
-					_removeImportantTaskMark = false;
-					Lexplosion.Runtime.AddImportantTask();
+					_onlineGameStopedMark = false;
+					OnlineGameSystemStarted?.Invoke();
 
 					_gameGateway.ConnectingUser += delegate (string uuid)
 					{
@@ -626,12 +634,12 @@ namespace Lexplosion.Logic.Management
 					OnGameStoped?.Invoke(this);
 					_activeAccount?.SetOnlineStatus();
 
-					lock (_removeImportantTaskLocker)
+					lock (_onlineGameStpedEventLocker)
 					{
-						if (!_removeImportantTaskMark)
+						if (!_onlineGameStopedMark)
 						{
-							_removeImportantTaskMark = true;
-							Lexplosion.Runtime.RemoveImportantTask();
+							_onlineGameStopedMark = true;
+							OnlineGameSystemStoped?.Invoke();
 						}
 					}
 
@@ -936,12 +944,12 @@ namespace Lexplosion.Logic.Management
 			}
 			catch { }
 
-			lock (_removeImportantTaskLocker)
+			lock (_onlineGameStpedEventLocker)
 			{
-				if (!_removeImportantTaskMark)
+				if (!_onlineGameStopedMark)
 				{
-					_removeImportantTaskMark = true;
-					Lexplosion.Runtime.RemoveImportantTask();
+					_onlineGameStopedMark = true;
+					OnlineGameSystemStoped?.Invoke();
 				}
 			}
 		}

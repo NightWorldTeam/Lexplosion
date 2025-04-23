@@ -278,7 +278,7 @@ namespace Lexplosion.WPF.NewInterface
                 }
             };
 
-            LaunchGame.OnGameStarted += delegate (LaunchGame gameManager) //подписываемся на эвент запуска игры
+            LaunchGame.OnGameStarted += (LaunchGame gameManager) => //подписываемся на эвент запуска игры
             {
                 // если в настрйоках устанавлено что нужно скрывать лаунчер при запуске клиента, то скрывеам главное окно
                 if (GlobalData.GeneralSettings.IsHiddenMode == true)
@@ -299,7 +299,7 @@ namespace Lexplosion.WPF.NewInterface
                 });
             };
 
-            LaunchGame.OnGameStoped += delegate (LaunchGame gameManager) //подписываемся на эвент завершения игры
+            LaunchGame.OnGameStoped += (LaunchGame gameManager) => //подписываемся на эвент завершения игры
             {
                 _activeGameManager = null;
 

@@ -10,6 +10,7 @@ using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Network.WebSockets;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network.Services;
+using Lexplosion.Logic.Management;
 
 namespace Lexplosion
 {
@@ -69,6 +70,9 @@ namespace Lexplosion
             // инициализация
             GlobalData.InitSetting();
             WithDirectory.Create(GlobalData.GeneralSettings.GamePath);
+
+			LaunchGame.OnlineGameSystemStarted += AddImportantTask;
+			LaunchGame.OnlineGameSystemStoped += RemoveImportantTask;
 
 			CurrentProcess = Process.GetCurrentProcess();
 
