@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using Lexplosion.Logic.FileSystem;
+using Lexplosion.Logic.Network.Services;
 using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Objects.Curseforge;
@@ -10,7 +11,7 @@ namespace Lexplosion.Logic.Management.Installers
 {
     class CurseforgeInstallManager : ArchiveInstallManager<CurseforgeInstaller, InstanceManifest, CurseforgeFileInfo, InstancePlatformData>
     {
-        public CurseforgeInstallManager(string instanceid, bool onlyBase, CancellationToken cancelToken) : base(new CurseforgeInstaller(instanceid), instanceid, onlyBase, cancelToken)
+        public CurseforgeInstallManager(string instanceid, bool onlyBase, MinecraftInfoService infoService, CancellationToken cancelToken) : base(new CurseforgeInstaller(instanceid), instanceid, onlyBase, infoService, cancelToken)
         { }
 
         protected override CurseforgeFileInfo GetProjectInfo(string projectId, string projectVersion)
@@ -103,21 +104,21 @@ namespace Lexplosion.Logic.Management.Installers
             return manifest.minecraft?.version ?? "";
         }
 
-        public override string ProjectId { get => ProjectInfo?.id.ToString() ?? ""; }
+        public override string ProjectId { get => projectInfo?.id.ToString() ?? ""; }
 
         protected override bool ProfectInfoIsValid
         {
-            get => !string.IsNullOrWhiteSpace(ProjectInfo?.downloadUrl) && !string.IsNullOrWhiteSpace(ProjectInfo.fileName);
+            get => !string.IsNullOrWhiteSpace(projectInfo?.downloadUrl) && !string.IsNullOrWhiteSpace(projectInfo.fileName);
         }
 
         protected override string ArchiveDownloadUrl
         {
-            get => ProjectInfo.downloadUrl;
+            get => projectInfo.downloadUrl;
         }
 
         protected override string ArchiveFileName
         {
-            get => ProjectInfo.fileName;
+            get => projectInfo.fileName;
         }
     }
 }

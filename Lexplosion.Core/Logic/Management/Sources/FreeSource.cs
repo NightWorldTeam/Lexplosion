@@ -10,6 +10,7 @@ using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Global;
 using System;
+using Lexplosion.Logic.Network.Services;
 
 namespace Lexplosion.Logic.Management.Sources
 {
@@ -95,7 +96,7 @@ namespace Lexplosion.Logic.Management.Sources
         public IInstallManager GetInstaller(string localId, bool updateOnlyBase, CancellationToken updateCancelToken)
         {
             var content = DataFilesManager.GetExtendedPlatfromData<FreeSourcePlatformData>(localId);
-            return new FreeSourceInstanceInstallManager(GetSourceMap(content), localId, updateOnlyBase, updateCancelToken);
+            return new FreeSourceInstanceInstallManager(GetSourceMap(content), localId, updateOnlyBase, NetworkServicesManager.MinecraftInfo, updateCancelToken);
         }
 
         public InstancePlatformData CreateInstancePlatformData(string externalId, string localId, string instanceVersion)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
+using Lexplosion.Logic.Network.Services;
 using Lexplosion.Logic.Objects.CommonClientData;
 
 namespace Lexplosion.Logic.Management.Installers
@@ -15,6 +16,7 @@ namespace Lexplosion.Logic.Management.Installers
 		private CancellationToken _cancelToken;
 
 		private string InstanceId;
+		private readonly MinecraftInfoService _infoService;
 		private int stagesCount = 0;
 		private int updatesCount = 0;
 
@@ -32,9 +34,10 @@ namespace Lexplosion.Logic.Management.Installers
 
 		public event Action DownloadStarted;
 
-		public LocalInstallManager(string instanceid, CancellationToken cancelToken)
+		public LocalInstallManager(string instanceid, MinecraftInfoService infoService, CancellationToken cancelToken)
 		{
 			InstanceId = instanceid;
+			_infoService = infoService;
 			_cancelToken = cancelToken;
 			installer = new InstanceInstaller(instanceid);
 		}
@@ -58,7 +61,7 @@ namespace Lexplosion.Logic.Management.Installers
 			var optifineVersion = Manifest.version.AdditionalInstaller?.installerVersion;
 			var isNwClient = Manifest.version.IsNightWorldClient;
 
-			Manifest = ToServer.GetVersionManifest(gameVersion, modloaderType, isNwClient, modloaderVersion, optifineVersion);
+			Manifest = _infoService.GetVersionManifest(gameVersion, modloaderType, isNwClient, modloaderVersion, optifineVersion);
 
 			if (Manifest != null)
 			{

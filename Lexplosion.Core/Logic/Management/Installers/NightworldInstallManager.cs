@@ -6,6 +6,7 @@ using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects.Nightworld;
 using Lexplosion.Logic.Objects.CommonClientData;
+using Lexplosion.Logic.Network.Services;
 
 namespace Lexplosion.Logic.Management.Installers
 {
@@ -28,7 +29,8 @@ namespace Lexplosion.Logic.Management.Installers
 
         private bool _requiresUpdates = true;
         private bool _onlyBase;
-        private int stagesCount = 0;
+		private readonly MinecraftInfoService _infoService;
+		private int stagesCount = 0;
         private int _baseFaliseUpdatesCount = 0;
         private int _modpackFilesUpdatesCount = 0;
 
@@ -48,11 +50,12 @@ namespace Lexplosion.Logic.Management.Installers
 
         public event Action DownloadStarted;
 
-        public NightworldInstallManager(string instanceid, bool onlyBase, CancellationToken cancelToken)
+        public NightworldInstallManager(string instanceid, bool onlyBase, MinecraftInfoService infoService, CancellationToken cancelToken)
         {
             InstanceId = instanceid;
             _onlyBase = onlyBase;
-            _cancelToken = cancelToken;
+			_infoService = infoService;
+			_cancelToken = cancelToken;
             installer = new NightWorldInstaller(instanceid);
         }
 
@@ -107,7 +110,7 @@ namespace Lexplosion.Logic.Management.Installers
                     {
                         bool isNwClient = manifest_?.version?.IsNightWorldClient == true;
                         var versionInfo = nightworldManifest.version;
-                        manifest = ToServer.GetVersionManifest(versionInfo.gameVersion, versionInfo.modloaderType, isNwClient, versionInfo.modloaderVersion);
+                        manifest = _infoService.GetVersionManifest(versionInfo.gameVersion, versionInfo.modloaderType, isNwClient, versionInfo.modloaderVersion);
                     }
 
                     if (manifest == null)
@@ -125,7 +128,7 @@ namespace Lexplosion.Logic.Management.Installers
                     }
                     else
                     {
-                        manifest = ToServer.GetVersionManifest(versionInfo.GameVersion, versionInfo.ModloaderType, versionInfo.IsNightWorldClient, versionInfo.ModloaderVersion);
+                        manifest = _infoService.GetVersionManifest(versionInfo.GameVersion, versionInfo.ModloaderType, versionInfo.IsNightWorldClient, versionInfo.ModloaderVersion);
                     }
 
                     if (manifest == null)
@@ -146,7 +149,7 @@ namespace Lexplosion.Logic.Management.Installers
                         {
                             var mcVersion = nightworldManifest.version;
                             bool isNwClient = versionInfo.IsNightWorldClient == true;
-                            manifest = ToServer.GetVersionManifest(mcVersion.gameVersion, mcVersion.modloaderType, isNwClient, mcVersion.modloaderVersion);
+                            manifest = _infoService.GetVersionManifest(mcVersion.gameVersion, mcVersion.modloaderType, isNwClient, mcVersion.modloaderVersion);
                         }
 
                         if (manifest == null)
@@ -176,7 +179,7 @@ namespace Lexplosion.Logic.Management.Installers
                 else
                 {
                     var versionInfo = nightworldManifest.version;
-                    manifest = ToServer.GetVersionManifest(versionInfo.gameVersion, versionInfo.modloaderType, isNwClient, versionInfo.modloaderVersion);
+                    manifest = _infoService.GetVersionManifest(versionInfo.gameVersion, versionInfo.modloaderType, isNwClient, versionInfo.modloaderVersion);
                 }
 
                 if (manifest == null)

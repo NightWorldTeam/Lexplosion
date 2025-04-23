@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects.FreeSource;
+using Lexplosion.Logic.Network.Services;
 
 namespace Lexplosion.Logic.Management.Installers
 {
@@ -12,16 +13,16 @@ namespace Lexplosion.Logic.Management.Installers
     {
         private SourceMap _urlsMap;
 
-        public FreeSourceInstanceInstallManager(SourceMap urlsMap, string instanceid, bool onlyBase, CancellationToken cancelToken) : base(new FreeSourceInstanceInstaller(instanceid), instanceid, onlyBase, cancelToken)
+        public FreeSourceInstanceInstallManager(SourceMap urlsMap, string instanceid, bool onlyBase, MinecraftInfoService infoService, CancellationToken cancelToken) : base(new FreeSourceInstanceInstaller(instanceid), instanceid, onlyBase, infoService, cancelToken)
         {
             _urlsMap = urlsMap;
         }
 
-        public override string ProjectId => ProjectInfo?.ModpackId ?? string.Empty;
+        public override string ProjectId => projectInfo?.ModpackId ?? string.Empty;
 
-        protected override bool ProfectInfoIsValid => !string.IsNullOrWhiteSpace(ProjectInfo?.DownloadUrl);
+        protected override bool ProfectInfoIsValid => !string.IsNullOrWhiteSpace(projectInfo?.DownloadUrl);
 
-        protected override string ArchiveDownloadUrl => ProjectInfo.DownloadUrl;
+        protected override string ArchiveDownloadUrl => projectInfo.DownloadUrl;
 
         protected override string ArchiveFileName
         {
@@ -29,7 +30,7 @@ namespace Lexplosion.Logic.Management.Installers
             {
                 try
                 {
-                    var url = new Uri(ProjectInfo.DownloadUrl);
+                    var url = new Uri(projectInfo.DownloadUrl);
                     return Path.GetFileName(url.LocalPath);
                 }
                 catch

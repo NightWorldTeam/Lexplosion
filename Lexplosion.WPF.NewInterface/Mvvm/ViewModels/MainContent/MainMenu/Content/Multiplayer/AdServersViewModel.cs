@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network;
+using Lexplosion.Logic.Network.Services;
 using Lexplosion.Logic.Objects;
 using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
@@ -27,7 +28,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             _selectInstanceForServerArgs = selectInstanceForServerArgs;
             _backCommand = backCommand;
 
-            var servers = ToServer.GetMinecraftServersList();
+            var servers = NetworkServicesManager.MinecraftInfo.GetMinecraftServersList();
 
             foreach (var server in servers) 
             {
@@ -79,7 +80,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
         private async void SetOnlineInfoToServer(MinecraftServerInstance server)
         {
-            server.OnlineCount = await ToServer.GetMcServerOnline(server);
+            server.OnlineCount = await NetworkServicesManager.MinecraftInfo.GetMcServerOnline(server);
         }
 
         internal void OnServerBannerLoaded(MinecraftServerInstance instance)

@@ -43,54 +43,6 @@ namespace Lexplosion.Logic.Network
             return HttpPost(LaunсherSettings.URL.Base + "api/onlineStatus") == "online";
         }
 
-        public static async Task<int> GetMcServerOnline(MinecraftServerInstance server)
-        {
-            int count = -1;
-            await Task.Run(() =>
-            {
-                string result = ToServer.HttpGet($"https://api.mcsrvstat.us/3/{server.Address}");
-                if (result == null) return;
-
-                try
-                {
-                    var data = JsonConvert.DeserializeObject<McServerOnlineData>(result);
-                    if (data?.Players != null)
-                    {
-                        count = data.Players.Online;
-                    }
-                }
-                catch { }
-            });
-
-            return count;
-        }
-
-        public static List<MinecraftServerInstance> GetMinecraftServersList()
-        {
-            string result = HttpGet(LaunсherSettings.URL.Base + "/api/minecraftServers/list");
-
-            if (result == null) return new List<MinecraftServerInstance>();
-
-            try
-            {
-                var data = JsonConvert.DeserializeObject<List<MinecraftServerInstance>>(result);
-
-                for (int i = 0; i < data.Count; i++)
-                {
-                    MinecraftServerInstance element = data[i];
-                    if (!element.IsValid()) data.Remove(element);
-                }
-
-                Random rand = new Random();
-                rand.Shuffle(data);
-                return data;
-            }
-            catch
-            {
-                return new List<MinecraftServerInstance>();
-            }
-        }
-
         public static T ProtectedRequest<T>(string url) where T : ProtectedManifest
         {
             Random rnd = new Random();
@@ -147,80 +99,6 @@ namespace Lexplosion.Logic.Network
                     return default;
                 }
             }
-        }
-
-        /// <summary>
-        /// Получает маниест для майкрафт версии
-        /// </summary>
-        /// <param name="version">Версия майнкрафта</param>
-        /// <param name="clientType">тип клиента</param>
-        /// <param name="isNwClient">Включен ли NightWorldClient</param>
-        /// <param name="modloaderVersion">Версия модлоадера, если он передан в clientType</param>
-        /// <param name="optifineVersion">Версия оптифайна, если он не нужен то null</param>
-        public static VersionManifest GetVersionManifest(string version, ClientType clientType, bool isNwClient, string modloaderVersion = null, string optifineVersion = null)
-        {
-            try
-            {
-                string modloaderUrl = "";
-                if (!string.IsNullOrWhiteSpace(modloaderVersion))
-                {
-                    if (clientType != ClientType.Vanilla)
-                    {
-                        modloaderUrl = "/" + clientType.ToString().ToLower() + "/";
-                        modloaderUrl += modloaderVersion;
-                    }
-                }
-
-                var filesData = ProtectedRequest<ProtectedVersionManifest>(LaunсherSettings.URL.VersionsData + WebUtility.UrlEncode(version) + modloaderUrl);
-                if (filesData?.version != null)
-                {
-                    if (isNwClient && filesData.version.NightWorldClientData != null)
-                    {
-                        filesData.version.IsNightWorldClient = true;
-                    }
-
-                    Dictionary<string, LibInfo> libraries = new Dictionary<string, LibInfo>();
-                    foreach (string lib in filesData.libraries.Keys)
-                    {
-                        if (filesData.libraries[lib].os == null || filesData.libraries[lib].os.Contains("windows"))
-                        {
-                            libraries[lib] = filesData.libraries[lib].GetLibInfo;
-                        }
-                    }
-
-                    VersionManifest manifest = new VersionManifest
-                    {
-                        version = filesData.version,
-                        libraries = libraries
-                    };
-
-                    if (optifineVersion != null)
-                    {
-                        var optifineData = ProtectedRequest<ProtectedInstallerManifest>(LaunсherSettings.URL.InstallersData + WebUtility.UrlEncode(version) + "/optifine/" + optifineVersion);
-                        if (optifineData == null) return null;
-
-                        foreach (string lib in optifineData.libraries.Keys)
-                        {
-                            if (optifineData.libraries[lib].os == null || optifineData.libraries[lib].os.Contains("windows"))
-                            {
-                                libraries[lib] = optifineData.libraries[lib].GetLibInfo;
-                                libraries[lib].additionalInstallerType = AdditionalInstallerType.Optifine;
-                            }
-                        }
-
-                        optifineData.version.installerVersion = optifineVersion;
-                        manifest.version.AdditionalInstaller = optifineData.version;
-                    }
-
-                    return manifest;
-                }
-            }
-            catch (Exception ex)
-            {
-                Runtime.DebugWrite("Exception " + ex);
-            }
-
-            return null;
         }
 
         /// <summary>

@@ -4,12 +4,13 @@ using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Objects.Modrinth;
 using System.Collections.Generic;
+using Lexplosion.Logic.Network.Services;
 
 namespace Lexplosion.Logic.Management.Installers
 {
     class ModrinthInstallManager : ArchiveInstallManager<ModrinthInstaller, InstanceManifest, ModrinthProjectFile, InstancePlatformData>
     {
-        public ModrinthInstallManager(string instanceid, bool onlyBase, CancellationToken cancelToken) : base(new ModrinthInstaller(instanceid), instanceid, onlyBase, cancelToken)
+        public ModrinthInstallManager(string instanceid, bool onlyBase, MinecraftInfoService infoService, CancellationToken cancelToken) : base(new ModrinthInstaller(instanceid), instanceid, onlyBase, infoService, cancelToken)
         { }
         protected override ModrinthProjectFile GetProjectInfo(string projectId, string projectVersion)
         {
@@ -94,21 +95,21 @@ namespace Lexplosion.Logic.Management.Installers
             return manifest.dependencies["minecraft"] ?? "";
         }
 
-        public override string ProjectId { get => ProjectInfo?.ProjectId ?? string.Empty; }
+        public override string ProjectId { get => projectInfo?.ProjectId ?? string.Empty; }
 
         protected override bool ProfectInfoIsValid
         {
-            get => ProjectInfo?.Files != null && ProjectInfo.Files.Count > 0 && ProjectInfo.Files[0].Filename != null && ProjectInfo.Files[0].Url != null;
+            get => projectInfo?.Files != null && projectInfo.Files.Count > 0 && projectInfo.Files[0].Filename != null && projectInfo.Files[0].Url != null;
         }
 
         protected override string ArchiveDownloadUrl
         {
-            get => ProjectInfo.Files[0].Url;
+            get => projectInfo.Files[0].Url;
         }
 
         protected override string ArchiveFileName
         {
-            get => ProjectInfo.Files[0].Filename;
+            get => projectInfo.Files[0].Filename;
         }
     }
 }

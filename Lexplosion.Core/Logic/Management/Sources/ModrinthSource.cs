@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Logic.Management.Installers;
 using Lexplosion.Logic.Management.Instances;
+using Lexplosion.Logic.Network.Services;
 using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
@@ -15,7 +16,7 @@ namespace Lexplosion.Logic.Management.Sources
 
         public IInstallManager GetInstaller(string localId, bool updateOnlyBase, CancellationToken updateCancelToken)
         {
-            return new ModrinthInstallManager(localId, updateOnlyBase, updateCancelToken);
+            return new ModrinthInstallManager(localId, updateOnlyBase, NetworkServicesManager.MinecraftInfo, updateCancelToken);
         }
 
         private static List<ModrinthCategory> ParseCategories(List<string> data)

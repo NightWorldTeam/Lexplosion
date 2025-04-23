@@ -2,6 +2,7 @@
 using Lexplosion.Logic.Management.Installers;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network;
+using Lexplosion.Logic.Network.Services;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ namespace Lexplosion.Logic.Management.Sources
 
         public IInstallManager GetInstaller(string localId, bool updateOnlyBase, CancellationToken updateCancelToken)
         {
-            return new NightworldInstallManager(localId, updateOnlyBase, updateCancelToken);
+            return new NightworldInstallManager(localId, updateOnlyBase, NetworkServicesManager.MinecraftInfo, updateCancelToken);
         }
 
         public CatalogResult<Objects.InstanceInfo> GetCatalog(InstanceSource type, ISearchParams searchParams)

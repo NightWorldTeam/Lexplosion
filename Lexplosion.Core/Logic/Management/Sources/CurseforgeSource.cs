@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Logic.Management.Installers;
 using Lexplosion.Logic.Management.Instances;
+using Lexplosion.Logic.Network.Services;
 using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
@@ -23,7 +24,7 @@ namespace Lexplosion.Logic.Management.Sources
 
         public IInstallManager GetInstaller(string localId, bool updateOnlyBase, CancellationToken updateCancelToken)
         {
-            return new CurseforgeInstallManager(localId, updateOnlyBase, updateCancelToken);
+            return new CurseforgeInstallManager(localId, updateOnlyBase, NetworkServicesManager.MinecraftInfo, updateCancelToken);
         }
 
         public CatalogResult<InstanceInfo> GetCatalog(InstanceSource type, ISearchParams searchParams)
