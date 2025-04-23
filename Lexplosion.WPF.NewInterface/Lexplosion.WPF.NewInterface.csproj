@@ -513,6 +513,10 @@
       <DependentUpon>PasswordResetView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Core\ViewModel\ViewModelBase.cs" />
+    <Page Include="Assets\langs\de-DE.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Assets\langs\en-US.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -520,6 +524,13 @@
     <Page Include="Assets\langs\ru-RU.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Assets\langs\uk-UA.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Assets\langs\zh-CN.xaml">
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Assets\LanguagesRegister.xaml">
       <SubType>Designer</SubType>

@@ -1,3 +1,14 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:s="clr-namespace:System;assembly=mscorlib">
+	<!--
+        == NEW
+        == WPF
+        == INTERFACE
+        == TRANSLATE
+    -->
+
     <!--  Import (продолжение) -->
     <s:String x:Key="ImportDragDropFieldDescription">拖放整合包压缩文件以开始上传。</s:String>
     <s:String x:Key="Review">预览</s:String>
