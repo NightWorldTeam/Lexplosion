@@ -453,24 +453,24 @@ namespace Lexplosion.Logic.Management.Instances
 
 		internal void CompleteClient(string name, MinecraftVersion gameVersion, IEnumerable<CategoryBase> categories, string summary, string description, string author, string websiteUrl)
 		{
-			if (name != null)
+			if (!string.IsNullOrEmpty(name))
 				Name = name;
-			else if (Name == null)
+			else if (string.IsNullOrEmpty(Name))
 				Name = UnknownName;
 
-			if (summary != null)
+			if (!string.IsNullOrEmpty(summary))
 				Summary = summary;
-			else if (Summary == null)
+			else if (string.IsNullOrEmpty(Summary))
 				Summary = NoDescription;
 
-			if (description != null)
+			if (!string.IsNullOrEmpty(description))
 				Description = description;
-			else if (Description == null)
+			else if (string.IsNullOrEmpty(Description))
 				Description = NoDescription;
 
-			if (author != null)
+			if (!string.IsNullOrEmpty(author))
 				Author = author;
-			else if (Author == null)
+			else if (string.IsNullOrEmpty(Author))
 				Author = UnknownAuthor;
 
 			if (categories != null)

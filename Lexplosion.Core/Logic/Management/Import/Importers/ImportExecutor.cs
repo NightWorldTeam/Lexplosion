@@ -37,43 +37,54 @@ namespace Lexplosion.Logic.Management.Import.Importers
 			{
 				if (Path.GetExtension(_filePath) == ".mrpack")
 				{
+					Runtime.DebugWrite(".mrpack pack");
 					_importManager = new ModrinthImportManager(_filePath, _settings, _cancellationToken);
 					return;
 				}
 
 				if (Path.GetExtension(_filePath) == ".nwpk")
 				{
+					Runtime.DebugWrite(".nwpk pack");
 					_importManager = new NWPackImportManager(_filePath, _settings, _cancellationToken);
 					return;
-				}
-
-				if (Path.GetExtension(_filePath) == ".zip")
-				{
-					using (ZipArchive archive = ZipFile.OpenRead(_filePath))
-					{
-						if (archive.GetEntry("modrinth.index.json") != null)
-						{
-							_importManager = new ModrinthImportManager(_filePath, _settings, _cancellationToken);
-							return;
-						}
-
-						if (archive.GetEntry("instanceInfo.json") != null)
-						{
-							_importManager = new NWPackImportManager(_filePath, _settings, _cancellationToken);
-							return;
-						}
-
-						if (archive.GetEntry("manifest.json") != null)
-						{
-							_importManager = new CurseforgeImportManager(_filePath, _settings, _cancellationToken);
-							return;
-						}
-
-						_importManager = new SimpleArchiveImportManager(_filePath, _settings, _importId, _cancellationToken, _interruptionHandler);
-					}
-				}
+				}	
 			}
 			catch { }
+
+			try
+			{
+				Runtime.DebugWrite("trying open as an archive");
+
+				using (ZipArchive archive = ZipFile.OpenRead(_filePath))
+				{
+					if (archive.GetEntry("modrinth.index.json") != null)
+					{
+						Runtime.DebugWrite("is modrinth");
+						_importManager = new ModrinthImportManager(_filePath, _settings, _cancellationToken);
+						return;
+					}
+
+					if (archive.GetEntry("instanceInfo.json") != null)
+					{
+						Runtime.DebugWrite("is nightworld");
+						_importManager = new NWPackImportManager(_filePath, _settings, _cancellationToken);
+						return;
+					}
+
+					if (archive.GetEntry("manifest.json") != null)
+					{
+						Runtime.DebugWrite("is curseforge");
+						_importManager = new CurseforgeImportManager(_filePath, _settings, _cancellationToken);
+						return;
+					}
+
+					_importManager = new SimpleArchiveImportManager(_filePath, _settings, _importId, _cancellationToken, _interruptionHandler);
+				}
+			}
+			catch (Exception ex)
+			{
+				Runtime.DebugWrite("file open error " + ex);
+			}
 		}
 
 		public ImportResult Prepeare(out PrepeareResult result)
