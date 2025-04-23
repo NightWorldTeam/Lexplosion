@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Lexplosion.Global;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
-using static Lexplosion.Logic.Objects.Curseforge.CurseforgeProjectInfo;
 using Newtonsoft.Json.Linq;
 
 namespace Lexplosion.Logic.Network.Services

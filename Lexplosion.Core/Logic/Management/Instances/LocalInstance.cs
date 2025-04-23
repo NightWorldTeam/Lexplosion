@@ -5,37 +5,37 @@ using System.Collections.Generic;
 
 namespace Lexplosion.Logic.Management.Instances
 {
-    class LocalInstance : PrototypeInstance
-    {
-        public override bool CheckUpdates(string localId)
-        {
-            return false;
-        }
+	class LocalInstance : PrototypeInstance
+	{
+		public override bool CheckUpdates(string localId)
+		{
+			return false;
+		}
 
-        public override InstanceData GetFullInfo(string localId, string externalId)
-        {
-            if (localId == null) return null;
+		public override InstanceData GetFullInfo(string localId, string externalId)
+		{
+			if (localId == null) return null;
 
-            VersionManifest instanceManifest = DataFilesManager.GetManifest(localId, false);
-            var assetsData = DataFilesManager.GetFile<InstanceAssetsFileDecodeFormat>(WithDirectory.DirectoryPath + "/instances-assets/" + localId + "/assets.json");
+			VersionManifest instanceManifest = DataFilesManager.GetManifest(localId, false);
+			var assetsData = DataFilesManager.GetFile<InstanceAssetsFileDecodeFormat>(WithDirectory.DirectoryPath + "/instances-assets/" + localId + "/assets.json");
 
-            return new InstanceData
-            {
-                Source = InstanceSource.Local,
-                Categories = new List<IProjectCategory>(),
-                Description = assetsData?.Description,
-                Summary = assetsData?.Summary,
-                TotalDownloads = 0,
-                GameVersion = instanceManifest?.version?.GameVersion,
-                LastUpdate = null,
-                Modloader = instanceManifest?.version?.ModloaderType ?? ClientType.Vanilla,
-                Images = WithDirectory.LoadMcScreenshots(localId)
-            };
-        }
+			return new InstanceData
+			{
+				Source = InstanceSource.Local,
+				Categories = new List<IProjectCategory>(),
+				Description = assetsData?.Description,
+				Summary = assetsData?.Summary,
+				TotalDownloads = 0,
+				GameVersion = instanceManifest?.version?.GameVersion,
+				LastUpdate = null,
+				Modloader = instanceManifest?.version?.ModloaderType ?? ClientType.Vanilla,
+				Images = WithDirectory.LoadMcScreenshots(localId)
+			};
+		}
 
-        public override List<InstanceVersion> GetVersions(string externalId)
-        {
-            return null;
-        }
-    }
+		public override List<InstanceVersion> GetVersions(string externalId)
+		{
+			return null;
+		}
+	}
 }

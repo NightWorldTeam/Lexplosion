@@ -8,24 +8,24 @@ using System.Threading;
 namespace Lexplosion.Logic.Management.Sources
 {
 	internal class LocalSource : IInstanceSource
-    {
-        public PrototypeInstance ContentManager { get => new LocalInstance(); }
+	{
+		public PrototypeInstance ContentManager { get => new LocalInstance(); }
 
-        public IInstallManager GetInstaller(string localId, bool updateOnlyBase, CancellationToken updateCancelToken)
-        {
-            return new LocalInstallManager(localId, NetworkServicesManager.MinecraftInfo, updateCancelToken);
-        }
+		public IInstallManager GetInstaller(string localId, bool updateOnlyBase, CancellationToken updateCancelToken)
+		{
+			return new LocalInstallManager(localId, NetworkServicesManager.MinecraftInfo, updateCancelToken);
+		}
 
-        public CatalogResult<InstanceInfo> GetCatalog(InstanceSource type, ISearchParams searchParams)
-        {
-            return new();
-        }
+		public CatalogResult<InstanceInfo> GetCatalog(InstanceSource type, ISearchParams searchParams)
+		{
+			return new();
+		}
 
-        public InstancePlatformData CreateInstancePlatformData(string externalId, string localId, string instanceVersion)
-        {
-            return null;
-        }
+		public InstancePlatformData CreateInstancePlatformData(string externalId, string localId, string instanceVersion)
+		{
+			return null;
+		}
 
-        public InstanceSource SourceType { get => InstanceSource.Local; }
-    }
+		public InstanceSource SourceType { get => InstanceSource.Local; }
+	}
 }

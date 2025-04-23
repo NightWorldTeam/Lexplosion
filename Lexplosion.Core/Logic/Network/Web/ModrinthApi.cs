@@ -10,7 +10,6 @@ using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.Modrinth;
 using Lexplosion.Tools;
-using Microsoft.Win32;
 
 namespace Lexplosion.Logic.Network.Web
 {

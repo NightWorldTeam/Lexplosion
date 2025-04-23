@@ -1,22 +1,12 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
-using System.Linq;
 using System.Net;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading;
-using Tommy;
-using Newtonsoft.Json;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Tools;
 using Lexplosion.Logic.Management.Instances;
-using Lexplosion.Logic.Network.Web;
-using Lexplosion.Logic.Objects.Curseforge;
-using Lexplosion.Logic.Objects.Modrinth;
 
 namespace Lexplosion.Logic.Management.Addons
 {
@@ -158,17 +148,17 @@ namespace Lexplosion.Logic.Management.Addons
 			}
 		}
 
-        private bool _isLoading;
-        public bool IsLoading
-        {
-            get => _isLoading; set
-            {
-                _isLoading = value;
-                OnPropertyChanged();
-            }
-        }
+		private bool _isLoading;
+		public bool IsLoading
+		{
+			get => _isLoading; set
+			{
+				_isLoading = value;
+				OnPropertyChanged();
+			}
+		}
 
-        private string _websiteUrl = null;
+		private string _websiteUrl = null;
 		public string WebsiteUrl
 		{
 			get => _websiteUrl; set
@@ -340,9 +330,9 @@ namespace Lexplosion.Logic.Management.Addons
 			// если такой аддон уже скачивается - выходим нахуй
 			if (!isDependencie && _synchronizer.CheckAddonInstalling(_addonPrototype.ProjectId)) return;
 
-            IsLoading = true;
+			IsLoading = true;
 
-            _cancelTokenSource = new CancellationTokenSource();
+			_cancelTokenSource = new CancellationTokenSource();
 			stateHandler.ChangeState(new SetValues<InstanceAddon, DownloadAddonRes>
 			{
 				Value1 = this,

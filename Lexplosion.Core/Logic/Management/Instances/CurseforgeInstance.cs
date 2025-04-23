@@ -5,7 +5,6 @@ using System.Net;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects;
-using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Objects.Curseforge;
 using Lexplosion.Tools;
 

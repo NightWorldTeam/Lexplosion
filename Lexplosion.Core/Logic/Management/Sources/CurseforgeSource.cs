@@ -10,87 +10,87 @@ using System.Threading;
 namespace Lexplosion.Logic.Management.Sources
 {
 	class CurseforgeSource : IInstanceSource
-    {
-        // чтобы не создавать объект каждый вызов метода GetCatalog 
-        private readonly IProjectCategory _modpacksAllCategory = new SimpleCategory()
-        {
-            Id = "-1",
-            Name = "All",
-            ClassId = ((int)CfProjectType.Modpacks).ToString(),
-            ParentCategoryId = ((int)CfProjectType.Modpacks).ToString(),
-        };
+	{
+		// чтобы не создавать объект каждый вызов метода GetCatalog 
+		private readonly IProjectCategory _modpacksAllCategory = new SimpleCategory()
+		{
+			Id = "-1",
+			Name = "All",
+			ClassId = ((int)CfProjectType.Modpacks).ToString(),
+			ParentCategoryId = ((int)CfProjectType.Modpacks).ToString(),
+		};
 
-        public PrototypeInstance ContentManager { get => new CurseforgeInstance(); }
+		public PrototypeInstance ContentManager { get => new CurseforgeInstance(); }
 
-        public IInstallManager GetInstaller(string localId, bool updateOnlyBase, CancellationToken updateCancelToken)
-        {
-            return new CurseforgeInstallManager(localId, updateOnlyBase, NetworkServicesManager.MinecraftInfo, updateCancelToken);
-        }
+		public IInstallManager GetInstaller(string localId, bool updateOnlyBase, CancellationToken updateCancelToken)
+		{
+			return new CurseforgeInstallManager(localId, updateOnlyBase, NetworkServicesManager.MinecraftInfo, updateCancelToken);
+		}
 
-        public CatalogResult<InstanceInfo> GetCatalog(InstanceSource type, ISearchParams searchParams)
-        {
-            IProjectCategory category = _modpacksAllCategory;
+		public CatalogResult<InstanceInfo> GetCatalog(InstanceSource type, ISearchParams searchParams)
+		{
+			IProjectCategory category = _modpacksAllCategory;
 
-            CurseforgeSearchParams sParams;
-            if (searchParams is CurseforgeSearchParams)
-            {
-                sParams = (CurseforgeSearchParams)searchParams;
-            }
-            else
-            {
-                sParams = new CurseforgeSearchParams();
-            }
+			CurseforgeSearchParams sParams;
+			if (searchParams is CurseforgeSearchParams)
+			{
+				sParams = (CurseforgeSearchParams)searchParams;
+			}
+			else
+			{
+				sParams = new CurseforgeSearchParams();
+			}
 
-            // получаем первый элемент списка
-            using (var iter = searchParams.Categories.GetEnumerator())
-            {
-                if (iter.MoveNext())
-                {
-                    category = (IProjectCategory)iter.Current;
-                }
-            }
+			// получаем первый элемент списка
+			using (var iter = searchParams.Categories.GetEnumerator())
+			{
+				if (iter.MoveNext())
+				{
+					category = (IProjectCategory)iter.Current;
+				}
+			}
 
-            var catalogResult = CurseforgeApi.GetInstances(sParams);
-            var result = new List<InstanceInfo>();
+			var catalogResult = CurseforgeApi.GetInstances(sParams);
+			var result = new List<InstanceInfo>();
 
-            foreach (var instance in catalogResult.Collection)
-            {
-                // проверяем версию игры
-                if (instance.latestFilesIndexes != null && instance.latestFilesIndexes.Count > 0 && instance.latestFilesIndexes[0].gameVersion != null)
-                {
-                    string author = null;
-                    if (instance.authors != null && instance.authors.Count > 0)
-                    {
-                        author = instance.authors[0].name;
-                    }
+			foreach (var instance in catalogResult.Collection)
+			{
+				// проверяем версию игры
+				if (instance.latestFilesIndexes != null && instance.latestFilesIndexes.Count > 0 && instance.latestFilesIndexes[0].gameVersion != null)
+				{
+					string author = null;
+					if (instance.authors != null && instance.authors.Count > 0)
+					{
+						author = instance.authors[0].name;
+					}
 
-                    result.Add(new InstanceInfo()
-                    {
-                        Name = instance.name,
-                        Author = author,
-                        Categories = instance.categories,
-                        Summary = instance.summary,
-                        Description = instance.summary,
-                        GameVersion = new MinecraftVersion(instance.latestFilesIndexes[0].gameVersion),
-                        WebsiteUrl = instance.links?.websiteUrl,
-                        LogoUrl = instance.logo?.url,
-                        ExternalId = instance.id
-                    });
-                }
-            }
+					result.Add(new InstanceInfo()
+					{
+						Name = instance.name,
+						Author = author,
+						Categories = instance.categories,
+						Summary = instance.summary,
+						Description = instance.summary,
+						GameVersion = new MinecraftVersion(instance.latestFilesIndexes[0].gameVersion),
+						WebsiteUrl = instance.links?.websiteUrl,
+						LogoUrl = instance.logo?.url,
+						ExternalId = instance.id
+					});
+				}
+			}
 
-            return new(result, catalogResult.TotalCount);
-        }
+			return new(result, catalogResult.TotalCount);
+		}
 
-        public InstancePlatformData CreateInstancePlatformData(string externalId, string localId, string instanceVersion)
-        {
-            return new InstancePlatformData
-            {
-                id = externalId,
-                instanceVersion = instanceVersion,
-            };
-        }
+		public InstancePlatformData CreateInstancePlatformData(string externalId, string localId, string instanceVersion)
+		{
+			return new InstancePlatformData
+			{
+				id = externalId,
+				instanceVersion = instanceVersion,
+			};
+		}
 
-        public InstanceSource SourceType { get => InstanceSource.Curseforge; }
-    }
+		public InstanceSource SourceType { get => InstanceSource.Curseforge; }
+	}
 }

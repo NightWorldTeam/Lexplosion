@@ -3,73 +3,73 @@ using System.Runtime.CompilerServices;
 
 namespace Lexplosion.Logic.Management.Accounts.Auth
 {
-    using AuthData = NightWorldApi.AuthData;
+	using AuthData = NightWorldApi.AuthData;
 
-    internal class NightWorldAuth : IAuthHandler
-    {
-        public IAuthHandler.AuthResult Auth(string login, string accessData)
-        {
-            var data = new AuthData
-            {
-                login = login,
-                accessData = new AuthData.AccessData
-                {
-                    type = "password",
-                    data = Cryptography.Sha256(accessData + login)
-                }
-            };
+	internal class NightWorldAuth : IAuthHandler
+	{
+		public IAuthHandler.AuthResult Auth(string login, string accessData)
+		{
+			var data = new AuthData
+			{
+				login = login,
+				accessData = new AuthData.AccessData
+				{
+					type = "password",
+					data = Cryptography.Sha256(accessData + login)
+				}
+			};
 
-            return Execute(data);
-        }
+			return Execute(data);
+		}
 
-        public IAuthHandler.AuthResult ReAuth(string login, string accessData)
-        {
-            var data = new AuthData
-            {
-                login = login,
-                accessData = new AuthData.AccessData
-                {
-                    type = "accessID",
-                    data = accessData
-                }
-            };
+		public IAuthHandler.AuthResult ReAuth(string login, string accessData)
+		{
+			var data = new AuthData
+			{
+				login = login,
+				accessData = new AuthData.AccessData
+				{
+					type = "accessID",
+					data = accessData
+				}
+			};
 
-            return Execute(data);
-        }
+			return Execute(data);
+		}
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private IAuthHandler.AuthResult Execute(AuthData authData)
-        {
-            NwAuthResult response = NightWorldApi.Authorization(authData);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private IAuthHandler.AuthResult Execute(AuthData authData)
+		{
+			NwAuthResult response = NightWorldApi.Authorization(authData);
 
-            ActivityStatus status = ActivityStatus.Online;
+			ActivityStatus status = ActivityStatus.Online;
 
-            if (response.Status == AuthCode.Successfully)
-            {
-                if (response.BaseStatus == 1)
-                {
-                    status = ActivityStatus.Offline;
-                }
-                else if (response.BaseStatus == 2)
-                {
-                    status = ActivityStatus.NotDisturb;
-                }
+			if (response.Status == AuthCode.Successfully)
+			{
+				if (response.BaseStatus == 1)
+				{
+					status = ActivityStatus.Offline;
+				}
+				else if (response.BaseStatus == 2)
+				{
+					status = ActivityStatus.NotDisturb;
+				}
 
-                var result = new IAuthHandler.AuthResult
-                {
-                    Login = response.Login,
-                    UUID = response.UUID,
-                    AccessToken = response.AccesToken,
-                    SessionToken = response.SessionToken,
-                    AccessData = response.AccessID,
-                    Status = status,
-                    Code = AuthCode.Successfully
-                };
+				var result = new IAuthHandler.AuthResult
+				{
+					Login = response.Login,
+					UUID = response.UUID,
+					AccessToken = response.AccesToken,
+					SessionToken = response.SessionToken,
+					AccessData = response.AccessID,
+					Status = status,
+					Code = AuthCode.Successfully
+				};
 
-                return result;
-            }
+				return result;
+			}
 
-            return new IAuthHandler.AuthResult { Code = response.Status };
-        }
-    }
+			return new IAuthHandler.AuthResult { Code = response.Status };
+		}
+	}
 }

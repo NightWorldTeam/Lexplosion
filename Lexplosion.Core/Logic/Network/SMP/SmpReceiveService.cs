@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Lexplosion.Logic.Network.SMP
+﻿namespace Lexplosion.Logic.Network.SMP
 {
 	internal struct SmpReceiveService
 	{

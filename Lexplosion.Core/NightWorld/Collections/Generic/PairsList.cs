@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NightWorld.Collections.Generic
 {
@@ -101,7 +98,7 @@ namespace NightWorld.Collections.Generic
 
 		public PairsList()
 		{
-			
+
 		}
 	}
 }

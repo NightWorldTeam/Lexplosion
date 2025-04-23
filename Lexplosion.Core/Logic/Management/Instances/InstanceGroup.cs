@@ -3,48 +3,48 @@ using System.Collections.Generic;
 
 namespace Lexplosion.Logic.Management.Instances
 {
-    public class InstanceGroup
-    {
-        #region static
-        public static InstanceGroup AllInstances { get; } = new InstanceGroup("AllInstances", 0);
-        public static InstanceGroup UngroupedInstances { get; } = new InstanceGroup("UngroupedInstances", 1);
+	public class InstanceGroup
+	{
+		#region static
+		public static InstanceGroup AllInstances { get; } = new InstanceGroup("AllInstances", 0);
+		public static InstanceGroup UngroupedInstances { get; } = new InstanceGroup("UngroupedInstances", 1);
 
-        private static HashSet<InstanceGroup> _allGroups = [InstanceGroup.AllInstances, InstanceGroup.UngroupedInstances];
+		private static HashSet<InstanceGroup> _allGroups = [InstanceGroup.AllInstances, InstanceGroup.UngroupedInstances];
 
-        public static IReadOnlyCollection<InstanceGroup> GetAllGroups()
-        {
-            return _allGroups;
-        }
+		public static IReadOnlyCollection<InstanceGroup> GetAllGroups()
+		{
+			return _allGroups;
+		}
 
-        #endregion
+		#endregion
 
-        public string Name { get; private set; }
-        public uint Id { get; private set; }
+		public string Name { get; private set; }
+		public uint Id { get; private set; }
 
-        private InstanceGroup(string name, uint id)
-        {
-            Name = name;
-            Id = id;
-        }
+		private InstanceGroup(string name, uint id)
+		{
+			Name = name;
+			Id = id;
+		}
 
-        public InstanceGroup(string name)
-        {
-            Name = name;
+		public InstanceGroup(string name)
+		{
+			Name = name;
 
-            Id = (uint)new Random().Next();
+			Id = (uint)new Random().Next();
 
-            _allGroups.Add(this);
-        }
+			_allGroups.Add(this);
+		}
 
 
-        public override bool Equals(object obj)
-        {
-            InstanceGroup group = obj as InstanceGroup;
-            if (group == null) return false;
+		public override bool Equals(object obj)
+		{
+			InstanceGroup group = obj as InstanceGroup;
+			if (group == null) return false;
 
-            return group.Id == Id;
-        }
+			return group.Id == Id;
+		}
 
-        public override int GetHashCode() => (int)Id;
-    }
+		public override int GetHashCode() => (int)Id;
+	}
 }

@@ -9,144 +9,144 @@ using Lexplosion.Logic.Network.Services;
 
 namespace Lexplosion.Logic.Management.Installers
 {
-    class FreeSourceInstanceInstallManager : ArchiveInstallManager<FreeSourceInstanceInstaller, InstanceManifest, ModpackVersion, FreeSourcePlatformData>
-    {
-        private SourceMap _urlsMap;
+	class FreeSourceInstanceInstallManager : ArchiveInstallManager<FreeSourceInstanceInstaller, InstanceManifest, ModpackVersion, FreeSourcePlatformData>
+	{
+		private SourceMap _urlsMap;
 
-        public FreeSourceInstanceInstallManager(SourceMap urlsMap, string instanceid, bool onlyBase, MinecraftInfoService infoService, CancellationToken cancelToken) : base(new FreeSourceInstanceInstaller(instanceid), instanceid, onlyBase, infoService, cancelToken)
-        {
-            _urlsMap = urlsMap;
-        }
+		public FreeSourceInstanceInstallManager(SourceMap urlsMap, string instanceid, bool onlyBase, MinecraftInfoService infoService, CancellationToken cancelToken) : base(new FreeSourceInstanceInstaller(instanceid), instanceid, onlyBase, infoService, cancelToken)
+		{
+			_urlsMap = urlsMap;
+		}
 
-        public override string ProjectId => projectInfo?.ModpackId ?? string.Empty;
+		public override string ProjectId => projectInfo?.ModpackId ?? string.Empty;
 
-        protected override bool ProfectInfoIsValid => !string.IsNullOrWhiteSpace(projectInfo?.DownloadUrl);
+		protected override bool ProfectInfoIsValid => !string.IsNullOrWhiteSpace(projectInfo?.DownloadUrl);
 
-        protected override string ArchiveDownloadUrl => projectInfo.DownloadUrl;
+		protected override string ArchiveDownloadUrl => projectInfo.DownloadUrl;
 
-        protected override string ArchiveFileName
-        {
-            get
-            {
-                try
-                {
-                    var url = new Uri(projectInfo.DownloadUrl);
-                    return Path.GetFileName(url.LocalPath);
-                }
-                catch
-                {
-                    return ProjectId + "-archive.zip";
-                }
-            }
-        }
+		protected override string ArchiveFileName
+		{
+			get
+			{
+				try
+				{
+					var url = new Uri(projectInfo.DownloadUrl);
+					return Path.GetFileName(url.LocalPath);
+				}
+				catch
+				{
+					return ProjectId + "-archive.zip";
+				}
+			}
+		}
 
-        protected override void DetermineGameType(InstanceManifest manifest, out ClientType clienType, out string modloaderVersion)
-        {
-            modloaderVersion = "";
-            clienType = ClientType.Vanilla;
+		protected override void DetermineGameType(InstanceManifest manifest, out ClientType clienType, out string modloaderVersion)
+		{
+			modloaderVersion = "";
+			clienType = ClientType.Vanilla;
 
-            modloaderVersion = manifest.ModloaderVersion;
-            clienType = manifest.ModloaderType;
-        }
+			modloaderVersion = manifest.ModloaderVersion;
+			clienType = manifest.ModloaderType;
+		}
 
-        protected override string DetermineGameVersion(InstanceManifest manifest)
-        {
-            return manifest.GameVersion;
-        }
+		protected override string DetermineGameVersion(InstanceManifest manifest)
+		{
+			return manifest.GameVersion;
+		}
 
-        protected override ModpackVersion GetProjectDefaultInfo(string projectId, string actualInstanceVersion)
-        {
-            string url = _urlsMap?.GetModpackVersionsListUrl(projectId);
-            if (url == null)
-            {
-                return null;
-            }
+		protected override ModpackVersion GetProjectDefaultInfo(string projectId, string actualInstanceVersion)
+		{
+			string url = _urlsMap?.GetModpackVersionsListUrl(projectId);
+			if (url == null)
+			{
+				return null;
+			}
 
-            string result = ToServer.HttpPost(url);
-            if (result == null)
-            {
-                return null;
-            }
+			string result = ToServer.HttpPost(url);
+			if (result == null)
+			{
+				return null;
+			}
 
-            try
-            {
-                var version = JsonConvert.DeserializeObject<MidpackVersionsList>(result);
-                if (string.IsNullOrWhiteSpace(version?.LatestVersion) || version.AllVersions == null || !version.AllVersions.ContainsKey(version.LatestVersion))
-                {
-                    return null;
-                }
+			try
+			{
+				var version = JsonConvert.DeserializeObject<MidpackVersionsList>(result);
+				if (string.IsNullOrWhiteSpace(version?.LatestVersion) || version.AllVersions == null || !version.AllVersions.ContainsKey(version.LatestVersion))
+				{
+					return null;
+				}
 
-                if (version.AllVersions[version.LatestVersion].Version != actualInstanceVersion)
-                {
-                    return version.AllVersions[version.LatestVersion];
-                }
+				if (version.AllVersions[version.LatestVersion].Version != actualInstanceVersion)
+				{
+					return version.AllVersions[version.LatestVersion];
+				}
 
-                return null;
-            }
-            catch
-            {
-                return null;
-            }
-        }
+				return null;
+			}
+			catch
+			{
+				return null;
+			}
+		}
 
-        protected override ModpackVersion GetProjectInfo(string projectId, string projectVersion)
-        {
-            string url = _urlsMap?.GetModpackVersionManifestUrl(projectId, projectVersion);
-            if (url == null)
-            {
-                return null;
-            }
+		protected override ModpackVersion GetProjectInfo(string projectId, string projectVersion)
+		{
+			string url = _urlsMap?.GetModpackVersionManifestUrl(projectId, projectVersion);
+			if (url == null)
+			{
+				return null;
+			}
 
-            string result = ToServer.HttpPost(url);
-            if (result == null)
-            {
-                return null;
-            }
+			string result = ToServer.HttpPost(url);
+			if (result == null)
+			{
+				return null;
+			}
 
-            try
-            {
-                var version = JsonConvert.DeserializeObject<ModpackVersion>(result);
-                if (string.IsNullOrWhiteSpace(version?.DownloadUrl) || string.IsNullOrWhiteSpace(version.Version) || string.IsNullOrWhiteSpace(version.ModpackId))
-                {
-                    return null;
-                }
+			try
+			{
+				var version = JsonConvert.DeserializeObject<ModpackVersion>(result);
+				if (string.IsNullOrWhiteSpace(version?.DownloadUrl) || string.IsNullOrWhiteSpace(version.Version) || string.IsNullOrWhiteSpace(version.ModpackId))
+				{
+					return null;
+				}
 
-                return version;
-            }
-            catch
-            {
-                return null;
-            }
-        }
+				return version;
+			}
+			catch
+			{
+				return null;
+			}
+		}
 
-        protected override string GetProjectVersion(ModpackVersion projectData)
-        {
-            return projectData?.Version;
-        }
+		protected override string GetProjectVersion(ModpackVersion projectData)
+		{
+			return projectData?.Version;
+		}
 
-        protected override bool LocalInfoIsValid(FreeSourcePlatformData data)
-        {
-            return data?.IsValid() == true;
-        }
+		protected override bool LocalInfoIsValid(FreeSourcePlatformData data)
+		{
+			return data?.IsValid() == true;
+		}
 
-        protected override bool ManifestIsValid(InstanceManifest manifest)
-        {
-            if (manifest == null || string.IsNullOrEmpty(manifest.ModloaderVersion))
-            {
-                return false;
-            }
+		protected override bool ManifestIsValid(InstanceManifest manifest)
+		{
+			if (manifest == null || string.IsNullOrEmpty(manifest.ModloaderVersion))
+			{
+				return false;
+			}
 
-            if (string.IsNullOrEmpty(manifest.GameVersion))
-            {
-                if (manifest.GameVersionInfo?.IsNan != false)
-                {
-                    return false;
-                }
+			if (string.IsNullOrEmpty(manifest.GameVersion))
+			{
+				if (manifest.GameVersionInfo?.IsNan != false)
+				{
+					return false;
+				}
 
-                manifest.GameVersion = manifest.GameVersionInfo.Id;
-            }
+				manifest.GameVersion = manifest.GameVersionInfo.Id;
+			}
 
-            return Enum.IsDefined(typeof(ClientType), (int)manifest.ModloaderType);
-        }
-    }
+			return Enum.IsDefined(typeof(ClientType), (int)manifest.ModloaderType);
+		}
+	}
 }

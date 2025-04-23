@@ -21,7 +21,6 @@ using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.Logic.Management.Addons;
 using Lexplosion.Logic.Management.Import;
 using Lexplosion.Logic.Management.Import.Importers;
-using System.Diagnostics.SymbolStore;
 
 namespace Lexplosion.Logic.Management.Instances
 {
@@ -627,7 +626,7 @@ namespace Lexplosion.Logic.Management.Instances
 				}
 			}
 		}
-		
+
 
 		/// <summary>
 		/// Возвращает количество сборок в библиотеке

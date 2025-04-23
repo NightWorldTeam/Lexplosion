@@ -7,9 +7,7 @@ using Lexplosion.Logic.Management.Instances;
 using System.Runtime.CompilerServices;
 using System;
 using System.Threading;
-using static Lexplosion.Logic.Objects.Curseforge.InstanceManifest;
 using NightWorld.Collections.Concurrent;
-using System.Linq;
 
 namespace Lexplosion.Logic.Management.Addons
 {

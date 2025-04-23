@@ -5,7 +5,6 @@ using System.IO;
 using System.Threading;
 using Lexplosion.Tools;
 using Lexplosion.Logic.Management.Instances;
-using System.Security.Cryptography;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Objects.CommonClientData;
 using static Lexplosion.Logic.Management.Import.ImportInterruption;

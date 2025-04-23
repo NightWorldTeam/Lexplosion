@@ -4,7 +4,6 @@ using System.IO.Compression;
 using System.Threading;
 using System.Linq;
 using System;
-using Newtonsoft.Json;
 using Lexplosion.Tools;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Objects;

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -8,7 +7,6 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
-using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Global;
 using Lexplosion.Tools;
 using Lexplosion.Logic.Objects;

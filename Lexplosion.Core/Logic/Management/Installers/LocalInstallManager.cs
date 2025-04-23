@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading;
 using Lexplosion.Logic.FileSystem;
-using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Network.Services;
 using Lexplosion.Logic.Objects.CommonClientData;
 
