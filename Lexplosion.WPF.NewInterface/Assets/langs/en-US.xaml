@@ -11,6 +11,9 @@
 
     <s:String x:Key="en-US">English</s:String>
     <s:String x:Key="ru-RU">Russian</s:String>
+    <s:String x:Key="uk-UA">Ukraine</s:String>
+    <s:String x:Key="zh-CN">Chine</s:String>
+    <s:String x:Key="de-DE">Deutsch</s:String>
 
     <s:String x:Key="Default">Default</s:String>
 
