@@ -13,7 +13,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
     {
         public static readonly string[] AvailableLanguages = new string[5]
         {
-            "ru-RU", "en-US", "uk-UA", "zh-CN", "de-DE"
+            "ru-RU", "en-US", "uk-UA", "zh-CN", "de-DE, ru-CAT, lolcat"
         };
 
         private LanguageModel _selectedLang;
