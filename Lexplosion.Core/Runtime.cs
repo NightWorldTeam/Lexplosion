@@ -52,14 +52,14 @@ namespace Lexplosion
 				mutex.Dispose();
 
 #if DEBUG
-            return true;
+			return true;
 #else
 
 			return isNew;
 #endif
 		}
 
-		public static void InitializedSystem(int updaterOffsetLeft, int updaterOffsetRight, bool isCheckUpdate = true)
+		public static void InitializedSystem(int updaterOffsetLeft, int updaterOffsetRight)
 		{
 			//подписываемся на эвент вылета, чтобы логировать все необработанные исключения
 			AppDomain.CurrentDomain.UnhandledException += delegate (object sender, UnhandledExceptionEventArgs args)
@@ -87,7 +87,14 @@ namespace Lexplosion
 			}
 
 			int version = ToServer.CheckLauncherUpdates();
-			if (version != -1 && isCheckUpdate)
+
+			if (version == -1)
+			{
+				//проблемы
+			}
+
+			//если есть новая версия, то обновляем
+			if (version > LaunсherSettings.version)
 			{
 				OnUpdateStart?.Invoke();
 				LauncherUpdate(version, updaterOffsetLeft, updaterOffsetRight);

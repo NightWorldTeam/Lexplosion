@@ -12,27 +12,16 @@ namespace Lexplosion.Logic.Network
 	public static class ToServer
 	{
 		/// <summary>
-		/// Проверяет есть ли на сервере новая версия лаунчера
+		/// Возврщает версию лаунчера на сервере. -1 если произошла ошибка
 		/// </summary>
-		/// <returns>Возвращает версию нового лаунчера. -1 если новых версий нет.</returns>
 		public static int CheckLauncherUpdates()
 		{
-			try
-			{
-				int version = Int32.Parse(HttpPost(LaunсherSettings.URL.LauncherParts + "launcherVersion.html"));
+			var result = HttpPost(LaunсherSettings.URL.LauncherParts + "launcherVersion.html", timeout: 10000);
+			if (result == null) return -1;
 
-				if (version > LaunсherSettings.version)
-				{
-					return version;
-				}
+			if (Int32.TryParse(result, out int res)) return res;
 
-				return -1;
-
-			}
-			catch
-			{
-				return -1;
-			}
+			return -1;
 		}
 
 		public static bool ServerIsOnline()
@@ -179,12 +168,13 @@ namespace Lexplosion.Logic.Network
 			}
 		}
 
-		public static string HttpPost(string url, Dictionary<string, string> data = null)
+		public static string HttpPost(string url, Dictionary<string, string> data = null, int timeout = 0)
 		{
 			try
 			{
 				WebRequest request = WebRequest.Create(url);
 				request.Method = "POST";
+				if (timeout > 0) request.Timeout = timeout;
 				string dataS = "";
 
 				if (data != null)
