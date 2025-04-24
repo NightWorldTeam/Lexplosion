@@ -1,5 +1,342 @@
-    <!--  Import (продолжение) -->
-    <s:String x:Key="ImportDragDropFieldDescription">拖放整合包压缩文件以开始上传。</s:String>
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:s="clr-namespace:System;assembly=mscorlib">
+    <!--
+        == NEW
+        == WPF
+        == INTERFACE
+        == TRANSLATE
+    -->
+
+    <s:String x:Key="en-US">英语</s:String>
+    <s:String x:Key="ru-RU">俄语</s:String>
+    <s:String x:Key="uk-UA">乌克兰语</s:String>
+    <s:String x:Key="zh-CN">中文</s:String>
+    <s:String x:Key="de-DE">德语</s:String>
+    <s:String x:Key="ru-CAT">俄语（猫咪）</s:String>
+    <s:String x:Key="lolcat">喵星语</s:String>
+
+    <s:String x:Key="Default">默认</s:String>
+    <!--    -->
+    <!--  LeftPanel  -->
+    <!--    -->
+    <s:String x:Key="Catalog">目录</s:String>
+    <s:String x:Key="Library">库</s:String>
+    <s:String x:Key="Friends">好友</s:String>
+    <s:String x:Key="Multiplayer">多人游戏</s:String>
+    <s:String x:Key="Settings">设置</s:String>
+    <s:String x:Key="GladToSeeYou">很高兴见到你，</s:String>
+
+    <!--    -->
+    <!--  Titles  -->
+    <!--    -->
+    <s:String x:Key="General">常规</s:String>
+
+    <!--  Friends  -->
+    <s:String x:Key="FindFriends">查找好友</s:String>
+    <s:String x:Key="FriendsRequests">好友请求</s:String>
+
+    <!--  Settings  -->
+    <s:String x:Key="Appearance">外观</s:String>
+    <s:String x:Key="Language">语言</s:String>
+    <s:String x:Key="About">关于启动器</s:String>
+
+    <!--  Main Menu  -->
+
+    <!--    -->
+    <!--  Catalog  -->
+    <!--    -->
+    <s:String x:Key="Search">搜索</s:String>
+
+    <!--    -->
+    <!--  Library  -->
+    <!--    -->
+
+    <!--    -->
+    <!--  Friends  -->
+    <!--    -->
+    <s:String x:Key="Pending">待处理</s:String>
+    <s:String x:Key="Outgoing">已发送</s:String>
+    <s:String x:Key="AcceptRequest">接受请求</s:String>
+    <s:String x:Key="RemoveFollower">移除关注者</s:String>
+    <s:String x:Key="AddFriend">添加好友</s:String>
+    <s:String x:Key="Unfriends">删除好友</s:String>
+
+    <!--  Status  -->
+    <s:String x:Key="Online">在线</s:String>
+    <s:String x:Key="Offline">离线</s:String>
+    <s:String x:Key="PlayingIn">正在玩</s:String>
+    <s:String x:Key="InGame">游戏中</s:String>
+    <s:String x:Key="DoNotDisturb">请勿打扰</s:String>
+
+    <!--    -->
+    <!--  Multiplayer  -->
+    <!--    -->
+    <s:String x:Key="Status">状态</s:String>
+    <s:String x:Key="PriorityConnetionMethod">优先连接方式</s:String>
+    <s:String x:Key="DirectConnection">直接连接</s:String>
+    <s:String x:Key="ViaRepeater">通过中继器</s:String>
+    <s:String x:Key="ConnectedPlayers">已连接的玩家</s:String>
+    <s:String x:Key="NoConnectedPlayers">没有已连接的玩家</s:String>
+    <s:String x:Key="ReloadMultiplayer">重新加载多人游戏</s:String>
+
+    <!--  Status  -->
+    <s:String x:Key="StatusNone">没有开放的世界</s:String>
+    <s:String x:Key="StatusOpenWorld">开放连接</s:String>
+    <s:String x:Key="StatusConnectedToUser">已连接到服务器</s:String>
+
+    <!--    -->
+    <!--  General Settings  -->
+    <!--    -->
+
+    <!--  General Settings -> General  -->
+    <s:String x:Key="GameProperties">游戏参数</s:String>
+    <s:String x:Key="JavaProperties">Java 参数</s:String>
+    <s:String x:Key="LauncherProperties">启动器参数</s:String>
+
+    <s:String x:Key="GamePropertiesDescription">配置你的游戏。</s:String>
+    <s:String x:Key="JavaPropertiesDescription">为 Minecraft 配置 Java。</s:String>
+    <s:String x:Key="LauncherPropertiesDescription">根据你的需求配置启动器。</s:String>
+
+    <!--  Game Properties  -->
+    <!--  Window Size  -->
+    <s:String x:Key="WindowSize">窗口大小</s:String>
+    <s:String x:Key="WindowSizeDescription">调整 Minecraft 窗口大小。</s:String>
+    <!--  Ram  -->
+    <s:String x:Key="Ram">内存</s:String>
+    <s:String x:Key="RamDescription">此属性可以提高运行速度。</s:String>
+    <!--  Game Directory  -->
+    <s:String x:Key="GameDirectory">游戏文件夹</s:String>
+    <s:String x:Key="GameDirectoryDescription">选择游戏文件夹的存储位置。</s:String>
+
+    <!--  Java Properties  -->
+    <!--  Java Path  -->
+    <s:String x:Key="JavaPath">Java 路径</s:String>
+    <s:String x:Key="JavaPathDescription">Java 的目录路径</s:String>
+    <!--  Java Path for higher 1.16.5  -->
+    <s:String x:Key="JavaPathHigher">1.16.5 及以上版本的 Java 路径</s:String>
+    <s:String x:Key="JavaPathHigherDescription">1.16.5 及以上版本的 Java 目录路径</s:String>
+    <!--  JVM Arguments  -->
+    <s:String x:Key="JVMArguments">JVM 参数</s:String>
+    <s:String x:Key="JVMArgumentsDescription">Java 虚拟机参数</s:String>
+
+    <!--  Launcher Properties  -->
+    <!--  Console  -->
+    <s:String x:Key="Console">控制台</s:String>
+    <s:String x:Key="ConsoleDescription">在启动游戏时打开控制台。</s:String>
+    <!--  Hide Launcher  -->
+    <s:String x:Key="HideLauncher">隐藏启动器</s:String>
+    <s:String x:Key="HideLauncherDescription">在启动游戏时隐藏启动器。</s:String>
+    <!--  Auto Instance Update  -->
+    <s:String x:Key="AutoInstanceUpdate">自动更新客户端</s:String>
+    <s:String x:Key="AutoInstanceUpdateDescription">库中的客户端会自动更新。</s:String>
+    <!--  NightWorld Skins  -->
+    <s:String x:Key="NightWorldSkins">NightWorld 皮肤系统</s:String>
+    <s:String x:Key="NightWorldSkinsDescription">游戏中将显示在个人资料中设置的皮肤。</s:String>
+
+    <!--    -->
+    <!--  Appearance  -->
+    <!--    -->
+    <s:String x:Key="AccentColor">强调色</s:String>
+    <s:String x:Key="ChooseAccentColor">选择你的强调色。</s:String>
+    <s:String x:Key="InterfaceTheme">界面主题</s:String>
+    <s:String x:Key="ChooseTheme">选择你的主题。</s:String>
+
+    <!--    -->
+    <!--  Language  -->
+    <!--    -->
+    <s:String x:Key="ChooseLanguage">选择语言。</s:String>
+
+    <!--    -->
+    <!--  Accounts  -->
+    <!--    -->
+    <s:String x:Key="Accounts">账户</s:String>
+
+    <!--    -->
+    <!--  About  -->
+    <!--    -->
+    <s:String x:Key="Authors">作者</s:String>
+    <s:String x:Key="Founders">创始人</s:String>
+    <s:String x:Key="Developers">开发者</s:String>
+    <s:String x:Key="Contacts">联系方式</s:String>
+    <s:String x:Key="OurVkontakteGroup">我们的 VK 群组</s:String>
+    <s:String x:Key="Protection">本程序受版权法和国际协议保护。非法复制或分发本程序或其任何部分将承担民事和刑事责任。</s:String>
+    <s:String x:Key="Copyright">© NightWorld，2025年。版权所有。</s:String>
+    <s:String x:Key="DenialOfResponsibility">非 Minecraft 的官方产品/服务/活动等。未经 Mojang 或 Microsoft 认可或关联。</s:String>
+
+    <!--    -->
+    <!--  Instance Factory Modal  -->
+    <!--    -->
+
+    <!--  Instance Factory Left Modal Menu Tabs Titles  -->
+    <s:String x:Key="Create">创建</s:String>
+    <s:String x:Key="Import">导入</s:String>
+    <s:String x:Key="Distributions">分发</s:String>
+
+    <!--    -->
+    <!--  Instance Form  -->
+    <!--    -->
+
+    <!--  Logo  -->
+    <s:String x:Key="More">更多</s:String>
+
+    <!--  Upper Buttons  -->
+    <s:String x:Key="Play">玩</s:String>
+    <s:String x:Key="Launch">启动</s:String>
+
+    <!--  LowerButtons  -->
+    <s:String x:Key="DeleteInstance">删除客户端</s:String>
+    <s:String x:Key="Export">导出</s:String>
+    <s:String x:Key="OpenFolder">打开文件夹</s:String>
+    <s:String x:Key="ExploreAddons">查看附加组件</s:String>
+    <s:String x:Key="AddToLibrary">添加到库</s:String>
+    <s:String x:Key="RemoveFromLibrary">从库中移除</s:String>
+    <s:String x:Key="CancelDownload">取消下载</s:String>
+
+    <!--  Visit Official Page  -->
+    <s:String x:Key="VisitCurseforge">访问 Curseforge</s:String>
+    <s:String x:Key="VisitModrinth">访问 Modrinth</s:String>
+    <s:String x:Key="VisitNightworld">访问 NightWorld</s:String>
+
+    <!--    -->
+    <!--  Instance Overview Menu  -->
+    <!--    -->
+    <s:String x:Key="Version">版本</s:String>
+    <s:String x:Key="Download">下载</s:String>
+
+    <!--    -->
+    <!--  Instance Profile  -->
+    <!--    -->
+    <s:String x:Key="Overview">概览</s:String>
+    <s:String x:Key="Addons">附加组件</s:String>
+    <s:String x:Key="AboutInstance">关于客户端</s:String>
+
+    <!--    -->
+    <!--  Instance Profile Left Panel  -->
+    <!--    -->
+    <s:String x:Key="Back">返回</s:String>
+    <s:String x:Key="Version:">游戏版本：</s:String>
+    <s:String x:Key="GameType:">游戏类型：</s:String>
+    <s:String x:Key="PlayedTime:">游戏时长：</s:String>
+    <s:String x:Key="DownloadCount:">下载次数：</s:String>
+
+    <!--    -->
+    <!--  Instance Profile Addons  -->
+    <!--    -->
+    <s:String x:Key="Mods">模组</s:String>
+    <s:String x:Key="Resourcepacks">资源包</s:String>
+    <s:String x:Key="Maps">地图</s:String>
+    <s:String x:Key="Shaders">着色器</s:String>
+
+    <!--  Sort By  -->
+    <s:String x:Key="Name">名称</s:String>
+    <s:String x:Key="Author">作者</s:String>
+    <s:String x:Key="FileName">文件名</s:String>
+
+    <!--  By Name  -->
+    <s:String x:Key="ModName">模组名称</s:String>
+    <s:String x:Key="ResourcepackName">资源包名称</s:String>
+    <s:String x:Key="MapName">地图名称</s:String>
+    <s:String x:Key="ShaderName">着色器名称</s:String>
+
+    <!--  By Author  -->
+    <s:String x:Key="ModAuthor">模组作者</s:String>
+    <s:String x:Key="ResourcepackAuthor">资源包作者</s:String>
+    <s:String x:Key="MapAuthor">地图作者</s:String>
+    <s:String x:Key="ShaderAuthor">着色器作者</s:String>
+
+    <!--  By FileName  -->
+    <s:String x:Key="ModFileName">模组文件名</s:String>
+    <s:String x:Key="ResourcepackFileName">资源包文件名</s:String>
+    <s:String x:Key="MapFileName">地图文件名</s:String>
+    <s:String x:Key="ShaderFileName">着色器文件名</s:String>
+
+    <!--    -->
+    <!--  Instance Profile Settings  -->
+    <!--    -->
+    <s:String x:Key="Configuration">配置</s:String>
+    <s:String x:Key="InstanceNameDescription">客户端在库中的显示名称</s:String>
+    <s:String x:Key="Summary">简介</s:String>
+    <s:String x:Key="SummaryDescription">客户端的简短描述。</s:String>
+    <s:String x:Key="Description">描述</s:String>
+    <s:String x:Key="DescriptionAdditional">客户端的详细描述。</s:String>
+
+    <!--    -->
+    <!--  Instance Profile Configuration  -->
+    <!--    -->
+    <s:String x:Key="GameType">游戏类型</s:String>
+    <s:String x:Key="GameTypeDescription">原版/模组加载器</s:String>
+
+    <s:String x:Key="VersionDescription">版本描述。</s:String>
+
+    <s:String x:Key="ModloaderVersion">模组加载器版本</s:String>
+    <s:String x:Key="ModloaderVersionDescription">选择所选模组加载器的版本。</s:String>
+
+    <s:String x:Key="IsShowSnapshots">显示快照版本？</s:String>
+    <s:String x:Key="IsShowSnapshotsDescription">在游戏版本下拉菜单中显示快照版本。</s:String>
+
+    <s:String x:Key="Optifine">Optifine</s:String>
+    <s:String x:Key="OptifineDescription">为此客户端安装 Optifine。</s:String>
+
+    <!--    -->
+    <!--  Addons Repository  -->
+    <!--    -->
+    <s:String x:Key="Install">安装</s:String>
+    <s:String x:Key="Categories">分类</s:String>
+    <s:String x:Key="Search...">搜索...</s:String>
+    <s:String x:Key="SortBy">排序方式</s:String>
+    <s:String x:Key="ShowPerPage">每页显示</s:String>
+    <s:String x:Key="Accept">接受</s:String>
+    <s:String x:Key="Installing...">正在安装...</s:String>
+
+    <!--    -->
+    <!--  Modrinth Addon Page  -->
+    <!--    -->
+    <s:String x:Key="ProjectMembers">项目成员</s:String>
+    <s:String x:Key="TechnicalInformation">技术信息</s:String>
+    <s:String x:Key="ExternalResources">外部资源</s:String>
+    <s:String x:Key="Created">创建时间</s:String>
+    <s:String x:Key="Updated">更新时间</s:String>
+    <s:String x:Key="License">许可证</s:String>
+    <s:String x:Key="ClientSide">客户端</s:String>
+    <s:String x:Key="ServerSide">服务器端</s:String>
+    <s:String x:Key="ProjectId">项目 ID</s:String>
+    <s:String x:Key="Required">必需</s:String>
+    <s:String x:Key="Unsupported">不支持</s:String>
+
+    <s:String x:Key="Downloads1">次下载</s:String>
+    <s:String x:Key="Downloads2">次下载</s:String>
+    <s:String x:Key="Downloads3">次下载</s:String>
+
+    <s:String x:Key="Followers1">个关注者</s:String>
+    <s:String x:Key="Followers2">个关注者</s:String>
+    <s:String x:Key="Followers3">个关注者</s:String>
+
+    <s:String x:Key="Gallery">图库</s:String>
+    <s:String x:Key="Changelog">更新日志</s:String>
+    <s:String x:Key="Versions">版本</s:String>
+
+    <s:String x:Key="Update">更新</s:String>
+    <s:String x:Key="Delete">删除</s:String>
+
+    <s:String x:Key="ProjectFound">个项目被找到</s:String>
+
+    <!--  Instance Factory  -->
+    <s:String x:Key="InstanceName">客户端名称</s:String>
+    <s:String x:Key="CreateInstance">创建客户端</s:String>
+
+    <!--  Export  -->
+    <s:String x:Key="ExportProperties">导出属性</s:String>
+    <s:String x:Key="ExportInstanceNameDescription">导出后在库中显示的名称。</s:String>
+    <s:String x:Key="FoldersAndFiles">文件夹和文件</s:String>
+    <s:String x:Key="FoldersAndFilesDescription">选择要导出的文件夹和文件。</s:String>
+    <s:String x:Key="FullExport">完整导出</s:String>
+    <s:String x:Key="InstanceExport">客户端导出</s:String>
+    <s:String x:Key="ExportProcessActive">客户端导出进程</s:String>
+
+    <!--  Import  -->
+    <s:String x:Key="ImportDragDropFieldDescription">拖放客户端压缩包以开始上传。</s:String>
     <s:String x:Key="Review">预览</s:String>
 
     <!--  Filter Sorting  -->
@@ -17,38 +354,38 @@
     <s:String x:Key="And">和</s:String>
 
     <!--  Categories  -->
-    <s:String x:Key="CategoriesSearchBoxPlaceholder">选择分类以进行筛选...</s:String>
+    <s:String x:Key="CategoriesSearchBoxPlaceholder">选择分类进行筛选...</s:String>
 
     <!--  Modrinth  -->
     <s:String x:Key="ModrinthRelevance">相关性</s:String>
     <s:String x:Key="ModrinthDownloads">下载量</s:String>
-    <s:String x:Key="ModrinthFollows">关注者数量</s:String>
+    <s:String x:Key="ModrinthFollows">关注者</s:String>
     <s:String x:Key="ModrinthUpdated">最近更新</s:String>
     <s:String x:Key="ModrinthNewest">创建日期</s:String>
     <!--  Curseforge  -->
     <s:String x:Key="CurseforgeRelevance">相关性</s:String>
-    <s:String x:Key="CurseforgeFeatured">推荐</s:String>
-    <s:String x:Key="CurseforgePopularity">受欢迎程度</s:String>
+    <s:String x:Key="CurseforgeFeatured">精选</s:String>
+    <s:String x:Key="CurseforgePopularity">流行度</s:String>
     <s:String x:Key="CurseforgeLastUpdated">最近更新</s:String>
     <s:String x:Key="CurseforgeCreationDate">创建日期</s:String>
     <s:String x:Key="CurseforgeTotalDownloads">总下载量</s:String>
-    <s:String x:Key="CurseforgeName">A-Z</s:String>
+    <s:String x:Key="CurseforgeName">按名称 A-Z</s:String>
 
     <!--  Accounts  -->
     <s:String x:Key="Active">活跃</s:String>
-    <s:String x:Key="NotActive">未激活</s:String>
+    <s:String x:Key="NotActive">未活跃</s:String>
     <s:String x:Key="TypingNicknamePlaceholder">输入昵称...</s:String>
 
     <!--  Funcs  -->
     <s:String x:Key="Activate">设为活跃</s:String>
-    <s:String x:Key="DoGameLauncher">设为启动账户</s:String>
+    <s:String x:Key="DoGameLauncher">设为游戏启动账户</s:String>
     <s:String x:Key="Signout">退出</s:String>
 
     <s:String x:Key="GameLauncher">启动游戏</s:String>
 
     <!--  Account Factory  -->
     <s:String x:Key="AddingAccount">添加账户</s:String>
-    <s:String x:Key="Login">登录名</s:String>
+    <s:String x:Key="Login">登录</s:String>
     <s:String x:Key="Password">密码</s:String>
     <s:String x:Key="AccountType">账户类型</s:String>
     <s:String x:Key="AccountTypeDescription">授权服务</s:String>
@@ -59,7 +396,7 @@
 
     <!--  Nightworld Limited Pages Curtains  -->
     <s:String x:Key="OnlyAvailableWithNightWorldAccount">仅通过 NightWorld 账户可用</s:String>
-    <s:String x:Key="OnlyAvailableWithNightWorldAccountDescription">启动器的此功能仅在通过 NightWorld 账户授权时可用，无需设为启动账户。</s:String>
+    <s:String x:Key="OnlyAvailableWithNightWorldAccountDescription">启动器的此功能仅在通过 NightWorld 账户授权后可用，无需将其设为启动账户。</s:String>
     <s:String x:Key="CreateNightWorldAccount">创建 NightWorld 账户</s:String>
     <s:String x:Key="LoginWithYourNightWorldAccount">通过 NightWorld 登录</s:String>
 
@@ -69,7 +406,7 @@
 
     <!--  Instance Share  -->
     <s:String x:Key="Share">分享</s:String>
-    <s:String x:Key="ShareInstance">开始分享此整合包</s:String>
+    <s:String x:Key="ShareInstance">开始分享此客户端</s:String>
     <s:String x:Key="ActiveShares">你的分享</s:String>
 
     <s:String x:Key="CurseforgeCatalogLoading">正在加载 Curseforge 目录</s:String>
@@ -101,7 +438,7 @@
     <!--  Paginator  -->
     <s:String x:Key="PaginatorPrevious">上一页</s:String>
     <s:String x:Key="PaginatorNext">下一页</s:String>
-    <s:String x:Key="PaginatorPage">页</s:String>
+    <s:String x:Key="PaginatorPage">页面</s:String>
     <s:String x:Key="PaginatorPageOf">共</s:String>
 
     <!--  ToolTip Appearance Settings  -->
@@ -109,26 +446,24 @@
     <s:String x:Key="TooltipDescription">提示设置</s:String>
 
     <s:String x:Key="ToolTipState">提示状态</s:String>
-    <s:String x:Key="ToolTipStateDescription">此参数控制提示的启用/禁用状态</s:String>
+    <s:String x:Key="ToolTipStateDescription">此参数控制提示的开关状态（开启/关闭）</s:String>
 
     <s:String x:Key="InitialShowDelay">初始显示延迟</s:String>
     <s:String x:Key="InitialShowDelayDescription">鼠标悬停在元素上后显示提示前的延迟（毫秒）。</s:String>
-    <s:String x:Key="BetweenShowDelay">提示间延迟</s:String>
-    <s:String x:Key="BetweenShowDelayDescription">
-        在不触发初始显示延迟的情况下，从一个提示切换到另一个提示的时间间隔（毫秒）。
-    </s:String>
+    <s:String x:Key="BetweenShowDelay">连续显示延迟</s:String>
+    <s:String x:Key="BetweenShowDelayDescription">从一个提示切换到另一个提示时无需初始显示延迟的时间间隔（毫秒）。</s:String>
 
     <!--  InstanceForm  -->
     <s:String x:Key="Downloaded">已下载</s:String>
     <!--  Instance Form Download Process  -->
     <s:String x:Key="DownloadPreparing">正在准备下载...</s:String>
-    <s:String x:Key="JavaInstalling">正在安装 Java...</s:String>
-    <s:String x:Key="InstanceDownloading">整合包正在安装...</s:String>
+    <s:String x:Key="JavaInstalling">正在安装 Java</s:String>
+    <s:String x:Key="InstanceDownloading">正在安装客户端...</s:String>
     <s:String x:Key="Stage">阶段</s:String>
     <s:String x:Key="VerifyIntegrityGameFiles">正在验证游戏文件完整性...</s:String>
     <s:String x:Key="DownloadCanceling">正在取消下载...</s:String>
 
-    <s:String x:Key="AddonsListLoadingPlaceholder">正在加载模组列表...</s:String>
+    <s:String x:Key="AddonsListLoadingPlaceholder">正在加载附加组件列表...</s:String>
 
     <s:String x:Key="Technology">技术</s:String>
     <s:String x:Key="WorldGen">世界生成</s:String>
@@ -145,10 +480,10 @@
     <s:String x:Key="Paginator">分页器</s:String>
     <s:String x:Key="Searchbox">搜索框</s:String>
     <s:String x:Key="InstalledList">已安装</s:String>
-    <s:String x:Key="SearchAddonByNamePlaceholder">模组名称</s:String>
+    <s:String x:Key="SearchAddonByNamePlaceholder">附加组件名称</s:String>
 
-    <s:String x:Key="AddonInfoDownloadsTooltip">下载量</s:String>
-    <s:String x:Key="AddonInfoLatestReleaseTooltip">最新更新日期</s:String>
+    <s:String x:Key="AddonInfoDownloadsTooltip">下载次数</s:String>
+    <s:String x:Key="AddonInfoLatestReleaseTooltip">最后更新日期</s:String>
     <s:String x:Key="AddonInfoCreationDateTooltip">创建日期</s:String>
     <s:String x:Key="AddonInfoGameVersionTooltip">游戏版本</s:String>
 
@@ -163,7 +498,7 @@
     <s:String x:Key="LogIn">登录</s:String>
 
     <s:String x:Key="RegistrationInNightWorld">NightWorld 注册</s:String>
-    <s:String x:Key="EmailAddress">电子邮箱</s:String>
+    <s:String x:Key="EmailAddress">邮箱</s:String>
     <s:String x:Key="CreateAccount">创建账户</s:String>
     <s:String x:Key="AlreadyHaveAnyAccount">已有账户？</s:String>
 
@@ -175,7 +510,7 @@
     <s:String x:Key="NoAuth">无账户</s:String>
 
     <s:String x:Key="AuthorizationWithoutAccountTitle">无账户授权</s:String>
-    <s:String x:Key="AuthorizationWithoutAccountDescription">若要无账户授权，请选择所需的昵称。</s:String>
+    <s:String x:Key="AuthorizationWithoutAccountDescription">要以无账户方式授权，请选择所需的昵称。</s:String>
     <s:String x:Key="AuthorizationWithoutAccountNicknamePlaceholder">输入所需的昵称</s:String>
     <s:String x:Key="Continue">继续</s:String>
 
@@ -190,7 +525,7 @@
     <s:String x:Key="Cancel">取消</s:String>
 
     <s:String x:Key="Important">重要！</s:String>
-    <s:String x:Key="MicrosoftManualInputImportantMessage">切勿将你的认证令牌分享或展示给任何人。如果第三方获得了令牌，他们将获得你的账户访问权限！</s:String>
+    <s:String x:Key="MicrosoftManualInputImportantMessage">切勿将您的认证令牌分享或展示给任何人。如果令牌被第三方获取，他们将获得您的账户访问权限！</s:String>
 
     <!--  endregion Authorization  -->
 
@@ -199,11 +534,11 @@
     <!--  endregion Notifications Content  -->
 
     <s:String x:Key="CustomColor">自定义颜色</s:String>
-    <s:String x:Key="CustomColorDescription">选择你的主题色</s:String>
+    <s:String x:Key="CustomColorDescription">选择你的强调色</s:String>
 
     <!--  Instance Configuration  -->
     <s:String x:Key="SaveChanges">保存更改</s:String>
-    <s:String x:Key="LoadYourLogo">上传标志</s:String>
+    <s:String x:Key="LoadYourLogo">上传你的标志</s:String>
     <s:String x:Key="UnsavedChangesWarningText">小心，你尚未保存更改！</s:String>
     <s:String x:Key="Reset">重置</s:String>
 
@@ -211,28 +546,28 @@
     <s:String x:Key="Files_LowerCase">文件</s:String>
 
     <!--  Ad Servers  -->
-    <s:String x:Key="PartnerServers">合作服务器</s:String>
+    <s:String x:Key="PartnerServers">合作伙伴服务器</s:String>
     <s:String x:Key="Add">添加</s:String>
 
     <s:String x:Key="AutoConnectToServer">自动连接到服务器</s:String>
-    <s:String x:Key="AvailableGameClientsNotFound">未找到适合的客户端</s:String>
-    <s:String x:Key="SelectInstanceForServer">选择用于添加服务器的客户端</s:String>
+    <s:String x:Key="AvailableGameClientsNotFound">未找到合适的客户端</s:String>
+    <s:String x:Key="SelectInstanceForServer">选择要添加服务器的客户端</s:String>
     <s:String x:Key="ConfirmSelection">确认选择</s:String>
     <s:String x:Key="CreateNewInstanceForServer">为服务器创建新客户端</s:String>
 
-    <s:String x:Key="InstallServerInstance">安装服务器整合包</s:String>
-    <s:String x:Key="InstallServerInstanceDescription">在此服务器上游戏需要安装整合包，是否安装此整合包？</s:String>
+    <s:String x:Key="InstallServerInstance">安装服务器客户端</s:String>
+    <s:String x:Key="InstallServerInstanceDescription">要在该服务器上玩游戏，需要安装客户端，你想安装此客户端吗？</s:String>
     <s:String x:Key="ServerIpAddressCopied">服务器 IP 地址已复制</s:String>
 
-    <s:String x:Key="LoadingInstanceClientVersions">正在加载整合包版本</s:String>
-    <s:String x:Key="NoDistributionsAvailableForDownload">无可用下载的分发</s:String>
+    <s:String x:Key="LoadingInstanceClientVersions">正在加载客户端版本</s:String>
+    <s:String x:Key="NoDistributionsAvailableForDownload">没有可下载的分发</s:String>
 
     <!--  region Notifications  -->
 
     <!--    -->
     <!--  Ad Server  -->
     <!--    -->
-    <s:String x:Key="InstanceForServerAddedToLibrary">整合包 {0} 已成功添加到库！</s:String>
+    <s:String x:Key="InstanceForServerAddedToLibrary">客户端 {0} 已成功添加到库！</s:String>
 
     <!--    -->
     <!--  Multiplayer  -->
@@ -244,37 +579,37 @@
     <!--    -->
 
     <!--  Instance Launch  -->
-    <s:String x:Key="InstanceLaunchedSuccessfulNotification">整合包 {0} 已成功启动。</s:String>
-    <s:String x:Key="InstanceLaunchedUnsuccessfulNotification">无法启动整合包 {0}。</s:String>
+    <s:String x:Key="InstanceLaunchedSuccessfulNotification">客户端 {0} 已成功启动。</s:String>
+    <s:String x:Key="InstanceLaunchedUnsuccessfulNotification">无法启动客户端 {0}。</s:String>
 
     <!--  Instance Installing  -->
-    <s:String x:Key="DownloadCompletedSuccessfully">整合包 {0} 下载已成功完成。</s:String>
+    <s:String x:Key="DownloadCompletedSuccessfully">客户端 {0} 下载已成功完成。</s:String>
 
     <s:String x:Key="FailedToDownloadFollowingFiles:_">无法下载以下文件：{0}</s:String>
     <s:String x:Key="FailedToDownloadSomeFiles">无法下载某些文件</s:String>
-    <s:String x:Key="RedownloadingMaySolveTheProblem">重新下载可能解决问题，但不保证。</s:String>
-    <s:String x:Key="ExternalIdIncorrect">整合包的外部 ID 不正确。</s:String>
+    <s:String x:Key="RedownloadingMaySolveTheProblem">重新下载可能会解决问题，但不确定。</s:String>
+    <s:String x:Key="ExternalIdIncorrect">客户端的外部 ID 不正确。</s:String>
     <s:String x:Key="ServerError">服务器错误。</s:String>
     <s:String x:Key="FailedToGetDataFromServer">无法从服务器获取数据。</s:String>
     <s:String x:Key="FileVerificationFailed">无法验证文件。</s:String>
     <s:String x:Key="VersionVerificationFailed">无法确定游戏版本。</s:String>
     <s:String x:Key="ModloaderVerificationFailed">无法确定模组加载器版本。</s:String>
     <s:String x:Key="InvalidGameDirectory">无效的游戏目录</s:String>
-    <s:String x:Key="FailedLoadInstanceManifest">无法加载整合包清单。</s:String>
+    <s:String x:Key="FailedLoadInstanceManifest">无法加载客户端清单。</s:String>
     <s:String x:Key="TrySetCustomJavaPath">尝试在设置中指定自定义 Java 路径。</s:String>
-    <s:String x:Key="InstanceDownloadCanceledSuccessfully">整合包下载已成功取消。</s:String>
-    <s:String x:Key="UnknownErrorTryRestartLauncher">发生了未知错误... 建议关闭并重新打开。</s:String>
+    <s:String x:Key="InstanceDownloadCanceledSuccessfully">客户端下载已成功取消。</s:String>
+    <s:String x:Key="UnknownErrorTryRestartLauncher">发生未知错误... 建议关闭并重新打开。</s:String>
 
     <s:String x:Key="CurseforgeErrorTitle">Curseforge 错误</s:String>
     <s:String x:Key="NightWorldErrorTitle">NightWorld 错误</s:String>
-    <s:String x:Key="GuardErrorTitle">Guard 错误</s:String>
+    <s:String x:Key="GuardErrorTitle">防护错误</s:String>
     <s:String x:Key="VersionErrorTitle">版本错误</s:String>
     <s:String x:Key="ForgeVersionErrorTitle">Forge 版本错误</s:String>
     <s:String x:Key="GamePathErrorTitle">游戏目录错误</s:String>
     <s:String x:Key="ManifestErrorTitle">清单文件错误</s:String>
     <s:String x:Key="JavaDownloadErrorTitle">Java 安装错误</s:String>
     <s:String x:Key="UnknownErrorTitle">未知错误</s:String>
-    <s:String x:Key="InstanceName:_">整合包名称：{0}</s:String>
+    <s:String x:Key="InstanceName:_">客户端名称：{0}</s:String>
 
     <!--  endregion Notifications  -->
 
@@ -287,9 +622,9 @@
     <!--  region Settings  -->
     <!--  Java Errors  -->
     <s:String x:Key="WrongJavaPathFormat">Java 路径格式错误</s:String>
-    <s:String x:Key="JavaPathEmptyOrNull">所选路径不能为空！</s:String>
+    <s:String x:Key="JavaPathEmptyOrNull">选择的路径不能为空！</s:String>
     <s:String x:Key="JavaPathExeDoesNotExists">所选路径中不存在 java.exe 或 javaw.exe 文件！</s:String>
-    <s:String x:Key="JavaPathWrongExe">所选路径指向了错误的 .exe 文件！</s:String>
+    <s:String x:Key="JavaPathWrongExe">所选路径指向错误的 .exe 文件！</s:String>
     <s:String x:Key="JavaPathPathDoesNotExists">所选路径不存在！</s:String>
 
     <!--  endregion Settings  -->
@@ -307,77 +642,79 @@
     <s:String x:Key="NightWorldClient">默认使用 NWClient</s:String>
     <s:String x:Key="NightWorldClientDescription">启用 NightWorld 的装饰品和其他功能</s:String>
 
-    <s:String x:Key="GamePathEmptyOrHasInvalidChars">游戏文件夹路径为空或包含禁用字符：{0}</s:String>
+    <s:String x:Key="GamePathEmptyOrHasInvalidChars">文件夹路径为空或包含禁止字符：{0}</s:String>
 
     <!--  endregion Settings  -->
 
     <!--  region Import  -->
     <s:String x:Key="ImportByUrlDescriptionPlaceholder">或 Google Drive 或 Yandex Disk 的链接</s:String>
-    <s:String x:Key="ImportCancelledNotification">整合包导入已成功取消</s:String>
+    <s:String x:Key="ImportCancelledNotification">客户端导入已成功取消</s:String>
     <s:String x:Key="ImportUrlWrongPathNotification">链接格式错误</s:String>
 
-    <s:String x:Key="ImportResultSuccessful">整合包 {0} 已成功导入并在库中等待你</s:String>
-    <s:String x:Key="ImportResultZipFileError">打开 zip 文件时出错</s:String>
+    <s:String x:Key="ImportResultSuccessful">客户端 {0} 已成功导入，正在库中等待你</s:String>
+    <s:String x:Key="ImportResultZipFileError">打开 zip 文件错误</s:String>
     <s:String x:Key="ImportResultGameVersionError">游戏版本错误</s:String>
-    <s:String x:Key="ImportResultJavaDownloadError">下载 Java 时出现问题</s:String>
+    <s:String x:Key="ImportResultJavaDownloadError">Java 下载问题</s:String>
     <s:String x:Key="ImportResultIsOfflineMode">离线模式</s:String>
-    <s:String x:Key="ImportResultMovingFilesError">移动文件时出错</s:String>
+    <s:String x:Key="ImportResultMovingFilesError">移动文件错误</s:String>
     <s:String x:Key="ImportResultDownloadError">下载错误</s:String>
-    <s:String x:Key="ImportResultDirectoryCreateError">创建目录时出错</s:String>
-    <s:String x:Key="ImportResultWrongUrl">用于导入文件的 URL 地址无效。目前我们仅支持 Yandex Disk 和 Google Drive。</s:String>
+    <s:String x:Key="ImportResultDirectoryCreateError">创建目录错误</s:String>
+    <s:String x:Key="ImportResultWrongUrl">导入文件的 URL 地址不正确。目前我们仅支持 Yandex Disk 和 Google Drive。</s:String>
     <s:String x:Key="ImportResultManifestError">清单文件错误。</s:String>
     <s:String x:Key="ImportResultUnknownFileType">未知文件类型。</s:String>
     <s:String x:Key="ImportResultUnknownError">未知错误</s:String>
+
+    <!--  endregion Import  -->
 
     <!--  region Accounts  -->
     <s:String x:Key="RemoveAccount">删除账户</s:String>
     <s:String x:Key="RemoveAccountDescription">
         你确定要删除账户：{0}？
-        只有通过重新授权才能恢复账户访问权限！
+        只有通过重新授权才能恢复对账户的访问！
     </s:String>
-    <s:String x:Key="YesIWantRemoveAccount">是的，我想删除账户</s:String>
+    <s:String x:Key="YesIWantRemoveAccount">是的，我要删除账户</s:String>
 
     <s:String x:Key="RemoveAllAccount">删除所有账户</s:String>
     <s:String x:Key="RemoveAllAccountDescription">
         你确定要删除所有账户？
-        只有通过重新授权才能恢复账户访问权限！
+        只有通过重新授权才能恢复对账户的访问！
     </s:String>
-    <s:String x:Key="YesIWantRemoveAllAccount">是的，我想删除所有账户</s:String>
+    <s:String x:Key="YesIWantRemoveAllAccount">是的，我要删除所有账户</s:String>
 
     <!--  Notification  -->
     <s:String x:Key="WrongLoginOrPassword">登录名或密码错误。</s:String>
     <s:String x:Key="NoConnectionToTheServer">无法连接到服务器！</s:String>
     <s:String x:Key="TokenError">令牌错误！</s:String>
     <s:String x:Key="UnknownError">未知错误！</s:String>
-    <s:String x:Key="SessionExpiredRedirectToMicrosoft">会话已过期，正在重定向到 Microsoft 授权页面</s:String>
-    <s:String x:Key="TokenErrorRedirectToMicrosoft">令牌错误，正在重定向到 Microsoft 授权页面</s:String>
-    <s:String x:Key="SessionExpiredTryAuthAgain">会话已过期，请尝试重新授权</s:String>
-    <s:String x:Key="TokenErrorTryAuthAgain">令牌错误，请尝试重新授权</s:String>
+    <s:String x:Key="SessionExpiredRedirectToMicrosoft">会话已过期。正在重定向到 Microsoft 授权页面</s:String>
+    <s:String x:Key="TokenErrorRedirectToMicrosoft">令牌错误。正在重定向到 Microsoft 授权页面</s:String>
+    <s:String x:Key="SessionExpiredTryAuthAgain">会话已过期。建议再次尝试授权</s:String>
+    <s:String x:Key="TokenErrorTryAuthAgain">令牌错误。建议再次尝试授权</s:String>
 
     <!--  endregion Accounts  -->
 
     <!--  region Library  -->
-    <s:String x:Key="DeletingInstance">删除整合包</s:String>
+    <s:String x:Key="DeletingInstance">删除客户端</s:String>
     <s:String x:Key="DeletingInstanceDescription">
-        你确定要删除整合包：{0}？
+        你确定要删除客户端：{0}？
         删除后无法恢复！
     </s:String>
-    <s:String x:Key="YesIWantDeleteInstance">是的，我想删除整合包</s:String>
+    <s:String x:Key="YesIWantDeleteInstance">是的，我要删除客户端</s:String>
 
     <!--  endregion Library  -->
 
     <!--  region Friends  -->
     <!--  Notifications  -->
     <s:String x:Key="FriendRequestHasBeenSent">好友请求已发送。</s:String>
-    <s:String x:Key="FriendRequestWasCancelled">添加好友的请求已取消。</s:String>
+    <s:String x:Key="FriendRequestWasCancelled">好友请求已取消。</s:String>
     <s:String x:Key="YouAnd_AreFriendsNow">你和 {0} 现在是好友！</s:String>
-    <s:String x:Key="YouHaveDeclinedYourFriendRequest_">你已拒绝 {0} 的好友请求。</s:String>
+    <s:String x:Key="YouHaveDeclinedYourFriendRequest_">你拒绝了 {0} 的好友请求。</s:String>
 
     <!--  endregion Friends  -->
 
     <!--  region Instance  -->
     <!--  Notification  -->
-    <s:String x:Key="Instance_HasBeenInstalledSuccessful">整合包 {0} 已成功安装</s:String>
+    <s:String x:Key="Instance_HasBeenInstalledSuccessful">客户端 {0} 已成功安装</s:String>
     <s:String x:Key="FailedToInstallColon_">无法安装：{0}</s:String>
 
     <!--  endregion Instance  -->
@@ -387,62 +724,62 @@
     <s:String x:Key="AuthorizationProcessInProgress">正在进行授权...</s:String>
 
     <s:String x:Key="Information">信息</s:String>
-    <s:String x:Key="MicrosoftAccountAuthorizationDescription">为了授权正版账户，你将被自动重定向到 Microsoft 授权页面。</s:String>
+    <s:String x:Key="MicrosoftAccountAuthorizationDescription">为授权正版账户，你将被自动重定向到 Microsoft 授权页面。</s:String>
     <s:String x:Key="DoInstallTheLatestVersion">安装最新版本？</s:String>
     <s:String x:Key="NWClientNotAvailableForThisVersion">此版本不支持 NWClient</s:String>
     <s:String x:Key="YouHaveNoActiveDistributions">你没有活跃的分发</s:String>
 
     <s:String x:Key="InQueue">排队中</s:String>
     <s:String x:Key="InConnect">正在连接</s:String>
-    <s:String x:Key="PostProcessing">文件处理中</s:String>
+    <s:String x:Key="PostProcessing">文件处理</s:String>
     <s:String x:Key="InProcess">排队中</s:String>
     <s:String x:Key="Successful">成功</s:String>
 
-    <s:String x:Key="UnableToDetermineDataForImport">无法确定整合包导入数据，请手动输入数据！</s:String>
+    <s:String x:Key="UnableToDetermineDataForImport">无法确定客户端导入数据，请手动输入数据！</s:String>
     <s:String x:Key="YouAreAlreadyDistributingToThisClient">你已在分发此客户端。</s:String>
-    <s:String x:Key="ActiveDistributingDescription">此页面将在你停止“你的分发”部分中的活跃分发后解锁</s:String>
-    <s:String x:Key="ThereAreNotAddons">无模组</s:String>
+    <s:String x:Key="ActiveDistributingDescription">此页面将在你停止“你的分发”部分的活跃分发后解锁</s:String>
+    <s:String x:Key="ThereAreNotAddons">没有附加组件</s:String>
     <s:String x:Key="GameLaunching">正在启动游戏...</s:String>
     <s:String x:Key="ProcessColon">进程：</s:String>
-    <s:String x:Key="UpdatingFiles">正在更新文件</s:String>
+    <s:String x:Key="UpdatingFiles">更新文件</s:String>
     <s:String x:Key="StageColon">阶段：</s:String>
     <s:String x:Key="FilesColon">文件：</s:String>
-    <s:String x:Key="TotalDonwloadedColon">总计下载：</s:String>
-    <s:String x:Key="InstallingTheInstance">正在安装整合包</s:String>
-    <s:String x:Key="ThereAreNotImages">无图片</s:String>
+    <s:String x:Key="TotalDonwloadedColon">总下载量：</s:String>
+    <s:String x:Key="InstallingTheInstance">正在安装客户端</s:String>
+    <s:String x:Key="ThereAreNotImages">没有图片</s:String>
     <s:String x:Key="ImagesLoading">正在加载图片...</s:String>
     <s:String x:Key="DescriptionLoading">正在加载描述...</s:String>
-    <s:String x:Key="DownloadingTheInstance">正在下载整合包</s:String>
-    <s:String x:Key="LoadingEllipsis">正在加载...</s:String>
-    <s:String x:Key="WeDidNotFindAnythingForThisRequest">未找到与此请求相关的内容</s:String>
-    <s:String x:Key="ThereAreNoIncomingFriendRequests">无待处理的好友请求。</s:String>
-    <s:String x:Key="ThereAreNoOutgoingFriendRequests">无已发送的好友请求。</s:String>
+    <s:String x:Key="DownloadingTheInstance">正在下载客户端</s:String>
+    <s:String x:Key="LoadingEllipsis">加载中...</s:String>
+    <s:String x:Key="WeDidNotFindAnythingForThisRequest">未找到与此请求相关的任何内容</s:String>
+    <s:String x:Key="ThereAreNoIncomingFriendRequests">没有收到的好友请求。</s:String>
+    <s:String x:Key="ThereAreNoOutgoingFriendRequests">没有发送的好友请求。</s:String>
     <s:String x:Key="Close">关闭</s:String>
     <s:String x:Key="Notifications">通知</s:String>
-    <s:String x:Key="LibraryEmptyDescription">你可以通过目录或创建自己的整合包来向库中添加整合包</s:String>
-    <s:String x:Key="CreateNewInstance">创建新整合包</s:String>
+    <s:String x:Key="LibraryEmptyDescription">你可以通过目录或创建自己的客户端来添加客户端到库中</s:String>
+    <s:String x:Key="CreateNewInstance">创建新客户端</s:String>
     <s:String x:Key="MinecraftNotRunning">Minecraft 未运行。</s:String>
-    <s:String x:Key="InstanceDash_">整合包 - {0}</s:String>
+    <s:String x:Key="InstanceDash_">客户端 - {0}</s:String>
     <s:String x:Key="GoToCatalog">前往目录</s:String>
     <s:String x:Key="LibraryEmpty">库为空</s:String>
 
     <s:String x:Key="WelcomeDescription">欢迎体验新时代</s:String>
-    <s:String x:Key="WelcomePageThemeSelectDescription">选择你偏好的界面外观。</s:String>
+    <s:String x:Key="WelcomePageThemeSelectDescription">选择你喜欢的界面外观。</s:String>
 
     <!--  Tray  -->
     <s:String x:Key="ContactSupport">联系支持</s:String>
     <s:String x:Key="TrayHideLauncher">隐藏启动器</s:String>
     <s:String x:Key="TrayReloadMultiplayer">重新启动多人游戏</s:String>
     <s:String x:Key="MaximizeLauncher">显示启动器</s:String>
-    <s:String x:Key="CloseInstance">关闭整合包</s:String>
+    <s:String x:Key="CloseInstance">关闭客户端</s:String>
 
     <!--  Console Header  -->
-    <s:String x:Key="InstanceNameColon">整合包：</s:String>
+    <s:String x:Key="InstanceNameColon">客户端：</s:String>
     <s:String x:Key="VersionColon">版本：</s:String>
     <s:String x:Key="TypeColon">类型：</s:String>
 
     <!--  LeftPanel Help Block  -->
-    <s:String x:Key="HowToPlay">如何游玩？</s:String>
+    <s:String x:Key="HowToPlay">如何玩？</s:String>
     <s:String x:Key="Support">支持</s:String>
 
     <s:String x:Key="LoggingMode">日志记录模式</s:String>
@@ -451,32 +788,32 @@
     </s:String>
 
     <s:String x:Key="ThereAreNoAddonVersion">
-        版本列表为空。我们不知道发生了什么(
+        版本列表为空。我们也不知道发生了什么(
     </s:String>
 
     <s:String x:Key="SuccessDirectoryTransfer">
         旧目录数据成功复制到新目录。
     </s:String>
     <s:String x:Key="DirectoryTransfer">
-        完整复制旧目录
+        完全复制旧目录
     </s:String>
     <s:String x:Key="DirectoryTransferDescription">
-        你想完整复制旧目录吗？
+        你想完全复制旧目录吗？
     </s:String>
     <s:String x:Key="DirectoryTransferAgreeButtonText">
-        完整复制
+        完全复制
     </s:String>
     <s:String x:Key="DirectoryTransferLoading">
         正在将旧目录复制到新目录...
     </s:String>
 
     <s:String x:Key="RestartLauncher">
-        需要重启
+        需要重新启动
     </s:String>
     <s:String x:Key="RestartLauncherDescription">
-        要使更改生效，必须重启启动器。否则启动器可能无法正常运行。
+        要使更改生效，需要重新启动启动器。如果不重新启动，启动器可能无法正常工作。
     </s:String>
     <s:String x:Key="RestartLauncherButtonAction">
-        是的，我想现在重启启动器
+        是的，我现在要重新启动启动器
     </s:String>
 </ResourceDictionary>

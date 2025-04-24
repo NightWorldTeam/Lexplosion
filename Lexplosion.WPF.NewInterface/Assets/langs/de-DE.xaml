@@ -15,6 +15,8 @@
     <s:String x:Key="uk-UA">Ukrainisch</s:String>
     <s:String x:Key="zh-CN">Chinesisch</s:String>
     <s:String x:Key="de-DE">Deutsch</s:String>
+    <s:String x:Key="ru-CAT">Russisch (Katze)</s:String>
+    <s:String x:Key="lolcat">LOLCAT</s:String>
 
     <s:String x:Key="Default">Standard</s:String>
     <!--    -->
@@ -523,7 +525,7 @@
     <s:String x:Key="Cancel">Abbrechen</s:String>
 
     <s:String x:Key="Important">Wichtig!</s:String>
-    <s:String x:Key="MicrosoftManualInputImportantMessage">Teile oder zeige dein Authentifizierungstoken niemals jemandem. Wenn Dritte dein Token erhalten, können sie auf dein Konto zugreifen!</s:String>
+    <s:String x:Key="MicrosoftManualInputImportantMessage">Teile oder zeige dein Authentifizierungstoken niemandem. Wenn Dritte dein Token erhalten, können sie auf dein Konto zugreifen!</s:String>
 
     <!--  endregion Authorization  -->
 

@@ -1,0 +1,819 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:s="clr-namespace:System;assembly=mscorlib">
+    <!--
+        == NEW
+        == WPF
+        == INTERFACE
+        == TRANSLATE
+    -->
+
+    <s:String x:Key="en-US">Englisch</s:String>
+    <s:String x:Key="ru-RU">Russki</s:String>
+    <s:String x:Key="uk-UA">Ukrainey</s:String>
+    <s:String x:Key="zh-CN">Chinesey</s:String>
+    <s:String x:Key="de-DE">Germanz</s:String>
+    <s:String x:Key="ru-CAT">Russki (Cat)</s:String>
+    <s:String x:Key="lolcat">LOLCAT</s:String>
+
+    <s:String x:Key="Default">Defawltz</s:String>
+    <!--    -->
+    <!--  LeftPanel  -->
+    <!--    -->
+    <s:String x:Key="Catalog">Cat-alog</s:String>
+    <s:String x:Key="Library">Libraree</s:String>
+    <s:String x:Key="Friends">Frenz</s:String>
+    <s:String x:Key="Multiplayer">Multi-kitteh Gaem</s:String>
+    <s:String x:Key="Settings">Settinz</s:String>
+    <s:String x:Key="GladToSeeYou">Happeh 2 seez u,</s:String>
+
+    <!--    -->
+    <!--  Titles  -->
+    <!--    -->
+    <s:String x:Key="General">Genrul</s:String>
+
+    <!--  Friends  -->
+    <s:String x:Key="FindFriends">Findz Frenz</s:String>
+    <s:String x:Key="FriendsRequests">Frenz Reqwests</s:String>
+
+    <!--  Settings  -->
+    <s:String x:Key="Appearance">Lookz</s:String>
+    <s:String x:Key="Language">Langwage</s:String>
+    <s:String x:Key="About">Bout da Launchr</s:String>
+
+    <!--  Main Menu  -->
+
+    <!--    -->
+    <!--  Catalog  -->
+    <!--    -->
+    <s:String x:Key="Search">Serch</s:String>
+
+    <!--    -->
+    <!--  Library  -->
+    <!--    -->
+
+    <!--    -->
+    <!--  Friends  -->
+    <!--    -->
+    <s:String x:Key="Pending">Waitin</s:String>
+    <s:String x:Key="Outgoing">Sentz</s:String>
+    <s:String x:Key="AcceptRequest">Acept Reqwests</s:String>
+    <s:String x:Key="RemoveFollower">Remoov Follwer</s:String>
+    <s:String x:Key="AddFriend">Addz Fren</s:String>
+    <s:String x:Key="Unfriends">Unfren</s:String>
+
+    <!--  Status  -->
+    <s:String x:Key="Online">Onliez</s:String>
+    <s:String x:Key="Offline">Offliez</s:String>
+    <s:String x:Key="PlayingIn">Playin in</s:String>
+    <s:String x:Key="InGame">In Gaem</s:String>
+    <s:String x:Key="DoNotDisturb">No Botherz</s:String>
+
+    <!--    -->
+    <!--  Multiplayer  -->
+    <!--    -->
+    <s:String x:Key="Status">Statuz</s:String>
+    <s:String x:Key="PriorityConnetionMethod">Top Connekshun Way</s:String>
+    <s:String x:Key="DirectConnection">Direkt Link</s:String>
+    <s:String x:Key="ViaRepeater">Thru Repeetr</s:String>
+    <s:String x:Key="ConnectedPlayers">Linkd Kittehs</s:String>
+    <s:String x:Key="NoConnectedPlayers">No Linkd Kittehs</s:String>
+    <s:String x:Key="ReloadMultiplayer">Reloadz Multi-kitteh Gaem</s:String>
+
+    <!--  Status  -->
+    <s:String x:Key="StatusNone">No Open Wurldz</s:String>
+    <s:String x:Key="StatusOpenWorld">Open 4 Connekshun</s:String>
+    <s:String x:Key="StatusConnectedToUser">Linkd 2 Servr</s:String>
+
+    <!--    -->
+    <!--  General Settings  -->
+    <!--    -->
+
+    <!--  General Settings -> General  -->
+    <s:String x:Key="GameProperties">Gaem Settinz</s:String>
+    <s:String x:Key="JavaProperties">Java Settinz</s:String>
+    <s:String x:Key="LauncherProperties">Launchr Settinz</s:String>
+
+    <s:String x:Key="GamePropertiesDescription">Tweak ur gaem.</s:String>
+    <s:String x:Key="JavaPropertiesDescription">Tweak java 4 minecraft.</s:String>
+    <s:String x:Key="LauncherPropertiesDescription">Tweak launchr 4 u.</s:String>
+
+    <!--  Game Properties  -->
+    <!--  Window Size  -->
+    <s:String x:Key="WindowSize">Windoe Size</s:String>
+    <s:String x:Key="WindowSizeDescription">Set minecraft windoe size.</s:String>
+    <!--  Ram  -->
+    <s:String x:Key="Ram">RAMz</s:String>
+    <s:String x:Key="RamDescription">Dis makez gaem go fasta.</s:String>
+    <!--  Game Directory  -->
+    <s:String x:Key="GameDirectory">Gaem Foldr</s:String>
+    <s:String x:Key="GameDirectoryDescription">Pick spot 4 gaem foldr.</s:String>
+
+    <!--  Java Properties  -->
+    <!--  Java Path  -->
+    <s:String x:Key="JavaPath">Java Pathz</s:String>
+    <s:String x:Key="JavaPathDescription">Path 2 java foldr</s:String>
+    <!--  Java Path for higher 1.16.5  -->
+    <s:String x:Key="JavaPathHigher">Java Path 4 1.16.5+ </s:String>
+    <s:String x:Key="JavaPathHigherDescription">Path 2 java foldr 4 1.16.5+ </s:String>
+    <!--  JVM Arguments  -->
+    <s:String x:Key="JVMArguments">JVM Argumintz</s:String>
+    <s:String x:Key="JVMArgumentsDescription">Java virtul masheen argumintz</s:String>
+
+    <!--  Launcher Properties  -->
+    <!--  Console  -->
+    <s:String x:Key="Console">Consol</s:String>
+    <s:String x:Key="ConsoleDescription">Openz consol wen gaem startz.</s:String>
+    <!--  Hide Launcher  -->
+    <s:String x:Key="HideLauncher">Hidez Launchr</s:String>
+    <s:String x:Key="HideLauncherDescription">Hidez launchr wen gaem startz.</s:String>
+    <!--  Auto Instance Update  -->
+    <s:String x:Key="AutoInstanceUpdate">Auto Updaet Clientz</s:String>
+    <s:String x:Key="AutoInstanceUpdateDescription">Clientz in libraree updaet automagikly.</s:String>
+    <!--  NightWorld Skins  -->
+    <s:String x:Key="NightWorldSkins">NightWorld Skinz Sistim</s:String>
+    <s:String x:Key="NightWorldSkinsDescription">Gaem showz skin set in profil.</s:String>
+
+    <!--    -->
+    <!--  Appearance  -->
+    <!--    -->
+    <s:String x:Key="AccentColor">Fancy Colur</s:String>
+    <s:String x:Key="ChooseAccentColor">Pick ur fancy colur.</s:String>
+    <s:String x:Key="InterfaceTheme">Interfase Theem</s:String>
+    <s:String x:Key="ChooseTheme">Pick ur theem.</s:String>
+
+    <!--    -->
+    <!--  Language  -->
+    <!--    -->
+    <s:String x:Key="ChooseLanguage">Pick langwage.</s:String>
+
+    <!--    -->
+    <!--  Accounts  -->
+    <!--    -->
+    <s:String x:Key="Accounts">Akountz</s:String>
+
+    <!--    -->
+    <!--  About  -->
+    <!--    -->
+    <s:String x:Key="Authors">Authrz</s:String>
+    <s:String x:Key="Founders">Foundrz</s:String>
+    <s:String x:Key="Developers">Develuprz</s:String>
+    <s:String x:Key="Contacts">Kontactz</s:String>
+    <s:String x:Key="OurVkontakteGroup">Our VKontakte Groop</s:String>
+    <s:String x:Key="Protection">Dis progrum protekted by copyrite lawz an internashunal agreez. Bad copy or sharin dis progrum or partz of it getz u in trubble.</s:String>
+    <s:String x:Key="Copyright">© NightWorld, 2025. All rightz reservd.</s:String>
+    <s:String x:Key="DenialOfResponsibility">NOT OFFISHUL MINECRAFT THINGY. NOT APPROVD OR LINKD 2 MOJANG OR MICROSOFT</s:String>
+
+    <!--    -->
+    <!--  Instance Factory Modal  -->
+    <!--    -->
+
+    <!--  Instance Factory Left Modal Menu Tabs Titles  -->
+    <s:String x:Key="Create">Maek</s:String>
+    <s:String x:Key="Import">Bringz In</s:String>
+    <s:String x:Key="Distributions">Sharings</s:String>
+
+    <!--    -->
+    <!--  Instance Form  -->
+    <!--    -->
+
+    <!--  Logo  -->
+    <s:String x:Key="More">Moar</s:String>
+
+    <!--  Upper Buttons  -->
+    <s:String x:Key="Play">Playz</s:String>
+    <s:String x:Key="Launch">Launchz</s:String>
+
+    <!--  LowerButtons  -->
+    <s:String x:Key="DeleteInstance">Deleet Client</s:String>
+    <s:String x:Key="Export">Exportz</s:String>
+    <s:String x:Key="OpenFolder">Open Foldr</s:String>
+    <s:String x:Key="ExploreAddons">Chek Addonz</s:String>
+    <s:String x:Key="AddToLibrary">Add 2 Libraree</s:String>
+    <s:String x:Key="RemoveFromLibrary">Remoov from Libraree</s:String>
+    <s:String x:Key="CancelDownload">Stopz Download</s:String>
+
+    <!--  Visit Official Page  -->
+    <s:String x:Key="VisitCurseforge">Go 2 Curseforge</s:String>
+    <s:String x:Key="VisitModrinth">Go 2 Modrinth</s:String>
+    <s:String x:Key="VisitNightworld">Go 2 NightWorld</s:String>
+
+    <!--    -->
+    <!--  Instance Overview Menu  -->
+    <!--    -->
+    <s:String x:Key="Version">Versiun</s:String>
+    <s:String x:Key="Download">Downloadz</s:String>
+
+    <!--    -->
+    <!--  Instance Profile  -->
+    <!--    -->
+    <s:String x:Key="Overview">Ovrview</s:String>
+    <s:String x:Key="Addons">Addonz</s:String>
+    <s:String x:Key="AboutInstance">Bout Client</s:String>
+
+    <!--    -->
+    <!--  Instance Profile Left Panel  -->
+    <!--    -->
+    <s:String x:Key="Back">Bak</s:String>
+    <s:String x:Key="Version:">Gaem Versiun:</s:String>
+    <s:String x:Key="GameType:">Gaem Tipe:</s:String>
+    <s:String x:Key="PlayedTime:">Playd Tiem:</s:String>
+    <s:String x:Key="DownloadCount:">Downloadz Count:</s:String>
+
+    <!--    -->
+    <!--  Instance Profile Addons  -->
+    <!--    -->
+    <s:String x:Key="Mods">Modz</s:String>
+    <s:String x:Key="Resourcepacks">Resoorspackz</s:String>
+    <s:String x:Key="Maps">Mapz</s:String>
+    <s:String x:Key="Shaders">Shaderz</s:String>
+
+    <!--  Sort By  -->
+    <s:String x:Key="Name">Naem</s:String>
+    <s:String x:Key="Author">Authr</s:String>
+    <s:String x:Key="FileName">Fiel Naem</s:String>
+
+    <!--  By Name  -->
+    <s:String x:Key="ModName">Mod Naem</s:String>
+    <s:String x:Key="ResourcepackName">Resoorspack Naem</s:String>
+    <s:String x:Key="MapName">Map Naem</s:String>
+    <s:String x:Key="ShaderName">Shader Naem</s:String>
+
+    <!--  By Author  -->
+    <s:String x:Key="ModAuthor">Mod Authr</s:String>
+    <s:String x:Key="ResourcepackAuthor">Resoorspack Authr</s:String>
+    <s:String x:Key="MapAuthor">Map Authr</s:String>
+    <s:String x:Key="ShaderAuthor">Shader Authr</s:String>
+
+    <!--  By FileName  -->
+    <s:String x:Key="ModFileName">Mod Fiel Naem</s:String>
+    <s:String x:Key="ResourcepackFileName">Resoorspack Fiel Naem</s:String>
+    <s:String x:Key="MapFileName">Map Fiel Naem</s:String>
+    <s:String x:Key="ShaderFileName">Shader Fiel Naem</s:String>
+
+    <!--    -->
+    <!--  Instance Profile Settings  -->
+    <!--    -->
+    <s:String x:Key="Configuration">Configurashun</s:String>
+    <s:String x:Key="InstanceNameDescription">How ur client showz in libraree</s:String>
+    <s:String x:Key="Summary">Short Descripshun</s:String>
+    <s:String x:Key="SummaryDescription">Short descripshun 4 dis client.</s:String>
+    <s:String x:Key="Description">Descripshun</s:String>
+    <s:String x:Key="DescriptionAdditional">Detaild descripshun 4 dis client.</s:String>
+
+    <!--    -->
+    <!--  Instance Profile Configuration  -->
+    <!--    -->
+    <s:String x:Key="GameType">Gaem Tipe</s:String>
+    <s:String x:Key="GameTypeDescription">Vanilla/Modloadr</s:String>
+
+    <s:String x:Key="VersionDescription">Versiun descripshun.</s:String>
+
+    <s:String x:Key="ModloaderVersion">Modloadr Versiun</s:String>
+    <s:String x:Key="ModloaderVersionDescription">Pick versiun 4 chosn modloadr.</s:String>
+
+    <s:String x:Key="IsShowSnapshots">Showz Snapshutz?</s:String>
+    <s:String x:Key="IsShowSnapshotsDescription">Showz snapshutz in gaem versiun dropdown.</s:String>
+
+    <s:String x:Key="Optifine">Optifien</s:String>
+    <s:String x:Key="OptifineDescription">Instal optifien on dis client.</s:String>
+
+    <!--    -->
+    <!--  Addons Repository  -->
+    <!--    -->
+    <s:String x:Key="Install">Instalz</s:String>
+    <s:String x:Key="Categories">Categoreez</s:String>
+    <s:String x:Key="Search...">Serch...</s:String>
+    <s:String x:Key="SortBy">Sortz By</s:String>
+    <s:String x:Key="ShowPerPage">Showz Per Page</s:String>
+    <s:String x:Key="Accept">Acept</s:String>
+    <s:String x:Key="Installing...">Instalin...</s:String>
+
+    <!--    -->
+    <!--  Modrinth Addon Page  -->
+    <!--    -->
+    <s:String x:Key="ProjectMembers">Projek Memburz</s:String>
+    <s:String x:Key="TechnicalInformation">Teknikal Info</s:String>
+    <s:String x:Key="ExternalResources">Xternal Resoorsez</s:String>
+    <s:String x:Key="Created">Creatd</s:String>
+    <s:String x:Key="Updated">Updatd</s:String>
+    <s:String x:Key="License">Lisense</s:String>
+    <s:String x:Key="ClientSide">Client Sied</s:String>
+    <s:String x:Key="ServerSide">Servr Sied</s:String>
+    <s:String x:Key="ProjectId">Projek ID</s:String>
+    <s:String x:Key="Required">Needz</s:String>
+    <s:String x:Key="Unsupported">No Suport</s:String>
+
+    <s:String x:Key="Downloads1">download</s:String>
+    <s:String x:Key="Downloads2">downloadz</s:String>
+    <s:String x:Key="Downloads3">downloadz</s:String>
+
+    <s:String x:Key="Followers1">follwer</s:String>
+    <s:String x:Key="Followers2">follwerz</s:String>
+    <s:String x:Key="Followers3">follwerz</s:String>
+
+    <s:String x:Key="Gallery">Galeree</s:String>
+    <s:String x:Key="Changelog">Changelogz</s:String>
+    <s:String x:Key="Versions">Versiunz</s:String>
+
+    <s:String x:Key="Update">Updaet</s:String>
+    <s:String x:Key="Delete">Deleet</s:String>
+
+    <s:String x:Key="ProjectFound">projekts found</s:String>
+
+    <!--  Instance Factory  -->
+    <s:String x:Key="InstanceName">Client Naem</s:String>
+    <s:String x:Key="CreateInstance">Maek Client</s:String>
+
+    <!--  Export  -->
+    <s:String x:Key="ExportProperties">Export Settinz</s:String>
+    <s:String x:Key="ExportInstanceNameDescription">Showz in libraree after export.</s:String>
+    <s:String x:Key="FoldersAndFiles">Foldrz an Fielz</s:String>
+    <s:String x:Key="FoldersAndFilesDescription">Pick foldrz an fielz 2 export.</s:String>
+    <s:String x:Key="FullExport">Full Export</s:String>
+    <s:String x:Key="InstanceExport">Client Export</s:String>
+    <s:String x:Key="ExportProcessActive">Exportin client proces</s:String>
+
+    <!--  Import  -->
+    <s:String x:Key="ImportDragDropFieldDescription">Drag an drop client zip 2 start upload.</s:String>
+    <s:String x:Key="Review">Revew</s:String>
+
+    <!--  Filter Sorting  -->
+    <s:String x:Key="Source">Sorce</s:String>
+    <s:String x:Key="Sorting">Sortin</s:String>
+
+    <!--  Sources  -->
+    <s:String x:Key="AllSource">All Sorcez</s:String>
+    <s:String x:Key="LocalSource">Lexplosion</s:String>
+    <s:String x:Key="Curseforge">Curseforge</s:String>
+    <s:String x:Key="Modrinth">Modrinth</s:String>
+    <s:String x:Key="NightWorld">NightWorld</s:String>
+
+    <s:String x:Key="Or">Orz</s:String>
+    <s:String x:Key="And">An</s:String>
+
+    <!--  Categories  -->
+    <s:String x:Key="CategoriesSearchBoxPlaceholder">Pick categoree 2 filtr...</s:String>
+
+    <!--  Modrinth  -->
+    <s:String x:Key="ModrinthRelevance">Relevansy</s:String>
+    <s:String x:Key="ModrinthDownloads">Downloadz Count</s:String>
+    <s:String x:Key="ModrinthFollows">Follwerz</s:String>
+    <s:String x:Key="ModrinthUpdated">Last Updaet</s:String>
+    <s:String x:Key="ModrinthNewest">Creaet Date</s:String>
+    <!--  Curseforge  -->
+    <s:String x:Key="CurseforgeRelevance">Relevansy</s:String>
+    <s:String x:Key="CurseforgeFeatured">Featurd</s:String>
+    <s:String x:Key="CurseforgePopularity">Popularty</s:String>
+    <s:String x:Key="CurseforgeLastUpdated">Last Updaet</s:String>
+    <s:String x:Key="CurseforgeCreationDate">Creaet Date</s:String>
+    <s:String x:Key="CurseforgeTotalDownloads">Total Downloadz</s:String>
+    <s:String x:Key="CurseforgeName">A-Z</s:String>
+
+    <!--  Accounts  -->
+    <s:String x:Key="Active">Aktiv</s:String>
+    <s:String x:Key="NotActive">Not Aktiv</s:String>
+    <s:String x:Key="TypingNicknamePlaceholder">Typ nicknaem...</s:String>
+
+    <!--  Funcs  -->
+    <s:String x:Key="Activate">Maek Aktiv</s:String>
+    <s:String x:Key="DoGameLauncher">Maek Gaem Launchr</s:String>
+    <s:String x:Key="Signout">Sign Owt</s:String>
+
+    <s:String x:Key="GameLauncher">Gaem Launchr</s:String>
+
+    <!--  Account Factory  -->
+    <s:String x:Key="AddingAccount">Addin Akount</s:String>
+    <s:String x:Key="Login">Logz In</s:String>
+    <s:String x:Key="Password">Passwurd</s:String>
+    <s:String x:Key="AccountType">Akount Tipe</s:String>
+    <s:String x:Key="AccountTypeDescription">Authorizashun Servis</s:String>
+    <s:String x:Key="LoginAccountFactoryDescription">Login or email 4 akount</s:String>
+    <s:String x:Key="PasswordAccountFactoryDescription">Passwurd 4 akount</s:String>
+    <s:String x:Key="AddAccount">Add Akount</s:String>
+    <s:String x:Key="LoginExample">Exampul: _Hel2x_</s:String>
+
+    <!--  Nightworld Limited Pages Curtains  -->
+    <s:String x:Key="OnlyAvailableWithNightWorldAccount">Only wif NightWorld Akount</s:String>
+    <s:String x:Key="OnlyAvailableWithNightWorldAccountDescription">Dis launchr featur only wurkz wif NightWorld akount login, no need 2 maek it launch akount.</s:String>
+    <s:String x:Key="CreateNightWorldAccount">Maek NightWorld Akount</s:String>
+    <s:String x:Key="LoginWithYourNightWorldAccount">Logz in wif NightWorld</s:String>
+
+    <!--  Friends DropdownMenu  -->
+    <s:String x:Key="Unfriend">Unfren</s:String>
+    <s:String x:Key="ViewProfile">See Profil</s:String>
+
+    <!--  Instance Share  -->
+    <s:String x:Key="Share">Shar</s:String>
+    <s:String x:Key="ShareInstance">Start sharin dis client</s:String>
+    <s:String x:Key="ActiveShares">Ur Sharings</s:String>
+
+    <s:String x:Key="CurseforgeCatalogLoading">Loadin Curseforge Cat-alog</s:String>
+
+    <!--  Account Funcs  -->
+    <s:String x:Key="LaunchAccount">Set 4 Gaem</s:String>
+    <s:String x:Key="MakeAccountActive">Maek Aktiv</s:String>
+    <s:String x:Key="ReloadAccount">Refreash</s:String>
+    <s:String x:Key="LogoutAccount">Deleet</s:String>
+    <s:String x:Key="LogoutAllAccounts">Deleet All Akountz</s:String>
+    <s:String x:Key="AddNewAccount">Add New Akount</s:String>
+
+    <!--  Addon ToolTip  -->
+    <s:String x:Key="AddNewAddon">Instalz</s:String>
+    <s:String x:Key="AddonOpenFolder">Open Foldr</s:String>
+    <s:String x:Key="AddonReloadList">Refreash List</s:String>
+    <s:String x:Key="AddonChangeView">Chang View</s:String>
+
+    <!--  Instance Settings  -->
+    <s:String x:Key="DisplayResolution">Skreen Rez</s:String>
+    <s:String x:Key="Browse">Browz</s:String>
+    <s:String x:Key="JavaResetPath">Reset Java Pathz</s:String>
+
+    <s:String x:Key="AcceptFriendRequest">Acept Fren Reqwests</s:String>
+    <s:String x:Key="DeclineFriendRequest">Say No 2 Fren Reqwests</s:String>
+    <s:String x:Key="CancelFriendRequest">Cansul Fren Reqwests</s:String>
+    <s:String x:Key="SendFriendRequest">Sendz Fren Reqwests</s:String>
+
+    <!--  Paginator  -->
+    <s:String x:Key="PaginatorPrevious">Bak</s:String>
+    <s:String x:Key="PaginatorNext">Nex</s:String>
+    <s:String x:Key="PaginatorPage">Page</s:String>
+    <s:String x:Key="PaginatorPageOf">of</s:String>
+
+    <!--  ToolTip Appearance Settings  -->
+    <s:String x:Key="Tooltip">ToolTipz</s:String>
+    <s:String x:Key="TooltipDescription">ToolTipz Settinz</s:String>
+
+    <s:String x:Key="ToolTipState">ToolTipz Statuz</s:String>
+    <s:String x:Key="ToolTipStateDescription">Dis settin turnz tooltipz on/off</s:String>
+
+    <s:String x:Key="InitialShowDelay">Start Showz Delay</s:String>
+    <s:String x:Key="InitialShowDelayDescription">Delay (in millisec) b4 showin tooltip wen mouse hoverz.</s:String>
+    <s:String x:Key="BetweenShowDelay">Betweens Showz Delay</s:String>
+    <s:String x:Key="BetweenShowDelayDescription">Tiem (in millisec) u can switch tooltipz wifout start delay.</s:String>
+
+    <!--  InstanceForm  -->
+    <s:String x:Key="Downloaded">Downloadid</s:String>
+    <!--  Instance Form Download Process  -->
+    <s:String x:Key="DownloadPreparing">Gettin redy 2 download...</s:String>
+    <s:String x:Key="JavaInstalling">Instalin Java</s:String>
+    <s:String x:Key="InstanceDownloading">Client instalin...</s:String>
+    <s:String x:Key="Stage">Stagez</s:String>
+    <s:String x:Key="VerifyIntegrityGameFiles">Chekin gaem fielz integritee...</s:String>
+    <s:String x:Key="DownloadCanceling">Cansulin download...</s:String>
+
+    <s:String x:Key="AddonsListLoadingPlaceholder">Loadin addonz list...</s:String>
+
+    <s:String x:Key="Technology">Teknologee</s:String>
+    <s:String x:Key="WorldGen">Wurld Gen</s:String>
+    <s:String x:Key="All">Allz</s:String>
+
+    <s:String x:Key="Features">Featurz</s:String>
+    <s:String x:Key="Performanceimpact">Performans Impakt</s:String>
+    <s:String x:Key="Resolutions">Texchur Rez</s:String>
+
+    <s:String x:Key="Website">Webziet</s:String>
+
+    <s:String x:Key="Installed">Installd</s:String>
+
+    <s:String x:Key="Paginator">Paginatr</s:String>
+    <s:String x:Key="Searchbox">Serchbox</s:String>
+    <s:String x:Key="InstalledList">Installd</s:String>
+    <s:String x:Key="SearchAddonByNamePlaceholder">Addon naem</s:String>
+
+    <s:String x:Key="AddonInfoDownloadsTooltip">Downloadz count</s:String>
+    <s:String x:Key="AddonInfoLatestReleaseTooltip">Last updaet date</s:String>
+    <s:String x:Key="AddonInfoCreationDateTooltip">Creaet date</s:String>
+    <s:String x:Key="AddonInfoGameVersionTooltip">Gaem versiun</s:String>
+
+    <!--  region Authorization  -->
+    <s:String x:Key="DoNothaveAnyAccount">No akount?</s:String>
+    <s:String x:Key="ForgotPassword">Furgot passwurd?</s:String>
+    <s:String x:Key="SingUp">Signz Up</s:String>
+    <s:String x:Key="SelectAuthorizationMethod">Pick authorizashun way</s:String>
+    <s:String x:Key="AuthorizationViaNightWorld">Authorizashun via NightWorld</s:String>
+    <s:String x:Key="Via">Via</s:String>
+    <s:String x:Key="RememberMe">Remembr me</s:String>
+    <s:String x:Key="LogIn">Logz In</s:String>
+
+    <s:String x:Key="RegistrationInNightWorld">NightWorld Registur</s:String>
+    <s:String x:Key="EmailAddress">Emailz</s:String>
+    <s:String x:Key="CreateAccount">Maek Akount</s:String>
+    <s:String x:Key="AlreadyHaveAnyAccount">Got akount alredee?</s:String>
+
+    <s:String x:Key="ViaNightWorld">Via NightWorld</s:String>
+    <s:String x:Key="ViaMicrosoft">Via Microsft</s:String>
+    <s:String x:Key="WithoutAccount">No Akount</s:String>
+
+    <s:String x:Key="Microsoft">Microsft</s:String>
+    <s:String x:Key="NoAuth">No Auth</s:String>
+
+    <s:String x:Key="AuthorizationWithoutAccountTitle">Authorizashun wifout akount</s:String>
+    <s:String x:Key="AuthorizationWithoutAccountDescription">2 authoriz wifout akount, pick wantd nicknaem.</s:String>
+    <s:String x:Key="AuthorizationWithoutAccountNicknamePlaceholder">Typ wantd nicknaem</s:String>
+    <s:String x:Key="Continue">Go On</s:String>
+
+    <s:String x:Key="AuthorizationMicrosoftTitle">Authorizashun via Microsft</s:String>
+    <s:String x:Key="AuthorizationMicrosoftAccountDescription">Waitin 4 Microsft authorizashun 2 finish</s:String>
+    <s:String x:Key="ManualInput">Manualz Input</s:String>
+    <s:String x:Key="ManualInputMicrosoftTokenTitle">Manualz Microsft Token Input</s:String>
+    <s:String x:Key="WrongTokenFormat">Bad token format</s:String>
+    <s:String x:Key="CorrectTokenFormat">Gud token format</s:String>
+    <s:String x:Key="ManualInputTokenPlaceholder">Typ microsft token heer</s:String>
+    <s:String x:Key="Apply">Aply</s:String>
+    <s:String x:Key="Cancel">Cansul</s:String>
+
+    <s:String x:Key="Important">Importunt!</s:String>
+    <s:String x:Key="MicrosoftManualInputImportantMessage">Nevar share/show ur auth token 2 any1. If sum1 getz token, they getz ur akount!</s:String>
+
+    <!--  endregion Authorization  -->
+
+    <!--  region Notifications Content  -->
+
+    <!--  endregion Notifications Content  -->
+
+    <s:String x:Key="CustomColor">Kustom Colur</s:String>
+    <s:String x:Key="CustomColorDescription">Pick ur fancy colur</s:String>
+
+    <!--  Instance Configuration  -->
+    <s:String x:Key="SaveChanges">Savez Changz</s:String>
+    <s:String x:Key="LoadYourLogo">Loadz Ur Logo</s:String>
+    <s:String x:Key="UnsavedChangesWarningText">Careful, u no saved changz!</s:String>
+    <s:String x:Key="Reset">Resetz</s:String>
+
+    <s:String x:Key="Files">Fielz</s:String>
+    <s:String x:Key="Files_LowerCase">fielz</s:String>
+
+    <!--  Ad Servers  -->
+    <s:String x:Key="PartnerServers">Partnur Servrz</s:String>
+    <s:String x:Key="Add">Addz</s:String>
+
+    <s:String x:Key="AutoConnectToServer">Auto link 2 servr</s:String>
+    <s:String x:Key="AvailableGameClientsNotFound">No matchin clientz found</s:String>
+    <s:String x:Key="SelectInstanceForServer">Pick clientz 4 addin servr</s:String>
+    <s:String x:Key="ConfirmSelection">Confirmz Pick</s:String>
+    <s:String x:Key="CreateNewInstanceForServer">Maek new client 4 servr</s:String>
+
+    <s:String x:Key="InstallServerInstance">Instal Servr Client</s:String>
+    <s:String x:Key="InstallServerInstanceDescription">2 play on dis servr, needz 2 instal client. Wantz 2 instal dis client?</s:String>
+    <s:String x:Key="ServerIpAddressCopied">Servr IP addres copid</s:String>
+
+    <s:String x:Key="LoadingInstanceClientVersions">Loadin client versiunz</s:String>
+    <s:String x:Key="NoDistributionsAvailableForDownload">No sharings availabul 4 download</s:String>
+
+    <!--  region Notifications  -->
+
+    <!--    -->
+    <!--  Ad Server  -->
+    <!--    -->
+    <s:String x:Key="InstanceForServerAddedToLibrary">Client {0} addid 2 libraree suksesful!</s:String>
+
+    <!--    -->
+    <!--  Multiplayer  -->
+    <!--    -->
+    <s:String x:Key="MultiplayerReloaded">Multi-kitteh gaem restartd</s:String>
+
+    <!--    -->
+    <!--  InstanceForm  -->
+    <!--    -->
+
+    <!--  Instance Launch  -->
+    <s:String x:Key="InstanceLaunchedSuccessfulNotification">Client {0} launchd suksesful.</s:String>
+    <s:String x:Key="InstanceLaunchedUnsuccessfulNotification">Faild 2 launch client {0}.</s:String>
+
+    <!--  Instance Installing  -->
+    <s:String x:Key="DownloadCompletedSuccessfully">Client {0} download finishd suksesful.</s:String>
+
+    <s:String x:Key="FailedToDownloadFollowingFiles:_">Faild 2 download dese fielz: {0}</s:String>
+    <s:String x:Key="FailedToDownloadSomeFiles">Faild 2 download sum fielz</s:String>
+    <s:String x:Key="RedownloadingMaySolveTheProblem">Try download agin, might fix, but no sure.</s:String>
+    <s:String x:Key="ExternalIdIncorrect">Client xternal ID wrongz.</s:String>
+    <s:String x:Key="ServerError">Servr oopsie.</s:String>
+    <s:String x:Key="FailedToGetDataFromServer">Faild 2 get dataz from servr.</s:String>
+    <s:String x:Key="FileVerificationFailed">Faild 2 chek fiel.</s:String>
+    <s:String x:Key="VersionVerificationFailed">Faild 2 find gaem versiun.</s:String>
+    <s:String x:Key="ModloaderVerificationFailed">Faild 2 find modloadr versiun.</s:String>
+    <s:String x:Key="InvalidGameDirectory">Bad gaem foldr</s:String>
+    <s:String x:Key="FailedLoadInstanceManifest">Faild 2 load client manifest.</s:String>
+    <s:String x:Key="TrySetCustomJavaPath">Try set kustom java path in settinz.</s:String>
+    <s:String x:Key="InstanceDownloadCanceledSuccessfully">Client download cansuld suksesful.</s:String>
+    <s:String x:Key="UnknownErrorTryRestartLauncher">Sum weird thing happnd... Try turn off an on agin.</s:String>
+
+    <s:String x:Key="CurseforgeErrorTitle">Curseforge Oopsie</s:String>
+    <s:String x:Key="NightWorldErrorTitle">NightWorld Oopsie</s:String>
+    <s:String x:Key="GuardErrorTitle">Guard Oopsie</s:String>
+    <s:String x:Key="VersionErrorTitle">Versiun Oopsie</s:String>
+    <s:String x:Key="ForgeVersionErrorTitle">Forge Versiun Oopsie</s:String>
+    <s:String x:Key="GamePathErrorTitle">Gaem Path Oopsie</s:String>
+    <s:String x:Key="ManifestErrorTitle">Manifest Fiel Oopsie</s:String>
+    <s:String x:Key="JavaDownloadErrorTitle">Java Instal Oopsie</s:String>
+    <s:String x:Key="UnknownErrorTitle">Unknown Oopsie</s:String>
+    <s:String x:Key="InstanceName:_">Client Naem: {0}</s:String>
+
+    <!--  endregion Notifications  -->
+
+    <!--  region ServerProfile  -->
+    <s:String x:Key="Status:">Statuz:</s:String>
+    <s:String x:Key="Online:">Onliez:</s:String>
+
+    <!--  endregion ServerProfile  -->
+
+    <!--  region Settings  -->
+    <!--  Java Errors  -->
+    <s:String x:Key="WrongJavaPathFormat">Bad Java path format</s:String>
+    <s:String x:Key="JavaPathEmptyOrNull">Path no can b empty!</s:String>
+    <s:String x:Key="JavaPathExeDoesNotExists">No java.exe or javaw.exe in dis path!</s:String>
+    <s:String x:Key="JavaPathWrongExe">Path pointz 2 wrong .exe!</s:String>
+    <s:String x:Key="JavaPathPathDoesNotExists">Dis path no exist!</s:String>
+
+    <!--  endregion Settings  -->
+
+    <!--  region Instance Profile  -->
+    <s:String x:Key="OptifineVersion">Optifien Versiun</s:String>
+    <s:String x:Key="OptifineVersionDescription">Pick wantd optifien versiun</s:String>
+
+    <!--  endregion Instance Profile  -->
+
+    <!--  region Settings  -->
+    <s:String x:Key="MinecraftArguments">Minecraft Argumintz</s:String>
+    <s:String x:Key="MinecraftArgumentsDescription">Letz u tweak gaem settinz moar</s:String>
+
+    <s:String x:Key="NightWorldClient">Use NWClient by defawlt</s:String>
+    <s:String x:Key="NightWorldClientDescription">Turnz on NightWorld kosmetiks an stuff</s:String>
+
+    <s:String x:Key="GamePathEmptyOrHasInvalidChars">Foldr path empty or haz bad charz: {0}</s:String>
+
+    <!--  endregion Settings  -->
+
+    <!--  region Import  -->
+    <s:String x:Key="ImportByUrlDescriptionPlaceholder">Or link 2 Google Drive or Yandex Disk</s:String>
+    <s:String x:Key="ImportCancelledNotification">Client import cansuld suksesful</s:String>
+    <s:String x:Key="ImportUrlWrongPathNotification">Bad link format</s:String>
+
+    <s:String x:Key="ImportResultSuccessful">Client {0} importd suksesful, waitin in libraree</s:String>
+    <s:String x:Key="ImportResultZipFileError">Oopsie openin zip fiel</s:String>
+    <s:String x:Key="ImportResultGameVersionError">Gaem versiun oopsie</s:String>
+    <s:String x:Key="ImportResultJavaDownloadError">Java download problum</s:String>
+    <s:String x:Key="ImportResultIsOfflineMode">Offlien mode</s:String>
+    <s:String x:Key="ImportResultMovingFilesError">Oopsie movin fielz</s:String>
+    <s:String x:Key="ImportResultDownloadError">Download oopsie</s:String>
+    <s:String x:Key="ImportResultDirectoryCreateError">Oopsie makin foldr</s:String>
+    <s:String x:Key="ImportResultWrongUrl">Bad URL 4 import fiel. We only suport Yandex Disk an Google Drive now.</s:String>
+    <s:String x:Key="ImportResultManifestError">Manifest fiel oopsie.</s:String>
+    <s:String x:Key="ImportResultUnknownFileType">Unknown fiel tipe.</s:String>
+    <s:String x:Key="ImportResultUnknownError">Unknown oopsie</s:String>
+
+    <!--  endregion Import  -->
+
+    <!--  region Accounts  -->
+    <s:String x:Key="RemoveAccount">Deleet Akount</s:String>
+    <s:String x:Key="RemoveAccountDescription">
+        U sure u wantz deleet akount: {0}?
+        Only get bak wif new authorizashun!
+    </s:String>
+    <s:String x:Key="YesIWantRemoveAccount">Yez, I wantz deleet akount</s:String>
+
+    <s:String x:Key="RemoveAllAccount">Deleet All Akountz</s:String>
+    <s:String x:Key="RemoveAllAccountDescription">
+        U sure u wantz deleet all akountz?
+        Only get bak wif new authorizashun!
+    </s:String>
+    <s:String x:Key="YesIWantRemoveAllAccount">Yez, I wantz deleet all akountz</s:String>
+
+    <!--  Notification  -->
+    <s:String x:Key="WrongLoginOrPassword">Bad login or passwurd.</s:String>
+    <s:String x:Key="NoConnectionToTheServer">No link 2 servr!</s:String>
+    <s:String x:Key="TokenError">Token oopsie!</s:String>
+    <s:String x:Key="UnknownError">Unknown oopsie!</s:String>
+    <s:String x:Key="SessionExpiredRedirectToMicrosoft">Seshun expired. Sendin 2 Microsft authorizashun page</s:String>
+    <s:String x:Key="TokenErrorRedirectToMicrosoft">Token oopsie. Sendin 2 Microsft authorizashun page</s:String>
+    <s:String x:Key="SessionExpiredTryAuthAgain">Seshun expired. Try authorizin agin</s:String>
+    <s:String x:Key="TokenErrorTryAuthAgain">Token oopsie. Try authorizin agin</s:String>
+
+    <!--  endregion Accounts  -->
+
+    <!--  region Library  -->
+    <s:String x:Key="DeletingInstance">Deleetin Client</s:String>
+    <s:String x:Key="DeletingInstanceDescription">
+        U sure u wantz deleet client: {0}?
+        No can bring bak!
+    </s:String>
+    <s:String x:Key="YesIWantDeleteInstance">Yez, I wantz deleet client</s:String>
+
+    <!--  endregion Library  -->
+
+    <!--  region Friends  -->
+    <!--  Notifications  -->
+    <s:String x:Key="FriendRequestHasBeenSent">Fren reqwest sent.</s:String>
+    <s:String x:Key="FriendRequestWasCancelled">Fren reqwest cansuld.</s:String>
+    <s:String x:Key="YouAnd_AreFriendsNow">U an {0} frenz now!</s:String>
+    <s:String x:Key="YouHaveDeclinedYourFriendRequest_">U sayd no 2 {0} fren reqwest.</s:String>
+
+    <!--  endregion Friends  -->
+
+    <!--  region Instance  -->
+    <!--  Notification  -->
+    <s:String x:Key="Instance_HasBeenInstalledSuccessful">Client {0} installd suksesful</s:String>
+    <s:String x:Key="FailedToInstallColon_">Faild 2 instal: {0}</s:String>
+
+    <!--  endregion Instance  -->
+
+    <s:String x:Key="LoginOrPasswordNotFilled">Login or passwurd not filld!</s:String>
+
+    <s:String x:Key="AuthorizationProcessInProgress">Authorizin in progres...</s:String>
+
+    <s:String x:Key="Information">Infoz</s:String>
+    <s:String x:Key="MicrosoftAccountAuthorizationDescription">4 offishul akount authorizashun, u getz sent 2 Microsft authorizashun page automagikly.</s:String>
+    <s:String x:Key="DoInstallTheLatestVersion">Instal newest versiun?</s:String>
+    <s:String x:Key="NWClientNotAvailableForThisVersion">NWClient no wurk on dis versiun</s:String>
+    <s:String x:Key="YouHaveNoActiveDistributions">U haz no aktiv sharings</s:String>
+
+    <s:String x:Key="InQueue">In Que</s:String>
+    <s:String x:Key="InConnect">Connectin</s:String>
+    <s:String x:Key="PostProcessing">Procesin fielz</s:String>
+    <s:String x:Key="InProcess">In Que</s:String>
+    <s:String x:Key="Successful">Sukses</s:String>
+
+    <s:String x:Key="UnableToDetermineDataForImport">Can’t figgur import dataz, typ manual!</s:String>
+    <s:String x:Key="YouAreAlreadyDistributingToThisClient">U alredee sharin dis client.</s:String>
+    <s:String x:Key="ActiveDistributingDescription">Dis page unlockz wen u stop aktiv sharin in 'Ur Sharings' sekshun</s:String>
+    <s:String x:Key="ThereAreNotAddons">No addonz</s:String>
+    <s:String x:Key="GameLaunching">Launchin gaem...</s:String>
+    <s:String x:Key="ProcessColon">Proces:</s:String>
+    <s:String x:Key="UpdatingFiles">Updaetin fielz</s:String>
+    <s:String x:Key="StageColon">Stage:</s:String>
+    <s:String x:Key="FilesColon">Fielz:</s:String>
+    <s:String x:Key="TotalDonwloadedColon">Total downloadid:</s:String>
+    <s:String x:Key="InstallingTheInstance">Instalin client</s:String>
+    <s:String x:Key="ThereAreNotImages">No imagez</s:String>
+    <s:String x:Key="ImagesLoading">Loadin imagez...</s:String>
+    <s:String x:Key="DescriptionLoading">Loadin descripshun...</s:String>
+    <s:String x:Key="DownloadingTheInstance">Downloadin client</s:String>
+    <s:String x:Key="LoadingEllipsis">Loadin...</s:String>
+    <s:String x:Key="WeDidNotFindAnythingForThisRequest">We found nuffin 4 dis reqwest</s:String>
+    <s:String x:Key="ThereAreNoIncomingFriendRequests">No incomin fren reqwests.</s:String>
+    <s:String x:Key="ThereAreNoOutgoingFriendRequests">No sent fren reqwests.</s:String>
+    <s:String x:Key="Close">Cloze</s:String>
+    <s:String x:Key="Notifications">Notifcashuns</s:String>
+    <s:String x:Key="LibraryEmptyDescription">U can addz clientz 2 libraree thru cat-alog or makin ur own client</s:String>
+    <s:String x:Key="CreateNewInstance">Maek new client</s:String>
+    <s:String x:Key="MinecraftNotRunning">Minecraft not runnin.</s:String>
+    <s:String x:Key="InstanceDash_">Client - {0}</s:String>
+    <s:String x:Key="GoToCatalog">Go 2 Cat-alog</s:String>
+    <s:String x:Key="LibraryEmpty">Libraree empty</s:String>
+
+    <s:String x:Key="WelcomeDescription">Welcom 2 new era</s:String>
+    <s:String x:Key="WelcomePageThemeSelectDescription">Pick ur favorit interfase lookz.</s:String>
+
+    <!--  Tray  -->
+    <s:String x:Key="ContactSupport">Talk 2 Suport</s:String>
+    <s:String x:Key="TrayHideLauncher">Hidez Launchr</s:String>
+    <s:String x:Key="TrayReloadMultiplayer">Restart Multi-kitteh Gaem</s:String>
+    <s:String x:Key="MaximizeLauncher">Showz Launchr</s:String>
+    <s:String x:Key="CloseInstance">Cloze Client</s:String>
+
+    <!--  Console Header  -->
+    <s:String x:Key="InstanceNameColon">Client:</s:String>
+    <s:String x:Key="VersionColon">Versiun:</s:String>
+    <s:String x:Key="TypeColon">Tipe:</s:String>
+
+    <!--  LeftPanel Help Block  -->
+    <s:String x:Key="HowToPlay">How 2 Play?</s:String>
+    <s:String x:Key="Support">Suport</s:String>
+
+    <s:String x:Key="LoggingMode">Loggin Mode</s:String>
+    <s:String x:Key="LoggingModeDescription">
+        Turnz on loggin of logz
+    </s:String>
+
+    <s:String x:Key="ThereAreNoAddonVersion">
+        Versiun list empty. We dunno wut happnd(
+    </s:String>
+
+    <s:String x:Key="SuccessDirectoryTransfer">
+        Old foldr dataz copid 2 new foldr suksesful.
+    </s:String>
+    <s:String x:Key="DirectoryTransfer">
+        Full copy old foldr
+    </s:String>
+    <s:String x:Key="DirectoryTransferDescription">
+        Wantz 2 full copy old foldr?
+    </s:String>
+    <s:String x:Key="DirectoryTransferAgreeButtonText">
+        Copy full
+    </s:String>
+    <s:String x:Key="DirectoryTransferLoading">
+        Copyin old foldr 2 new foldr...
+    </s:String>
+
+    <s:String x:Key="RestartLauncher">
+        Needz Restart
+    </s:String>
+    <s:String x:Key="RestartLauncherDescription">
+        2 maek changz wurk, needz 2 restart launchr. No restart, launchr might act weird.
+    </s:String>
+    <s:String x:Key="RestartLauncherButtonAction">
+        Yez, I wantz restart launchr now
+    </s:String>
+</ResourceDictionary>

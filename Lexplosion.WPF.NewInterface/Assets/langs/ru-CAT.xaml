@@ -1,0 +1,813 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:s="clr-namespace:System;assembly=mscorlib">
+    <!--
+        == NEW
+        == WPF
+        == INTERFACE
+        == TRANSLATE
+    -->
+
+    <s:String x:Key="en-US">Англиский</s:String>
+    <s:String x:Key="ru-RU">Русский</s:String>
+    <s:String x:Key="uk-UA">Украиньский</s:String>
+    <s:String x:Key="zh-CN">Китайский</s:String>
+    <s:String x:Key="de-DE">Немецкий</s:String>
+    <s:String x:Key="ru-CAT">Русский (Котик)</s:String>
+    <s:String x:Key="lolcat">ЛОЛКЭТ</s:String>
+
+    <s:String x:Key="Default">По умолчанью</s:String>
+    <!--    -->
+    <!--  LeftPanel  -->
+    <!--    -->
+    <s:String x:Key="Catalog">Коталог</s:String>
+    <s:String x:Key="Library">Библиотечка</s:String>
+    <s:String x:Key="Friends">Котики-друзья</s:String>
+    <s:String x:Key="Multiplayer">Мультикотик игра</s:String>
+    <s:String x:Key="Settings">Настроймяу</s:String>
+    <s:String x:Key="GladToSeeYou">Мяу, рады видеть, котик </s:String>
+
+    <!--    -->
+    <!--  Titles  -->
+    <!--    -->
+    <s:String x:Key="General">Общенькое</s:String>
+
+    <!--  Friends  -->
+    <s:String x:Key="FindFriends">Искать котиков-друзей</s:String>
+    <s:String x:Key="FriendsRequests">Запросики дружбы</s:String>
+
+    <!--  Settings  -->
+    <s:String x:Key="Appearance">Внешний видяу</s:String>
+    <s:String x:Key="Language">Язычок</s:String>
+    <s:String x:Key="About">Про запускалку</s:String>
+
+    <!--  Main Menu  -->
+
+    <!--    -->
+    <!--  Catalog  -->
+    <!--    -->
+    <s:String x:Key="Search">Поискать</s:String>
+
+    <!--    -->
+    <!--  Library  -->
+    <!--    -->
+
+    <!--    -->
+    <!--  Friends  -->
+    <!--    -->
+    <s:String x:Key="Pending">Ждемся</s:String>
+    <s:String x:Key="Outgoing">Отправленки</s:String>
+    <s:String x:Key="AcceptRequest">Принять запросик</s:String>
+    <s:String x:Key="RemoveFollower">Убрать следящего котика</s:String>
+    <s:String x:Key="AddFriend">Добавить котика-друга</s:String>
+    <s:String x:Key="Unfriends">Раздружить</s:String>
+
+    <!--  Status  -->
+    <s:String x:Key="Online">В онлайне</s:String>
+    <s:String x:Key="Offline">Оффлайняу</s:String>
+    <s:String x:Key="PlayingIn">Играет в</s:String>
+    <s:String x:Key="InGame">В игре мяу</s:String>
+    <s:String x:Key="DoNotDisturb">Не тревожить котика</s:String>
+
+    <!--    -->
+    <!--  Multiplayer  -->
+    <!--    -->
+    <s:String x:Key="Status">Статусик</s:String>
+    <s:String x:Key="PriorityConnetionMethod">Главный способ подключки</s:String>
+    <s:String x:Key="DirectConnection">Прямой коннект</s:String>
+    <s:String x:Key="ViaRepeater">Через ретранслятник</s:String>
+    <s:String x:Key="ConnectedPlayers">Подключённые котики</s:String>
+    <s:String x:Key="NoConnectedPlayers">Нет подключённых котиков</s:String>
+    <s:String x:Key="ReloadMultiplayer">Перезагрузить мультикотик игру</s:String>
+
+    <!--  Status  -->
+    <s:String x:Key="StatusNone">Нет открытых мирков</s:String>
+    <s:String x:Key="StatusOpenWorld">Открыт для подключки</s:String>
+    <s:String x:Key="StatusConnectedToUser">Подключён к серверу</s:String>
+
+    <!--    -->
+    <!--  General Settings  -->
+    <!--    -->
+
+    <!--  General Settings -> General  -->
+    <s:String x:Key="GameProperties">Игровые настроймяу</s:String>
+    <s:String x:Key="JavaProperties">Джава настроймяу</s:String>
+    <s:String x:Key="LauncherProperties">Запускалочные настроймяу</s:String>
+
+    <s:String x:Key="GamePropertiesDescription">Настраивай игруху.</s:String>
+    <s:String x:Key="JavaPropertiesDescription">Настраивай джава для майнкрафта.</s:String>
+    <s:String x:Key="LauncherPropertiesDescription">Настраивай запускалку по-своему.</s:String>
+
+    <!--  Game Properties  -->
+    <!--  Window Size  -->
+    <s:String x:Key="WindowSize">Размер окошка</s:String>
+    <s:String x:Key="WindowSizeDescription">Меняй размер окошка майнкрафта.</s:String>
+    <!--  Ram  -->
+    <s:String x:Key="Ram">Памятька</s:String>
+    <s:String x:Key="RamDescription">Эт ускоряет игруху.</s:String>
+    <!--  Game Directory  -->
+    <s:String x:Key="GameDirectory">Папочка игры</s:String>
+    <s:String x:Key="GameDirectoryDescription">Выбери, где хранить папочку игры.</s:String>
+
+    <!--  Java Properties  -->
+    <!--  Java Path  -->
+    <s:String x:Key="JavaPath">Путь к джаве</s:String>
+    <s:String x:Key="JavaPathDescription">Путь к папочке с джава</s:String>
+    <!--  Java Path for higher 1.16.5  -->
+    <s:String x:Key="JavaPathHigher">Путь к джаве для 1.16.5 и выше</s:String>
+    <s:String x:Key="JavaPathHigherDescription">Путь к папочке с джава для 1.16.5 и выше</s:String>
+    <!--  JVM Arguments  -->
+    <s:String x:Key="JVMArguments">Аргументы JVM</s:String>
+    <s:String x:Key="JVMArgumentsDescription">Аргументы для джава машины</s:String>
+
+    <!--  Launcher Properties  -->
+    <!--  Console  -->
+    <s:String x:Key="Console">Консолька</s:String>
+    <s:String x:Key="ConsoleDescription">Открывать консольку при запуске игры.</s:String>
+    <!--  Hide Launcher  -->
+    <s:String x:Key="HideLauncher">Спрятать запускалку</s:String>
+    <s:String x:Key="HideLauncherDescription">Прятать запускалку при запуске игры.</s:String>
+    <!--  Auto Instance Update  -->
+    <s:String x:Key="AutoInstanceUpdate">Автообновка клиента</s:String>
+    <s:String x:Key="AutoInstanceUpdateDescription">Клиенты в библиотечке обновляются сами.</s:String>
+    <!--  NightWorld Skins  -->
+    <s:String x:Key="NightWorldSkins">Система скинов NightWorld</s:String>
+    <s:String x:Key="NightWorldSkinsDescription">В игре показывается скин из профиля.</s:String>
+
+    <!--    -->
+    <!--  Appearance  -->
+    <!--    -->
+    <s:String x:Key="AccentColor">Цветик акцента</s:String>
+    <s:String x:Key="ChooseAccentColor">Выбери свой цветик акцента.</s:String>
+    <s:String x:Key="InterfaceTheme">Тема интерфейсика</s:String>
+    <s:String x:Key="ChooseTheme">Выбери свою тему.</s:String>
+
+    <!--    -->
+    <!--  Language  -->
+    <!--    -->
+    <s:String x:Key="ChooseLanguage">Выбери язычок.</s:String>
+
+    <!--    -->
+    <!--  Accounts  -->
+    <!--    -->
+    <s:String x:Key="Accounts">Аккаунтики</s:String>
+
+    <!--    -->
+    <!--  About  -->
+    <!--    -->
+    <s:String x:Key="Authors">Авторики</s:String>
+    <s:String x:Key="Founders">Основатики</s:String>
+    <s:String x:Key="Developers">Разработчики</s:String>
+    <s:String x:Key="Contacts">Контактики</s:String>
+    <s:String x:Key="OurVkontakteGroup">Наша группа ВК</s:String>
+    <s:String x:Key="Protection">Эта программа под защитой котиковых законов и международных договоров. Плохое копирование или раздача программы или её кусочков приведёт к неприятностям!</s:String>
+    <s:String x:Key="Copyright">© NightWorld, 2025. Все права за котиками.</s:String>
+    <s:String x:Key="DenialOfResponsibility">Не оффициальный продукт Minecraft! Не одобрен и не связан с Mojang или Microsoft.</s:String>
+
+    <!--    -->
+    <!--  Instance Factory Modal  -->
+    <!--    -->
+
+    <!--  Instance Factory Left Modal Menu Tabs Titles  -->
+    <s:String x:Key="Create">Создать</s:String>
+    <s:String x:Key="Import">Импортик</s:String>
+    <s:String x:Key="Distributions">Раздачи</s:String>
+
+    <!--    -->
+    <!--  Instance Form  -->
+    <!--    -->
+
+    <!--  Logo  -->
+    <s:String x:Key="More">Ещё мяу</s:String>
+
+    <!--  Upper Buttons  -->
+    <s:String x:Key="Play">Играть</s:String>
+    <s:String x:Key="Launch">Запускать</s:String>
+
+    <!--  LowerButtons  -->
+    <s:String x:Key="DeleteInstance">Удалить клиент</s:String>
+    <s:String x:Key="Export">Экспортик</s:String>
+    <s:String x:Key="OpenFolder">Открыть папочку</s:String>
+    <s:String x:Key="ExploreAddons">Посмотреть дополнения</s:String>
+    <s:String x:Key="AddToLibrary">Добавить в библиотечку</s:String>
+    <s:String x:Key="RemoveFromLibrary">Убрать из библиотечки</s:String>
+    <s:String x:Key="CancelDownload">Отменить скачивание</s:String>
+
+    <!--  Visit Official Page  -->
+    <s:String x:Key="VisitCurseforge">Зайти на Curseforge</s:String>
+    <s:String x:Key="VisitModrinth">Зайти на Modrinth</s:String>
+    <s:String x:Key="VisitNightworld">Зайти на NightWorld</s:String>
+
+    <!--    -->
+    <!--  Instance Overview Menu  -->
+    <!--    -->
+    <s:String x:Key="Version">Версичка</s:String>
+    <s:String x:Key="Download">Скачивание</s:String>
+
+    <!--    -->
+    <!--  Instance Profile  -->
+    <!--    -->
+    <s:String x:Key="Overview">Обзорчик</s:String>
+    <s:String x:Key="Addons">Дополнения</s:String>
+    <s:String x:Key="AboutInstance">Про клиент</s:String>
+
+    <!--    -->
+    <!--  Instance Profile Left Panel  -->
+    <!--    -->
+    <s:String x:Key="Back">Назадик</s:String>
+    <s:String x:Key="Version:">Версия игры:</s:String>
+    <s:String x:Key="GameType:">Тип игры:</s:String>
+    <s:String x:Key="PlayedTime:">Время игры:</s:String>
+    <s:String x:Key="DownloadCount:">Сколько скачиваний:</s:String>
+
+    <!--    -->
+    <!--  Instance Profile Addons  -->
+    <!--    -->
+    <s:String x:Key="Mods">Модики</s:String>
+    <s:String x:Key="Resourcepacks">Ресурспаки</s:String>
+    <s:String x:Key="Maps">Карты</s:String>
+    <s:String x:Key="Shaders">Шейдеры</s:String>
+
+    <!--  Sort By  -->
+    <s:String x:Key="Name">Имёнка</s:String>
+    <s:String x:Key="Author">Авторик</s:String>
+    <s:String x:Key="FileName">Имя файла</s:String>
+
+    <!--  By Name  -->
+    <s:String x:Key="ModName">Имя модика</s:String>
+    <s:String x:Key="ResourcepackName">Имя ресурспака</s:String>
+    <s:String x:Key="MapName">Имя карты</s:String>
+    <s:String x:Key="ShaderName">Имя шейдера</s:String>
+
+    <!--  By Author  -->
+    <s:String x:Key="ModAuthor">Автор модика</s:String>
+    <s:String x:Key="ResourcepackAuthor">Автор ресурспака</s:String>
+    <s:String x:Key="MapAuthor">Автор карты</s:String>
+    <s:String x:Key="ShaderAuthor">Автор шейдера</s:String>
+
+    <!--  By FileName  -->
+    <s:String x:Key="ModFileName">Имя файла модика</s:String>
+    <s:String x:Key="ResourcepackFileName">Имя файла ресурспака</s:String>
+    <s:String x:Key="MapFileName">Имя файла карты</s:String>
+    <s:String x:Key="ShaderFileName">Имя файла шейдера</s:String>
+
+    <!--    -->
+    <!--  Instance Profile Settings  -->
+    <!--    -->
+    <s:String x:Key="Configuration">Конфигурашка</s:String>
+    <s:String x:Key="InstanceNameDescription">Как клиент называется в библиотечке</s:String>
+    <s:String x:Key="Summary">Кратенько</s:String>
+    <s:String x:Key="SummaryDescription">Короткое описание клиента.</s:String>
+    <s:String x:Key="Description">Описаньице</s:String>
+    <s:String x:Key="DescriptionAdditional">Подробное описание клиента.</s:String>
+
+    <!--    -->
+    <!--  Instance Profile Configuration  -->
+    <!--    -->
+    <s:String x:Key="GameType">Тип игры</s:String>
+    <s:String x:Key="GameTypeDescription">Ванилька/Модлоадер</s:String>
+
+    <s:String x:Key="VersionDescription">Описаньице версии.</s:String>
+
+    <s:String x:Key="ModloaderVersion">Версия модлоадера</s:String>
+    <s:String x:Key="ModloaderVersionDescription">Выбери версию для модлоадера.</s:String>
+
+    <s:String x:Key="IsShowSnapshots">Показывать снапшоты?</s:String>
+    <s:String x:Key="IsShowSnapshotsDescription">Показывать снапшоты в списке версий игры.</s:String>
+
+    <s:String x:Key="Optifine">Оптифайн</s:String>
+    <s:String x:Key="OptifineDescription">Установить оптифайн на этот клиент.</s:String>
+
+    <!--    -->
+    <!--  Addons Repository  -->
+    <!--    -->
+    <s:String x:Key="Install">Установить</s:String>
+    <s:String x:Key="Categories">Категорийки</s:String>
+    <s:String x:Key="Search...">Поискать...</s:String>
+    <s:String x:Key="SortBy">Сортировать по</s:String>
+    <s:String x:Key="ShowPerPage">Показывать на страничке</s:String>
+    <s:String x:Key="Accept">Принять</s:String>
+    <s:String x:Key="Installing...">Устанавливается...</s:String>
+
+    <!--    -->
+    <!--  Modrinth Addon Page  -->
+    <!--    -->
+    <s:String x:Key="ProjectMembers">Котики проекта</s:String>
+    <s:String x:Key="TechnicalInformation">Техническая инфяу</s:String>
+    <s:String x:Key="ExternalResources">Внешние ресурсики</s:String>
+    <s:String x:Key="Created">Созданно</s:String>
+    <s:String x:Key="Updated">Обновлённо</s:String>
+    <s:String x:Key="License">Лицензия</s:String>
+    <s:String x:Key="ClientSide">Клиентская сторона</s:String>
+    <s:String x:Key="ServerSide">Серверная сторона</s:String>
+    <s:String x:Key="ProjectId">ID проекта</s:String>
+    <s:String x:Key="Required">Надо</s:String>
+    <s:String x:Key="Unsupported">Не поддерживается</s:String>
+
+    <s:String x:Key="Downloads1">скачивание</s:String>
+    <s:String x:Key="Downloads2">скачивания</s:String>
+    <s:String x:Key="Downloads3">скачиваний</s:String>
+
+    <s:String x:Key="Followers1">подписчик</s:String>
+    <s:String x:Key="Followers2">подписчика</s:String>
+    <s:String x:Key="Followers3">подписчиков</s:String>
+
+    <s:String x:Key="Gallery">Галерейка</s:String>
+    <s:String x:Key="Changelog">Лог изменений</s:String>
+    <s:String x:Key="Versions">Версички</s:String>
+
+    <s:String x:Key="Update">Обновить</s:String>
+    <s:String x:Key="Delete">Удалить</s:String>
+
+    <s:String x:Key="ProjectFound">проектов найдено</s:String>
+
+    <!--  Instance Factory  -->
+    <s:String x:Key="InstanceName">Имя клиента</s:String>
+    <s:String x:Key="CreateInstance">Создать клиент</s:String>
+
+    <!--  Export  -->
+    <s:String x:Key="ExportProperties">Свойства экспорта</s:String>
+    <s:String x:Key="ExportInstanceNameDescription">Имя, которое будет в библиотечке после экспорта.</s:String>
+    <s:String x:Key="FoldersAndFiles">Папочки и файлики</s:String>
+    <s:String x:Key="FoldersAndFilesDescription">Выбери папочки и файлики для экспорта.</s:String>
+    <s:String x:Key="FullExport">Полный экспортик</s:String>
+    <s:String x:Key="InstanceExport">Экспорт клиента</s:String>
+    <s:String x:Key="ExportProcessActive">Процесс экспорта клиента</s:String>
+
+    <!--  Import  -->
+    <s:String x:Key="ImportDragDropFieldDescription">Перетащи архив клиента, чтобы начать загрузку.</s:String>
+    <s:String x:Key="Review">Просмотреть</s:String>
+
+    <!--  Filter Sorting  -->
+    <s:String x:Key="Source">Источничек</s:String>
+    <s:String x:Key="Sorting">Сортировочка</s:String>
+
+    <!--  Sources  -->
+    <s:String x:Key="AllSource">Все источнички</s:String>
+    <s:String x:Key="LocalSource">Lexplosion</s:String>
+    <s:String x:Key="Curseforge">Curseforge</s:String>
+    <s:String x:Key="Modrinth">Modrinth</s:String>
+    <s:String x:Key="NightWorld">NightWorld</s:String>
+
+    <s:String x:Key="Or">Или</s:String>
+    <s:String x:Key="And">И</s:String>
+
+    <!--  Categories  -->
+    <s:String x:Key="CategoriesSearchBoxPlaceholder">Выбери категорийки для фильтра...</s:String>
+
+    <!--  Modrinth  -->
+    <s:String x:Key="ModrinthRelevance">Релевантность</s:String>
+    <s:String x:Key="ModrinthDownloads">Скачивания</s:String>
+    <s:String x:Key="ModrinthFollows">Подписчики</s:String>
+    <s:String x:Key="ModrinthUpdated">Последнее обновление</s:String>
+    <s:String x:Key="ModrinthNewest">Дата создания</s:String>
+    <!--  Curseforge  -->
+    <s:String x:Key="CurseforgeRelevance">Релевантность</s:String>
+    <s:String x:Key="CurseforgeFeatured">Избранное</s:String>
+    <s:String x:Key="CurseforgePopularity">Популярность</s:String>
+    <s:String x:Key="CurseforgeLastUpdated">Последнее обновление</s:String>
+    <s:String x:Key="CurseforgeCreationDate">Дата создания</s:String>
+    <s:String x:Key="CurseforgeTotalDownloads">Всего скачиваний</s:String>
+    <s:String x:Key="CurseforgeName">По имени А-Я</s:String>
+
+    <!--  Accounts  -->
+    <s:String x:Key="Active">Активненький</s:String>
+    <s:String x:Key="NotActive">Не активненький</s:String>
+    <s:String x:Key="TypingNicknamePlaceholder">Введи ник...</s:String>
+
+    <!--  Funcs  -->
+    <s:String x:Key="Activate">Сделать активненьким</s:String>
+    <s:String x:Key="DoGameLauncher">Сделать аккаунтом для игры</s:String>
+    <s:String x:Key="Signout">Выйти</s:String>
+
+    <s:String x:Key="GameLauncher">Запуск игры</s:String>
+
+    <!--  Account Factory  -->
+    <s:String x:Key="AddingAccount">Добавление аккаунтика</s:String>
+    <s:String x:Key="Login">Логинчик</s:String>
+    <s:String x:Key="Password">Парольчик</s:String>
+    <s:String x:Key="AccountType">Тип аккаунтика</s:String>
+    <s:String x:Key="AccountTypeDescription">Сервис авторизации</s:String>
+    <s:String x:Key="LoginAccountFactoryDescription">Логин или почта аккаунтика</s:String>
+    <s:String x:Key="PasswordAccountFactoryDescription">Пароль аккаунтика</s:String>
+    <s:String x:Key="AddAccount">Добавить аккаунтик</s:String>
+    <s:String x:Key="LoginExample">Например: _Hel2x_</s:String>
+
+    <!--  Nightworld Limited Pages Curtains  -->
+    <s:String x:Key="OnlyAvailableWithNightWorldAccount">Только с аккаунтом NightWorld</s:String>
+    <s:String x:Key="OnlyAvailableWithNightWorldAccountDescription">Эта фича запускалки работает только с авторизацией через NightWorld, не обязательно делать его игровым аккаунтом.</s:String>
+    <s:String x:Key="CreateNightWorldAccount">Создать аккаунтик NightWorld</s:String>
+    <s:String x:Key="LoginWithYourNightWorldAccount">Войти через NightWorld</s:String>
+
+    <!--  Friends DropdownMenu  -->
+    <s:String x:Key="Unfriend">Раздружить</s:String>
+    <s:String x:Key="ViewProfile">Посмотреть профильчик</s:String>
+
+    <!--  Instance Share  -->
+    <s:String x:Key="Share">Поделиться</s:String>
+    <s:String x:Key="ShareInstance">Начать делиться этим клиентом</s:String>
+    <s:String x:Key="ActiveShares">Твои раздачи</s:String>
+
+    <s:String x:Key="CurseforgeCatalogLoading">Загружается коталог Curseforge</s:String>
+
+    <!--  Account Funcs  -->
+    <s:String x:Key="LaunchAccount">Назначить игровым аккаунтом</s:String>
+    <s:String x:Key="MakeAccountActive">Сделать активненьким</s:String>
+    <s:String x:Key="ReloadAccount">Обновить</s:String>
+    <s:String x:Key="LogoutAccount">Удалить</s:String>
+    <s:String x:Key="LogoutAllAccounts">Удалить все аккаунтики</s:String>
+    <s:String x:Key="AddNewAccount">Добавить новый аккаунтик</s:String>
+
+    <!--  Addon ToolTip  -->
+    <s:String x:Key="AddNewAddon">Установить</s:String>
+    <s:String x:Key="AddonOpenFolder">Открыть папочку</s:String>
+    <s:String x:Key="AddonReloadList">Обновить списочек</s:String>
+    <s:String x:Key="AddonChangeView">Сменить вид</s:String>
+
+    <!--  Instance Settings  -->
+    <s:String x:Key="DisplayResolution">Разрешение экранчика</s:String>
+    <s:String x:Key="Browse">Просмотреть</s:String>
+    <s:String x:Key="JavaResetPath">Сбросить путь к джаве</s:String>
+
+    <s:String x:Key="AcceptFriendRequest">Принять запросик дружбы</s:String>
+    <s:String x:Key="DeclineFriendRequest">Отклонить запросик дружбы</s:String>
+    <s:String x:Key="CancelFriendRequest">Отменить запросик дружбы</s:String>
+    <s:String x:Key="SendFriendRequest">Отправить запросик дружбы</s:String>
+
+    <!--  Paginator  -->
+    <s:String x:Key="PaginatorPrevious">Назад</s:String>
+    <s:String x:Key="PaginatorNext">Вперёд</s:String>
+    <s:String x:Key="PaginatorPage">Страничка</s:String>
+    <s:String x:Key="PaginatorPageOf">из</s:String>
+
+    <!--  ToolTip Appearance Settings  -->
+    <s:String x:Key="Tooltip">Подсказочка</s:String>
+    <s:String x:Key="TooltipDescription">Настроймяу подсказочек</s:String>
+
+    <s:String x:Key="ToolTipState">Состояние подсказочек</s:String>
+    <s:String x:Key="ToolTipStateDescription">Этот параметр включает или выключает подсказочки</s:String>
+
+    <s:String x:Key="InitialShowDelay">Задержка появления</s:String>
+    <s:String x:Key="InitialShowDelayDescription">Задержка (в миллисекундах) перед показом подсказочки при наведении мышки.</s:String>
+    <s:String x:Key="BetweenShowDelay">Задержка между подсказочками</s:String>
+    <s:String x:Key="BetweenShowDelayDescription">Время (в миллисекундах) для переключения между подсказочками без начальной задержки.</s:String>
+
+    <!--  InstanceForm  -->
+    <s:String x:Key="Downloaded">Скачано</s:String>
+    <!--  Instance Form Download Process  -->
+    <s:String x:Key="DownloadPreparing">Готовимся к скачиванию...</s:String>
+    <s:String x:Key="JavaInstalling">Устанавливается джава</s:String>
+    <s:String x:Key="InstanceDownloading">Клиент устанавливается...</s:String>
+    <s:String x:Key="Stage">Этап</s:String>
+    <s:String x:Key="VerifyIntegrityGameFiles">Проверяется целостность игровых файликов...</s:String>
+    <s:String x:Key="DownloadCanceling">Скачивание отменяется...</s:String>
+
+    <s:String x:Key="AddonsListLoadingPlaceholder">Загружается списочек дополнений...</s:String>
+
+    <s:String x:Key="Technology">Технология</s:String>
+    <s:String x:Key="WorldGen">Генерация мирков</s:String>
+    <s:String x:Key="All">Всё</s:String>
+
+    <s:String x:Key="Features">Фичи</s:String>
+    <s:String x:Key="Performanceimpact">Влияние на производительность</s:String>
+    <s:String x:Key="Resolutions">Разрешение текстурок</s:String>
+
+    <s:String x:Key="Website">Сайтик</s:String>
+
+    <s:String x:Key="Installed">Установлено</s:String>
+
+    <s:String x:Key="Paginator">Пагинятник</s:String>
+    <s:String x:Key="Searchbox">Поисковая коробочка</s:String>
+    <s:String x:Key="InstalledList">Установленные</s:String>
+    <s:String x:Key="SearchAddonByNamePlaceholder">Имя дополнения</s:String>
+
+    <s:String x:Key="AddonInfoDownloadsTooltip">Количество скачиваний</s:String>
+    <s:String x:Key="AddonInfoLatestReleaseTooltip">Дата последнего обновления</s:String>
+    <s:String x:Key="AddonInfoCreationDateTooltip">Дата создания</s:String>
+    <s:String x:Key="AddonInfoGameVersionTooltip">Версия игры</s:String>
+
+    <!--  region Authorization  -->
+    <s:String x:Key="DoNothaveAnyAccount">Нет аккаунтика?</s:String>
+    <s:String x:Key="ForgotPassword">Забыл парольчик?</s:String>
+    <s:String x:Key="SingUp">Зарегистрироваться</s:String>
+    <s:String x:Key="SelectAuthorizationMethod">Выбери способ авторизации</s:String>
+    <s:String x:Key="AuthorizationViaNightWorld">Авторизация через NightWorld</s:String>
+    <s:String x:Key="Via">Через</s:String>
+    <s:String x:Key="RememberMe">Запомнить меня</s:String>
+    <s:String x:Key="LogIn">Войти</s:String>
+
+    <s:String x:Key="RegistrationInNightWorld">Регистрация в NightWorld</s:String>
+    <s:String x:Key="EmailAddress">Почта</s:String>
+    <s:String x:Key="CreateAccount">Создать аккаунтик</s:String>
+    <s:String x:Key="AlreadyHaveAnyAccount">Уже есть аккаунтик?</s:String>
+
+    <s:String x:Key="ViaNightWorld">Через NightWorld</s:String>
+    <s:String x:Key="ViaMicrosoft">Через Microsoft</s:String>
+    <s:String x:Key="WithoutAccount">Без аккаунтика</s:String>
+
+    <s:String x:Key="Microsoft">Microsoft</s:String>
+    <s:String x:Key="NoAuth">Без авторизации</s:String>
+
+    <s:String x:Key="AuthorizationWithoutAccountTitle">Авторизация без аккаунтика</s:String>
+    <s:String x:Key="AuthorizationWithoutAccountDescription">Чтобы авторизоваться без аккаунтика, выбери нужный ник.</s:String>
+    <s:String x:Key="AuthorizationWithoutAccountNicknamePlaceholder">Введи нужный ник</s:String>
+    <s:String x:Key="Continue">Продолжить</s:String>
+
+    <s:String x:Key="AuthorizationMicrosoftTitle">Авторизация через Microsoft</s:String>
+    <s:String x:Key="AuthorizationMicrosoftAccountDescription">Ждём завершения авторизации через Microsoft</s:String>
+    <s:String x:Key="ManualInput">Ручной ввод</s:String>
+    <s:String x:Key="ManualInputMicrosoftTokenTitle">Ручной ввод токена Microsoft</s:String>
+    <s:String x:Key="WrongTokenFormat">Неправильный формат токена</s:String>
+    <s:String x:Key="CorrectTokenFormat">Правильный формат токена</s:String>
+    <s:String x:Key="ManualInputTokenPlaceholder">Введи токен Microsoft сюда</s:String>
+    <s:String x:Key="Apply">Применить</s:String>
+    <s:String x:Key="Cancel">Отменить</s:String>
+
+    <s:String x:Key="Important">Важно!</s:String>
+    <s:String x:Key="MicrosoftManualInputImportantMessage">Никогда не делись и не показывай свой токен авторизации никому! Если токен попадёт к другому котику, он получит доступ к твоему аккаунтику!</s:String>
+
+    <!--  endregion Authorization  -->
+
+    <!--  region Notifications Content  -->
+
+    <!--  endregion Notifications Content  -->
+
+    <s:String x:Key="CustomColor">Кастомный цветик</s:String>
+    <s:String x:Key="CustomColorDescription">Выбери свой цветик акцента</s:String>
+
+    <!--  Instance Configuration  -->
+    <s:String x:Key="SaveChanges">Сохранить изменения</s:String>
+    <s:String x:Key="LoadYourLogo">Загрузить свой логотипчик</s:String>
+    <s:String x:Key="UnsavedChangesWarningText">Осторожно, ты не сохранил изменения!</s:String>
+    <s:String x:Key="Reset">Сбросить</s:String>
+
+    <s:String x:Key="Files">Файлики</s:String>
+    <s:String x:Key="Files_LowerCase">файлики</s:String>
+
+    <!--  Ad Servers  -->
+    <s:String x:Key="PartnerServers">Серверы-партнёры</s:String>
+    <s:String x:Key="Add">Добавить</s:String>
+
+    <s:String x:Key="AutoConnectToServer">Автоконнект к серверу</s:String>
+    <s:String x:Key="AvailableGameClientsNotFound">Подходящих клиентов не найдено</s:String>
+    <s:String x:Key="SelectInstanceForServer">Выбери клиент для добавления сервера</s:String>
+    <s:String x:Key="ConfirmSelection">Подтвердить выбор</s:String>
+    <s:String x:Key="CreateNewInstanceForServer">Создать новый клиент для сервера</s:String>
+
+    <s:String x:Key="InstallServerInstance">Установить клиент сервера</s:String>
+    <s:String x:Key="InstallServerInstanceDescription">Чтобы играть на этом сервере, нужно установить клиент. Хочешь установить этот клиент?</s:String>
+    <s:String x:Key="ServerIpAddressCopied">IP-адрес сервера скопирован</s:String>
+
+    <s:String x:Key="LoadingInstanceClientVersions">Загружаются версии клиента</s:String>
+    <s:String x:Key="NoDistributionsAvailableForDownload">Нет раздач для скачивания</s:String>
+
+    <!--  region Notifications  -->
+
+    <!--    -->
+    <!--  Ad Server  -->
+    <!--    -->
+    <s:String x:Key="InstanceForServerAddedToLibrary">Клиент {0} успешно добавлен в библиотечку!</s:String>
+
+    <!--    -->
+    <!--  Multiplayer  -->
+    <!--    -->
+    <s:String x:Key="MultiplayerReloaded">Мультикотик игра перезапущена</s:String>
+
+    <!--    -->
+    <!--  InstanceForm  -->
+    <!--    -->
+
+    <!--  Instance Launch  -->
+    <s:String x:Key="InstanceLaunchedSuccessfulNotification">Клиент {0} успешно запущен.</s:String>
+    <s:String x:Key="InstanceLaunchedUnsuccessfulNotification">Не удалось запустить клиент {0}.</s:String>
+
+    <!--  Instance Installing  -->
+    <s:String x:Key="DownloadCompletedSuccessfully">Скачивание клиента {0} успешно завершено.</s:String>
+
+    <s:String x:Key="FailedToDownloadFollowingFiles:_">Не удалось скачать следующие файлики: {0}</s:String>
+    <s:String x:Key="FailedToDownloadSomeFiles">Не удалось скачать некоторые файлики</s:String>
+    <s:String x:Key="RedownloadingMaySolveTheProblem">Попробуй скачать заново, может помочь, но не факт.</s:String>
+    <s:String x:Key="ExternalIdIncorrect">Внешний ID клиента неправильный.</s:String>
+    <s:String x:Key="ServerError">Ошибка сервера.</s:String>
+    <s:String x:Key="FailedToGetDataFromServer">Не удалось получить данные с сервера.</s:String>
+    <s:String x:Key="FileVerificationFailed">Не удалось проверить файлик.</s:String>
+    <s:String x:Key="VersionVerificationFailed">Не удалось определить версию игры.</s:String>
+    <s:String x:Key="ModloaderVerificationFailed">Не удалось определить версию модлоадера.</s:String>
+    <s:String x:Key="InvalidGameDirectory">Неправильная папочка игры</s:String>
+    <s:String x:Key="FailedLoadInstanceManifest">Не удалось загрузить манифест клиента.</s:String>
+    <s:String x:Key="TrySetCustomJavaPath">Попробуй указать кастомный путь к джаве в настройках.</s:String>
+    <s:String x:Key="InstanceDownloadCanceledSuccessfully">Скачивание клиента успешно отменено.</s:String>
+    <s:String x:Key="UnknownErrorTryRestartLauncher">Неизвестная ошибка... Попробуй выключить и включить заново.</s:String>
+
+    <s:String x:Key="ismanifestErrorTitle">Ошибка манифеста</s:String>
+    <s:String x:Key="JavaDownloadErrorTitle">Ошибка установки джавы</s:String>
+    <s:String x:Key="UnknownErrorTitle">Неизвестная ошибка</s:String>
+    <s:String x:Key="InstanceName:_">Имя клиента: {0}</s:String>
+
+    <!--  endregion Notifications  -->
+
+    <!--  region ServerProfile  -->
+    <s:String x:Key="Status:">Статус:</s:String>
+    <s:String x:Key="Online:">Онлайн:</s:String>
+
+    <!--  endregion ServerProfile  -->
+
+    <!--  region Settings  -->
+    <!--  Java Errors  -->
+    <s:String x:Key="WrongJavaPathFormat">Неправильный формат пути к джаве</s:String>
+    <s:String x:Key="JavaPathEmptyOrNull">Выбранный путь не может быть пустым!</s:String>
+    <s:String x:Key="JavaPathExeDoesNotExists">В выбранном пути нет java.exe или javaw.exe!</s:String>
+    <s:String x:Key="JavaPathWrongExe">Путь указывает на неправильный .exe файлик!</s:String>
+    <s:String x:Key="JavaPathPathDoesNotExists">Выбранный путь не существует!</s:String>
+
+    <!--  endregion Settings  -->
+
+    <!--  region Instance Profile  -->
+    <s:String x:Key="OptifineVersion">Версия оптифайна</s:String>
+    <s:String x:Key="OptifineVersionDescription">Выбери нужную версию оптифайна</s:String>
+
+    <!--  endregion Instance Profile  -->
+
+    <!--  region Settings  -->
+    <s:String x:Key="MinecraftArguments">Аргументы майнкрафта</s:String>
+    <s:String x:Key="MinecraftArgumentsDescription">Позволяет гибко настраивать параметры игры</s:String>
+
+    <s:String x:Key="NightWorldClient">По умолчанию использовать NWClient</s:String>
+    <s:String x:Key="NightWorldClientDescription">Включает косметику NightWorld и другие фичи</s:String>
+
+    <s:String x:Key="GamePathEmptyOrHasInvalidChars">Путь к папочке пустой или содержит запрещённые символы: {0}</s:String>
+
+    <!--  endregion Settings  -->
+
+    <!--  region Import  -->
+    <s:String x:Key="ImportByUrlDescriptionPlaceholder">Или ссылка на Google Drive или Yandex Disk</s:String>
+    <s:String x:Key="ImportCancelledNotification">Импорт клиента успешно отменён</s:String>
+    <s:String x:Key="ImportUrlWrongPathNotification">Неправильный формат ссылки</s:String>
+
+    <s:String x:Key="ImportResultSuccessful">Клиент {0} успешно импортирован и ждёт в библиотечке</s:String>
+    <s:String x:Key="ImportResultZipFileError">Ошибка открытия zip-файлика</s:String>
+    <s:String x:Key="ImportResultGameVersionError">Ошибка версии игры</s:String>
+    <s:String x:Key="ImportResultJavaDownloadError">Проблема с загрузкой джавы</s:String>
+    <s:String x:Key="ImportResultIsOfflineMode">Оффлайн-режим</s:String>
+    <s:String x:Key="ImportResultMovingFilesError">Ошибка перемещения файликов</s:String>
+    <s:String x:Key="ImportResultDownloadError">Ошибка скачивания</s:String>
+    <s:String x:Key="ImportResultDirectoryCreateError">Ошибка создания папочки</s:String>
+    <s:String x:Key="ImportResultWrongUrl">Неправильный URL для импорта файлика. Пока поддерживаем только Yandex Disk и Google Drive.</s:String>
+    <s:String x:Key="ImportResultManifestError">Ошибка манифеста файлика.</s:String>
+    <s:String x:Key="ImportResultUnknownFileType">Неизвестный тип файлика.</s:String>
+    <s:String x:Key="ImportResultUnknownError">Неизвестная ошибка</s:String>
+
+    <!--  endregion Import  -->
+
+    <!--  region Accounts  -->
+    <s:String x:Key="RemoveAccount">Удалить аккаунтик</s:String>
+    <s:String x:Key="RemoveAccountDescription">
+        Ты уверен, что хочешь удалить аккаунтик: {0}?
+        Вернуть доступ можно только через повторную авторизацию!
+    </s:String>
+    <s:String x:Key="YesIWantRemoveAccount">Да, я хочу удалить аккаунтик</s:String>
+
+    <s:String x:Key="RemoveAllAccount">Удалить все аккаунтики</s:String>
+    <s:String x:Key="RemoveAllAccountDescription">
+        Ты уверен, что хочешь удалить все аккаунтики?
+        Вернуть доступ можно только через повторную авторизацию!
+    </s:String>
+    <s:String x:Key="YesIWantRemoveAllAccount">Да, я хочу удалить все аккаунтики</s:String>
+
+    <!--  Notification  -->
+    <s:String x:Key="WrongLoginOrPassword">Неправильный логин или парольчик.</s:String>
+    <s:String x:Key="NoConnectionToTheServer">Не удалось подключиться к серверу!</s:String>
+    <s:String x:Key="TokenError">Ошибка токена!</s:String>
+    <s:String x:Key="UnknownError">Неизвестная ошибка!</s:String>
+    <s:String x:Key="SessionExpiredRedirectToMicrosoft">Сессия истекла. Перенаправляем на страницу авторизации Microsoft</s:String>
+    <s:String x:Key="TokenErrorRedirectToMicrosoft">Ошибка токена. Перенаправляем на страницу авторизации Microsoft</s:String>
+    <s:String x:Key="SessionExpiredTryAuthAgain">Сессия истекла. Попробуй авторизоваться снова</s:String>
+    <s:String x:Key="TokenErrorTryAuthAgain">Ошибка токена. Попробуй авторизоваться снова</s:String>
+
+    <!--  endregion Accounts  -->
+
+    <!--  region Library  -->
+    <s:String x:Key="DeletingInstance">Удаление клиента</s:String>
+    <s:String x:Key="DeletingInstanceDescription">
+        Ты уверен, что хочешь удалить клиент: {0}?
+        После удаления не восстановить!
+    </s:String>
+    <s:String x:Key="YesIWantDeleteInstance">Да, я хочу удалить клиент</s:String>
+
+    <!--  endregion Library  -->
+
+    <!--  region Friends  -->
+    <!--  Notifications  -->
+    <s:String x:Key="FriendRequestHasBeenSent">Запросик дружбы отправлен.</s:String>
+    <s:String x:Key="FriendRequestWasCancelled">Запросик дружбы отменён.</s:String>
+    <s:String x:Key="YouAnd_AreFriendsNow">Ты и {0} теперь котики-друзья!</s:String>
+    <s:String x:Key="YouHaveDeclinedYourFriendRequest_">Ты отклонил запросик дружбы от {0}.</s:String>
+
+    <!--  endregion Friends  -->
+
+    <!--  region Instance  -->
+    <!--  Notification  -->
+    <s:String x:Key="Instance_HasBeenInstalledSuccessful">Клиент {0} успешно установлен</s:String>
+    <s:String x:Key="FailedToInstallColon_">Не удалось установить: {0}</s:String>
+
+    <!--  endregion Instance  -->
+
+    <s:String x:Key="LoginOrPasswordNotFilled">Логин или парольчик не заполнены!</s:String>
+
+    <s:String x:Key="AuthorizationProcessInProgress">Идёт авторизация...</s:String>
+
+    <s:String x:Key="Information">Инфяу</s:String>
+    <s:String x:Key="MicrosoftAccountAuthorizationDescription">Для авторизации лицензионного аккаунтика ты будешь автоматически перенаправлен на страницу авторизации Microsoft.</s:String>
+    <s:String x:Key="DoInstallTheLatestVersion">Установить последнюю версию?</s:String>
+    <s:String x:Key="NWClientNotAvailableForThisVersion">NWClient не поддерживается на этой версии</s:String>
+    <s:String x:Key="YouHaveNoActiveDistributions">У тебя нет активных раздач</s:String>
+
+    <s:String x:Key="InQueue">В очереди</s:String>
+    <s:String x:Key="InConnect">Подключаемся</s:String>
+    <s:String x:Key="PostProcessing">Обработка файликов</s:String>
+    <s:String x:Key="InProcess">В очереди</s:String>
+    <s:String x:Key="Successful">Успешно</s:String>
+
+    <s:String x:Key="UnableToDetermineDataForImport">Не удалось определить данные для импорта клиента, введи вручную!</s:String>
+    <s:String x:Key="YouAreAlreadyDistributingToThisClient">Ты уже раздаёшь этот клиент.</s:String>
+    <s:String x:Key="ActiveDistributingDescription">Эта страничка разблокируется, когда ты остановишь активные раздачи в разделе «Твои раздачи»</s:String>
+    <s:String x:Key="ThereAreNotAddons">Нет дополнений</s:String>
+    <s:String x:Key="GameLaunching">Игра запускается...</s:String>
+    <s:String x:Key="ProcessColon">Процесс:</s:String>
+    <s:String x:Key="UpdatingFiles">Обновление файликов</s:String>
+    <s:String x:Key="StageColon">Этап:</s:String>
+    <s:String x:Key="FilesColon">Файлики:</s:String>
+    <s:String x:Key="TotalDonwloadedColon">Всего скачано:</s:String>
+    <s:String x:Key="InstallingTheInstance">Установка клиента</s:String>
+    <s:String x:Key="ThereAreNotImages">Нет картинок</s:String>
+    <s:String x:Key="ImagesLoading">Картинки загружаются...</s:String>
+    <s:String x:Key="DescriptionLoading">Описаньице загружается...</s:String>
+    <s:String x:Key="DownloadingTheInstance">Скачивается клиент</s:String>
+    <s:String x:Key="LoadingEllipsis">Загрузка...</s:String>
+    <s:String x:Key="WeDidNotFindAnythingForThisRequest">Ничего не найдено по этому запросику</s:String>
+    <s:String x:Key="ThereAreNoIncomingFriendRequests">Нет входящих запросиков дружбы.</s:String>
+    <s:String x:Key="ThereAreNoOutgoingFriendRequests">Нет отправленных запросиков дружбы.</s:String>
+    <s:String x:Key="Close">Закрыть</s:String>
+    <s:String x:Key="Notifications">Уведомления</s:String>
+    <s:String x:Key="LibraryEmptyDescription">Ты можешь добавить клиенты в библиотечку через коталог или создать свой клиент</s:String>
+    <s:String x:Key="CreateNewInstance">Создать новый клиент</s:String>
+    <s:String x:Key="MinecraftNotRunning">Minecraft не запущен.</s:String>
+    <s:String x:Key="InstanceDash_">Клиент — {0}</s:String>
+    <s:String x:Key="GoToCatalog">Перейти в коталог</s:String>
+    <s:String x:Key="LibraryEmpty">Библиотечка пуста</s:String>
+
+    <s:String x:Key="WelcomeDescription">Добро пожаловать в новую эру</s:String>
+    <s:String x:Key="WelcomePageThemeSelectDescription">Выбери любимый вид интерфейсика.</s:String>
+
+    <!--  Tray  -->
+    <s:String x:Key="ContactSupport">Связаться с поддержкой</s:String>
+    <s:String x:Key="TrayHideLauncher">Спрятать запускалку</s:String>
+    <s:String x:Key="TrayReloadMultiplayer">Перезапустить мультикотик игру</s:String>
+    <s:String x:Key="MaximizeLauncher">Показать запускалку</s:String>
+    <s:String x:Key="CloseInstance">Закрыть клиент</s:String>
+
+    <!--  Console Header  -->
+    <s:String x:Key="InstanceNameColon">Клиент:</s:String>
+    <s:String x:Key="VersionColon">Версия:</s:String>
+    <s:String x:Key="TypeColon">Тип:</s:String>
+
+    <!--  LeftPanel Help Block  -->
+    <s:String x:Key="HowToPlay">Как играть?</s:String>
+    <s:String x:Key="Support">Поддержка</s:String>
+
+    <s:String x:Key="LoggingMode">Режим логгирования</s:String>
+    <s:String x:Key="LoggingModeDescription">
+        Включить запись логов
+    </s:String>
+
+    <s:String x:Key="ThereAreNoAddonVersion">
+        Список версий пустой. Мы тоже не знаем, что случилось(
+    </s:String>
+
+    <s:String x:Key="SuccessDirectoryTransfer">
+        Данные старой папочки успешно скопированы в новую.
+    </s:String>
+    <s:String x:Key="DirectoryTransfer">
+        Полностью скопировать старую папочку
+    </s:String>
+    <s:String x:Key="DirectoryTransferDescription">
+        Хочешь полностью скопировать старую папочку?
+    </s:String>
+    <s:String x:Key="DirectoryTransferAgreeButtonText">
+        Полностью скопировать
+    </s:String>
+    <s:String x:Key="DirectoryTransferLoading">
+        Копируем старую папочку в новую...
+    </s:String>
+
+    <s:String x:Key="RestartLauncher">
+        Нужен перезапуск
+    </s:String>
+    <s:String x:Key="RestartLauncherDescription">
+        Чтобы изменения заработали, нужно перезапустить запускалку. Без перезапуска запускалка может глючить.
+    </s:String>
+    <s:String x:Key="RestartLauncherButtonAction">
+        Да, я хочу перезапустить запускалку сейчас
+    </s:String>
+</ResourceDictionary>
