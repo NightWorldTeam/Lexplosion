@@ -8,8 +8,10 @@ using Lexplosion.Logic.Objects.Nightworld;
 
 namespace Lexplosion.Logic.Network
 {
-	public static class NightWorldApi
+	public class NightWorldApi
 	{
+		private readonly ToServer _toServer;
+
 		/// <summary>
 		/// этот класс нужен для декодирования json в GetInstanceManifest
 		/// </summary>
@@ -64,15 +66,15 @@ namespace Lexplosion.Logic.Network
 			public string str { get; set; }
 		}
 
-		//public AuthManifest Registration(string login, string password, string email)
-		//{
+		public NightWorldApi(ToServer toServer)
+		{
+			_toServer = toServer;
+		}
 
-		//}
-
-		public static NwAuthResult Authorization(AuthData authData)
+		public NwAuthResult Authorization(AuthData authData)
 		{
 			string data = JsonConvert.SerializeObject(authData);
-			var manifest = ToServer.ProtectedUserRequest<AuthManifest>(LaunсherSettings.URL.Account + "auth", data, out string notComplitedResult);
+			var manifest = _toServer.ProtectedUserRequest<AuthManifest>(LaunсherSettings.URL.Account + "auth", data, out string notComplitedResult);
 
 			if (notComplitedResult != null)
 			{
@@ -117,11 +119,11 @@ namespace Lexplosion.Logic.Network
 			}
 		}
 
-		public static Dictionary<string, InstanceInfo> GetInstancesList()
+		public Dictionary<string, InstanceInfo> GetInstancesList()
 		{
 			try
 			{
-				string answer = ToServer.HttpPost(LaunсherSettings.URL.ModpacksData);
+				string answer = _toServer.HttpPost(LaunсherSettings.URL.ModpacksData);
 				Dictionary<string, InstanceInfo> list = JsonConvert.DeserializeObject<Dictionary<string, InstanceInfo>>(answer);
 
 				return list;
@@ -132,11 +134,11 @@ namespace Lexplosion.Logic.Network
 			}
 		}
 
-		public static int GetInstanceVersion(string id)
+		public int GetInstanceVersion(string id)
 		{
 			try
 			{
-				string answer = ToServer.HttpPost(LaunсherSettings.URL.ModpacksData + WebUtility.UrlEncode(id) + "/version");
+				string answer = _toServer.HttpPost(LaunсherSettings.URL.ModpacksData + WebUtility.UrlEncode(id) + "/version");
 				Int32.TryParse(answer, out int idInt);
 
 				return idInt;
@@ -147,11 +149,11 @@ namespace Lexplosion.Logic.Network
 			}
 		}
 
-		public static FullInstanceInfo GetInstanceInfo(string id)
+		public FullInstanceInfo GetInstanceInfo(string id)
 		{
 			try
 			{
-				string answer = ToServer.HttpPost(LaunсherSettings.URL.ModpacksData + WebUtility.UrlEncode(id) + "/info");
+				string answer = _toServer.HttpPost(LaunсherSettings.URL.ModpacksData + WebUtility.UrlEncode(id) + "/info");
 				FullInstanceInfo info = JsonConvert.DeserializeObject<FullInstanceInfo>(answer);
 
 				return info;
@@ -166,9 +168,9 @@ namespace Lexplosion.Logic.Network
 		/// Получет манифест для NightWorld модпаков
 		/// </summary>
 		/// <param name="instanceId"></param>
-		public static NightWorldManifest GetInstanceManifest(string instanceId) // TODO: одинаковые блоки кода в этих двух функция вынести в другую функцию
+		public NightWorldManifest GetInstanceManifest(string instanceId) // TODO: одинаковые блоки кода в этих двух функция вынести в другую функцию
 		{
-			var filesData = ToServer.ProtectedRequest<ProtectedNightWorldManifest>(LaunсherSettings.URL.ModpacksData + WebUtility.UrlEncode(instanceId) + "/manifest");
+			var filesData = _toServer.ProtectedRequest<ProtectedNightWorldManifest>(LaunсherSettings.URL.ModpacksData + WebUtility.UrlEncode(instanceId) + "/manifest");
 
 			if (filesData == null) return null;
 
@@ -182,9 +184,9 @@ namespace Lexplosion.Logic.Network
 			return ret;
 		}
 
-		public static VersionManifest GetVersionManifest(string modpackId)
+		public VersionManifest GetVersionManifest(string modpackId)
 		{
-			var filesData = ToServer.ProtectedRequest<ProtectedVersionManifest>(LaunсherSettings.URL.ModpacksData + modpackId + "/versionManifest");
+			var filesData = _toServer.ProtectedRequest<ProtectedVersionManifest>(LaunсherSettings.URL.ModpacksData + modpackId + "/versionManifest");
 
 			if (filesData == null) return null;
 
@@ -210,9 +212,9 @@ namespace Lexplosion.Logic.Network
 			};
 		}
 
-		public static PlayerData GetPlayerData(string uuid)
+		public PlayerData GetPlayerData(string uuid)
 		{
-			string data = ToServer.HttpPost(LaunсherSettings.URL.Account + "getPlayerData", new Dictionary<string, string>
+			string data = _toServer.HttpPost(LaunсherSettings.URL.Account + "getPlayerData", new Dictionary<string, string>
 			{
 				["playerUUID"] = uuid
 			});
@@ -239,9 +241,9 @@ namespace Lexplosion.Logic.Network
 		/// <param name="sessionToken">Токен сессии. Его можно получить в GlobalData.User.SessionToken</param>
 		/// <param name="page">Страница (начиная с нуля)</param>
 		/// <param name="filter">Поиск конкретного логина. Если не нужен, то пустая строка</param>
-		public static UsersCatalogPage FindUsers(string UUID, string sessionToken, uint page, string filter)
+		public UsersCatalogPage FindUsers(string UUID, string sessionToken, uint page, string filter)
 		{
-			string data = ToServer.HttpPost(LaunсherSettings.URL.UserApi + "findUsers?page=" + page + "&user_login=" + filter, new Dictionary<string, string>
+			string data = _toServer.HttpPost(LaunсherSettings.URL.UserApi + "findUsers?page=" + page + "&user_login=" + filter, new Dictionary<string, string>
 			{
 				["UUID"] = UUID,
 				["sessionToken"] = sessionToken
@@ -281,9 +283,9 @@ namespace Lexplosion.Logic.Network
 		/// Если нужно получить список своих друзей, то нужно передать свой ник.
 		/// </param>
 		/// <returns></returns>
-		public static List<NwUser> GetFriends(string UUID, string sessionToken, string userLogin)
+		public List<NwUser> GetFriends(string UUID, string sessionToken, string userLogin)
 		{
-			string data = ToServer.HttpPost(LaunсherSettings.URL.UserApi + "getFreinds?login=" + userLogin, new Dictionary<string, string>
+			string data = _toServer.HttpPost(LaunсherSettings.URL.UserApi + "getFreinds?login=" + userLogin, new Dictionary<string, string>
 			{
 				["UUID"] = UUID,
 				["sessionToken"] = sessionToken
@@ -309,9 +311,9 @@ namespace Lexplosion.Logic.Network
 		/// <param name="UUID">uuid. Его можно получить в GlobalData.User.UUID</param>
 		/// <param name="sessionToken">Токен сессии. Его можно получить в GlobalData.User.SessionToken</param>
 		/// <returns></returns>
-		public static FriendRequests GetFriendRequests(string UUID, string sessionToken)
+		public FriendRequests GetFriendRequests(string UUID, string sessionToken)
 		{
-			string data = ToServer.HttpPost(LaunсherSettings.URL.UserApi + "getFriendRequests", new Dictionary<string, string>
+			string data = _toServer.HttpPost(LaunсherSettings.URL.UserApi + "getFriendRequests", new Dictionary<string, string>
 			{
 				["UUID"] = UUID,
 				["sessionToken"] = sessionToken
@@ -345,9 +347,9 @@ namespace Lexplosion.Logic.Network
 		/// <param name="UUID">uuid. Его можно получить в GlobalData.User.UUID</param>
 		/// <param name="sessionToken">Токен сессии. Его можно получить в GlobalData.User.SessionToken</param>
 		/// <param name="login">Логин потльзователя, которому нужно отправить заявку в друзья или принять её.</param>
-		public static void AddFriend(string UUID, string sessionToken, string login)
+		public void AddFriend(string UUID, string sessionToken, string login)
 		{
-			ToServer.HttpPost(LaunсherSettings.URL.UserApi + "addFriend?user_login=" + login, new Dictionary<string, string>
+			_toServer.HttpPost(LaunсherSettings.URL.UserApi + "addFriend?user_login=" + login, new Dictionary<string, string>
 			{
 				["UUID"] = UUID,
 				["sessionToken"] = sessionToken
@@ -362,14 +364,32 @@ namespace Lexplosion.Logic.Network
 		/// <param name="UUID">uuid. Его можно получить в GlobalData.User.UUID</param>
 		/// <param name="sessionToken">Токен сессии. Его можно получить в GlobalData.User.SessionToken</param>
 		/// <param name="login">Логин пользователя.</param>
-		public static void RemoveFriend(string UUID, string sessionToken, string login)
+		public void RemoveFriend(string UUID, string sessionToken, string login)
 		{
 
-			ToServer.HttpPost(LaunсherSettings.URL.UserApi + "removeFriend?user_login=" + login, new Dictionary<string, string>
+			_toServer.HttpPost(LaunсherSettings.URL.UserApi + "removeFriend?user_login=" + login, new Dictionary<string, string>
 			{
 				["UUID"] = UUID,
 				["sessionToken"] = sessionToken
 			});
+		}
+
+		/// <summary>
+		/// Возврщает версию лаунчера на сервере. -1 если произошла ошибка
+		/// </summary>
+		public int CheckLauncherUpdates()
+		{
+			var result = _toServer.HttpGet(LaunсherSettings.URL.LauncherParts + "launcherVersion.html", timeout: 10000);
+			if (result == null) return -1;
+
+			if (Int32.TryParse(result, out int res)) return res;
+
+			return -1;
+		}
+
+		public bool ServerIsOnline()
+		{
+			return _toServer.HttpPost(LaunсherSettings.URL.Base + "api/onlineStatus") == "online";
 		}
 	}
 }

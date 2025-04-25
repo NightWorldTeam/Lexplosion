@@ -12,9 +12,10 @@ using Lexplosion.Tools;
 
 namespace Lexplosion.Logic.Network.Web
 {
-	public static class CurseforgeApi
+	public class CurseforgeApi
 	{
 		private const string Token = "$2a$10$Ky9zG9R9.ha.kf5BRrvwU..OGSvC0I2Wp56hgXI/4aRtGbizrm3we";
+		private readonly ToServer _toServer;
 
 		private class DataContainer<T>
 		{
@@ -47,8 +48,13 @@ namespace Lexplosion.Logic.Network.Web
 			public List<SearchedFiles> exactMatches;
 		}
 
+		public CurseforgeApi(ToServer toServer)
+		{
+			_toServer = toServer;
+		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		private static T GetApiData<T>(string url, out Pagination pagination) where T : new()
+		private T GetApiData<T>(string url, out Pagination pagination) where T : new()
 		{
 			pagination = null;
 
@@ -59,7 +65,7 @@ namespace Lexplosion.Logic.Network.Web
 					["x-api-key"] = Token
 				};
 
-				string answer = ToServer.HttpGet(url, headers);
+				string answer = _toServer.HttpGet(url, headers);
 				if (answer != null)
 				{
 					var data = JsonConvert.DeserializeObject<DataContainer<T>>(answer);
@@ -78,7 +84,7 @@ namespace Lexplosion.Logic.Network.Web
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		private static T GetApiData<T>(string url, string jsonInputData, out Pagination pagination) where T : new()
+		private T GetApiData<T>(string url, string jsonInputData, out Pagination pagination) where T : new()
 		{
 			pagination = null;
 
@@ -89,7 +95,7 @@ namespace Lexplosion.Logic.Network.Web
 					["x-api-key"] = Token
 				};
 
-				string answer = ToServer.HttpPostJson(url, jsonInputData, out _, headers);
+				string answer = _toServer.HttpPostJson(url, jsonInputData, out _, headers);
 				if (answer != null)
 				{
 					var data = JsonConvert.DeserializeObject<DataContainer<T>>(answer);
@@ -108,12 +114,12 @@ namespace Lexplosion.Logic.Network.Web
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		private static T GetApiData<T>(string url, string jsonInputData) where T : new() => GetApiData<T>(url, jsonInputData, out _);
+		private T GetApiData<T>(string url, string jsonInputData) where T : new() => GetApiData<T>(url, jsonInputData, out _);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		private static T GetApiData<T>(string url) where T : new() => GetApiData<T>(url, out _);
+		private T GetApiData<T>(string url) where T : new() => GetApiData<T>(url, out _);
 
-		public static CatalogResult<CurseforgeInstanceInfo> GetInstances(CurseforgeSearchParams searchParams)
+		public CatalogResult<CurseforgeInstanceInfo> GetInstances(CurseforgeSearchParams searchParams)
 		{
 			var queryBuilder = new QueryApiBuilder("https://api.curseforge.com/v1/mods/search");
 
@@ -140,13 +146,13 @@ namespace Lexplosion.Logic.Network.Web
 			return new(result, paginator?.TotalCount ?? 1);
 		}
 
-		private static string BuildCategoriesToQuery(IEnumerable<IProjectCategory> categories)
+		private string BuildCategoriesToQuery(IEnumerable<IProjectCategory> categories)
 		{
 			string ctrs = string.Join(",", categories.Select(x => x.Id != "-1"));
 			return "[" + ctrs + "]";
 		}
 
-		public static CatalogResult<CurseforgeAddonInfo> GetAddonsList(AddonType type, CurseforgeSearchParams searchParams)
+		public CatalogResult<CurseforgeAddonInfo> GetAddonsList(AddonType type, CurseforgeSearchParams searchParams)
 		{
 			/*
              https://api.curseforge.com/v1/mods/search?gameId=432&classId=12&sortOrder=desc&pageSize=10&index=0&gameVersion=1.20.1&categoryIds=%5B%5D&sortField=0&searchFilter=
@@ -192,7 +198,7 @@ namespace Lexplosion.Logic.Network.Web
 		/// <param name="gameVersion">Версия игры</param>
 		/// <param name="modloader">Модлоадер. Если его не нужно учитывать, то null</param>
 		/// <returns></returns>
-		public static List<CurseforgeFileInfo> GetProjectFiles(string projectId, string gameVersion, Modloader? modloader)
+		public List<CurseforgeFileInfo> GetProjectFiles(string projectId, string gameVersion, Modloader? modloader)
 		{
 			string modloaderStr = "";
 			if (modloader != null)
@@ -204,7 +210,7 @@ namespace Lexplosion.Logic.Network.Web
 			return GetApiData<List<CurseforgeFileInfo>>("https://api.curseforge.com/v1/mods/" + projectId + "/files?gameVersion=" + gameVersion + modloaderStr);
 		}
 
-		public static List<CurseforgeFileInfo> GetProjectFiles(string projectId, string gameVersion, IEnumerable<Modloader> modloaders)
+		public List<CurseforgeFileInfo> GetProjectFiles(string projectId, string gameVersion, IEnumerable<Modloader> modloaders)
 		{
 			string modloaderStr = "";
 			if (modloaders != null)
@@ -216,7 +222,7 @@ namespace Lexplosion.Logic.Network.Web
 			return GetApiData<List<CurseforgeFileInfo>>("https://api.curseforge.com/v1/mods/" + projectId + "/files?gameVersion=" + gameVersion + modloaderStr);
 		}
 
-		public static List<CurseforgeFileInfo> GetFilesFromFingerprints(List<string> fingerprint)
+		public List<CurseforgeFileInfo> GetFilesFromFingerprints(List<string> fingerprint)
 		{
 			var jsonContent = "{\"fingerprints\": [" + string.Join(",", fingerprint) + "]}";
 
@@ -233,22 +239,22 @@ namespace Lexplosion.Logic.Network.Web
 			return result;
 		}
 
-		public static List<CurseforgeFileInfo> GetProjectFiles(string projectId)
+		public List<CurseforgeFileInfo> GetProjectFiles(string projectId)
 		{
 			return GetApiData<List<CurseforgeFileInfo>>("https://api.curseforge.com/v1/mods/" + projectId + "/files");
 		}
 
-		public static CurseforgeFileInfo GetProjectFile(string projecrId, string fileId)
+		public CurseforgeFileInfo GetProjectFile(string projecrId, string fileId)
 		{
 			return GetApiData<CurseforgeFileInfo>("https://api.curseforge.com/v1/mods/" + projecrId + "/files/" + fileId);
 		}
 
-		public static CurseforgeAddonInfo GetAddonInfo(string id)
+		public CurseforgeAddonInfo GetAddonInfo(string id)
 		{
 			return GetApiData<CurseforgeAddonInfo>("https://api.curseforge.com/v1/mods/" + id + "/");
 		}
 
-		public static List<CurseforgeAddonInfo> GetAddonsInfo(string[] ids)
+		public List<CurseforgeAddonInfo> GetAddonsInfo(string[] ids)
 		{
 			string jsonContent = "{\"modIds\": [" + string.Join(",", ids) + "]}";
 
@@ -256,7 +262,7 @@ namespace Lexplosion.Logic.Network.Web
 			return data ?? new List<CurseforgeAddonInfo>();
 		}
 
-		public static CurseforgeInstanceInfo GetInstance(string id)
+		public CurseforgeInstanceInfo GetInstance(string id)
 		{
 			try
 			{
@@ -268,18 +274,18 @@ namespace Lexplosion.Logic.Network.Web
 			}
 		}
 
-		public static string GetProjectChangelog(string projectID, string fileID)
+		public string GetProjectChangelog(string projectID, string fileID)
 		{
 			//return ToServer.HttpGet("https://api.curseforge.com/v1/mods/" + projectID + "/files/" + fileID + "/changelog");
 			// TODO: придумать как эту хуйню красиво сделать
 			return "";
 		}
 
-		public static string GetProjectDescription(string projectId)
+		public string GetProjectDescription(string projectId)
 		{
 			try
 			{
-				string result = ToServer.HttpGet($"https://api.curseforge.com/v1/mods/{projectId}/description", new Dictionary<string, string>()
+				string result = _toServer.HttpGet($"https://api.curseforge.com/v1/mods/{projectId}/description", new Dictionary<string, string>()
 				{
 					["x-api-key"] = Token
 				});
@@ -295,7 +301,7 @@ namespace Lexplosion.Logic.Network.Web
 			}
 		}
 
-		public static List<CurseforgeCategory> GetCategories(CfProjectType type)
+		public List<CurseforgeCategory> GetCategories(CfProjectType type)
 		{
 			List<CurseforgeCategory> categories = GetApiData<List<CurseforgeCategory>>("https://api.curseforge.com/v1/categories?gameId=432&classId=" + (int)type);
 			categories.Insert(0, new CurseforgeCategory
@@ -310,7 +316,7 @@ namespace Lexplosion.Logic.Network.Web
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		private static SetValues<InstalledAddonInfo, DownloadAddonRes> InstallAddon(AddonType addonType, string fileUrl, string fileName, string path, string folderName, string projectID, string fileID, TaskArgs taskArgs)
+		private SetValues<InstalledAddonInfo, DownloadAddonRes> InstallAddon(AddonType addonType, string fileUrl, string fileName, string path, string folderName, string projectID, string fileID, TaskArgs taskArgs)
 		{
 			if (addonType != AddonType.Maps)
 			{
@@ -354,7 +360,7 @@ namespace Lexplosion.Logic.Network.Web
 			};
 		}
 
-		public static SetValues<InstalledAddonInfo, DownloadAddonRes> DownloadAddon(CurseforgeFileInfo addonInfo, AddonType addonType, string path, TaskArgs taskArgs)
+		public SetValues<InstalledAddonInfo, DownloadAddonRes> DownloadAddon(CurseforgeFileInfo addonInfo, AddonType addonType, string path, TaskArgs taskArgs)
 		{
 			Runtime.DebugWrite("PR ID " + addonInfo.id);
 			string projectID = addonInfo.modId;
@@ -427,7 +433,7 @@ namespace Lexplosion.Logic.Network.Web
 			}
 		}
 
-		public static SetValues<InstalledAddonInfo, DownloadAddonRes> DownloadAddon(CurseforgeAddonInfo addonInfo, string fileID, string path, TaskArgs taskArgs)
+		public SetValues<InstalledAddonInfo, DownloadAddonRes> DownloadAddon(CurseforgeAddonInfo addonInfo, string fileID, string path, TaskArgs taskArgs)
 		{
 			try
 			{
