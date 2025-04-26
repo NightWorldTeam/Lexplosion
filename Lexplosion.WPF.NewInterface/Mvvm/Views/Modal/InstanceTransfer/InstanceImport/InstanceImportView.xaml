@@ -100,7 +100,7 @@
         </DataTemplate>
     </UserControl.Resources>
 
-    <ScrollViewer Margin="0,0,-10,4">
+    <ScrollViewer x:Name="PageScroll" Margin="0,0,-10,4">
         <Grid Background="Transparent" ShowGridLines="False">
 
             <Grid.RowDefinitions>
