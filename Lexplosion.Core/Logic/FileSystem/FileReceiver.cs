@@ -1,4 +1,5 @@
 ﻿using Lexplosion.Global;
+using Lexplosion.Logic.FileSystem.Services;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Tools;
@@ -21,10 +22,10 @@ namespace Lexplosion.Logic.FileSystem
 
 		private static object _dataClientInitLocker = new object();
 
-		public static List<FileReceiver> GetDistributors(string uuid, string sessionToken)
+		public static List<FileReceiver> GetDistributors(string uuid, string sessionToken, INightWorldFileServicesContainer services)
 		{
 			var data = new List<FileReceiver>();
-			string anwer = ToServer.HttpPost(LaunсherSettings.URL.UserApi + "getFileDistributions", new Dictionary<string, string>
+			string anwer = services.WebService.HttpPost(LaunсherSettings.URL.UserApi + "getFileDistributions", new Dictionary<string, string>
 			{
 				["UUID"] = uuid,
 				["sessionToken"] = sessionToken

@@ -1,4 +1,5 @@
 ﻿using Lexplosion.Logic.FileSystem;
+using Lexplosion.Logic.FileSystem.Services;
 using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.Modrinth;
@@ -11,15 +12,22 @@ namespace Lexplosion.Logic.Management.Instances
 {
 	class ModrinthInstance : PrototypeInstance
 	{
+		private readonly IModrinthFileServicesContainer _services;
+
+		public ModrinthInstance(IModrinthFileServicesContainer services)
+		{
+			_services = services;
+		}
+
 		public override bool CheckUpdates(string localId)
 		{
-			var infoData = DataFilesManager.GetPlatfromData(localId);
+			var infoData = _services.DataFilesService.GetPlatfromData(localId);
 			if (string.IsNullOrWhiteSpace(infoData?.id))
 			{
 				return false;
 			}
 
-			ModrinthProjectInfo info = ModrinthApi.GetProject(infoData.id);
+			ModrinthProjectInfo info = _services.MdApi.GetProject(infoData.id);
 
 			var lastElem = info.Versions.GetLastElement();
 			return lastElem != null && lastElem != infoData.instanceVersion;
@@ -47,7 +55,7 @@ namespace Lexplosion.Logic.Management.Instances
 
 		public override InstanceData GetFullInfo(string localId, string externalId)
 		{
-			var data = ModrinthApi.GetProject(externalId);
+			var data = _services.MdApi.GetProject(externalId);
 
 			if (data == null)
 			{
@@ -128,7 +136,7 @@ namespace Lexplosion.Logic.Management.Instances
 
 		public override List<InstanceVersion> GetVersions(string externalId)
 		{
-			List<ModrinthProjectFile> versions = ModrinthApi.GetProjectFiles(externalId);
+			List<ModrinthProjectFile> versions = _services.MdApi.GetProjectFiles(externalId);
 			var data = new List<InstanceVersion>();
 			foreach (ModrinthProjectFile file in versions)
 			{

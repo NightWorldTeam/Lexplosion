@@ -127,7 +127,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
                 if (instanceModelBase.IsInstalled || instanceModelBase.IsDownloading)
                 {
                     // Останавливаем обновление директорий сборки.
-                    AddonsManager.GetManager(instanceModelBase.BaseData).StopWatchingDirectory();
+                    AddonsManager.GetManager(instanceModelBase.BaseData, Runtime.ServicesContainer).StopWatchingDirectory();
                 }
                 toMainMenuLayoutCommand.Execute(obj);
             });

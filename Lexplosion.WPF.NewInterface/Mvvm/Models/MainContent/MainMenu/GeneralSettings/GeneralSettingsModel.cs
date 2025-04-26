@@ -28,6 +28,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
 		private readonly AppCore _appCore;
 		private readonly ComputerInfo ci = new ComputerInfo();
 		private readonly ClientsManager _clientsManager = Runtime.ClientsManager;
+		private readonly DataFilesManager _dataFilesManager = Runtime.ServicesContainer.DataFilesService;
+		private readonly WithDirectory _withDirectory = Runtime.ServicesContainer.DirectoryService;
 
 		public IEnumerable<string> Resolutions { get; }
 
@@ -72,9 +74,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
 
 				if (isCorrectPath)
 				{
-					GlobalData.GeneralSettings.GamePath = WithDirectory.CreateAcceptableGamePath(value, out var _);
+					GlobalData.GeneralSettings.GamePath = _dataFilesManager.CreateAcceptableGamePath(value);
 					OnPropertyChanged();
-					DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+					_dataFilesManager.SaveSettings(GlobalData.GeneralSettings);
 
 					bool copyEntireOldDirectory = false;
 
@@ -120,7 +122,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
 			{
 				GlobalData.GeneralSettings.WindowHeight = value;
 				OnPropertyChanged();
-				DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+				_dataFilesManager.SaveSettings(GlobalData.GeneralSettings);
 			}
 		}
 
@@ -130,7 +132,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
 			{
 				GlobalData.GeneralSettings.WindowWidth = value;
 				OnPropertyChanged();
-				DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+				_dataFilesManager.SaveSettings(GlobalData.GeneralSettings);
 			}
 		}
 
@@ -140,7 +142,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
 			{
 				GlobalData.GeneralSettings.Xmx = value;
 				OnPropertyChanged();
-				DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+				_dataFilesManager.SaveSettings(GlobalData.GeneralSettings);
 			}
 		}
 
@@ -150,7 +152,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
 			{
 				GlobalData.GeneralSettings.Xms = value;
 				OnPropertyChanged();
-				DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+				_dataFilesManager.SaveSettings(GlobalData.GeneralSettings);
 			}
 		}
 
@@ -160,7 +162,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
 			{
 				GlobalData.GeneralSettings.IsShowConsole = value;
 				OnPropertyChanged();
-				DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+				_dataFilesManager.SaveSettings(GlobalData.GeneralSettings);
 
 				ConsoleParameterChanged?.Invoke(value == true);
 			}
@@ -172,7 +174,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
 			{
 				GlobalData.GeneralSettings.IsHiddenMode = value;
 				OnPropertyChanged();
-				DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+				_dataFilesManager.SaveSettings(GlobalData.GeneralSettings);
 			}
 		}
 
@@ -182,7 +184,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
 			{
 				GlobalData.GeneralSettings.IsAutoUpdate = value;
 				OnPropertyChanged();
-				DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+				_dataFilesManager.SaveSettings(GlobalData.GeneralSettings);
 			}
 		}
 
@@ -191,7 +193,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
 			get => GlobalData.GeneralSettings.IsNightWorldSkinSystem; set
 			{
 				GlobalData.GeneralSettings.IsNightWorldSkinSystem = value;
-				DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+				_dataFilesManager.SaveSettings(GlobalData.GeneralSettings);
 				OnPropertyChanged();
 			}
 		}
@@ -201,7 +203,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
 			get => GlobalData.GeneralSettings.NwClientByDefault; set
 			{
 				GlobalData.GeneralSettings.NwClientByDefault = value;
-				DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+				_dataFilesManager.SaveSettings(GlobalData.GeneralSettings);
 				OnPropertyChanged();
 			}
 		}
@@ -224,7 +226,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
 				}
 
 				Notify?.Invoke(javaPathResult);
-				DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+				_dataFilesManager.SaveSettings(GlobalData.GeneralSettings);
 				OnPropertyChanged();
 			}
 		}
@@ -248,7 +250,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
 				}
 
 				Notify?.Invoke(javaPathResult);
-				DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+				_dataFilesManager.SaveSettings(GlobalData.GeneralSettings);
 				OnPropertyChanged();
 			}
 		}
@@ -259,7 +261,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
 			{
 				GlobalData.GeneralSettings.GameArgs = value;
 				OnPropertyChanged();
-				DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+				_dataFilesManager.SaveSettings(GlobalData.GeneralSettings);
 			}
 		}
 
@@ -269,7 +271,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
 			{
 				GlobalData.GeneralSettings.JVMArgs = value;
 				OnPropertyChanged();
-				DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+				_dataFilesManager.SaveSettings(GlobalData.GeneralSettings);
 			}
 		}
 
@@ -368,7 +370,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
 
 			Runtime.TaskRun(() =>
 			{
-				WithDirectory.SetNewDirectory(SystemPath);
+				_withDirectory.SetNewDirectory(SystemPath);
 				_appCore.MessageService.Success("SuccessDirectoryTransfer", true);
 				_appCore.SetGlobalLoadingStatus(false);
 				_appCore.NotificationService.Notify(new SimpleNotification(

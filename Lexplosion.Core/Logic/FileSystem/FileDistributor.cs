@@ -9,6 +9,7 @@ using Lexplosion.Logic.Network;
 using Lexplosion.Global;
 using Lexplosion.Logic.Management;
 using System.Collections.Concurrent;
+using Lexplosion.Logic.FileSystem.Services;
 
 namespace Lexplosion.Logic.FileSystem
 {
@@ -28,21 +29,27 @@ namespace Lexplosion.Logic.FileSystem
 		private ConcurrentDictionary<string, Player> _connectedUsers = new();
 		private string _fileId;
 
+		private ToServer _toServer;
+		private WithDirectory _withDirectory;
+
 		public event Action OnClosed;
 
 		public event Action<Player> UserConnected;
 		public event Action<Player> UserDisconnected;
 
-		public static string SharesDir
+		public string SharesDir
 		{
 			get
 			{
-				return WithDirectory.DirectoryPath + "/shares/files/";
+				return _withDirectory.DirectoryPath + "/shares/files/";
 			}
 		}
 
-		private FileDistributor(string fileId, string UUID, string sessionToken)
+		private FileDistributor(string fileId, string UUID, string sessionToken, INightWorldFileServicesContainer services)
 		{
+			_toServer = services.WebService;
+			_withDirectory = services.DirectoryService;
+
 			_fileId = fileId;
 			_waitingInforming = new AutoResetEvent(false);
 
@@ -61,20 +68,20 @@ namespace Lexplosion.Logic.FileSystem
 					_waitingInforming.WaitOne(120000);
 					do
 					{
-						ToServer.HttpPost(LaunсherSettings.URL.UserApi + "setFileDistribution", input);
+						_toServer.HttpPost(LaunсherSettings.URL.UserApi + "setFileDistribution", input);
 					}
 					while (!_waitingInforming.WaitOne(120000));
 				}
 				finally
 				{
-					ToServer.HttpPost(LaunсherSettings.URL.UserApi + "dropFileDistribution", input);
+					_toServer.HttpPost(LaunсherSettings.URL.UserApi + "dropFileDistribution", input);
 				}
 			});
 
 			_informingThread.Start();
 		}
 
-		public static FileDistributor CreateDistribution(string filePath, string name, string userUUID, string userSessionToken)
+		public static FileDistributor CreateDistribution(string filePath, string name, string userUUID, string userSessionToken, INightWorldFileServicesContainer services)
 		{
 			if (!_isWork) return null;
 
@@ -100,7 +107,8 @@ namespace Lexplosion.Logic.FileSystem
 							() =>
 							{
 								_dataServer.UnkickClient(uuid);
-							}
+							},
+							services.NwApi
 						);
 
 						_distributors.TryGetValue(fileId, out FileDistributor distributor);
@@ -132,7 +140,7 @@ namespace Lexplosion.Logic.FileSystem
 					return null;
 				}
 
-				string answer = ToServer.HttpPost(LaunсherSettings.URL.UserApi + "setFileDistribution", new Dictionary<string, string>
+				string answer = services.WebService.HttpPost(LaunсherSettings.URL.UserApi + "setFileDistribution", new Dictionary<string, string>
 				{
 					["UUID"] = userUUID,
 					["sessionToken"] = userSessionToken,
@@ -149,7 +157,7 @@ namespace Lexplosion.Logic.FileSystem
 
 				_distributionsCount++;
 
-				var dstr = new FileDistributor(hash, userUUID, userSessionToken);
+				var dstr = new FileDistributor(hash, userUUID, userSessionToken, services);
 				_distributors[dstr._fileId] = dstr;
 
 				return dstr;

@@ -7,18 +7,23 @@ using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Objects.Modrinth;
 using Lexplosion.Logic.Network.Web;
-using static Lexplosion.Logic.FileSystem.WithDirectory;
-using static Lexplosion.Logic.FileSystem.DataFilesManager;
+using Lexplosion.Logic.FileSystem.Services;
+using Lexplosion.Logic.FileSystem.Extensions;
 
-namespace Lexplosion.Logic.FileSystem
+namespace Lexplosion.Logic.FileSystem.Installers
 {
 	class ModrinthInstaller : StandartInstanceInstaller<InstanceManifest>
 	{
-		public ModrinthInstaller(string instanceId) : base(instanceId) { }
+		private ModrinthApi _modrinthApi;
+
+		public ModrinthInstaller(string instanceId, IModrinthFileServicesContainer servicesContainer) : base(instanceId, servicesContainer) 
+		{
+			_modrinthApi = servicesContainer.MdApi;
+		}
 
 		protected override InstanceManifest LoadManifest(string unzupArchivePath)
 		{
-			return GetFile<InstanceManifest>(unzupArchivePath + "modrinth.index.json");
+			return dataFilesManager.GetFile<InstanceManifest>(unzupArchivePath + "modrinth.index.json");
 		}
 
 		protected override void ArchiveHadnle(string unzupArchivePath, out List<string> files)
@@ -28,7 +33,7 @@ namespace Lexplosion.Logic.FileSystem
 			// тут переосим нужные файлы из этого архива
 
 			string sourcePath = unzupArchivePath + "overrides/";
-			string destinationPath = WithDirectory.GetInstancePath(instanceId);
+			string destinationPath = withDirectory.GetInstancePath(instanceId);
 
 			if (!Directory.Exists(destinationPath))
 			{
@@ -95,7 +100,7 @@ namespace Lexplosion.Logic.FileSystem
 				var unknownProjects = new List<InstanceManifest.FileData>(); // тут харним неизтные аддоны, которые потом установим по прямой ссылке
 				{
 					// получем спсиок с проектами по списоку хэшэй
-					Dictionary<string, ModrinthProjectFile> projectFiles = ModrinthApi.GetFilesFromHashes(filesHashes);
+					Dictionary<string, ModrinthProjectFile> projectFiles = _modrinthApi.GetFilesFromHashes(filesHashes);
 
 					foreach (InstanceManifest.FileData file in data.files)
 					{
@@ -203,7 +208,7 @@ namespace Lexplosion.Logic.FileSystem
 						else
 						{
 							InstalledAddonInfo addonInfo = installedAddons[projectId];
-							if (addonInfo.FileID != addonData.Value1.FileId || !addonInfo.IsExists(InstancesPath + instanceId + "/"))
+							if (addonInfo.FileID != addonData.Value1.FileId || !addonInfo.IsExists(withDirectory.GetInstancePath(instanceId)))
 							{
 								// версия не сходится или нет файла. Тоже кидаем на обновление
 								downloadList.Add(addonData);
@@ -221,8 +226,8 @@ namespace Lexplosion.Logic.FileSystem
 						{
 							if (installedAddons[addonId].ActualPath != null)
 							{
-								Runtime.DebugWrite("Delete file: " + InstancesPath + instanceId + "/" + installedAddons[addonId].ActualPath);
-								DelFile(InstancesPath + instanceId + "/" + installedAddons[addonId].ActualPath);
+								Runtime.DebugWrite("Delete file: " + withDirectory.GetInstancePath(instanceId) + installedAddons[addonId].ActualPath);
+								withDirectory.DelFile(withDirectory.GetInstancePath(instanceId) + installedAddons[addonId].ActualPath);
 							}
 						}
 						else
@@ -271,7 +276,7 @@ namespace Lexplosion.Logic.FileSystem
 							};
 
 							ModrinthProjectFile projectFile = addonData.Value1;
-							var result = ModrinthApi.DownloadAddon(projectFile, addonData.Value2.Type, "/instances/" + instanceId + "/", addonData.Value2.FileName, taskArgs);
+							var result = _modrinthApi.DownloadAddon(projectFile, addonData.Value2.Type, "/instances/" + instanceId + "/", addonData.Value2.FileName, withDirectory, taskArgs);
 
 							_fileDownloadHandler?.Invoke(addonData.Value2.FileName, 100, DownloadFileProgress.Successful);
 
@@ -319,13 +324,13 @@ namespace Lexplosion.Logic.FileSystem
 							int count = 0;
 
 							ModrinthProjectFile projectFile = addonData.Value1;
-							SetValues<InstalledAddonInfo, DownloadAddonRes> result = ModrinthApi.DownloadAddon(projectFile, addonData.Value2.Type, "/instances/" + instanceId + "/", addonData.Value2.FileName, taskArgs);
+							SetValues<InstalledAddonInfo, DownloadAddonRes> result = _modrinthApi.DownloadAddon(projectFile, addonData.Value2.Type, "/instances/" + instanceId + "/", addonData.Value2.FileName, withDirectory, taskArgs);
 
 							while (count < 4 && result.Value2 != DownloadAddonRes.Successful && !cancelToken.IsCancellationRequested)
 							{
 								Thread.Sleep(1000);
 								Runtime.DebugWrite("REPEAT DOWNLOAD " + addonData.Value2.FileName);
-								result = ModrinthApi.DownloadAddon(projectFile, addonData.Value2.Type, "/instances/" + instanceId + "/", addonData.Value2.FileName, taskArgs);
+								result = _modrinthApi.DownloadAddon(projectFile, addonData.Value2.Type, "/instances/" + instanceId + "/", addonData.Value2.FileName, withDirectory, taskArgs);
 
 								count++;
 							}
@@ -368,7 +373,7 @@ namespace Lexplosion.Logic.FileSystem
 						CancelToken = cancelToken
 					};
 
-					if (WithDirectory.InstallFile(fileData.downloads[0], fileName, folderName, taskArgs))
+					if (withDirectory.InstallFile(fileData.downloads[0], fileName, folderName, taskArgs))
 					{
 						string filePath = "/" + fileData.Path;
 						if (!existsFiles.Contains(filePath))

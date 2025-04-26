@@ -7,18 +7,24 @@ using Lexplosion.Logic.Objects.Modrinth;
 using Lexplosion.Logic.Objects.Curseforge;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Tools;
+using Lexplosion.Logic.FileSystem.Services;
 
 namespace Lexplosion.Logic.Management.Addons
 {
 	static class AddonsPrototypesCreater
 	{
-		public static IPrototypeAddon CreateFromFile(BaseInstanceData indtanceData, string filePath)
+		public static IPrototypeAddon CreateFromFile(BaseInstanceData indtanceData, string filePath, IAllFileServicesContainer services, CategoriesManager categoriesManager)
 		{
 			Runtime.DebugWrite("CreateFromFile");
 			string md5;
 			string sha1;
 			long fileLenght;
 			string sha512;
+
+			var modrinthCategoriesGetter = (AddonType addonType, IEnumerable<string> ids) =>
+			{
+				return categoriesManager.FindAddonsCategoriesById(ProjectSource.Modrinth, addonType, ids);
+			};
 
 			try
 			{
@@ -32,7 +38,7 @@ namespace Lexplosion.Logic.Management.Addons
 					fileLenght = stream.Length;
 
 					// ищем файл на модринфе
-					List<ModrinthProjectFile> projectFiles = ModrinthApi.GetFilesFromHash(sha512);
+					List<ModrinthProjectFile> projectFiles = services.MdApi.GetFilesFromHash(sha512);
 					foreach (var projectFile in projectFiles)
 					{
 						if (projectFile?.Files != null && projectFile.Files.Count > 0)
@@ -43,7 +49,7 @@ namespace Lexplosion.Logic.Management.Addons
 								if (isHash && file.Hashes.Sha512 == sha512 && file.Hashes.Sha1 == sha1 && file.Size == fileLenght)
 								{
 									Runtime.DebugWrite("Return modrinth addon");
-									return new ModrinthAddon(indtanceData, projectFile);
+									return new ModrinthAddon(indtanceData, projectFile, services, modrinthCategoriesGetter);
 								}
 							}
 						}
@@ -65,7 +71,7 @@ namespace Lexplosion.Logic.Management.Addons
 				string fingerprint = StupidHash.Compute(fileBytes).ToString();
 				fileBytes = null;
 
-				List<CurseforgeFileInfo> projectFiles = CurseforgeApi.GetFilesFromFingerprints(new List<string> { fingerprint });
+				List<CurseforgeFileInfo> projectFiles = services.CfApi.GetFilesFromFingerprints(new List<string> { fingerprint });
 				foreach (var projectFile in projectFiles)
 				{
 					if (projectFile?.hashes != null)
@@ -88,7 +94,7 @@ namespace Lexplosion.Logic.Management.Addons
 						if (fileSha1 == sha1 && fileMd5 == md5 && fileLenght == projectFile.fileLength)
 						{
 							Runtime.DebugWrite("return curseforge addon");
-							return new CurseforgeAddon(indtanceData, projectFile);
+							return new CurseforgeAddon(indtanceData, projectFile, services);
 						}
 					}
 				}
@@ -97,13 +103,18 @@ namespace Lexplosion.Logic.Management.Addons
 			return null;
 		}
 
-		public static Dictionary<string, IPrototypeAddon> CreateFromFiles(BaseInstanceData indtanceData, List<string> files)
+		public static Dictionary<string, IPrototypeAddon> CreateFromFiles(BaseInstanceData indtanceData, List<string> files, IAllFileServicesContainer services, CategoriesManager categoriesManager)
 		{
 			var result = new Dictionary<string, IPrototypeAddon>();
 
 			var filesData = new Dictionary<string, SetValues<string, string, long, string>>(); // ключ - путь до файла, знаечния - sha512, sha1, размер файла, md5
 			var falesSha512 = new Dictionary<string, string>(); // ключ - sha512, значение - путь до файла
 			var hashesToModrinth = new List<string>(); // все sha512
+
+			var modrinthCategoriesGetter = (AddonType addonType, IEnumerable<string> ids) =>
+			{
+				return categoriesManager.FindAddonsCategoriesById(ProjectSource.Modrinth, addonType, ids);
+			};
 
 			Runtime.DebugWrite("Start calculate files hashes");
 
@@ -146,7 +157,7 @@ namespace Lexplosion.Logic.Management.Addons
 			Runtime.DebugWrite("End calculate files hashes");
 
 			Runtime.DebugWrite("Start search on Modrint");
-			Dictionary<string, ModrinthProjectFile> modrinthData = ModrinthApi.GetFilesFromHashes(hashesToModrinth);
+			Dictionary<string, ModrinthProjectFile> modrinthData = services.MdApi.GetFilesFromHashes(hashesToModrinth);
 			hashesToModrinth = null;
 
 			var hashesToCurseforge = new List<string>();
@@ -204,13 +215,13 @@ namespace Lexplosion.Logic.Management.Addons
 			falesSha512 = null;
 			GC.Collect();
 
-			List<ModrinthProjectInfo> mdProjects = ModrinthApi.GetProjects(knownProjectFiles.Keys.ToArray());
+			List<ModrinthProjectInfo> mdProjects = services.MdApi.GetProjects(knownProjectFiles.Keys.ToArray());
 			foreach (var mdProject in mdProjects)
 			{
 				if (knownProjectFiles.ContainsKey(mdProject.ProjectId))
 				{
 					SetValues<string, ModrinthProjectFile> dataSet = knownProjectFiles[mdProject.ProjectId];
-					result[dataSet.Value1] = new ModrinthAddon(indtanceData, mdProject, dataSet.Value2);
+					result[dataSet.Value1] = new ModrinthAddon(indtanceData, mdProject, dataSet.Value2, services, modrinthCategoriesGetter);
 				}
 			}
 
@@ -223,7 +234,7 @@ namespace Lexplosion.Logic.Management.Addons
 				// разрабы курсфорджа тупорылые недоумки, не умеющие составлять нормальные стрктуры данных,
 				// поэтому проходимся по всему полученному списку и формируем новый список cureseforgeData, где string - фингерпринт, а List<CurseforgeFileInfo> - список файлов с этим фингерпринтом
 				var cureseforgeData = new Dictionary<string, List<CurseforgeFileInfo>>();
-				foreach (var projectFile in CurseforgeApi.GetFilesFromFingerprints(hashesToCurseforge))
+				foreach (var projectFile in services.CfApi.GetFilesFromFingerprints(hashesToCurseforge))
 				{
 					if (projectFile?.hashes != null && !string.IsNullOrEmpty(projectFile.fileFingerprint))
 					{
@@ -266,7 +277,7 @@ namespace Lexplosion.Logic.Management.Addons
 
 							if (projectFileSha1 == sha1 && projectFileMd5 == md5 && fileLenght == projectFile.fileLength)
 							{
-								result[cfHaches[key]] = new CurseforgeAddon(indtanceData, projectFile);
+								result[cfHaches[key]] = new CurseforgeAddon(indtanceData, projectFile, services);
 								knownProjectFiles_[projectFile.modId] = new SetValues<string, CurseforgeFileInfo>
 								{
 									Value1 = cfHaches[key], // путь до файла
@@ -277,13 +288,13 @@ namespace Lexplosion.Logic.Management.Addons
 					}
 				}
 
-				List<CurseforgeAddonInfo> cfProjects = CurseforgeApi.GetAddonsInfo(knownProjectFiles_.Keys.ToArray());
+				List<CurseforgeAddonInfo> cfProjects = services.CfApi.GetAddonsInfo(knownProjectFiles_.Keys.ToArray());
 				foreach (var cfProject in cfProjects)
 				{
 					if (knownProjectFiles_.ContainsKey(cfProject.id))
 					{
 						SetValues<string, CurseforgeFileInfo> dataSet = knownProjectFiles_[cfProject.id];
-						result[dataSet.Value1] = new CurseforgeAddon(indtanceData, cfProject, dataSet.Value2);
+						result[dataSet.Value1] = new CurseforgeAddon(indtanceData, cfProject, dataSet.Value2, services);
 					}
 				}
 

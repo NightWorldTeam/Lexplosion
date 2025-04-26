@@ -1,4 +1,5 @@
-﻿using Lexplosion.Logic.Management.Installers;
+﻿using Lexplosion.Logic.FileSystem.Services;
+using Lexplosion.Logic.Management.Installers;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network.Services;
 using Lexplosion.Logic.Network.Web;
@@ -12,11 +13,18 @@ namespace Lexplosion.Logic.Management.Sources
 {
 	class ModrinthSource : IInstanceSource
 	{
-		public PrototypeInstance ContentManager { get => new ModrinthInstance(); }
+		private readonly IModrinthFileServicesContainer _services;
+
+		public ModrinthSource(IModrinthFileServicesContainer services)
+		{
+			_services = services;
+		}
+
+		public PrototypeInstance ContentManager { get => new ModrinthInstance(_services); }
 
 		public IInstallManager GetInstaller(string localId, bool updateOnlyBase, CancellationToken updateCancelToken)
 		{
-			return new ModrinthInstallManager(localId, updateOnlyBase, NetworkServicesManager.MinecraftInfo, updateCancelToken);
+			return new ModrinthInstallManager(localId, updateOnlyBase, _services, updateCancelToken);
 		}
 
 		private static List<ModrinthCategory> ParseCategories(List<string> data)
@@ -51,7 +59,7 @@ namespace Lexplosion.Logic.Management.Sources
 				sParams = new ModrinthSearchParams();
 			}
 
-			CatalogResult<ModrinthCtalogUnit> catalogResult = ModrinthApi.GetInstances(sParams.PageSize, sParams.PageIndex, sParams.Categories, sParams.SortFieldString, sParams.SearchFilter, sParams.GameVersion);
+			CatalogResult<ModrinthCtalogUnit> catalogResult = _services.MdApi.GetInstances(sParams.PageSize, sParams.PageIndex, sParams.Categories, sParams.SortFieldString, sParams.SearchFilter, sParams.GameVersion);
 			var result = new List<InstanceInfo>(sParams.PageSize);
 
 			foreach (var instance in catalogResult.Collection)

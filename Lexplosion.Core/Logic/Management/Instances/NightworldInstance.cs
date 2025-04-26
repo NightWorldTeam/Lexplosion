@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
+using Lexplosion.Logic.FileSystem.Services;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
 
@@ -10,21 +11,28 @@ namespace Lexplosion.Logic.Management.Instances
 {
 	class NightworldInstance : PrototypeInstance
 	{
+		private readonly INightWorldFileServicesContainer _services;
+
+		public NightworldInstance(INightWorldFileServicesContainer services)
+		{
+			_services = services;
+		}
+
 		public override bool CheckUpdates(string localId)
 		{
-			var infoData = DataFilesManager.GetPlatfromData(localId);
+			var infoData = _services.DataFilesService.GetPlatfromData(localId);
 			if (string.IsNullOrWhiteSpace(infoData?.id))
 			{
 				return false;
 			}
 
-			int version = NightWorldApi.GetInstanceVersion(infoData.id);
+			int version = _services.NwApi.GetInstanceVersion(infoData.id);
 			return (infoData.instanceVersion.ToInt32() < version);
 		}
 
 		public override InstanceData GetFullInfo(string localId, string externalId)
 		{
-			var data = NightWorldApi.GetInstanceInfo(externalId);
+			var data = _services.NwApi.GetInstanceInfo(externalId);
 			var images = new List<byte[]>();
 
 			if (data != null)
@@ -66,48 +74,48 @@ namespace Lexplosion.Logic.Management.Instances
 			}
 		}
 
-		public static List<Info> GetCatalog(int pageSize, int pageIndex)
-		{
-			Dictionary<string, NightWorldApi.InstanceInfo> nwInstances = NightWorldApi.GetInstancesList();
-			var result = new List<Info>();
-
-			var i = 0;
-			foreach (string nwModpack in nwInstances.Keys)
-			{
-				if (i < pageSize * (pageIndex + 1))
-				{
-					// проверяем версию игры
-					if (nwInstances[nwModpack].GameVersion != null)
-					{
-						result.Add(new Info()
-						{
-							Name = nwInstances[nwModpack].Name,
-							Author = nwInstances[nwModpack].Author,
-							Categories = nwInstances[nwModpack].Categories,
-							Summary = nwInstances[nwModpack].Summary,
-							Description = nwInstances[nwModpack].Description,
-							GameVersion = nwInstances[nwModpack].GameVersion,
-							WebsiteUrl = LaunсherSettings.URL.Base + "modpacks/" + nwModpack,
-							LogoUrl = nwInstances[nwModpack].LogoUrl,
-							ExternalId = nwModpack
-						});
-					}
-				}
-
-				i++;
-			}
-
-			return result;
-		}
-
 		public override List<InstanceVersion> GetVersions(string externalId)
 		{
 			return null;
 		}
 
-		public static Info GetInstance(string instanceId)
+		//public static List<Info> GetCatalog(int pageSize, int pageIndex)
+		//{
+		//	Dictionary<string, NightWorldApi.InstanceInfo> nwInstances = _services.NwApi.GetInstancesList();
+		//	var result = new List<Info>();
+
+		//	var i = 0;
+		//	foreach (string nwModpack in nwInstances.Keys)
+		//	{
+		//		if (i < pageSize * (pageIndex + 1))
+		//		{
+		//			// проверяем версию игры
+		//			if (nwInstances[nwModpack].GameVersion != null)
+		//			{
+		//				result.Add(new Info()
+		//				{
+		//					Name = nwInstances[nwModpack].Name,
+		//					Author = nwInstances[nwModpack].Author,
+		//					Categories = nwInstances[nwModpack].Categories,
+		//					Summary = nwInstances[nwModpack].Summary,
+		//					Description = nwInstances[nwModpack].Description,
+		//					GameVersion = nwInstances[nwModpack].GameVersion,
+		//					WebsiteUrl = LaunсherSettings.URL.Base + "modpacks/" + nwModpack,
+		//					LogoUrl = nwInstances[nwModpack].LogoUrl,
+		//					ExternalId = nwModpack
+		//				});
+		//			}
+		//		}
+
+		//		i++;
+		//	}
+
+		//	return result;
+		//}
+
+		public static Info GetInstance(string instanceId, NightWorldApi api)
 		{
-			Dictionary<string, NightWorldApi.InstanceInfo> nwInstances = NightWorldApi.GetInstancesList();
+			Dictionary<string, NightWorldApi.InstanceInfo> nwInstances = api.GetInstancesList();
 			var result = new List<Info>();
 
 			NightWorldApi.InstanceInfo info = null;

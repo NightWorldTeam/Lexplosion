@@ -7,23 +7,26 @@ using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.FreeSource;
 using Lexplosion.Tools;
+using Lexplosion.Logic.FileSystem.Services;
 
 namespace Lexplosion.Logic.Management.Instances
 {
 	class FreeInstance : PrototypeInstance
 	{
 		private Func<FreeSourcePlatformData, SourceMap> _urlGetter;
+		private readonly IFileServicesContainer _services;
 
-		public FreeInstance(Func<FreeSourcePlatformData, SourceMap> urlGetter)
+		public FreeInstance(Func<FreeSourcePlatformData, SourceMap> urlGetter, IFileServicesContainer services)
 		{
 			_urlGetter = urlGetter;
+			_services = services;
 		}
 
 		public override bool CheckUpdates(string localId)
 		{
 			try
 			{
-				var infoData = DataFilesManager.GetExtendedPlatfromData<FreeSourcePlatformData>(localId);
+				var infoData = _services.DataFilesService.GetExtendedPlatfromData<FreeSourcePlatformData>(localId);
 				if (infoData == null || !infoData.IsValid())
 				{
 					return false;
@@ -35,7 +38,7 @@ namespace Lexplosion.Logic.Management.Instances
 					return false;
 				}
 
-				string result = ToServer.HttpPost(url);
+				string result = _services.WebService.HttpPost(url);
 				if (result == null)
 				{
 					return false;
@@ -59,13 +62,13 @@ namespace Lexplosion.Logic.Management.Instances
 		{
 			if (localId == null) return null;
 
-			var content = DataFilesManager.GetExtendedPlatfromData<FreeSourcePlatformData>(localId);
+			var content = _services.DataFilesService.GetExtendedPlatfromData<FreeSourcePlatformData>(localId);
 			string url = _urlGetter(content)?.GetModpackManifestUrl(externalId);
 
 			ModpackManifest manifest = null;
 			try
 			{
-				string result = ToServer.HttpGet(url);
+				string result = _services.WebService.HttpGet(url);
 				manifest = JsonConvert.DeserializeObject<ModpackManifest>(result);
 			}
 			catch { }

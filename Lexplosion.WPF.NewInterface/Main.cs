@@ -481,7 +481,7 @@ namespace Lexplosion.WPF.NewInterface
                         //switch () тут код для стран cis
                         CurrentLangDict.Source = new Uri(LangPath + currentCultureName + ".xaml");
                         GlobalData.GeneralSettings.LanguageId = currentCultureName;
-                        DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+						Runtime.ServicesContainer.DataFilesService.SaveSettings(GlobalData.GeneralSettings);
                     }
                     else
                     {
@@ -492,7 +492,7 @@ namespace Lexplosion.WPF.NewInterface
                 {
                     CurrentLangDict.Source = new Uri(LangPath + "ru-RU.xaml");
                     GlobalData.GeneralSettings.LanguageId = "ru-RU";
-                    DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+					Runtime.ServicesContainer.DataFilesService.SaveSettings(GlobalData.GeneralSettings);
                 }
             }
             else

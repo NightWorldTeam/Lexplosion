@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Threading;
 using Lexplosion.Logic.FileSystem;
+using Lexplosion.Logic.FileSystem.Installers;
+using Lexplosion.Logic.FileSystem.Services;
 using Lexplosion.Logic.Objects.Modrinth;
 
 namespace Lexplosion.Logic.Management.Import.Importers
 {
 	class ModrinthImportManager : ArchiveImportManager<InstanceManifest>
 	{
-		public ModrinthImportManager(string fileAddres, Settings globalSettings, CancellationToken cancelToken) : base(fileAddres, new ModrinthInstaller(null), globalSettings, cancelToken)
+		public ModrinthImportManager(string fileAddres, Settings globalSettings, IModrinthFileServicesContainer services, CancellationToken cancelToken) : base(fileAddres, new ModrinthInstaller(null, services), services, globalSettings, cancelToken)
 		{
 		}
 

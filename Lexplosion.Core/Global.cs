@@ -8,10 +8,10 @@ namespace Lexplosion.Global
 	{
 		public static Settings GeneralSettings { get; private set; } // инициализируется в методе Main
 
-		public static void InitSetting()
+		public static void InitSetting(DataFilesManager dataFilesManager)
 		{
 			GeneralSettings = Settings.GetDefault();
-			var loadedSettings = DataFilesManager.GetSettings();
+			var loadedSettings = dataFilesManager.GetSettings();
 			GeneralSettings.Merge(loadedSettings);
 			Runtime.DebugWrite($"GamePath: {GlobalData.GeneralSettings?.GamePath}, theme: {GlobalData.GeneralSettings?.ThemeName}");
 		}

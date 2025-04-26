@@ -23,6 +23,7 @@ namespace Lexplosion.Logic.Network
 
 		private string UUID;
 		private string sessionToken;
+		private readonly ToServer _toServer;
 
 		public event Action<string> ConnectingUser;
 		public event Action<string> DisconnectedUser;
@@ -44,10 +45,11 @@ namespace Lexplosion.Logic.Network
 		/// <param name="sessionToken_">Его токен</param>
 		/// <param name="controlServer">Айпи сервера сетевой игры</param>
 		/// <param name="directConnection">Использовать ли прямо подключение в приоритете</param>
-		public OnlineGameGateway(string uuid, string sessionToken_, ControlServerData controlServer, bool directConnection)
+		public OnlineGameGateway(string uuid, string sessionToken_, ToServer toServer, ControlServerData controlServer, bool directConnection)
 		{
 			UUID = uuid;
 			sessionToken = sessionToken_;
+			_toServer = toServer;
 			_controlServer = controlServer;
 			_directConnection = directConnection;
 			Runtime.DebugWrite("Create Gateway");
@@ -196,7 +198,7 @@ namespace Lexplosion.Logic.Network
 						// раз в 2 минуты отправляем пакеты основному серверу информирующие о доступности нашего игровго сервера
 						do
 						{
-							string ans = ToServer.HttpPost(LaunсherSettings.URL.UserApi + "setGameServer", input);
+							string ans = _toServer.HttpPost(LaunсherSettings.URL.UserApi + "setGameServer", input);
 							Runtime.DebugWrite(ans);
 						}
 						while (!waitingInforming.WaitOne(120000));
@@ -205,7 +207,7 @@ namespace Lexplosion.Logic.Network
 					{
 						Task.Run(delegate ()
 						{
-							ToServer.HttpPost(LaunсherSettings.URL.UserApi + "dropGameServer", input);
+							_toServer.HttpPost(LaunсherSettings.URL.UserApi + "dropGameServer", input);
 						});
 					}
 				});
@@ -266,7 +268,7 @@ namespace Lexplosion.Logic.Network
 						["sessionToken"] = sessionToken
 					};
 
-					string data = ToServer.HttpPost(LaunсherSettings.URL.UserApi + "getGameServers", input);
+					string data = _toServer.HttpPost(LaunсherSettings.URL.UserApi + "getGameServers", input);
 					Dictionary<string, OnlineUserInfo> servers = null;
 					try
 					{

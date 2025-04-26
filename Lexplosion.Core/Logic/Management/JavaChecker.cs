@@ -9,6 +9,7 @@ using Lexplosion.Logic.Objects;
 using Lexplosion.Tools;
 using Lexplosion.Global;
 using Lexplosion.Logic.Network.Services;
+using Lexplosion.Logic.FileSystem.Services;
 
 namespace Lexplosion.Logic.Management
 {
@@ -29,6 +30,10 @@ namespace Lexplosion.Logic.Management
 		private string _javaName;
 		private JavaVersion _thisJava = null;
 		private JavaVersionsFile _versionsFile;
+		private readonly ToServer _toServer;
+		private readonly MinecraftInfoService _minecraftInfoService;
+		private readonly DataFilesManager _dataFilesManager;
+		private readonly WithDirectory _withDirectory;
 		private CancellationToken _cancelToken;
 		private Dictionary<string, JavaFiles.Unit> _updateList = new();
 
@@ -36,9 +41,13 @@ namespace Lexplosion.Logic.Management
 		private const string FILES_DIR = "/java/versions/";
 		private const string VERSIONS_MANIFEST_DIR = "/java/versionsManifests/";
 
-		public JavaChecker(string javaName, CancellationToken cancelToken, bool isReleased = false)
+		public JavaChecker(string javaName, IFileServicesContainer services, CancellationToken cancelToken, bool isReleased = false)
 		{
 			_javaName = !string.IsNullOrWhiteSpace(javaName) ? javaName : "jre-legacy";
+			_toServer = services.WebService;
+			_minecraftInfoService = services.MinecraftService;
+			_dataFilesManager = services.DataFilesService;
+			_withDirectory = services.DirectoryService;
 			_cancelToken = cancelToken;
 			_semIsReleased = isReleased;
 		}
@@ -50,7 +59,7 @@ namespace Lexplosion.Logic.Management
 				// получаем файл с версиями джавы
 				lock (_versionsManifestLock)
 				{
-					_versionsFile = DataFilesManager.GetFile<JavaVersionsFile>(WithDirectory.DirectoryPath + MANIFEST_FILE);
+					_versionsFile = _dataFilesManager.GetFile<JavaVersionsFile>(_withDirectory.DirectoryPath + MANIFEST_FILE);
 				}
 
 				if (_versionsFile == null)
@@ -106,7 +115,7 @@ namespace Lexplosion.Logic.Management
 			}
 			else //не нашли, получаем данные с сервера
 			{
-				JavaVersionManifest versions = NetworkServicesManager.MinecraftInfo.GetJavaVersions();
+				JavaVersionManifest versions = _minecraftInfoService.GetJavaVersions();
 
 				if (versions == null)
 				{
@@ -134,7 +143,7 @@ namespace Lexplosion.Logic.Management
 
 				lock (_versionsManifestLock)
 				{
-					DataFilesManager.SaveFile(WithDirectory.DirectoryPath + MANIFEST_FILE, JsonConvert.SerializeObject(_versionsFile));
+					_dataFilesManager.SaveFile(_withDirectory.DirectoryPath + MANIFEST_FILE, JsonConvert.SerializeObject(_versionsFile));
 				}
 			}
 
@@ -148,12 +157,12 @@ namespace Lexplosion.Logic.Management
 
 			_downloadSemaphore.WaitOne(_thisJava.JavaName);
 
-			var fileDir = WithDirectory.DirectoryPath + VERSIONS_MANIFEST_DIR + _thisJava.JavaName + ".json";
-			var javaFiles = DataFilesManager.GetFile<JavaFiles>(fileDir);
+			var fileDir = _withDirectory.DirectoryPath + VERSIONS_MANIFEST_DIR + _thisJava.JavaName + ".json";
+			var javaFiles = _dataFilesManager.GetFile<JavaFiles>(fileDir);
 
 			if (javaFiles?.Files == null || javaFiles.Files.Count < 1)
 			{
-				string manifestString = ToServer.HttpGet(_thisJava.ManifestUrl);
+				string manifestString = _toServer.HttpGet(_thisJava.ManifestUrl);
 				try
 				{
 					javaFiles = JsonConvert.DeserializeObject<JavaFiles>(manifestString);
@@ -166,10 +175,10 @@ namespace Lexplosion.Logic.Management
 					return false;
 				}
 
-				DataFilesManager.SaveFile(fileDir, manifestString);
+				_dataFilesManager.SaveFile(fileDir, manifestString);
 			}
 
-			string javaBaseDir = WithDirectory.DirectoryPath + FILES_DIR + _thisJava.JavaName + "/";
+			string javaBaseDir = _withDirectory.DirectoryPath + FILES_DIR + _thisJava.JavaName + "/";
 			foreach (var fileName in javaFiles.Files.Keys)
 			{
 				var unit = javaFiles.Files[fileName];
@@ -214,13 +223,13 @@ namespace Lexplosion.Logic.Management
 						CancelToken = _cancelToken
 					};
 
-					if (!WithDirectory.InstallFile(_updateList[unitName].Downloads.Raw.DownloadUrl, fileName, javaPath + path, taskArgs))
+					if (!_withDirectory.InstallFile(_updateList[unitName].Downloads.Raw.DownloadUrl, fileName, javaPath + path, taskArgs))
 					{
 						string url = _updateList[unitName].Downloads.Raw.DownloadUrl.Replace("https://", "");
 						url = LaunсherSettings.URL.MirrorUrl + url;
 						Runtime.DebugWrite("Download error, try mirror. Url " + url);
 
-						if (!WithDirectory.InstallFile(url, fileName, javaPath + path, taskArgs))
+						if (!_withDirectory.InstallFile(url, fileName, javaPath + path, taskArgs))
 						{
 							_semIsReleased = true;
 							_downloadSemaphore.Release(_thisJava.JavaName);

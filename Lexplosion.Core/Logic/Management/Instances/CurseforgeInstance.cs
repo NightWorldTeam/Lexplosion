@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using Lexplosion.Logic.FileSystem;
+using Lexplosion.Logic.FileSystem.Services;
 using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.Curseforge;
@@ -12,15 +13,22 @@ namespace Lexplosion.Logic.Management.Instances
 {
 	class CurseforgeInstance : PrototypeInstance
 	{
+		private readonly ICurseforgeFileServicesContainer _services;
+
+		public CurseforgeInstance(ICurseforgeFileServicesContainer services)
+		{
+			_services = services;
+		}
+
 		public override bool CheckUpdates(string localId)
 		{
-			var infoData = DataFilesManager.GetPlatfromData(localId);
+			var infoData = _services.DataFilesService.GetPlatfromData(localId);
 			if (string.IsNullOrWhiteSpace(infoData?.id))
 			{
 				return false;
 			}
 
-			var content = DataFilesManager.GetInstanceContent(localId);
+			var content = _services.DataFilesService.GetInstanceContent(localId);
 			if (content != null && !content.FullClient)
 			{
 				return true;
@@ -31,7 +39,7 @@ namespace Lexplosion.Logic.Management.Instances
 				return true;
 			}
 
-			List<CurseforgeFileInfo> instanceVersionsInfo = CurseforgeApi.GetProjectFiles(infoData.id); //получем информацию об этом модпаке
+			List<CurseforgeFileInfo> instanceVersionsInfo = _services.CfApi.GetProjectFiles(infoData.id); //получем информацию об этом модпаке
 
 			//проходимся по каждой версии модпака, ищем самый большой id. Это будет последняя версия. Причем этот id должен быть больше, чем id уже установленной версии 
 			foreach (CurseforgeFileInfo ver in instanceVersionsInfo)
@@ -47,7 +55,7 @@ namespace Lexplosion.Logic.Management.Instances
 
 		public override InstanceData GetFullInfo(string localId, string externalId)
 		{
-			var data = CurseforgeApi.GetInstance(externalId);
+			var data = _services.CfApi.GetInstance(externalId);
 
 			if (data == null)
 			{
@@ -105,13 +113,13 @@ namespace Lexplosion.Logic.Management.Instances
 				Modloader = data.ModloaderType,
 				Images = images,
 				WebsiteUrl = data.links?.websiteUrl,
-				Changelog = (projectFileId != null) ? (CurseforgeApi.GetProjectChangelog(externalId, projectFileId?.ToString()) ?? "") : ""
+				Changelog = (projectFileId != null) ? (_services.CfApi.GetProjectChangelog(externalId, projectFileId?.ToString()) ?? "") : ""
 			};
 		}
 
 		public override List<InstanceVersion> GetVersions(string externalId)
 		{
-			List<CurseforgeFileInfo> files = CurseforgeApi.GetProjectFiles(externalId);
+			List<CurseforgeFileInfo> files = _services.CfApi.GetProjectFiles(externalId);
 
 			HashSet<string> clientTypes = new(Enum.GetNames(typeof(ClientType)).Select(x => x.ToLower()));
 

@@ -25,6 +25,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
             }
         }
 
+		private NightWorldApi _api = Runtime.ServicesContainer.NwApi;
 
         #region Constructors
 
@@ -55,7 +56,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
             }
 
             HasFriendRequestSent = true;
-            NightWorldApi.AddFriend(Account.ActiveAccount.UUID, Account.ActiveAccount.SessionToken, Login);
+			_api.AddFriend(Account.ActiveAccount.UUID, Account.ActiveAccount.SessionToken, Login);
         }
 
         /// <summary>
@@ -70,7 +71,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
             }
 
             HasFriendRequestSent = false;
-            NightWorldApi.RemoveFriend(Account.ActiveAccount.UUID, Account.ActiveAccount.SessionToken, Login);
+			_api.RemoveFriend(Account.ActiveAccount.UUID, Account.ActiveAccount.SessionToken, Login);
         }
     }
 
@@ -90,17 +91,18 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
         }
 
 
-        #endregion Constructors
+		#endregion Constructors
 
+		private NightWorldApi _api = Runtime.ServicesContainer.NwApi;
 
-        public void AddFriend() 
+		public void AddFriend() 
         {
-            NightWorldApi.AddFriend(Account.ActiveAccount.UUID, Account.ActiveAccount.SessionToken, Login);
+			_api.AddFriend(Account.ActiveAccount.UUID, Account.ActiveAccount.SessionToken, Login);
         }
 
         public void DeclineFriend() 
         {
-            NightWorldApi.RemoveFriend(Account.ActiveAccount.UUID, Account.ActiveAccount.SessionToken, Login);
+			_api.RemoveFriend(Account.ActiveAccount.UUID, Account.ActiveAccount.SessionToken, Login);
         }
     }
 

@@ -4,32 +4,27 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Security.Cryptography;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Net.Http.Headers;
+using System.Threading;
+using System.Linq;
 using Newtonsoft.Json;
 using Lexplosion.Global;
 
 namespace Lexplosion.Logic.Network
 {
-	public static class ToServer
+	public class ToServer
 	{
-		/// <summary>
-		/// Возврщает версию лаунчера на сервере. -1 если произошла ошибка
-		/// </summary>
-		public static int CheckLauncherUpdates()
+		private HttpClient _httpClient;
+
+		public ToServer()
 		{
-			var result = HttpPost(LaunсherSettings.URL.LauncherParts + "launcherVersion.html", timeout: 10000);
-			if (result == null) return -1;
-
-			if (Int32.TryParse(result, out int res)) return res;
-
-			return -1;
+			_httpClient = new HttpClient();
+			_httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0");
 		}
 
-		public static bool ServerIsOnline()
-		{
-			return HttpPost(LaunсherSettings.URL.Base + "api/onlineStatus") == "online";
-		}
-
-		public static T ProtectedRequest<T>(string url) where T : ProtectedManifest
+		public T ProtectedRequest<T>(string url) where T : ProtectedManifest
 		{
 			Random rnd = new Random();
 
@@ -95,7 +90,7 @@ namespace Lexplosion.Logic.Network
 		/// <param name="data">Данные</param>
 		/// <param name="errorResult">Если сервер вернул ошибку, то ее код будет помещен сюда. В случае успеха будет null </param>
 		/// <returns>Вернет базовое значение при ошибке, поместив код ошибки в errorResult (если он есть).</returns>
-		public static T ProtectedUserRequest<T>(string url, string data, out string errorResult) where T : ProtectedManifest
+		public T ProtectedUserRequest<T>(string url, string data, out string errorResult) where T : ProtectedManifest
 		{
 			Random rnd = new Random();
 
@@ -168,54 +163,41 @@ namespace Lexplosion.Logic.Network
 			}
 		}
 
-		public static string HttpPost(string url, Dictionary<string, string> data = null, int timeout = 0)
+		public string HttpPost(string url, IDictionary<string, string> data = null, IDictionary<string, string> headers = null)
+		{
+			return HttpPostAsync(url, data, headers).Result;
+		}
+
+		public async Task<string> HttpPostAsync(string url, IDictionary<string, string> data = null, IDictionary<string, string> headers = null)
 		{
 			try
 			{
-				WebRequest request = WebRequest.Create(url);
-				request.Method = "POST";
-				if (timeout > 0) request.Timeout = timeout;
-				string dataS = "";
+				var content = data != null
+						? new FormUrlEncodedContent(data)
+						: new FormUrlEncodedContent(Enumerable.Empty<KeyValuePair<string, string>>());
 
-				if (data != null)
+				var request = new HttpRequestMessage(HttpMethod.Post, url)
 				{
-					foreach (var value in data)
-					{
-						dataS += WebUtility.UrlEncode(value.Key) + "=" + WebUtility.UrlEncode(value.Value) + "&";
-					}
-				}
+					Content = content
+				};
 
-				byte[] byteArray = Encoding.UTF8.GetBytes(dataS);
-				request.ContentType = "application/x-www-form-urlencoded";
-				request.ContentLength = byteArray.Length;
+				request.Content.Headers.ContentType =
+					new System.Net.Http.Headers.MediaTypeHeaderValue("application/x-www-form-urlencoded");
 
-				using (Stream dataStream = request.GetRequestStream())
-				{
-					dataStream.Write(byteArray, 0, byteArray.Length);
-				}
+				AddHeaders(request, headers);
 
-				string line;
-				using (WebResponse response = request.GetResponse())
-				{
-					using (Stream stream = response.GetResponseStream())
-					{
-						using (StreamReader reader = new StreamReader(stream))
-						{
-							line = reader.ReadToEnd();
-						}
-					}
-					response.Close();
-				}
+				var response = await _httpClient.SendAsync(request);
 
-				return line;
+				return await response.Content.ReadAsStringAsync();
 			}
-			catch
+			catch (Exception ex)
 			{
+				Runtime.DebugWrite($"url: {url}, Exception: {ex}, stack trace: {new System.Diagnostics.StackTrace()}");
 				return null;
 			}
 		}
 
-		public static string HttpGet(string url, Dictionary<string, string> headers = null)
+		public string HttpGet(string url, Dictionary<string, string> headers = null, int timeout = 0)
 		{
 			try
 			{
@@ -223,6 +205,8 @@ namespace Lexplosion.Logic.Network
 
 				WebRequest req = WebRequest.Create(url);
 				((HttpWebRequest)req).UserAgent = "Mozilla/5.0";
+				if (timeout > 0) req.Timeout = timeout;
+
 				if (headers != null)
 				{
 					foreach (var header in headers)
@@ -251,7 +235,38 @@ namespace Lexplosion.Logic.Network
 			}
 		}
 
-		public static bool IsHtmlPage(string url)
+		public async Task<string> HttpGetAsync(string url, IDictionary<string, string> headers = null, int timeout = 0)
+		{
+			try
+			{
+				var request = new HttpRequestMessage(HttpMethod.Get, url);
+
+				AddHeaders(request, headers);
+				HttpResponseMessage response;
+
+				if (timeout > 0)
+				{
+					var cts = new CancellationTokenSource();
+					cts.CancelAfter(TimeSpan.FromMilliseconds(timeout));
+					response = await _httpClient.SendAsync(request, cts.Token);
+				}
+				else
+				{
+					response = await _httpClient.SendAsync(request);
+				}
+
+				if (!response.IsSuccessStatusCode) return null;
+
+				return await response.Content.ReadAsStringAsync();
+			}
+			catch (Exception ex)
+			{
+				Runtime.DebugWrite($"url: {url}, Exception: {ex}, stack trace: {new System.Diagnostics.StackTrace()}");
+				return null;
+			}
+		}
+
+		public bool IsHtmlPage(string url)
 		{
 			var request = HttpWebRequest.Create(url);
 			request.Method = "HEAD";
@@ -259,61 +274,75 @@ namespace Lexplosion.Logic.Network
 			return (request.GetResponse().ContentType.StartsWith("text/html"));
 		}
 
-		public static string HttpPostJson(string url, string data, out HttpStatusCode? httpStatus, Dictionary<string, string> headers = null)
+		public string HttpPostJson(string url, string data, out HttpStatusCode? httpStatus, Dictionary<string, string> headers = null)
 		{
-			httpStatus = null;
+			var result = HttpPostJsonAsync(url, data, headers).ConfigureAwait(false).GetAwaiter().GetResult();
+
+			httpStatus = result.Item2;
+			return result.Item1;
+		}
+
+		public async Task<(string, HttpStatusCode?)> HttpPostJsonAsync(string url, string data, IDictionary<string, string> headers = null)
+		{
+			HttpStatusCode? httpStatus = null;
 
 			try
 			{
-				WebRequest req = WebRequest.Create(url);
-				req.Method = "POST";
-				req.ContentType = "application/json";
-
-				if (headers != null)
+				var request = new HttpRequestMessage(HttpMethod.Post, url)
 				{
-					foreach (var header in headers)
-					{
-						req.Headers.Add(header.Key, header.Value);
-					}
-				}
+					Content = new StringContent(data, Encoding.UTF8, "application/json")
+				};
 
-				byte[] byteArray = Encoding.UTF8.GetBytes(data);
+				// Добавляем заголовки
+				AddHeaders(request, headers);
 
-				req.ContentLength = byteArray.Length;
+				var response = await _httpClient.SendAsync(request);
+				httpStatus = response.StatusCode;
+				string result = await response.Content.ReadAsStringAsync();
 
-				using (Stream dataStream = req.GetRequestStream())
+				return (result, httpStatus);
+			}
+			catch (HttpRequestException ex)
+			{
+				if (ex.Data.Contains("StatusCode"))
 				{
-					dataStream.Write(byteArray, 0, byteArray.Length);
+					httpStatus = (HttpStatusCode)ex.Data["StatusCode"];
 				}
-
-				string answer;
-				using (WebResponse resp = req.GetResponse())
-				{
-					using (Stream stream = resp.GetResponseStream())
-					{
-						using (StreamReader sr = new StreamReader(stream))
-						{
-							answer = sr.ReadToEnd();
-						}
-					}
-				}
-
-				httpStatus = HttpStatusCode.OK;
-				return answer;
 			}
 			catch (WebException ex)
 			{
-				WebExceptionStatus status = ex.Status;
-
-				if (status == WebExceptionStatus.ProtocolError)
+				if (ex.Response is HttpWebResponse httpResponse)
 				{
-					HttpWebResponse httpResponse = (HttpWebResponse)ex.Response;
 					httpStatus = httpResponse.StatusCode;
 				}
 			}
-			catch { }
+			catch (Exception ex)
+			{
+				Runtime.DebugWrite($"url: {url}, Exception: {ex}, stack trace: {new System.Diagnostics.StackTrace()}");
+			}
 
-			return null;
+			return (null, httpStatus);
+		}
+
+		private void AddHeaders(HttpRequestMessage request, IDictionary<string, string> headers)
+		{
+			if (headers != null)
+			{
+				foreach (var header in headers)
+				{
+					if (header.Key.Equals("Content-Type", StringComparison.OrdinalIgnoreCase))
+					{
+						request.Content.Headers.ContentType = new MediaTypeHeaderValue(header.Value);
+					}
+					else
+					{
+						if (!request.Headers.TryAddWithoutValidation(header.Key, header.Value))
+						{
+							request.Content?.Headers.TryAddWithoutValidation(header.Key, header.Value);
+						}
+					}
+				}
+			}
 		}
 	}
 }

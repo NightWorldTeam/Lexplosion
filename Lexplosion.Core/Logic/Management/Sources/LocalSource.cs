@@ -1,4 +1,5 @@
-﻿using Lexplosion.Logic.Management.Installers;
+﻿using Lexplosion.Logic.FileSystem.Services;
+using Lexplosion.Logic.Management.Installers;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network.Services;
 using Lexplosion.Logic.Objects;
@@ -9,11 +10,18 @@ namespace Lexplosion.Logic.Management.Sources
 {
 	internal class LocalSource : IInstanceSource
 	{
-		public PrototypeInstance ContentManager { get => new LocalInstance(); }
+		private readonly IFileServicesContainer _services;
+
+		public LocalSource(IFileServicesContainer services)
+		{
+			_services = services;
+		}
+
+		public PrototypeInstance ContentManager { get => new LocalInstance(_services); }
 
 		public IInstallManager GetInstaller(string localId, bool updateOnlyBase, CancellationToken updateCancelToken)
 		{
-			return new LocalInstallManager(localId, NetworkServicesManager.MinecraftInfo, updateCancelToken);
+			return new LocalInstallManager(localId, _services, updateCancelToken);
 		}
 
 		public CatalogResult<InstanceInfo> GetCatalog(InstanceSource type, ISearchParams searchParams)

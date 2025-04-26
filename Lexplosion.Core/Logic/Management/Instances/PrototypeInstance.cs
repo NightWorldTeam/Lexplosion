@@ -1,4 +1,5 @@
-﻿using Lexplosion.Logic.Objects;
+﻿using Lexplosion.Logic.Management.Accounts;
+using Lexplosion.Logic.Objects;
 using System.Collections.Generic;
 
 namespace Lexplosion.Logic.Management.Instances
@@ -24,12 +25,12 @@ namespace Lexplosion.Logic.Management.Instances
 
 		public abstract List<InstanceVersion> GetVersions(string externalId);
 
-		public static Info GetInstance(InstanceSource type, string instanceId)
+		public static Info GetInstance(InstanceSource type, AllServicesContainer servicesContainer, string instanceId)
 		{
 			switch (type)
 			{
 				case InstanceSource.Nightworld:
-					return NightworldInstance.GetInstance(instanceId);
+					return NightworldInstance.GetInstance(instanceId, servicesContainer.NwApi);
 				default:
 					return null;
 			}

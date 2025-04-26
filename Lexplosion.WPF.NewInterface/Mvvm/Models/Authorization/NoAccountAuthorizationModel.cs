@@ -29,7 +29,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization
 
         public void LogIn() 
         {
-            var account = new Account(AccountType.NoAuth, Nickname);
+			var services = Runtime.ServicesContainer;
+            var account = new Account(AccountType.NoAuth, services, services.DataFilesService, Nickname);
             account.IsLaunch = true;
             account.Save();
         }

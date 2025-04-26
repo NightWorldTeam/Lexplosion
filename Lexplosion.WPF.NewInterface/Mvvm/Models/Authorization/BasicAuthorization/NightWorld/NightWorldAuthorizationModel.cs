@@ -68,7 +68,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization.BasicAuthorizati
                 return;
             }
 
-            var account = new Account(AccountType.NightWorld, Login);
+			var services = Runtime.ServicesContainer;
+
+			var account = new Account(AccountType.NightWorld, services, services.DataFilesService, Login);
 
             Runtime.TaskRun(() =>
             {

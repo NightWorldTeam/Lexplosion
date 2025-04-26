@@ -46,7 +46,7 @@ namespace Lexplosion.Logic.Management
 			UUID = uuid;
 		}
 
-		public Player(string uuid, Action kickMethod, Action unkickMethod)
+		public Player(string uuid, Action kickMethod, Action unkickMethod, NightWorldApi api)
 		{
 			UUID = uuid;
 			_kickMethod = kickMethod;
@@ -54,7 +54,7 @@ namespace Lexplosion.Logic.Management
 
 			ThreadPool.QueueUserWorkItem(delegate (object state)
 			{
-				PlayerData data = NightWorldApi.GetPlayerData(uuid);
+				PlayerData data = api.GetPlayerData(uuid);
 				if (data != null)
 				{
 					Nickname = data.Nickname;

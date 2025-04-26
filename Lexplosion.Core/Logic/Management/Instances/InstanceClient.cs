@@ -36,7 +36,7 @@ namespace Lexplosion.Logic.Management.Instances
 		private string _localId = null;
 		private readonly PrototypeInstance _dataManager;
 		private readonly IInstanceSource _instanceSource;
-
+		private readonly AllServicesContainer _services;
 		private CancellationTokenSource _cancelTokenSource = null;
 		private LaunchGame _gameManager = null;
 
@@ -269,7 +269,7 @@ namespace Lexplosion.Logic.Management.Instances
 
 		public bool IsInstalled { get; private set; } = false;
 
-		public string FolderPath { get => WithDirectory.GetInstancePath(_localId); }
+		public string FolderPath { get => _services.DirectoryService.GetInstancePath(_localId); }
 
 		internal ProgressHandlerCallback GetProgressHandler { get => ProgressHandler; }
 
@@ -286,10 +286,11 @@ namespace Lexplosion.Logic.Management.Instances
 		/// Базовый конструктор, от него должны наследоваться все остальные
 		/// </summary>
 		/// <param name="source">Источник модпака</param>
-		internal InstanceClient(IInstanceSource source)
+		internal InstanceClient(IInstanceSource source, AllServicesContainer services)
 		{
 			Type = source.SourceType;
 			_instanceSource = source;
+			_services = services;
 			_dataManager = source.ContentManager;
 
 			GameExited += delegate (string _)
@@ -303,7 +304,7 @@ namespace Lexplosion.Logic.Management.Instances
 		/// </summary>
 		/// <param name="source">Источник модпака</param>
 		/// <param name="externalID">Внешний ID</param>
-		internal InstanceClient(IInstanceSource source, string externalID) : this(source)
+		internal InstanceClient(IInstanceSource source, AllServicesContainer services, string externalID) : this(source, services)
 		{
 			_externalId = externalID;
 		}
@@ -314,7 +315,7 @@ namespace Lexplosion.Logic.Management.Instances
 		/// <param name="source">Источник модпака</param>
 		/// <param name="externalID">Внешний ID</param>
 		/// <param name="externalID">Локальный ID</param>
-		internal InstanceClient(IInstanceSource source, string externalID, string localId) : this(source, externalID)
+		internal InstanceClient(IInstanceSource source, AllServicesContainer services, string externalID, string localId) : this(source, services, externalID)
 		{
 			_localId = localId;
 		}
@@ -325,7 +326,7 @@ namespace Lexplosion.Logic.Management.Instances
 		/// <param name="name">Название сборки</param>
 		/// <param name="source">Источник модпака</param>
 		/// <param name="gameVersion">Версия игры</param>
-		internal InstanceClient(string name, IInstanceSource source, MinecraftVersion gameVersion, string externalId, string localId) : this(source, externalId, localId)
+		internal InstanceClient(string name, IInstanceSource source, AllServicesContainer services, MinecraftVersion gameVersion, string externalId, string localId) : this(source, services, externalId, localId)
 		{
 			Name = name;
 			GameVersion = gameVersion;
@@ -364,8 +365,8 @@ namespace Lexplosion.Logic.Management.Instances
 			{
 				ThreadPool.QueueUserWorkItem(delegate (object o)
 				{
-					var sodium = ModrinthApi.GetProject("AANobbMI");
-					var addon = AddonsManager.GetManager(GetBaseData).CreateModrinthAddon(sodium);
+					var sodium = _services.MdApi.GetProject("AANobbMI");
+					var addon = AddonsManager.GetManager(GetBaseData, _services).CreateModrinthAddon(sodium);
 					var stateData = new DynamicStateHandler<SetValues<InstanceAddon, DownloadAddonRes>, InstanceAddon.InstallAddonState>(delegate (SetValues<InstanceAddon, DownloadAddonRes> a, InstanceAddon.InstallAddonState b) { });
 					addon.InstallLatestVersion(stateData, downloadDependencies: true);
 				});
@@ -404,11 +405,11 @@ namespace Lexplosion.Logic.Management.Instances
 		internal void CompleteClient(string name, MinecraftVersion gameVersion, byte[] logo, string instanceVersion, bool isInstalled)
 		{
 			//получаем асетсы модпака
-			var assetsData = DataFilesManager.GetFile<InstanceAssetsFileDecodeFormat>(WithDirectory.DirectoryPath + "/instances-assets/" + _localId + "/assets.json");
+			var assetsData = _services.DataFilesService.GetFile<InstanceAssetsFileDecodeFormat>(_services.DirectoryService.DirectoryPath + "/instances-assets/" + _localId + "/assets.json");
 
 			if (assetsData != null)
 			{
-				string file = WithDirectory.DirectoryPath + "/instances-assets/" + _localId + "/" + LogoFileName;
+				string file = _services.DirectoryService.DirectoryPath + "/instances-assets/" + _localId + "/" + LogoFileName;
 
 				try
 				{
@@ -512,7 +513,7 @@ namespace Lexplosion.Logic.Management.Instances
 
 		internal void DeleteLocalStruct()
 		{
-			WithDirectory.DeleteInstance(_localId);
+			_services.DirectoryService.DeleteInstance(_localId);
 			UpdateAvailable = false;
 			CreatedLocally = false;
 			IsInstalled = false;
@@ -533,7 +534,7 @@ namespace Lexplosion.Logic.Management.Instances
 
 				if (_localId != null)
 				{
-					VersionManifest manifest = DataFilesManager.GetManifest(_localId, false);
+					VersionManifest manifest = _services.DataFilesService.GetManifest(_localId, false);
 					if (manifest?.version != null)
 					{
 						gameVersion = manifest.version.GameVersionInfo;
@@ -597,7 +598,7 @@ namespace Lexplosion.Logic.Management.Instances
 		/// <param name="logoPath">Путь до лого. Если логотип изменять не нужно, то null</param>
 		public void ChangeParameters(BaseInstanceData data, string logoPath)
 		{
-			VersionManifest manifest = DataFilesManager.GetManifest(_localId, false);
+			VersionManifest manifest = _services.DataFilesService.GetManifest(_localId, false);
 			if (manifest != null)
 			{
 				manifest.version.ModloaderType = data.Modloader;
@@ -619,7 +620,7 @@ namespace Lexplosion.Logic.Management.Instances
 					manifest.version.AdditionalInstaller = null;
 				}
 
-				DataFilesManager.SaveManifest(_localId, manifest);
+				_services.DataFilesService.SaveManifest(_localId, manifest);
 			}
 
 			if (logoPath != null)
@@ -670,7 +671,7 @@ namespace Lexplosion.Logic.Management.Instances
 			var activeAccount = Account.ActiveAccount?.IsAuthed == true ? Account.ActiveAccount : null;
 			var launchAccount = Account.LaunchAccount;
 
-			LaunchGame launchGame = new LaunchGame(_localId, generalSettings, instanceSettings, activeAccount, launchAccount, _instanceSource, _cancelTokenSource.Token);
+			LaunchGame launchGame = new LaunchGame(_localId, generalSettings, instanceSettings, activeAccount, launchAccount, _instanceSource, _services, _cancelTokenSource.Token);
 			InitData data = launchGame.Update(ProgressHandler, FileDownloadEvent, DownloadStarted, instanceVersion);
 
 			UpdateAvailable = data.UpdatesAvailable;
@@ -714,7 +715,7 @@ namespace Lexplosion.Logic.Management.Instances
 			var activeAccount = Account.ActiveAccount?.IsAuthed == true ? Account.ActiveAccount : null;
 			var launchAccount = Account.LaunchAccount;
 
-			_gameManager = new LaunchGame(_localId, generalSettings, instanceSettings, activeAccount, launchAccount, _instanceSource, _cancelTokenSource.Token);
+			_gameManager = new LaunchGame(_localId, generalSettings, instanceSettings, activeAccount, launchAccount, _instanceSource, _services, _cancelTokenSource.Token);
 			InitData data = _gameManager.Initialization(ProgressHandler, FileDownloadEvent, DownloadStarted);
 
 			UpdateAvailable = data.UpdatesAvailable;
@@ -727,7 +728,7 @@ namespace Lexplosion.Logic.Management.Instances
 				Initialized?.Invoke(data.InitResult, data.DownloadErrors, true);
 
 				_gameManager.Run(data, LaunchComplited, GameExited, Name);
-				DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+				_services.DataFilesService.SaveSettings(GlobalData.GeneralSettings);
 				// TODO: тут надо как-то определять что сборка обновилась и UpdateAvailable = false делать, если было обновление
 			}
 			else
@@ -784,20 +785,20 @@ namespace Lexplosion.Logic.Management.Instances
 		{
 			try
 			{
-				if (!Directory.Exists(WithDirectory.DirectoryPath + "/instances-assets/" + _localId))
+				if (!Directory.Exists(_services.DirectoryService.DirectoryPath + "/instances-assets/" + _localId))
 				{
-					Directory.CreateDirectory(WithDirectory.DirectoryPath + "/instances-assets/" + _localId);
+					Directory.CreateDirectory(_services.DirectoryService.DirectoryPath + "/instances-assets/" + _localId);
 				}
 
 				if (Logo != null)
 				{
-					File.WriteAllBytes(WithDirectory.DirectoryPath + "/instances-assets/" + _localId + "/" + LogoFileName, Logo);
+					File.WriteAllBytes(_services.DirectoryService.DirectoryPath + "/instances-assets/" + _localId + "/" + LogoFileName, Logo);
 				}
 			}
 			catch { }
 
-			string file = WithDirectory.DirectoryPath + "/instances-assets/" + _localId + "/assets.json";
-			InstanceAssetsFileDecodeFormat assetsData_ = DataFilesManager.GetFile<InstanceAssetsFileDecodeFormat>(file);
+			string file = _services.DirectoryService.DirectoryPath + "/instances-assets/" + _localId + "/assets.json";
+			InstanceAssetsFileDecodeFormat assetsData_ = _services.DataFilesService.GetFile<InstanceAssetsFileDecodeFormat>(file);
 
 			var categories_ = new List<SimpleCategory>();
 			if (Categories != null)
@@ -817,7 +818,7 @@ namespace Lexplosion.Logic.Management.Instances
 				Summary = Summary
 			};
 
-			DataFilesManager.SaveFile(file, JsonConvert.SerializeObject(assetsData));
+			_services.DataFilesService.SaveFile(file, JsonConvert.SerializeObject(assetsData));
 		}
 
 		/// <summary>
@@ -853,14 +854,14 @@ namespace Lexplosion.Logic.Management.Instances
 				};
 			}
 
-			DataFilesManager.SaveManifest(_localId, manifest);
+			_services.DataFilesService.SaveManifest(_localId, manifest);
 
 			if (_instanceSource != null)
 			{
 				InstancePlatformData instanceData = _instanceSource.CreateInstancePlatformData(_externalId, _localId, null);
 				if (instanceData != null)
 				{
-					DataFilesManager.SavePlatfromData(_localId, instanceData);
+					_services.DataFilesService.SavePlatfromData(_localId, instanceData);
 				}
 			}
 			else if (Type != InstanceSource.Local)
@@ -870,23 +871,23 @@ namespace Lexplosion.Logic.Management.Instances
 					id = _externalId
 				};
 
-				DataFilesManager.SavePlatfromData(_localId, instanceData);
+				_services.DataFilesService.SavePlatfromData(_localId, instanceData);
 			}
 		}
 
 		public string GetDirectoryPath()
 		{
-			return (WithDirectory.DirectoryPath.Replace("/", @"\") + @"\instances\" + _localId).Replace(@"\\", @"\");
+			return (_services.DirectoryService.DirectoryPath.Replace("/", @"\") + @"\instances\" + _localId).Replace(@"\\", @"\");
 		}
 
 		public Settings GetSettings()
 		{
-			return DataFilesManager.GetSettings(_localId);
+			return _services.DataFilesService.GetSettings(_localId);
 		}
 
 		public void SaveSettings(Settings settings)
 		{
-			DataFilesManager.SaveSettings(settings, _localId);
+			_services.DataFilesService.SaveSettings(settings, _localId);
 		}
 
 		/// <summary>
@@ -956,7 +957,7 @@ namespace Lexplosion.Logic.Management.Instances
 			string uuid = activeAccount.UUID;
 			string sessionToken = activeAccount.SessionToken;
 
-			string shareDir = FileDistributor.SharesDir;
+			string shareDir = distributor.SharesDir;
 			try
 			{
 				if (!Directory.Exists(shareDir))
@@ -976,7 +977,7 @@ namespace Lexplosion.Logic.Management.Instances
 			{
 				IsSharing = true;
 
-				distributor = FileDistributor.CreateDistribution(zipFile, Name, uuid, sessionToken);
+				distributor = FileDistributor.CreateDistribution(zipFile, Name, uuid, sessionToken, _services);
 				if (distributor == null) return ExportResult.ZipFileError;
 
 				distributor.OnClosed += delegate ()
@@ -1050,9 +1051,9 @@ namespace Lexplosion.Logic.Management.Instances
 				filesList.Add(dirPath + "/" + DataFilesManager.INSTALLED_ADDONS_FILE);
 			}
 
-			VersionManifest instanceManifest = DataFilesManager.GetManifest(_localId, false);
+			VersionManifest instanceManifest = _services.DataFilesService.GetManifest(_localId, false);
 
-			string logoPath = (Logo != null ? WithDirectory.DirectoryPath + "/instances-assets/" + _localId + "/" + LogoFileName : null);
+			string logoPath = (Logo != null ? _services.DirectoryService.DirectoryPath + "/instances-assets/" + _localId + "/" + LogoFileName : null);
 			var parameters = new ArchivedClientData
 			{
 				Author = Author,
@@ -1069,7 +1070,9 @@ namespace Lexplosion.Logic.Management.Instances
 
 			};
 
-			var res = WithDirectory.ExportInstance<ArchivedClientData>(_localId, filesList, exportFile, parameters, logoPath);
+			string infoFileContent = JsonConvert.SerializeObject(parameters);
+
+			var res = _services.DirectoryService.ExportInstance(_localId, filesList, exportFile, infoFileContent, logoPath);
 			Runtime.DebugWrite(res);
 
 			return res;

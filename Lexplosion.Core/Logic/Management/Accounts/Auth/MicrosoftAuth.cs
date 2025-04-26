@@ -5,9 +5,16 @@ namespace Lexplosion.Logic.Management.Accounts.Auth
 {
 	class MicrosoftAuth : IAuthHandler
 	{
+		private readonly MojangApi _api;
+
+		public MicrosoftAuth(MojangApi api)
+		{
+			_api = api;
+		}
+
 		public IAuthHandler.AuthResult Auth(string login, string accessData)
 		{
-			string token = MojangApi.GetToken(accessData);
+			string token = _api.GetToken(accessData);
 			if (token == null)
 			{
 				return new IAuthHandler.AuthResult
@@ -16,7 +23,7 @@ namespace Lexplosion.Logic.Management.Accounts.Auth
 				};
 			}
 
-			MojangAuthResult response = MojangApi.AuthFromToken(token);
+			MojangAuthResult response = _api.AuthFromToken(token);
 			if (response.Status == AuthCode.Successfully)
 			{
 				return new IAuthHandler.AuthResult

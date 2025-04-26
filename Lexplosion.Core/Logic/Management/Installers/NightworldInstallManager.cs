@@ -6,6 +6,8 @@ using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects.Nightworld;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Network.Services;
+using Lexplosion.Logic.FileSystem.Installers;
+using Lexplosion.Logic.FileSystem.Services;
 
 namespace Lexplosion.Logic.Management.Installers
 {
@@ -16,46 +18,51 @@ namespace Lexplosion.Logic.Management.Installers
 			public bool CustomVersion;
 		}
 
-		private NightWorldManifest nightworldManifest = null;
-		private VersionManifest manifest = null;
-		private LastUpdates Updates;
+		private NightWorldManifest _nightworldManifest = null;
+		private VersionManifest _manifest = null;
+		private LastUpdates _updates;
 		private Dictionary<string, string> _instanceContent;
-		private NightWorldInstaller installer;
+		private NightWorldInstaller _installer;
 		private CancellationToken _cancelToken;
 
-		private string InstanceId;
-		private NwInstancePlatformData InfoData;
+		private string _instanceId;
+		private NwInstancePlatformData _infoData;
 
 		private bool _requiresUpdates = true;
 		private bool _onlyBase;
-		private readonly MinecraftInfoService _infoService;
-		private int stagesCount = 0;
+		private int _stagesCount = 0;
 		private int _baseFaliseUpdatesCount = 0;
 		private int _modpackFilesUpdatesCount = 0;
 
-		private int actualVersion = -1;
+		private readonly MinecraftInfoService _infoService;
+		private readonly NightWorldApi _nightWorldApi;
+		private readonly DataFilesManager _dataFilesManager;
+
+		private int _aactualVersion = -1;
 
 		public event Action<string, int, DownloadFileProgress> FileDownloadEvent
 		{
 			add
 			{
-				installer.FileDownloadEvent += value;
+				_installer.FileDownloadEvent += value;
 			}
 			remove
 			{
-				installer.FileDownloadEvent -= value;
+				_installer.FileDownloadEvent -= value;
 			}
 		}
 
 		public event Action DownloadStarted;
 
-		public NightworldInstallManager(string instanceid, bool onlyBase, MinecraftInfoService infoService, CancellationToken cancelToken)
+		public NightworldInstallManager(string instanceid, bool onlyBase, INightWorldFileServicesContainer services, CancellationToken cancelToken)
 		{
-			InstanceId = instanceid;
+			_instanceId = instanceid;
 			_onlyBase = onlyBase;
-			_infoService = infoService;
+			_infoService = services.MinecraftService;
+			_nightWorldApi = services.NwApi;
 			_cancelToken = cancelToken;
-			installer = new NightWorldInstaller(instanceid);
+			_installer = new NightWorldInstaller(instanceid, services);
+			_dataFilesManager = services.DataFilesService;
 		}
 
 		private bool _downloadStartedIsCalled = false;
@@ -68,9 +75,9 @@ namespace Lexplosion.Logic.Management.Installers
 		public InstanceInit Check(out string javaVersionName, string instanceVersion)
 		{
 			javaVersionName = "";
-			InfoData = DataFilesManager.GetExtendedPlatfromData<NwInstancePlatformData>(InstanceId);
+			_infoData = _dataFilesManager.GetExtendedPlatfromData<NwInstancePlatformData>(_instanceId);
 
-			if (InfoData?.id == null)
+			if (_infoData?.id == null)
 			{
 				return InstanceInit.NightworldIdError;
 			}
@@ -78,9 +85,9 @@ namespace Lexplosion.Logic.Management.Installers
 			int version = 0;
 			if (!_onlyBase)
 			{
-				version = NightWorldApi.GetInstanceVersion(InfoData.id);
-				_requiresUpdates = version > InfoData.instanceVersion.ToInt32();
-				actualVersion = version;
+				version = _nightWorldApi.GetInstanceVersion(_infoData.id);
+				_requiresUpdates = version > _infoData.instanceVersion.ToInt32();
+				_aactualVersion = version;
 			}
 			else
 			{
@@ -89,30 +96,30 @@ namespace Lexplosion.Logic.Management.Installers
 
 			if (!_requiresUpdates)
 			{
-				VersionManifest manifest_ = DataFilesManager.GetManifest(InstanceId, false);
+				VersionManifest manifest_ = _dataFilesManager.GetManifest(_instanceId, false);
 				if (string.IsNullOrWhiteSpace(manifest_?.version?.GameVersion))
 				{
-					nightworldManifest = NightWorldApi.GetInstanceManifest(InfoData.id);
-					if (nightworldManifest == null)
+					_nightworldManifest = _nightWorldApi.GetInstanceManifest(_infoData.id);
+					if (_nightworldManifest == null)
 					{
 						// TODO: сделать как с локлаьными и курсфорджевкими сборками, чтобы при ошибке сеервера загружался локальный манифест
 						return InstanceInit.ServerError;
 					}
 
-					if (nightworldManifest.CustomVersion)
+					if (_nightworldManifest.CustomVersion)
 					{
-						manifest = NightWorldApi.GetVersionManifest(InfoData.id);
-						InfoData.CustomVersion = true;
-						DataFilesManager.SavePlatfromData(InstanceId, InfoData);
+						_manifest = _nightWorldApi.GetVersionManifest(_infoData.id);
+						_infoData.CustomVersion = true;
+						_dataFilesManager.SavePlatfromData(_instanceId, _infoData);
 					}
 					else
 					{
 						bool isNwClient = manifest_?.version?.IsNightWorldClient == true;
-						var versionInfo = nightworldManifest.version;
-						manifest = _infoService.GetVersionManifest(versionInfo.gameVersion, versionInfo.modloaderType, isNwClient, versionInfo.modloaderVersion);
+						var versionInfo = _nightworldManifest.version;
+						_manifest = _infoService.GetVersionManifest(versionInfo.gameVersion, versionInfo.modloaderType, isNwClient, versionInfo.modloaderVersion);
 					}
 
-					if (manifest == null)
+					if (_manifest == null)
 					{
 						return InstanceInit.ServerError;
 					}
@@ -120,38 +127,38 @@ namespace Lexplosion.Logic.Management.Installers
 				else
 				{
 					var versionInfo = manifest_.version;
-					if (InfoData.CustomVersion)
+					if (_infoData.CustomVersion)
 					{
 						// TODO: здесь надо учитывать NightWorldClient. Он сейчас всегда выключаться будет
-						manifest = NightWorldApi.GetVersionManifest(InfoData.id);
+						_manifest = _nightWorldApi.GetVersionManifest(_infoData.id);
 					}
 					else
 					{
-						manifest = _infoService.GetVersionManifest(versionInfo.GameVersion, versionInfo.ModloaderType, versionInfo.IsNightWorldClient, versionInfo.ModloaderVersion);
+						_manifest = _infoService.GetVersionManifest(versionInfo.GameVersion, versionInfo.ModloaderType, versionInfo.IsNightWorldClient, versionInfo.ModloaderVersion);
 					}
 
-					if (manifest == null)
+					if (_manifest == null)
 					{
-						nightworldManifest = NightWorldApi.GetInstanceManifest(InfoData.id);
-						if (nightworldManifest == null)
+						_nightworldManifest = _nightWorldApi.GetInstanceManifest(_infoData.id);
+						if (_nightworldManifest == null)
 						{
 							return InstanceInit.ServerError;
 						}
 
-						if (nightworldManifest.CustomVersion)
+						if (_nightworldManifest.CustomVersion)
 						{
-							InfoData.CustomVersion = true;
-							DataFilesManager.SavePlatfromData(InstanceId, InfoData);
-							manifest = NightWorldApi.GetVersionManifest(InfoData.id);
+							_infoData.CustomVersion = true;
+							_dataFilesManager.SavePlatfromData(_instanceId, _infoData);
+							_manifest = _nightWorldApi.GetVersionManifest(_infoData.id);
 						}
 						else
 						{
-							var mcVersion = nightworldManifest.version;
+							var mcVersion = _nightworldManifest.version;
 							bool isNwClient = versionInfo.IsNightWorldClient == true;
-							manifest = _infoService.GetVersionManifest(mcVersion.gameVersion, mcVersion.modloaderType, isNwClient, mcVersion.modloaderVersion);
+							_manifest = _infoService.GetVersionManifest(mcVersion.gameVersion, mcVersion.modloaderType, isNwClient, mcVersion.modloaderVersion);
 						}
 
-						if (manifest == null)
+						if (_manifest == null)
 						{
 							return InstanceInit.ServerError;
 						}
@@ -160,41 +167,41 @@ namespace Lexplosion.Logic.Management.Installers
 			}
 			else
 			{
-				nightworldManifest = NightWorldApi.GetInstanceManifest(InfoData.id);
-				if (nightworldManifest?.version == null)
+				_nightworldManifest = _nightWorldApi.GetInstanceManifest(_infoData.id);
+				if (_nightworldManifest?.version == null)
 				{
 					return InstanceInit.ServerError;
 				}
 
-				VersionManifest manifest_ = DataFilesManager.GetManifest(InstanceId, false);
+				VersionManifest manifest_ = _dataFilesManager.GetManifest(_instanceId, false);
 				bool isNwClient = manifest_?.version?.IsNightWorldClient == true;
-				if (nightworldManifest.CustomVersion)
+				if (_nightworldManifest.CustomVersion)
 				{
 					// TODO: аналогично подобному месту вышле. Учитывать NightWorldClient
-					InfoData.CustomVersion = true;
-					DataFilesManager.SavePlatfromData(InstanceId, InfoData);
-					manifest = NightWorldApi.GetVersionManifest(InfoData.id);
+					_infoData.CustomVersion = true;
+					_dataFilesManager.SavePlatfromData(_instanceId, _infoData);
+					_manifest = _nightWorldApi.GetVersionManifest(_infoData.id);
 				}
 				else
 				{
-					var versionInfo = nightworldManifest.version;
-					manifest = _infoService.GetVersionManifest(versionInfo.gameVersion, versionInfo.modloaderType, isNwClient, versionInfo.modloaderVersion);
+					var versionInfo = _nightworldManifest.version;
+					_manifest = _infoService.GetVersionManifest(versionInfo.gameVersion, versionInfo.modloaderType, isNwClient, versionInfo.modloaderVersion);
 				}
 
-				if (manifest == null)
+				if (_manifest == null)
 				{
 					return InstanceInit.ServerError;
 				}
 			}
 
-			if (manifest != null)
+			if (_manifest != null)
 			{
-				Updates = DataFilesManager.GetLastUpdates(InstanceId);
-				_instanceContent = installer.GetInstanceContent();
+				_updates = _dataFilesManager.GetLastUpdates(_instanceId);
+				_instanceContent = _installer.GetInstanceContent();
 
-				_requiresUpdates = (_requiresUpdates || Updates.Count == 0);
+				_requiresUpdates = (_requiresUpdates || _updates.Count == 0);
 
-				_baseFaliseUpdatesCount = installer.CheckBaseFiles(manifest, ref Updates); // проверяем основные файлы клиента на обновление
+				_baseFaliseUpdatesCount = _installer.CheckBaseFiles(_manifest, ref _updates); // проверяем основные файлы клиента на обновление
 				if (_baseFaliseUpdatesCount == -1)
 				{
 					return InstanceInit.GuardError;
@@ -203,21 +210,21 @@ namespace Lexplosion.Logic.Management.Installers
 				if (_baseFaliseUpdatesCount > 0)
 				{
 					DownloadStartedCall();
-					stagesCount++;
+					_stagesCount++;
 				}
 
-				if (_requiresUpdates || installer.InvalidStruct(Updates, _instanceContent))
+				if (_requiresUpdates || _installer.InvalidStruct(_updates, _instanceContent))
 				{
-					if (nightworldManifest == null)
+					if (_nightworldManifest == null)
 					{
-						nightworldManifest = NightWorldApi.GetInstanceManifest(InfoData.id);
-						if (nightworldManifest == null)
+						_nightworldManifest = _nightWorldApi.GetInstanceManifest(_infoData.id);
+						if (_nightworldManifest == null)
 						{
 							return InstanceInit.ServerError;
 						}
 					}
 
-					_modpackFilesUpdatesCount = installer.CheckInstance(nightworldManifest, ref Updates, _instanceContent); // проверяем дополнительные файлы клиента (моды и прочее)
+					_modpackFilesUpdatesCount = _installer.CheckInstance(_nightworldManifest, ref _updates, _instanceContent); // проверяем дополнительные файлы клиента (моды и прочее)
 					if (_modpackFilesUpdatesCount == -1)
 					{
 						return InstanceInit.GuardError;
@@ -226,19 +233,19 @@ namespace Lexplosion.Logic.Management.Installers
 					if (_modpackFilesUpdatesCount > 0)
 					{
 						DownloadStartedCall();
-						stagesCount++;
+						_stagesCount++;
 					}
 
 					_requiresUpdates = true;
 				}
 
-				javaVersionName = manifest.version.JavaVersionName;
+				javaVersionName = _manifest.version.JavaVersionName;
 
-				if (actualVersion == -1)
+				if (_aactualVersion == -1)
 				{
-					int version_ = NightWorldApi.GetInstanceVersion(InfoData.id);
+					int version_ = _nightWorldApi.GetInstanceVersion(_infoData.id);
 					if (version_ > 0)
-						actualVersion = version_;
+						_aactualVersion = version_;
 				}
 
 				return InstanceInit.Successful;
@@ -255,15 +262,15 @@ namespace Lexplosion.Logic.Management.Installers
 
 			Action<string, int, DownloadFileProgress> singleDownloadMethod = null;
 
-			if (stagesCount > 0)
+			if (_stagesCount > 0)
 			{
 				if (_baseFaliseUpdatesCount > 1)
 				{
-					installer.BaseDownloadEvent += delegate (int totalDataCount, int nowDataCount)
+					_installer.BaseDownloadEvent += delegate (int totalDataCount, int nowDataCount)
 					{
 						progressHandler(StageType.Client, new ProgressHandlerArguments()
 						{
-							StagesCount = stagesCount,
+							StagesCount = _stagesCount,
 							Stage = 1,
 							Procents = (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100),
 							TotalFilesCount = totalDataCount,
@@ -277,7 +284,7 @@ namespace Lexplosion.Logic.Management.Installers
 					{
 						progressHandler(StageType.Client, new ProgressHandlerArguments()
 						{
-							StagesCount = stagesCount,
+							StagesCount = _stagesCount,
 							Stage = 1,
 							Procents = pr,
 							TotalFilesCount = 1,
@@ -285,7 +292,7 @@ namespace Lexplosion.Logic.Management.Installers
 						});
 					};
 
-					installer.FileDownloadEvent += singleDownloadMethod;
+					_installer.FileDownloadEvent += singleDownloadMethod;
 				}
 			}
 
@@ -293,7 +300,7 @@ namespace Lexplosion.Logic.Management.Installers
 			{
 				progressHandler(StageType.Client, new ProgressHandlerArguments()
 				{
-					StagesCount = stagesCount,
+					StagesCount = _stagesCount,
 					Stage = 1,
 					Procents = 0
 				});
@@ -307,7 +314,7 @@ namespace Lexplosion.Logic.Management.Installers
 				};
 			}
 
-			List<string> errors_ = installer.UpdateBaseFiles(manifest, ref Updates, javaPath, _cancelToken);
+			List<string> errors_ = _installer.UpdateBaseFiles(_manifest, ref _updates, javaPath, _cancelToken);
 			List<string> errors = null;
 
 			if (_cancelToken.IsCancellationRequested)
@@ -332,7 +339,7 @@ namespace Lexplosion.Logic.Management.Installers
 
 				progressHandler(StageType.Client, new ProgressHandlerArguments()
 				{
-					StagesCount = stagesCount,
+					StagesCount = _stagesCount,
 					Stage = stage,
 					Procents = 0
 				});
@@ -341,14 +348,14 @@ namespace Lexplosion.Logic.Management.Installers
 				{
 					if (singleDownloadMethod != null)
 					{
-						installer.FileDownloadEvent -= singleDownloadMethod;
+						_installer.FileDownloadEvent -= singleDownloadMethod;
 					}
 
-					installer.FilesDownloadEvent += delegate (int totalDataCount, int nowDataCount)
+					_installer.FilesDownloadEvent += delegate (int totalDataCount, int nowDataCount)
 					{
 						progressHandler(StageType.Client, new ProgressHandlerArguments()
 						{
-							StagesCount = stagesCount,
+							StagesCount = _stagesCount,
 							Stage = stage,
 							Procents = (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100),
 							TotalFilesCount = totalDataCount,
@@ -358,11 +365,11 @@ namespace Lexplosion.Logic.Management.Installers
 				}
 				else if (singleDownloadMethod == null)
 				{
-					installer.FileDownloadEvent += delegate (string file, int pr, DownloadFileProgress stage_)
+					_installer.FileDownloadEvent += delegate (string file, int pr, DownloadFileProgress stage_)
 					{
 						progressHandler(StageType.Client, new ProgressHandlerArguments()
 						{
-							StagesCount = stagesCount,
+							StagesCount = _stagesCount,
 							Stage = stage,
 							Procents = pr,
 							TotalFilesCount = 1,
@@ -379,7 +386,7 @@ namespace Lexplosion.Logic.Management.Installers
 					};
 				}
 
-				errors = installer.UpdateInstance(nightworldManifest, InfoData.id, ref Updates, _instanceContent, _cancelToken);
+				errors = _installer.UpdateInstance(_nightworldManifest, _infoData.id, ref _updates, _instanceContent, _cancelToken);
 
 				if (_cancelToken.IsCancellationRequested)
 				{
@@ -390,7 +397,7 @@ namespace Lexplosion.Logic.Management.Installers
 				}
 			}
 
-			DataFilesManager.SaveManifest(InstanceId, manifest);
+			_dataFilesManager.SaveManifest(_instanceId, _manifest);
 
 			if (errors != null)
 			{
@@ -412,20 +419,20 @@ namespace Lexplosion.Logic.Management.Installers
 			else
 			{
 				result = InstanceInit.Successful;
-				if (actualVersion != -1)
+				if (_aactualVersion != -1)
 				{
-					InfoData.instanceVersion = actualVersion.ToString();
+					_infoData.instanceVersion = _aactualVersion.ToString();
 				}
 
-				DataFilesManager.SavePlatfromData(InstanceId, InfoData);
+				_dataFilesManager.SavePlatfromData(_instanceId, _infoData);
 			}
 
 			return new InitData
 			{
 				InitResult = result,
 				DownloadErrors = errors,
-				VersionFile = manifest.version,
-				Libraries = manifest.libraries,
+				VersionFile = _manifest.version,
+				Libraries = _manifest.libraries,
 				UpdatesAvailable = (result != InstanceInit.Successful)
 			};
 		}

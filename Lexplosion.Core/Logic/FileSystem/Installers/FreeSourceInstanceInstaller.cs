@@ -14,13 +14,22 @@ using Lexplosion.Tools;
 using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Network;
 using Lexplosion.Global;
+using Lexplosion.Logic.FileSystem.Services;
+using Lexplosion.Logic.FileSystem.Extensions;
 
-namespace Lexplosion.Logic.FileSystem
+namespace Lexplosion.Logic.FileSystem.Installers
 {
 	class FreeSourceInstanceInstaller : InstanceInstaller, IArchivedInstanceInstaller<InstanceManifest>
 	{
-		public FreeSourceInstanceInstaller(string instanceID) : base(instanceID)
+		private ModrinthApi _modrinthApi;
+		private CurseforgeApi _curseforgeApi;
+
+		private string _extractedFilesDir;
+
+		public FreeSourceInstanceInstaller(string instanceID, IAllFileServicesContainer servicesContainer) : base(instanceID, servicesContainer)
 		{
+			_modrinthApi = servicesContainer.MdApi;
+			_curseforgeApi = servicesContainer.CfApi;
 		}
 
 		public event Action<int> MainFileDownload;
@@ -33,8 +42,6 @@ namespace Lexplosion.Logic.FileSystem
 			[JsonProperty("whiteList")]
 			public HashSet<FileDesc> WhiteList;
 		}
-
-		private string _extractedFilesDir;
 
 		public InstanceManifest Extraction(InstanceFileGetter instanceFileGetter, CancellationToken cancelToken)
 		{
@@ -53,7 +60,7 @@ namespace Lexplosion.Logic.FileSystem
 
 			try
 			{
-				_extractedFilesDir = WithDirectory.CreateTempDir();
+				_extractedFilesDir = withDirectory.CreateTempDir();
 
 				MainFileDownload?.Invoke(0);
 
@@ -78,10 +85,10 @@ namespace Lexplosion.Logic.FileSystem
 
 				//определяем белый список файлов
 				HashSet<FileDesc> files = null;
-				var content = DataFilesManager.GetExtendedPlatfromData<FreeSourcePlatformData>(instanceId);
+				var content = dataFilesManager.GetExtendedPlatfromData<FreeSourcePlatformData>(instanceId);
 				if (content != null && content.IsValid())
 				{
-					string result = ToServer.HttpGet(LaunсherSettings.URL.Base + "api/freeSources/" + content.sourceId + "/modpacks/" + content.id + "/exutableFilesWhiteList");
+					string result = webService.HttpGet(LaunсherSettings.URL.Base + "api/freeSources/" + content.sourceId + "/modpacks/" + content.id + "/exutableFilesWhiteList");
 					if (result != null)
 					{
 						try
@@ -137,7 +144,7 @@ namespace Lexplosion.Logic.FileSystem
 					ZipFile.ExtractToDirectory(res.Item2, unzipFolder);
 				}
 
-				var manifest = DataFilesManager.GetFile<InstanceManifest>(unzipFolder + "instanceInfo.json");
+				var manifest = dataFilesManager.GetFile<InstanceManifest>(unzipFolder + "instanceInfo.json");
 				if (manifest == null || (string.IsNullOrWhiteSpace(manifest.GameVersion) && manifest.GameVersionInfo?.IsNan != false))
 				{
 					Runtime.DebugWrite("Manifest error. (manifest is null: " + (manifest == null) + "), (GameVersionInfo is null " + (manifest?.GameVersionInfo == null) + ")");
@@ -146,7 +153,7 @@ namespace Lexplosion.Logic.FileSystem
 
 				if (manifest.Addons == null || manifest.Addons.Count < 1)
 				{
-					var installedAddons = DataFilesManager.GetFile<InstalledAddonsFormat>(unzipFolder + "files/" + DataFilesManager.INSTALLED_ADDONS_FILE);
+					var installedAddons = dataFilesManager.GetFile<InstalledAddonsFormat>(unzipFolder + "files/" + DataFilesManager.INSTALLED_ADDONS_FILE);
 					manifest.Addons = installedAddons ?? new InstalledAddonsFormat();
 				}
 
@@ -168,7 +175,7 @@ namespace Lexplosion.Logic.FileSystem
 				{
 					foreach (string file in localFiles.Files)
 					{
-						WithDirectory.DelFile(WithDirectory.InstancesPath + instanceId + file);
+						withDirectory.DelFile(withDirectory.InstancesPath + instanceId + file);
 						if (cancelToken.IsCancellationRequested) return false;
 					}
 				}
@@ -177,7 +184,7 @@ namespace Lexplosion.Logic.FileSystem
 
 				string unzipFolder = _extractedFilesDir + "dataDownload/";
 				string sourcePath = unzipFolder + "files/";
-				string destinationPath = WithDirectory.GetInstancePath(instanceId);
+				string destinationPath = withDirectory.GetInstancePath(instanceId);
 
 				foreach (string dirPath in Directory.GetDirectories(sourcePath, "*", SearchOption.AllDirectories))
 				{
@@ -224,7 +231,7 @@ namespace Lexplosion.Logic.FileSystem
 				Files = localFiles.Files
 			};
 
-			string instanceFolder = WithDirectory.InstancesPath + instanceId + "/";
+			string instanceFolder = withDirectory.InstancesPath + instanceId + "/";
 
 			InstalledAddonsFormat installedAddons = localFiles.InstalledAddons;
 			data.Addons ??= new InstalledAddonsFormat();
@@ -315,8 +322,8 @@ namespace Lexplosion.Logic.FileSystem
 					CancelToken = cancelToken
 				};
 
-				var addonInfo = CurseforgeApi.GetProjectFile(addon.ProjectID, addon.FileID);
-				var result = CurseforgeApi.DownloadAddon(addonInfo, addon.Type, folder, taskArgs);
+				var addonInfo = _curseforgeApi.GetProjectFile(addon.ProjectID, addon.FileID);
+				var result = _curseforgeApi.DownloadAddon(addonInfo, addon.Type, folder, withDirectory, taskArgs);
 
 				if (result.Value2 == DownloadAddonRes.Successful)
 				{
@@ -347,8 +354,8 @@ namespace Lexplosion.Logic.FileSystem
 					CancelToken = cancelToken
 				};
 
-				var addonInfo = ModrinthApi.GetProjectFile(addon.FileID);
-				var result = ModrinthApi.DownloadAddon(addonInfo, ProjectTypeConvert(addon.Type), folder, taskArgs);
+				var addonInfo = _modrinthApi.GetProjectFile(addon.FileID);
+				var result = _modrinthApi.DownloadAddon(addonInfo, ProjectTypeConvert(addon.Type), folder, withDirectory, taskArgs);
 
 				if (result.Value2 == DownloadAddonRes.Successful)
 				{
@@ -393,8 +400,8 @@ namespace Lexplosion.Logic.FileSystem
 
 		public InstanceContent GetInstanceContent()
 		{
-			var content = DataFilesManager.GetInstanceContent(instanceId);
-			using (InstalledAddons installedAddons = InstalledAddons.Get(instanceId))
+			var content = dataFilesManager.GetInstanceContent(instanceId);
+			using (InstalledAddons installedAddons = InstalledAddons.Get(instanceId, dataFilesManager))
 			{
 				if (content != null)
 				{
@@ -429,14 +436,14 @@ namespace Lexplosion.Logic.FileSystem
 
 		public void SaveInstanceContent(InstanceContent content)
 		{
-			DataFilesManager.SaveInstanceContent(instanceId, new InstanceContentFile
+			dataFilesManager.SaveInstanceContent(instanceId, new InstanceContentFile
 			{
 				FullClient = content.FullClient,
 				Files = content.Files,
 				InstalledAddons = new List<string>(content.InstalledAddons.Keys.ToArray())
 			});
 
-			using (InstalledAddons installedAddons = InstalledAddons.Get(instanceId))
+			using (InstalledAddons installedAddons = InstalledAddons.Get(instanceId, dataFilesManager))
 			{
 				foreach (var key in content.InstalledAddons.Keys)
 				{
@@ -468,7 +475,7 @@ namespace Lexplosion.Logic.FileSystem
 					return true;
 				}
 
-				string instancePath = WithDirectory.InstancesPath + instanceId + "/";
+				string instancePath = withDirectory.InstancesPath + instanceId + "/";
 
 				if (!addon.IsExists(instancePath))
 				{
@@ -478,7 +485,7 @@ namespace Lexplosion.Logic.FileSystem
 
 			foreach (string file in localFiles.Files)
 			{
-				if (!File.Exists(WithDirectory.InstancesPath + instanceId + file))
+				if (!File.Exists(withDirectory.InstancesPath + instanceId + file))
 				{
 					return true;
 				}

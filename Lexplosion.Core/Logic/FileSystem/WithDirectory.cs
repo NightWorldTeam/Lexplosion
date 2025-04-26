@@ -10,25 +10,24 @@ using Newtonsoft.Json;
 using Lexplosion.Global;
 using Lexplosion.Tools;
 using Lexplosion.Logic.Objects;
-using static Lexplosion.Logic.FileSystem.DataFilesManager;
 
 namespace Lexplosion.Logic.FileSystem
 {
-	public static class WithDirectory
+	public class WithDirectory
 	{
 		// TODO: во всём WithDirectory я заменяю элементы адресов директорий через replace. Не знаю как на винде, но на линуксе могут появиться проблемы, ведь replace заменяет подстроки в строке, а не только конечную подстроку
-		public static string DirectoryPath { get; private set; }
-		public static string InstancesPath { get => $"{DirectoryPath}/instances/"; }
-		public static string GetInstancePath(string instanceId) => $"{InstancesPath}{instanceId}/";
+		public string DirectoryPath { get; private set; }
+		public string InstancesPath { get => $"{DirectoryPath}/instances/"; }
+		public string GetInstancePath(string instanceId) => $"{InstancesPath}{instanceId}/";
 
-		private static HttpClient _httpClient = new();
+		private HttpClient _httpClient = new();
 
-		static WithDirectory()
+		internal WithDirectory()
 		{
 			_httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0");
 		}
 
-		public static void Create(string path)
+		public void Create(string path)
 		{
 			try
 			{
@@ -55,7 +54,7 @@ namespace Lexplosion.Logic.FileSystem
 			}
 		}
 
-		public static void SetNewDirectory(string path)
+		public void SetNewDirectory(string path)
 		{
 			string oldDir = DirectoryPath;
 			Create(path);
@@ -83,7 +82,7 @@ namespace Lexplosion.Logic.FileSystem
 		/// Если внутри path нету папки lexplosion, то будет возвращена path/lexplosion.
 		/// Если есть, то будет добавлена номерная метка (например path/lexplosion_1)
 		/// </returns>
-		private static string CreateValidPath(string path)
+		public string CreateValidPath(string path)
 		{
 			path += "/" + LaunсherSettings.GAME_FOLDER_NAME;
 			string path_ = path;
@@ -97,47 +96,9 @@ namespace Lexplosion.Logic.FileSystem
 			return path_;
 		}
 
-		public static string CreateAcceptableGamePath(string path, out bool newDirIsEmpty)
-		{
-			try
-			{
-				newDirIsEmpty = true;
+		private Random random = new Random();
 
-				// заменяем обратный слеш на нормальный слеш
-				path = path.Replace('\\', '/');
-				// сокращаем n-ное количество слешей до 1
-				path = Regex.Replace(path, @"\/+", "/").Trim();
-				// убираем слеш в конце
-				path = path.TrimEnd('/');
-
-				if (!Directory.Exists(path) || DirectoryHelper.IsDirectoryEmpty(path)) return path;
-
-				string instancesPath = path + "/instances";
-				if (!Directory.Exists(instancesPath)) return CreateValidPath(path);
-
-				int directoryCount = Directory.GetDirectories(instancesPath).Length;
-				if (directoryCount < 1) return CreateValidPath(path);
-
-				if (!File.Exists(path + "/instanesList.json")) return CreateValidPath(path);
-
-				var data = GetFile<InstalledInstancesFormat>(path + "/instanesList.json");
-				if (data == null) return CreateValidPath(path);
-
-				newDirIsEmpty = false;
-				return path;
-			}
-			catch (Exception ex)
-			{
-				newDirIsEmpty = true;
-				Runtime.DebugWrite("Exception " + ex);
-
-				return CreateValidPath(path);
-			}
-		}
-
-		private static Random random = new Random();
-
-		public static string CreateTempDir() // TODO: пр использовании этого метода разными потоками может создаться одна папка на два вызова. Так же сделать try
+		public string CreateTempDir() // TODO: пр использовании этого метода разными потоками может создаться одна папка на два вызова. Так же сделать try
 		{
 			string dirName = DirectoryPath + "/temp";
 			string dirName_ = dirName;
@@ -159,7 +120,7 @@ namespace Lexplosion.Logic.FileSystem
 		/// </summary>
 		/// <param name="name">Адрес, по которому должна быть создана папка.</param>
 		/// <returns>Вовзращает имя созданной папки. может отличаться от параметра name, ведь такая папка может уже существовтаь и нужно будет добавить символы в имя.</returns>
-		public static string CreateFolder(string name)
+		public string CreateFolder(string name)
 		{
 			try
 			{
@@ -181,7 +142,7 @@ namespace Lexplosion.Logic.FileSystem
 			}
 		}
 
-		public static bool InstallZipContent(string url, string fileName, string path, TaskArgs taskArgs)
+		public bool InstallZipContent(string url, string fileName, string path, TaskArgs taskArgs)
 		{
 			path = DirectoryPath + "/" + path;
 			string tempDir = CreateTempDir();
@@ -225,7 +186,7 @@ namespace Lexplosion.Logic.FileSystem
 			return true;
 		}
 
-		public static bool InstallFile(string url, string fileName, string path, TaskArgs taskArgs)
+		public bool InstallFile(string url, string fileName, string path, TaskArgs taskArgs)
 		{
 			Runtime.DebugWrite("INSTALL " + url);
 
@@ -266,7 +227,7 @@ namespace Lexplosion.Logic.FileSystem
 			}
 		}
 
-		private static async Task<bool> DownloadFileAsync(string url, string savePath, TaskArgs taskArgs)
+		private async Task<bool> DownloadFileAsync(string url, string savePath, TaskArgs taskArgs)
 		{
 			try
 			{
@@ -312,7 +273,7 @@ namespace Lexplosion.Logic.FileSystem
 			}
 		}
 
-		public static bool DownloadFile(string url, string fileName, string tempDir, TaskArgs taskArgs)
+		public bool DownloadFile(string url, string fileName, string tempDir, TaskArgs taskArgs)
 		{
 			DelFile(tempDir + fileName);
 			return DownloadFileAsync(url, tempDir + fileName, taskArgs).Result;
@@ -322,7 +283,7 @@ namespace Lexplosion.Logic.FileSystem
 		/// Удаляет файл, если он существует.
 		/// </summary>
 		/// <param name="file">Имя файла.</param>
-		public static void DelFile(string file)
+		public void DelFile(string file)
 		{
 			try
 			{
@@ -337,7 +298,7 @@ namespace Lexplosion.Logic.FileSystem
 			}
 		}
 
-		public static ExportResult ExportInstance<T>(string instanceId, List<string> filesList, string exportFile, T parameters, string logoPath = null)
+		public ExportResult ExportInstance(string instanceId, List<string> filesList, string exportFile, string infoFileContent, string logoPath = null)
 		{
 			// TODO: удалять временную папку в конце
 			string targetDir = CreateTempDir() + instanceId + "-export"; //временная папка, куда будем копировать все файлы
@@ -401,23 +362,18 @@ namespace Lexplosion.Logic.FileSystem
 			{
 				try
 				{
-					if (File.Exists(logoPath))
-					{
-						File.Copy(logoPath, targetDir + "/logo.png");
-					}
+					if (File.Exists(logoPath)) File.Copy(logoPath, targetDir + "/logo.png");
 				}
 				catch { }
 			}
 
-			string jsonData = JsonConvert.SerializeObject(parameters);
-			if (!SaveFile(targetDir + "/instanceInfo.json", jsonData))
+			try
 			{
-				try
-				{
-					Directory.Delete(targetDir, true);
-				}
-				catch { }
-
+				File.WriteAllText(targetDir + "/instanceInfo.json", infoFileContent);
+			}
+			catch
+			{
+				try { Directory.Delete(targetDir, true); } catch { }
 				return ExportResult.InfoFileError;
 			}
 
@@ -432,14 +388,12 @@ namespace Lexplosion.Logic.FileSystem
 			catch
 			{
 				try { Directory.Delete(targetDir, true); } catch { }
-
 				return ExportResult.ZipFileError;
 			}
 		}
 
-		public static ImportResult UnzipInstance<T>(string zipFile, out T parameters, out string resultingDirectory)
+		public ImportResult UnzipInstance(string zipFile, out string resultingDirectory)
 		{
-			parameters = default(T);
 			resultingDirectory = CreateTempDir() + "import/";
 
 			try
@@ -470,12 +424,10 @@ namespace Lexplosion.Logic.FileSystem
 				return ImportResult.ZipFileError;
 			}
 
-			parameters = GetFile<T>(resultingDirectory + "instanceInfo.json");
-
 			return ImportResult.Successful;
 		}
 
-		public static ImportResult MoveUnpackedInstance(string instanceId, string unzipPath)
+		public ImportResult MoveUnpackedInstance(string instanceId, string unzipPath)
 		{
 			string addr = unzipPath + "files/";
 			string targetDir = InstancesPath + instanceId + "/";
@@ -517,7 +469,7 @@ namespace Lexplosion.Logic.FileSystem
 			return ImportResult.Successful;
 		}
 
-		public static FileRecvResult ReceiveFile(FileReceiver reciver, out string file)
+		public FileRecvResult ReceiveFile(FileReceiver reciver, out string file)
 		{
 			string tempDir = CreateTempDir();
 			file = tempDir + "archive.zip";
@@ -525,7 +477,7 @@ namespace Lexplosion.Logic.FileSystem
 			return reciver.StartDownload(file);
 		}
 
-		public static List<byte[]> LoadMcScreenshots(string instanceId)
+		public List<byte[]> LoadMcScreenshots(string instanceId)
 		{
 			string[] files;
 			List<byte[]> screenshot = new List<byte[]>();
@@ -568,7 +520,7 @@ namespace Lexplosion.Logic.FileSystem
 			}
 		}
 
-		public static void DeleteInstance(string instanceId)
+		public void DeleteInstance(string instanceId)
 		{
 			try
 			{

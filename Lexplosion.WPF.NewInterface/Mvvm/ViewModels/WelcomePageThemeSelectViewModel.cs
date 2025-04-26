@@ -46,7 +46,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
             {
                 _appCore.Settings.ThemeService.ChangeTheme(theme, true);
                 GlobalData.GeneralSettings.ThemeName = theme.Name;
-                DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+				Runtime.ServicesContainer.DataFilesService.SaveSettings(GlobalData.GeneralSettings);
             }
         }
     }

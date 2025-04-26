@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Threading;
 using Lexplosion.Logic.FileSystem;
+using Lexplosion.Logic.FileSystem.Installers;
+using Lexplosion.Logic.FileSystem.Services;
 using Lexplosion.Logic.Objects.Curseforge;
 
 namespace Lexplosion.Logic.Management.Import.Importers
 {
 	internal class CurseforgeImportManager : ArchiveImportManager<InstanceManifest>
 	{
-		public CurseforgeImportManager(string fileAddres, Settings globalSettings, CancellationToken cancelToken) : base(fileAddres, new CurseforgeInstaller(null), globalSettings, cancelToken)
+		public CurseforgeImportManager(string fileAddres, Settings globalSettings, ICurseforgeFileServicesContainer services, CancellationToken cancelToken) : base(fileAddres, new CurseforgeInstaller(null, services), services, globalSettings, cancelToken)
 		{
 		}
 
