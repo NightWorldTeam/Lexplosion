@@ -15,7 +15,7 @@
     <s:String x:Key="zh-CN">中文</s:String>
     <s:String x:Key="de-DE">德语</s:String>
     <s:String x:Key="ru-CAT">俄语（猫咪）</s:String>
-    <s:String x:Key="lolcat">喵星语</s:String>
+    <s:String x:Key="lolcat">LOLCAT</s:String>
 
     <s:String x:Key="Default">默认</s:String>
     <!--    -->

@@ -11,8 +11,8 @@
 
     <s:String x:Key="en-US">Англиский</s:String>
     <s:String x:Key="ru-RU">Русский</s:String>
-    <s:String x:Key="uk-UA">Украиньский</s:String>
-    <s:String x:Key="zh-CN">Китайский</s:String>
+    <s:String x:Key="uk-UA">Украинський</s:String>
+    <s:String x:Key="zh-CN">Китайський</s:String>
     <s:String x:Key="de-DE">Немецкий</s:String>
     <s:String x:Key="ru-CAT">Русский (Котик)</s:String>
     <s:String x:Key="lolcat">ЛОЛКЭТ</s:String>
@@ -156,14 +156,14 @@
     <!--    -->
     <!--  About  -->
     <!--    -->
-    <s:String x:Key="Authors">Авторики</s:String>
-    <s:String x:Key="Founders">Основатики</s:String>
+     <s:String x:Key="Authors">Авторы</s:String>
+    <s:String x:Key="Founders">Основатели</s:String>
     <s:String x:Key="Developers">Разработчики</s:String>
-    <s:String x:Key="Contacts">Контактики</s:String>
-    <s:String x:Key="OurVkontakteGroup">Наша группа ВК</s:String>
-    <s:String x:Key="Protection">Эта программа под защитой котиковых законов и международных договоров. Плохое копирование или раздача программы или её кусочков приведёт к неприятностям!</s:String>
-    <s:String x:Key="Copyright">© NightWorld, 2025. Все права за котиками.</s:String>
-    <s:String x:Key="DenialOfResponsibility">Не оффициальный продукт Minecraft! Не одобрен и не связан с Mojang или Microsoft.</s:String>
+    <s:String x:Key="Contacts">Контакты</s:String>
+    <s:String x:Key="OurVkontakteGroup">Наша группа Вконтакте</s:String>
+    <s:String x:Key="Protection">Данная программа защищена законами об авторских правах и международными соглашениями. Незаконное воспроизведение или распространение данной программы или любой ее части влечет гражданскую и уголовную ответственность.</s:String>
+    <s:String x:Key="Copyright">© NightWorld, 2025г. Все права защищены.</s:String>
+    <s:String x:Key="DenialOfResponsibility">НЕ ЯВЛЯЕТСЯ ОФИЦИАЛЬНЫМ [ПРОДУКТОМ/УСЛУГОЙ/СОБЫТИЕМ И т. п.] MINECRAFT. НЕ ОДОБРЕНО И НЕ СВЯЗАНО С КОМПАНИЕЙ MOJANG ИЛИ MICROSOFT</s:String>
 
     <!--    -->
     <!--  Instance Factory Modal  -->
