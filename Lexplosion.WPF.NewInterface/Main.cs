@@ -231,10 +231,6 @@ namespace Lexplosion.WPF.NewInterface
 
         private static void InitializedSystem()
         {
-            ResourcesDictionariesRegister();
-
-            InitializedAccountSystem();
-
             App.Current.Dispatcher.Invoke(delegate ()
             {
                 App.Current.Exit += Runtime.BeforeExit;
@@ -251,7 +247,10 @@ namespace Lexplosion.WPF.NewInterface
 
             Runtime.InitializedSystem((int)_splashWindowLeft, (int)_splashWindowTop);
 
-            _appCore.UIThread.Invoke(() =>
+			ResourcesDictionariesRegister();
+			InitializedAccountSystem();
+
+			_appCore.UIThread.Invoke(() =>
             {
                 _appCore.Settings = new AppSettings();
             });
