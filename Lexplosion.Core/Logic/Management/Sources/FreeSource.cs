@@ -11,6 +11,7 @@ using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Global;
 using Lexplosion.Logic.Network.Services;
+using Lexplosion.Logic.FileSystem.Services;
 
 namespace Lexplosion.Logic.Management.Sources
 {
@@ -21,15 +22,17 @@ namespace Lexplosion.Logic.Management.Sources
 
 		public string SourceId = null;
 		public string SourceUrl = null;
+		private readonly IAllFileServicesContainer _services;
 
 		public FreeSource() { }
-		public FreeSource(string sourceId, string sourceUrl)
+		public FreeSource(string sourceId, string sourceUrl, IAllFileServicesContainer services)
 		{
 			SourceId = sourceId;
 			SourceUrl = sourceUrl;
+			_services = services;
 		}
 
-		private static SourceMap GetSourceMap(FreeSourcePlatformData infoData)
+		private SourceMap GetSourceMap(FreeSourcePlatformData infoData)
 		{
 			lock (_locker)
 			{
@@ -50,7 +53,7 @@ namespace Lexplosion.Logic.Management.Sources
 				}
 				else
 				{
-					sourceUrl = ToServer.HttpGet(LaunсherSettings.URL.Base + "api/freeSources/" + infoData.sourceId + "/mapUrl");
+					sourceUrl = _services.WebService.HttpGet(LaunсherSettings.URL.Base + "api/freeSources/" + infoData.sourceId + "/mapUrl");
 					if (string.IsNullOrWhiteSpace(sourceUrl))
 					{
 						return null;
@@ -59,7 +62,7 @@ namespace Lexplosion.Logic.Management.Sources
 
 				try
 				{
-					string result = ToServer.HttpGet(sourceUrl);
+					string result = _services.WebService.HttpGet(sourceUrl);
 					if (result == null)
 					{
 						return null;
@@ -84,7 +87,7 @@ namespace Lexplosion.Logic.Management.Sources
 			}
 		}
 
-		public PrototypeInstance ContentManager => new FreeInstance(GetSourceMap);
+		public PrototypeInstance ContentManager => new FreeInstance(GetSourceMap, _services);
 
 		public InstanceSource SourceType => InstanceSource.FreeSource;
 
@@ -95,8 +98,8 @@ namespace Lexplosion.Logic.Management.Sources
 
 		public IInstallManager GetInstaller(string localId, bool updateOnlyBase, CancellationToken updateCancelToken)
 		{
-			var content = DataFilesManager.GetExtendedPlatfromData<FreeSourcePlatformData>(localId);
-			return new FreeSourceInstanceInstallManager(GetSourceMap(content), localId, updateOnlyBase, NetworkServicesManager.MinecraftInfo, updateCancelToken);
+			var content = _services.DataFilesService.GetExtendedPlatfromData<FreeSourcePlatformData>(localId);
+			return new FreeSourceInstanceInstallManager(GetSourceMap(content), localId, updateOnlyBase, _services, updateCancelToken);
 		}
 
 		public InstancePlatformData CreateInstancePlatformData(string externalId, string localId, string instanceVersion)

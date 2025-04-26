@@ -10,6 +10,9 @@ using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Network.WebSockets;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Management;
+using Lexplosion.Logic.Network.Services;
+using Lexplosion.Logic.Network.Web;
+using Lexplosion.Logic.Management.Accounts;
 
 namespace Lexplosion
 {
@@ -18,6 +21,7 @@ namespace Lexplosion
 		public static bool IsFirtsLaunch { get; private set; }
 		public static Process CurrentProcess { get; private set; }
 
+		public static AllServicesContainer ServicesContainer { get; private set; }
 		public static ClientsManager ClientsManager { get; private set; }
 
 		/// <summary>
@@ -65,12 +69,28 @@ namespace Lexplosion
 			AppDomain.CurrentDomain.UnhandledException += delegate (object sender, UnhandledExceptionEventArgs args)
 			{
 				Exception exception = (Exception)args.ExceptionObject;
-				DataFilesManager.SaveFile(LaunсherSettings.LauncherDataPath + "/crash-report_" + DateTime.Now.ToString("dd.MM.yyyy-h.mm.ss") + ".log", exception.ToString());
+				File.WriteAllText(LaunсherSettings.LauncherDataPath + "/crash-report_" + DateTime.Now.ToString("dd.MM.yyyy-h.mm.ss") + ".log", exception.ToString());
 			};
 
+			var withDirectory = new WithDirectory();
+			var dataFilesManager = new DataFilesManager(withDirectory);
+			var toServer = new ToServer();
+			var minecraftInfo = new MinecraftInfoService(toServer);
+			var nightWorldApi = new NightWorldApi(toServer);
+			var modrinthApi = new ModrinthApi(toServer);
+			var curesforgeApi = new CurseforgeApi(toServer);
+			var mojangApi = new MojangApi(toServer);
+
+			var categoriesManager = new CategoriesManager(modrinthApi, curesforgeApi);
+
+			var services = new AllServicesContainer(toServer, minecraftInfo, withDirectory, dataFilesManager, curesforgeApi, modrinthApi, nightWorldApi, mojangApi, categoriesManager);
+			ServicesContainer = services;
+
+			ClientsManager = new ClientsManager(services);
+
 			// инициализация
-			GlobalData.InitSetting();
-			WithDirectory.Create(GlobalData.GeneralSettings.GamePath);
+			GlobalData.InitSetting(dataFilesManager);
+			withDirectory.Create(GlobalData.GeneralSettings.GamePath);
 
 			LaunchGame.OnlineGameSystemStarted += AddImportantTask;
 			LaunchGame.OnlineGameSystemStoped += RemoveImportantTask;
@@ -86,7 +106,7 @@ namespace Lexplosion
 				CurrentProcess.Kill(); //стопаем этот процесс
 			}
 
-			int version = ToServer.CheckLauncherUpdates();
+			int version = nightWorldApi.CheckLauncherUpdates();
 
 			if (version == -1)
 			{
@@ -100,7 +120,8 @@ namespace Lexplosion
 				LauncherUpdate(version, updaterOffsetLeft, updaterOffsetRight);
 			}
 
-			ClientsManager = new ClientsManager();
+			Account.Init();
+
 			ClientsManager.DefineInstalledInstances();
 
 			bool isStarted = CommandReceiver.StartCommandServer();
@@ -122,7 +143,7 @@ namespace Lexplosion
 			if (IsFirtsLaunch)
 			{
 				// При сохранении он автоматом пометит ItIsNotShit как true
-				DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+				dataFilesManager.SaveSettings(GlobalData.GeneralSettings);
 			}
 
 			//подписываемся на эвент открытия второй копии лаунчера
@@ -133,24 +154,24 @@ namespace Lexplosion
 		{
 			try
 			{
-				int upgradeToolVersion = Int32.Parse(ToServer.HttpPost(LaunсherSettings.URL.LauncherParts + "upgradeToolVersion.html"));
+				int upgradeToolVersion = Int32.Parse(ServicesContainer.WebService.HttpPost(LaunсherSettings.URL.LauncherParts + "upgradeToolVersion.html"));
 				string gamePath = GlobalData.GeneralSettings.GamePath;
 
 				// скачивание и проверка версии UpgradeTool.exe
 				using (WebClient wc = new WebClient())
 				{
 					wc.Proxy = null;
-					if (DataFilesManager.GetUpgradeToolVersion() < upgradeToolVersion && File.Exists(gamePath + "/UpgradeTool.exe"))
+					if (ServicesContainer.DataFilesService.GetUpgradeToolVersion() < upgradeToolVersion && File.Exists(gamePath + "/UpgradeTool.exe"))
 					{
 						File.Delete(gamePath + "/UpgradeTool.exe");
 						wc.DownloadFile(LaunсherSettings.URL.LauncherParts + "UpgradeTool.exe?" + upgradeToolVersion, gamePath + "/UpgradeTool.exe");
-						DataFilesManager.SetUpgradeToolVersion(upgradeToolVersion);
+						ServicesContainer.DataFilesService.SetUpgradeToolVersion(upgradeToolVersion);
 
 					}
 					else if (!File.Exists(gamePath + "/UpgradeTool.exe"))
 					{
 						wc.DownloadFile(LaunсherSettings.URL.LauncherParts + "UpgradeTool.exe?" + upgradeToolVersion, gamePath + "/UpgradeTool.exe");
-						DataFilesManager.SetUpgradeToolVersion(upgradeToolVersion);
+						ServicesContainer.DataFilesService.SetUpgradeToolVersion(upgradeToolVersion);
 					}
 				}
 

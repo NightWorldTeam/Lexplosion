@@ -190,16 +190,49 @@ namespace Lexplosion.Logic.Network
 
 				return await response.Content.ReadAsStringAsync();
 			}
-			catch (Exception ex) 
+			catch (Exception ex)
 			{
 				Runtime.DebugWrite($"url: {url}, Exception: {ex}, stack trace: {new System.Diagnostics.StackTrace()}");
 				return null;
 			}
 		}
 
-		public string HttpGet(string url, IDictionary<string, string> headers = null, int timeout = 0)
+		public string HttpGet(string url, Dictionary<string, string> headers = null, int timeout = 0)
 		{
-			return HttpGetAsync(url, headers, timeout).Result;
+			try
+			{
+				string answer;
+
+				WebRequest req = WebRequest.Create(url);
+				((HttpWebRequest)req).UserAgent = "Mozilla/5.0";
+				if (timeout > 0) req.Timeout = timeout;
+
+				if (headers != null)
+				{
+					foreach (var header in headers)
+					{
+						req.Headers.Add(header.Key, header.Value);
+					}
+				}
+
+				using (WebResponse resp = req.GetResponse())
+				{
+					using (Stream stream = resp.GetResponseStream())
+					{
+						using (StreamReader sr = new StreamReader(stream))
+						{
+							answer = sr.ReadToEnd();
+						}
+					}
+				}
+
+				return answer;
+			}
+			catch (Exception ex)
+			{
+				Runtime.DebugWrite($"url: {url}, Exception: {ex}, stack trace: {new System.Diagnostics.StackTrace()}");
+				return null;
+			}
 		}
 
 		public async Task<string> HttpGetAsync(string url, IDictionary<string, string> headers = null, int timeout = 0)

@@ -6,16 +6,20 @@ using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects.FreeSource;
 using Lexplosion.Logic.Network.Services;
+using Lexplosion.Logic.FileSystem.Installers;
+using Lexplosion.Logic.FileSystem.Services;
 
 namespace Lexplosion.Logic.Management.Installers
 {
 	class FreeSourceInstanceInstallManager : ArchiveInstallManager<FreeSourceInstanceInstaller, InstanceManifest, ModpackVersion, FreeSourcePlatformData>
 	{
 		private SourceMap _urlsMap;
+		private ToServer _toServer;
 
-		public FreeSourceInstanceInstallManager(SourceMap urlsMap, string instanceid, bool onlyBase, MinecraftInfoService infoService, CancellationToken cancelToken) : base(new FreeSourceInstanceInstaller(instanceid), instanceid, onlyBase, infoService, cancelToken)
+		public FreeSourceInstanceInstallManager(SourceMap urlsMap, string instanceid, bool onlyBase, IAllFileServicesContainer services, CancellationToken cancelToken) : base(new FreeSourceInstanceInstaller(instanceid, services), instanceid, onlyBase, services, cancelToken)
 		{
 			_urlsMap = urlsMap;
+			_toServer = services.WebService;
 		}
 
 		public override string ProjectId => projectInfo?.ModpackId ?? string.Empty;
@@ -62,7 +66,7 @@ namespace Lexplosion.Logic.Management.Installers
 				return null;
 			}
 
-			string result = ToServer.HttpPost(url);
+			string result = _toServer.HttpPost(url);
 			if (result == null)
 			{
 				return null;
@@ -97,7 +101,7 @@ namespace Lexplosion.Logic.Management.Installers
 				return null;
 			}
 
-			string result = ToServer.HttpPost(url);
+			string result = _toServer.HttpPost(url);
 			if (result == null)
 			{
 				return null;

@@ -8,6 +8,7 @@ using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Objects.CommonClientData;
 using static Lexplosion.Logic.Management.Import.ImportInterruption;
+using Lexplosion.Logic.FileSystem.Services;
 
 namespace Lexplosion.Logic.Management.Import.Importers
 {
@@ -18,18 +19,22 @@ namespace Lexplosion.Logic.Management.Import.Importers
 		private readonly Guid _importId;
 		private readonly CancellationToken _cancelToken;
 		private readonly DynamicStateHandler<ImportInterruption, InterruptionType> _interruptionHandler;
+		private readonly WithDirectory _withDirectory;
+		private readonly DataFilesManager _dataFilesManager;
 
 		private VersionManifest _versionManifest;
 		private string _localId;
 		private string _unzipPath;
 
-		public SimpleArchiveImportManager(string fileAddres, Settings settings, Guid importId, CancellationToken cancelToken, DynamicStateHandler<ImportInterruption, InterruptionType> interruptionHandler)
+		public SimpleArchiveImportManager(string fileAddres, Settings settings, IFileServicesContainer services, Guid importId, CancellationToken cancelToken, DynamicStateHandler<ImportInterruption, InterruptionType> interruptionHandler)
 		{
 			_fileAddres = fileAddres;
 			_settings = settings;
 			_importId = importId;
 			_cancelToken = cancelToken;
 			_interruptionHandler = interruptionHandler;
+			_withDirectory = services.DirectoryService;
+			_dataFilesManager =  services.DataFilesService;
 		}
 
 		public int CompletedStagesCount { private get; set; }
@@ -37,12 +42,12 @@ namespace Lexplosion.Logic.Management.Import.Importers
 		public ImportResult Import(ProgressHandlerCallback progressHandler, out IReadOnlyCollection<string> errors)
 		{
 			errors = new List<string>();
-			ImportResult result = WithDirectory.MoveUnpackedInstance(_localId, _unzipPath);
+			ImportResult result = _withDirectory.MoveUnpackedInstance(_localId, _unzipPath);
 			if (result != ImportResult.Successful)
 			{
 				try
 				{
-					string dir = WithDirectory.GetInstancePath(_localId);
+					string dir = _withDirectory.GetInstancePath(_localId);
 					if (Directory.Exists(dir)) Directory.Delete(dir, true);
 				}
 				catch { }
@@ -50,7 +55,7 @@ namespace Lexplosion.Logic.Management.Import.Importers
 				return result;
 			}
 
-			DataFilesManager.SaveManifest(_localId, _versionManifest);
+			_dataFilesManager.SaveManifest(_localId, _versionManifest);
 
 			return ImportResult.Successful;
 		}
@@ -66,7 +71,7 @@ namespace Lexplosion.Logic.Management.Import.Importers
 				Procents = 0
 			});
 
-			_unzipPath = WithDirectory.CreateTempDir() + "import/";
+			_unzipPath = _withDirectory.CreateTempDir() + "import/";
 			string activeUnzipPath = _unzipPath + "files";
 
 			try

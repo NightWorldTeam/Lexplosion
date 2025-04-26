@@ -5,6 +5,8 @@ using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Tools;
 using Lexplosion.Logic.Network.Services;
+using Lexplosion.Logic.FileSystem.Installers;
+using Lexplosion.Logic.FileSystem.Services;
 
 namespace Lexplosion.Logic.Management.Installers
 {
@@ -32,6 +34,9 @@ namespace Lexplosion.Logic.Management.Installers
 		private readonly MinecraftInfoService _infoService;
 		private CancellationToken _cancelToken;
 
+		private readonly WithDirectory _withDirectory;
+		private readonly DataFilesManager _dataFilesManager;
+
 		private int _updatesCount = 0;
 
 		private bool _serverManifestIsNull = false;
@@ -50,13 +55,15 @@ namespace Lexplosion.Logic.Management.Installers
 
 		public event Action DownloadStarted;
 
-		public ArchiveInstallManager(TInstaller installer, string instanceid, bool onlyBase, MinecraftInfoService infoService, CancellationToken cancelToken)
+		public ArchiveInstallManager(TInstaller installer, string instanceid, bool onlyBase, IFileServicesContainer services, CancellationToken cancelToken)
 		{
 			_instanceId = instanceid;
 			_onlyBase = onlyBase;
-			_infoService = infoService;
+			_infoService = services.MinecraftService;
 			_cancelToken = cancelToken;
 			_installer = installer;
+			_withDirectory = services.DirectoryService;
+			_dataFilesManager = services.DataFilesService;
 		}
 
 		/// <summary>
@@ -111,8 +118,8 @@ namespace Lexplosion.Logic.Management.Installers
 		{
 			javaVersionName = string.Empty;
 
-			_manifest = DataFilesManager.GetManifest(_instanceId, false);
-			_infoData = DataFilesManager.GetExtendedPlatfromData<CPlatformData>(_instanceId);
+			_manifest = _dataFilesManager.GetManifest(_instanceId, false);
+			_infoData = _dataFilesManager.GetExtendedPlatfromData<CPlatformData>(_instanceId);
 
 			if (!LocalInfoIsValid(_infoData))
 			{
@@ -134,7 +141,7 @@ namespace Lexplosion.Logic.Management.Installers
 
 				if (_manifest != null)
 				{
-					_updates = DataFilesManager.GetLastUpdates(_instanceId);
+					_updates = _dataFilesManager.GetLastUpdates(_instanceId);
 					_updatesCount = _installer.CheckBaseFiles(_manifest, ref _updates); // проверяем основные файлы клиента на обновление
 
 					if (_updatesCount == -1)
@@ -150,7 +157,7 @@ namespace Lexplosion.Logic.Management.Installers
 				{
 					Runtime.DebugWrite("Manifest from server is null. Load local manifest");
 					_serverManifestIsNull = true;
-					_manifest = DataFilesManager.GetManifest(_instanceId, true);
+					_manifest = _dataFilesManager.GetManifest(_instanceId, true);
 
 					if (string.IsNullOrWhiteSpace(_manifest?.version?.GameVersion))
 					{
@@ -180,7 +187,7 @@ namespace Lexplosion.Logic.Management.Installers
 				_infoData.instanceVersion = GetProjectVersion(info);
 			}
 
-			DataFilesManager.SavePlatfromData(_instanceId, _infoData);
+			_dataFilesManager.SavePlatfromData(_instanceId, _infoData);
 
 			javaVersionName = _manifest.version.JavaVersionName ?? string.Empty;
 			return InstanceInit.Successful;
@@ -219,7 +226,7 @@ namespace Lexplosion.Logic.Management.Installers
 						if (ProfectInfoIsValid)
 						{
 							_infoData.instanceVersion = GetProjectVersion(projectInfo);
-							DataFilesManager.SavePlatfromData(_instanceId, _infoData);
+							_dataFilesManager.SavePlatfromData(_instanceId, _infoData);
 						}
 						else
 						{
@@ -253,7 +260,7 @@ namespace Lexplosion.Logic.Management.Installers
 
 				InstanceFileGetter fileGetter = (string tempDir, Func<string, TaskArgs> taskArgsGetter) =>
 				{
-					bool res = WithDirectory.DownloadFile(ArchiveDownloadUrl, ArchiveFileName, tempDir, taskArgsGetter(ArchiveFileName));
+					bool res = _withDirectory.DownloadFile(ArchiveDownloadUrl, ArchiveFileName, tempDir, taskArgsGetter(ArchiveFileName));
 					return (res, tempDir + ArchiveFileName, ArchiveFileName);
 				};
 
@@ -314,7 +321,7 @@ namespace Lexplosion.Logic.Management.Installers
 
 					if (_manifest != null)
 					{
-						DataFilesManager.SaveManifest(_instanceId, _manifest);
+						_dataFilesManager.SaveManifest(_instanceId, _manifest);
 
 						if (_cancelToken.IsCancellationRequested)
 						{
@@ -324,7 +331,7 @@ namespace Lexplosion.Logic.Management.Installers
 							};
 						}
 
-						_updates = DataFilesManager.GetLastUpdates(_instanceId);
+						_updates = _dataFilesManager.GetLastUpdates(_instanceId);
 						_updatesCount = _installer.CheckBaseFiles(_manifest, ref _updates); // проверяем основные файлы клиента на обновление
 
 						if (_updatesCount == -1)
@@ -551,7 +558,7 @@ namespace Lexplosion.Logic.Management.Installers
 				}
 			}
 
-			DataFilesManager.SaveManifest(_instanceId, _manifest);
+			_dataFilesManager.SaveManifest(_instanceId, _manifest);
 
 			return new InitData
 			{

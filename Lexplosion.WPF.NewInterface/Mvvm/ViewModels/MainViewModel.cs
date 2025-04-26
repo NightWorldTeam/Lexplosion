@@ -183,7 +183,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
         {
             Lexplosion.Runtime.TaskRun(() =>
             {
-                var versionsList = CoreServicesManager.MinecraftInfo.GetVersionsList();
+                var versionsList = Runtime.ServicesContainer.MinecraftService.GetVersionsList();
                 var releaseOnlyVersions = new List<MinecraftVersion>();
                 var allVersions = new MinecraftVersion[versionsList.Count];
                 var i = 0;

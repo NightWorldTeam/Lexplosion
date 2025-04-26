@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace Lexplosion.Logic.Network.Web
 {
-	static class MojangApi
+	public class MojangApi
 	{
 		private class AuthAnswer
 		{
@@ -20,9 +20,32 @@ namespace Lexplosion.Logic.Network.Web
 			public SelectedProfile selectedProfile;
 		}
 
-		private static Random random = new Random();
+		private class MicrosoftData
+		{
+			public string uhs;
+			public string xsts_token;
+		}
 
-		public static MojangAuthResult Auth(string username, string password)
+		private class MicrosoftAuthRes
+		{
+			public string access_token;
+		}
+
+		private class MojangProfile
+		{
+			public string id;
+			public string name;
+		}
+
+		public MojangApi(ToServer toServer)
+		{
+			_toServer = toServer;
+		}
+
+		private Random _random = new Random();
+		private readonly ToServer _toServer;
+
+		public MojangAuthResult Auth(string username, string password)
 		{
 			try
 			{
@@ -34,10 +57,10 @@ namespace Lexplosion.Logic.Network.Web
 						"}," +
 						"\"username\": \"" + username + "\"," +
 						"\"password\": \"" + password + "\"," +
-						"\"clientToken\": \"" + random.GenerateString(20) + "\"" +
+						"\"clientToken\": \"" + _random.GenerateString(20) + "\"" +
 					"}";
 
-				string answer = ToServer.HttpPostJson("https://authserver.mojang.com/authenticate", payload, out HttpStatusCode? statusCode);
+				string answer = _toServer.HttpPostJson("https://authserver.mojang.com/authenticate", payload, out HttpStatusCode? statusCode);
 
 				if (answer == null)
 				{
@@ -90,7 +113,7 @@ namespace Lexplosion.Logic.Network.Web
 			};
 		}
 
-		public static MojangAuthResult Refresh(string username, string accessToken, string clientToken)
+		public MojangAuthResult Refresh(string username, string accessToken, string clientToken)
 		{
 			try
 			{
@@ -100,7 +123,7 @@ namespace Lexplosion.Logic.Network.Web
 						"\"clientToken\": \"" + clientToken + "\"" +
 					"}";
 
-				string answer = ToServer.HttpPostJson("https://authserver.mojang.com/refresh", payload, out HttpStatusCode? statusCode);
+				string answer = _toServer.HttpPostJson("https://authserver.mojang.com/refresh", payload, out HttpStatusCode? statusCode);
 
 				if (answer == null)
 				{
@@ -153,29 +176,12 @@ namespace Lexplosion.Logic.Network.Web
 			};
 		}
 
-		private class MicrosoftData
-		{
-			public string uhs;
-			public string xsts_token;
-		}
-
-		private class MicrosoftAuthRes
-		{
-			public string access_token;
-		}
-
-		private class MojangProfile
-		{
-			public string id;
-			public string name;
-		}
-
 		/// <summary>
 		/// Возвращает токен для майнрафта.
 		/// </summary>
 		/// <param name="microsoftData">json массив microsoft данных (uhs и xsts_token)</param>
 		/// <returns>Возвращает токен, который можно использовать для получения аккаунта.</returns>
-		public static string GetToken(string microsoftData)
+		public string GetToken(string microsoftData)
 		{
 			try
 			{
@@ -187,7 +193,7 @@ namespace Lexplosion.Logic.Network.Web
 						"\"ensureLegacyEnabled\" : true" +
 					"}";
 
-				string answer = ToServer.HttpPostJson("https://api.minecraftservices.com/authentication/login_with_xbox", payload, out _);
+				string answer = _toServer.HttpPostJson("https://api.minecraftservices.com/authentication/login_with_xbox", payload, out _);
 
 				if (answer == null)
 				{
@@ -207,11 +213,11 @@ namespace Lexplosion.Logic.Network.Web
 		/// </summary>
 		/// <param name="token">Сам токен. Получить можно в GetToken.</param>
 		/// <returns>Результат.</returns>
-		public static MojangAuthResult AuthFromToken(string token)
+		public MojangAuthResult AuthFromToken(string token)
 		{
 			try
 			{
-				string answer = ToServer.HttpGet("https://api.minecraftservices.com/minecraft/profile", new Dictionary<string, string>()
+				string answer = _toServer.HttpGet("https://api.minecraftservices.com/minecraft/profile", new Dictionary<string, string>()
 				{
 					["Authorization"] = "Bearer " + token
 				});

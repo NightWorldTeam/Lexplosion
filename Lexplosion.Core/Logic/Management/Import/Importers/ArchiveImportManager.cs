@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using Lexplosion.Logic.FileSystem;
+using Lexplosion.Logic.FileSystem.Services;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Tools;
 
@@ -12,6 +13,7 @@ namespace Lexplosion.Logic.Management.Import.Importers
 	{
 		private CancellationToken _cancelToken;
 		private Settings _settings;
+		private DataFilesManager _dataFilesManager;
 
 		protected string instanceId;
 		protected string fileAddres;
@@ -20,12 +22,13 @@ namespace Lexplosion.Logic.Management.Import.Importers
 		/// Конструктор, автоматом определяющий делегат получения файла модпака.
 		/// </summary>
 		/// <param name="fileAddres">Путь до файла модпака.</param>
-		protected ArchiveImportManager(string fileAddres, IArchivedInstanceInstaller<TManifest> installer, Settings globalSettings, CancellationToken cancelToken)
+		protected ArchiveImportManager(string fileAddres, IArchivedInstanceInstaller<TManifest> installer, IFileServicesContainer services, Settings globalSettings, CancellationToken cancelToken)
 		{
 			this.fileAddres = fileAddres;
 			_cancelToken = cancelToken;
 			_settings = globalSettings;
 			this.installer = installer;
+			_dataFilesManager = services.DataFilesService;
 		}
 
 		protected IArchivedInstanceInstaller<TManifest> installer;
@@ -142,7 +145,7 @@ namespace Lexplosion.Logic.Management.Import.Importers
 				return ImportResult.DownloadError;
 			}
 
-			DataFilesManager.SaveManifest(instanceId, versionManifest);
+			_dataFilesManager.SaveManifest(instanceId, versionManifest);
 			return ImportResult.Successful;
 		}
 

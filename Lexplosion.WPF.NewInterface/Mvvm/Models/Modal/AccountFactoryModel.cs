@@ -1,4 +1,5 @@
-﻿using Lexplosion.Logic.Management.Accounts;
+﻿using Lexplosion.Logic.Management;
+using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.Logic.Network;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Authorization;
@@ -12,9 +13,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Modal
         private readonly Action AuthFinished;
         private readonly AppCore _appCore;
         private readonly Action _toAccountFactory;
+		private readonly AllServicesContainer _allServicesContainer = Runtime.ServicesContainer;
 
 
-        private event Action<string> MicrosoftInputTokenPassed;
+		private event Action<string> MicrosoftInputTokenPassed;
 
         private Action UnsubscribeMicrosoftAuthPassedEvent;
 
@@ -153,7 +155,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Modal
 
         private void NoAuth()
         {
-            var account = new Account(AccountType.NoAuth, Login);
+            var account = new Account(AccountType.NoAuth, _allServicesContainer, _allServicesContainer.DataFilesService, Login);
             account.Save();
             IsAuthorizationInProcess = true;
             AuthFinished?.Invoke();
@@ -161,7 +163,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Modal
 
         private void NightWorldAuth()
         {
-            var account = new Account(AccountType.NightWorld, Login);
+            var account = new Account(AccountType.NightWorld, _allServicesContainer, _allServicesContainer.DataFilesService, Login);
 
             Runtime.TaskRun(() =>
             {
@@ -185,7 +187,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Modal
 
         private void MicrosoftAuth()
         {
-            var account = new Account(AccountType.Microsoft);
+            var account = new Account(AccountType.Microsoft, _allServicesContainer, _allServicesContainer.DataFilesService);
 
             void SuccessAuth(string token, MicrosoftAuthRes res)
             {

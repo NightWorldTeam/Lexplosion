@@ -123,7 +123,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
             _selectedSortByParam = SortByList[0];
             _instanceModelBase = instanceModelBase;
 
-            string folderName = string.Empty;
+			string folderName = string.Empty;
 
             switch (type)
             {
@@ -162,7 +162,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
             Runtime.TaskRun(() =>
             {
                 _baseInstanceData = instanceModelBase.BaseData;
-                var instanceAddons = AddonsManager.GetManager(_baseInstanceData).GetInstalledAddons(type);
+                var instanceAddons = AddonsManager.GetManager(_baseInstanceData, Runtime.ServicesContainer).GetInstalledAddons(type);
 
                 App.Current.Dispatcher.Invoke(() => 
                 {
@@ -172,9 +172,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
                     IsAddonsLoading = false;
                     OnPropertyChanged(nameof(AddonsCount));
 
-                    AddonsManager.GetManager(_baseInstanceData).StartWathingDirecoty();
-                    AddonsManager.GetManager(_baseInstanceData).AddonAdded += InstanceAddon_AddonAdded;
-                    AddonsManager.GetManager(_baseInstanceData).AddonRemoved += InstanceAddon_AddonRemoved;
+                    AddonsManager.GetManager(_baseInstanceData, Runtime.ServicesContainer).StartWathingDirecoty();
+                    AddonsManager.GetManager(_baseInstanceData, Runtime.ServicesContainer).AddonAdded += InstanceAddon_AddonAdded;
+                    AddonsManager.GetManager(_baseInstanceData, Runtime.ServicesContainer).AddonRemoved += InstanceAddon_AddonRemoved;
                 });
             });
 
@@ -185,7 +185,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
                     if (files.Count() > 10)
                         IsAddonsLoading = true;
 
-                    AddonsManager.GetManager(_baseInstanceData).AddAddons(files, type, out var addons);
+                    AddonsManager.GetManager(_baseInstanceData, Runtime.ServicesContainer).AddAddons(files, type, out var addons);
 
                     if (addons == null)
                         return;
@@ -266,7 +266,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile
             IsAddonsLoading = true;
             Runtime.TaskRun(() =>
             {
-                var installedAddons = AddonsManager.GetManager(_baseInstanceData).GetInstalledAddons(Type);
+                var installedAddons = AddonsManager.GetManager(_baseInstanceData, Runtime.ServicesContainer).GetInstalledAddons(Type);
                 //IsAddonsLoaded = !false;
                 SetAddons(installedAddons, true, true);
             });

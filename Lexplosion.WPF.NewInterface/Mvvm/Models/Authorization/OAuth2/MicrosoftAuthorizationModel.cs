@@ -90,7 +90,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization.OAuth2
 
         private void LogInInternal(string microsoftData)
         {
-            var account = new Account(AccountType.Microsoft);
+			var services = Runtime.ServicesContainer;
+			var account = new Account(AccountType.Microsoft, services, services.DataFilesService);
 
             if (Account.LaunchAccount == null)
             {

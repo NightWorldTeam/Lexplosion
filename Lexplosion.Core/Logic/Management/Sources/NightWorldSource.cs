@@ -1,4 +1,5 @@
 ﻿using Lexplosion.Global;
+using Lexplosion.Logic.FileSystem.Services;
 using Lexplosion.Logic.Management.Installers;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network;
@@ -12,16 +13,23 @@ namespace Lexplosion.Logic.Management.Sources
 {
 	class NightWorldSource : IInstanceSource
 	{
-		public PrototypeInstance ContentManager { get => new NightworldInstance(); }
+		private readonly INightWorldFileServicesContainer _services;
+
+		public NightWorldSource(INightWorldFileServicesContainer services)
+		{
+			_services = services;
+		}
+
+		public PrototypeInstance ContentManager { get => new NightworldInstance(_services); }
 
 		public IInstallManager GetInstaller(string localId, bool updateOnlyBase, CancellationToken updateCancelToken)
 		{
-			return new NightworldInstallManager(localId, updateOnlyBase, NetworkServicesManager.MinecraftInfo, updateCancelToken);
+			return new NightworldInstallManager(localId, updateOnlyBase, _services, updateCancelToken);
 		}
 
 		public CatalogResult<Objects.InstanceInfo> GetCatalog(InstanceSource type, ISearchParams searchParams)
 		{
-			Dictionary<string, NightWorldApi.InstanceInfo> nwInstances = NightWorldApi.GetInstancesList();
+			Dictionary<string, NightWorldApi.InstanceInfo> nwInstances = _services.NwApi.GetInstancesList();
 			var result = new List<Objects.InstanceInfo>();
 
 			var i = 0;

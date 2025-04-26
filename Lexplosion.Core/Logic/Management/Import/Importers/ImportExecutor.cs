@@ -4,6 +4,8 @@ using System.IO;
 using System.IO.Compression;
 using System.Threading;
 using Lexplosion.Logic.FileSystem;
+using Lexplosion.Logic.FileSystem.Services;
+using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.Tools;
 using static Lexplosion.Logic.Management.Import.ImportInterruption;
 
@@ -13,6 +15,8 @@ namespace Lexplosion.Logic.Management.Import.Importers
 	{
 		private string _filePath;
 		private Settings _settings;
+		private readonly IAllFileServicesContainer _services;
+		private readonly WithDirectory _withDirectory;
 		private IImportManager _importManager;
 		private ProgressHandlerCallback _progressHandler;
 		private readonly DynamicStateHandler<ImportInterruption, InterruptionType> _interruptionHandler;
@@ -20,15 +24,17 @@ namespace Lexplosion.Logic.Management.Import.Importers
 		private CancellationToken _cancellationToken;
 		private bool _fileAddrIsLocalPath;
 
-		public ImportExecutor(string fileAddr, bool fileAddrIsLocalPath, Settings settings, ProgressHandlerCallback progressHandler, ImportData importData)
+		public ImportExecutor(string fileAddr, bool fileAddrIsLocalPath, Settings settings, IAllFileServicesContainer services, ProgressHandlerCallback progressHandler, ImportData importData)
 		{
 			_filePath = fileAddr;
 			_settings = settings;
+			_services = services;
 			_progressHandler = progressHandler;
 			_interruptionHandler = importData.InterruptionHandler;
 			_cancellationToken = importData.CancelToken;
 			_fileAddrIsLocalPath = fileAddrIsLocalPath;
 			_importId = importData.ImportId;
+			_withDirectory = services.DirectoryService;
 		}
 
 		private void DefineManagerType()
@@ -38,14 +44,14 @@ namespace Lexplosion.Logic.Management.Import.Importers
 				if (Path.GetExtension(_filePath) == ".mrpack")
 				{
 					Runtime.DebugWrite(".mrpack pack");
-					_importManager = new ModrinthImportManager(_filePath, _settings, _cancellationToken);
+					_importManager = new ModrinthImportManager(_filePath, _settings, _services, _cancellationToken);
 					return;
 				}
 
 				if (Path.GetExtension(_filePath) == ".nwpk")
 				{
 					Runtime.DebugWrite(".nwpk pack");
-					_importManager = new NWPackImportManager(_filePath, _settings, _cancellationToken);
+					_importManager = new NWPackImportManager(_filePath, _settings, _services, _cancellationToken);
 					return;
 				}	
 			}
@@ -60,25 +66,25 @@ namespace Lexplosion.Logic.Management.Import.Importers
 					if (archive.GetEntry("modrinth.index.json") != null)
 					{
 						Runtime.DebugWrite("is modrinth");
-						_importManager = new ModrinthImportManager(_filePath, _settings, _cancellationToken);
+						_importManager = new ModrinthImportManager(_filePath, _settings, _services, _cancellationToken);
 						return;
 					}
 
 					if (archive.GetEntry("instanceInfo.json") != null)
 					{
 						Runtime.DebugWrite("is nightworld");
-						_importManager = new NWPackImportManager(_filePath, _settings, _cancellationToken);
+						_importManager = new NWPackImportManager(_filePath, _settings, _services, _cancellationToken);
 						return;
 					}
 
 					if (archive.GetEntry("manifest.json") != null)
 					{
 						Runtime.DebugWrite("is curseforge");
-						_importManager = new CurseforgeImportManager(_filePath, _settings, _cancellationToken);
+						_importManager = new CurseforgeImportManager(_filePath, _settings, _services, _cancellationToken);
 						return;
 					}
 
-					_importManager = new SimpleArchiveImportManager(_filePath, _settings, _importId, _cancellationToken, _interruptionHandler);
+					_importManager = new SimpleArchiveImportManager(_filePath, _settings, _services, _importId, _cancellationToken, _interruptionHandler);
 				}
 			}
 			catch (Exception ex)
@@ -93,7 +99,7 @@ namespace Lexplosion.Logic.Management.Import.Importers
 			if (!_fileAddrIsLocalPath)
 			{
 				string fileName = "axaxa_ebala";
-				string tempDir = WithDirectory.CreateTempDir();
+				string tempDir = _withDirectory.CreateTempDir();
 
 				var taskArgs = new TaskArgs()
 				{
@@ -110,7 +116,7 @@ namespace Lexplosion.Logic.Management.Import.Importers
 					}
 				};
 
-				if (!WithDirectory.DownloadFile(_filePath, fileName, tempDir, taskArgs))
+				if (!_withDirectory.DownloadFile(_filePath, fileName, tempDir, taskArgs))
 				{
 					result = new PrepeareResult();
 					return ImportResult.DownloadError;

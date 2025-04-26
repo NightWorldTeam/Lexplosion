@@ -1,19 +1,28 @@
-﻿using Lexplosion.Logic.Network.Web;
-using Lexplosion.Logic.Objects;
-using Lexplosion.Logic.Objects.Modrinth;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using Lexplosion.Logic.FileSystem.Services;
+using Lexplosion.Logic.Network.Web;
+using Lexplosion.Logic.Objects;
+using Lexplosion.Logic.Objects.Modrinth;
 
 namespace Lexplosion.Logic.Management
 {
-	public static class CategoriesManager
+	public class CategoriesManager
 	{
-		private static ConcurrentDictionary<ProjectSource, IEnumerable<CategoryBase>> _modpacksCategoriesChache = new();
-		private static ConcurrentDictionary<ValueTuple<ProjectSource, AddonType>, IEnumerable<CategoryBase>> _addonsCategoriesChache = new();
+		public CategoriesManager(ModrinthApi modrinthApi, CurseforgeApi curseforgeApi)
+		{
+			_modrinthApi = modrinthApi;
+			_curseforgeApi = curseforgeApi;
+		}
 
-		public static IEnumerable<CategoryBase> GetModpackCategories(ProjectSource source)
+		private ConcurrentDictionary<ProjectSource, IEnumerable<CategoryBase>> _modpacksCategoriesChache = new();
+		private ConcurrentDictionary<ValueTuple<ProjectSource, AddonType>, IEnumerable<CategoryBase>> _addonsCategoriesChache = new();
+		private readonly ModrinthApi _modrinthApi;
+		private readonly CurseforgeApi _curseforgeApi;
+
+		public IEnumerable<CategoryBase> GetModpackCategories(ProjectSource source)
 		{
 			if (_modpacksCategoriesChache.ContainsKey(source)) return _modpacksCategoriesChache[source];
 
@@ -21,7 +30,7 @@ namespace Lexplosion.Logic.Management
 			{
 				case ProjectSource.Curseforge:
 					{
-						var result = CurseforgeApi.GetCategories(CfProjectType.Modpacks);
+						var result = _curseforgeApi.GetCategories(CfProjectType.Modpacks);
 						_modpacksCategoriesChache[source] = result;
 
 						return result;
@@ -29,7 +38,7 @@ namespace Lexplosion.Logic.Management
 				case ProjectSource.Modrinth:
 					{
 						var result = new List<CategoryBase>();
-						List<ModrinthCategory> categories = ModrinthApi.GetCategories();
+						List<ModrinthCategory> categories = _modrinthApi.GetCategories();
 
 						result.Add(new SimpleCategory
 						{
@@ -56,7 +65,7 @@ namespace Lexplosion.Logic.Management
 			}
 		}
 
-		public static IEnumerable<CategoryBase> GetAddonsCategories(ProjectSource source, AddonType addonType)
+		public IEnumerable<CategoryBase> GetAddonsCategories(ProjectSource source, AddonType addonType)
 		{
 			var key = ValueTuple.Create(source, addonType);
 			if (_addonsCategoriesChache.ContainsKey(key)) return _addonsCategoriesChache[key];
@@ -75,7 +84,7 @@ namespace Lexplosion.Logic.Management
 							projectType = CfProjectType.Mods;
 						}
 
-						var result = CurseforgeApi.GetCategories(projectType)
+						var result = _curseforgeApi.GetCategories(projectType)
 							.OrderBy(i => i.Name);
 						_addonsCategoriesChache[key] = result;
 
@@ -94,7 +103,7 @@ namespace Lexplosion.Logic.Management
 						}
 
 						var result = new List<CategoryBase>();
-						List<ModrinthCategory> categories = ModrinthApi.GetCategories();
+						List<ModrinthCategory> categories = _modrinthApi.GetCategories();
 						result.Add(new SimpleCategory
 						{
 							Id = "-1",
@@ -119,7 +128,7 @@ namespace Lexplosion.Logic.Management
 			}
 		}
 
-		public static IEnumerable<CategoryBase> FindAddonsCategoriesById(ProjectSource source, AddonType addonType, IEnumerable<string> ids)
+		public IEnumerable<CategoryBase> FindAddonsCategoriesById(ProjectSource source, AddonType addonType, IEnumerable<string> ids)
 		{
 			if (ids == null) return null;
 

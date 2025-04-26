@@ -5,16 +5,23 @@ using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Objects.Modrinth;
 using System.Collections.Generic;
 using Lexplosion.Logic.Network.Services;
+using Lexplosion.Logic.FileSystem.Installers;
+using Lexplosion.Logic.FileSystem.Services;
 
 namespace Lexplosion.Logic.Management.Installers
 {
 	class ModrinthInstallManager : ArchiveInstallManager<ModrinthInstaller, InstanceManifest, ModrinthProjectFile, InstancePlatformData>
 	{
-		public ModrinthInstallManager(string instanceid, bool onlyBase, MinecraftInfoService infoService, CancellationToken cancelToken) : base(new ModrinthInstaller(instanceid), instanceid, onlyBase, infoService, cancelToken)
-		{ }
+		private ModrinthApi _modrinthApi;
+
+		public ModrinthInstallManager(string instanceid, bool onlyBase, IModrinthFileServicesContainer services, CancellationToken cancelToken) : base(new ModrinthInstaller(instanceid, services), instanceid, onlyBase, services, cancelToken)
+		{
+			_modrinthApi = services.MdApi;
+		}
+
 		protected override ModrinthProjectFile GetProjectInfo(string projectId, string projectVersion)
 		{
-			var data = ModrinthApi.GetProjectFile(projectVersion);
+			var data = _modrinthApi.GetProjectFile(projectVersion);
 
 			if (string.IsNullOrWhiteSpace(data.FileId))
 			{
@@ -31,13 +38,13 @@ namespace Lexplosion.Logic.Management.Installers
 
 		protected override ModrinthProjectFile GetProjectDefaultInfo(string projectId, string actualInstanceVersion)
 		{
-			ModrinthProjectInfo instanceInfo = ModrinthApi.GetProject(projectId); //получем информацию об этом модпаке
+			ModrinthProjectInfo instanceInfo = _modrinthApi.GetProject(projectId); //получем информацию об этом модпаке
 
 			//проверяем полученные данные на валидность и определяем последнюю версию клиента (она будет последняя в спике)
 			string lastVersion = instanceInfo.Versions.GetLastElement();
 			if (lastVersion != null && lastVersion != actualInstanceVersion)
 			{
-				return ModrinthApi.GetProjectFile(lastVersion);
+				return _modrinthApi.GetProjectFile(lastVersion);
 			}
 
 			return null;

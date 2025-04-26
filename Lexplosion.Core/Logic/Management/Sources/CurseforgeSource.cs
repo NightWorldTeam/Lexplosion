@@ -1,4 +1,5 @@
-﻿using Lexplosion.Logic.Management.Installers;
+﻿using Lexplosion.Logic.FileSystem.Services;
+using Lexplosion.Logic.Management.Installers;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network.Services;
 using Lexplosion.Logic.Network.Web;
@@ -20,11 +21,18 @@ namespace Lexplosion.Logic.Management.Sources
 			ParentCategoryId = ((int)CfProjectType.Modpacks).ToString(),
 		};
 
-		public PrototypeInstance ContentManager { get => new CurseforgeInstance(); }
+		private readonly ICurseforgeFileServicesContainer _services;
+
+		public CurseforgeSource(ICurseforgeFileServicesContainer services)
+		{
+			_services = services;
+		}
+
+		public PrototypeInstance ContentManager { get => new CurseforgeInstance(_services); }
 
 		public IInstallManager GetInstaller(string localId, bool updateOnlyBase, CancellationToken updateCancelToken)
 		{
-			return new CurseforgeInstallManager(localId, updateOnlyBase, NetworkServicesManager.MinecraftInfo, updateCancelToken);
+			return new CurseforgeInstallManager(localId, updateOnlyBase, _services, updateCancelToken);
 		}
 
 		public CatalogResult<InstanceInfo> GetCatalog(InstanceSource type, ISearchParams searchParams)
@@ -50,7 +58,7 @@ namespace Lexplosion.Logic.Management.Sources
 				}
 			}
 
-			var catalogResult = CurseforgeApi.GetInstances(sParams);
+			var catalogResult = _services.CfApi.GetInstances(sParams);
 			var result = new List<InstanceInfo>();
 
 			foreach (var instance in catalogResult.Collection)

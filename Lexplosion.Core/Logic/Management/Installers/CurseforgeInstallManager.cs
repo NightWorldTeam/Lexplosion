@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Threading;
 using Lexplosion.Logic.FileSystem;
+using Lexplosion.Logic.FileSystem.Installers;
+using Lexplosion.Logic.FileSystem.Services;
 using Lexplosion.Logic.Network.Services;
 using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects.CommonClientData;
@@ -11,12 +13,16 @@ namespace Lexplosion.Logic.Management.Installers
 {
 	class CurseforgeInstallManager : ArchiveInstallManager<CurseforgeInstaller, InstanceManifest, CurseforgeFileInfo, InstancePlatformData>
 	{
-		public CurseforgeInstallManager(string instanceid, bool onlyBase, MinecraftInfoService infoService, CancellationToken cancelToken) : base(new CurseforgeInstaller(instanceid), instanceid, onlyBase, infoService, cancelToken)
-		{ }
+		private CurseforgeApi _curseforgeApi;
+
+		public CurseforgeInstallManager(string instanceid, bool onlyBase, ICurseforgeFileServicesContainer services, CancellationToken cancelToken) : base(new CurseforgeInstaller(instanceid, services), instanceid, onlyBase, services, cancelToken)
+		{
+			_curseforgeApi = services.CfApi;
+		}
 
 		protected override CurseforgeFileInfo GetProjectInfo(string projectId, string projectVersion)
 		{
-			var data = CurseforgeApi.GetProjectFile(projectId, projectVersion);
+			var data = _curseforgeApi.GetProjectFile(projectId, projectVersion);
 
 			if (data.id < 1)
 			{
@@ -34,7 +40,7 @@ namespace Lexplosion.Logic.Management.Installers
 		protected override CurseforgeFileInfo GetProjectDefaultInfo(string projectId, string actualInstanceVersion)
 		{
 			int actualVersion = actualInstanceVersion?.ToInt32() ?? 0;
-			List<CurseforgeFileInfo> instanceVersionsInfo = CurseforgeApi.GetProjectFiles(projectId); //получем информацию об этом модпаке
+			List<CurseforgeFileInfo> instanceVersionsInfo = _curseforgeApi.GetProjectFiles(projectId); //получем информацию об этом модпаке
 
 			CurseforgeFileInfo result = null;
 

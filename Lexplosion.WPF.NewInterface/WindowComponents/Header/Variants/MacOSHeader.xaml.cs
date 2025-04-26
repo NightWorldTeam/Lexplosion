@@ -69,7 +69,7 @@ namespace Lexplosion.WPF.NewInterface.WindowComponents.Header.Variants
                 GlobalData.GeneralSettings.NavBarInLeft = false;
             }
 
-            DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+			Runtime.ServicesContainer.DataFilesService.SaveSettings(GlobalData.GeneralSettings);
         } 
     }
 }

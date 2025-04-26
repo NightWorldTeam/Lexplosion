@@ -9,13 +9,14 @@ using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.Nightworld;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Objects.CommonClientData;
-using static Lexplosion.Logic.FileSystem.WithDirectory;
+using Lexplosion.Logic.FileSystem.Services;
 
-namespace Lexplosion.Logic.FileSystem
+namespace Lexplosion.Logic.FileSystem.Installers
 {
 	class NightWorldInstaller : InstanceInstaller
 	{
-		public NightWorldInstaller(string instanceID) : base(instanceID) { }
+		public NightWorldInstaller(string instanceID, IFileServicesContainer serviceContainer) : base(instanceID, serviceContainer) { }
+
 
 		private Dictionary<string, List<string>> data = new Dictionary<string, List<string>>(); //сюда записываем файлы, которые нужно обновить
 		private List<string> oldFiles = new List<string>(); // список старых файлов, которые нуждаются в обновлении
@@ -31,7 +32,7 @@ namespace Lexplosion.Logic.FileSystem
 		public Dictionary<string, string> GetInstanceContent()
 		{
 			var result = new Dictionary<string, string>();
-			using (InstalledAddons installedAddons = InstalledAddons.Get(instanceId))
+			using (InstalledAddons installedAddons = InstalledAddons.Get(instanceId, dataFilesManager))
 			{
 				foreach (string key in installedAddons.Keys)
 				{
@@ -54,8 +55,8 @@ namespace Lexplosion.Logic.FileSystem
 		/// </returns>
 		public int CheckInstance(NightWorldManifest filesInfo, ref LastUpdates updates, Dictionary<string, string> content)
 		{
-			string instancePath = InstancesPath + instanceId + "/";
-			using (InstalledAddons installedAddons = InstalledAddons.Get(instanceId))
+			string instancePath = withDirectory.GetInstancePath(instanceId);
+			using (InstalledAddons installedAddons = InstalledAddons.Get(instanceId, dataFilesManager))
 			{
 				//Проходимся по списку папок(data) из класса instanceFiles
 				foreach (string dir in filesInfo.data.Keys)
@@ -90,13 +91,13 @@ namespace Lexplosion.Logic.FileSystem
 										else
 										{
 											updates.Remove(filePath);
-											WithDirectory.DelFile(instancePath + filePath);
+											withDirectory.DelFile(instancePath + filePath);
 										}
 									}
 									else
 									{
 										updates.Remove(filePath);
-										WithDirectory.DelFile(instancePath + filePath);
+										withDirectory.DelFile(instancePath + filePath);
 									}
 								}
 							}
@@ -105,7 +106,7 @@ namespace Lexplosion.Logic.FileSystem
 						}
 
 						//отрываем файл с последними обновлениями и записываем туда updates, который уже содержит последнюю версию папки. Папка сейчас будет пустой, поэтому метод Update в любом случае скачает нужные файлы
-						DataFilesManager.SaveLastUpdates(instanceId, updates);
+						dataFilesManager.SaveLastUpdates(instanceId, updates);
 					}
 					catch { }
 
@@ -286,16 +287,16 @@ namespace Lexplosion.Logic.FileSystem
 		{
 			int updated = 0;
 
-			string tempDir = CreateTempDir();
+			string tempDir = withDirectory.CreateTempDir();
 
 			string addr;
 			List<string> errors = new List<string>();
 
-			string instancePath = InstancesPath + instanceId + "/";
+			string instancePath = withDirectory.GetInstancePath(instanceId);
 
 			FilesDownloadEvent?.Invoke(updatesCount, 0);
 
-			using (InstalledAddons installedAddons = InstalledAddons.Get(instanceId))
+			using (InstalledAddons installedAddons = InstalledAddons.Get(instanceId, dataFilesManager))
 			{
 				//скачивание файлов из списка data
 				foreach (string dir in data.Keys)
@@ -359,7 +360,7 @@ namespace Lexplosion.Logic.FileSystem
 							updates[dir + "/" + file] = filesList.data[dir].objects[file].lastUpdate; //добавляем файл в список последних обновлений
 							if (actualPath != basePath) //перименовываем файл, если его actualPath отличается от basePath
 							{
-								DelFile(instancePath + actualPath);
+								withDirectory.DelFile(instancePath + actualPath);
 								File.Move(instancePath + basePath, instancePath + actualPath);
 							}
 						}
@@ -368,7 +369,7 @@ namespace Lexplosion.Logic.FileSystem
 						FilesDownloadEvent?.Invoke(updatesCount, updated);
 
 						//сохарняем updates
-						DataFilesManager.SaveLastUpdates(instanceId, updates);
+						dataFilesManager.SaveLastUpdates(instanceId, updates);
 					}
 				}
 
@@ -420,7 +421,7 @@ namespace Lexplosion.Logic.FileSystem
 			}
 
 			//сохарняем updates
-			DataFilesManager.SaveLastUpdates(instanceId, updates);
+			dataFilesManager.SaveLastUpdates(instanceId, updates);
 
 			Directory.Delete(tempDir, true);
 
@@ -432,9 +433,9 @@ namespace Lexplosion.Logic.FileSystem
 		/// </summary>
 		public bool InvalidStruct(LastUpdates updates, Dictionary<string, string> content)
 		{
-			string instancePath = InstancesPath + instanceId + "/";
+			string instancePath = withDirectory.GetInstancePath(instanceId);
 
-			using (InstalledAddons installedAddons = InstalledAddons.Get(instanceId))
+			using (InstalledAddons installedAddons = InstalledAddons.Get(instanceId, dataFilesManager))
 			{
 				foreach (string file in updates.Keys)
 				{

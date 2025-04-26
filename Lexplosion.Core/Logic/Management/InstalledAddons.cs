@@ -13,16 +13,18 @@ namespace Lexplosion.Logic.Management
 		private static ConcurrentDictionary<string, InstalledAddons> _memoryStore = new ConcurrentDictionary<string, InstalledAddons>();
 
 		private InstalledAddonsFormat _data;
+		private readonly DataFilesManager _dataFilesManager;
 		private string _instanceId;
 		private int _referencesCount = 0;
 
-		private InstalledAddons(InstalledAddonsFormat data, string instanceID)
+		private InstalledAddons(InstalledAddonsFormat data, DataFilesManager dataFilesManager, string instanceID)
 		{
 			_data = data;
+			_dataFilesManager = dataFilesManager;
 			_instanceId = instanceID;
 		}
 
-		public static InstalledAddons Get(string instanceID)
+		public static InstalledAddons Get(string instanceID, DataFilesManager dataFilesManager)
 		{
 			InstalledAddons data;
 			_semaphore.WaitOne(instanceID);
@@ -32,8 +34,8 @@ namespace Lexplosion.Logic.Management
 			}
 			else
 			{
-				var fileData = DataFilesManager.GetInstalledAddons(instanceID);
-				data = new InstalledAddons(fileData, instanceID);
+				var fileData = dataFilesManager.GetInstalledAddons(instanceID);
+				data = new InstalledAddons(fileData, dataFilesManager, instanceID);
 				_memoryStore[instanceID] = data;
 			}
 			data._referencesCount++;
@@ -115,7 +117,7 @@ namespace Lexplosion.Logic.Management
 		public void Save()
 		{
 			_semaphore.WaitOne(_instanceId);
-			DataFilesManager.SaveInstalledAddons(_instanceId, _data);
+			_dataFilesManager.SaveInstalledAddons(_instanceId, _data);
 			_semaphore.Release(_instanceId);
 		}
 
@@ -123,7 +125,7 @@ namespace Lexplosion.Logic.Management
 		{
 			_semaphore.WaitOne(_instanceId);
 			_data = addonsList;
-			DataFilesManager.SaveInstalledAddons(_instanceId, _data);
+			_dataFilesManager.SaveInstalledAddons(_instanceId, _data);
 			_semaphore.Release(_instanceId);
 		}
 

@@ -191,7 +191,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
 
 			Runtime.TaskRun(() =>
 			{
-				NWClientSupportedVersions = NetworkServicesManager.MinecraftInfo.GetNwClientGameVersions();
+				NWClientSupportedVersions = Runtime.ServicesContainer.MinecraftService.GetNwClientGameVersions();
 				OnPropertyChanged(nameof(NWClientSupportedVersions));
 
 				IsNWClientAvailable = NWClientSupportedVersions.FirstOrDefault(verStr => verStr == Version.Id) != null;

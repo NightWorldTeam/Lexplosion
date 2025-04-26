@@ -7,6 +7,13 @@ namespace Lexplosion.Logic.Management.Accounts.Auth
 
 	internal class NightWorldAuth : IAuthHandler
 	{
+		private readonly NightWorldApi _api;
+
+		public NightWorldAuth(NightWorldApi api)
+		{
+			_api = api;
+		}
+
 		public IAuthHandler.AuthResult Auth(string login, string accessData)
 		{
 			var data = new AuthData
@@ -40,7 +47,7 @@ namespace Lexplosion.Logic.Management.Accounts.Auth
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		private IAuthHandler.AuthResult Execute(AuthData authData)
 		{
-			NwAuthResult response = NightWorldApi.Authorization(authData);
+			NwAuthResult response = _api.Authorization(authData);
 
 			ActivityStatus status = ActivityStatus.Online;
 

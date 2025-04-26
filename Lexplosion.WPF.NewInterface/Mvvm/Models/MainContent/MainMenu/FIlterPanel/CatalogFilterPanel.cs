@@ -163,7 +163,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.FIlterPan
         private void UpdateCategories(InstanceSource instanceSource) 
         {
             AvailableCategories.Clear();
-            var cats = CategoriesManager.GetModpackCategories(EnumManager.InstanceSourceToProjectSource(instanceSource)) ?? new List<CategoryBase>();
+            var cats = Runtime.ServicesContainer.CategoriesService.GetModpackCategories(EnumManager.InstanceSourceToProjectSource(instanceSource)) ?? new List<CategoryBase>();
             foreach (var cat in cats.Where(mc => mc.Id != "-1"))
             {
                 AvailableCategories.Add(cat);

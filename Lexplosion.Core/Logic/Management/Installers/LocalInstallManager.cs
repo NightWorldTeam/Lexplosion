@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Threading;
 using Lexplosion.Logic.FileSystem;
+using Lexplosion.Logic.FileSystem.Installers;
+using Lexplosion.Logic.FileSystem.Services;
 using Lexplosion.Logic.Network.Services;
 using Lexplosion.Logic.Objects.CommonClientData;
 
@@ -15,9 +17,12 @@ namespace Lexplosion.Logic.Management.Installers
 		private CancellationToken _cancelToken;
 
 		private string InstanceId;
-		private readonly MinecraftInfoService _infoService;
 		private int stagesCount = 0;
 		private int updatesCount = 0;
+
+		private readonly MinecraftInfoService _infoService;
+		private readonly WithDirectory _withDirectory;
+		private readonly DataFilesManager _dataFilesManager;
 
 		public event Action<string, int, DownloadFileProgress> FileDownloadEvent
 		{
@@ -33,12 +38,14 @@ namespace Lexplosion.Logic.Management.Installers
 
 		public event Action DownloadStarted;
 
-		public LocalInstallManager(string instanceid, MinecraftInfoService infoService, CancellationToken cancelToken)
+		public LocalInstallManager(string instanceid, IFileServicesContainer services, CancellationToken cancelToken)
 		{
 			InstanceId = instanceid;
-			_infoService = infoService;
+			_infoService = services.MinecraftService;
 			_cancelToken = cancelToken;
-			installer = new InstanceInstaller(instanceid);
+			installer = new InstanceInstaller(instanceid, services);
+			_withDirectory = services.DirectoryService;
+			_dataFilesManager = services.DataFilesService;
 		}
 
 		public InstanceInit Check(out string javaVersionName, string instanceVersion)
@@ -46,7 +53,7 @@ namespace Lexplosion.Logic.Management.Installers
 			javaVersionName = string.Empty;
 
 			//модпак локальный. получем его версию, отправляем её в ToServer.GetFilesList. Метод ToServer.GetFilesList получит список именно для этой версии, а не для модпака
-			Manifest = DataFilesManager.GetManifest(InstanceId, false);
+			Manifest = _dataFilesManager.GetManifest(InstanceId, false);
 
 			if (string.IsNullOrWhiteSpace(Manifest?.version?.GameVersion))
 			{
@@ -64,7 +71,7 @@ namespace Lexplosion.Logic.Management.Installers
 
 			if (Manifest != null)
 			{
-				Updates = DataFilesManager.GetLastUpdates(InstanceId);
+				Updates = _dataFilesManager.GetLastUpdates(InstanceId);
 				updatesCount = installer.CheckBaseFiles(Manifest, ref Updates); // проверяем основные файлы клиента на обновление
 
 				if (updatesCount == -1)
@@ -84,7 +91,7 @@ namespace Lexplosion.Logic.Management.Installers
 			else
 			{
 				Runtime.DebugWrite("Manifest from server is null. Load local manifest");
-				Manifest = DataFilesManager.GetManifest(InstanceId, true);
+				Manifest = _dataFilesManager.GetManifest(InstanceId, true);
 
 				if (string.IsNullOrWhiteSpace(Manifest?.version?.GameVersion))
 				{
@@ -151,7 +158,7 @@ namespace Lexplosion.Logic.Management.Installers
 			if (Updates != null)
 			{
 				errors = installer.UpdateBaseFiles(Manifest, ref Updates, javaPath, _cancelToken);
-				DataFilesManager.SaveManifest(InstanceId, Manifest);
+				_dataFilesManager.SaveManifest(InstanceId, Manifest);
 			}
 			else
 			{

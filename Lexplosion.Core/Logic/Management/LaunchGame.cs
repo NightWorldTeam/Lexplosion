@@ -14,6 +14,7 @@ using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Management.Installers;
 using Lexplosion.Logic.Management.Sources;
 using Lexplosion.Logic.Management.Accounts;
+using Lexplosion.Logic.FileSystem.Services;
 
 namespace Lexplosion.Logic.Management
 {
@@ -25,6 +26,9 @@ namespace Lexplosion.Logic.Management
 		private string _instanceId;
 		private Settings _settings;
 		private IInstanceSource _source;
+		private readonly INightWorldFileServicesContainer _services;
+		private readonly WithDirectory _withDirectory;
+		private readonly DataFilesManager _dataFilesManager;
 		private string _javaPath = string.Empty;
 		private bool _processIsWork;
 
@@ -124,7 +128,7 @@ namespace Lexplosion.Logic.Management
 			get => _instanceId;
 		}
 
-		public LaunchGame(string instanceId, Settings generalSettings, Settings instanceSettings, Account activeAccount, Account launchAccount, IInstanceSource source, CancellationToken updateCancelToken)
+		public LaunchGame(string instanceId, Settings generalSettings, Settings instanceSettings, Account activeAccount, Account launchAccount, IInstanceSource source, INightWorldFileServicesContainer services, CancellationToken updateCancelToken)
 		{
 			if (_classInstance == null)
 				_classInstance = this;
@@ -141,8 +145,11 @@ namespace Lexplosion.Logic.Management
 			_settings = instanceSettings;
 			_instanceId = instanceId;
 			_source = source;
-
+			_services = services;
 			_updateCancelToken = updateCancelToken;
+
+			_withDirectory = services.DirectoryService;
+			_dataFilesManager = services.DataFilesService;
 		}
 
 		private ConcurrentDictionary<string, Player> _connectedPlayers = new ConcurrentDictionary<string, Player>();
@@ -555,7 +562,7 @@ namespace Lexplosion.Logic.Management
 				lock (loocker)
 				{
 					var serverData = new ControlServerData(LaunсherSettings.ServerIp);
-					_gameGateway = new OnlineGameGateway(_activeAccount.UUID, _activeAccount.SessionToken, serverData, _generalSettings.NetworkDirectConnection);
+					_gameGateway = new OnlineGameGateway(_activeAccount.UUID, _activeAccount.SessionToken, _services.WebService, serverData, _generalSettings.NetworkDirectConnection);
 
 					_onlineGameStopedMark = false;
 					OnlineGameSystemStarted?.Invoke();
@@ -570,7 +577,8 @@ namespace Lexplosion.Logic.Management
 							delegate
 							{
 								this._gameGateway?.UnkickClient(uuid);
-							}
+							},
+							_services.NwApi
 						);
 
 						_connectedPlayers[uuid] = player;
@@ -746,7 +754,7 @@ namespace Lexplosion.Logic.Management
 
 			if (javaIsNotDefined)
 			{
-				using (JavaChecker javaCheck = new JavaChecker(javaVersionName, _updateCancelToken))
+				using (JavaChecker javaCheck = new JavaChecker(javaVersionName, _services, _updateCancelToken))
 				{
 					if (javaCheck.Check(out JavaChecker.CheckResult checkResult, out JavaVersion javaVersion))
 					{
@@ -801,7 +809,7 @@ namespace Lexplosion.Logic.Management
 
 					if (checkResult == JavaChecker.CheckResult.Successful)
 					{
-						_javaPath = WithDirectory.DirectoryPath + "/java/versions/" + javaVersion.JavaName + javaVersion.ExecutableFile;
+						_javaPath = _withDirectory.DirectoryPath + "/java/versions/" + javaVersion.JavaName + javaVersion.ExecutableFile;
 						Runtime.DebugWrite("JavaPath " + _javaPath);
 					}
 					else
@@ -822,7 +830,7 @@ namespace Lexplosion.Logic.Management
 		{
 			try
 			{
-				WithDirectory.Create(_settings.GamePath);
+				_withDirectory.Create(_settings.GamePath);
 				InitData data = null;
 				// Было измененно с !_settings.GamePath.Contains(":") - -на)--> !(_settings.GamePath.IndexOf(':') >= 0) 
 				bool pathIsExists = Directory.Exists(_settings.GamePath);
@@ -835,10 +843,10 @@ namespace Lexplosion.Logic.Management
 					};
 				}
 
-				VersionManifest files = DataFilesManager.GetManifest(_instanceId, true);
+				VersionManifest files = _dataFilesManager.GetManifest(_instanceId, true);
 				bool versionIsStatic = files?.version?.IsStatic == true;
 
-				if (!versionIsStatic && ToServer.ServerIsOnline())
+				if (!versionIsStatic && _services.NwApi.ServerIsOnline())
 				{
 					data = Update(progressHandler, fileDownloadHandler, downloadStarted, null, (_settings.IsAutoUpdate == false));
 				}
@@ -867,7 +875,7 @@ namespace Lexplosion.Logic.Management
 
 						if (javaIsNotDefined)
 						{
-							using (JavaChecker javaCheck = new JavaChecker(files.version.JavaVersionName, _updateCancelToken, true))
+							using (JavaChecker javaCheck = new JavaChecker(files.version.JavaVersionName, _services, _updateCancelToken, true))
 							{
 								JavaVersion javaInfo = javaCheck.GetJavaInfo();
 								if (javaInfo?.JavaName == null || javaInfo.ExecutableFile == null)
@@ -878,7 +886,7 @@ namespace Lexplosion.Logic.Management
 									};
 								}
 
-								_javaPath = WithDirectory.DirectoryPath + "/java/versions/" + javaInfo.JavaName + javaInfo.ExecutableFile;
+								_javaPath = _withDirectory.DirectoryPath + "/java/versions/" + javaInfo.JavaName + javaInfo.ExecutableFile;
 							}
 						}
 
@@ -965,7 +973,7 @@ namespace Lexplosion.Logic.Management
 				catch { }
 
 				var serverData = new ControlServerData(LaunсherSettings.ServerIp);
-				_gameGateway = new OnlineGameGateway(_activeAccount.UUID, _activeAccount.SessionToken, serverData, _generalSettings.NetworkDirectConnection);
+				_gameGateway = new OnlineGameGateway(_activeAccount.UUID, _activeAccount.SessionToken, _services.WebService, serverData, _generalSettings.NetworkDirectConnection);
 				_gameGateway.Initialization(_classInstance._process.Id);
 			}
 		}

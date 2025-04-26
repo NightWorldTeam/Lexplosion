@@ -58,7 +58,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu
             {
                 GlobalData.GeneralSettings.NetworkDirectConnection = value;
                 OnPropertyChanged();
-                DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+				Runtime.ServicesContainer.DataFilesService.SaveSettings(GlobalData.GeneralSettings);
             }
         }
 

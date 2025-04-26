@@ -26,6 +26,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
         private readonly Dictionary<string, List<CategoryWrapper>> _categoriesGroupsByName = new();
         private readonly Action _launchInstanceAction;
         private readonly InstanceModelBase _instanceModelBase;
+		private readonly AllServicesContainer _allServicesContainer = Runtime.ServicesContainer;
 
         public ObservableCollection<InstanceAddon> InstalledAddons { get; set; } = [];
         public ObservableCollection<DownloableAddonFile> InProgressAddons { get; set; } = [];
@@ -88,7 +89,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 
             Runtime.TaskRun(() =>
             {
-                var installedAddons = AddonsManager.GetManager(instanceData).GetInstalledAddons(addonType);
+                var installedAddons = AddonsManager.GetManager(instanceData, _allServicesContainer).GetInstalledAddons(addonType);
                 App.Current.Dispatcher.Invoke(() =>
                 {
                     InstalledAddons = new(installedAddons);
@@ -247,7 +248,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
 
         protected override List<IProjectCategory> GetCategories()
         {
-            return CategoriesManager.GetAddonsCategories(_projectSource, _addonType).ToList<IProjectCategory>() ?? [];
+            return _allServicesContainer.CategoriesService.GetAddonsCategories(_projectSource, _addonType).ToList<IProjectCategory>() ?? [];
         }
 
 

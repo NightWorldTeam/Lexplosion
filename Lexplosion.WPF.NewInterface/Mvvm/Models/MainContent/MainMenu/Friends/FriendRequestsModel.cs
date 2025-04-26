@@ -56,7 +56,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends
             Runtime.TaskRun(() =>
             {
                 var activeAccount = Account.ActiveAccount;
-                var friendRequests = NightWorldApi.GetFriendRequests(activeAccount.UUID, activeAccount.SessionToken);
+                var friendRequests = Runtime.ServicesContainer.NwApi.GetFriendRequests(activeAccount.UUID, activeAccount.SessionToken);
 
                 App.Current.Dispatcher?.Invoke(() =>
                 {

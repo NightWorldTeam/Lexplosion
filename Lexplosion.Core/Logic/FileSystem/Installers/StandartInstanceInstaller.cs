@@ -5,16 +5,16 @@ using System.Threading;
 using System.Linq;
 using System;
 using Lexplosion.Tools;
+using Lexplosion.Logic.FileSystem.Services;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
-using static Lexplosion.Logic.FileSystem.WithDirectory;
 
-namespace Lexplosion.Logic.FileSystem
+namespace Lexplosion.Logic.FileSystem.Installers
 {
 	abstract class StandartInstanceInstaller<TManifest> : InstanceInstaller, IArchivedInstanceInstaller<TManifest>
 	{
-		public StandartInstanceInstaller(string instanceId) : base(instanceId) { }
+		public StandartInstanceInstaller(string instanceId, IFileServicesContainer servicesContainer) : base(instanceId, servicesContainer) { }
 
 		public event Action<int> MainFileDownload;
 		public event ProcentUpdate AddonsDownload;
@@ -43,8 +43,8 @@ namespace Lexplosion.Logic.FileSystem
 
 		public InstanceContent GetInstanceContent()
 		{
-			var content = DataFilesManager.GetInstanceContent(instanceId);
-			using (InstalledAddons installedAddons = InstalledAddons.Get(instanceId))
+			var content = dataFilesManager.GetInstanceContent(instanceId);
+			using (InstalledAddons installedAddons = InstalledAddons.Get(instanceId, dataFilesManager))
 			{
 				if (content != null)
 				{
@@ -79,14 +79,14 @@ namespace Lexplosion.Logic.FileSystem
 
 		public void SaveInstanceContent(InstanceContent content)
 		{
-			DataFilesManager.SaveInstanceContent(instanceId, new InstanceContentFile
+			dataFilesManager.SaveInstanceContent(instanceId, new InstanceContentFile
 			{
 				FullClient = content.FullClient,
 				Files = content.Files,
 				InstalledAddons = new List<string>(content.InstalledAddons.Keys.ToArray())
 			});
 
-			using (InstalledAddons installedAddons = InstalledAddons.Get(instanceId))
+			using (InstalledAddons installedAddons = InstalledAddons.Get(instanceId, dataFilesManager))
 			{
 				foreach (var key in content.InstalledAddons.Keys)
 				{
@@ -115,7 +115,7 @@ namespace Lexplosion.Logic.FileSystem
 					return true;
 				}
 
-				string instancePath = InstancesPath + instanceId + "/";
+				string instancePath = withDirectory.GetInstancePath(instanceId);
 
 				if (!addon.IsExists(instancePath))
 				{
@@ -125,7 +125,7 @@ namespace Lexplosion.Logic.FileSystem
 
 			foreach (string file in localFiles.Files)
 			{
-				if (!File.Exists(InstancesPath + instanceId + file))
+				if (!File.Exists(withDirectory.InstancesPath + instanceId + file))
 				{
 					return true;
 				}
@@ -153,7 +153,7 @@ namespace Lexplosion.Logic.FileSystem
 
 			try
 			{
-				_extractedFilesDir = CreateTempDir();
+				_extractedFilesDir = withDirectory.CreateTempDir();
 
 				MainFileDownload?.Invoke(0);
 
@@ -193,7 +193,7 @@ namespace Lexplosion.Logic.FileSystem
 				{
 					foreach (string file in localFiles.Files)
 					{
-						DelFile(InstancesPath + instanceId + file);
+						withDirectory.DelFile(withDirectory.InstancesPath + instanceId + file);
 					}
 				}
 

@@ -7,18 +7,25 @@ using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.Curseforge;
 using Lexplosion.Logic.Objects.CommonClientData;
+using Lexplosion.Logic.FileSystem.Services;
 using static Lexplosion.Logic.FileSystem.WithDirectory;
 using static Lexplosion.Logic.FileSystem.DataFilesManager;
+using Lexplosion.Logic.FileSystem.Extensions;
 
-namespace Lexplosion.Logic.FileSystem
+namespace Lexplosion.Logic.FileSystem.Installers
 {
 	class CurseforgeInstaller : StandartInstanceInstaller<InstanceManifest>
 	{
-		public CurseforgeInstaller(string instanceId) : base(instanceId) { }
+		private CurseforgeApi _curseforgeApi;
+
+		public CurseforgeInstaller(string instanceId, ICurseforgeFileServicesContainer servicesContainer) : base(instanceId, servicesContainer)
+		{
+			_curseforgeApi = servicesContainer.CfApi;
+		}
 
 		protected override InstanceManifest LoadManifest(string unzupArchivePath)
 		{
-			return GetFile<InstanceManifest>(unzupArchivePath + "manifest.json");
+			return dataFilesManager.GetFile<InstanceManifest>(unzupArchivePath + "manifest.json");
 		}
 
 		protected override void ArchiveHadnle(string unzupArchivePath, out List<string> files)
@@ -28,7 +35,7 @@ namespace Lexplosion.Logic.FileSystem
 			// тут переосим нужные файлы из этого архива
 
 			string sourcePath = unzupArchivePath + "overrides/";
-			string destinationPath = WithDirectory.GetInstancePath(instanceId);
+			string destinationPath = withDirectory.GetInstancePath(instanceId);
 
 			if (!Directory.Exists(destinationPath))
 			{
@@ -95,7 +102,7 @@ namespace Lexplosion.Logic.FileSystem
 						}
 						else
 						{
-							if (installedAddons[file.projectID].FileID != file.fileID || !installedAddons[file.projectID].IsExists(InstancesPath + instanceId + "/"))
+							if (installedAddons[file.projectID].FileID != file.fileID || !installedAddons[file.projectID].IsExists(withDirectory.GetInstancePath(instanceId)))
 							{
 								downloadList.Add(file);
 							}
@@ -112,8 +119,8 @@ namespace Lexplosion.Logic.FileSystem
 						{
 							if (installedAddons[addonId].ActualPath != null)
 							{
-								Runtime.DebugWrite("Delete file: " + InstancesPath + instanceId + "/" + installedAddons[addonId].ActualPath);
-								DelFile(InstancesPath + instanceId + "/" + installedAddons[addonId].ActualPath);
+								Runtime.DebugWrite("Delete file: " + withDirectory.GetInstancePath(instanceId) + installedAddons[addonId].ActualPath);
+								withDirectory.DelFile(withDirectory.GetInstancePath(instanceId) + installedAddons[addonId].ActualPath);
 							}
 						}
 						else
@@ -146,11 +153,11 @@ namespace Lexplosion.Logic.FileSystem
 					}
 
 					// получем инфу о всех аддонах
-					List<CurseforgeAddonInfo> addnos_ = CurseforgeApi.GetAddonsInfo(ids);
+					List<CurseforgeAddonInfo> addnos_ = _curseforgeApi.GetAddonsInfo(ids);
 					if (addnos_ == null) // у этих долбаебов просто по  приколу может упасть соединение во время запроса. пробуем второй раз
 					{
 						Thread.Sleep(5000);
-						addnos_ = CurseforgeApi.GetAddonsInfo(ids);
+						addnos_ = _curseforgeApi.GetAddonsInfo(ids);
 					}
 					//преобразовываем эту хуйню в нормальный спсиок
 					var addons = new Dictionary<string, CurseforgeAddonInfo>();
@@ -182,7 +189,7 @@ namespace Lexplosion.Logic.FileSystem
 							}
 							else
 							{
-								addonInfo = CurseforgeApi.GetAddonInfo(file.projectID);
+								addonInfo = _curseforgeApi.GetAddonInfo(file.projectID);
 							}
 
 							var taskArgs = new TaskArgs
@@ -194,7 +201,7 @@ namespace Lexplosion.Logic.FileSystem
 								CancelToken = cancelToken
 							};
 
-							var result = CurseforgeApi.DownloadAddon(addonInfo, file.fileID, "/instances/" + instanceId + "/", taskArgs);
+							var result = _curseforgeApi.DownloadAddon(addonInfo, file.fileID, "/instances/" + instanceId + "/", withDirectory,  taskArgs);
 
 							_fileDownloadHandler?.Invoke(addonInfo.name, 100, DownloadFileProgress.Successful);
 
@@ -202,7 +209,7 @@ namespace Lexplosion.Logic.FileSystem
 							{
 								if (!file.required && !result.Value1.IsDisable)
 								{
-									File.Move(WithDirectory.GetInstancePath(instanceId) + result.Value1.ActualPath, WithDirectory.GetInstancePath(instanceId) + result.Value1.ActualPath + ".disable");
+									File.Move(withDirectory.GetInstancePath(instanceId) + result.Value1.ActualPath, withDirectory.GetInstancePath(instanceId) + result.Value1.ActualPath + ".disable");
 									result.Value1.IsDisable = true;
 								}
 
@@ -236,7 +243,7 @@ namespace Lexplosion.Logic.FileSystem
 						{
 							if (cancelToken.IsCancellationRequested) break;
 
-							CurseforgeAddonInfo addonInfo = CurseforgeApi.GetAddonInfo(file.projectID);
+							CurseforgeAddonInfo addonInfo = _curseforgeApi.GetAddonInfo(file.projectID);
 							if (addonInfo.latestFiles == null && addons.ContainsKey(file.projectID))
 							{
 								addonInfo = addons[file.projectID];
@@ -252,14 +259,14 @@ namespace Lexplosion.Logic.FileSystem
 							};
 
 							int count = 0;
-							SetValues<InstalledAddonInfo, DownloadAddonRes> result = CurseforgeApi.DownloadAddon(addonInfo, file.fileID, "/instances/" + instanceId + "/", taskArgs);
+							SetValues<InstalledAddonInfo, DownloadAddonRes> result = _curseforgeApi.DownloadAddon(addonInfo, file.fileID, "/instances/" + instanceId + "/", withDirectory, taskArgs);
 
 							while (count < 4 && result.Value2 != DownloadAddonRes.Successful && !cancelToken.IsCancellationRequested)
 							{
 								Thread.Sleep(1000);
 								Runtime.DebugWrite("REPEAT DOWNLOAD " + addonInfo.id);
-								addonInfo = CurseforgeApi.GetAddonInfo(file.projectID);
-								result = CurseforgeApi.DownloadAddon(addonInfo, file.fileID, "/instances/" + instanceId + "/", taskArgs);
+								addonInfo = _curseforgeApi.GetAddonInfo(file.projectID);
+								result = _curseforgeApi.DownloadAddon(addonInfo, file.fileID, "/instances/" + instanceId + "/", withDirectory, taskArgs);
 
 								count++;
 							}
