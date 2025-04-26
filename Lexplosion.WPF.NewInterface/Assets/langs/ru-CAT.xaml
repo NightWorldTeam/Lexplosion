@@ -15,7 +15,7 @@
     <s:String x:Key="zh-CN">Китайський</s:String>
     <s:String x:Key="de-DE">Немецкий</s:String>
     <s:String x:Key="ru-CAT">Русский (Котик)</s:String>
-    <s:String x:Key="lolcat">ЛОЛКЭТ</s:String>
+    <s:String x:Key="lolcat">LOLCAT</s:String>
 
     <s:String x:Key="Default">По умолчанью</s:String>
     <!--    -->
