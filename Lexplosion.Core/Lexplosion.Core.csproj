@@ -135,6 +135,7 @@
     <Compile Include="Logic\Management\Instances\PrototypeInstance.cs" />
     <Compile Include="Logic\Management\JavaChecker.cs" />
     <Compile Include="Logic\Management\LaunchGame.cs" />
+    <Compile Include="Logic\Network\ProxyFetcher.cs" />
     <Compile Include="Logic\Network\QueryApiBuilder.cs" />
     <Compile Include="Logic\Network\Services\IAuthServicesContainer.cs" />
     <Compile Include="Logic\Network\Services\ICurseforgeWebServicesContainer.cs" />
@@ -144,6 +145,7 @@
     <Compile Include="Logic\Network\Services\MinecraftInfoService.cs" />
     <Compile Include="Logic\Network\SMP\SmpClient_Objects.cs" />
     <Compile Include="Logic\Network\SMP\SmpReceiveService.cs" />
+    <Compile Include="Logic\Network\Web\RetryableProxyHttpClientHandler.cs" />
     <Compile Include="Logic\Objects\CatalogResult.cs" />
     <Compile Include="Logic\Objects\FreeSource.cs" />
     <Compile Include="Logic\Objects\ISearchParams.cs" />

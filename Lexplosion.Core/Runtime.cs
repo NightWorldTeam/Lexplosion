@@ -13,6 +13,7 @@ using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Network.Services;
 using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Management.Accounts;
+using Lexplosion.Logic.Objects;
 
 namespace Lexplosion
 {
@@ -110,11 +111,30 @@ namespace Lexplosion
 
 			if (version == -1)
 			{
-				//проблемы
-			}
+				toServer.ChengeToProxyMode();
 
-			//если есть новая версия, то обновляем
-			if (version > LaunсherSettings.version)
+				var proxies = ProxyFetcher.GetProxies();
+				if (proxies.Count > 0)
+				{
+					var waiter = new ManualResetEvent(false);
+					ProxyFetcher.FindWorkingProxy(proxies, (Proxy proxy) =>
+					{
+						toServer.AddProxy(proxy);
+						waiter.Set();
+					}, () => waiter.Set());
+
+					waiter.WaitOne();
+
+					version = nightWorldApi.CheckLauncherUpdates();
+
+					if (version > LaunсherSettings.version)
+					{
+						OnUpdateStart?.Invoke();
+						LauncherUpdate(version, updaterOffsetLeft, updaterOffsetRight);
+					}
+				}
+			}
+			else if (version > LaunсherSettings.version)
 			{
 				OnUpdateStart?.Invoke();
 				LauncherUpdate(version, updaterOffsetLeft, updaterOffsetRight);

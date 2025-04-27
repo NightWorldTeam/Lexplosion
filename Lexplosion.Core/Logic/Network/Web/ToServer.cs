@@ -11,17 +11,33 @@ using System.Threading;
 using System.Linq;
 using Newtonsoft.Json;
 using Lexplosion.Global;
+using Lexplosion.Logic.Objects;
+using System.Collections.Concurrent;
+using Lexplosion.Logic.Network.Web;
 
 namespace Lexplosion.Logic.Network
 {
 	public class ToServer
 	{
 		private HttpClient _httpClient;
+		private RetryableProxyHttpClientHandler _clientHandler;
 
 		public ToServer()
 		{
 			_httpClient = new HttpClient();
 			_httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0");
+		}
+
+		public void ChengeToProxyMode()
+		{
+			_clientHandler = new RetryableProxyHttpClientHandler();
+			_httpClient = new HttpClient(_clientHandler);
+			_httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0");
+		}
+
+		public void AddProxy(Proxy proxy)
+		{
+			_clientHandler.AddProxy(proxy.Url);
 		}
 
 		public T ProtectedRequest<T>(string url) where T : ProtectedManifest
@@ -199,40 +215,9 @@ namespace Lexplosion.Logic.Network
 
 		public string HttpGet(string url, Dictionary<string, string> headers = null, int timeout = 0)
 		{
-			try
-			{
-				string answer;
-
-				WebRequest req = WebRequest.Create(url);
-				((HttpWebRequest)req).UserAgent = "Mozilla/5.0";
-				if (timeout > 0) req.Timeout = timeout;
-
-				if (headers != null)
-				{
-					foreach (var header in headers)
-					{
-						req.Headers.Add(header.Key, header.Value);
-					}
-				}
-
-				using (WebResponse resp = req.GetResponse())
-				{
-					using (Stream stream = resp.GetResponseStream())
-					{
-						using (StreamReader sr = new StreamReader(stream))
-						{
-							answer = sr.ReadToEnd();
-						}
-					}
-				}
-
-				return answer;
-			}
-			catch (Exception ex)
-			{
-				Runtime.DebugWrite($"url: {url}, Exception: {ex}, stack trace: {new System.Diagnostics.StackTrace()}");
-				return null;
-			}
+			var task = Task.Run(() => HttpGetAsync(url, headers, timeout));
+			task.Wait();
+			return task.Result;
 		}
 
 		public async Task<string> HttpGetAsync(string url, IDictionary<string, string> headers = null, int timeout = 0)

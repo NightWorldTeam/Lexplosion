@@ -416,4 +416,12 @@ namespace Lexplosion.Logic.Objects
 
 	}
 
+	public struct Proxy
+	{
+		public string IP { get; set; }
+		public int Port { get; set; }
+
+		public string Url { get => $"http://{IP}:{Port}"; }
+	}
+
 }
