@@ -9,11 +9,11 @@ using System.Windows.Media.Animation;
 namespace Lexplosion.WPF.NewInterface.WindowComponents.Header.Variants
 {
     /// <summary>
-    /// Interaction logic for MacOSHeader.xaml
+    /// Interaction logic for WindowsOSHeader.xaml
     /// </summary>
-    public partial class MacOSHeader : HeaderBase
+    public partial class WindowsOSHeader : HeaderBase
     {
-        public MacOSHeader()
+        public WindowsOSHeader()
         {
             InitializeComponent();
 
@@ -46,7 +46,7 @@ namespace Lexplosion.WPF.NewInterface.WindowComponents.Header.Variants
             WindowHeaderPanelButtonsGrid.BeginAnimation(OpacityProperty, opacityHideAnimation);
         }
 
-        public void ChangeWHPHorizontalOrintation() 
+        public void ChangeWHPHorizontalOrintation()
         {
             if (WindowHeaderPanelButtonsGrid.HorizontalAlignment == HorizontalAlignment.Left)
             {
@@ -68,6 +68,6 @@ namespace Lexplosion.WPF.NewInterface.WindowComponents.Header.Variants
             }
 
             DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
-        } 
+        }
     }
 }

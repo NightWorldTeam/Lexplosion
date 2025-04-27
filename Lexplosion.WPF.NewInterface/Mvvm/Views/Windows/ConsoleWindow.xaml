@@ -118,38 +118,42 @@
         </Grid.RowDefinitions>
 
         <!--  Window Header Panel Margin="16,12"  -->
-        <Grid
-            x:Name="WindowHeaderPanelButtonsGrid"
-            Margin="16,12,16,0"
-            VerticalAlignment="Top"
-            KeyboardNavigation.IsTabStop="False">
+        <Grid>
 
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+            <header:WindowHeaderContainer x:Name="WHC" />
+
+            <Grid
+                x:Name="WindowHeaderPanelButtonsGrid"
+                Margin="16,12,16,0"
+                VerticalAlignment="Top"
+                KeyboardNavigation.IsTabStop="False">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
 
-            <StackPanel Orientation="Horizontal">
-                <TextBlock VerticalAlignment="Center" FontSize="14">
-                    <Run Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="{DynamicResource InstanceNameColon}" />
-                    <Run
-                        x:Name="InstanceNamePlaceholder"
-                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                        Text="..." />
-                </TextBlock>
-                <TextBlock
-                    Margin="8,0,0,0"
-                    VerticalAlignment="Center"
-                    FontSize="14">
-                    <Run Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="{DynamicResource VersionColon}" />
-                    <Run
-                        x:Name="GameVersionPlaceholder"
-                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                        Text="..." />
-                </TextBlock>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock VerticalAlignment="Center" FontSize="14">
+                        <Run Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="{DynamicResource InstanceNameColon}" />
+                        <Run
+                            x:Name="InstanceNamePlaceholder"
+                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                            Text="..." />
+                    </TextBlock>
+                    <TextBlock
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Center"
+                        FontSize="14">
+                        <Run Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="{DynamicResource VersionColon}" />
+                        <Run
+                            x:Name="GameVersionPlaceholder"
+                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                            Text="..." />
+                    </TextBlock>
 
-                <!--<TextBlock
+                    <!--<TextBlock
                     Margin="8,0,0,0"
                     VerticalAlignment="Center"
                     FontSize="14">
@@ -160,53 +164,10 @@
                         Text="Forge 10.13.4.1614" />
                 </TextBlock>-->
 
-            </StackPanel>
+                </StackPanel>
 
-            <!--  Close & Hide Buttons  -->
-
-            <StackPanel
-                x:Name="WindowHeaderPanelButtons"
-                Grid.Column="1"
-                HorizontalAlignment="Right"
-                Orientation="Horizontal"
-                RenderTransformOrigin="0.5, 0.5">
-
-                <StackPanel.RenderTransform>
-                    <RotateTransform Angle="180" />
-                </StackPanel.RenderTransform>
-
-                <!--  Close Button  -->
-
-                <Button
-                    Width="15"
-                    Height="15"
-                    Margin="0,0,10,0"
-                    Background="#FF0B00"
-                    Click="CloseWindow_Click"
-                    Style="{StaticResource ColoredWindowsButton}" />
-
-
-                <!--  Maximized Button  -->
-
-                <Button
-                    Width="15"
-                    Height="15"
-                    Margin="0,0,10,0"
-                    Background="Orange"
-                    Click="MaximazedWindow_Click"
-                    Style="{StaticResource ColoredWindowsButton}" />
-
-
-                <!--  Minimaze Button  -->
-
-                <Button
-                    Width="15"
-                    Height="15"
-                    Margin="0,0,10,0"
-                    Background="#009DFF"
-                    Click="MinimazedWindow_Click"
-                    Style="{StaticResource ColoredWindowsButton}" />
-            </StackPanel>
+                <!--  Close & Hide Buttons  -->
+            </Grid>
         </Grid>
 
         <!--  ConsoleBackground  -->

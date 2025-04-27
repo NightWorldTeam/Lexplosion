@@ -20,17 +20,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Modal.InstanceTransfer
 
         private void OnDataContextChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
         {
-            //var tmpViewModel = _importViewModel;
             if (_importViewModel != null) 
             {
               _importViewModel.Model.ImportProcesses.CollectionChanged -= ImportProcessesChanged;
             }
             _importViewModel = (InstanceImportViewModel)DataContext;
-
-            //if (tmpViewModel != null) 
-            //{
-            //    tmpViewModel.Model.ImportProcesses.CollectionChanged -= ImportProcessesChanged;
-            //}
 
             if (_importViewModel != null) 
             {

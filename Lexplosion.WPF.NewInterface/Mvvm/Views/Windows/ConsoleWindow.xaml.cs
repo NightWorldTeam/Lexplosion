@@ -1,6 +1,7 @@
 ﻿using DiscordRPC.Message;
 using Lexplosion.Logic.Management;
 using Lexplosion.WPF.NewInterface.Core;
+using Lexplosion.WPF.NewInterface.WindowComponents.Header;
 using System;
 using System.Collections;
 using System.Collections.ObjectModel;
@@ -50,6 +51,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
             InstanceNamePlaceholder.Text = _gameManager.GameClientName;
             GameVersionPlaceholder.Text = _gameManager.GameVersion;
             //ModloaderPlaceholder.Text = _gameManager.
+
+            WHC.DataContext = new WindowHeaderArgs(
+                "WindowsOS",
+                () => CloseWindow_Click(null, null),
+                () => MaximazedWindow_Click(null, null),
+                () => MinimazedWindow_Click(null, null),
+                false);
         }
 
 

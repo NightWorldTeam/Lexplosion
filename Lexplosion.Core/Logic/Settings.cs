@@ -51,9 +51,10 @@ namespace Lexplosion.Logic
         /// Использовать ли в приоритете в сетевой игре прямое подключение.
         /// </summary>
         public bool NetworkDirectConnection = true;
-        public string LanguageId = "";
-        public string AccentColor = "";
-        public string ThemeName = "";
+        public string LanguageId = string.Empty;
+        public string AccentColor = string.Empty;
+        public string ThemeName = string.Empty;
+        public string AppHeaderTemplateName = string.Empty;
         /// <summary>
         /// Адрес сервера для автовхода при запуске майкрафта.
         /// Параметр только для настроек конкретного клиента. 
@@ -109,6 +110,7 @@ namespace Lexplosion.Logic
                 if (string.IsNullOrWhiteSpace(LanguageId)) LanguageId = settings.LanguageId;
                 if (string.IsNullOrWhiteSpace(ThemeName)) ThemeName = settings.ThemeName;
                 if (string.IsNullOrWhiteSpace(AccentColor)) AccentColor = settings.AccentColor;
+                if (string.IsNullOrWhiteSpace(AppHeaderTemplateName)) AppHeaderTemplateName = settings.AppHeaderTemplateName;
             }
             else
             {
@@ -130,6 +132,7 @@ namespace Lexplosion.Logic
 				if (!string.IsNullOrWhiteSpace(settings.LanguageId)) LanguageId = settings.LanguageId;
                 if (!string.IsNullOrWhiteSpace(settings.ThemeName)) ThemeName = settings.ThemeName;
                 if (!string.IsNullOrWhiteSpace(settings.AccentColor)) AccentColor = settings.AccentColor;
+                if (!string.IsNullOrWhiteSpace(settings.AppHeaderTemplateName)) AppHeaderTemplateName = settings.AppHeaderTemplateName;
                 AutoLoginServer = settings.AutoLoginServer;
             }
 
@@ -181,7 +184,8 @@ namespace Lexplosion.Logic
 				NavBarInLeft = true,
 				IsPortableMode = false,
                 IsNightWorldSkinSystem = true,
-			};
+                AppHeaderTemplateName = "MacOS"
+            };
         }
     }
 }

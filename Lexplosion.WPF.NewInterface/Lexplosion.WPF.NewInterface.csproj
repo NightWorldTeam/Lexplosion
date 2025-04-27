@@ -302,6 +302,9 @@
     <Compile Include="WindowComponents\Header\Variants\MacOSHeader.xaml.cs">
       <DependentUpon>MacOSHeader.xaml</DependentUpon>
     </Compile>
+    <Compile Include="WindowComponents\Header\Variants\WindowsOSHeader.xaml.cs">
+      <DependentUpon>WindowsOSHeader.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WindowComponents\Header\WindowHeaderArgs.cs" />
     <Compile Include="WindowComponents\Header\WindowHeaderContainer.xaml.cs">
       <DependentUpon>WindowHeaderContainer.xaml</DependentUpon>
@@ -798,6 +801,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="WindowComponents\Header\Variants\MacOSHeader.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WindowComponents\Header\Variants\WindowsOSHeader.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

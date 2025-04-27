@@ -312,6 +312,40 @@
                         Padding="0,0,0,16"
                         BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
                         BorderThickness="0,0,0,0">
+                        <Grid>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Orientation="Vertical">
+
+                                <TextBlock
+                                    FontSize="16"
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                    Text="{DynamicResource AppHeaderTemplate}" />
+                                <TextBlock
+                                    FontSize="14"
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                    Text="{DynamicResource AppHeaderTemplateDescription}" />
+                            </StackPanel>
+
+                            <ComboBox
+                                Grid.Column="1"
+                                ItemsSource="{Binding Model.HeaderTemplates}"
+                                SelectedValue="{Binding Model.SelectedAppHeaderTemplateName}" />
+                        </Grid>
+                    </Border>
+
+                    <Border
+                        Grid.Row="2"
+                        Margin="0,16,0,0"
+                        Padding="0,0,0,16"
+                        BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
+                        BorderThickness="0,0,0,0">
                         <StackPanel Orientation="Vertical">
 
                             <TextBlock

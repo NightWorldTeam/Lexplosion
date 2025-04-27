@@ -1,11 +1,6 @@
-﻿using Lexplosion.WPF.NewInterface.Core.Objects;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -45,6 +40,8 @@ namespace Lexplosion.WPF.NewInterface.Core
 
     public class Switch : UserControl
     {
+        private readonly Guid _id;
+
         #region Dependency Properties
 
 
@@ -81,14 +78,16 @@ namespace Lexplosion.WPF.NewInterface.Core
 
         public Switch()
         {
+            // Коллекция по умолчанию не пустая, обнуляем её чтобы всё работало как надо
+            // Думаю в будущем, при добавлении в коллецию нужно проверять хеш-объекта, чтобы компонент не падал
+            Cases = new SwitchCaseCollection();
             UpdateContent();
             Cases.CollectionChanged += Cases_CollectionChanged;
         }
 
         private void UpdateContent()
         {
-            var s = Cases?.FirstOrDefault(c => IsEqualsKeys(c.Key, SelectedExpression));
-            Content = s; 
+            Content = Cases?.FirstOrDefault(c => IsEqualsKeys(c.Key, SelectedExpression)); 
         }
 
 
@@ -117,13 +116,14 @@ namespace Lexplosion.WPF.NewInterface.Core
         private static void OnConditionPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var _this = (Switch)d;
+            var r = _this._id;
             _this.UpdateContent();
         }
 
         private static void OnConditionsPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var _this = (Switch)d;
-                        
+
             if (e.OldValue != null)
                 (e.OldValue as SwitchCaseCollection).CollectionChanged -= _this.Cases_CollectionChanged;
 

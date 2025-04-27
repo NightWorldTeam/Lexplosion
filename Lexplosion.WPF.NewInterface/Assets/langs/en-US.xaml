@@ -800,4 +800,19 @@
     <s:String x:Key="RestartLauncherButtonAction">
         Yes, I want to restart the launcher now
     </s:String>
+
+    <s:String x:Key="AddonDragAndDropDescription">
+        Drop .jar, .zip, or .rar file to install it
+    </s:String>
+
+    <s:String x:Key="ChangeMenuPosition">
+        Change Menu Position
+    </s:String>
+
+    <s:String x:Key="AppHeaderTemplate">
+        App Header Style
+    </s:String>
+    <s:String x:Key="AppHeaderTemplateDescription">
+        Select header visual style you wish
+    </s:String>
 </ResourceDictionary>
