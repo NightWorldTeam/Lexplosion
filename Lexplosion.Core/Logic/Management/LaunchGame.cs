@@ -260,7 +260,7 @@ namespace Lexplosion.Logic.Management
 			if (_settings.JVMArgs.Length > 0 && _settings.JVMArgs[_settings.JVMArgs.Length - 1] != ' ')
 				_settings.JVMArgs += " ";
 
-			bool isNwClient = (data.VersionFile?.NightWorldClientData != null) && data.VersionFile.IsNightWorldClient;
+			bool isNwClient = (data.VersionFile?.NightWorldClientData != null) && data.VersionFile.IsNightWorldClient && _launchAccount.AccountType == AccountType.NightWorld;
 			bool isNwSkinSystem = _launchAccount.AccountType == AccountType.NightWorld && _settings.IsNightWorldSkinSystem != false;
 
 			string accountType = _launchAccount.AccountType.ToString();
@@ -270,12 +270,9 @@ namespace Lexplosion.Logic.Management
 				var activation = data.Libraries[lib].activationConditions;
 
 				bool byAccountType = (activation?.accountTypes == null || activation.accountTypes.Contains(accountType));
-				bool byNwClient = activation?.nightWorldClient == null || (activation.nightWorldClient == isNwClient);
+				bool byNwClient = (activation?.nightWorldClient == null || activation.nightWorldClient == isNwClient);
 				bool byClientType = (activation?.clientTypes == null || activation.clientTypes.Contains(data.VersionFile.ModloaderType.ToString()));
 				bool bySkinSystem = activation?.nightWorldSkinSystem == null || (activation.nightWorldSkinSystem == isNwSkinSystem);
-
-				if (lib.Contains("authlib"))
-					byAccountType = true;
 
 				if (byAccountType && byNwClient && byClientType && bySkinSystem && !data.Libraries[lib].notLaunch)
 				{
