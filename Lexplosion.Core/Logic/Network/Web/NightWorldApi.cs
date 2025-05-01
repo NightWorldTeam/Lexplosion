@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using Lexplosion.Global;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Objects.Nightworld;
+using System.Threading;
 
 namespace Lexplosion.Logic.Network
 {
@@ -377,9 +378,9 @@ namespace Lexplosion.Logic.Network
 		/// <summary>
 		/// Возврщает версию лаунчера на сервере. -1 если произошла ошибка
 		/// </summary>
-		public int CheckLauncherUpdates()
+		public int CheckLauncherUpdates(int timeout = 10000)
 		{
-			var result = _toServer.HttpGet(LaunсherSettings.URL.LauncherParts + "launcherVersion.html", timeout: 10000);
+			var result = _toServer.HttpGet(LaunсherSettings.URL.LauncherParts + "launcherVersion.html", timeout: timeout);
 			if (result == null) return -1;
 
 			if (Int32.TryParse(result, out int res)) return res;

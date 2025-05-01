@@ -421,6 +421,8 @@ namespace Lexplosion.Logic.Objects
 		public string IP { get; set; }
 		public int Port { get; set; }
 
+		public double CalculatedDelay { get; set; }
+
 		public string Url { get => $"http://{IP}:{Port}"; }
 	}
 

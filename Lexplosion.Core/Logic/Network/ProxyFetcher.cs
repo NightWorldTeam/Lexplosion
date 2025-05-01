@@ -9,6 +9,7 @@ using System.Threading;
 using System;
 using Lexplosion.Global;
 using Lexplosion.Logic.Objects;
+using System.Diagnostics;
 
 namespace Lexplosion.Logic.Network
 {
@@ -30,17 +31,17 @@ namespace Lexplosion.Logic.Network
 
 			try
 			{
-				var geonodeUrl = "https://proxylist.geonode.com/api/proxy-list?google=true&limit=75&page=1&sort_by=lastChecked&sort_type=desc";
+				var geonodeUrl = "https://proxylist.geonode.com/api/proxy-list?google=true&limit=120&page=1&sort_by=lastChecked&sort_type=desc";
 				var geonodeResponse = await _httpClient.GetStringAsync(geonodeUrl);
 				proxies.AddRange(ParseGeonodeProxies(geonodeResponse));
-
-				var freeProxyListUrl = "https://free-proxy-list.net/";
-				var freeProxyListResponse = await _httpClient.GetStringAsync(freeProxyListUrl);
-				proxies.AddRange(ParseFreeProxyList(freeProxyListResponse));
 
 				var proxyListUrl = "https://www.proxy-list.download/api/v1/get?type=http";
 				var proxyListResponse = await _httpClient.GetStringAsync(proxyListUrl);
 				proxies.AddRange(ParseProxyListDownload(proxyListResponse));
+
+				var freeProxyListUrl = "https://free-proxy-list.net/";
+				var freeProxyListResponse = await _httpClient.GetStringAsync(freeProxyListUrl);
+				proxies.AddRange(ParseFreeProxyList(freeProxyListResponse));
 			}
 			catch (Exception ex)
 			{
@@ -54,7 +55,8 @@ namespace Lexplosion.Logic.Network
 		{
 			new Thread(() =>
 			{
-				int maxProxiesToCheck = 75;
+				Runtime.DebugWrite($"Поиск рабочих прокси среди {proxies.Count} штук");
+				int maxProxiesToCheck = proxies.Count < 120 ? proxies.Count : 120;
 				int workingProxies = 0;
 
 				var perfomer = new TasksPerfomer(15, maxProxiesToCheck);
@@ -67,19 +69,22 @@ namespace Lexplosion.Logic.Network
 					{
 						var prx = proxy;
 						var res = CheckWorking(prx).Result;
-						if (res)
+						if (res != -1)
 						{
+							prx.CalculatedDelay = res;
 							findedWorkingProxy(prx);
 							workingProxies++;
 						}
 					});
 				}
 
+				perfomer.WaitEnd();
+
 				end();
 			}).Start();
 		}
 
-		private static async Task<bool> CheckWorking(Proxy proxy)
+		private static async Task<double> CheckWorking(Proxy proxy)
 		{
 			try
 			{
@@ -92,23 +97,28 @@ namespace Lexplosion.Logic.Network
 
 				using (var testClient = new HttpClient(handler))
 				{
+					testClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0");
 					testClient.Timeout = _timeout;
 
+					var startTime = new Stopwatch();
+					startTime.Start();
 					var response = await testClient.SendAsync(new HttpRequestMessage(HttpMethod.Head, LaunсherSettings.URL.Base));
+					startTime.Stop();
+
+					var requestTime = startTime.Elapsed;
 
 					if (response.IsSuccessStatusCode)
 					{
 						Runtime.DebugWrite($"Найден рабочий прокси: {proxy.IP}:{proxy.Port}");
-						return true;
+						return requestTime.TotalMilliseconds;
 					}
+
+					Runtime.DebugWrite($"Proxy error {response.StatusCode}");
 				}
 			}
-			catch (Exception ex)
-			{
-				Runtime.DebugWrite($"Прокси {proxy.IP} не пашет");
-			}
+			catch { }
 
-			return false;
+			return -1;
 		}
 
 		private static List<Proxy> ParseFreeProxyList(string htmlResponse)

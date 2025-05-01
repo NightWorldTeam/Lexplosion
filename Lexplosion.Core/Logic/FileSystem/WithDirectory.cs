@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using Lexplosion.Global;
 using Lexplosion.Tools;
 using Lexplosion.Logic.Objects;
+using Lexplosion.Logic.Network.Web;
 
 namespace Lexplosion.Logic.FileSystem
 {
@@ -21,10 +22,25 @@ namespace Lexplosion.Logic.FileSystem
 		public string GetInstancePath(string instanceId) => $"{InstancesPath}{instanceId}/";
 
 		private HttpClient _httpClient = new();
+		private ProxyHandler _clientHandler;
+
+		private const string USER_AGENT = "Mozilla/5.0";
 
 		internal WithDirectory()
 		{
-			_httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0");
+			_httpClient.DefaultRequestHeaders.Add("User-Agent", USER_AGENT);
+		}
+
+		public void ChangeDownloadToProxyMode()
+		{
+			_clientHandler = new ProxyHandler(USER_AGENT);
+			_httpClient = new HttpClient(_clientHandler);
+			_httpClient.DefaultRequestHeaders.Add("User-Agent", USER_AGENT);
+		}
+
+		public void AddProxy(Proxy proxy)
+		{
+			_clientHandler.AddProxy(proxy);
 		}
 
 		public void Create(string path)

@@ -20,24 +20,26 @@ namespace Lexplosion.Logic.Network
 	public class ToServer
 	{
 		private HttpClient _httpClient;
-		private RetryableProxyHttpClientHandler _clientHandler;
+		private ProxyHandler _clientHandler;
 
-		public ToServer()
+		private const string USER_AGENT = "Mozilla/5.0";
+
+		internal ToServer()
 		{
 			_httpClient = new HttpClient();
-			_httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0");
+			_httpClient.DefaultRequestHeaders.Add("User-Agent", USER_AGENT);
 		}
 
-		public void ChengeToProxyMode()
+		public void ChangeToProxyMode()
 		{
-			_clientHandler = new RetryableProxyHttpClientHandler();
+			_clientHandler = new ProxyHandler(USER_AGENT);
 			_httpClient = new HttpClient(_clientHandler);
-			_httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0");
+			_httpClient.DefaultRequestHeaders.Add("User-Agent", USER_AGENT);
 		}
 
 		public void AddProxy(Proxy proxy)
 		{
-			_clientHandler.AddProxy(proxy.Url);
+			_clientHandler.AddProxy(proxy);
 		}
 
 		public T ProtectedRequest<T>(string url) where T : ProtectedManifest
@@ -186,6 +188,7 @@ namespace Lexplosion.Logic.Network
 
 		public async Task<string> HttpPostAsync(string url, IDictionary<string, string> data = null, IDictionary<string, string> headers = null)
 		{
+			HttpResponseMessage response;
 			try
 			{
 				var content = data != null
@@ -202,7 +205,8 @@ namespace Lexplosion.Logic.Network
 
 				AddHeaders(request, headers);
 
-				var response = await _httpClient.SendAsync(request);
+				response = await _httpClient.SendAsync(request);
+				if (!response.IsSuccessStatusCode) return null;
 
 				return await response.Content.ReadAsStringAsync();
 			}
@@ -283,6 +287,8 @@ namespace Lexplosion.Logic.Network
 
 				var response = await _httpClient.SendAsync(request);
 				httpStatus = response.StatusCode;
+				if (!response.IsSuccessStatusCode) return (null, httpStatus);
+
 				string result = await response.Content.ReadAsStringAsync();
 
 				return (result, httpStatus);

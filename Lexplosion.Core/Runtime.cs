@@ -102,30 +102,34 @@ namespace Lexplosion
 			if (!InstanceCheck())
 			{
 				WebSocketClient ws = new WebSocketClient(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 54352));
-				//отправляем уже запущщеному лаунчеру запрос о том, что надо бы блять что-то сделать, а то юзер новый запустить пытается
+				//отправляем уже запущеному лаунчеру запрос о том, что надо бы блять что-то сделать, а то юзер новый запустить пытается
 				ws.SendData("$lexplosionOpened:" + CurrentProcess.Id);
 				CurrentProcess.Kill(); //стопаем этот процесс
 			}
 
 			int version = nightWorldApi.CheckLauncherUpdates();
-
 			if (version == -1)
 			{
-				toServer.ChengeToProxyMode();
-
 				var proxies = ProxyFetcher.GetProxies();
 				if (proxies.Count > 0)
 				{
+					toServer.ChangeToProxyMode();
+					withDirectory.ChangeDownloadToProxyMode();
+
 					var waiter = new ManualResetEvent(false);
 					ProxyFetcher.FindWorkingProxy(proxies, (Proxy proxy) =>
 					{
+						if (proxy.CalculatedDelay < 0) return;
+
 						toServer.AddProxy(proxy);
+						withDirectory.AddProxy(proxy);
+
 						waiter.Set();
 					}, () => waiter.Set());
 
 					waiter.WaitOne();
 
-					version = nightWorldApi.CheckLauncherUpdates();
+					version = nightWorldApi.CheckLauncherUpdates(15000);
 
 					if (version > LaunсherSettings.version)
 					{
