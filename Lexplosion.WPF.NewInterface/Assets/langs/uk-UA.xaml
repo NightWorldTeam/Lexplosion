@@ -1,0 +1,895 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:s="clr-namespace:System;assembly=mscorlib">
+    <!--
+        == NEW
+        == WPF
+        == INTERFACE
+        == TRANSLATE
+    -->
+
+    <!-- Languages -->
+    <s:String x:Key="en-US">Англійська</s:String>
+    <s:String x:Key="ru-RU">Російська</s:String>
+    <s:String x:Key="uk-UA">Українська</s:String>
+    <s:String x:Key="zh-CN">Китайська</s:String>
+    <s:String x:Key="de-DE">Німецька</s:String>
+    <s:String x:Key="ru-CAT">Російська (Кішка)</s:String>
+    <s:String x:Key="lolcat">LOLCAT</s:String>
+
+    <s:String x:Key="Default">За замовчуванням</s:String>
+    <!--    -->
+    <!--  LeftPanel  -->
+    <!--    -->
+    <s:String x:Key="Catalog">Каталог</s:String>
+    <s:String x:Key="Library">Бібліотека</s:String>
+    <s:String x:Key="Friends">Друзі</s:String>
+    <s:String x:Key="Multiplayer">Мережева гра</s:String>
+    <s:String x:Key="Settings">Налаштування</s:String>
+    <s:String x:Key="GladToSeeYou">Раді тебе бачити,</s:String>
+
+    <!--    -->
+    <!--  Titles  -->
+    <!--    -->
+    <s:String x:Key="General">Основне</s:String>
+
+    <!--  Friends  -->
+    <s:String x:Key="FindFriends">Пошук друзів</s:String>
+    <s:String x:Key="FriendsRequests">Заявки на дружбу</s:String>
+
+    <!--  Settings  -->
+    <s:String x:Key="Appearance">Вигляд</s:String>
+    <s:String x:Key="Language">Мова</s:String>
+    <s:String x:Key="About">Про лаунчер</s:String>
+
+    <!--  Main Menu  -->
+
+    <!--    -->
+    <!--  Catalog  -->
+    <!--    -->
+    <s:String x:Key="Search">Пошук</s:String>
+
+    <!--    -->
+    <!--  Library  -->
+    <!--    -->
+
+    <!--    -->
+    <!--  Friends  -->
+    <!--    -->
+    <s:String x:Key="Pending">Вхідні</s:String>
+    <s:String x:Key="Outgoing">Вихідні</s:String>
+    <s:String x:Key="AcceptRequest">Прийняти заявку</s:String>
+    <s:String x:Key="RemoveFollower">Видалити підписників</s:String>
+    <s:String x:Key="AddFriend">Додати до друзів</s:String>
+    <s:String x:Key="Unfriends">Видалити з друзів</s:String>
+
+    <!--  Status  -->
+    <s:String x:Key="Online">Онлайн</s:String>
+    <s:String x:Key="Offline">Офлайн</s:String>
+    <s:String x:Key="PlayingIn">Грає в</s:String>
+    <s:String x:Key="InGame">У грі</s:String>
+    <s:String x:Key="DoNotDisturb">Не турбувати</s:String>
+
+    <!--    -->
+    <!--  Multiplayer  -->
+    <!--    -->
+    <s:String x:Key="Status">Статус</s:String>
+    <s:String x:Key="PriorityConnetionMethod">Пріоритетний метод підключення</s:String>
+    <s:String x:Key="DirectConnection">Пряме</s:String>
+    <s:String x:Key="ViaRepeater">Через ретранслятор</s:String>
+    <s:String x:Key="ConnectedPlayers">Підключені гравці</s:String>
+    <s:String x:Key="NoConnectedPlayers">Підключені гравці відсутні</s:String>
+    <s:String x:Key="ReloadMultiplayer">Перезавантажити мережеву гру</s:String>
+
+    <!--  Status  -->
+    <s:String x:Key="StatusNone">Немає відкритих світів</s:String>
+    <s:String x:Key="StatusOpenWorld">Відкрито для підключення</s:String>
+    <s:String x:Key="StatusConnectedToUser">Підключено до сервера</s:String>
+
+    <!--    -->
+    <!--  General Settings  -->
+    <!--    -->
+
+    <!--  General Settings -> General  -->
+    <s:String x:Key="GameProperties">Параметри гри</s:String>
+    <s:String x:Key="JavaProperties">Параметри Java</s:String>
+    <s:String x:Key="LauncherProperties">Параметри лаунчера</s:String>
+
+    <s:String x:Key="GamePropertiesDescription">Налаштуйте вашу гру.</s:String>
+    <s:String x:Key="JavaPropertiesDescription">Налаштуйте Java для Minecraft.</s:String>
+    <s:String x:Key="LauncherPropertiesDescription">Налаштуйте лаунчер під себе.</s:String>
+
+    <!--  Game Properties  -->
+    <!--  Window Size  -->
+    <s:String x:Key="WindowSize">Розмір вікна</s:String>
+    <s:String x:Key="WindowSizeDescription">Налаштування розміру вікна Minecraft.</s:String>
+    <!--  Ram  -->
+    <s:String x:Key="Ram">ОЗП</s:String>
+    <s:String x:Key="RamDescription">Цей параметр підвищить швидкість роботи.</s:String>
+    <!--  Game Directory  -->
+    <s:String x:Key="GameDirectory">Папка з грою</s:String>
+    <s:String x:Key="GameDirectoryDescription">Виберіть місце для папки з грою.</s:String>
+
+    <!--  Java Properties  -->
+    <!--  Java Path  -->
+    <s:String x:Key="JavaPath">Шлях до Java</s:String>
+    <s:String x:Key="JavaPathDescription">Шлях до директорії Java.</s:String>
+    <!--  Java Path for higher 1.16.5  -->
+    <s:String x:Key="JavaPathHigher">Шлях до Java для версій від 1.16.5</s:String>
+    <s:String x:Key="JavaPathHigherDescription">Шлях до директорії Java для версій від 1.16.5.</s:String>
+    <!--  JVM Arguments  -->
+    <s:String x:Key="JVMArguments">Аргументи JVM</s:String>
+    <s:String x:Key="JVMArgumentsDescription">Аргументи віртуальної машини Java.</s:String>
+
+    <!--  Launcher Properties  -->
+    <!--  Console  -->
+    <s:String x:Key="Console">Консоль</s:String>
+    <s:String x:Key="ConsoleDescription">Запускає консоль під час запуску гри.</s:String>
+    <!--  Hide Launcher  -->
+    <s:String x:Key="HideLauncher">Приховувати лаунчер</s:String>
+    <s:String x:Key="HideLauncherDescription">Приховує лаунчер під час запуску гри.</s:String>
+    <!--  Auto Instance Update  -->
+    <s:String x:Key="AutoInstanceUpdate">Автоматично оновлювати збірки</s:String>
+    <s:String x:Key="AutoInstanceUpdateDescription">Збірки у вашій бібліотеці оновлюються автоматично.</s:String>
+    <!--  NightWorld Skins  -->
+    <s:String x:Key="NightWorldSkins">Система скінів NightWorld</s:String>
+    <s:String x:Key="NightWorldSkinsDescription">У грі відображатиметься скін, установлений у профілі.</s:String>
+
+    <!--    -->
+    <!--  Appearance  -->
+    <!--    -->
+    <s:String x:Key="AccentColor">Колір акценту</s:String>
+    <s:String x:Key="ChooseAccentColor">Виберіть ваш колір акценту.</s:String>
+    <s:String x:Key="InterfaceTheme">Тема інтерфейсу</s:String>
+    <s:String x:Key="ChooseTheme">Виберіть вашу тему.</s:String>
+
+    <!--    -->
+    <!--  Language  -->
+    <!--    -->
+    <s:String x:Key="ChooseLanguage">Виберіть мову.</s:String>
+
+    <!--    -->
+    <!--  Accounts  -->
+    <!--    -->
+    <s:String x:Key="Accounts">Облікові записи</s:String>
+
+    <!--    -->
+    <!--  About  -->
+    <!--    -->
+    <s:String x:Key="Authors">Автори</s:String>
+    <s:String x:Key="Founders">Засновники</s:String>
+    <s:String x:Key="Developers">Розробники</s:String>
+    <s:String x:Key="Contacts">Контакти</s:String>
+    <s:String x:Key="OurVkontakteGroup">Наша група Вконтакте</s:String>
+    <s:String x:Key="Protection">Ця програма захищена законами про авторські права та міжнародними угодами. Незаконне відтворення або розповсюдження цієї програми чи будь-якої її частини тягне за собою цивільну та кримінальну відповідальність.</s:String>
+    <s:String x:Key="Copyright">© NightWorld, 2025 р. Усі права захищено.</s:String>
+    <s:String x:Key="DenialOfResponsibility">НЕ Є ОФІЦІЙНИМ [ПРОДУКТОМ/ПОСЛУГОЮ/ПОДІЄЮ ТОЩО] MINECRAFT. НЕ СХВАЛЕНО І НЕ ПОВ’ЯЗАНО З КОМПАНІЄЮ MOJANG АБО MICROSOFT</s:String>
+
+    <!--    -->
+    <!--  Instance Factory Modal  -->
+    <!--    -->
+
+    <!--  Instance Factory Left Modal Menu Tabs Titles  -->
+    <s:String x:Key="Create">Створення</s:String>
+    <s:String x:Key="Import">Імпорт</s:String>
+    <s:String x:Key="Distributions">Роздачі</s:String>
+
+    <!--    -->
+    <!--  Instance Form  -->
+    <!--    -->
+
+    <!--  Logo  -->
+    <s:String x:Key="More">Більше</s:String>
+
+    <!--  Upper Buttons  -->
+    <s:String x:Key="Play">Грати</s:String>
+    <s:String x:Key="Launch">Запустити</s:String>
+
+    <!--  LowerButtons  -->
+    <s:String x:Key="DeleteInstance">Видалити збірку</s:String>
+    <s:String x:Key="Export">Експорт</s:String>
+    <s:String x:Key="OpenFolder">Відкрити папку</s:String>
+    <s:String x:Key="ExploreAddons">Перегляд доповнень</s:String>
+    <s:String x:Key="AddToLibrary">Додати до бібліотеки</s:String>
+    <s:String x:Key="RemoveFromLibrary">Видалити з бібліотеки</s:String>
+    <s:String x:Key="CancelDownload">Скасувати завантаження</s:String>
+
+    <!--  Visit Official Page  -->
+    <s:String x:Key="VisitCurseforge">Перейти на Curseforge</s:String>
+    <s:String x:Key="VisitModrinth">Перейти на Modrinth</s:String>
+    <s:String x:Key="VisitNightworld">Перейти на NightWorld</s:String>
+
+    <!--    -->
+    <!--  Instance Overview Menu  -->
+    <!--    -->
+    <s:String x:Key="Version">Версія</s:String>
+    <s:String x:Key="Download">Завантажити</s:String>
+
+    <!--    -->
+    <!--  Instance Profile  -->
+    <!--    -->
+    <s:String x:Key="Overview">Огляд</s:String>
+    <s:String x:Key="Addons">Доповнення</s:String>
+    <s:String x:Key="AboutInstance">Про збірку</s:String>
+
+    <!--    -->
+    <!--  Instance Profile Left Panel  -->
+    <!--    -->
+    <s:String x:Key="Back">Назад</s:String>
+    <s:String x:Key="Version:">Версія гри:</s:String>
+    <s:String x:Key="GameType:">Тип гри:</s:String>
+    <s:String x:Key="PlayedTime:">Награно:</s:String>
+    <s:String x:Key="DownloadCount:">Завантажень:</s:String>
+
+    <!--    -->
+    <!--  Instance Profile Addons  -->
+    <!--    -->
+    <s:String x:Key="Mods">Моди</s:String>
+    <s:String x:Key="Resourcepacks">Ресурспаки</s:String>
+    <s:String x:Key="Maps">Карти</s:String>
+    <s:String x:Key="Shaders">Шейдери</s:String>
+
+    <!--  Sort By  -->
+    <s:String x:Key="Name">Назва</s:String>
+    <s:String x:Key="Author">Автор</s:String>
+    <s:String x:Key="FileName">Ім'я файлу</s:String>
+
+    <!--  By Name  -->
+    <s:String x:Key="ModName">Назва мода</s:String>
+    <s:String x:Key="ResourcepackName">Назва ресурспаку</s:String>
+    <s:String x:Key="MapName">Назва карти</s:String>
+    <s:String x:Key="ShaderName">Назва шейдера</s:String>
+
+    <!--  By Author  -->
+    <s:String x:Key="ModAuthor">Автор мода</s:String>
+    <s:String x:Key="ResourcepackAuthor">Автор ресурспаку</s:String>
+    <s:String x:Key="MapAuthor">Автор карти</s:String>
+    <s:String x:Key="ShaderAuthor">Автор шейдера</s:String>
+
+    <!--  By File Name  -->
+    <s:String x:Key="ModFileName">Назва файлу мода</s:String>
+    <s:String x:Key="ResourcepackFileName">Назва файлу ресурспаку</s:String>
+    <s:String x:Key="MapFileName">Назва файлу карти</s:String>
+    <s:String x:Key="ShaderFileName">Назва файлу шейдера</s:String>
+
+    <!--    -->
+    <!--  Instance Profile Settings  -->
+    <!--    -->
+    <s:String x:Key="Configuration">Конфігурація</s:String>
+    <s:String x:Key="InstanceNameDescription">Так ваша збірка називатиметься в бібліотеці</s:String>
+    <s:String x:Key="Summary">Короткий опис</s:String>
+    <s:String x:Key="SummaryDescription">Короткий опис для цієї збірки.</s:String>
+    <s:String x:Key="Description">Опис</s:String>
+    <s:String x:Key="DescriptionAdditional">Опис для цієї збірки.</s:String>
+
+    <!--    -->
+    <!--  Instance Profile Configuration  -->
+    <!--    -->
+    <s:String x:Key="GameType">Тип гри</s:String>
+    <s:String x:Key="GameTypeDescription">Ваніла/модлоадер</s:String>
+    <s:String x:Key="VersionDescription">Опис версії.</s:String>
+    <s:String x:Key="ModloaderVersion">Версія модлоадера</s:String>
+    <s:String x:Key="ModloaderVersionDescription">Вибір версії для обраного модлоадера.</s:String>
+    <s:String x:Key="IsShowSnapshots">Показувати снапшоти?</s:String>
+    <s:String x:Key="IsShowSnapshotsDescription">Показує снапшоти у спадному меню з версіями гри.</s:String>
+    <s:String x:Key="Optifine">Оптіфайн</s:String>
+    <s:String x:Key="OptifineDescription">Встановлює Оптіфайн на цю збірку.</s:String>
+
+    <!--    -->
+    <!--  Addons Repository  -->
+    <!--    -->
+    <s:String x:Key="Install">Встановити</s:String>
+    <s:String x:Key="Categories">Категорії</s:String>
+    <s:String x:Key="Search...">Пошук...</s:String>
+    <s:String x:Key="SortBy">Сортувати за</s:String>
+    <s:String x:Key="ShowPerPage">Показати на сторінці</s:String>
+    <s:String x:Key="Accept">Прийняти</s:String>
+    <s:String x:Key="Installing...">Встановлення...</s:String>
+
+    <!--    -->
+    <!--  Modrinth Addon Page  -->
+    <!--    -->
+    <s:String x:Key="ProjectMembers">Учасники проєкту</s:String>
+    <s:String x:Key="TechnicalInformation">Технічна інформація</s:String>
+    <s:String x:Key="ExternalResources">Зовнішні ресурси</s:String>
+    <s:String x:Key="Created">Створено</s:String>
+    <s:String x:Key="Updated">Оновлено</s:String>
+    <s:String x:Key="License">Ліцензія</s:String>
+    <s:String x:Key="ClientSide">Сторона клієнта</s:String>
+    <s:String x:Key="ServerSide">Сторона сервера</s:String>
+    <s:String x:Key="ProjectId">ID проєкту</s:String>
+    <s:String x:Key="Required">Обов’язковий</s:String>
+    <s:String x:Key="Unsupported">Не підтримується</s:String>
+
+    <s:String x:Key="Downloads1">завантаження</s:String>
+    <s:String x:Key="Downloads2">завантаження</s:String>
+    <s:String x:Key="Downloads3">завантажень</s:String>
+
+    <s:String x:Key="Followers1">підписаний</s:String>
+    <s:String x:Key="Followers2">підписані</s:String>
+    <s:String x:Key="Followers3">підписаних</s:String>
+
+    <s:String x:Key="Gallery">Галерея</s:String>
+    <s:String x:Key="Changelog">Журнал змін</s:String>
+    <s:String x:Key="Versions">Версії</s:String>
+
+    <s:String x:Key="Update">Оновити</s:String>
+    <s:String x:Key="Delete">Видалити</s:String>
+
+    <s:String x:Key="ProjectFound">проєктів знайдено</s:String>
+
+    <!--  Instance Factory  -->
+    <s:String x:Key="InstanceName">Назва збірки</s:String>
+    <s:String x:Key="CreateInstance">Створити збірку</s:String>
+
+    <!--  Export  -->
+    <s:String x:Key="ExportProperties">Властивості експорту</s:String>
+    <s:String x:Key="ExportInstanceNameDescription">Відображатиметься після експорту в бібліотеці.</s:String>
+    <s:String x:Key="FoldersAndFiles">Папки та файли</s:String>
+    <s:String x:Key="FoldersAndFilesDescription">Виберіть папки та файли, які хочете експортувати.</s:String>
+    <s:String x:Key="FullExport">Повний експорт</s:String>
+    <s:String x:Key="InstanceExport">Експорт збірки</s:String>
+    <s:String x:Key="ExportProcessActive">Процес експорту збірки</s:String>
+
+    <!--  Import  -->
+    <s:String x:Key="ImportDragDropFieldDescription">Перетягніть архів зі збіркою, щоб почати завантаження.</s:String>
+    <s:String x:Key="Review">Огляд</s:String>
+
+    <!--  Filter Sorting  -->
+    <s:String x:Key="Source">Джерело</s:String>
+    <s:String x:Key="Sorting">Сортувати за</s:String>
+
+    <!--  Sources  -->
+    <s:String x:Key="AllSource">Усі джерела</s:String>
+    <s:String x:Key="LocalSource">Lexplosion</s:String>
+    <s:String x:Key="Curseforge">Curseforge</s:String>
+    <s:String x:Key="Modrinth">Modrinth</s:String>
+    <s:String x:Key="NightWorld">NightWorld</s:String>
+
+    <s:String x:Key="Or">Або</s:String>
+    <s:String x:Key="And">І</s:String>
+
+    <!--  Categories  -->
+    <s:String x:Key="CategoriesSearchBoxPlaceholder">Виберіть категорію для фільтрації...</s:String>
+
+    <!--  Modrinth  -->
+    <s:String x:Key="ModrinthRelevance">Релевантністю</s:String>
+    <s:String x:Key="ModrinthDownloads">Кількістю завантажень</s:String>
+    <s:String x:Key="ModrinthFollows">Підписниками</s:String>
+    <s:String x:Key="ModrinthUpdated">Останнім оновленням</s:String>
+    <s:String x:Key="ModrinthNewest">Датою створення</s:String>
+    <!--  Curseforge  -->
+    <s:String x:Key="CurseforgeRelevance">Релевантністю</s:String>
+    <s:String x:Key="CurseforgeFeatured">Релевантністю</s:String>
+    <s:String x:Key="CurseforgePopularity">Популярністю</s:String>
+    <s:String x:Key="CurseforgeLastUpdated">Останнім оновленням</s:String>
+    <s:String x:Key="CurseforgeCreationDate">Датою створення</s:String>
+    <s:String x:Key="CurseforgeTotalDownloads">Кількістю завантажень</s:String>
+    <s:String x:Key="CurseforgeName">A-Z</s:String>
+
+    <!--  Accounts  -->
+    <s:String x:Key="Active">Активно</s:String>
+    <s:String x:Key="NotActive">Неактивно</s:String>
+    <s:String x:Key="TypingNicknamePlaceholder">Введіть нік...</s:String>
+
+    <!--  Funcs  -->
+    <s:String x:Key="Activate">Зробити активним</s:String>
+    <s:String x:Key="DoGameLauncher">Зробити запусканим</s:String>
+    <s:String x:Key="Signout">Вийти</s:String>
+
+    <s:String x:Key="GameLauncher">Запуск гри</s:String>
+
+    <!--  Account Factory  -->
+    <s:String x:Key="AddingAccount">Додавання облікового запису</s:String>
+    <s:String x:Key="Login">Логін</s:String>
+    <s:String x:Key="Password">Пароль</s:String>
+    <s:String x:Key="AccountType">Тип облікового запису</s:String>
+    <s:String x:Key="AccountTypeDescription">Сервіс авторизації</s:String>
+    <s:String x:Key="LoginAccountFactoryDescription">Логін або пошта для облікового запису</s:String>
+    <s:String x:Key="PasswordAccountFactoryDescription">Пароль від облікового запису</s:String>
+    <s:String x:Key="AddAccount">Додати обліковий запис</s:String>
+    <s:String x:Key="LoginExample">Наприклад: _Hel2x_</s:String>
+
+    <!--  Nightworld Limited Pages Curtains  -->
+    <s:String x:Key="OnlyAvailableWithNightWorldAccount">Доступно лише через обліковий запис NightWorld</s:String>
+    <s:String x:Key="OnlyAvailableWithNightWorldAccountDescription">Ці функції лаунчера доступні лише за наявності авторизації через обліковий запис NightWorld, при цьому робити його запусканим не обов’язково.</s:String>
+    <s:String x:Key="CreateNightWorldAccount">Створити обліковий запис NightWorld</s:String>
+    <s:String x:Key="LoginWithYourNightWorldAccount">Авторизуватися через NightWorld</s:String>
+
+    <!--  Friends DropdownMenu  -->
+    <s:String x:Key="Unfriend">Видалити з друзів</s:String>
+    <s:String x:Key="ViewProfile">Відкрити профіль</s:String>
+
+    <!--  Instance Share  -->
+    <s:String x:Key="Share">Роздача</s:String>
+    <s:String x:Key="ShareInstance">Почати роздачу цієї збірки</s:String>
+    <s:String x:Key="ActiveShares">Ваші роздачі</s:String>
+
+    <s:String x:Key="CurseforgeCatalogLoading">Триває завантаження каталогу Curseforge</s:String>
+
+    <!--  Account Funcs  -->
+    <s:String x:Key="LaunchAccount">Призначити для гри</s:String>
+    <s:String x:Key="MakeAccountActive">Зробити активним</s:String>
+    <s:String x:Key="ReloadAccount">Оновити</s:String>
+    <s:String x:Key="LogoutAccount">Видалити</s:String>
+    <s:String x:Key="LogoutAllAccounts">Видалити всі облікові записи</s:String>
+    <s:String x:Key="AddNewAccount">Додати новий обліковий запис</s:String>
+
+    <!--  Addon ToolTip  -->
+    <s:String x:Key="AddNewAddon">Встановити</s:String>
+    <s:String x:Key="AddonOpenFolder">Відкрити папку</s:String>
+    <s:String x:Key="AddonReloadList">Оновити список</s:String>
+    <s:String x:Key="AddonChangeView">Змінити вигляд</s:String>
+
+    <!--  Instance Settings  -->
+    <s:String x:Key="DisplayResolution">Роздільна здатність екрана</s:String>
+    <s:String x:Key="Browse">Огляд</s:String>
+    <s:String x:Key="JavaResetPath">Скинути шлях до Java</s:String>
+
+    <s:String x:Key="AcceptFriendRequest">Прийняти заявку на дружбу</s:String>
+    <s:String x:Key="DeclineFriendRequest">Відхилити заявку на дружбу</s:String>
+    <s:String x:Key="CancelFriendRequest">Скасувати заявку на дружбу</s:String>
+    <s:String x:Key="SendFriendRequest">Надіслати заявку на дружбу</s:String>
+
+    <!--  Paginator  -->
+    <s:String x:Key="PaginatorPrevious">Назад</s:String>
+    <s:String x:Key="PaginatorNext">Далі</s:String>
+    <s:String x:Key="PaginatorPage">Сторінка</s:String>
+    <s:String x:Key="PaginatorPageOf">з</s:String>
+
+    <!--  ToolTip Appearance Settings  -->
+    <s:String x:Key="Tooltip">Спливні підказки</s:String>
+    <s:String x:Key="TooltipDescription">Налаштування спливних підказок</s:String>
+
+    <s:String x:Key="ToolTipState">Стан спливних підказок</s:String>
+    <s:String x:Key="ToolTipStateDescription">Цей параметр відповідає за стан спливних підказок (увімкнено/вимкнено)</s:String>
+
+    <s:String x:Key="InitialShowDelay">InitialShowDelay</s:String>
+    <s:String x:Key="InitialShowDelayDescription">Затримка (у мілісекундах) перед виведенням підказки після наведення вказівника миші на елемент.</s:String>
+    <s:String x:Key="BetweenShowDelay">BetweenShowDelay</s:String>
+    <s:String x:Key="BetweenShowDelayDescription">
+        Часовий інтервал (у мілісекундах), протягом якого можна переходити від однієї спливної підказки до іншої без затримки, визначеної властивістю InitialShowDelay.
+    </s:String>
+
+    <!--  InstanceForm  -->
+    <s:String x:Key="Downloaded">Завантажено</s:String>
+    <!--  Instance Form Download Process  -->
+    <s:String x:Key="DownloadPreparing">Триває підготовка до завантаження...</s:String>
+    <s:String x:Key="JavaInstalling">Триває процес встановлення Java</s:String>
+    <s:String x:Key="InstanceDownloading">Збірка встановлюється...</s:String>
+    <s:String x:Key="Stage">Етап</s:String>
+    <s:String x:Key="VerifyIntegrityGameFiles">Перевірка цілісності ігрових файлів...</s:String>
+    <s:String x:Key="DownloadCanceling">Скасування завантаження...</s:String>
+
+    <s:String x:Key="AddonsListLoadingPlaceholder">Завантаження списків доповнень...</s:String>
+
+    <s:String x:Key="Technology">Технології</s:String>
+    <s:String x:Key="WorldGen">Генерація світу</s:String>
+    <s:String x:Key="All">Усе</s:String>
+
+    <s:String x:Key="Features">Особливості</s:String>
+    <s:String x:Key="Performanceimpact">Вплив на продуктивність</s:String>
+    <s:String x:Key="Resolutions">Роздільна здатність текстур</s:String>
+
+    <s:String x:Key="Website">Веб-сторінка</s:String>
+
+    <s:String x:Key="Installed">Встановлено</s:String>
+
+    <s:String x:Key="Paginator">Пагінатор</s:String>
+    <s:String x:Key="Searchbox">Поле пошуку</s:String>
+    <s:String x:Key="InstalledList">Встановлені</s:String>
+    <s:String x:Key="SearchAddonByNamePlaceholder">Назва доповнення</s:String>
+
+    <s:String x:Key="AddonInfoDownloadsTooltip">Кількість завантажень</s:String>
+    <s:String x:Key="AddonInfoLatestReleaseTooltip">Дата останнього оновлення</s:String>
+    <s:String x:Key="AddonInfoCreationDateTooltip">Дата створення</s:String>
+    <s:String x:Key="AddonInfoGameVersionTooltip">Версія гри</s:String>
+
+    <!--  region Authorization  -->
+    <s:String x:Key="DoNothaveAnyAccount">Немає облікового запису?</s:String>
+    <s:String x:Key="ForgotPassword">Забули пароль?</s:String>
+    <s:String x:Key="SingUp">Зареєструватися</s:String>
+    <s:String x:Key="SelectAuthorizationMethod">Виберіть спосіб авторизації</s:String>
+    <s:String x:Key="AuthorizationViaNightWorld">Авторизація через NightWorld</s:String>
+    <s:String x:Key="Via">Через</s:String>
+    <s:String x:Key="RememberMe">Запам’ятати мене</s:String>
+    <s:String x:Key="LogIn">Увійти</s:String>
+
+    <s:String x:Key="RegistrationInNightWorld">Реєстрація NightWorld</s:String>
+    <s:String x:Key="EmailAddress">Електронна пошта</s:String>
+    <s:String x:Key="CreateAccount">Створити обліковий запис</s:String>
+    <s:String x:Key="AlreadyHaveAnyAccount">У вас уже є обліковий запис?</s:String>
+
+    <s:String x:Key="ViaNightWorld">Через NightWorld</s:String>
+    <s:String x:Key="ViaMicrosoft">Через Microsoft</s:String>
+    <s:String x:Key="WithoutAccount">Без облікового запису</s:String>
+
+    <s:String x:Key="Microsoft">Microsoft</s:String>
+    <s:String x:Key="NoAuth">Без облікового запису</s:String>
+
+    <s:String x:Key="AuthorizationWithoutAccountTitle">Авторизація без облікового запису</s:String>
+    <s:String x:Key="AuthorizationWithoutAccountDescription">Для авторизації без облікового запису виберіть бажаний нік.</s:String>
+    <s:String x:Key="AuthorizationWithoutAccountNicknamePlaceholder">Введіть бажаний нікнейм</s:String>
+    <s:String x:Key="Continue">Продовжити</s:String>
+
+    <s:String x:Key="AuthorizationMicrosoftTitle">Авторизація через Microsoft</s:String>
+    <s:String x:Key="AuthorizationMicrosoftAccountDescription">Очікується завершення авторизації через Microsoft</s:String>
+    <s:String x:Key="ManualInput">Ручне введення</s:String>
+    <s:String x:Key="ManualInputMicrosoftTokenTitle">Ручне введення токена Microsoft</s:String>
+    <s:String x:Key="WrongTokenFormat">Неправильний формат токена</s:String>
+    <s:String x:Key="CorrectTokenFormat">Формат токена правильний</s:String>
+    <s:String x:Key="ManualInputTokenPlaceholder">Введіть токен Microsoft у це поле</s:String>
+    <s:String x:Key="Apply">Застосувати</s:String>
+    <s:String x:Key="Cancel">Скасувати</s:String>
+
+    <s:String x:Key="Important">Важливо!</s:String>
+    <s:String x:Key="MicrosoftManualInputImportantMessage">Ніколи нікому не передавайте/не показуйте свій аутентифікаційний токен. Якщо токен отримають треті особи, вони отримають доступ до вашого облікового запису!</s:String>
+
+    <!--    -->
+    <!--  Instance Factory Modal  -->
+    <!--    -->
+
+    <!--  Instance Factory Left Modal Menu Tabs Titles  -->
+    <s:String x:Key="Create">Створення</s:String>
+    <s:String x:Key="Import">Імпорт</s:String>
+    <s:String x:Key="Distributions">Роздачі</s:String>
+
+    <!--    -->
+    <!--  Instance Form  -->
+    <!--    -->
+
+    <!--  Logo  -->
+    <s:String x:Key="More">Більше</s:String>
+
+    <!--  Upper Buttons  -->
+    <s:String x:Key="Play">Грати</s:String>
+    <s:String x:Key="Launch">Запустити</s:String>
+
+    <!--  LowerButtons  -->
+    <s:String x:Key="DeleteInstance">Видалити збірку</s:String>
+    <s:String x:Key="Export">Експорт</s:String>
+    <s:String x:Key="OpenFolder">Відкрити папку</s:String>
+    <s:String x:Key="ExploreAddons">Перегляд доповнень</s:String>
+    <s:String x:Key="AddToLibrary">Додати до бібліотеки</s:String>
+    <s:String x:Key="RemoveFromLibrary">Видалити з бібліотеки</s:String>
+    <s:String x:Key="CancelDownload">Скасувати завантаження</s:String>
+
+    <!--  Visit Official Page  -->
+    <s:String x:Key="VisitCurseforge">Перейти на Curseforge</s:String>
+    <s:String x:Key="VisitModrinth">Перейти на Modrinth</s:String>
+    <s:String x:Key="VisitNightworld">Перейти на NightWorld</s:String>
+
+    <!--    -->
+    <!--  Instance Overview Menu  -->
+    <!--    -->
+    <s:String x:Key="Version">Версія</s:String>
+    <s:String x:Key="Download">Завантажити</s:String>
+
+    <!--    -->
+    <!--  Instance Profile  -->
+    <!--    -->
+    <s:String x:Key="Overview">Огляд</s:String>
+    <s:String x:Key="Addons">Доповнення</s:String>
+    <s:String x:Key="AboutInstance">Про збірку</s:String>
+
+    <!--    -->
+    <!--  Instance Profile Left Panel  -->
+    <!--    -->
+    <s:String x:Key="Back">Назад</s:String>
+    <s:String x:Key="Version:">Версія гри:</s:String>
+    <s:String x:Key="GameType:">Тип гри:</s:String>
+    <s:String x:Key="PlayedTime:">Награно:</s:String>
+    <s:String x:Key="DownloadCount:">Завантажень:</s:String>
+
+    <!--    -->
+    <!--  Instance Profile Addons  -->
+    <!--    -->
+    <s:String x:Key="Mods">Моди</s:String>
+    <s:String x:Key="Resourcepacks">Ресурспаки</s:String>
+    <s:String x:Key="Maps">Карти</s:String>
+    <s:String x:Key="Shaders">Шейдери</s:String>
+
+    <!--  Sort By  -->
+    <s:String x:Key="Name">Назва</s:String>
+    <s:String x:Key="Author">Автор</s:String>
+    <s:String x:Key="FileName">Ім'я файлу</s:String>
+
+    <!--  By Name  -->
+    <s:String x:Key="ModName">Назва мода</s:String>
+    <s:String x:Key="ResourcepackName">Назва ресурспаку</s:String>
+    <s:String x:Key="MapName">Назва карти</s:String>
+    <s:String x:Key="ShaderName">Назва шейдера</s:String>
+
+    <!--  By Author  -->
+    <s:String x:Key="ModAuthor">Автор мода</s:String>
+    <s:String x:Key="ResourcepackAuthor">Автор ресурспаку</s:String>
+    <s:String x:Key="MapAuthor">Автор карти</s:String>
+    <s:String x:Key="ShaderAuthor">Автор шейдера</s:String>
+
+    <!--  By File Name  -->
+    <s:String x:Key="ModFileName">Назва файлу мода</s:String>
+    <s:String x:Key="ResourcepackFileName">Назва файлу ресурспаку</s:String>
+    <s:String x:Key="MapFileName">Назва файлу карти</s:String>
+    <s:String x:Key="ShaderFileName">Назва файлу шейдера</s:String>
+
+    <!--    -->
+    <!--  Instance Profile Settings  -->
+    <!--    -->
+    <s:String x:Key="Configuration">Конфігурація</s:String>
+    <s:String x:Key="InstanceNameDescription">Так ваша збірка називатиметься в бібліотеці</s:String>
+    <s:String x:Key="Summary">Короткий опис</s:String>
+    <s:String x:Key="SummaryDescription">Короткий опис для цієї збірки.</s:String>
+    <s:String x:Key="Description">Опис</s:String>
+    <s:String x:Key="DescriptionAdditional">Опис для цієї збірки.</s:String>
+
+    <!--    -->
+    <!--  Instance Profile Configuration  -->
+    <!--    -->
+    <s:String x:Key="GameType">Тип гри</s:String>
+    <s:String x:Key="GameTypeDescription">Ваніла/модлоадер</s:String>
+    <s:String x:Key="VersionDescription">Опис версії.</s:String>
+    <s:String x:Key="ModloaderVersion">Версія модлоадера</s:String>
+    <s:String x:Key="ModloaderVersionDescription">Вибір версії для обраного модлоадера.</s:String>
+    <s:String x:Key="IsShowSnapshots">Показувати снапшоти?</s:String>
+    <s:String x:Key="IsShowSnapshotsDescription">Показує снапшоти у спадному меню з версіями гри.</s:String>
+    <s:String x:Key="Optifine">Оптіфайн</s:String>
+    <s:String x:Key="OptifineDescription">Встановлює Оптіфайн на цю збірку.</s:String>
+
+    <!--    -->
+    <!--  Addons Repository  -->
+    <!--    -->
+    <s:String x:Key="Install">Встановити</s:String>
+    <s:String x:Key="Categories">Категорії</s:String>
+    <s:String x:Key="Search...">Пошук...</s:String>
+    <s:String x:Key="SortBy">Сортувати за</s:String>
+    <s:String x:Key="ShowPerPage">Показати на сторінці</s:String>
+    <s:String x:Key="Accept">Прийняти</s:String>
+    <s:String x:Key="Installing...">Встановлення...</s:String>
+
+    <!--    -->
+    <!--  Modrinth Addon Page  -->
+    <!--    -->
+    <s:String x:Key="ProjectMembers">Учасники проєкту</s:String>
+    <s:String x:Key="TechnicalInformation">Технічна інформація</s:String>
+    <s:String x:Key="ExternalResources">Зовнішні ресурси</s:String>
+    <s:String x:Key="Created">Створено</s:String>
+    <s:String x:Key="Updated">Оновлено</s:String>
+    <s:String x:Key="License">Ліцензія</s:String>
+    <s:String x:Key="ClientSide">Сторона клієнта</s:String>
+    <s:String x:Key="ServerSide">Сторона сервера</s:String>
+    <s:String x:Key="ProjectId">ID проєкту</s:String>
+    <s:String x:Key="Required">Обов’язковий</s:String>
+    <s:String x:Key="Unsupported">Не підтримується</s:String>
+
+    <s:String x:Key="Downloads1">завантаження</s:String>
+    <s:String x:Key="Downloads2">завантаження</s:String>
+    <s:String x:Key="Downloads3">завантажень</s:String>
+
+    <s:String x:Key="Followers1">підписаний</s:String>
+    <s:String x:Key="Followers2">підписані</s:String>
+    <s:String x:Key="Followers3">підписаних</s:String>
+
+    <s:String x:Key="Gallery">Галерея</s:String>
+    <s:String x:Key="Changelog">Журнал змін</s:String>
+    <s:String x:Key="Versions">Версії</s:String>
+
+    <s:String x:Key="Update">Оновити</s:String>
+    <s:String x:Key="Delete">Видалити</s:String>
+
+    <s:String x:Key="ProjectFound">проєктів знайдено</s:String>
+
+    <!--  Instance Factory  -->
+    <s:String x:Key="InstanceName">Назва збірки</s:String>
+    <s:String x:Key="CreateInstance">Створити збірку</s:String>
+
+    <!--  Export  -->
+    <s:String x:Key="ExportProperties">Властивості експорту</s:String>
+    <s:String x:Key="ExportInstanceNameDescription">Відображатиметься після експорту в бібліотеці.</s:String>
+    <s:String x:Key="FoldersAndFiles">Папки та файли</s:String>
+    <s:String x:Key="FoldersAndFilesDescription">Виберіть папки та файли, які хочете експортувати.</s:String>
+    <s:String x:Key="FullExport">Повний експорт</s:String>
+    <s:String x:Key="InstanceExport">Експорт збірки</s:String>
+    <s:String x:Key="ExportProcessActive">Процес експорту збірки</s:String>
+
+    <!--  Import  -->
+    <s:String x:Key="ImportDragDropFieldDescription">Перетягніть архів зі збіркою, щоб почати завантаження.</s:String>
+    <s:String x:Key="Review">Огляд</s:String>
+
+    <!--  Filter Sorting  -->
+    <s:String x:Key="Source">Джерело</s:String>
+    <s:String x:Key="Sorting">Сортувати за</s:String>
+
+    <!--  Sources  -->
+    <s:String x:Key="AllSource">Усі джерела</s:String>
+    <s:String x:Key="LocalSource">Lexplosion</s:String>
+    <s:String x:Key="Curseforge">Curseforge</s:String>
+    <s:String x:Key="Modrinth">Modrinth</s:String>
+    <s:String x:Key="NightWorld">NightWorld</s:String>
+
+    <s:String x:Key="Or">Або</s:String>
+    <s:String x:Key="And">І</s:String>
+
+    <!--  Categories  -->
+    <s:String x:Key="CategoriesSearchBoxPlaceholder">Виберіть категорію для фільтрації...</s:String>
+
+    <!--  Modrinth  -->
+    <s:String x:Key="ModrinthRelevance">Релевантністю</s:String>
+    <s:String x:Key="ModrinthDownloads">Кількістю завантажень</s:String>
+    <s:String x:Key="ModrinthFollows">Підписниками</s:String>
+    <s:String x:Key="ModrinthUpdated">Останнім оновленням</s:String>
+    <s:String x:Key="ModrinthNewest">Датою створення</s:String>
+    <!--  Curseforge  -->
+    <s:String x:Key="CurseforgeRelevance">Релевантністю</s:String>
+    <s:String x:Key="CurseforgeFeatured">Релевантністю</s:String>
+    <s:String x:Key="CurseforgePopularity">Популярністю</s:String>
+    <s:String x:Key="CurseforgeLastUpdated">Останнім оновленням</s:String>
+    <s:String x:Key="CurseforgeCreationDate">Датою створення</s:String>
+    <s:String x:Key="CurseforgeTotalDownloads">Кількістю завантажень</s:String>
+    <s:String x:Key="CurseforgeName">A-Z</s:String>
+
+    <!--  Accounts  -->
+    <s:String x:Key="Active">Активно</s:String>
+    <s:String x:Key="NotActive">Неактивно</s:String>
+    <s:String x:Key="TypingNicknamePlaceholder">Введіть нік...</s:String>
+
+    <!--  Funcs  -->
+    <s:String x:Key="Activate">Зробити активним</s:String>
+    <s:String x:Key="DoGameLauncher">Зробити запусканим</s:String>
+    <s:String x:Key="Signout">Вийти</s:String>
+
+    <s:String x:Key="GameLauncher">Запуск гри</s:String>
+
+    <!--  Account Factory  -->
+    <s:String x:Key="AddingAccount">Додавання облікового запису</s:String>
+    <s:String x:Key="Login">Логін</s:String>
+    <s:String x:Key="Password">Пароль</s:String>
+    <s:String x:Key="AccountType">Тип облікового запису</s:String>
+    <s:String x:Key="AccountTypeDescription">Сервіс авторизації</s:String>
+    <s:String x:Key="LoginAccountFactoryDescription">Логін або пошта для облікового запису</s:String>
+    <s:String x:Key="PasswordAccountFactoryDescription">Пароль від облікового запису</s:String>
+    <s:String x:Key="AddAccount">Додати обліковий запис</s:String>
+    <s:String x:Key="LoginExample">Наприклад: _Hel2x_</s:String>
+
+    <!--  Nightworld Limited Pages Curtains  -->
+    <s:String x:Key="OnlyAvailableWithNightWorldAccount">Доступно лише через обліковий запис NightWorld</s:String>
+    <s:String x:Key="OnlyAvailableWithNightWorldAccountDescription">Ці функції лаунчера доступні лише за наявності авторизації через обліковий запис NightWorld, при цьому робити його запусканим не обов’язково.</s:String>
+    <s:String x:Key="CreateNightWorldAccount">Створити обліковий запис NightWorld</s:String>
+    <s:String x:Key="LoginWithYourNightWorldAccount">Авторизуватися через NightWorld</s:String>
+
+    <!--  Friends DropdownMenu  -->
+    <s:String x:Key="Unfriend">Видалити з друзів</s:String>
+    <s:String x:Key="ViewProfile">Відкрити профіль</s:String>
+
+    <!--  Instance Share  -->
+    <s:String x:Key="Share">Роздача</s:String>
+    <s:String x:Key="ShareInstance">Почати роздачу цієї збірки</s:String>
+    <s:String x:Key="ActiveShares">Ваші роздачі</s:String>
+
+    <s:String x:Key="CurseforgeCatalogLoading">Триває завантаження каталогу Curseforge</s:String>
+
+    <!--  Account Funcs  -->
+    <s:String x:Key="LaunchAccount">Призначити для гри</s:String>
+    <s:String x:Key="MakeAccountActive">Зробити активним</s:String>
+    <s:String x:Key="ReloadAccount">Оновити</s:String>
+    <s:String x:Key="LogoutAccount">Видалити</s:String>
+    <s:String x:Key="LogoutAllAccounts">Видалити всі облікові записи</s:String>
+    <s:String x:Key="AddNewAccount">Додати новий обліковий запис</s:String>
+
+    <!--  Addon ToolTip  -->
+    <s:String x:Key="AddNewAddon">Встановити</s:String>
+    <s:String x:Key="AddonOpenFolder">Відкрити папку</s:String>
+    <s:String x:Key="AddonReloadList">Оновити список</s:String>
+    <s:String x:Key="AddonChangeView">Змінити вигляд</s:String>
+
+    <!--  Instance Settings  -->
+    <s:String x:Key="DisplayResolution">Роздільна здатність екрана</s:String>
+    <s:String x:Key="Browse">Огляд</s:String>
+    <s:String x:Key="JavaResetPath">Скинути шлях до Java</s:String>
+
+    <s:String x:Key="AcceptFriendRequest">Прийняти заявку на дружбу</s:String>
+    <s:String x:Key="DeclineFriendRequest">Відхилити заявку на дружбу</s:String>
+    <s:String x:Key="CancelFriendRequest">Скасувати заявку на дружбу</s:String>
+    <s:String x:Key="SendFriendRequest">Надіслати заявку на дружбу</s:String>
+
+    <!--  Paginator  -->
+    <s:String x:Key="PaginatorPrevious">Назад</s:String>
+    <s:String x:Key="PaginatorNext">Далі</s:String>
+    <s:String x:Key="PaginatorPage">Сторінка</s:String>
+    <s:String x:Key="PaginatorPageOf">з</s:String>
+
+    <!--  ToolTip Appearance Settings  -->
+    <s:String x:Key="Tooltip">Спливні підказки</s:String>
+    <s:String x:Key="TooltipDescription">Налаштування спливних підказок</s:String>
+
+    <s:String x:Key="ToolTipState">Стан спливних підказок</s:String>
+    <s:String x:Key="ToolTipStateDescription">Цей параметр відповідає за стан спливних підказок (увімкнено/вимкнено)</s:String>
+
+    <s:String x:Key="InitialShowDelay">InitialShowDelay</s:String>
+    <s:String x:Key="InitialShowDelayDescription">Затримка (у мілісекундах) перед виведенням підказки після наведення вказівника миші на елемент.</s:String>
+    <s:String x:Key="BetweenShowDelay">BetweenShowDelay</s:String>
+    <s:String x:Key="BetweenShowDelayDescription">
+        Часовий інтервал (у мілісекундах), протягом якого можна переходити від однієї спливної підказки до іншої без затримки, визначеної властивістю InitialShowDelay.
+    </s:String>
+
+    <!--  InstanceForm  -->
+    <s:String x:Key="Downloaded">Завантажено</s:String>
+    <!--  Instance Form Download Process  -->
+    <s:String x:Key="DownloadPreparing">Триває підготовка до завантаження...</s:String>
+    <s:String x:Key="JavaInstalling">Триває процес встановлення Java</s:String>
+    <s:String x:Key="InstanceDownloading">Збірка встановлюється...</s:String>
+    <s:String x:Key="Stage">Етап</s:String>
+    <s:String x:Key="VerifyIntegrityGameFiles">Перевірка цілісності ігрових файлів...</s:String>
+    <s:String x:Key="DownloadCanceling">Скасування завантаження...</s:String>
+
+    <s:String x:Key="AddonsListLoadingPlaceholder">Завантаження списків доповнень...</s:String>
+
+    <s:String x:Key="Technology">Технології</s:String>
+    <s:String x:Key="WorldGen">Генерація світу</s:String>
+    <s:String x:Key="All">Усе</s:String>
+
+    <s:String x:Key="Features">Особливості</s:String>
+    <s:String x:Key="Performanceimpact">Вплив на продуктивність</s:String>
+    <s:String x:Key="Resolutions">Роздільна здатність текстур</s:String>
+
+    <s:String x:Key="Website">Веб-сторінка</s:String>
+
+    <s:String x:Key="Installed">Встановлено</s:String>
+
+    <s:String x:Key="Paginator">Пагінатор</s:String>
+    <s:String x:Key="Searchbox">Поле пошуку</s:String>
+    <s:String x:Key="InstalledList">Встановлені</s:String>
+    <s:String x:Key="SearchAddonByNamePlaceholder">Назва доповнення</s:String>
+
+    <s:String x:Key="AddonInfoDownloadsTooltip">Кількість завантажень</s:String>
+    <s:String x:Key="AddonInfoLatestReleaseTooltip">Дата останнього оновлення</s:String>
+    <s:String x:Key="AddonInfoCreationDateTooltip">Дата створення</s:String>
+    <s:String x:Key="AddonInfoGameVersionTooltip">Версія гри</s:String>
+
+    <!--  region Authorization  -->
+    <s:String x:Key="DoNothaveAnyAccount">Немає облікового запису?</s:String>
+    <s:String x:Key="ForgotPassword">Забули пароль?</s:String>
+    <s:String x:Key="SingUp">Зареєструватися</s:String>
+    <s:String x:Key="SelectAuthorizationMethod">Виберіть спосіб авторизації</s:String>
+    <s:String x:Key="AuthorizationViaNightWorld">Авторизація через NightWorld</s:String>
+    <s:String x:Key="Via">Через</s:String>
+    <s:String x:Key="RememberMe">Запам’ятати мене</s:String>
+    <s:String x:Key="LogIn">Увійти</s:String>
+
+    <s:String x:Key="RegistrationInNightWorld">Реєстрація NightWorld</s:String>
+    <s:String x:Key="EmailAddress">Електронна пошта</s:String>
+    <s:String x:Key="CreateAccount">Створити обліковий запис</s:String>
+    <s:String x:Key="AlreadyHaveAnyAccount">У вас уже є обліковий запис?</s:String>
+
+    <s:String x:Key="ViaNightWorld">Через NightWorld</s:String>
+    <s:String x:Key="ViaMicrosoft">Через Microsoft</s:String>
+    <s:String x:Key="WithoutAccount">Без облікового запису</s:String>
+
+    <s:String x:Key="Microsoft">Microsoft</s:String>
+    <s:String x:Key="NoAuth">Без облікового запису</s:String>
+
+    <s:String x:Key="AuthorizationWithoutAccountTitle">Авторизація без облікового запису</s:String>
+    <s:String x:Key="AuthorizationWithoutAccountDescription">Для авторизації без облікового запису виберіть бажаний нік.</s:String>
+    <s:String x:Key="AuthorizationWithoutAccountNicknamePlaceholder">Введіть бажаний нікнейм</s:String>
+    <s:String x:Key="Continue">Продовжити</s:String>
+
+    <s:String x:Key="AuthorizationMicrosoftTitle">Авторизація через Microsoft</s:String>
+    <s:String x:Key="AuthorizationMicrosoftAccountDescription">Очікується завершення авторизації через Microsoft</s:String>
+    <s:String x:Key="ManualInput">Ручне введення</s:String>
+    <s:String x:Key="ManualInputMicrosoftTokenTitle">Ручне введення токена Microsoft</s:String>
+    <s:String x:Key="WrongTokenFormat">Неправильний формат токена</s:String>
+    <s:String x:Key="CorrectTokenFormat">Формат токена правильний</s:String>
+    <s:String x:Key="ManualInputTokenPlaceholder">Введіть токен Microsoft у це поле</s:String>
+    <s:String x:Key="Apply">Застосувати</s:String>
+    <s:String x:Key="Cancel">Скасувати</s:String>
+
+    <s:String x:Key="Important">Важливо!</s:String>
+    <s:String x:Key="MicrosoftManualInputImportantMessage">Ніколи нікому не передавайте/не показуйте свій аутентифікаційний токен. Якщо токен отримають треті особи, вони отримають доступ до вашого облікового запису!</s:String>
+
+    <!--    -->
+    <!--  Instance Factory Modal  -->
+    <!--    -->
+
+    <!--  Instance Factory Left Modal Menu Tabs Titles  -->
+    <s:String x:Key="Create">Створення</s:String>
+    <s:String x:Key="Import">Імпо
