@@ -45,6 +45,10 @@ namespace Lexplosion.WPF.NewInterface.Controls
             = DependencyProperty.Register("BlurTarget", typeof(UIElement), typeof(LoadingBoard), 
                 new FrameworkPropertyMetadata(propertyChangedCallback: OnBlurTargetChanged));
 
+        public static readonly DependencyProperty PlaceholderKeyProperty
+            = DependencyProperty.Register("PlaceholderKey", typeof(string), typeof(LoadingBoard), 
+                new PropertyMetadata(string.Empty, propertyChangedCallback: OnPlaceholderKeyChanged));
+
         public bool IsActive
         {
             get => (bool)GetValue(IsLoadingFinishedProperty);
@@ -55,6 +59,12 @@ namespace Lexplosion.WPF.NewInterface.Controls
         {
             get => (string)GetValue(PlaceholderProperty);
             set => SetValue(PlaceholderProperty, value);
+        }
+
+        public string PlaceholderKey 
+        {
+            get => (string)GetValue(PlaceholderKeyProperty);
+            set => SetValue(PlaceholderKeyProperty, value);
         }
 
         public Brush RectangeColor
@@ -162,6 +172,13 @@ namespace Lexplosion.WPF.NewInterface.Controls
             }
         }
 
+        private static void OnPlaceholderKeyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is LoadingBoard _this) 
+            {
+                _this.Placeholder = App.Current.Resources[_this.PlaceholderKey] as string;
+            }
+        }
 
         #endregion Private Methods
     }

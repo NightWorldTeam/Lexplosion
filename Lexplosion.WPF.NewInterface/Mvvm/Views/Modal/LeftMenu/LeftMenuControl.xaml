@@ -201,7 +201,7 @@
                             BackgroundOpacity="0.3"
                             BlurTarget="{Binding ElementName=Content}"
                             IsActive="{Binding IsProcessActive}"
-                            Placeholder="{Binding LoaderPlaceholderKey}" />
+                            PlaceholderKey="{Binding LoaderPlaceholderKey}" />
                     </Grid>
                 </Grid>
             </Grid>
