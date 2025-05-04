@@ -814,7 +814,7 @@
     <s:String x:Key="MicrosoftAccountAuthorizationDescription">Для авторизации лицензионого аккаунта вы будете автоматически перенаправлены на страницу авторизации Microsoft.</s:String>
     <s:String x:Key="DoInstallTheLatestVersion">Установить последнию версию?</s:String>
     <s:String x:Key="NWClientNotAvailableForThisVersion">NWClient недоступен на данную версию</s:String>
-    <s:String x:Key="YouHaveNoActiveDistributions">У вас отсутсвуют активные раздачи</s:String>
+    <s:String x:Key="YouHaveNoActiveDistributions">У вас отсутствуют активные раздачи</s:String>
 
 
     <s:String x:Key="InQueue">В очереди</s:String>
