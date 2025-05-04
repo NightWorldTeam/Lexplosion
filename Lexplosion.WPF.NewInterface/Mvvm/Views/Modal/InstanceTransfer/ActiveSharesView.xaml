@@ -118,6 +118,7 @@
                             Width="48"
                             Height="48"
                             Margin="0,0,16,0"
+                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
                             CornerRadius="5">
                             <Border.Background>
                                 <ImageBrush ImageSource="pack://Application:,,,/Assets/images/icons/non_image.png" />
@@ -135,8 +136,10 @@
                             <TextBlock
                                 Margin="-1,0,0,0"
                                 FontSize="14"
-                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
-                                Text="by _Hel2x_" />
+                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}">
+                                <Run Text="by" />
+                                <Run Text="{Binding DataContext.Model.Author, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                            </TextBlock>
                         </StackPanel>
 
                         <Grid Grid.Column="2">
@@ -167,8 +170,9 @@
                         VerticalAlignment="Bottom"
                         FontSize="14"
                         Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}">
-                        <Run Text="{DynamicResource ActivityTime}" />
-                        <Run Text="{Binding ActivityTime, Mode=OneWay, StringFormat='{}{0} min'}" />
+                        <Run Text="{DynamicResource ShareActiveTime}" />
+                        <Run Text="{Binding ActivityTime, Mode=OneWay}" />
+                        <Run Text="{DynamicResource Min}" />
                     </TextBlock>
 
                     <!--  Downloaders list  -->

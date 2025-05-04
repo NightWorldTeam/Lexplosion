@@ -817,4 +817,6 @@
     </s:String>
 
     <s:String x:Key="ShareActiveTime">Активно</s:String>
+    <!--  Minutes  -->
+    <s:String x:Key="Min">min</s:String>
 </ResourceDictionary>
