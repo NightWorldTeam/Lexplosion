@@ -176,6 +176,11 @@ namespace Lexplosion.WPF.NewInterface.Controls
         {
             if (d is LoadingBoard _this) 
             {
+                if (string.IsNullOrEmpty(_this.PlaceholderKey)) 
+                {
+                    return;
+                }
+
                 _this.Placeholder = App.Current.Resources[_this.PlaceholderKey] as string;
             }
         }
