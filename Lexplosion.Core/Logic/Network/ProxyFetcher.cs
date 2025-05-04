@@ -35,17 +35,17 @@ namespace Lexplosion.Logic.Network
 				var geonodeResponse = await _httpClient.GetStringAsync(geonodeUrl);
 				proxies.AddRange(ParseGeonodeProxies(geonodeResponse));
 
-				var proxyListUrl = "https://www.proxy-list.download/api/v1/get?type=http";
-				var proxyListResponse = await _httpClient.GetStringAsync(proxyListUrl);
-				proxies.AddRange(ParseProxyListDownload(proxyListResponse));
-
 				var freeProxyListUrl = "https://free-proxy-list.net/";
 				var freeProxyListResponse = await _httpClient.GetStringAsync(freeProxyListUrl);
 				proxies.AddRange(ParseFreeProxyList(freeProxyListResponse));
+
+				var proxyListUrl = "https://www.proxy-list.download/api/v1/get?type=http";
+				var proxyListResponse = await _httpClient.GetStringAsync(proxyListUrl);
+				proxies.AddRange(ParseProxyListDownload(proxyListResponse));
 			}
 			catch (Exception ex)
 			{
-				Runtime.DebugWrite($"Ошибка при получении прокси: {ex.Message}");
+				Runtime.DebugWrite($"Ошибка при получении прокси: {ex}");
 			}
 
 			return proxies;

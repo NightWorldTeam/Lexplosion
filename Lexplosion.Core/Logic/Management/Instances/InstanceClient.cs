@@ -957,7 +957,7 @@ namespace Lexplosion.Logic.Management.Instances
 			string uuid = activeAccount.UUID;
 			string sessionToken = activeAccount.SessionToken;
 
-			string shareDir = distributor.SharesDir;
+			string shareDir = FileDistributor.GetSharesDir(_services.DirectoryService);
 			try
 			{
 				if (!Directory.Exists(shareDir))

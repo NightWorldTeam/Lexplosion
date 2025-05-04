@@ -37,12 +37,9 @@ namespace Lexplosion.Logic.FileSystem
 		public event Action<Player> UserConnected;
 		public event Action<Player> UserDisconnected;
 
-		public string SharesDir
+		public static string GetSharesDir(WithDirectory withDirectory)
 		{
-			get
-			{
-				return _withDirectory.DirectoryPath + "/shares/files/";
-			}
+			return withDirectory.DirectoryPath + "/shares/files/";
 		}
 
 		private FileDistributor(string fileId, string UUID, string sessionToken, INightWorldFileServicesContainer services)
