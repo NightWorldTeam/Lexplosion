@@ -815,4 +815,6 @@
     <s:String x:Key="AppHeaderTemplateDescription">
         Select header visual style you wish
     </s:String>
+
+    <s:String x:Key="ShareActiveTime">Активно</s:String>
 </ResourceDictionary>

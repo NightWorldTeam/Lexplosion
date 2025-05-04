@@ -154,13 +154,12 @@
                                 IconPadding="8"
                                 Style="{StaticResource ModalCloseButton}" />
 
-                            <!--  Activity Time  -->
                         </Grid>
 
 
                     </Grid>
 
-
+                    <!--  Activity Time  -->
                     <TextBlock
                         Grid.Row="1"
                         Margin="0,0,0,2"
@@ -168,7 +167,7 @@
                         VerticalAlignment="Bottom"
                         FontSize="14"
                         Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}">
-                        <Run Text="Active" />
+                        <Run Text="{DynamicResource ActivityTime}" />
                         <Run Text="{Binding ActivityTime, Mode=OneWay, StringFormat='{}{0} min'}" />
                     </TextBlock>
 
@@ -181,7 +180,7 @@
 
                     <Border
                         Grid.Row="1"
-                        Margin="0,8,0,0"
+                        Margin="0,1,0,0"
                         HorizontalAlignment="Stretch"
                         BorderBrush="{DynamicResource SeparateSolidColorBrush}"
                         BorderThickness="0,1,0,0"
