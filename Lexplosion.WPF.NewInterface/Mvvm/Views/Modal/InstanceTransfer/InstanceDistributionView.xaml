@@ -98,6 +98,7 @@
                                 Command="{Binding DataContext.DownloadInstanceCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
                                 CommandParameter="{Binding}"
                                 Cursor="Hand"
+                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
                                 IconData="{DynamicResource PDDownload}"
                                 Visibility="{Binding IsDownloadStarted, Converter={converters:NegativeBooleanToVisibilityConverter}}" />
                         </Grid>
