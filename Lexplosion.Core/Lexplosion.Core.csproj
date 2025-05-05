@@ -190,7 +190,6 @@
     <Compile Include="Logic\Settings.cs" />
     <Compile Include="Logic\Cryptography.cs" />
     <Compile Include="NightWorld\Collections\Concurrent\ConcurrentHashSet.cs" />
-    <Compile Include="NightWorld\Collections\Generic\PairsList.cs" />
     <Compile Include="NightWorld\Logging\LoggerBase.cs" />
     <Compile Include="NightWorld\Tools\Minecraft\NBT\INbtNode.cs" />
     <Compile Include="NightWorld\Tools\Minecraft\NBT\NbtDocoder.cs" />
@@ -229,7 +228,9 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="NightWorld\Collections\Generic\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

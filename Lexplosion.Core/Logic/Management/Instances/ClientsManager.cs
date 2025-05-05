@@ -171,12 +171,10 @@ namespace Lexplosion.Logic.Management.Instances
 		/// Возвращает список модпаков для библиотеки.
 		/// </summary>
 		/// <returns>Список установленных модпаков.</returns>
-		public List<InstanceClient> GetInstalledInstances(InstanceGroup group)
+		public List<InstanceClient> GetInstalledInstances()
 		{
 			return new List<InstanceClient>(_installedInstances.Values);
 		}
-
-		public List<InstanceClient> GetInstalledInstances() => GetInstalledInstances(InstanceGroup.AllInstances);
 
 		/// <summary>
 		/// Возвращает список модпаков для каталога.

@@ -1,50 +1,50 @@
-﻿using System;
+﻿using Lexplosion.Logic.FileSystem.Services;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Lexplosion.Logic.Management.Instances
 {
 	public class InstanceGroup
 	{
-		#region static
-		public static InstanceGroup AllInstances { get; } = new InstanceGroup("AllInstances", 0);
-		public static InstanceGroup UngroupedInstances { get; } = new InstanceGroup("UngroupedInstances", 1);
+		private List<InstanceClient> _clients;
+		private readonly IFileServicesContainer _fileServices;
+		private readonly Guid _id;
+		private readonly string _name;
 
-		private static HashSet<InstanceGroup> _allGroups = [InstanceGroup.AllInstances, InstanceGroup.UngroupedInstances];
-
-		public static IReadOnlyCollection<InstanceGroup> GetAllGroups()
+		public IReadOnlyCollection<InstanceClient> Clients
 		{
-			return _allGroups;
+			get => _clients;
 		}
 
-		#endregion
-
-		public string Name { get; private set; }
-		public uint Id { get; private set; }
-
-		private InstanceGroup(string name, uint id)
+		internal InstanceGroup(Guid id, string name, List<InstanceClient> clients, IFileServicesContainer fileServices)
 		{
-			Name = name;
-			Id = id;
+			_id = id;
+			_name = name;
+			_clients = clients;
+			_fileServices = fileServices;
 		}
 
-		public InstanceGroup(string name)
+		public void ChangePosition(InstanceClient client, int newIndex)
 		{
-			Name = name;
+			int index = _clients.FindIndex((InstanceClient clnt) => clnt == client);
+			if (index < 0) return;
 
-			Id = (uint)new Random().Next();
+			_clients.RemoveAt(index);
+			_clients.Insert(index, client);
+		}
 
-			_allGroups.Add(this);
+		public void SaveGroupInfo()
+		{
+			_fileServices.DataFilesService.SaveGroupInfo(new Objects.InstalledInstanceGroup()
+			{
+				Name = _name,
+				Id = _id,
+				InstancesIds = _clients.Select(x => x.LocalId).ToList(),
+			});
 		}
 
 
-		public override bool Equals(object obj)
-		{
-			InstanceGroup group = obj as InstanceGroup;
-			if (group == null) return false;
 
-			return group.Id == Id;
-		}
-
-		public override int GetHashCode() => (int)Id;
 	}
 }

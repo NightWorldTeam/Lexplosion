@@ -11,7 +11,28 @@ namespace Lexplosion.Logic.Objects
 	{
 		public string Name;
 		public bool IsInstalled;
+		public Guid? GroupId;
 		public InstanceSource Type;
+	}
+
+	public class InstalledInstanceGroup
+	{
+		public Guid Id;
+		public string Name;
+		public List<string> InstancesIds;
+
+		public override bool Equals(object obj)
+		{
+			InstalledInstanceGroup other = obj as InstalledInstanceGroup;
+			if (other == null) return false;
+
+			return other.Id.Equals(this);
+		}
+
+		public override int GetHashCode()
+		{
+			return Id.GetHashCode();
+		}
 	}
 
 	/// <summary>

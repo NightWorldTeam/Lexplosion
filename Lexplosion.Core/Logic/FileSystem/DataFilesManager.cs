@@ -25,6 +25,8 @@ namespace Lexplosion.Logic.FileSystem
 		public const string LAST_UPDATES_FILE_OLD = "lastUpdates.json";
 		public const string MANIFEST_FILE_OLD = "manifest.json";
 
+		public const string INSTANCES_GROUPS_FILE = "instancesGroups.json";
+
 		private readonly WithDirectory _withDirectory;
 
 		public DataFilesManager(WithDirectory withDirectory)
@@ -458,6 +460,20 @@ namespace Lexplosion.Logic.FileSystem
 
 				return _withDirectory.CreateValidPath(path);
 			}
+		}
+
+		public HashSet<InstalledInstanceGroup> GetGroups()
+		{
+			return GetFile<HashSet<InstalledInstanceGroup>>($"{_withDirectory.DirectoryPath}/{INSTANCES_GROUPS_FILE}");
+		}
+
+		public void SaveGroupInfo(InstalledInstanceGroup instanceGroup)
+		{
+			var allGroups = GetGroups();
+			allGroups.Remove(instanceGroup);
+			allGroups.Add(instanceGroup);
+
+			SaveFile($"{_withDirectory.DirectoryPath}/{INSTANCES_GROUPS_FILE}", JsonConvert.SerializeObject(allGroups));
 		}
 	}
 }

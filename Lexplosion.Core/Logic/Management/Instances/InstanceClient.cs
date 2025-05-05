@@ -2,12 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
-using System.Text.RegularExpressions;
 using System.Threading;
-using System.Runtime.CompilerServices;
 using System.Linq;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using NightWorld.Tools.Minecraft.NBT.StorageFiles;
 using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
@@ -15,14 +12,8 @@ using Lexplosion.Tools;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Management.Sources;
-using Lexplosion.Logic.Network.Web;
-using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.Logic.Management.Addons;
-using Lexplosion.Logic.Management.Import;
-using Lexplosion.Logic.Management.Import.Importers;
-using static Lexplosion.Logic.Objects.Curseforge.CurseforgeProjectInfo;
-using System.Web;
 
 namespace Lexplosion.Logic.Management.Instances
 {
