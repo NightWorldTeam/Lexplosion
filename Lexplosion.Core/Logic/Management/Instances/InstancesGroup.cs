@@ -13,6 +13,8 @@ namespace Lexplosion.Logic.Management.Instances
 		public Guid Id { get; private set; }
 		public string Name { get; private set; }
 
+		public static readonly Guid AllInctancesGroupId = Guid.Empty;
+
 		public IReadOnlyCollection<InstanceClient> Clients
 		{
 			get => _clients;
@@ -22,9 +24,9 @@ namespace Lexplosion.Logic.Management.Instances
 		/// Конструктор создающий существующую группу
 		/// </summary>
 		/// <param name="group">Информация о группе</param>
-		/// <param name="clients">Список со всеми установленными сборками</param>
+		/// <param name="clients">Список со всеми установленными сборками. Ключ - внутренний id, значение - сам инстанс клиент</param>
 		/// <param name="fileServices">сервисы</param>
-		internal InstancesGroup(InstalledInstancesGroup group, Dictionary<string, InstanceClient> clients, IFileServicesContainer fileServices)
+		internal InstancesGroup(InstalledInstancesGroup group, IDictionary<string, InstanceClient> clients, IFileServicesContainer fileServices)
 		{
 			Id = group.Id;
 			Name = group.Name;
@@ -56,7 +58,7 @@ namespace Lexplosion.Logic.Management.Instances
 		/// <param name="fileServices">сервисы</param>
 		internal InstancesGroup(IEnumerable<InstanceClient> clients, IFileServicesContainer fileServices)
 		{
-			Id = Guid.Empty;
+			Id = AllInctancesGroupId;
 			Name = "All";
 			_fileServices = fileServices;
 			_clients = new List<InstanceClient>(clients);
@@ -88,8 +90,17 @@ namespace Lexplosion.Logic.Management.Instances
 
 		public void SaveGroupInfo()
 		{
-			if (Id == Guid.Empty) return;
 			_fileServices.DataFilesService.SaveGroupInfo(BuildInstalledInstanceGroup());
+		}
+
+		public void AddIfNotExists(IEnumerable<InstanceClient> clients)
+		{
+			var existsClients = _clients.ToHashSet();
+			foreach (InstanceClient client in clients)
+			{
+				if (existsClients.Contains(client)) continue;
+				_clients.Add(client);
+			}
 		}
 
 		internal InstalledInstancesGroup BuildInstalledInstanceGroup()

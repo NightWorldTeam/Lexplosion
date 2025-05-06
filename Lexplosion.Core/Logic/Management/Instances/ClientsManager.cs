@@ -172,12 +172,38 @@ namespace Lexplosion.Logic.Management.Instances
 
 		internal void DefineExistsGroups()
 		{
-			_existsGroups.Add(new InstancesGroup(_installedInstances.Values, _services));
-
 			var groups = _services.DataFilesService.GetGroups();
-			foreach (var group in groups)
+
+			using (var enumerator = groups.GetEnumerator())
 			{
-				_existsGroups.Add(new InstancesGroup(group, _installedInstances, _services));
+				// если нет групп, то создаем группу all и выходим
+				if (!enumerator.MoveNext())
+				{
+					_existsGroups.Add(new InstancesGroup(_installedInstances.Values, _services));
+					return;
+				}
+
+				var groupInfo = enumerator.Current;
+				if (groupInfo.Id != InstancesGroup.AllInctancesGroupId)
+				{
+					// если первая группа не all, то сначала добавляем группу all, а потом текущую группу
+					_existsGroups.Add(new InstancesGroup(_installedInstances.Values, _services));
+					_existsGroups.Add(new InstancesGroup(groupInfo, _installedInstances, _services));
+				}
+				else
+				{
+					//если первая группа all, то добавляем в нее сборки, которых не хватает, и закидываем группу в список
+					var group = new InstancesGroup(groupInfo, _installedInstances, _services);
+					group.AddIfNotExists(_installedInstances.Values);
+					_existsGroups.Add(group);
+				}
+
+				// добавляем все остальные группы
+				while (enumerator.MoveNext())
+				{
+					groupInfo = enumerator.Current;
+					_existsGroups.Add(new InstancesGroup(groupInfo, _installedInstances, _services));
+				}
 			}
 		}
 
