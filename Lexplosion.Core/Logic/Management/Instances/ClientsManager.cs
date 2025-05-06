@@ -1,22 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
-using Lexplosion.Logic.FileSystem.Services;
-using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.Logic.Management.Import.Importers;
 using Lexplosion.Logic.Management.Import;
 using Lexplosion.Logic.Management.Sources;
-using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Tools;
@@ -26,6 +20,7 @@ namespace Lexplosion.Logic.Management.Instances
 	public class ClientsManager
 	{
 		private Dictionary<string, InstanceClient> _installedInstances = new();
+		private List<InstancesGroup> _existsGroups = new();
 
 		/// <summary>
 		/// Содержит пары состоящие из внешнего и внутреннего id.
@@ -97,6 +92,14 @@ namespace Lexplosion.Logic.Management.Instances
 			return client;
 		}
 
+		public InstancesGroup CreateGroup(string name)
+		{
+			var group = new InstancesGroup(name, _services);
+			group.SaveGroupInfo();
+
+			return group;
+		}
+
 		/// <summary>
 		/// Сохраняем список установленных сборок (библиотеку) в файл instanesList.json.
 		/// </summary>
@@ -121,7 +124,7 @@ namespace Lexplosion.Logic.Management.Instances
 		/// <summary>
 		/// Заполняет список установленных сборок. Вызывается 1 раз, в Main при запуске лаунчера
 		/// </summary>
-		public void DefineInstalledInstances()
+		internal void DefineInstalledInstances()
 		{
 			var list = _services.DataFilesService.GetFile<InstalledInstancesFormat>(_services.DirectoryService.DirectoryPath + "/instanesList.json");
 
@@ -167,6 +170,17 @@ namespace Lexplosion.Logic.Management.Instances
 			}
 		}
 
+		internal void DefineExistsGroups()
+		{
+			_existsGroups.Add(new InstancesGroup(_installedInstances.Values, _services));
+
+			var groups = _services.DataFilesService.GetGroups();
+			foreach (var group in groups)
+			{
+				_existsGroups.Add(new InstancesGroup(group, _installedInstances, _services));
+			}
+		}
+
 		/// <summary>
 		/// Возвращает список модпаков для библиотеки.
 		/// </summary>
@@ -174,6 +188,11 @@ namespace Lexplosion.Logic.Management.Instances
 		public List<InstanceClient> GetInstalledInstances()
 		{
 			return new List<InstanceClient>(_installedInstances.Values);
+		}
+
+		public IReadOnlyCollection<InstancesGroup> GetExistsGroups()
+		{
+			return _existsGroups;
 		}
 
 		/// <summary>

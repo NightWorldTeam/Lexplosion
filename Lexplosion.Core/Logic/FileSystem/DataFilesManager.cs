@@ -462,12 +462,12 @@ namespace Lexplosion.Logic.FileSystem
 			}
 		}
 
-		public HashSet<InstalledInstanceGroup> GetGroups()
+		public HashSet<InstalledInstancesGroup> GetGroups()
 		{
-			return GetFile<HashSet<InstalledInstanceGroup>>($"{_withDirectory.DirectoryPath}/{INSTANCES_GROUPS_FILE}");
+			return GetFile<HashSet<InstalledInstancesGroup>>($"{_withDirectory.DirectoryPath}/{INSTANCES_GROUPS_FILE}") ?? new();
 		}
 
-		public void SaveGroupInfo(InstalledInstanceGroup instanceGroup)
+		public void SaveGroupInfo(InstalledInstancesGroup instanceGroup)
 		{
 			var allGroups = GetGroups();
 			allGroups.Remove(instanceGroup);

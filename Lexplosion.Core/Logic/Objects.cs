@@ -15,7 +15,7 @@ namespace Lexplosion.Logic.Objects
 		public InstanceSource Type;
 	}
 
-	public class InstalledInstanceGroup
+	public class InstalledInstancesGroup
 	{
 		public Guid Id;
 		public string Name;
@@ -23,7 +23,7 @@ namespace Lexplosion.Logic.Objects
 
 		public override bool Equals(object obj)
 		{
-			InstalledInstanceGroup other = obj as InstalledInstanceGroup;
+			InstalledInstancesGroup other = obj as InstalledInstancesGroup;
 			if (other == null) return false;
 
 			return other.Id.Equals(this);

@@ -147,6 +147,7 @@ namespace Lexplosion
 			Account.Init();
 
 			ClientsManager.DefineInstalledInstances();
+			ClientsManager.DefineExistsGroups();
 
 			bool isStarted = CommandReceiver.StartCommandServer();
 			if (!isStarted)
