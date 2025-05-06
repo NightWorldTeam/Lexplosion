@@ -79,7 +79,7 @@ namespace Lexplosion.Logic.Management.Instances
 
 		public void AddInstance(InstanceClient client) => _clients.Add(client);
 
-		public void RemoveInstance(InstanceClient client, int newIndex)
+		public void RemoveInstance(InstanceClient client)
 		{
 			int index = _clients.FindIndex((InstanceClient clnt) => clnt == client);
 			if (index < 0) return;
