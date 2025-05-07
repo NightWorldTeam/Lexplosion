@@ -1,11 +1,4 @@
-﻿using Lexplosion.Global;
-using Lexplosion.Logic.FileSystem.Services;
-using Lexplosion.Logic.Management;
-using Lexplosion.Logic.Network;
-using Lexplosion.Logic.Objects.CommonClientData;
-using Lexplosion.Tools;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
@@ -15,6 +8,13 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using Lexplosion.Global;
+using Lexplosion.Logic.FileSystem.Services;
+using Lexplosion.Logic.Management;
+using Lexplosion.Logic.Network;
+using Lexplosion.Logic.Objects.CommonClientData;
+using Lexplosion.Tools;
+using Newtonsoft.Json;
 
 namespace Lexplosion.Logic.FileSystem.Installers
 {

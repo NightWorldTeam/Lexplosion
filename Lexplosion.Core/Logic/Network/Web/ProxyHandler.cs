@@ -10,6 +10,7 @@ using Lexplosion.Logic.Objects;
 using System.Collections.Concurrent;
 using NightWorld.Collections.Concurrent;
 using System.Linq;
+using System.Net.Security;
 
 namespace Lexplosion.Logic.Network.Web
 {
@@ -125,6 +126,23 @@ namespace Lexplosion.Logic.Network.Web
 			}
 			return clone;
 		}
+
+		//var handler = new HttpClientHandler
+		//{
+		//	ServerCertificateCustomValidationCallback = (message, cert, chain, sslPolicyErrors) =>
+		//	{
+		//		// 1. Явно выполняем стандартную проверку
+		//		bool isChainValid = chain.Build(cert); // Проверяет цепочку и срок действия
+
+		//		// 2. Анализируем ошибки (как это делает .NET)
+		//		bool isStandardValid = isChainValid && sslPolicyErrors == SslPolicyErrors.None;
+
+		//		// 3. Кастомная проверка (например, по отпечатку)
+		//		bool isCustomValid = cert.GetCertHashString() == "A1B2C3D4E5...";
+
+		//		return isStandardValid || isCustomValid;
+		//	}
+		//};
 
 	}
 

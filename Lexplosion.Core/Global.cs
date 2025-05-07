@@ -31,6 +31,8 @@ namespace Lexplosion.Global
 			public const string Base = "https://night-world.org/";
 			public const string Account = "https://night-world.org/api/account/";
 			public const string MirrorUrl = "https://night-world.org/mirror/";
+
+			public const string LauncherPartsMirror = "https://mirror.night-world.org/launcher/windows/";
 		}
 
 		public const string GAME_FOLDER_NAME = "lexplosion";
