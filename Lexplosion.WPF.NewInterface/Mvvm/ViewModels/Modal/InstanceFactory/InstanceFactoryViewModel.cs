@@ -180,10 +180,15 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
 
 
 		#region Constructors
-
+		
 
 		public InstanceFactoryModel()
 		{
+			if (GameVersions.Length == 0) 
+			{
+				return;
+			}
+
 			ModloaderManager = new ModloaderManager(GameExtension.Forge, Version);
 			Version = GameVersions[0];
 			ClientType = ClientType.Vanilla;

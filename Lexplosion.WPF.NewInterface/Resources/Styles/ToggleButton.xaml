@@ -64,6 +64,9 @@
                             <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource LatestForegroundSolidColorBrush}" />
                             <Setter TargetName="c" Property="Background" Value="{DynamicResource LatestForegroundSolidColorBrush}" />
                         </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.1" />
+                        </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>

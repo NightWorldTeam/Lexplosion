@@ -1,6 +1,7 @@
 ﻿using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Modal;
 using Lexplosion.WPF.NewInterface.Core.Objects;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -60,16 +61,39 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
         #region Public Methods
 
 
-        public void AddTabItems(IEnumerable<ModalLeftMenuTabItem> tabItems, bool isSelectFirst = false)
+        public void AddTabItems(IEnumerable<ModalLeftMenuTabItem> tabItems, bool isSelectFirst = false, Type selectedPageType = null)
         {
             foreach (var item in tabItems)
             {
                 item.SelectedEvent += OnCurrentContentChanged;
                 _tabItems.Add(item);
-                _loadingPages[item.Content] = false;
+                if (item.Content != null)
+                {
+                    _loadingPages[item.Content] = false;
+                }
             }
 
-            if (_tabItems.Count > 0 && isSelectFirst)
+            if (_tabItems.Count == 0)
+            {
+                return;
+            }
+
+            if (selectedPageType != null)
+            {
+                ModalLeftMenuTabItem selected;
+
+                for (var i = 0; i < _tabItems.Count; i++) 
+                {
+                    if (_tabItems[i].Content?.GetType() == selectedPageType) 
+                    {
+                        var selectedTmp = _tabItems[i];
+                        selectedTmp.IsSelected = true;
+                        _tabItems[i] = selectedTmp;
+                    }
+                }
+            }
+
+            if (isSelectFirst)
             {
                 var firstItem = _tabItems[0];
                 firstItem.IsSelected = true;

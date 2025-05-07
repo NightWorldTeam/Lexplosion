@@ -39,7 +39,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.ModalFactory
                 TitleKey = "Create",
                 IsEnable = hasMinecraftVersions,
                 IsSelected = hasMinecraftVersions,
-                Content = new InstanceFactoryViewModel((i) => _libraryController.Add(i), leftMenuControl.CloseCommand)
+                Content = !hasMinecraftVersions ? null : new InstanceFactoryViewModel((i) => _libraryController.Add(i), leftMenuControl.CloseCommand)
             });
 
             menuItems.Add(new ModalLeftMenuTabItem()
@@ -60,7 +60,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.ModalFactory
                 Content = new NightWorldLimitedContentLayoutViewModel(new InstanceDistributionViewModel(_libraryController, _shareController), true)
             });
 
-            leftMenuControl.AddTabItems(menuItems, true);
+            leftMenuControl.AddTabItems(menuItems, selectedPageType: typeof(InstanceImportViewModel));
             return leftMenuControl;
         }
     }
