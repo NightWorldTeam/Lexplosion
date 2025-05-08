@@ -113,6 +113,17 @@
                         </core:If.True>
                     </core:If>
 
+                    <core:If Condition="{Binding IsImporting}">
+                        <core:If.True>
+                            <controls:CircleLoader
+                                Width="32"
+                                Height="32"
+                                Padding="0"
+                                BlurTarget="{Binding Source={x:Reference PART_Logo}}"
+                                IsActive="{Binding IsImporting}" />
+                        </core:If.True>
+                    </core:If>
+
                     <!--  More Button  -->
                     <Grid Opacity="0">
                         <Border CornerRadius="5">
@@ -313,7 +324,7 @@
                                             </MultiDataTrigger.Setters>
                                         </MultiDataTrigger>
 
-                                        <!--  Запуск игры Скачивание игры  -->
+                                        <!--  Запуск игры со скачиванием игры  -->
                                         <MultiDataTrigger>
                                             <MultiDataTrigger.Conditions>
                                                 <Condition Binding="{Binding IsDownloading}" Value="True" />
@@ -362,6 +373,43 @@
                                         <DataTrigger Binding="{Binding IsInstanceCompleted}" Value="False">
                                             <Setter Property="Visibility" Value="Collapsed" />
                                         </DataTrigger>
+
+                                        <!--  Import prepare  -->
+                                        <MultiDataTrigger>
+
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding IsImporting, Mode=OneWay}" Value="True" />
+                                                <Condition Binding="{Binding DownloadingData.Stage, Mode=OneWay}" Value="{x:Static lexplosion:StageType.Prepare}" />
+                                            </MultiDataTrigger.Conditions>
+
+                                            <Setter Property="Visibility" Value="Visible" />
+                                            <Setter Property="Text" Value="{DynamicResource DownloadPreparing}" />
+                                        </MultiDataTrigger>
+
+
+                                        <!--  Import Downloading  -->
+                                        <MultiDataTrigger>
+
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding IsImporting, Mode=OneWay}" Value="True" />
+                                                <Condition Binding="{Binding DownloadingData.Stage, Mode=OneWay}" Value="{x:Static lexplosion:StageType.Client}" />
+                                            </MultiDataTrigger.Conditions>
+
+                                            <Setter Property="Visibility" Value="Visible" />
+                                            <Setter Property="Text" Value="{DynamicResource DownloadPreparing}" />
+                                        </MultiDataTrigger>
+
+
+                                        <!--  Import Downloading  -->
+                                        <MultiDataTrigger>
+
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding IsImporting, Mode=OneWay}" Value="True" />
+                                                <Condition Binding="{Binding DownloadingData.Stage, Mode=OneWay}" Value="{x:Static lexplosion:StageType.Client}" />
+                                            </MultiDataTrigger.Conditions>
+
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                        </MultiDataTrigger>
                                     </Style.Triggers>
                                 </Style>
                             </TextBlock.Style>
@@ -403,6 +451,18 @@
                                             <MultiDataTrigger.Setters>
                                                 <Setter Property="Visibility" Value="Visible" />
                                             </MultiDataTrigger.Setters>
+                                        </MultiDataTrigger>
+
+
+                                        <!--  Import Downloading  -->
+                                        <MultiDataTrigger>
+
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding IsImporting, Mode=OneWay}" Value="True" />
+                                                <Condition Binding="{Binding DownloadingData.Stage, Mode=OneWay}" Value="{x:Static lexplosion:StageType.Client}" />
+                                            </MultiDataTrigger.Conditions>
+
+                                            <Setter Property="Visibility" Value="Visible" />
                                         </MultiDataTrigger>
 
                                     </Style.Triggers>
@@ -613,6 +673,31 @@
                                             <Setter Property="IsIndeterminate" Value="False" />
                                         </DataTrigger>
 
+                                        <!--  Import prepare  -->
+                                        <MultiDataTrigger>
+
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding IsImporting, Mode=OneWay}" Value="True" />
+                                                <Condition Binding="{Binding DownloadingData.Stage, Mode=OneWay}" Value="{x:Static lexplosion:StageType.Prepare}" />
+                                            </MultiDataTrigger.Conditions>
+
+                                            <Setter Property="Visibility" Value="Visible" />
+                                            <Setter Property="IsIndeterminate" Value="True" />
+                                        </MultiDataTrigger>
+
+
+                                        <!--  Import Downloading  -->
+                                        <MultiDataTrigger>
+
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding IsImporting, Mode=OneWay}" Value="True" />
+                                                <Condition Binding="{Binding DownloadingData.Stage, Mode=OneWay}" Value="{x:Static lexplosion:StageType.Client}" />
+                                            </MultiDataTrigger.Conditions>
+
+                                            <Setter Property="Visibility" Value="Visible" />
+                                            <Setter Property="Value" Value="{Binding DownloadingData.Percentages, Mode=OneWay}" />
+                                            <Setter Property="IsIndeterminate" Value="False" />
+                                        </MultiDataTrigger>
                                     </Style.Triggers>
 
                                 </Style>
@@ -756,6 +841,29 @@
                                                     <Setter Property="FontSize" Value="20" />
                                                 </DataTrigger>
 
+                                                <!--  Import prepare  -->
+                                                <MultiDataTrigger>
+
+                                                    <MultiDataTrigger.Conditions>
+                                                        <Condition Binding="{Binding IsImporting, Mode=OneWay}" Value="True" />
+                                                        <Condition Binding="{Binding DownloadingData.Stage, Mode=OneWay}" Value="{x:Static lexplosion:StageType.Prepare}" />
+                                                    </MultiDataTrigger.Conditions>
+
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                </MultiDataTrigger>
+
+
+                                                <!--  Import Downloading  -->
+                                                <MultiDataTrigger>
+
+                                                    <MultiDataTrigger.Conditions>
+                                                        <Condition Binding="{Binding IsImporting, Mode=OneWay}" Value="True" />
+                                                        <Condition Binding="{Binding DownloadingData.Stage, Mode=OneWay}" Value="{x:Static lexplosion:StageType.Client}" />
+                                                    </MultiDataTrigger.Conditions>
+
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                    <Setter TargetName="Percentage" Property="Visibility" Value="Visible" />
+                                                </MultiDataTrigger>
                                             </ControlTemplate.Triggers>
                                         </ControlTemplate>
                                     </Setter.Value>
