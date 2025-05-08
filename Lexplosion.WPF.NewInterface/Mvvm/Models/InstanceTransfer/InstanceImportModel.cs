@@ -152,6 +152,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
             if (!importProcess.IsImporing)
                 return;
 
+            importProcess.Cancel();
+
             var index = ImportProcesses.IndexOf(importProcess);
 
             if (index == -1)
