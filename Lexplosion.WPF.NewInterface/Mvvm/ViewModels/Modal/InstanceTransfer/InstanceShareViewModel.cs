@@ -3,15 +3,17 @@ using Lexplosion.Logic.Management.Instances;
 using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Modal;
+using Lexplosion.WPF.NewInterface.Core.Notifications;
 using Lexplosion.WPF.NewInterface.Core.ViewModel;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer;
 using System;
+using System.Windows.Forms;
 using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer
 {
-    public sealed class InstanceShareModel : ViewModelBase 
+    public sealed class InstanceShareModel : ViewModelBase
     {
         // true - exporting | false - nothing
         public event Action<bool> SharePreparingStarted;
@@ -19,6 +21,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer
 
         private readonly Action<int> _navigateTo;
         private readonly InstanceClient _instanceClient;
+        private readonly AppCore _appCore;
 
 
         private readonly InstanceSharesController _instanceSharesController;
@@ -32,7 +35,16 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer
 
 
         public bool IsAlreadySharing => _instanceClient.IsSharing;
-        public bool IsPreparingToShare { get; private set; }
+
+        private bool _isPreparingToShare;
+        public bool IsPreparingToShare
+        {
+            get => _isPreparingToShare; private set
+            {
+                _isPreparingToShare = value;
+                OnPropertyChanged();
+            }
+        }
 
 
         private bool _isFullExport;
@@ -55,8 +67,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer
         #region Constructors
 
 
-        public InstanceShareModel(InstanceClient instanceClient, InstanceSharesController controller, Action<int> navigateTo)
+        public InstanceShareModel(AppCore appCore, InstanceClient instanceClient, InstanceSharesController controller, Action<int> navigateTo)
         {
+            _appCore = appCore;
             _instanceClient = instanceClient;
             InstanceName = _instanceClient.Name;
             InstanceFileTree = new InstanceFileTree(instanceClient);
@@ -67,7 +80,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer
 
         private void Controller_ShareStopped(string obj)
         {
-            if (_instanceClient.LocalId == obj) 
+            if (_instanceClient.LocalId == obj)
             {
                 OnPropertyChanged(nameof(IsAlreadySharing));
                 OnPropertyChanged(nameof(IsPreparingToShare));
@@ -93,8 +106,14 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer
             Lexplosion.Runtime.TaskRun(() =>
             {
                 var result = _instanceClient.Share(InstanceFileTree.UnitsList, out FileDistributor fileDistribution);
+                ShareResultHandler(result);
 
-                //ExportResultHandler(result);
+                if (result != ExportResult.Successful)
+                {
+                    IsPreparingToShare = false;
+                    SharePreparingStarted?.Invoke(false);
+                    return;
+                }
 
                 App.Current.Dispatcher.Invoke(() =>
                 {
@@ -102,7 +121,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer
                     _instanceSharesController.AddActiveShare(wrapper);
                     OnPropertyChanged(nameof(IsAlreadySharing));
                     IsPreparingToShare = false;
-                    OnPropertyChanged(nameof(IsPreparingToShare));
                     _instanceSharesController.ShareStopped += OnActiveShareStopped;
                     SharePreparingStarted?.Invoke(false);
                     _navigateTo(2);
@@ -111,7 +129,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer
         }
 
 
-        public void OnActiveShareStopped(string id) 
+        public void OnActiveShareStopped(string id)
         {
             if (id == _instanceClient.LocalId)
             {
@@ -121,6 +139,30 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer
 
 
         #endregion Public Methods
+
+
+        #region Private Methods
+
+
+        private void ShareResultHandler(ExportResult exportResult)
+        {
+            switch (exportResult)
+            {
+                case ExportResult.Successful:
+                    _appCore.MessageService.Success("ShareExport_Successful", true, InstanceName);
+                    break;
+                default:
+                    _appCore.NotificationService.Notify(
+                        new SimpleNotification(
+                            string.Format(_appCore.Resources("InstanceShareColon_") as string, InstanceName),
+                            _appCore.Resources($"ShareExport{exportResult}") as string)
+                        );
+                    break;
+            }
+        }
+
+
+        #endregion Private Methods
     }
 
     public sealed class InstanceShareViewModel : ActionModalViewModelBase, ILimitedAccess
@@ -133,9 +175,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer
 
 
         private RelayCommand _stopSharingCommand;
-        public ICommand StopSharingCommand 
+        public ICommand StopSharingCommand
         {
-            get => RelayCommand.GetCommand(ref _stopSharingCommand, () => 
+            get => RelayCommand.GetCommand(ref _stopSharingCommand, () =>
             {
                 //Model.StopShare
             });
@@ -144,9 +186,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer
         #endregion Commands
 
 
-        public InstanceShareViewModel(InstanceClient instanceClient, InstanceSharesController controller, Action<int> navigateTo)
+        public InstanceShareViewModel(AppCore appCore, InstanceClient instanceClient, InstanceSharesController controller, Action<int> navigateTo)
         {
-            Model = new InstanceShareModel(instanceClient, controller, navigateTo);
+            Model = new InstanceShareModel(appCore, instanceClient, controller, navigateTo);
             ActionCommandExecutedEvent += OnInstanceShareActionCommandExecuted;
         }
 

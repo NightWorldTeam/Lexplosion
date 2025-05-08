@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Logic.Management.Instances;
 using Lexplosion.WPF.NewInterface.Core;
+using Lexplosion.WPF.NewInterface.Core.Notifications;
 using System;
 using System.Threading.Tasks;
 
@@ -11,6 +12,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
         public event Action<bool> ExportStatusChanged;
 
 
+        private readonly AppCore _appCore;
         private readonly InstanceClient _instanceClient;
 
 
@@ -55,8 +57,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
         #region Constructors
 
 
-        public InstanceExportModel(InstanceClient instanceClient)
+        public InstanceExportModel(AppCore appCore, InstanceClient instanceClient)
         {
+            _appCore = appCore;
             _instanceClient = instanceClient;
             InstanceName = _instanceClient.Name;
             InstanceFileTree = new InstanceFileTree(instanceClient);
@@ -81,6 +84,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
             return await Task.Run(() =>
             {
                 var exportResult = _instanceClient.Export(InstanceFileTree.UnitsList, fileName, InstanceName);
+                ShareResultHandler(exportResult);
                 IsExportActive = false;
                 return exportResult;
             });
@@ -88,6 +92,30 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
 
 
         #endregion Public Methods
+
+
+        #region Private Methods
+
+
+        private void ShareResultHandler(ExportResult exportResult)
+        {
+            switch (exportResult)
+            {
+                case ExportResult.Successful:
+                    _appCore.MessageService.Success("Export_Sucessfully", true, InstanceName);
+                    break;
+                default:
+                    _appCore.NotificationService.Notify(
+                        new SimpleNotification(
+                            string.Format(_appCore.Resources("InstanceShareColon_") as string, InstanceName),
+                            _appCore.Resources($"Export{exportResult}") as string)
+                        );
+                    break;
+            }
+        }
+
+
+        #endregion Private Methods
     }
 
 }

@@ -819,4 +819,22 @@
     <s:String x:Key="ShareActiveTime">Активно</s:String>
     <!--  Minutes  -->
     <s:String x:Key="Min">min</s:String>
+
+    <s:String x:Key="Importing">Importing...</s:String>
+
+    <s:String x:Key="InstanceShareColon_">Instance Share: {0}</s:String>
+    <s:String x:Key="ShareExport_Sucessfully">Instance {0} shared successfully!</s:String>
+    <s:String x:Key="ShareExportTempPathError">Error creating temporary directory!</s:String>
+    <s:String x:Key="ShareExportFileCopyError">Error while copying files! You may not have enough disk space.</s:String>
+    <s:String x:Key="ShareExportInfoFileError">Error creating instanceInfo.json file!</s:String>
+    <s:String x:Key="ShareExportZipFileError">Error creating zip archive!</s:String>
+    <s:String x:Key="ShareExportNotExistsValidAccount">We really don't know what's going on!</s:String>
+
+    <s:String x:Key="InstanceExportColon_">Экспорт сборки: {0}</s:String>
+    <s:String x:Key="Export_Sucessfully">Instance {0} exported successfully!</s:String>
+    <s:String x:Key="ExportTempPathError">Error creating temporary directory!</s:String>
+    <s:String x:Key="ExportFileCopyError">Error while copying files! You may not have enough disk space.</s:String>
+    <s:String x:Key="ExportInfoFileError">Error creating instanceInfo.json file!</s:String>
+    <s:String x:Key="ExportZipFileError">Error creating zip archive!</s:String>
+    <s:String x:Key="ExportNotExistsValidAccount">We really don't know what's going on!</s:String>
 </ResourceDictionary>

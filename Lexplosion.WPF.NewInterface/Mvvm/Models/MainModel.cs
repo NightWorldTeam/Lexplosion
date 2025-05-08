@@ -44,8 +44,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models
             // Ибо в будущем всё равно делать Раздачу, которая работает по такому-же принципу.
             var leftmenu = new LeftMenuControl();
 
-            var exportVM = new InstanceExportViewModel(instanceClient);
-            var instanceShare = new InstanceShareViewModel(instanceClient, InstanceSharesController, leftmenu.NavigateTo);
+            var exportVM = new InstanceExportViewModel(_appCore, instanceClient);
+            var instanceShare = new InstanceShareViewModel(_appCore, instanceClient, InstanceSharesController, leftmenu.NavigateTo);
             var activeShares = new ActiveSharesViewModel(InstanceSharesController);
 
             leftmenu.AddTabItems(new ModalLeftMenuTabItem[]

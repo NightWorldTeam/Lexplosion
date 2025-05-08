@@ -924,4 +924,22 @@
     <s:String x:Key="ShareActiveTime">Активно</s:String>
     <!--  Минуты  -->
     <s:String x:Key="Min">мин</s:String>
+
+    <s:String x:Key="Importing">Импорт...</s:String>
+
+    <s:String x:Key="InstanceShareColon_">Раздача сборки: {0}</s:String>
+    <s:String x:Key="ShareExport_Sucessfully">Сборка {0} успешно раздаётся!</s:String>
+    <s:String x:Key="ShareExportTempPathError">Ошибка при создании временной директории!</s:String>
+    <s:String x:Key="ShareExportFileCopyError">Ошибка при копирование файла! Возможно у вас недостаточно места на диске.</s:String>
+    <s:String x:Key="ShareExportInfoFileError">Ошибка при создании файла instanceInfo.json</s:String>
+    <s:String x:Key="ShareExportZipFileError">Ошибка при создании zip-архива сборки</s:String>
+    <s:String x:Key="ShareExportNotExistsValidAccount">Произошло, что-то нам не известное!</s:String>
+
+    <s:String x:Key="InstanceExportColon_">Экспорт сборки: {0}</s:String>
+    <s:String x:Key="Export_Sucessfully">Сборка {0} успешно экспортирована!</s:String>
+    <s:String x:Key="ExportTempPathError">Ошибка при создании временной директории!</s:String>
+    <s:String x:Key="ExportFileCopyError">Ошибка при копирование файла! Возможно у вас недостаточно места на диске.</s:String>
+    <s:String x:Key="ExportInfoFileError">Ошибка при создании файла instanceInfo.json</s:String>
+    <s:String x:Key="ExportZipFileError">Ошибка при создании zip-архива сборки</s:String>
+    <s:String x:Key="ExportNotExistsValidAccount">Произошло, что-то нам не известное!</s:String>
 </ResourceDictionary>

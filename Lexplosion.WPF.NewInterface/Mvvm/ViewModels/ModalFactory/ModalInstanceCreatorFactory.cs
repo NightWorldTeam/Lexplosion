@@ -60,7 +60,14 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.ModalFactory
                 Content = new NightWorldLimitedContentLayoutViewModel(new InstanceDistributionViewModel(_libraryController, _shareController), true)
             });
 
-            leftMenuControl.AddTabItems(menuItems, selectedPageType: typeof(InstanceImportViewModel));
+            if (hasMinecraftVersions)
+            {
+                leftMenuControl.AddTabItems(menuItems, hasMinecraftVersions);
+            }
+            else 
+            {
+                leftMenuControl.AddTabItems(menuItems, selectedPageType: typeof(InstanceImportViewModel));
+            }
             return leftMenuControl;
         }
     }

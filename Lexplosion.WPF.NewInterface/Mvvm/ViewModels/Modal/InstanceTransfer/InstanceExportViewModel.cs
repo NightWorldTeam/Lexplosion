@@ -1,6 +1,7 @@
 ﻿using Lexplosion.Global;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.WPF.NewInterface.Commands;
+using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Modal;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer;
 using System.IO;
@@ -11,6 +12,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer
 {
     public sealed class InstanceExportViewModel : ActionModalViewModelBase
     {
+        private readonly AppCore _appCore;
         private readonly InstanceClient _instanceClient;
 
 
@@ -42,10 +44,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer
         #region Constructors
 
 
-        public InstanceExportViewModel(InstanceClient instanceClient)
+        public InstanceExportViewModel(AppCore appCore, InstanceClient instanceClient)
         {
+            _appCore = appCore;
             _instanceClient = instanceClient;
-            Model = new InstanceExportModel(instanceClient);
+            Model = new InstanceExportModel(appCore, instanceClient);
             ActionCommandExecutedEvent += OnActionCommandExecuted;
         }
 
@@ -86,8 +89,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer
                     // ExportedInstance.Add(this);
 
                     var result = Model.Export(saveFileDialog.FileName);
-                    Runtime.DebugWrite(result);
-                    // result hanlder
                 }
             }
         }
