@@ -10,6 +10,8 @@ using Lexplosion.Logic.Objects.Nightworld;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.FileSystem.Services;
+using System.IO.Compression;
+using System.Text;
 
 namespace Lexplosion.Logic.FileSystem.Installers
 {
@@ -482,5 +484,146 @@ namespace Lexplosion.Logic.FileSystem.Installers
 
 			return false;
 		}
+
+		/// <summary>
+		/// Функция для скачивания файлов клиента в zip формате, со сравнением хеша
+		/// </summary>
+		/// <param name="url">Ссыллка на файл, охуеть, да? Без .zip в конце.</param>
+		/// <param name="file">Имя файла</param>
+		/// <param name="to">Путь куда скачать (без имени файла), должен заканчиваться на слеш.</param>
+		/// <param name="temp">Временная директория (без имени файла), должна заканчиваться на слеш.</param>
+		/// <param name="sha1">Хэш</param>
+		/// <param name="size">Размер</param>
+		/// <param name="taskArgs">аргументы задачи</param>
+		/// <returns></returns>
+		protected bool SaveDownloadZip(string url, string file, string to, string temp, string sha1, long size, TaskArgs taskArgs)
+		{
+			string zipFile = file + ".zip";
+
+			try
+			{
+				if (!Directory.Exists(to))
+				{
+					Directory.CreateDirectory(to);
+				}
+
+				//пробуем скачать 4 раза
+				int i = 0;
+				while (!withDirectory.DownloadFile(url + ".zip", zipFile, temp, taskArgs) && i < 4 && !taskArgs.CancelToken.IsCancellationRequested)
+				{
+					Thread.Sleep(1500);
+					i++;
+				}
+
+				// все попытки неувенчались успехом
+				if (i > 3 || taskArgs.CancelToken.IsCancellationRequested)
+				{
+					return false;
+				}
+
+				withDirectory.DelFile(to + file);
+
+				ZipFile.ExtractToDirectory(temp + zipFile, temp);
+				File.Delete(temp + zipFile);
+
+				using (FileStream fstream = new FileStream(temp + file, FileMode.Open, FileAccess.Read))
+				{
+					byte[] fileBytes = new byte[fstream.Length];
+					fstream.Read(fileBytes, 0, fileBytes.Length);
+					fstream.Close();
+
+					using (SHA1 sha = new SHA1Managed())
+					{
+						if (Convert.ToBase64String(sha.ComputeHash(fileBytes)) == sha1 && fileBytes.Length == size)
+						{
+							withDirectory.DelFile(to + file);
+							File.Move(temp + file, to + file);
+
+							return true;
+						}
+						else
+						{
+							File.Delete(temp + file);
+							return false;
+						}
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				Runtime.DebugWrite("Exception " + ex);
+				withDirectory.DelFile(temp + file);
+				withDirectory.DelFile(temp + zipFile);
+
+				return false;
+			}
+		}
+
+		///// <summary>
+		///// Aункция для скачивания файлов в jar формате, со сравнением хэша
+		///// </summary>
+		///// <param name="url">URL файла</param>
+		///// <param name="file">Имя файла</param>
+		///// <param name="to">Директория куда скачать (без имени файла). Должно заканчиваться слешем</param>
+		///// <param name="temp">Временная директория (без имени файла). Должно заканчиваться слешем</param>
+		///// <param name="sha1">Хэш файла</param>
+		///// <param name="size">Размер файла</param>
+		///// <param name="taskArgs">аргументы задачи</param>
+		///// <returns></returns>
+		//protected bool SaveDownloadJar(string url, string file, string to, string temp, string sha1, long size, TaskArgs taskArgs, bool mirrorIfError = false)
+		//{
+		//	try
+		//	{
+		//		if (!Directory.Exists(to))
+		//		{
+		//			Directory.CreateDirectory(to);
+		//		}
+
+		//		if (mirrorIfError && !TryDownloadWithMirror(url, file, temp, taskArgs))
+		//		{
+		//			return false;
+		//		}
+		//		else if (!mirrorIfError && !TryDownloadFile(url, file, temp, taskArgs))
+		//		{
+		//			return false;
+		//		}
+
+		//		withDirectory.DelFile(to + file);
+
+		//		using (FileStream fstream = new FileStream(temp + file, FileMode.Open, FileAccess.Read))
+		//		{
+		//			using (SHA1CryptoServiceProvider mySha = new SHA1CryptoServiceProvider())
+		//			{
+		//				StringBuilder Sb = new StringBuilder();
+		//				byte[] result = mySha.ComputeHash(fstream);
+
+		//				foreach (byte b in result)
+		//					Sb.Append(b.ToString("x2"));
+
+		//				bool hashIsValid = Sb.ToString() == sha1 || Convert.ToBase64String(result) == sha1;
+		//				if (hashIsValid && fstream.Length == size)
+		//				{
+		//					fstream.Close();
+		//					withDirectory.DelFile(to + file);
+		//					File.Move(temp + file, to + file);
+
+		//					return true;
+		//				}
+		//				else
+		//				{
+		//					fstream.Close();
+		//					File.Delete(temp + file);
+		//					return false;
+		//				}
+		//			}
+		//		}
+		//	}
+		//	catch (Exception ex)
+		//	{
+		//		Runtime.DebugWrite("Exception " + ex);
+		//		withDirectory.DelFile(temp + file);
+		//		return false;
+		//	}
+		//}
 	}
 }

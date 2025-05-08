@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net;
 using System.Text;
 using System.Security.Cryptography;
@@ -12,7 +11,6 @@ using System.Linq;
 using Newtonsoft.Json;
 using Lexplosion.Global;
 using Lexplosion.Logic.Objects;
-using System.Collections.Concurrent;
 using Lexplosion.Logic.Network.Web;
 
 namespace Lexplosion.Logic.Network
@@ -22,7 +20,7 @@ namespace Lexplosion.Logic.Network
 		private HttpClient _httpClient;
 		private ProxyHandler _clientHandler;
 
-		private const string USER_AGENT = "Mozilla/5.0";
+		private const string USER_AGENT = "Mozilla/5.0 Lexplosion/1.0.0.5";
 
 		internal ToServer()
 		{

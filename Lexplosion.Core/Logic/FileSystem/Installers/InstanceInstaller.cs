@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Net;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
@@ -26,8 +27,15 @@ namespace Lexplosion.Logic.FileSystem.Installers
 		protected readonly WithDirectory withDirectory;
 		protected readonly DataFilesManager dataFilesManager;
 		protected readonly ToServer webService;
+		protected readonly DownloadUrlHandler _downloadUrlHandler = new();
 
 		protected string instanceId;
+
+		private ConcurrentDictionary<string, LibInfo> _libraries;
+		private bool _minecraftJar;
+		private bool _assetsIndexes;
+		private Assets _assets;
+		private int _updatesCount = 0;
 
 		public InstanceInstaller(string instanceID, IFileServicesContainer services)
 		{
@@ -65,15 +73,7 @@ namespace Lexplosion.Logic.FileSystem.Installers
 		}
 
 		protected Action<string, int, DownloadFileProgress> _fileDownloadHandler;
-
 		public event ProcentUpdate BaseDownloadEvent;
-
-		private ConcurrentDictionary<string, LibInfo> _libraries;
-		private bool _minecraftJar;
-		private bool _assetsIndexes;
-		private Assets _assets;
-
-		private int _updatesCount = 0;
 
 		private void ResetUpdatesList()
 		{
@@ -82,6 +82,18 @@ namespace Lexplosion.Logic.FileSystem.Installers
 			_assetsIndexes = false;
 			_assets.objects = null;
 			_updatesCount = 0;
+		}
+
+		[MethodImpl(MethodImplOptions.Synchronized)]
+		protected void CallBaseDownloadEvent(int totalDataCount, int nowDataCount)
+		{
+			BaseDownloadEvent?.Invoke(totalDataCount, nowDataCount);
+		}
+
+		[MethodImpl(MethodImplOptions.Synchronized)]
+		protected void CallFileDownloadEvent(string filename, int pr, DownloadFileProgress stage)
+		{
+			_fileDownloadHandler?.Invoke(filename, pr, stage);
 		}
 
 		/// <summary>
@@ -311,45 +323,65 @@ namespace Lexplosion.Logic.FileSystem.Installers
 			return _updatesCount;
 		}
 
-		protected bool TryDownloadFile(string url, string file, string temp, TaskArgs taskArgs)
+		/// <summary>
+		/// Пытается скачать файл несколько раз по переданному url
+		/// </summary>
+		/// <param name="url">Url файла</param>
+		/// <param name="file">Имя файла</param>
+		/// <param name="temp">Временная директория (тоже без имени файла). Должно заканчиваться слешем. В эту директорию будет скачиваться файл</param>
+		/// <param name="tryCount">Количество попыток скачивания</param>
+		/// <param name="taskArgs">аргументы задачи</param>
+		/// <returns>true - удачно, null - файла на серваке нет или доступ закрыт, false - неизвестная ошибка</returns>
+		private bool? TryDownload(string url, string file, string temp, int tryCount, TaskArgs taskArgs)
 		{
 			int i = 0;
-			while (!withDirectory.DownloadFile(url, file, temp, taskArgs) && i < 3 && !taskArgs.CancelToken.IsCancellationRequested)
+			while (i < tryCount && !taskArgs.CancelToken.IsCancellationRequested && !withDirectory.DownloadFile(url, file, temp, out HttpStatusCode? statusCode, taskArgs))
 			{
+				if (statusCode == HttpStatusCode.NotFound || statusCode == HttpStatusCode.Unauthorized || statusCode == HttpStatusCode.Forbidden) return null;
+
 				Thread.Sleep(1500);
 				i++;
 			}
 
-			//успех если попыток было меньше трёх и скачивнаие не было отменено
-			return i <= 2 && !taskArgs.CancelToken.IsCancellationRequested;
+			return i < tryCount && !taskArgs.CancelToken.IsCancellationRequested;
 		}
 
-		protected bool TryDownloadWithMirror(string url, string file, string temp, TaskArgs taskArgs)
+
+		/// <summary>
+		/// Пытается скачать файл несколько раз. При неудаче меняет источник скачивания и пробует еще раз
+		/// </summary>
+		/// <param name="url">Url файла</param>
+		/// <param name="file">Имя файла</param>
+		/// <param name="temp">Временная директория (тоже без имени файла). Должно заканчиваться слешем. В эту директорию будет скачиваться файл</param>
+		/// <param name="taskArgs">аргументы задачи</param>
+		/// <returns>Удачно скачивание или нет</returns>
+		private bool TryMultipleDownload(string url, string file, string temp, TaskArgs taskArgs)
 		{
-			if (!TryDownloadFile(url, file, temp, taskArgs))
+			string url_ = _downloadUrlHandler.GenerateFileUrl(url, out int shiftNumber);
+
+			bool? result = false;
+			int shiftCounts = 2; // количество попыток смены источника
+			while (!taskArgs.CancelToken.IsCancellationRequested && (result = TryDownload(url_, file, temp, 2, taskArgs)) != true && shiftCounts > 0)
 			{
-				if (!url.StartsWith("https://") || taskArgs.CancelToken.IsCancellationRequested) return false;
-
-				url = url.Replace("https://", "");
-				url = LaunсherSettings.URL.MirrorUrl + url;
-
-				Runtime.DebugWrite("Try mirror, url " + url);
-				return withDirectory.DownloadFile(url, file, temp, taskArgs);
+				if (result == null) break; // сервер доступен, но файл нам не вернул. Менять источник смысла нет. Выходим
+				_downloadUrlHandler.ErrorOccured(url, shiftNumber);
+				url_ = _downloadUrlHandler.GenerateFileUrl(url, out shiftNumber);
+				shiftCounts--;
 			}
 
-			return true;
+			return result == true;
 		}
 
 		/// <summary>
 		/// Ффункция для скачивания файлов клиента в zip формате, без проверки хеша
 		/// </summary>
 		/// <param name="url">Ссылка на файл, охуеть, да? C .zip в конце.</param>
-		/// <param name="file">Имя файла</param>
+		/// <param name="file">Итоговое имя файла в папке майнкрафта</param>
 		/// <param name="to">Путь куда скачать (без имени файла), должен заканчиваться на слеш.</param>
 		/// <param name="temp">Временная директория (без имени файла), должена заканчиваться на слеш.</param>
 		/// <param name="taskArgs">Аргументы задачи</param> 
 		/// <returns></returns>
-		protected bool UnsafeDownloadZip(string url, string to, string file, string temp, TaskArgs taskArgs)
+		protected bool UnsafeDownloadZippedFile(string url, string to, string file, string temp, TaskArgs taskArgs)
 		{
 			string zipFile = file + ".zip";
 
@@ -361,19 +393,7 @@ namespace Lexplosion.Logic.FileSystem.Installers
 				}
 				withDirectory.DelFile(temp + zipFile);
 
-				//пробуем скачать 4 раза
-				int i = 0;
-				while (!withDirectory.DownloadFile(url, zipFile, temp, taskArgs) && i < 4 && !taskArgs.CancelToken.IsCancellationRequested)
-				{
-					Thread.Sleep(1500);
-					i++;
-				}
-
-				// все попытки неувенчались успехом
-				if (i > 3 || taskArgs.CancelToken.IsCancellationRequested)
-				{
-					return false;
-				}
+				if (!TryMultipleDownload(url, zipFile, temp, taskArgs)) return false;
 
 				ZipFile.ExtractToDirectory(temp + zipFile, temp);
 				File.Delete(temp + zipFile);
@@ -391,86 +411,10 @@ namespace Lexplosion.Logic.FileSystem.Installers
 
 				return false;
 			}
-
 		}
 
 		/// <summary>
-		/// Функция для скачивания файлов клиента в zip формате, со сравнением хеша
-		/// </summary>
-		/// <param name="url">Ссыллка на файл, охуеть, да? Без .zip в конце.</param>
-		/// <param name="file">Имя файла</param>
-		/// <param name="to">Путь куда скачать (без имени файла), должен заканчиваться на слеш.</param>
-		/// <param name="temp">Временная директория (без имени файла), должна заканчиваться на слеш.</param>
-		/// <param name="sha1">Хэш</param>
-		/// <param name="size">Размер</param>
-		/// <param name="taskArgs">аргументы задачи</param>
-		/// <returns></returns>
-		protected bool SaveDownloadZip(string url, string file, string to, string temp, string sha1, long size, TaskArgs taskArgs)
-		{
-			string zipFile = file + ".zip";
-
-			try
-			{
-				if (!Directory.Exists(to))
-				{
-					Directory.CreateDirectory(to);
-				}
-
-				//пробуем скачать 4 раза
-				int i = 0;
-				while (!withDirectory.DownloadFile(url + ".zip", zipFile, temp, taskArgs) && i < 4 && !taskArgs.CancelToken.IsCancellationRequested)
-				{
-					Thread.Sleep(1500);
-					i++;
-				}
-
-				// все попытки неувенчались успехом
-				if (i > 3 || taskArgs.CancelToken.IsCancellationRequested)
-				{
-					return false;
-				}
-
-				withDirectory.DelFile(to + file);
-
-				ZipFile.ExtractToDirectory(temp + zipFile, temp);
-				File.Delete(temp + zipFile);
-
-				using (FileStream fstream = new FileStream(temp + file, FileMode.Open, FileAccess.Read))
-				{
-					byte[] fileBytes = new byte[fstream.Length];
-					fstream.Read(fileBytes, 0, fileBytes.Length);
-					fstream.Close();
-
-					using (SHA1 sha = new SHA1Managed())
-					{
-						if (Convert.ToBase64String(sha.ComputeHash(fileBytes)) == sha1 && fileBytes.Length == size)
-						{
-							withDirectory.DelFile(to + file);
-							File.Move(temp + file, to + file);
-
-							return true;
-						}
-						else
-						{
-							File.Delete(temp + file);
-							return false;
-						}
-					}
-				}
-			}
-			catch (Exception ex)
-			{
-				Runtime.DebugWrite("Exception " + ex);
-				withDirectory.DelFile(temp + file);
-				withDirectory.DelFile(temp + zipFile);
-
-				return false;
-			}
-		}
-
-
-		/// <summary>
-		/// Aункция для скачивания файлов в jar формате, без сравнения хэша
+		/// Функция для скачивания файлов в jar формате, без сравнения хэша
 		/// </summary>
 		/// <param name="url">Url файла</param>
 		/// <param name="to">Директория куда скачать (без имени файла). Должно заканчиваться слешем.</param>
@@ -478,7 +422,7 @@ namespace Lexplosion.Logic.FileSystem.Installers
 		/// <param name="temp">Временная директория (тоже без имени файла). Должно заканчиваться слешем.</param>
 		/// <param name="taskArgs">аргументы задачи</param>
 		/// <returns>Охуенно или пиздец</returns>
-		protected bool UnsafeDownloadJar(string url, string to, string file, string temp, TaskArgs taskArgs, bool mirrorIfError = false)
+		protected bool UnsafeDownloadFile(string url, string to, string file, string temp, TaskArgs taskArgs)
 		{
 			try
 			{
@@ -487,87 +431,12 @@ namespace Lexplosion.Logic.FileSystem.Installers
 					Directory.CreateDirectory(to);
 				}
 
-				if (mirrorIfError && !TryDownloadWithMirror(url, file, temp, taskArgs))
-				{
-					return false;
-				}
-				else if (!mirrorIfError && !TryDownloadFile(url, file, temp, taskArgs))
-				{
-					return false;
-				}
-
+				if (!TryMultipleDownload(url, file, temp, taskArgs)) return false;
 
 				withDirectory.DelFile(to + file);
 				File.Move(temp + file, to + file);
 
 				return true;
-			}
-			catch (Exception ex)
-			{
-				Runtime.DebugWrite("Exception " + ex);
-				withDirectory.DelFile(temp + file);
-				return false;
-			}
-		}
-
-		/// <summary>
-		/// Aункция для скачивания файлов в jar формате, со сравнением хэша
-		/// </summary>
-		/// <param name="url">URL файла</param>
-		/// <param name="file">Имя файла</param>
-		/// <param name="to">Директория куда скачать (без имени файла). Должно заканчиваться слешем</param>
-		/// <param name="temp">Временная директория (без имени файла). Должно заканчиваться слешем</param>
-		/// <param name="sha1">Хэш файла</param>
-		/// <param name="size">Размер файла</param>
-		/// <param name="taskArgs">аргументы задачи</param>
-		/// <returns></returns>
-		protected bool SaveDownloadJar(string url, string file, string to, string temp, string sha1, long size, TaskArgs taskArgs, bool mirrorIfError = false)
-		{
-			try
-			{
-				if (!Directory.Exists(to))
-				{
-					Directory.CreateDirectory(to);
-				}
-
-				if (mirrorIfError && !TryDownloadWithMirror(url, file, temp, taskArgs))
-				{
-					return false;
-				}
-				else if (!mirrorIfError && !TryDownloadFile(url, file, temp, taskArgs))
-				{
-					return false;
-				}
-
-				withDirectory.DelFile(to + file);
-
-				using (FileStream fstream = new FileStream(temp + file, FileMode.Open, FileAccess.Read))
-				{
-					using (SHA1CryptoServiceProvider mySha = new SHA1CryptoServiceProvider())
-					{
-						StringBuilder Sb = new StringBuilder();
-						byte[] result = mySha.ComputeHash(fstream);
-
-						foreach (byte b in result)
-							Sb.Append(b.ToString("x2"));
-
-						bool hashIsValid = Sb.ToString() == sha1 || Convert.ToBase64String(result) == sha1;
-						if (hashIsValid && fstream.Length == size)
-						{
-							fstream.Close();
-							withDirectory.DelFile(to + file);
-							File.Move(temp + file, to + file);
-
-							return true;
-						}
-						else
-						{
-							fstream.Close();
-							File.Delete(temp + file);
-							return false;
-						}
-					}
-				}
 			}
 			catch (Exception ex)
 			{
@@ -592,7 +461,7 @@ namespace Lexplosion.Logic.FileSystem.Installers
 			var errors = new List<string>();
 			string temp = withDirectory.CreateTempDir();
 
-			BaseDownloadEvent?.Invoke(_updatesCount, 0);
+			CallBaseDownloadEvent(_updatesCount, 0);
 
 			//скачивание файла версии
 			if (_minecraftJar)
@@ -611,7 +480,7 @@ namespace Lexplosion.Logic.FileSystem.Installers
 				{
 					PercentHandler = delegate (int a)
 					{
-						_fileDownloadHandler?.Invoke(minecraftJar.name, a, DownloadFileProgress.PercentagesChanged);
+						CallFileDownloadEvent(minecraftJar.name, a, DownloadFileProgress.PercentagesChanged);
 					},
 					CancelToken = cancelToken
 				};
@@ -620,11 +489,11 @@ namespace Lexplosion.Logic.FileSystem.Installers
 				string to = withDirectory.GetInstancePath(instanceId) + "version/";
 				if (minecraftJar.notArchived)
 				{
-					isDownload = SaveDownloadJar(addr, minecraftJar.name, to, temp, minecraftJar.sha1, minecraftJar.size, taskArgs, true);
+					isDownload = UnsafeDownloadFile(addr, to, minecraftJar.name, temp, taskArgs);
 				}
 				else
 				{
-					isDownload = SaveDownloadZip(addr, minecraftJar.name, to, temp, minecraftJar.sha1, minecraftJar.size, taskArgs);
+					isDownload = UnsafeDownloadZippedFile(addr, to, minecraftJar.name, temp, taskArgs);
 				}
 
 				DownloadFileProgress downloadResult;
@@ -646,8 +515,8 @@ namespace Lexplosion.Logic.FileSystem.Installers
 				}
 
 				updated++;
-				_fileDownloadHandler?.Invoke(minecraftJar.name, 100, downloadResult);
-				BaseDownloadEvent?.Invoke(_updatesCount, updated);
+				CallFileDownloadEvent(minecraftJar.name, 100, downloadResult);
+				CallBaseDownloadEvent(_updatesCount, updated);
 
 				if (downloadResult == DownloadFileProgress.Error)
 				{
@@ -664,7 +533,7 @@ namespace Lexplosion.Logic.FileSystem.Installers
 
 				var executedMethods = new List<string>();
 				string downloadedLibsAddr = withDirectory.DirectoryPath + "/versions/libraries/" + libName + "-downloaded.json"; // адрес файла в котором убдет храниться список downloadedLibs
-																												   // TODO: список downloadedLibs мы получаем в методе проверки. брать от туда, а не подгружать опять
+																																 // TODO: список downloadedLibs мы получаем в методе проверки. брать от туда, а не подгружать опять
 				var downloadedLibs = dataFilesManager.GetFile<List<string>>(downloadedLibsAddr); // сюда мы пихаем файлы, которые удачно скачались. При каждом удачном скачивании сохраняем список в файл. Если все файлы скачались удачно - удаляем этот список
 				if (downloadedLibs == null) downloadedLibs = new List<string>();
 				int startDownloadedLibsCount = downloadedLibs.Count;
@@ -719,7 +588,7 @@ namespace Lexplosion.Logic.FileSystem.Installers
 					ObtainingMethodExecute(in manifest, obtainingMethod, executedMethods, errors, downloadedLibs, lib, javaPath, downloadedLibsAddr, cancelToken);
 
 					updated++;
-					BaseDownloadEvent?.Invoke(_updatesCount, updated);
+					CallBaseDownloadEvent(_updatesCount, updated);
 				}
 
 				try
@@ -757,63 +626,56 @@ namespace Lexplosion.Logic.FileSystem.Installers
 					CancelToken = cancelToken
 				};
 
+				string assetsTemp = withDirectory.CreateTempDir();
+
 				int i = 0;
 				foreach (string asset in _assets.objects.Keys)
 				{
+					if (cancelToken.IsCancellationRequested)
+					{
+						withDirectory.DelDirectory(assetsTemp);
+						return errors;
+					}
+
 					perfomer.ExecuteTask(delegate ()
 					{
 						string assetHash = _assets.objects[asset].hash;
 						if (assetHash != null)
 						{
-							string assetPath = "/" + assetHash.Substring(0, 2);
-							if (!File.Exists(withDirectory.DirectoryPath + "/assets/objects/" + assetPath + "/" + assetHash))
+							string assetPath = assetHash.Substring(0, 2);
+							string filePath = $"{withDirectory.DirectoryPath}/assets/objects/{assetPath}/";
+							if (!File.Exists($"{filePath}/{assetHash}"))
 							{
-								bool flag = false;
-								for (int i = 0; i < 3; i++) // 3 попытки делаем
-								{
-									if (withDirectory.InstallFile("https://resources.download.minecraft.net" + assetPath + "/" + assetHash, assetHash, "/assets/objects/" + assetPath, taskArgs))
-									{
-										flag = true;
-										break;
-									}
-								}
+								string url = "https://resources.download.minecraft.net/" + assetPath + "/" + assetHash;
 
 								if (cancelToken.IsCancellationRequested) return;
 
-								// если не скачалось, то пробуем сделать еще одну попытку через прокси
-								if (!flag && withDirectory.InstallFile(LaunсherSettings.URL.MirrorUrl + "resources.download.minecraft.net" + assetPath + "/" + assetHash, assetHash, "/assets/objects/" + assetPath, taskArgs))
+								if (!UnsafeDownloadFile(url, filePath, assetHash, assetsTemp, taskArgs))
 								{
-									flag = true;
-								}
-
-								if (cancelToken.IsCancellationRequested) return;
-
-								if (!flag)
-								{
-									_fileDownloadHandler?.Invoke("asstes: " + asset, 100, DownloadFileProgress.Error);
+									CallFileDownloadEvent("asstes: " + asset, 100, DownloadFileProgress.Error);
 									errors.Add("asstes: " + asset);
 									Runtime.DebugWrite("Downloading error " + asset);
 								}
 
 								updated++;
-								BaseDownloadEvent?.Invoke(_updatesCount, updated);
+								CallBaseDownloadEvent(_updatesCount, updated);
 							}
 						}
 						else
 						{
-							_fileDownloadHandler?.Invoke("asstes: " + asset, 100, DownloadFileProgress.Error);
+							CallFileDownloadEvent("asstes: " + asset, 100, DownloadFileProgress.Error);
 							errors.Add("asstes: " + asset);
 						}
 
 						i++;
-						_fileDownloadHandler?.Invoke("assets files", (int)(((decimal)i / (decimal)assetsCount) * 100), DownloadFileProgress.PercentagesChanged);
+						CallFileDownloadEvent("assets files", (int)(((decimal)i / (decimal)assetsCount) * 100), DownloadFileProgress.PercentagesChanged);
 					});
-
-					if (cancelToken.IsCancellationRequested) return errors;
 				}
 
 				perfomer?.WaitEnd();
-				_fileDownloadHandler?.Invoke("assets files", 100, DownloadFileProgress.Successful);
+				CallFileDownloadEvent("assets files", 100, DownloadFileProgress.Successful);
+
+				withDirectory.DelDirectory(assetsTemp);
 			}
 			else
 			{
@@ -834,7 +696,7 @@ namespace Lexplosion.Logic.FileSystem.Installers
 					{
 						PercentHandler = delegate (int pr)
 						{
-							_fileDownloadHandler?.Invoke(filename, pr, DownloadFileProgress.PercentagesChanged);
+							CallFileDownloadEvent(filename, pr, DownloadFileProgress.PercentagesChanged);
 						},
 						CancelToken = cancelToken
 					};
@@ -847,8 +709,8 @@ namespace Lexplosion.Logic.FileSystem.Installers
 						withDirectory.InstallFile(url, filename, "/assets/indexes/", taskArgs);
 					}
 
-					_fileDownloadHandler?.Invoke(filename, 100, DownloadFileProgress.Successful);
-					// TODO: я на ошибки тут не проверяю то ли потмоу что мне лень было, толи просто не хотел делать так, чтобы от одного этогоф айла клиент не запускался
+					CallFileDownloadEvent(filename, 100, DownloadFileProgress.Successful);
+					// TODO: я на ошибки тут не проверяю то ли потому что мне лень было, толи просто не хотел делать так, чтобы от одного этого файла клиент не запускался
 				}
 			}
 
@@ -892,7 +754,7 @@ namespace Lexplosion.Logic.FileSystem.Installers
 			{
 				PercentHandler = delegate (int pr)
 				{
-					_fileDownloadHandler?.Invoke(name, pr, DownloadFileProgress.PercentagesChanged);
+					CallFileDownloadEvent(name, pr, DownloadFileProgress.PercentagesChanged);
 				},
 				CancelToken = cancelToken
 			};
@@ -903,13 +765,13 @@ namespace Lexplosion.Logic.FileSystem.Installers
 			{
 				if (isNwDownload) addr += "?" + librariesVersion;
 
-				isDownload = UnsafeDownloadJar(addr, fileDir, name, tempDir, taskArgs, true);
+				isDownload = UnsafeDownloadFile(addr, fileDir, name, tempDir, taskArgs);
 			}
 			else
 			{
 				if (isNwDownload) addr += ".zip?" + librariesVersion;
 
-				isDownload = UnsafeDownloadZip(addr, fileDir, name, tempDir, taskArgs);
+				isDownload = UnsafeDownloadZippedFile(addr, fileDir, name, tempDir, taskArgs);
 			}
 
 			try
@@ -920,7 +782,7 @@ namespace Lexplosion.Logic.FileSystem.Installers
 
 			if (cancelToken.IsCancellationRequested) return;
 
-			_fileDownloadHandler?.Invoke(name, 100, isDownload ? DownloadFileProgress.Successful : DownloadFileProgress.Error);
+			CallFileDownloadEvent(name, 100, isDownload ? DownloadFileProgress.Successful : DownloadFileProgress.Error);
 
 			if (libInfo.isNative && isDownload)
 			{
@@ -972,7 +834,7 @@ namespace Lexplosion.Logic.FileSystem.Installers
 			}
 
 			updated++;
-			BaseDownloadEvent?.Invoke(_updatesCount, updated);
+			CallBaseDownloadEvent(_updatesCount, updated);
 		}
 
 
@@ -1007,18 +869,18 @@ namespace Lexplosion.Logic.FileSystem.Installers
 									{
 										PercentHandler = delegate (int pr)
 										{
-											_fileDownloadHandler?.Invoke(fileName, pr, DownloadFileProgress.PercentagesChanged);
+											CallFileDownloadEvent(fileName, pr, DownloadFileProgress.PercentagesChanged);
 										},
 										CancelToken = cancelToken
 									};
 
 									if (!withDirectory.DownloadFile(downloadUrl, fileName, tempDir, taskArgs))
 									{
-										_fileDownloadHandler?.Invoke(fileName, 100, DownloadFileProgress.Error);
+										CallFileDownloadEvent(fileName, 100, DownloadFileProgress.Error);
 										goto EndWhile; //возникла ошибка
 									}
 
-									_fileDownloadHandler?.Invoke(fileName, 100, DownloadFileProgress.Successful);
+									CallFileDownloadEvent(fileName, 100, DownloadFileProgress.Successful);
 								}
 								break;
 							case "unzipFile":

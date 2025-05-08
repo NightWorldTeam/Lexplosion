@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Net.Http;
 using System.Text.RegularExpressions;
+using System.Net;
 using Newtonsoft.Json;
 using Lexplosion.Global;
 using Lexplosion.Tools;
@@ -24,7 +25,7 @@ namespace Lexplosion.Logic.FileSystem
 		private HttpClient _httpClient = new();
 		private ProxyHandler _clientHandler;
 
-		private const string USER_AGENT = "Mozilla/5.0";
+		private const string USER_AGENT = "Mozilla/5.0 Lexplosion/1.0.0.5";
 
 		internal WithDirectory()
 		{
@@ -243,12 +244,15 @@ namespace Lexplosion.Logic.FileSystem
 			}
 		}
 
-		private async Task<bool> DownloadFileAsync(string url, string savePath, TaskArgs taskArgs)
+		public async Task<(bool, HttpStatusCode?)> DownloadFileAsync(string url, string savePath, TaskArgs taskArgs)
 		{
+			HttpStatusCode? httpStatus = null;
+
 			try
 			{
 				using (HttpResponseMessage response = await _httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, taskArgs.CancelToken))
 				{
+					httpStatus = response.StatusCode;
 					response.EnsureSuccessStatusCode();
 
 					long? contentLength = response.Content.Headers.ContentLength;
@@ -278,21 +282,40 @@ namespace Lexplosion.Logic.FileSystem
 							taskArgs.PercentHandler(100);
 						}
 
-						return true;
+						return (true, httpStatus);
 					}
 				}
+			}
+			catch (HttpRequestException ex)
+			{
+				Runtime.DebugWrite("Downloading error " + savePath + " " + url + " " + ex);
+				if (ex.Data.Contains("StatusCode")) httpStatus = (HttpStatusCode)ex.Data["StatusCode"];
+			}
+			catch (WebException ex)
+			{
+				Runtime.DebugWrite("Downloading error " + savePath + " " + url + " " + ex);
+				if (ex.Response is HttpWebResponse httpResponse) httpStatus = httpResponse.StatusCode;
 			}
 			catch (Exception ex)
 			{
 				Runtime.DebugWrite("Downloading error " + savePath + " " + url + " " + ex);
-				return false;
 			}
+
+			return (false, httpStatus);
 		}
 
 		public bool DownloadFile(string url, string fileName, string tempDir, TaskArgs taskArgs)
 		{
 			DelFile(tempDir + fileName);
-			return DownloadFileAsync(url, tempDir + fileName, taskArgs).Result;
+			return DownloadFileAsync(url, tempDir + fileName, taskArgs).Result.Item1;
+		}
+
+		public bool DownloadFile(string url, string fileName, string tempDir, out HttpStatusCode? statusCode, TaskArgs taskArgs)
+		{
+			DelFile(tempDir + fileName);
+			var res = DownloadFileAsync(url, tempDir + fileName, taskArgs).Result;
+			statusCode = res.Item2;
+			return res.Item1;
 		}
 
 		/// <summary>
@@ -306,6 +329,21 @@ namespace Lexplosion.Logic.FileSystem
 				if (File.Exists(file))
 				{
 					File.Delete(file);
+				}
+			}
+			catch (Exception ex)
+			{
+				Runtime.DebugWrite("Exception: " + ex);
+			}
+		}
+
+		public void DelDirectory(string path)
+		{
+			try
+			{
+				if (Directory.Exists(path))
+				{
+					Directory.Delete(path, true);
 				}
 			}
 			catch (Exception ex)

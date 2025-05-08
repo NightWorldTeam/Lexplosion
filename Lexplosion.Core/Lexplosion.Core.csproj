@@ -64,6 +64,7 @@
     <Compile Include="Enums.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Global.cs" />
+    <Compile Include="Logic\FileSystem\DownloadUrlHandler.cs" />
     <Compile Include="Logic\FileSystem\Extensions\CurseforgeApiExtensions.cs" />
     <Compile Include="Logic\FileSystem\Extensions\ModrinthApiExtensions.cs" />
     <Compile Include="Logic\FileSystem\Installers\FreeSourceInstanceInstaller.cs" />
