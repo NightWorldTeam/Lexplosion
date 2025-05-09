@@ -147,8 +147,14 @@
                         <Grid.Style>
                             <Style TargetType="{x:Type Grid}">
                                 <Style.Triggers>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Trigger.EnterActions>
+
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Value="True" />
+                                            <Condition Binding="{Binding IsInstanceCompleted}" Value="True" />
+                                        </MultiDataTrigger.Conditions>
+
+                                        <MultiDataTrigger.EnterActions>
                                             <BeginStoryboard>
                                                 <Storyboard>
                                                     <DoubleAnimation
@@ -162,8 +168,8 @@
                                                         Duration="0:0:0.35" />
                                                 </Storyboard>
                                             </BeginStoryboard>
-                                        </Trigger.EnterActions>
-                                        <Trigger.ExitActions>
+                                        </MultiDataTrigger.EnterActions>
+                                        <MultiDataTrigger.ExitActions>
                                             <BeginStoryboard>
                                                 <Storyboard>
                                                     <DoubleAnimation
@@ -172,8 +178,8 @@
                                                         Duration="0:0:0.35" />
                                                 </Storyboard>
                                             </BeginStoryboard>
-                                        </Trigger.ExitActions>
-                                    </Trigger>
+                                        </MultiDataTrigger.ExitActions>
+                                    </MultiDataTrigger>
                                 </Style.Triggers>
                             </Style>
                         </Grid.Style>
@@ -386,20 +392,6 @@
                                             <Setter Property="Text" Value="{DynamicResource DownloadPreparing}" />
                                         </MultiDataTrigger>
 
-
-                                        <!--  Import Downloading  -->
-                                        <MultiDataTrigger>
-
-                                            <MultiDataTrigger.Conditions>
-                                                <Condition Binding="{Binding IsImporting, Mode=OneWay}" Value="True" />
-                                                <Condition Binding="{Binding DownloadingData.Stage, Mode=OneWay}" Value="{x:Static lexplosion:StageType.Client}" />
-                                            </MultiDataTrigger.Conditions>
-
-                                            <Setter Property="Visibility" Value="Visible" />
-                                            <Setter Property="Text" Value="{DynamicResource DownloadPreparing}" />
-                                        </MultiDataTrigger>
-
-
                                         <!--  Import Downloading  -->
                                         <MultiDataTrigger>
 
@@ -564,7 +556,7 @@
                                             </MultiDataTrigger.Setters>
                                         </MultiDataTrigger>
 
-                                        <!--  Скачивание Java  -->
+                                        <!--  Скачивание Клиента  -->
                                         <MultiDataTrigger>
                                             <MultiDataTrigger.Conditions>
                                                 <Condition Binding="{Binding IsDownloading}" Value="True" />
@@ -574,6 +566,17 @@
                                             <MultiDataTrigger.Setters>
                                                 <Setter Property="Visibility" Value="Visible" />
                                             </MultiDataTrigger.Setters>
+                                        </MultiDataTrigger>
+
+                                        <!--  Import  -->
+                                        <MultiDataTrigger>
+
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding IsImporting, Mode=OneWay}" Value="True" />
+                                                <Condition Binding="{Binding DownloadingData.Stage, Mode=OneWay}" Value="{x:Static lexplosion:StageType.Client}" />
+                                            </MultiDataTrigger.Conditions>
+
+                                            <Setter Property="Visibility" Value="Visible" />
                                         </MultiDataTrigger>
 
                                     </Style.Triggers>
@@ -975,6 +978,55 @@
                             </core:If>
                         </StackPanel>
                     </controls:DropdownMenu>
+
+                    <!--  Import Cancel  -->
+                    <Button
+                        Grid.Row="2"
+                        Click="ImportCancelClicked"
+                        FontSize="20"
+                        Visibility="{Binding IsInstanceCompleted, Converter={converters:NegativeBooleanToVisibilityConverter}}">
+                        <Button.Style>
+                            <Style TargetType="{x:Type Button}">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type Button}">
+                                            <Grid>
+                                                <Border
+                                                    x:Name="ActivityColorBorder"
+                                                    Background="Transparent"
+                                                    CornerRadius="0,5,0,0" />
+
+
+                                                <Viewbox Height="{TemplateBinding FontSize}">
+                                                    <Path
+                                                        x:Name="Icon"
+                                                        extensions:PathExtensions.StringKeyData="Cancel"
+                                                        Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                                        Stretch="Fill" />
+                                                </Viewbox>
+                                            </Grid>
+
+                                            <ControlTemplate.Triggers>
+                                                <!--  MouseOver  -->
+                                                <MultiTrigger>
+
+                                                    <MultiTrigger.Conditions>
+                                                        <Condition Property="IsMouseOver" Value="True" />
+                                                        <Condition Property="IsEnabled" Value="True" />
+                                                    </MultiTrigger.Conditions>
+
+                                                    <Setter Property="Cursor" Value="Hand" />
+                                                    <Setter TargetName="ActivityColorBorder" Property="Background" Value="{DynamicResource ActivitySolidColorBrush}" />
+                                                    <Setter TargetName="Icon" Property="Fill" Value="{DynamicResource BrandColorForegroundSolidColorBrush}" />
+                                                </MultiTrigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Button.Style>
+
+                    </Button>
                 </Grid>
             </Grid>
         </Border>

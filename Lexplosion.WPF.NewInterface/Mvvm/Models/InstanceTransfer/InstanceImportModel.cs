@@ -16,7 +16,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
 {
     public sealed class InstanceImportModel : ViewModelBase
     {
-        private readonly Action<InstanceClient> _addToLibrary;
+        private readonly Action<InstanceClient, ImportData?> _addToLibrary;
         private readonly Action<InstanceClient> _removeFromLibrary;
         private readonly AppCore _appCore;
         private IModalViewModel _currentModalViewModelBase;
@@ -35,7 +35,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
         #region Constructors
 
 
-        public InstanceImportModel(AppCore appCore, Action<InstanceClient> addToLibrary, Action<InstanceClient> removeFromLibrary)
+        public InstanceImportModel(AppCore appCore, Action<InstanceClient, ImportData?> addToLibrary, Action<InstanceClient> removeFromLibrary)
         {
             _appCore = appCore;
             _addToLibrary = addToLibrary;
@@ -103,7 +103,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
 
             // Добавляем в библиотеку.
             // TODO: IMPORTANT синхронизировать import и instanceform.
-            _addToLibrary(instanceClient);
+            _addToLibrary(instanceClient, importData);
         }
 
         /// <summary>
@@ -194,7 +194,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
 
             // Добавляем в библиотеку.
             // TODO: IMPORTANT синхронизировать import и instanceform.
-            _addToLibrary(instanceClient);
+            _addToLibrary(instanceClient, importData);
         }
 
 

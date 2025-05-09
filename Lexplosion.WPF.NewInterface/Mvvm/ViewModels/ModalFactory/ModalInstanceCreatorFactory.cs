@@ -7,6 +7,7 @@ using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.Logic.Management.Accounts;
 using System.Collections.Generic;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Limited;
+using Lexplosion.Logic.Management.Import;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.ModalFactory
 {
@@ -48,7 +49,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.ModalFactory
                 TitleKey = "Import",
                 IsEnable = true,
                 IsSelected = !hasMinecraftVersions,
-                Content = new InstanceImportViewModel(_appCore, (i) => _libraryController.Add(i), _libraryController.Remove)
+                Content = new InstanceImportViewModel(
+                    _appCore, 
+                    (instanceClient, importData) => _libraryController.Add(instanceClient, importData),
+                    _libraryController.Remove)
             });
 
             menuItems.Add(new ModalLeftMenuTabItem()

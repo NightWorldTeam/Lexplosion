@@ -1,4 +1,5 @@
-﻿using Lexplosion.Logic.Management.Instances;
+﻿using Lexplosion.Logic.Management.Import;
+using Lexplosion.Logic.Management.Instances;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Notifications;
 using Lexplosion.WPF.NewInterface.Core.Objects;
@@ -87,6 +88,18 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
             App.Current.Dispatcher.Invoke(() =>
             {
                 instanceModelBase = new InstanceModelBase(_appCore, instanceClient, _exportFunc, _setRunningGame, instanceDistribution);
+                Add(instanceModelBase);
+            });
+
+            return instanceModelBase;
+        }
+
+        public InstanceModelBase? Add(InstanceClient instanceClient, ImportData? importData, [CallerMemberName] string member = "")
+        {
+            InstanceModelBase? instanceModelBase = null;
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                instanceModelBase = new InstanceModelBase(_appCore, instanceClient, _exportFunc, _setRunningGame, importData: importData);
                 Add(instanceModelBase);
             });
 

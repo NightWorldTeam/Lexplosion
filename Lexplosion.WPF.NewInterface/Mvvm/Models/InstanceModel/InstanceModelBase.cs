@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Accounts;
+using Lexplosion.Logic.Management.Import;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Objects;
 using Lexplosion.WPF.NewInterface.Core;
@@ -118,7 +119,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         private readonly InstanceClient _instanceClient;
         private readonly Action<InstanceClient> _exportFunc;
         private readonly Action<InstanceModelBase> _setRunningGame;
-
         private readonly AppCore _appCore;
 
 
@@ -368,7 +368,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         /// Данные скачивания
         /// </summary>
         public DownloadingData DownloadingData { get; set; } = new();
-        public InstanceDistribution InstanceDistribution { get; set; }
+        public InstanceDistribution InstanceDistribution { get; }
+        public ImportData? ImportData { get; }
 
 
         #endregion Properties
@@ -377,13 +378,14 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         #region Constructors
 
 
-        public InstanceModelBase(AppCore appCore, InstanceClient instanceClient, Action<InstanceClient> exportFunc, Action<InstanceModelBase> setRunningGame, InstanceDistribution instanceDistribution = null)
+        public InstanceModelBase(AppCore appCore, InstanceClient instanceClient, Action<InstanceClient> exportFunc, Action<InstanceModelBase> setRunningGame, InstanceDistribution instanceDistribution = null, ImportData? importData = null)
         {
             _appCore = appCore;
 
             _instanceClient = instanceClient;
             _exportFunc = exportFunc;
             InstanceDistribution = instanceDistribution;
+            ImportData = importData;
 
             if (instanceDistribution != null)
             {
@@ -729,6 +731,15 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         public void CancelShareInstanceDownloading()
         {
             InstanceDistribution.CancelDownload();
+        }
+
+        public void CancelImport()
+        {
+            if (ImportData.HasValue) 
+            {
+                ImportData.Value.CancelImport();
+                DeletedEvent?.Invoke(this);
+            }
         }
 
         #endregion Public Methods
