@@ -11,7 +11,6 @@ using System.Threading;
 using Lexplosion.Global;
 using Lexplosion.WPF.NewInterface.Core.ViewModel;
 using System.Collections.ObjectModel;
-using Lexplosion.Logic.FileSystem;
 
 namespace Lexplosion.WPF.NewInterface.Core.Services
 {
@@ -68,7 +67,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Services
             {
                 SelectedAppHeaderTemplateName = templateName;
                 GlobalData.GeneralSettings.AppHeaderTemplateName = templateName;
-                DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+                Runtime.ServicesContainer.DataFilesService.SaveSettings(GlobalData.GeneralSettings);
                 AppHeaderTemplateNameChanged?.Invoke();
             }
         }

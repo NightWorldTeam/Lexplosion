@@ -103,7 +103,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
             importFile.TargetInstanceClient = instanceClient;
 
             // Добавляем в библиотеку.
-            // TODO: IMPORTANT синхронизировать import и instanceform.
             _addToLibrary(instanceClient, importData);
         }
 
@@ -120,7 +119,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
         private void OnImportDynamicStateHandlerStateChanged(ImportInterruption importInterruption, InterruptionType arg2)
         {
             // Если в очереди пусто, окрываем модальное окно.
-            // Если в очереди есть элементы, добавляем новый в очередью.
+            // Если в очереди есть элементы, добавляем новый в очередь.
             // Если элемены в очереди закончились, и на момент открытия
             // было открыто модальное окно импорта возвращаем пользователя туда
             // Иначе, закрываем все модальные окна.
@@ -194,7 +193,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
             importFile.TargetInstanceClient = instanceClient;
 
             // Добавляем в библиотеку.
-            // TODO: IMPORTANT синхронизировать import и instanceform.
             _addToLibrary(instanceClient, importData);
         }
 

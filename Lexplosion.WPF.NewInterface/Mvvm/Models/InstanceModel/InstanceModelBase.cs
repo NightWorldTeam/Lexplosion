@@ -827,7 +827,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             DownloadComplited?.Invoke(init, errors, isRun);
             DataChanged?.Invoke();
 
-            // TODO: Notifications
+            if (ImportData.HasValue) 
+            {
+                return;
+            }
+
             switch (init)
             {
                 case InstanceInit.Successful:
