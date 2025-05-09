@@ -1,5 +1,7 @@
-﻿using Lexplosion.Logic.Management.Installers;
+﻿using Lexplosion.Logic.FileSystem.Services;
+using Lexplosion.Logic.Management.Installers;
 using Lexplosion.Logic.Management.Instances;
+using Lexplosion.Logic.Network.Services;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
 using System.Threading;
@@ -7,24 +9,31 @@ using System.Threading;
 namespace Lexplosion.Logic.Management.Sources
 {
 	internal class LocalSource : IInstanceSource
-    {
-        public PrototypeInstance ContentManager { get => new LocalInstance(); }
+	{
+		private readonly IFileServicesContainer _services;
 
-        public IInstallManager GetInstaller(string localId, bool updateOnlyBase, CancellationToken updateCancelToken)
-        {
-            return new LocalInstallManager(localId, updateCancelToken);
-        }
+		public LocalSource(IFileServicesContainer services)
+		{
+			_services = services;
+		}
 
-        public CatalogResult<InstanceInfo> GetCatalog(InstanceSource type, ISearchParams searchParams)
-        {
-            return new();
-        }
+		public PrototypeInstance ContentManager { get => new LocalInstance(_services); }
 
-        public InstancePlatformData CreateInstancePlatformData(string externalId, string localId, string instanceVersion)
-        {
-            return null;
-        }
+		public IInstallManager GetInstaller(string localId, bool updateOnlyBase, CancellationToken updateCancelToken)
+		{
+			return new LocalInstallManager(localId, _services, updateCancelToken);
+		}
 
-        public InstanceSource SourceType { get => InstanceSource.Local; }
-    }
+		public CatalogResult<InstanceInfo> GetCatalog(InstanceSource type, ISearchParams searchParams)
+		{
+			return new();
+		}
+
+		public InstancePlatformData CreateInstancePlatformData(string externalId, string localId, string instanceVersion)
+		{
+			return null;
+		}
+
+		public InstanceSource SourceType { get => InstanceSource.Local; }
+	}
 }

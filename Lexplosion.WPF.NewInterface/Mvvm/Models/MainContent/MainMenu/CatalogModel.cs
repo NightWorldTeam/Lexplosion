@@ -24,12 +24,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
 
 
         private readonly ManualResetEvent _resetEvent = new ManualResetEvent(false);
+		private readonly ClientsManager _clientsManager = Runtime.ClientsManager;
 
 
-        #region Properties
+		#region Properties
 
 
-        public IEnumerable<InstanceModelBase> Instances { get => _instanceController.Instances; }
+		public IEnumerable<InstanceModelBase> Instances { get => _instanceController.Instances; }
 
 
         public CatalogFilterPanel FilterPanel { get; }
@@ -180,7 +181,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
                     break;
             }
 
-            return InstanceClient.GetOutsideInstances(source, searchParams);
+            return _clientsManager.GetOutsideInstances(source, searchParams);
         }
 
 

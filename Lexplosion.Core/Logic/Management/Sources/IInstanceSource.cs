@@ -7,11 +7,11 @@ using System.Threading;
 namespace Lexplosion.Logic.Management.Sources
 {
 	public interface IInstanceSource
-    {
-        public PrototypeInstance ContentManager { get; }
-        public IInstallManager GetInstaller(string localId, bool updateOnlyBase, CancellationToken updateCancelToken);
-        public CatalogResult<InstanceInfo> GetCatalog(InstanceSource type, ISearchParams searchParams);
-        public InstanceSource SourceType { get; }
-        public InstancePlatformData CreateInstancePlatformData(string externalId, string localId, string instanceVersion);
-    }
+	{
+		public PrototypeInstance ContentManager { get; }
+		public IInstallManager GetInstaller(string localId, bool updateOnlyBase, CancellationToken updateCancelToken);
+		public CatalogResult<InstanceInfo> GetCatalog(InstanceSource type, ISearchParams searchParams);
+		public InstanceSource SourceType { get; }
+		public InstancePlatformData CreateInstancePlatformData(string externalId, string localId, string instanceVersion);
+	}
 }

@@ -22,8 +22,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
         private readonly AppCore _appCore;
         private readonly Action<InstanceClient> _exportFunc;
         private readonly Action<InstanceModelBase> _setRunningGame;
+		private readonly ClientsManager _clientsManager = Runtime.ClientsManager;
 
-        private ObservableCollection<InstanceModelBase> _instances = new ObservableCollection<InstanceModelBase>();
+		private ObservableCollection<InstanceModelBase> _instances = new ObservableCollection<InstanceModelBase>();
 
 
         #region Properties
@@ -48,7 +49,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
             _exportFunc = export;
             _setRunningGame = setRunningGame;
 
-            foreach (var ic in InstanceClient.GetInstalledInstances())
+            foreach (var ic in _clientsManager.GetInstalledInstances())
             {
                 Add(ic);
             }

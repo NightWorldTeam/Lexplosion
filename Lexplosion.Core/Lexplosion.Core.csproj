@@ -64,8 +64,16 @@
     <Compile Include="Enums.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Global.cs" />
-    <Compile Include="Logic\CoreServicesManager.cs" />
-    <Compile Include="Logic\FileSystem\FreeSourceInstanceInstaller.cs" />
+    <Compile Include="Logic\FileSystem\DownloadUrlHandler.cs" />
+    <Compile Include="Logic\FileSystem\Extensions\CurseforgeApiExtensions.cs" />
+    <Compile Include="Logic\FileSystem\Extensions\ModrinthApiExtensions.cs" />
+    <Compile Include="Logic\FileSystem\Installers\FreeSourceInstanceInstaller.cs" />
+    <Compile Include="Logic\FileSystem\Services\ICurseforgeFileServicesContainer.cs" />
+    <Compile Include="Logic\FileSystem\Services\IAllFileServicesContainer.cs" />
+    <Compile Include="Logic\FileSystem\Services\IModrinthFileServicesContainer.cs" />
+    <Compile Include="Logic\FileSystem\Services\IFileServicesContainer.cs" />
+    <Compile Include="Logic\FileSystem\Services\INightWorldFileServicesContainer.cs" />
+    <Compile Include="Logic\Management\AllServicesContainer.cs" />
     <Compile Include="Logic\Management\Addons\AddonsCatalogParams\AddonsCatalogParamsBase.cs" />
     <Compile Include="Logic\Management\Addons\AddonsCatalogParams\CurseforgeAddonsCatalogParams.cs" />
     <Compile Include="Logic\Management\Addons\AddonsCatalogParams\ModrinthAddonsCatalogParams.cs" />
@@ -77,15 +85,15 @@
     <Compile Include="Logic\Management\Import\Importers\CurseforgeImportManager.cs" />
     <Compile Include="Logic\Management\Import\Importers\ImportExecutor.cs" />
     <Compile Include="Logic\Management\Import\Importers\ModrinthImportManager.cs" />
-    <Compile Include="Logic\FileSystem\StandartInstanceInstaller.cs" />
+    <Compile Include="Logic\FileSystem\Installers\StandartInstanceInstaller.cs" />
     <Compile Include="Logic\FileSystem\IArchivedInstanceInstaller.cs" />
-    <Compile Include="Logic\FileSystem\CurseforgeInstaller.cs" />
+    <Compile Include="Logic\FileSystem\Installers\CurseforgeInstaller.cs" />
     <Compile Include="Logic\FileSystem\DataFilesManager.cs" />
     <Compile Include="Logic\FileSystem\FileDistributor.cs" />
     <Compile Include="Logic\FileSystem\FileReceiver.cs" />
-    <Compile Include="Logic\FileSystem\InstanceInstaller.cs" />
-    <Compile Include="Logic\FileSystem\ModrinthInstaller.cs" />
-    <Compile Include="Logic\FileSystem\NightWorldInstaller.cs" />
+    <Compile Include="Logic\FileSystem\Installers\InstanceInstaller.cs" />
+    <Compile Include="Logic\FileSystem\Installers\ModrinthInstaller.cs" />
+    <Compile Include="Logic\FileSystem\Installers\NightWorldInstaller.cs" />
     <Compile Include="Logic\FileSystem\WithDirectory.cs" />
     <Compile Include="Logic\Management\Accounts\Account.cs" />
     <Compile Include="Logic\Management\Accounts\Auth\IAuthHandler.cs" />
@@ -105,8 +113,9 @@
     <Compile Include="Logic\Management\Import\ImportInterruption.cs" />
     <Compile Include="Logic\Management\Installers\FreeSourceInstanceInstallManager.cs" />
     <Compile Include="Logic\Management\Import\Importers\IImportManager.cs" />
+    <Compile Include="Logic\Management\Instances\ClientsManager.cs" />
     <Compile Include="Logic\Management\Instances\FreeInstance.cs" />
-    <Compile Include="Logic\Management\Instances\InstanceGroup.cs" />
+    <Compile Include="Logic\Management\Instances\InstancesGroup.cs" />
     <Compile Include="Logic\Management\MinecraftVersion.cs" />
     <Compile Include="Logic\Management\Sources\CurseforgeSource.cs" />
     <Compile Include="Logic\Management\Sources\FreeSource.cs" />
@@ -127,11 +136,17 @@
     <Compile Include="Logic\Management\Instances\PrototypeInstance.cs" />
     <Compile Include="Logic\Management\JavaChecker.cs" />
     <Compile Include="Logic\Management\LaunchGame.cs" />
+    <Compile Include="Logic\Network\ProxyFetcher.cs" />
     <Compile Include="Logic\Network\QueryApiBuilder.cs" />
+    <Compile Include="Logic\Network\Services\IAuthServicesContainer.cs" />
+    <Compile Include="Logic\Network\Services\ICurseforgeWebServicesContainer.cs" />
+    <Compile Include="Logic\Network\Services\IModrinthWebServicesContainer.cs" />
+    <Compile Include="Logic\Network\Services\INightWorldWebServicesContainer.cs" />
+    <Compile Include="Logic\Network\Services\IWebServicesContainer.cs" />
     <Compile Include="Logic\Network\Services\MinecraftInfoService.cs" />
-    <Compile Include="Logic\Network\Services\NetworkServicesManager.cs" />
     <Compile Include="Logic\Network\SMP\SmpClient_Objects.cs" />
     <Compile Include="Logic\Network\SMP\SmpReceiveService.cs" />
+    <Compile Include="Logic\Network\Web\ProxyHandler.cs" />
     <Compile Include="Logic\Objects\CatalogResult.cs" />
     <Compile Include="Logic\Objects\FreeSource.cs" />
     <Compile Include="Logic\Objects\ISearchParams.cs" />
@@ -176,7 +191,7 @@
     <Compile Include="Logic\Settings.cs" />
     <Compile Include="Logic\Cryptography.cs" />
     <Compile Include="NightWorld\Collections\Concurrent\ConcurrentHashSet.cs" />
-    <Compile Include="NightWorld\Collections\Generic\PairsList.cs" />
+    <Compile Include="NightWorld\Logging\LoggerBase.cs" />
     <Compile Include="NightWorld\Tools\Minecraft\NBT\INbtNode.cs" />
     <Compile Include="NightWorld\Tools\Minecraft\NBT\NbtDocoder.cs" />
     <Compile Include="NightWorld\Tools\Minecraft\NBT\NbtEncoder.cs" />
@@ -214,7 +229,9 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="NightWorld\Collections\Generic\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

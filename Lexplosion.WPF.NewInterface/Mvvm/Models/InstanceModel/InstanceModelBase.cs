@@ -114,12 +114,14 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         Running
     }
 
-    public class InstanceModelBase : ViewModelBase, IEquatable<InstanceClient>
-    {
-        private readonly InstanceClient _instanceClient;
-        private readonly Action<InstanceClient> _exportFunc;
-        private readonly Action<InstanceModelBase> _setRunningGame;
-        private readonly AppCore _appCore;
+	public class InstanceModelBase : ViewModelBase, IEquatable<InstanceClient>
+	{
+		private readonly InstanceClient _instanceClient;
+		private readonly ClientsManager _clientsManager = Runtime.ClientsManager;
+		private readonly Action<InstanceClient> _exportFunc;
+		private readonly Action<InstanceModelBase> _setRunningGame;
+
+		private readonly AppCore _appCore;
 
 
         private Action _openAddonPage;
@@ -277,10 +279,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             }
         }
 
-        public bool IsInstalled { get => _instanceClient.IsInstalled; }
-        public bool InLibrary { get => _instanceClient.InLibrary; }
-        public string DirectoryPath { get => _instanceClient.GetDirectoryPath(); }
-        public bool HasAvailableUpdate { get => _instanceClient.UpdateAvailable && _instanceClient.IsInstalled; }
+		public bool IsInstalled { get => _instanceClient.IsInstalled; }
+		public bool InLibrary { get => _instanceClient.CreatedLocally || _instanceClient.IsFictitious; }
+		public string DirectoryPath { get => _instanceClient.GetDirectoryPath(); }
+		public bool HasAvailableUpdate { get => _instanceClient.UpdateAvailable && _instanceClient.IsInstalled; }
 
         public bool IsImporting
         {
@@ -493,16 +495,16 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             DataChanged?.Invoke();
         }
 
-        /// <summary>
-        /// Добавить сборку в библиотеку.
-        /// </summary>
-        public void AddToLibrary()
-        {
-            _instanceClient.AddToLibrary();
-            GlobalAddedToLibrary?.Invoke(this);
-            AddedToLibraryEvent?.Invoke(this);
-            DataChanged?.Invoke();
-        }
+		/// <summary>
+		/// Добавить сборку в библиотеку.
+		/// </summary>
+		public void AddToLibrary()
+		{
+			_clientsManager.AddToLibrary(_instanceClient);
+			GlobalAddedToLibrary?.Invoke(this);
+			AddedToLibraryEvent?.Invoke(this);
+			DataChanged?.Invoke();
+		}
 
         /// <summary>
         /// Отменить текущие скачивание
@@ -645,27 +647,27 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             _exportFunc(_instanceClient);
         }
 
-        /// <summary>
-        /// Удалять сборку.
-        /// Если сборка только добавлена в библиотеку (не установлена), то сборка будет удалена из библиотеки.
-        /// Если сборка установлена, то она будет удалена полностью.
-        /// </summary>
-        public void Delete()
-        {
-            if (InstanceClient.InstancesCount == 1) return;
+		/// <summary>
+		/// Удалять сборку.
+		/// Если сборка только добавлена в библиотеку (не установлена), то сборка будет удалена из библиотеки.
+		/// Если сборка установлена, то она будет удалена полностью.
+		/// </summary>
+		public void Delete()
+		{
+			if (_clientsManager.LibrarySize == 1) return;
 
-            _appCore.ModalNavigationStore.Open(new ConfirmActionViewModel(
-                    _appCore.Resources("DeletingInstance") as string,
-                    string.Format(_appCore.Resources("DeletingInstanceDescription") as string, Name),
-                    _appCore.Resources("YesIWantDeleteInstance") as string,
-                    (obj) =>
-                    {
-                        // TODO: ПОДПИСАТЬСЯ НА эвент и удалять через него.
-                        GlobalDeletedEvent?.Invoke(this);
-                        _instanceClient.Delete();
-                        DeletedEvent?.Invoke(this);
-                    }));
-        }
+			_appCore.ModalNavigationStore.Open(new ConfirmActionViewModel(
+					_appCore.Resources("DeletingInstance") as string,
+					string.Format(_appCore.Resources("DeletingInstanceDescription") as string, Name),
+					_appCore.Resources("YesIWantDeleteInstance") as string,
+					(obj) =>
+					{
+						// TODO: ПОДПИСАТЬСЯ НА эвент и удалять через него.
+						GlobalDeletedEvent?.Invoke(this);
+						_clientsManager.DeleteFromLibrary(_instanceClient);
+						DeletedEvent?.Invoke(this);
+					}));
+		}
 
         public Logic.Settings Settings
         {

@@ -11,6 +11,9 @@
 
     <s:String x:Key="en-US">Английский</s:String>
     <s:String x:Key="ru-RU">Русский</s:String>
+    <s:String x:Key="uk-UA">Украинский</s:String>
+    <s:String x:Key="zh-CN">Китайський</s:String>
+    <s:String x:Key="de-DE">Немецкий</s:String>
 
     <s:String x:Key="Default">По умолчанию</s:String>
     <!--    -->

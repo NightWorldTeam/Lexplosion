@@ -213,7 +213,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Services
             {
                 ChangeActivityColor(color.Brush.Color);
                 GlobalData.GeneralSettings.AccentColor = color.Brush.Color.ToString();
-                DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+                Runtime.ServicesContainer.DataFilesService.SaveSettings(GlobalData.GeneralSettings);
             }
         }
 
@@ -223,7 +223,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Services
             {
                 ChangeTheme(theme, theme.HasChangeAnimation);
                 GlobalData.GeneralSettings.ThemeName = theme.Name;
-                DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+				Runtime.ServicesContainer.DataFilesService.SaveSettings(GlobalData.GeneralSettings);
             }
         }
 

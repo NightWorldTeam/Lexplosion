@@ -6,13 +6,35 @@ using Newtonsoft.Json;
 using Lexplosion.Global;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
-using static Lexplosion.Logic.FileSystem.WithDirectory;
+using Lexplosion.Tools;
+using System.Text.RegularExpressions;
 
 namespace Lexplosion.Logic.FileSystem
 {
-	public static class DataFilesManager
+	public class DataFilesManager
 	{
-		public static void SaveSettings(Settings data, string instanceId = "")
+		public const string INSTALLED_ADDONS_FILE = "installedAddons.nwdat";
+		public const string INSTANCE_PLATFORM_DATA_FILE = "instancePlatformData.nwdat";
+		public const string INSTANCE_CONTENT_FILE = "instanceContent.nwdat";
+		public const string LAST_UPDATES_FILE = "lastUpdates.nwdat";
+		public const string MANIFEST_FILE = "manifest.nwdat";
+
+		public const string INSTALLED_ADDONS_FILE_OLD = "installedAddons.json";
+		public const string INSTANCE_PLATFORM_DATA_FILE_OLD = "instancePlatformData.json";
+		public const string INSTANCE_CONTENT_FILE_OLD = "instanceContent.json";
+		public const string LAST_UPDATES_FILE_OLD = "lastUpdates.json";
+		public const string MANIFEST_FILE_OLD = "manifest.json";
+
+		public const string INSTANCES_GROUPS_FILE = "instancesGroups.json";
+
+		private readonly WithDirectory _withDirectory;
+
+		public DataFilesManager(WithDirectory withDirectory)
+		{
+			_withDirectory = withDirectory;
+		}
+
+		public void SaveSettings(Settings data, string instanceId = "")
 		{
 			string file;
 			data.ItIsNotShit = true;
@@ -29,11 +51,11 @@ namespace Lexplosion.Logic.FileSystem
 			{
 				data.GamePath = null;
 
-				string path = InstancesPath + instanceId;
+				string path = _withDirectory.GetInstancePath(instanceId);
 				if (!Directory.Exists(path))
 					Directory.CreateDirectory(path);
 
-				file = path + "/instanceSettings.json";
+				file = path + "instanceSettings.json";
 			}
 
 			try
@@ -59,7 +81,7 @@ namespace Lexplosion.Logic.FileSystem
 			catch { }
 		}
 
-		public static Settings GetSettings(string instanceId = "")
+		public Settings GetSettings(string instanceId = "")
 		{
 			string file;
 			if (instanceId == "")
@@ -68,7 +90,7 @@ namespace Lexplosion.Logic.FileSystem
 			}
 			else
 			{
-				file = InstancesPath + instanceId + "/instanceSettings.json";
+				file = _withDirectory.GetInstancePath(instanceId) + "instanceSettings.json";
 
 				if (!File.Exists(file))
 				{
@@ -97,11 +119,11 @@ namespace Lexplosion.Logic.FileSystem
 			}
 		}
 
-		public static bool DeleteLastUpdates(string instanceId) //Эта функция удаляет файл lastUpdates.json
+		public bool DeleteLastUpdates(string instanceId) //Эта функция удаляет файл lastUpdates.json
 		{
 			try
 			{
-				string instancePath = WithDirectory.GetInstancePath(instanceId);
+				string instancePath = _withDirectory.GetInstancePath(instanceId);
 				if (File.Exists(instancePath + LAST_UPDATES_FILE))
 				{
 					File.Delete(instancePath + LAST_UPDATES_FILE);
@@ -113,25 +135,25 @@ namespace Lexplosion.Logic.FileSystem
 			catch { return false; }
 		}
 
-		public static LastUpdates GetLastUpdates(string instanceId)
+		public LastUpdates GetLastUpdates(string instanceId)
 		{
 			var data = TryGetFile<LastUpdates>(instanceId, LAST_UPDATES_FILE, LAST_UPDATES_FILE_OLD);
 			return data ?? new LastUpdates();
 		}
 
-		public static void SaveLastUpdates(string instanceId, LastUpdates updates)
+		public void SaveLastUpdates(string instanceId, LastUpdates updates)
 		{
-			SaveFile(GetInstancePath(instanceId) + LAST_UPDATES_FILE, JsonConvert.SerializeObject(updates));
+			SaveFile(_withDirectory.GetInstancePath(instanceId) + LAST_UPDATES_FILE, JsonConvert.SerializeObject(updates));
 		}
 
-		public static int GetUpgradeToolVersion()
+		public int GetUpgradeToolVersion()
 		{
-			if (!File.Exists(DirectoryPath + "/up-version.txt"))
+			if (!File.Exists(_withDirectory.DirectoryPath + "/up-version.txt"))
 				return -1;
 
 			try
 			{
-				using (FileStream fstream = File.OpenRead(DirectoryPath + "/up-version.txt"))
+				using (FileStream fstream = File.OpenRead(_withDirectory.DirectoryPath + "/up-version.txt"))
 				{
 					byte[] fileBytes = new byte[fstream.Length];
 					fstream.Read(fileBytes, 0, fileBytes.Length);
@@ -145,14 +167,14 @@ namespace Lexplosion.Logic.FileSystem
 
 		}
 
-		public static void SetUpgradeToolVersion(int version)
+		public void SetUpgradeToolVersion(int version)
 		{
 			try
 			{
-				if (!File.Exists(DirectoryPath + "/up-version.txt"))
-					File.Create(DirectoryPath + "/up-version.txt").Close();
+				if (!File.Exists(_withDirectory.DirectoryPath + "/up-version.txt"))
+					File.Create(_withDirectory.DirectoryPath + "/up-version.txt").Close();
 
-				using (FileStream fstream = new FileStream(DirectoryPath + "/up-version.txt", FileMode.Create))
+				using (FileStream fstream = new FileStream(_withDirectory.DirectoryPath + "/up-version.txt", FileMode.Create))
 				{
 					byte[] bytes = Encoding.UTF8.GetBytes(version.ToString());
 					fstream.Write(bytes, 0, bytes.Length);
@@ -164,7 +186,7 @@ namespace Lexplosion.Logic.FileSystem
 
 		}
 
-		public static bool SaveFile(string name, string content)
+		public bool SaveFile(string name, string content)
 		{
 			try
 			{
@@ -196,7 +218,7 @@ namespace Lexplosion.Logic.FileSystem
 		/// <typeparam name="T">Тип, к которому привести JSON</typeparam>
 		/// <param name="file">Путь до файла</param>
 		/// <returns>Декодированные данные</returns>
-		public static T GetFile<T>(string file)
+		public T GetFile<T>(string file)
 		{
 			try
 			{
@@ -216,7 +238,7 @@ namespace Lexplosion.Logic.FileSystem
 		/// </summary>
 		/// <param name="file">Путь до файла</param>
 		/// <returns>Текстовые данные</returns>
-		public static string GetFile(string file)
+		public string GetFile(string file)
 		{
 			try
 			{
@@ -246,9 +268,9 @@ namespace Lexplosion.Logic.FileSystem
 			}
 		}
 
-		public static void SaveManifest(string instanceId, VersionManifest data)
+		public void SaveManifest(string instanceId, VersionManifest data)
 		{
-			SaveFile(WithDirectory.GetInstancePath(instanceId) + MANIFEST_FILE, JsonConvert.SerializeObject(data));
+			SaveFile(_withDirectory.GetInstancePath(instanceId) + MANIFEST_FILE, JsonConvert.SerializeObject(data));
 			if (data.libraries != null)
 			{
 				if (data.version.AdditionalInstaller != null)
@@ -270,33 +292,33 @@ namespace Lexplosion.Logic.FileSystem
 						}
 					}
 
-					SaveFile(DirectoryPath + "/versions/libraries/" + data.version.GetLibName + ".json", JsonConvert.SerializeObject(baseLibs));
+					SaveFile(_withDirectory.DirectoryPath + "/versions/libraries/" + data.version.GetLibName + ".json", JsonConvert.SerializeObject(baseLibs));
 
 					if (additionalLibs != null && additionalLibs.Count > 0)
 					{
-						SaveFile(DirectoryPath + "/versions/additionalLibraries/" + data.version.AdditionalInstaller.GetLibName + ".json", JsonConvert.SerializeObject(additionalLibs));
+						SaveFile(_withDirectory.DirectoryPath + "/versions/additionalLibraries/" + data.version.AdditionalInstaller.GetLibName + ".json", JsonConvert.SerializeObject(additionalLibs));
 					}
 				}
 				else
 				{
-					SaveFile(DirectoryPath + "/versions/libraries/" + data.version.GetLibName + ".json", JsonConvert.SerializeObject(data.libraries));
+					SaveFile(_withDirectory.DirectoryPath + "/versions/libraries/" + data.version.GetLibName + ".json", JsonConvert.SerializeObject(data.libraries));
 				}
 			}
 		}
 
-		public static VersionManifest GetManifest(string instanceId, bool includingLibraries)
+		public VersionManifest GetManifest(string instanceId, bool includingLibraries)
 		{
 			VersionManifest data = TryGetFile<VersionManifest>(instanceId, MANIFEST_FILE, MANIFEST_FILE_OLD);
 			if (data == null) return null;
 
 			if (includingLibraries)
 			{
-				var librariesData = GetFile<Dictionary<string, LibInfo>>(DirectoryPath + "/versions/libraries/" + data.version.GetLibName + ".json") ?? new Dictionary<string, LibInfo>();
+				var librariesData = GetFile<Dictionary<string, LibInfo>>(_withDirectory.DirectoryPath + "/versions/libraries/" + data.version.GetLibName + ".json") ?? new Dictionary<string, LibInfo>();
 
 				var installer = data.version?.AdditionalInstaller;
 				if (installer != null)
 				{
-					var additionallibrarieData = GetFile<Dictionary<string, LibInfo>>(DirectoryPath + "/versions/additionalLibraries/" + installer?.GetLibName + ".json");
+					var additionallibrarieData = GetFile<Dictionary<string, LibInfo>>(_withDirectory.DirectoryPath + "/versions/additionalLibraries/" + installer?.GetLibName + ".json");
 
 					if (additionallibrarieData != null)
 					{
@@ -318,14 +340,14 @@ namespace Lexplosion.Logic.FileSystem
 			return data;
 		}
 
-		private static T TryGetFile<T>(string instanceId, string fileName, string oldFileName)
+		private T TryGetFile<T>(string instanceId, string fileName, string oldFileName)
 		{
-			string filePath = WithDirectory.GetInstancePath(instanceId) + fileName;
+			string filePath = _withDirectory.GetInstancePath(instanceId) + fileName;
 
 			var data = GetFile<T>(filePath);
 			if (data == null)
 			{
-				string oldFilePath = WithDirectory.GetInstancePath(instanceId) + oldFileName;
+				string oldFilePath = _withDirectory.GetInstancePath(instanceId) + oldFileName;
 				data = GetFile<T>(oldFilePath);
 				if (data == null) return default(T);
 
@@ -342,29 +364,29 @@ namespace Lexplosion.Logic.FileSystem
 			return data;
 		}
 
-		public static InstalledAddonsFormat GetInstalledAddons(string instanceId)
+		public InstalledAddonsFormat GetInstalledAddons(string instanceId)
 		{
 			var data = TryGetFile<InstalledAddonsFormat>(instanceId, INSTALLED_ADDONS_FILE, INSTALLED_ADDONS_FILE_OLD);
 			return data ?? new InstalledAddonsFormat();
 		}
 
-		public static void SaveInstalledAddons(string instanceId, InstalledAddonsFormat data)
+		public void SaveInstalledAddons(string instanceId, InstalledAddonsFormat data)
 		{
-			string path = WithDirectory.GetInstancePath(instanceId) + INSTALLED_ADDONS_FILE;
+			string path = _withDirectory.GetInstancePath(instanceId) + INSTALLED_ADDONS_FILE;
 			SaveFile(path, JsonConvert.SerializeObject(data));
 		}
 
-		public static InstancePlatformData GetPlatfromData(string instanceId)
+		public InstancePlatformData GetPlatfromData(string instanceId)
 		{
 			// Это должно было делаться методом TryGetFile, но из-за косяка с выпоском обновы пришлось делать этот костыль.
 			// TODO: где-нибудь через 2 месяца, когда большая часть пользователей уже запустит нвоый лаунчер и этот код откработает,
 			// то можно возвращаться на TryGetFile
-			string filePath = WithDirectory.GetInstancePath(instanceId) + INSTANCE_PLATFORM_DATA_FILE;
+			string filePath = _withDirectory.GetInstancePath(instanceId) + INSTANCE_PLATFORM_DATA_FILE;
 
 			var data = GetFile<InstancePlatformData>(filePath);
 			if (data == null || string.IsNullOrWhiteSpace(data.id) || string.IsNullOrWhiteSpace(data.instanceVersion))
 			{
-				string oldFilePath = WithDirectory.GetInstancePath(instanceId) + INSTANCE_PLATFORM_DATA_FILE_OLD;
+				string oldFilePath = _withDirectory.GetInstancePath(instanceId) + INSTANCE_PLATFORM_DATA_FILE_OLD;
 				data = GetFile<InstancePlatformData>(oldFilePath);
 				if (data == null) return default(InstancePlatformData);
 
@@ -386,37 +408,72 @@ namespace Lexplosion.Logic.FileSystem
 			return data;
 		}
 
-		public static T GetExtendedPlatfromData<T>(string instanceId) where T : InstancePlatformData
+		public T GetExtendedPlatfromData<T>(string instanceId) where T : InstancePlatformData
 		{
 			return TryGetFile<T>(instanceId, INSTANCE_PLATFORM_DATA_FILE, INSTANCE_PLATFORM_DATA_FILE_OLD);
 		}
 
-		public static void SavePlatfromData(string instanceId, InstancePlatformData content)
+		public void SavePlatfromData(string instanceId, InstancePlatformData content)
 		{
-			SaveFile(WithDirectory.GetInstancePath(instanceId) + INSTANCE_PLATFORM_DATA_FILE, JsonConvert.SerializeObject(content));
+			SaveFile(_withDirectory.GetInstancePath(instanceId) + INSTANCE_PLATFORM_DATA_FILE, JsonConvert.SerializeObject(content));
 		}
 
-		public static InstanceContentFile GetInstanceContent(string instanceId)
+		public InstanceContentFile GetInstanceContent(string instanceId)
 		{
 			return TryGetFile<InstanceContentFile>(instanceId, INSTANCE_CONTENT_FILE, INSTANCE_CONTENT_FILE_OLD);
 		}
 
-		public static void SaveInstanceContent(string instanceId, InstanceContentFile content)
+		public void SaveInstanceContent(string instanceId, InstanceContentFile content)
 		{
-			SaveFile(WithDirectory.GetInstancePath(instanceId) + INSTANCE_CONTENT_FILE, JsonConvert.SerializeObject(content));
+			SaveFile(_withDirectory.GetInstancePath(instanceId) + INSTANCE_CONTENT_FILE, JsonConvert.SerializeObject(content));
 		}
 
-		public const string INSTALLED_ADDONS_FILE = "installedAddons.nwdat";
-		public const string INSTANCE_PLATFORM_DATA_FILE = "instancePlatformData.nwdat";
-		public const string INSTANCE_CONTENT_FILE = "instanceContent.nwdat";
-		public const string LAST_UPDATES_FILE = "lastUpdates.nwdat";
-		public const string MANIFEST_FILE = "manifest.nwdat";
+		public string CreateAcceptableGamePath(string path)
+		{
+			try
+			{
+				// заменяем обратный слеш на нормальный слеш
+				path = path.Replace('\\', '/');
+				// сокращаем n-ное количество слешей до 1
+				path = Regex.Replace(path, @"\/+", "/").Trim();
+				// убираем слеш в конце
+				path = path.TrimEnd('/');
 
-		public const string INSTALLED_ADDONS_FILE_OLD = "installedAddons.json";
-		public const string INSTANCE_PLATFORM_DATA_FILE_OLD = "instancePlatformData.json";
-		public const string INSTANCE_CONTENT_FILE_OLD = "instanceContent.json";
-		public const string LAST_UPDATES_FILE_OLD = "lastUpdates.json";
-		public const string MANIFEST_FILE_OLD = "manifest.json";
+				if (!Directory.Exists(path) || DirectoryHelper.IsDirectoryEmpty(path)) return path;
 
+				string instancesPath = path + "/instances";
+				if (!Directory.Exists(instancesPath)) return _withDirectory.CreateValidPath(path);
+
+				int directoryCount = Directory.GetDirectories(instancesPath).Length;
+				if (directoryCount < 1) return _withDirectory.CreateValidPath(path);
+
+				if (!File.Exists(path + "/instanesList.json")) return _withDirectory.CreateValidPath(path);
+
+				var data = GetFile<InstalledInstancesFormat>(path + "/instanesList.json");
+				if (data == null) return _withDirectory.CreateValidPath(path);
+
+				return path;
+			}
+			catch (Exception ex)
+			{
+				Runtime.DebugWrite("Exception " + ex);
+
+				return _withDirectory.CreateValidPath(path);
+			}
+		}
+
+		public HashSet<InstalledInstancesGroup> GetGroups()
+		{
+			return GetFile<HashSet<InstalledInstancesGroup>>($"{_withDirectory.DirectoryPath}/{INSTANCES_GROUPS_FILE}") ?? new();
+		}
+
+		public void SaveGroupInfo(InstalledInstancesGroup instanceGroup)
+		{
+			var allGroups = GetGroups();
+			allGroups.Remove(instanceGroup);
+			allGroups.Add(instanceGroup);
+
+			SaveFile($"{_withDirectory.DirectoryPath}/{INSTANCES_GROUPS_FILE}", JsonConvert.SerializeObject(allGroups));
+		}
 	}
 }

@@ -5,44 +5,44 @@ using System.IO;
 
 namespace Lexplosion.Tools
 {
-    static class ImageTools
-    {
-        public static byte[] ResizeImage(byte[] imageBytes, int width, int height)
-        {
-            if (imageBytes.Length == 0)
-                return imageBytes;
+	static class ImageTools
+	{
+		public static byte[] ResizeImage(byte[] imageBytes, int width, int height)
+		{
+			if (imageBytes.Length == 0)
+				return imageBytes;
 
-            Image image;
-            using (var ms = new MemoryStream(imageBytes))
-            {
-                image = Image.FromStream(ms);
-            }
+			Image image;
+			using (var ms = new MemoryStream(imageBytes))
+			{
+				image = Image.FromStream(ms);
+			}
 
-            var destRect = new Rectangle(0, 0, width, height);
-            var destImage = new Bitmap(width, height);
+			var destRect = new Rectangle(0, 0, width, height);
+			var destImage = new Bitmap(width, height);
 
-            destImage.SetResolution(image.HorizontalResolution, image.VerticalResolution);
+			destImage.SetResolution(image.HorizontalResolution, image.VerticalResolution);
 
-            using (var graphics = Graphics.FromImage(destImage))
-            {
-                graphics.CompositingMode = CompositingMode.SourceCopy;
-                graphics.CompositingQuality = CompositingQuality.HighQuality;
-                graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                graphics.SmoothingMode = SmoothingMode.HighQuality;
-                graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+			using (var graphics = Graphics.FromImage(destImage))
+			{
+				graphics.CompositingMode = CompositingMode.SourceCopy;
+				graphics.CompositingQuality = CompositingQuality.HighQuality;
+				graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+				graphics.SmoothingMode = SmoothingMode.HighQuality;
+				graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
-                using (var wrapMode = new ImageAttributes())
-                {
-                    wrapMode.SetWrapMode(WrapMode.TileFlipXY);
-                    graphics.DrawImage(image, destRect, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, wrapMode);
-                }
-            }
+				using (var wrapMode = new ImageAttributes())
+				{
+					wrapMode.SetWrapMode(WrapMode.TileFlipXY);
+					graphics.DrawImage(image, destRect, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, wrapMode);
+				}
+			}
 
-            using (MemoryStream stream = new MemoryStream())
-            {
-                destImage.Save(stream, System.Drawing.Imaging.ImageFormat.Bmp);
-                return stream.ToArray();
-            }
-        }
-    }
+			using (MemoryStream stream = new MemoryStream())
+			{
+				destImage.Save(stream, System.Drawing.Imaging.ImageFormat.Bmp);
+				return stream.ToArray();
+			}
+		}
+	}
 }

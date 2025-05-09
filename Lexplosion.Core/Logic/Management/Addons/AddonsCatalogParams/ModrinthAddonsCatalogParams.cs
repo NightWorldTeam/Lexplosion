@@ -1,28 +1,35 @@
-﻿using Lexplosion.Logic.Management.Instances;
+﻿using Lexplosion.Logic.FileSystem.Services;
+using Lexplosion.Logic.Management.Instances;
+using Lexplosion.Logic.Network.Services;
 using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.Modrinth;
 using System;
+using System.Collections.Generic;
 
 namespace Lexplosion.Logic.Management.Addons.AddonsCatalogParams
 {
 	internal class ModrinthAddonsCatalogParams : AddonsCatalogParamsBase<ModrinthProjectInfo, ModrinthSearchParams>
 	{
-		public ModrinthAddonsCatalogParams(AddonType type, ModrinthSearchParams sParams, BaseInstanceData modpackInfo)
+		private readonly IModrinthFileServicesContainer _services;
+		private readonly Func<AddonType, IEnumerable<string>, IEnumerable<CategoryBase>> _categoriesGetter;
+
+		public ModrinthAddonsCatalogParams(AddonType type, ModrinthSearchParams sParams, IModrinthFileServicesContainer services, BaseInstanceData modpackInfo, Func<AddonType, IEnumerable<string>, IEnumerable<CategoryBase>> categoriesGetter)
 			: base(type, sParams, modpackInfo)
 		{
-
+			_services = services;
+			_categoriesGetter = categoriesGetter;
 		}
 
 
 		public override CatalogResult<ModrinthProjectInfo> GetCatalog()
 		{
-			return ModrinthApi.GetAddonsList(Type, SearchParams);
+			return _services.MdApi.GetAddonsList(Type, SearchParams);
 		}
 
 		public override IPrototypeAddon CreateAddonPrototypeCreate(ModrinthProjectInfo addonInfo)
 		{
-			return new ModrinthAddon(ModpackInfo, addonInfo);
+			return new ModrinthAddon(ModpackInfo, addonInfo, _services, _categoriesGetter);
 		}
 
 		public override string GetAddonId(ModrinthProjectInfo addonInfo)

@@ -20,9 +20,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
         private readonly Action<InstanceClient> _removeFromLibrary;
         private readonly AppCore _appCore;
         private IModalViewModel _currentModalViewModelBase;
+		private readonly ClientsManager _clientsManager = Runtime.ClientsManager;
 
 
-        public ObservableCollection<ImportProcess> ImportProcesses { get; } = new();
+		public ObservableCollection<ImportProcess> ImportProcesses { get; } = new();
         public Action<IEnumerable<string>> ImportAction { get; }
 
         public Queue<InstanceImportFillDataViewModel> FillDataViewModels { get; } = [];
@@ -95,7 +96,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
             importFile.ImportCancelled += OnImportCancelled;
             ImportProcesses.Add(importFile);
 
-            instanceClient = InstanceClient.Import(path, (ir) =>
+            instanceClient = _clientsManager.Import(path, (ir) =>
             {
                 ImportResultHandler(ir, importFile, instanceClient);
             }, importData);
@@ -186,7 +187,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
             importFile.ImportCancelled += OnImportCancelled;
             ImportProcesses.Add(importFile);
 
-            instanceClient = InstanceClient.Import(uri, (ir) =>
+            instanceClient = _clientsManager.Import(uri, (ir) =>
             {
                 ImportResultHandler(ir, importFile, instanceClient);
             }, importData);

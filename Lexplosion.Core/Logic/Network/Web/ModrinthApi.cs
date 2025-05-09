@@ -10,12 +10,13 @@ using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.Modrinth;
 using Lexplosion.Tools;
-using Microsoft.Win32;
 
 namespace Lexplosion.Logic.Network.Web
 {
-	public static class ModrinthApi
+	public class ModrinthApi
 	{
+		private readonly ToServer _toServer;
+
 		public struct SearchFilters
 		{
 			public const string Relevance = "relevance";
@@ -33,12 +34,17 @@ namespace Lexplosion.Logic.Network.Web
 			public int TotalHits;
 		}
 
+		public ModrinthApi(ToServer toServer)
+		{
+			_toServer = toServer;
+		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		private static T GetApiData<T>(string url) where T : new()
+		private T GetApiData<T>(string url) where T : new()
 		{
 			try
 			{
-				string answer = ToServer.HttpGet(url);
+				string answer = _toServer.HttpGet(url);
 				if (answer != null)
 				{
 					var data = JsonConvert.DeserializeObject<T>(answer);
@@ -54,11 +60,11 @@ namespace Lexplosion.Logic.Network.Web
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		private static T GetApiData<T, U>(string url, U inputData) where T : new()
+		private T GetApiData<T, U>(string url, U inputData) where T : new()
 		{
 			try
 			{
-				string answer = ToServer.HttpPostJson(url, JsonConvert.SerializeObject(inputData), out _);
+				string answer = _toServer.HttpPostJson(url, JsonConvert.SerializeObject(inputData), out _);
 				if (answer != null)
 				{
 					var data = JsonConvert.DeserializeObject<T>(answer);
@@ -73,22 +79,22 @@ namespace Lexplosion.Logic.Network.Web
 			}
 		}
 
-		public static List<ModrinthTeam> GetTeam(string teamId)
+		public List<ModrinthTeam> GetTeam(string teamId)
 		{
 			return GetApiData<List<ModrinthTeam>>("https://api.modrinth.com/v2/team/" + teamId + "/members");
 		}
 
-		public static List<ModrinthCategory> GetCategories()
+		public List<ModrinthCategory> GetCategories()
 		{
 			return GetApiData<List<ModrinthCategory>>("https://api.modrinth.com/v2/tag/category");
 		}
 
-		public static ModrinthProjectInfo GetProject(string projectId)
+		public ModrinthProjectInfo GetProject(string projectId)
 		{
 			return GetApiData<ModrinthProjectInfo>("https://api.modrinth.com/v2/project/" + projectId);
 		}
 
-		public static List<ModrinthProjectFile> GetProjectFiles(string projectId)
+		public List<ModrinthProjectFile> GetProjectFiles(string projectId)
 		{
 			return GetApiData<List<ModrinthProjectFile>>("https://api.modrinth.com/v2/project/" + projectId + "/version");
 		}
@@ -99,7 +105,7 @@ namespace Lexplosion.Logic.Network.Web
 		/// <param name="projectId">id проекта</param>
 		/// <param name="modloaders">Белый список модлоадеров. Если он не нужен, то null</param>
 		/// <param name="gameVersion">Версия игры</param>
-		public static List<ModrinthProjectFile> GetProjectFiles(string projectId, IEnumerable<Modloader> modloaders, string gameVersion)
+		public List<ModrinthProjectFile> GetProjectFiles(string projectId, IEnumerable<Modloader> modloaders, string gameVersion)
 		{
 			string param = "?game_versions=" + WebUtility.UrlEncode($"[\"{gameVersion}\"]");
 			if (modloaders != null)
@@ -116,7 +122,7 @@ namespace Lexplosion.Logic.Network.Web
 		/// <param name="projectId">id проекта</param>
 		/// <param name="modloader">Допустимый модлоадер. Если модлоадер не важен, то null</param>
 		/// <param name="gameVersion">Версия игры</param>
-		public static List<ModrinthProjectFile> GetProjectFiles(string projectId, Modloader? modloader, string gameVersion)
+		public List<ModrinthProjectFile> GetProjectFiles(string projectId, Modloader? modloader, string gameVersion)
 		{
 			Modloader[] modloaders = null;
 			if (modloader != null) modloaders = new Modloader[] { modloader ?? (Modloader)modloader };
@@ -125,12 +131,12 @@ namespace Lexplosion.Logic.Network.Web
 
 		}
 
-		public static ModrinthProjectFile GetProjectFile(string fileId)
+		public ModrinthProjectFile GetProjectFile(string fileId)
 		{
 			return GetApiData<ModrinthProjectFile>("https://api.modrinth.com/v2/version/" + fileId);
 		}
 
-		public static List<ModrinthProjectFile> GetFilesFromHash(string hash)
+		public List<ModrinthProjectFile> GetFilesFromHash(string hash)
 		{
 			return GetApiData<List<ModrinthProjectFile>>("https://api.modrinth.com/v2/version_file/" + hash + "?algorithm=sha512&multiple=true");
 		}
@@ -146,7 +152,7 @@ namespace Lexplosion.Logic.Network.Web
 		/// </summary>
 		/// <param name="hashes">Хэши</param>
 		/// <returns>Ключ - хэш, значение - Modrinth файл, которому принадлежит этот хэш</returns>
-		public static Dictionary<string, ModrinthProjectFile> GetFilesFromHashes(List<string> hashes)
+		public Dictionary<string, ModrinthProjectFile> GetFilesFromHashes(List<string> hashes)
 		{
 			return GetApiData<Dictionary<string, ModrinthProjectFile>, HashesContainer>("https://api.modrinth.com/v2/version_files", new HashesContainer
 			{
@@ -155,7 +161,7 @@ namespace Lexplosion.Logic.Network.Web
 			});
 		}
 
-		public static List<ModrinthProjectInfo> GetProjects(string[] ids)
+		public List<ModrinthProjectInfo> GetProjects(string[] ids)
 		{
 			// не понятно на кой хуй modrinth сделал это через get запрос. Максимальные размер url 1024,
 			// в него все айдишники могут не вместится поэтому мутим костыли.
@@ -190,7 +196,7 @@ namespace Lexplosion.Logic.Network.Web
 			return files;
 		}
 
-		public static CatalogResult<ModrinthCtalogUnit> GetInstances(int pageSize, int index, IEnumerable<IProjectCategory> categories, string sortField, string searchFilter, string gameVersion)
+		public CatalogResult<ModrinthCtalogUnit> GetInstances(int pageSize, int index, IEnumerable<IProjectCategory> categories, string sortField, string searchFilter, string gameVersion)
 		{
 			var queryBuilder = new QueryApiBuilder("https://api.modrinth.com/v2/search");
 
@@ -218,7 +224,7 @@ namespace Lexplosion.Logic.Network.Web
 		/// <summary>
 		/// Возвращает строку формата ,["categories: ..."]
 		/// </summary>
-		private static string BuildCategoriesToQuery(IEnumerable<IProjectCategory> categories)
+		private string BuildCategoriesToQuery(IEnumerable<IProjectCategory> categories)
 		{
 			var result = string.Empty;
 
@@ -238,7 +244,7 @@ namespace Lexplosion.Logic.Network.Web
 		/// <summary>
 		/// Возвращает строку формата ,["categories:forge","categories:neoforge" ..."]
 		/// </summary>
-		private static string BuildModloadersToQuery(IEnumerable<string> modloaders)
+		private string BuildModloadersToQuery(IEnumerable<string> modloaders)
 		{
 			var facets = string.Empty;
 			string modloadersFilter = string.Join(",", modloaders.Select(x => ($"\"categories:{x}\"")));
@@ -255,7 +261,7 @@ namespace Lexplosion.Logic.Network.Web
 		/// <param name="type">Тип аддона</param>
 		/// <param name="searchParams">параметры поиска</param>
 		/// <returns>Первое значение - список аддонов, второе - общее количество аддонов, доступных по запросу</returns>
-		public static CatalogResult<ModrinthProjectInfo> GetAddonsList(AddonType type, ModrinthSearchParams searchParams)
+		public CatalogResult<ModrinthProjectInfo> GetAddonsList(AddonType type, ModrinthSearchParams searchParams)
 		{
 			string _type = type switch
 			{
@@ -304,187 +310,6 @@ namespace Lexplosion.Logic.Network.Web
 			}
 
 			return new(result, catalogList.TotalHits);
-		}
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		private static SetValues<InstalledAddonInfo, DownloadAddonRes> DownloadAddon(string fileUrl, string fileName, ModrinthProjectType addonType, string path, string projectID, string fileID, TaskArgs taskArgs)
-		{
-			// определяем папку в которую будет установлен данный аддон
-			string folderName = "";
-			AddonType baseAddonType;
-			switch (addonType)
-			{
-				case ModrinthProjectType.Mod:
-					folderName = "mods";
-					baseAddonType = AddonType.Mods;
-					break;
-				case ModrinthProjectType.Shader:
-					baseAddonType = AddonType.Shaders;
-					folderName = "shaderpacks";
-					break;
-				case ModrinthProjectType.Resourcepack:
-					baseAddonType = AddonType.Resourcepacks;
-					folderName = "resourcepacks";
-					break;
-				default:
-					return new SetValues<InstalledAddonInfo, DownloadAddonRes>
-					{
-						Value1 = null,
-						Value2 = DownloadAddonRes.unknownAddonType
-					};
-			}
-
-			// устанавливаем
-			if (!WithDirectory.InstallFile(fileUrl, fileName, path + folderName, taskArgs))
-			{
-				return new SetValues<InstalledAddonInfo, DownloadAddonRes>
-				{
-					Value1 = null,
-					Value2 = taskArgs.CancelToken.IsCancellationRequested ? DownloadAddonRes.IsCanselled : DownloadAddonRes.DownloadError
-				};
-			}
-
-			Runtime.DebugWrite("SYS " + fileUrl);
-
-			return new SetValues<InstalledAddonInfo, DownloadAddonRes>
-			{
-				Value1 = new InstalledAddonInfo
-				{
-					ProjectID = projectID,
-					FileID = fileID,
-					Path = folderName + "/" + fileName,
-					Type = baseAddonType,
-					Source = ProjectSource.Modrinth
-
-				},
-				Value2 = DownloadAddonRes.Successful
-			};
-		}
-
-		public static SetValues<InstalledAddonInfo, DownloadAddonRes> DownloadAddon(ModrinthProjectFile fileInfo, ModrinthProjectType addonType, string path, string fileName, TaskArgs taskArgs)
-		{
-			Runtime.DebugWrite("PR ID " + fileInfo.ProjectId);
-			string projectID = fileInfo.ProjectId;
-			string fileID = fileInfo.FileId;
-			try
-			{
-				if (fileInfo.Files == null || fileInfo.Files.Count == 0)
-				{
-					return new SetValues<InstalledAddonInfo, DownloadAddonRes>
-					{
-						Value1 = null,
-						Value2 = DownloadAddonRes.UrlError
-					};
-				}
-
-				string fileUrl = fileInfo.Files[0].Url;
-
-				if (fileUrl == null)
-				{
-					return new SetValues<InstalledAddonInfo, DownloadAddonRes>
-					{
-						Value1 = null,
-						Value2 = DownloadAddonRes.UrlError
-					};
-				}
-
-				Runtime.DebugWrite(fileUrl);
-
-				return DownloadAddon(fileUrl, fileName, addonType, path, projectID, fileID, taskArgs);
-			}
-			catch
-			{
-				return new SetValues<InstalledAddonInfo, DownloadAddonRes>
-				{
-					Value1 = null,
-					Value2 = DownloadAddonRes.unknownError
-				};
-			}
-		}
-
-		public static SetValues<InstalledAddonInfo, DownloadAddonRes> DownloadAddon(ModrinthProjectFile fileInfo, ModrinthProjectType addonType, string path, TaskArgs taskArgs)
-		{
-			Runtime.DebugWrite("PR ID " + fileInfo.ProjectId);
-			string projectID = fileInfo.ProjectId;
-			string fileID = fileInfo.FileId;
-			try
-			{
-				if (fileInfo.Files == null || fileInfo.Files.Count == 0)
-				{
-					return new SetValues<InstalledAddonInfo, DownloadAddonRes>
-					{
-						Value1 = null,
-						Value2 = DownloadAddonRes.UrlError
-					};
-				}
-
-				string fileUrl = fileInfo.Files[0].Url;
-
-				if (fileUrl == null)
-				{
-					return new SetValues<InstalledAddonInfo, DownloadAddonRes>
-					{
-						Value1 = null,
-						Value2 = DownloadAddonRes.UrlError
-					};
-				}
-
-				Runtime.DebugWrite(fileUrl);
-
-				string fileName = fileInfo.Files[0].Filename;
-
-				// проверяем имя файла на валидность
-				char[] invalidFileChars = Path.GetInvalidFileNameChars();
-				bool isInvalidFilename = invalidFileChars.Any(s => fileName?.Contains(s) != false);
-
-				if (isInvalidFilename)
-				{
-					return new SetValues<InstalledAddonInfo, DownloadAddonRes>
-					{
-						Value1 = null,
-						Value2 = DownloadAddonRes.FileNameError
-					};
-				}
-
-				return DownloadAddon(fileUrl, fileName, addonType, path, projectID, fileID, taskArgs);
-			}
-			catch
-			{
-				return new SetValues<InstalledAddonInfo, DownloadAddonRes>
-				{
-					Value1 = null,
-					Value2 = DownloadAddonRes.unknownError
-				};
-			}
-		}
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static ModrinthProjectType StrProjectTypeToEnum(string typeStr)
-		{
-			ModrinthProjectType type;
-			switch (typeStr)
-			{
-				case "mod":
-					type = ModrinthProjectType.Mod;
-					break;
-				case "resourcepack":
-					type = ModrinthProjectType.Resourcepack;
-					break;
-				case "shader":
-					type = ModrinthProjectType.Shader;
-					break;
-				default:
-					type = ModrinthProjectType.Unknown;
-					break;
-			}
-
-			return type;
-		}
-
-		public static SetValues<InstalledAddonInfo, DownloadAddonRes> DownloadAddon(ModrinthProjectInfo addonInfo, string fileID, string path, TaskArgs taskArgs)
-		{
-			ModrinthProjectFile fileInfo = GetProjectFile(fileID);
-			return DownloadAddon(fileInfo, StrProjectTypeToEnum(addonInfo.Type), path, taskArgs);
 		}
 	}
 }

@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network;
+using Lexplosion.Logic.Network.Services;
 using Lexplosion.Logic.Objects;
 using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
@@ -18,8 +19,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         private readonly AppCore _appCore;
         private readonly ICommand _backCommand;
         private readonly SelectInstanceForServerArgs _selectInstanceForServerArgs;
+		private readonly ClientsManager _clientsManager = Runtime.ClientsManager;
 
-        public ObservableCollection<MinecraftServerInstance> Servers { get; }
+		public ObservableCollection<MinecraftServerInstance> Servers { get; }
 
         public AdServersModel(AppCore appCore, ICommand backCommand, SelectInstanceForServerArgs selectInstanceForServerArgs)
         {
@@ -27,7 +29,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             _selectInstanceForServerArgs = selectInstanceForServerArgs;
             _backCommand = backCommand;
 
-            var servers = ToServer.GetMinecraftServersList();
+            var servers = Runtime.ServicesContainer.MinecraftService.GetMinecraftServersList();
 
             foreach (var server in servers) 
             {
@@ -58,7 +60,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             {
                 _appCore.ModalNavigationStore.Open(new AskServerInstanceInstallingViewModel(_appCore, (isAutoConnectToServer) => 
                 {
-                    var ic = InstanceClient.CreateClient(server, isAutoConnectToServer);
+                    var ic = _clientsManager.CreateClient(server, isAutoConnectToServer);
                     _selectInstanceForServerArgs.AddNewInstanceInLibrary(ic);
                     _appCore.MessageService.Success("InstanceForServerAddedToLibrary", true, server.Name);
                 }));
@@ -79,7 +81,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
         private async void SetOnlineInfoToServer(MinecraftServerInstance server)
         {
-            server.OnlineCount = await ToServer.GetMcServerOnline(server);
+            server.OnlineCount = await Runtime.ServicesContainer.MinecraftService.GetMcServerOnline(server);
         }
 
         internal void OnServerBannerLoaded(MinecraftServerInstance instance)

@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using Lexplosion.Logic.Management.Instances;
-using Lexplosion.Logic.Objects;
 using Lexplosion.Tools;
 
 namespace Lexplosion.Logic.Management.Addons
@@ -82,8 +77,8 @@ namespace Lexplosion.Logic.Management.Addons
 		{
 			lock (_addAddonInstallingLocker)
 			{
-                _addonsInstalling++;
-            }
+				_addonsInstalling++;
+			}
 		}
 
 		/// <summary>
@@ -93,11 +88,11 @@ namespace Lexplosion.Logic.Management.Addons
 		{
 			lock (_addAddonInstallingLocker)
 			{
-                _addonsInstalling--;
-                if (_addonsInstalling == 0)
+				_addonsInstalling--;
+				if (_addonsInstalling == 0)
 				{
-                    _nothingAddonsInstalling?.Invoke();
-                }
+					_nothingAddonsInstalling?.Invoke();
+				}
 			}
 		}
 
@@ -111,58 +106,58 @@ namespace Lexplosion.Logic.Management.Addons
 			{
 				if (_addonsInstalling == 0)
 				{
-                    action();
+					action();
 					return;
-                }
+				}
 
 				_nothingAddonsInstalling += action;
 			}
 		}
 
 		private Dictionary<ValueTuple<AddonType, string>, InstanceAddon> _installedAddons = new();
-        private object _installedAddonLocker = new();
+		private object _installedAddonLocker = new();
 
-        public void AddInstalledAddon(InstanceAddon addon)
-        {
-            lock (_installedAddonLocker)
-            {
-                _installedAddons[(addon.Type, addon.FileName)] = addon;
-                AddonAdded?.Invoke(addon);
-            }
-        }
+		public void AddInstalledAddon(InstanceAddon addon)
+		{
+			lock (_installedAddonLocker)
+			{
+				_installedAddons[(addon.Type, addon.FileName)] = addon;
+				AddonAdded?.Invoke(addon);
+			}
+		}
 
-        public void AddInstalledAddonWithoutEvent(InstanceAddon addon)
-        {
-            lock (_installedAddonLocker)
-            {
-                _installedAddons[(addon.Type, addon.FileName)] = addon;
-            }
-        }
+		public void AddInstalledAddonWithoutEvent(InstanceAddon addon)
+		{
+			lock (_installedAddonLocker)
+			{
+				_installedAddons[(addon.Type, addon.FileName)] = addon;
+			}
+		}
 
-        public void RemoveInstalledAddon(InstanceAddon addon)
-        {
-            lock (_installedAddonLocker)
-            {
-                _installedAddons.Remove((addon.Type, addon.FileName));
-                AddonRemoved?.Invoke(addon);
-            }
-        }
+		public void RemoveInstalledAddon(InstanceAddon addon)
+		{
+			lock (_installedAddonLocker)
+			{
+				_installedAddons.Remove((addon.Type, addon.FileName));
+				AddonRemoved?.Invoke(addon);
+			}
+		}
 
-        public bool InstalledAddonContains(InstanceAddon addon)
-        {
-            lock (_installedAddonLocker)
-            {
-                return _installedAddons.ContainsKey((addon.Type, addon.FileName));
-            }
-        }
+		public bool InstalledAddonContains(InstanceAddon addon)
+		{
+			lock (_installedAddonLocker)
+			{
+				return _installedAddons.ContainsKey((addon.Type, addon.FileName));
+			}
+		}
 
-        public bool InstalledAddonContains(ValueTuple<AddonType, string> addonKey)
-        {
-            lock (_installedAddonLocker)
-            {
-                var res = _installedAddons.ContainsKey(addonKey);
+		public bool InstalledAddonContains(ValueTuple<AddonType, string> addonKey)
+		{
+			lock (_installedAddonLocker)
+			{
+				var res = _installedAddons.ContainsKey(addonKey);
 				return res;
-            }
-        }
-    }
+			}
+		}
+	}
 }

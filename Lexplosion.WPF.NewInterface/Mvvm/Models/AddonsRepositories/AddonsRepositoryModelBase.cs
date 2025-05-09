@@ -197,7 +197,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.AddonsRepositories
             Runtime.DebugConsoleWrite(CurrentPageIndex, color: ConsoleColor.Yellow);
             Runtime.TaskRun(() =>
             {
-                var catalog = AddonsManager.GetManager(_instanceData)
+                var catalog = AddonsManager.GetManager(_instanceData, Runtime.ServicesContainer)
                     .GetAddonsCatalog(_projectSource, _addonType, BuildSearchParams());
 
                 App.Current.Dispatcher.Invoke(() =>

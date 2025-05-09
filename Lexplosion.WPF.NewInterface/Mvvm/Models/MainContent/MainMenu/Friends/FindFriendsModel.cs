@@ -173,15 +173,17 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends
 
             ThreadPool.QueueUserWorkItem((obj) =>
             {
-                var activeAccount = Account.ActiveAccount;
+				var services = Runtime.ServicesContainer;
+
+				var activeAccount = Account.ActiveAccount;
                 if (reboot)
                 {
                     CurrentPageIndex = 0;
-                    _usersCatalogPage = NightWorldApi.FindUsers(activeAccount.UUID, activeAccount.SessionToken, 0, string.Empty);
+                    _usersCatalogPage = services.NwApi.FindUsers(activeAccount.UUID, activeAccount.SessionToken, 0, string.Empty);
                 }
                 else
                 {
-                    _usersCatalogPage = NightWorldApi.FindUsers(activeAccount.UUID, activeAccount.SessionToken, (uint)CurrentPageIndex, searchFilter ?? string.Empty);
+                    _usersCatalogPage = services.NwApi.FindUsers(activeAccount.UUID, activeAccount.SessionToken, (uint)CurrentPageIndex, searchFilter ?? string.Empty);
                 }
 
                 App.Current.Dispatcher.Invoke(() =>

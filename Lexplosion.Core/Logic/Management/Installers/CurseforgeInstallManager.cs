@@ -2,122 +2,129 @@
 using System.Collections.Generic;
 using System.Threading;
 using Lexplosion.Logic.FileSystem;
+using Lexplosion.Logic.FileSystem.Installers;
+using Lexplosion.Logic.FileSystem.Services;
+using Lexplosion.Logic.Network.Services;
 using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Objects.Curseforge;
 
 namespace Lexplosion.Logic.Management.Installers
 {
-    class CurseforgeInstallManager : ArchiveInstallManager<CurseforgeInstaller, InstanceManifest, CurseforgeFileInfo, InstancePlatformData>
-    {
-        public CurseforgeInstallManager(string instanceid, bool onlyBase, CancellationToken cancelToken) : base(new CurseforgeInstaller(instanceid), instanceid, onlyBase, cancelToken)
-        { }
+	class CurseforgeInstallManager : ArchiveInstallManager<CurseforgeInstaller, InstanceManifest, CurseforgeFileInfo, InstancePlatformData>
+	{
+		private CurseforgeApi _curseforgeApi;
 
-        protected override CurseforgeFileInfo GetProjectInfo(string projectId, string projectVersion)
-        {
-            var data = CurseforgeApi.GetProjectFile(projectId, projectVersion);
+		public CurseforgeInstallManager(string instanceid, bool onlyBase, ICurseforgeFileServicesContainer services, CancellationToken cancelToken) : base(new CurseforgeInstaller(instanceid, services), instanceid, onlyBase, services, cancelToken)
+		{
+			_curseforgeApi = services.CfApi;
+		}
 
-            if (data.id < 1)
-            {
-                return null;
-            }
+		protected override CurseforgeFileInfo GetProjectInfo(string projectId, string projectVersion)
+		{
+			var data = _curseforgeApi.GetProjectFile(projectId, projectVersion);
 
-            return data;
-        }
+			if (data.id < 1)
+			{
+				return null;
+			}
 
-        protected override bool LocalInfoIsValid(InstancePlatformData data)
-        {
-            return data?.id != null && Int32.TryParse(data.id, out _);
-        }
+			return data;
+		}
 
-        protected override CurseforgeFileInfo GetProjectDefaultInfo(string projectId, string actualInstanceVersion)
-        {
-            int actualVersion = actualInstanceVersion?.ToInt32() ?? 0;
-            List<CurseforgeFileInfo> instanceVersionsInfo = CurseforgeApi.GetProjectFiles(projectId); //получем информацию об этом модпаке
+		protected override bool LocalInfoIsValid(InstancePlatformData data)
+		{
+			return data?.id != null && Int32.TryParse(data.id, out _);
+		}
 
-            CurseforgeFileInfo result = null;
+		protected override CurseforgeFileInfo GetProjectDefaultInfo(string projectId, string actualInstanceVersion)
+		{
+			int actualVersion = actualInstanceVersion?.ToInt32() ?? 0;
+			List<CurseforgeFileInfo> instanceVersionsInfo = _curseforgeApi.GetProjectFiles(projectId); //получем информацию об этом модпаке
 
-            //проходимся по каждой версии модпака, ищем самый большой id. Это будет последняя версия. Причем этот id должен быть больше, чем id уже установленной версии
-            foreach (CurseforgeFileInfo ver in instanceVersionsInfo)
-            {
-                if (ver.id > actualVersion)
-                {
-                    result = ver;
-                    actualVersion = ver.id;
-                }
-            }
+			CurseforgeFileInfo result = null;
 
-            return result;
-        }
+			//проходимся по каждой версии модпака, ищем самый большой id. Это будет последняя версия. Причем этот id должен быть больше, чем id уже установленной версии
+			foreach (CurseforgeFileInfo ver in instanceVersionsInfo)
+			{
+				if (ver.id > actualVersion)
+				{
+					result = ver;
+					actualVersion = ver.id;
+				}
+			}
 
-        protected override string GetProjectVersion(CurseforgeFileInfo projectData)
-        {
-            return projectData?.id.ToString();
-        }
+			return result;
+		}
 
-        protected override bool ManifestIsValid(InstanceManifest manifest)
-        {
-            return manifest?.minecraft != null && manifest.minecraft.modLoaders != null && manifest.minecraft.version != null;
-        }
+		protected override string GetProjectVersion(CurseforgeFileInfo projectData)
+		{
+			return projectData?.id.ToString();
+		}
 
-        protected override void DetermineGameType(InstanceManifest manifest, out ClientType clienType, out string modloaderVersion)
-        {
-            modloaderVersion = "";
-            clienType = ClientType.Vanilla;
-            foreach (var loader in manifest.minecraft.modLoaders)
-            {
-                if (loader.primary)
-                {
-                    modloaderVersion = loader.id;
-                    break;
-                }
-            }
+		protected override bool ManifestIsValid(InstanceManifest manifest)
+		{
+			return manifest?.minecraft != null && manifest.minecraft.modLoaders != null && manifest.minecraft.version != null;
+		}
 
-            if (modloaderVersion != "")
-            {
-                if (modloaderVersion.Contains("neoforge-"))
-                {
-                    clienType = ClientType.NeoForge;
-                    modloaderVersion = modloaderVersion.Replace("neoforge-", "");
-                }
-                else if(modloaderVersion.Contains("forge-"))
-                {
-                    clienType = ClientType.Forge;
-                    modloaderVersion = modloaderVersion.Replace("forge-", "");
-                }
-                else if (modloaderVersion.Contains("fabric-"))
-                {
-                    clienType = ClientType.Fabric;
-                    modloaderVersion = modloaderVersion.Replace("fabric-", "");
-                }
-                else if (modloaderVersion.Contains("fabric-"))
-                {
-                    clienType = ClientType.Quilt;
-                    modloaderVersion = modloaderVersion.Replace("quilt-", "");
-                }
-            }
-        }
+		protected override void DetermineGameType(InstanceManifest manifest, out ClientType clienType, out string modloaderVersion)
+		{
+			modloaderVersion = "";
+			clienType = ClientType.Vanilla;
+			foreach (var loader in manifest.minecraft.modLoaders)
+			{
+				if (loader.primary)
+				{
+					modloaderVersion = loader.id;
+					break;
+				}
+			}
 
-        protected override string DetermineGameVersion(InstanceManifest manifest)
-        {
-            return manifest.minecraft?.version ?? "";
-        }
+			if (modloaderVersion != "")
+			{
+				if (modloaderVersion.Contains("neoforge-"))
+				{
+					clienType = ClientType.NeoForge;
+					modloaderVersion = modloaderVersion.Replace("neoforge-", "");
+				}
+				else if (modloaderVersion.Contains("forge-"))
+				{
+					clienType = ClientType.Forge;
+					modloaderVersion = modloaderVersion.Replace("forge-", "");
+				}
+				else if (modloaderVersion.Contains("fabric-"))
+				{
+					clienType = ClientType.Fabric;
+					modloaderVersion = modloaderVersion.Replace("fabric-", "");
+				}
+				else if (modloaderVersion.Contains("fabric-"))
+				{
+					clienType = ClientType.Quilt;
+					modloaderVersion = modloaderVersion.Replace("quilt-", "");
+				}
+			}
+		}
 
-        public override string ProjectId { get => ProjectInfo?.id.ToString() ?? ""; }
+		protected override string DetermineGameVersion(InstanceManifest manifest)
+		{
+			return manifest.minecraft?.version ?? "";
+		}
 
-        protected override bool ProfectInfoIsValid
-        {
-            get => !string.IsNullOrWhiteSpace(ProjectInfo?.downloadUrl) && !string.IsNullOrWhiteSpace(ProjectInfo.fileName);
-        }
+		public override string ProjectId { get => projectInfo?.id.ToString() ?? ""; }
 
-        protected override string ArchiveDownloadUrl
-        {
-            get => ProjectInfo.downloadUrl;
-        }
+		protected override bool ProfectInfoIsValid
+		{
+			get => !string.IsNullOrWhiteSpace(projectInfo?.downloadUrl) && !string.IsNullOrWhiteSpace(projectInfo.fileName);
+		}
 
-        protected override string ArchiveFileName
-        {
-            get => ProjectInfo.fileName;
-        }
-    }
+		protected override string ArchiveDownloadUrl
+		{
+			get => projectInfo.downloadUrl;
+		}
+
+		protected override string ArchiveFileName
+		{
+			get => projectInfo.fileName;
+		}
+	}
 }

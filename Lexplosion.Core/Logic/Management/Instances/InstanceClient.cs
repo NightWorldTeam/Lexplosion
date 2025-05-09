@@ -2,12 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
-using System.Text.RegularExpressions;
 using System.Threading;
-using System.Runtime.CompilerServices;
 using System.Linq;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using NightWorld.Tools.Minecraft.NBT.StorageFiles;
 using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
@@ -15,13 +12,8 @@ using Lexplosion.Tools;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Management.Sources;
-using Lexplosion.Logic.Network.Web;
-using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.Logic.Management.Addons;
-using Lexplosion.Logic.Management.Import;
-using Lexplosion.Logic.Management.Import.Importers;
-using System.Diagnostics.SymbolStore;
 
 namespace Lexplosion.Logic.Management.Instances
 {
@@ -35,7 +27,7 @@ namespace Lexplosion.Logic.Management.Instances
 		private string _localId = null;
 		private readonly PrototypeInstance _dataManager;
 		private readonly IInstanceSource _instanceSource;
-
+		private readonly AllServicesContainer _services;
 		private CancellationTokenSource _cancelTokenSource = null;
 		private LaunchGame _gameManager = null;
 
@@ -43,13 +35,6 @@ namespace Lexplosion.Logic.Management.Instances
 		private const string UnknownName = "Unknown name";
 		private const string UnknownAuthor = "Unknown author";
 		private const string NoDescription = "Описания нет, но мы надеемся что оно будет.";
-
-		private static Dictionary<string, InstanceClient> _installedInstances = new Dictionary<string, InstanceClient>();
-
-		/// <summary>
-		/// Содержит пары состоящие из внешнего и внутреннего id.
-		/// </summary>
-		private static Dictionary<string, string> _idsPairs = new Dictionary<string, string>();
 
 		#region events
 		/// <summary>
@@ -91,10 +76,17 @@ namespace Lexplosion.Logic.Management.Instances
 		public event Action DescriptionChanged;
 		public event Action LogoChanged;
 		public event Action GameVersionChanged;
+
+		/// <summary>
+		/// Вызывается когда у сборки обноавляются данные.
+		/// Существует чтобы <see cref="ClientsManager"/> при срабатывании этого эвента перезаписывал список сборок в файл
+		/// </summary>
+		internal event Action InternalDataChanged;
 		#endregion
 
 		#region info
 		public string LocalId { get => _localId; }
+		public string ExternalId { get => _externalId; }
 
 		private string _name;
 		public string Name
@@ -195,17 +187,22 @@ namespace Lexplosion.Logic.Management.Instances
 			}
 		}
 
-		private bool _inLibrary = false;
-		public bool InLibrary
+		private bool _createdLocally = false;
+		/// <summary>
+		/// Создана ли сборка локально. То есть существует ли у неё на диски вся файловая структура
+		/// </summary>
+		public bool CreatedLocally
 		{
-			get => _inLibrary;
-			private set
+			get => _createdLocally;
+			internal set
 			{
-				_inLibrary = value;
+				_createdLocally = value;
 				OnPropertyChanged();
 				StateChanged?.Invoke();
 			}
 		}
+
+		public bool IsFictitious { get; private set; }
 
 		private bool _updateAvailable = false;
 		public bool UpdateAvailable
@@ -248,7 +245,7 @@ namespace Lexplosion.Logic.Management.Instances
 		public bool IsComplete
 		{
 			get => _isComplete;
-			private set
+			internal set
 			{
 				_isComplete = value;
 				OnPropertyChanged();
@@ -259,13 +256,13 @@ namespace Lexplosion.Logic.Management.Instances
 			}
 		}
 
-		public static int InstancesCount { get => _installedInstances.Count; }
-
 		public bool IsSharing { get; private set; } = false;
 
 		public bool IsInstalled { get; private set; } = false;
 
-		public string FolderPath { get => WithDirectory.GetInstancePath(_localId); }
+		public string FolderPath { get => _services.DirectoryService.GetInstancePath(_localId); }
+
+		internal ProgressHandlerCallback GetProgressHandler { get => ProgressHandler; }
 
 		#endregion
 
@@ -280,10 +277,11 @@ namespace Lexplosion.Logic.Management.Instances
 		/// Базовый конструктор, от него должны наследоваться все остальные
 		/// </summary>
 		/// <param name="source">Источник модпака</param>
-		private InstanceClient(IInstanceSource source)
+		internal InstanceClient(IInstanceSource source, AllServicesContainer services)
 		{
 			Type = source.SourceType;
 			_instanceSource = source;
+			_services = services;
 			_dataManager = source.ContentManager;
 
 			GameExited += delegate (string _)
@@ -297,7 +295,7 @@ namespace Lexplosion.Logic.Management.Instances
 		/// </summary>
 		/// <param name="source">Источник модпака</param>
 		/// <param name="externalID">Внешний ID</param>
-		private InstanceClient(IInstanceSource source, string externalID) : this(source)
+		internal InstanceClient(IInstanceSource source, AllServicesContainer services, string externalID) : this(source, services)
 		{
 			_externalId = externalID;
 		}
@@ -308,7 +306,7 @@ namespace Lexplosion.Logic.Management.Instances
 		/// <param name="source">Источник модпака</param>
 		/// <param name="externalID">Внешний ID</param>
 		/// <param name="externalID">Локальный ID</param>
-		private InstanceClient(IInstanceSource source, string externalID, string localId) : this(source, externalID)
+		internal InstanceClient(IInstanceSource source, AllServicesContainer services, string externalID, string localId) : this(source, services, externalID)
 		{
 			_localId = localId;
 		}
@@ -319,68 +317,26 @@ namespace Lexplosion.Logic.Management.Instances
 		/// <param name="name">Название сборки</param>
 		/// <param name="source">Источник модпака</param>
 		/// <param name="gameVersion">Версия игры</param>
-		private InstanceClient(string name, IInstanceSource source, MinecraftVersion gameVersion, string externalID) : this(source, externalID)
+		internal InstanceClient(string name, IInstanceSource source, AllServicesContainer services, MinecraftVersion gameVersion, string externalId, string localId) : this(source, services, externalId, localId)
 		{
 			Name = name;
 			GameVersion = gameVersion;
-			GenerateInstanceId();
 		}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		private static IInstanceSource CreateSourceFactory(InstanceSource type)
+		internal void CompleteClient(IInstanceSource source, string name, InstanceSource type, MinecraftVersion gameVersion, ClientType modloader, bool isNwClient, string logoPath = null, string modloaderVersion = null, string optifineVersion = null, bool sodium = false, string externalId = null)
 		{
-			switch (type)
-			{
-				case InstanceSource.Local:
-					return new LocalSource();
-				case InstanceSource.Nightworld:
-					return new NightWorldSource();
-				case InstanceSource.Curseforge:
-					return new CurseforgeSource();
-				case InstanceSource.Modrinth:
-					return new ModrinthSource();
-				case InstanceSource.FreeSource:
-					return new FreeSource();
-				default:
-					{
-						Runtime.DebugWrite("CreateSourceFactory error. type: " + type);
-						return new LocalSource();
-					}
-			}
-		}
+			CreatedLocally = true;
+			Author = Account.AnyFuckingLogin;
+			Description = NoDescription;
+			Summary = NoDescription;
 
-		/// <summary>
-		/// Этот метод создаёт локальную сборку. Должен использоваться только при создании локальной сборки.
-		/// </summary>
-		/// <param name="name">Название сборки</param>
-		/// <param name="gameVersion">Версия игры</param>
-		/// <param name="modloader">Тип модлоадера</param>
-		/// <param name="logoPath">Путь до логотипа. Если устанавливать не надо, то null.</param>
-		/// <param name="modloaderVersion">Версия модлоадера. Это поле необходимо только если есть модлоадер</param>
-		/// <param name="optifineVersion">Версия оптифайна. Если оптифайн не нужен - то null.</param>
-		/// <param name="sodium">Устанавливать ли sodium</param>
-		public static InstanceClient CreateClient(string name, InstanceSource type, MinecraftVersion gameVersion, ClientType modloader, bool isNwClient, string logoPath = null, string modloaderVersion = null, string optifineVersion = null, bool sodium = false)
-		{
-			return CreateClient(CreateSourceFactory(type), name, type, gameVersion, modloader, isNwClient, logoPath: logoPath, modloaderVersion: modloaderVersion, optifineVersion: optifineVersion, sodium: sodium);
-		}
-
-		private static InstanceClient CreateClient(IInstanceSource source, string name, InstanceSource type, MinecraftVersion gameVersion, ClientType modloader, bool isNwClient, string logoPath = null, string modloaderVersion = null, string optifineVersion = null, bool sodium = false, string externalId = null)
-		{
 			if (modloaderVersion == null) modloader = ClientType.Vanilla;
-
-			var client = new InstanceClient(name, source, gameVersion, externalId)
-			{
-				InLibrary = true,
-				Author = Account.AnyFuckingLogin,
-				Description = NoDescription,
-				Summary = NoDescription
-			};
 
 			try
 			{
 				if (logoPath != null && File.Exists(logoPath))
 				{
-					client.Logo = File.ReadAllBytes(logoPath);
+					Logo = File.ReadAllBytes(logoPath);
 				}
 			}
 			catch { }
@@ -393,74 +349,165 @@ namespace Lexplosion.Logic.Management.Instances
 				installer = AdditionalInstallerType.Optifine;
 			}
 
-			client.CreateFileStruct(modloader, modloaderVersion, isNwClient, installer, installerVer);
-			client.SaveAssets();
-
-			_installedInstances[client._localId] = client;
-			SaveInstalledInstancesList();
+			CreateFileStruct(modloader, modloaderVersion, isNwClient, installer, installerVer);
+			SaveAssets();
 
 			if (sodium && (modloader == ClientType.Fabric || modloader == ClientType.Quilt))
 			{
 				ThreadPool.QueueUserWorkItem(delegate (object o)
 				{
-					var sodium = ModrinthApi.GetProject("AANobbMI");
-					var addon = AddonsManager.GetManager(client.GetBaseData).CreateModrinthAddon(sodium);
+					var sodium = _services.MdApi.GetProject("AANobbMI");
+					var addon = AddonsManager.GetManager(GetBaseData, _services).CreateModrinthAddon(sodium);
 					var stateData = new DynamicStateHandler<SetValues<InstanceAddon, DownloadAddonRes>, InstanceAddon.InstallAddonState>(delegate (SetValues<InstanceAddon, DownloadAddonRes> a, InstanceAddon.InstallAddonState b) { });
 					addon.InstallLatestVersion(stateData, downloadDependencies: true);
 				});
 			}
-
-			return client;
 		}
 
-		public static InstanceClient CreateClient(MinecraftServerInstance server, bool autoLogin)
+		internal void CompleteClient(MinecraftServerInstance server, bool autoLogin)
 		{
-			string name = server.Name;
-			var minecraftVersion = new MinecraftVersion(server.GameVersion);
-
-			IInstanceSource source;
-			string externalId = null;
-			string modpackVersion = null;
-			if (server.InstanceSource == InstanceSource.FreeSource)
-			{
-				source = new FreeSource(server.ModpackInfo.SourceId, null);
-			}
-			else
-			{
-				source = CreateSourceFactory(server.InstanceSource);
-			}
-
-			externalId = server.ModpackInfo?.ModpackId;
-			modpackVersion = server.ModpackInfo?.Version;
-
-			bool isNwClient = GlobalData.GeneralSettings.NwClientByDefault == true;
-			var client = CreateClient(source, name, server.InstanceSource, minecraftVersion, ClientType.Vanilla, isNwClient, externalId: externalId);
-			client.AddGameServer(server, autoLogin);
-			client._instanceVersionToDownload = modpackVersion;
+			string modpackVersion = server.ModpackInfo?.Version;
+			AddGameServer(server, autoLogin);
+			_instanceVersionToDownload = modpackVersion;
 
 			if (server.Tags != null)
 			{
-				client.Categories = server.Tags.Select((x) => new SimpleCategory(x.Id, x.Name));
+				Categories = server.Tags.Select((x) => new SimpleCategory(x.Id, x.Name));
 			}
 
 			if (server.Description != null)
 			{
-				client.Description = server.Description;
-				client.Summary = server.Description.Truncate(45);
+				Description = server.Description;
+				Summary = server.Description.Truncate(45);
 			}
 
-			client.SaveAssets();
+			SaveAssets();
 
 			if (!string.IsNullOrWhiteSpace(server.IconUrl))
 			{
-				client.DownloadLogo(server.IconUrl, client.SaveAssets);
+				DownloadLogo(server.IconUrl, SaveAssets);
 			}
 
-			Settings settings = client.GetSettings();
+			Settings settings = GetSettings();
 			settings.IsAutoUpdate = true;
-			client.SaveSettings(settings);
+			SaveSettings(settings);
+		}
 
-			return client;
+		internal void CompleteClient(string name, MinecraftVersion gameVersion, byte[] logo, string instanceVersion, bool isInstalled)
+		{
+			//получаем асетсы модпака
+			var assetsData = _services.DataFilesService.GetFile<InstanceAssetsFileDecodeFormat>(_services.DirectoryService.DirectoryPath + "/instances-assets/" + _localId + "/assets.json");
+
+			if (assetsData != null)
+			{
+				string file = _services.DirectoryService.DirectoryPath + "/instances-assets/" + _localId + "/" + LogoFileName;
+
+				try
+				{
+					if (File.Exists(file))
+					{
+						logo = File.ReadAllBytes(file);
+					}
+				}
+				catch { }
+			}
+
+			if (assetsData != null)
+			{
+				Name = name ?? UnknownName;
+				Summary = assetsData.Summary ?? NoDescription;
+				Author = assetsData.Author ?? UnknownAuthor;
+				Description = assetsData.Description ?? NoDescription;
+				Categories = assetsData.Categories;
+				GameVersion = gameVersion;
+				Logo = logo;
+				_profileVersion = instanceVersion;
+			}
+			else
+			{
+				Name = name ?? UnknownName;
+				Summary = NoDescription;
+				Author = UnknownAuthor;
+				Description = NoDescription;
+				GameVersion = gameVersion;
+				Logo = logo;
+				_profileVersion = instanceVersion;
+			}
+
+			CreatedLocally = true;
+			IsInstalled = isInstalled;
+			//хуярим проверку обновлений в пуле потоков
+			ThreadPool.QueueUserWorkItem(delegate (object state)
+			{
+				CheckUpdates();
+			});
+		}
+
+		internal void CompleteClient(string name, MinecraftVersion gameVersion, IEnumerable<CategoryBase> categories, string summary, string description, string author, string websiteUrl)
+		{
+			if (!string.IsNullOrEmpty(name))
+				Name = name;
+			else if (string.IsNullOrEmpty(Name))
+				Name = UnknownName;
+
+			if (!string.IsNullOrEmpty(summary))
+				Summary = summary;
+			else if (string.IsNullOrEmpty(Summary))
+				Summary = NoDescription;
+
+			if (!string.IsNullOrEmpty(description))
+				Description = description;
+			else if (string.IsNullOrEmpty(Description))
+				Description = NoDescription;
+
+			if (!string.IsNullOrEmpty(author))
+				Author = author;
+			else if (string.IsNullOrEmpty(Author))
+				Author = UnknownAuthor;
+
+			if (categories != null)
+				Categories = categories;
+			if (gameVersion != null)
+				GameVersion = gameVersion;
+			if (websiteUrl != null)
+				WebsiteUrl = websiteUrl;
+		}
+
+		internal void MakeFictitiousClient(string tempName)
+		{
+			Name = tempName;
+			IsFictitious = true;
+			Author = UnknownAuthor;
+			Summary = string.Empty;
+			IsComplete = false;
+		}
+
+		/// <summary>
+		/// Создает локальную структуру сборки.
+		/// То есть помечает ее как созданную локлаьно и создает для нее всю файловую структуру
+		/// </summary>
+		internal void CreateLocalStruct(string localId)
+		{
+			_localId = localId;
+			bool isNwClient = GlobalData.GeneralSettings.NwClientByDefault == true;
+			CreateFileStruct(ClientType.Vanilla, string.Empty, isNwClient);
+			SaveAssets();
+			CreatedLocally = true;
+		}
+
+		internal void CompleteInitialization(InstanceInit initResult, IReadOnlyCollection<string> errors)
+		{
+			if (initResult == InstanceInit.Successful) IsComplete = true;
+			IsFictitious = false;
+			Initialized?.Invoke(initResult, (List<string>)errors, false);
+		}
+
+		internal void DeleteLocalStruct()
+		{
+			_services.DirectoryService.DeleteInstance(_localId);
+			UpdateAvailable = false;
+			CreatedLocally = false;
+			IsInstalled = false;
 		}
 
 		/// <summary>
@@ -478,7 +525,7 @@ namespace Lexplosion.Logic.Management.Instances
 
 				if (_localId != null)
 				{
-					VersionManifest manifest = DataFilesManager.GetManifest(_localId, false);
+					VersionManifest manifest = _services.DataFilesService.GetManifest(_localId, false);
 					if (manifest?.version != null)
 					{
 						gameVersion = manifest.version.GameVersionInfo;
@@ -495,7 +542,7 @@ namespace Lexplosion.Logic.Management.Instances
 					ExternalId = _externalId,
 					Type = Type,
 					GameVersion = gameVersion,
-					InLibrary = InLibrary,
+					InLibrary = CreatedLocally,
 					Author = Author,
 					Categories = Categories,
 					Description = Description,
@@ -507,252 +554,6 @@ namespace Lexplosion.Logic.Management.Instances
 					IsNwClient = IsNwClient
 				};
 			}
-		}
-
-		/// <summary>
-		/// Сохраняем список установленных сборок (библиотеку) в файл instanesList.json.
-		/// </summary>
-		public static void SaveInstalledInstancesList()
-		{
-			// деаем список всех установленных сборок
-			var list = new InstalledInstancesFormat();
-			foreach (var inst in _installedInstances.Keys)
-			{
-				list[inst] = new InstalledInstance
-				{
-					Name = _installedInstances[inst].Name,
-					Type = _installedInstances[inst].Type,
-					IsInstalled = _installedInstances[inst].IsInstalled,
-				};
-			}
-
-			// сохраняем этот список
-			DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/instanesList.json", JsonConvert.SerializeObject(list));
-		}
-
-		/// <summary>
-		/// Заполняет список установленных сборок. Вызывается 1 раз, в Main при запуске лаунчера
-		/// </summary>
-		public static void DefineInstalledInstances()
-		{
-			var list = DataFilesManager.GetFile<InstalledInstancesFormat>(WithDirectory.DirectoryPath + "/instanesList.json");
-
-			if (list != null)
-			{
-				foreach (string localId in list.Keys)
-				{
-					VersionManifest instanceManifest = DataFilesManager.GetManifest(localId, false);
-					bool manifestIsCorrect =
-						(instanceManifest != null && instanceManifest.version != null && instanceManifest.version.GameVersion != null);
-
-					//проверяем имеется ли манифест, не содержит ли его id запрещенных символов
-					if (manifestIsCorrect && !ForbiddenIsCharsExists(localId))
-					{
-						IInstanceSource sourceFactory = CreateSourceFactory(list[localId].Type);
-						if (sourceFactory == null)
-						{
-							continue;
-						}
-
-						string externalID = null;
-						string instanceVersion = null;
-						byte[] logo = null;
-
-						//получаем вншний айдшник и версию, если этот модпак не локлаьный
-						if (list[localId].Type != InstanceSource.Local)
-						{
-							InstancePlatformData data = DataFilesManager.GetPlatfromData(localId);
-							if (data?.instanceVersion != null && data.id != null)
-							{
-								externalID = data.id;
-								instanceVersion = data.instanceVersion;
-								_idsPairs[externalID] = localId;
-							}
-						}
-
-						//получаем асетсы модпаков
-						var assetsData = DataFilesManager.GetFile<InstanceAssetsFileDecodeFormat>(WithDirectory.DirectoryPath + "/instances-assets/" + localId + "/assets.json");
-
-						if (assetsData != null)
-						{
-							string file = WithDirectory.DirectoryPath + "/instances-assets/" + localId + "/" + LogoFileName;
-							if (File.Exists(file))
-							{
-								try
-								{
-									logo = File.ReadAllBytes(file);
-								}
-								catch { }
-							}
-						}
-
-						InstanceClient instance;
-						if (assetsData != null)
-						{
-							instance = new InstanceClient(sourceFactory, externalID, localId)
-							{
-								Name = list[localId].Name ?? UnknownName,
-								Summary = assetsData.Summary ?? NoDescription,
-								Author = assetsData.Author ?? UnknownAuthor,
-								Description = assetsData.Description ?? NoDescription,
-								Categories = assetsData.Categories,
-								GameVersion = instanceManifest.version?.GameVersionInfo,
-								Logo = logo,
-								_profileVersion = instanceVersion
-							};
-						}
-						else
-						{
-							instance = new InstanceClient(sourceFactory, externalID, localId)
-							{
-								Name = list[localId].Name ?? UnknownName,
-								Summary = NoDescription,
-								Author = UnknownAuthor,
-								Description = NoDescription,
-								GameVersion = instanceManifest.version?.GameVersionInfo,
-								Logo = logo,
-								_profileVersion = instanceVersion
-							};
-						}
-
-						instance.InLibrary = true;
-						instance.IsInstalled = list[localId].IsInstalled;
-						//хуярим проверку обновлений в пуле потоков
-						ThreadPool.QueueUserWorkItem(delegate (object state)
-						{
-							instance.CheckUpdates();
-						});
-						_installedInstances[localId] = instance;
-					}
-				}
-			}
-		}
-		
-
-		/// <summary>
-		/// Возвращает количество сборок в библиотеке
-		/// </summary>
-		public static int LibrarySize { get => _installedInstances.Count; }
-
-		/// <summary>
-		/// Возвращает список модпаков для библиотеки.
-		/// </summary>
-		/// <returns>Список установленных модпаков.</returns>
-		public static List<InstanceClient> GetInstalledInstances(InstanceGroup group)
-		{
-			return new List<InstanceClient>(_installedInstances.Values);
-		}
-
-		public static List<InstanceClient> GetInstalledInstances() => GetInstalledInstances(InstanceGroup.AllInstances);
-
-		/// <summary>
-		/// Возвращает список модпаков для каталога.
-		/// </summary>
-		/// <returns>Список внешних модпаков.</returns>
-		public static CatalogResult<InstanceClient> GetOutsideInstances(InstanceSource type, ISearchParams searchParams)
-		{
-			Runtime.DebugWrite("UploadInstances " + searchParams.PageIndex);
-
-			IInstanceSource source = CreateSourceFactory(type);
-
-			var instances = new List<InstanceClient>();
-			CatalogResult<InstanceInfo> catalog = source.GetCatalog(type, searchParams);
-
-			foreach (var instance in catalog)
-			{
-				InstanceClient instanceClient;
-				if (_idsPairs.ContainsKey(instance.ExternalId))
-				{
-					instanceClient = _installedInstances[_idsPairs[instance.ExternalId]];
-					instanceClient.CheckUpdates();
-
-					if (instance.Name != null)
-						instanceClient.Name = instance.Name;
-					if (instance.Categories != null)
-						instanceClient.Categories = instance.Categories;
-					if (instance.Summary != null)
-						instanceClient.Summary = instance.Summary;
-					if (instance.Description != null)
-						instanceClient.Description = instance.Description;
-					if (instance.Author != null)
-						instanceClient.Author = instance.Author;
-					if (instance.WebsiteUrl != null)
-						instanceClient.WebsiteUrl = instance.WebsiteUrl;
-
-					instanceClient.DownloadLogo(instance.LogoUrl, instanceClient.SaveAssets);
-				}
-				else
-				{
-					instanceClient = new InstanceClient(source, instance.ExternalId)
-					{
-						Name = instance.Name ?? UnknownName,
-						Logo = null,
-						Categories = instance.Categories,
-						GameVersion = instance.GameVersion,
-						Summary = instance.Summary ?? NoDescription,
-						Description = instance.Description ?? NoDescription,
-						Author = instance.Author,
-						WebsiteUrl = instance.WebsiteUrl
-					};
-
-					instanceClient.DownloadLogo(instance.LogoUrl, delegate { });
-				}
-
-				instances.Add(instanceClient);
-			}
-
-			return new(instances, catalog.TotalCount);
-		}
-
-		/// <summary>
-		/// Получает внешнюю сборку по id
-		/// </summary>
-		/// <returns>Экземпляр клиента.</returns>
-		public static InstanceClient GetInstance(InstanceSource type, string instanceId)
-		{
-			PrototypeInstance.Info instance = PrototypeInstance.GetInstance(type, instanceId);
-
-			InstanceClient instanceClient;
-			if (instance != null)
-			{
-				// TODO: тут пока нет необходимости получать лого, но потом она может появиться
-				if (_idsPairs.ContainsKey(instance.ExternalId))
-				{
-					instanceClient = _installedInstances[_idsPairs[instance.ExternalId]];
-					instanceClient.CheckUpdates();
-
-					if (instance.Name != null)
-						instanceClient.Name = instance.Name;
-					if (instance.Categories != null)
-						instanceClient.Categories = instance.Categories;
-					if (instance.Summary != null)
-						instanceClient.Summary = instance.Summary;
-					if (instance.Description != null)
-						instanceClient.Description = instance.Description;
-					if (instance.Author != null)
-						instanceClient.Author = instance.Author;
-					if (instance.Author != null)
-						instanceClient.WebsiteUrl = instance.WebsiteUrl;
-				}
-				else
-				{
-					instanceClient = new InstanceClient(CreateSourceFactory(type), instance.ExternalId)
-					{
-						Name = instance.Name ?? UnknownName,
-						Logo = null,
-						Categories = instance.Categories,
-						GameVersion = new MinecraftVersion(instance.GameVersion),
-						Summary = instance.Summary ?? NoDescription,
-						Description = instance.Description ?? NoDescription,
-						Author = instance.Author,
-						WebsiteUrl = instance.WebsiteUrl
-					};
-				}
-
-				return instanceClient;
-			}
-
-			return null;
 		}
 
 		/// <summary>
@@ -788,7 +589,7 @@ namespace Lexplosion.Logic.Management.Instances
 		/// <param name="logoPath">Путь до лого. Если логотип изменять не нужно, то null</param>
 		public void ChangeParameters(BaseInstanceData data, string logoPath)
 		{
-			VersionManifest manifest = DataFilesManager.GetManifest(_localId, false);
+			VersionManifest manifest = _services.DataFilesService.GetManifest(_localId, false);
 			if (manifest != null)
 			{
 				manifest.version.ModloaderType = data.Modloader;
@@ -810,17 +611,13 @@ namespace Lexplosion.Logic.Management.Instances
 					manifest.version.AdditionalInstaller = null;
 				}
 
-				DataFilesManager.SaveManifest(_localId, manifest);
+				_services.DataFilesService.SaveManifest(_localId, manifest);
 			}
 
-			try
+			if (logoPath != null)
 			{
-				if (logoPath != null && File.Exists(logoPath))
-				{
-					Logo = File.ReadAllBytes(logoPath);
-				}
+				SetLogo(logoPath);
 			}
-			catch { }
 
 			Description = data.Description;
 			GameVersion = data.GameVersion;
@@ -829,7 +626,7 @@ namespace Lexplosion.Logic.Management.Instances
 			SaveAssets();
 
 			Name = data.Name;
-			SaveInstalledInstancesList();
+			InternalDataChanged?.Invoke();
 		}
 
 		/// <summary>
@@ -865,7 +662,7 @@ namespace Lexplosion.Logic.Management.Instances
 			var activeAccount = Account.ActiveAccount?.IsAuthed == true ? Account.ActiveAccount : null;
 			var launchAccount = Account.LaunchAccount;
 
-			LaunchGame launchGame = new LaunchGame(_localId, generalSettings, instanceSettings, activeAccount, launchAccount, _instanceSource, _cancelTokenSource.Token);
+			LaunchGame launchGame = new LaunchGame(_localId, generalSettings, instanceSettings, activeAccount, launchAccount, _instanceSource, _services, _cancelTokenSource.Token);
 			InitData data = launchGame.Update(ProgressHandler, FileDownloadEvent, DownloadStarted, instanceVersion);
 
 			UpdateAvailable = data.UpdatesAvailable;
@@ -883,7 +680,7 @@ namespace Lexplosion.Logic.Management.Instances
 				IsInstalled = (data.InitResult == InstanceInit.Successful);
 				_instanceVersionToDownload = null;
 
-				SaveInstalledInstancesList(); // чтобы если сборка установилась то флаг IsInstalled сохранился
+				InternalDataChanged?.Invoke(); // чтобы если сборка установилась то флаг IsInstalled сохранился
 			}
 
 			Initialized?.Invoke(data.InitResult, data.DownloadErrors, false);
@@ -909,7 +706,7 @@ namespace Lexplosion.Logic.Management.Instances
 			var activeAccount = Account.ActiveAccount?.IsAuthed == true ? Account.ActiveAccount : null;
 			var launchAccount = Account.LaunchAccount;
 
-			_gameManager = new LaunchGame(_localId, generalSettings, instanceSettings, activeAccount, launchAccount, _instanceSource, _cancelTokenSource.Token);
+			_gameManager = new LaunchGame(_localId, generalSettings, instanceSettings, activeAccount, launchAccount, _instanceSource, _services, _cancelTokenSource.Token);
 			InitData data = _gameManager.Initialization(ProgressHandler, FileDownloadEvent, DownloadStarted);
 
 			UpdateAvailable = data.UpdatesAvailable;
@@ -918,11 +715,11 @@ namespace Lexplosion.Logic.Management.Instances
 			if (data.InitResult == InstanceInit.Successful)
 			{
 				IsInstalled = true;
-				SaveInstalledInstancesList(); // чтобы если сборка установилась то флаг IsInstalled сохранился
+				InternalDataChanged?.Invoke(); // чтобы если сборка установилась то флаг IsInstalled сохранился
 				Initialized?.Invoke(data.InitResult, data.DownloadErrors, true);
 
 				_gameManager.Run(data, LaunchComplited, GameExited, Name);
-				DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+				_services.DataFilesService.SaveSettings(GlobalData.GeneralSettings);
 				// TODO: тут надо как-то определять что сборка обновилась и UpdateAvailable = false делать, если было обновление
 			}
 			else
@@ -936,112 +733,15 @@ namespace Lexplosion.Logic.Management.Instances
 			_gameManager?.DeleteCancellationToken();
 		}
 
-		/// <summary>
-		/// Добавляет сборку в библиотеку
-		/// </summary>
-		public void AddToLibrary()
-		{
-			if (!InLibrary)
-			{
-				GenerateInstanceId();
-				bool isNwClient = GlobalData.GeneralSettings.NwClientByDefault == true;
-				CreateFileStruct(ClientType.Vanilla, string.Empty, isNwClient);
-				_installedInstances[_localId] = this;
-				_idsPairs[_externalId] = _localId;
-				SaveInstalledInstancesList();
-				SaveAssets();
-				InLibrary = true;
-			}
-		}
-
-		private void CheckUpdates()
+		internal void CheckUpdates()
 		{
 			UpdateAvailable = _dataManager.CheckUpdates(_localId);
-		}
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		private static bool ForbiddenIsCharsExists(string str)
-		{
-			str = str.Replace("_", "").Replace("[", "").Replace("]", "").Replace("{", "").Replace("}", "").Replace(" ", "").Replace(".", "").Replace("(", "").Replace(")", "");
-			return Regex.IsMatch(str, @"[^a-zA-Z0-9]");
-		}
-
-		private bool DirectoryIsExists(string path)
-		{
-			try
-			{
-				return Directory.Exists(path);
-			}
-			catch
-			{
-				return false;
-			}
-		}
-
-		private void GenerateInstanceId()
-		{
-			string instanceId = Name.ToLower();
-
-			// переводим русские символы в транслит
-			string[] lat_low = { "a", "b", "v", "g", "d", "e", "yo", "zh", "z", "i", "y", "k", "l", "m", "n", "o", "p", "r", "s", "t", "u", "f", "kh", "ts", "ch", "sh", "shch", "\"", "y", "'", "e", "yu", "ya" };
-			string[] rus_up = { "А", "Б", "В", "Г", "Д", "Е", "Ё", "Ж", "З", "И", "Й", "К", "Л", "М", "Н", "О", "П", "Р", "С", "Т", "У", "Ф", "Х", "Ц", "Ч", "Ш", "Щ", "Ъ", "Ы", "Ь", "Э", "Ю", "Я" };
-			string[] rus_low = { "а", "б", "в", "г", "д", "е", "ё", "ж", "з", "и", "й", "к", "л", "м", "н", "о", "п", "р", "с", "т", "у", "ф", "х", "ц", "ч", "ш", "щ", "ъ", "ы", "ь", "э", "ю", "я" };
-			for (int i = 0; i <= 32; i++)
-			{
-				instanceId = instanceId.Replace(rus_up[i], lat_low[i]).Replace(rus_low[i], lat_low[i]);
-			}
-
-			instanceId = instanceId.Replace("&", "AND");
-
-			if (ForbiddenIsCharsExists(instanceId))
-			{
-				int j = 0;
-				while (j < instanceId.Length)
-				{
-					if (ForbiddenIsCharsExists(instanceId[j].ToString()))
-					{
-						instanceId = instanceId.Replace(instanceId[j], '_');
-					}
-					j++;
-				}
-
-				if (_installedInstances.ContainsKey(instanceId) || DirectoryIsExists(WithDirectory.GetInstancePath(instanceId)))
-				{
-					string instanceId_ = instanceId;
-					int i = 0;
-					do
-					{
-						if (i > 0)
-						{
-							instanceId_ = instanceId + " (" + i + ")";
-						}
-						i++;
-					}
-					while (_installedInstances.ContainsKey(instanceId_) || DirectoryIsExists(WithDirectory.GetInstancePath(instanceId_)));
-					instanceId = instanceId_;
-				}
-			}
-			else if (_installedInstances.ContainsKey(instanceId) || DirectoryIsExists(WithDirectory.GetInstancePath(instanceId)))
-			{
-				string instanceId_ = instanceId;
-				int i = 0;
-				do
-				{
-					instanceId_ = instanceId + " (" + i + ")";
-					i++;
-				}
-				while (_installedInstances.ContainsKey(instanceId_) || DirectoryIsExists(WithDirectory.GetInstancePath(instanceId_)));
-
-				instanceId = instanceId_;
-			}
-
-			_localId = instanceId;
 		}
 
 		/// <summary>
 		/// Ну бля, качает заглавную картинку (лого) по ссылке и записывает в переменную Logo. Делает это всё в пуле потоков.
 		/// </summary>
-		private void DownloadLogo(string url, Action callback)
+		internal void DownloadLogo(string url, Action callback)
 		{
 			ThreadPool.QueueUserWorkItem(delegate (object state)
 			{
@@ -1058,27 +758,38 @@ namespace Lexplosion.Logic.Management.Instances
 			});
 		}
 
+		internal void SetLogo(string logoFilePath)
+		{
+
+			try
+			{
+				if (File.Exists(logoFilePath))
+					Logo = File.ReadAllBytes(logoFilePath);
+			}
+			catch { }
+		}
+
 		/// <summary>
 		/// Сохраняет асетсы клиента в файл.
 		/// </summary>
-		private void SaveAssets()
+		internal void SaveAssets()
 		{
 			try
 			{
-				if (!Directory.Exists(WithDirectory.DirectoryPath + "/instances-assets/" + _localId))
+				if (!Directory.Exists(_services.DirectoryService.DirectoryPath + "/instances-assets/" + _localId))
 				{
-					Directory.CreateDirectory(WithDirectory.DirectoryPath + "/instances-assets/" + _localId);
+					Directory.CreateDirectory(_services.DirectoryService.DirectoryPath + "/instances-assets/" + _localId);
 				}
 
 				if (Logo != null)
 				{
-					File.WriteAllBytes(WithDirectory.DirectoryPath + "/instances-assets/" + _localId + "/" + LogoFileName, Logo);
+					File.WriteAllBytes(_services.DirectoryService.DirectoryPath + "/instances-assets/" + _localId + "/" + LogoFileName, Logo);
 				}
 			}
 			catch { }
 
-			string file = WithDirectory.DirectoryPath + "/instances-assets/" + _localId + "/assets.json";
-			InstanceAssetsFileDecodeFormat assetsData_ = DataFilesManager.GetFile<InstanceAssetsFileDecodeFormat>(file);
+			string file = _services.DirectoryService.DirectoryPath + "/instances-assets/" + _localId + "/assets.json";
+			InstanceAssetsFileDecodeFormat assetsData_ = _services.DataFilesService.GetFile<InstanceAssetsFileDecodeFormat>(file);
 
 			var categories_ = new List<SimpleCategory>();
 			if (Categories != null)
@@ -1098,7 +809,7 @@ namespace Lexplosion.Logic.Management.Instances
 				Summary = Summary
 			};
 
-			DataFilesManager.SaveFile(file, JsonConvert.SerializeObject(assetsData));
+			_services.DataFilesService.SaveFile(file, JsonConvert.SerializeObject(assetsData));
 		}
 
 		/// <summary>
@@ -1134,14 +845,14 @@ namespace Lexplosion.Logic.Management.Instances
 				};
 			}
 
-			DataFilesManager.SaveManifest(_localId, manifest);
+			_services.DataFilesService.SaveManifest(_localId, manifest);
 
 			if (_instanceSource != null)
 			{
 				InstancePlatformData instanceData = _instanceSource.CreateInstancePlatformData(_externalId, _localId, null);
 				if (instanceData != null)
 				{
-					DataFilesManager.SavePlatfromData(_localId, instanceData);
+					_services.DataFilesService.SavePlatfromData(_localId, instanceData);
 				}
 			}
 			else if (Type != InstanceSource.Local)
@@ -1151,40 +862,23 @@ namespace Lexplosion.Logic.Management.Instances
 					id = _externalId
 				};
 
-				DataFilesManager.SavePlatfromData(_localId, instanceData);
+				_services.DataFilesService.SavePlatfromData(_localId, instanceData);
 			}
 		}
 
 		public string GetDirectoryPath()
 		{
-			return (WithDirectory.DirectoryPath.Replace("/", @"\") + @"\instances\" + _localId).Replace(@"\\", @"\");
+			return (_services.DirectoryService.DirectoryPath.Replace("/", @"\") + @"\instances\" + _localId).Replace(@"\\", @"\");
 		}
 
 		public Settings GetSettings()
 		{
-			return DataFilesManager.GetSettings(_localId);
+			return _services.DataFilesService.GetSettings(_localId);
 		}
 
 		public void SaveSettings(Settings settings)
 		{
-			DataFilesManager.SaveSettings(settings, _localId);
-		}
-
-		/// <summary>
-		/// Удаляет сборку к хуям.
-		/// </summary>
-		public void Delete()
-		{
-			WithDirectory.DeleteInstance(_localId);
-			_installedInstances.Remove(_localId);
-			if (_externalId != null)
-			{
-				_idsPairs.Remove(_externalId);
-			}
-			UpdateAvailable = false;
-			InLibrary = false;
-			IsInstalled = false;
-			SaveInstalledInstancesList();
+			_services.DataFilesService.SaveSettings(settings, _localId);
 		}
 
 		/// <summary>
@@ -1254,7 +948,7 @@ namespace Lexplosion.Logic.Management.Instances
 			string uuid = activeAccount.UUID;
 			string sessionToken = activeAccount.SessionToken;
 
-			string shareDir = FileDistributor.SharesDir;
+			string shareDir = FileDistributor.GetSharesDir(_services.DirectoryService);
 			try
 			{
 				if (!Directory.Exists(shareDir))
@@ -1274,7 +968,7 @@ namespace Lexplosion.Logic.Management.Instances
 			{
 				IsSharing = true;
 
-				distributor = FileDistributor.CreateDistribution(zipFile, Name, uuid, sessionToken);
+				distributor = FileDistributor.CreateDistribution(zipFile, Name, uuid, sessionToken, _services);
 				if (distributor == null) return ExportResult.ZipFileError;
 
 				distributor.OnClosed += delegate ()
@@ -1348,9 +1042,9 @@ namespace Lexplosion.Logic.Management.Instances
 				filesList.Add(dirPath + "/" + DataFilesManager.INSTALLED_ADDONS_FILE);
 			}
 
-			VersionManifest instanceManifest = DataFilesManager.GetManifest(_localId, false);
+			VersionManifest instanceManifest = _services.DataFilesService.GetManifest(_localId, false);
 
-			string logoPath = (Logo != null ? WithDirectory.DirectoryPath + "/instances-assets/" + _localId + "/" + LogoFileName : null);
+			string logoPath = (Logo != null ? _services.DirectoryService.DirectoryPath + "/instances-assets/" + _localId + "/" + LogoFileName : null);
 			var parameters = new ArchivedClientData
 			{
 				Author = Author,
@@ -1367,323 +1061,12 @@ namespace Lexplosion.Logic.Management.Instances
 
 			};
 
-			var res = WithDirectory.ExportInstance<ArchivedClientData>(_localId, filesList, exportFile, parameters, logoPath);
+			string infoFileContent = JsonConvert.SerializeObject(parameters);
+
+			var res = _services.DirectoryService.ExportInstance(_localId, filesList, exportFile, infoFileContent, logoPath);
 			Runtime.DebugWrite(res);
 
 			return res;
-		}
-
-		private static ImportResult Import(in InstanceClient client, string zipFile, ImportData importData)
-		{
-			var executor = new ImportExecutor(zipFile, true, GlobalData.GeneralSettings, client.ProgressHandler, importData);
-			ImportResult res = executor.Prepeare(out PrepeareResult result);
-
-			if (res != ImportResult.Successful) return res;
-
-			byte[] logo = null;
-			if (result.LogoPath != null)
-			{
-				try
-				{
-					logo = File.ReadAllBytes(result.LogoPath);
-				}
-				catch { }
-			}
-
-			client.Name = result.Name;
-			client.Logo = logo;
-			client.GameVersion = result.GameVersionInfo;
-			client.Author = result.Author ?? UnknownAuthor;
-			client.Description = result.Description ?? NoDescription;
-			client.Summary = result.Summary ?? NoDescription;
-			client.Logo = logo;
-			client.GenerateInstanceId();
-
-			bool isNwClient = GlobalData.GeneralSettings.NwClientByDefault == true;
-			client.CreateFileStruct(ClientType.Vanilla, string.Empty, isNwClient);
-			res = executor.Import(client._localId, out IReadOnlyCollection<string> errors);
-
-			client.Initialized?.Invoke(InstanceInit.Successful, (List<string>)errors, false);
-
-			if (res != ImportResult.Successful) return res;
-
-			client.SaveAssets();
-			_installedInstances[client._localId] = client;
-			SaveInstalledInstancesList();
-			client.IsComplete = true;
-			return ImportResult.Successful;
-
-			//if (Path.GetExtension(zipFile) == ".mrpack")
-			//{
-			//    CancellationTokenSource tes = new CancellationTokenSource();
-			//    var importManager = new ModrinthImportManager(zipFile, true, GlobalData.GeneralSettings, tes.Token);
-			//    importManager.Prepeare((StageType stageType, ProgressHandlerArguments data) => { }, out var result);
-
-			//    client.Name = result.Name;
-			//    client.GenerateInstanceId();
-
-			//    importManager.SetInstanceId(client.LocalId);
-			//    importManager.Import((StageType stageType, ProgressHandlerArguments data) => { }, out var errors);
-
-			//    return ImportResult.Successful;
-			//}
-
-			//ArchivedClientData parameters;
-			//string unzipPath;
-
-			//ImportResult res = WithDirectory.UnzipInstance(zipFile, out parameters, out unzipPath);
-			//if (res == ImportResult.Successful)
-			//{
-			//    if (parameters != null && parameters.Name != null && parameters.GameVersion != null)
-			//    {
-			//        byte[] logo = null;
-			//        if (parameters.LogoFileName != null)
-			//        {
-			//            try
-			//            {
-			//                string file = unzipPath + parameters.LogoFileName;
-			//                if (File.Exists(unzipPath + parameters.LogoFileName))
-			//                {
-			//                    logo = File.ReadAllBytes(file);
-			//                }
-			//            }
-			//            catch { }
-			//        }
-
-			//        client.Name = parameters.Name;
-			//        client.GameVersion = parameters.GameVersionInfo;
-			//        client.Author = parameters.Author ?? UnknownAuthor;
-			//        client.Description = parameters.Description;
-			//        client.Summary = parameters.Summary;
-			//        client.Logo = logo;
-			//        client.GenerateInstanceId();
-
-			//        client.CreateFileStruct(parameters.ModloaderType, parameters.ModloaderVersion, parameters.AdditionalInstallerType, parameters.AdditionalInstallerVersion);
-			//        res = WithDirectory.MoveUnpackedInstance(client._localId, unzipPath);
-
-			//        if (res == ImportResult.Successful)
-			//        {
-			//            client.SaveAssets();
-			//            _installedInstances[client._localId] = client;
-			//            SaveInstalledInstancesList();
-			//            client.IsComplete = true;
-			//        }
-			//        else
-			//        {
-			//            WithDirectory.DeleteInstance(client._localId);
-			//        }
-			//    }
-			//    else
-			//    {
-			//        res = ImportResult.GameVersionError;
-			//    }
-			//}
-
-			//return res;
-		}
-
-		public static InstanceClient Import(string zipFile, Action<ImportResult> callback, ImportData importData)
-		{
-			var client = new InstanceClient(CreateSourceFactory(InstanceSource.Local))
-			{
-				Name = "Importing...",
-				InLibrary = true,
-				Author = UnknownAuthor,
-				Summary = string.Empty,
-				IsComplete = false
-			};
-
-			Lexplosion.Runtime.TaskRun(delegate ()
-			{
-				callback(Import(client, zipFile, importData));
-			});
-
-			return client;
-		}
-
-		public static InstanceClient Import(FileReceiver reciver, Action<ImportResult> callback, Action<DownloadShareState> stateHandler, ImportData importData)
-		{
-			var client = new InstanceClient(CreateSourceFactory(InstanceSource.Local))
-			{
-				Name = reciver.Name,
-				InLibrary = true,
-				Author = UnknownAuthor,
-				Summary = string.Empty,
-				IsComplete = false
-			};
-
-			Lexplosion.Runtime.TaskRun(delegate ()
-			{
-				reciver.StateChanged += () =>
-				{
-					var state = reciver.State;
-					DownloadShareState resState = DownloadShareState.InQueue;
-					switch (state)
-					{
-						case FileReceiver.DistributionState.InQueue:
-							resState = DownloadShareState.InQueue;
-							break;
-						case FileReceiver.DistributionState.InConnect:
-							resState = DownloadShareState.InConnect;
-							break;
-						case FileReceiver.DistributionState.InProcess:
-							resState = DownloadShareState.InProcess;
-							break;
-					}
-
-					stateHandler(resState);
-				};
-
-				FileRecvResult result = WithDirectory.ReceiveFile(reciver, out string file);
-				if (result == FileRecvResult.Successful)
-				{
-					stateHandler(DownloadShareState.PostProcessing);
-					callback(Import(in client, file, importData));
-				}
-				else
-				{
-					callback(result == FileRecvResult.Canceled ? ImportResult.Canceled : ImportResult.DownloadError);
-				}
-			});
-
-			return client;
-		}
-
-		public static InstanceClient Import(Uri fileURL, Action<ImportResult> callback, ImportData importData)
-		{
-			var client = new InstanceClient(CreateSourceFactory(InstanceSource.Local))
-			{
-				Name = "Importing...",
-				InLibrary = true,
-				Author = UnknownAuthor,
-				Summary = string.Empty,
-				IsComplete = false
-			};
-
-			Lexplosion.Runtime.TaskRun(delegate ()
-			{
-				string downloadUrl = null;
-				try
-				{
-					if (fileURL.Host == "drive.google.com")
-					{
-						string[] parts = fileURL.PathAndQuery.Split('/');
-						if (parts.Length < 4 || string.IsNullOrWhiteSpace(parts[3]))
-						{
-							callback(ImportResult.WrongUrl);
-							return;
-						}
-
-						downloadUrl = "https://drive.google.com/uc?export=download&confirm=no_antivirus&id=" + parts[3];
-
-						if (ToServer.IsHtmlPage(downloadUrl))
-						{
-							string data = ToServer.HttpGet(downloadUrl);
-							if (string.IsNullOrWhiteSpace(data))
-							{
-								callback(ImportResult.WrongUrl);
-								return;
-							}
-
-							IEnumerable<string> GetSubStrings(string input, string start, string end)
-							{
-								Regex r = new Regex(Regex.Escape(start) + "(.*?)" + Regex.Escape(end));
-								MatchCollection matches = r.Matches(input);
-								foreach (Match match in matches)
-									yield return match.Groups[1].Value;
-							}
-
-							string GetStrBetweenStrings(string input, string start, string end)
-							{
-								return Regex.Match(input, Regex.Escape(start) + "(.*?)" + Regex.Escape(end)).Groups[1].Value;
-							}
-
-							string urlBase = null;
-							string formHead = null;
-							foreach (string pageForm in GetSubStrings(data, "<form", ">"))
-							{
-								if (pageForm.Contains("id=\"download-form\"") && pageForm.Contains("action=\""))
-								{
-									urlBase = GetStrBetweenStrings(pageForm, "action=\"", "\"");
-									formHead = "<form" + pageForm + ">";
-									break;
-								}
-							}
-
-							if (urlBase == null)
-							{
-								callback(ImportResult.WrongUrl);
-								return;
-							}
-
-							urlBase += "?";
-							data = GetStrBetweenStrings(data, formHead, "</form>");
-							foreach (string htmlInput in GetSubStrings(data, "<input", ">"))
-							{
-								if (htmlInput.Contains("name=\"") && htmlInput.Contains("value=\""))
-								{
-									string name = GetStrBetweenStrings(htmlInput, "name=\"", "\"");
-									string value = GetStrBetweenStrings(htmlInput, "value=\"", "\"");
-									urlBase += Uri.EscapeDataString(name) + "=" + Uri.EscapeDataString(value) + "&";
-								}
-							}
-
-							downloadUrl = urlBase;
-						}
-					}
-					else if (fileURL.Host == "yadi.sk" || fileURL.Host == "disk.yandex.ru" || fileURL.Host == "disk.yandex.com" || fileURL.Host == "disk.yandex.by")
-					{
-						string queryUrl = "https://cloud-api.yandex.net/v1/disk/public/resources/download?public_key=" + Uri.EscapeDataString(fileURL.ToString());
-
-						string result = ToServer.HttpGet(queryUrl);
-						if (result == null)
-						{
-							callback(ImportResult.WrongUrl);
-							return;
-						}
-
-						var data = JsonConvert.DeserializeObject<JToken>(result);
-						downloadUrl = data["href"].ToString();
-					}
-				}
-				catch (Exception ex)
-				{
-					Runtime.DebugWrite("Exception " + ex);
-					callback(ImportResult.WrongUrl);
-					return;
-				}
-
-				string tempDir = WithDirectory.CreateTempDir();
-				bool res = WithDirectory.DownloadFile(downloadUrl, "instance_file", tempDir, new TaskArgs
-				{
-					CancelToken = (new CancellationTokenSource()).Token,
-					PercentHandler = (int pr) => { }
-				});
-
-				if (!res)
-				{
-					callback(ImportResult.DownloadError);
-					return;
-				}
-
-				ImportResult impurtRes = Import(client, tempDir + "instance_file", importData);
-
-				try
-				{
-					if (Directory.Exists(tempDir))
-					{
-						Directory.Delete(tempDir, true);
-					}
-				}
-				catch (Exception ex)
-				{
-					Runtime.DebugWrite("Exception " + ex);
-				}
-
-				callback(impurtRes);
-			});
-
-			return client;
 		}
 
 		public void AddGameServer(MinecraftServerInstance server, bool autoLogin)
@@ -1700,16 +1083,6 @@ namespace Lexplosion.Logic.Management.Instances
 			settings.AutoLoginServer = autoLogin ? server.Address : null;
 
 			SaveSettings(settings);
-		}
-
-		public void AddToGroup(InstanceGroup group)
-		{
-
-		}
-
-		public void RemoveFromGroup(InstanceGroup group)
-		{
-
 		}
 	}
 }

@@ -8,6 +8,7 @@ using System.Threading;
 using Lexplosion.Logic.FileSystem;
 using Newtonsoft.Json;
 using Lexplosion.Logic.Objects;
+using Lexplosion.Logic.Network.Services;
 
 namespace Lexplosion.Logic.Management.Accounts
 {
@@ -94,6 +95,7 @@ namespace Lexplosion.Logic.Management.Accounts
 		}
 
 		private static readonly object StateSetLocker = new object();
+		private readonly IAuthServicesContainer _services;
 
 		/// <summary>
 		/// Является ли аккаунт активным. 
@@ -244,9 +246,9 @@ namespace Lexplosion.Logic.Management.Accounts
 			}
 		}
 
-		static Account()
+		public static void Init()
 		{
-			var list = DataFilesManager.GetFile<HashSet<AccountSummary>>(LaunсherSettings.LauncherDataPath + "/accounts.json");
+			var list = Runtime.ServicesContainer.DataFilesService.GetFile<HashSet<AccountSummary>>(LaunсherSettings.LauncherDataPath + "/accounts.json");
 			_listToSave = new Dictionary<Account, AccountSummary>();
 			_accounts = new HashSet<Account>();
 
@@ -256,7 +258,7 @@ namespace Lexplosion.Logic.Management.Accounts
 				{
 					if (item.IsValid())
 					{
-						var account = new Account(item);
+						var account = new Account(item, Runtime.ServicesContainer);
 						AddToList(account);
 					}
 				}
@@ -264,7 +266,7 @@ namespace Lexplosion.Logic.Management.Accounts
 			else
 			{
 				//если список аккаунтов пуст, то получаем список аккаунтов из файла старой версии
-				var oldList = DataFilesManager.GetFile<OldAcccountsFormat>(LaunсherSettings.LauncherDataPath + "/account.json");
+				var oldList = Runtime.ServicesContainer.DataFilesService.GetFile<OldAcccountsFormat>(LaunсherSettings.LauncherDataPath + "/account.json");
 				if (oldList != null && Enum.IsDefined(typeof(AccountType), (int)oldList.SelectedProfile))
 				{
 					foreach (var item in oldList.Profiles)
@@ -281,7 +283,7 @@ namespace Lexplosion.Logic.Management.Accounts
 							AccountType = item.Key
 						};
 
-						var account = new Account(summary);
+						var account = new Account(summary, Runtime.ServicesContainer);
 						AddToList(account);
 					}
 
@@ -299,26 +301,28 @@ namespace Lexplosion.Logic.Management.Accounts
 
 		private static void SaveSummaryList()
 		{
-			DataFilesManager.SaveFile(LaunсherSettings.LauncherDataPath + "/accounts.json", JsonConvert.SerializeObject(_listToSave.Values));
+			Runtime.ServicesContainer.DataFilesService.SaveFile(LaunсherSettings.LauncherDataPath + "/accounts.json", JsonConvert.SerializeObject(_listToSave.Values));
 		}
 
-		public Account(AccountType type)
+		public Account(AccountType type, IAuthServicesContainer services, DataFilesManager dataFilesManager)
 		{
 			AccountType = type;
+			_services = services;
 		}
 
-		public Account(AccountType type, string login) : this(type)
+		public Account(AccountType type, IAuthServicesContainer services, DataFilesManager dataFilesManager, string login) : this(type, services, dataFilesManager)
 		{
 			Login = login;
 		}
 
-		private Account(AccountSummary summary)
+		private Account(AccountSummary summary, IAuthServicesContainer services)
 		{
 			AccountType = summary.AccountType;
 			Login = summary.Login;
 			UUID = summary.UUID;
 			IsActive = summary.IsActive;
 			IsLaunch = summary.IsLaunch;
+			_services = services;
 
 			if (AccountType == AccountType.NoAuth) return;
 
@@ -418,13 +422,13 @@ namespace Lexplosion.Logic.Management.Accounts
 			switch (AccountType)
 			{
 				case AccountType.NightWorld:
-					authHandler = new NightWorldAuth();
+					authHandler = new NightWorldAuth(_services.NwApi);
 					break;
 				//case AccountType.Mojang:
 				//    authHandler = new MojangAuth();
 				//    break;
 				case AccountType.Microsoft:
-					authHandler = new MicrosoftAuth();
+					authHandler = new MicrosoftAuth(_services.MjApi);
 					break;
 				case AccountType.NoAuth:
 					authHandler = new LocalAuth();
@@ -476,7 +480,7 @@ namespace Lexplosion.Logic.Management.Accounts
 
 		private void Exit()
 		{
-			ToServer.HttpGet(LaunсherSettings.URL.UserApi + "setActivity?status=0&UUID=" + UUID + "&sessionToken=" + SessionToken);
+			_services.WebService.HttpGet(LaunсherSettings.URL.UserApi + "setActivity?status=0&UUID=" + UUID + "&sessionToken=" + SessionToken);
 		}
 
 		public void ChangeBaseStatus(ActivityStatus status)
@@ -493,7 +497,7 @@ namespace Lexplosion.Logic.Management.Accounts
 					statusInt = 2;
 				}
 
-				ToServer.HttpGet(LaunсherSettings.URL.UserApi + "setBaseStatus?activityStatus=" + statusInt + "&UUID=" + UUID + "&sessionToken=" + SessionToken);
+				_services.WebService.HttpGet(LaunсherSettings.URL.UserApi + "setBaseStatus?activityStatus=" + statusInt + "&UUID=" + UUID + "&sessionToken=" + SessionToken);
 			}
 
 			Status = status;
@@ -509,7 +513,7 @@ namespace Lexplosion.Logic.Management.Accounts
 				{
 					while (IsAuthed && _isActive)
 					{
-						ToServer.HttpGet(LaunсherSettings.URL.UserApi + "setActivity?status=" + (int)Status + "&UUID=" + UUID + "&sessionToken=" + SessionToken + "&gameClientName=" + _gameClientName);
+						_services.WebService.HttpGet(LaunсherSettings.URL.UserApi + "setActivity?status=" + (int)Status + "&UUID=" + UUID + "&sessionToken=" + SessionToken + "&gameClientName=" + _gameClientName);
 						Thread.Sleep(240000); // Ждём 4 минуты
 					}
 				});
@@ -535,7 +539,7 @@ namespace Lexplosion.Logic.Management.Accounts
 			{
 				_gameClientName = gameClientName;
 				Status = ActivityStatus.InGame;
-				ToServer.HttpGet(LaunсherSettings.URL.UserApi + "setActivity?status=2&UUID=" + UUID + "&sessionToken=" + SessionToken + "&gameClientName=" + _gameClientName);
+				_services.WebService.HttpGet(LaunсherSettings.URL.UserApi + "setActivity?status=2&UUID=" + UUID + "&sessionToken=" + SessionToken + "&gameClientName=" + _gameClientName);
 			}
 		}
 
@@ -544,7 +548,7 @@ namespace Lexplosion.Logic.Management.Accounts
 			if (AccountType == AccountType.NightWorld && IsAuthed && _nwServicesIsInit)
 			{
 				Status = ActivityStatus.Online;
-				ToServer.HttpGet(LaunсherSettings.URL.UserApi + "setActivity?status=1&UUID=" + UUID + "&sessionToken=" + SessionToken);
+				_services.WebService.HttpGet(LaunсherSettings.URL.UserApi + "setActivity?status=1&UUID=" + UUID + "&sessionToken=" + SessionToken);
 			}
 		}
 	}
