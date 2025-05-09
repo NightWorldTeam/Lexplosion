@@ -19,6 +19,7 @@ namespace Lexplosion.Logic.FileSystem
 		{
 			["launchermeta.mojang.com"] = [("://bmclapi2.bangbang93.com", "://launchermeta.mojang.com")],
 			["launcher.mojang.com"] = [("://bmclapi2.bangbang93.com", "://launcher.mojang.com")],
+			["piston-data.mojang.com"] = [("://bmclapi2.bangbang93.com", "://piston-data.mojang.com")],
 			["resources.download.minecraft.net"] = [("://bmclapi2.bangbang93.com/assets", "://resources.download.minecraft.net")],
 			["libraries.minecraft.net"] = [("://bmclapi2.bangbang93.com/maven", "://libraries.minecraft.net")],
 			["files.minecraftforge.net/maven"] = [("://bmclapi2.bangbang93.com/maven", "://files.minecraftforge.net/maven")],
