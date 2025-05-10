@@ -323,7 +323,7 @@ namespace Lexplosion.Logic.Management.Instances
 			GameVersion = gameVersion;
 		}
 
-		internal void CompleteClient(IInstanceSource source, string name, InstanceSource type, MinecraftVersion gameVersion, ClientType modloader, bool isNwClient, string logoPath = null, string modloaderVersion = null, string optifineVersion = null, bool sodium = false, string externalId = null)
+		internal void DeployLocally(ClientType modloader, bool isNwClient, string logoPath = null, string modloaderVersion = null, string optifineVersion = null, bool sodium = false)
 		{
 			CreatedLocally = true;
 			Author = Account.AnyFuckingLogin;
@@ -364,7 +364,28 @@ namespace Lexplosion.Logic.Management.Instances
 			}
 		}
 
-		internal void CompleteClient(MinecraftServerInstance server, bool autoLogin)
+		/// <summary>
+		/// Создает локальную структуру сборки.
+		/// То есть помечает ее как созданную локлаьно и создает для нее всю файловую структуру
+		/// </summary>
+		internal void CreateLocalStruct(string localId)
+		{
+			_localId = localId;
+			bool isNwClient = GlobalData.GeneralSettings.NwClientByDefault == true;
+			CreateFileStruct(ClientType.Vanilla, string.Empty, isNwClient);
+			SaveAssets();
+			CreatedLocally = true;
+		}
+
+		internal void DeleteLocalStruct()
+		{
+			_services.DirectoryService.DeleteInstance(_localId);
+			UpdateAvailable = false;
+			CreatedLocally = false;
+			IsInstalled = false;
+		}
+
+		internal void UpdateInfo(MinecraftServerInstance server, bool autoLogin)
 		{
 			string modpackVersion = server.ModpackInfo?.Version;
 			AddGameServer(server, autoLogin);
@@ -393,7 +414,7 @@ namespace Lexplosion.Logic.Management.Instances
 			SaveSettings(settings);
 		}
 
-		internal void CompleteClient(string name, MinecraftVersion gameVersion, byte[] logo, string instanceVersion, bool isInstalled)
+		internal void UpdateInfo(string name, MinecraftVersion gameVersion, byte[] logo, string instanceVersion, bool isInstalled)
 		{
 			//получаем асетсы модпака
 			var assetsData = _services.DataFilesService.GetFile<InstanceAssetsFileDecodeFormat>(_services.DirectoryService.DirectoryPath + "/instances-assets/" + _localId + "/assets.json");
@@ -443,7 +464,7 @@ namespace Lexplosion.Logic.Management.Instances
 			});
 		}
 
-		internal void CompleteClient(string name, MinecraftVersion gameVersion, IEnumerable<CategoryBase> categories, string summary, string description, string author, string websiteUrl)
+		internal void UpdateInfo(string name, MinecraftVersion gameVersion, IEnumerable<CategoryBase> categories, string summary, string description, string author, string websiteUrl)
 		{
 			if (!string.IsNullOrEmpty(name))
 				Name = name;
@@ -482,32 +503,11 @@ namespace Lexplosion.Logic.Management.Instances
 			IsComplete = false;
 		}
 
-		/// <summary>
-		/// Создает локальную структуру сборки.
-		/// То есть помечает ее как созданную локлаьно и создает для нее всю файловую структуру
-		/// </summary>
-		internal void CreateLocalStruct(string localId)
-		{
-			_localId = localId;
-			bool isNwClient = GlobalData.GeneralSettings.NwClientByDefault == true;
-			CreateFileStruct(ClientType.Vanilla, string.Empty, isNwClient);
-			SaveAssets();
-			CreatedLocally = true;
-		}
-
 		internal void CompleteInitialization(InstanceInit initResult, IReadOnlyCollection<string> errors)
 		{
 			if (initResult == InstanceInit.Successful) IsComplete = true;
 			IsFictitious = false;
 			Initialized?.Invoke(initResult, (List<string>)errors, false);
-		}
-
-		internal void DeleteLocalStruct()
-		{
-			_services.DirectoryService.DeleteInstance(_localId);
-			UpdateAvailable = false;
-			CreatedLocally = false;
-			IsInstalled = false;
 		}
 
 		/// <summary>
@@ -768,6 +768,8 @@ namespace Lexplosion.Logic.Management.Instances
 			}
 			catch { }
 		}
+
+		internal void SetLogo(byte[] logoBytes) => Logo = logoBytes;
 
 		/// <summary>
 		/// Сохраняет асетсы клиента в файл.

@@ -55,7 +55,7 @@ namespace Lexplosion.Logic.Management.Instances
 			var localId = GenerateInstanceId(name);
 			var client = new InstanceClient(name, source, _services, gameVersion, externalId, localId);
 
-			client.CompleteClient(source, name, type, gameVersion, modloader, isNwClient, logoPath, modloaderVersion, optifineVersion, sodium, externalId);
+			client.DeployLocally(modloader, isNwClient, logoPath, modloaderVersion, optifineVersion, sodium);
 			client.InternalDataChanged += SaveInstalledInstancesList;
 
 			_installedInstances[client.LocalId] = client;
@@ -87,7 +87,7 @@ namespace Lexplosion.Logic.Management.Instances
 			bool isNwClient = GlobalData.GeneralSettings.NwClientByDefault == true;
 
 			var client = CreateClient(source, name, server.InstanceSource, minecraftVersion, ClientType.Vanilla, isNwClient, externalId: externalId);
-			client.CompleteClient(server, autoLogin);
+			client.UpdateInfo(server, autoLogin);
 
 			return client;
 		}
@@ -162,7 +162,7 @@ namespace Lexplosion.Logic.Management.Instances
 						}
 
 						var instance = new InstanceClient(sourceFactory, _services, externalID, localId);
-						instance.CompleteClient(list[localId].Name, instanceManifest.version?.GameVersionInfo, logo, instanceVersion, true);
+						instance.UpdateInfo(list[localId].Name, instanceManifest.version?.GameVersionInfo, logo, instanceVersion, true);
 
 						_installedInstances[localId] = instance;
 					}
@@ -243,13 +243,13 @@ namespace Lexplosion.Logic.Management.Instances
 				{
 					instanceClient = _installedInstances[_idsPairs[instance.ExternalId]];
 					instanceClient.CheckUpdates();
-					instanceClient.CompleteClient(instance.Name, null, instance.Categories, instance.Summary, instance.Description, instance.Author, instance.WebsiteUrl);
+					instanceClient.UpdateInfo(instance.Name, null, instance.Categories, instance.Summary, instance.Description, instance.Author, instance.WebsiteUrl);
 					instanceClient.DownloadLogo(instance.LogoUrl, instanceClient.SaveAssets);
 				}
 				else
 				{
 					instanceClient = new InstanceClient(instance.Name, source, _services, instance.GameVersion, instance.ExternalId, null);
-					instanceClient.CompleteClient(instance.Name, null, instance.Categories, instance.Summary, instance.Description, instance.Author, instance.WebsiteUrl);
+					instanceClient.UpdateInfo(instance.Name, null, instance.Categories, instance.Summary, instance.Description, instance.Author, instance.WebsiteUrl);
 					instanceClient.DownloadLogo(instance.LogoUrl, () => { });
 
 					instances.Add(instanceClient);
@@ -281,7 +281,7 @@ namespace Lexplosion.Logic.Management.Instances
 					instanceClient = new InstanceClient(instance.Name, CreateSourceFactory(type), _services, new MinecraftVersion(instance.GameVersion), instance.ExternalId, null);
 				}
 
-				instanceClient.CompleteClient(instance.Name, null, instance.Categories, instance.Summary, instance.Description, instance.Author, instance.WebsiteUrl);
+				instanceClient.UpdateInfo(instance.Name, null, instance.Categories, instance.Summary, instance.Description, instance.Author, instance.WebsiteUrl);
 
 				return instanceClient;
 			}
@@ -391,16 +391,16 @@ namespace Lexplosion.Logic.Management.Instances
 
 			string localId = GenerateInstanceId(result.Name);
 
-			client.CompleteClient(result.Name, result.GameVersionInfo, categories: null, result.Summary, result.Description, result.Author, null);
+			client.UpdateInfo(result.Name, result.GameVersionInfo, categories: null, result.Summary, result.Description, result.Author, null);
 			client.SetLogo(result.LogoPath);
 			client.CreateLocalStruct(localId);
 
-			res = executor.Import(localId, out IReadOnlyCollection<string> errors);
+			InstanceInit importRes = executor.Import(localId, out IReadOnlyCollection<string> errors);
 
-			if (res != ImportResult.Successful)
+			if (importRes != InstanceInit.Successful)
 			{
-				// TODO: нормально передать тип ошибки
-				client.CompleteInitialization(InstanceInit.UnknownError, errors);
+				client.CompleteInitialization(importRes, errors);
+				client.DeleteLocalStruct();
 				return res;
 			}
 
@@ -417,10 +417,10 @@ namespace Lexplosion.Logic.Management.Instances
 			var client = new InstanceClient(CreateSourceFactory(InstanceSource.Local), _services);
 			client.MakeFictitiousClient("Importing...");
 
-			Lexplosion.Runtime.TaskRun(delegate ()
+			new Thread(() =>
 			{
 				callback(Import(client, zipFile, importData));
-			});
+			}).Start();
 
 			return client;
 		}
@@ -430,7 +430,7 @@ namespace Lexplosion.Logic.Management.Instances
 			var client = new InstanceClient(CreateSourceFactory(InstanceSource.Local), _services);
 			client.MakeFictitiousClient("Importing...");
 
-			Lexplosion.Runtime.TaskRun(delegate ()
+			new Thread(() =>
 			{
 				reciver.StateChanged += () =>
 				{
@@ -462,7 +462,7 @@ namespace Lexplosion.Logic.Management.Instances
 				{
 					callback(result == FileRecvResult.Canceled ? ImportResult.Canceled : ImportResult.DownloadError);
 				}
-			});
+			}).Start();
 
 			return client;
 		}
@@ -473,7 +473,7 @@ namespace Lexplosion.Logic.Management.Instances
 
 			client.MakeFictitiousClient("Importing...");
 
-			Lexplosion.Runtime.TaskRun(delegate ()
+			new Thread(() =>
 			{
 				string downloadUrl = null;
 				try
@@ -594,9 +594,50 @@ namespace Lexplosion.Logic.Management.Instances
 				}
 
 				callback(impurtRes);
-			});
+			}).Start();
 
 			return client;
+		}
+
+		public InstanceClient CopyClient(InstanceClient client)
+		{
+			string name = client.Name + " (Copy)";
+			string id = GenerateInstanceId(name);
+
+			IInstanceSource source = CreateSourceFactory(client.Type);
+			var newClient = new InstanceClient(name, source, _services, client.GameVersion, client.ExternalId, id);
+
+			BaseInstanceData baseData = client.GetBaseData;
+			newClient.UpdateInfo(null, null, client.Categories, client.Summary, client.Description, client.Author, client.WebsiteUrl);
+			newClient.SetLogo(client.Logo);
+			newClient.DeployLocally(baseData.Modloader, baseData.IsNwClient, null, baseData.ModloaderVersion, baseData.OptifineVersion, false);
+
+			new Thread(() =>
+			{
+				try
+				{
+					WithDirectory directoryService = _services.DirectoryService;
+					string from = directoryService.GetInstancePath(client.LocalId);
+					string to = directoryService.GetInstancePath(newClient.LocalId);
+
+					foreach (string dirPath in Directory.GetDirectories(from, "*", SearchOption.AllDirectories))
+					{
+						Directory.CreateDirectory(dirPath.Replace(from, to));
+					}
+
+					foreach (string sourcePath in Directory.GetFiles(from, "*.*", SearchOption.AllDirectories))
+					{
+						string fileName = Path.GetFileName(sourcePath);
+						if (fileName == DataFilesManager.MANIFEST_FILE || fileName == DataFilesManager.MANIFEST_FILE_OLD) continue;
+
+						File.Copy(sourcePath, sourcePath.Replace(from, to), true);
+					}
+
+				}
+				catch { }
+			}).Start();
+
+			return newClient;
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]

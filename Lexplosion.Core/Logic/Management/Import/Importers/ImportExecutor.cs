@@ -135,7 +135,7 @@ namespace Lexplosion.Logic.Management.Import.Importers
 			return _importManager.Prepeare(_progressHandler, out result);
 		}
 
-		public ImportResult Import(string instanceId, out IReadOnlyCollection<string> errors)
+		public InstanceInit Import(string instanceId, out IReadOnlyCollection<string> errors)
 		{
 			_importManager.SetInstanceId(instanceId);
 			return _importManager.Import(_progressHandler, out errors);

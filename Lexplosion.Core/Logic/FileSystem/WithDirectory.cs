@@ -76,19 +76,7 @@ namespace Lexplosion.Logic.FileSystem
 			string oldDir = DirectoryPath;
 			Create(path);
 
-			try
-			{
-				foreach (string dirPath in Directory.GetDirectories(oldDir, "*", SearchOption.AllDirectories))
-				{
-					Directory.CreateDirectory(dirPath.Replace(oldDir, path));
-				}
-
-				foreach (string newPath in Directory.GetFiles(oldDir, "*.*", SearchOption.AllDirectories))
-				{
-					File.Copy(newPath, newPath.Replace(oldDir, path), true);
-				}
-			}
-			catch { }
+			CopyDirectory(oldDir, path);
 		}
 
 		/// <summary>
@@ -156,6 +144,28 @@ namespace Lexplosion.Logic.FileSystem
 			catch
 			{
 				return null;
+			}
+		}
+
+		public bool CopyDirectory(string from, string to)
+		{
+			try
+			{
+				foreach (string dirPath in Directory.GetDirectories(from, "*", SearchOption.AllDirectories))
+				{
+					Directory.CreateDirectory(dirPath.Replace(from, to));
+				}
+
+				foreach (string sourcePath in Directory.GetFiles(from, "*.*", SearchOption.AllDirectories))
+				{
+					File.Copy(sourcePath, sourcePath.Replace(from, to), true);
+				}
+
+				return true;
+			}
+			catch 
+			{
+				return false;
 			}
 		}
 
@@ -481,7 +491,7 @@ namespace Lexplosion.Logic.FileSystem
 			return ImportResult.Successful;
 		}
 
-		public ImportResult MoveUnpackedInstance(string instanceId, string unzipPath)
+		public InstanceInit MoveUnpackedInstance(string instanceId, string unzipPath)
 		{
 			string addr = unzipPath + "files/";
 			string targetDir = InstancesPath + instanceId + "/";
@@ -511,7 +521,7 @@ namespace Lexplosion.Logic.FileSystem
 				catch { }
 				Runtime.DebugWrite("Exception " + ex);
 
-				return ImportResult.MovingFilesError;
+				return InstanceInit.MoveFilesError;
 			}
 
 			try
@@ -520,7 +530,7 @@ namespace Lexplosion.Logic.FileSystem
 			}
 			catch { }
 
-			return ImportResult.Successful;
+			return InstanceInit.Successful;
 		}
 
 		public FileRecvResult ReceiveFile(FileReceiver reciver, out string file)

@@ -20,7 +20,7 @@ namespace Lexplosion.Logic.Management.Import.Importers
 		/// <param name="progressHandler">Обработчик прогресса</param>
 		/// <param name="errors">Список ошибок,  которые возники при импорте</param>
 		/// <returns>Результат</returns>
-		public ImportResult Import(ProgressHandlerCallback progressHandler, out IReadOnlyCollection<string> errors);
+		public InstanceInit Import(ProgressHandlerCallback progressHandler, out IReadOnlyCollection<string> errors);
 
 		/// <summary>
 		/// Устанавливает лкоальный id сборки

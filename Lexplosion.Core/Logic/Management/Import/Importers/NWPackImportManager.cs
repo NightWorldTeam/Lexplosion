@@ -84,11 +84,18 @@ namespace Lexplosion.Logic.Management.Import.Importers
 			return ImportResult.Successful;
 		}
 
-		public ImportResult Import(ProgressHandlerCallback progressHandler, out IReadOnlyCollection<string> errors)
+		public InstanceInit Import(ProgressHandlerCallback progressHandler, out IReadOnlyCollection<string> errors)
 		{
+			progressHandler(StageType.Client, new ProgressHandlerArguments()
+			{
+				StagesCount = CompletedStagesCount + 2,
+				Stage = CompletedStagesCount + 2,
+				Procents = 0
+			});
+
 			errors = new List<string>();
-			ImportResult result = _withDirectory.MoveUnpackedInstance(_localId, _unzipPath);
-			if (result != ImportResult.Successful)
+			InstanceInit result = _withDirectory.MoveUnpackedInstance(_localId, _unzipPath);
+			if (result != InstanceInit.Successful)
 			{
 				try
 				{
@@ -102,7 +109,7 @@ namespace Lexplosion.Logic.Management.Import.Importers
 
 			_dataFilesManager.SaveManifest(_localId, _versionManifest);
 
-			return ImportResult.Successful;
+			return InstanceInit.Successful;
 		}
 
 		public void SetInstanceId(string id)

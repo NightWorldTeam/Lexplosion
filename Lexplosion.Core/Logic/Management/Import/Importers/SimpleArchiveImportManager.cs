@@ -39,11 +39,11 @@ namespace Lexplosion.Logic.Management.Import.Importers
 
 		public int CompletedStagesCount { private get; set; }
 
-		public ImportResult Import(ProgressHandlerCallback progressHandler, out IReadOnlyCollection<string> errors)
+		public InstanceInit Import(ProgressHandlerCallback progressHandler, out IReadOnlyCollection<string> errors)
 		{
 			errors = new List<string>();
-			ImportResult result = _withDirectory.MoveUnpackedInstance(_localId, _unzipPath);
-			if (result != ImportResult.Successful)
+			InstanceInit result = _withDirectory.MoveUnpackedInstance(_localId, _unzipPath);
+			if (result != InstanceInit.Successful)
 			{
 				try
 				{
@@ -57,7 +57,7 @@ namespace Lexplosion.Logic.Management.Import.Importers
 
 			_dataFilesManager.SaveManifest(_localId, _versionManifest);
 
-			return ImportResult.Successful;
+			return InstanceInit.Successful;
 		}
 
 		public ImportResult Prepeare(ProgressHandlerCallback progressHandler, out PrepeareResult result)

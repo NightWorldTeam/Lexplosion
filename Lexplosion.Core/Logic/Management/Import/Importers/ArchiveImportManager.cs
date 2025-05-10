@@ -112,12 +112,12 @@ namespace Lexplosion.Logic.Management.Import.Importers
 			return ImportResult.Successful;
 		}
 
-		public virtual ImportResult Import(ProgressHandlerCallback progressHandler, out IReadOnlyCollection<string> errors)
+		public virtual InstanceInit Import(ProgressHandlerCallback progressHandler, out IReadOnlyCollection<string> errors)
 		{
 			errors = null;
 			if (versionManifest == null)
 			{
-				return ImportResult.UnknownError;
+				return InstanceInit.UnknownError;
 			}
 
 			installer.AddonsDownload += (int totalDataCount, int nowDataCount) =>
@@ -136,17 +136,15 @@ namespace Lexplosion.Logic.Management.Import.Importers
 			bool result = installer.HandleExtractedFiles(ref instanceContent, _cancelToken);
 			if (!result || instanceContent == null)
 			{
-				return ImportResult.MovingFilesError;
+				return InstanceInit.MoveFilesError;
 			}
 
 			errors = installer.Install(manifest, instanceContent, _cancelToken);
-			if (errors.Count > 0)
-			{
-				return ImportResult.DownloadError;
-			}
+			if (errors.Count > 0) return InstanceInit.DownloadFilesError;
+			if (_cancelToken.IsCancellationRequested) return InstanceInit.IsCancelled;
 
 			_dataFilesManager.SaveManifest(instanceId, versionManifest);
-			return ImportResult.Successful;
+			return InstanceInit.Successful;
 		}
 
 		public void SetInstanceId(string id)
