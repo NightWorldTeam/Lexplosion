@@ -149,7 +149,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer
             switch (exportResult)
             {
                 case ExportResult.Successful:
-                    _appCore.MessageService.Success("ShareExport_Successful", true, InstanceName);
+                    _appCore.MessageService.Success("ShareExport_Sucessfully", true, InstanceName);
                     break;
                 default:
                     _appCore.NotificationService.Notify(
