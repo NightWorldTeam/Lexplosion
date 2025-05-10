@@ -38,7 +38,7 @@ namespace Lexplosion.Logic.Network.SMP
 		private List<ushort> _repeatDeliveryList = null;
 		private bool _sendigIsConfirmed = false;
 
-		private int _maxPackagesCount = 100;
+		private int _maxPackagesCount = 400;
 		private long _rtt = -1; // пинг в обе стороны (время ожидание ответа)
 		private int _mtu = 68; // максимальный размер пакета
 		private int _hostMtu = -1; // mtu удалённого хоста
@@ -525,6 +525,7 @@ namespace Lexplosion.Logic.Network.SMP
 					_repeatDeliveryBlock.WaitOne();
 					_lastPackage = lastPackageId;
 					_lastPackageIdsRange = lastPackageIdsRange;
+					_sendigIsConfirmed = false;
 					_deliveryWait.Reset();
 					_repeatDeliveryBlock.Release();
 
@@ -578,8 +579,6 @@ namespace Lexplosion.Logic.Network.SMP
 							_repeatDeliveryBlock.WaitOne();
 							if (_sendigIsConfirmed) // пакеты удачно доставлены
 							{
-								_sendigIsConfirmed = false;
-
 								//рассчитываем задержку
 								long deltaTime = DateTimeOffset.Now.ToUnixTimeMilliseconds() - lastTime;
 								_rttCalculator.AddDelta(deltaTime);
