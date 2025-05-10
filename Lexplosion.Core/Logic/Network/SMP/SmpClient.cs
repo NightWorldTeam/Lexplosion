@@ -38,7 +38,7 @@ namespace Lexplosion.Logic.Network.SMP
 		private List<ushort> _repeatDeliveryList = null;
 		private bool _sendigIsConfirmed = false;
 
-		private int _maxPackagesCount = 400;
+		private int _maxPackagesCount = 100;
 		private long _rtt = -1; // пинг в обе стороны (время ожидание ответа)
 		private int _mtu = 68; // максимальный размер пакета
 		private int _hostMtu = -1; // mtu удалённого хоста
