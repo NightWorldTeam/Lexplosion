@@ -262,7 +262,15 @@ namespace Lexplosion.Logic.Management.Instances
 
 		public string FolderPath { get => _services.DirectoryService.GetInstancePath(_localId); }
 
-		internal ProgressHandlerCallback GetProgressHandler { get => ProgressHandler; }
+		internal ProgressHandlerCallback GetProgressHandler
+		{
+			get
+			{
+				ProgressHandlerCallback value = ProgressHandler;
+				if (value == null) return (StageType stageType, ProgressHandlerArguments data) => { };
+				return value;
+			}
+		}
 
 		#endregion
 

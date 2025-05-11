@@ -26,12 +26,6 @@ namespace Lexplosion.Logic.Management.Import.Importers
 		/// Устанавливает лкоальный id сборки
 		/// </summary>
 		public void SetInstanceId(string id);
-
-		/// <summary>
-		/// Количество уже выполенных стадий. 
-		/// Это количество должно прибавляться к числу стадий во время выполнения импорта.
-		/// </summary>
-		public int CompletedStagesCount { set; }
 	}
 
 	public struct PrepeareResult

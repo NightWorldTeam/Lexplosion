@@ -382,9 +382,9 @@ namespace Lexplosion.Logic.Management.Instances
 			return instanceId;
 		}
 
-		private ImportResult Import(in InstanceClient client, string zipFile, ImportData importData)
+		private ImportResult Import(in InstanceClient client, string fileAddr, bool fileAddrIsLocal, ImportData importData)
 		{
-			var executor = new ImportExecutor(zipFile, true, GlobalData.GeneralSettings, _services, client.GetProgressHandler, importData);
+			var executor = new ImportExecutor(fileAddr, fileAddrIsLocal, GlobalData.GeneralSettings, _services, client.GetProgressHandler, importData);
 			ImportResult res = executor.Prepeare(out PrepeareResult result);
 
 			if (res != ImportResult.Successful) return res;
@@ -416,10 +416,11 @@ namespace Lexplosion.Logic.Management.Instances
 		{
 			var client = new InstanceClient(CreateSourceFactory(InstanceSource.Local), _services);
 			client.MakeFictitiousClient("Importing...");
+			client.GetProgressHandler(StageType.Prepare, new ProgressHandlerArguments());
 
 			new Thread(() =>
 			{
-				callback(Import(client, zipFile, importData));
+				callback(Import(client, zipFile, true, importData));
 			}).Start();
 
 			return client;
@@ -429,6 +430,7 @@ namespace Lexplosion.Logic.Management.Instances
 		{
 			var client = new InstanceClient(CreateSourceFactory(InstanceSource.Local), _services);
 			client.MakeFictitiousClient("Importing...");
+			client.GetProgressHandler(StageType.Prepare, new ProgressHandlerArguments());
 
 			new Thread(() =>
 			{
@@ -456,7 +458,7 @@ namespace Lexplosion.Logic.Management.Instances
 				if (result == FileRecvResult.Successful)
 				{
 					stateHandler(DownloadShareState.PostProcessing);
-					callback(Import(in client, file, importData));
+					callback(Import(in client, file, true, importData));
 				}
 				else
 				{
@@ -472,6 +474,7 @@ namespace Lexplosion.Logic.Management.Instances
 			var client = new InstanceClient(CreateSourceFactory(InstanceSource.Local), _services);
 
 			client.MakeFictitiousClient("Importing...");
+			client.GetProgressHandler(StageType.Prepare, new ProgressHandlerArguments());
 
 			new Thread(() =>
 			{
@@ -566,32 +569,7 @@ namespace Lexplosion.Logic.Management.Instances
 					return;
 				}
 
-				string tempDir = _services.DirectoryService.CreateTempDir();
-				bool res = _services.DirectoryService.DownloadFile(downloadUrl, "instance_file", tempDir, new TaskArgs
-				{
-					CancelToken = (new CancellationTokenSource()).Token,
-					PercentHandler = (int pr) => { }
-				});
-
-				if (!res)
-				{
-					callback(ImportResult.DownloadError);
-					return;
-				}
-
-				ImportResult impurtRes = Import(client, tempDir + "instance_file", importData);
-
-				try
-				{
-					if (Directory.Exists(tempDir))
-					{
-						Directory.Delete(tempDir, true);
-					}
-				}
-				catch (Exception ex)
-				{
-					Runtime.DebugWrite("Exception " + ex);
-				}
+				ImportResult impurtRes = Import(client, downloadUrl, false, importData);
 
 				callback(impurtRes);
 			}).Start();

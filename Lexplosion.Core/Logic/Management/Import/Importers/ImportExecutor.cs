@@ -53,7 +53,7 @@ namespace Lexplosion.Logic.Management.Import.Importers
 					Runtime.DebugWrite(".nwpk pack");
 					_importManager = new NWPackImportManager(_filePath, _settings, _services, _cancellationToken);
 					return;
-				}	
+				}
 			}
 			catch { }
 
@@ -95,6 +95,8 @@ namespace Lexplosion.Logic.Management.Import.Importers
 
 		public ImportResult Prepeare(out PrepeareResult result)
 		{
+			ProgressHandlerCallback progressHandler = _progressHandler;
+
 			//Если мы имеем ссылку на файл, а не локальный путь, то скачиваем этот файл
 			if (!_fileAddrIsLocalPath)
 			{
@@ -110,8 +112,9 @@ namespace Lexplosion.Logic.Management.Import.Importers
 						{
 							StagesCount = 3,
 							Stage = 1,
-							FilesCount = 1,
-							Procents = pr
+							FilesCount = 0,
+							Procents = pr,
+							TotalFilesCount = 1,
 						});
 					}
 				};
@@ -123,6 +126,18 @@ namespace Lexplosion.Logic.Management.Import.Importers
 				}
 
 				_filePath = tempDir + fileName;
+
+				progressHandler = (StageType stageType, ProgressHandlerArguments data) =>
+				{
+					// в калбеке обработки прогресса прибавляем в количества стадий и в номер стадии по еденице, потому что одна стадия у нас уже была (скачивание файла по url)
+					_progressHandler(stageType, new ProgressHandlerArguments()
+					{
+						FilesCount = data.FilesCount,
+						TotalFilesCount = data.TotalFilesCount,
+						Stage = data.Stage + 1,
+						StagesCount = data.StagesCount + 1,
+					});
+				};
 			}
 
 			DefineManagerType();
@@ -132,7 +147,7 @@ namespace Lexplosion.Logic.Management.Import.Importers
 				return ImportResult.UnknownFileType;
 			}
 
-			return _importManager.Prepeare(_progressHandler, out result);
+			return _importManager.Prepeare(progressHandler, out result);
 		}
 
 		public InstanceInit Import(string instanceId, out IReadOnlyCollection<string> errors)

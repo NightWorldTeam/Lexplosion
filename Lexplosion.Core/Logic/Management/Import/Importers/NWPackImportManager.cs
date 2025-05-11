@@ -20,8 +20,6 @@ namespace Lexplosion.Logic.Management.Import.Importers
 		private string _localId;
 		private string _unzipPath;
 
-		public int CompletedStagesCount { private get; set; }
-
 		public NWPackImportManager(string fileAddres, Settings settings, INightWorldFileServicesContainer services, CancellationToken cancelToken)
 		{
 			_fileAddres = fileAddres;
@@ -38,8 +36,8 @@ namespace Lexplosion.Logic.Management.Import.Importers
 
 			progressHandler(StageType.Client, new ProgressHandlerArguments()
 			{
-				StagesCount = CompletedStagesCount + 2,
-				Stage = CompletedStagesCount + 1,
+				StagesCount = 2,
+				Stage = 1,
 				Procents = 0
 			});
 
@@ -88,8 +86,8 @@ namespace Lexplosion.Logic.Management.Import.Importers
 		{
 			progressHandler(StageType.Client, new ProgressHandlerArguments()
 			{
-				StagesCount = CompletedStagesCount + 2,
-				Stage = CompletedStagesCount + 2,
+				StagesCount = 2,
+				Stage = 2,
 				Procents = 0
 			});
 

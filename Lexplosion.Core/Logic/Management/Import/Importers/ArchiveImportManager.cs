@@ -36,8 +36,6 @@ namespace Lexplosion.Logic.Management.Import.Importers
 		protected VersionManifest versionManifest;
 		protected TManifest manifest;
 
-		public int CompletedStagesCount { private get; set; }
-
 		protected abstract bool ManifestIsValid(TManifest manifest);
 
 		/// <summary>
@@ -61,8 +59,8 @@ namespace Lexplosion.Logic.Management.Import.Importers
 
 			progressHandler(StageType.Client, new ProgressHandlerArguments()
 			{
-				StagesCount = CompletedStagesCount + 2,
-				Stage = CompletedStagesCount + 1,
+				StagesCount = 2,
+				Stage = 1,
 				Procents = 0
 			});
 
@@ -70,8 +68,8 @@ namespace Lexplosion.Logic.Management.Import.Importers
 			{
 				progressHandler(StageType.Client, new ProgressHandlerArguments()
 				{
-					StagesCount = CompletedStagesCount + 2,
-					Stage = CompletedStagesCount + 1,
+					StagesCount = 2,
+					Stage = 1,
 					Procents = pr
 				});
 			};
@@ -127,8 +125,8 @@ namespace Lexplosion.Logic.Management.Import.Importers
 					TotalFilesCount = totalDataCount,
 					FilesCount = nowDataCount,
 					Procents = (((nowDataCount != 0 ? nowDataCount : 1) * 100) / totalDataCount),
-					Stage = CompletedStagesCount + 2,
-					StagesCount = CompletedStagesCount + 2
+					Stage = 2,
+					StagesCount = 2
 				});
 			};
 

@@ -37,8 +37,6 @@ namespace Lexplosion.Logic.Management.Import.Importers
 			_dataFilesManager =  services.DataFilesService;
 		}
 
-		public int CompletedStagesCount { private get; set; }
-
 		public InstanceInit Import(ProgressHandlerCallback progressHandler, out IReadOnlyCollection<string> errors)
 		{
 			errors = new List<string>();
@@ -66,8 +64,8 @@ namespace Lexplosion.Logic.Management.Import.Importers
 
 			progressHandler(StageType.Client, new ProgressHandlerArguments()
 			{
-				StagesCount = CompletedStagesCount + 2,
-				Stage = CompletedStagesCount + 1,
+				StagesCount = 2,
+				Stage = 1,
 				Procents = 0
 			});
 
