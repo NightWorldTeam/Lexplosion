@@ -14,6 +14,7 @@ using Lexplosion.Logic.Management.Sources;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Tools;
+using Lexplosion.Logic.Management.Addons;
 
 namespace Lexplosion.Logic.Management.Instances
 {
@@ -590,6 +591,8 @@ namespace Lexplosion.Logic.Management.Instances
 			newClient.SetLogo(client.Logo);
 			newClient.DeployLocally(baseData.Modloader, baseData.IsNwClient, null, baseData.ModloaderVersion, baseData.OptifineVersion, false);
 
+			newClient.GetProgressHandler(StageType.Prepare, new ProgressHandlerArguments());
+
 			new Thread(() =>
 			{
 				try
@@ -610,6 +613,67 @@ namespace Lexplosion.Logic.Management.Instances
 
 						File.Copy(sourcePath, sourcePath.Replace(from, to), true);
 					}
+
+				}
+				catch { }
+			}).Start();
+
+			return newClient;
+		}
+
+		public InstanceClient CopyClient(InstanceClient client, MinecraftVersion gameVersion, ClientType clientType, string modloaderVersion)
+		{
+			string name = client.Name + " (Copy)";
+			string id = GenerateInstanceId(name);
+
+			IInstanceSource source = CreateSourceFactory(client.Type);
+			var newClient = new InstanceClient(name, source, _services, gameVersion, client.ExternalId, id);
+
+			BaseInstanceData baseData = client.GetBaseData;
+			newClient.UpdateInfo(null, null, client.Categories, client.Summary, client.Description, client.Author, client.WebsiteUrl);
+			newClient.SetLogo(client.Logo);
+			newClient.DeployLocally(clientType, baseData.IsNwClient, null, modloaderVersion, baseData.OptifineVersion, false);
+
+			newClient.GetProgressHandler(StageType.Prepare, new ProgressHandlerArguments());
+
+			new Thread(() =>
+			{
+				try
+				{
+					WithDirectory directoryService = _services.DirectoryService;
+
+					string from = directoryService.GetInstancePath(client.LocalId);
+					string to = directoryService.GetInstancePath(newClient.LocalId);
+
+					var directoriesBlackList = new string[]
+					{
+						$"{from}{AddonsUtils.GetFolderName(AddonType.Mods)}",
+						$"{from}{AddonsUtils.GetFolderName(AddonType.Resourcepacks)}",
+						$"{from}{AddonsUtils.GetFolderName(AddonType.Shaders)}"
+					};
+
+					foreach (string dirPath in Directory.GetDirectories(from, "*", SearchOption.AllDirectories))
+					{
+						Directory.CreateDirectory(dirPath.Replace(from, to));
+					}
+
+					foreach (string sourcePath in Directory.GetFiles(from, "*.*", SearchOption.AllDirectories))
+					{
+						string _sourcePath = sourcePath.Replace("\\", "/");
+						foreach (string dir in directoriesBlackList)
+						{
+							if (_sourcePath.StartsWith(dir)) goto ToNextIteration;
+						}
+
+						string fileName = Path.GetFileName(sourcePath);
+						if (fileName == DataFilesManager.MANIFEST_FILE || fileName == DataFilesManager.MANIFEST_FILE_OLD) continue;
+
+						File.Copy(sourcePath, sourcePath.Replace(from, to), true);
+
+					ToNextIteration:;
+					}
+
+					//AddonsPrototypesCreater.CreateFromFiles()
 
 				}
 				catch { }

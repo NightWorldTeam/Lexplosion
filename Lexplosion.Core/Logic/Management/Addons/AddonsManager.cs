@@ -217,16 +217,9 @@ namespace Lexplosion.Logic.Management.Addons
 			addons = null;
 
 			string path = _services.DirectoryService.GetInstancePath(_modpackInfo.LocalId);
-			if (type == AddonType.Mods)
-				path += "mods/";
-			else if (type == AddonType.Resourcepacks)
-				path += "resourcepacks/";
-			else if (type == AddonType.Shaders)
-				path += "shaderspacks/";
-			else if (type == AddonType.Maps)
-				path += "saves/";
-			else
-				return false;
+			string folderName = AddonsUtils.GetFolderName(type);
+			if (folderName == string.Empty) return false;
+			path += $"{folderName}/";
 
 			if (!Directory.Exists(path))
 				Directory.CreateDirectory(path);
@@ -934,7 +927,8 @@ namespace Lexplosion.Logic.Management.Addons
 		/// <param name="modpackInfo">Инфа о модпаке с которого нужно получить список модов</param>
 		public List<InstanceAddon> GetInstalledMods()
 		{
-			return InstalledAddonsHandle(AddonType.Mods, "mods", ".jar", DefineIternalModInfo);
+			string folderName = AddonsUtils.GetFolderName(AddonType.Mods);
+			return InstalledAddonsHandle(AddonType.Mods, folderName, ".jar", DefineIternalModInfo);
 		}
 
 		public List<InstanceAddon> GetInstalledResourcepacks()
@@ -948,7 +942,8 @@ namespace Lexplosion.Logic.Management.Addons
 				modId = "";
 			};
 
-			return InstalledAddonsHandle(AddonType.Resourcepacks, "resourcepacks", ".zip", addonInfo);
+			string folderName = AddonsUtils.GetFolderName(AddonType.Resourcepacks);
+			return InstalledAddonsHandle(AddonType.Resourcepacks, folderName, ".zip", addonInfo);
 		}
 
 		public List<InstanceAddon> GetInstalledWorlds()
@@ -1040,7 +1035,8 @@ namespace Lexplosion.Logic.Management.Addons
 				modId = "";
 			};
 
-			return InstalledAddonsHandle(AddonType.Shaders, "shaderpacks", ".zip", addonInfo);
+			string folderName = AddonsUtils.GetFolderName(AddonType.Shaders);
+			return InstalledAddonsHandle(AddonType.Shaders, folderName, ".zip", addonInfo);
 		}
 
 		/// <summary>

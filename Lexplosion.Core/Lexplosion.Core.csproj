@@ -73,6 +73,7 @@
     <Compile Include="Logic\FileSystem\Services\IModrinthFileServicesContainer.cs" />
     <Compile Include="Logic\FileSystem\Services\IFileServicesContainer.cs" />
     <Compile Include="Logic\FileSystem\Services\INightWorldFileServicesContainer.cs" />
+    <Compile Include="Logic\Management\Addons\AddonsUtils.cs" />
     <Compile Include="Logic\Management\AllServicesContainer.cs" />
     <Compile Include="Logic\Management\Addons\AddonsCatalogParams\AddonsCatalogParamsBase.cs" />
     <Compile Include="Logic\Management\Addons\AddonsCatalogParams\CurseforgeAddonsCatalogParams.cs" />
