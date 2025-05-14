@@ -148,8 +148,8 @@ namespace Lexplosion.Logic.Network.Web
 
 		private string BuildCategoriesToQuery(IEnumerable<IProjectCategory> categories)
 		{
-			string ctrs = string.Join(",", categories.Select(x => x.Id != "-1"));
-			return "[" + ctrs + "]";
+			string ctrs = string.Join(",", categories.Where(x => x.Id != "-1").Select(x => x.Id));
+			return $"[{ctrs}]";
 		}
 
 		public CatalogResult<CurseforgeAddonInfo> GetAddonsList(AddonType type, CurseforgeSearchParams searchParams)
