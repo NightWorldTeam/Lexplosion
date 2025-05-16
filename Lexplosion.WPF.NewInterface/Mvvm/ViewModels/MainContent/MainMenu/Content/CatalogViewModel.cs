@@ -117,7 +117,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         public CatalogViewModel(AppCore appCore, INavigationStore navigationStore, NavigateCommand<ViewModelBase> navigationCommand, IInstanceController instanceController)
         {
             _appCore = appCore;
-            Model = new CatalogModel(instanceController);
+            Model = new CatalogModel(appCore, instanceController);
             _navigationCommand = navigationCommand;
             _navigationStore = navigationStore;
         }

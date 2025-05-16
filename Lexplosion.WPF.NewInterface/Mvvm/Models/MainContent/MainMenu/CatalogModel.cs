@@ -1,6 +1,7 @@
 ﻿using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Objects;
+using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.FIlterPanel;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
@@ -93,10 +94,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
         #region Constructors
 
 
-        public CatalogModel(IInstanceController instanceController)
+        public CatalogModel(AppCore appCore, IInstanceController instanceController)
         {
             _instanceController = instanceController;
-            FilterPanel = new CatalogFilterPanel(OnFilterChanged);
+            FilterPanel = new CatalogFilterPanel(appCore, () => OnFilterChanged());
             _resetEvent.Set();
         }
 
@@ -107,10 +108,16 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
         #region Public & Properties Methods
         
 
-        private void OnFilterChanged() 
+        private void OnFilterChanged(bool paginatorChanged = false) 
         {
             IsLoading = true;
             _instanceController.Clear();
+
+            if (!paginatorChanged) 
+            {
+                CurrentPageIndex = 0;            
+            }
+
             Runtime.TaskRun(() =>
             {
                 _resetEvent.WaitOne();
@@ -141,7 +148,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
         public void Paginate(uint scrollTo)
         {
             CurrentPageIndex = scrollTo;
-            OnFilterChanged();
+            OnFilterChanged(true);
         }
 
         public void SearchFilterChanged(string searchFilter) 
@@ -150,7 +157,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
             OnFilterChanged();
         }
 
-        /// TODO: Сделать метод приватным
         /// <summary>
         /// Return a list of instances from curseforge/modrinth
         /// </summary>
@@ -162,7 +168,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
         /// <param name="gameVersion">version of minecraft</param>
         /// <param name="isPaginatorInvoke">Is page index changed?</param>
         /// <returns>Tuple[IEnumerable InstanceClient & InstanceClient count </returns>
-        public CatalogResult<InstanceClient> GetInstanceClients(string searchInput, int scrollTo, InstanceSource source, IEnumerable<IProjectCategory> selectedCategories, int sortBy, MinecraftVersion gameVersion, bool isPaginatorInvoke = false)
+        private CatalogResult<InstanceClient> GetInstanceClients(string searchInput, int scrollTo, InstanceSource source, IEnumerable<IProjectCategory> selectedCategories, int sortBy, MinecraftVersion gameVersion, bool isPaginatorInvoke = false)
         {
             ISearchParams searchParams = null;
 

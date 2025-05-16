@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Objects;
+using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Objects.TranslatableObjects;
 using Lexplosion.WPF.NewInterface.Core.ViewModel;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels;
@@ -8,7 +9,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Threading;
 using System.Windows.Data;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.FIlterPanel
@@ -18,6 +18,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.FIlterPan
         public event Action FilterChanged;
 
 
+        private readonly AppCore _appCore;
+
+
         #region Properties
 
 
@@ -25,19 +28,19 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.FIlterPan
         public MinecraftVersion AllVersion { get; } = new MinecraftVersion("All", MinecraftVersion.VersionType.Release);
 
         private IList<SortByParamObject> _sortByParams = new ObservableCollection<SortByParamObject>();
-        public IList<SortByParamObject> SortByParams 
-        { 
+        public IList<SortByParamObject> SortByParams
+        {
             get => _sortByParams; set
             {
                 _sortByParams = value;
                 SelectedSortByParam = value.FirstOrDefault();
                 OnPropertyChanged();
             }
-        
+
         }
 
         private SortByParamObject _selectedSortByParam;
-        public SortByParamObject SelectedSortByParam 
+        public SortByParamObject SelectedSortByParam
         {
             get => _selectedSortByParam; set
             {
@@ -71,10 +74,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.FIlterPan
             get => _selectedSource; set
             {
                 _selectedSource = value;
-                
+
                 UpdateCategories(value.Value);
 
-                switch (value.Value) 
+                switch (value.Value)
                 {
                     case InstanceSource.Modrinth:
                         {
@@ -96,10 +99,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.FIlterPan
                             {
                                 var name = Enum.GetName(typeof(CfSortField), index);
 
-								var elem = new SortByParamObject($"Curseforge{name}", (int)index);
-								if ((int)index == (int)CfSortField.Popularity) SelectedSortByParam = elem;
+                                var elem = new SortByParamObject($"Curseforge{name}", (int)index);
+                                if ((int)index == (int)CfSortField.Popularity) SelectedSortByParam = elem;
 
-								_sortByParams.Add(elem);
+                                _sortByParams.Add(elem);
                             }
 
                         }
@@ -116,14 +119,27 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.FIlterPan
         }
 
 
+        private bool _isCategoryLoading;
+        public bool IsCategoryLoading
+        {
+            get => _isCategoryLoading; set
+            {
+                _isCategoryLoading = true;
+                OnPropertyChanged();
+            }
+        }
+
+
         #endregion Properties
 
 
         #region Constructors
 
 
-        public CatalogFilterPanel(Action filterChange)
+        public CatalogFilterPanel(AppCore appCore, Action filterChange)
         {
+            _appCore = appCore;
+
             Sources.Add(new InstanceSourceObject("Curseforge", InstanceSource.Curseforge));
             Sources.Add(new InstanceSourceObject("Modrinth", InstanceSource.Modrinth));
             Sources.Add(new InstanceSourceObject("NightWorld", InstanceSource.Nightworld));
@@ -137,7 +153,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.FIlterPan
             {
                 MainViewModel.AllVersionsLoaded += MainViewModel_AllVersionsLoaded;
             }
-            else 
+            else
             {
                 MainViewModel_AllVersionsLoaded();
             }
@@ -145,8 +161,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.FIlterPan
 
         private void MainViewModel_AllVersionsLoaded()
         {
-            App.Current.Dispatcher.Invoke(() => 
-            { 
+            App.Current.Dispatcher.Invoke(() =>
+            {
                 var versions = new ObservableCollection<MinecraftVersion>(MainViewModel.AllGameVersions);
                 versions.Insert(0, AllVersion);
                 SelectedVersion = versions[0];
@@ -160,21 +176,29 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.FIlterPan
         #endregion Constructors
 
 
-        private void UpdateCategories(InstanceSource instanceSource) 
+        private void UpdateCategories(InstanceSource instanceSource)
         {
+            IsCategoryLoading = true;
             AvailableCategories.Clear();
-            var cats = Runtime.ServicesContainer.CategoriesService.GetModpackCategories(EnumManager.InstanceSourceToProjectSource(instanceSource)) ?? new List<CategoryBase>();
-            foreach (var cat in cats.Where(mc => mc.Id != "-1"))
+            Runtime.TaskRun(() =>
             {
-                AvailableCategories.Add(cat);
-            }
+                var cats = Runtime.ServicesContainer.CategoriesService.GetModpackCategories(EnumManager.InstanceSourceToProjectSource(instanceSource)) ?? new List<CategoryBase>();
+                _appCore.UIThread(() =>
+                {
+                    foreach (var cat in cats.Where(mc => mc.Id != "-1"))
+                    {
+                        AvailableCategories.Add(cat);
+                    }
+                    IsCategoryLoading = false;
+                });
+            });
         }
 
 
         #region Public Methods
 
 
-        public void ExecuteFilter() 
+        public void ExecuteFilter()
         {
             SelectedSource = Sources[0];
         }
