@@ -938,9 +938,20 @@
                                             Template="{StaticResource DropDownButton}"
                                             Text="{DynamicResource Addons}" />
 
+                                        <core:If Condition="{Binding HasAvailableUpdate}">
+                                            <core:If.True>
+                                                <!--  Обновить  -->
+                                                <controls:AdvancedButton
+                                                    x:Name="UpdateButton"
+                                                    Click="UpdateButton_Click"
+                                                    IconData="{DynamicResource PDUpdate}"
+                                                    Template="{StaticResource DropDownButton}"
+                                                    Text="{DynamicResource Update}" />
+                                            </core:If.True>
+                                        </core:If>
+
                                         <core:If Condition="{Binding IsInstalled}">
                                             <core:If.True>
-
                                                 <!--  Удалить  -->
                                                 <controls:AdvancedButton
                                                     x:Name="DeleteButton"
@@ -948,7 +959,6 @@
                                                     IconData="{DynamicResource PDDelete}"
                                                     Template="{StaticResource DropDownButton}"
                                                     Text="{DynamicResource DeleteInstance}" />
-
                                             </core:If.True>
                                             <core:If.False>
 

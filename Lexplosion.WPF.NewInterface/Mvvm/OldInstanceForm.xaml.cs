@@ -261,5 +261,13 @@ namespace Lexplosion.WPF.NewInterface.Controls.OldInstanceForm
                 _model.CancelImport();
             }
         }
+
+        private void UpdateButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_model != null && _model.State == InstanceState.Default)
+            {
+                _model.Update();
+            }
+        }
     }
 }
