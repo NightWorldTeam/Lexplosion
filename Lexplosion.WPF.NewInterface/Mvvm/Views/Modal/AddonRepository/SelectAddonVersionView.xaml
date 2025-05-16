@@ -39,19 +39,20 @@
 
                     <!--  Selected Page Title  -->
                     <TextBlock
-                        Grid.Row="1"
                         Margin="20,0,0,0"
                         VerticalAlignment="Top"
                         FontSize="18"
                         FontWeight="Medium"
-                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}">
+                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                        TextTrimming="CharacterEllipsis">
                         <Run Text="{DynamicResource Install}" />
                         <Run Text="{Binding Model.AddonName, Mode=OneWay}" />
                     </TextBlock>
 
                     <!--  Close Button  -->
                     <controls:AdvancedButton
-                        Margin="0,0,20,0"
+                        Grid.Column="1"
+                        Margin="0,-4,20,0"
                         Padding="8"
                         HorizontalAlignment="Right"
                         Panel.ZIndex="10000"
