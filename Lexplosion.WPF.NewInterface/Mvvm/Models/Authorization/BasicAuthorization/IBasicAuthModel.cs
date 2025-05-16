@@ -14,5 +14,9 @@
         /// Будет ли сохранения аккаунта после авторизации.
         /// </summary>
         bool IsRememberMe { get; set; }
+        /// <summary>
+        /// Идет процесс авторизации
+        /// </summary>
+        bool IsLoading { get; set; }
     }
 }

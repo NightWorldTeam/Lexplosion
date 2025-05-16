@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.WPF.NewInterface.Core;
+using System.Threading;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization.BasicAuthorization
 {
@@ -42,6 +43,17 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization.BasicAuthorizati
         }
 
 
+        private bool _isLoading;
+        public bool IsLoading 
+        {
+            get => _isLoading; set 
+            {
+                _isLoading = value;
+                OnPropertyChanged();
+            }
+        }
+
+
         #endregion Properties
 
 
@@ -68,8 +80,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization.BasicAuthorizati
                 return;
             }
 
-			var services = Runtime.ServicesContainer;
-
+            IsLoading = true;
+            var services = Runtime.ServicesContainer;
 			var account = new Account(AccountType.NightWorld, services, services.DataFilesService, Login);
 
             Runtime.TaskRun(() =>
@@ -78,6 +90,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization.BasicAuthorizati
                 App.Current.Dispatcher.Invoke(() =>
                 {
                     PerformNightWorldAuthCode(account, authCode);
+                    IsLoading = false;
                 });
             });
         }
