@@ -13,6 +13,7 @@ using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Addons;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.Logic.Objects;
+using Lexplosion.WPF.NewInterface.Extensions;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile
 {
@@ -47,7 +48,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
         public string InstanceName { get => _instanceModel.Name; }
         public string InstanceVersion { get => _instanceModel.BaseData.GameVersion?.Id; }
         public string InstanceModloader { get => _instanceModel.BaseData.Modloader.ToString(); }
-        public string DownloadCount { get => _instanceModel.TotalDonwloads; }
+        public string DownloadCount { get => _instanceModel.TotalDownloads; }
         public bool IsInstalled { get => _instanceModel.IsInstalled; }
 
 
@@ -189,7 +190,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
                     _additionalInfo.Add(new InstanceFieldInfo<long>("DownloadCount:", () =>
                     {
                         additionalInfo = _instanceModel.AdditionalData;
-                        return DownloadsCountToString(additionalInfo.TotalDownloads);
+                        return additionalInfo.TotalDownloads.LongToString();
                     }));
                 }
             });
@@ -204,42 +205,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             }
             return $"{seconds / 60}мин";
         }
-
-        string DownloadsCountToString(long number)
-        {
-            if (number == 0)
-                return "0";
-
-            if (number < 10000)
-                return number.ToString();
-
-            var size = (long)Math.Log10(number);
-
-            switch (size)
-            {
-                //k
-                case 4:
-                    {
-                        return (number / 1000).ToString("##.###k");
-                    }
-                case 5:
-                    {
-                        return (number / 1000).ToString("###.###k");
-                    }
-                // M
-                case 7:
-                    {
-                        return (number / 1000000).ToString("##.##M");
-                    }
-                case 8:
-                    {
-                        return (number / 100000).ToString("###.##M");
-                    }
-                default:
-                    return (number / Math.Pow(10, size)).ToString("#.##M");
-            }
-        }
-
 
         private void OnNameChanged()
         {

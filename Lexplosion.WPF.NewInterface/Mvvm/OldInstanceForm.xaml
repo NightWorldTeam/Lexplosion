@@ -196,6 +196,39 @@
                         Background="Transparent"
                         CornerRadius="0,5,0,5" />
 
+                    <!--  Modloader Icon  -->
+                    <Border
+                        Padding="4"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Bottom"
+                        CornerRadius="0,5,0,5"
+                        Visibility="{Binding HasTotalDownloads, Converter={converters:BooleanToVisibilityConverter}}">
+
+                        <Border.Background>
+                            <SolidColorBrush Opacity="0.6" Color="Black" />
+                        </Border.Background>
+
+                        <StackPanel Orientation="Horizontal">
+                            <Viewbox
+                                Width="10"
+                                Height="10"
+                                Margin="0,0,4,0">
+
+                                <Path
+                                    extensions:PathExtensions.StringKeyData="Download"
+                                    Fill="White"
+                                    Stretch="Fill" />
+                            </Viewbox>
+
+                            <TextBlock
+                                x:Name="DownloadCountIcon"
+                                Background="Transparent"
+                                FontWeight="Medium"
+                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                Text="{Binding TotalDownloads}" />
+                        </StackPanel>
+                    </Border>
+
                     <!--  Update Button  -->
                     <core:If Condition="{Binding HasAvailableUpdate}">
                         <core:If.True>

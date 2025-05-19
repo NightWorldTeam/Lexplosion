@@ -149,6 +149,7 @@
     <Compile Include="Core\Switch.cs" />
     <Compile Include="Core\ViewModel\ILimitedAccess.cs" />
     <Compile Include="Core\ViewModel\LimitedContentViewModelBase.cs" />
+    <Compile Include="Extensions\LongExtensions.cs" />
     <Compile Include="Extensions\ResourceDictionaryExtensions.cs" />
     <Compile Include="Extensions\ScrollViewerExtensions.cs" />
     <Compile Include="Extensions\StyleSelectors\LastRowItemWrapPanelStyleSelector.cs" />

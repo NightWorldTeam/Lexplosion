@@ -7,6 +7,7 @@ using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Notifications;
 using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Core.ViewModel;
+using Lexplosion.WPF.NewInterface.Extensions;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal;
 using System;
 using System.Collections.Generic;
@@ -232,7 +233,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         public byte[] Logo { get; private set; }
         public IEnumerable<IProjectCategory> Tags { get; }
         public InstanceSource Source { get => _instanceClient.Type; }
-        public string TotalDonwloads { get; private set; }
+        public bool HasTotalDownloads { get; private set; }
+        public string TotalDownloads { get; private set; }
         public bool IsLocal { get => Source == InstanceSource.Local; }
         public string ClientVersion { get => _instanceClient.ProfileVersion; }
         public InstanceData PageData { get; private set; }
@@ -248,7 +250,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             }
         }
 
-
+        
         #endregion Visual Data
 
 
@@ -406,6 +408,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             _instanceClient.GameExited += OnGameExited;
 
             Logo = _instanceClient.Logo;
+            TotalDownloads = _instanceClient.DownloadCounts.LongToString();
+            HasTotalDownloads = _instanceClient.HasDownloadCounts;
             var versionTag = new SimpleCategory { Name = GameVersion?.Id ?? "" };
             var tags = _instanceClient.Categories.ToList() ?? new List<CategoryBase>();
             tags.Insert(0, versionTag);
@@ -698,7 +702,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             {
                 PageData = _instanceClient.GetFullInfo();
                 PageData.TotalDownloads.ToString();
-                OnPropertyChanged(nameof(TotalDonwloads));
+                OnPropertyChanged(nameof(TotalDownloads));
             });
         }
 
