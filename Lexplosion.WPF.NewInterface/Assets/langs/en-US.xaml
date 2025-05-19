@@ -840,4 +840,12 @@
     <s:String x:Key="ExportInfoFileError">Error creating instanceInfo.json file!</s:String>
     <s:String x:Key="ExportZipFileError">Error creating zip archive!</s:String>
     <s:String x:Key="ExportNotExistsValidAccount">We really don't know what's going on!</s:String>
+
+    <s:String x:Key="CoopertationContact">По вопросам сотрудничества</s:String>
+
+    <s:String x:Key="OurVkGroup">Наша группа ВК</s:String>
+    <s:String x:Key="OurDiscordServer">Наш Discord сервер</s:String>
+    <s:String x:Key="OurYoutube">Наш Youtube</s:String>
+    <s:String x:Key="SourceCode">Исходный код</s:String>
+    <s:String x:Key="OutWebsite">Наш веб-сайт</s:String>
 </ResourceDictionary>
