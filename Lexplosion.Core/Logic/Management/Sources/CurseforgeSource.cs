@@ -82,7 +82,8 @@ namespace Lexplosion.Logic.Management.Sources
 						GameVersion = new MinecraftVersion(instance.latestFilesIndexes[0].gameVersion),
 						WebsiteUrl = instance.links?.websiteUrl,
 						LogoUrl = instance.logo?.url,
-						ExternalId = instance.id
+						ExternalId = instance.id,
+						DownloadCounts = (int)instance.downloadCount
 					});
 				}
 			}

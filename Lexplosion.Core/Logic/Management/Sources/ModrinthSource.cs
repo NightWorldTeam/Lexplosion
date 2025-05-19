@@ -76,7 +76,8 @@ namespace Lexplosion.Logic.Management.Sources
 					GameVersion = new MinecraftVersion(instance.GameVersions[instance.GameVersions.Count - 1]),
 					WebsiteUrl = "https://modrinth.com/modpack/" + instance.Slug,
 					LogoUrl = instance.LogoUrl,
-					ExternalId = instance.ProjectId
+					ExternalId = instance.ProjectId,
+					DownloadCounts = instance.Downloads
 				});
 			}
 
