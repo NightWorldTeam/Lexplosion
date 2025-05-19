@@ -230,6 +230,9 @@ namespace Lexplosion.Logic.Management.Instances
 			}
 		}
 
+		public int DownloadCounts { get; internal set; } = -1;
+		public bool HasDownloadCounts { get => DownloadCounts > -1; }
+
 		private string _websiteUrl = null;
 		public string WebsiteUrl
 		{

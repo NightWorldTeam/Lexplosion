@@ -255,6 +255,8 @@ namespace Lexplosion.Logic.Management.Instances
 
 					instances.Add(instanceClient);
 				}
+
+				instanceClient.DownloadCounts = instance.DownloadCounts;
 			}
 
 			return new(instances, catalog.TotalCount);
