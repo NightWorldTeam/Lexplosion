@@ -73,6 +73,7 @@ namespace Lexplosion.Logic.Objects
 		public string WebsiteUrl;
 		public string LogoUrl;
 		public string ExternalId;
+		public long DownloadCounts = -1;
 		public MinecraftVersion GameVersion;
 	}
 
