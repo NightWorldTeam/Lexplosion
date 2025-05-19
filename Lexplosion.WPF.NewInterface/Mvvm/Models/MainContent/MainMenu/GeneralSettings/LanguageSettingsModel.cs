@@ -11,9 +11,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
 {
     public sealed class LanguageSettingsModel : ViewModelBase
     {
-        public static readonly string[] AvailableLanguages = new string[5]
+        public static readonly string[] AvailableLanguages = new string[]
         {
-            "ru-RU", "en-US", "uk-UA", "zh-CN", "de-DE"
+            "ru-RU", "en-US", //"uk-UA", "zh-CN", "de-DE"
         };
 
         private LanguageModel _selectedLang;
