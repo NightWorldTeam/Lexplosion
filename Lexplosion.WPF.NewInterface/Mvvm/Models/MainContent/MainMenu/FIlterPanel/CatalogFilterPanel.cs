@@ -19,6 +19,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.FIlterPan
 
 
         private readonly AppCore _appCore;
+        private readonly bool _isInitialized;
 
 
         #region Properties
@@ -75,7 +76,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.FIlterPan
             {
                 _selectedSource = value;
 
-                UpdateCategories(value.Value);
+                if (_isInitialized) 
+                {
+                    UpdateCategories(value.Value);
+                }
 
                 switch (value.Value)
                 {
@@ -157,6 +161,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.FIlterPan
             {
                 MainViewModel_AllVersionsLoaded();
             }
+            _isInitialized = true;
         }
 
         private void MainViewModel_AllVersionsLoaded()
