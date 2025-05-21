@@ -125,7 +125,7 @@
                     </core:If>
 
                     <!--  More Button  -->
-                    <Grid Opacity="0">
+                    <Grid Cursor="Hand" Opacity="0">
                         <Border CornerRadius="5">
                             <Border.Background>
                                 <SolidColorBrush Opacity="0.5" Color="Black" />
@@ -150,7 +150,7 @@
 
                                     <MultiDataTrigger>
                                         <MultiDataTrigger.Conditions>
-                                            <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Value="True" />
+                                            <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType={x:Type Grid}}}" Value="True" />
                                             <Condition Binding="{Binding IsInstanceCompleted}" Value="True" />
                                         </MultiDataTrigger.Conditions>
 
