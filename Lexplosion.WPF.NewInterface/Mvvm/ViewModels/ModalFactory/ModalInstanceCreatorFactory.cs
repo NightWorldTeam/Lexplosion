@@ -7,6 +7,7 @@ using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.Logic.Management.Accounts;
 using System.Collections.Generic;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Limited;
+using Lexplosion.Logic.Management.Import;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.ModalFactory
 {
@@ -39,7 +40,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.ModalFactory
                 TitleKey = "Create",
                 IsEnable = hasMinecraftVersions,
                 IsSelected = hasMinecraftVersions,
-                Content = new InstanceFactoryViewModel((i) => _libraryController.Add(i), leftMenuControl.CloseCommand)
+                Content = !hasMinecraftVersions ? null : new InstanceFactoryViewModel((i) => _libraryController.Add(i), leftMenuControl.CloseCommand)
             });
 
             menuItems.Add(new ModalLeftMenuTabItem()
@@ -48,7 +49,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.ModalFactory
                 TitleKey = "Import",
                 IsEnable = true,
                 IsSelected = !hasMinecraftVersions,
-                Content = new InstanceImportViewModel(_appCore, (i) => _libraryController.Add(i), _libraryController.Remove)
+                Content = new InstanceImportViewModel(
+                    _appCore, 
+                    (instanceClient, importData) => _libraryController.Add(instanceClient, importData),
+                    _libraryController.Remove)
             });
 
             menuItems.Add(new ModalLeftMenuTabItem()
@@ -60,7 +64,14 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.ModalFactory
                 Content = new NightWorldLimitedContentLayoutViewModel(new InstanceDistributionViewModel(_libraryController, _shareController), true)
             });
 
-            leftMenuControl.AddTabItems(menuItems, true);
+            if (hasMinecraftVersions)
+            {
+                leftMenuControl.AddTabItems(menuItems, hasMinecraftVersions);
+            }
+            else 
+            {
+                leftMenuControl.AddTabItems(menuItems, selectedPageType: typeof(InstanceImportViewModel));
+            }
             return leftMenuControl;
         }
     }

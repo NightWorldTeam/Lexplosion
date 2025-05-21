@@ -1,9 +1,7 @@
 ﻿using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
-using Lexplosion.WPF.NewInterface.WindowComponents.Header.Variants;
 using System;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
@@ -69,7 +67,7 @@ namespace Lexplosion.WPF.NewInterface.WindowComponents.Header.Variants
                 GlobalData.GeneralSettings.NavBarInLeft = false;
             }
 
-            DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+			Runtime.ServicesContainer.DataFilesService.SaveSettings(GlobalData.GeneralSettings);
         } 
     }
 }

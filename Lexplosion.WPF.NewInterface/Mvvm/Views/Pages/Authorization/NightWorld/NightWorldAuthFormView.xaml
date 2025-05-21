@@ -85,14 +85,14 @@
 
                     <Grid Grid.Row="1" Margin="0,16,0,0">
                         <StackPanel>
-                            <Button
-                                Height="32"
-                                HorizontalContentAlignment="Center"
-                                VerticalContentAlignment="Center"
+                            <controls:AdvancedButton
+                                Padding="0,0,0,0"
                                 Command="{Binding AuthorizationCommand}"
                                 Content="{DynamicResource LogIn}"
-                                FontWeight="Medium"
-                                Foreground="White" />
+                                FontSize="12"
+                                FontWeight="Medium" LoadingText="Авторизация"
+                                IsLoading="{Binding Model.IsLoading}"
+                                Style="{StaticResource sm-default}" />
 
                             <WrapPanel Margin="0,12,0,0" HorizontalAlignment="Center">
 

@@ -14,14 +14,27 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
     {
         private readonly AppCore _appCore;
         private readonly AppColorThemeService _themeService;
-        
+
 
         public Theme SelectedTheme { get => _themeService.SelectedTheme; }
         public ActivityColor SelectedColor { get => _themeService.SelectedActivityColor; }
+        public string SelectedAppHeaderTemplateName
+        {
+            get => _themeService.SelectedAppHeaderTemplateName; set
+            {
+                if (!string.IsNullOrEmpty(value)) 
+                {
+                    _themeService.ChangeWindowHeaderTemplate(value);
+                    OnPropertyChanged();
+                }
+            }
+        }
 
 
         public IEnumerable<ActivityColor> Colors { get => _themeService.Colors; }
         public IEnumerable<Theme> Themes { get => _themeService.Themes; }
+
+        public IEnumerable<string> HeaderTemplates { get => _themeService.HeaderTemplateNames; }
 
 
         private string _newHexActivityColor;

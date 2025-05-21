@@ -8,6 +8,7 @@ namespace Lexplosion.WPF.NewInterface.WindowComponents.Header.Variants
     {
         private WindowHeaderArgs _windowHeaderArgs;
 
+
         protected HeaderBase()
         {
             DataContextChanged += OnDataContextChanged;

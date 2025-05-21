@@ -231,11 +231,9 @@ namespace Lexplosion.WPF.NewInterface
 
         private static void InitializedSystem()
         {
-            ResourcesDictionariesRegister();
+			ResourcesDictionariesRegister();
 
-            InitializedAccountSystem();
-
-            App.Current.Dispatcher.Invoke(delegate ()
+			App.Current.Dispatcher.Invoke(delegate ()
             {
                 App.Current.Exit += Runtime.BeforeExit;
             });
@@ -251,7 +249,9 @@ namespace Lexplosion.WPF.NewInterface
 
             Runtime.InitializedSystem((int)_splashWindowLeft, (int)_splashWindowTop);
 
-            _appCore.UIThread.Invoke(() =>
+			InitializedAccountSystem();
+
+			_appCore.UIThread.Invoke(() =>
             {
                 _appCore.Settings = new AppSettings();
             });
@@ -278,7 +278,7 @@ namespace Lexplosion.WPF.NewInterface
                 }
             };
 
-            LaunchGame.OnGameStarted += delegate (LaunchGame gameManager) //подписываемся на эвент запуска игры
+            LaunchGame.OnGameStarted += (LaunchGame gameManager) => //подписываемся на эвент запуска игры
             {
                 // если в настрйоках устанавлено что нужно скрывать лаунчер при запуске клиента, то скрывеам главное окно
                 if (GlobalData.GeneralSettings.IsHiddenMode == true)
@@ -299,7 +299,7 @@ namespace Lexplosion.WPF.NewInterface
                 });
             };
 
-            LaunchGame.OnGameStoped += delegate (LaunchGame gameManager) //подписываемся на эвент завершения игры
+            LaunchGame.OnGameStoped += (LaunchGame gameManager) => //подписываемся на эвент завершения игры
             {
                 _activeGameManager = null;
 
@@ -481,7 +481,7 @@ namespace Lexplosion.WPF.NewInterface
                         //switch () тут код для стран cis
                         CurrentLangDict.Source = new Uri(LangPath + currentCultureName + ".xaml");
                         GlobalData.GeneralSettings.LanguageId = currentCultureName;
-                        DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+						Runtime.ServicesContainer.DataFilesService.SaveSettings(GlobalData.GeneralSettings);
                     }
                     else
                     {
@@ -492,7 +492,7 @@ namespace Lexplosion.WPF.NewInterface
                 {
                     CurrentLangDict.Source = new Uri(LangPath + "ru-RU.xaml");
                     GlobalData.GeneralSettings.LanguageId = "ru-RU";
-                    DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+					Runtime.ServicesContainer.DataFilesService.SaveSettings(GlobalData.GeneralSettings);
                 }
             }
             else

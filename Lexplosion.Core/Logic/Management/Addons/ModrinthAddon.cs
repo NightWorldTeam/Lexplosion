@@ -7,9 +7,10 @@ using Lexplosion.Logic.Management.Instances;
 using System.Runtime.CompilerServices;
 using System;
 using System.Threading;
-using static Lexplosion.Logic.Objects.Curseforge.InstanceManifest;
 using NightWorld.Collections.Concurrent;
-using System.Linq;
+using Lexplosion.Logic.Network.Services;
+using Lexplosion.Logic.FileSystem.Extensions;
+using Lexplosion.Logic.FileSystem.Services;
 
 namespace Lexplosion.Logic.Management.Addons
 {
@@ -17,6 +18,8 @@ namespace Lexplosion.Logic.Management.Addons
 	{
 		private ModrinthProjectFile _versionInfo;
 		private ModrinthProjectInfo _addonInfo;
+		private readonly IModrinthFileServicesContainer _services;
+		private readonly Func<AddonType, IEnumerable<string>, IEnumerable<CategoryBase>> _categoriesGetter;
 		private BaseInstanceData _instanceData;
 
 		private string _projectId;
@@ -24,43 +27,52 @@ namespace Lexplosion.Logic.Management.Addons
 
 		private ConcurrentHashSet<Modloader> _acceptableModloaders = null;
 
-		public ModrinthAddon(BaseInstanceData instanceData, ModrinthProjectInfo addonInfo)
+		public ModrinthAddon(BaseInstanceData instanceData, ModrinthProjectInfo addonInfo, IModrinthFileServicesContainer services, Func<AddonType, IEnumerable<string>, IEnumerable<CategoryBase>> categoriesGetter)
 		{
 			_addonInfo = addonInfo;
+			_services = services;
+			_categoriesGetter = categoriesGetter;
 			_instanceData = instanceData;
 			_projectId = addonInfo.ProjectId;
 
 			SetAuthor();
 		}
 
-		public ModrinthAddon(BaseInstanceData instanceData, ModrinthProjectFile addonFileInfo)
+		public ModrinthAddon(BaseInstanceData instanceData, ModrinthProjectFile addonFileInfo, IModrinthFileServicesContainer services, Func<AddonType, IEnumerable<string>, IEnumerable<CategoryBase>> categoriesGetter)
 		{
 			_instanceData = instanceData;
 			_projectId = addonFileInfo.ProjectId;
 			_fileId = addonFileInfo.FileId;
+			_services = services;
+			_categoriesGetter = categoriesGetter;
 		}
 
-		public ModrinthAddon(BaseInstanceData instanceData, ModrinthProjectInfo addonInfo, ModrinthProjectFile addonFileInfo)
+		public ModrinthAddon(BaseInstanceData instanceData, ModrinthProjectInfo addonInfo, ModrinthProjectFile addonFileInfo, IModrinthFileServicesContainer services, Func<AddonType, IEnumerable<string>, IEnumerable<CategoryBase>> categoriesGetter)
 		{
 			_instanceData = instanceData;
 			_projectId = addonFileInfo.ProjectId;
 			_addonInfo = addonInfo;
 			_fileId = addonFileInfo.FileId;
-
+			_services = services;
+			_categoriesGetter = categoriesGetter;
 			SetAuthor();
 		}
 
-		private ModrinthAddon(BaseInstanceData instanceData, string projectId)
+		private ModrinthAddon(BaseInstanceData instanceData, string projectId, IModrinthFileServicesContainer services, Func<AddonType, IEnumerable<string>, IEnumerable<CategoryBase>> categoriesGetter)
 		{
 			_instanceData = instanceData;
 			_projectId = projectId;
+			_services = services;
+			_categoriesGetter = categoriesGetter;
 		}
 
-		private ModrinthAddon(BaseInstanceData instanceData, string projectId, string fileId)
+		private ModrinthAddon(BaseInstanceData instanceData, string projectId, string fileId, IModrinthFileServicesContainer services, Func<AddonType, IEnumerable<string>, IEnumerable<CategoryBase>> categoriesGetter)
 		{
 			_instanceData = instanceData;
 			_projectId = projectId;
 			_fileId = fileId;
+			_services = services;
+			_categoriesGetter = categoriesGetter;
 		}
 
 		#region Info
@@ -126,11 +138,11 @@ namespace Lexplosion.Logic.Management.Addons
 						{
 							if (dependencie.VersionId != null)
 							{
-								list.Add(new AddonDependencie(dependencie.ProjectId, new ModrinthAddon(_instanceData, dependencie.ProjectId, dependencie.VersionId)));
+								list.Add(new AddonDependencie(dependencie.ProjectId, new ModrinthAddon(_instanceData, dependencie.ProjectId, dependencie.VersionId, _services,_categoriesGetter)));
 							}
 							else
 							{
-								list.Add(new AddonDependencie(dependencie.ProjectId, new ModrinthAddon(_instanceData, dependencie.ProjectId)));
+								list.Add(new AddonDependencie(dependencie.ProjectId, new ModrinthAddon(_instanceData, dependencie.ProjectId, _services, _categoriesGetter)));
 							}
 						}
 					}
@@ -151,7 +163,7 @@ namespace Lexplosion.Logic.Management.Addons
 			{
 				ThreadPool.QueueUserWorkItem(delegate (object state)
 				{
-					List<ModrinthTeam> teamsData = ModrinthApi.GetTeam(_addonInfo.Team);
+					List<ModrinthTeam> teamsData = _services.MdApi.GetTeam(_addonInfo.Team);
 					if (teamsData.Count > 0)
 					{
 						AuthorName = teamsData[0]?.User?.Username;
@@ -171,7 +183,7 @@ namespace Lexplosion.Logic.Management.Addons
 			if (_addonInfo.Type == "mod")
 			{
 				Modloader mainMoaloder = (Modloader)_instanceData.Modloader;
-				var files = ModrinthApi.GetProjectFiles(_projectId, mainMoaloder, _instanceData.GameVersion.Id);
+				var files = _services.MdApi.GetProjectFiles(_projectId, mainMoaloder, _instanceData.GameVersion.Id);
 				if (files.Count > 0 && files[0] != null)
 				{
 					_versionInfo = files[0];
@@ -181,7 +193,7 @@ namespace Lexplosion.Logic.Management.Addons
 				{
 					foreach (var modloader in _acceptableModloaders)
 					{
-						files = ModrinthApi.GetProjectFiles(_projectId, modloader, _instanceData.GameVersion.Id);
+						files = _services.MdApi.GetProjectFiles(_projectId, modloader, _instanceData.GameVersion.Id);
 						if (files.Count > 0 && files[0] != null)
 						{
 							_versionInfo = files[0];
@@ -193,7 +205,7 @@ namespace Lexplosion.Logic.Management.Addons
 			}
 			else
 			{
-				var files = ModrinthApi.GetProjectFiles(_projectId, modloaders: null, _instanceData.GameVersion.Id);
+				var files = _services.MdApi.GetProjectFiles(_projectId, modloaders: null, _instanceData.GameVersion.Id);
 
 				if (files.Count > 0 && files[0] != null)
 				{
@@ -210,7 +222,7 @@ namespace Lexplosion.Logic.Management.Addons
 			{
 				if (_addonInfo == null)
 				{
-					_addonInfo = ModrinthApi.GetProject(_projectId);
+					_addonInfo = _services.MdApi.GetProject(_projectId);
 					SetAuthor();
 				}
 			}
@@ -224,7 +236,7 @@ namespace Lexplosion.Logic.Management.Addons
 			{
 				if (_versionInfo == null)
 				{
-					_versionInfo = ModrinthApi.GetProjectFile(_fileId);
+					_versionInfo = _services.MdApi.GetProjectFile(_fileId);
 				}
 			}
 			else
@@ -270,11 +282,11 @@ namespace Lexplosion.Logic.Management.Addons
 					modloaders.AddRange(acceptableModloaders);
 				}
 
-				files = ModrinthApi.GetProjectFiles(_projectId, modloaders, _instanceData.GameVersion.Id);
+				files = _services.MdApi.GetProjectFiles(_projectId, modloaders, _instanceData.GameVersion.Id);
 			}
 			else
 			{
-				files = ModrinthApi.GetProjectFiles(_projectId, modloaders: null, _instanceData.GameVersion.Id);
+				files = _services.MdApi.GetProjectFiles(_projectId, modloaders: null, _instanceData.GameVersion.Id);
 			}
 
 			foreach (var file in files)
@@ -296,7 +308,7 @@ namespace Lexplosion.Logic.Management.Addons
 				};
 			}
 
-			return ModrinthApi.DownloadAddon(_addonInfo, _versionInfo.FileId, "instances/" + _instanceData.LocalId + "/", taskArgs);
+			return _services.MdApi.DownloadAddon(_addonInfo, _versionInfo.FileId, "instances/" + _instanceData.LocalId + "/", _services.DirectoryService, taskArgs);
 		}
 
 
@@ -314,7 +326,7 @@ namespace Lexplosion.Logic.Management.Addons
 					ThreadPool.QueueUserWorkItem((object o) =>
 					{
 						Modloader? modloader = (addonInfo.Type == "mod") ? (Modloader?)_instanceData?.Modloader : null;
-						var files = ModrinthApi.GetProjectFiles(ProjectId, modloader, _instanceData?.GameVersion?.Id ?? "");
+						var files = _services.MdApi.GetProjectFiles(ProjectId, modloader, _instanceData?.GameVersion?.Id ?? "");
 
 						if (files.Count > 0 && files[0] != null && files[0].FileId != addonFileId)
 						{
@@ -335,7 +347,7 @@ namespace Lexplosion.Logic.Management.Addons
 			DefineAddonInfo();
 			if (_addonInfo?.Categories == null) return new List<CategoryBase>();
 
-			var resutl = CategoriesManager.FindAddonsCategoriesById(ProjectSource.Modrinth, _addonInfo.GetAddonType, _addonInfo.Categories);
+			var resutl = _categoriesGetter(_addonInfo.GetAddonType, _addonInfo.Categories);
 			return resutl ?? new List<CategoryBase>();
 		}
 

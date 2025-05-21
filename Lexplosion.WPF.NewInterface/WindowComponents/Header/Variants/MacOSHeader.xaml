@@ -2,6 +2,7 @@
     x:Class="Lexplosion.WPF.NewInterface.WindowComponents.Header.Variants.MacOSHeader"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:Lexplosion.WPF.NewInterface.Core.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.WindowComponents.Header.Variants"
@@ -72,7 +73,7 @@
             HorizontalAlignment="Right"
             VerticalAlignment="Top"
             RenderTransformOrigin="0.5, 0.5"
-            Visibility="Visible">
+            Visibility="{Binding IsAdditionalButtonEnabled, Converter={converters:BooleanToVisibilityConverter}}">
             <!--  Change Panel Orintation  -->
 
             <Border
@@ -82,7 +83,7 @@
                 Background="{DynamicResource SeparateSolidColorBrush}"
                 CornerRadius="2"
                 MouseDown="ChangeOrintation"
-                ToolTip="Изменить положение меню"
+                ToolTip="{DynamicResource ChangeMenuPosition}"
                 ToolTipService.BetweenShowDelay="0"
                 ToolTipService.InitialShowDelay="0"
                 ToolTipService.PlacementRectangle="7,40,0,0">

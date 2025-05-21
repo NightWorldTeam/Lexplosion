@@ -4,125 +4,157 @@ using System.IO;
 using System.IO.Compression;
 using System.Threading;
 using Lexplosion.Logic.FileSystem;
+using Lexplosion.Logic.FileSystem.Services;
+using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.Tools;
 using static Lexplosion.Logic.Management.Import.ImportInterruption;
 
 namespace Lexplosion.Logic.Management.Import.Importers
 {
-    class ImportExecutor
-    {
-        private string _filePath;
-        private Settings _settings;
-        private IImportManager _importManager;
-        private ProgressHandlerCallback _progressHandler;
+	class ImportExecutor
+	{
+		private string _filePath;
+		private Settings _settings;
+		private readonly IAllFileServicesContainer _services;
+		private readonly WithDirectory _withDirectory;
+		private IImportManager _importManager;
+		private ProgressHandlerCallback _progressHandler;
 		private readonly DynamicStateHandler<ImportInterruption, InterruptionType> _interruptionHandler;
 		private readonly Guid _importId;
 		private CancellationToken _cancellationToken;
-        private bool _fileAddrIsLocalPath;
+		private bool _fileAddrIsLocalPath;
 
-        public ImportExecutor(string fileAddr, bool fileAddrIsLocalPath, Settings settings, ProgressHandlerCallback progressHandler, ImportData importData)
-        {
-            _filePath = fileAddr;
-            _settings = settings;
-            _progressHandler = progressHandler;
+		public ImportExecutor(string fileAddr, bool fileAddrIsLocalPath, Settings settings, IAllFileServicesContainer services, ProgressHandlerCallback progressHandler, ImportData importData)
+		{
+			_filePath = fileAddr;
+			_settings = settings;
+			_services = services;
+			_progressHandler = progressHandler;
 			_interruptionHandler = importData.InterruptionHandler;
 			_cancellationToken = importData.CancelToken;
-            _fileAddrIsLocalPath = fileAddrIsLocalPath;
+			_fileAddrIsLocalPath = fileAddrIsLocalPath;
 			_importId = importData.ImportId;
+			_withDirectory = services.DirectoryService;
 		}
 
-        private void DefineManagerType()
-        {
-            try
-            {
-                if (Path.GetExtension(_filePath) == ".mrpack")
-                {
-                    _importManager = new ModrinthImportManager(_filePath, _settings, _cancellationToken);
-                    return;
-                }
+		private void DefineManagerType()
+		{
+			try
+			{
+				if (Path.GetExtension(_filePath) == ".mrpack")
+				{
+					Runtime.DebugWrite(".mrpack pack");
+					_importManager = new ModrinthImportManager(_filePath, _settings, _services, _cancellationToken);
+					return;
+				}
 
-                if (Path.GetExtension(_filePath) == ".nwpk")
-                {
-                    _importManager = new NWPackImportManager(_filePath, _settings, _cancellationToken);
-                    return;
-                }
+				if (Path.GetExtension(_filePath) == ".nwpk")
+				{
+					Runtime.DebugWrite(".nwpk pack");
+					_importManager = new NWPackImportManager(_filePath, _settings, _services, _cancellationToken);
+					return;
+				}
+			}
+			catch { }
 
-                if (Path.GetExtension(_filePath) == ".zip")
-                {
-                    using (ZipArchive archive = ZipFile.OpenRead(_filePath))
-                    {
-                        if (archive.GetEntry("modrinth.index.json") != null)
-                        {
-                            _importManager = new ModrinthImportManager(_filePath, _settings, _cancellationToken);
-                            return;
-                        }
+			try
+			{
+				Runtime.DebugWrite("trying open as an archive");
 
-                        if (archive.GetEntry("instanceInfo.json") != null)
-                        {
-                            _importManager = new NWPackImportManager(_filePath, _settings, _cancellationToken);
-                            return;
-                        }
-
-                        if (archive.GetEntry("manifest.json") != null)
-                        {
-                            _importManager = new CurseforgeImportManager(_filePath, _settings, _cancellationToken);
-                            return;
-                        }
-
-						_importManager = new SimpleArchiveImportManager(_filePath, _settings, _importId, _cancellationToken, _interruptionHandler);
+				using (ZipArchive archive = ZipFile.OpenRead(_filePath))
+				{
+					if (archive.GetEntry("modrinth.index.json") != null)
+					{
+						Runtime.DebugWrite("is modrinth");
+						_importManager = new ModrinthImportManager(_filePath, _settings, _services, _cancellationToken);
+						return;
 					}
-                }
-            }
-            catch { }
-        }
 
-        public ImportResult Prepeare(out PrepeareResult result)
-        {
-            //Если мы имеем ссылку на файл, а не локальный путь, то скачиваем этот файл
-            if (!_fileAddrIsLocalPath)
-            {
-                string fileName = "axaxa_ebala";
-                string tempDir = WithDirectory.CreateTempDir();
+					if (archive.GetEntry("instanceInfo.json") != null)
+					{
+						Runtime.DebugWrite("is nightworld");
+						_importManager = new NWPackImportManager(_filePath, _settings, _services, _cancellationToken);
+						return;
+					}
 
-                var taskArgs = new TaskArgs()
-                {
-                    CancelToken = _cancellationToken,
-                    PercentHandler = (int pr) =>
-                    {
-                        _progressHandler(StageType.Client, new ProgressHandlerArguments()
-                        {
-                            StagesCount = 3,
-                            Stage = 1,
-                            FilesCount = 1,
-                            Procents = pr
-                        });
-                    }
-                };
+					if (archive.GetEntry("manifest.json") != null)
+					{
+						Runtime.DebugWrite("is curseforge");
+						_importManager = new CurseforgeImportManager(_filePath, _settings, _services, _cancellationToken);
+						return;
+					}
 
-                if (!WithDirectory.DownloadFile(_filePath, fileName, tempDir, taskArgs))
-                {
-                    result = new PrepeareResult();
-                    return ImportResult.DownloadError;
-                }
+					_importManager = new SimpleArchiveImportManager(_filePath, _settings, _services, _importId, _cancellationToken, _interruptionHandler);
+				}
+			}
+			catch (Exception ex)
+			{
+				Runtime.DebugWrite("file open error " + ex);
+			}
+		}
 
-                _filePath = tempDir + fileName;
-            }
+		public ImportResult Prepeare(out PrepeareResult result)
+		{
+			ProgressHandlerCallback progressHandler = _progressHandler;
 
-            DefineManagerType();
-            if (_importManager == null)
-            {
-                result = new PrepeareResult();
-                return ImportResult.UnknownFileType;
-            }
+			//Если мы имеем ссылку на файл, а не локальный путь, то скачиваем этот файл
+			if (!_fileAddrIsLocalPath)
+			{
+				string fileName = "axaxa_ebala";
+				string tempDir = _withDirectory.CreateTempDir();
 
-            return _importManager.Prepeare(_progressHandler, out result);
-        }
+				var taskArgs = new TaskArgs()
+				{
+					CancelToken = _cancellationToken,
+					PercentHandler = (int pr) =>
+					{
+						_progressHandler(StageType.Client, new ProgressHandlerArguments()
+						{
+							StagesCount = 3,
+							Stage = 1,
+							FilesCount = 0,
+							Procents = pr,
+							TotalFilesCount = 1,
+						});
+					}
+				};
 
-        public ImportResult Import(string instanceId, out IReadOnlyCollection<string> errors)
-        {
-            _importManager.SetInstanceId(instanceId);
-            return _importManager.Import(_progressHandler, out errors);
-        }
+				if (!_withDirectory.DownloadFile(_filePath, fileName, tempDir, taskArgs))
+				{
+					result = new PrepeareResult();
+					return ImportResult.DownloadError;
+				}
 
-    }
+				_filePath = tempDir + fileName;
+
+				progressHandler = (StageType stageType, ProgressHandlerArguments data) =>
+				{
+					// в калбеке обработки прогресса прибавляем в количества стадий и в номер стадии по еденице, потому что одна стадия у нас уже была (скачивание файла по url)
+					_progressHandler(stageType, new ProgressHandlerArguments()
+					{
+						FilesCount = data.FilesCount,
+						TotalFilesCount = data.TotalFilesCount,
+						Stage = data.Stage + 1,
+						StagesCount = data.StagesCount + 1,
+					});
+				};
+			}
+
+			DefineManagerType();
+			if (_importManager == null)
+			{
+				result = new PrepeareResult();
+				return ImportResult.UnknownFileType;
+			}
+
+			return _importManager.Prepeare(progressHandler, out result);
+		}
+
+		public InstanceInit Import(string instanceId, out IReadOnlyCollection<string> errors)
+		{
+			_importManager.SetInstanceId(instanceId);
+			return _importManager.Import(_progressHandler, out errors);
+		}
+
+	}
 }

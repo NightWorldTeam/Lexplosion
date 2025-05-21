@@ -1,4 +1,6 @@
-﻿using Lexplosion.Logic.Management.Instances;
+﻿using Lexplosion.Logic.FileSystem.Services;
+using Lexplosion.Logic.Management.Instances;
+using Lexplosion.Logic.Network.Services;
 using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.Curseforge;
@@ -8,20 +10,22 @@ namespace Lexplosion.Logic.Management.Addons.AddonsCatalogParams
 {
 	internal class CurseforgeAddonsCatalogParams : AddonsCatalogParamsBase<CurseforgeAddonInfo, CurseforgeSearchParams>
 	{
-		public CurseforgeAddonsCatalogParams(AddonType addonType, CurseforgeSearchParams searchParams, BaseInstanceData modpackInfo)
+		private readonly ICurseforgeFileServicesContainer _services;
+
+		public CurseforgeAddonsCatalogParams(AddonType addonType, CurseforgeSearchParams searchParams, ICurseforgeFileServicesContainer services, BaseInstanceData modpackInfo)
 			: base(addonType, searchParams, modpackInfo)
 		{
-
+			_services = services;
 		}
 
 		public override CatalogResult<CurseforgeAddonInfo> GetCatalog()
 		{
-			return CurseforgeApi.GetAddonsList(Type, SearchParams);
+			return _services.CfApi.GetAddonsList(Type, SearchParams);
 		}
 
 		public override IPrototypeAddon CreateAddonPrototypeCreate(CurseforgeAddonInfo addonInfo)
 		{
-			return new CurseforgeAddon(ModpackInfo, addonInfo);
+			return new CurseforgeAddon(ModpackInfo, addonInfo, _services);
 		}
 
 		public override string GetAddonId(CurseforgeAddonInfo addonInfo)

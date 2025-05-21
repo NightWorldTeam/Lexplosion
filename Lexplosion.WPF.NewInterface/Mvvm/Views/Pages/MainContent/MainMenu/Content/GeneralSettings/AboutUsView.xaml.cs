@@ -19,17 +19,31 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu
             //ProtectionTextBlock.Text = GlobalData.GeneralSettings.LanguageId == "ru-RU" ? "Данная программа защищена законами об авторских правах и международными соглашениями. Незаконное воспроизведение или распространение данной программы или любой ее части влечет гражданскую и уголовную ответственность." : "This program is protected by copyright laws and international treaties. Illegal reproduction or distribution of this software or any part of it is subject to civil and criminal liability.";
 
             VersionTextBlock.Text = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            var hel2xBitmap = new BitmapImage();
-            hel2xBitmap.BeginInit();
-            hel2xBitmap.UriSource = new System.Uri("https://night-world.org/requestProcessing/getUserImage.php?user_login=_Hel2x_");
-            hel2xBitmap.EndInit();
-            Hel2xHead.Background = new ImageBrush(hel2xBitmap);
 
-            var sklaipBitmap = new BitmapImage();
-            sklaipBitmap.BeginInit();
-            sklaipBitmap.UriSource = new System.Uri("https://night-world.org/requestProcessing/getUserImage.php?user_login=Sklaip");
-            sklaipBitmap.EndInit();
-            SklaipHead.Background = new ImageBrush(sklaipBitmap);
+            //Runtime.TaskRun(() =>
+            //{
+                var hel2xBitmap = new BitmapImage();
+                hel2xBitmap.BeginInit();
+                hel2xBitmap.UriSource = new System.Uri("https://night-world.org/requestProcessing/getUserImage.php?user_login=_Hel2x_");
+                hel2xBitmap.EndInit();
+
+                var sklaipBitmap = new BitmapImage();
+                sklaipBitmap.BeginInit();
+                sklaipBitmap.UriSource = new System.Uri("https://night-world.org/requestProcessing/getUserImage.php?user_login=Sklaip");
+                sklaipBitmap.EndInit();
+
+                //var vasGenBitmap = new BitmapImage();
+                //vasGenBitmap.BeginInit();
+                //vasGenBitmap.UriSource = new System.Uri("https://night-world.org/requestProcessing/getUserImage.php?user_login=VasGen");
+                //vasGenBitmap.EndInit();
+
+                //App.Current.Dispatcher.Invoke(() =>
+                //{
+                    Hel2xHead.Background = new ImageBrush(hel2xBitmap);
+                    SklaipHead.Background = new ImageBrush(sklaipBitmap);
+                    //VasGenBitmap.Background = new ImageBrush(vasGenBitmap);
+            //    });
+            //});
         }
 
         private void IgorVK_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -45,6 +59,45 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu
         private void GroupVK_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             Process.Start(Constants.VKDefaultUrl + "nightworld_offical");
+        }
+
+        /// <summary>
+        /// VK Url
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void VK_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            Process.Start(Constants.VKDefaultUrl + "lord_of_anecdotes");
+        }
+
+        /// <summary>
+        /// Discord Url
+        /// </summary>
+        private void Discord_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            Process.Start("https://discord.gg/nightworld");
+        }
+
+        /// <summary>
+        /// Youtube Url
+        /// </summary>
+        private void Youtube_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            Process.Start("https://www.youtube.com/@nightworldoffical");
+        }
+
+        /// <summary>
+        /// Github Url
+        /// </summary>
+        private void Github_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            Process.Start("https://github.com/NightWorldTeam/Lexplosion");
+        }
+
+        public void Vasgen_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            Process.Start("https://vk.com/yura_vas1");
         }
     }
 }

@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
-using Newtonsoft.Json;
 using Lexplosion.Logic.FileSystem;
-using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Tools;
+using Lexplosion.Logic.Network.Services;
+using Lexplosion.Logic.FileSystem.Installers;
+using Lexplosion.Logic.FileSystem.Services;
 
 namespace Lexplosion.Logic.Management.Installers
 {
@@ -20,19 +21,23 @@ namespace Lexplosion.Logic.Management.Installers
 	/// <typeparam name="CPlatformData">Тип, описывающий данные, которые будут храниться в файле instancePlatformData.json</typeparam>
 	abstract class ArchiveInstallManager<TInstaller, UManifest, BProjectInfo, CPlatformData> : IInstallManager where TInstaller : InstanceInstaller, IArchivedInstanceInstaller<UManifest> where CPlatformData : InstancePlatformData
 	{
-		private VersionManifest Manifest;
-		private LastUpdates Updates;
+		private VersionManifest _manifest;
+		private LastUpdates _updates;
 		private TInstaller _installer;
 
-		private string InstanceId;
-		private CPlatformData InfoData;
-		protected BProjectInfo ProjectInfo;
+		private string _instanceId;
+		private CPlatformData _infoData;
+		protected BProjectInfo projectInfo;
 
-		private bool BaseFilesIsCheckd = false;
-		private bool onlyBase;
+		private bool _baseFilesIsCheckd = false;
+		private bool _onlyBase;
+		private readonly MinecraftInfoService _infoService;
 		private CancellationToken _cancelToken;
 
-		private int updatesCount = 0;
+		private readonly WithDirectory _withDirectory;
+		private readonly DataFilesManager _dataFilesManager;
+
+		private int _updatesCount = 0;
 
 		private bool _serverManifestIsNull = false;
 
@@ -50,12 +55,15 @@ namespace Lexplosion.Logic.Management.Installers
 
 		public event Action DownloadStarted;
 
-		public ArchiveInstallManager(TInstaller installer, string instanceid, bool onlyBase_, CancellationToken cancelToken)
+		public ArchiveInstallManager(TInstaller installer, string instanceid, bool onlyBase, IFileServicesContainer services, CancellationToken cancelToken)
 		{
-			InstanceId = instanceid;
-			onlyBase = onlyBase_;
+			_instanceId = instanceid;
+			_onlyBase = onlyBase;
+			_infoService = services.MinecraftService;
 			_cancelToken = cancelToken;
 			_installer = installer;
+			_withDirectory = services.DirectoryService;
+			_dataFilesManager = services.DataFilesService;
 		}
 
 		/// <summary>
@@ -110,37 +118,37 @@ namespace Lexplosion.Logic.Management.Installers
 		{
 			javaVersionName = string.Empty;
 
-			Manifest = DataFilesManager.GetManifest(InstanceId, false);
-			InfoData = DataFilesManager.GetExtendedPlatfromData<CPlatformData>(InstanceId);
+			_manifest = _dataFilesManager.GetManifest(_instanceId, false);
+			_infoData = _dataFilesManager.GetExtendedPlatfromData<CPlatformData>(_instanceId);
 
-			if (!LocalInfoIsValid(InfoData))
+			if (!LocalInfoIsValid(_infoData))
 			{
 				return InstanceInit.CurseforgeIdError;
 			}
 
 			// TODO: думаю, если манифест равен null, вполне можно продолжить работу скачав всё заново 
-			if (string.IsNullOrWhiteSpace(Manifest?.version?.GameVersion))
+			if (string.IsNullOrWhiteSpace(_manifest?.version?.GameVersion))
 			{
 				return InstanceInit.VersionError;
 			}
 
-			if (!string.IsNullOrWhiteSpace(Manifest.version.ModloaderVersion) && Manifest.version.ModloaderType != ClientType.Vanilla)
+			if (!string.IsNullOrWhiteSpace(_manifest.version.ModloaderVersion) && _manifest.version.ModloaderType != ClientType.Vanilla)
 			{
-				BaseFilesIsCheckd = true;
+				_baseFilesIsCheckd = true;
 
-				var ver = Manifest.version;
-				Manifest = ToServer.GetVersionManifest(ver.GameVersion, ver.ModloaderType, ver.IsNightWorldClient, ver.ModloaderVersion);
+				var ver = _manifest.version;
+				_manifest = _infoService.GetVersionManifest(ver.GameVersion, ver.ModloaderType, ver.IsNightWorldClient, ver.ModloaderVersion);
 
-				if (Manifest != null)
+				if (_manifest != null)
 				{
-					Updates = DataFilesManager.GetLastUpdates(InstanceId);
-					updatesCount = _installer.CheckBaseFiles(Manifest, ref Updates); // проверяем основные файлы клиента на обновление
+					_updates = _dataFilesManager.GetLastUpdates(_instanceId);
+					_updatesCount = _installer.CheckBaseFiles(_manifest, ref _updates); // проверяем основные файлы клиента на обновление
 
-					if (updatesCount == -1)
+					if (_updatesCount == -1)
 					{
 						return InstanceInit.GuardError;
 					}
-					else if (updatesCount > 0)
+					else if (_updatesCount > 0)
 					{
 						DownloadStartedCall();
 					}
@@ -149,15 +157,15 @@ namespace Lexplosion.Logic.Management.Installers
 				{
 					Runtime.DebugWrite("Manifest from server is null. Load local manifest");
 					_serverManifestIsNull = true;
-					Manifest = DataFilesManager.GetManifest(InstanceId, true);
+					_manifest = _dataFilesManager.GetManifest(_instanceId, true);
 
-					if (string.IsNullOrWhiteSpace(Manifest?.version?.GameVersion))
+					if (string.IsNullOrWhiteSpace(_manifest?.version?.GameVersion))
 					{
-						Runtime.DebugWrite("Local manifest is null (" + (Manifest == null) + ", " + (Manifest?.version == null) + ")");
+						Runtime.DebugWrite("Local manifest is null (" + (_manifest == null) + ", " + (_manifest?.version == null) + ")");
 						return InstanceInit.VersionError;
 					}
 
-					javaVersionName = Manifest.version.JavaVersionName ?? string.Empty;
+					javaVersionName = _manifest.version.JavaVersionName ?? string.Empty;
 					return InstanceInit.Successful;
 				}
 			}
@@ -166,22 +174,22 @@ namespace Lexplosion.Logic.Management.Installers
 			BProjectInfo info = default;
 			if (instanceVersion != null)
 			{
-				info = GetProjectInfo(InfoData.id, instanceVersion);
+				info = GetProjectInfo(_infoData.id, instanceVersion);
 			}
-			else if (!onlyBase) //версия сборки не определена. Получаем версию по умолчанию
+			else if (!_onlyBase) //версия сборки не определена. Получаем версию по умолчанию
 			{
-				info = GetProjectDefaultInfo(InfoData.id, InfoData.instanceVersion);
+				info = GetProjectDefaultInfo(_infoData.id, _infoData.instanceVersion);
 			}
 
 			if (info != null)
 			{
-				ProjectInfo = info;
-				InfoData.instanceVersion = GetProjectVersion(info);
+				projectInfo = info;
+				_infoData.instanceVersion = GetProjectVersion(info);
 			}
 
-			DataFilesManager.SavePlatfromData(InstanceId, InfoData);
+			_dataFilesManager.SavePlatfromData(_instanceId, _infoData);
 
-			javaVersionName = Manifest.version.JavaVersionName ?? string.Empty;
+			javaVersionName = _manifest.version.JavaVersionName ?? string.Empty;
 			return InstanceInit.Successful;
 		}
 
@@ -192,8 +200,8 @@ namespace Lexplosion.Logic.Management.Installers
 				return new InitData
 				{
 					InitResult = InstanceInit.Successful,
-					VersionFile = Manifest.version,
-					Libraries = Manifest.libraries,
+					VersionFile = _manifest.version,
+					Libraries = _manifest.libraries,
 					UpdatesAvailable = false,
 					ClientVersion = ProjectId ?? string.Empty
 				};
@@ -202,23 +210,23 @@ namespace Lexplosion.Logic.Management.Installers
 			var localFiles = _installer.GetInstanceContent(); //получем список всех файлов модпака
 
 			//нашелся id, который больше id установленной версии. Значит доступно обновление. Или же отсуствуют некоторые файлы модпака. Обновляем
-			if (ProjectInfo != null || _installer.InvalidStruct(localFiles))
+			if (projectInfo != null || _installer.InvalidStruct(localFiles))
 			{
-				Runtime.DebugWrite("ProjectInfo != null " + (ProjectInfo != null));
+				Runtime.DebugWrite("ProjectInfo != null " + (projectInfo != null));
 				DownloadStartedCall();
 
-				if (ProjectInfo == null)
+				if (projectInfo == null)
 				{
-					ProjectInfo = GetProjectInfo(InfoData.id, InfoData.instanceVersion); //получем информацию об этом модпаке
+					projectInfo = GetProjectInfo(_infoData.id, _infoData.instanceVersion); //получем информацию об этом модпаке
 
 					if (!ProfectInfoIsValid)
 					{
 						// возможно эта версия была удалена на сервере. Пробуем получить версию по умолчанию
-						ProjectInfo = GetProjectDefaultInfo(InfoData.id, InfoData.instanceVersion);
+						projectInfo = GetProjectDefaultInfo(_infoData.id, _infoData.instanceVersion);
 						if (ProfectInfoIsValid)
 						{
-							InfoData.instanceVersion = GetProjectVersion(ProjectInfo);
-							DataFilesManager.SavePlatfromData(InstanceId, InfoData);
+							_infoData.instanceVersion = GetProjectVersion(projectInfo);
+							_dataFilesManager.SavePlatfromData(_instanceId, _infoData);
 						}
 						else
 						{
@@ -252,7 +260,7 @@ namespace Lexplosion.Logic.Management.Installers
 
 				InstanceFileGetter fileGetter = (string tempDir, Func<string, TaskArgs> taskArgsGetter) =>
 				{
-					bool res = WithDirectory.DownloadFile(ArchiveDownloadUrl, ArchiveFileName, tempDir, taskArgsGetter(ArchiveFileName));
+					bool res = _withDirectory.DownloadFile(ArchiveDownloadUrl, ArchiveFileName, tempDir, taskArgsGetter(ArchiveFileName));
 					return (res, tempDir + ArchiveFileName, ArchiveFileName);
 				};
 
@@ -300,20 +308,20 @@ namespace Lexplosion.Logic.Management.Installers
 				DetermineGameType(manifest, out ClientType gameType, out string modLoaderVersion);
 				Runtime.DebugWrite("modLoaderVersion " + modLoaderVersion);
 
-				var versionData = Manifest?.version;
+				var versionData = _manifest?.version;
 				bool baseFFilesIsUpdates = modLoaderVersion != versionData?.ModloaderVersion || gameType != versionData?.ModloaderType || DetermineGameVersion(manifest) != versionData?.GameVersion;
 
 				// Скачиваем основные файлы майкнрафта
 
 				// если BaseFilesIsCheckd равно true, то это значит что в манифесте уже была версия форджа
-				if (!BaseFilesIsCheckd || baseFFilesIsUpdates) // в данном случае в манифесте версии форджа не была и нам надо её получить. Или же были измнения в модлоадере или версии игры
+				if (!_baseFilesIsCheckd || baseFFilesIsUpdates) // в данном случае в манифесте версии форджа не была и нам надо её получить. Или же были измнения в модлоадере или версии игры
 				{
 					bool isNwClient = versionData?.IsNightWorldClient == true;
-					Manifest = ToServer.GetVersionManifest(DetermineGameVersion(manifest), gameType, isNwClient, modLoaderVersion);
+					_manifest = _infoService.GetVersionManifest(DetermineGameVersion(manifest), gameType, isNwClient, modLoaderVersion);
 
-					if (Manifest != null)
+					if (_manifest != null)
 					{
-						DataFilesManager.SaveManifest(InstanceId, Manifest);
+						_dataFilesManager.SaveManifest(_instanceId, _manifest);
 
 						if (_cancelToken.IsCancellationRequested)
 						{
@@ -323,10 +331,10 @@ namespace Lexplosion.Logic.Management.Installers
 							};
 						}
 
-						Updates = DataFilesManager.GetLastUpdates(InstanceId);
-						updatesCount = _installer.CheckBaseFiles(Manifest, ref Updates); // проверяем основные файлы клиента на обновление
+						_updates = _dataFilesManager.GetLastUpdates(_instanceId);
+						_updatesCount = _installer.CheckBaseFiles(_manifest, ref _updates); // проверяем основные файлы клиента на обновление
 
-						if (updatesCount == -1)
+						if (_updatesCount == -1)
 						{
 							return new InitData
 							{
@@ -349,7 +357,7 @@ namespace Lexplosion.Logic.Management.Installers
 
 				Action<string, int, DownloadFileProgress> singleDownloadMethod = null;
 
-				if (updatesCount > 1)
+				if (_updatesCount > 1)
 				{
 					_installer.BaseDownloadEvent += delegate (int totalDataCount, int nowDataCount)
 					{
@@ -363,7 +371,7 @@ namespace Lexplosion.Logic.Management.Installers
 						});
 					};
 				}
-				else if (updatesCount == 1)
+				else if (_updatesCount == 1)
 				{
 					singleDownloadMethod = delegate (string file, int pr, DownloadFileProgress stage_)
 					{
@@ -388,7 +396,7 @@ namespace Lexplosion.Logic.Management.Installers
 					};
 				}
 
-				List<string> errors = _installer.UpdateBaseFiles(Manifest, ref Updates, javaPath, _cancelToken);
+				List<string> errors = _installer.UpdateBaseFiles(_manifest, ref _updates, javaPath, _cancelToken);
 
 				if (_cancelToken.IsCancellationRequested)
 				{
@@ -479,9 +487,9 @@ namespace Lexplosion.Logic.Management.Installers
 			}
 			else
 			{
-				if (BaseFilesIsCheckd)
+				if (_baseFilesIsCheckd)
 				{
-					if (updatesCount > 1)
+					if (_updatesCount > 1)
 					{
 						_installer.BaseDownloadEvent += delegate (int totalDataCount, int nowDataCount)
 						{
@@ -495,7 +503,7 @@ namespace Lexplosion.Logic.Management.Installers
 							});
 						};
 					}
-					else if (updatesCount == 1)
+					else if (_updatesCount == 1)
 					{
 						_installer.FileDownloadEvent += delegate (string file, int pr, DownloadFileProgress stage_)
 						{
@@ -518,7 +526,7 @@ namespace Lexplosion.Logic.Management.Installers
 						};
 					}
 
-					List<string> errors = _installer.UpdateBaseFiles(Manifest, ref Updates, javaPath, _cancelToken);
+					List<string> errors = _installer.UpdateBaseFiles(_manifest, ref _updates, javaPath, _cancelToken);
 
 					if (_cancelToken.IsCancellationRequested)
 					{
@@ -550,13 +558,13 @@ namespace Lexplosion.Logic.Management.Installers
 				}
 			}
 
-			DataFilesManager.SaveManifest(InstanceId, Manifest);
+			_dataFilesManager.SaveManifest(_instanceId, _manifest);
 
 			return new InitData
 			{
 				InitResult = InstanceInit.Successful,
-				VersionFile = Manifest.version,
-				Libraries = Manifest.libraries,
+				VersionFile = _manifest.version,
+				Libraries = _manifest.libraries,
 				UpdatesAvailable = false,
 				ClientVersion = ProjectId ?? String.Empty
 			};

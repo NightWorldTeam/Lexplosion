@@ -11,7 +11,6 @@ using System.Threading;
 using Lexplosion.Global;
 using Lexplosion.WPF.NewInterface.Core.ViewModel;
 using System.Collections.ObjectModel;
-using Lexplosion.Logic.FileSystem;
 
 namespace Lexplosion.WPF.NewInterface.Core.Services
 {
@@ -19,6 +18,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Services
     {
         public event Action ColorThemeChanged;
         public event Action ActivityColorChanged;
+        public event Action AppHeaderTemplateNameChanged;
 
         private ResourceDictionary _selectedThemeResourceDictionary;
         private Color _selectedActivityColor;
@@ -27,8 +27,9 @@ namespace Lexplosion.WPF.NewInterface.Core.Services
         public Dictionary<string, Action<Action>> AnimationsList = [];
         public Dictionary<string, Action> BeforeAnimationsList = [];
 
-
+        
         #region Properties
+
 
         public List<Action> Animations { get; } = new List<Action>();
         public List<Action> BeforeAnimations { get; } = new List<Action>();
@@ -38,10 +39,12 @@ namespace Lexplosion.WPF.NewInterface.Core.Services
 
         private ObservableCollection<ActivityColor> _colors = new ObservableCollection<ActivityColor>();
         public IEnumerable<ActivityColor> Colors { get => _colors; }
+        private ObservableCollection<string> _headerTemplateNames = new ObservableCollection<string>();
+        public IEnumerable<string> HeaderTemplateNames { get => _headerTemplateNames; }
 
         public Theme SelectedTheme { get; private set; }
         public ActivityColor SelectedActivityColor { get; private set; }
-
+        public string SelectedAppHeaderTemplateName { get; private set; }
 
 
         #endregion Properties
@@ -51,62 +54,22 @@ namespace Lexplosion.WPF.NewInterface.Core.Services
         {
             LoadDefaultTheme();
             LoadActivityColors();
+            LoadHeaderTemplates();
         }
 
 
         #region Public Methods
 
 
-        public void LoadDefaultTheme()
-        {       
-			_themes.Add(new Theme("Light Punch", "LightColorTheme.xaml"));
-			_themes.Add(new Theme("Open Space", "DarkColorTheme.xaml"));
-			_themes.Add(new Theme("Old Lexplosion", "BrownColorTheme.xaml"));
-
-			foreach (var theme in _themes)
-            {
-                theme.SelectedEvent += SelectedThemeChanged;
-                //Runtime.DebugWrite(theme.Name + " >>> " + GlobalData.GeneralSettings.ThemeName, color: System.ConsoleColor.Red);
-            }
-
-            var savedTheme = _themes.FirstOrDefault(t => t.Name == GlobalData.GeneralSettings.ThemeName);
-
-            if (savedTheme == null)
-                _themes[0].IsSelected = true;
-            else
-                savedTheme.IsSelected = true;
-
-        }
-
-        public void LoadActivityColors()
+        public void ChangeWindowHeaderTemplate(string templateName)
         {
-            _colors.Add(new ActivityColor("#167ffc"));
-            _colors.Add(new ActivityColor("#A020F0"));
-            _colors.Add(new ActivityColor("#ff7601"));
-            _colors.Add(new ActivityColor("#CD0074"));
-            _colors.Add(new ActivityColor("#1bd96a"));
-            _colors.Add(new ActivityColor("#5a10ea"));
-            _colors.Add(new ActivityColor("#ebbe11"));
-            _colors.Add(new ActivityColor("#547d96"));
-            _colors.Add(new ActivityColor("#f066db"));
-
-            foreach (var color in _colors)
+            if (templateName != GlobalData.GeneralSettings.AppHeaderTemplateName) 
             {
-                color.SelectedEvent += SelectedColorChanged;
+                SelectedAppHeaderTemplateName = templateName;
+                GlobalData.GeneralSettings.AppHeaderTemplateName = templateName;
+                Runtime.ServicesContainer.DataFilesService.SaveSettings(GlobalData.GeneralSettings);
+                AppHeaderTemplateNameChanged?.Invoke();
             }
-
-            var savedColorBrush = (SolidColorBrush)new BrushConverter().ConvertFrom(GlobalData.GeneralSettings.AccentColor);
-            var savedColor = new ActivityColor(savedColorBrush);
-            savedColor.SelectedEvent += SelectedColorChanged;
-            if (savedColorBrush == null)
-            {
-                _colors[0].IsSelected = true;
-            }
-            else
-            {
-                savedColor.IsSelected = true;
-            }
-
         }
 
         public void ChangeActivityColor(Color color, bool animatedChanging = false)
@@ -249,7 +212,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Services
             {
                 ChangeActivityColor(color.Brush.Color);
                 GlobalData.GeneralSettings.AccentColor = color.Brush.Color.ToString();
-                DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+                Runtime.ServicesContainer.DataFilesService.SaveSettings(GlobalData.GeneralSettings);
             }
         }
 
@@ -259,12 +222,71 @@ namespace Lexplosion.WPF.NewInterface.Core.Services
             {
                 ChangeTheme(theme, theme.HasChangeAnimation);
                 GlobalData.GeneralSettings.ThemeName = theme.Name;
-                DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+				Runtime.ServicesContainer.DataFilesService.SaveSettings(GlobalData.GeneralSettings);
             }
         }
 
 
         #endregion Public Methods
+
+
+        protected virtual void LoadHeaderTemplates()
+        {
+            SelectedAppHeaderTemplateName = GlobalData.GeneralSettings.AppHeaderTemplateName;
+            _headerTemplateNames = ["WindowsOS", "MacOS"];
+        }
+
+        protected virtual void LoadDefaultTheme()
+        {
+            _themes.Add(new Theme("Light Punch", "LightColorTheme.xaml"));
+            _themes.Add(new Theme("Open Space", "DarkColorTheme.xaml"));
+            _themes.Add(new Theme("Old Lexplosion", "BrownColorTheme.xaml"));
+
+            foreach (var theme in _themes)
+            {
+                theme.SelectedEvent += SelectedThemeChanged;
+                //Runtime.DebugWrite(theme.Name + " >>> " + GlobalData.GeneralSettings.ThemeName, color: System.ConsoleColor.Red);
+            }
+
+            var savedTheme = _themes.FirstOrDefault(t => t.Name == GlobalData.GeneralSettings.ThemeName);
+
+            if (savedTheme == null)
+                _themes[0].IsSelected = true;
+            else
+                savedTheme.IsSelected = true;
+
+        }
+
+        protected virtual void LoadActivityColors()
+        {
+            _colors.Add(new ActivityColor("#167ffc"));
+            _colors.Add(new ActivityColor("#A020F0"));
+            _colors.Add(new ActivityColor("#ff7601"));
+            _colors.Add(new ActivityColor("#CD0074"));
+            _colors.Add(new ActivityColor("#1bd96a"));
+            _colors.Add(new ActivityColor("#5a10ea"));
+            _colors.Add(new ActivityColor("#ebbe11"));
+            _colors.Add(new ActivityColor("#547d96"));
+            _colors.Add(new ActivityColor("#f066db"));
+
+            foreach (var color in _colors)
+            {
+                color.SelectedEvent += SelectedColorChanged;
+            }
+
+            var savedColorBrush = (SolidColorBrush)new BrushConverter().ConvertFrom(GlobalData.GeneralSettings.AccentColor);
+            var savedColor = new ActivityColor(savedColorBrush);
+            savedColor.SelectedEvent += SelectedColorChanged;
+            if (savedColorBrush == null)
+            {
+                _colors[0].IsSelected = true;
+            }
+            else
+            {
+                savedColor.IsSelected = true;
+            }
+
+        }
 
 
         /// <summary>

@@ -1,22 +1,13 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
-using System.Linq;
 using System.Net;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading;
-using Tommy;
-using Newtonsoft.Json;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Tools;
 using Lexplosion.Logic.Management.Instances;
-using Lexplosion.Logic.Network.Web;
-using Lexplosion.Logic.Objects.Curseforge;
-using Lexplosion.Logic.Objects.Modrinth;
+using Lexplosion.Logic.FileSystem.Services;
 
 namespace Lexplosion.Logic.Management.Addons
 {
@@ -43,6 +34,7 @@ namespace Lexplosion.Logic.Management.Addons
 		private readonly string _gameVersion;
 
 		private readonly InstaceAddonsSynchronizer _synchronizer;
+		private readonly IFileServicesContainer _services;
 		private CancellationTokenSource _cancelTokenSource = null;
 
 
@@ -158,17 +150,17 @@ namespace Lexplosion.Logic.Management.Addons
 			}
 		}
 
-        private bool _isLoading;
-        public bool IsLoading
-        {
-            get => _isLoading; set
-            {
-                _isLoading = value;
-                OnPropertyChanged();
-            }
-        }
+		private bool _isLoading;
+		public bool IsLoading
+		{
+			get => _isLoading; set
+			{
+				_isLoading = value;
+				OnPropertyChanged();
+			}
+		}
 
-        private string _websiteUrl = null;
+		private string _websiteUrl = null;
 		public string WebsiteUrl
 		{
 			get => _websiteUrl; set
@@ -215,10 +207,11 @@ namespace Lexplosion.Logic.Management.Addons
 		/// <summary>
 		/// Создает экземпляр аддона с курсфорджа.
 		/// </summary>
-		internal InstanceAddon(AddonType type, InstaceAddonsSynchronizer synchronizer, IPrototypeAddon addonPrototype, BaseInstanceData modpackInfo)
+		internal InstanceAddon(AddonType type, InstaceAddonsSynchronizer synchronizer, IFileServicesContainer services, IPrototypeAddon addonPrototype, BaseInstanceData modpackInfo)
 		{
 			Type = type;
 			_synchronizer = synchronizer;
+			_services = services;
 			_addonPrototype = addonPrototype;
 			_projectId = addonPrototype.ProjectId;
 			_modpackInfo = modpackInfo;
@@ -241,11 +234,12 @@ namespace Lexplosion.Logic.Management.Addons
 		/// <summary>
 		/// Создает экземпляр аддона не с курсфорджа.
 		/// </summary>    
-		internal InstanceAddon(AddonType type, InstaceAddonsSynchronizer synchronizer, string projectId, BaseInstanceData modpackInfo)
+		internal InstanceAddon(AddonType type, InstaceAddonsSynchronizer synchronizer, IFileServicesContainer services, string projectId, BaseInstanceData modpackInfo)
 		{
 			Type = type;
 			_addonPrototype = null;
 			_synchronizer = synchronizer;
+			_services = services;
 			_projectId = projectId;
 			_modpackInfo = modpackInfo;
 			_gameVersion = modpackInfo.GameVersion.Id;
@@ -259,11 +253,11 @@ namespace Lexplosion.Logic.Management.Addons
 		public void Delete()
 		{
 			string instanceId = _modpackInfo.LocalId;
-			using (InstalledAddons installedAddons = InstalledAddons.Get(instanceId))
+			using (InstalledAddons installedAddons = InstalledAddons.Get(instanceId, _services.DataFilesService))
 			{
 				InstalledAddonInfo addon = installedAddons[_projectId];
 				installedAddons.TryRemove(_projectId);
-				addon?.RemoveFromDir(WithDirectory.GetInstancePath(instanceId));
+				addon?.RemoveFromDir(_services.DirectoryService.GetInstancePath(instanceId));
 				installedAddons.Save();
 			}
 
@@ -340,9 +334,9 @@ namespace Lexplosion.Logic.Management.Addons
 			// если такой аддон уже скачивается - выходим нахуй
 			if (!isDependencie && _synchronizer.CheckAddonInstalling(_addonPrototype.ProjectId)) return;
 
-            IsLoading = true;
+			IsLoading = true;
 
-            _cancelTokenSource = new CancellationTokenSource();
+			_cancelTokenSource = new CancellationTokenSource();
 			stateHandler.ChangeState(new SetValues<InstanceAddon, DownloadAddonRes>
 			{
 				Value1 = this,
@@ -352,7 +346,7 @@ namespace Lexplosion.Logic.Management.Addons
 			_synchronizer.AddonInstallingStarted();
 
 			string instanceId = _modpackInfo.LocalId;
-			using (InstalledAddons installedAddons = InstalledAddons.Get(instanceId))
+			using (InstalledAddons installedAddons = InstalledAddons.Get(instanceId, _services.DataFilesService))
 			{
 				string addonKey = _addonPrototype.ProjectId;
 
@@ -421,7 +415,7 @@ namespace Lexplosion.Logic.Management.Addons
 								addon.DefineDefaultVersion();
 
 								_synchronizer.InstallingSemaphore.WaitOne(modId);
-								addonInstance = new InstanceAddon(Type, _synchronizer, addon, _modpackInfo);
+								addonInstance = new InstanceAddon(Type, _synchronizer, _services, addon, _modpackInfo);
 								_synchronizer.InstallingSemaphore.Release(modId);
 							}
 							else
@@ -486,7 +480,7 @@ namespace Lexplosion.Logic.Management.Addons
 						{
 							try
 							{
-								string path = WithDirectory.InstancesPath + instanceId + "/";
+								string path = _services.DirectoryService.InstancesPath + instanceId + "/";
 								InstalledAddonInfo installedAddon = installedAddons[_addonPrototype.ProjectId];
 								if (installedAddon.IsExists(path))
 								{
@@ -500,7 +494,7 @@ namespace Lexplosion.Logic.Management.Addons
 						{
 							try
 							{
-								string dir = WithDirectory.GetInstancePath(instanceId);
+								string dir = _services.DirectoryService.GetInstancePath(instanceId);
 								File.Move(dir + ressult.Value1.ActualPath, dir + ressult.Value1.Path + DISABLE_FILE_EXTENSION);
 								ressult.Value1.IsDisable = true;
 
@@ -587,13 +581,13 @@ namespace Lexplosion.Logic.Management.Addons
 			string projectID = _projectId;
 			string instanceId = _modpackInfo.LocalId;
 
-			using (InstalledAddons addons = InstalledAddons.Get(instanceId))
+			using (InstalledAddons addons = InstalledAddons.Get(instanceId, _services.DataFilesService))
 			{
 				addons.DisableAddon(projectID, !_isEnable, delegate (InstalledAddonInfo data)
 				{
 					try
 					{
-						string dir = WithDirectory.InstancesPath + instanceId + "/";
+						string dir = _services.DirectoryService.InstancesPath + instanceId + "/";
 						if (data.IsExists(dir))
 						{
 							File.Move(dir + data.Path + DISABLE_FILE_EXTENSION, dir + data.Path);
@@ -605,7 +599,7 @@ namespace Lexplosion.Logic.Management.Addons
 				{
 					try
 					{
-						string dir = WithDirectory.InstancesPath + instanceId + "/";
+						string dir = _services.DirectoryService.InstancesPath + instanceId + "/";
 						if (data.IsExists(dir))
 						{
 							File.Move(dir + data.Path, dir + data.Path + DISABLE_FILE_EXTENSION);

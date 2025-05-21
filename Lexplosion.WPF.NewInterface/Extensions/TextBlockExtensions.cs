@@ -37,6 +37,7 @@ namespace Lexplosion.WPF.NewInterface.Extensions
                 {
                     Runtime.DebugWrite("Значение ключа null, так быть явно не должно.", color: ConsoleColor.Red);
                     textBlock.Text = "null";
+                    return;
                 }
 
                 if (App.Current.Resources[e.NewValue] == null)

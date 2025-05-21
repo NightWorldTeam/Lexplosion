@@ -11,10 +11,13 @@
     d:DesignWidth="800"
     mc:Ignorable="d">
     <Grid>
-        <core:Switch SelectedExpression="Macos">
+        <core:Switch SelectedExpression="{Binding TemplateName}">
             <core:Switch.Cases>
-                <core:SwitchCaseItem Key="Macos">
+                <core:SwitchCaseItem Key="MacOS">
                     <variants:MacOSHeader DataContext="{Binding}" />
+                </core:SwitchCaseItem>
+                <core:SwitchCaseItem Key="WindowsOS">
+                    <variants:WindowsOSHeader DataContext="{Binding}" />
                 </core:SwitchCaseItem>
             </core:Switch.Cases>
         </core:Switch>

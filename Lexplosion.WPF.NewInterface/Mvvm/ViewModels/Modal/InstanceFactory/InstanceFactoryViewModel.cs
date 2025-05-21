@@ -16,6 +16,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
 	public class InstanceFactoryModel : ViewModelBase
 	{
 		public event Action<ClientType> GameTypeChanged;
+		private readonly ClientsManager _clientsManager = Runtime.ClientsManager;
 
 
 		#region Properties
@@ -180,17 +181,22 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
 
 
 		#region Constructors
-
+		
 
 		public InstanceFactoryModel()
 		{
+			if (GameVersions.Length == 0) 
+			{
+				return;
+			}
+
 			ModloaderManager = new ModloaderManager(GameExtension.Forge, Version);
 			Version = GameVersions[0];
 			ClientType = ClientType.Vanilla;
 
 			Runtime.TaskRun(() =>
 			{
-				NWClientSupportedVersions = NetworkServicesManager.MinecraftInfo.GetNwClientGameVersions();
+				NWClientSupportedVersions = Runtime.ServicesContainer.MinecraftService.GetNwClientGameVersions();
 				OnPropertyChanged(nameof(NWClientSupportedVersions));
 
 				IsNWClientAvailable = NWClientSupportedVersions.FirstOrDefault(verStr => verStr == Version.Id) != null;
@@ -233,7 +239,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
 			var instanceName = InstanceName?.Trim();
 			if (string.IsNullOrWhiteSpace(instanceName)) instanceName = $"{Version.ToString()} {ClientType}";
 
-			return InstanceClient.CreateClient(
+			return _clientsManager.CreateClient(
 				instanceName,
 				InstanceSource.Local,
 				Version,

@@ -1,4 +1,5 @@
-﻿using Lexplosion.WPF.NewInterface.Commands;
+﻿using Lexplosion.Logic.Management.Accounts;
+using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Notifications;
 using Lexplosion.WPF.NewInterface.Core.ViewModel;
@@ -16,6 +17,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer
 
         public IReadOnlyCollection<DistributedInstance> DistributedInstances { get => _controller.ActiveShares; }
         public bool IsEmpty { get => DistributedInstances.Count == 0;}
+        public string Author { get => Account.ActiveAccount.Login; }
 
 
         public ActiveSharesModel(InstanceSharesController controller)

@@ -2,5 +2,8 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="langs/en-US.xaml" />
         <ResourceDictionary Source="langs/ru-RU.xaml" />
+        <ResourceDictionary Source="langs/uk-UA.xaml" />
+        <ResourceDictionary Source="langs/zh-CN.xaml" />
+        <ResourceDictionary Source="langs/de-DE.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

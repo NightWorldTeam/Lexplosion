@@ -313,34 +313,48 @@
                                                 Text="{DynamicResource Categories}" />
                                         </Grid>
 
-                                        <Grid Grid.Row="1">
+                                        <core:If Grid.Row="1" Condition="{Binding Model.FilterPanel.IsCategoryLoading}">
+                                            <core:If.False>
+                                                <Grid Height="180">
+                                                    <controls:CircleLoader
+                                                        Width="24"
+                                                        Height="24"
+                                                        HorizontalAlignment="Center"
+                                                        VerticalAlignment="Center"
+                                                        IsActive="{Binding Model.FilterPanel.IsCategoryLoading}" />
+                                                </Grid>
+                                            </core:If.False>
+                                            <core:If.True>
+                                                <Grid Grid.Row="1">
 
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                            </Grid.RowDefinitions>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="Auto" />
+                                                        <RowDefinition Height="Auto" />
+                                                    </Grid.RowDefinitions>
 
-                                            <!--  categories list  -->
+                                                    <!--  categories list  -->
 
-                                            <!--  selected categories  -->
-                                            <ItemsControl Grid.Row="1" ItemsSource="{Binding Model.FilterPanel.AvailableCategories}">
-                                                <ItemsControl.ItemsPanel>
-                                                    <ItemsPanelTemplate>
-                                                        <WrapPanel IsItemsHost="true" />
-                                                    </ItemsPanelTemplate>
-                                                </ItemsControl.ItemsPanel>
-                                                <ItemsControl.ItemTemplate>
-                                                    <DataTemplate DataType="{x:Type objects:CategoryBase}">
-                                                        <ToggleButton
-                                                            Margin="0,4,4,0"
-                                                            Command="{Binding DataContext.SelectCategoryCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
-                                                            CommandParameter="{Binding}"
-                                                            Content="{Binding Name}"
-                                                            Style="{StaticResource CategoryToggleButton}" />
-                                                    </DataTemplate>
-                                                </ItemsControl.ItemTemplate>
-                                            </ItemsControl>
-                                        </Grid>
+                                                    <!--  selected categories  -->
+                                                    <ItemsControl Grid.Row="1" ItemsSource="{Binding Model.FilterPanel.AvailableCategories}">
+                                                        <ItemsControl.ItemsPanel>
+                                                            <ItemsPanelTemplate>
+                                                                <WrapPanel IsItemsHost="true" />
+                                                            </ItemsPanelTemplate>
+                                                        </ItemsControl.ItemsPanel>
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate DataType="{x:Type objects:CategoryBase}">
+                                                                <ToggleButton
+                                                                    Margin="0,4,4,0"
+                                                                    Command="{Binding DataContext.SelectCategoryCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                                    CommandParameter="{Binding}"
+                                                                    Content="{Binding Name}"
+                                                                    Style="{StaticResource CategoryToggleButton}" />
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+                                                </Grid>
+                                            </core:If.True>
+                                        </core:If>
                                     </Grid>
                                 </Grid>
                             </Border>
@@ -348,7 +362,7 @@
                             <controls:Paginator
                                 Grid.Row="2"
                                 Margin="0,0,0,16"
-                                CurrentPageIndex="{Binding Model.CurrentPageIndex}"
+                                CurrentPageIndex="{Binding Model.CurrentPageIndex, UpdateSourceTrigger=PropertyChanged}"
                                 NextCommand="{Binding NextPageCommand}"
                                 PageChanged="Paginator_PageChanged"
                                 PageCount="{Binding Model.PageCount}"
@@ -385,7 +399,7 @@
                                         Grid.Row="1"
                                         Grid.Column="1"
                                         Margin="0,16,0,32"
-                                        CurrentPageIndex="{Binding Model.CurrentPageIndex}"
+                                        CurrentPageIndex="{Binding Model.CurrentPageIndex, UpdateSourceTrigger=PropertyChanged}"
                                         NextCommand="{Binding NextPageCommand}"
                                         PageChanged="Paginator_PageChanged"
                                         PageCount="{Binding Model.PageCount}"

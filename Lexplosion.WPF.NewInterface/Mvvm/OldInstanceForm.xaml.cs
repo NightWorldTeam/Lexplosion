@@ -102,6 +102,11 @@ namespace Lexplosion.WPF.NewInterface.Controls.OldInstanceForm
 
         private void PART_MainActionButton_Click(object sender, RoutedEventArgs e)
         {
+            if (_model.IsImporting) 
+            {
+                return;
+            }
+
             if (_model.IsInstalled && !_model.IsLaunching && !_model.IsLaunched)
             {
                 _model.Run();
@@ -205,7 +210,10 @@ namespace Lexplosion.WPF.NewInterface.Controls.OldInstanceForm
 
         private void PART_LogoBlock_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            LogoButtonCommand.Execute(LogoButtonCommandParameter);
+            if (_model.IsInstanceCompleted) 
+            {
+                LogoButtonCommand.Execute(LogoButtonCommandParameter);
+            }
         }
 
 
@@ -244,6 +252,22 @@ namespace Lexplosion.WPF.NewInterface.Controls.OldInstanceForm
         {
             if (_model.State == InstanceState.Default)
                 _model.Update();
+        }
+
+        private void ImportCancelClicked(object sender, RoutedEventArgs e)
+        {
+            if (_model != null) 
+            {
+                _model.CancelImport();
+            }
+        }
+
+        private void UpdateButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_model != null && _model.State == InstanceState.Default)
+            {
+                _model.Update();
+            }
         }
     }
 }

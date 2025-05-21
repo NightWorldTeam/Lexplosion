@@ -9,207 +9,212 @@ using Lexplosion.Logic.Network;
 using Lexplosion.Global;
 using Lexplosion.Logic.Management;
 using System.Collections.Concurrent;
+using Lexplosion.Logic.FileSystem.Services;
 
 namespace Lexplosion.Logic.FileSystem
 {
-    public class FileDistributor
-    {
-        private static DataServer _dataServer = null;
-        private static string _publicRsaKey;
-        private static string _confirmWord;
-        private static int _distributionsCount = 0;
-        private static object _createLock = new object();
-        private static ConcurrentDictionary<string, FileDistributor> _distributors = new();
-        private static bool _isWork = true;
-        private static List<string> _files = new();
+	public class FileDistributor
+	{
+		private static DataServer _dataServer = null;
+		private static string _publicRsaKey;
+		private static string _confirmWord;
+		private static int _distributionsCount = 0;
+		private static object _createLock = new object();
+		private static ConcurrentDictionary<string, FileDistributor> _distributors = new();
+		private static bool _isWork = true;
+		private static List<string> _files = new();
 
-        private Thread _informingThread;
-        private AutoResetEvent _waitingInforming;
-        private ConcurrentDictionary<string, Player> _connectedUsers = new();
-        private string _fileId;
+		private Thread _informingThread;
+		private AutoResetEvent _waitingInforming;
+		private ConcurrentDictionary<string, Player> _connectedUsers = new();
+		private string _fileId;
 
-        public event Action OnClosed;
+		private ToServer _toServer;
+		private WithDirectory _withDirectory;
 
-        public event Action<Player> UserConnected;
-        public event Action<Player> UserDisconnected;
+		public event Action OnClosed;
 
-        public static string SharesDir
-        {
-            get
-            {
-                return WithDirectory.DirectoryPath + "/shares/files/";
-            }
-        }
+		public event Action<Player> UserConnected;
+		public event Action<Player> UserDisconnected;
 
-        private FileDistributor(string fileId, string UUID, string sessionToken)
-        {
-            _fileId = fileId;
-            _waitingInforming = new AutoResetEvent(false);
+		public static string GetSharesDir(WithDirectory withDirectory)
+		{
+			return withDirectory.DirectoryPath + "/shares/files/";
+		}
 
-            _informingThread = new Thread(() =>
-            {
-                var input = new Dictionary<string, string>
-                {
-                    ["UUID"] = UUID,
-                    ["sessionToken"] = sessionToken,
-                    ["FileId"] = fileId
-                };
+		private FileDistributor(string fileId, string UUID, string sessionToken, INightWorldFileServicesContainer services)
+		{
+			_toServer = services.WebService;
+			_withDirectory = services.DirectoryService;
 
-                try
-                {
-                    // раз в 2 минуты отправляем пакеты основному серверу информирующие о доступности раздачи
-                    _waitingInforming.WaitOne(120000);
-                    do
-                    {
-                        ToServer.HttpPost(LaunсherSettings.URL.UserApi + "setFileDistribution", input);
-                    }
-                    while (!_waitingInforming.WaitOne(120000));
-                }
-                finally
-                {
-                    ToServer.HttpPost(LaunсherSettings.URL.UserApi + "dropFileDistribution", input);
-                }
-            });
+			_fileId = fileId;
+			_waitingInforming = new AutoResetEvent(false);
 
-            _informingThread.Start();
-        }
+			_informingThread = new Thread(() =>
+			{
+				var input = new Dictionary<string, string>
+				{
+					["UUID"] = UUID,
+					["sessionToken"] = sessionToken,
+					["FileId"] = fileId
+				};
 
-        public static FileDistributor CreateDistribution(string filePath, string name, string userUUID, string userSessionToken)
-        {
-            if (!_isWork) return null;
+				try
+				{
+					// раз в 2 минуты отправляем пакеты основному серверу информирующие о доступности раздачи
+					_waitingInforming.WaitOne(120000);
+					do
+					{
+						_toServer.HttpPost(LaunсherSettings.URL.UserApi + "setFileDistribution", input);
+					}
+					while (!_waitingInforming.WaitOne(120000));
+				}
+				finally
+				{
+					_toServer.HttpPost(LaunсherSettings.URL.UserApi + "dropFileDistribution", input);
+				}
+			});
 
-            _files.Add(filePath);
+			_informingThread.Start();
+		}
 
-            lock (_createLock)
-            {
-                if (_dataServer == null)
-                {
-                    Cryptography.CreateRsaKeys(out RSAParameters privateKey, out _publicRsaKey);
-                    _confirmWord = new Random().GenerateString(32);
+		public static FileDistributor CreateDistribution(string filePath, string name, string userUUID, string userSessionToken, INightWorldFileServicesContainer services)
+		{
+			if (!_isWork) return null;
 
-                    var serverData = new ControlServerData(LaunсherSettings.ServerIp);
-                    _dataServer = new DataServer(privateKey, _confirmWord, userUUID, userSessionToken, serverData);
+			_files.Add(filePath);
 
-                    _dataServer.ClientStartedDownloading += (string uuid, string fileId) =>
-                    {
-                        var user = new Player(uuid,
-                            () =>
-                            {
-                                _dataServer.KickClient(uuid);
-                            },
-                            () =>
-                            {
-                                _dataServer.UnkickClient(uuid);
-                            }
-                        );
+			lock (_createLock)
+			{
+				if (_dataServer == null)
+				{
+					Cryptography.CreateRsaKeys(out RSAParameters privateKey, out _publicRsaKey);
+					_confirmWord = new Random().GenerateString(32);
 
-                        _distributors.TryGetValue(fileId, out FileDistributor distributor);
-                        if (distributor == null) return;
+					var serverData = new ControlServerData(LaunсherSettings.ServerIp);
+					_dataServer = new DataServer(privateKey, _confirmWord, userUUID, userSessionToken, serverData);
 
-                        distributor._connectedUsers[uuid] = user;
-                        distributor.UserConnected?.Invoke(user);
-                    };
+					_dataServer.ClientStartedDownloading += (string uuid, string fileId) =>
+					{
+						var user = new Player(uuid,
+							() =>
+							{
+								_dataServer.KickClient(uuid);
+							},
+							() =>
+							{
+								_dataServer.UnkickClient(uuid);
+							},
+							services.NwApi
+						);
 
-                    _dataServer.ClientFinishedDownloading += (string uuid, string fileId) =>
-                    {
-                        _distributors.TryGetValue(fileId, out FileDistributor distributor);
-                        if (distributor == null) return;
+						_distributors.TryGetValue(fileId, out FileDistributor distributor);
+						if (distributor == null) return;
 
-                        distributor._connectedUsers.TryRemove(uuid, out Player user);
-                        distributor.UserDisconnected?.Invoke(user);
-                    };
-                }
+						distributor._connectedUsers[uuid] = user;
+						distributor.UserConnected?.Invoke(user);
+					};
 
-                //Получаем хэш файла
-                string hash;
-                using (FileStream fstream = File.OpenRead(filePath))
-                {
-                    hash = Cryptography.Sha256(fstream);
-                }
+					_dataServer.ClientFinishedDownloading += (string uuid, string fileId) =>
+					{
+						_distributors.TryGetValue(fileId, out FileDistributor distributor);
+						if (distributor == null) return;
 
-                if (!_dataServer.AddFile(filePath, hash))
-                {
-                    return null;
-                }
+						distributor._connectedUsers.TryRemove(uuid, out Player user);
+						distributor.UserDisconnected?.Invoke(user);
+					};
+				}
 
-                string answer = ToServer.HttpPost(LaunсherSettings.URL.UserApi + "setFileDistribution", new Dictionary<string, string>
-                {
-                    ["UUID"] = userUUID,
-                    ["sessionToken"] = userSessionToken,
-                    ["FileId"] = hash,
-                    ["Parameters"] = JsonConvert.SerializeObject(new DistributionData
-                    {
-                        Name = name,
-                        PublicRsaKey = _publicRsaKey,
-                        ConfirmWord = _confirmWord
-                    })
-                });
+				//Получаем хэш файла
+				string hash;
+				using (FileStream fstream = File.OpenRead(filePath))
+				{
+					hash = Cryptography.Sha256(fstream);
+				}
 
-                Runtime.DebugWrite(answer);
+				if (!_dataServer.AddFile(filePath, hash))
+				{
+					return null;
+				}
 
-                _distributionsCount++;
+				string answer = services.WebService.HttpPost(LaunсherSettings.URL.UserApi + "setFileDistribution", new Dictionary<string, string>
+				{
+					["UUID"] = userUUID,
+					["sessionToken"] = userSessionToken,
+					["FileId"] = hash,
+					["Parameters"] = JsonConvert.SerializeObject(new DistributionData
+					{
+						Name = name,
+						PublicRsaKey = _publicRsaKey,
+						ConfirmWord = _confirmWord
+					})
+				});
 
-                var dstr = new FileDistributor(hash, userUUID, userSessionToken);
-                _distributors[dstr._fileId] = dstr;
+				Runtime.DebugWrite(answer);
 
-                return dstr;
-            }
-        }
+				_distributionsCount++;
 
-        public void Stop()
-        {
-            lock (_createLock)
-            {
-                _waitingInforming.Set();
-                try { _informingThread.Abort(); } catch { }
+				var dstr = new FileDistributor(hash, userUUID, userSessionToken, services);
+				_distributors[dstr._fileId] = dstr;
 
-                _distributionsCount--;
-                if (_distributionsCount < 1)
-                {
-                    _dataServer?.StopWork();
-                    _dataServer = null;
-                }
+				return dstr;
+			}
+		}
 
-                if (_isWork)
-                {
-                    _distributors.TryRemove(this._fileId, out _);
+		public void Stop()
+		{
+			lock (_createLock)
+			{
+				_waitingInforming.Set();
+				try { _informingThread.Abort(); } catch { }
 
-                    ThreadPool.QueueUserWorkItem(delegate (object state)
-                    {
-                        OnClosed?.Invoke();
-                    });
-                }
-            }
-        }
+				_distributionsCount--;
+				if (_distributionsCount < 1)
+				{
+					_dataServer?.StopWork();
+					_dataServer = null;
+				}
 
-        public static void StopWork()
-        {
-            _isWork = false;
+				if (_isWork)
+				{
+					_distributors.TryRemove(this._fileId, out _);
 
-            // TODO: тут пихнуть какой-нибудь лукер, ибо в _distributors может null присвоится во время работы CreateDistribution
-            if (_distributors != null)
-            {
-                foreach (var distributor in _distributors)
-                {
-                    distributor.Value.Stop();
-                }
+					ThreadPool.QueueUserWorkItem(delegate (object state)
+					{
+						OnClosed?.Invoke();
+					});
+				}
+			}
+		}
 
-                _distributors = null;
-            }
+		public static void StopWork()
+		{
+			_isWork = false;
 
-            if (_files != null)
-            {
-                foreach (var file in _files)
-                {
-                    try
-                    {
-                        File.Delete(file);
-                    }
-                    catch { }
-                }
+			// TODO: тут пихнуть какой-нибудь лукер, ибо в _distributors может null присвоится во время работы CreateDistribution
+			if (_distributors != null)
+			{
+				foreach (var distributor in _distributors)
+				{
+					distributor.Value.Stop();
+				}
 
-                _files = null;
-            }
-        }
-    }
+				_distributors = null;
+			}
+
+			if (_files != null)
+			{
+				foreach (var file in _files)
+				{
+					try
+					{
+						File.Delete(file);
+					}
+					catch { }
+				}
+
+				_files = null;
+			}
+		}
+	}
 }

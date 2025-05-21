@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading;
 using Lexplosion.Logic.FileSystem;
+using Lexplosion.Logic.FileSystem.Services;
 using Lexplosion.Logic.Objects.CommonClientData;
 
 namespace Lexplosion.Logic.Management.Import.Importers
@@ -10,19 +11,23 @@ namespace Lexplosion.Logic.Management.Import.Importers
 	{
 		private string _fileAddres;
 		private Settings _settings;
+		private readonly INightWorldFileServicesContainer _services;
+		private readonly WithDirectory _withDirectory;
+		private readonly DataFilesManager _dataFilesManager;
 		private CancellationToken _cancellationToken;
 
 		private VersionManifest _versionManifest;
 		private string _localId;
 		private string _unzipPath;
 
-		public int CompletedStagesCount { private get; set; }
-
-		public NWPackImportManager(string fileAddres, Settings settings, CancellationToken cancelToken)
+		public NWPackImportManager(string fileAddres, Settings settings, INightWorldFileServicesContainer services, CancellationToken cancelToken)
 		{
 			_fileAddres = fileAddres;
 			_settings = settings;
+			_services = services;
 			_cancellationToken = cancelToken;
+			_withDirectory = services.DirectoryService;
+			_dataFilesManager = services.DataFilesService;
 		}
 
 		public ImportResult Prepeare(ProgressHandlerCallback progressHandler, out PrepeareResult result)
@@ -31,12 +36,14 @@ namespace Lexplosion.Logic.Management.Import.Importers
 
 			progressHandler(StageType.Client, new ProgressHandlerArguments()
 			{
-				StagesCount = CompletedStagesCount + 2,
-				Stage = CompletedStagesCount + 1,
+				StagesCount = 2,
+				Stage = 1,
 				Procents = 0
 			});
 
-			ImportResult res = WithDirectory.UnzipInstance(_fileAddres, out ArchivedClientData parameters, out _unzipPath);
+			ImportResult res = _withDirectory.UnzipInstance(_fileAddres, out _unzipPath);
+			var parameters = _dataFilesManager.GetFile<ArchivedClientData>($"{_unzipPath}instanceInfo.json");
+
 			if (res != ImportResult.Successful) return res;
 
 			if (parameters?.GameVersionInfo?.IsNan != false)
@@ -75,15 +82,22 @@ namespace Lexplosion.Logic.Management.Import.Importers
 			return ImportResult.Successful;
 		}
 
-		public ImportResult Import(ProgressHandlerCallback progressHandler, out IReadOnlyCollection<string> errors)
+		public InstanceInit Import(ProgressHandlerCallback progressHandler, out IReadOnlyCollection<string> errors)
 		{
+			progressHandler(StageType.Client, new ProgressHandlerArguments()
+			{
+				StagesCount = 2,
+				Stage = 2,
+				Procents = 0
+			});
+
 			errors = new List<string>();
-			ImportResult result = WithDirectory.MoveUnpackedInstance(_localId, _unzipPath);
-			if (result != ImportResult.Successful)
+			InstanceInit result = _withDirectory.MoveUnpackedInstance(_localId, _unzipPath);
+			if (result != InstanceInit.Successful)
 			{
 				try
 				{
-					string dir = WithDirectory.GetInstancePath(_localId);
+					string dir = _withDirectory.GetInstancePath(_localId);
 					if (Directory.Exists(dir)) Directory.Delete(dir, true);
 				}
 				catch { }
@@ -91,9 +105,9 @@ namespace Lexplosion.Logic.Management.Import.Importers
 				return result;
 			}
 
-			DataFilesManager.SaveManifest(_localId, _versionManifest);
+			_dataFilesManager.SaveManifest(_localId, _versionManifest);
 
-			return ImportResult.Successful;
+			return InstanceInit.Successful;
 		}
 
 		public void SetInstanceId(string id)

@@ -60,7 +60,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
                 return;
             }
 
-            var receivers = await Task.Run(() => FileReceiver.GetDistributors(Account.ActiveAccount.UUID, Account.ActiveAccount.SessionToken));
+			var services = Runtime.ServicesContainer;
+			var receivers = await Task.Run(() => FileReceiver.GetDistributors(Account.ActiveAccount.UUID, Account.ActiveAccount.SessionToken, services));
 
             foreach (var receiver in receivers)
             {

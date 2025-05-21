@@ -750,7 +750,7 @@
                             FontSize="20"
                             Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
                             IsEnabled="False"
-                            Text="Перенесите .jar, .zip или .rar, что установить его" />
+                            Text="{DynamicResource AddonDragAndDropDescription}" />
                     </StackPanel>
                 </Grid>
             </Border>

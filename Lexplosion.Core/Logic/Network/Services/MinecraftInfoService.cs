@@ -3,16 +3,22 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 using Lexplosion.Global;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
-using static Lexplosion.Logic.Objects.Curseforge.CurseforgeProjectInfo;
-using Newtonsoft.Json.Linq;
 
 namespace Lexplosion.Logic.Network.Services
 {
 	public class MinecraftInfoService
 	{
+		private readonly ToServer _toServer;
+
+		public MinecraftInfoService(ToServer toServer)
+		{
+			_toServer = toServer;
+		}
+
 		public JavaVersionManifest GetJavaVersions()
 		{
 			string answer = null;
@@ -20,7 +26,7 @@ namespace Lexplosion.Logic.Network.Services
 			{
 				try
 				{
-					answer = ToServer.HttpGet(LaunсherSettings.URL.JavaData);
+					_toServer.HttpGet(LaunсherSettings.URL.JavaData);
 				}
 				catch (Exception ex)
 				{
@@ -31,7 +37,7 @@ namespace Lexplosion.Logic.Network.Services
 				{
 					string url = LaunсherSettings.URL.MirrorUrl + LaunсherSettings.URL.JavaData.Replace("https://", "");
 					Runtime.DebugWrite("Try mirror, url " + url);
-					answer = ToServer.HttpGet(url);
+					answer = _toServer.HttpGet(url);
 				}
 
 				return JsonConvert.DeserializeObject<JavaVersionManifest>(answer);
@@ -47,7 +53,7 @@ namespace Lexplosion.Logic.Network.Services
 		{
 			try
 			{
-				string answer = ToServer.HttpGet(LaunсherSettings.URL.VersionsData);
+				string answer = _toServer.HttpGet(LaunсherSettings.URL.VersionsData);
 				if (answer != null)
 				{
 					List<MCVersionInfo> data = JsonConvert.DeserializeObject<List<MCVersionInfo>>(answer);
@@ -80,7 +86,7 @@ namespace Lexplosion.Logic.Network.Services
 			try
 			{
 				string url = LaunсherSettings.URL.VersionsData + gameVersion + modloader;
-				string answer = ToServer.HttpGet(url);
+				string answer = _toServer.HttpGet(url);
 				if (answer != null)
 				{
 					List<string> data = JsonConvert.DeserializeObject<List<string>>(answer);
@@ -103,7 +109,7 @@ namespace Lexplosion.Logic.Network.Services
 			int count = -1;
 			await Task.Run(() =>
 			{
-				string result = ToServer.HttpGet($"https://api.mcsrvstat.us/3/{server.Address}");
+				string result = _toServer.HttpGet($"https://api.mcsrvstat.us/3/{server.Address}");
 				if (result == null) return;
 
 				try
@@ -122,7 +128,7 @@ namespace Lexplosion.Logic.Network.Services
 
 		public List<MinecraftServerInstance> GetMinecraftServersList()
 		{
-			string result = ToServer.HttpGet(LaunсherSettings.URL.Base + "/api/minecraftServers/list");
+			string result = _toServer.HttpGet(LaunсherSettings.URL.Base + "/api/minecraftServers/list");
 
 			if (result == null) return new List<MinecraftServerInstance>();
 
@@ -150,7 +156,7 @@ namespace Lexplosion.Logic.Network.Services
 		{
 			try
 			{
-				string answer = ToServer.HttpGet(LaunсherSettings.URL.InstallersData + gameVersion + "/optifine");
+				string answer = _toServer.HttpGet(LaunсherSettings.URL.InstallersData + gameVersion + "/optifine");
 				if (answer != null)
 				{
 					List<string> data = JsonConvert.DeserializeObject<List<string>>(answer);
@@ -171,7 +177,7 @@ namespace Lexplosion.Logic.Network.Services
 		{
 			try
 			{
-				string answer = ToServer.HttpGet(LaunсherSettings.URL.Base + "/minecraft/nwClientVersions");
+				string answer = _toServer.HttpGet(LaunсherSettings.URL.Base + "/minecraft/nwClientVersions");
 				var res = JsonConvert.DeserializeObject<Dictionary<string, JToken>>(answer);
 
 				return new HashSet<string>(res.Keys);
@@ -204,7 +210,7 @@ namespace Lexplosion.Logic.Network.Services
 					}
 				}
 
-				var filesData = ToServer.ProtectedRequest<ProtectedVersionManifest>(LaunсherSettings.URL.VersionsData + WebUtility.UrlEncode(version) + modloaderUrl);
+				var filesData = _toServer.ProtectedRequest<ProtectedVersionManifest>(LaunсherSettings.URL.VersionsData + WebUtility.UrlEncode(version) + modloaderUrl);
 				if (filesData?.version != null)
 				{
 					if (isNwClient && filesData.version.NightWorldClientData != null)
@@ -229,21 +235,20 @@ namespace Lexplosion.Logic.Network.Services
 
 					if (optifineVersion != null)
 					{
-						var optifineData = ToServer.ProtectedRequest<ProtectedInstallerManifest>(LaunсherSettings.URL.InstallersData + WebUtility.UrlEncode(version) + "/optifine/" + optifineVersion);
-						if (optifineData != null)
-						{
-							foreach (string lib in optifineData.libraries.Keys)
-							{
-								if (optifineData.libraries[lib].os == null || optifineData.libraries[lib].os.Contains("windows"))
-								{
-									libraries[lib] = optifineData.libraries[lib].GetLibInfo;
-									libraries[lib].additionalInstallerType = AdditionalInstallerType.Optifine;
-								}
-							}
+						var optifineData = _toServer.ProtectedRequest<ProtectedInstallerManifest>(LaunсherSettings.URL.InstallersData + WebUtility.UrlEncode(version) + "/optifine/" + optifineVersion);
+						if (optifineData == null) return null;
 
-							optifineData.version.installerVersion = optifineVersion;
-							manifest.version.AdditionalInstaller = optifineData.version;
+						foreach (string lib in optifineData.libraries.Keys)
+						{
+							if (optifineData.libraries[lib].os == null || optifineData.libraries[lib].os.Contains("windows"))
+							{
+								libraries[lib] = optifineData.libraries[lib].GetLibInfo;
+								libraries[lib].additionalInstallerType = AdditionalInstallerType.Optifine;
+							}
 						}
+
+						optifineData.version.installerVersion = optifineVersion;
+						manifest.version.AdditionalInstaller = optifineData.version;
 					}
 
 					return manifest;

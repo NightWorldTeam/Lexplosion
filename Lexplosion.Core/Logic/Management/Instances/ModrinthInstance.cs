@@ -1,157 +1,162 @@
 ﻿using Lexplosion.Logic.FileSystem;
+using Lexplosion.Logic.FileSystem.Services;
 using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects;
-using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Objects.Modrinth;
 using Lexplosion.Tools;
 using System;
 using System.Collections.Generic;
 using System.Net;
-using static Lexplosion.Logic.Objects.Curseforge.CurseforgeProjectInfo;
-using static Lexplosion.Logic.Objects.Curseforge.InstanceManifest;
 
 namespace Lexplosion.Logic.Management.Instances
 {
-    class ModrinthInstance : PrototypeInstance
-    {
-        public override bool CheckUpdates(string localId)
-        {
-            var infoData = DataFilesManager.GetPlatfromData(localId);
-            if (string.IsNullOrWhiteSpace(infoData?.id))
-            {
-                return false;
-            }
+	class ModrinthInstance : PrototypeInstance
+	{
+		private readonly IModrinthFileServicesContainer _services;
 
-            ModrinthProjectInfo info = ModrinthApi.GetProject(infoData.id);
+		public ModrinthInstance(IModrinthFileServicesContainer services)
+		{
+			_services = services;
+		}
 
-            var lastElem = info.Versions.GetLastElement();
-            return lastElem != null && lastElem != infoData.instanceVersion;
-        }
+		public override bool CheckUpdates(string localId)
+		{
+			var infoData = _services.DataFilesService.GetPlatfromData(localId);
+			if (string.IsNullOrWhiteSpace(infoData?.id))
+			{
+				return false;
+			}
 
-        private static List<ModrinthCategory> ParseCategories(List<string> data)
-        {
-            var categories = new List<ModrinthCategory>();
-            if (data != null)
-            {
-                foreach (string category in data)
-                {
-                    if (!string.IsNullOrWhiteSpace(category))
-                    {
-                        categories.Add(new ModrinthCategory
-                        {
-                            Id = category
-                        });
-                    }
-                }
-            }
+			ModrinthProjectInfo info = _services.MdApi.GetProject(infoData.id);
 
-            return categories;
-        }
+			var lastElem = info.Versions.GetLastElement();
+			return lastElem != null && lastElem != infoData.instanceVersion;
+		}
 
-        public override InstanceData GetFullInfo(string localId, string externalId)
-        {
-            var data = ModrinthApi.GetProject(externalId);
+		private static List<ModrinthCategory> ParseCategories(List<string> data)
+		{
+			var categories = new List<ModrinthCategory>();
+			if (data != null)
+			{
+				foreach (string category in data)
+				{
+					if (!string.IsNullOrWhiteSpace(category))
+					{
+						categories.Add(new ModrinthCategory
+						{
+							Id = category
+						});
+					}
+				}
+			}
 
-            if (data == null)
-            {
-                return null;
-            }
+			return categories;
+		}
 
-            var images = new List<byte[]>();
-            if (data.Images != null && data.Images.Count > 0)
-            {
-                var perfomer = new TasksPerfomer(3, data.Images.Count);
-                foreach (var item in data.Images)
-                {
-                    if (item == null || !item.ContainsKey("url")) continue;
+		public override InstanceData GetFullInfo(string localId, string externalId)
+		{
+			var data = _services.MdApi.GetProject(externalId);
 
-                    perfomer.ExecuteTask(delegate ()
-                    {
-                        using (var webClient = new WebClient())
-                        {
-                            try
-                            {
-                                webClient.Proxy = null;
-                                images.Add(webClient.DownloadData(item["url"]));
-                            }
-                            catch { }
-                        }
-                    });
-                }
+			if (data == null)
+			{
+				return null;
+			}
 
-                perfomer.WaitEnd();
-            }
+			var images = new List<byte[]>();
+			if (data.Images != null && data.Images.Count > 0)
+			{
+				var perfomer = new TasksPerfomer(3, data.Images.Count);
+				foreach (var item in data.Images)
+				{
+					if (item == null || !item.ContainsKey("url")) continue;
 
-            ClientType clientType = ClientType.Vanilla;
-            if (data.Loaders != null)
-            {
-                if (data.Loaders.Contains("fabric"))
-                {
-                    clientType = ClientType.Fabric;
-                }
-                else if (data.Loaders.Contains("forge"))
-                {
-                    clientType = ClientType.Forge;
-                }
-                else if (data.Loaders.Contains("quilt"))
-                {
-                    clientType = ClientType.Quilt;
-                }
-            }
+					perfomer.ExecuteTask(delegate ()
+					{
+						using (var webClient = new WebClient())
+						{
+							try
+							{
+								webClient.Proxy = null;
+								images.Add(webClient.DownloadData(item["url"]));
+							}
+							catch { }
+						}
+					});
+				}
 
-            var categories = ParseCategories(data.Categories);
+				perfomer.WaitEnd();
+			}
 
-            string date;
-            try
-            {
-                date = (data.Updated != null) ? DateTime.Parse(data.Updated).ToString("dd MMM yyyy") : "";
-            }
-            catch
-            {
-                date = "";
-            }
+			ClientType clientType = ClientType.Vanilla;
+			if (data.Loaders != null)
+			{
+				if (data.Loaders.Contains("fabric"))
+				{
+					clientType = ClientType.Fabric;
+				}
+				else if (data.Loaders.Contains("forge"))
+				{
+					clientType = ClientType.Forge;
+				}
+				else if (data.Loaders.Contains("quilt"))
+				{
+					clientType = ClientType.Quilt;
+				}
+			}
 
-            var gameVer = (data.GameVersions != null && data.GameVersions.Count > 0) ? data.GameVersions[data.GameVersions.Count - 1] : "";
+			var categories = ParseCategories(data.Categories);
 
-            return new InstanceData
-            {
-                Source = InstanceSource.Modrinth,
-                Categories = categories,
-                Description = data.Summary,
-                Summary = data.Summary,
-                TotalDownloads = data.Downloads,
-                GameVersion = gameVer,
-                LastUpdate = date,
-                Modloader = clientType,
-                Images = images,
-                WebsiteUrl = data.WebsiteUrl,
-                Changelog = ""
-            };
-        }
+			string date;
+			try
+			{
+				date = (data.Updated != null) ? DateTime.Parse(data.Updated).ToString("dd MMM yyyy") : "";
+			}
+			catch
+			{
+				date = "";
+			}
 
-        public override List<InstanceVersion> GetVersions(string externalId)
-        {
-            List<ModrinthProjectFile> versions = ModrinthApi.GetProjectFiles(externalId);
-            var data = new List<InstanceVersion>();
-            foreach (ModrinthProjectFile file in versions)
-            {
-                if (file == null) continue;
+			var gameVer = (data.GameVersions != null && data.GameVersions.Count > 0) ? data.GameVersions[data.GameVersions.Count - 1] : "";
 
-                var date = (file.Date != null) ? file.Date : DateTime.MinValue;
+			return new InstanceData
+			{
+				Source = InstanceSource.Modrinth,
+				Categories = categories,
+				Description = data.Summary,
+				Summary = data.Summary,
+				TotalDownloads = data.Downloads,
+				GameVersion = gameVer,
+				LastUpdate = date,
+				Modloader = clientType,
+				Images = images,
+				WebsiteUrl = data.WebsiteUrl,
+				Changelog = ""
+			};
+		}
 
-                data.Add(new InstanceVersion
-                {
-                    FileName = file.Name,
-                    Date = date,
-                    Id = file.FileId,
-                    Status = (file.Status == "release") ? ReleaseType.Release : ((file.Status == "beta") ? ReleaseType.Beta : ReleaseType.Alpha),
-                    GameVersion = file.GameVersions[0],
-                    Modloader = file.Modloaders[0],
-                    VersionNumber = file.VersionNumber
-                });
-            }
+		public override List<InstanceVersion> GetVersions(string externalId)
+		{
+			List<ModrinthProjectFile> versions = _services.MdApi.GetProjectFiles(externalId);
+			var data = new List<InstanceVersion>();
+			foreach (ModrinthProjectFile file in versions)
+			{
+				if (file == null) continue;
 
-            return data;
-        }
-    }
+				var date = (file.Date != null) ? file.Date : DateTime.MinValue;
+
+				data.Add(new InstanceVersion
+				{
+					FileName = file.Name,
+					Date = date,
+					Id = file.FileId,
+					Status = (file.Status == "release") ? ReleaseType.Release : ((file.Status == "beta") ? ReleaseType.Beta : ReleaseType.Alpha),
+					GameVersion = file.GameVersions[0],
+					Modloader = file.Modloaders[0],
+					VersionNumber = file.VersionNumber
+				});
+			}
+
+			return data;
+		}
+	}
 }

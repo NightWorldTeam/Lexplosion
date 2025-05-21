@@ -13,6 +13,7 @@ using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.WindowComponents.Header;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Tools;
+using Lexplosion.Global;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
 {
@@ -58,7 +59,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Windows
             MouseDown += delegate { try { DragMove(); } catch { } };
 			this.Closing += Close;
 
-			HeaderContainer.DataContext = new WindowHeaderArgs(Close, Maximized, Minimized);
+			HeaderContainer.DataContext = new WindowHeaderArgs(GlobalData.GeneralSettings.AppHeaderTemplateName, Close, Maximized, Minimized);
+
+            _appCore.Settings.ThemeService.AppHeaderTemplateNameChanged += () =>
+            {
+                HeaderContainer.DataContext = new WindowHeaderArgs(_appCore.Settings.ThemeService.SelectedAppHeaderTemplateName, Close, Maximized, Minimized);
+            };
 
             _gallery = appCore.GalleryManager;
             InitGallery();

@@ -307,8 +307,18 @@
                         Padding="16,0"
                         HorizontalAlignment="Left"
                         Command="{Binding ManualInputCommand}"
-                        Content="{DynamicResource ManualInput}"
-                        Style="{StaticResource sm-default}" />
+                        Content="{DynamicResource ManualInput}">
+                        <controls:AdvancedButton.Style>
+                            <Style BasedOn="{StaticResource sm-default}" TargetType="{x:Type controls:AdvancedButton}">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Model.AccountType}" Value="{x:Static enums:AccountType.Microsoft}">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </controls:AdvancedButton.Style>
+                    </controls:AdvancedButton>
 
                     <controls:AdvancedButton
                         Grid.Column="1"

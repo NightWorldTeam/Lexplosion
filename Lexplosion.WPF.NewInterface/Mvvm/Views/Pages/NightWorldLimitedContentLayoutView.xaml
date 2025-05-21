@@ -14,7 +14,7 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <Grid Background="{DynamicResource PageSolidColorBrush}">
+    <Grid>
         <core:If Condition="{Binding HasAccess}">
             <core:If.True>
                 <ContentControl Content="{Binding Content}" />

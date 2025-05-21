@@ -16,13 +16,14 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
 {
     public sealed class InstanceImportModel : ViewModelBase
     {
-        private readonly Action<InstanceClient> _addToLibrary;
+        private readonly Action<InstanceClient, ImportData?> _addToLibrary;
         private readonly Action<InstanceClient> _removeFromLibrary;
         private readonly AppCore _appCore;
         private IModalViewModel _currentModalViewModelBase;
+		private readonly ClientsManager _clientsManager = Runtime.ClientsManager;
 
 
-        public ObservableCollection<ImportProcess> ImportProcesses { get; } = new();
+		public ObservableCollection<ImportProcess> ImportProcesses { get; } = new();
         public Action<IEnumerable<string>> ImportAction { get; }
 
         public Queue<InstanceImportFillDataViewModel> FillDataViewModels { get; } = [];
@@ -35,7 +36,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
         #region Constructors
 
 
-        public InstanceImportModel(AppCore appCore, Action<InstanceClient> addToLibrary, Action<InstanceClient> removeFromLibrary)
+        public InstanceImportModel(AppCore appCore, Action<InstanceClient, ImportData?> addToLibrary, Action<InstanceClient> removeFromLibrary)
         {
             _appCore = appCore;
             _addToLibrary = addToLibrary;
@@ -95,15 +96,14 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
             importFile.ImportCancelled += OnImportCancelled;
             ImportProcesses.Add(importFile);
 
-            instanceClient = InstanceClient.Import(path, (ir) =>
+            instanceClient = _clientsManager.Import(path, (ir) =>
             {
                 ImportResultHandler(ir, importFile, instanceClient);
             }, importData);
             importFile.TargetInstanceClient = instanceClient;
 
             // Добавляем в библиотеку.
-            // TODO: IMPORTANT синхронизировать import и instanceform.
-            _addToLibrary(instanceClient);
+            _addToLibrary(instanceClient, importData);
         }
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
         private void OnImportDynamicStateHandlerStateChanged(ImportInterruption importInterruption, InterruptionType arg2)
         {
             // Если в очереди пусто, окрываем модальное окно.
-            // Если в очереди есть элементы, добавляем новый в очередью.
+            // Если в очереди есть элементы, добавляем новый в очередь.
             // Если элемены в очереди закончились, и на момент открытия
             // было открыто модальное окно импорта возвращаем пользователя туда
             // Иначе, закрываем все модальные окна.
@@ -151,6 +151,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
         {
             if (!importProcess.IsImporing)
                 return;
+
+            importProcess.Cancel();
 
             var index = ImportProcesses.IndexOf(importProcess);
 
@@ -184,15 +186,14 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
             importFile.ImportCancelled += OnImportCancelled;
             ImportProcesses.Add(importFile);
 
-            instanceClient = InstanceClient.Import(uri, (ir) =>
+            instanceClient = _clientsManager.Import(uri, (ir) =>
             {
                 ImportResultHandler(ir, importFile, instanceClient);
             }, importData);
             importFile.TargetInstanceClient = instanceClient;
 
             // Добавляем в библиотеку.
-            // TODO: IMPORTANT синхронизировать import и instanceform.
-            _addToLibrary(instanceClient);
+            _addToLibrary(instanceClient, importData);
         }
 
 

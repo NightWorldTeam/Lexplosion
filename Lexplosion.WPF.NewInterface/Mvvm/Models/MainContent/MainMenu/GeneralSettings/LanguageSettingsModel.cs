@@ -11,9 +11,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
 {
     public sealed class LanguageSettingsModel : ViewModelBase
     {
-        public static readonly string[] AvailableLanguages = new string[2]
+        public static readonly string[] AvailableLanguages = new string[]
         {
-            "ru-RU", "en-US"
+            "ru-RU", "en-US", //"uk-UA", "zh-CN", "de-DE"
         };
 
         private LanguageModel _selectedLang;
@@ -59,7 +59,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
             _selectedLang = langModel;
             ChangeLangauge(cultureId);
             GlobalData.GeneralSettings.LanguageId = cultureId;
-            DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+			Runtime.ServicesContainer.DataFilesService.SaveSettings(GlobalData.GeneralSettings);
         }
     }
 }

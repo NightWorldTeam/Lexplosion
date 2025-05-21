@@ -11,6 +11,9 @@
 
     <s:String x:Key="en-US">Английский</s:String>
     <s:String x:Key="ru-RU">Русский</s:String>
+    <s:String x:Key="uk-UA">Украинский</s:String>
+    <s:String x:Key="zh-CN">Китайський</s:String>
+    <s:String x:Key="de-DE">Немецкий</s:String>
 
     <s:String x:Key="Default">По умолчанию</s:String>
     <!--    -->
@@ -346,7 +349,7 @@
     <s:String x:Key="FoldersAndFilesDescription">Выберите папки и файлы которые хотите экспортировать.</s:String>
     <s:String x:Key="FullExport">Полный экспорт</s:String>
     <s:String x:Key="InstanceExport">Экспорт сборки</s:String>
-    <s:String x:Key="ExportProcessActive">Процесс экспорта сборки</s:String>
+    <s:String x:Key="ExportProcessActive">Экспорт сборки...</s:String>
 
 
     <!--  Import  -->
@@ -814,7 +817,7 @@
     <s:String x:Key="MicrosoftAccountAuthorizationDescription">Для авторизации лицензионого аккаунта вы будете автоматически перенаправлены на страницу авторизации Microsoft.</s:String>
     <s:String x:Key="DoInstallTheLatestVersion">Установить последнию версию?</s:String>
     <s:String x:Key="NWClientNotAvailableForThisVersion">NWClient недоступен на данную версию</s:String>
-    <s:String x:Key="YouHaveNoActiveDistributions">У вас отсутсвуют активные раздачи</s:String>
+    <s:String x:Key="YouHaveNoActiveDistributions">У вас отсутствуют активные раздачи</s:String>
 
 
     <s:String x:Key="InQueue">В очереди</s:String>
@@ -906,4 +909,48 @@
     <s:String x:Key="RestartLauncherButtonAction">
         Да, я хочу сейчас перезапустить лаунчер
     </s:String>
+
+    <s:String x:Key="AddonDragAndDropDescription">
+        Перенесите .jar, .zip или .rar, что установить его
+    </s:String>
+    <s:String x:Key="ChangeMenuPosition">
+        Изменить положение меню
+    </s:String>
+
+    <s:String x:Key="AppHeaderTemplate">
+        Стиль шапки приложения
+    </s:String>
+    <s:String x:Key="AppHeaderTemplateDescription">
+        Выберите визуальный стиль шапки
+    </s:String>
+
+    <s:String x:Key="ShareActiveTime">Активно</s:String>
+    <!--  Минуты  -->
+    <s:String x:Key="Min">мин</s:String>
+
+    <s:String x:Key="Importing">Импорт...</s:String>
+
+    <s:String x:Key="InstanceShareColon_">Раздача сборки: {0}</s:String>
+    <s:String x:Key="ShareExport_Sucessfully">Сборка {0} успешно раздаётся!</s:String>
+    <s:String x:Key="ShareExportTempPathError">Ошибка при создании временной директории!</s:String>
+    <s:String x:Key="ShareExportFileCopyError">Ошибка при копирование файла! Возможно у вас недостаточно места на диске.</s:String>
+    <s:String x:Key="ShareExportInfoFileError">Ошибка при создании файла instanceInfo.json</s:String>
+    <s:String x:Key="ShareExportZipFileError">Ошибка при создании zip-архива сборки</s:String>
+    <s:String x:Key="ShareExportNotExistsValidAccount">Произошло, что-то нам не известное!</s:String>
+
+    <s:String x:Key="InstanceExportColon_">Экспорт сборки: {0}</s:String>
+    <s:String x:Key="Export_Sucessfully">Сборка {0} успешно экспортирована!</s:String>
+    <s:String x:Key="ExportTempPathError">Ошибка при создании временной директории!</s:String>
+    <s:String x:Key="ExportFileCopyError">Ошибка при копирование файла! Возможно у вас недостаточно места на диске.</s:String>
+    <s:String x:Key="ExportInfoFileError">Ошибка при создании файла instanceInfo.json</s:String>
+    <s:String x:Key="ExportZipFileError">Ошибка при создании zip-архива сборки</s:String>
+    <s:String x:Key="ExportNotExistsValidAccount">Произошло, что-то нам не известное!</s:String>
+
+    <s:String x:Key="CoopertationContact">По вопросам сотрудничества</s:String>
+
+    <s:String x:Key="OurVkGroup">Наша группа ВК</s:String>
+    <s:String x:Key="OurDiscordServer">Наш Discord сервер</s:String>
+    <s:String x:Key="OurYoutube">Наш Youtube</s:String>
+    <s:String x:Key="SourceCode">Исходный код</s:String>
+    <s:String x:Key="OutWebsite">Наш веб-сайт</s:String>
 </ResourceDictionary>

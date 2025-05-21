@@ -123,7 +123,11 @@
                 KeyboardNavigation.IsTabStop="False" />
 
             <!--  Window Header Panel Margin="16,12"  -->
-            <header:WindowHeaderContainer x:Name="HeaderContainer" />
+            <header:WindowHeaderContainer
+                x:Name="HeaderContainer"
+                Height="40"
+                VerticalAlignment="Top"
+                HeaderType="WindowsOS" />
 
             <!--  Toast Message Notification Panel  -->
             <ItemsControl

@@ -67,7 +67,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends
 
         public void Unfriend() 
         {
-            NightWorldApi.RemoveFriend(Account.ActiveAccount.UUID, Account.ActiveAccount.SessionToken, Name);
+            Runtime.ServicesContainer.NwApi.RemoveFriend(Account.ActiveAccount.UUID, Account.ActiveAccount.SessionToken, Name);
             Unfriended?.Invoke(this);
         }
     }

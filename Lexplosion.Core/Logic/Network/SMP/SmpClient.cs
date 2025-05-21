@@ -525,6 +525,7 @@ namespace Lexplosion.Logic.Network.SMP
 					_repeatDeliveryBlock.WaitOne();
 					_lastPackage = lastPackageId;
 					_lastPackageIdsRange = lastPackageIdsRange;
+					_sendigIsConfirmed = false;
 					_deliveryWait.Reset();
 					_repeatDeliveryBlock.Release();
 
@@ -578,8 +579,6 @@ namespace Lexplosion.Logic.Network.SMP
 							_repeatDeliveryBlock.WaitOne();
 							if (_sendigIsConfirmed) // пакеты удачно доставлены
 							{
-								_sendigIsConfirmed = false;
-
 								//рассчитываем задержку
 								long deltaTime = DateTimeOffset.Now.ToUnixTimeMilliseconds() - lastTime;
 								_rttCalculator.AddDelta(deltaTime);
