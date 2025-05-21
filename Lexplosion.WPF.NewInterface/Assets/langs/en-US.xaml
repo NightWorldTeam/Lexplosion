@@ -841,11 +841,11 @@
     <s:String x:Key="ExportZipFileError">Error creating zip archive!</s:String>
     <s:String x:Key="ExportNotExistsValidAccount">We really don't know what's going on!</s:String>
 
-    <s:String x:Key="CoopertationContact">По вопросам сотрудничества</s:String>
+    <s:String x:Key="CoopertationContact">Coopertation Contact</s:String>
 
-    <s:String x:Key="OurVkGroup">Наша группа ВК</s:String>
-    <s:String x:Key="OurDiscordServer">Наш Discord сервер</s:String>
-    <s:String x:Key="OurYoutube">Наш Youtube</s:String>
-    <s:String x:Key="SourceCode">Исходный код</s:String>
-    <s:String x:Key="OutWebsite">Наш веб-сайт</s:String>
+    <s:String x:Key="OurVkGroup">Our vk group</s:String>
+    <s:String x:Key="OurDiscordServer">Our Discord server</s:String>
+    <s:String x:Key="OurYoutube">Our Youtube</s:String>
+    <s:String x:Key="SourceCode">Source Code</s:String>
+    <s:String x:Key="OutWebsite">Out website</s:String>
 </ResourceDictionary>
