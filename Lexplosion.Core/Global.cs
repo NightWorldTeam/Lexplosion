@@ -44,6 +44,6 @@ namespace Lexplosion.Global
 		public const int version = 1745159825;
 		public const int CommandServerPort = 54352;
 		public const string DiscordAppID = "839856058703806484";
-		public const string ServerIp = "79.174.92.100";
+		public const string ServerIp = "rtc.night-world.org"; //79.174.92.100
 	}
 }

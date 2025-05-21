@@ -20,7 +20,7 @@ namespace Lexplosion.Tools
 			_sem.WaitOne();
 			try
 			{
-				Lexplosion.Runtime.TaskRun(delegate ()
+				var thread = new Thread(delegate ()
 				{
 					_sem.WaitOne();
 
@@ -40,6 +40,11 @@ namespace Lexplosion.Tools
 					}
 
 				});
+
+#if DEBUG
+				thread.Name = $"TasksPerfomer ({GetHashCode()}) thread {thread.GetHashCode()}";
+#endif
+				thread.Start();
 			}
 			finally
 			{
