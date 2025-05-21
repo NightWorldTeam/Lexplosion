@@ -349,8 +349,15 @@ namespace Lexplosion.Logic.Management.Instances
 				{
 					Logo = File.ReadAllBytes(logoPath);
 				}
+				else
+				{
+					Logo = ImageTools.GenerateRandomGradientImage(120, 120);
+				}
 			}
-			catch { }
+			catch 
+			{
+				Logo = ImageTools.GenerateRandomGradientImage(120, 120);
+			}
 
 			AdditionalInstallerType? installer = null;
 			string installerVer = null;
