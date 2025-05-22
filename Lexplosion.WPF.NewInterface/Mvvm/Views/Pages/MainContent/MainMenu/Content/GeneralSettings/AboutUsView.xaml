@@ -132,6 +132,7 @@
                                             </Border>
                                         </Border>
 
+                                        <!--  Contacts  -->
                                         <StackPanel
                                             Margin="2,0,0,0"
                                             HorizontalAlignment="Right"
@@ -154,7 +155,7 @@
                                                     <Viewbox Width="26" Height="26">
                                                         <Path
                                                             extensions:PathExtensions.StringKeyData="VKontakte"
-                                                            Fill="White"
+                                                            Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
                                                             Stretch="Fill" />
                                                     </Viewbox>
                                                 </Grid>
@@ -176,7 +177,7 @@
                                                     <Viewbox Width="28" Height="28">
                                                         <Path
                                                             extensions:PathExtensions.StringKeyData="Discord"
-                                                            Fill="White"
+                                                            Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
                                                             Stretch="Fill" />
                                                     </Viewbox>
                                                 </Grid>
@@ -198,7 +199,7 @@
                                                     <Viewbox Width="28" Height="28">
                                                         <Path
                                                             extensions:PathExtensions.StringKeyData="Youtube"
-                                                            Fill="White"
+                                                            Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
                                                             Stretch="Fill" />
                                                     </Viewbox>
                                                 </Grid>
@@ -219,7 +220,7 @@
                                                     <Viewbox Width="28" Height="28">
                                                         <Path
                                                             extensions:PathExtensions.StringKeyData="Github"
-                                                            Fill="White"
+                                                            Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
                                                             Stretch="Fill" />
                                                     </Viewbox>
                                                 </Grid>
@@ -240,7 +241,7 @@
                                                     <Viewbox Width="28" Height="28">
                                                         <Path
                                                             extensions:PathExtensions.StringKeyData="Nightworld"
-                                                            Fill="White"
+                                                            Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
                                                             Stretch="Fill" />
                                                     </Viewbox>
                                                 </Grid>
