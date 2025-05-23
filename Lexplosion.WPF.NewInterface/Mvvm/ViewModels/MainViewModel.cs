@@ -11,7 +11,6 @@ using Lexplosion.WPF.NewInterface.Mvvm.Models;
 using System;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.ModalFactory;
-using Lexplosion.Logic;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Tools;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
@@ -21,7 +20,6 @@ using Lexplosion.WPF.NewInterface.TrayMenu;
 using System.Windows.Input;
 using Lexplosion.Logic.Management.Accounts;
 using System.Diagnostics;
-using System.Windows.Controls;
 using Lexplosion.WPF.NewInterface.Mvvm.Views.Windows;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
@@ -129,7 +127,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
                 GlobalLoadingArgs = val;
             };
 
-            Model = new MainModel(appCore);
+            Model = new MainModel(appCore, _clientsManager);
 
             SubscribeToOpenModpackEvent();
 
@@ -146,7 +144,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
                 new ModalInstanceCreatorFactory(appCore, Model.LibraryController as LibraryController, Model.InstanceSharesController)
             );
 
-            _mainMenuLayoutViewModel = new MainMenuLayoutViewModel(appCore, NavigationStore, ModalNavigationStore, Model);
+            _mainMenuLayoutViewModel = new MainMenuLayoutViewModel(appCore, Model, _clientsManager);
             ToMainMenu = new NavigateCommand<ViewModelBase>(NavigationStore, () => _mainMenuLayoutViewModel);
 
             InitTrayComponents();

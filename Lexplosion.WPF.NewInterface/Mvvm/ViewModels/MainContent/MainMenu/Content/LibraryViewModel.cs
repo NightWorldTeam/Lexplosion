@@ -14,12 +14,13 @@ using Lexplosion.Logic.Objects;
 using Lexplosion.WPF.NewInterface.Core.Notifications;
 using Lexplosion.WPF.NewInterface.Core.Objects;
 using System.Diagnostics.Eventing.Reader;
+using Lexplosion.Logic.Management.Instances;
+using System.Runtime.CompilerServices;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 {
     public sealed class LibraryViewModel : ViewModelBase
     {
-
         public event Action<InstanceModelBase> InstanceProfileOpened;
 
         private readonly AppCore _appCore;
@@ -122,18 +123,30 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         private RelayCommand _moveToCatalogCommand;
         public ICommand MoveToCatalogCommand { get; }
 
+        private RelayCommand _selectGroupCommand;
+        public ICommand SelectGroupCommand
+        {
+            get => RelayCommand.GetCommand<InstancesGroup>(ref _selectGroupCommand, Model.OpenInstanceGroup);
+        }
+
+
+        private RelayCommand _changeOpenStateGroupDrawerCommand;
+        public ICommand ChangeOpenStateGroupDrawerCommand 
+        {
+            get => RelayCommand.GetCommand<bool>(ref _changeOpenStateGroupDrawerCommand, Model.ChangeOpenStateGroupDrawer);
+        }
 
         #endregion Commands
 
 
         // TODO: думаю делегат с инстансами это костыль ченить другое надо придумать
-        public LibraryViewModel(AppCore appCore, INavigationStore navigationStore, ICommand toMainMenuLayoutCommand, ModalNavigationStore modalNavigationStore, IInstanceController instanceController, Action moveToCatalog)
+        public LibraryViewModel(AppCore appCore, ClientsManager clientsManager, ICommand toMainMenuLayoutCommand, ILibraryInstanceController instanceController, Action moveToCatalog)
         {
             _appCore = appCore;
-            Model = new LibraryModel(instanceController);
-            _navigationStore = navigationStore;
+            Model = new LibraryModel(clientsManager, instanceController);
+            _navigationStore = appCore.NavigationStore;
             _toMainMenuLayoutCommand = toMainMenuLayoutCommand;
-            _modalNavigationStore = modalNavigationStore;
+            _modalNavigationStore = appCore.ModalNavigationStore;
             MoveToCatalogCommand = RelayCommand.GetCommand(ref _moveToCatalogCommand, moveToCatalog);
         }
     }

@@ -1,35 +1,50 @@
-﻿using Lexplosion.WPF.NewInterface.Core;
-using Lexplosion.WPF.NewInterface.Core.Objects;
+﻿using Lexplosion.Logic.Management.Instances;
+using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
-using System.Windows.Data;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
 {
     public sealed class LibraryModel : ViewModelBase
     {
-        private readonly IInstanceController _instanceController;
-        private readonly ObservableCollection<InstanceGroup> _groups = [];
-
+        private readonly ILibraryInstanceController _instanceController;
+        
 
         #region Properties
 
 
-        public IReadOnlyCollection<InstanceModelBase> InstanceList { get => _instanceController.Instances; }
         public FiltableObservableCollection InstancesCollectionViewSource { get; } = new();
-        public IReadOnlyCollection<InstanceGroup> Groups { get => _groups; }
-        public InstanceGroup SelectedGroup { get; private set; } = null;
-        public bool HasSelectedGroup { get => SelectedGroup != null; }
+        /// <summary>
+        /// Группы сборок.
+        /// </summary>
+        public IReadOnlyCollection<InstancesGroup> Groups { get => _instanceController.InstancesGroups; }
+        /// <summary>
+        /// Группа пустая?
+        /// </summary>
         public bool IsEmpty { get => _instanceController.Instances.Count == 0; }
+        /// <summary>
+        /// Выбранная группа.
+        /// </summary>
+        public InstancesGroup SelectedGroup { get => _instanceController.SelectedGroup;}
+        /// <summary>
+        /// Класс отвечающий за логику панели фильтрации.
+        /// </summary>
+        public LibraryFilterPanel FilterPanel { get; private set; }
+        /// <summary>
+        /// Открыто ли меню со списком групп
+        /// </summary>
+        public bool IsGroupDrawerOpen { get; set; }
 
 
         private string _searchText;
+        /// <summary>
+        /// Текст поиска для сборки
+        /// </summary>
         public string SearchText 
         {
             get => _searchText; set 
@@ -40,34 +55,29 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
         }
 
 
-        public LibraryFilterPanel FilterPanel { get; }
-
-
         #endregion Properties
 
 
         #region Constructors
 
 
-        public LibraryModel(IInstanceController instanceController)
+        public LibraryModel(ClientsManager clientsManager, ILibraryInstanceController instanceController, string defaultGroupName = "default")
         {
             _instanceController = instanceController;
 
-            FilterPanel = new(instanceController);
+            InstancesGroup defaultGroup;
 
-            FilterPanel.FilterChanged += OnFilterChanged;
-
-            InstancesCollectionViewSource.Source = instanceController.Instances;
-
-            if (_instanceController.Instances is INotifyCollectionChanged notifyChangeCollection) 
+            if (defaultGroupName == "default")
             {
-                notifyChangeCollection.CollectionChanged += OnInstancesCollectionChanged;
+                // Предполагаем, что стандартная группа всегда первая.
+                defaultGroup = _instanceController.InstancesGroups.First();
             }
-        }
+            else 
+            {
+                defaultGroup = _instanceController.InstancesGroups.FirstOrDefault(ig => ig.Name == defaultGroupName);
+            }
 
-        private void OnInstancesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            OnPropertyChanged(nameof(IsEmpty));
+            OpenInstanceGroup(defaultGroup);
         }
 
 
@@ -77,24 +87,49 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
         #region Public Methods
 
 
-        public void SelectGroup(InstanceGroup instanceGroup) 
+        public void OpenInstanceGroup(InstancesGroup instancesGroup) 
         {
-            SelectedGroup = instanceGroup;
-            OnPropertyChanged(nameof(SelectedGroup));
-            OnPropertyChanged(nameof(HasSelectedGroup));
-        
-            if (SelectedGroup != null) 
+            if (FilterPanel != null) 
             {
-                InstancesCollectionViewSource.Source = instanceGroup.Instances;
-            } 
+                FilterPanel.FilterChanged -= OnFilterChanged;
+            }
+
+            _instanceController.SelectGroup(instancesGroup);
+
+            FilterPanel = new(_instanceController);
+            FilterPanel.FilterChanged += OnFilterChanged;
+
+
+            if (instancesGroup.Clients is INotifyCollectionChanged notifyChangeCollection)
+            {
+                notifyChangeCollection.CollectionChanged += OnInstancesCollectionChanged;
+            }
+
+            OnPropertyChanged(nameof(SelectedGroup));
+            OnPropertyChanged(nameof(Groups));
+
+            InstancesCollectionViewSource.Source = _instanceController.Instances;
         }
 
+
+        /// <summary>
+        /// Открывает/закрывает меню со списком групп
+        /// </summary>
+        public void ChangeOpenStateGroupDrawer(bool state) 
+        {
+            IsGroupDrawerOpen = state;
+            OnPropertyChanged(nameof(IsGroupDrawerOpen));
+        }
 
         #endregion Public Methods
 
 
         #region Private Methods
 
+        private void OnInstancesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            OnPropertyChanged(nameof(IsEmpty));
+        }
 
         private void OnFilterChanged() 
         {

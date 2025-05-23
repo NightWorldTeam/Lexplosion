@@ -953,4 +953,10 @@
     <s:String x:Key="OurYoutube">Наш Youtube</s:String>
     <s:String x:Key="SourceCode">Исходный код</s:String>
     <s:String x:Key="OutWebsite">Наш веб-сайт</s:String>
+
+
+    <s:String x:Key="Edit">Редатировать</s:String>
+    <s:String x:Key="AllInstanceGroupName">Все сборки</s:String>
+    <s:String x:Key="AllInstanceGroupSummary">Данная группа содержит все сборки из библиотеки. (Не изменяемая)</s:String>
+    <s:String x:Key="OpenGroupTooltip">Открыть меню групп (ESC)</s:String>
 </ResourceDictionary>

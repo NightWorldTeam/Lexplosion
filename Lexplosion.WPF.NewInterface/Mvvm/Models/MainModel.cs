@@ -21,14 +21,14 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models
         private HashSet<object> ExportingInstances { get; } = new HashSet<object>();
 
         public IInstanceController CatalogController { get; }
-        public IInstanceController LibraryController { get; }
+        public ILibraryInstanceController LibraryController { get; }
         public InstanceSharesController InstanceSharesController { get; }
 
-        public MainModel(AppCore appCore)
+        public MainModel(AppCore appCore, ClientsManager clientsManager)
         {
             _appCore = appCore;
             CatalogController = new CatalogController(appCore, Export, SetRunningGame);
-            LibraryController = new LibraryController(appCore, Export, SetRunningGame);
+            LibraryController = new LibraryController(appCore, clientsManager, Export, SetRunningGame);
             InstanceSharesController = new InstanceSharesController();
 
             OnPropertyChanged(nameof(NotificationService));

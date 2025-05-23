@@ -10,6 +10,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
     xmlns:instanceModel="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel"
+    xmlns:instances="clr-namespace:Lexplosion.Logic.Management.Instances;assembly=Lexplosion.Core"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu"
     xmlns:maincontent="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu"
     xmlns:mainmenu="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu"
@@ -75,6 +76,170 @@
                 LogoButtonCommand="{Binding DataContext.OpenInstanceProfileMenuCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
                 LogoButtonCommandParameter="{Binding}"
                 OpenAddonsPageCommand="{Binding DataContext.OpenAddonsPageCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type instances:InstancesGroup}">
+            <RadioButton
+                Command="{Binding DataContext.SelectGroupCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                CommandParameter="{Binding}"
+                Cursor="Hand"
+                GroupName="InstanceGroup"
+                IsChecked="{Binding IsSelected}">
+                <RadioButton.Template>
+                    <ControlTemplate TargetType="{x:Type RadioButton}">
+
+                        <Border
+                            x:Name="BodyBorder"
+                            Padding="8"
+                            Background="Transparent"
+                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                            BorderThickness="1"
+                            CornerRadius="5">
+
+
+                            <!--  Context Menu  -->
+                            <Border.ContextMenu>
+                                <ContextMenu Visibility="{Binding IsDefaultGroup, Converter={converters:NegativeBooleanToVisibilityConverter}}">
+                                    <ContextMenu.Template>
+                                        <ControlTemplate>
+                                            <Border
+                                                Padding="4,8"
+                                                Background="{DynamicResource PrimarySolidColorBrush}"
+                                                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                                BorderThickness="1"
+                                                CornerRadius="5">
+                                                <StackPanel>
+                                                    <StackPanel.Resources>
+                                                        <ControlTemplate x:Key="DropDownButton" TargetType="{x:Type controls:AdvancedButton}">
+                                                            <Border
+                                                                x:Name="border"
+                                                                Margin="1"
+                                                                Padding="5,2,5,2"
+                                                                Background="Transparent"
+                                                                CornerRadius="5">
+
+                                                                <Grid Margin="5,3,5,3" ShowGridLines="False">
+
+                                                                    <Grid.ColumnDefinitions>
+                                                                        <ColumnDefinition Width="30" />
+                                                                        <ColumnDefinition Width="*" />
+                                                                    </Grid.ColumnDefinitions>
+
+                                                                    <Border
+                                                                        Padding="2"
+                                                                        Background="Transparent"
+                                                                        CornerRadius="5">
+                                                                        <Viewbox Width="20" Height="20">
+                                                                            <Path
+                                                                                x:Name="Path"
+                                                                                HorizontalAlignment="Center"
+                                                                                extensions:PathExtensions.StringData="{TemplateBinding IconData}"
+                                                                                Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                                                                Stretch="Fill" />
+                                                                        </Viewbox>
+                                                                    </Border>
+
+                                                                    <TextBlock
+                                                                        x:Name="TextBlock"
+                                                                        Grid.Column="1"
+                                                                        Margin="7,0,5,0"
+                                                                        FontSize="12pt"
+                                                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                                                        Text="{TemplateBinding Text}"
+                                                                        TextAlignment="Justify" />
+                                                                </Grid>
+                                                            </Border>
+
+                                                            <ControlTemplate.Triggers>
+                                                                <Trigger Property="IsMouseOver" Value="True">
+                                                                    <Setter TargetName="border" Property="Background">
+                                                                        <Setter.Value>
+                                                                            <SolidColorBrush Opacity="0.1" Color="{DynamicResource ActivityColor}" />
+                                                                        </Setter.Value>
+                                                                    </Setter>
+                                                                    <Setter TargetName="TextBlock" Property="TextElement.Foreground" Value="{DynamicResource ActivitySolidColorBrush}" />
+
+                                                                    <Setter TargetName="Path" Property="Fill" Value="{DynamicResource ActivitySolidColorBrush}" />
+                                                                </Trigger>
+                                                            </ControlTemplate.Triggers>
+                                                        </ControlTemplate>
+                                                    </StackPanel.Resources>
+
+                                                    <controls:AdvancedButton
+                                                        IconData="{DynamicResource PDEditNote}"
+                                                        Template="{StaticResource DropDownButton}"
+                                                        Text="{DynamicResource Edit}" />
+                                                    <controls:AdvancedButton
+                                                        IconData="{DynamicResource PDDelete}"
+                                                        Template="{StaticResource DropDownButton}"
+                                                        Text="{DynamicResource Delete}" />
+                                                </StackPanel>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </ContextMenu.Template>
+                                </ContextMenu>
+                            </Border.ContextMenu>
+
+                            <!--  Main Body  -->
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Border
+                                    Width="64"
+                                    Height="64"
+                                    Background="{DynamicResource ActivitySolidColorBrush}"
+                                    CornerRadius="5"
+                                    Opacity="0.3" />
+
+                                <StackPanel Grid.Column="1" Margin="16,0,0,0">
+
+                                    <core:If Condition="{Binding IsDefaultGroup}">
+                                        <core:If.True>
+                                            <TextBlock FontSize="16" Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}">
+                                                <Run Text="{DynamicResource AllInstanceGroupName}" />
+                                                <Run Foreground="{DynamicResource ActivitySolidColorBrush}" Text="{Binding Clients.Count, Mode=OneWay, StringFormat='{}({0})'}" />
+                                            </TextBlock>
+                                        </core:If.True>
+                                        <core:If.False>
+                                            <TextBlock FontSize="16" Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}">
+                                                <Run Text="{Binding Name, Mode=OneWay}" />
+                                                <Run Foreground="{DynamicResource ActivitySolidColorBrush}" Text="{Binding Clients.Count, Mode=OneWay, StringFormat='{}({0})'}" />
+                                            </TextBlock>
+                                        </core:If.False>
+                                    </core:If>
+
+                                    <core:If Condition="{Binding IsDefaultGroup}">
+                                        <core:If.True>
+                                            <TextBlock
+                                                FontSize="14"
+                                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                                Text="{DynamicResource AllInstanceGroupSummary}"
+                                                TextWrapping="Wrap" />
+                                        </core:If.True>
+                                        <core:If.False>
+                                            <TextBlock
+                                                FontSize="14"
+                                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                                Text="{Binding Summary}"
+                                                TextWrapping="Wrap" />
+                                        </core:If.False>
+                                    </core:If>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="BodyBorder" Property="BorderBrush" Value="{DynamicResource ActivitySolidColorBrush}" />
+                                <Setter Property="Cursor" Value="None" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </RadioButton.Template>
+            </RadioButton>
         </DataTemplate>
     </UserControl.Resources>
 
@@ -408,7 +573,10 @@
                         VirtualizingPanel.ScrollUnit="Pixel">
                         <ListBox.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <controls1:VirtualizingWrapPanel Margin="0,0,41,0" VirtualizingPanel.VirtualizationMode="Recycling" ScrollViewer.CanContentScroll="True" />
+                                <controls1:VirtualizingWrapPanel
+                                    Margin="0,0,41,0"
+                                    ScrollViewer.CanContentScroll="True"
+                                    VirtualizingPanel.VirtualizationMode="Recycling" />
                             </ItemsPanelTemplate>
                         </ListBox.ItemsPanel>
                     </ListBox>
@@ -458,21 +626,146 @@
                 ToolTip="{DynamicResource CreateInstance}"
                 ToolTipService.PlacementRectangle="-64,20,0,0" />
 
-            <controls:BackTop x:Name="BackTopButton" Style="{StaticResource sm-backtop-default}" />
-
-            <!--<controls:AdvancedButton
-                Width="32"
-                Height="32"
+            <controls:AdvancedButton
+                Width="40"
+                Height="40"
                 Margin="0,8,0,0"
-                Padding="8"
                 Background="{DynamicResource PrimarySolidColorBrush}"
                 BorderBrush="{DynamicResource SeparateSolidColorBrush}"
                 BorderThickness="2"
-                Command="{Binding CloseGroupCommand}"
+                Command="{Binding ChangeOpenStateGroupDrawerCommand}"
+                CommandParameter="{StaticResource TrueValue}"
                 CornerRadius="100"
                 Foreground="{DynamicResource ActivitySolidColorBrush}"
                 IconData="{StaticResource PDGroupList}"
-                IsCancel="True" />-->
+                IconPadding="8,9,8,9"
+                IsCancel="True"
+                IsEnabled="{Binding Model.IsGroupDrawerOpen, Converter={converters:NegativeBooleanValueConverter}}"
+                ToolTip="{DynamicResource OpenGroupTooltip}"
+                ToolTipService.PlacementRectangle="-88,20,0,0" />
+
+            <controls:BackTop
+                x:Name="BackTopButton"
+                Margin="0,8,0,0"
+                Style="{StaticResource sm-backtop-default}" />
+
         </StackPanel>
+
+        <!--  Instance Groups  -->
+        <Grid Visibility="{Binding Model.IsGroupDrawerOpen, Converter={converters:BooleanToVisibilityConverter}}">
+
+            <Grid.Background>
+                <SolidColorBrush Opacity="0.5" Color="Black" />
+            </Grid.Background>
+
+            <!--  Instance Groups Drawer  -->
+            <Border
+                Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={converters:WindowWidthToXProcentWidth}, ConverterParameter=44}"
+                Padding="8,8,18,8"
+                HorizontalAlignment="Right"
+                Background="{DynamicResource PrimarySolidColorBrush}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <!--  Header  -->
+                    <Border
+                        Margin="-8,0,-18,0"
+                        Padding="8,0,8,8"
+                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                        BorderThickness="0,0,0,1">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <!--  Close Button  -->
+                            <Button
+                                Width="24"
+                                Height="24"
+                                Command="{Binding ChangeOpenStateGroupDrawerCommand}"
+                                CommandParameter="{StaticResource FalseValue}"
+                                IsCancel="True">
+
+                                <Button.Template>
+                                    <ControlTemplate>
+                                        <Border
+                                            x:Name="border"
+                                            Padding="6"
+                                            Background="Transparent"
+                                            CornerRadius="100">
+
+                                            <Viewbox Height="16">
+                                                <Path
+                                                    x:Name="CloseIcon"
+                                                    extensions:PathExtensions.StringKeyData="LeftBackArrow"
+                                                    Fill="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                                    Stretch="Fill" />
+                                            </Viewbox>
+
+                                        </Border>
+
+                                        <ControlTemplate.Triggers>
+                                            <DataTrigger Binding="{Binding IsActive, ElementName=Loader}" Value="True">
+                                                <Setter TargetName="CloseIcon" Property="Fill" Value="White" />
+                                            </DataTrigger>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="border" Property="Background" Value="{DynamicResource SecondarySolidColorBrush}" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+
+                            <TextBlock
+                                Grid.Column="1"
+                                Margin="8,0,0,0"
+                                FontSize="16"
+                                FontWeight="Medium"
+                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                Text="Группы сборок" />
+                        </Grid>
+                    </Border>
+
+                    <!--  Additional Functions  -->
+                    <Border
+                        Grid.Row="1"
+                        Margin="-8,8,-18,0"
+                        Padding="8,0,18,8"
+                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                        BorderThickness="0,0,0,1">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <controls:SearchBox Placeholder="Название группы" Style="{StaticResource sm-searchbox-default}" />
+                            <controls:AdvancedButton
+                                Grid.Column="1"
+                                Width="28"
+                                Height="28"
+                                Margin="16,0,0,0"
+                                Padding="0"
+                                IconData="{StaticResource PDAddCircle}"
+                                IconPadding="4"
+                                Style="{StaticResource sm-default}"
+                                ToolTip="Создать новую группу" />
+                        </Grid>
+                    </Border>
+
+                    <!--  Group List  -->
+                    <ListBox
+                        Grid.Row="2"
+                        Margin="0,16,0,0"
+                        ItemsSource="{Binding Model.Groups}"
+                        Style="{StaticResource TransparentListBox}" />
+                </Grid>
+            </Border>
+        </Grid>
     </Grid>
 </UserControl>

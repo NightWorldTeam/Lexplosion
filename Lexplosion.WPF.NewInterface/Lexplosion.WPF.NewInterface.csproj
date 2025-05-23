@@ -134,7 +134,6 @@
     <Compile Include="Core\Objects\Accounts.cs" />
     <Compile Include="Core\Objects\DownloableAddonFile.cs" />
     <Compile Include="Core\Objects\InstanceDistribution.cs" />
-    <Compile Include="Core\Objects\InstanceGroup.cs" />
     <Compile Include="Core\Objects\Modloader.cs" />
     <Compile Include="Core\Objects\SelecteableItem.cs" />
     <Compile Include="Core\Objects\Test.cs" />
