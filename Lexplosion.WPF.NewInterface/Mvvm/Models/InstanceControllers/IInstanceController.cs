@@ -21,6 +21,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
         /// </summary>
         /// <param name="instancesGroup">Группа сборок</param>
         public void SelectGroup(InstancesGroup instancesGroup);
+        /// <summary>
+        /// Добавляет новую группу в список.
+        /// </summary>
+        /// <param name="instancesGroup">Группа сборок</param>
+        public void AddGroup(InstancesGroup instancesGroup);
     }
 
     public interface IInstanceController

@@ -111,7 +111,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
             InstancesCollectionViewSource.Source = _instanceController.Instances;
         }
 
-
         /// <summary>
         /// Открывает/закрывает меню со списком групп
         /// </summary>
@@ -119,6 +118,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
         {
             IsGroupDrawerOpen = state;
             OnPropertyChanged(nameof(IsGroupDrawerOpen));
+        }
+
+        ///
+        public void AddGroup(InstancesGroup instancesGroup) 
+        {
+            _instanceController.AddGroup(instancesGroup);
         }
 
         #endregion Public Methods

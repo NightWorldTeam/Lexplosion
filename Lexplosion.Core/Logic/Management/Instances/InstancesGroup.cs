@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
 using Lexplosion.Core.Extensions;
 using Lexplosion.Logic.FileSystem.Services;
@@ -88,10 +87,11 @@ namespace Lexplosion.Logic.Management.Instances
         /// </summary>
         /// <param name="name">Имя группы</param>
         /// <param name="fileServices">Сервисы</param>
-        internal InstancesGroup(string name, IFileServicesContainer fileServices)
+        internal InstancesGroup(string name, string summary, IFileServicesContainer fileServices)
         {
             Id = Guid.NewGuid();
             Name = name;
+            Summary = summary;
             _fileServices = fileServices;
         }
 

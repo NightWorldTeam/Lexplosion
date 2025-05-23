@@ -148,6 +148,7 @@
     <Compile Include="Core\Switch.cs" />
     <Compile Include="Core\ViewModel\ILimitedAccess.cs" />
     <Compile Include="Core\ViewModel\LimitedContentViewModelBase.cs" />
+    <Compile Include="Extensions\ListBoxExtensions.cs" />
     <Compile Include="Extensions\LongExtensions.cs" />
     <Compile Include="Extensions\ResourceDictionaryExtensions.cs" />
     <Compile Include="Extensions\ScrollViewerExtensions.cs" />
@@ -192,7 +193,7 @@
     <Compile Include="Mvvm\ViewModels\Modal\AdServers\AskServerInstanceInstallingViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\AdServers\SelectInstanceForServerViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\ConfirmActionViewModel.cs" />
-    <Compile Include="Mvvm\ViewModels\Modal\GroupFactory\GroupFactoryViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\Modal\InstancesGroup\InstancesGroupFactoryViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\ActiveSharesViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\Import\InstanceImportFillDataViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\InstanceDistributionViewModel.cs" />
@@ -212,8 +213,8 @@
     <Compile Include="Mvvm\Views\Modal\ConfirmAction\ConfirmActionView.xaml.cs">
       <DependentUpon>ConfirmActionView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Mvvm\Views\Modal\GroupFactory\GroupFactoryView.xaml.cs">
-      <DependentUpon>GroupFactoryView.xaml</DependentUpon>
+    <Compile Include="Mvvm\Views\Modal\InstancesGroup\InstancesGroupFactoryView.xaml.cs">
+      <DependentUpon>InstancesGroupFactoryView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Mvvm\Views\Modal\InstanceTransfer\ActiveSharesView.xaml.cs">
       <DependentUpon>ActiveSharesView.xaml</DependentUpon>
@@ -671,7 +672,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Mvvm\Views\Modal\GroupFactory\GroupFactoryView.xaml">
+    <Page Include="Mvvm\Views\Modal\InstancesGroup\InstancesGroupFactoryView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

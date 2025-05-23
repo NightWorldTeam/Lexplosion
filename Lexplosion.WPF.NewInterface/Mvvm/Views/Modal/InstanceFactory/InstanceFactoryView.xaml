@@ -35,8 +35,6 @@
                         BorderBrush="{DynamicResource SeparateSolidColorBrush}"
                         BorderThickness="0,0,0,1">
 
-                        <!--  Game Versions  -->
-
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />

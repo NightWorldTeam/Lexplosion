@@ -90,12 +90,13 @@
 
                         <Border
                             x:Name="BodyBorder"
+                            Margin="0,0,0,8"
                             Padding="8"
                             Background="Transparent"
                             BorderBrush="{DynamicResource SeparateSolidColorBrush}"
                             BorderThickness="1"
-                            CornerRadius="5">
-
+                            CornerRadius="5"
+                            FocusVisualStyle="{x:Null}">
 
                             <!--  Context Menu  -->
                             <Border.ContextMenu>
@@ -721,6 +722,7 @@
                                 </Button.Template>
                             </Button>
 
+                            <!--  TODO: 1.0.1.0 Translate  -->
                             <TextBlock
                                 Grid.Column="1"
                                 Margin="8,0,0,0"
@@ -744,13 +746,16 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
+                            <!--  TODO: 1.0.1.0 Translate  -->
                             <controls:SearchBox Placeholder="Название группы" Style="{StaticResource sm-searchbox-default}" />
+                            <!--  TODO: 1.0.1.0 Translate  -->
                             <controls:AdvancedButton
                                 Grid.Column="1"
                                 Width="28"
                                 Height="28"
                                 Margin="16,0,0,0"
                                 Padding="0"
+                                Command="{Binding OpenInstancesFactoryModalCommand}"
                                 IconData="{StaticResource PDAddCircle}"
                                 IconPadding="4"
                                 Style="{StaticResource sm-default}"
@@ -761,9 +766,10 @@
                     <!--  Group List  -->
                     <ListBox
                         Grid.Row="2"
-                        Margin="0,16,0,0"
+                        Margin="0,16,-18,0"
                         ItemsSource="{Binding Model.Groups}"
-                        Style="{StaticResource TransparentListBox}" />
+                        Style="{StaticResource TransparentListBox}"
+                        VirtualizingPanel.ScrollUnit="Pixel" />
                 </Grid>
             </Border>
         </Grid>

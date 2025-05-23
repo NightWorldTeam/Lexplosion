@@ -11,11 +11,8 @@ using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal;
 using Lexplosion.WPF.NewInterface.Core.Objects.TranslatableObjects;
 using Lexplosion.Logic.Objects;
-using Lexplosion.WPF.NewInterface.Core.Notifications;
-using Lexplosion.WPF.NewInterface.Core.Objects;
-using System.Diagnostics.Eventing.Reader;
 using Lexplosion.Logic.Management.Instances;
-using System.Runtime.CompilerServices;
+using System.Linq;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 {
@@ -28,6 +25,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         private readonly ICommand _toMainMenuLayoutCommand;
         private readonly ModalNavigationStore _modalNavigationStore;
         private readonly Func<IEnumerable<InstanceModelBase>> _getInstances;
+        private readonly ClientsManager _clientsManager;
 
 
         #region Properties
@@ -136,6 +134,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             get => RelayCommand.GetCommand<bool>(ref _changeOpenStateGroupDrawerCommand, Model.ChangeOpenStateGroupDrawer);
         }
 
+        private RelayCommand _openInstancesFactoryModalCommand;
+        public ICommand OpenInstancesFactoryModalCommand 
+        {
+            get => RelayCommand.GetCommand(ref _openInstancesFactoryModalCommand, OpenInstancesFactoryModal); 
+        }
+
+
         #endregion Commands
 
 
@@ -143,11 +148,28 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         public LibraryViewModel(AppCore appCore, ClientsManager clientsManager, ICommand toMainMenuLayoutCommand, ILibraryInstanceController instanceController, Action moveToCatalog)
         {
             _appCore = appCore;
+            _clientsManager = clientsManager;
             Model = new LibraryModel(clientsManager, instanceController);
             _navigationStore = appCore.NavigationStore;
             _toMainMenuLayoutCommand = toMainMenuLayoutCommand;
             _modalNavigationStore = appCore.ModalNavigationStore;
             MoveToCatalogCommand = RelayCommand.GetCommand(ref _moveToCatalogCommand, moveToCatalog);
         }
+
+
+        #region Private Methods
+
+
+        private void OpenInstancesFactoryModal() 
+        {
+            var defaultGroup = _clientsManager.GetExistsGroups().First();
+            var instancesFactoryModalViewModel = new InstancesGroupFactoryViewModel(_clientsManager, defaultGroup.Clients);
+
+            instancesFactoryModalViewModel.Model.GroupCreated += Model.AddGroup;
+            _appCore.ModalNavigationStore.Open(instancesFactoryModalViewModel);
+        }
+
+
+        #endregion Private Methods
     }
 }

@@ -93,9 +93,9 @@ namespace Lexplosion.Logic.Management.Instances
 			return client;
 		}
 
-		public InstancesGroup CreateGroup(string name)
+		public InstancesGroup CreateGroup(string name, string summary = "")
 		{
-			var group = new InstancesGroup(name, _services);
+			var group = new InstancesGroup(name, summary, _services);
 			group.SaveGroupInfo();
 
 			return group;

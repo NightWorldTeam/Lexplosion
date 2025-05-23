@@ -166,6 +166,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
             }
         }
 
+        public void AddGroup(InstancesGroup instancesGroup)
+        {
+            _groups.Add(instancesGroup);
+        }
+
 
         #endregion Public Methods
     }
