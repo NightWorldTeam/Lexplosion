@@ -15,7 +15,7 @@
     <s:String x:Key="uk-UA">Українська</s:String>
     <s:String x:Key="zh-CN">Китайська</s:String>
     <s:String x:Key="de-DE">Німецька</s:String>
-
+    <s:String x:key="pl-PL">Польский</s:String>
     <s:String x:Key="Default">За замовчуванням</s:String>
     <!--    -->
     <!--  LeftPanel  -->
