@@ -854,4 +854,11 @@
     <s:String x:Key="AllInstanceGroupName">All Instances</s:String>
     <s:String x:Key="AllInstanceGroupSummary">This group contains all instances from the library. (Unchangeable)</s:String>
     <s:String x:Key="OpenGroupTooltip">Open group menu (ESC)</s:String>
+
+    <s:String x:Key="RemoveInstancesGroupTitle">Remove instances group</s:String>
+    <s:String x:Key="RemoveInstancesGroupDescription">
+        Do you really want to remove group: {0}?
+        All instances from this group will not be removed and will be located in other groups.!
+    </s:String>
+    <s:String x:Key="YesIWantToRemoveGroup">Yes I want to remove this group</s:String>
 </ResourceDictionary>

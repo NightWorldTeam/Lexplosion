@@ -959,4 +959,11 @@
     <s:String x:Key="AllInstanceGroupName">Все сборки</s:String>
     <s:String x:Key="AllInstanceGroupSummary">Данная группа содержит все сборки из библиотеки. (Не изменяемая)</s:String>
     <s:String x:Key="OpenGroupTooltip">Открыть меню групп (ESC)</s:String>
+
+    <s:String x:Key="RemoveInstancesGroupTitle">Удаление группы</s:String>
+    <s:String x:Key="RemoveInstancesGroupDescription">
+        Вы действительно хотите группу: {0}?
+        Сборки из данной группы удалены не будут, и будут находится в других группах!
+    </s:String>
+    <s:String x:Key="YesIWantToRemoveGroup">Да я хочу удалить данную группу</s:String>
 </ResourceDictionary>

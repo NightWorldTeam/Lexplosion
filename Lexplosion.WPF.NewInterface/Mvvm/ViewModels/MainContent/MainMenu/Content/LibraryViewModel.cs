@@ -129,15 +129,27 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
 
         private RelayCommand _changeOpenStateGroupDrawerCommand;
-        public ICommand ChangeOpenStateGroupDrawerCommand 
+        public ICommand ChangeOpenStateGroupDrawerCommand
         {
             get => RelayCommand.GetCommand<bool>(ref _changeOpenStateGroupDrawerCommand, Model.ChangeOpenStateGroupDrawer);
         }
 
         private RelayCommand _openInstancesFactoryModalCommand;
-        public ICommand OpenInstancesFactoryModalCommand 
+        public ICommand OpenInstancesFactoryModalCommand
         {
-            get => RelayCommand.GetCommand(ref _openInstancesFactoryModalCommand, OpenInstancesFactoryModal); 
+            get => RelayCommand.GetCommand(ref _openInstancesFactoryModalCommand, OpenInstancesGroupFactoryModal);
+        }
+
+        private RelayCommand _editInstancesGroupCommand;
+        public ICommand EditInstancesGroupCommand
+        {
+            get => RelayCommand.GetCommand<InstancesGroup>(ref _editInstancesGroupCommand, OpenInstancesGroupEditModal);
+        }
+
+        private RelayCommand _deleteInstancesGroupCommand;
+        public ICommand DeleteInstancesGroupCommand
+        {
+            get => RelayCommand.GetCommand<InstancesGroup>(ref _deleteInstancesGroupCommand, RemoveInstancesGroupModal);
         }
 
 
@@ -160,12 +172,28 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         #region Private Methods
 
 
-        private void OpenInstancesFactoryModal() 
+        private void OpenInstancesGroupFactoryModal()
         {
             var defaultGroup = _clientsManager.GetExistsGroups().First();
             var instancesFactoryModalViewModel = new InstancesGroupFactoryViewModel(_clientsManager, defaultGroup.Clients);
 
             instancesFactoryModalViewModel.Model.GroupCreated += Model.AddGroup;
+            _appCore.ModalNavigationStore.Open(instancesFactoryModalViewModel);
+        }
+
+        private void OpenInstancesGroupEditModal(InstancesGroup instancesGroup)
+        {
+            var instancesFactoryModalViewModel = new InstancesGroupEditViewModel(instancesGroup, _clientsManager);
+            _appCore.ModalNavigationStore.Open(instancesFactoryModalViewModel);
+        }
+
+        private void RemoveInstancesGroupModal(InstancesGroup instancesGroup)
+        {
+            var instancesFactoryModalViewModel = new ConfirmActionViewModel(
+                    _appCore.Resources("RemoveInstancesGroupTitle") as string,
+                    string.Format(_appCore.Resources("RemoveInstancesGroupDescription") as string, instancesGroup.Name),
+                    _appCore.Resources("YesIWantToRemoveGroup") as string,
+                (obj) => Model.RemoveGroup(instancesGroup));
             _appCore.ModalNavigationStore.Open(instancesFactoryModalViewModel);
         }
 

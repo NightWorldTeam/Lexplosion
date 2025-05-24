@@ -1,16 +1,11 @@
 ﻿using Lexplosion.WPF.NewInterface.Extensions;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu;
-using System.Reflection;
 using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Forms;
-using System.Windows.Media;
 using System.Windows.Threading;
-using WpfToolkit.Controls;
-using System.Collections;
-using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
+using System.Windows.Media;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu
 {
@@ -120,5 +115,22 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu
 				BackTopButton.TargetScroll = e.OriginalSource as ScrollViewer;
 			}
 		}
-	}
+
+
+		private void CloseContextMenuWhenButtonClicked() 
+		{
+			(Resources["GroupItemContextMenu"] as ContextMenu).IsOpen = false;
+        }
+
+
+        private void Remove_Click(object sender, RoutedEventArgs e)
+        {
+			CloseContextMenuWhenButtonClicked();
+        }
+		
+		private void Edit_Click(object sender, RoutedEventArgs e)
+        {
+            CloseContextMenuWhenButtonClicked();
+        }
+    }
 }

@@ -2,19 +2,21 @@
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Modal;
 using Lexplosion.WPF.NewInterface.Core.ViewModel;
-using System;
 using System.Collections.Generic;
+using System;
+using System.Linq;
+using System.Xml.Linq;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
 {
-    public sealed class InstancesGroupFactoryModel : ObservableObject 
+    public sealed class InstancesGroupEditModel : ObservableObject
     {
-        public event Action<InstancesGroup> GroupCreated;
+        public event Action<InstancesGroup> GroupSaved;
 
+        private readonly InstancesGroup _groupInstance;
         private readonly ClientsManager _clientsManager;
 
         public FiltableObservableCollection AllInstancesViewSource { get; } = new();
-
 
         private string _name;
         public string Name
@@ -42,22 +44,28 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
             }
         }
 
-        public InstancesGroupFactoryModel(ClientsManager clientsManager, IReadOnlyCollection<InstanceClient> allInstances)
+        public InstancesGroupEditModel(InstancesGroup group, ClientsManager clientsManager)
         {
-            AllInstancesViewSource.Source = allInstances;
+            _groupInstance = group;
+            AllInstancesViewSource.Source = clientsManager.GetExistsGroups().First().Clients;
+
+            Name = group.Name;
+            Summary = group.Summary;
+            SelectedInstances = new(group.Clients);
+
             _clientsManager = clientsManager;
-        }   
+        }
 
-        public void CreateGroup() 
+        public void SaveGroupChanges()
         {
-            var newGroup = _clientsManager.CreateGroup(Name, Summary);
+            //var newGroup = _clientsManager.CreateGroup(Name, Summary);
 
-            foreach (var ic in SelectedInstances) 
-            {   
-                newGroup.AddInstance(ic);
-            }
+            //foreach (var ic in SelectedInstances)
+            //{
+            //    newGroup.AddInstance(ic);
+            //}
 
-            GroupCreated?.Invoke(newGroup);
+            //GroupSaved?.Invoke(newGroup);
         }
 
         /// <summary>
@@ -67,21 +75,21 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
         {
             AllInstancesViewSource.Filter = (ic =>
             {
-                return string.IsNullOrEmpty(SearchText) 
-                    ? true 
+                return string.IsNullOrEmpty(SearchText)
+                    ? true
                     : (ic as InstanceClient).Name.IndexOf(SearchText, System.StringComparison.InvariantCultureIgnoreCase) > -1;
             });
         }
     }
 
-    public sealed class InstancesGroupFactoryViewModel : ActionModalViewModelBase
+    public sealed class InstancesGroupEditViewModel : ActionModalViewModelBase
     {
-        public InstancesGroupFactoryModel Model { get; }
+        public InstancesGroupEditModel Model { get; }
 
-        public InstancesGroupFactoryViewModel(ClientsManager clientManager, IReadOnlyCollection<InstanceClient> allInstances)
+        public InstancesGroupEditViewModel(InstancesGroup group, ClientsManager clientManager)
         {
-            Model = new InstancesGroupFactoryModel(clientManager, allInstances);
-            ActionCommandExecutedEvent += (obj) => Model.CreateGroup();
+            Model = new(group, clientManager);
+            ActionCommandExecutedEvent += (obj) => Model.SaveGroupChanges();
             IsCloseAfterCommandExecuted = true;
         }
     }

@@ -76,8 +76,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
         {
             App.Current.Dispatcher.Invoke(() =>
             {
-                _instances.Add(instanceModelBase);
-                InstanceAdded?.Invoke(instanceModelBase);
+            _instances.Add(instanceModelBase);
+            InstanceAdded?.Invoke(instanceModelBase);
+                OnPropertyChanged(nameof(Instances));
             });
         }
 
@@ -164,11 +165,18 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
             {
                 Add(ic);
             }
+
+            OnPropertyChanged(nameof(Instances));
         }
 
         public void AddGroup(InstancesGroup instancesGroup)
         {
             _groups.Add(instancesGroup);
+        }
+
+        public void RemoveGroup(InstancesGroup instancesGroup)
+        {
+            _groups.Remove(instancesGroup);
         }
 
 

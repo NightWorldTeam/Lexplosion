@@ -193,6 +193,7 @@
     <Compile Include="Mvvm\ViewModels\Modal\AdServers\AskServerInstanceInstallingViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\AdServers\SelectInstanceForServerViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\ConfirmActionViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\Modal\InstancesGroup\InstancesGroupEditViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\InstancesGroup\InstancesGroupFactoryViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\ActiveSharesViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\Import\InstanceImportFillDataViewModel.cs" />
@@ -212,6 +213,9 @@
     </Compile>
     <Compile Include="Mvvm\Views\Modal\ConfirmAction\ConfirmActionView.xaml.cs">
       <DependentUpon>ConfirmActionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Views\Modal\InstancesGroup\InstancesGroupEditView.xaml.cs">
+      <DependentUpon>InstancesGroupEditView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Mvvm\Views\Modal\InstancesGroup\InstancesGroupFactoryView.xaml.cs">
       <DependentUpon>InstancesGroupFactoryView.xaml</DependentUpon>
@@ -671,6 +675,10 @@
     <Page Include="Mvvm\Views\Modal\ConfirmAction\ConfirmActionView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Mvvm\Views\Modal\InstancesGroup\InstancesGroupEditView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Mvvm\Views\Modal\InstancesGroup\InstancesGroupFactoryView.xaml">
       <SubType>Designer</SubType>

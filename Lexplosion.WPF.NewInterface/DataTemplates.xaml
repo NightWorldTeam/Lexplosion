@@ -135,6 +135,9 @@
     <DataTemplate DataType="{x:Type modalvm:InstancesGroupFactoryViewModel}">
         <modalviews:InstancesGroupFactoryView />
     </DataTemplate>
+    <DataTemplate DataType="{x:Type modalvm:InstancesGroupEditViewModel}">
+        <modalviews:InstancesGroupEditView />
+    </DataTemplate>
 
     <!--  Instance Profile  -->
     <DataTemplate DataType="{x:Type instanceprofilevm:InstanceProfileLeftPanelViewModel}">

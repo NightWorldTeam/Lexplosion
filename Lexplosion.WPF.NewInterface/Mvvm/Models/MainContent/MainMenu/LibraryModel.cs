@@ -126,6 +126,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
             _instanceController.AddGroup(instancesGroup);
         }
 
+        public void RemoveGroup(InstancesGroup instancesGroup) 
+        {
+            _instanceController.RemoveGroup(instancesGroup);
+        }
+
         #endregion Public Methods
 
 
