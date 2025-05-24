@@ -15,13 +15,14 @@ using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Tools;
 using Lexplosion.Logic.Management.Addons;
+using System.Linq;
 
 namespace Lexplosion.Logic.Management.Instances
 {
 	public class ClientsManager
 	{
 		private Dictionary<string, InstanceClient> _installedInstances = new();
-		private List<InstancesGroup> _existsGroups = new();
+		private List<InstancesGroup> _existsGroups = new(); //первая группа всегда all
 
 		/// <summary>
 		/// Содержит пары состоящие из внешнего и внутреннего id.
@@ -304,6 +305,9 @@ namespace Lexplosion.Logic.Management.Instances
 
 				_installedInstances[localId] = client;
 				_idsPairs[client.ExternalId] = localId;
+				_existsGroups[0].AddInstance(client);
+
+				_services.DataFilesService.RewriteGroupsInfo(_existsGroups.Select(x => x.BuildInstalledInstanceGroup()));
 				SaveInstalledInstancesList();
 			}
 		}
@@ -321,7 +325,13 @@ namespace Lexplosion.Logic.Management.Instances
 				_idsPairs.Remove(client.ExternalId);
 			}
 
+			foreach (var group in _existsGroups)
+			{
+				group.RemoveInstance(client);
+			}
+
 			client.DeleteLocalStruct();
+			_services.DataFilesService.RewriteGroupsInfo(_existsGroups.Select(x => x.BuildInstalledInstanceGroup()));
 			SaveInstalledInstancesList();
 		}
 

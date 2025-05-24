@@ -475,5 +475,10 @@ namespace Lexplosion.Logic.FileSystem
 
 			SaveFile($"{_withDirectory.DirectoryPath}/{INSTANCES_GROUPS_FILE}", JsonConvert.SerializeObject(allGroups));
 		}
+
+		public void RewriteGroupsInfo(IEnumerable<InstalledInstancesGroup> clients)
+		{
+			SaveFile($"{_withDirectory.DirectoryPath}/{INSTANCES_GROUPS_FILE}", JsonConvert.SerializeObject(clients));
+		}
 	}
 }
