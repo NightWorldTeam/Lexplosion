@@ -1,0 +1,682 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:s="clr-namespace:System;assembly=mscorlib">
+    <!--
+        == NEW
+        == WPF
+        == INTERFACE
+        == TRANSLATE
+    -->
+    <s:String x:Key="en-US">Angielski</s:String>
+    <s:String x:Key="ru-RU">Rosyjski</s:String>
+    <s:String x:Key="uk-UA">Ukraiński</s:String>
+    <s:String x:Key="zh-CN">Chiński</s:String>
+    <s:String x:Key="de-DE">Niemiecki</s:String>
+    <s:String x:Key="pl-PL">Polski</s:String>
+    <s:String x:Key="Default">Domyślne</s:String>
+    <!--    -->
+    <!--  LeftPanel  -->
+    <!--    -->
+    <s:String x:Key="Catalog">Katalog</s:String>
+    <s:String x:Key="Library">Biblioteka</s:String>
+    <s:String x:Key="Friends">Znajomi</s:String>
+    <s:String x:Key="Multiplayer">Gra wieloosobowa</s:String>
+    <s:String x:Key="Settings">Ustawienia</s:String>
+    <s:String x:Key="GladToSeeYou">Cieszymy się, że Cię widzimy</s:String>
+    <!--    -->
+    <!--  Titles  -->
+    <!--    -->
+    <s:String x:Key="General">Ogólne</s:String>
+    <!--  Friends  -->
+    <s:String x:Key="FindFriends">Znajdź znajomych</s:String>
+    <s:String x:Key="FriendsRequests">Prośby o dodanie do znajomych</s:String>
+    <!--  Settings  -->
+    <s:String x:Key="Appearance">Wygląd</s:String>
+    <s:String x:Key="Language">Język</s:String>
+    <s:String x:Key="About">O programie</s:String>
+    <!--  Main Menu  -->
+    <!--    -->
+    <!--  Catalog  -->
+    <!--    -->
+    <s:String x:Key="Search">Szukaj</s:String>
+    <!--    -->
+    <!--  Library  -->
+    <!--    -->
+    <!--    -->
+    <!--  Friends  -->
+    <!--    -->
+    <s:String x:Key="Pending">Oczekujące</s:String>
+    <s:String x:Key="Outgoing">Wychodzące</s:String>
+    <s:String x:Key="AcceptRequest">Zaakceptuj prośbę</s:String>
+    <s:String x:Key="RemoveFollower">Usuń z obserwujących</s:String>
+    <s:String x:Key="AddFriend">Dodaj do znajomych</s:String>
+    <s:String x:Key="Unfriends">Usuń ze znajomych</s:String>
+    <!--  Status  -->
+    <s:String x:Key="Online">Online</s:String>
+    <s:String x:Key="Offline">Offline</s:String>
+    <s:String x:Key="PlayingIn">Gra w</s:String>
+    <s:String x:Key="InGame">W grze</s:String>
+    <s:String x:Key="DoNotDisturb">Nie przeszkadzaj</s:String>
+    <!--    -->
+    <!--  Multiplayer  -->
+    <!--    -->
+    <s:String x:Key="Status">Status</s:String>
+    <s:String x:Key="PriorityConnetionMethod">Metoda połączenia</s:String>
+    <s:String x:Key="DirectConnection">Bezpośrednie</s:String>
+    <s:String x:Key="ViaRepeater">Przez powtarzacz</s:String>
+    <s:String x:Key="ConnectedPlayers">Podłączeni gracze</s:String>
+    <s:String x:Key="NoConnectedPlayers">Brak podłączonych graczy</s:String>
+    <s:String x:Key="ReloadMultiplayer">Przeładuj grę wieloosobową</s:String>
+    <!--  Status  -->
+    <s:String x:Key="StatusNone">Brak otwartych światów</s:String>
+    <s:String x:Key="StatusOpenWorld">Serwer otwarty</s:String>
+    <s:String x:Key="StatusConnectedToUser">Połączono z serwerem</s:String>
+    <!--    -->
+    <!--  General Settings  -->
+    <!--    -->
+    <!--  General Settings -> General  -->
+    <s:String x:Key="GameProperties">Właściwości gry</s:String>
+    <s:String x:Key="JavaProperties">Właściwości Java</s:String>
+    <s:String x:Key="LauncherProperties">Właściwości launcher'a</s:String>
+    <s:String x:Key="GamePropertiesDescription">Dostosuj ustawienia gry.</s:String>
+    <s:String x:Key="JavaPropertiesDescription">Dostosuj Java dla Minecrafta.</s:String>
+    <s:String x:Key="LauncherPropertiesDescription">Dostosuj launcher do siebie.</s:String>
+    <!--  Game Properties  -->
+    <!--  Window Size  -->
+    <s:String x:Key="WindowSize">Rozmiar okna</s:String>
+    <s:String x:Key="WindowSizeDescription">Ustaw rozmiar okna Minecrafta.</s:String>
+    <!--  Ram  -->
+    <s:String x:Key="Ram">RAM</s:String>
+    <s:String x:Key="RamDescription">Ta opcja poprawi wydajność.</s:String>
+    <!--  Game Directory  -->
+    <s:String x:Key="GameDirectory">Folder z grą</s:String>
+    <s:String x:Key="GameDirectoryDescription">Wybierz folder dla gry.</s:String>
+    <!--  Java Properties  -->
+    <!--  Java Path  -->
+    <s:String x:Key="JavaPath">Ścieżka do Java</s:String>
+    <s:String x:Key="JavaPathDescription">Ścieżka do katalogu Java</s:String>
+    <!--  Java Path for higher 1.16.5  -->
+    <s:String x:Key="JavaPathHigher">Ścieżka do Java dla wersji powyżej 1.16.5</s:String>
+    <s:String x:Key="JavaPathHigherDescription">Ścieżka do katalogu Java dla wersji powyżej 1.16.5</s:String>
+    <!--  JVM Arguments  -->
+    <s:String x:Key="JVMArguments">Argumenty JVM</s:String>
+    <s:String x:Key="JVMArgumentsDescription">Argumenty maszyny wirtualnej Java</s:String>
+    <!--  Launcher Properties  -->
+    <!--  Console  -->
+    <s:String x:Key="Console">Konsola</s:String>
+    <s:String x:Key="ConsoleDescription">Uruchamia konsolę przy starcie gry.</s:String>
+    <!--  Hide Launcher  -->
+    <s:String x:Key="HideLauncher">Ukryj launcher</s:String>
+    <s:String x:Key="HideLauncherDescription">Ukrywa launcher przy uruchomieniu gry.</s:String>
+    <!--  Auto Instance Update  -->
+    <s:String x:Key="AutoInstanceUpdate">Automatycznie aktualizuj paczki</s:String>
+    <s:String x:Key="AutoInstanceUpdateDescription">Paczki w Twojej bibliotece są automatycznie aktualizowane.</s:String>
+    <!--  NightWorld Skins  -->
+    <s:String x:Key="NightWorldSkins">System skórek NightWorld</s:String>
+    <s:String x:Key="NightWorldSkinsDescription">W grze będzie wyświetlana skórka ustawiona w profilu.</s:String>
+    <!--    -->
+    <!--  Appearance  -->
+    <!--    -->
+    <s:String x:Key="AccentColor">Kolor akcentowy</s:String>
+    <s:String x:Key="ChooseAccentColor">Wybierz swój kolor akcentowy.</s:String>
+    <s:String x:Key="InterfaceTheme">Motyw interfejsu</s:String>
+    <s:String x:Key="ChooseTheme">Wybierz swój motyw.</s:String>
+    <!--    -->
+    <!--  Language  -->
+    <!--    -->
+    <s:String x:Key="ChooseLanguage">Wybierz język.</s:String>
+    <!--    -->
+    <!--  Accounts  -->
+    <!--    -->
+    <s:String x:Key="Accounts">Konta</s:String>
+    <!--    -->
+    <!--  About  -->
+    <!--    -->
+    <s:String x:Key="Authors">Autorzy</s:String>
+    <s:String x:Key="Founders">Założyciele</s:String>
+    <s:String x:Key="Developers">Programiści</s:String>
+    <s:String x:Key="Contacts">Kontakt</s:String>
+    <s:String x:Key="OurVkontakteGroup">Nasza grupa na VK</s:String>
+    <s:String x:Key="Protection">Ten program jest chroniony prawami autorskimi i międzynarodowymi umowami. Nielegalne powielanie lub rozpowszechnianie tego programu lub jego części wiąże się z odpowiedzialnością cywilną i karną.</s:String>
+    <s:String x:Key="Copyright">© NightWorld, 2025 r. Wszelkie prawa zastrzeżone.</s:String>
+    <s:String x:Key="DenialOfResponsibility">NIE JEST OFICJALNYM [PRODUKTEM/USŁUGĄ/ZDARZENIEM ITD.] MINECRAFTA. NIE JEST ZATWIERDZONE ANI POWIĄZANE Z FIRMA MOJANG LUB MICROSOFT</s:String>
+    <!--    -->
+    <!--  Instance Factory Modal  -->
+    <!--    -->
+    <!--  Instance Factory Left Modal Menu Tabs Titles  -->
+    <s:String x:Key="Create">Tworzenie</s:String>
+    <s:String x:Key="Import">Import</s:String>
+    <s:String x:Key="Distributions">Dystrybucje</s:String>
+    <!--    -->
+    <!--  Instance Form  -->
+    <!--    -->
+    <!--  Logo  -->
+    <s:String x:Key="More">Więcej</s:String>
+    <!--  Upper Buttons  -->
+    <s:String x:Key="Play">Graj</s:String>
+    <s:String x:Key="Launch">Uruchom</s:String>
+    <!--  LowerButtons  -->
+    <s:String x:Key="DeleteInstance">Usuń paczkę</s:String>
+    <s:String x:Key="Export">Eksport</s:String>
+    <s:String x:Key="OpenFolder">Otwórz folder</s:String>
+    <s:String x:Key="ExploreAddons">Przeglądaj dodatki</s:String>
+    <s:String x:Key="AddToLibrary">Dodaj do biblioteki</s:String>
+    <s:String x:Key="RemoveFromLibrary">Usuń z biblioteki</s:String>
+    <s:String x:Key="CancelDownload">Anuluj pobieranie</s:String>
+    <!--  Visit Offical Page  -->
+    <s:String x:Key="VisitCurseforge">Przejdź do Curseforge</s:String>
+    <s:String x:Key="VisitModrinth">Przejdź do Modrinth</s:String>
+    <s:String x:Key="VisitNightworld">Przejdź do NightWorld</s:String>
+    <!--    -->
+    <!--  Instance Overview Menu  -->
+    <!--    -->
+    <s:String x:Key="Version">Wersja</s:String>
+    <s:String x:Key="Download">Pobierz</s:String>
+    <!--    -->
+    <!--  Instance Profile  -->
+    <!--    -->
+    <s:String x:Key="Overview">Przegląd</s:String>
+    <s:String x:Key="Addons">Dodatki</s:String>
+    <s:String x:Key="AboutInstance">O paczce</s:String>
+    <!--    -->
+    <!--  Instance Profile Left Panel  -->
+    <!--    -->
+    <s:String x:Key="Back">Wstecz</s:String>
+    <s:String x:Key="Version:">Wersja gry:</s:String>
+    <s:String x:Key="GameType:">Typ gry:</s:String>
+    <s:String x:Key="PlayedTime:">Czas gry:</s:String>
+    <s:String x:Key="DownloadCount:">Pobrane:</s:String>
+    <!--    -->
+    <!--  Instance Profile Addons  -->
+    <!--    -->
+    <s:String x:Key="Mods">Mody</s:String>
+    <s:String x:Key="Resourcepacks">Resourcepacki</s:String>
+    <s:String x:Key="Maps">Mapy</s:String>
+    <s:String x:Key="Shaders">Shadery</s:String>
+    <!--  Sort By  -->
+    <s:String x:Key="Name">Nazwa</s:String>
+    <s:String x:Key="Author">Autor</s:String>
+    <s:String x:Key="FileName">Nazwa pliku</s:String>
+    <!--  By Name  -->
+    <s:String x:Key="ModName">Nazwa moda</s:String>
+    <s:String x:Key="ResourcepackName">Nazwa resourcepacka</s:String>
+    <s:String x:Key="MapName">Nazwa mapy</s:String>
+    <s:String x:Key="ShaderName">Nazwa shadera</s:String>
+    <!--  By Author  -->
+    <s:String x:Key="ModAuthor">Autor moda</s:String>
+    <s:String x:Key="ResourcepackAuthor">Autor resourcepacka</s:String>
+    <s:String x:Key="MapAuthor">Autor mapy</s:String>
+    <s:String x:Key="ShaderAuthor">Autor shadera</s:String>
+    <!--  By File Name  -->
+    <s:String x:Key="ModFileName">Nazwa pliku moda</s:String>
+    <s:String x:Key="ResourcepackFileName">Nazwa pliku resourcepacka</s:String>
+    <s:String x:Key="MapFileName">Nazwa pliku mapy</s:String>
+    <s:String x:Key="ShaderFileName">Nazwa pliku shadera</s:String>
+    <!--    -->
+    <!--  Instance Profile Settings  -->
+    <!--    -->
+    <s:String x:Key="Configuration">Konfiguracja</s:String>
+    <s:String x:Key="InstanceNameDescription">Tak nazwie się paczka w bibliotece</s:String>
+    <s:String x:Key="Summary">Streszczenie</s:String>
+    <s:String x:Key="SummaryDescription">Krótki opis tej paczki.</s:String>
+    <s:String x:Key="Description">Opis</s:String>
+    <s:String x:Key="DescriptionAdditional">Pełny opis tej paczki.</s:String>
+    <!--    -->
+    <!--  Instance Profile Configuration  -->
+    <!--    -->
+    <s:String x:Key="GameType">Typ gry</s:String>
+    <s:String x:Key="GameTypeDescription">Vanilla / Loader</s:String>
+    <s:String x:Key="VersionDescription">Opis wersji.</s:String>
+    <s:String x:Key="ModloaderVersion">Wersja loadera</s:String>
+    <s:String x:Key="ModloaderVersionDescription">Wybierz wersję dla wybranego loadera.</s:String>
+    <s:String x:Key="IsShowSnapshots">Pokaż snapshoty?</s:String>
+    <s:String x:Key="IsShowSnapshotsDescription">Pokazuje snapshoty w rozwijanej liście wersji gry.</s:String>
+    <s:String x:Key="Optifine">Optifine</s:String>
+    <s:String x:Key="OptifineDescription">Instaluje Optifine do tej paczki.</s:String>
+    <!--    -->
+    <!--  Addons Repository  -->
+    <!--    -->
+    <s:String x:Key="Install">Zainstaluj</s:String>
+    <s:String x:Key="Categories">Kategorie</s:String>
+    <s:String x:Key="Search...">Szukaj...</s:String>
+    <s:String x:Key="SortBy">Sortuj według</s:String>
+    <s:String x:Key="ShowPerPage">Pokaż na stronie</s:String>
+    <s:String x:Key="Accept">Zaakceptuj</s:String>
+    <s:String x:Key="Installing...">Instalowanie...</s:String>
+    <!--    -->
+    <!--  Modrinth Addon Page  -->
+    <!--    -->
+    <s:String x:Key="ProjectMembers">Uczestnicy projektu</s:String>
+    <s:String x:Key="TechnicalInformation">Informacje techniczne</s:String>
+    <s:String x:Key="ExternalResources">Zewnętrzne źródła</s:String>
+    <s:String x:Key="Created">Utworzono</s:String>
+    <s:String x:Key="Updated">Zaktualizowano</s:String>
+    <s:String x:Key="License">Licencja</s:String>
+    <s:String x:Key="ClientSide">Strona klienta</s:String>
+    <s:String x:Key="ServerSide">Strona serwera</s:String>
+    <s:String x:Key="ProjectId">ID Projektu</s:String>
+    <s:String x:Key="Required">Wymagany</s:String>
+    <s:String x:Key="Unsupported">Nieobsługiwany</s:String>
+    <s:String x:Key="Downloads1">pobranie</s:String>
+    <s:String x:Key="Downloads2">pobrania</s:String>
+    <s:String x:Key="Downloads3">pobrań</s:String>
+    <s:String x:Key="Followers1">obserwujący</s:String>
+    <s:String x:Key="Followers2">obserwujących</s:String>
+    <s:String x:Key="Followers3">obserwujących</s:String>
+    <s:String x:Key="Gallery">Galeria</s:String>
+    <s:String x:Key="Changelog">Historia zmian</s:String>
+    <s:String x:Key="Versions">Wersje</s:String>
+    <s:String x:Key="Update">Aktualizuj</s:String>
+    <s:String x:Key="Delete">Usuń</s:String>
+    <s:String x:Key="ProjectFound">znaleziono projektów</s:String>
+    <!--  Instance Factory  -->
+    <s:String x:Key="InstanceName">Nazwa paczki</s:String>
+    <s:String x:Key="CreateInstance">Utwórz paczkę</s:String>
+    <!--  Export  -->
+    <s:String x:Key="ExportProperties">Właściwości eksportu</s:String>
+    <s:String x:Key="ExportInstanceNameDescription">Będzie widoczna po eksporcie w bibliotece.</s:String>
+    <s:String x:Key="FoldersAndFiles">Foldery i pliki</s:String>
+    <s:String x:Key="FoldersAndFilesDescription">Wybierz foldery i pliki do eksportu.</s:String>
+    <s:String x:Key="FullExport">Pełny eksport</s:String>
+    <s:String x:Key="InstanceExport">Eksport paczki</s:String>
+    <s:String x:Key="ExportProcessActive">Trwa eksportowanie paczki...</s:String>
+    <!--  Import  -->
+    <s:String x:Key="ImportDragDropFieldDescription">Upuść archiwum z paczką, aby rozpocząć import.</s:String>
+    <s:String x:Key="Review">Podgląd</s:String>
+    <!--  Filter Sorting  -->
+    <s:String x:Key="Source">Źródło</s:String>
+    <s:String x:Key="Sorting">Sortowanie</s:String>
+    <!--  Sources  -->
+    <s:String x:Key="AllSource">Wszystkie źródła</s:String>
+    <s:String x:Key="LocalSource">Lexplosion</s:String>
+    <s:String x:Key="Curseforge">Curseforge</s:String>
+    <s:String x:Key="Modrinth">Modrinth</s:String>
+    <s:String x:Key="NightWorld">NightWorld</s:String>
+    <s:String x:Key="Or">Lub</s:String>
+    <s:String x:Key="And">I</s:String>
+    <!--  Categories  -->
+    <s:String x:Key="CategoriesSearchBoxPlaceholder">Wybierz kategorię do filtrowania...</s:String>
+    <!--  Modrinth  -->
+    <s:String x:Key="ModrinthRelevance">Trafność</s:String>
+    <s:String x:Key="ModrinthDownloads">Liczba pobrań</s:String>
+    <s:String x:Key="ModrinthFollows">Obserwujący</s:String>
+    <s:String x:Key="ModrinthUpdated">Data aktualizacji</s:String>
+    <s:String x:Key="ModrinthNewest">Data utworzenia</s:String>
+    <!--  Curseforge  -->
+    <s:String x:Key="CurseforgeRelevance">Trafność</s:String>
+    <s:String x:Key="CurseforgeFeatured">Trafność</s:String>
+    <s:String x:Key="CurseforgePopularity">Popularność</s:String>
+    <s:String x:Key="CurseforgeLastUpdated">Ostatnia aktualizacja</s:String>
+    <s:String x:Key="CurseforgeCreationDate">Data utworzenia</s:String>
+    <s:String x:Key="CurseforgeTotalDownloads">Liczba pobrań</s:String>
+    <s:String x:Key="CurseforgeName">A-Z</s:String>
+    <!--  Accounts  -->
+    <s:String x:Key="Active">Aktywny</s:String>
+    <s:String x:Key="NotActive">Nieaktywny</s:String>
+    <s:String x:Key="TypingNicknamePlaceholder">Wpisz nick...</s:String>
+    <!--  Funcs  -->
+    <s:String x:Key="Activate">Aktywuj</s:String>
+    <s:String x:Key="DoGameLauncher">Ustaw jako domyślny</s:String>
+    <s:String x:Key="Signout">Wyloguj</s:String>
+    <s:String x:Key="GameLauncher">Uruchamianie gry</s:String>
+    <!--  Account Factory  -->
+    <s:String x:Key="AddingAccount">Dodawanie konta</s:String>
+    <s:String x:Key="Login">Login</s:String>
+    <s:String x:Key="Password">Hasło</s:String>
+    <s:String x:Key="AccountType">Typ konta</s:String>
+    <s:String x:Key="AccountTypeDescription">System logowania</s:String>
+    <s:String x:Key="LoginAccountFactoryDescription">Login lub email konta</s:String>
+    <s:String x:Key="PasswordAccountFactoryDescription">Hasło konta</s:String>
+    <s:String x:Key="AddAccount">Dodaj konto</s:String>
+    <s:String x:Key="LoginExample">Na przykład: _Hel2x_</s:String>
+    <!--  Nightworld Limited Pages Curtains  -->
+    <s:String x:Key="OnlyAvailableWithNightWorldAccount">Dostępne tylko przez konto NightWorld</s:String>
+    <s:String x:Key="OnlyAvailableWithNightWorldAccountDescription">Te funkcje launcher'a dostępne są tylko po zalogowaniu przez konto NightWorld, nie musisz go ustawiać jako domyślnego.</s:String>
+    <s:String x:Key="CreateNightWorldAccount">Utwórz konto NightWorld</s:String>
+    <s:String x:Key="LoginWithYourNightWorldAccount">Zaloguj się przez NightWorld</s:String>
+    <!--  Friends DropdownMenu  -->
+    <s:String x:Key="Unfriend">Usuń ze znajomych</s:String>
+    <s:String x:Key="ViewProfile">Otwórz profil</s:String>
+    <!--  Instance Share  -->
+    <s:String x:Key="Share">Udostępnij</s:String>
+    <s:String x:Key="ShareInstance">Rozpocznij udostępnianie tej paczki</s:String>
+    <s:String x:Key="ActiveShares">Twoje udostępnienia</s:String>
+    <s:String x:Key="CurseforgeCatalogLoading">Trwa ładowanie katalogu Curseforge</s:String>
+    <!--  Account Funcs  -->
+    <s:String x:Key="LaunchAccount">Ustaw jako domyślne</s:String>
+    <s:String x:Key="MakeAccountActive">Aktywuj konto</s:String>
+    <s:String x:Key="ReloadAccount">Odśwież</s:String>
+    <s:String x:Key="LogoutAccount">Usuń</s:String>
+    <s:String x:Key="LogoutAllAccounts">Usuń wszystkie konta</s:String>
+    <s:String x:Key="AddNewAccount">Dodaj nowe konto</s:String>
+    <!--  Addon ToolTip  -->
+    <s:String x:Key="AddNewAddon">Zainstaluj</s:String>
+    <s:String x:Key="AddonOpenFolder">Otwórz folder</s:String>
+    <s:String x:Key="AddonReloadList">Odśwież listę</s:String>
+    <s:String x:Key="AddonChangeView">Zmień widok</s:String>
+    <!--  Instance Settings  -->
+    <s:String x:Key="DisplayResolution">Rozdzielczość ekranu</s:String>
+    <s:String x:Key="Browse">Przeglądaj</s:String>
+    <s:String x:Key="JavaResetPath">Zresetuj ścieżkę do Java</s:String>
+    <s:String x:Key="AcceptFriendRequest">Zaakceptuj prośbę</s:String>
+    <s:String x:Key="DeclineFriendRequest">Odrzuć prośbę</s:String>
+    <s:String x:Key="CancelFriendRequest">Anuluj prośbę</s:String>
+    <s:String x:Key="SendFriendRequest">Wyślij prośbę</s:String>
+    <!--  Paginator  -->
+    <s:String x:Key="PaginatorPrevious">Poprzednia</s:String>
+    <s:String x:Key="PaginatorNext">Następna</s:String>
+    <s:String x:Key="PaginatorPage">Strona</s:String>
+    <s:String x:Key="PaginatorPageOf">z</s:String>
+    <!--  ToolTip Appearance Settings  -->
+    <s:String x:Key="Tooltip">Podpowiedzi</s:String>
+    <s:String x:Key="TooltipDescription">Ustawienia podpowiedzi</s:String>
+    <s:String x:Key="ToolTipState">Stan podpowiedzi</s:String>
+    <s:String x:Key="ToolTipStateDescription">Ustawia stan podpowiedzi (włączone/wyłączone)</s:String>
+    <s:String x:Key="InitialShowDelay">Opóźnienie początkowe</s:String>
+    <s:String x:Key="InitialShowDelayDescription">Opóźnienie (w ms) przed pokazaniem podpowiedzi po najechaniu myszą.</s:String>
+    <s:String x:Key="BetweenShowDelay">Opóźnienie między podpowiedziami</s:String>
+    <s:String x:Key="BetweenShowDelayDescription">Czas (w ms), w którym możesz przejść od jednej podpowiedzi do drugiej bez ponownego opóźnienia.</s:String>
+    <!--  InstanceForm  -->
+    <s:String x:Key="Downloaded">Pobrano</s:String>
+    <!--  Instance Form Download Process  -->
+    <s:String x:Key="DownloadPreparing">Trwa przygotowanie do pobierania...</s:String>
+    <s:String x:Key="JavaInstalling">Trwa instalacja Java</s:String>
+    <s:String x:Key="InstanceDownloading">Paczka jest instalowana...</s:String>
+    <s:String x:Key="Stage">Etap</s:String>
+    <s:String x:Key="VerifyIntegrityGameFiles">Sprawdzanie integralności plików gry...</s:String>
+    <s:String x:Key="DownloadCanceling">Anulowanie pobierania...</s:String>
+    <s:String x:Key="AddonsListLoadingPlaceholder">Trwa ładowanie listy dodatków...</s:String>
+    <s:String x:Key="Technology">Technologia</s:String>
+    <s:String x:Key="WorldGen">Generacja świata</s:String>
+    <s:String x:Key="All">Wszystko</s:String>
+    <s:String x:Key="Features">Cechy</s:String>
+    <s:String x:Key="Performanceimpact">Wpływ na wydajność</s:String>
+    <s:String x:Key="Resolutions">Rozdzielczość tekstur</s:String>
+    <s:String x:Key="Website">Strona internetowa</s:String>
+    <s:String x:Key="Installed">Zainstalowane</s:String>
+    <s:String x:Key="Paginator">Paginator</s:String>
+    <s:String x:Key="Searchbox">Pole wyszukiwania</s:String>
+    <s:String x:Key="InstalledList">Zainstalowane</s:String>
+    <s:String x:Key="SearchAddonByNamePlaceholder">Nazwa dodatku</s:String>
+    <s:String x:Key="AddonInfoDownloadsTooltip">Liczba pobrań</s:String>
+    <s:String x:Key="AddonInfoLatestReleaseTooltip">Data ostatniej aktualizacji</s:String>
+    <s:String x:Key="AddonInfoCreationDateTooltip">Data utworzenia</s:String>
+    <s:String x:Key="AddonInfoGameVersionTooltip">Wersja Minecrafta</s:String>
+    <!--  region Authorization  -->
+    <s:String x:Key="DoNothaveAnyAccount">Nie masz konta?</s:String>
+    <s:String x:Key="ForgotPassword">Zapomniałeś hasła?</s:String>
+    <s:String x:Key="SingUp">Zarejestruj się</s:String>
+    <s:String x:Key="SelectAuthorizationMethod">Wybierz metodę logowania</s:String>
+    <s:String x:Key="AuthorizationViaNightWorld">Logowanie przez NightWorld</s:String>
+    <s:String x:Key="Via">Przez</s:String>
+    <s:String x:Key="RememberMe">Zapamiętaj mnie</s:String>
+    <s:String x:Key="LogIn">Zaloguj się</s:String>
+    <s:String x:Key="RegistrationInNightWorld">Rejestracja NightWorld</s:String>
+    <s:String x:Key="EmailAddress">Email</s:String>
+    <s:String x:Key="CreateAccount">Utwórz konto</s:String>
+    <s:String x:Key="AlreadyHaveAnyAccount">Masz już konto?</s:String>
+    <s:String x:Key="ViaNightWorld">Przez NightWorld</s:String>
+    <s:String x:Key="ViaMicrosoft">Przez Microsoft</s:String>
+    <s:String x:Key="WithoutAccount">Bez konta</s:String>
+    <s:String x:Key="Microsoft">Microsoft</s:String>
+    <s:String x:Key="NoAuth">Bez konta</s:String>
+    <s:String x:Key="AuthorizationWithoutAccountTitle">Logowanie bez konta</s:String>
+    <s:String x:Key="AuthorizationWithoutAccountDescription">Wybierz nick do logowania bez konta.</s:String>
+    <s:String x:Key="AuthorizationWithoutAccountNicknamePlaceholder">Wpisz żądany nick</s:String>
+    <s:String x:Key="Continue">Kontynuuj</s:String>
+    <s:String x:Key="AuthorizationMicrosoftTitle">Logowanie przez Microsoft</s:String>
+    <s:String x:Key="AuthorizationMicrosoftAccountDescription">Oczekiwanie na zakończenie logowania przez Microsoft.</s:String>
+    <s:String x:Key="ManualInput">Wprowadzenie ręczne</s:String>
+    <s:String x:Key="ManualInputMicrosoftTokenTitle">Wprowadź token Microsoft ręcznie</s:String>
+    <s:String x:Key="WrongTokenFormat">Niepoprawny format tokenu</s:String>
+    <s:String x:Key="CorrectTokenFormat">Format tokenu poprawny</s:String>
+    <s:String x:Key="ManualInputTokenPlaceholder">Wpisz token Microsoft w to pole</s:String>
+    <s:String x:Key="Apply">Zastosuj</s:String>
+    <s:String x:Key="Cancel">Anuluj</s:String>
+    <s:String x:Key="Important">Ważne!</s:String>
+    <s:String x:Key="MicrosoftManualInputImportantMessage">Nigdy i nikomu nie udostępniaj swojego tokena autoryzacyjnego. Jeśli trafi on w czyjeś ręce, osoba ta uzyska dostęp do Twojego konta!</s:String>
+    <!--  endregion Authorization  -->
+    <!--  region Notifications Content  -->
+    <!--  endregion Notifications Content  -->
+    <s:String x:Key="CustomColor">Własny kolor</s:String>
+    <s:String x:Key="CustomColorDescription">Wybierz własny kolor akcentowy</s:String>
+    <!--  Instance Configuration  -->
+    <s:String x:Key="SaveChanges">Zapisz zmiany</s:String>
+    <s:String x:Key="LoadYourLogo">Załaduj logo</s:String>
+    <s:String x:Key="UnsavedChangesWarningText">Uważaj, nie zapisano zmian!</s:String>
+    <s:String x:Key="Reset">Resetuj</s:String>
+    <s:String x:Key="Files">Pliki</s:String>
+    <s:String x:Key="Files_LowerCase">pliki</s:String>
+    <!--  Ad Servers  -->
+    <s:String x:Key="PartnerServers">Serwery partnerów</s:String>
+    <s:String x:Key="Add">Dodaj</s:String>
+    <s:String x:Key="AutoConnectToServer">Automatycznie łącz z serwerem</s:String>
+    <s:String x:Key="AvailableGameClientsNotFound">Nie znaleziono pasujących klientów</s:String>
+    <s:String x:Key="SelectInstanceForServer">Wybierz klienta do dodania serwera</s:String>
+    <s:String x:Key="ConfirmSelection">Potwierdź wybór</s:String>
+    <s:String x:Key="CreateNewInstanceForServer">Utwórz nowego klienta dla serwera</s:String>
+    <s:String x:Key="InstallServerInstance">Instalacja paczki serwera</s:String>
+    <s:String x:Key="InstallServerInstanceDescription">Do gry na tym serwerze potrzebna jest paczka. Czy chcesz ją zainstalować?</s:String>
+    <s:String x:Key="ServerIpAddressCopied">Adres IP serwera został skopiowany</s:String>
+    <s:String x:Key="LoadingInstanceClientVersions">Trwa ładowanie wersji paczki</s:String>
+    <s:String x:Key="NoDistributionsAvailableForDownload">Brak dostępnych dystrybucji do pobrania</s:String>
+    <!--  region Notifications  -->
+    <!--    -->
+    <!--  Ad Server  -->
+    <!--    -->
+    <s:String x:Key="InstanceForServerAddedToLibrary">Paczka {0} została pomyślnie dodana do biblioteki!</s:String>
+    <!--    -->
+    <!--  Multiplayer  -->
+    <!--    -->
+    <s:String x:Key="MultiplayerReloaded">Gra wieloosobowa przeładowana</s:String>
+    <!--    -->
+    <!--  InstanceForm  -->
+    <!--    -->
+    <!--  Instance Launch  -->
+    <s:String x:Key="InstanceLaunchedSuccessfulNotification">Paczka {0} została uruchomiona pomyślnie.</s:String>
+    <s:String x:Key="InstanceLaunchedUnsuccessfulNotification">Nie udało się uruchomić paczki {0}.</s:String>
+    <!--  Instance Installing  -->
+    <s:String x:Key="DownloadCompletedSuccessfully">Pobieranie paczki {0} zakończyło się sukcesem.</s:String>
+    <s:String x:Key="FailedToDownloadFollowingFiles:_">Nie udało się pobrać następujących plików:{0}</s:String>
+    <s:String x:Key="FailedToDownloadSomeFiles">Nie udało się pobrać niektórych plików</s:String>
+    <s:String x:Key="RedownloadingMaySolveTheProblem">Ponowne pobieranie może pomóc, ale niekoniecznie.</s:String>
+    <s:String x:Key="ExternalIdIncorrect">Niepoprawny ID paczki.</s:String>
+    <s:String x:Key="ServerError">Błąd serwera.</s:String>
+    <s:String x:Key="FailedToGetDataFromServer">Nie udało się pobrać danych z serwera.</s:String>
+    <s:String x:Key="FileVerificationFailed">Nie udało się zweryfikować pliku.</s:String>
+    <s:String x:Key="VersionVerificationFailed">Nie udało się ustalić wersji gry.</s:String>
+    <s:String x:Key="ModloaderVerificationFailed">Nie udało się ustalić wersji loadera.</s:String>
+    <s:String x:Key="InvalidGameDirectory">Nieprawidłowy folder gry</s:String>
+    <s:String x:Key="FailedLoadInstanceManifest">Nie udało się wczytać manifestu paczki.</s:String>
+    <s:String x:Key="TrySetCustomJavaPath">Spróbuj ustawić własną ścieżkę do Java w ustawieniach.</s:String>
+    <s:String x:Key="InstanceDownloadCanceledSuccessfully">Pobieranie paczki zostało anulowane.</s:String>
+    <s:String x:Key="UnknownErrorTryRestartLauncher">Coś poszło nie tak... Spróbuj zrestartować launcher.</s:String>
+    <s:String x:Key="CurseforgeErrorTitle">Błąd Curseforge</s:String>
+    <s:String x:Key="NightWorldErrorTitle">Błąd NightWorld</s:String>
+    <s:String x:Key="GuardErrorTitle">Błąd Guard</s:String>
+    <s:String x:Key="VersionErrorTitle">Błąd wersji</s:String>
+    <s:String x:Key="ForgeVersionErrorTitle">Błąd wersji Forge</s:String>
+    <s:String x:Key="GamePathErrorTitle">Błąd ścieżki gry</s:String>
+    <s:String x:Key="ManifestErrorTitle">Błąd pliku manifestu</s:String>
+    <s:String x:Key="JavaDownloadErrorTitle">Błąd instalacji Java</s:String>
+    <s:String x:Key="UnknownErrorTitle">Nieznany błąd</s:String>
+    <s:String x:Key="InstanceName:_">Nazwa paczki: {0}</s:String>
+    <!--  endregion Notifications  -->
+    <!--  region ServerProfile  -->
+    <s:String x:Key="Status:">Status:</s:String>
+    <s:String x:Key="Online:">Online:</s:String>
+    <!--  endregion ServerProfile  -->
+    <!--  region Settings  -->
+    <!--  Java Errors  -->
+    <s:String x:Key="WrongJavaPathFormat">Niepoprawny format ścieżki do Java</s:String>
+    <s:String x:Key="JavaPathEmptyOrNull">Ścieżka nie może być pusta!</s:String>
+    <s:String x:Key="JavaPathExeDoesNotExists">Plik java.exe lub javaw.exe nie istnieje w tej ścieżce!</s:String>
+    <s:String x:Key="JavaPathWrongExe">Wybrana ścieżka prowadzi do nieprawidłowego pliku .exe!</s:String>
+    <s:String x:Key="JavaPathPathDoesNotExists">Wybrana ścieżka nie istnieje!</s:String>
+    <!--  endregion Settings  -->
+    <!--  region Instance Profile  -->
+    <s:String x:Key="OptifineVersion">Wersja Optifine</s:String>
+    <s:String x:Key="OptifineVersionDescription">Wybierz żądaną wersję Optifine</s:String>
+    <!--  endregion Instance Profile  -->
+    <!--  region Settings  -->
+    <s:String x:Key="MinecraftArguments">Argumenty dla Minecrafta</s:String>
+    <s:String x:Key="MinecraftArgumentsDescription">Umożliwia bardziej elastyczne konfigurowanie parametrów gry</s:String>
+    <s:String x:Key="NightWorldClient">Używaj NWClienta domyślnie</s:String>
+    <s:String x:Key="NightWorldClientDescription">Włącza kosmetyki i inne funkcje NightWorld</s:String>
+    <s:String x:Key="GamePathEmptyOrHasInvalidChars">Ścieżka jest pusta lub zawiera niedozwolone znaki: {0}</s:String>
+    <!--  endregion Settings  -->
+    <!--  region Import  -->
+    <s:String x:Key="ImportByUrlDescriptionPlaceholder">Lub link z Google Drive lub Yandex Disk</s:String>
+    <s:String x:Key="ImportCancelledNotification">Import paczki został anulowany</s:String>
+    <s:String x:Key="ImportUrlWrongPathNotification">Niepoprawny format linku</s:String>
+    <s:String x:Key="ImportResultSuccessful">Paczka {0} została pomyślnie zaimportowana i czeka w bibliotece</s:String>
+    <s:String x:Key="ImportResultZipFileError">Błąd otwierania pliku zip</s:String>
+    <s:String x:Key="ImportResultGameVersionError">Błąd wersji gry</s:String>
+    <s:String x:Key="ImportResultJavaDownloadError">Problem z pobieraniem Java</s:String>
+    <s:String x:Key="ImportResultIsOfflineMode">Tryb offline</s:String>
+    <s:String x:Key="ImportResultMovingFilesError">Błąd przenoszenia plików</s:String>
+    <s:String x:Key="ImportResultDownloadError">Błąd pobierania</s:String>
+    <s:String x:Key="ImportResultDirectoryCreateError">Błąd tworzenia katalogu</s:String>
+    <s:String x:Key="ImportResultWrongUrl">URL importu jest niepoprawny. Obsługujemy tylko Yandex Disk i Google Drive.</s:String>
+    <s:String x:Key="ImportResultManifestError">Błąd pliku manifestu.</s:String>
+    <s:String x:Key="ImportResultUnknownFileType">Nieznany typ pliku.</s:String>
+    <s:String x:Key="ImportResultUnknownError">Nieznany błąd</s:String>
+    <!--  endregion Import  -->
+    <!--  region Accounts  -->
+    <s:String x:Key="RemoveAccount">Usuwanie konta</s:String>
+    <s:String x:Key="RemoveAccountDescription">
+        Czy na pewno chcesz usunąć konto: {0}?
+        Aby odzyskać dostęp, musisz się ponownie zalogować!
+    </s:String>
+    <s:String x:Key="YesIWantRemoveAccount">Tak, chcę usunąć konto</s:String>
+    <s:String x:Key="RemoveAllAccount">Usuwanie wszystkich kont</s:String>
+    <s:String x:Key="RemoveAllAccountDescription">
+        Czy na pewno chcesz usunąć wszystkie konta?
+        Aby odzyskać dostęp, musisz się ponownie zalogować!
+    </s:String>
+    <s:String x:Key="YesIWantRemoveAllAccount">Tak, chcę usunąć wszystkie konta</s:String>
+    <!--  Notification  -->
+    <s:String x:Key="WrongLoginOrPassword">Nieprawidłowy login lub hasło.</s:String>
+    <s:String x:Key="NoConnectionToTheServer">Brak połączenia z serwerem!</s:String>
+    <s:String x:Key="TokenError">Błąd tokenu!</s:String>
+    <s:String x:Key="UnknownError">Nieznany błąd!</s:String>
+    <s:String x:Key="SessionExpiredRedirectToMicrosoft">Sesja wygasła. Przekierowuję do strony logowania Microsoft</s:String>
+    <s:String x:Key="TokenErrorRedirectToMicrosoft">Błąd tokenu. Przekierowuję do strony logowania Microsoft</s:String>
+    <s:String x:Key="SessionExpiredTryAuthAgain">Sesja wygasła. Spróbuj się ponownie zalogować</s:String>
+    <s:String x:Key="TokenErrorTryAuthAgain">Błąd tokenu. Spróbuj się ponownie zalogować</s:String>
+    <!--  endregion Accounts  -->
+    <!--  region Library  -->
+    <s:String x:Key="DeletingInstance">Usuwanie paczki</s:String>
+    <s:String x:Key="DeletingInstanceDescription">
+        Czy na pewno chcesz usunąć paczkę: {0}?
+        Nie będzie można jej odzyskać!
+    </s:String>
+    <s:String x:Key="YesIWantDeleteInstance">Tak, chcę usunąć paczkę</s:String>
+    <!--  endregion Library  -->
+    <!--  region Friends  -->
+    <!--  Notifications  -->
+    <s:String x:Key="FriendRequestHasBeenSent">Wysłano prośbę o dodanie do znajomych.</s:String>
+    <s:String x:Key="FriendRequestWasCancelled">Prośba o dodanie do znajomych została anulowana.</s:String>
+    <s:String x:Key="YouAnd_AreFriendsNow">Ty i {0} jesteście teraz znajomymi!</s:String>
+    <s:String x:Key="YouHaveDeclinedYourFriendRequest_">Odrzuciłeś prośbę od {0}.</s:String>
+    <!--  endregion Friends  -->
+    <!--  region Instance  -->
+    <!--  Notification  -->
+    <s:String x:Key="Instance_HasBeenInstalledSuccessful">Paczka {0} została pomyślnie zainstalowana</s:String>
+    <s:String x:Key="FailedToInstallColon_">Nie udało się zainstalować: {0}</s:String>
+    <!--  endregion Instance  -->
+    <s:String x:Key="LoginOrPasswordNotFilled">Login lub hasło nie zostały wypełnione!</s:String>
+    <s:String x:Key="AuthorizationProcessInProgress">Trwa proces logowania...</s:String>
+    <s:String x:Key="Information">Informacja</s:String>
+    <s:String x:Key="MicrosoftAccountAuthorizationDescription">Aby zalogować licencjonowane konto zostaniesz automatycznie przekierowany na stronę logowania Microsoft.</s:String>
+    <s:String x:Key="DoInstallTheLatestVersion">Zainstalować najnowszą wersję?</s:String>
+    <s:String x:Key="NWClientNotAvailableForThisVersion">NWClient niedostępny dla tej wersji</s:String>
+    <s:String x:Key="YouHaveNoActiveDistributions">Nie posiadasz aktywnych dystrybucji</s:String>
+    <s:String x:Key="InQueue">W kolejce</s:String>
+    <s:String x:Key="InConnect">Trwa łączenie</s:String>
+    <s:String x:Key="PostProcessing">Przetwarzanie plików</s:String>
+    <s:String x:Key="InProcess">W trakcie</s:String>
+    <s:String x:Key="Successful">Sukces</s:String>
+    <s:String x:Key="UnableToDetermineDataForImport">Nie udało się określić danych do importu paczki, wprowadź dane ręcznie!</s:String>
+    <s:String x:Key="YouAreAlreadyDistributingToThisClient">Już udostępniasz ten klient.</s:String>
+    <s:String x:Key="ActiveDistributingDescription">Ta strona zostanie odblokowana jak zatrzymasz aktywne udostępnienie w sekcji 'Twoje udostępnienia'</s:String>
+    <s:String x:Key="ThereAreNotAddons">Brak dodatków</s:String>
+    <s:String x:Key="GameLaunching">Uruchamianie gry...</s:String>
+    <s:String x:Key="ProcessColon">Proces:</s:String>
+    <s:String x:Key="UpdatingFiles">Aktualizacja plików</s:String>
+    <s:String x:Key="StageColon">Etap:</s:String>
+    <s:String x:Key="FilesColon">Pliki:</s:String>
+    <s:String x:Key="TotalDownloadedColon">Razem pobrano:</s:String>
+    <s:String x:Key="InstallingTheInstance">Instalacja paczki</s:String>
+    <s:String x:Key="ThereAreNotImages">Brak obrazów</s:String>
+    <s:String x:Key="ImagesLoading">Trwa ładowanie obrazów...</s:String>
+    <s:String x:Key="DescriptionLoading">Trwa ładowanie opisu...</s:String>
+    <s:String x:Key="DownloadingTheInstance">Pobieranie paczki</s:String>
+    <s:String x:Key="LoadingEllipsis">Ładowanie...</s:String>
+    <s:String x:Key="WeDidNotFindAnythingForThisRequest">Nic nie znaleziono dla tego zapytania</s:String>
+    <s:String x:Key="ThereAreNoIncomingFriendRequests">Brak wejściowych prośb o znajomość</s:String>
+    <s:String x:Key="ThereAreNoOutgoingFriendRequests">Brak wychodzących prośb o znajomość</s:String>
+    <s:String x:Key="Close">Zamknij</s:String>
+    <s:String x:Key="Notifications">Powiadomienia</s:String>
+    <s:String x:Key="LibraryEmptyDescription">Możesz dodać paczki do biblioteki przez katalog lub stworzyć własną paczkę</s:String>
+    <s:String x:Key="CreateNewInstance">Utwórz nową paczkę</s:String>
+    <s:String x:Key="MinecraftNotRunning">Minecraft nie jest uruchomiony.</s:String>
+    <s:String x:Key="InstanceDash_">Paczka: {0}</s:String>
+    <s:String x:Key="GoToCatalog">Przejdź do katalogu</s:String>
+    <s:String x:Key="LibraryEmpty">Biblioteka jest pusta</s:String>
+    <s:String x:Key="WelcomeDescription">Witamy w nowej epoce</s:String>
+    <s:String x:Key="WelcomePageThemeSelectDescription">Wybierz preferowany styl interfejsu.</s:String>
+    <!--  Tray  -->
+    <s:String x:Key="ContactSupport">Skontaktuj się z pomocą</s:String>
+    <s:String x:Key="TrayHideLauncher">Ukryj launcher</s:String>
+    <s:String x:Key="TrayReloadMultiplayer">Uruchom ponownie grę wieloosobową</s:String>
+    <s:String x:Key="MaximizeLauncher">Pokaż launcher</s:String>
+    <s:String x:Key="CloseInstance">Zamknij paczkę</s:String>
+    <!--  Console Header  -->
+    <s:String x:Key="InstanceNameColon">Paczka:</s:String>
+    <s:String x:Key="VersionColon">Wersja:</s:String>
+    <s:String x:Key="TypeColon">Typ:</s:String>
+    <!--  LeftPanel Help Block  -->
+    <s:String x:Key="HowToPlay">Jak grać?</s:String>
+    <s:String x:Key="Support">Wsparcie</s:String>
+    <s:String x:Key="LoggingMode">Tryb logowania</s:String>
+    <s:String x:Key="LoggingModeDescription">Włącza rejestrowanie logów</s:String>
+    <s:String x:Key="ThereAreNoAddonVersion">Lista wersji była pusta. Nie wiemy co się stało(</s:String>
+    <s:String x:Key="SuccessDirectoryTransfer">Kopiowanie danych starego folderu do nowego zakończyło się sukcesem.</s:String>
+    <s:String x:Key="DirectoryTransfer">Pełne kopiowanie starego folderu</s:String>
+    <s:String x:Key="DirectoryTransferDescription">Czy chcesz skopiować cały stary folder?</s:String>
+    <s:String x:Key="DirectoryTransferAgreeButtonText">Skopiuj całość</s:String>
+    <s:String x:Key="DirectoryTransferLoading">Trwa kopiowanie starego folderu do nowego...</s:String>
+    <s:String x:Key="RestartLauncher">Wymagane ponowne uruchomienie</s:String>
+    <s:String x:Key="RestartLauncherDescription">Aby zmiany zaczęły obowiązywać, należy zrestartować launcher. Bez restartu może działać niepoprawnie.</s:String>
+    <s:String x:Key="RestartLauncherButtonAction">Tak, chcę teraz zrestartować launcher</s:String>
+    <s:String x:Key="AddonDragAndDropDescription">Przeciągnij .jar, .zip lub .rar, aby zainstalować</s:String>
+    <s:String x:Key="ChangeMenuPosition">Zmień pozycję menu</s:String>
+    <s:String x:Key="AppHeaderTemplate">Styl nagłówka aplikacji</s:String>
+    <s:String x:Key="AppHeaderTemplateDescription">Wybierz wizualny styl nagłówka</s:String>
+    <s:String x:Key="ShareActiveTime">Aktywne</s:String>
+    <!--  Minutes  -->
+    <s:String x:Key="Min">min</s:String>
+    <s:String x:Key="Importing">Importowanie...</s:String>
+    <s:String x:Key="InstanceShareColon_">Udostępnianie paczki: {0}</s:String>
+    <s:String x:Key="ShareExport_Sucessfully">Paczka {0} została udostępniona!</s:String>
+    <s:String x:Key="ShareExportTempPathError">Błąd tworzenia tymczasowego folderu!</s:String>
+    <s:String x:Key="ShareExportFileCopyError">Błąd kopiowania pliku! Może brakować miejsca na dysku.</s:String>
+    <s:String x:Key="ShareExportInfoFileError">Błąd tworzenia pliku instanceInfo.json</s:String>
+    <s:String x:Key="ShareExportZipFileError">Błąd tworzenia archiwum zip paczki</s:String>
+    <s:String x:Key="ShareExportNotExistsValidAccount">Coś się popsuło!</s:String>
+    <s:String x:Key="InstanceExportColon_">Eksport paczki: {0}</s:String>
+    <s:String x:Key="Export_Sucessfully">Paczka {0} została pomyślnie wyeksportowana!</s:String>
+    <s:String x:Key="ExportTempPathError">Błąd tworzenia tymczasowego folderu!</s:String>
+    <s:String x:Key="ExportFileCopyError">Błąd kopiowania pliku! Może brakować miejsca na dysku.</s:String>
+    <s:String x:Key="ExportInfoFileError">Błąd tworzenia pliku instanceInfo.json</s:String>
+    <s:String x:Key="ExportZipFileError">Błąd tworzenia archiwum zip paczki</s:String>
+    <s:String x:Key="ExportNotExistsValidAccount">Coś się popsuło!</s:String>
+    <s:String x:Key="CoopertationContact">W sprawie współpracy</s:String>
+    <s:String x:Key="OurVkGroup">Nasza grupa VK</s:String>
+    <s:String x:Key="OurDiscordServer">Nasz serwer Discord</s:String>
+    <s:String x:Key="OurYoutube">Nasz YouTube</s:String>
+    <s:String x:Key="SourceCode">Kod źródłowy</s:String>
+    <s:String x:Key="OutWebsite">Nasza strona</s:String>
+</ResourceDictionary>
