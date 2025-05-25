@@ -269,5 +269,13 @@ namespace Lexplosion.WPF.NewInterface.Controls.OldInstanceForm
                 _model.Update();
             }
         }
+
+        private void RemoveFromGroup_Click(object sender, RoutedEventArgs e)
+        {
+            if (_model != null && !_model.IsSelectedGroupDefault)
+            {
+                _model.RemoveFromGroup();
+            }
+        }
     }
 }

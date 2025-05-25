@@ -983,6 +983,18 @@
                                             </core:If.True>
                                         </core:If>
 
+                                        <core:If Condition="{Binding IsSelectedGroupDefault}">
+                                            <core:If.False>
+                                                <!--  Удалить  -->
+                                                <controls:AdvancedButton
+                                                    x:Name="RemoveFromGroup"
+                                                    Click="RemoveFromGroup_Click"
+                                                    IconData="{DynamicResource PDRemoveFromLibrary}"
+                                                    Template="{StaticResource DropDownButton}"
+                                                    Text="{DynamicResource RemoveFromGroup}" />
+                                            </core:If.False>
+                                        </core:If>
+
                                         <core:If Condition="{Binding IsInstalled}">
                                             <core:If.True>
                                                 <!--  Удалить  -->

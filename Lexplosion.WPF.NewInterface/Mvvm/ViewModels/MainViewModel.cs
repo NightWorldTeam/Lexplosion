@@ -223,7 +223,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
 
                         if (viewModel == null)
                         {
-                            viewModel = new InstanceModelBase(AppCore, instanceClient, Model.Export, Model.SetRunningGame);
+                            var args = new InstanceModelArgs(AppCore, instanceClient, Model.Export, Model.SetRunningGame);
+                            viewModel = new InstanceModelBase(args);
                         }
                     }
                     _mainMenuLayoutViewModel.ToInstanceProfile(viewModel);

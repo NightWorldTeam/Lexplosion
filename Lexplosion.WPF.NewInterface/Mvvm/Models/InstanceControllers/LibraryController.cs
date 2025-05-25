@@ -60,6 +60,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
 
             InstanceModelBase.GlobalAddedToLibrary += (im) => Add(im);
             InstanceModelBase.GlobalDeletedEvent += Remove;
+            InstanceModelBase.GlobalGroupRemovedEvent += Remove;
 
             _exportFunc = export;
             _setRunningGame = setRunningGame;
@@ -87,7 +88,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
             InstanceModelBase? instanceModelBase = null;
             App.Current.Dispatcher.Invoke(() =>
             {
-                instanceModelBase = new InstanceModelBase(_appCore, instanceClient, _exportFunc, _setRunningGame);
+                var args = new InstanceModelArgs(_appCore, instanceClient, _exportFunc, _setRunningGame, group: SelectedGroup);
+                instanceModelBase = new InstanceModelBase(args);
                 Add(instanceModelBase);
             });
 
@@ -99,7 +101,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
             InstanceModelBase? instanceModelBase = null;
             App.Current.Dispatcher.Invoke(() =>
             {
-                instanceModelBase = new InstanceModelBase(_appCore, instanceClient, _exportFunc, _setRunningGame, instanceDistribution);
+                var args = new InstanceModelArgs(_appCore, instanceClient, _exportFunc, _setRunningGame, instanceDistribution, group: SelectedGroup);
+                instanceModelBase = new InstanceModelBase(args);
                 Add(instanceModelBase);
             });
 
@@ -111,7 +114,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
             InstanceModelBase? instanceModelBase = null;
             App.Current.Dispatcher.Invoke(() =>
             {
-                instanceModelBase = new InstanceModelBase(_appCore, instanceClient, _exportFunc, _setRunningGame, importData: importData);
+                var args = new InstanceModelArgs(_appCore, instanceClient, _exportFunc, _setRunningGame, importData: importData, group: SelectedGroup);
+                instanceModelBase = new InstanceModelBase(args);
                 Add(instanceModelBase);
             });
 

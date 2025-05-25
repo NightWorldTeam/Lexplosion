@@ -16,6 +16,33 @@ using System.Runtime.CompilerServices;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 {
+    public class InstanceModelArgs 
+    {
+        public AppCore AppCore;
+        public InstanceClient InstanceClient;
+        public Action<InstanceClient> ExportFunc; 
+        public Action<InstanceModelBase> SetRunningGame;
+        public InstanceDistribution InstanceDistribution = null; 
+        public ImportData? ImportData = null;
+        public InstancesGroup? Group;
+
+        public InstanceModelArgs()
+        {
+            
+        }
+
+        public InstanceModelArgs(AppCore appCore, InstanceClient instanceClient, Action<InstanceClient> exportFunc, Action<InstanceModelBase> setRunningGame, InstanceDistribution instanceDistribution = null, ImportData? importData = null, InstancesGroup? group = null)
+        {
+            AppCore = appCore;
+            InstanceClient = instanceClient;
+            ExportFunc = exportFunc;
+            SetRunningGame = setRunningGame;
+            InstanceDistribution = instanceDistribution;
+            ImportData = importData;
+            Group = group;
+        }
+    }
+
     public sealed class DownloadingData : ObservableObject
     {
         /// <summary>
@@ -121,9 +148,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 		private readonly ClientsManager _clientsManager = Runtime.ClientsManager;
 		private readonly Action<InstanceClient> _exportFunc;
 		private readonly Action<InstanceModelBase> _setRunningGame;
+        private readonly InstancesGroup _instancesGroup;
 
 		private readonly AppCore _appCore;
-
 
         private Action _openAddonPage;
 
@@ -139,7 +166,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         /// Эвент для контроллеров для удаление из библиотеки.
         /// </summary>
         public static event Action<InstanceModelBase> GlobalDeletedEvent;
-
+        /// <summary>
+        /// Эвент для контроллеров для удаление из группы.
+        /// </summary>
+        public static event Action<InstanceModelBase> GlobalGroupRemovedEvent;
 
         public event Action StateChanged;
         public event Action DataChanged;
@@ -376,24 +406,33 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         public ImportData? ImportData { get; }
 
 
+        public bool IsSelectedGroupDefault { get; }
+
+
         #endregion Properties
 
 
         #region Constructors
 
 
-        public InstanceModelBase(AppCore appCore, InstanceClient instanceClient, Action<InstanceClient> exportFunc, Action<InstanceModelBase> setRunningGame, InstanceDistribution instanceDistribution = null, ImportData? importData = null)
+        public InstanceModelBase(InstanceModelArgs instanceModel)
         {
-            _appCore = appCore;
+            _appCore = instanceModel.AppCore;
 
-            _instanceClient = instanceClient;
-            _exportFunc = exportFunc;
-            InstanceDistribution = instanceDistribution;
-            ImportData = importData;
+            _instanceClient = instanceModel.InstanceClient;
+            _exportFunc = instanceModel.ExportFunc;
+            InstanceDistribution = instanceModel.InstanceDistribution;
+            ImportData = instanceModel.ImportData;
 
-            if (instanceDistribution != null)
+            if (instanceModel.Group != null) 
             {
-                instanceDistribution.DownloadFinished += OnShareDownloadFinished;
+                IsSelectedGroupDefault = instanceModel.Group.IsDefaultGroup;
+                _instancesGroup = instanceModel.Group;
+            }
+
+            if (InstanceDistribution != null)
+            {
+                InstanceDistribution.DownloadFinished += OnShareDownloadFinished;
                 IsShareDownloading = true;
             }
 
@@ -747,6 +786,15 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
                 DeletedEvent?.Invoke(this);
             }
         }
+
+
+        public void RemoveFromGroup() 
+        {
+            _instancesGroup.RemoveInstance(_instanceClient);
+            _instancesGroup.SaveGroupInfo();
+            GlobalGroupRemovedEvent?.Invoke(this);
+        }
+
 
         #endregion Public Methods
 

@@ -861,4 +861,8 @@
         All instances from this group will not be removed and will be located in other groups.!
     </s:String>
     <s:String x:Key="YesIWantToRemoveGroup">Yes I want to remove this group</s:String>
+
+    <s:String x:Key="WithoutGroup">No group</s:String>
+
+    <s:String x:Key="RemoveFromGroup">Remove from group</s:String>
 </ResourceDictionary>
