@@ -966,4 +966,6 @@
         Сборки из данной группы удалены не будут, и будут находится в других группах!
     </s:String>
     <s:String x:Key="YesIWantToRemoveGroup">Да я хочу удалить данную группу</s:String>
+
+    <s:String x:Key="WithoutGroup">Без группы</s:String>
 </ResourceDictionary>

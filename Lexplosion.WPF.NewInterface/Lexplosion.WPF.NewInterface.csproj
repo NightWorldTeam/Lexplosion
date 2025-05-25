@@ -167,6 +167,7 @@
     <Compile Include="Mvvm\Models\MainContent\MainMenu\Friends\FriendRequestsModel.cs" />
     <Compile Include="Mvvm\Models\MainContent\MainMenu\Friends\FriendsModel.cs" />
     <Compile Include="Mvvm\Models\MainContent\MainMenu\GeneralSettings\AccountsSettingsModel.cs" />
+    <Compile Include="Mvvm\Models\Modal\InstanceFactoryModel.cs" />
     <Compile Include="Mvvm\OldInstanceForm.xaml.cs">
       <DependentUpon>OldInstanceForm.xaml</DependentUpon>
     </Compile>

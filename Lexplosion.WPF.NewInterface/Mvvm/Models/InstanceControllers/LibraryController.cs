@@ -22,10 +22,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
         private readonly AppCore _appCore;
         private readonly Action<InstanceClient> _exportFunc;
         private readonly Action<InstanceModelBase> _setRunningGame;
-		private readonly ClientsManager _clientsManager;
+        private readonly ClientsManager _clientsManager;
 
-		private ObservableCollection<InstanceModelBase> _instances = new();
-		private ObservableCollection<InstancesGroup> _groups = new();
+        private ObservableCollection<InstanceModelBase> _instances = new();
+        private ObservableCollection<InstancesGroup> _groups = new();
 
 
         #region Properties
@@ -57,7 +57,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
             _clientsManager = clientsManager;
 
             _groups = new(_clientsManager.GetExistsGroups());
-            
+
             InstanceModelBase.GlobalAddedToLibrary += (im) => Add(im);
             InstanceModelBase.GlobalDeletedEvent += Remove;
 
@@ -76,8 +76,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
         {
             App.Current.Dispatcher.Invoke(() =>
             {
-            _instances.Add(instanceModelBase);
-            InstanceAdded?.Invoke(instanceModelBase);
+                _instances.Add(instanceModelBase);
+                InstanceAdded?.Invoke(instanceModelBase);
                 OnPropertyChanged(nameof(Instances));
             });
         }
@@ -154,18 +154,29 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
             return _instances.FirstOrDefault(i => i.Equals(instanceClient));
         }
 
-        public void SelectGroup(InstancesGroup instancesGroup)
+        public void GroupItemsChanged()
         {
-            SelectedGroup = instancesGroup;
-            OnPropertyChanged(nameof(SelectedGroup));
-
             _instances.Clear();
 
-            foreach (var ic in instancesGroup.Clients) 
+            foreach (var ic in SelectedGroup.Clients)
             {
                 Add(ic);
             }
+        }
 
+        public void SelectGroup(InstancesGroup instancesGroup)
+        {
+            if (SelectedGroup != null)
+            {
+                SelectedGroup.NewInstanceAdded -= GroupItemsChanged;
+            }
+
+            SelectedGroup = instancesGroup;
+            SelectedGroup.NewInstanceAdded += GroupItemsChanged;
+
+            GroupItemsChanged();
+
+            OnPropertyChanged(nameof(SelectedGroup));
             OnPropertyChanged(nameof(Instances));
         }
 

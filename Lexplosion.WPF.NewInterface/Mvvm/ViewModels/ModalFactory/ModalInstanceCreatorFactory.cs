@@ -40,7 +40,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.ModalFactory
                 TitleKey = "Create",
                 IsEnable = hasMinecraftVersions,
                 IsSelected = hasMinecraftVersions,
-                Content = !hasMinecraftVersions ? null : new InstanceFactoryViewModel((i) => _libraryController.Add(i), leftMenuControl.CloseCommand)
+                Content = !hasMinecraftVersions ? null : new InstanceFactoryViewModel((i) => _libraryController.Add(i), leftMenuControl.CloseCommand, 
+                    _libraryController.InstancesGroups, _libraryController.SelectedGroup)
             });
 
             menuItems.Add(new ModalLeftMenuTabItem()

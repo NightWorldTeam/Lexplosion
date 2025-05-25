@@ -77,6 +77,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
                 defaultGroup = _instanceController.InstancesGroups.FirstOrDefault(ig => ig.Name == defaultGroupName);
             }
 
+
+
             OpenInstanceGroup(defaultGroup);
         }
 
@@ -129,6 +131,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
         public void RemoveGroup(InstancesGroup instancesGroup) 
         {
             _instanceController.RemoveGroup(instancesGroup);
+            
         }
 
         #endregion Public Methods

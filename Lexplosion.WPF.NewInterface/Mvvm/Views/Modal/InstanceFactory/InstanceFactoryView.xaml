@@ -434,6 +434,78 @@
                             </Grid>
                         </Border>
                     </StackPanel>
+
+                    <!--  Group  -->
+                    <Border
+                        Padding="0,8,0,8"
+                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                        BorderThickness="0,0,0,1">
+
+                        <Grid>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <!--  Header  -->
+                            <!--  TODO: 1.0.1.0 Translate  -->
+                            <StackPanel>
+                                <TextBlock
+                                    FontSize="13"
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                    Text="Группа" />
+                                <TextBlock
+                                    FontSize="12"
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                    Text="{DynamicResource ModloaderVersionDescription}"
+                                    TextWrapping="WrapWithOverflow" />
+                            </StackPanel>
+
+
+                            <Grid Grid.Column="1">
+                                <ComboBox
+                                    Width="215"
+                                    Height="32"
+                                    HorizontalAlignment="Right"
+                                    IsSynchronizedWithCurrentItem="True"
+                                    ItemsSource="{Binding Model.InstancesGroups}"
+                                    SelectedValue="{Binding Model.SelectedGroup, UpdateSourceTrigger=PropertyChanged}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="{x:Type TextBlock}">
+                                                        <Setter Property="Text" Value="{Binding Name}" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding Name}" Value="All">
+                                                                <Setter Property="Text" Value="{DynamicResource WithoutGroup}" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                                <!--  Only version when GameVersions count = 0  -->
+                                <!--<Border
+                                    Width="215"
+                                    Height="{Binding ActualHeight, ElementName=ModloaderVersion}"
+                                    Padding="8"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center"
+                                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="5"
+                                    Visibility="{Binding Model.ModloaderManager.IsCurrentAvaliable, Mode=OneWay, Converter={converters:NegativeBooleanToVisibilityConverter}}">
+                                    <TextBlock FontWeight="Medium" Text="Без группы" />
+                                </Border>-->
+                            </Grid>
+                        </Grid>
+                    </Border>
                 </StackPanel>
 
                 <controls:AdvancedButton

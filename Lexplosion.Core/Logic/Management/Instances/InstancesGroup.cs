@@ -18,6 +18,10 @@ namespace Lexplosion.Logic.Management.Instances
 		/// Состояния IsSelected изменилось.
 		/// </summary>
 		public event Action<bool> SelectedChanged;
+		/// <summary>
+		/// Добавленная новая сборка
+		/// </summary>
+		public event Action NewInstanceAdded;
 
 
 		private readonly IFileServicesContainer _fileServices;
@@ -120,6 +124,7 @@ namespace Lexplosion.Logic.Management.Instances
 		{
 			_clients.Add(client);
 			_clientsKeys[client] = _clients.Count - 1;
+			NewInstanceAdded?.Invoke();
 		}
 
 		public void ChangeInstancePosition(InstanceClient client, int newIndex)
