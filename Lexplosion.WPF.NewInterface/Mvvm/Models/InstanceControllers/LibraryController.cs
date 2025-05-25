@@ -172,6 +172,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
             }
 
             SelectedGroup = instancesGroup;
+            SelectedGroup.IsSelected = true;
             SelectedGroup.NewInstanceAdded += GroupItemsChanged;
 
             GroupItemsChanged();
@@ -188,6 +189,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
         public void RemoveGroup(InstancesGroup instancesGroup)
         {
             _groups.Remove(instancesGroup);
+            _clientsManager.DeleteGroup(instancesGroup);
         }
 
 
