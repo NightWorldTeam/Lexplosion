@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using Lexplosion.Core.Extensions;
 using Lexplosion.Logic.FileSystem.Services;
 using Lexplosion.Logic.Objects;
@@ -13,6 +14,9 @@ namespace Lexplosion.Logic.Management.Instances
 	{
 		public static readonly Guid AllInctancesGroupId = Guid.Empty;
 
+		private readonly IFileServicesContainer _fileServices;
+
+		public byte[] Logo { get; private set; }
 
 		/// <summary>
 		/// Состояния IsSelected изменилось.
@@ -23,9 +27,6 @@ namespace Lexplosion.Logic.Management.Instances
 		/// </summary>
 		public event Action NewInstanceAdded;
 
-
-		private readonly IFileServicesContainer _fileServices;
-
 		/// <summary>
 		/// Id группы
 		/// </summary>
@@ -33,11 +34,11 @@ namespace Lexplosion.Logic.Management.Instances
 		/// <summary>
 		/// Название группы
 		/// </summary>
-		public string Name { get; private set; }
+		public string Name { get; set; }
 		/// <summary>
 		/// Краткое описание группы
 		/// </summary>
-		public string Summary { get; private set; }
+		public string Summary { get; set; }
 		/// <summary>
 		/// Является ли группа, группой по умолчанию (All)
 		/// </summary>
@@ -76,6 +77,7 @@ namespace Lexplosion.Logic.Management.Instances
 		{
 			Id = group.Id;
 			Name = group.Name;
+			Summary = group.Summary;
 			_fileServices = fileServices;
 
 			foreach (var clientId in group.InstancesIds)
@@ -120,6 +122,7 @@ namespace Lexplosion.Logic.Management.Instances
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.Synchronized)]
 		private void AddClient(InstanceClient client)
 		{
 			_clients.Add(client);
@@ -127,6 +130,7 @@ namespace Lexplosion.Logic.Management.Instances
 			NewInstanceAdded?.Invoke();
 		}
 
+		[MethodImpl(MethodImplOptions.Synchronized)]
 		public void ChangeInstancePosition(InstanceClient client, int newIndex)
 		{
 			if (!_clientsKeys.TryGetValue(client, out int currentIndex)) return;
@@ -154,8 +158,10 @@ namespace Lexplosion.Logic.Management.Instances
 			_clientsKeys[client] = newIndex;
 		}
 
+		[MethodImpl(MethodImplOptions.Synchronized)]
 		public void AddInstance(InstanceClient client) => AddClient(client);
 
+		[MethodImpl(MethodImplOptions.Synchronized)]
 		public void RemoveInstance(InstanceClient client)
 		{
 			if (!_clientsKeys.TryGetValue(client, out int currentIndex)) return;
@@ -168,6 +174,7 @@ namespace Lexplosion.Logic.Management.Instances
 			}
 
 			_clients.RemoveAt(endIndex);
+			_clientsKeys.Remove(client);
 		}
 
 		public void SaveGroupInfo()
@@ -175,6 +182,7 @@ namespace Lexplosion.Logic.Management.Instances
 			_fileServices.DataFilesService.SaveGroupInfo(BuildInstalledInstanceGroup());
 		}
 
+		[MethodImpl(MethodImplOptions.Synchronized)]
 		public void AddIfNotExists(IEnumerable<InstanceClient> clients)
 		{
 			foreach (InstanceClient client in clients)
@@ -184,13 +192,20 @@ namespace Lexplosion.Logic.Management.Instances
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.Synchronized)]
 		public bool InstanceContains(InstanceClient client) => _clients.Contains(client);
+
+		public void UpdateLogo(string imagePath)
+		{
+
+		}
 
 		internal InstalledInstancesGroup BuildInstalledInstanceGroup()
 		{
 			return new InstalledInstancesGroup()
 			{
 				Name = Name,
+				Summary = Summary,
 				Id = Id,
 				InstancesIds = _clients.Select(x => x.LocalId).ToList(),
 			};

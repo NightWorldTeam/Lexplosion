@@ -60,6 +60,7 @@ namespace Lexplosion.Logic.Management.Instances
 			client.DeployLocally(modloader, isNwClient, logoPath, modloaderVersion, optifineVersion, sodium);
 			client.InternalDataChanged += SaveInstalledInstancesList;
 
+			AddToDefaultGroup(client);
 			_installedInstances[client.LocalId] = client;
 			SaveInstalledInstancesList();
 
@@ -100,6 +101,12 @@ namespace Lexplosion.Logic.Management.Instances
 			group.SaveGroupInfo();
 
 			return group;
+		}
+
+		public void DeleteGroup(InstancesGroup instancesGroup)
+		{
+			_existsGroups.Remove(instancesGroup);
+			SaveAllGroups();
 		}
 
 		/// <summary>
@@ -204,6 +211,7 @@ namespace Lexplosion.Logic.Management.Instances
 				while (enumerator.MoveNext())
 				{
 					groupInfo = enumerator.Current;
+					if (groupInfo.Id == InstancesGroup.AllInctancesGroupId) continue; // группу all мы уже добавили в начале
 					_existsGroups.Add(new InstancesGroup(groupInfo, _installedInstances, _services));
 				}
 			}
@@ -293,6 +301,16 @@ namespace Lexplosion.Logic.Management.Instances
 			return null;
 		}
 
+		private void AddToDefaultGroup(InstanceClient client)
+		{
+			_existsGroups[0].AddInstance(client);
+		}
+
+		public void SaveAllGroups()
+		{
+			_services.DataFilesService.RewriteGroupsInfo(_existsGroups.Select(x => x.BuildInstalledInstanceGroup()));
+		}
+
 		/// <summary>
 		/// Добавляет сборку в библиотеку
 		/// </summary>
@@ -305,9 +323,8 @@ namespace Lexplosion.Logic.Management.Instances
 
 				_installedInstances[localId] = client;
 				_idsPairs[client.ExternalId] = localId;
-				_existsGroups[0].AddInstance(client);
 
-				_services.DataFilesService.RewriteGroupsInfo(_existsGroups.Select(x => x.BuildInstalledInstanceGroup()));
+				AddToDefaultGroup(client);
 				SaveInstalledInstancesList();
 			}
 		}
@@ -331,7 +348,7 @@ namespace Lexplosion.Logic.Management.Instances
 			}
 
 			client.DeleteLocalStruct();
-			_services.DataFilesService.RewriteGroupsInfo(_existsGroups.Select(x => x.BuildInstalledInstanceGroup()));
+			SaveAllGroups();
 			SaveInstalledInstancesList();
 		}
 
