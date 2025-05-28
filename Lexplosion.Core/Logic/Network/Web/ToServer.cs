@@ -242,7 +242,7 @@ namespace Lexplosion.Logic.Network
 					response = await _httpClient.SendAsync(request);
 				}
 
-				if (!response.IsSuccessStatusCode) return null;
+				response.EnsureSuccessStatusCode();
 
 				return await response.Content.ReadAsStringAsync();
 			}
