@@ -39,6 +39,12 @@ namespace Lexplosion.Logic.FileSystem
 			_httpClient.DefaultRequestHeaders.Add("User-Agent", USER_AGENT);
 		}
 
+		public void ChangeDownloadToMirrorMode()
+		{
+			_httpClient = new HttpClient(new RedirectToMirrorHandler());
+			_httpClient.DefaultRequestHeaders.Add("User-Agent", USER_AGENT);
+		}
+
 		public void AddProxy(Proxy proxy)
 		{
 			_clientHandler.AddProxy(proxy);

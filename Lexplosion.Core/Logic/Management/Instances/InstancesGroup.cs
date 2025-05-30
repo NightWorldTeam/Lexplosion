@@ -42,7 +42,7 @@ namespace Lexplosion.Logic.Management.Instances
 		/// <summary>
 		/// Является ли группа, группой по умолчанию (All)
 		/// </summary>
-		public bool IsDefaultGroup { get; }
+		public bool IsDefaultGroup { get => Id == AllInctancesGroupId; }
 		/// <summary>
 		/// Группа выбрана
 		/// </summary>
@@ -110,7 +110,6 @@ namespace Lexplosion.Logic.Management.Instances
 			Id = AllInctancesGroupId;
 			Name = "All";
 			Summary = "AllSummary";
-			IsDefaultGroup = true;
 			_fileServices = fileServices;
 			_clients = new(clients);
 
@@ -125,6 +124,8 @@ namespace Lexplosion.Logic.Management.Instances
 		[MethodImpl(MethodImplOptions.Synchronized)]
 		private void AddClient(InstanceClient client)
 		{
+			if (_clientsKeys.ContainsKey(client)) return;
+
 			_clients.Add(client);
 			_clientsKeys[client] = _clients.Count - 1;
 			NewInstanceAdded?.Invoke();
