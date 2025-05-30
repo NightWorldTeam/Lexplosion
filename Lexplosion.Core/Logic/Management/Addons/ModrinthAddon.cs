@@ -134,7 +134,7 @@ namespace Lexplosion.Logic.Management.Addons
 				{
 					foreach (var dependencie in _versionInfo.Dependencies)
 					{
-						if (dependencie?.ProjectId != null)
+						if (dependencie?.ProjectId != null && dependencie.DependencyType == ModrinthProjectFile.Dependencie.Dependency.Required)
 						{
 							if (dependencie.VersionId != null)
 							{
