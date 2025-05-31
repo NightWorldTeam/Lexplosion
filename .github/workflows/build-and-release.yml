@@ -1,0 +1,115 @@
+name: Build and Release
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    types: [ closed ]
+    branches: [ main, master ]
+
+jobs:
+  build:
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+        include:
+          - os: windows-latest
+            output_name: Lexplosion-Windows
+            output_extension: .zip
+          - os: ubuntu-latest
+            output_name: Lexplosion-Linux
+            output_extension: .tar.gz
+          - os: macos-latest
+            output_name: Lexplosion-macOS
+            output_extension: .tar.gz
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
+
+    - name: Setup MSBuild (Windows)
+      if: matrix.os == 'windows-latest'
+      uses: microsoft/setup-msbuild@v1.1
+
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v1
+
+    - name: Restore NuGet packages
+      run: nuget restore Lexplosion.sln
+
+    - name: Build Windows
+      if: matrix.os == 'windows-latest'
+      run: |
+        msbuild /p:Configuration=Release /p:Platform="Any CPU" Lexplosion.sln
+
+    - name: Build Linux
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        dotnet build Lexplosion.Tests/Lexplosion.Tests.csproj --configuration Release
+        # Для Linux сборки можно использовать Mono или .NET Core для WPF приложений
+        # Это потребует дополнительной настройки
+
+    - name: Build macOS
+      if: matrix.os == 'macos-latest'
+      run: |
+        dotnet build Lexplosion.Tests/Lexplosion.Tests.csproj --configuration Release
+        # Для macOS сборки можно использовать Mono или .NET Core для WPF приложений
+        # Это потребует дополнительной настройки
+
+    - name: Run Tests
+      run: dotnet test Lexplosion.Tests/Lexplosion.Tests.csproj --configuration Release --no-build
+
+    - name: Package Application (Windows)
+      if: matrix.os == 'windows-latest'
+      run: |
+        mkdir -p publish
+        cp -r Lexplosion.WPF.NewInterface/bin/Release/* publish/
+        cp -r DLL/* publish/
+        Compress-Archive -Path publish/* -DestinationPath ${{ matrix.output_name }}${{ matrix.output_extension }}
+      shell: pwsh
+
+    - name: Package Application (Linux/macOS)
+      if: matrix.os != 'windows-latest'
+      run: |
+        mkdir -p publish
+        # Здесь нужно скопировать собранные файлы для Linux/macOS
+        # Это зависит от способа сборки для этих платформ
+        tar -czf ${{ matrix.output_name }}${{ matrix.output_extension }} publish
+      shell: bash
+
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ matrix.output_name }}
+        path: ${{ matrix.output_name }}${{ matrix.output_extension }}
+
+  create-release:
+    needs: build
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v3
+
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ github.run_number }}
+          name: Release v${{ github.run_number }}
+          draft: false
+          prerelease: false
+          files: |
+            Lexplosion-Windows/Lexplosion-Windows.zip
+            Lexplosion-Linux/Lexplosion-Linux.tar.gz
+            Lexplosion-macOS/Lexplosion-macOS.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
