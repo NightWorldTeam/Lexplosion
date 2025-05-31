@@ -388,12 +388,12 @@ namespace Lexplosion.WPF.NewInterface
         {
             DiscordRpcClient client = new DiscordRpcClient(LaunсherSettings.DiscordAppID);
 
-            if (client.Initialize())
-            {
-                return null;
-            }
+			if (!client.Initialize())
+			{
+				return null;
+			}
 
-            client.SetPresence(new RichPresence()
+			client.SetPresence(new RichPresence()
             {
                 State = _appCore.Resources("MinecraftNotRunning") as string,
                 Timestamps = Timestamps.Now,
