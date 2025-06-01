@@ -875,7 +875,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
                 case InstanceInit.ServerError:
                     {
                         var title = _appCore.Resources("ServerError") as string;
-                        var notifyContent = _appCore.Resources("FailedGetDataFromServer") as string;
+                        var notifyContent = _appCore.Resources("FailedToGetDataFromServer") as string;
 
                         _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent, type: NotificationType.Error));
                     }
