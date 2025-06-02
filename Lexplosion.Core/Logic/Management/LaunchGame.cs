@@ -363,7 +363,7 @@ namespace Lexplosion.Logic.Management
 				command += @"-Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true -XX:TargetSurvivorRatio=90";
 				command += " -Dhttp.agent=\"Mozilla/5.0\"";
 				command += " -Djava.net.preferIPv4Stack=true";
-				command += " -Xmx" + _settings.Xmx + "M -Xms" + _settings.Xms + "M " + _settings.GameArgs;
+				command += " -Xmx" + _settings.Xmx + "M -Xms" + _settings.Xms + "M ";
 				command += nwClientJvmArgs + " ";
 				command += mainClass + " ";
 				command += nwClientMinecraftArgs;
@@ -412,7 +412,7 @@ namespace Lexplosion.Logic.Management
 				command += @" -Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true -XX:TargetSurvivorRatio=90";
 				command += " -Dhttp.agent=\"Mozilla/5.0\"";
 				command += " -Djava.net.preferIPv4Stack=true";
-				command += " -Xmx" + _settings.Xmx + "M -Xms" + _settings.Xms + "M " + _settings.GameArgs;
+				command += " -Xmx" + _settings.Xmx + "M -Xms" + _settings.Xms + "M ";
 				command += mainClass + " ";
 				command += nwClientMinecraftArgs;
 				command += " --username " + _launchAccount.Login + " --version " + data.VersionFile.GameVersion;
@@ -449,6 +449,7 @@ namespace Lexplosion.Logic.Management
 			command = command.Replace("${appearanceElementsDir}", gamePath + "appearanceElements");
 			command = command.Replace("${mainClass}", mainClass);
 			command = command.Replace("${appearanceElementsDir}", gamePath + "appearanceElements");
+			command += _settings.GameArgs;
 
 			//TODO: сделать функционал для автоматического коннекта - --server 192.168.1.114 --port 55538 --quickPlayMultiplayer "192.168.1.114:55538";
 
