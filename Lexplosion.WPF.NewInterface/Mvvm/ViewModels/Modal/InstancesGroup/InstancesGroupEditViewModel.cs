@@ -18,16 +18,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
 
         public FiltableObservableCollection AllInstancesViewSource { get; } = new();
 
-        private string _name;
-        public string Name
-        {
-            get => _name; set
-            {
-                _name = value;
-                OnPropertyChanged();
-            }
-        }
-
+        public string Name { get; set; }
         public string Summary { get; set; }
         public List<InstanceClient> SelectedInstances { get; } = [];
 
@@ -58,14 +49,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
 
         public void SaveGroupChanges()
         {
-            //var newGroup = _clientsManager.CreateGroup(Name, Summary);
+            _groupInstance.Name = Name;
+            _groupInstance.Summary = Summary;
+            _groupInstance.SaveGroupInfo();
 
-            //foreach (var ic in SelectedInstances)
-            //{
-            //    newGroup.AddInstance(ic);
-            //}
+            _groupInstance.UpdateInstances(SelectedInstances);
 
-            //GroupSaved?.Invoke(newGroup);
+            GroupSaved?.Invoke(_groupInstance);
         }
 
         /// <summary>

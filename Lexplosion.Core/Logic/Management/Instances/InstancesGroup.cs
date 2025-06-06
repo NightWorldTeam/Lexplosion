@@ -34,11 +34,27 @@ namespace Lexplosion.Logic.Management.Instances
 		/// <summary>
 		/// Название группы
 		/// </summary>
-		public string Name { get; set; }
+		private string _name;
+		public string Name 
+		{
+			get => _name; set 
+			{
+				_name = value;
+				OnPropertyChanged();
+			} 
+		}
 		/// <summary>
 		/// Краткое описание группы
 		/// </summary>
-		public string Summary { get; set; }
+		private string _summary;
+		public string Summary 
+		{
+			get => _summary; set 
+			{
+				_summary = value;
+				OnPropertyChanged();
+			}
+		}
 		/// <summary>
 		/// Является ли группа, группой по умолчанию (All)
 		/// </summary>
@@ -195,6 +211,29 @@ namespace Lexplosion.Logic.Management.Instances
 
 		[MethodImpl(MethodImplOptions.Synchronized)]
 		public bool InstanceContains(InstanceClient client) => _clients.Contains(client);
+
+		[MethodImpl(MethodImplOptions.Synchronized)]
+		public void UpdateInstances(IEnumerable<InstanceClient> clients) 
+		{
+			if (_clients.SequenceEqual(clients)) 
+			{
+				return;
+			}
+
+			var removedItems = _clients.Except(clients).ToList();
+
+			foreach (var removedItem in removedItems) 
+			{
+				RemoveInstance(removedItem);
+			}
+
+			var newItems = clients.Except(_clients);
+
+			foreach (var newItem in newItems) 
+			{
+				AddClient(newItem);
+			}
+        }
 
 		public void UpdateLogo(string imagePath)
 		{

@@ -1,4 +1,5 @@
 ﻿using Lexplosion.Logic.Management.Instances;
+using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal;
 using System.Windows.Controls;
 
@@ -41,6 +42,24 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Modal
             foreach (var ic in e.AddedItems)
             {
                 collection.Add(ic as InstanceClient);
+            }
+        }
+
+        private void InstancesList_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            if (_viewModel == null)
+            {
+                return;
+            }
+
+            var listbox = sender as ListBox;
+
+            var selectedItems = _viewModel.Model.SelectedInstances.ToArray();
+            listbox.SelectedItems.Clear();
+            _viewModel.Model.SelectedInstances.Clear();
+            foreach (var i in selectedItems)
+            {
+                listbox.SelectedItems.Add(i);
             }
         }
     }

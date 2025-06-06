@@ -56,7 +56,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
             {   
                 newGroup.AddInstance(ic);
             }
-
+            newGroup.SaveGroupInfo();
             GroupCreated?.Invoke(newGroup);
         }
 

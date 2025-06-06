@@ -90,8 +90,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
                 defaultGroup = _instanceController.InstancesGroups.FirstOrDefault(ig => ig.Name == defaultGroupName);
             }
 
-
-
             OpenInstanceGroup(defaultGroup);
         }
 
