@@ -1247,6 +1247,7 @@
     <Resource Include="Assets\images\icons\neoforge.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Assets\images\icons\non_image_template.png" />
     <Content Include="Resources\Libraries\Compression.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

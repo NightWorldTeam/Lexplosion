@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -7,8 +8,10 @@ using System.Runtime.InteropServices;
 
 namespace Lexplosion.Tools
 {
-	static class ImageTools
+	public static class ImageTools
 	{
+		private static Random _random = new Random();
+
 		public static byte[] ResizeImage(byte[] imageBytes, int width, int height)
 		{
 			if (imageBytes.Length == 0)
@@ -72,41 +75,151 @@ namespace Lexplosion.Tools
 			return GenerateGradient(width, height, startColor, endColor, random.Next(0, 180));
 		}
 
+		public static (Color, Color) GenerateColorPair()
+		{
+			int value = _random.Next(0, 16777215);
+			int startR = (byte)value;
+			int startG = (byte)(value >> 8);
+			int startB = (byte)(value >> 16);
+
+			double lightness = (startR + startG + startB) / 3d;
+
+			Color startColor = Color.FromArgb(startR, startG, startB);
+			Color endColor;
+			if (lightness > 112.5)
+			{
+				endColor = ChangeColorBrightness(startColor, -0.3);
+			}
+			else
+			{
+				endColor = ChangeColorBrightness(startColor, 0.3);
+			}
+
+			return (startColor, endColor);
+		}
+
+		public static Color ChangeColorBrightness(Color color, double lightness)
+		{
+			byte calcRes(double value)
+			{
+				if (value > 255) value = 255;
+				else if (value < 0) value = 0;
+				return (byte)value;
+			}
+
+			if (lightness > 0)
+			{
+				// стартовыми координатами делаем наш цвет (конечными коорднатами будет белый цвет)
+				byte whiteColorR = (byte)(255 - color.R);
+				byte whiteColorG = (byte)(255 - color.G);
+				byte whiteColorB = (byte)(255 - color.B);
+
+				var res = ColorShift(whiteColorR, whiteColorG, whiteColorB, lightness);
+				//сейчас у нас нулевые координаты соотвествуют цвету color, поэтому прибавляем их к результату чтобы получить нужный цвет
+				return Color.FromArgb(calcRes(res.Item1 + color.R), calcRes(res.Item2 + color.G), calcRes(res.Item3 + color.B));
+			}
+			else
+			{
+				var res = ColorShift(color.R, color.G, color.B, lightness + 1);
+				return Color.FromArgb(calcRes(res.Item1), calcRes(res.Item2), calcRes(res.Item3));
+			}
+		}
+
+		/// <summary>
+		/// Высчитывает координаты между началом координатной оси и точкой с позицией (endPointR, endPointG, endPointB)
+		/// в зависимости от shiftRatio. shiftRatio показывает для какой части пути от начала до точки нужно врнуть координаты.
+		/// </summary>
+		/// <param name="endPointR">Конечная точка R</param>
+		/// <param name="endPointG">Конечная точка G</param>
+		/// <param name="endPointB">Конечная точка B</param>
+		/// <param name="shiftRatio">
+		/// Коэфициент смещения по пути до точки (endPointR, endPointG, endPointB). 
+		/// Принимает значение от 0 до 1. 
+		/// При значении 1 путь будет полным, а значит возвращены будут переданные координаты. 
+		/// При значении 0.5 будут возвращены координаты соответствующие половине пути до точки (endPointR, endPointG, endPointB)</param>
+		/// <returns>Высчитанные координаты</returns>
+		private static (double, double, double) ColorShift(byte endPointR, byte endPointG, byte endPointB, double shiftRatio)
+		{
+			double vectorLength = Math.Sqrt(endPointR * endPointR + endPointG * endPointG + endPointB * endPointB);
+			double resultVectorLenght = vectorLength * shiftRatio;
+
+			double vectorAngle = endPointR / vectorLength;
+
+			double resultR = vectorAngle * resultVectorLenght;
+
+			double vectorProjection = Math.Sqrt(vectorLength * vectorLength - endPointR * endPointR);
+			double resultVectorProjection = Math.Sqrt(resultVectorLenght * resultVectorLenght - resultR * resultR);
+
+			double resultG = (endPointG / vectorProjection) * resultVectorProjection;
+			double resultB = (endPointB / vectorProjection) * resultVectorProjection;
+
+			return (resultR, resultG, resultB);
+		}
+
+		public static Color ColorLighten(Color color, double lightness)
+		{
+			byte calcRes(double value)
+			{
+				if (value > 255) value = 255;
+				else if (value < 0) value = 0;
+				return (byte)value;
+			}
+
+			byte wayToWhiteR = (byte)(255 - color.R);
+			byte wayToWhiteG = (byte)(255 - color.G);
+			byte wayToWhiteB = (byte)(255 - color.B);
+
+			double vectorLength = Math.Sqrt(wayToWhiteR * wayToWhiteR + wayToWhiteG * wayToWhiteG + wayToWhiteB * wayToWhiteB);
+			double resultVectorLenght = vectorLength * lightness;
+
+			double vectorAngle = wayToWhiteR / vectorLength;
+
+			double resultR = vectorAngle * resultVectorLenght;
+
+			double vectorProjection = Math.Sqrt(vectorLength * vectorLength - wayToWhiteR * wayToWhiteR);
+			double resultVectorProjection = Math.Sqrt(resultVectorLenght * resultVectorLenght - resultR * resultR);
+
+			double resultG = (wayToWhiteG / vectorProjection) * resultVectorProjection;
+			double resultB = (wayToWhiteB / vectorProjection) * resultVectorProjection;
+
+			return Color.FromArgb(calcRes(resultR + color.R), calcRes(resultG + color.G), calcRes(resultB + color.B));
+		}
+
 		private static void MakeColorSaturated(ref int r, ref int g, ref int b)
 		{
 			if (r > g && r > b)
 			{
-				if (g >= b) MakeColorSaturated(ref r, ref g);
-				else MakeColorSaturated(ref r, ref b);
+				if (g >= b) IncreaseDivergence(ref r, ref g);
+				else IncreaseDivergence(ref r, ref b);
 			}
 			else if (g > r && g > b)
 			{
-				if (r >= b) MakeColorSaturated(ref g, ref r);
-				else MakeColorSaturated(ref g, ref b);
+				if (r >= b) IncreaseDivergence(ref g, ref r);
+				else IncreaseDivergence(ref g, ref b);
 			}
 			else
 			{
-				if (r >= g) MakeColorSaturated(ref b, ref r);
-				else MakeColorSaturated(ref b, ref g);
+				if (r >= g) IncreaseDivergence(ref b, ref r);
+				else IncreaseDivergence(ref b, ref g);
 			}
 		}
 
-		private static void MakeColorSaturated(ref int maxColor, ref int minColor)
+		private static void IncreaseDivergence(ref int maxValue, ref int minValue)
 		{
-			double diffRatio = maxColor / minColor;
+			double diffRatio = minValue / maxValue;
 			double ratio = diffRatio / 2;
 
-			maxColor += (int)(maxColor * ratio);
-			minColor -= (int)(minColor * ratio);
+			maxValue += (int)(maxValue * ratio);
+			minValue -= (int)(minValue * ratio);
 
-			if (minColor < 0)
+			if (minValue < 0)
 			{
-				int step = minColor * -1;
-				minColor = 0;
-				maxColor += step;
+				int step = minValue * -1;
+				minValue = 0;
+				maxValue += step;
 			}
 
-			if (maxColor > 255) maxColor = 255;
+			if (maxValue > 255) maxValue = 255;
 		}
 
 		private static int ColorShift(int compareColor, int targetColor)
