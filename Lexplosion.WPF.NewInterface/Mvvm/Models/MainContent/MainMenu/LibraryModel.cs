@@ -3,9 +3,6 @@ using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 
@@ -14,7 +11,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
     public sealed class LibraryModel : ViewModelBase
     {
         private readonly ILibraryInstanceController _instanceController;
-        
+        private readonly AppCore _appCore;
+
 
         #region Properties
 
@@ -23,7 +21,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
         /// <summary>
         /// Группы сборок.
         /// </summary>
-        public IReadOnlyCollection<InstancesGroup> Groups { get => _instanceController.InstancesGroups; }
+        public FiltableObservableCollection Groups { get; } = new();
         /// <summary>
         /// Группа пустая?
         /// </summary>
@@ -55,6 +53,19 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
             }
         }
 
+        private string _groupSearchText;
+        /// <summary>
+        /// Текст поиска для групп сборок
+        /// </summary>
+        public string GroupSearchText
+        {
+            get => _groupSearchText; set
+            {
+                _groupSearchText = value;
+                OnGroupsFilterChanged();
+            }
+        }
+
 
         #endregion Properties
 
@@ -62,8 +73,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
         #region Constructors
 
 
-        public LibraryModel(ClientsManager clientsManager, ILibraryInstanceController instanceController, string defaultGroupName = "default")
+        public LibraryModel(AppCore appCore, ClientsManager clientsManager, ILibraryInstanceController instanceController, string defaultGroupName = "default")
         {
+            _appCore = appCore;
             _instanceController = instanceController;
 
             InstancesGroup defaultGroup;
@@ -109,8 +121,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
             }
 
             OnPropertyChanged(nameof(SelectedGroup));
-            OnPropertyChanged(nameof(Groups));
 
+            Groups.Source = _instanceController.InstancesGroups;
             InstancesCollectionViewSource.Source = _instanceController.Instances;
         }
 
@@ -132,7 +144,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
         public void RemoveGroup(InstancesGroup instancesGroup) 
         {
             _instanceController.RemoveGroup(instancesGroup);
-            
         }
 
         #endregion Public Methods
@@ -206,6 +217,29 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
             });
         }
 
+
+        private void OnGroupsFilterChanged()
+        {
+            Groups.Filter = (i =>
+            {
+                var group = i as InstancesGroup;
+
+                if (string.IsNullOrEmpty(GroupSearchText)) 
+                {
+                    return true;
+                }
+
+                if (group.Name == "All") 
+                {
+                    var defaultGroupCurrentLangName = _appCore.Resources("AllInstanceGroupName") as string;
+                    return defaultGroupCurrentLangName.IndexOf(GroupSearchText, System.StringComparison.InvariantCultureIgnoreCase) > -1;
+                }
+
+
+
+                return group.Name.IndexOf(GroupSearchText, System.StringComparison.InvariantCultureIgnoreCase) > -1;
+            });
+        }
 
         #endregion Private Methods
     }

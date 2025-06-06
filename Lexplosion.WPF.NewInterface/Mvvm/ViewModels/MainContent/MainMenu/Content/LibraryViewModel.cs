@@ -161,7 +161,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         {
             _appCore = appCore;
             _clientsManager = clientsManager;
-            Model = new LibraryModel(clientsManager, instanceController);
+            Model = new LibraryModel(_appCore, clientsManager, instanceController);
             _navigationStore = appCore.NavigationStore;
             _toMainMenuLayoutCommand = toMainMenuLayoutCommand;
             _modalNavigationStore = appCore.ModalNavigationStore;

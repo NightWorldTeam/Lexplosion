@@ -754,7 +754,10 @@
                             </Grid.ColumnDefinitions>
 
                             <!--  TODO: 1.0.1.0 Translate  -->
-                            <controls:SearchBox Placeholder="Название группы" Style="{StaticResource sm-searchbox-default}" />
+                            <controls:SearchBox
+                                Placeholder="Название группы"
+                                Style="{StaticResource sm-searchbox-default}"
+                                Text="{Binding Model.GroupSearchText, UpdateSourceTrigger=PropertyChanged}" />
                             <!--  TODO: 1.0.1.0 Translate  -->
                             <controls:AdvancedButton
                                 Grid.Column="1"
@@ -778,7 +781,7 @@
                     <ListBox
                         Grid.Row="2"
                         Margin="0,16,-18,0"
-                        ItemsSource="{Binding Model.Groups}"
+                        ItemsSource="{Binding Model.Groups.Filtered}"
                         ScrollViewer.VerticalScrollBarVisibility="Visible"
                         Style="{StaticResource TransparentListBox}"
                         VirtualizingPanel.ScrollUnit="Pixel" />
