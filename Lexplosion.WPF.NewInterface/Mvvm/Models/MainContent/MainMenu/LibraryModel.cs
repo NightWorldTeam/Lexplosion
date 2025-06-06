@@ -37,7 +37,15 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
         /// <summary>
         /// Открыто ли меню со списком групп
         /// </summary>
-        public bool IsGroupDrawerOpen { get; set; }
+        private bool _isGroupDrawerOpen;
+        public bool IsGroupDrawerOpen 
+        { 
+            get => _isGroupDrawerOpen; set
+            {
+                _isGroupDrawerOpen = value;
+                OnPropertyChanged();
+            }
+        }
 
 
         private string _searchText;

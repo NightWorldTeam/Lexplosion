@@ -660,7 +660,7 @@
         </StackPanel>
 
         <!--  Instance Groups  -->
-        <Grid Visibility="{Binding Model.IsGroupDrawerOpen, Converter={converters:BooleanToVisibilityConverter}}">
+        <Grid Visibility="{Binding Model.IsGroupDrawerOpen, Converter={converters:BooleanToVisibilityConverter}}" MouseDown="Grid_MouseDown">
 
             <Grid.Background>
                 <SolidColorBrush Opacity="0.5" Color="Black" />

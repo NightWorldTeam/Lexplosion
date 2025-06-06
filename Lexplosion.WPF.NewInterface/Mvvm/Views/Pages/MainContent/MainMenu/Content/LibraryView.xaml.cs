@@ -132,5 +132,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu
         {
             CloseContextMenuWhenButtonClicked();
         }
+
+        private void Grid_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+			if (_viewModel != null) 
+			{
+				_viewModel.Model.IsGroupDrawerOpen = false;
+			}
+        }
     }
 }
