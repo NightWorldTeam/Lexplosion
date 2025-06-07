@@ -65,9 +65,9 @@ namespace Lexplosion.Tools
 			int endG = (byte)(value >> 8);
 			int endB = (byte)(value >> 16);
 
-			endR = ColorShift(startR, endR);
-			endG = ColorShift(startG, endG);
-			endB = ColorShift(startB, endB);
+			endR = ValueShift(startR, endR);
+			endG = ValueShift(startG, endG);
+			endB = ValueShift(startB, endB);
 
 			var startColor = Color.FromArgb(startR, startG, startB);
 			var endColor = Color.FromArgb(endR, endG, endB);
@@ -222,20 +222,20 @@ namespace Lexplosion.Tools
 			if (maxValue > 255) maxValue = 255;
 		}
 
-		private static int ColorShift(int compareColor, int targetColor)
+		private static int ValueShift(int compareValue, int targetValue)
 		{
 			double diffRatio;
-			if (compareColor > targetColor) diffRatio = -1 * (targetColor / compareColor);
-			else diffRatio = compareColor / targetColor;
+			if (compareValue > targetValue) diffRatio = -1 * (targetValue / compareValue);
+			else diffRatio = compareValue / targetValue;
 
 			double ratio = diffRatio * 0.7;
 
-			targetColor += (int)(targetColor * ratio);
+			targetValue += (int)(targetValue * ratio);
 
-			if (targetColor > 255) targetColor = 255;
-			else if (targetColor < 0) targetColor = 0;
+			if (targetValue > 255) targetValue = 255;
+			else if (targetValue < 0) targetValue = 0;
 
-			return targetColor;
+			return targetValue;
 		}
 
 		public static byte[] GenerateGradient(int width, int height, Color startColor, Color endColor, float angleDegrees = 0f)
