@@ -97,7 +97,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
                 _tabs.Clear();
 
                 _friendsViewModel = new FriendsViewModel();
-                _friendsRequestsViewModel = new FriendRequestsViewModel();
+                _friendsRequestsViewModel = new FriendRequestsViewModel(_appCore);
                 _findFriendsViewModel = new FindFriendsViewModel(_appCore);
 
                 _friendsViewModel.Model.Unfriended += (user) =>
