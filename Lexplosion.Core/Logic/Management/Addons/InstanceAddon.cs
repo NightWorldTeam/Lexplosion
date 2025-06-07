@@ -27,7 +27,6 @@ namespace Lexplosion.Logic.Management.Addons
 		public event Action LoadLoaded;
 
 
-		//private readonly CurseforgeAddonInfo _modInfo;
 		private readonly BaseInstanceData _modpackInfo;
 		private readonly IPrototypeAddon _addonPrototype;
 		private readonly string _projectId;

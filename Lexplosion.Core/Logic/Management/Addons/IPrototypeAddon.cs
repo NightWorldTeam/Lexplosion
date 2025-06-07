@@ -43,7 +43,9 @@ namespace Lexplosion.Logic.Management.Addons
 		void CompareVersions(string addonFileId, Action actionIfTrue);
 
 		string ProjectId { get; }
+
 		string FileId { get; }
+
 		ProjectSource Source { get; }
 
 		string AuthorName { get; }

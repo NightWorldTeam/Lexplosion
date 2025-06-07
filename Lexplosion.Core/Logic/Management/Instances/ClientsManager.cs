@@ -650,7 +650,7 @@ namespace Lexplosion.Logic.Management.Instances
 			return newClient;
 		}
 
-		public InstanceClient CopyClient(InstanceClient client, MinecraftVersion gameVersion, ClientType clientType, string modloaderVersion)
+		public InstanceClient CopyClient(InstanceClient client, MinecraftVersion gameVersion, ClientType clientType, string modloaderVersion, Action<List<InstanceAddon>> addonsCopyError)
 		{
 			string name = client.Name + " (Copy)";
 			string id = GenerateInstanceId(name);
@@ -702,7 +702,43 @@ namespace Lexplosion.Logic.Management.Instances
 					ToNextIteration:;
 					}
 
-					//AddonsPrototypesCreater.CreateFromFiles()
+					var addonsManager = AddonsManager.GetManager(baseData, _services);
+
+					var addonsToDownload = new List<InstanceAddon>();
+					addonsToDownload.AddRange(addonsManager.GetInstalledMods(newClient.GetBaseData));
+					addonsToDownload.AddRange(addonsManager.GetInstalledResourcepacks(newClient.GetBaseData));
+					addonsToDownload.AddRange(addonsManager.GetInstalledShaders(newClient.GetBaseData));
+
+					int totalAddonsCount = addonsToDownload.Count;
+
+					newClient.GetProgressHandler(StageType.Client, new ProgressHandlerArguments()
+					{
+						Stage = 1,
+						StagesCount = 1,
+						TotalFilesCount = totalAddonsCount
+					});
+
+					var errors = new List<InstanceAddon>();
+
+					int filesCount = 0;
+					foreach (var addon in addonsToDownload)
+					{
+						DownloadAddonRes result = addon.Update();
+						if (result != DownloadAddonRes.Successful) errors.Add(addon);
+
+						filesCount++;
+
+						newClient.GetProgressHandler(StageType.Client, new ProgressHandlerArguments()
+						{
+							Stage = 1,
+							StagesCount = 1,
+							TotalFilesCount = totalAddonsCount,
+							FilesCount = filesCount,
+							Procents = (filesCount / totalAddonsCount) * 100
+						});
+					}
+
+					if (errors.Count > 0) addonsCopyError(errors);
 
 				}
 				catch { }
