@@ -43,9 +43,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         #endregion Command
 
 
-        public FriendRequestsViewModel()
+        public FriendRequestsViewModel(AppCore appCore)
         {
-            Model = new FriendRequestsModel();
+            Model = new FriendRequestsModel(appCore);
+            _appCore = appCore;
         }
 
         public void Refresh()
