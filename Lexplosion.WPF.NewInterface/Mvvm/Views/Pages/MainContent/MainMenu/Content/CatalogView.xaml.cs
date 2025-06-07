@@ -37,6 +37,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu
             );
         }
 
-
+        private void OnFilterPanelSourceClicked(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            FiltersButton.IsChecked = false;
+            //PropertyChanged?.Invoke(FiltersButton, new PropertyChangedEventArgs(nameof(FiltersButton.IsChecked)));
+        }
     }
 }

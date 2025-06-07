@@ -32,7 +32,8 @@
                             Height="32"
                             Padding="4"
                             Background="Transparent"
-                            CornerRadius="5">
+                            CornerRadius="5"
+                            MouseUp="OnFilterPanelSourceClicked">
                             <Grid>
                                 <Viewbox Width="24" Height="20">
                                     <Path
@@ -161,7 +162,7 @@
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
 
-                                    <!--  Source  -->
+                                    <!--  Sources  -->
 
                                     <Border BorderBrush="{DynamicResource SeparateSolidColorBrush}" BorderThickness="0,0,1,1">
                                         <Grid Margin="8">
