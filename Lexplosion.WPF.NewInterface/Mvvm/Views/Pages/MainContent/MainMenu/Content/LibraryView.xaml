@@ -660,14 +660,21 @@
         </StackPanel>
 
         <!--  Instance Groups  -->
-        <Grid Visibility="{Binding Model.IsGroupDrawerOpen, Converter={converters:BooleanToVisibilityConverter}}" MouseDown="Grid_MouseDown">
+        <Grid Visibility="{Binding Model.IsGroupDrawerOpen, Converter={converters:BooleanToVisibilityConverter}}">
 
-            <Grid.Background>
-                <SolidColorBrush Opacity="0.5" Color="Black" />
-            </Grid.Background>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Border
+                Background="Black"
+                MouseDown="Grid_MouseDown"
+                Opacity="0.5" />
 
             <!--  Instance Groups Drawer  -->
             <Border
+                Grid.Column="1"
                 Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={converters:WindowWidthToXProcentWidth}, ConverterParameter=44}"
                 Padding="8,8,18,8"
                 HorizontalAlignment="Right"
