@@ -317,7 +317,8 @@ namespace Lexplosion.Logic.Management.Installers
 				if (!_baseFilesIsCheckd || baseFFilesIsUpdates) // в данном случае в манифесте версии форджа не была и нам надо её получить. Или же были измнения в модлоадере или версии игры
 				{
 					bool isNwClient = versionData?.IsNightWorldClient == true;
-					_manifest = _infoService.GetVersionManifest(DetermineGameVersion(manifest), gameType, isNwClient, modLoaderVersion);
+					string gameVersion = DetermineGameVersion(manifest);
+					_manifest = _infoService.GetVersionManifest(gameVersion, gameType, isNwClient, modLoaderVersion);
 
 					if (_manifest != null)
 					{
@@ -346,6 +347,8 @@ namespace Lexplosion.Logic.Management.Installers
 					}
 					else
 					{
+						Runtime.DebugWrite($"manifest error. gameVersion: {gameVersion}, gameType: {gameType}, isNwClient: {isNwClient}, modLoaderVersion: {modLoaderVersion}");
+
 						return new InitData
 						{
 							InitResult = InstanceInit.ServerError,
