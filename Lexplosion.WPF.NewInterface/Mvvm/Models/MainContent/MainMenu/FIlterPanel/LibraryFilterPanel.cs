@@ -11,11 +11,6 @@ using System.Linq;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu
 {
-    public readonly struct InstanceData 
-    {
-        
-    }
-
     public class LibraryFilterPanel : ObservableObject
     {
         public event Action FilterChanged;

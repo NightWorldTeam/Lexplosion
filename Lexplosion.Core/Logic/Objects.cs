@@ -19,6 +19,7 @@ namespace Lexplosion.Logic.Objects
 	{
 		public Guid Id;
 		public string Name;
+		public string Summary;
 		public List<string> InstancesIds;
 
 		public override bool Equals(object obj)
@@ -26,7 +27,7 @@ namespace Lexplosion.Logic.Objects
 			InstalledInstancesGroup other = obj as InstalledInstancesGroup;
 			if (other == null) return false;
 
-			return other.Id.Equals(this);
+			return other.Id.Equals(Id);
 		}
 
 		public override int GetHashCode()

@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums.cs" />
+    <Compile Include="Extensions\ObservableCollectionExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="Logic\FileSystem\DownloadUrlHandler.cs" />
@@ -148,6 +149,7 @@
     <Compile Include="Logic\Network\SMP\SmpClient_Objects.cs" />
     <Compile Include="Logic\Network\SMP\SmpReceiveService.cs" />
     <Compile Include="Logic\Network\Web\ProxyHandler.cs" />
+    <Compile Include="Logic\Network\Web\RedirectToMirrorHandler.cs" />
     <Compile Include="Logic\Objects\CatalogResult.cs" />
     <Compile Include="Logic\Objects\FreeSource.cs" />
     <Compile Include="Logic\Objects\ISearchParams.cs" />

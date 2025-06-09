@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Linq;
-using Newtonsoft.Json;
 using Lexplosion.Global;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Network.Web;
+using Newtonsoft.Json;
 
 namespace Lexplosion.Logic.Network
 {
@@ -38,6 +38,12 @@ namespace Lexplosion.Logic.Network
 		public void AddProxy(Proxy proxy)
 		{
 			_clientHandler.AddProxy(proxy);
+		}
+
+		public void ChangeToMirrorMode()
+		{
+			_httpClient = new HttpClient(new RedirectToMirrorHandler());
+			_httpClient.DefaultRequestHeaders.Add("User-Agent", USER_AGENT);
 		}
 
 		public T ProtectedRequest<T>(string url) where T : ProtectedManifest
@@ -242,7 +248,7 @@ namespace Lexplosion.Logic.Network
 					response = await _httpClient.SendAsync(request);
 				}
 
-				if (!response.IsSuccessStatusCode) return null;
+				response.EnsureSuccessStatusCode();
 
 				return await response.Content.ReadAsStringAsync();
 			}

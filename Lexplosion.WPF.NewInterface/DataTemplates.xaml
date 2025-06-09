@@ -132,8 +132,11 @@
     <DataTemplate DataType="{x:Type modalvm:ConfirmActionViewModel}">
         <modalviews:ConfirmActionView />
     </DataTemplate>
-    <DataTemplate DataType="{x:Type modalvm:GroupFactoryViewModel}">
-        <modalviews:GroupFactoryView />
+    <DataTemplate DataType="{x:Type modalvm:InstancesGroupFactoryViewModel}">
+        <modalviews:InstancesGroupFactoryView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type modalvm:InstancesGroupEditViewModel}">
+        <modalviews:InstancesGroupEditView />
     </DataTemplate>
 
     <!--  Instance Profile  -->

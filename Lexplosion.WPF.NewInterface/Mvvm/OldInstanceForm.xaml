@@ -911,7 +911,7 @@
 
                     <controls:DropdownMenu
                         x:Name="PART_DropDownMenu"
-                        Grid.Row="1"
+                        Grid.Row="1" KeyDown="PART_DropDownMenu_KeyDown"
                         Background="{DynamicResource PrimarySolidColorBrush}"
                         BorderBrush="{DynamicResource SeparateSolidColorBrush}"
                         BorderThickness="1"
@@ -981,6 +981,18 @@
                                                     Template="{StaticResource DropDownButton}"
                                                     Text="{DynamicResource Update}" />
                                             </core:If.True>
+                                        </core:If>
+
+                                        <core:If Condition="{Binding IsSelectedGroupDefault}">
+                                            <core:If.False>
+                                                <!--  Удалить  -->
+                                                <controls:AdvancedButton
+                                                    x:Name="RemoveFromGroup"
+                                                    Click="RemoveFromGroup_Click"
+                                                    IconData="{DynamicResource PDRemoveFromLibrary}"
+                                                    Template="{StaticResource DropDownButton}"
+                                                    Text="{DynamicResource RemoveFromGroup}" />
+                                            </core:If.False>
                                         </core:If>
 
                                         <core:If Condition="{Binding IsInstalled}">

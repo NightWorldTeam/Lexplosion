@@ -27,12 +27,11 @@ namespace Lexplosion.Global
 			public const string JavaData = "https://launchermeta.mojang.com/v1/products/java-runtime/2ec0cc96c44e5a76b9c8b7c39df7210883d12871/all.json";
 			public const string Upload = "https://night-world.org/minecraft/upload/";
 			public const string LauncherParts = "https://night-world.org/assets/launcher/windows/";
+			public const string LauncherPartsMirror = "https://mirror.night-world.org/assets/launcher/windows/";
 			public const string UserApi = "https://night-world.org/api/user/";
 			public const string Base = "https://night-world.org/";
 			public const string Account = "https://night-world.org/api/account/";
 			public const string MirrorUrl = "https://night-world.org/mirror/";
-
-			public const string LauncherPartsMirror = "https://mirror.night-world.org/launcher/windows/";
 		}
 
 		public const string GAME_FOLDER_NAME = "lexplosion";

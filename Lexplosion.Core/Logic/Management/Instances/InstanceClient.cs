@@ -36,6 +36,8 @@ namespace Lexplosion.Logic.Management.Instances
 		private const string UnknownAuthor = "Unknown author";
 		private const string NoDescription = "Описания нет, но мы надеемся что оно будет.";
 
+		public static Func<byte[]> LogoGenerator { set; private get; }
+
 		#region events
 		/// <summary>
 		/// Вызывается когда происходит обновление состояния инициализации
@@ -349,8 +351,15 @@ namespace Lexplosion.Logic.Management.Instances
 				{
 					Logo = File.ReadAllBytes(logoPath);
 				}
+				else
+				{
+					Logo = LogoGenerator?.Invoke();
+				}
 			}
-			catch { }
+			catch 
+			{
+				Logo = LogoGenerator?.Invoke();
+			}
 
 			AdditionalInstallerType? installer = null;
 			string installerVer = null;
@@ -771,7 +780,6 @@ namespace Lexplosion.Logic.Management.Instances
 
 		internal void SetLogo(string logoFilePath)
 		{
-
 			try
 			{
 				if (File.Exists(logoFilePath))

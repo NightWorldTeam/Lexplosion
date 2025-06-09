@@ -129,7 +129,6 @@ namespace Lexplosion.WPF.NewInterface.Core
         public readonly Func<object, object> Resources;
 
 
-
         #region Properties
 
 

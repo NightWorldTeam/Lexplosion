@@ -1,12 +1,14 @@
-﻿using DiscordRPC;
+using DiscordRPC;
 using Hardcodet.Wpf.TaskbarNotification;
 using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Accounts;
-using Lexplosion.Tools;
+using Lexplosion.Logic.Management.Instances;
+
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Notifications;
+using Lexplosion.WPF.NewInterface.Core.Tools;
 using Lexplosion.WPF.NewInterface.Extensions;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSettings;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Settings;
@@ -338,7 +340,10 @@ namespace Lexplosion.WPF.NewInterface
                 }
             };
 
-            Thread.Sleep(800);
+			InstanceClient.LogoGenerator = ImageTools.GenerateRandomIcon;
+
+
+			Thread.Sleep(800);
 
             _appCore.UIThread(() =>
             {
@@ -388,12 +393,12 @@ namespace Lexplosion.WPF.NewInterface
         {
             DiscordRpcClient client = new DiscordRpcClient(LaunсherSettings.DiscordAppID);
 
-            if (!client.Initialize())
-            {
-                return null;
-            }
+			if (!client.Initialize())
+			{
+				return null;
+			}
 
-            client.SetPresence(new RichPresence()
+			client.SetPresence(new RichPresence()
             {
                 State = _appCore.Resources("MinecraftNotRunning") as string,
                 Timestamps = Timestamps.Now,
@@ -435,7 +440,7 @@ namespace Lexplosion.WPF.NewInterface
                 }
                 else
                 {
-                    NativeMethods.ShowProcessWindows(Runtime.CurrentProcess.MainWindowHandle);
+					Lexplosion.Tools.NativeMethods.ShowProcessWindows(Runtime.CurrentProcess.MainWindowHandle);
                 }
             });
         }

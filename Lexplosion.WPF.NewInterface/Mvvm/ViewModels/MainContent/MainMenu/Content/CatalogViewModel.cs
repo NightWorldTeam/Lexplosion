@@ -114,12 +114,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         #region Constructors
 
 
-        public CatalogViewModel(AppCore appCore, INavigationStore navigationStore, NavigateCommand<ViewModelBase> navigationCommand, IInstanceController instanceController)
+        public CatalogViewModel(AppCore appCore, NavigateCommand<ViewModelBase> navigationCommand, IInstanceController instanceController)
         {
             _appCore = appCore;
             Model = new CatalogModel(appCore, instanceController);
             _navigationCommand = navigationCommand;
-            _navigationStore = navigationStore;
+            _navigationStore = appCore.NavigationStore;
         }
 
 

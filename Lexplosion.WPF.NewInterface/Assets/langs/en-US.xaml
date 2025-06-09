@@ -876,9 +876,26 @@
 
     <s:String x:Key="CoopertationContact">Coopertation Contact</s:String>
 
+
     <s:String x:Key="OurVkGroup">Our vk group</s:String>
     <s:String x:Key="OurDiscordServer">Our Discord server</s:String>
     <s:String x:Key="OurYoutube">Our Youtube</s:String>
     <s:String x:Key="SourceCode">Source Code</s:String>
     <s:String x:Key="OutWebsite">Out website</s:String>
+
+    <s:String x:Key="Edit">Edit</s:String>
+    <s:String x:Key="AllInstanceGroupName">All Instances</s:String>
+    <s:String x:Key="AllInstanceGroupSummary">This group contains all instances from the library. (Unchangeable)</s:String>
+    <s:String x:Key="OpenGroupTooltip">Open group menu (ESC)</s:String>
+
+    <s:String x:Key="RemoveInstancesGroupTitle">Remove instances group</s:String>
+    <s:String x:Key="RemoveInstancesGroupDescription">
+        Do you really want to remove group: {0}?
+        All instances from this group will not be removed and will be located in other groups.!
+    </s:String>
+    <s:String x:Key="YesIWantToRemoveGroup">Yes I want to remove this group</s:String>
+
+    <s:String x:Key="WithoutGroup">No group</s:String>
+
+    <s:String x:Key="RemoveFromGroup">Remove from group</s:String>
 </ResourceDictionary>

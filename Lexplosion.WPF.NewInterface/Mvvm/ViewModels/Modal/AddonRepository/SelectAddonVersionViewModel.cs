@@ -1,14 +1,10 @@
 ﻿using Lexplosion.Logic.Management.Addons;
-using Lexplosion.Logic.Management.Instances;
-using Lexplosion.Logic.Objects;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Modal;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using static Lexplosion.Logic.Objects.Curseforge.InstanceManifest;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
 {

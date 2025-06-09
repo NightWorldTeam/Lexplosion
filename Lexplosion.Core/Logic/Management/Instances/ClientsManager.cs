@@ -15,13 +15,14 @@ using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Tools;
 using Lexplosion.Logic.Management.Addons;
+using System.Linq;
 
 namespace Lexplosion.Logic.Management.Instances
 {
 	public class ClientsManager
 	{
 		private Dictionary<string, InstanceClient> _installedInstances = new();
-		private List<InstancesGroup> _existsGroups = new();
+		private List<InstancesGroup> _existsGroups = new(); //первая группа всегда all
 
 		/// <summary>
 		/// Содержит пары состоящие из внешнего и внутреннего id.
@@ -59,6 +60,7 @@ namespace Lexplosion.Logic.Management.Instances
 			client.DeployLocally(modloader, isNwClient, logoPath, modloaderVersion, optifineVersion, sodium);
 			client.InternalDataChanged += SaveInstalledInstancesList;
 
+			AddToDefaultGroup(client);
 			_installedInstances[client.LocalId] = client;
 			SaveInstalledInstancesList();
 
@@ -93,12 +95,18 @@ namespace Lexplosion.Logic.Management.Instances
 			return client;
 		}
 
-		public InstancesGroup CreateGroup(string name)
+		public InstancesGroup CreateGroup(string name, string summary = "")
 		{
-			var group = new InstancesGroup(name, _services);
+			var group = new InstancesGroup(name, summary, _services);
 			group.SaveGroupInfo();
 
 			return group;
+		}
+
+		public void DeleteGroup(InstancesGroup instancesGroup)
+		{
+			_existsGroups.Remove(instancesGroup);
+			SaveAllGroups();
 		}
 
 		/// <summary>
@@ -203,6 +211,7 @@ namespace Lexplosion.Logic.Management.Instances
 				while (enumerator.MoveNext())
 				{
 					groupInfo = enumerator.Current;
+					if (groupInfo.Id == InstancesGroup.AllInctancesGroupId) continue; // группу all мы уже добавили в начале
 					_existsGroups.Add(new InstancesGroup(groupInfo, _installedInstances, _services));
 				}
 			}
@@ -292,6 +301,16 @@ namespace Lexplosion.Logic.Management.Instances
 			return null;
 		}
 
+		private void AddToDefaultGroup(InstanceClient client)
+		{
+			_existsGroups[0].AddInstance(client);
+		}
+
+		public void SaveAllGroups()
+		{
+			_services.DataFilesService.RewriteGroupsInfo(_existsGroups.Select(x => x.BuildInstalledInstanceGroup()));
+		}
+
 		/// <summary>
 		/// Добавляет сборку в библиотеку
 		/// </summary>
@@ -304,6 +323,8 @@ namespace Lexplosion.Logic.Management.Instances
 
 				_installedInstances[localId] = client;
 				_idsPairs[client.ExternalId] = localId;
+
+				AddToDefaultGroup(client);
 				SaveInstalledInstancesList();
 			}
 		}
@@ -321,7 +342,13 @@ namespace Lexplosion.Logic.Management.Instances
 				_idsPairs.Remove(client.ExternalId);
 			}
 
+			foreach (var group in _existsGroups)
+			{
+				group.RemoveInstance(client);
+			}
+
 			client.DeleteLocalStruct();
+			SaveAllGroups();
 			SaveInstalledInstancesList();
 		}
 
@@ -623,7 +650,7 @@ namespace Lexplosion.Logic.Management.Instances
 			return newClient;
 		}
 
-		public InstanceClient CopyClient(InstanceClient client, MinecraftVersion gameVersion, ClientType clientType, string modloaderVersion)
+		public InstanceClient CopyClient(InstanceClient client, MinecraftVersion gameVersion, ClientType clientType, string modloaderVersion, Action<List<InstanceAddon>> addonsCopyError)
 		{
 			string name = client.Name + " (Copy)";
 			string id = GenerateInstanceId(name);
@@ -675,7 +702,43 @@ namespace Lexplosion.Logic.Management.Instances
 					ToNextIteration:;
 					}
 
-					//AddonsPrototypesCreater.CreateFromFiles()
+					var addonsManager = AddonsManager.GetManager(baseData, _services);
+
+					var addonsToDownload = new List<InstanceAddon>();
+					addonsToDownload.AddRange(addonsManager.GetInstalledMods(newClient.GetBaseData));
+					addonsToDownload.AddRange(addonsManager.GetInstalledResourcepacks(newClient.GetBaseData));
+					addonsToDownload.AddRange(addonsManager.GetInstalledShaders(newClient.GetBaseData));
+
+					int totalAddonsCount = addonsToDownload.Count;
+
+					newClient.GetProgressHandler(StageType.Client, new ProgressHandlerArguments()
+					{
+						Stage = 1,
+						StagesCount = 1,
+						TotalFilesCount = totalAddonsCount
+					});
+
+					var errors = new List<InstanceAddon>();
+
+					int filesCount = 0;
+					foreach (var addon in addonsToDownload)
+					{
+						DownloadAddonRes result = addon.Update();
+						if (result != DownloadAddonRes.Successful) errors.Add(addon);
+
+						filesCount++;
+
+						newClient.GetProgressHandler(StageType.Client, new ProgressHandlerArguments()
+						{
+							Stage = 1,
+							StagesCount = 1,
+							TotalFilesCount = totalAddonsCount,
+							FilesCount = filesCount,
+							Procents = (filesCount / totalAddonsCount) * 100
+						});
+					}
+
+					if (errors.Count > 0) addonsCopyError(errors);
 
 				}
 				catch { }
