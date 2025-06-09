@@ -911,7 +911,7 @@
 
                     <controls:DropdownMenu
                         x:Name="PART_DropDownMenu"
-                        Grid.Row="1"
+                        Grid.Row="1" KeyDown="PART_DropDownMenu_KeyDown"
                         Background="{DynamicResource PrimarySolidColorBrush}"
                         BorderBrush="{DynamicResource SeparateSolidColorBrush}"
                         BorderThickness="1"

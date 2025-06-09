@@ -277,5 +277,14 @@ namespace Lexplosion.WPF.NewInterface.Controls.OldInstanceForm
                 _model.RemoveFromGroup();
             }
         }
+
+        private void PART_DropDownMenu_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape) 
+            {
+                var dropDown = (sender as DropdownMenu);
+                dropDown.IsOpen = false;
+            }
+        }
     }
 }
