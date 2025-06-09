@@ -1,4 +1,4 @@
-﻿using DiscordRPC;
+using DiscordRPC;
 using Hardcodet.Wpf.TaskbarNotification;
 using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;

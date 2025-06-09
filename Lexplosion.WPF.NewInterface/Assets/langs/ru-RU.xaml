@@ -565,25 +565,11 @@
 
     <!--  endregion Authorization  -->
 
-
-
-
-
-
-    <!--  region Notifications Content  -->
-
-
-
-
-
-    <!--  endregion Notifications Content  -->
-
-
+    
     <s:String x:Key="CustomColor">Свой цвет</s:String>
     <s:String x:Key="CustomColorDescription">Выберите свой акцентный цвет</s:String>
 
-
-
+    
     <!--  Instance Configuration  -->
     <s:String x:Key="SaveChanges">Сохранить изменения</s:String>
     <s:String x:Key="LoadYourLogo">Загрузить лого</s:String>

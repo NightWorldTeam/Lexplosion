@@ -557,11 +557,12 @@
     <s:String x:Key="Important">Important!</s:String>
     <s:String x:Key="MicrosoftManualInputImportantMessage">Never give/show your authentication token to anyone. If third parties receive the token, they will gain access to your account!</s:String>
 
+    <!--  endregion Authorization  -->
+
 
     <s:String x:Key="CustomColor">Custom color</s:String>
     <s:String x:Key="CustomColorDescription">Select custom color</s:String>
 
-    <!--  endregion Authorization  -->
 
     <!--  Instance Configuration  -->
     <s:String x:Key="SaveChanges">Save Changes</s:String>
@@ -571,6 +572,7 @@
 
     <s:String x:Key="Files">Files</s:String>
     <s:String x:Key="Files_LowerCase">files</s:String>
+
 
     <!--  Ad Servers  -->
     <s:String x:Key="PartnerServers">Partner Servers</s:String>
@@ -590,6 +592,37 @@
     <s:String x:Key="LoadingInstanceClientVersions">Loading Client Versions</s:String>
     <s:String x:Key="NoDistributionsAvailableForDownload">There are no distributions available for download</s:String>
 
+
+    <!--  Instance Installing  -->
+    <s:String x:Key="DownloadCompletedSuccessfully">Instance download {0} completed successfully.</s:String>
+
+    <s:String x:Key="FailedToDownloadFollowingFiles:_">The following files could not be downloaded: {0}</s:String>
+    <s:String x:Key="FailedToDownloadSomeFiles">Failed to download some files</s:String>
+    <s:String x:Key="RedownloadingMaySolveTheProblem">Re-downloading may solve the problem, but it is not certain.</s:String>
+    <s:String x:Key="ExternalIdIncorrect">External instance id is invalid.</s:String>
+    <s:String x:Key="ServerError">Server error.</s:String>
+    <s:String x:Key="FailedToGetDataFromServer">Failed to get data from server.</s:String>
+    <s:String x:Key="FileVerificationFailed">File Verification Failed.</s:String>
+    <s:String x:Key="VersionVerificationFailed">Version Verification Failed.</s:String>
+    <s:String x:Key="ModloaderVerificationFailed">Modloader Verification Failed.</s:String>
+    <s:String x:Key="InvalidGameDirectory">Invalid game directory</s:String>
+    <s:String x:Key="FailedLoadInstanceManifest">Failed load instance manifest.</s:String>
+    <s:String x:Key="TrySetCustomJavaPath">Try set custom java path.</s:String>
+    <s:String x:Key="InstanceDownloadCanceledSuccessfully">Instance download canceled successfully.</s:String>
+    <s:String x:Key="UnknownErrorTryRestartLauncher">Something strange happened... We recommend turning it off and on again.</s:String>
+
+    <s:String x:Key="CurseforgeErrorTitle">Curseforge error</s:String>
+    <s:String x:Key="NightWorldErrorTitle">NightWorld error</s:String>
+    <s:String x:Key="GuardErrorTitle">Guard Error</s:String>
+    <s:String x:Key="VersionErrorTitle">Version Error</s:String>
+    <s:String x:Key="ForgeVersionErrorTitle">Forge version error</s:String>
+    <s:String x:Key="GamePathErrorTitle">Game Path error</s:String>
+    <s:String x:Key="ManifestErrorTitle">Manifest-file error</s:String>
+    <s:String x:Key="JavaDownloadErrorTitle">Java download error</s:String>
+    <s:String x:Key="UnknownErrorTitle">Unknown Error</s:String>
+    <s:String x:Key="InstanceName:_">InstanceName: {0}</s:String>
+
+    <!--  endregion Notifications  -->
 
 
     <!--  region ServerProfile  -->

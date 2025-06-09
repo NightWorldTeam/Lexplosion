@@ -65,7 +65,10 @@ namespace Lexplosion.WPF.NewInterface.Core.Services
 
         public void Remove(Guid notificationId) 
         {
-            _notifications.Remove(_notifications.FirstOrDefault(i => i.Id == notificationId));
+            App.Current.Dispatcher.Invoke(() => 
+            {
+                _notifications.Remove(_notifications.FirstOrDefault(i => i.Id == notificationId));
+            });
         }
 
         public void Success(string title, string message)
