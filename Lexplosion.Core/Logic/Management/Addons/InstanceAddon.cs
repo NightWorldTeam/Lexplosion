@@ -397,7 +397,7 @@ namespace Lexplosion.Logic.Management.Addons
 							var addonPointer = new Pointer<InstanceAddon>();
 							addonPointer.Point = null;
 							_synchronizer.ChacheSemaphore.WaitOne();
-							if (_synchronizer.AddonsCatalogChache.ContainsKey(modId))
+							if (_synchronizer.AddonsCatalogChacheContains(modId))
 							{
 								addonPointer.Point = _synchronizer.AddonsCatalogChache[modId];
 								addonPointer.Point.IsInstalling = true;

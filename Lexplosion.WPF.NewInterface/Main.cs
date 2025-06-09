@@ -388,7 +388,7 @@ namespace Lexplosion.WPF.NewInterface
         {
             DiscordRpcClient client = new DiscordRpcClient(LaunсherSettings.DiscordAppID);
 
-            if (client.Initialize())
+            if (!client.Initialize())
             {
                 return null;
             }
