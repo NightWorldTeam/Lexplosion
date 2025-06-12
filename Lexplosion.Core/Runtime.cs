@@ -108,8 +108,10 @@ namespace Lexplosion
 			}
 
 			int version = nightWorldApi.CheckLauncherUpdates();
+			Runtime.DebugWrite($"last launcher version: {version}");
 			if (version == -1)
 			{
+				Runtime.DebugWrite($"Change to mirror mode");
 				toServer.ChangeToMirrorMode();
 				withDirectory.ChangeDownloadToMirrorMode();
 

@@ -192,6 +192,8 @@ namespace Lexplosion.Logic.Network
 
 		public async Task<string> HttpPostAsync(string url, IDictionary<string, string> data = null, IDictionary<string, string> headers = null)
 		{
+			Runtime.DebugWrite($"Request url: {url}");
+
 			HttpResponseMessage response;
 			try
 			{
@@ -230,6 +232,8 @@ namespace Lexplosion.Logic.Network
 
 		public async Task<string> HttpGetAsync(string url, IDictionary<string, string> headers = null, int timeout = 0)
 		{
+			Runtime.DebugWrite($"Request url: {url}");
+
 			try
 			{
 				var request = new HttpRequestMessage(HttpMethod.Get, url);
@@ -277,6 +281,7 @@ namespace Lexplosion.Logic.Network
 
 		public async Task<(string, HttpStatusCode?)> HttpPostJsonAsync(string url, string data, IDictionary<string, string> headers = null)
 		{
+			Runtime.DebugWrite($"Request url: {url}");
 			HttpStatusCode? httpStatus = null;
 
 			try

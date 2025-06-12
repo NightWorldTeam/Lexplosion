@@ -12,6 +12,7 @@ using Lexplosion.Global;
 using Lexplosion.Tools;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Network.Web;
+using System.Threading;
 
 namespace Lexplosion.Logic.FileSystem
 {
@@ -169,7 +170,7 @@ namespace Lexplosion.Logic.FileSystem
 
 				return true;
 			}
-			catch 
+			catch
 			{
 				return false;
 			}
@@ -263,6 +264,7 @@ namespace Lexplosion.Logic.FileSystem
 		public async Task<(bool, HttpStatusCode?)> DownloadFileAsync(string url, string savePath, TaskArgs taskArgs)
 		{
 			HttpStatusCode? httpStatus = null;
+			Runtime.DebugWrite($"Start Download url: {url}, savePath: {savePath}");
 
 			try
 			{
@@ -277,13 +279,20 @@ namespace Lexplosion.Logic.FileSystem
 					{
 						using (var fileStream = File.Create(savePath))
 						{
-							byte[] buffer = new byte[16384];
+							byte[] buffer = new byte[8192];
 							long bytesRead = 0;
 							int bytesReadTotal = 0;
 
+							var source = CancellationTokenSource.CreateLinkedTokenSource(taskArgs.CancelToken);
+							var readToken = source.Token;
+							source.Token.Register(() => stream.Close());
+							source.CancelAfter(TimeSpan.FromMinutes(1));
+
 							int bytesReadThisTime;
-							while ((bytesReadThisTime = await stream.ReadAsync(buffer, 0, buffer.Length)) != 0)
+							while (!readToken.IsCancellationRequested && (bytesReadThisTime = await stream.ReadAsync(buffer, 0, buffer.Length, readToken)) != 0)
 							{
+								source.CancelAfter(Timeout.InfiniteTimeSpan);
+
 								await fileStream.WriteAsync(buffer, 0, bytesReadThisTime);
 								bytesRead += bytesReadThisTime;
 								bytesReadTotal += bytesReadThisTime;
@@ -293,8 +302,11 @@ namespace Lexplosion.Logic.FileSystem
 									double percentage = ((double)bytesRead) / contentLength.Value * 100;
 									taskArgs.PercentHandler((int)percentage);
 								}
+
+								source.CancelAfter(TimeSpan.FromMinutes(1));
 							}
 
+							readToken.ThrowIfCancellationRequested();
 							taskArgs.PercentHandler(100);
 						}
 

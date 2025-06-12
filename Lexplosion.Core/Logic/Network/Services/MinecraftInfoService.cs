@@ -128,7 +128,7 @@ namespace Lexplosion.Logic.Network.Services
 
 		public List<MinecraftServerInstance> GetMinecraftServersList()
 		{
-			string result = _toServer.HttpGet(LaunсherSettings.URL.Base + "/api/minecraftServers/list");
+			string result = _toServer.HttpGet(LaunсherSettings.URL.Base + "api/minecraftServers/list");
 
 			if (result == null) return new List<MinecraftServerInstance>();
 
