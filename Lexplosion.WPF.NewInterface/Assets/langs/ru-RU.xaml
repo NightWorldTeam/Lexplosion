@@ -565,11 +565,11 @@
 
     <!--  endregion Authorization  -->
 
-    
+
     <s:String x:Key="CustomColor">Свой цвет</s:String>
     <s:String x:Key="CustomColorDescription">Выберите свой акцентный цвет</s:String>
 
-    
+
     <!--  Instance Configuration  -->
     <s:String x:Key="SaveChanges">Сохранить изменения</s:String>
     <s:String x:Key="LoadYourLogo">Загрузить лого</s:String>
@@ -956,4 +956,12 @@
     <s:String x:Key="WithoutGroup">Без группы</s:String>
 
     <s:String x:Key="RemoveFromGroup">Убрать из группы</s:String>
+    <s:String x:Key="AddToGroup">Добавить в группу</s:String>
+
+
+
+    <!--  Metadata  -->
+    <s:String x:Key="EmptyDescriptionPlaceholder">
+        Описания нет, но мы надеемся что оно будет.
+    </s:String>
 </ResourceDictionary>

@@ -70,7 +70,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
             Runtime.DebugWrite($"{member} {instanceClient.Name}");
             App.Current.Dispatcher.Invoke(() =>
             {
-                var args = new InstanceModelArgs(_appCore, instanceClient, _exportFunc, _setRunningGame);
+                var args = new InstanceModelArgs(_appCore, instanceClient, _exportFunc, _setRunningGame, instanceLocation: InstanceLocation.Catalog);
                 instanceModelBase = new InstanceModelBase(args);
                 _instances.Add(instanceModelBase);
             });

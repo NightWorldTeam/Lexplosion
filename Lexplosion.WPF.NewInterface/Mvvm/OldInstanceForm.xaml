@@ -911,10 +911,11 @@
 
                     <controls:DropdownMenu
                         x:Name="PART_DropDownMenu"
-                        Grid.Row="1" KeyDown="PART_DropDownMenu_KeyDown"
+                        Grid.Row="1"
                         Background="{DynamicResource PrimarySolidColorBrush}"
                         BorderBrush="{DynamicResource SeparateSolidColorBrush}"
                         BorderThickness="1"
+                        KeyDown="PART_DropDownMenu_KeyDown"
                         Visibility="{Binding IsInstanceCompleted, Converter={converters:BooleanToVisibilityConverter}}">
                         <StackPanel>
 
@@ -984,8 +985,21 @@
                                         </core:If>
 
                                         <core:If Condition="{Binding IsSelectedGroupDefault}">
+                                            <core:If.True>
+                                                <core:If Condition="{Binding AvailableGroupsForAdding}">
+                                                    <core:If.True>
+                                                        <!--  Удалить из группы  -->
+                                                        <controls:AdvancedButton
+                                                            x:Name="AddToGroup"
+                                                            Click="AddToGroup_Click"
+                                                            IconData="{DynamicResource PDAddToList}"
+                                                            Template="{StaticResource DropDownButton}"
+                                                            Text="{DynamicResource AddToGroup}" />
+                                                    </core:If.True>
+                                                </core:If>
+                                            </core:If.True>
                                             <core:If.False>
-                                                <!--  Удалить  -->
+                                                <!--  Удалить из группы  -->
                                                 <controls:AdvancedButton
                                                     x:Name="RemoveFromGroup"
                                                     Click="RemoveFromGroup_Click"
@@ -1025,7 +1039,7 @@
                                     <controls:AdvancedButton
                                         x:Name="AddToLibraryButton"
                                         Click="AddToLibraryButton_Click"
-                                        IconData="{DynamicResource PDAddToLibrary}"
+                                        IconData="{DynamicResource PDAddToList}"
                                         Template="{StaticResource DropDownButton}"
                                         Text="{DynamicResource AddToLibrary}" />
 

@@ -898,4 +898,9 @@
     <s:String x:Key="WithoutGroup">No group</s:String>
 
     <s:String x:Key="RemoveFromGroup">Remove from group</s:String>
+
+    <!--  Metadata  -->
+    <s:String x:Key="EmptyDescriptionPlaceholder">
+        There is no description but we hope you will add it.
+    </s:String>
 </ResourceDictionary>

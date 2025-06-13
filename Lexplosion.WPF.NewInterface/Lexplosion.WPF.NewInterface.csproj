@@ -159,6 +159,10 @@
     <Compile Include="Mvvm\Models\Authorization\NightWorldRegistrationModel.cs" />
     <Compile Include="Mvvm\Models\Authorization\NoAccountAuthorizationModel.cs" />
     <Compile Include="Mvvm\Models\InstanceControllers\InstanceSharesController.cs" />
+    <Compile Include="Mvvm\Models\InstanceModel\DownloadingData.cs" />
+    <Compile Include="Mvvm\Models\InstanceModel\InstanceLocation.cs" />
+    <Compile Include="Mvvm\Models\InstanceModel\InstanceModelArgs.cs" />
+    <Compile Include="Mvvm\Models\InstanceModel\InstanceState.cs" />
     <Compile Include="Mvvm\Models\InstanceTransfer\DistributedInstance.cs" />
     <Compile Include="Mvvm\Models\InstanceTransfer\InstanceDistributionModel.cs" />
     <Compile Include="Mvvm\Models\InstanceTransfer\InstanceExportModel.cs" />
@@ -194,6 +198,8 @@
     <Compile Include="Mvvm\ViewModels\Modal\AdServers\AskServerInstanceInstallingViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\AdServers\SelectInstanceForServerViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\ConfirmActionViewModel.cs" />
+    <Compile Include="Mvvm\Models\Modal\InstanceGroupsConfiguratorModel.cs" />
+    <Compile Include="Mvvm\ViewModels\Modal\InstancesGroup\InstanceGroupsConfiguratorViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\InstancesGroup\InstancesGroupEditViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\InstancesGroup\InstancesGroupFactoryViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\ActiveSharesViewModel.cs" />
@@ -214,6 +220,9 @@
     </Compile>
     <Compile Include="Mvvm\Views\Modal\ConfirmAction\ConfirmActionView.xaml.cs">
       <DependentUpon>ConfirmActionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Views\Modal\InstancesGroup\InstanceGroupsConfiguratorView.xaml.cs">
+      <DependentUpon>InstanceGroupsConfiguratorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Mvvm\Views\Modal\InstancesGroup\InstancesGroupEditView.xaml.cs">
       <DependentUpon>InstancesGroupEditView.xaml</DependentUpon>
@@ -676,6 +685,10 @@
     <Page Include="Mvvm\Views\Modal\ConfirmAction\ConfirmActionView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Mvvm\Views\Modal\InstancesGroup\InstanceGroupsConfiguratorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Mvvm\Views\Modal\InstancesGroup\InstancesGroupEditView.xaml">
       <SubType>Designer</SubType>

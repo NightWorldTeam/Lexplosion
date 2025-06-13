@@ -7,6 +7,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Media;
 using System.Runtime.CompilerServices;
 using System.Windows.Media.Animation;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Menu;
 
 namespace Lexplosion.WPF.NewInterface.Controls.OldInstanceForm
 {
@@ -284,6 +285,15 @@ namespace Lexplosion.WPF.NewInterface.Controls.OldInstanceForm
             {
                 var dropDown = (sender as DropdownMenu);
                 dropDown.IsOpen = false;
+            }
+        }
+
+        private void AddToGroup_Click(object sender, RoutedEventArgs e)
+        {
+            if (_model != null && _model.IsSelectedGroupDefault)
+            {
+                _model.OpenInstanceToGroupsConfigurator();
+                PART_DropDownMenu.IsOpen = false;
             }
         }
     }

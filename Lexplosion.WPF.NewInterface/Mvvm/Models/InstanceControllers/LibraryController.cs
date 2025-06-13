@@ -38,7 +38,20 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
         /// <summary>
         /// Выбранная группа
         /// </summary>
-        public InstancesGroup SelectedGroup { get; private set; }
+        private InstancesGroup _selectedGroup;
+        public InstancesGroup SelectedGroup
+        {
+            get => _selectedGroup; set 
+            {
+                //if (_selectedGroup != null) 
+                //{
+                //    _selectedGroup.NewInstanceAdded -= OnNewInstanceAddedToGroup;
+                //}
+
+                _selectedGroup = value;
+                //_selectedGroup.NewInstanceAdded += OnNewInstanceAddedToGroup;
+            }
+        }
         /// <summary>
         /// Группы сборок
         /// </summary>
@@ -158,14 +171,15 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
             return _instances.FirstOrDefault(i => i.Equals(instanceClient));
         }
 
-        public void GroupItemsChanged()
+        public void GroupItemsChanged(InstanceClient client)
         {
-            _instances.Clear();
+            Add(client);
+            //_instances.Clear();
 
-            foreach (var ic in SelectedGroup.Clients)
-            {
-                Add(ic);
-            }
+            //foreach (var ic in SelectedGroup.Clients)
+            //{
+            //    Add(ic);
+            //}
         }
 
         public void SelectGroup(InstancesGroup instancesGroup)
@@ -179,7 +193,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
             SelectedGroup.IsSelected = true;
             SelectedGroup.NewInstanceAdded += GroupItemsChanged;
 
-            GroupItemsChanged();
+            _instances.Clear();
+
+            foreach (var ic in SelectedGroup.Clients)
+            {
+                Add(ic);
+            }
 
             OnPropertyChanged(nameof(SelectedGroup));
             OnPropertyChanged(nameof(Instances));
@@ -195,6 +214,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
             _groups.Remove(instancesGroup);
             _clientsManager.DeleteGroup(instancesGroup);
         }
+
+
+        //private void OnNewInstanceAddedToGroup() 
+        //{
+        //    GroupItemsChanged();
+        //}
 
 
         #endregion Public Methods

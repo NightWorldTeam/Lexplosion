@@ -1,18 +1,18 @@
-﻿using Lexplosion.WPF.NewInterface.Commands;
-using Lexplosion.WPF.NewInterface.Core;
-using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
-using Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent;
-using Lexplosion.WPF.NewInterface.Stores;
-using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile;
-using System.Windows.Input;
-using System.Collections.Generic;
-using System;
-using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers;
-using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal;
-using Lexplosion.WPF.NewInterface.Core.Objects.TranslatableObjects;
+﻿using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Objects;
-using Lexplosion.Logic.Management.Instances;
+using Lexplosion.WPF.NewInterface.Commands;
+using Lexplosion.WPF.NewInterface.Core;
+using Lexplosion.WPF.NewInterface.Core.Objects.TranslatableObjects;
+using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers;
+using Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent;
+using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
+using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile;
+using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal;
+using Lexplosion.WPF.NewInterface.Stores;
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 {
@@ -134,10 +134,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             get => RelayCommand.GetCommand<bool>(ref _changeOpenStateGroupDrawerCommand, Model.ChangeOpenStateGroupDrawer);
         }
 
-        private RelayCommand _openInstancesFactoryModalCommand;
-        public ICommand OpenInstancesFactoryModalCommand
+        private RelayCommand _openInstancesGroupFactoryModalCommand;
+        public ICommand OpenInstancesGroupFactoryModalCommand
         {
-            get => RelayCommand.GetCommand(ref _openInstancesFactoryModalCommand, OpenInstancesGroupFactoryModal);
+            get => RelayCommand.GetCommand(ref _openInstancesGroupFactoryModalCommand, OpenInstancesGroupFactoryModal);
         }
 
         private RelayCommand _editInstancesGroupCommand;
@@ -150,6 +150,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         public ICommand DeleteInstancesGroupCommand
         {
             get => RelayCommand.GetCommand<InstancesGroup>(ref _deleteInstancesGroupCommand, RemoveInstancesGroupModal);
+        }
+
+        private RelayCommand _openInstanceToGroupsConfiguratorCommand;
+        public ICommand OpenInstanceToGroupsConfiguratorCommand
+        {
+            get => RelayCommand.GetCommand<InstanceModelBase>(ref _openInstanceToGroupsConfiguratorCommand, OpenInstanceToGroupsConfigurator);
         }
 
 
@@ -166,10 +172,32 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             _toMainMenuLayoutCommand = toMainMenuLayoutCommand;
             _modalNavigationStore = appCore.ModalNavigationStore;
             MoveToCatalogCommand = RelayCommand.GetCommand(ref _moveToCatalogCommand, moveToCatalog);
+
+            _appCore.ModalNavigationStore.Opened += OnModalOpened;
+            _appCore.ModalNavigationStore.Closed += OnModalClosed;
         }
 
 
         #region Private Methods
+
+
+        private void OnModalClosed()
+        {
+            Model.IsGroupDrawerEnabled = true && !Model.IsGroupDrawerOpen;
+            Model.IsModalOpened = false;
+        }
+
+        private void OnModalOpened()
+        {
+            Model.IsModalOpened = true;
+            Model.IsGroupDrawerEnabled = false;
+        }
+
+        private void OpenInstanceToGroupsConfigurator(InstanceModelBase instanceModelBase) 
+        {
+            var instancesFactoryModalViewModel = new InstanceGroupsConfiguratorViewModel(instanceModelBase, _clientsManager);
+            _appCore.ModalNavigationStore.Open(instancesFactoryModalViewModel);
+        }
 
 
         private void OpenInstancesGroupFactoryModal()

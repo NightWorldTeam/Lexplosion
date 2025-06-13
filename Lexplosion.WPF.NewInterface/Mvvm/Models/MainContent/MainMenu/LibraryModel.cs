@@ -29,7 +29,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
         /// <summary>
         /// Выбранная группа.
         /// </summary>
-        public InstancesGroup SelectedGroup { get => _instanceController.SelectedGroup;}
+        public InstancesGroup SelectedGroup { get => _instanceController.SelectedGroup; }
         /// <summary>
         /// Класс отвечающий за логику панели фильтрации.
         /// </summary>
@@ -38,23 +38,43 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
         /// Открыто ли меню со списком групп
         /// </summary>
         private bool _isGroupDrawerOpen;
-        public bool IsGroupDrawerOpen 
-        { 
+        public bool IsGroupDrawerOpen
+        {
             get => _isGroupDrawerOpen; set
             {
                 _isGroupDrawerOpen = value;
+                IsGroupDrawerEnabled = !value;
                 OnPropertyChanged();
             }
         }
 
+        private bool _isGroupDrawerEnabled = true;
+        public bool IsGroupDrawerEnabled
+        {
+            get => _isGroupDrawerEnabled; set
+            {
+                _isGroupDrawerEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _isModalOpened = false;
+        public bool IsModalOpened
+        {
+            get => _isModalOpened; set
+            {
+                _isModalOpened = value;
+                OnPropertyChanged();
+            }
+        }
 
         private string _searchText;
         /// <summary>
         /// Текст поиска для сборки
         /// </summary>
-        public string SearchText 
+        public string SearchText
         {
-            get => _searchText; set 
+            get => _searchText; set
             {
                 _searchText = value;
                 OnFilterChanged();
@@ -93,7 +113,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
                 // Предполагаем, что стандартная группа всегда первая.
                 defaultGroup = _instanceController.InstancesGroups.First();
             }
-            else 
+            else
             {
                 defaultGroup = _instanceController.InstancesGroups.FirstOrDefault(ig => ig.Name == defaultGroupName);
             }
@@ -102,15 +122,17 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
         }
 
 
+
+
         #endregion Constructors
 
 
         #region Public Methods
 
 
-        public void OpenInstanceGroup(InstancesGroup instancesGroup) 
+        public void OpenInstanceGroup(InstancesGroup instancesGroup)
         {
-            if (FilterPanel != null) 
+            if (FilterPanel != null)
             {
                 FilterPanel.FilterChanged -= OnFilterChanged;
             }
@@ -135,19 +157,19 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
         /// <summary>
         /// Открывает/закрывает меню со списком групп
         /// </summary>
-        public void ChangeOpenStateGroupDrawer(bool state) 
+        public void ChangeOpenStateGroupDrawer(bool state)
         {
             IsGroupDrawerOpen = state;
             OnPropertyChanged(nameof(IsGroupDrawerOpen));
         }
 
         ///
-        public void AddGroup(InstancesGroup instancesGroup) 
+        public void AddGroup(InstancesGroup instancesGroup)
         {
             _instanceController.AddGroup(instancesGroup);
         }
 
-        public void RemoveGroup(InstancesGroup instancesGroup) 
+        public void RemoveGroup(InstancesGroup instancesGroup)
         {
             _instanceController.RemoveGroup(instancesGroup);
         }
@@ -162,7 +184,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
             OnPropertyChanged(nameof(IsEmpty));
         }
 
-        private void OnFilterChanged() 
+        private void OnFilterChanged()
         {
             InstancesCollectionViewSource.Filter = (i =>
             {
@@ -172,7 +194,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
 
 
                 // check versions
-                if (FilterPanel.SelectedVersion == null) 
+                if (FilterPanel.SelectedVersion == null)
                 {
                     FilterPanel.SelectedVersion = FilterPanel.Versions[0];
                     FilterPanel.SelectedIndex = 0;
@@ -183,7 +205,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
                 {
                     selectedVersionRes = true;
                 }
-                else 
+                else
                 {
                     return false;
                 }
@@ -195,7 +217,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
                 {
                     selectedSourceRes = true;
                 }
-                else 
+                else
                 {
                     return false;
                 }
@@ -204,9 +226,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
 
                 // skip first element because its version.
                 var categories = instanceModelBase.BaseData.Categories.Skip(0);
-                
+
                 var selectedCategoriesRes = false;
-                if (FilterPanel.SelectedCategories.Count == 0) 
+                if (FilterPanel.SelectedCategories.Count == 0)
                 {
                     return selectedSourceRes && selectedVersionRes && searchBoxRes;
                 }
@@ -214,7 +236,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
                 {
                     selectedCategoriesRes = categories.Union(FilterPanel.SelectedCategories).ToArray().Length == categories.Count();
                 }
-                else 
+                else
                 {
                     selectedCategoriesRes = categories.Intersect(FilterPanel.SelectedCategories).Any();
                 }
@@ -230,12 +252,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
             {
                 var group = i as InstancesGroup;
 
-                if (string.IsNullOrEmpty(GroupSearchText)) 
+                if (string.IsNullOrEmpty(GroupSearchText))
                 {
                     return true;
                 }
 
-                if (group.Name == "All") 
+                if (group.Name == "All")
                 {
                     var defaultGroupCurrentLangName = _appCore.Resources("AllInstanceGroupName") as string;
                     return defaultGroupCurrentLangName.IndexOf(GroupSearchText, System.StringComparison.InvariantCultureIgnoreCase) > -1;

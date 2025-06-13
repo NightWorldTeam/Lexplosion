@@ -1,11 +1,9 @@
 using DiscordRPC;
 using Hardcodet.Wpf.TaskbarNotification;
 using Lexplosion.Global;
-using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.Logic.Management.Instances;
-
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Notifications;
 using Lexplosion.WPF.NewInterface.Core.Tools;
@@ -29,7 +27,6 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 
 namespace Lexplosion.WPF.NewInterface
 {

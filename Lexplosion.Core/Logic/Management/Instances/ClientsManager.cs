@@ -1,26 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Runtime.CompilerServices;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Lexplosion.Global;
+﻿using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
-using Lexplosion.Logic.Management.Import.Importers;
+using Lexplosion.Logic.Management.Addons;
 using Lexplosion.Logic.Management.Import;
+using Lexplosion.Logic.Management.Import.Importers;
 using Lexplosion.Logic.Management.Sources;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
-using Lexplosion.Tools;
-using Lexplosion.Logic.Management.Addons;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace Lexplosion.Logic.Management.Instances
 {
 	public class ClientsManager
 	{
+		public event Action<InstancesGroup> GroupAdded;
+		public event Action<InstancesGroup> GroupDeleted;
+
 		private Dictionary<string, InstanceClient> _installedInstances = new();
 		private List<InstancesGroup> _existsGroups = new(); //первая группа всегда all
 
@@ -99,7 +101,7 @@ namespace Lexplosion.Logic.Management.Instances
 		{
 			var group = new InstancesGroup(name, summary, _services);
 			group.SaveGroupInfo();
-
+			GroupAdded?.Invoke(group);
 			return group;
 		}
 
@@ -107,6 +109,7 @@ namespace Lexplosion.Logic.Management.Instances
 		{
 			_existsGroups.Remove(instancesGroup);
 			SaveAllGroups();
+			GroupDeleted?.Invoke(instancesGroup);
 		}
 
 		/// <summary>

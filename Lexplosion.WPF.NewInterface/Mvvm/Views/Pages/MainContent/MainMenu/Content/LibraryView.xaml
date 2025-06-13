@@ -648,7 +648,7 @@
                 IconData="{StaticResource PDGroupList}"
                 IconPadding="8,9,8,9"
                 IsCancel="True"
-                IsEnabled="{Binding Model.IsGroupDrawerOpen, Converter={converters:NegativeBooleanValueConverter}}"
+                IsEnabled="{Binding Model.IsGroupDrawerEnabled}"
                 ToolTip="{DynamicResource OpenGroupTooltip}"
                 ToolTipService.PlacementRectangle="-88,20,0,0" />
 
@@ -704,7 +704,8 @@
                                 Height="24"
                                 Command="{Binding ChangeOpenStateGroupDrawerCommand}"
                                 CommandParameter="{StaticResource FalseValue}"
-                                IsCancel="True">
+                                IsCancel="True"
+                                IsEnabled="{Binding Model.IsModalOpened, Converter={converters:NegativeBooleanValueConverter}}">
 
                                 <Button.Template>
                                     <ControlTemplate>
@@ -772,7 +773,7 @@
                                 Height="28"
                                 Margin="16,0,0,0"
                                 Padding="0"
-                                Command="{Binding OpenInstancesFactoryModalCommand}"
+                                Command="{Binding OpenInstancesGroupFactoryModalCommand}"
                                 IconData="{StaticResource PDAddCircle}"
                                 IconPadding="4"
                                 Style="{StaticResource sm-default}"

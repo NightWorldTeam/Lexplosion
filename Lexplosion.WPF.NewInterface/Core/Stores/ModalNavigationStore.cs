@@ -9,6 +9,8 @@ namespace Lexplosion.WPF.NewInterface.Stores
     public sealed class ModalNavigationStore
     {
         public event CurrentViewModelChangedEventHandler CurrentViewModelChanged;
+        public event Action Opened;
+        public event Action Closed;
 
         private static readonly Dictionary<Type, Func<IModalViewModel>> _modalAbstractFactoriesByType = new();
 
@@ -32,6 +34,7 @@ namespace Lexplosion.WPF.NewInterface.Stores
                 LatestModal = viewModel.ToString().Split('.').LastOrDefault();
             }
             CurrentViewModel.CloseCommandExecutedEvent += CloseInternal;
+            Opened?.Invoke();
         }
 
         public void RegisterAbstractFactory(Type type, ModalFactoryBase factory) 
@@ -69,6 +72,7 @@ namespace Lexplosion.WPF.NewInterface.Stores
             var tmpVM = CurrentViewModel;
             CurrentViewModel = null;
             tmpVM.ExecuteClosedEvent();
+            Closed?.Invoke();
         }
 
         private void CloseInternal(object obj) 

@@ -6,7 +6,6 @@ using Lexplosion.Logic.Objects;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Notifications;
 using Lexplosion.WPF.NewInterface.Core.Objects;
-using Lexplosion.WPF.NewInterface.Core.ViewModel;
 using Lexplosion.WPF.NewInterface.Extensions;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal;
 using System;
@@ -16,134 +15,9 @@ using System.Runtime.CompilerServices;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 {
-    public class InstanceModelArgs 
-    {
-        public AppCore AppCore;
-        public InstanceClient InstanceClient;
-        public Action<InstanceClient> ExportFunc; 
-        public Action<InstanceModelBase> SetRunningGame;
-        public InstanceDistribution InstanceDistribution = null; 
-        public ImportData? ImportData = null;
-        public InstancesGroup? Group;
-
-        public InstanceModelArgs()
-        {
-            
-        }
-
-        public InstanceModelArgs(AppCore appCore, InstanceClient instanceClient, Action<InstanceClient> exportFunc, Action<InstanceModelBase> setRunningGame, InstanceDistribution instanceDistribution = null, ImportData? importData = null, InstancesGroup? group = null)
-        {
-            AppCore = appCore;
-            InstanceClient = instanceClient;
-            ExportFunc = exportFunc;
-            SetRunningGame = setRunningGame;
-            InstanceDistribution = instanceDistribution;
-            ImportData = importData;
-            Group = group;
-        }
-    }
-
-    public sealed class DownloadingData : ObservableObject
-    {
-        /// <summary>
-        /// Текущий этап
-        /// </summary>
-        private StageType _stage;
-        public StageType Stage
-        {
-            get => _stage; set
-            {
-                _stage = value;
-                OnPropertyChanged();
-            }
-        }
-        /// <summary>
-        /// Всего этапов
-        /// </summary>
-        private int _totalStages;
-        public int TotalStages
-        {
-            get => _totalStages; set
-            {
-                _totalStages = value;
-                OnPropertyChanged();
-            }
-        }
-        /// <summary>
-        /// Активный этап
-        /// </summary>
-        private int _currentStage;
-        public int CurrentStage
-        {
-            get => _currentStage; set
-            {
-                _currentStage = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(StageFormatted));
-            }
-        }
-        /// <summary>
-        /// Всего файлов
-        /// </summary>
-        private int _totalFiles;
-        public int TotalFiles
-        {
-            get => _totalFiles; set
-            {
-                _totalFiles = value;
-                OnPropertyChanged();
-            }
-        }
-        /// <summary>
-        /// Текущие количество скаченных файлов
-        /// </summary>
-        private int _filesCounts;
-        public int FilesCounts
-        {
-            get => _filesCounts; set
-            {
-                _filesCounts = value;
-                OnPropertyChanged();
-            }
-        }
-        /// <summary>
-        /// Процент скачивания
-        /// </summary>
-        private int _persentages;
-        public int Percentages
-        {
-            get => _persentages; set
-            {
-                _persentages = value;
-                OnPropertyChanged();
-            }
-        }
-
-
-        public string StageFormatted { get; }
-
-        public DownloadingData()
-        {
-            StageFormatted = $"{FilesCounts}/{TotalFiles}";
-            OnPropertyChanged(string.Empty);
-        }
-    }
-
-    /// <summary>
-    /// Перечисление состояний формы.
-    /// </summary>
-    public enum InstanceState
-    {
-        Default,
-        Downloading,
-        DownloadCanceling,
-        Launching,
-        Preparing,
-        Running
-    }
-
 	public class InstanceModelBase : ViewModelBase, IEquatable<InstanceClient>
 	{
+        public readonly Guid Id;
 		private readonly InstanceClient _instanceClient;
 		private readonly ClientsManager _clientsManager = Runtime.ClientsManager;
 		private readonly Action<InstanceClient> _exportFunc;
@@ -248,6 +122,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
                 OnPropertyChanged();
             }
         }
+
+        public InstanceClient InstanceClient { get => _instanceClient; }
 
         public string LocalId { get => _instanceClient.LocalId; }
         public string WebsiteUrl { get => _instanceClient.WebsiteUrl; }
@@ -407,6 +283,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 
 
         public bool IsSelectedGroupDefault { get; }
+        /// <summary>
+        /// Количество доступных групп сборок больше 1
+        /// </summary>
+        public bool AvailableGroupsForAdding { get => _clientsManager.GetExistsGroups().Count > 1; }
 
 
         #endregion Properties
@@ -417,6 +297,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 
         public InstanceModelBase(InstanceModelArgs instanceModel)
         {
+            Id = Guid.NewGuid();
             _appCore = instanceModel.AppCore;
 
             _instanceClient = instanceModel.InstanceClient;
@@ -426,7 +307,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 
             if (instanceModel.Group != null) 
             {
-                IsSelectedGroupDefault = instanceModel.Group.IsDefaultGroup;
+                IsSelectedGroupDefault = instanceModel.Group.IsDefaultGroup || instanceModel.Location == InstanceLocation.Catalog;
                 _instancesGroup = instanceModel.Group;
             }
 
@@ -446,6 +327,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             _instanceClient.BuildFinished += OnBuildFinished;
             _instanceClient.GameExited += OnGameExited;
 
+            _clientsManager.GroupAdded += OnInstancesGroupAdded;
+            _clientsManager.GroupDeleted += OnInstancesGroupDeleted;
+
             Logo = _instanceClient.Logo;
             TotalDownloads = _instanceClient.DownloadCounts.LongToString();
             HasTotalDownloads = _instanceClient.HasDownloadCounts;
@@ -453,6 +337,16 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             var tags = _instanceClient.Categories.ToList() ?? new List<CategoryBase>();
             tags.Insert(0, versionTag);
             Tags = tags;
+        }
+
+        private void OnInstancesGroupDeleted(InstancesGroup group)
+        {
+            OnPropertyChanged(nameof(AvailableGroupsForAdding));
+        }
+
+        private void OnInstancesGroupAdded(InstancesGroup group)
+        {
+            OnPropertyChanged(nameof(AvailableGroupsForAdding));
         }
 
         private void OnGameExited(string instanceId)
@@ -659,6 +553,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             return _instanceClient == instanceClient;
         }
 
+        public bool CheckInstanceClient(InstanceModelBase instanceModel)
+        {
+            return _instanceClient == instanceModel._instanceClient;
+        }
+
         /// <summary>
         /// Открыть папку с игрой.
         /// </summary>
@@ -796,19 +695,17 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         }
 
 
+        public void OpenInstanceToGroupsConfigurator()
+        {
+            var instancesFactoryModalViewModel = new InstanceGroupsConfiguratorViewModel(this, _clientsManager);
+            _appCore.ModalNavigationStore.Open(instancesFactoryModalViewModel);
+        }
+
+
         #endregion Public Methods
 
 
         #region Private Methods
-
-
-        #region Handlers
-
-
-
-
-
-        #endregion Handlers
 
 
         private void OnDownloadProgressChanged(StageType stageType, ProgressHandlerArguments progressHandlerArguments)
@@ -1063,8 +960,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 
             IsLaunching = false;
             IsLaunched = false;
-            //IsDownloading = false;
-
 
             DownloadCanceled?.Invoke();
             DataChanged?.Invoke();
