@@ -176,7 +176,7 @@ namespace Lexplosion.Logic.Management.Instances
 						}
 
 						var instance = new InstanceClient(sourceFactory, _services, externalID, localId);
-						instance.UpdateInfo(list[localId].Name, instanceManifest.version?.GameVersionInfo, logo, instanceVersion, true);
+						instance.UpdateInfo(list[localId].Name, instanceManifest.version?.GameVersionInfo, logo, instanceVersion, list[localId].IsInstalled);
 
 						_installedInstances[localId] = instance;
 					}
