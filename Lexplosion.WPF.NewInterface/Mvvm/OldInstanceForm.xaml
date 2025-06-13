@@ -338,19 +338,6 @@
                                             </MultiDataTrigger.Setters>
                                         </MultiDataTrigger>
 
-                                        <!--  Скачивание Java  -->
-                                        <MultiDataTrigger>
-                                            <MultiDataTrigger.Conditions>
-                                                <Condition Binding="{Binding IsDownloading}" Value="True" />
-                                                <Condition Binding="{Binding DownloadingData.Stage}" Value="{x:Static lexplosion:StageType.Java}" />
-                                            </MultiDataTrigger.Conditions>
-
-                                            <MultiDataTrigger.Setters>
-                                                <Setter Property="Text" Value="{DynamicResource JavaInstalling}" />
-                                                <Setter Property="Visibility" Value="Visible" />
-                                            </MultiDataTrigger.Setters>
-                                        </MultiDataTrigger>
-
                                         <!--  Скачивание игры  -->
                                         <MultiDataTrigger>
                                             <MultiDataTrigger.Conditions>
@@ -375,6 +362,18 @@
                                             </MultiDataTrigger.Setters>
                                         </MultiDataTrigger>
 
+                                        <!--  Скачивание Java  -->
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding IsDownloading}" Value="True" />
+                                                <Condition Binding="{Binding DownloadingData.Stage}" Value="{x:Static lexplosion:StageType.Java}" />
+                                            </MultiDataTrigger.Conditions>
+
+                                            <MultiDataTrigger.Setters>
+                                                <Setter Property="Text" Value="{DynamicResource JavaInstalling}" />
+                                                <Setter Property="Visibility" Value="Visible" />
+                                            </MultiDataTrigger.Setters>
+                                        </MultiDataTrigger>
 
                                         <!--  Проверка целостности игровых файлов  -->
                                         <MultiDataTrigger>

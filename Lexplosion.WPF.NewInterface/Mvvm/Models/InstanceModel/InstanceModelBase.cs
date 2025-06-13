@@ -717,6 +717,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 
         private void OnDownloadProgressChanged(StageType stageType, ProgressHandlerArguments progressHandlerArguments)
         {
+            if (!IsDownloading)
+            {
+                IsDownloading = true;
+            }
+
             // Данный код вызывается при скачивании и запуске.
             // Поэтому мы будет при StageType.Prepare изменять состояние клиента на Preparing; 
             // Иначе устанавливаем состояние клиента Downloading;
@@ -739,6 +744,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
                 DownloadingData = new();
                 OnPropertyChanged(nameof(DownloadingData));
             }
+
+            Console.WriteLine(IsDownloading);
+            Console.WriteLine(IsLaunching);
 
             DownloadingData.Stage = stageType;
             DownloadingData.CurrentStage = progressHandlerArguments.Stage;
