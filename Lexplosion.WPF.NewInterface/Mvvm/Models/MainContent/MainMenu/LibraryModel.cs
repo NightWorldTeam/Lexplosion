@@ -13,6 +13,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
     {
         private readonly ILibraryInstanceController _instanceController;
         private readonly AppCore _appCore;
+        private readonly InstancesGroup _defaultGroup;
 
 
         #region Properties
@@ -107,19 +108,17 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
             _appCore = appCore;
             _instanceController = instanceController;
 
-            InstancesGroup defaultGroup;
-
             if (defaultGroupName == "default")
             {
                 // Предполагаем, что стандартная группа всегда первая.
-                defaultGroup = _instanceController.InstancesGroups.First();
+                _defaultGroup = _instanceController.InstancesGroups.First();
             }
             else
             {
-                defaultGroup = _instanceController.InstancesGroups.FirstOrDefault(ig => ig.Name == defaultGroupName);
+                _defaultGroup = _instanceController.InstancesGroups.FirstOrDefault(ig => ig.Name == defaultGroupName);
             }
 
-            OpenInstanceGroup(defaultGroup);
+            OpenInstanceGroup(_defaultGroup);
         }
 
 
@@ -173,6 +172,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
 
         public void RemoveGroup(InstancesGroup instancesGroup)
         {
+            if (SelectedGroup == instancesGroup) 
+            {
+                _instanceController.SelectGroup(_defaultGroup);
+            }
             _instanceController.RemoveGroup(instancesGroup);
         }
 
