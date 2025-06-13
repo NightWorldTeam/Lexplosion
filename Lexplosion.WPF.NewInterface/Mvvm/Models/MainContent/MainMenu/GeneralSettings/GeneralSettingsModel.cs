@@ -74,13 +74,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.Content.GeneralSet
 
 				if (isCorrectPath)
 				{
-					GlobalData.GeneralSettings.GamePath = _dataFilesManager.CreateAcceptableGamePath(value);
+					GlobalData.GeneralSettings.GamePath = _dataFilesManager.CreateAcceptableGamePath(value, out bool newDirIsEmpty);
 					OnPropertyChanged();
 					_dataFilesManager.SaveSettings(GlobalData.GeneralSettings);
 
 					bool copyEntireOldDirectory = false;
 
-					if (_clientsManager.LibrarySize > 0)
+					if (_clientsManager.LibrarySize > 0 && newDirIsEmpty)
 					{
 						var entireDirectoryCopyModal = new ConfirmActionViewModel(
 							_appCore.Resources("DirectoryTransfer") as string,
