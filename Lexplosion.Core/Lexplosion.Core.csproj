@@ -33,7 +33,7 @@
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>5</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
@@ -241,6 +241,6 @@
     </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>powershell Compress-Archive -Path "$(TargetPath)" -DestinationPath "$(SolutionDir)DLL\Lexplosion.Core.zip" -Force</PostBuildEvent>
+    <PostBuildEvent>powershell -Command "Compress-Archive -Path \"$(TargetPath)\" -DestinationPath \"$(SolutionDir)DLL\Lexplosion.Core.zip\" -Force"</PostBuildEvent>
   </PropertyGroup>
 </Project>
