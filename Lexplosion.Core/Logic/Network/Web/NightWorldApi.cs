@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading;
 using Newtonsoft.Json;
 using Lexplosion.Global;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Objects.Nightworld;
-using System.Threading;
 
 namespace Lexplosion.Logic.Network
 {
@@ -390,7 +390,16 @@ namespace Lexplosion.Logic.Network
 
 		public bool ServerIsOnline()
 		{
-			return _toServer.HttpPost(LaunсherSettings.URL.Base + "api/onlineStatus") == "online";
+			var isMirrorMode = _toServer.IsMirrorModeToNw;
+			var result = _toServer.HttpPost(LaunсherSettings.URL.Base + "api/onlineStatus", timeout: 10000);
+
+			if (result == null && !isMirrorMode)
+			{
+				_toServer.ChangeToMirrorMode();
+				return ServerIsOnline();
+			}
+
+			return result == "online";
 		}
 	}
 }

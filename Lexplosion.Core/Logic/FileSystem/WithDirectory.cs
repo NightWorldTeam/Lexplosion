@@ -13,6 +13,7 @@ using Lexplosion.Tools;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Network.Web;
 using System.Threading;
+using System.Runtime.CompilerServices;
 
 namespace Lexplosion.Logic.FileSystem
 {
@@ -21,6 +22,7 @@ namespace Lexplosion.Logic.FileSystem
 		// TODO: во всём WithDirectory я заменяю элементы адресов директорий через replace. Не знаю как на винде, но на линуксе могут появиться проблемы, ведь replace заменяет подстроки в строке, а не только конечную подстроку
 		public string DirectoryPath { get; private set; }
 		public string InstancesPath { get => $"{DirectoryPath}/instances/"; }
+		public bool IsMirrorModeToNw { get; private set; } = false;
 		public string GetInstancePath(string instanceId) => $"{InstancesPath}{instanceId}/";
 
 		private HttpClient _httpClient = new();
@@ -33,17 +35,28 @@ namespace Lexplosion.Logic.FileSystem
 			_httpClient.DefaultRequestHeaders.Add("User-Agent", USER_AGENT);
 		}
 
+		[MethodImpl(MethodImplOptions.Synchronized)]
 		public void ChangeDownloadToProxyMode()
 		{
 			_clientHandler = new ProxyHandler(USER_AGENT);
-			_httpClient = new HttpClient(_clientHandler);
-			_httpClient.DefaultRequestHeaders.Add("User-Agent", USER_AGENT);
+			var newhttpClient = new HttpClient(_clientHandler);
+			newhttpClient.DefaultRequestHeaders.Add("User-Agent", USER_AGENT);
+
+			_httpClient = newhttpClient;
 		}
 
+		[MethodImpl(MethodImplOptions.Synchronized)]
 		public void ChangeDownloadToMirrorMode()
 		{
-			_httpClient = new HttpClient(new RedirectToMirrorHandler());
-			_httpClient.DefaultRequestHeaders.Add("User-Agent", USER_AGENT);
+			if (!IsMirrorModeToNw)
+			{
+				Runtime.DebugWrite("Enable mirror mode");
+				var newhttpClient = new HttpClient(new RedirectToMirrorHandler());
+				newhttpClient.DefaultRequestHeaders.Add("User-Agent", USER_AGENT);
+
+				_httpClient = newhttpClient;
+				IsMirrorModeToNw = true;
+			}			
 		}
 
 		public void AddProxy(Proxy proxy)
@@ -263,12 +276,13 @@ namespace Lexplosion.Logic.FileSystem
 
 		public async Task<(bool, HttpStatusCode?)> DownloadFileAsync(string url, string savePath, TaskArgs taskArgs)
 		{
+			var httpClient =  _httpClient;
 			HttpStatusCode? httpStatus = null;
 			Runtime.DebugWrite($"Start Download url: {url}, savePath: {savePath}");
 
 			try
 			{
-				using (HttpResponseMessage response = await _httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, taskArgs.CancelToken))
+				using (HttpResponseMessage response = await httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, taskArgs.CancelToken))
 				{
 					httpStatus = response.StatusCode;
 					response.EnsureSuccessStatusCode();
@@ -327,6 +341,11 @@ namespace Lexplosion.Logic.FileSystem
 			catch (Exception ex)
 			{
 				Runtime.DebugWrite("Downloading error " + savePath + " " + url + " " + ex);
+
+				if (!IsMirrorModeToNw && url != null && url.StartsWith(LaunсherSettings.URL.Base))
+				{
+					ChangeDownloadToMirrorMode();
+				}
 			}
 
 			return (false, httpStatus);

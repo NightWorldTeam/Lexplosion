@@ -12,6 +12,7 @@ using Lexplosion.Global;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Network.Web;
 using Newtonsoft.Json;
+using System.Runtime.CompilerServices;
 
 namespace Lexplosion.Logic.Network
 {
@@ -22,17 +23,21 @@ namespace Lexplosion.Logic.Network
 
 		private const string USER_AGENT = "Mozilla/5.0 Lexplosion/1.0.0.5";
 
+		public bool IsMirrorModeToNw { get; private set; } = false;
+
 		internal ToServer()
 		{
 			_httpClient = new HttpClient();
 			_httpClient.DefaultRequestHeaders.Add("User-Agent", USER_AGENT);
 		}
 
+		[MethodImpl(MethodImplOptions.Synchronized)]
 		public void ChangeToProxyMode()
 		{
 			_clientHandler = new ProxyHandler(USER_AGENT);
-			_httpClient = new HttpClient(_clientHandler);
-			_httpClient.DefaultRequestHeaders.Add("User-Agent", USER_AGENT);
+			var newHttpClient = new HttpClient(_clientHandler);
+			newHttpClient.DefaultRequestHeaders.Add("User-Agent", USER_AGENT);
+			_httpClient = newHttpClient;
 		}
 
 		public void AddProxy(Proxy proxy)
@@ -40,13 +45,21 @@ namespace Lexplosion.Logic.Network
 			_clientHandler.AddProxy(proxy);
 		}
 
+		[MethodImpl(MethodImplOptions.Synchronized)]
 		public void ChangeToMirrorMode()
 		{
-			_httpClient = new HttpClient(new RedirectToMirrorHandler());
-			_httpClient.DefaultRequestHeaders.Add("User-Agent", USER_AGENT);
+			if (!IsMirrorModeToNw)
+			{
+				Runtime.DebugWrite("Enable mirror mode");
+				var newHttpClient = new HttpClient(new RedirectToMirrorHandler());
+				newHttpClient.DefaultRequestHeaders.Add("User-Agent", USER_AGENT);
+				_httpClient = newHttpClient;
+
+				IsMirrorModeToNw = true;
+			}		
 		}
 
-		public T ProtectedRequest<T>(string url) where T : ProtectedManifest
+		public T ProtectedRequest<T>(string url, int timeout = 0) where T : ProtectedManifest
 		{
 			Random rnd = new Random();
 
@@ -73,7 +86,7 @@ namespace Lexplosion.Logic.Network
 				try
 				{
 					Runtime.DebugWrite(url);
-					string answer = HttpPost(url, data);
+					string answer = HttpPost(url, data, timeout: timeout);
 
 					if (answer != null && answer != "")
 					{
@@ -185,15 +198,16 @@ namespace Lexplosion.Logic.Network
 			}
 		}
 
-		public string HttpPost(string url, IDictionary<string, string> data = null, IDictionary<string, string> headers = null)
+		public string HttpPost(string url, IDictionary<string, string> data = null, IDictionary<string, string> headers = null, int timeout = 0)
 		{
-			return HttpPostAsync(url, data, headers).Result;
+			return HttpPostAsync(url, data, headers, timeout).Result;
 		}
 
-		public async Task<string> HttpPostAsync(string url, IDictionary<string, string> data = null, IDictionary<string, string> headers = null)
+		public async Task<string> HttpPostAsync(string url, IDictionary<string, string> data = null, IDictionary<string, string> headers = null, int timeout = 0)
 		{
 			Runtime.DebugWrite($"Request url: {url}");
 
+			var httpClient = _httpClient;
 			HttpResponseMessage response;
 			try
 			{
@@ -211,7 +225,17 @@ namespace Lexplosion.Logic.Network
 
 				AddHeaders(request, headers);
 
-				response = await _httpClient.SendAsync(request);
+				if (timeout > 0)
+				{
+					var cts = new CancellationTokenSource();
+					cts.CancelAfter(TimeSpan.FromMilliseconds(timeout));
+					response = await httpClient.SendAsync(request, cts.Token);
+				}
+				else
+				{
+					response = await httpClient.SendAsync(request);
+				}
+
 				if (!response.IsSuccessStatusCode) return null;
 
 				return await response.Content.ReadAsStringAsync();
@@ -234,6 +258,7 @@ namespace Lexplosion.Logic.Network
 		{
 			Runtime.DebugWrite($"Request url: {url}");
 
+			var httpClient = _httpClient;
 			try
 			{
 				var request = new HttpRequestMessage(HttpMethod.Get, url);
@@ -245,11 +270,11 @@ namespace Lexplosion.Logic.Network
 				{
 					var cts = new CancellationTokenSource();
 					cts.CancelAfter(TimeSpan.FromMilliseconds(timeout));
-					response = await _httpClient.SendAsync(request, cts.Token);
+					response = await httpClient.SendAsync(request, cts.Token);
 				}
 				else
 				{
-					response = await _httpClient.SendAsync(request);
+					response = await httpClient.SendAsync(request);
 				}
 
 				response.EnsureSuccessStatusCode();
@@ -284,6 +309,7 @@ namespace Lexplosion.Logic.Network
 			Runtime.DebugWrite($"Request url: {url}");
 			HttpStatusCode? httpStatus = null;
 
+			var httpClient = _httpClient;
 			try
 			{
 				var request = new HttpRequestMessage(HttpMethod.Post, url)
@@ -294,7 +320,7 @@ namespace Lexplosion.Logic.Network
 				// Добавляем заголовки
 				AddHeaders(request, headers);
 
-				var response = await _httpClient.SendAsync(request);
+				var response = await httpClient.SendAsync(request);
 				httpStatus = response.StatusCode;
 				if (!response.IsSuccessStatusCode) return (null, httpStatus);
 

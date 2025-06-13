@@ -51,9 +51,10 @@ namespace Lexplosion.Logic.Network.Services
 
 		public List<MCVersionInfo> GetVersionsList()
 		{
+			bool isMirrorMode = _toServer.IsMirrorModeToNw;
 			try
 			{
-				string answer = _toServer.HttpGet(LaunсherSettings.URL.VersionsData);
+				string answer = _toServer.HttpGet(LaunсherSettings.URL.VersionsData, timeout: 20000);
 				if (answer != null)
 				{
 					List<MCVersionInfo> data = JsonConvert.DeserializeObject<List<MCVersionInfo>>(answer);
@@ -61,6 +62,12 @@ namespace Lexplosion.Logic.Network.Services
 				}
 				else
 				{
+					if (!isMirrorMode)
+					{
+						_toServer.ChangeToMirrorMode();
+						return GetVersionsList();
+					}
+
 					return new List<MCVersionInfo>();
 				}
 			}
@@ -210,7 +217,7 @@ namespace Lexplosion.Logic.Network.Services
 					}
 				}
 
-				var filesData = _toServer.ProtectedRequest<ProtectedVersionManifest>(LaunсherSettings.URL.VersionsData + WebUtility.UrlEncode(version) + modloaderUrl);
+				var filesData = _toServer.ProtectedRequest<ProtectedVersionManifest>(LaunсherSettings.URL.VersionsData + WebUtility.UrlEncode(version) + modloaderUrl, 20000);
 				if (filesData?.version != null)
 				{
 					if (isNwClient && filesData.version.NightWorldClientData != null)
@@ -235,7 +242,7 @@ namespace Lexplosion.Logic.Network.Services
 
 					if (optifineVersion != null)
 					{
-						var optifineData = _toServer.ProtectedRequest<ProtectedInstallerManifest>(LaunсherSettings.URL.InstallersData + WebUtility.UrlEncode(version) + "/optifine/" + optifineVersion);
+						var optifineData = _toServer.ProtectedRequest<ProtectedInstallerManifest>(LaunсherSettings.URL.InstallersData + WebUtility.UrlEncode(version) + "/optifine/" + optifineVersion, 20000);
 						if (optifineData == null) return null;
 
 						foreach (string lib in optifineData.libraries.Keys)
