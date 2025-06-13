@@ -201,6 +201,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
                 }
                 else
                 {
+                    im.UpdateInstancesGroup(instancesGroup);
                     Add(im);
                 }
             }

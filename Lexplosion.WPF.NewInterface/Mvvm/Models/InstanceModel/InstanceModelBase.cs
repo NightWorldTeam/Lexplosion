@@ -22,7 +22,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 		private readonly ClientsManager _clientsManager = Runtime.ClientsManager;
 		private readonly Action<InstanceClient> _exportFunc;
 		private readonly Action<InstanceModelBase> _setRunningGame;
-        private readonly InstancesGroup _instancesGroup;
+        private InstancesGroup _instancesGroup;
 
 		private readonly AppCore _appCore;
 
@@ -282,7 +282,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         public ImportData? ImportData { get; }
 
 
-        public bool IsSelectedGroupDefault { get; }
+        public bool IsSelectedGroupDefault { get; private set; }
         /// <summary>
         /// Количество доступных групп сборок больше 1
         /// </summary>
@@ -337,6 +337,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             var tags = _instanceClient.Categories.ToList() ?? new List<CategoryBase>();
             tags.Insert(0, versionTag);
             Tags = tags;
+        }
+
+
+        public void UpdateInstancesGroup(InstancesGroup group) 
+        {
+            _instancesGroup = group;
+            IsSelectedGroupDefault = group.IsDefaultGroup;
         }
 
         private void OnInstancesGroupDeleted(InstancesGroup group)
