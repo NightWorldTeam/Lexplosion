@@ -100,7 +100,9 @@ namespace Lexplosion.Logic.Management.Instances
 		public InstancesGroup CreateGroup(string name, string summary = "")
 		{
 			var group = new InstancesGroup(name, summary, _services);
+			_existsGroups.Add(group);
 			group.SaveGroupInfo();
+
 			GroupAdded?.Invoke(group);
 			return group;
 		}
