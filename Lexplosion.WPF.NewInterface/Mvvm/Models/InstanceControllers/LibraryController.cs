@@ -41,7 +41,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
         private InstancesGroup _selectedGroup;
         public InstancesGroup SelectedGroup
         {
-            get => _selectedGroup; set 
+            get => _selectedGroup; set
             {
                 //if (_selectedGroup != null) 
                 //{
@@ -193,11 +193,20 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
             SelectedGroup.IsSelected = true;
             SelectedGroup.NewInstanceAdded += GroupItemsChanged;
 
+            var prevInstances = _instances.ToList();
             _instances.Clear();
 
             foreach (var ic in SelectedGroup.Clients)
             {
-                Add(ic);
+                var im = prevInstances.FirstOrDefault(i => i.InstanceClient == ic);
+                if (im == null)
+                {
+                    Add(ic);
+                }
+                else
+                {
+                    Add(im);
+                }
             }
 
             OnPropertyChanged(nameof(SelectedGroup));
