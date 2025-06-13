@@ -71,6 +71,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
 
             _groups = new(_clientsManager.GetExistsGroups());
 
+            SelectGroup(_groups.First());
+
             InstanceModelBase.GlobalAddedToLibrary += (im) => Add(im);
             InstanceModelBase.GlobalDeletedEvent += Remove;
             InstanceModelBase.GlobalGroupRemovedEvent += Remove;
@@ -174,12 +176,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
         public void GroupItemsChanged(InstanceClient client)
         {
             Add(client);
-            //_instances.Clear();
-
-            //foreach (var ic in SelectedGroup.Clients)
-            //{
-            //    Add(ic);
-            //}
         }
 
         public void SelectGroup(InstancesGroup instancesGroup)

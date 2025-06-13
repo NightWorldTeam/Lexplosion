@@ -5,6 +5,7 @@ using Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
 {
@@ -25,7 +26,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
         /// <summary>
         /// Группа пустая?
         /// </summary>
-        public bool IsEmpty { get => _instanceController.Instances.Count == 0; }
+        public bool IsEmpty { get; private set; }
         /// <summary>
         /// Выбранная группа.
         /// </summary>
@@ -151,6 +152,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
             OnPropertyChanged(nameof(SelectedGroup));
 
             Groups.Source = _instanceController.InstancesGroups;
+            IsEmpty = _instanceController.Instances.Count == 0;
             InstancesCollectionViewSource.Source = _instanceController.Instances;
         }
 
@@ -181,6 +183,17 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
 
         private void OnInstancesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
+            if (e.Action == NotifyCollectionChangedAction.Remove || e.Action == NotifyCollectionChangedAction.Reset)
+            {
+                if (e.OldItems.Count == _instanceController.Instances.Count)
+                    IsEmpty = true;
+            }
+            else if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                if (_instanceController.Instances.Count == 0)
+                    IsEmpty = false;
+            }
+
             OnPropertyChanged(nameof(IsEmpty));
         }
 
