@@ -1004,6 +1004,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             OnPropertyChanged(nameof(Logo));
         }
 
+        internal void UpdateExportFunc()
+        {
+            throw new NotImplementedException();
+        }
+
 
         #endregion Private Methods
     }

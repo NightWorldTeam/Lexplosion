@@ -68,17 +68,15 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
         {
             _appCore = appCore;
             _clientsManager = clientsManager;
-
             _groups = new(_clientsManager.GetExistsGroups());
+            _exportFunc = export;
+            _setRunningGame = setRunningGame;
 
             SelectGroup(_groups.First());
 
             InstanceModelBase.GlobalAddedToLibrary += (im) => Add(im);
             InstanceModelBase.GlobalDeletedEvent += Remove;
             InstanceModelBase.GlobalGroupRemovedEvent += Remove;
-
-            _exportFunc = export;
-            _setRunningGame = setRunningGame;
         }
 
 

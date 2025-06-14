@@ -2,10 +2,9 @@
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Modal;
 using Lexplosion.WPF.NewInterface.Core.ViewModel;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
 {
