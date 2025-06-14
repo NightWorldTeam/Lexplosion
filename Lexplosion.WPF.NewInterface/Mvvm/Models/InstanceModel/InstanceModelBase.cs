@@ -109,6 +109,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         #endregion Events
 
 
+        private readonly Action<InstanceClient> _addToLibraryByInstanceClient;
+
+
         #region Properties
 
 
@@ -304,6 +307,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             _exportFunc = instanceModel.ExportFunc;
             InstanceDistribution = instanceModel.InstanceDistribution;
             ImportData = instanceModel.ImportData;
+            _addToLibraryByInstanceClient = instanceModel.AddToLibraryByInstanceClient;
 
             if (instanceModel.Group != null) 
             {
@@ -704,8 +708,14 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 
         public void OpenInstanceToGroupsConfigurator()
         {
-            var instancesFactoryModalViewModel = new InstanceGroupsConfiguratorViewModel(this, _clientsManager);
-            _appCore.ModalNavigationStore.Open(instancesFactoryModalViewModel);
+            var viewModel = new InstanceGroupsConfiguratorViewModel(this, _clientsManager);
+            _appCore.ModalNavigationStore.Open(viewModel);
+        }
+
+        public void OpenCoping()
+        {
+            var viewModel = new InstanceCopyViewModel(_appCore, _clientsManager, this, _addToLibraryByInstanceClient);
+            _appCore.ModalNavigationStore.Open(viewModel);
         }
 
 

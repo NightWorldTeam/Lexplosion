@@ -14,7 +14,6 @@
     xmlns:mainmenuview="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu"
     xmlns:mainmenuvm="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu"
     xmlns:modalviews="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Modal"
-    xmlns:modalviews1="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Modal.InstancesGroup"
     xmlns:modalvm="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal"
     xmlns:pages="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages"
     xmlns:s="clr-namespace:System;assembly=mscorlib"
@@ -141,6 +140,12 @@
     </DataTemplate>
     <DataTemplate DataType="{x:Type modalvm:InstanceGroupsConfiguratorViewModel}">
         <modalviews:InstanceGroupsConfiguratorView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type modalvm:InstanceCopyViewModel}">
+        <modalviews:InstanceCopyView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type modalvm:InstanceCopyErrorsViewModel}">
+        <modalviews:InstanceCopyErrorsView />
     </DataTemplate>
 
     <!--  Instance Profile  -->

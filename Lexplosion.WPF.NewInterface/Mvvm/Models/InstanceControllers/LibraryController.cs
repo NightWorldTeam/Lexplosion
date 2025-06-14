@@ -101,7 +101,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
             InstanceModelBase? instanceModelBase = null;
             App.Current.Dispatcher.Invoke(() =>
             {
-                var args = new InstanceModelArgs(_appCore, instanceClient, _exportFunc, _setRunningGame, group: SelectedGroup);
+                var args = new InstanceModelArgs(_appCore, instanceClient, _exportFunc, _setRunningGame, addByInstanceClient: (ic) => Add(ic), group: SelectedGroup);
                 instanceModelBase = new InstanceModelBase(args);
                 Add(instanceModelBase);
             });
@@ -114,7 +114,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
             InstanceModelBase? instanceModelBase = null;
             App.Current.Dispatcher.Invoke(() =>
             {
-                var args = new InstanceModelArgs(_appCore, instanceClient, _exportFunc, _setRunningGame, instanceDistribution, group: SelectedGroup);
+                var args = new InstanceModelArgs(_appCore, instanceClient, _exportFunc, _setRunningGame, instanceDistribution, addByInstanceClient: (ic) => Add(ic), group: SelectedGroup);
                 instanceModelBase = new InstanceModelBase(args);
                 Add(instanceModelBase);
             });
@@ -127,7 +127,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
             InstanceModelBase? instanceModelBase = null;
             App.Current.Dispatcher.Invoke(() =>
             {
-                var args = new InstanceModelArgs(_appCore, instanceClient, _exportFunc, _setRunningGame, importData: importData, group: SelectedGroup);
+                var args = new InstanceModelArgs(_appCore, instanceClient, _exportFunc, _setRunningGame, addByInstanceClient: (ic) => Add(ic), importData: importData, group: SelectedGroup);
                 instanceModelBase = new InstanceModelBase(args);
                 Add(instanceModelBase);
             });

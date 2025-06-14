@@ -955,6 +955,22 @@
                                             Template="{StaticResource DropDownButton}"
                                             Text="{DynamicResource OpenFolder}" />
 
+                                        <!--  Дополнения  -->
+                                        <controls:AdvancedButton
+                                            x:Name="OpenAddonManagerButton"
+                                            Click="OpenAddonManagerButton_Click"
+                                            IconData="{DynamicResource PDAddons}"
+                                            Template="{StaticResource DropDownButton}"
+                                            Text="{DynamicResource Addons}" />
+
+                                        <!--  Экспорт  -->
+                                        <controls:AdvancedButton
+                                            x:Name="CopyButton"
+                                            Click="CopyButton_Click"
+                                            IconData="{DynamicResource PDCopy}"
+                                            Template="{StaticResource DropDownButton}"
+                                            Text="{DynamicResource Copy}" />
+
                                         <!--  Экспорт  -->
                                         <controls:AdvancedButton
                                             x:Name="ExportButton"
@@ -963,13 +979,6 @@
                                             Template="{StaticResource DropDownButton}"
                                             Text="{DynamicResource Export}" />
 
-                                        <!--  Дополнения  -->
-                                        <controls:AdvancedButton
-                                            x:Name="OpenAddonManagerButton"
-                                            Click="OpenAddonManagerButton_Click"
-                                            IconData="{DynamicResource PDAddons}"
-                                            Template="{StaticResource DropDownButton}"
-                                            Text="{DynamicResource Addons}" />
 
                                         <core:If Condition="{Binding HasAvailableUpdate}">
                                             <core:If.True>

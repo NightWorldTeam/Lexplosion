@@ -655,7 +655,7 @@ namespace Lexplosion.Logic.Management.Instances
 			return newClient;
 		}
 
-		public InstanceClient CopyClient(InstanceClient client, MinecraftVersion gameVersion, ClientType clientType, string modloaderVersion, Action<List<InstanceAddon>> addonsCopyError)
+		public InstanceClient CopyClient(InstanceClient client, MinecraftVersion gameVersion, ClientType clientType, string modloaderVersion, Action<List<InstanceAddon>> getUncopiedAddons)
 		{
 			string name = client.Name + " (Copy)";
 			string id = GenerateInstanceId(name);
@@ -743,7 +743,7 @@ namespace Lexplosion.Logic.Management.Instances
 						});
 					}
 
-					if (errors.Count > 0) addonsCopyError(errors);
+					if (errors.Count > 0) getUncopiedAddons(errors);
 
 				}
 				catch { }

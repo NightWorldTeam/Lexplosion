@@ -964,4 +964,6 @@
     <s:String x:Key="EmptyDescriptionPlaceholder">
         Описания нет, но мы надеемся что оно будет.
     </s:String>
+
+    <s:String x:Key="Copy">Скопировать</s:String>
 </ResourceDictionary>

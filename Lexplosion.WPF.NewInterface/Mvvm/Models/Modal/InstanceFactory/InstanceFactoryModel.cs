@@ -1,8 +1,8 @@
 ﻿using Lexplosion.Global;
-using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Management;
-using Lexplosion.WPF.NewInterface.Core.GameExtensions;
+using Lexplosion.Logic.Management.Instances;
 using Lexplosion.WPF.NewInterface.Core;
+using Lexplosion.WPF.NewInterface.Core.GameExtensions;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -280,7 +280,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Modal
             UpdateModloaderManager(ClientType, Version);
             UpdateOptimizationModManager(Version);
 
-            IsNWClientAvailable = NWClientSupportedVersions.FirstOrDefault(verStr => verStr == Version.Id) != null;
+            IsNWClientAvailable = Version != null ? NWClientSupportedVersions.FirstOrDefault(verStr => verStr == Version.Id) != null : false;
             OnPropertyChanged(nameof(IsNWClientAvailable));
         }
 

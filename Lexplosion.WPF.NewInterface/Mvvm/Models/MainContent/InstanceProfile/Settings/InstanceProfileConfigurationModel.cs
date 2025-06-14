@@ -1,7 +1,5 @@
-﻿using Lexplosion.Global;
-using Lexplosion.Logic.Management;
+﻿using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Instances;
-using Lexplosion.Logic.Network.Services;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.GameExtensions;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;

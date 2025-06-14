@@ -171,7 +171,7 @@
     <Compile Include="Mvvm\Models\MainContent\MainMenu\Friends\FriendRequestsModel.cs" />
     <Compile Include="Mvvm\Models\MainContent\MainMenu\Friends\FriendsModel.cs" />
     <Compile Include="Mvvm\Models\MainContent\MainMenu\GeneralSettings\AccountsSettingsModel.cs" />
-    <Compile Include="Mvvm\Models\Modal\InstanceFactoryModel.cs" />
+    <Compile Include="Mvvm\Models\Modal\InstanceFactory\InstanceFactoryModel.cs" />
     <Compile Include="Mvvm\OldInstanceForm.xaml.cs">
       <DependentUpon>OldInstanceForm.xaml</DependentUpon>
     </Compile>
@@ -199,6 +199,10 @@
     <Compile Include="Mvvm\ViewModels\Modal\AdServers\SelectInstanceForServerViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\ConfirmActionViewModel.cs" />
     <Compile Include="Mvvm\Models\Modal\InstanceGroupsConfiguratorModel.cs" />
+    <Compile Include="Mvvm\Models\Modal\InstanceFactory\InstanceCopyModel.cs" />
+    <Compile Include="Mvvm\Models\Modal\InstanceFactory\InstanceCopyErrorsModel.cs" />
+    <Compile Include="Mvvm\ViewModels\Modal\InstanceFactory\InstanceCopyErrorsViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\Modal\InstanceFactory\InstanceCopyViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\InstancesGroup\InstanceGroupsConfiguratorViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\InstancesGroup\InstancesGroupEditViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\InstancesGroup\InstancesGroupFactoryViewModel.cs" />
@@ -220,6 +224,12 @@
     </Compile>
     <Compile Include="Mvvm\Views\Modal\ConfirmAction\ConfirmActionView.xaml.cs">
       <DependentUpon>ConfirmActionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Views\Modal\InstanceFactory\InstanceCopyErrorsView.xaml.cs">
+      <DependentUpon>InstanceCopyErrorsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Views\Modal\InstanceFactory\InstanceCopyView.xaml.cs">
+      <DependentUpon>InstanceCopyView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Mvvm\Views\Modal\InstancesGroup\InstanceGroupsConfiguratorView.xaml.cs">
       <DependentUpon>InstanceGroupsConfiguratorView.xaml</DependentUpon>
@@ -685,6 +695,14 @@
     <Page Include="Mvvm\Views\Modal\ConfirmAction\ConfirmActionView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Mvvm\Views\Modal\InstanceFactory\InstanceCopyErrorsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Mvvm\Views\Modal\InstanceFactory\InstanceCopyView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Mvvm\Views\Modal\InstancesGroup\InstanceGroupsConfiguratorView.xaml">
       <SubType>Designer</SubType>

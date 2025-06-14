@@ -296,5 +296,14 @@ namespace Lexplosion.WPF.NewInterface.Controls.OldInstanceForm
                 PART_DropDownMenu.IsOpen = false;
             }
         }
+
+        private void CopyButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_model != null && _model.State == InstanceState.Default)
+            {
+                _model.OpenCoping();
+                PART_DropDownMenu.IsOpen = false;
+            }
+        }
     }
 }
