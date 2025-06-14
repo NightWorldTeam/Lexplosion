@@ -745,9 +745,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
                 OnPropertyChanged(nameof(DownloadingData));
             }
 
-            Console.WriteLine(IsDownloading);
-            Console.WriteLine(IsLaunching);
-
             DownloadingData.Stage = stageType;
             DownloadingData.CurrentStage = progressHandlerArguments.Stage;
             DownloadingData.TotalStages = progressHandlerArguments.StagesCount;

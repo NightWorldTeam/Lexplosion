@@ -1,6 +1,5 @@
 ﻿using Lexplosion.Core.Tools;
 using Lexplosion.Global;
-using Lexplosion.Logic.FileSystem;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Tools;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
@@ -162,7 +161,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile.Se
             get => InstanceSettings.GameArgs; set
             {
                 InstanceSettings.GameArgs = value;
-                _instanceSettingsCopy.JavaPath = value;
+                _instanceSettingsCopy.GameArgs = value;
                 _instanceModel.Settings = _instanceSettingsCopy;
             }
         }
