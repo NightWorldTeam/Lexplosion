@@ -304,19 +304,6 @@ namespace Lexplosion.Logic.Management
 				mainClass = installer.mainClass;
 			}
 
-			NightWorldClientData.ComlexArgument[] nwClientComplexArguments = null;
-			if (isNwClient)
-			{
-				var nwClientData = data.VersionFile.NightWorldClientData;
-				NightWorldClientData.Arguments arguments = nwClientData.GetByClientType(data.VersionFile.ModloaderType);
-				if (arguments != null)
-				{
-					builder.AddGameArgs(arguments.Minecraft);
-					builder.AddJvmArgs(arguments.Jvm);
-					nwClientComplexArguments = arguments.Complex;
-				}
-			}
-
 			if (!string.IsNullOrWhiteSpace(_settings.AutoLoginServer))
 			{
 				if (_settings.AutoLoginServer.Contains(":"))
@@ -329,7 +316,7 @@ namespace Lexplosion.Logic.Management
 				}
 				else
 				{
-					builder.AddGameArgs($" --server \"{_settings.AutoLoginServer}\" --quickPlayMultiplayer \"{_settings.AutoLoginServer}\"");
+					builder.AddGameArgs($"--server \"{_settings.AutoLoginServer}\" --quickPlayMultiplayer \"{_settings.AutoLoginServer}\"");
 				}
 			}
 
@@ -352,6 +339,19 @@ namespace Lexplosion.Logic.Management
 					{
 						builder.AddGameArgs(argument.Value);
 					}
+				}
+			}
+
+			NightWorldClientData.ComlexArgument[] nwClientComplexArguments = null;
+			if (isNwClient)
+			{
+				var nwClientData = data.VersionFile.NightWorldClientData;
+				NightWorldClientData.Arguments arguments = nwClientData.GetByClientType(data.VersionFile.ModloaderType);
+				if (arguments != null)
+				{
+					builder.AddGameArgs(arguments.Minecraft);
+					builder.AddJvmArgs(arguments.Jvm);
+					nwClientComplexArguments = arguments.Complex;
 				}
 			}
 
