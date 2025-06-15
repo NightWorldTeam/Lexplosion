@@ -347,16 +347,19 @@ namespace Lexplosion.Logic.Management.Instances
 
 			try
 			{
-				if (logoPath != null && File.Exists(logoPath))
+				if (Logo == null)
 				{
-					Logo = File.ReadAllBytes(logoPath);
-				}
-				else
-				{
-					Logo = LogoGenerator?.Invoke();
+					if (logoPath != null && File.Exists(logoPath))
+					{
+						Logo = File.ReadAllBytes(logoPath);
+					}
+					else
+					{
+						Logo = LogoGenerator?.Invoke();
+					}
 				}
 			}
-			catch 
+			catch
 			{
 				Logo = LogoGenerator?.Invoke();
 			}

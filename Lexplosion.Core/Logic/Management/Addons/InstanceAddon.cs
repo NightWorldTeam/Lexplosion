@@ -287,6 +287,16 @@ namespace Lexplosion.Logic.Management.Addons
 
 		public void InstallLatestVersion(DynamicStateHandler<SetValues<InstanceAddon, DownloadAddonRes>, InstallAddonState> stateHandler, bool downloadDependencies = true, bool isDependencie = false, IEnumerable<Modloader> acceptableModloaders = null)
 		{
+			if (_addonPrototype == null)
+			{
+				stateHandler.ChangeState(new SetValues<InstanceAddon, DownloadAddonRes>
+				{
+					Value1 = this,
+					Value2 = DownloadAddonRes.ProjectDataError
+				}, InstallAddonState.EndDownload);
+				return;
+			}
+
 			IsInstalling = true;
 			_addonPrototype.SetAcceptableModloaders(acceptableModloaders);
 			_addonPrototype.DefineLatestVersion();

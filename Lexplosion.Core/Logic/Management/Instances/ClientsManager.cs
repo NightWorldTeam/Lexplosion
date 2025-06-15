@@ -9,6 +9,7 @@ using Lexplosion.Logic.Objects.CommonClientData;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -23,7 +24,7 @@ namespace Lexplosion.Logic.Management.Instances
 		public event Action<InstancesGroup> GroupAdded;
 		public event Action<InstancesGroup> GroupDeleted;
 
-		private Dictionary<string, InstanceClient> _installedInstances = new();
+		private ConcurrentDictionary<string, InstanceClient> _installedInstances = new();
 		private List<InstancesGroup> _existsGroups = new(); //первая группа всегда all
 
 		/// <summary>
@@ -341,7 +342,7 @@ namespace Lexplosion.Logic.Management.Instances
 		{
 			if (client.LocalId == null) return;
 
-			_installedInstances.Remove(client.LocalId);
+			_installedInstances.TryRemove(client.LocalId, out _);
 			if (client.ExternalId != null)
 			{
 				_idsPairs.Remove(client.ExternalId);
@@ -612,7 +613,7 @@ namespace Lexplosion.Logic.Management.Instances
 			return client;
 		}
 
-		public InstanceClient CopyClient(InstanceClient client)
+		private InstanceClient CopyClient(InstanceClient client, BaseInstanceData newClientData)
 		{
 			string name = client.Name + " (Copy)";
 			string id = GenerateInstanceId(name);
@@ -620,10 +621,13 @@ namespace Lexplosion.Logic.Management.Instances
 			IInstanceSource source = CreateSourceFactory(client.Type);
 			var newClient = new InstanceClient(name, source, _services, client.GameVersion, client.ExternalId, id);
 
-			BaseInstanceData baseData = client.GetBaseData;
+			BaseInstanceData baseData = newClientData ?? client.GetBaseData;
 			newClient.UpdateInfo(null, null, client.Categories, client.Summary, client.Description, client.Author, client.WebsiteUrl);
 			newClient.SetLogo(client.Logo);
 			newClient.DeployLocally(baseData.Modloader, baseData.IsNwClient, null, baseData.ModloaderVersion, baseData.OptifineVersion, false);
+
+			_installedInstances[id] = client;
+			SaveInstalledInstancesList();
 
 			newClient.GetProgressHandler(StageType.Prepare, new ProgressHandlerArguments());
 
@@ -648,6 +652,7 @@ namespace Lexplosion.Logic.Management.Instances
 						File.Copy(sourcePath, sourcePath.Replace(from, to), true);
 					}
 
+					client.CompleteInitialization(InstanceInit.Successful, new List<string>());
 				}
 				catch { }
 			}).Start();
@@ -655,18 +660,33 @@ namespace Lexplosion.Logic.Management.Instances
 			return newClient;
 		}
 
+		public InstanceClient CopyClient(InstanceClient client)
+		{
+			return CopyClient(client, null);
+		}
+
 		public InstanceClient CopyClient(InstanceClient client, MinecraftVersion gameVersion, ClientType clientType, string modloaderVersion, Action<List<InstanceAddon>> getUncopiedAddons)
 		{
+			BaseInstanceData baseData = client.GetBaseData;
+
+			if (baseData.Modloader == clientType && baseData.GameVersion == gameVersion)
+			{
+				baseData.ModloaderVersion = modloaderVersion;
+				return CopyClient(client, baseData);
+			}
+
 			string name = client.Name + " (Copy)";
 			string id = GenerateInstanceId(name);
 
 			IInstanceSource source = CreateSourceFactory(client.Type);
 			var newClient = new InstanceClient(name, source, _services, gameVersion, client.ExternalId, id);
 
-			BaseInstanceData baseData = client.GetBaseData;
 			newClient.UpdateInfo(null, null, client.Categories, client.Summary, client.Description, client.Author, client.WebsiteUrl);
 			newClient.SetLogo(client.Logo);
 			newClient.DeployLocally(clientType, baseData.IsNwClient, null, modloaderVersion, baseData.OptifineVersion, false);
+
+			_installedInstances[id] = client;
+			SaveInstalledInstancesList();
 
 			newClient.GetProgressHandler(StageType.Prepare, new ProgressHandlerArguments());
 
@@ -700,7 +720,8 @@ namespace Lexplosion.Logic.Management.Instances
 						}
 
 						string fileName = Path.GetFileName(sourcePath);
-						if (fileName == DataFilesManager.MANIFEST_FILE || fileName == DataFilesManager.MANIFEST_FILE_OLD) continue;
+						if (fileName == DataFilesManager.MANIFEST_FILE || fileName == DataFilesManager.MANIFEST_FILE_OLD
+						|| fileName == DataFilesManager.INSTANCE_PLATFORM_DATA_FILE || fileName == DataFilesManager.INSTANCE_PLATFORM_DATA_FILE_OLD) continue;
 
 						File.Copy(sourcePath, sourcePath.Replace(from, to), true);
 
@@ -747,6 +768,11 @@ namespace Lexplosion.Logic.Management.Instances
 
 				}
 				catch { }
+				finally
+				{
+					client.CompleteInitialization(InstanceInit.Successful, new List<string>());
+				}
+
 			}).Start();
 
 			return newClient;
