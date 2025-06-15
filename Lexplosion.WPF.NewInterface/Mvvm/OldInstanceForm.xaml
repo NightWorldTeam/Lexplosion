@@ -329,7 +329,7 @@
                                         <MultiDataTrigger>
                                             <MultiDataTrigger.Conditions>
                                                 <Condition Binding="{Binding IsDownloading}" Value="True" />
-                                                <Condition Binding="{Binding IsPrepare}" Value="True" />
+                                                <Condition Binding="{Binding DownloadingData.Stage}" Value="{x:Static lexplosion:StageType.Prepare}" />
                                             </MultiDataTrigger.Conditions>
 
                                             <MultiDataTrigger.Setters>
