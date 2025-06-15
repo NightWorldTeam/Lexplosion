@@ -1,5 +1,4 @@
-﻿using Lexplosion.Logic.Management;
-using Lexplosion.Logic.Management.Import;
+﻿using Lexplosion.Logic.Management.Import;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Tools;
 using Lexplosion.WPF.NewInterface.Core;

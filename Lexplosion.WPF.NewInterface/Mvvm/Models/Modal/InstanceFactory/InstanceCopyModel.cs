@@ -14,8 +14,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Model.Modal
     {
         public event Action<ClientType> GameTypeChanged;
 
-
+        private readonly AppCore _appCore;
+        private readonly ClientsManager _clientsManager;
+        private readonly InstanceModelBase _instanceModelBase;
         private readonly BaseInstanceData _instanceData;
+
+
+        #region Properties
 
 
         private bool _isCopyWithoutChanges = true;
@@ -28,8 +33,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Model.Modal
             }
         }
 
-        #region Versions
-
+        public bool HasModloaderByDefault { get; }
 
         /// <summary>
         /// Список версий майнкрафта
@@ -44,10 +48,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Model.Modal
         /// Версия сборки
         /// </summary>
         private MinecraftVersion _version;
-        private readonly AppCore _appCore;
-        private readonly ClientsManager _clientsManager;
-        private readonly InstanceModelBase _instanceModelBase;
-
         public MinecraftVersion Version
         {
             get => _version; set
@@ -118,8 +118,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Model.Modal
         }
 
 
-        #endregion Modloader
-        
+        #endregion Properties
+
+
+        #region Constructors
+
 
         public InstanceCopyModel(AppCore appCore, ClientsManager clientsManager, InstanceModelBase instanceModelBase)
         {
@@ -130,10 +133,19 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Model.Modal
             Version = instanceModelBase.GameVersion;
 
             _instanceData = instanceModelBase.BaseData;
+
             ClientType = _instanceData.Modloader;
+            HasModloaderByDefault = ClientType != ClientType.Vanilla;
             LoadInstanceDefaultExtension(ClientType);
             ModloaderVersion = _instanceData.ModloaderVersion;
         }
+
+
+        #endregion Constructors
+
+
+        #region Public Methods
+
 
         public InstanceClient Copy()
         {
@@ -168,6 +180,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Model.Modal
                 }
             }
         }
+
+
+        #endregion  Public Methods
 
 
         #region Private Methods

@@ -90,7 +90,6 @@
                                 Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
                                 Text="Копировать без изменения параметров" />
 
-
                             <!--  Content  -->
                             <ToggleButton
                                 HorizontalAlignment="Right"
@@ -99,7 +98,7 @@
                         </Grid>
                     </Border>
 
-                    <StackPanel Grid.Row="1" Visibility="{Binding Model.IsCopyWithoutChanges, Converter={converters:BooleanToVisibilityConverter}}">
+                    <StackPanel Grid.Row="1" Visibility="{Binding Model.IsCopyWithoutChanges, Converter={converters:NegativeBooleanToVisibilityConverter}}">
 
                         <!--  Versions  -->
                         <Border
@@ -235,7 +234,8 @@
                                         GroupName="GameType"
                                         IsChecked="{Binding IsVanilla}"
                                         Style="{StaticResource HighlightRadioButton}"
-                                        TextBlock.FontSize="12" />
+                                        TextBlock.FontSize="12"
+                                        Visibility="{Binding Model.HasModloaderByDefault, Converter={converters:NegativeBooleanToVisibilityConverter}}" />
                                     <RadioButton
                                         Margin="8,0,0,0"
                                         Command="{Binding ChangeInstanceClientTypeCommand, Mode=OneWay}"

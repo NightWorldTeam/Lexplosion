@@ -730,6 +730,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             if (!IsDownloading)
             {
                 IsDownloading = true;
+                DownloadStarted?.Invoke();
+
+                OnPropertyChanged(nameof(AnyProcessActive));
+                DataChanged?.Invoke();
             }
 
             // Данный код вызывается при скачивании и запуске.
