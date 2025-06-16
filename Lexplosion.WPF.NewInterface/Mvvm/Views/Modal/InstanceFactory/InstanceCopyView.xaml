@@ -43,14 +43,13 @@
                         </Grid.ColumnDefinitions>
 
                         <!--  Selected Page Title  -->
-                        <!--  TODO: 1.0.1.0 Translate  -->
                         <TextBlock
                             Margin="20,0,0,0"
                             VerticalAlignment="Top"
                             FontSize="18"
                             FontWeight="Medium"
                             Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                            Text="Копирование сборки"
+                            Text="{DynamicResource CopyingAnInstance}"
                             TextTrimming="CharacterEllipsis" />
 
                         <!--  Close Button  -->
@@ -88,7 +87,7 @@
                                 FontSize="14"
                                 FontWeight="Medium"
                                 Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                Text="Копировать без изменения параметров" />
+                                Text="{DynamicResource CopyWithoutChangingParameters}" />
 
                             <!--  Content  -->
                             <ToggleButton
@@ -335,7 +334,6 @@
                         </Border>
                     </StackPanel>
 
-                    <!--  TODO: 1.0.1.0 Translate  -->
                     <Border
                         Grid.Row="2"
                         Padding="0,8,0,0"
@@ -343,7 +341,7 @@
                         BorderThickness="0,1,0,0">
                         <controls:AdvancedButton
                             Command="{Binding ActionCommand}"
-                            Content="Начать копирование"
+                            Content="{DynamicResource StartCopying}"
                             FontWeight="Medium">
                             <controls:AdvancedButton.Style>
                                 <Style BasedOn="{StaticResource sm-default}" TargetType="{x:Type controls:AdvancedButton}">

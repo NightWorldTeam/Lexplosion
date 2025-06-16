@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Logic.Management.Addons;
 using Lexplosion.WPF.NewInterface.Commands;
+using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Modal;
 using System;
 using System.Collections.Generic;
@@ -8,11 +9,9 @@ using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
 {
-
     public sealed class InstanceCopyErrorsViewModel : ModalViewModelBase
     {
         public InstanceCopyErrorsModel Model { get; }
-
 
         private RelayCommand _openExternalResourceCommand;
         public ICommand OpenExternalResourceCommand
@@ -31,9 +30,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
         }
 
 
-        public InstanceCopyErrorsViewModel(IEnumerable<InstanceAddon> uncopiedAddons)
+        public InstanceCopyErrorsViewModel(AppCore appCore, string instanceName, IEnumerable<InstanceAddon> uncopiedAddons)
         {
-            Model = new(uncopiedAddons);
+            Model = new(appCore, instanceName, uncopiedAddons);
         }
     }
 }

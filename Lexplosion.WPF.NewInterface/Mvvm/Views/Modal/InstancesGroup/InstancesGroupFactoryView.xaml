@@ -44,14 +44,13 @@
                         </Grid.ColumnDefinitions>
 
                         <!--  Selected Page Title  -->
-                        <!--  TODO: 1.0.1.0 Translate  -->
                         <TextBlock
                             Margin="20,0,0,0"
                             VerticalAlignment="Top"
                             FontSize="18"
                             FontWeight="Medium"
                             Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                            Text="Создание группы"
+                            Text="{DynamicResource CreatingGroupTitle}"
                             TextTrimming="CharacterEllipsis" />
 
                         <!--  Close Button  -->
@@ -97,18 +96,12 @@
                                         FontSize="13"
                                         FontWeight="Medium"
                                         Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                        Text="{DynamicResource InstanceName}" />
-                                    <TextBlock
-                                        FontSize="12"
-                                        FontWeight="Medium"
-                                        Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
-                                        Text="{DynamicResource SummaryDescription}" />
+                                        Text="{DynamicResource GroupName}" />
                                 </StackPanel>
 
                                 <controls:AdvancedTextBox
                                     Grid.Column="1"
                                     FontSize="13"
-                                    Placeholder="{DynamicResource InstanceName}"
                                     Text="{Binding Model.Name, UpdateSourceTrigger=PropertyChanged}" />
                             </Grid>
                         </Border>
@@ -137,13 +130,12 @@
                                         FontSize="12"
                                         FontWeight="Medium"
                                         Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
-                                        Text="{DynamicResource SummaryDescription}" />
+                                        Text="{DynamicResource GroupSummaryDescription}" />
                                 </StackPanel>
 
                                 <controls:AdvancedTextBox
                                     Grid.Column="1"
                                     FontSize="13"
-                                    Placeholder="{DynamicResource InstanceName}"
                                     Text="{Binding Model.Summary}" />
                             </Grid>
                         </Border>
@@ -171,18 +163,16 @@
                                 </Grid.ColumnDefinitions>
 
                                 <StackPanel>
-                                    <!--  TODO: 1.0.1.0 Translate  -->
                                     <TextBlock
                                         FontSize="13"
                                         FontWeight="Medium"
                                         Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                        Text="Ваши сборки" />
-                                    <!--  TODO: 1.0.1.0 Translate  -->
+                                        Text="{DynamicResource YourInstances}" />
                                     <TextBlock
                                         FontSize="12"
                                         FontWeight="Medium"
                                         Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
-                                        Text="Выберите сборки для группы" />
+                                        Text="{DynamicResource SelectInstancesForThisGroup}" />
                                 </StackPanel>
 
                                 <controls:SearchBox
@@ -306,7 +296,7 @@
                         BorderThickness="0,1,0,0">
                         <controls:AdvancedButton
                             Command="{Binding ActionCommand}"
-                            Content="Создать группу"
+                            Content="{DynamicResource CreateGroup}"
                             FontWeight="Medium">
                             <controls:AdvancedButton.Style>
                                 <Style BasedOn="{StaticResource sm-default}" TargetType="{x:Type controls:AdvancedButton}">

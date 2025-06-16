@@ -52,7 +52,7 @@
                             FontSize="18"
                             FontWeight="Medium"
                             Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                            Text="Не скопированные дополнения"
+                            Text="{DynamicResource UncopiedAddons}"
                             TextTrimming="CharacterEllipsis" />
 
                         <!--  Close Button  -->
@@ -82,7 +82,7 @@
                         Margin="0,16,0,16"
                         FontSize="14"
                         Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                        Text="При копировании сборки 1.21.1 Vanilla не удалось перенести следующие аддоны:"
+                        Text="{Binding Model.Description}"
                         TextWrapping="WrapWithOverflow" />
 
                     <ListBox

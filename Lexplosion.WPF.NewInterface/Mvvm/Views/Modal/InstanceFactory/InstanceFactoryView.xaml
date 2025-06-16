@@ -449,18 +449,17 @@
                             </Grid.ColumnDefinitions>
 
                             <!--  Header  -->
-                            <!--  TODO: 1.0.1.0 Translate  -->
                             <StackPanel>
                                 <TextBlock
                                     FontSize="13"
                                     FontWeight="Medium"
                                     Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                    Text="Группа" />
+                                    Text="{DynamicResource Group}" />
                                 <TextBlock
                                     FontSize="12"
                                     FontWeight="Medium"
                                     Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
-                                    Text="{DynamicResource ModloaderVersionDescription}"
+                                    Text="{DynamicResource GroupDescription}"
                                     TextWrapping="WrapWithOverflow" />
                             </StackPanel>
 

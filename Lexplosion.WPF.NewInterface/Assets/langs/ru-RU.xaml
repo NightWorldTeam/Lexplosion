@@ -965,5 +965,27 @@
         Описания нет, но мы надеемся что оно будет.
     </s:String>
 
+    <s:String x:Key="CreatingGroupTitle">Создание группы</s:String>
+    <s:String x:Key="YourInstances">Ваши сборки</s:String>
+    <s:String x:Key="SelectInstancesForThisGroup">Выберите сборки для группы</s:String>
+    <s:String x:Key="CreateGroup">Создать группу</s:String>
+    <s:String x:Key="InstanceGroups">Группы сборок</s:String>
+    <s:String x:Key="GroupName">Название группы</s:String>
+    <s:String x:Key="CreateNewGroup">Создать новую группу</s:String>
+    <s:String x:Key="SelectInstancesForGroup">Выберите сборки для группы</s:String>
+    <s:String x:Key="GroupEditTitle">Редактирование группы</s:String>
+    <s:String x:Key="AvailableGroups">Доступные группы</s:String>
+    <s:String x:Key="SelectGroupsForInstance">Выберите группы для сборки</s:String>
+    <s:String x:Key="Group">Группа</s:String>
+    <s:String x:Key="GroupDescription">Выберите группы для сборки</s:String>
+
+    <s:String x:Key="GroupSummary">Описание группы</s:String>
+    <s:String x:Key="GroupSummaryDescription">Краткое описание для данной группы.</s:String>
+
     <s:String x:Key="Copy">Скопировать</s:String>
+    <s:String x:Key="CopyingAnInstance">Копирование сборки</s:String>
+    <s:String x:Key="CopyWithoutChangingParameters">Копирование без изменений параметров</s:String>
+    <s:String x:Key="StartCopying">Начать копирование</s:String>
+    <s:String x:Key="UncopiedAddons">Нескопированные дополнения</s:String>
+    <s:String x:Key="InstanceCopyUncopiedAddonsDescription">При копировании сборки {0} не удалось перенести следующие аддоны:</s:String>
 </ResourceDictionary>

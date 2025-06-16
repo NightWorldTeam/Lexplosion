@@ -44,14 +44,13 @@
                         </Grid.ColumnDefinitions>
 
                         <!--  Selected Page Title  -->
-                        <!--  TODO: 1.0.1.0 Translate  -->
                         <TextBlock
                             Margin="20,0,0,0"
                             VerticalAlignment="Top"
                             FontSize="18"
                             FontWeight="Medium"
                             Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                            Text="Группы сборки"
+                            Text="{DynamicResource InstanceGroups}"
                             TextTrimming="CharacterEllipsis" />
 
                         <!--  Close Button  -->
@@ -146,23 +145,21 @@
                                 </Grid.ColumnDefinitions>
 
                                 <StackPanel>
-                                    <!--  TODO: 1.0.1.0 Translate  -->
                                     <TextBlock
                                         FontSize="13"
                                         FontWeight="Medium"
                                         Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                        Text="Доступные группы" />
-                                    <!--  TODO: 1.0.1.0 Translate  -->
+                                        Text="{DynamicResource AvailableGroups}" />
                                     <TextBlock
                                         FontSize="12"
                                         FontWeight="Medium"
                                         Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
-                                        Text="Выберите группы для сборки" />
+                                        Text="{DynamicResource SelectGroupsForInstance}" />
                                 </StackPanel>
 
                                 <controls:SearchBox
                                     Grid.Column="1"
-                                    Placeholder="{DynamicResource InstanceName}"
+                                    Placeholder="{DynamicResource InstanceGroups}"
                                     Style="{StaticResource sm-searchbox-default}"
                                     Text="{Binding Model.SearchText, UpdateSourceTrigger=PropertyChanged}" />
                             </Grid>
@@ -294,7 +291,7 @@
                         BorderThickness="0,1,0,0">
                         <controls:AdvancedButton
                             Command="{Binding ActionCommand}"
-                            Content="Сохранить изменения"
+                            Content="{DynamicResource SaveChanges}"
                             FontWeight="Medium"
                             Style="{StaticResource sm-default}" />
                     </Border>

@@ -963,7 +963,7 @@
                                             Template="{StaticResource DropDownButton}"
                                             Text="{DynamicResource Addons}" />
 
-                                        <!--  Экспорт  -->
+                                        <!--  Скопировать  -->
                                         <controls:AdvancedButton
                                             x:Name="CopyButton"
                                             Click="CopyButton_Click"

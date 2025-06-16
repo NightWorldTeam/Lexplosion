@@ -158,7 +158,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Model.Modal
             {
                 return _clientsManager.CopyClient(instanceClient, Version, ClientType, ModloaderVersion, (uncopiedAddons) => 
                 {
-                    _appCore.ModalNavigationStore.Open(new InstanceCopyErrorsViewModel(uncopiedAddons));
+                    _appCore.ModalNavigationStore.Open(new InstanceCopyErrorsViewModel(_appCore, instanceClient.Name, uncopiedAddons));
                 });
             }
         }

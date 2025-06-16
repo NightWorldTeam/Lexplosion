@@ -737,14 +737,13 @@
                                 </Button.Template>
                             </Button>
 
-                            <!--  TODO: 1.0.1.0 Translate  -->
                             <TextBlock
                                 Grid.Column="1"
                                 Margin="8,0,0,0"
                                 FontSize="16"
                                 FontWeight="Medium"
                                 Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                Text="Группы сборок" />
+                                Text="{DynamicResource InstanceGroups}" />
                         </Grid>
                     </Border>
 
@@ -761,12 +760,10 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <!--  TODO: 1.0.1.0 Translate  -->
                             <controls:SearchBox
-                                Placeholder="Название группы"
+                                Placeholder="{DynamicResource GroupName}"
                                 Style="{StaticResource sm-searchbox-default}"
                                 Text="{Binding Model.GroupSearchText, UpdateSourceTrigger=PropertyChanged}" />
-                            <!--  TODO: 1.0.1.0 Translate  -->
                             <controls:AdvancedButton
                                 Grid.Column="1"
                                 Width="28"
@@ -777,7 +774,7 @@
                                 IconData="{StaticResource PDAddCircle}"
                                 IconPadding="4"
                                 Style="{StaticResource sm-default}"
-                                ToolTip="Создать новую группу" />
+                                ToolTip="{DynamicResource CreateNewGroup}" />
                         </Grid>
                     </Border>
 

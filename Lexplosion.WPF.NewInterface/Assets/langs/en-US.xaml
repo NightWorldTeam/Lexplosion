@@ -965,5 +965,26 @@
         There is no description but we hope you will add it.
     </s:String>
 
+    <s:String x:Key="CreatingGroupTitle">Creation an group</s:String>
+    <s:String x:Key="YourInstances">Your instances</s:String>
+    <s:String x:Key="SelectInstancesForThisGroup">Select instances for this group</s:String>
+    <s:String x:Key="CreateGroup">Create a group</s:String>
+    <s:String x:Key="InstanceGroups">Instance Groups</s:String>
+    <s:String x:Key="GroupName">Group name</s:String>
+    <s:String x:Key="CreateNewGroup">Create a new instance</s:String>
+    <s:String x:Key="GroupEditTitle">Group editing</s:String>
+    <s:String x:Key="AvailableGroups">Available Group</s:String>
+    <s:String x:Key="SelectGroupsForInstance">Select groups for instance</s:String>
+    <s:String x:Key="Group">Group</s:String>
+    <s:String x:Key="GroupDescription">Select groups for this instance</s:String>
+
+    <s:String x:Key="GroupSummary">Group summary</s:String>
+    <s:String x:Key="GroupSummaryDescription">Write summary for this group.</s:String>
+
     <s:String x:Key="Copy">Copy</s:String>
+    <s:String x:Key="CopyingAnInstance">Copying an instance</s:String>
+    <s:String x:Key="CopyWithoutChangingParameters">Copy without changes parameters</s:String>
+    <s:String x:Key="StartCopying">Start copying</s:String>
+    <s:String x:Key="UncopiedAddons">Uncopied addons</s:String>
+    <s:String x:Key="InstanceCopyUncopiedAddonsDescription">While copying instance {0}, the following addons could not be migrated:</s:String>
 </ResourceDictionary>

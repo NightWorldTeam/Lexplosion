@@ -8,7 +8,7 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <!--  TODO: Translate. Сделать перевод данного окна взависимости от языка пользователя в системе  -->
+
     <Grid Loaded="Grid_Loaded">
         <StackPanel
             x:Name="WelcomePage"
