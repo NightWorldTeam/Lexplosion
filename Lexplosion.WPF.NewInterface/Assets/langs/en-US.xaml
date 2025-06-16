@@ -142,6 +142,7 @@
     <s:String x:Key="NightWorldSkins">NightWorld Skins</s:String>
     <s:String x:Key="NightWorldSkinsDescription">In Minecraft, the skin setted in the profile will be displayed.</s:String>
 
+
     <!--    -->
     <!--  Appearance  -->
     <!--    -->
@@ -161,7 +162,6 @@
     <!--  Accounts  -->
     <!--    -->
     <s:String x:Key="Accounts">Accounts</s:String>
-
 
     <!--    -->
     <!--  About  -->
@@ -225,7 +225,6 @@
     <s:String x:Key="Addons">Addons</s:String>
     <s:String x:Key="AboutInstance">About Instance</s:String>
 
-
     <!--    -->
     <!--  Instance Profile Left Panel  -->
     <!--    -->
@@ -234,7 +233,6 @@
     <s:String x:Key="GameType:">Game Type:</s:String>
     <s:String x:Key="PlayedTime:">Played Time:</s:String>
     <s:String x:Key="DownloadCount:">Downloads:</s:String>
-
 
     <!--    -->
     <!--  Instance Profile Addons  -->
@@ -304,6 +302,7 @@
     <s:String x:Key="SortBy">Sort By</s:String>
     <s:String x:Key="ShowPerPage">Show per page</s:String>
     <s:String x:Key="Accept">Accept</s:String>
+    <s:String x:Key="Installing...">Installing...</s:String>
 
 
     <!--    -->
@@ -344,7 +343,6 @@
     <s:String x:Key="MinecraftVersion">Minecraft Version</s:String>
     <s:String x:Key="ShowSnaphosts">Minecraft Version</s:String>
 
-
     <!--  Instance Factory  -->
     <s:String x:Key="InstanceName">Instance Name</s:String>
     <s:String x:Key="CreateInstance">Create Instance</s:String>
@@ -358,6 +356,10 @@
     <s:String x:Key="InstanceExport">Instance Export</s:String>
     <s:String x:Key="ExportProcessActive">Export Process is active</s:String>
 
+
+    <!--  Import  -->
+    <s:String x:Key="ImportDragDropFieldDescription">Drag and drop the archive with the assembly to start the download.</s:String>
+    <s:String x:Key="Review">Browse</s:String>
 
     <!--  Filter Sorting  -->
     <s:String x:Key="Source">Source</s:String>
@@ -374,7 +376,7 @@
     <s:String x:Key="And">And</s:String>
 
     <!--  Categories  -->
-    <s:String x:Key="CategoriesSearchBoxPlaceholder">Select a tag to filter...</s:String>
+    <s:String x:Key="CategoriesSearchBoxPlaceholder">Select a category to filter...</s:String>
 
     <!--  Modrinth  -->
     <s:String x:Key="ModrinthRelevance">Relevancy</s:String>
@@ -391,18 +393,17 @@
     <s:String x:Key="CurseforgeTotalDownloads">TotalDownloads</s:String>
     <s:String x:Key="CurseforgeName">A-Z</s:String>
 
-
     <!--  Accounts  -->
     <s:String x:Key="Active">Active</s:String>
     <s:String x:Key="NotActive">Not active</s:String>
+    <s:String x:Key="TypingNicknamePlaceholder">Typing nickname...</s:String>
 
     <!--  Funcs  -->
     <s:String x:Key="Activate">Activate</s:String>
     <s:String x:Key="DoGameLauncher">Do game launcher</s:String>
     <s:String x:Key="Signout">Sign-out</s:String>
-    <s:String x:Key="TypingNicknamePlaceholder">Typing nickname...</s:String>
 
-    <s:String x:Key="GameLauncher">Game Launch</s:String>
+    <s:String x:Key="GameLauncher">Запуск игры</s:String>
 
 
     <!--  Account Factory  -->
@@ -419,10 +420,7 @@
 
     <!--  Nightworld Limited Pages Curtains  -->
     <s:String x:Key="OnlyAvailableWithNightWorldAccount">Only available with a NightWorld account</s:String>
-    <s:String x:Key="OnlyAvailableWithNightWorldAccountDescription">
-        This launch feature is only available if you are logged in through your NightWorld account;
-        P.S you don't need to run it.
-    </s:String>
+    <s:String x:Key="OnlyAvailableWithNightWorldAccountDescription">This launch feature is only available if you are logged in through your NightWorld account; P.S you don't need to run it.</s:String>
     <s:String x:Key="CreateNightWorldAccount">Create a NightWorld account</s:String>
     <s:String x:Key="LoginWithYourNightWorldAccount">Login with your NightWorld account</s:String>
 
@@ -435,6 +433,9 @@
     <s:String x:Key="Share">Shares</s:String>
     <s:String x:Key="ShareInstance">Share this instance</s:String>
     <s:String x:Key="ActiveShares">Active Shares</s:String>
+
+
+    <s:String x:Key="CurseforgeCatalogLoading">Curseforge catalog loading...</s:String>
 
 
     <!--  Account Funcs  -->
@@ -494,7 +495,7 @@
     <s:String x:Key="VerifyIntegrityGameFiles">Verify integrity of game files...</s:String>
     <s:String x:Key="DownloadCanceling">Download canceling...</s:String>
 
-    <s:String x:Key="AddonsListLoadingPlaceholder">Addons List Loading...</s:String>
+    <s:String x:Key="AddonsListLoadingPlaceholder">Addon list loading...</s:String>
 
     <s:String x:Key="Technology">Technology</s:String>
     <s:String x:Key="WorldGen">World Gen</s:String>
@@ -510,10 +511,14 @@
     <s:String x:Key="Paginator">Paginator</s:String>
     <s:String x:Key="Searchbox">Searchbox</s:String>
     <s:String x:Key="InstalledList">Installed</s:String>
-
     <s:String x:Key="SearchAddonByNamePlaceholder">Addon name</s:String>
 
-    <s:String x:Key="Completed">Завершено</s:String>
+    <s:String x:Key="AddonInfoDownloadsTooltip">Download Count</s:String>
+    <s:String x:Key="AddonInfoLatestReleaseTooltip">Latest updated date</s:String>
+    <s:String x:Key="AddonInfoCreationDateTooltip">Date of creation</s:String>
+    <s:String x:Key="AddonInfoGameVersionTooltip">Game version</s:String>
+
+    <s:String x:Key="Completed">Completed</s:String>
 
 
     <!--  region Authorization  -->
@@ -531,6 +536,7 @@
     <s:String x:Key="EmailAddress">Email Address</s:String>
     <s:String x:Key="CreateAccount">Create Account</s:String>
     <s:String x:Key="AlreadyHaveAnyAccount">Already have any account?</s:String>
+
 
     <s:String x:Key="ViaNightWorld">Via NightWorld</s:String>
     <s:String x:Key="ViaMicrosoft">Via Microsoft</s:String>
@@ -560,8 +566,8 @@
     <!--  endregion Authorization  -->
 
 
-    <s:String x:Key="CustomColor">Custom color</s:String>
-    <s:String x:Key="CustomColorDescription">Select custom color</s:String>
+    <s:String x:Key="CustomColor">Свой цвет</s:String>
+    <s:String x:Key="CustomColorDescription">Выберите свой акцентный цвет</s:String>
 
 
     <!--  Instance Configuration  -->
@@ -586,12 +592,36 @@
 
     <s:String x:Key="InstallServerInstance">Install Server Instance</s:String>
     <s:String x:Key="InstallServerInstanceDescription">To play on this server you need to install the assembly, do you want to install this instance?</s:String>
-    <s:String x:Key="InstanceForServerAddedToLibrary">Instance {0} successfully added to the library!</s:String>
     <s:String x:Key="ServerIpAddressCopied">Server IP address copied</s:String>
 
-    <s:String x:Key="LoadingInstanceClientVersions">Loading Client Versions</s:String>
+
+    <s:String x:Key="LoadingInstanceClientVersions">Loading instance versions</s:String>
     <s:String x:Key="NoDistributionsAvailableForDownload">There are no distributions available for download</s:String>
 
+
+    <!--  region Notifications  -->
+
+
+    <!--    -->
+    <!--  Ad Server  -->
+    <!--    -->
+
+    <s:String x:Key="InstanceForServerAddedToLibrary">Instance {0} successfully added to the library!</s:String>
+
+    <!--    -->
+    <!--  Multiplayer  -->
+    <!--    -->
+    <s:String x:Key="MultiplayerReloaded">Multiplayer reloaded</s:String>
+
+
+    <!--    -->
+    <!--  InstanceForm  -->
+    <!--    -->
+
+
+    <!--  Instance Launch  -->
+    <s:String x:Key="InstanceLaunchedSuccessfulNotification">Instance {0} successfully launched.</s:String>
+    <s:String x:Key="InstanceLaunchedUnsuccessfulNotification">Failed to launched instance {0}.</s:String>
 
     <!--  Instance Installing  -->
     <s:String x:Key="DownloadCompletedSuccessfully">Instance download {0} completed successfully.</s:String>
@@ -702,25 +732,35 @@
     <!--  region Accounts  -->
 
 
-    <s:String x:Key="RemoveAccount">Remove account</s:String>
+    <s:String x:Key="RemoveAccount">Deleting an account</s:String>
     <s:String x:Key="RemoveAccountDescription">
-        Do you really want to remove account: {0}?
-        Access to your account can only be restored after re-authorization!
+        Do you really want an account: {0}?
+        Account access can only be restored after re-authorization!
     </s:String>
-    <s:String x:Key="YesIWantRemoveAccount">I want to remove this account</s:String>
+    <s:String x:Key="YesIWantRemoveAccount">Yes, I want to delete my account</s:String>
 
-    <s:String x:Key="RemoveAllAccount">Removing all account</s:String>
+    <s:String x:Key="RemoveAllAccount">Delete all accounts</s:String>
     <s:String x:Key="RemoveAllAccountDescription">
-        Do you really want to remove all accounts?
-        Access to your accounts can only be restored after re-authorization!
+        Are you sure you want to delete all accounts??
+        It will be possible to restore access to accounts only after re-authorization!
     </s:String>
-    <s:String x:Key="YesIWantRemoveAllAccount">Yes, I want to remove all accounts</s:String>
+    <s:String x:Key="YesIWantRemoveAllAccount">Yes, I want to delete all accounts</s:String>
 
+    <!--  Notification  -->
+    <s:String x:Key="WrongLoginOrPassword">Incorrect login or password.</s:String>
+    <s:String x:Key="NoConnectionToTheServer">No connection to the server!</s:String>
+    <s:String x:Key="TokenError">Token error!</s:String>
+    <s:String x:Key="UnknownError">Unknown error!</s:String>
+    <s:String x:Key="SessionExpiredRedirectToMicrosoft">Session expired. Redirecting to Microsoft authorization page</s:String>
+    <s:String x:Key="TokenErrorRedirectToMicrosoft">Token Error. Redirecting to Microsoft Authorization Page</s:String>
+    <s:String x:Key="SessionExpiredTryAuthAgain">Session expired. You should try authorizing again.</s:String>
+    <s:String x:Key="TokenErrorTryAuthAgain">Token error. You should try authorizing again.</s:String>
 
     <!--  endregion Accounts  -->
 
 
     <!--  region Library  -->
+
 
     <s:String x:Key="DeletingInstance">Deleting instance</s:String>
     <s:String x:Key="DeletingInstanceDescription">
@@ -732,22 +772,42 @@
 
     <!--  endregion Library  -->
 
+    <!--  region Friends  -->
 
-    <s:String x:Key="LoginOrPasswordNotFilled">Login or password is not filled in</s:String>
+
+    <!--  Notifications  -->
+    <s:String x:Key="FriendRequestHasBeenSent">Friend request has been sent.</s:String>
+    <s:String x:Key="FriendRequestWasCancelled">Friend request was cancelled.</s:String>
+    <s:String x:Key="YouAnd_AreFriendsNow">You and {0} are now friends!</s:String>
+    <s:String x:Key="YouHaveDeclinedYourFriendRequest_">You have rejected your friend request {0}.</s:String>
+
+
+    <!--  endregion Friends  -->
+
+
+    <!--  region Instance  -->
+
+    <!--  Notification  -->
+    <s:String x:Key="Instance_HasBeenInstalledSuccessful">Instance {0} installed successfully</s:String>
+    <s:String x:Key="FailedToInstallColon_">Failed to install: {0}</s:String>
+
+    <!--  endregion Instance  -->
+
+    <s:String x:Key="LoginOrPasswordNotFilled">Login or password is not filled in!</s:String>
 
     <s:String x:Key="AuthorizationProcessInProgress">The authorization process is in progress...</s:String>
 
     <s:String x:Key="Information">Information</s:String>
     <s:String x:Key="MicrosoftAccountAuthorizationDescription">To authorize your license account, you will be automatically redirected to the Microsoft authorization page.</s:String>
     <s:String x:Key="DoInstallTheLatestVersion">Install the latest version?</s:String>
-    <s:String x:Key="NWClientNotAvailableForThisVersion">NWClient not available for this version</s:String>
+    <s:String x:Key="NWClientNotAvailableForThisVersion">NWClient is not available for this version</s:String>
     <s:String x:Key="YouHaveNoActiveDistributions">You have no active distributions</s:String>
 
 
-    <s:String x:Key="InQueue">In Queue</s:String>
-    <s:String x:Key="InConnect">In Connect</s:String>
-    <s:String x:Key="PostProcessing">Post Processing</s:String>
-    <s:String x:Key="InProcess">In Process</s:String>
+    <s:String x:Key="InQueue">In queue</s:String>
+    <s:String x:Key="InConnect">In connect</s:String>
+    <s:String x:Key="PostProcessing">File processing</s:String>
+    <s:String x:Key="InProcess">In process</s:String>
     <s:String x:Key="Successful">Successful</s:String>
 
 
@@ -780,7 +840,7 @@
     <s:String x:Key="GoToCatalog">Go to Catalog</s:String>
     <s:String x:Key="LibraryEmpty">Library is empty</s:String>
 
-    <s:String x:Key="WelcomeDescription">Добро пожаловать в новую эру</s:String>
+    <s:String x:Key="WelcomeDescription">Welcome to a new era</s:String>
     <s:String x:Key="WelcomePageThemeSelectDescription">Choose your prefered interface apperarance. You have the option to pick a theme manually or enable automatic theme switching that aligns with your system settings.</s:String>
 
 
@@ -809,7 +869,6 @@
     <s:String x:Key="ThereAreNoAddonVersion">
         The version list was empty. We don't know what happened.
     </s:String>
-
 
     <s:String x:Key="SuccessDirectoryTransfer">
         The directory data transfer to the new directory has been completed successfully.
@@ -876,7 +935,6 @@
 
     <s:String x:Key="CoopertationContact">Coopertation Contact</s:String>
 
-
     <s:String x:Key="OurVkGroup">Our vk group</s:String>
     <s:String x:Key="OurDiscordServer">Our Discord server</s:String>
     <s:String x:Key="OurYoutube">Our Youtube</s:String>
@@ -898,9 +956,14 @@
     <s:String x:Key="WithoutGroup">No group</s:String>
 
     <s:String x:Key="RemoveFromGroup">Remove from group</s:String>
+    <s:String x:Key="AddToGroup">Add to group</s:String>
+
+
 
     <!--  Metadata  -->
     <s:String x:Key="EmptyDescriptionPlaceholder">
         There is no description but we hope you will add it.
     </s:String>
+
+    <s:String x:Key="Copy">Copy</s:String>
 </ResourceDictionary>

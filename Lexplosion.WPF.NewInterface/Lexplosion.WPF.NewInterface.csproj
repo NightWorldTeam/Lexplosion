@@ -186,6 +186,7 @@
     <Compile Include="Mvvm\ViewModels\MainContent\InstanceProfile\Overview\InstanceProfileVersionsViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\MainContent\InstanceProfile\Overview\InstanceProfileOverviewGalleryViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\MainContent\InstanceProfile\Overview\InstanceProfileOverviewLayoutViewModel.cs" />
+    <Compile Include="Mvvm\Models\MainContent\MainMenu\Multiplayer\AdServersModel.cs" />
     <Compile Include="Mvvm\ViewModels\MainContent\MainMenu\Content\Multiplayer\AdServersViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\MainContent\ServerProfile\Overview\ServerProfileOverviewGalleryViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\MainContent\ServerProfile\ServerProfileLayoutViewModel.cs" />

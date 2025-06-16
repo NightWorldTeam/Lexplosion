@@ -801,7 +801,7 @@
 
     <s:String x:Key="Information">Информация</s:String>
     <s:String x:Key="MicrosoftAccountAuthorizationDescription">Для авторизации лицензионого аккаунта вы будете автоматически перенаправлены на страницу авторизации Microsoft.</s:String>
-    <s:String x:Key="DoInstallTheLatestVersion">Установить последнию версию?</s:String>
+    <s:String x:Key="DoInstallTheLatestVersion">Установить последнюю версию?</s:String>
     <s:String x:Key="NWClientNotAvailableForThisVersion">NWClient недоступен на данную версию</s:String>
     <s:String x:Key="YouHaveNoActiveDistributions">У вас отсутствуют активные раздачи</s:String>
 
@@ -809,7 +809,7 @@
     <s:String x:Key="InQueue">В очереди</s:String>
     <s:String x:Key="InConnect">Идёт соединение</s:String>
     <s:String x:Key="PostProcessing">Обработка файлов</s:String>
-    <s:String x:Key="InProcess">В очереди</s:String>
+    <s:String x:Key="InProcess">В процессе</s:String>
     <s:String x:Key="Successful">Успешно</s:String>
 
 
