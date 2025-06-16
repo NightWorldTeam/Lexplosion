@@ -83,7 +83,7 @@ namespace Lexplosion.Logic.Management.Instances
 		/// Вызывается когда у сборки обноавляются данные.
 		/// Существует чтобы <see cref="ClientsManager"/> при срабатывании этого эвента перезаписывал список сборок в файл
 		/// </summary>
-		internal event Action InternalDataChanged;
+		private Action _internalDataChanged;
 		#endregion
 
 		#region info
@@ -290,11 +290,12 @@ namespace Lexplosion.Logic.Management.Instances
 		/// Базовый конструктор, от него должны наследоваться все остальные
 		/// </summary>
 		/// <param name="source">Источник модпака</param>
-		internal InstanceClient(IInstanceSource source, AllServicesContainer services)
+		internal InstanceClient(IInstanceSource source, AllServicesContainer services, Action internalDataChanged)
 		{
 			Type = source.SourceType;
 			_instanceSource = source;
 			_services = services;
+			_internalDataChanged = internalDataChanged;
 			_dataManager = source.ContentManager;
 
 			GameExited += delegate (string _)
@@ -308,7 +309,7 @@ namespace Lexplosion.Logic.Management.Instances
 		/// </summary>
 		/// <param name="source">Источник модпака</param>
 		/// <param name="externalID">Внешний ID</param>
-		internal InstanceClient(IInstanceSource source, AllServicesContainer services, string externalID) : this(source, services)
+		internal InstanceClient(IInstanceSource source, AllServicesContainer services, Action internalDataChanged, string externalID) : this(source, services, internalDataChanged)
 		{
 			_externalId = externalID;
 		}
@@ -319,7 +320,7 @@ namespace Lexplosion.Logic.Management.Instances
 		/// <param name="source">Источник модпака</param>
 		/// <param name="externalID">Внешний ID</param>
 		/// <param name="externalID">Локальный ID</param>
-		internal InstanceClient(IInstanceSource source, AllServicesContainer services, string externalID, string localId) : this(source, services, externalID)
+		internal InstanceClient(IInstanceSource source, AllServicesContainer services, Action internalDataChanged, string externalID, string localId) : this(source, services, internalDataChanged, externalID)
 		{
 			_localId = localId;
 		}
@@ -330,7 +331,7 @@ namespace Lexplosion.Logic.Management.Instances
 		/// <param name="name">Название сборки</param>
 		/// <param name="source">Источник модпака</param>
 		/// <param name="gameVersion">Версия игры</param>
-		internal InstanceClient(string name, IInstanceSource source, AllServicesContainer services, MinecraftVersion gameVersion, string externalId, string localId) : this(source, services, externalId, localId)
+		internal InstanceClient(string name, IInstanceSource source, AllServicesContainer services, Action internalDataChanged, MinecraftVersion gameVersion, string externalId, string localId) : this(source, services, internalDataChanged, externalId, localId)
 		{
 			Name = name;
 			GameVersion = gameVersion;
@@ -649,7 +650,7 @@ namespace Lexplosion.Logic.Management.Instances
 			SaveAssets();
 
 			Name = data.Name;
-			InternalDataChanged?.Invoke();
+			_internalDataChanged?.Invoke();
 		}
 
 		/// <summary>
@@ -703,7 +704,7 @@ namespace Lexplosion.Logic.Management.Instances
 				IsInstalled = (data.InitResult == InstanceInit.Successful);
 				_instanceVersionToDownload = null;
 
-				InternalDataChanged?.Invoke(); // чтобы если сборка установилась то флаг IsInstalled сохранился
+				_internalDataChanged?.Invoke(); // чтобы если сборка установилась то флаг IsInstalled сохранился
 			}
 
 			Initialized?.Invoke(data.InitResult, data.DownloadErrors, false);
@@ -738,8 +739,7 @@ namespace Lexplosion.Logic.Management.Instances
 			if (data.InitResult == InstanceInit.Successful)
 			{
 				IsInstalled = true;
-				InternalDataChanged?.Invoke(); // чтобы если сборка установилась то флаг IsInstalled сохранился
-				Initialized?.Invoke(data.InitResult, data.DownloadErrors, true);
+				_internalDataChanged?.Invoke(); // чтобы если сборка установилась то флаг IsInstalled сохранился
 
 				_gameManager.Run(data, LaunchComplited, GameExited, Name);
 				_services.DataFilesService.SaveSettings(GlobalData.GeneralSettings);

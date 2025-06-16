@@ -58,10 +58,9 @@ namespace Lexplosion.Logic.Management.Instances
 		private InstanceClient CreateClient(IInstanceSource source, string name, InstanceSource type, MinecraftVersion gameVersion, ClientType modloader, bool isNwClient, string logoPath = null, string modloaderVersion = null, string optifineVersion = null, bool sodium = false, string externalId = null)
 		{
 			var localId = GenerateInstanceId(name);
-			var client = new InstanceClient(name, source, _services, gameVersion, externalId, localId);
+			var client = new InstanceClient(name, source, _services, SaveInstalledInstancesList, gameVersion, externalId, localId);
 
 			client.DeployLocally(modloader, isNwClient, logoPath, modloaderVersion, optifineVersion, sodium);
-			client.InternalDataChanged += SaveInstalledInstancesList;
 
 			AddToDefaultGroup(client);
 			_installedInstances[client.LocalId] = client;
@@ -176,7 +175,7 @@ namespace Lexplosion.Logic.Management.Instances
 							}
 						}
 
-						var instance = new InstanceClient(sourceFactory, _services, externalID, localId);
+						var instance = new InstanceClient(sourceFactory, _services, SaveInstalledInstancesList, externalID, localId);
 						instance.UpdateInfo(list[localId].Name, instanceManifest.version?.GameVersionInfo, logo, instanceVersion, list[localId].IsInstalled);
 
 						_installedInstances[localId] = instance;
@@ -264,12 +263,12 @@ namespace Lexplosion.Logic.Management.Instances
 				}
 				else
 				{
-					instanceClient = new InstanceClient(instance.Name, source, _services, instance.GameVersion, instance.ExternalId, null);
+					instanceClient = new InstanceClient(instance.Name, source, _services, SaveInstalledInstancesList, instance.GameVersion, instance.ExternalId, null);
 					instanceClient.UpdateInfo(instance.Name, null, instance.Categories, instance.Summary, instance.Description, instance.Author, instance.WebsiteUrl);
 					instanceClient.DownloadLogo(instance.LogoUrl, () => { });
-
-					instances.Add(instanceClient);
 				}
+
+				instances.Add(instanceClient);
 
 				instanceClient.DownloadCounts = instance.DownloadCounts;
 			}
@@ -296,7 +295,7 @@ namespace Lexplosion.Logic.Management.Instances
 				}
 				else
 				{
-					instanceClient = new InstanceClient(instance.Name, CreateSourceFactory(type), _services, new MinecraftVersion(instance.GameVersion), instance.ExternalId, null);
+					instanceClient = new InstanceClient(instance.Name, CreateSourceFactory(type), _services, SaveInstalledInstancesList, new MinecraftVersion(instance.GameVersion), instance.ExternalId, null);
 				}
 
 				instanceClient.UpdateInfo(instance.Name, null, instance.Categories, instance.Summary, instance.Description, instance.Author, instance.WebsiteUrl);
@@ -450,7 +449,7 @@ namespace Lexplosion.Logic.Management.Instances
 
 		public InstanceClient Import(string zipFile, Action<ImportResult> callback, ImportData importData)
 		{
-			var client = new InstanceClient(CreateSourceFactory(InstanceSource.Local), _services);
+			var client = new InstanceClient(CreateSourceFactory(InstanceSource.Local), _services, SaveInstalledInstancesList);
 			client.MakeFictitiousClient("Importing...");
 			client.GetProgressHandler(StageType.Prepare, new ProgressHandlerArguments());
 
@@ -464,7 +463,7 @@ namespace Lexplosion.Logic.Management.Instances
 
 		public InstanceClient Import(FileReceiver reciver, Action<ImportResult> callback, Action<DownloadShareState> stateHandler, ImportData importData)
 		{
-			var client = new InstanceClient(CreateSourceFactory(InstanceSource.Local), _services);
+			var client = new InstanceClient(CreateSourceFactory(InstanceSource.Local), _services, SaveInstalledInstancesList);
 			client.MakeFictitiousClient("Importing...");
 			client.GetProgressHandler(StageType.Prepare, new ProgressHandlerArguments());
 
@@ -507,7 +506,7 @@ namespace Lexplosion.Logic.Management.Instances
 
 		public InstanceClient Import(Uri fileURL, Action<ImportResult> callback, ImportData importData)
 		{
-			var client = new InstanceClient(CreateSourceFactory(InstanceSource.Local), _services);
+			var client = new InstanceClient(CreateSourceFactory(InstanceSource.Local), _services, SaveInstalledInstancesList);
 
 			client.MakeFictitiousClient("Importing...");
 			client.GetProgressHandler(StageType.Prepare, new ProgressHandlerArguments());
@@ -619,7 +618,7 @@ namespace Lexplosion.Logic.Management.Instances
 			string id = GenerateInstanceId(name);
 
 			IInstanceSource source = CreateSourceFactory(client.Type);
-			var newClient = new InstanceClient(name, source, _services, client.GameVersion, client.ExternalId, id);
+			var newClient = new InstanceClient(name, source, _services, SaveInstalledInstancesList, client.GameVersion, client.ExternalId, id);
 
 			BaseInstanceData baseData = newClientData ?? client.GetBaseData;
 			newClient.UpdateInfo(null, null, client.Categories, client.Summary, client.Description, client.Author, client.WebsiteUrl);
@@ -679,7 +678,7 @@ namespace Lexplosion.Logic.Management.Instances
 			string id = GenerateInstanceId(name);
 
 			IInstanceSource source = CreateSourceFactory(client.Type);
-			var newClient = new InstanceClient(name, source, _services, gameVersion, client.ExternalId, id);
+			var newClient = new InstanceClient(name, source, _services, SaveInstalledInstancesList, gameVersion, client.ExternalId, id);
 
 			newClient.UpdateInfo(null, null, client.Categories, client.Summary, client.Description, client.Author, client.WebsiteUrl);
 			newClient.SetLogo(client.Logo);
