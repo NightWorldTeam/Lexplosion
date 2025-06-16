@@ -86,7 +86,7 @@ jobs:
       shell: bash
 
     - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v3.1.0
       with:
         name: ${{ matrix.output_name }}
         path: ${{ matrix.output_name }}${{ matrix.output_extension }}
@@ -108,8 +108,8 @@ jobs:
           draft: false
           prerelease: false
           files: |
-            Lexplosion-Windows/Lexplosion-Windows.zip
-            Lexplosion-Linux/Lexplosion-Linux.tar.gz
-            Lexplosion-macOS/Lexplosion-macOS.tar.gz
+            Lexplosion-Windows.zip
+            Lexplosion-Linux.tar.gz
+            Lexplosion-macOS.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
