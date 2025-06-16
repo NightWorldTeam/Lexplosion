@@ -449,8 +449,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 		public void AddToLibrary()
 		{
 			_clientsManager.AddToLibrary(_instanceClient);
-			GlobalAddedToLibrary?.Invoke(this);
-			AddedToLibraryEvent?.Invoke(this);
+			//GlobalAddedToLibrary?.Invoke(this);
+			//AddedToLibraryEvent?.Invoke(this);
 			DataChanged?.Invoke();
 		}
 
@@ -778,6 +778,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         /// <param name="isRun"></param>
         private void OnDownloadCompleted(InstanceInit init, IEnumerable<string> errors, bool isRun)
         {
+            Runtime.DebugWrite(Id, color: ConsoleColor.Red);
             IsDownloading = false;
 
             if (IsPrepare)

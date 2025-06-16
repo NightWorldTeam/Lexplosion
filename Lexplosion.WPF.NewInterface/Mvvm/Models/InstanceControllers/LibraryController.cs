@@ -7,6 +7,7 @@ using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -90,6 +91,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
         {
             App.Current.Dispatcher.Invoke(() =>
             {
+                Runtime.DebugWrite(instanceModelBase.Id, color: ConsoleColor.Red);
                 _instances.Add(instanceModelBase);
                 InstanceAdded?.Invoke(instanceModelBase);
                 OnPropertyChanged(nameof(Instances));

@@ -251,7 +251,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Model.Modal
                 {
                     ModloaderVersion = modloaderVersion;
                 }
-                else
+                else if (!HasModloaderByDefault)
                 {
                     GameTypeChanged?.Invoke(ClientType.Vanilla);
                 }

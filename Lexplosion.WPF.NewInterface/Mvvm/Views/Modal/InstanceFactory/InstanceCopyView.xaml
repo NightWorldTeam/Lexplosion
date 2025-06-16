@@ -327,7 +327,10 @@
                                         BorderThickness="1"
                                         CornerRadius="5"
                                         Visibility="{Binding Model.ModloaderManager.IsCurrentAvaliable, Mode=OneWay, Converter={converters:NegativeBooleanToVisibilityConverter}}">
-                                        <TextBlock FontWeight="Medium" Text="{Binding Model.ModloaderVersion}" />
+                                        <TextBlock
+                                            FontWeight="Medium"
+                                            Foreground="{DynamicResource LatestForegroundSolidColorBrush}"
+                                            Text="{Binding Model.ModloaderVersion}" />
                                     </Border>
                                 </Grid>
                             </Grid>

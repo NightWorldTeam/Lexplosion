@@ -87,7 +87,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
             ActionCommandExecutedEvent += OnAction;
             Model.GameTypeChanged += UpdateSelectedGameType;
             UpdateSelectedGameType(instance.BaseData.Modloader);
-
         }
 
         private void UpdateSelectedGameType(ClientType clientType)
