@@ -276,7 +276,6 @@ namespace Lexplosion.Logic.Management.Instances
 				return value;
 			}
 		}
-
 		#endregion
 
 		/// <summary>

@@ -451,10 +451,11 @@ namespace Lexplosion.Logic.Management.Instances
 		{
 			var client = new InstanceClient(CreateSourceFactory(InstanceSource.Local), _services, SaveInstalledInstancesList);
 			client.MakeFictitiousClient("Importing...");
-			client.GetProgressHandler(StageType.Prepare, new ProgressHandlerArguments());
 
 			new Thread(() =>
 			{
+				Thread.Sleep(10);
+				client.GetProgressHandler(StageType.Prepare, new ProgressHandlerArguments());
 				callback(Import(client, zipFile, true, importData));
 			}).Start();
 
@@ -465,10 +466,12 @@ namespace Lexplosion.Logic.Management.Instances
 		{
 			var client = new InstanceClient(CreateSourceFactory(InstanceSource.Local), _services, SaveInstalledInstancesList);
 			client.MakeFictitiousClient("Importing...");
-			client.GetProgressHandler(StageType.Prepare, new ProgressHandlerArguments());
 
 			new Thread(() =>
 			{
+				Thread.Sleep(10);
+				client.GetProgressHandler(StageType.Prepare, new ProgressHandlerArguments());
+
 				reciver.StateChanged += () =>
 				{
 					var state = reciver.State;
@@ -509,10 +512,11 @@ namespace Lexplosion.Logic.Management.Instances
 			var client = new InstanceClient(CreateSourceFactory(InstanceSource.Local), _services, SaveInstalledInstancesList);
 
 			client.MakeFictitiousClient("Importing...");
-			client.GetProgressHandler(StageType.Prepare, new ProgressHandlerArguments());
 
 			new Thread(() =>
 			{
+				Thread.Sleep(10);
+				client.GetProgressHandler(StageType.Prepare, new ProgressHandlerArguments());
 				string downloadUrl = null;
 				try
 				{
@@ -628,12 +632,13 @@ namespace Lexplosion.Logic.Management.Instances
 			_installedInstances[id] = client;
 			SaveInstalledInstancesList();
 
-			newClient.GetProgressHandler(StageType.Prepare, new ProgressHandlerArguments());
-
 			new Thread(() =>
 			{
 				try
 				{
+					Thread.Sleep(10); //ебанный костыль. Сделано чтобы на стороне интерфейса эвент точно отработал
+					newClient.GetProgressHandler(StageType.Prepare, new ProgressHandlerArguments());
+
 					WithDirectory directoryService = _services.DirectoryService;
 					string from = directoryService.GetInstancePath(client.LocalId);
 					string to = directoryService.GetInstancePath(newClient.LocalId);
@@ -687,12 +692,13 @@ namespace Lexplosion.Logic.Management.Instances
 			_installedInstances[id] = client;
 			SaveInstalledInstancesList();
 
-			newClient.GetProgressHandler(StageType.Prepare, new ProgressHandlerArguments());
-
 			new Thread(() =>
 			{
 				try
 				{
+					Thread.Sleep(10); //ебанный костыль. Сделано чтобы на стороне интерфейса эвент точно отработал
+					newClient.GetProgressHandler(StageType.Prepare, new ProgressHandlerArguments());
+
 					WithDirectory directoryService = _services.DirectoryService;
 
 					string from = directoryService.GetInstancePath(client.LocalId);
