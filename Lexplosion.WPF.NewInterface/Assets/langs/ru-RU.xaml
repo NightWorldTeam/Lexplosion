@@ -988,4 +988,7 @@
     <s:String x:Key="StartCopying">Начать копирование</s:String>
     <s:String x:Key="UncopiedAddons">Нескопированные дополнения</s:String>
     <s:String x:Key="InstanceCopyUncopiedAddonsDescription">При копировании сборки {0} не удалось перенести следующие аддоны:</s:String>
+
+    <s:String x:Key="LibraryGroupEmpty">Данная группа пуста</s:String>
+    <s:String x:Key="LibraryGroupEmptyDescription">Вы можете добавить сборки в данную группу из других групп или при создании сборки.</s:String>
 </ResourceDictionary>

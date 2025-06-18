@@ -96,6 +96,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
             }
         }
 
+        public bool IsSelectedGroupDefault { get => SelectedGroup == null ? true : SelectedGroup.IsDefaultGroup; }
+
 
         #endregion Properties
 
@@ -137,7 +139,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
                 FilterPanel.FilterChanged -= OnFilterChanged;
             }
 
-            if (SelectedGroup != null && SelectedGroup.Clients is INotifyCollectionChanged oldNotifyChangeCollection) 
+            if (SelectedGroup != null && SelectedGroup.Clients is INotifyCollectionChanged oldNotifyChangeCollection)
             {
                 oldNotifyChangeCollection.CollectionChanged -= OnInstancesCollectionChanged;
             }
@@ -158,6 +160,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
             Groups.Source = _instanceController.InstancesGroups;
             IsEmpty = _instanceController.Instances.Count == 0;
             OnPropertyChanged(nameof(IsEmpty));
+            OnPropertyChanged(nameof(IsSelectedGroupDefault));
             InstancesCollectionViewSource.Source = _instanceController.Instances;
         }
 
@@ -178,7 +181,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
 
         public void RemoveGroup(InstancesGroup instancesGroup)
         {
-            if (SelectedGroup == instancesGroup) 
+            if (SelectedGroup == instancesGroup)
             {
                 _instanceController.SelectGroup(_defaultGroup);
             }

@@ -194,9 +194,8 @@
                                 <Border
                                     Width="64"
                                     Height="64"
-                                    Background="{DynamicResource ActivitySolidColorBrush}"
-                                    CornerRadius="5"
-                                    Opacity="0.3" />
+                                    Background="{Binding Logo, Converter={converters:ImageSourceNullValidateConverter}}"
+                                    CornerRadius="5" />
 
                                 <StackPanel Grid.Column="1" Margin="16,0,0,0">
 
@@ -590,26 +589,45 @@
                     </ListBox>
                 </core:If.False>
                 <core:If.True>
-                    <controls:Empty
-                        Title="{DynamicResource LibraryEmpty}"
-                        Description="{DynamicResource LibraryEmptyDescription}"
-                        TitleForeground="{DynamicResource PrimaryForegroundSolidColorBrush}">
-                        <WrapPanel Margin="0,16,0,0">
-                            <controls:AdvancedButton
-                                Margin="0,0,8,0"
-                                Command="{Binding MoveToCatalogCommand}"
-                                FontSize="12"
-                                IconData="{StaticResource PDCatalog}"
-                                Style="{StaticResource sm-ghost}"
-                                Text="{DynamicResource GoToCatalog}" />
-                            <controls:AdvancedButton
-                                Command="{Binding OpenInstanceFactoryCommand}"
-                                FontSize="12"
-                                IconData="{StaticResource PDAddCircle}"
-                                Style="{StaticResource sm-default}"
-                                Text="{DynamicResource CreateNewInstance}" />
-                        </WrapPanel>
-                    </controls:Empty>
+                    <core:If Condition="{Binding Model.IsSelectedGroupDefault}">
+                        <core:If.False>
+                            <controls:Empty
+                                Title="{DynamicResource LibraryGroupEmpty}"
+                                Description="{DynamicResource LibraryGroupEmptyDescription}"
+                                TitleForeground="{DynamicResource PrimaryForegroundSolidColorBrush}">
+                                <WrapPanel Margin="0,16,0,0">
+                                    <controls:AdvancedButton
+                                        Command="{Binding OpenInstanceFactoryCommand}"
+                                        FontSize="12"
+                                        IconData="{StaticResource PDAddCircle}"
+                                        Style="{StaticResource sm-default}"
+                                        Text="{DynamicResource CreateNewInstance}" />
+                                </WrapPanel>
+                            </controls:Empty>
+                        </core:If.False>
+                        <core:If.True>
+                            <controls:Empty
+                                Title="{DynamicResource LibraryEmpty}"
+                                Description="{DynamicResource LibraryEmptyDescription}"
+                                TitleForeground="{DynamicResource PrimaryForegroundSolidColorBrush}">
+                                <WrapPanel Margin="0,16,0,0">
+                                    <controls:AdvancedButton
+                                        Margin="0,0,8,0"
+                                        Command="{Binding MoveToCatalogCommand}"
+                                        FontSize="12"
+                                        IconData="{StaticResource PDCatalog}"
+                                        Style="{StaticResource sm-ghost}"
+                                        Text="{DynamicResource GoToCatalog}" />
+                                    <controls:AdvancedButton
+                                        Command="{Binding OpenInstanceFactoryCommand}"
+                                        FontSize="12"
+                                        IconData="{StaticResource PDAddCircle}"
+                                        Style="{StaticResource sm-default}"
+                                        Text="{DynamicResource CreateNewInstance}" />
+                                </WrapPanel>
+                            </controls:Empty>
+                        </core:If.True>
+                    </core:If>
                 </core:If.True>
             </core:If>
         </Grid>

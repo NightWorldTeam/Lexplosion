@@ -987,4 +987,7 @@
     <s:String x:Key="StartCopying">Start copying</s:String>
     <s:String x:Key="UncopiedAddons">Uncopied addons</s:String>
     <s:String x:Key="InstanceCopyUncopiedAddonsDescription">While copying instance {0}, the following addons could not be migrated:</s:String>
+
+    <s:String x:Key="LibraryGroupEmpty">This group is empty</s:String>
+    <s:String x:Key="LibraryGroupEmptyDescription">You can add instances to this group from other groups or when creating an instance...</s:String>
 </ResourceDictionary>
