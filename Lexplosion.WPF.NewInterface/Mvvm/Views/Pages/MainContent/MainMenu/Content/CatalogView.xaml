@@ -59,6 +59,7 @@
         <DataTemplate DataType="{x:Type instanceModel:InstanceModelBase}">
             <oldinstanceform:OldInstanceForm
                 Margin="0,0,0,16"
+                InCatalog="True"
                 LogoButtonCommand="{Binding DataContext.OpenInstanceProfileMenu, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
                 LogoButtonCommandParameter="{Binding}"
                 OpenAddonsPageCommand="{Binding DataContext.OpenAddonsPageCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />

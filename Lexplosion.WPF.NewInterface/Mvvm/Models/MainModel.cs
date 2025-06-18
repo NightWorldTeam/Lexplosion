@@ -15,6 +15,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models
     public sealed class MainModel : ObservableObject
     {
         private readonly AppCore _appCore;
+        private readonly Dictionary<InstanceClient, InstanceModelBase> _instanceModelByInstanceClient = [];
 
         public InstanceModelBase RunningGame { get; private set; }
 
@@ -27,11 +28,26 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models
         public MainModel(AppCore appCore, ClientsManager clientsManager)
         {
             _appCore = appCore;
-            CatalogController = new CatalogController(appCore, Export, SetRunningGame);
-            LibraryController = new LibraryController(appCore, clientsManager, Export, SetRunningGame);
+            LibraryController = new LibraryController(appCore, clientsManager, Export, SetRunningGame, GetInstanceModelByInstanceClient, AddInstanceModelByInstanceClient);
+            CatalogController = new CatalogController(appCore, Export, SetRunningGame, GetInstanceModelByInstanceClient, AddInstanceModelByInstanceClient);
             InstanceSharesController = new InstanceSharesController();
 
             OnPropertyChanged(nameof(NotificationService));
+        }
+
+        public InstanceModelBase? GetInstanceModelByInstanceClient(InstanceClient instanceClient) 
+        {
+            if (_instanceModelByInstanceClient.TryGetValue(instanceClient, out var instanceModel))
+            {
+                return instanceModel;
+            }
+
+            return null;
+        }
+
+        public void AddInstanceModelByInstanceClient(InstanceModelBase instanceModel) 
+        {
+            _instanceModelByInstanceClient.Add(instanceModel.InstanceClient, instanceModel);
         }
 
         /// <summary>

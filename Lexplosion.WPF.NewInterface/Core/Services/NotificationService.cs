@@ -57,7 +57,10 @@ namespace Lexplosion.WPF.NewInterface.Core.Services
             App.Current.Dispatcher.Invoke(() => 
             {
                 _notifications.Add(notification);
-                notification.CloseCommand = new RelayCommand((obj) => _notifications.Remove(notification));
+                notification.CloseCommand = new RelayCommand((obj) => App.Current.Dispatcher.Invoke(() =>
+                {
+                    _notifications.Remove(notification);
+                }));
                 NotificationAdded?.Invoke(notification);
             });
         }

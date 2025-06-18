@@ -80,6 +80,8 @@ namespace Lexplosion.WPF.NewInterface.Core
                 this, 
                 new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset)
             );
+
+            OnPropertyChanged(nameof(Count));
         }
 
         protected virtual void OnFilterChanged()

@@ -300,6 +300,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 
         public InstanceModelBase(InstanceModelArgs instanceModel)
         {
+            if (instanceModel.InstanceClient.Name.ToLower().Contains("all the mods")) 
+            {
+                Runtime.DebugWrite("123", color: ConsoleColor.Green);
+            }
+
             Id = Guid.NewGuid();
             _appCore = instanceModel.AppCore;
 
@@ -311,7 +316,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 
             if (instanceModel.Group != null) 
             {
-                IsSelectedGroupDefault = instanceModel.Group.IsDefaultGroup || instanceModel.Location == InstanceLocation.Catalog;
+                IsSelectedGroupDefault = instanceModel.Group.IsDefaultGroup;
                 _instancesGroup = instanceModel.Group;
             }
 

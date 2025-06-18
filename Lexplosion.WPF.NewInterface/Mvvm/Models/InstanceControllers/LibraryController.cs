@@ -7,7 +7,6 @@ using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Drawing;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -23,6 +22,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
         private readonly AppCore _appCore;
         private readonly Action<InstanceClient> _exportFunc;
         private readonly Action<InstanceModelBase> _setRunningGame;
+        private readonly Func<InstanceClient, InstanceModelBase> _getInstanceModelByInstanceClient;
+        private readonly Action<InstanceModelBase> _addInstanceModel;
         private readonly ClientsManager _clientsManager;
 
         private ObservableCollection<InstanceModelBase> _instances = new();
@@ -65,15 +66,17 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
         #region Constructors
 
 
-        public LibraryController(AppCore appCore, ClientsManager clientsManager, Action<InstanceClient> export, Action<InstanceModelBase> setRunningGame)
+        public LibraryController(AppCore appCore, ClientsManager clientsManager, Action<InstanceClient> export, Action<InstanceModelBase> setRunningGame, 
+            Func<InstanceClient, InstanceModelBase> getInstanceModelByInstanceClient, Action<InstanceModelBase> addInstanceModel)
         {
             _appCore = appCore;
             _clientsManager = clientsManager;
             _groups = new(_clientsManager.GetExistsGroups());
             _exportFunc = export;
             _setRunningGame = setRunningGame;
-
-            SelectGroup(_groups.First());
+            
+            _getInstanceModelByInstanceClient = getInstanceModelByInstanceClient;
+            _addInstanceModel = addInstanceModel;
 
             InstanceModelBase.GlobalAddedToLibrary += (im) => Add(im);
             InstanceModelBase.GlobalDeletedEvent += Remove;
@@ -98,19 +101,43 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
             });
         }
 
+        /// <summary>
+        /// Добавляет сборку используется только при раздаче.
+        /// Может получать instanceclient для которого существует уже созданных экземлпяр instancemodel,
+        /// что будет создавать дубликаты например в уведомлениях.
+        /// </summary>
         public InstanceModelBase? Add(InstanceClient instanceClient, [CallerMemberName] string member = "")
         {
-            InstanceModelBase? instanceModelBase = null;
+            InstanceModelBase? instanceModelBase = _getInstanceModelByInstanceClient(instanceClient);
+
+            if (instanceModelBase != null) 
+            {
+                instanceModelBase.UpdateInstancesGroup(SelectedGroup);
+            }
+
+            foreach (var i in _instances)
+            {
+                Runtime.DebugWrite($"{instanceClient.Name} {i.InstanceClient.Name}\t|\t{instanceClient.ExternalId} {i.InstanceClient.ExternalId}\t|\t{i.InstanceClient == instanceClient}");
+            }
+
             App.Current.Dispatcher.Invoke(() =>
             {
-                var args = new InstanceModelArgs(_appCore, instanceClient, _exportFunc, _setRunningGame, addByInstanceClient: (ic) => Add(ic), group: SelectedGroup);
-                instanceModelBase = new InstanceModelBase(args);
+                if (instanceModelBase == null)
+                {
+                    var args = new InstanceModelArgs(_appCore, instanceClient, _exportFunc, _setRunningGame, addByInstanceClient: (ic) => Add(ic), group: SelectedGroup);
+                    instanceModelBase = new InstanceModelBase(args);
+                    _addInstanceModel(instanceModelBase);
+                }
                 Add(instanceModelBase);
             });
 
             return instanceModelBase;
         }
 
+        /// <summary>
+        /// Добавляет сборку используется только при раздаче.
+        /// Следовательно, добавляется всегда единственный экземпляр без существующих копий
+        /// </summary>
         public InstanceModelBase? Add(InstanceClient instanceClient, InstanceDistribution instanceDistribution, [CallerMemberName] string member = "")
         {
             InstanceModelBase? instanceModelBase = null;
@@ -124,6 +151,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
             return instanceModelBase;
         }
 
+        /// <summary>
+        /// Добавляет сборку используется только при импорте.
+        /// Следовательно, добавляется всегда единственный экземпляр без существующих копий
+        /// </summary>
         public InstanceModelBase? Add(InstanceClient instanceClient, ImportData? importData, [CallerMemberName] string member = "")
         {
             InstanceModelBase? instanceModelBase = null;
@@ -189,12 +220,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
             SelectedGroup.IsSelected = true;
             SelectedGroup.NewInstanceAdded += GroupItemsChanged;
 
-            var prevInstances = _instances.ToList();
             _instances.Clear();
 
             foreach (var ic in SelectedGroup.Clients)
             {
-                var im = prevInstances.FirstOrDefault(i => i.InstanceClient == ic);
+                var im = _getInstanceModelByInstanceClient(ic); 
                 if (im == null)
                 {
                     Add(ic);
@@ -220,12 +250,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
             _groups.Remove(instancesGroup);
             _clientsManager.DeleteGroup(instancesGroup);
         }
-
-
-        //private void OnNewInstanceAddedToGroup() 
-        //{
-        //    GroupItemsChanged();
-        //}
 
 
         #endregion Public Methods

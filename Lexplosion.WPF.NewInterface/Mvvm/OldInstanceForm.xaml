@@ -992,28 +992,32 @@
                                             </core:If.True>
                                         </core:If>
 
-                                        <core:If Condition="{Binding IsSelectedGroupDefault}">
-                                            <core:If.True>
-                                                <core:If Condition="{Binding AvailableGroupsForAdding}">
+                                        <core:If Condition="{Binding DataContext.InCatalog, RelativeSource={RelativeSource Self}}">
+                                            <core:If.False>
+                                                <core:If Condition="{Binding IsSelectedGroupDefault}">
                                                     <core:If.True>
+                                                        <core:If Condition="{Binding AvailableGroupsForAdding}">
+                                                            <core:If.True>
+                                                                <!--  Удалить из группы  -->
+                                                                <controls:AdvancedButton
+                                                                    x:Name="AddToGroup"
+                                                                    Click="AddToGroup_Click"
+                                                                    IconData="{DynamicResource PDAddToList}"
+                                                                    Template="{StaticResource DropDownButton}"
+                                                                    Text="{DynamicResource AddToGroup}" />
+                                                            </core:If.True>
+                                                        </core:If>
+                                                    </core:If.True>
+                                                    <core:If.False>
                                                         <!--  Удалить из группы  -->
                                                         <controls:AdvancedButton
-                                                            x:Name="AddToGroup"
-                                                            Click="AddToGroup_Click"
-                                                            IconData="{DynamicResource PDAddToList}"
+                                                            x:Name="RemoveFromGroup"
+                                                            Click="RemoveFromGroup_Click"
+                                                            IconData="{DynamicResource PDRemoveFromLibrary}"
                                                             Template="{StaticResource DropDownButton}"
-                                                            Text="{DynamicResource AddToGroup}" />
-                                                    </core:If.True>
+                                                            Text="{DynamicResource RemoveFromGroup}" />
+                                                    </core:If.False>
                                                 </core:If>
-                                            </core:If.True>
-                                            <core:If.False>
-                                                <!--  Удалить из группы  -->
-                                                <controls:AdvancedButton
-                                                    x:Name="RemoveFromGroup"
-                                                    Click="RemoveFromGroup_Click"
-                                                    IconData="{DynamicResource PDRemoveFromLibrary}"
-                                                    Template="{StaticResource DropDownButton}"
-                                                    Text="{DynamicResource RemoveFromGroup}" />
                                             </core:If.False>
                                         </core:If>
 

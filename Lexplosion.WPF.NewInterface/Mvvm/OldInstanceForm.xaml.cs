@@ -38,10 +38,20 @@ namespace Lexplosion.WPF.NewInterface.Controls.OldInstanceForm
             = DependencyProperty.Register(nameof(CanBeDeleted), typeof(bool), typeof(OldInstanceForm),
             new FrameworkPropertyMetadata(false));
 
+        public static readonly DependencyProperty InCatalogProperty
+            = DependencyProperty.Register(nameof(InCatalog), typeof(bool), typeof(OldInstanceForm),
+            new FrameworkPropertyMetadata(false));
+
         public bool CanBeDeleted
         {
             get => (bool)GetValue(CanBeDeletedProperty);
             set => SetValue(CanBeDeletedProperty, value);
+        }
+        
+        public bool InCatalog
+        {
+            get => (bool)GetValue(InCatalogProperty);
+            set => SetValue(InCatalogProperty, value);
         }
 
         public ICommand LogoButtonCommand
