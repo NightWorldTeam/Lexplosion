@@ -394,6 +394,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 
         private void OnLaunchComplited(string instanceId, bool isSuccessful)
         {
+            IsDownloading = false;
+            IsPrepare = false;
+
             if (isSuccessful)
             {
                 IsLaunched = true;
