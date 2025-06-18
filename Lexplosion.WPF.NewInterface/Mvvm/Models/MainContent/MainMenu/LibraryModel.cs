@@ -157,6 +157,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
 
             Groups.Source = _instanceController.InstancesGroups;
             IsEmpty = _instanceController.Instances.Count == 0;
+            OnPropertyChanged(nameof(IsEmpty));
             InstancesCollectionViewSource.Source = _instanceController.Instances;
         }
 

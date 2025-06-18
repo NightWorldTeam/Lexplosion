@@ -389,7 +389,7 @@
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
 
-                                    <ItemsControl ItemsSource="{Binding Model.Instances}">
+                                    <ItemsControl ItemsSource="{Binding Model.Instances}" ScrollViewer.CanContentScroll="True">
                                         <ItemsControl.ItemsPanel>
                                             <ItemsPanelTemplate>
                                                 <virtualization:VirtualizingWrapPanel Margin="0,0,0,0" IsItemsHost="True" />

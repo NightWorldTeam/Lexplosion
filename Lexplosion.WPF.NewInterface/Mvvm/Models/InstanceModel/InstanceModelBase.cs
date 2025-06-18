@@ -615,8 +615,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 		/// </summary>
 		public void Delete()
 		{
-			if (_clientsManager.LibrarySize == 1) return;
-
 			_appCore.ModalNavigationStore.Open(new ConfirmActionViewModel(
 					_appCore.Resources("DeletingInstance") as string,
 					string.Format(_appCore.Resources("DeletingInstanceDescription") as string, Name),
