@@ -137,6 +137,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
                 FilterPanel.FilterChanged -= OnFilterChanged;
             }
 
+            if (SelectedGroup != null && SelectedGroup.Clients is INotifyCollectionChanged oldNotifyChangeCollection) 
+            {
+                oldNotifyChangeCollection.CollectionChanged -= OnInstancesCollectionChanged;
+            }
+
             _instanceController.SelectGroup(instancesGroup);
 
             FilterPanel = new(_instanceController);

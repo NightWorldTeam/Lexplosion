@@ -224,7 +224,7 @@
                                 x:Name="DownloadCountIcon"
                                 Background="Transparent"
                                 FontWeight="Medium"
-                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                Foreground="White"
                                 Text="{Binding TotalDownloads}" />
                         </StackPanel>
                     </Border>

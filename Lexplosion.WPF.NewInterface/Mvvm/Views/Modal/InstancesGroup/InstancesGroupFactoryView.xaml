@@ -232,7 +232,7 @@
                                                         <Viewbox Height="16">
                                                             <Path
                                                                 extensions:PathExtensions.StringKeyData="CheckMark"
-                                                                Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                                                Fill="White"
                                                                 Stretch="Fill" />
                                                         </Viewbox>
 
