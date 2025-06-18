@@ -655,10 +655,12 @@ namespace Lexplosion.Logic.Management.Instances
 
 						File.Copy(sourcePath, sourcePath.Replace(from, to), true);
 					}
-
-					client.CompleteInitialization(InstanceInit.Successful, new List<string>());
 				}
 				catch { }
+				finally
+				{
+					client.CompleteInitialization(InstanceInit.Successful, new List<string>());
+				}
 			}).Start();
 
 			return newClient;
