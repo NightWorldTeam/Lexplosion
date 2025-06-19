@@ -63,7 +63,7 @@ namespace Lexplosion.Logic.Management.Instances
 		/// Используется, для того чтобы сообщить InstanceFormViewModel,
 		/// что данные обновились, и нужно обновить инфу о данных.
 		/// </summary>
-		public event Action StateChanged;
+		public event Action DataChanged;
 		/// <summary>
 		/// Обновляется после того как InstanceClient будет иметь завершенную версию;
 		/// </summary>
@@ -174,7 +174,7 @@ namespace Lexplosion.Logic.Management.Instances
 				_summary = value;
 				OnPropertyChanged();
 				SummaryChanged?.Invoke();
-				StateChanged?.Invoke();
+				DataChanged?.Invoke();
 			}
 		}
 
@@ -200,7 +200,7 @@ namespace Lexplosion.Logic.Management.Instances
 			{
 				_createdLocally = value;
 				OnPropertyChanged();
-				StateChanged?.Invoke();
+				DataChanged?.Invoke();
 			}
 		}
 
@@ -214,7 +214,7 @@ namespace Lexplosion.Logic.Management.Instances
 			{
 				_updateAvailable = value;
 				OnPropertyChanged();
-				StateChanged?.Invoke();
+				DataChanged?.Invoke();
 			}
 		}
 
@@ -242,7 +242,7 @@ namespace Lexplosion.Logic.Management.Instances
 			private set
 			{
 				_websiteUrl = value;
-				StateChanged?.Invoke();
+				DataChanged?.Invoke();
 			}
 		}
 

@@ -328,7 +328,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 
             _instanceClient.NameChanged += OnNameChanged;
             _instanceClient.LogoChanged += OnLogoChanged;
-            _instanceClient.StateChanged += OnStateClientChanged;
+            _instanceClient.DataChanged += OnStateClientChanged;
             _instanceClient.ProgressHandler += OnDownloadProgressChanged;
             _instanceClient.DownloadStarted += OnDownloadStarted;
             _instanceClient.Initialized += OnDownloadCompleted;
