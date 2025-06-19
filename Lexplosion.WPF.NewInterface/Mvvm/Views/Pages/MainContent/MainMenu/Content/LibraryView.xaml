@@ -580,7 +580,7 @@
                         VirtualizingPanel.ScrollUnit="Pixel">
                         <ListBox.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <controls1:VirtualizingWrapPanel
+                                <VirtualizingStackPanel
                                     Margin="0,0,41,0"
                                     ScrollViewer.CanContentScroll="True"
                                     VirtualizingPanel.VirtualizationMode="Recycling" />
