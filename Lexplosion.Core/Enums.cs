@@ -219,9 +219,11 @@
 
 	public enum StageType
 	{
+		Default,
 		Prepare,
 		Client,
-		Java
+		Java,
+		InCancellation
 	}
 
 	public enum ActivityStatus

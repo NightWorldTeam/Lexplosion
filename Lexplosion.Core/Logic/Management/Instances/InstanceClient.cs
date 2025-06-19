@@ -40,6 +40,15 @@ namespace Lexplosion.Logic.Management.Instances
 
 		#region events
 		/// <summary>
+		/// Вызывается когда происходит изменение состояния скачивания
+		/// </summary>
+		public event DownloadHandlerCallback DownloadHandler;
+		/// <summary>
+		/// Вызывается когда происходит измнение состояния текущего класса
+		/// </summary>
+		public event Action StateChanged;
+
+		/// <summary>
 		/// Вызывается когда происходит обновление состояния инициализации
 		/// </summary>
 		public event ProgressHandlerCallback ProgressHandler;
@@ -87,6 +96,7 @@ namespace Lexplosion.Logic.Management.Instances
 		#endregion
 
 		#region info
+		public StageType State { get; private set; } = StageType.Default;
 		public string LocalId { get => _localId; }
 		public string ExternalId { get => _externalId; }
 
@@ -671,7 +681,7 @@ namespace Lexplosion.Logic.Management.Instances
 		/// <summary>
 		/// Обновляет или скачивает сборку. Сборка должна быть добавлена в библиотеку.
 		/// </summary>
-		public void Update(string instanceVersion = null)
+		public ClientInitResult Update(string instanceVersion = null)
 		{
 			_cancelTokenSource = new CancellationTokenSource();
 			ProgressHandler?.Invoke(StageType.Prepare, new ProgressHandlerArguments());
@@ -711,12 +721,14 @@ namespace Lexplosion.Logic.Management.Instances
 
 			_cancelTokenSource = null;
 			_gameManager?.DeleteCancellationToken();
+
+			return new ClientInitResult(data.InitResult, data.DownloadErrors);
 		}
 
 		/// <summary>
 		/// Запускает сборку. Если надо её докачивает. Сборка должна быть доавлена в библиотеку
 		/// </summary>
-		public void Run()
+		public ClientInitResult Run()
 		{
 			_cancelTokenSource = new CancellationTokenSource();
 
@@ -753,6 +765,8 @@ namespace Lexplosion.Logic.Management.Instances
 
 			_cancelTokenSource = null;
 			_gameManager?.DeleteCancellationToken();
+
+			return new ClientInitResult(data.InitResult, data.DownloadErrors);
 		}
 
 		internal void CheckUpdates()

@@ -83,6 +83,7 @@
     <Compile Include="Logic\Management\Addons\IAddonProjectInfo.cs" />
     <Compile Include="Logic\Management\Addons\InstaceAddonsSynchronizer.cs" />
     <Compile Include="Logic\Management\Addons\InstanceAddon.cs" />
+    <Compile Include="Logic\Management\ClientInitResult.cs" />
     <Compile Include="Logic\Management\Import\ImportData.cs" />
     <Compile Include="Logic\Management\Import\Importers\CurseforgeImportManager.cs" />
     <Compile Include="Logic\Management\Import\Importers\ImportExecutor.cs" />
