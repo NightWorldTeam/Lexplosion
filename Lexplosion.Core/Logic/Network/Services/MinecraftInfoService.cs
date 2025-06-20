@@ -26,7 +26,7 @@ namespace Lexplosion.Logic.Network.Services
 			{
 				try
 				{
-					_toServer.HttpGet(LaunсherSettings.URL.JavaData);
+					answer = _toServer.HttpGet(LaunсherSettings.URL.JavaData);
 				}
 				catch (Exception ex)
 				{
