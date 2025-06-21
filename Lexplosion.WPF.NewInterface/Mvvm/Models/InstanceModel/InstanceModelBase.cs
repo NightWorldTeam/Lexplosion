@@ -3,6 +3,7 @@ using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.Logic.Management.Import;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Objects;
+using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Notifications;
 using Lexplosion.WPF.NewInterface.Core.Objects;
@@ -355,7 +356,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
                     IsPrepare = true;
                     IsDownloading = true;
                     break;
-                case StateType.DownloadClient:  
+                case StateType.DownloadClient:
                     IsPrepare = false;
                     IsDownloading = true;
                     break;
@@ -625,13 +626,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 
             IsDownloading = true;
 
-            Lexplosion.Runtime.TaskRun(() =>
-            {
-                _instanceClient.Update(version);
-            });
-            DownloadStarted?.Invoke();
+            Update(version);
 
             OnPropertyChanged(nameof(AnyProcessActive));
+            DownloadStarted?.Invoke();
             DataChanged?.Invoke();
         }
 
@@ -655,12 +653,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         /// <summary>
         /// Обновить сборку.
         /// </summary>
-        public void Update()
+        public void Update(string version = null)
         {
             Runtime.TaskRun(() =>
             {
-                var result = _instanceClient.Update();
-                _appCore.UIThread(() => 
+                var result = _instanceClient.Update(version);
+                _appCore.UIThread(() =>
                 {
                     OnDownloadCompleted(result.State, result.DownloadErrors, false);
                     DataChanged?.Invoke();
