@@ -978,16 +978,20 @@
                                             Text="{DynamicResource Export}" />
 
 
-                                        <core:If Condition="{Binding InstanceClient.UpdateAvailable}">
-                                            <core:If.True>
-                                                <!--  Обновить  -->
-                                                <controls:AdvancedButton
-                                                    x:Name="UpdateButton"
-                                                    Click="UpdateButton_Click"
-                                                    IconData="{DynamicResource PDUpdate}"
-                                                    Template="{StaticResource DropDownButton}"
-                                                    Text="{DynamicResource Update}" />
-                                            </core:If.True>
+                                        <core:If Condition="{Binding IsDownloading}">
+                                            <core:If.False>
+                                                <core:If Condition="{Binding InstanceClient.UpdateAvailable}">
+                                                    <core:If.True>
+                                                        <!--  Обновить  -->
+                                                        <controls:AdvancedButton
+                                                            x:Name="UpdateButton"
+                                                            Click="UpdateButton_Click"
+                                                            IconData="{DynamicResource PDUpdate}"
+                                                            Template="{StaticResource DropDownButton}"
+                                                            Text="{DynamicResource Update}" />
+                                                    </core:If.True>
+                                                </core:If>
+                                            </core:If.False>
                                         </core:If>
 
                                         <core:If Condition="{Binding DataContext.InCatalog, RelativeSource={RelativeSource Self}}">
