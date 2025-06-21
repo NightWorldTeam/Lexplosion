@@ -49,26 +49,6 @@ namespace Lexplosion.Logic.Management.Instances
 		public event Action<StageType> StateChanged;
 
 		/// <summary>
-		/// Вызывается когда происходит обновление состояния инициализации
-		/// </summary>
-		public event ProgressHandlerCallback ProgressHandler;
-		/// <summary>
-		/// Вызывается когда инициализация закончена
-		/// </summary>
-		public event InitializedCallback Initialized;
-		/// <summary>
-		/// Вызывается когда запуск игры выполнен
-		/// </summary>
-		public event LaunchComplitedCallback LaunchComplited;
-		/// <summary>
-		/// Вызывается когда игра закрывается
-		/// </summary>
-		public event GameExitedCallback GameExited;
-		/// <summary>
-		/// Вызывается если начинается скачивание
-		/// </summary>
-		public event Action DownloadStarted;
-		/// <summary>
 		/// Используется, для того чтобы сообщить InstanceFormViewModel,
 		/// что данные обновились, и нужно обновить инфу о данных.
 		/// </summary>

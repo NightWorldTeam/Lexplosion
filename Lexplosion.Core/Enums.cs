@@ -223,7 +223,8 @@
 		Prepare,
 		Client,
 		Java,
-		InCancellation
+		InCancellation,
+		GameRunning
 	}
 
 	public enum ActivityStatus
