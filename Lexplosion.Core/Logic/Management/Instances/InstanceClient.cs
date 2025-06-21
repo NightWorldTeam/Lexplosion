@@ -655,6 +655,7 @@ namespace Lexplosion.Logic.Management.Instances
 		/// </summary>
 		public void CancelDownload()
 		{
+			State = StateType.DownloadInCancellation;
 			_cancelTokenSource?.Cancel();
 		}
 
