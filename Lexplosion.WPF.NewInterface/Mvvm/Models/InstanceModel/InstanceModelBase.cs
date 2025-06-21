@@ -71,7 +71,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         /// <summary>
         /// Информация о прогресс было изменено.
         /// </summary>
-        public event Action<StageType, ProgressHandlerArguments> DownloadProgressChanged;
+        public event Action<StateType, ProgressHandlerArguments> DownloadProgressChanged;
         /// <summary>
         /// Процесс скачивания клиента игры был завершен.
         /// </summary>
@@ -347,25 +347,25 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             Tags = tags;
         }
 
-        private void OnStateChanged(StageType stageType)
+        private void OnStateChanged(StateType stageType)
         {
             switch (stageType)
             {
-                case StageType.Default:
+                case StateType.Default:
                     IsDownloading = false;
                     IsPrepare = false;
                     IsShareDownloading = false;
                     break;
-                case StageType.Prepare:
+                case StateType.DownloadPrepare:
                     IsPrepare = true;
                     break;
-                case StageType.Client:
+                case StateType.DownloadClient:
                     IsDownloading = true;
                     break;
-                case StageType.Java:
+                case StateType.DownloadJava:
 
                     break;
-                case StageType.InCancellation:
+                case StateType.DownloadInCancellation:
                     break;
                 default:
                     break;
@@ -716,7 +716,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         #region Private Methods
 
 
-        private void OnDownloadProgressChanged(StageType stageType, ProgressHandlerArguments progressHandlerArguments)
+        private void OnDownloadProgressChanged(StateType stageType, ProgressHandlerArguments progressHandlerArguments)
         {
             if (!IsDownloading)
             {
@@ -730,12 +730,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             // Данный код вызывается при скачивании и запуске.
             // Поэтому мы будет при StageType.Prepare изменять состояние клиента на Preparing; 
             // Иначе устанавливаем состояние клиента Downloading;
-            if (stageType == StageType.Prepare && State != InstanceState.Preparing)
+            if (stageType == StateType.DownloadPrepare && State != InstanceState.Preparing)
             {
                 SetState(InstanceState.Preparing);
                 IsPrepare = true;
             }
-            else if (stageType != StageType.Prepare)
+            else if (stageType != StateType.DownloadPrepare)
             {
                 SetState(State = InstanceState.Downloading);
                 if (IsPrepare)

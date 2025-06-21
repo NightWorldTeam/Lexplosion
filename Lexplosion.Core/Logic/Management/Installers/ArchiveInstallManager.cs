@@ -240,7 +240,7 @@ namespace Lexplosion.Logic.Management.Installers
 
 				_installer.MainFileDownload += delegate (int percent)
 				{
-					progressHandler(StageType.Client, new ProgressHandlerArguments()
+					progressHandler(StateType.DownloadClient, new ProgressHandlerArguments()
 					{
 						StagesCount = 3,
 						Stage = 1,
@@ -298,7 +298,7 @@ namespace Lexplosion.Logic.Management.Installers
 					};
 				}
 
-				progressHandler(StageType.Client, new ProgressHandlerArguments()
+				progressHandler(StateType.DownloadClient, new ProgressHandlerArguments()
 				{
 					StagesCount = 3,
 					Stage = 2,
@@ -364,7 +364,7 @@ namespace Lexplosion.Logic.Management.Installers
 				{
 					_installer.BaseDownloadEvent += delegate (int totalDataCount, int nowDataCount)
 					{
-						progressHandler(StageType.Client, new ProgressHandlerArguments()
+						progressHandler(StateType.DownloadClient, new ProgressHandlerArguments()
 						{
 							StagesCount = 3,
 							Stage = 2,
@@ -378,7 +378,7 @@ namespace Lexplosion.Logic.Management.Installers
 				{
 					singleDownloadMethod = delegate (string file, int pr, DownloadFileProgress stage_)
 					{
-						progressHandler(StageType.Client, new ProgressHandlerArguments()
+						progressHandler(StateType.DownloadClient, new ProgressHandlerArguments()
 						{
 							StagesCount = 3,
 							Stage = 2,
@@ -420,7 +420,7 @@ namespace Lexplosion.Logic.Management.Installers
 					};
 				}
 
-				progressHandler(StageType.Client, new ProgressHandlerArguments()
+				progressHandler(StateType.DownloadClient, new ProgressHandlerArguments()
 				{
 					StagesCount = 3,
 					Stage = 2,
@@ -436,7 +436,7 @@ namespace Lexplosion.Logic.Management.Installers
 				{
 					if (nowDataCount != 0)
 					{
-						progressHandler(StageType.Client, new ProgressHandlerArguments()
+						progressHandler(StateType.DownloadClient, new ProgressHandlerArguments()
 						{
 							StagesCount = 3,
 							Stage = 3,
@@ -447,7 +447,7 @@ namespace Lexplosion.Logic.Management.Installers
 					}
 					else
 					{
-						progressHandler(StageType.Client, new ProgressHandlerArguments()
+						progressHandler(StateType.DownloadClient, new ProgressHandlerArguments()
 						{
 							StagesCount = 3,
 							Stage = 3,
@@ -496,7 +496,7 @@ namespace Lexplosion.Logic.Management.Installers
 					{
 						_installer.BaseDownloadEvent += delegate (int totalDataCount, int nowDataCount)
 						{
-							progressHandler(StageType.Client, new ProgressHandlerArguments()
+							progressHandler(StateType.DownloadClient, new ProgressHandlerArguments()
 							{
 								StagesCount = 1,
 								Stage = 1,
@@ -510,7 +510,7 @@ namespace Lexplosion.Logic.Management.Installers
 					{
 						_installer.FileDownloadEvent += delegate (string file, int pr, DownloadFileProgress stage_)
 						{
-							progressHandler(StageType.Client, new ProgressHandlerArguments()
+							progressHandler(StateType.DownloadClient, new ProgressHandlerArguments()
 							{
 								StagesCount = 1,
 								Stage = 1,

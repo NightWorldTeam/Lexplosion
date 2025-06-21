@@ -57,7 +57,7 @@ namespace Lexplosion.Logic.Management.Import.Importers
 		{
 			result = new PrepeareResult();
 
-			progressHandler(StageType.Client, new ProgressHandlerArguments()
+			progressHandler(StateType.DownloadClient, new ProgressHandlerArguments()
 			{
 				StagesCount = 2,
 				Stage = 1,
@@ -66,7 +66,7 @@ namespace Lexplosion.Logic.Management.Import.Importers
 
 			installer.MainFileDownload += (int pr) =>
 			{
-				progressHandler(StageType.Client, new ProgressHandlerArguments()
+				progressHandler(StateType.DownloadClient, new ProgressHandlerArguments()
 				{
 					StagesCount = 2,
 					Stage = 1,
@@ -120,7 +120,7 @@ namespace Lexplosion.Logic.Management.Import.Importers
 
 			installer.AddonsDownload += (int totalDataCount, int nowDataCount) =>
 			{
-				progressHandler(StageType.Client, new ProgressHandlerArguments()
+				progressHandler(StateType.DownloadClient, new ProgressHandlerArguments()
 				{
 					TotalFilesCount = totalDataCount,
 					FilesCount = nowDataCount,

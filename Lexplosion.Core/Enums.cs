@@ -217,13 +217,13 @@
 		Shaders = 6552
 	}
 
-	public enum StageType
+	public enum StateType
 	{
 		Default,
-		Prepare,
-		Client,
-		Java,
-		InCancellation,
+		DownloadPrepare,
+		DownloadClient,
+		DownloadJava,
+		DownloadInCancellation,
 		GameRunning
 	}
 

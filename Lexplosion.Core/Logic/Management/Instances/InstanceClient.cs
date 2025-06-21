@@ -46,7 +46,7 @@ namespace Lexplosion.Logic.Management.Instances
 		/// <summary>
 		/// Вызывается когда происходит измнение состояния текущего класса
 		/// </summary>
-		public event Action<StageType> StateChanged;
+		public event Action<StateType> StateChanged;
 
 		/// <summary>
 		/// Используется, для того чтобы сообщить InstanceFormViewModel,
@@ -78,8 +78,8 @@ namespace Lexplosion.Logic.Management.Instances
 		#region info
 
 
-		private StageType _state = StageType.Default;
-		public StageType State
+		private StateType _state = StateType.Default;
+		public StateType State
 		{ 
 			get => _state; private set
 			{
@@ -276,7 +276,7 @@ namespace Lexplosion.Logic.Management.Instances
 			get
 			{
 				ProgressHandlerCallback value = ProgressHandler;
-				if (value == null) return (StageType stageType, ProgressHandlerArguments data) => { };
+				if (value == null) return (StateType stageType, ProgressHandlerArguments data) => { };
 				return value;
 			}
 		}
@@ -678,7 +678,7 @@ namespace Lexplosion.Logic.Management.Instances
 		public ClientInitResult Update(string instanceVersion = null)
 		{
 			_cancelTokenSource = new CancellationTokenSource();
-			ProgressHandler?.Invoke(StageType.Prepare, new ProgressHandlerArguments());
+			ProgressHandler?.Invoke(StateType.DownloadPrepare, new ProgressHandlerArguments());
 
 			Settings instanceSettings = GetSettings();
 			instanceSettings.Merge(GlobalData.GeneralSettings, true);
@@ -726,7 +726,7 @@ namespace Lexplosion.Logic.Management.Instances
 		{
 			_cancelTokenSource = new CancellationTokenSource();
 
-			ProgressHandler?.Invoke(StageType.Prepare, new ProgressHandlerArguments());
+			ProgressHandler?.Invoke(StateType.DownloadPrepare, new ProgressHandlerArguments());
 
 			Settings instanceSettings = GetSettings();
 			instanceSettings.Merge(GlobalData.GeneralSettings, true);

@@ -329,7 +329,7 @@
                                         <MultiDataTrigger>
                                             <MultiDataTrigger.Conditions>
                                                 <Condition Binding="{Binding IsDownloading}" Value="True" />
-                                                <Condition Binding="{Binding DownloadingData.Stage}" Value="{x:Static lexplosion:StageType.Prepare}" />
+                                                <Condition Binding="{Binding DownloadingData.Stage}" Value="{x:Static lexplosion:StateType.DownloadPrepare}" />
                                             </MultiDataTrigger.Conditions>
 
                                             <MultiDataTrigger.Setters>
@@ -342,7 +342,7 @@
                                         <MultiDataTrigger>
                                             <MultiDataTrigger.Conditions>
                                                 <Condition Binding="{Binding IsDownloading}" Value="False" />
-                                                <Condition Binding="{Binding DownloadingData.Stage}" Value="{x:Static lexplosion:StageType.Client}" />
+                                                <Condition Binding="{Binding DownloadingData.Stage}" Value="{x:Static lexplosion:StateType.DownloadClient}" />
                                             </MultiDataTrigger.Conditions>
 
                                             <MultiDataTrigger.Setters>
@@ -366,7 +366,7 @@
                                         <MultiDataTrigger>
                                             <MultiDataTrigger.Conditions>
                                                 <Condition Binding="{Binding IsDownloading}" Value="True" />
-                                                <Condition Binding="{Binding DownloadingData.Stage}" Value="{x:Static lexplosion:StageType.Java}" />
+                                                <Condition Binding="{Binding DownloadingData.Stage}" Value="{x:Static lexplosion:StateType.DownloadJava}" />
                                             </MultiDataTrigger.Conditions>
 
                                             <MultiDataTrigger.Setters>
@@ -417,7 +417,7 @@
 
                                             <MultiDataTrigger.Conditions>
                                                 <Condition Binding="{Binding IsImporting, Mode=OneWay}" Value="True" />
-                                                <Condition Binding="{Binding DownloadingData.Stage, Mode=OneWay}" Value="{x:Static lexplosion:StageType.Prepare}" />
+                                                <Condition Binding="{Binding DownloadingData.Stage, Mode=OneWay}" Value="{x:Static lexplosion:StateType.DownloadPrepare}" />
                                             </MultiDataTrigger.Conditions>
 
                                             <Setter Property="Visibility" Value="Visible" />
@@ -429,7 +429,7 @@
 
                                             <MultiDataTrigger.Conditions>
                                                 <Condition Binding="{Binding IsImporting, Mode=OneWay}" Value="True" />
-                                                <Condition Binding="{Binding DownloadingData.Stage, Mode=OneWay}" Value="{x:Static lexplosion:StageType.Client}" />
+                                                <Condition Binding="{Binding DownloadingData.Stage, Mode=OneWay}" Value="{x:Static lexplosion:StateType.DownloadClient}" />
                                             </MultiDataTrigger.Conditions>
 
                                             <Setter Property="Visibility" Value="Collapsed" />
@@ -469,7 +469,7 @@
                                         <MultiDataTrigger>
                                             <MultiDataTrigger.Conditions>
                                                 <Condition Binding="{Binding IsDownloading}" Value="True" />
-                                                <Condition Binding="{Binding DownloadingData.Stage}" Value="{x:Static lexplosion:StageType.Client}" />
+                                                <Condition Binding="{Binding DownloadingData.Stage}" Value="{x:Static lexplosion:StateType.DownloadClient}" />
                                             </MultiDataTrigger.Conditions>
 
                                             <MultiDataTrigger.Setters>
@@ -483,7 +483,7 @@
 
                                             <MultiDataTrigger.Conditions>
                                                 <Condition Binding="{Binding IsImporting, Mode=OneWay}" Value="True" />
-                                                <Condition Binding="{Binding DownloadingData.Stage, Mode=OneWay}" Value="{x:Static lexplosion:StageType.Client}" />
+                                                <Condition Binding="{Binding DownloadingData.Stage, Mode=OneWay}" Value="{x:Static lexplosion:StateType.DownloadClient}" />
                                             </MultiDataTrigger.Conditions>
 
                                             <Setter Property="Visibility" Value="Visible" />
@@ -580,7 +580,7 @@
                                         <MultiDataTrigger>
                                             <MultiDataTrigger.Conditions>
                                                 <Condition Binding="{Binding IsDownloading}" Value="True" />
-                                                <Condition Binding="{Binding DownloadingData.Stage}" Value="{x:Static lexplosion:StageType.Java}" />
+                                                <Condition Binding="{Binding DownloadingData.Stage}" Value="{x:Static lexplosion:StateType.DownloadJava}" />
                                             </MultiDataTrigger.Conditions>
 
                                             <MultiDataTrigger.Setters>
@@ -592,7 +592,7 @@
                                         <MultiDataTrigger>
                                             <MultiDataTrigger.Conditions>
                                                 <Condition Binding="{Binding IsDownloading}" Value="True" />
-                                                <Condition Binding="{Binding DownloadingData.Stage}" Value="{x:Static lexplosion:StageType.Client}" />
+                                                <Condition Binding="{Binding DownloadingData.Stage}" Value="{x:Static lexplosion:StateType.DownloadClient}" />
                                             </MultiDataTrigger.Conditions>
 
                                             <MultiDataTrigger.Setters>
@@ -605,7 +605,7 @@
 
                                             <MultiDataTrigger.Conditions>
                                                 <Condition Binding="{Binding IsImporting, Mode=OneWay}" Value="True" />
-                                                <Condition Binding="{Binding DownloadingData.Stage, Mode=OneWay}" Value="{x:Static lexplosion:StageType.Client}" />
+                                                <Condition Binding="{Binding DownloadingData.Stage, Mode=OneWay}" Value="{x:Static lexplosion:StateType.DownloadClient}" />
                                             </MultiDataTrigger.Conditions>
 
                                             <Setter Property="Visibility" Value="Visible" />
@@ -666,7 +666,7 @@
                                         <MultiDataTrigger>
                                             <MultiDataTrigger.Conditions>
                                                 <Condition Binding="{Binding IsDownloading}" Value="True" />
-                                                <Condition Binding="{Binding DownloadingData.Stage}" Value="{x:Static lexplosion:StageType.Prepare}" />
+                                                <Condition Binding="{Binding DownloadingData.Stage}" Value="{x:Static lexplosion:StateType.DownloadPrepare}" />
                                             </MultiDataTrigger.Conditions>
 
                                             <MultiDataTrigger.Setters>
@@ -679,7 +679,7 @@
                                         <MultiDataTrigger>
                                             <MultiDataTrigger.Conditions>
                                                 <Condition Binding="{Binding IsDownloading}" Value="True" />
-                                                <Condition Binding="{Binding DownloadingData.Stage}" Value="{x:Static lexplosion:StageType.Java}" />
+                                                <Condition Binding="{Binding DownloadingData.Stage}" Value="{x:Static lexplosion:StateType.DownloadJava}" />
                                             </MultiDataTrigger.Conditions>
 
                                             <MultiDataTrigger.Setters>
@@ -692,7 +692,7 @@
                                         <MultiDataTrigger>
                                             <MultiDataTrigger.Conditions>
                                                 <Condition Binding="{Binding IsDownloading}" Value="True" />
-                                                <Condition Binding="{Binding DownloadingData.Stage}" Value="{x:Static lexplosion:StageType.Client}" />
+                                                <Condition Binding="{Binding DownloadingData.Stage}" Value="{x:Static lexplosion:StateType.DownloadClient}" />
                                             </MultiDataTrigger.Conditions>
 
                                             <MultiDataTrigger.Setters>
@@ -713,7 +713,7 @@
 
                                             <MultiDataTrigger.Conditions>
                                                 <Condition Binding="{Binding IsImporting, Mode=OneWay}" Value="True" />
-                                                <Condition Binding="{Binding DownloadingData.Stage, Mode=OneWay}" Value="{x:Static lexplosion:StageType.Prepare}" />
+                                                <Condition Binding="{Binding DownloadingData.Stage, Mode=OneWay}" Value="{x:Static lexplosion:StateType.DownloadPrepare}" />
                                             </MultiDataTrigger.Conditions>
 
                                             <Setter Property="Visibility" Value="Visible" />
@@ -726,7 +726,7 @@
 
                                             <MultiDataTrigger.Conditions>
                                                 <Condition Binding="{Binding IsImporting, Mode=OneWay}" Value="True" />
-                                                <Condition Binding="{Binding DownloadingData.Stage, Mode=OneWay}" Value="{x:Static lexplosion:StageType.Client}" />
+                                                <Condition Binding="{Binding DownloadingData.Stage, Mode=OneWay}" Value="{x:Static lexplosion:StateType.DownloadClient}" />
                                             </MultiDataTrigger.Conditions>
 
                                             <Setter Property="Visibility" Value="Visible" />
@@ -832,7 +832,7 @@
                                                 <MultiDataTrigger>
                                                     <MultiDataTrigger.Conditions>
                                                         <Condition Binding="{Binding IsDownloading}" Value="True" />
-                                                        <Condition Binding="{Binding DownloadingData.Stage}" Value="{x:Static lexplosion:StageType.Java}" />
+                                                        <Condition Binding="{Binding DownloadingData.Stage}" Value="{x:Static lexplosion:StateType.DownloadJava}" />
                                                     </MultiDataTrigger.Conditions>
 
                                                     <Setter TargetName="Percentage" Property="Visibility" Value="Visible" />
@@ -844,7 +844,7 @@
                                                 <MultiDataTrigger>
                                                     <MultiDataTrigger.Conditions>
                                                         <Condition Binding="{Binding IsDownloading}" Value="True" />
-                                                        <Condition Binding="{Binding DownloadingData.Stage}" Value="{x:Static lexplosion:StageType.Client}" />
+                                                        <Condition Binding="{Binding DownloadingData.Stage}" Value="{x:Static lexplosion:StateType.DownloadClient}" />
                                                     </MultiDataTrigger.Conditions>
 
                                                     <Setter TargetName="Percentage" Property="Visibility" Value="Visible" />
@@ -881,7 +881,7 @@
 
                                                     <MultiDataTrigger.Conditions>
                                                         <Condition Binding="{Binding IsImporting, Mode=OneWay}" Value="True" />
-                                                        <Condition Binding="{Binding DownloadingData.Stage, Mode=OneWay}" Value="{x:Static lexplosion:StageType.Prepare}" />
+                                                        <Condition Binding="{Binding DownloadingData.Stage, Mode=OneWay}" Value="{x:Static lexplosion:StateType.DownloadPrepare}" />
                                                     </MultiDataTrigger.Conditions>
 
                                                     <Setter Property="Visibility" Value="Collapsed" />
@@ -893,7 +893,7 @@
 
                                                     <MultiDataTrigger.Conditions>
                                                         <Condition Binding="{Binding IsImporting, Mode=OneWay}" Value="True" />
-                                                        <Condition Binding="{Binding DownloadingData.Stage, Mode=OneWay}" Value="{x:Static lexplosion:StageType.Client}" />
+                                                        <Condition Binding="{Binding DownloadingData.Stage, Mode=OneWay}" Value="{x:Static lexplosion:StateType.DownloadClient}" />
                                                     </MultiDataTrigger.Conditions>
 
                                                     <Setter Property="Visibility" Value="Visible" />

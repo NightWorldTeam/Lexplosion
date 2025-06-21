@@ -7,8 +7,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         /// <summary>
         /// Текущий этап
         /// </summary>
-        private StageType _stage;
-        public StageType Stage
+        private StateType _stage;
+        public StateType Stage
         {
             get => _stage; set
             {

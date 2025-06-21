@@ -455,7 +455,7 @@ namespace Lexplosion.Logic.Management.Instances
 			new Thread(() =>
 			{
 				Thread.Sleep(10);
-				client.GetProgressHandler(StageType.Prepare, new ProgressHandlerArguments());
+				client.GetProgressHandler(StateType.DownloadPrepare, new ProgressHandlerArguments());
 				callback(Import(client, zipFile, true, importData));
 			}).Start();
 
@@ -470,7 +470,7 @@ namespace Lexplosion.Logic.Management.Instances
 			new Thread(() =>
 			{
 				Thread.Sleep(10);
-				client.GetProgressHandler(StageType.Prepare, new ProgressHandlerArguments());
+				client.GetProgressHandler(StateType.DownloadPrepare, new ProgressHandlerArguments());
 
 				reciver.StateChanged += () =>
 				{
@@ -516,7 +516,7 @@ namespace Lexplosion.Logic.Management.Instances
 			new Thread(() =>
 			{
 				Thread.Sleep(10);
-				client.GetProgressHandler(StageType.Prepare, new ProgressHandlerArguments());
+				client.GetProgressHandler(StateType.DownloadPrepare, new ProgressHandlerArguments());
 				string downloadUrl = null;
 				try
 				{
@@ -637,7 +637,7 @@ namespace Lexplosion.Logic.Management.Instances
 				try
 				{
 					Thread.Sleep(10); //ебанный костыль. Сделано чтобы на стороне интерфейса эвент точно отработал
-					newClient.GetProgressHandler(StageType.Prepare, new ProgressHandlerArguments());
+					newClient.GetProgressHandler(StateType.DownloadPrepare, new ProgressHandlerArguments());
 
 					WithDirectory directoryService = _services.DirectoryService;
 					string from = directoryService.GetInstancePath(client.LocalId);
@@ -699,7 +699,7 @@ namespace Lexplosion.Logic.Management.Instances
 				try
 				{
 					Thread.Sleep(10); //ебанный костыль. Сделано чтобы на стороне интерфейса эвент точно отработал
-					newClient.GetProgressHandler(StageType.Prepare, new ProgressHandlerArguments());
+					newClient.GetProgressHandler(StateType.DownloadPrepare, new ProgressHandlerArguments());
 
 					WithDirectory directoryService = _services.DirectoryService;
 
@@ -744,7 +744,7 @@ namespace Lexplosion.Logic.Management.Instances
 
 					int totalAddonsCount = addonsToDownload.Count;
 
-					newClient.GetProgressHandler(StageType.Client, new ProgressHandlerArguments()
+					newClient.GetProgressHandler(StateType.DownloadClient, new ProgressHandlerArguments()
 					{
 						Stage = 1,
 						StagesCount = 1,
@@ -761,7 +761,7 @@ namespace Lexplosion.Logic.Management.Instances
 
 						filesCount++;
 
-						newClient.GetProgressHandler(StageType.Client, new ProgressHandlerArguments()
+						newClient.GetProgressHandler(StateType.DownloadClient, new ProgressHandlerArguments()
 						{
 							Stage = 1,
 							StagesCount = 1,

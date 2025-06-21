@@ -108,7 +108,7 @@ namespace Lexplosion.Logic.Management.Installers
 		{
 			if (stagesCount == 1)
 			{
-				progressHandler(StageType.Client, new ProgressHandlerArguments()
+				progressHandler(StateType.DownloadClient, new ProgressHandlerArguments()
 				{
 					StagesCount = 1,
 					Stage = 1,
@@ -119,7 +119,7 @@ namespace Lexplosion.Logic.Management.Installers
 				{
 					installer.BaseDownloadEvent += delegate (int totalDataCount, int nowDataCount)
 					{
-						progressHandler(StageType.Client, new ProgressHandlerArguments()
+						progressHandler(StateType.DownloadClient, new ProgressHandlerArguments()
 						{
 							StagesCount = 1,
 							Stage = 1,
@@ -133,7 +133,7 @@ namespace Lexplosion.Logic.Management.Installers
 				{
 					installer.FileDownloadEvent += delegate (string file, int pr, DownloadFileProgress stage_)
 					{
-						progressHandler(StageType.Client, new ProgressHandlerArguments()
+						progressHandler(StateType.DownloadClient, new ProgressHandlerArguments()
 						{
 							StagesCount = 1,
 							Stage = 1,

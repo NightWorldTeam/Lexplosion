@@ -62,7 +62,7 @@ namespace Lexplosion.Logic.Management.Import.Importers
 		{
 			result = new PrepeareResult();
 
-			progressHandler(StageType.Client, new ProgressHandlerArguments()
+			progressHandler(StateType.DownloadClient, new ProgressHandlerArguments()
 			{
 				StagesCount = 2,
 				Stage = 1,

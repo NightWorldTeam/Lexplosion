@@ -34,7 +34,7 @@ namespace Lexplosion.Logic.Management.Import.Importers
 		{
 			result = new PrepeareResult();
 
-			progressHandler(StageType.Client, new ProgressHandlerArguments()
+			progressHandler(StateType.DownloadClient, new ProgressHandlerArguments()
 			{
 				StagesCount = 2,
 				Stage = 1,
@@ -84,7 +84,7 @@ namespace Lexplosion.Logic.Management.Import.Importers
 
 		public InstanceInit Import(ProgressHandlerCallback progressHandler, out IReadOnlyCollection<string> errors)
 		{
-			progressHandler(StageType.Client, new ProgressHandlerArguments()
+			progressHandler(StateType.DownloadClient, new ProgressHandlerArguments()
 			{
 				StagesCount = 2,
 				Stage = 2,

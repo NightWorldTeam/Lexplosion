@@ -108,7 +108,7 @@ namespace Lexplosion.Logic.Management.Import.Importers
 					CancelToken = _cancellationToken,
 					PercentHandler = (int pr) =>
 					{
-						_progressHandler(StageType.Client, new ProgressHandlerArguments()
+						_progressHandler(StateType.DownloadClient, new ProgressHandlerArguments()
 						{
 							StagesCount = 3,
 							Stage = 1,
@@ -127,7 +127,7 @@ namespace Lexplosion.Logic.Management.Import.Importers
 
 				_filePath = tempDir + fileName;
 
-				progressHandler = (StageType stageType, ProgressHandlerArguments data) =>
+				progressHandler = (StateType stageType, ProgressHandlerArguments data) =>
 				{
 					// в калбеке обработки прогресса прибавляем в количества стадий и в номер стадии по еденице, потому что одна стадия у нас уже была (скачивание файла по url)
 					_progressHandler(stageType, new ProgressHandlerArguments()

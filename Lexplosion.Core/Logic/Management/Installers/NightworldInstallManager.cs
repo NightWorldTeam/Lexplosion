@@ -268,7 +268,7 @@ namespace Lexplosion.Logic.Management.Installers
 				{
 					_installer.BaseDownloadEvent += delegate (int totalDataCount, int nowDataCount)
 					{
-						progressHandler(StageType.Client, new ProgressHandlerArguments()
+						progressHandler(StateType.DownloadClient, new ProgressHandlerArguments()
 						{
 							StagesCount = _stagesCount,
 							Stage = 1,
@@ -282,7 +282,7 @@ namespace Lexplosion.Logic.Management.Installers
 				{
 					singleDownloadMethod = delegate (string file, int pr, DownloadFileProgress stage_)
 					{
-						progressHandler(StageType.Client, new ProgressHandlerArguments()
+						progressHandler(StateType.DownloadClient, new ProgressHandlerArguments()
 						{
 							StagesCount = _stagesCount,
 							Stage = 1,
@@ -298,7 +298,7 @@ namespace Lexplosion.Logic.Management.Installers
 
 			if (_baseFaliseUpdatesCount > 0)
 			{
-				progressHandler(StageType.Client, new ProgressHandlerArguments()
+				progressHandler(StateType.DownloadClient, new ProgressHandlerArguments()
 				{
 					StagesCount = _stagesCount,
 					Stage = 1,
@@ -337,7 +337,7 @@ namespace Lexplosion.Logic.Management.Installers
 					stage = 1;
 				}
 
-				progressHandler(StageType.Client, new ProgressHandlerArguments()
+				progressHandler(StateType.DownloadClient, new ProgressHandlerArguments()
 				{
 					StagesCount = _stagesCount,
 					Stage = stage,
@@ -353,7 +353,7 @@ namespace Lexplosion.Logic.Management.Installers
 
 					_installer.FilesDownloadEvent += delegate (int totalDataCount, int nowDataCount)
 					{
-						progressHandler(StageType.Client, new ProgressHandlerArguments()
+						progressHandler(StateType.DownloadClient, new ProgressHandlerArguments()
 						{
 							StagesCount = _stagesCount,
 							Stage = stage,
@@ -367,7 +367,7 @@ namespace Lexplosion.Logic.Management.Installers
 				{
 					_installer.FileDownloadEvent += delegate (string file, int pr, DownloadFileProgress stage_)
 					{
-						progressHandler(StageType.Client, new ProgressHandlerArguments()
+						progressHandler(StateType.DownloadClient, new ProgressHandlerArguments()
 						{
 							StagesCount = _stagesCount,
 							Stage = stage,

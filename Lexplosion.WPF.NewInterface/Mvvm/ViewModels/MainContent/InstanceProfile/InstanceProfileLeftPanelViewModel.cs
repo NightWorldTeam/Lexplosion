@@ -149,7 +149,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             GenerateAdditionalInfo();
         }
 
-        private void OnDownloadProgressChanged(StageType type, ProgressHandlerArguments progressArgs)
+        private void OnDownloadProgressChanged(StateType type, ProgressHandlerArguments progressArgs)
         {
             if (IsInstalled)
                 OnPropertyChanged(nameof(IsInstalled));
