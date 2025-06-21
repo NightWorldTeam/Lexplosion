@@ -18,13 +18,13 @@ namespace Lexplosion.Logic.Management.Import.Importers
 		private readonly IAllFileServicesContainer _services;
 		private readonly WithDirectory _withDirectory;
 		private IImportManager _importManager;
-		private ProgressHandlerCallback _progressHandler;
+		private ProgressHandler _progressHandler;
 		private readonly DynamicStateHandler<ImportInterruption, InterruptionType> _interruptionHandler;
 		private readonly Guid _importId;
 		private CancellationToken _cancellationToken;
 		private bool _fileAddrIsLocalPath;
 
-		public ImportExecutor(string fileAddr, bool fileAddrIsLocalPath, Settings settings, IAllFileServicesContainer services, ProgressHandlerCallback progressHandler, ImportData importData)
+		public ImportExecutor(string fileAddr, bool fileAddrIsLocalPath, Settings settings, IAllFileServicesContainer services, ProgressHandler progressHandler, ImportData importData)
 		{
 			_filePath = fileAddr;
 			_settings = settings;
@@ -95,7 +95,7 @@ namespace Lexplosion.Logic.Management.Import.Importers
 
 		public ImportResult Prepeare(out PrepeareResult result)
 		{
-			ProgressHandlerCallback progressHandler = _progressHandler;
+			ProgressHandler progressHandler = _progressHandler;
 
 			//Если мы имеем ссылку на файл, а не локальный путь, то скачиваем этот файл
 			if (!_fileAddrIsLocalPath)

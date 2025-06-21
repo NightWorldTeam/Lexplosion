@@ -193,7 +193,7 @@ namespace Lexplosion.Logic.Management.Installers
 			return InstanceInit.Successful;
 		}
 
-		public InitData Update(string javaPath, ProgressHandlerCallback progressHandler)
+		public InitData Update(string javaPath, ProgressHandler progressHandler)
 		{
 			if (_serverManifestIsNull)
 			{

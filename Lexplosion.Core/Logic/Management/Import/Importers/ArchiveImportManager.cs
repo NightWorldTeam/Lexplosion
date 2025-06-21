@@ -53,7 +53,7 @@ namespace Lexplosion.Logic.Management.Import.Importers
 
 		protected abstract string DetermineAthor(TManifest manifest);
 
-		public virtual ImportResult Prepeare(ProgressHandlerCallback progressHandler, out PrepeareResult result)
+		public virtual ImportResult Prepeare(ProgressHandler progressHandler, out PrepeareResult result)
 		{
 			result = new PrepeareResult();
 
@@ -110,7 +110,7 @@ namespace Lexplosion.Logic.Management.Import.Importers
 			return ImportResult.Successful;
 		}
 
-		public virtual InstanceInit Import(ProgressHandlerCallback progressHandler, out IReadOnlyCollection<string> errors)
+		public virtual InstanceInit Import(ProgressHandler progressHandler, out IReadOnlyCollection<string> errors)
 		{
 			errors = null;
 			if (versionManifest == null)

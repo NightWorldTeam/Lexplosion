@@ -271,15 +271,6 @@ namespace Lexplosion.Logic.Management.Instances
 
 		public string FolderPath { get => _services.DirectoryService.GetInstancePath(_localId); }
 
-		internal ProgressHandlerCallback GetProgressHandler
-		{
-			get
-			{
-				ProgressHandlerCallback value = ProgressHandler;
-				if (value == null) return (StateType stageType, ProgressHandlerArguments data) => { };
-				return value;
-			}
-		}
 		#endregion
 
 		/// <summary>
@@ -678,7 +669,7 @@ namespace Lexplosion.Logic.Management.Instances
 		public ClientInitResult Update(string instanceVersion = null)
 		{
 			_cancelTokenSource = new CancellationTokenSource();
-			ProgressHandler?.Invoke(StateType.DownloadPrepare, new ProgressHandlerArguments());
+			State = StateType.DownloadPrepare;
 
 			Settings instanceSettings = GetSettings();
 			instanceSettings.Merge(GlobalData.GeneralSettings, true);
@@ -710,11 +701,11 @@ namespace Lexplosion.Logic.Management.Instances
 				_internalDataChanged?.Invoke(); // чтобы если сборка установилась то флаг IsInstalled сохранился
 			}
 
-			Initialized?.Invoke(data.InitResult, data.DownloadErrors, false);
 			Runtime.DebugWrite("UpdateInstance-end " + data.InitResult);
 
 			_cancelTokenSource = null;
 			_gameManager?.DeleteCancellationToken();
+			State = StateType.Default;
 
 			return new ClientInitResult(data.InitResult, data.DownloadErrors);
 		}
@@ -722,11 +713,11 @@ namespace Lexplosion.Logic.Management.Instances
 		/// <summary>
 		/// Запускает сборку. Если надо её докачивает. Сборка должна быть доавлена в библиотеку
 		/// </summary>
-		public ClientInitResult Run()
+		public ClientRunResult Run()
 		{
 			_cancelTokenSource = new CancellationTokenSource();
 
-			ProgressHandler?.Invoke(StateType.DownloadPrepare, new ProgressHandlerArguments());
+			State = StateType.DownloadPrepare;
 
 			Settings instanceSettings = GetSettings();
 			instanceSettings.Merge(GlobalData.GeneralSettings, true);
@@ -760,7 +751,7 @@ namespace Lexplosion.Logic.Management.Instances
 			_cancelTokenSource = null;
 			_gameManager?.DeleteCancellationToken();
 
-			return new ClientInitResult(data.InitResult, data.DownloadErrors);
+			return new ClientRunResult(data.InitResult, data.DownloadErrors);
 		}
 
 		internal void CheckUpdates()

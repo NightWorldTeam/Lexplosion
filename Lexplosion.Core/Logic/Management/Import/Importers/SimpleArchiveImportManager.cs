@@ -37,7 +37,7 @@ namespace Lexplosion.Logic.Management.Import.Importers
 			_dataFilesManager =  services.DataFilesService;
 		}
 
-		public InstanceInit Import(ProgressHandlerCallback progressHandler, out IReadOnlyCollection<string> errors)
+		public InstanceInit Import(ProgressHandler progressHandler, out IReadOnlyCollection<string> errors)
 		{
 			errors = new List<string>();
 			InstanceInit result = _withDirectory.MoveUnpackedInstance(_localId, _unzipPath);
@@ -58,7 +58,7 @@ namespace Lexplosion.Logic.Management.Import.Importers
 			return InstanceInit.Successful;
 		}
 
-		public ImportResult Prepeare(ProgressHandlerCallback progressHandler, out PrepeareResult result)
+		public ImportResult Prepeare(ProgressHandler progressHandler, out PrepeareResult result)
 		{
 			result = new PrepeareResult();
 

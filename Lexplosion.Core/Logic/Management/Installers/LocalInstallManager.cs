@@ -104,7 +104,7 @@ namespace Lexplosion.Logic.Management.Installers
 			}
 		}
 
-		public InitData Update(string javaPath, ProgressHandlerCallback progressHandler)
+		public InitData Update(string javaPath, ProgressHandler progressHandler)
 		{
 			if (stagesCount == 1)
 			{
