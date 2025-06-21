@@ -228,7 +228,7 @@
                     </Border>
 
                     <!--  Update Button  -->
-                    <core:If Condition="{Binding HasAvailableUpdate}">
+                    <core:If Condition="{Binding InstanceClient.UpdateAvailable}">
                         <core:If.True>
                             <Button
                                 HorizontalAlignment="Right"
@@ -978,7 +978,7 @@
                                             Text="{DynamicResource Export}" />
 
 
-                                        <core:If Condition="{Binding HasAvailableUpdate}">
+                                        <core:If Condition="{Binding InstanceClient.UpdateAvailable}">
                                             <core:If.True>
                                                 <!--  Обновить  -->
                                                 <controls:AdvancedButton

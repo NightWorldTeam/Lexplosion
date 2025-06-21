@@ -193,7 +193,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         public bool IsInstalled { get => _instanceClient.IsInstalled; }
         public bool InLibrary { get => _instanceClient.CreatedLocally || _instanceClient.IsFictitious; }
         public string DirectoryPath { get => _instanceClient.GetDirectoryPath(); }
-        public bool HasAvailableUpdate { get => _instanceClient.UpdateAvailable && _instanceClient.IsInstalled; }
 
         public bool IsImporting
         {
