@@ -305,6 +305,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
                 Runtime.DebugWrite("123", color: ConsoleColor.Green);
             }
 
+
             Id = Guid.NewGuid();
             _appCore = instanceModel.AppCore;
 
@@ -313,6 +314,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             InstanceDistribution = instanceModel.InstanceDistribution;
             ImportData = instanceModel.ImportData;
             _addToLibraryByInstanceClient = instanceModel.AddToLibraryByInstanceClient;
+
+            OnStateChanged(instanceModel.InstanceClient.State);
+            instanceModel.InstanceClient.StateChanged += OnStateChanged;
 
             if (instanceModel.Group != null) 
             {
@@ -328,13 +332,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 
             _instanceClient.NameChanged += OnNameChanged;
             _instanceClient.LogoChanged += OnLogoChanged;
-            _instanceClient.DataChanged += OnStateClientChanged;
-            _instanceClient.ProgressHandler += OnDownloadProgressChanged;
-            _instanceClient.DownloadStarted += OnDownloadStarted;
-            _instanceClient.Initialized += OnDownloadCompleted;
-            _instanceClient.LaunchComplited += OnLaunchComplited;
+            //_instanceClient.DownloadHandler += OnDownloadProgressChanged;
             _instanceClient.BuildFinished += OnBuildFinished;
-            _instanceClient.GameExited += OnGameExited;
 
             _clientsManager.GroupAdded += OnInstancesGroupAdded;
             _clientsManager.GroupDeleted += OnInstancesGroupDeleted;
@@ -348,6 +347,30 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             Tags = tags;
         }
 
+        private void OnStateChanged(StageType stageType)
+        {
+            switch (stageType)
+            {
+                case StageType.Default:
+                    IsDownloading = false;
+                    IsPrepare = false;
+                    IsShareDownloading = false;
+                    break;
+                case StageType.Prepare:
+                    IsPrepare = true;
+                    break;
+                case StageType.Client:
+                    IsDownloading = true;
+                    break;
+                case StageType.Java:
+
+                    break;
+                case StageType.InCancellation:
+                    break;
+                default:
+                    break;
+            }
+        }
 
         public void UpdateInstancesGroup(InstancesGroup group) 
         {
@@ -365,12 +388,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             OnPropertyChanged(nameof(AvailableGroupsForAdding));
         }
 
-        private void OnGameExited(string instanceId)
-        {
-            IsLaunched = false;
-            State = InstanceState.Default;
-        }
-
         /// <summary>
         /// Скачивание раздачи завершено
         /// </summary>
@@ -382,38 +399,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         private void OnSharingStateChanged()
         {
             OnPropertyChanged(nameof(IsShareDownloading));
-        }
-
-        private void OnDownloadStarted()
-        {
-            IsDownloading = true;
-
-            DownloadStarted?.Invoke();
-            DataChanged?.Invoke();
-        }
-
-        private void OnLaunchComplited(string instanceId, bool isSuccessful)
-        {
-            IsDownloading = false;
-            IsPrepare = false;
-
-            if (isSuccessful)
-            {
-                IsLaunched = true;
-                SetState(InstanceState.Running);
-
-                _appCore.MessageService.Success("InstanceLaunchedSuccessfulNotification", true, _instanceClient.Name);
-            }
-            else
-            {
-                SetState(InstanceState.Default);
-                _appCore.MessageService.Error("InstanceLaunchedUnsuccessfulNotification", true, _instanceClient.Name);
-                IsLaunched = false;
-            }
-
-            IsLaunching = false;
-            GameLaunchCompleted?.Invoke(isSuccessful);
-            DataChanged?.Invoke();
         }
 
 
@@ -776,173 +761,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             DataChanged?.Invoke();
         }
 
-        /// <summary>
-        /// Завершнение скачивание файлов
-        /// </summary>
-        /// <param name="init"></param>
-        /// <param name="errors"></param>
-        /// <param name="isRun"></param>
-        private void OnDownloadCompleted(InstanceInit init, IEnumerable<string> errors, bool isRun)
-        {
-            Runtime.DebugWrite(Id, color: ConsoleColor.Red);
-            IsDownloading = false;
-
-            if (IsPrepare)
-            {
-                IsPrepare = false;
-            }
-
-            if (isRun && init == InstanceInit.Successful)
-            {
-                SetState(InstanceState.Launching);
-            }
-            else
-            {
-                SetState(InstanceState.Default);
-                IsLaunched = false;
-                IsLaunching = false;
-            }
-
-            DownloadingData = null;
-            OnPropertyChanged(nameof(DownloadingData));
-            OnPropertyChanged(nameof(IsDownloading));
-            DownloadComplited?.Invoke(init, errors, isRun);
-            DataChanged?.Invoke();
-
-            if (ImportData.HasValue) 
-            {
-                return;
-            }
-
-            switch (init)
-            {
-                case InstanceInit.Successful:
-                    {
-                        _appCore.MessageService.Success("Instance_HasBeenInstalledSuccessful", true, Name);
-                    }
-                    break;
-                case InstanceInit.DownloadFilesError:
-                    {
-                        // TODO: В будещем переделать ToastMessage на работу с ключами
-                        var title = _appCore.Resources("FailedToDownloadSomeFiles") as string;
-                        var notifyContent = _appCore.Resources("FailedToDownloadFollowingFiles:_") as string;
-                        if (errors.Count() > 0)
-                        {
-                            notifyContent = string.Format(notifyContent, errors.Cast<object>().ToArray());
-                        }
-
-                        _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent, type: NotificationType.Error));
-                    }
-                    break;
-                case InstanceInit.CurseforgeIdError:
-                    {
-                        var title = _appCore.Resources("CurseforgeErrorTitle") as string;
-                        var notifyContent = _appCore.Resources("ExternalIdIncorrect") as string;
-
-                        _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent, type: NotificationType.Error));
-                    }
-                    break;
-                case InstanceInit.NightworldIdError:
-                    {
-                        var title = _appCore.Resources("NightWorldErrorTitle") as string;
-                        var notifyContent = _appCore.Resources("ExternalIdIncorrect") as string;
-
-                        _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent, type: NotificationType.Error));
-                    }
-                    break;
-                case InstanceInit.ServerError:
-                    {
-                        var title = _appCore.Resources("ServerError") as string;
-                        var notifyContent = _appCore.Resources("FailedToGetDataFromServer") as string;
-
-                        _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent, type: NotificationType.Error));
-                    }
-                    break;
-                case InstanceInit.GuardError:
-                    {
-                        var title = _appCore.Resources("GuardErrorTitle") as string;
-                        var notifyContent = _appCore.Resources("FileVerificationFailed") as string;
-
-                        _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent, type: NotificationType.Error));
-                    }
-                    break;
-                case InstanceInit.VersionError:
-                    {
-                        var title = _appCore.Resources("VersionErrorTitle") as string;
-                        var notifyContent = _appCore.Resources("VersionVerificationFailed") as string;
-
-                        _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent, type: NotificationType.Error));
-                    }
-                    break;
-                case InstanceInit.ForgeVersionError:
-                    {
-                        var title = _appCore.Resources("ForgeVersionErrorTitle") as string;
-                        var notifyContent = _appCore.Resources("ModloaderVerificationFailed") as string;
-
-                        _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent, type: NotificationType.Error));
-                    }
-                    break;
-                case InstanceInit.GamePathError:
-                    {
-                        var title = _appCore.Resources("GamePathErrorTitle") as string;
-                        var notifyContent = _appCore.Resources("InvalidGameDirectory") as string;
-
-                        _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent, type: NotificationType.Error));
-                    }
-                    break;
-                case InstanceInit.ManifestError:
-                    {
-                        var title = _appCore.Resources("ManifestErrorTitle") as string;
-                        var notifyContent = _appCore.Resources("FailedLoadInstanceManifest") as string;
-
-                        _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent, type: NotificationType.Error));
-                    }
-                    break;
-                case InstanceInit.JavaDownloadError:
-                    {
-                        var title = _appCore.Resources("JavaDownloadErrorTitle") as string;
-                        var notifyContent = _appCore.Resources("TrySetCustomJavaPath") as string;
-
-                        _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent, type: NotificationType.Error));
-                    }
-                    break;
-                case InstanceInit.IsCancelled:
-                    {
-                        var title = _appCore.Resources("InstanceDownloadCanceledSuccessfully") as string;
-                        var notifyContent = string.Format(_appCore.Resources("InstanceName:_") as string, Name);
-
-                        _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent, type: NotificationType.Error));
-
-                        OnDownloadCanceled();
-                        break;
-                    }
-                default:
-                    {
-                        var title = _appCore.Resources("UnknownErrorTitle") as string;
-                        var notifyContent = _appCore.Resources("UnknownErrorTryRestartLauncher") as string;
-
-                        _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent, type: NotificationType.Error));
-                    }
-                    break;
-            }
-        }
-
-        private void OnLaunchStarted()
-        {
-            IsLaunching = true;
-            DataChanged?.Invoke();
-        }
-
-        private void OnGameClosed()
-        {
-            IsLaunching = false;
-            IsLaunched = false;
-
-            GameClosed?.Invoke();
-            SetState(InstanceState.Default);
-            DataChanged?.Invoke();
-        }
-
 
         ///
         /// <! -- Presentation Info -- !> 
@@ -976,12 +794,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             OnPropertyChanged(nameof(Description));
             DescriptionChanged?.Invoke();
             DataChanged?.Invoke();
-        }
-
-        private void OnStateClientChanged()
-        {
-            //StateChanged?.Invoke();
-            OnPropertyChanged(string.Empty);
         }
 
         /// <summary>
