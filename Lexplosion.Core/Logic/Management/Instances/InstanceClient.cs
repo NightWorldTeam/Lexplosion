@@ -648,6 +648,7 @@ namespace Lexplosion.Logic.Management.Instances
 		public void StopGame()
 		{
 			_gameManager?.Stop();
+			State = StateType.Default;
 		}
 
 		/// <summary>
