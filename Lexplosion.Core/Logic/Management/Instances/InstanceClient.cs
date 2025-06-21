@@ -1,19 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net;
-using System.Threading;
-using System.Linq;
-using Newtonsoft.Json;
-using NightWorld.Tools.Minecraft.NBT.StorageFiles;
-using Lexplosion.Global;
+﻿using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
-using Lexplosion.Tools;
-using Lexplosion.Logic.Objects;
-using Lexplosion.Logic.Objects.CommonClientData;
-using Lexplosion.Logic.Management.Sources;
 using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.Logic.Management.Addons;
+using Lexplosion.Logic.Management.Sources;
+using Lexplosion.Logic.Objects;
+using Lexplosion.Logic.Objects.CommonClientData;
+using Lexplosion.Tools;
+using Newtonsoft.Json;
+using NightWorld.Tools.Minecraft.NBT.StorageFiles;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Threading;
 
 namespace Lexplosion.Logic.Management.Instances
 {
@@ -46,7 +46,7 @@ namespace Lexplosion.Logic.Management.Instances
 		/// <summary>
 		/// Вызывается когда происходит измнение состояния текущего класса
 		/// </summary>
-		public event Action StateChanged;
+		public event Action<StageType> StateChanged;
 
 		/// <summary>
 		/// Вызывается когда происходит обновление состояния инициализации
@@ -96,7 +96,21 @@ namespace Lexplosion.Logic.Management.Instances
 		#endregion
 
 		#region info
-		public StageType State { get; private set; } = StageType.Default;
+
+
+		private StageType _state = StageType.Default;
+		public StageType State
+		{ 
+			get => _state; private set
+			{
+				if (_state != value) 
+				{
+					_state = value;
+					StateChanged?.Invoke(value);
+				}
+            }
+		}
+		
 		public string LocalId { get => _localId; }
 		public string ExternalId { get => _externalId; }
 
