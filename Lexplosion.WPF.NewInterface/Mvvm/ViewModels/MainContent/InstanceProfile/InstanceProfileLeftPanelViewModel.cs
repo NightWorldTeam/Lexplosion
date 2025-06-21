@@ -143,8 +143,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             _instanceModel.StateChanged += OnStateChanged;
             _instanceModel.DownloadProgressChanged += OnDownloadProgressChanged;
 
-            //_instanceModel.DataChanged += OnInstanceModelDataChanged;
-
 
             GenerateAdditionalInfo();
         }
