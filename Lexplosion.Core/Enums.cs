@@ -224,6 +224,7 @@
 		DownloadClient,
 		DownloadJava,
 		DownloadInCancellation,
+		Launching,
 		GameRunning
 	}
 

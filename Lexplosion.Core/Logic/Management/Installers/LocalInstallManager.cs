@@ -36,8 +36,6 @@ namespace Lexplosion.Logic.Management.Installers
 			}
 		}
 
-		public event Action DownloadStarted;
-
 		public LocalInstallManager(string instanceid, IFileServicesContainer services, CancellationToken cancelToken)
 		{
 			InstanceId = instanceid;
@@ -82,7 +80,6 @@ namespace Lexplosion.Logic.Management.Installers
 				if (updatesCount > 0)
 				{
 					stagesCount = 1;
-					DownloadStarted?.Invoke();
 				}
 
 				javaVersionName = Manifest.version.JavaVersionName;

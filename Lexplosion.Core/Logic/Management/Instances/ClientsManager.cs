@@ -419,7 +419,9 @@ namespace Lexplosion.Logic.Management.Instances
 
 		private ImportResult Import(in InstanceClient client, string fileAddr, bool fileAddrIsLocal, ImportData importData)
 		{
-			var executor = new ImportExecutor(fileAddr, fileAddrIsLocal, GlobalData.GeneralSettings, _services, client.GetProgressHandler, importData);
+			client.State = StateType.DownloadPrepare;
+
+			var executor = new ImportExecutor(fileAddr, fileAddrIsLocal, GlobalData.GeneralSettings, _services, client.DownloadStateHandler, importData);
 			ImportResult res = executor.Prepeare(out PrepeareResult result);
 
 			if (res != ImportResult.Successful) return res;
@@ -454,8 +456,7 @@ namespace Lexplosion.Logic.Management.Instances
 
 			new Thread(() =>
 			{
-				Thread.Sleep(10);
-				client.GetProgressHandler(StateType.DownloadPrepare, new ProgressHandlerArguments());
+				client.State = StateType.DownloadPrepare;
 				callback(Import(client, zipFile, true, importData));
 			}).Start();
 
@@ -469,8 +470,7 @@ namespace Lexplosion.Logic.Management.Instances
 
 			new Thread(() =>
 			{
-				Thread.Sleep(10);
-				client.GetProgressHandler(StateType.DownloadPrepare, new ProgressHandlerArguments());
+				client.State = StateType.DownloadPrepare;
 
 				reciver.StateChanged += () =>
 				{
@@ -515,8 +515,7 @@ namespace Lexplosion.Logic.Management.Instances
 
 			new Thread(() =>
 			{
-				Thread.Sleep(10);
-				client.GetProgressHandler(StateType.DownloadPrepare, new ProgressHandlerArguments());
+				client.State = StateType.DownloadPrepare;
 				string downloadUrl = null;
 				try
 				{
@@ -636,8 +635,7 @@ namespace Lexplosion.Logic.Management.Instances
 			{
 				try
 				{
-					Thread.Sleep(10); //ебанный костыль. Сделано чтобы на стороне интерфейса эвент точно отработал
-					newClient.GetProgressHandler(StateType.DownloadPrepare, new ProgressHandlerArguments());
+					client.State = StateType.DownloadPrepare;
 
 					WithDirectory directoryService = _services.DirectoryService;
 					string from = directoryService.GetInstancePath(client.LocalId);
@@ -698,8 +696,7 @@ namespace Lexplosion.Logic.Management.Instances
 			{
 				try
 				{
-					Thread.Sleep(10); //ебанный костыль. Сделано чтобы на стороне интерфейса эвент точно отработал
-					newClient.GetProgressHandler(StateType.DownloadPrepare, new ProgressHandlerArguments());
+					client.State = StateType.DownloadPrepare;
 
 					WithDirectory directoryService = _services.DirectoryService;
 
@@ -744,7 +741,7 @@ namespace Lexplosion.Logic.Management.Instances
 
 					int totalAddonsCount = addonsToDownload.Count;
 
-					newClient.GetProgressHandler(StateType.DownloadClient, new ProgressHandlerArguments()
+					newClient.DownloadStateHandler(StateType.DownloadClient, new ProgressHandlerArguments()
 					{
 						Stage = 1,
 						StagesCount = 1,
@@ -761,7 +758,7 @@ namespace Lexplosion.Logic.Management.Instances
 
 						filesCount++;
 
-						newClient.GetProgressHandler(StateType.DownloadClient, new ProgressHandlerArguments()
+						newClient.DownloadStateHandler(StateType.DownloadClient, new ProgressHandlerArguments()
 						{
 							Stage = 1,
 							StagesCount = 1,

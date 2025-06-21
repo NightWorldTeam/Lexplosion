@@ -53,8 +53,6 @@ namespace Lexplosion.Logic.Management.Installers
 			}
 		}
 
-		public event Action DownloadStarted;
-
 		public ArchiveInstallManager(TInstaller installer, string instanceid, bool onlyBase, IFileServicesContainer services, CancellationToken cancelToken)
 		{
 			_instanceId = instanceid;
@@ -107,13 +105,6 @@ namespace Lexplosion.Logic.Management.Installers
 		protected abstract string ArchiveDownloadUrl { get; }
 		protected abstract string ArchiveFileName { get; }
 
-		private bool _downloadStartedIsCalled = false;
-		private void DownloadStartedCall()
-		{
-			if (!_downloadStartedIsCalled)
-				DownloadStarted?.Invoke();
-		}
-
 		public InstanceInit Check(out string javaVersionName, string instanceVersion)
 		{
 			javaVersionName = string.Empty;
@@ -147,10 +138,6 @@ namespace Lexplosion.Logic.Management.Installers
 					if (_updatesCount == -1)
 					{
 						return InstanceInit.GuardError;
-					}
-					else if (_updatesCount > 0)
-					{
-						DownloadStartedCall();
 					}
 				}
 				else
@@ -213,7 +200,6 @@ namespace Lexplosion.Logic.Management.Installers
 			if (projectInfo != null || _installer.InvalidStruct(localFiles))
 			{
 				Runtime.DebugWrite("ProjectInfo != null " + (projectInfo != null));
-				DownloadStartedCall();
 
 				if (projectInfo == null)
 				{

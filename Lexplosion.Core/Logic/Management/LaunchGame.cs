@@ -545,7 +545,7 @@ namespace Lexplosion.Logic.Management
 			}
 		}
 
-		public bool Run(InitData data, LaunchComplitedCallback ComplitedLaunch, GameExitedCallback GameExited, string gameClientName)
+		public bool Run(InitData data, Action gameExited, string gameClientName)
 		{
 			GameClientName = gameClientName;
 			GameVersion = data?.VersionFile?.GameVersion;
@@ -601,8 +601,6 @@ namespace Lexplosion.Logic.Management
 			Runtime.DebugWrite("Run javaPath " + _javaPath);
 			Runtime.DebugWrite($"Minecraft run command: \"{_javaPath}\" {command}");
 
-			bool gameVisible = false;
-
 			try
 			{
 				_process.StartInfo.FileName = _javaPath;
@@ -648,66 +646,52 @@ namespace Lexplosion.Logic.Management
 						}
 					}
 
-					if (!gameVisible)
-					{
-						ComplitedLaunch?.Invoke(_instanceId, false);
-					}
-
 					_classInstance = null;
-					GameExited(_instanceId);
+					gameExited();
 				};
 
 				_processIsWork = _process.Start();
 				_process.BeginOutputReadLine();
-
-				// отслеживаем появление окна
-				Lexplosion.Runtime.TaskRun(delegate ()
-				{
-					while (_processIsWork)
-					{
-						Thread.Sleep(1000);
-
-						try
-						{
-							if (GuiIsExists(_process.Id))
-							{
-								ComplitedLaunch?.Invoke(_instanceId, true);
-								OnGameStarted?.Invoke(this);
-
-								gameVisible = true;
-								break;
-							}
-						}
-						catch
-						{
-							break;
-						}
-					}
-				});
 
 				lock (loocker)
 				{
 					_gameGateway?.Initialization(_process.Id);
 				}
 
-				return true;
+				// отслеживаем появление окна
+				while (_processIsWork)
+				{
+					Thread.Sleep(1000);
+
+					try
+					{
+						if (GuiIsExists(_process.Id))
+						{
+							OnGameStarted?.Invoke(this);
+							return true;
+						}
+					}
+					catch
+					{
+						break;
+					}
+				}
+
+				return false;
 			}
 			catch (Exception ex)
 			{
 				_processIsWork = false;
-				ComplitedLaunch(_instanceId, false);
 				Runtime.DebugWrite(ex);
 
 				return false;
 			}
 		}
 
-		public InitData Update(ProgressHandler progressHandler, Action<string, int, DownloadFileProgress> fileDownloadHandler, Action downloadStarted, string version = null, bool onlyBase = false)
+		public InitData Update(ProgressHandler progressHandler, Action<string, int, DownloadFileProgress> fileDownloadHandler, string version = null, bool onlyBase = false)
 		{
 			IInstallManager instance = _source.GetInstaller(_instanceId, onlyBase, _updateCancelToken);
-
 			instance.FileDownloadEvent += fileDownloadHandler;
-			instance.DownloadStarted += downloadStarted;
 
 			InstanceInit result = instance.Check(out string javaVersionName, version);
 
@@ -823,7 +807,7 @@ namespace Lexplosion.Logic.Management
 			return instance.Update(_javaPath, progressHandler);
 		}
 
-		public InitData Initialization(ProgressHandler progressHandler, Action<string, int, DownloadFileProgress> fileDownloadHandler, Action downloadStarted)
+		public InitData Initialization(ProgressHandler progressHandler, Action<string, int, DownloadFileProgress> fileDownloadHandler)
 		{
 			try
 			{
@@ -845,7 +829,7 @@ namespace Lexplosion.Logic.Management
 
 				if (!versionIsStatic && _services.NwApi.ServerIsOnline())
 				{
-					data = Update(progressHandler, fileDownloadHandler, downloadStarted, null, (_settings.IsAutoUpdate == false));
+					data = Update(progressHandler, fileDownloadHandler, null, (_settings.IsAutoUpdate == false));
 				}
 				else
 				{

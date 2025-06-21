@@ -1,4 +1,10 @@
-﻿using Lexplosion.Global;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Threading;
+using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.Logic.Management.Addons;
@@ -6,14 +12,8 @@ using Lexplosion.Logic.Management.Sources;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Tools;
-using Newtonsoft.Json;
 using NightWorld.Tools.Minecraft.NBT.StorageFiles;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Threading;
+using Newtonsoft.Json;
 
 namespace Lexplosion.Logic.Management.Instances
 {
@@ -80,17 +80,17 @@ namespace Lexplosion.Logic.Management.Instances
 
 		private StateType _state = StateType.Default;
 		public StateType State
-		{ 
-			get => _state; private set
+		{
+			get => _state; internal set
 			{
-				if (_state != value) 
+				if (_state != value)
 				{
 					_state = value;
 					StateChanged?.Invoke(value);
 				}
-            }
+			}
 		}
-		
+
 		public string LocalId { get => _localId; }
 		public string ExternalId { get => _externalId; }
 
@@ -291,11 +291,6 @@ namespace Lexplosion.Logic.Management.Instances
 			_services = services;
 			_internalDataChanged = internalDataChanged;
 			_dataManager = source.ContentManager;
-
-			GameExited += delegate (string _)
-			{
-				_gameManager = null;
-			};
 		}
 
 		/// <summary>
@@ -525,7 +520,7 @@ namespace Lexplosion.Logic.Management.Instances
 		{
 			if (initResult == InstanceInit.Successful) IsComplete = true;
 			IsFictitious = false;
-			Initialized?.Invoke(initResult, (List<string>)errors, false);
+			State = StateType.Default;
 		}
 
 		/// <summary>
@@ -663,6 +658,12 @@ namespace Lexplosion.Logic.Management.Instances
 			_cancelTokenSource?.Cancel();
 		}
 
+		internal void DownloadStateHandler(StateType stageType, ProgressHandlerArguments data) 
+		{
+			State = stageType;
+			DownloadHandler?.Invoke(data);
+		}
+
 		/// <summary>
 		/// Обновляет или скачивает сборку. Сборка должна быть добавлена в библиотеку.
 		/// </summary>
@@ -681,7 +682,7 @@ namespace Lexplosion.Logic.Management.Instances
 			var launchAccount = Account.LaunchAccount;
 
 			LaunchGame launchGame = new LaunchGame(_localId, generalSettings, instanceSettings, activeAccount, launchAccount, _instanceSource, _services, _cancelTokenSource.Token);
-			InitData data = launchGame.Update(ProgressHandler, FileDownloadEvent, DownloadStarted, instanceVersion);
+			InitData data = launchGame.Update(DownloadStateHandler, FileDownloadEvent, instanceVersion);
 
 			UpdateAvailable = data.UpdatesAvailable;
 			if (data.InitResult == InstanceInit.IsCancelled)
@@ -727,31 +728,31 @@ namespace Lexplosion.Logic.Management.Instances
 			var launchAccount = Account.LaunchAccount;
 
 			_gameManager = new LaunchGame(_localId, generalSettings, instanceSettings, activeAccount, launchAccount, _instanceSource, _services, _cancelTokenSource.Token);
-			InitData data = _gameManager.Initialization(ProgressHandler, FileDownloadEvent, DownloadStarted);
+			InitData data = _gameManager.Initialization(DownloadStateHandler, FileDownloadEvent);
 
 			UpdateAvailable = data.UpdatesAvailable;
 			ProfileVersion = data.ClientVersion;
+
+			bool runResult = false;
 
 			if (data.InitResult == InstanceInit.Successful)
 			{
 				IsInstalled = true;
 				_internalDataChanged?.Invoke(); // чтобы если сборка установилась то флаг IsInstalled сохранился
+				State = StateType.Launching;
 
-				_gameManager.Run(data, LaunchComplited, GameExited, Name);
+				runResult = _gameManager.Run(data, () => { _gameManager = null; State = StateType.Default; }, Name);
 				_services.DataFilesService.SaveSettings(GlobalData.GeneralSettings);
 				// TODO: тут надо как-то определять что сборка обновилась и UpdateAvailable = false делать, если было обновление
-			}
-			else
-			{
-				Initialized?.Invoke(data.InitResult, data.DownloadErrors, false);
 			}
 
 			Runtime.DebugWrite("Run-end " + data.InitResult);
 
 			_cancelTokenSource = null;
 			_gameManager?.DeleteCancellationToken();
+			State = runResult ? StateType.GameRunning : StateType.Default;
 
-			return new ClientRunResult(data.InitResult, data.DownloadErrors);
+			return new ClientRunResult(data.InitResult, data.DownloadErrors, runResult);
 		}
 
 		internal void CheckUpdates()
