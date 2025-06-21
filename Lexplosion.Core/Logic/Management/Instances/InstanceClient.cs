@@ -216,7 +216,7 @@ namespace Lexplosion.Logic.Management.Instances
 			get => _updateAvailable;
 			set
 			{
-				_updateAvailable = value;
+				_updateAvailable = IsInstalled && value;
 				OnPropertyChanged();
 				DataChanged?.Invoke();
 			}
@@ -660,7 +660,7 @@ namespace Lexplosion.Logic.Management.Instances
 			_cancelTokenSource?.Cancel();
 		}
 
-		internal void DownloadStateHandler(StateType stageType, ProgressHandlerArguments data) 
+		internal void DownloadStateHandler(StateType stageType, ProgressHandlerArguments data)
 		{
 			State = stageType;
 			DownloadHandler?.Invoke(data);

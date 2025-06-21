@@ -224,6 +224,9 @@
 		DownloadClient,
 		DownloadJava,
 		DownloadInCancellation,
+		PostProcessing, // должен быть бесконечный прогресс бар с текстом "Обработка файлов"
+		InQueue,
+		InConnect,
 		Launching,
 		GameRunning
 	}
