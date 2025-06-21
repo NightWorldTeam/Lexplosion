@@ -9,9 +9,7 @@
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
     xmlns:instancemodel="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel"
     xmlns:lexplosion="clr-namespace:Lexplosion;assembly=Lexplosion.Core"
-    xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Controls.OldInstanceForm"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:models="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Models"
     xmlns:objects="clr-namespace:Lexplosion.Logic.Objects;assembly=Lexplosion.Core"
     d:DataContext="{d:DesignInstance Type=instancemodel:InstanceModelBase}"
     d:DesignHeight="120"
@@ -329,7 +327,7 @@
                                         <MultiDataTrigger>
                                             <MultiDataTrigger.Conditions>
                                                 <Condition Binding="{Binding IsDownloading}" Value="True" />
-                                                <Condition Binding="{Binding DownloadingData.Stage}" Value="{x:Static lexplosion:StateType.DownloadPrepare}" />
+                                                <Condition Binding="{Binding State}" Value="{x:Static lexplosion:StateType.DownloadPrepare}" />
                                             </MultiDataTrigger.Conditions>
 
                                             <MultiDataTrigger.Setters>
@@ -342,7 +340,7 @@
                                         <MultiDataTrigger>
                                             <MultiDataTrigger.Conditions>
                                                 <Condition Binding="{Binding IsDownloading}" Value="False" />
-                                                <Condition Binding="{Binding DownloadingData.Stage}" Value="{x:Static lexplosion:StateType.DownloadClient}" />
+                                                <Condition Binding="{Binding State}" Value="{x:Static lexplosion:StateType.DownloadClient}" />
                                             </MultiDataTrigger.Conditions>
 
                                             <MultiDataTrigger.Setters>
@@ -366,7 +364,7 @@
                                         <MultiDataTrigger>
                                             <MultiDataTrigger.Conditions>
                                                 <Condition Binding="{Binding IsDownloading}" Value="True" />
-                                                <Condition Binding="{Binding DownloadingData.Stage}" Value="{x:Static lexplosion:StateType.DownloadJava}" />
+                                                <Condition Binding="{Binding State}" Value="{x:Static lexplosion:StateType.DownloadJava}" />
                                             </MultiDataTrigger.Conditions>
 
                                             <MultiDataTrigger.Setters>
@@ -403,7 +401,7 @@
                                         </MultiDataTrigger>
 
 
-                                        <DataTrigger Binding="{Binding DownloadCancelling}" Value="True">
+                                        <DataTrigger Binding="{Binding State}" Value="{x:Static lexplosion:StateType.DownloadInCancellation}">
                                             <Setter Property="Text" Value="{DynamicResource DownloadCanceling}" />
                                             <Setter Property="Visibility" Value="Visible" />
                                         </DataTrigger>
@@ -417,7 +415,7 @@
 
                                             <MultiDataTrigger.Conditions>
                                                 <Condition Binding="{Binding IsImporting, Mode=OneWay}" Value="True" />
-                                                <Condition Binding="{Binding DownloadingData.Stage, Mode=OneWay}" Value="{x:Static lexplosion:StateType.DownloadPrepare}" />
+                                                <Condition Binding="{Binding State, Mode=OneWay}" Value="{x:Static lexplosion:StateType.DownloadPrepare}" />
                                             </MultiDataTrigger.Conditions>
 
                                             <Setter Property="Visibility" Value="Visible" />
@@ -429,7 +427,7 @@
 
                                             <MultiDataTrigger.Conditions>
                                                 <Condition Binding="{Binding IsImporting, Mode=OneWay}" Value="True" />
-                                                <Condition Binding="{Binding DownloadingData.Stage, Mode=OneWay}" Value="{x:Static lexplosion:StateType.DownloadClient}" />
+                                                <Condition Binding="{Binding State, Mode=OneWay}" Value="{x:Static lexplosion:StateType.DownloadClient}" />
                                             </MultiDataTrigger.Conditions>
 
                                             <Setter Property="Visibility" Value="Collapsed" />
@@ -800,7 +798,7 @@
                                                 <!--  Default Not Installed  -->
                                                 <MultiDataTrigger>
                                                     <MultiDataTrigger.Conditions>
-                                                        <Condition Binding="{Binding State}" Value="{x:Static instancemodel:InstanceState.Default}" />
+                                                        <Condition Binding="{Binding State}" Value="{x:Static lexplosion:StateType.Default}" />
                                                         <Condition Binding="{Binding IsInstalled}" Value="False" />
                                                     </MultiDataTrigger.Conditions>
                                                     <Setter TargetName="Icon" Property="extensions:PathExtensions.StringKeyData" Value="Download" />
@@ -811,7 +809,7 @@
                                                 <!--  Default Installed  -->
                                                 <MultiDataTrigger>
                                                     <MultiDataTrigger.Conditions>
-                                                        <Condition Binding="{Binding State}" Value="{x:Static instancemodel:InstanceState.Default}" />
+                                                        <Condition Binding="{Binding State}" Value="{x:Static lexplosion:StateType.Default}" />
                                                         <Condition Binding="{Binding IsInstalled}" Value="True" />
                                                     </MultiDataTrigger.Conditions>
                                                     <Setter TargetName="Icon" Property="extensions:PathExtensions.StringKeyData" Value="Play" />
@@ -820,7 +818,7 @@
                                                 </MultiDataTrigger>
 
                                                 <!--  Prepare  -->
-                                                <DataTrigger Binding="{Binding State}" Value="{x:Static instancemodel:InstanceState.Preparing}">
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static lexplosion:StateType.DownloadPrepare}">
                                                     <Setter TargetName="Icon" Property="Visibility" Value="Collapsed" />
                                                     <Setter TargetName="Percentage" Property="Text" Value="0%" />
                                                     <Setter TargetName="Percentage" Property="Visibility" Value="Visible" />
@@ -860,7 +858,7 @@
                                                 </DataTrigger>
 
                                                 <!--  Подготовка к скачиванию  -->
-                                                <DataTrigger Binding="{Binding State}" Value="{x:Static instancemodel:InstanceState.Launching}">
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static lexplosion:StateType.Launching}">
                                                     <Setter TargetName="Icon" Property="extensions:PathExtensions.StringKeyData" Value="Cancel" />
                                                     <Setter Property="FontSize" Value="20" />
                                                 </DataTrigger>
@@ -1022,6 +1020,7 @@
                                         </core:If>
 
                                         <core:If Condition="{Binding IsInstalled}">
+
                                             <core:If.True>
                                                 <!--  Удалить  -->
                                                 <controls:AdvancedButton

@@ -11,7 +11,6 @@ using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 {
@@ -117,13 +116,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         #region Properties
 
 
-        private InstanceState _state;
-        public InstanceState State
+        private StateType _state;
+        public StateType State
         {
             get => _state; private set
             {
                 _state = value;
-                StateChanged?.Invoke();
                 OnPropertyChanged();
             }
         }
@@ -207,11 +205,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 
         public BaseInstanceData BaseData
         {
-            get
-            {
-                var s = _instanceClient.GetBaseData;
-                return s;
-            }
+            get => _instanceClient.GetBaseData;
         }
 
         private InstanceData _addionalData;
@@ -257,6 +251,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             get => _isDownloading; set
             {
                 _isDownloading = value;
+                OnPropertyChanged(nameof(AnyProcessActive));
                 OnPropertyChanged();
             }
         }
@@ -345,6 +340,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 
         private void OnStateChanged(StateType stageType)
         {
+            Runtime.DebugWrite($"prev: {State} | now: {stageType}", color: ConsoleColor.Magenta);
+            State = stageType;
             switch (stageType)
             {
                 case StateType.Default:
@@ -353,26 +350,23 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
                     IsDownloading = false;
                     IsLaunching = false;
                     IsLaunched = false;
+                    DownloadCancelling = false;
                     break;
                 case StateType.DownloadPrepare:
                     IsPrepare = true;
-                    State = InstanceState.Preparing;
-                    OnPropertyChanged(nameof(State));
+                    IsDownloading = true;
                     break;
-                case StateType.DownloadClient:
+                case StateType.DownloadClient:  
                     IsPrepare = false;
                     IsDownloading = true;
                     break;
                 case StateType.DownloadJava:
+                    IsDownloading = true;
                     break;
                 case StateType.DownloadInCancellation:
                     {
                         IsDownloading = false;
-                        if (State != InstanceState.DownloadCanceling)
-                            SetState(InstanceState.DownloadCanceling);
-
                         DownloadCancelling = true;
-                        OnPropertyChanged(nameof(IsDownloading));
 
                         DownloadCanceled?.Invoke();
                         DataChanged?.Invoke();
@@ -403,13 +397,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
                 IsPrepare = false;
             }
 
-            if (isRun && init == InstanceInit.Successful)
+            if (!isRun && init != InstanceInit.Successful)
             {
-                SetState(InstanceState.Launching);
-            }
-            else
-            {
-                SetState(InstanceState.Default);
                 IsLaunched = false;
                 IsLaunching = false;
             }
@@ -570,13 +559,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             if (isSuccessful)
             {
                 IsLaunched = true;
-                SetState(InstanceState.Running);
-
                 _appCore.MessageService.Success("InstanceLaunchedSuccessfulNotification", true, _instanceClient.Name);
             }
             else
             {
-                SetState(InstanceState.Default);
                 _appCore.MessageService.Error("InstanceLaunchedUnsuccessfulNotification", true, _instanceClient.Name);
                 IsLaunched = false;
             }
@@ -748,13 +734,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         {
             _instanceClient.StopGame();
 
-            IsLaunching = false;
-            IsLaunched = false;
-            IsDownloading = false;
-
             GameClosed?.Invoke();
             DataChanged?.Invoke();
-            State = InstanceState.Default;
         }
 
         #endregion Launch
@@ -925,8 +906,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             {
                 IsDownloading = true;
                 DownloadStarted?.Invoke();
-
-                OnPropertyChanged(nameof(AnyProcessActive));
                 DataChanged?.Invoke();
             }
 
@@ -936,7 +915,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
                 OnPropertyChanged(nameof(DownloadingData));
             }
 
-            DownloadingData.Stage = _instanceState;
+            DownloadingData.Stage = State;
             DownloadingData.CurrentStage = progressHandlerArguments.Stage;
             DownloadingData.TotalStages = progressHandlerArguments.StagesCount;
             DownloadingData.FilesCounts = progressHandlerArguments.FilesCount;
@@ -987,8 +966,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         /// </summary>
         private void OnDownloadCanceled()
         {
-            SetState(InstanceState.Default);
-
             IsLaunching = false;
             IsLaunched = false;
 
@@ -999,12 +976,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             OnPropertyChanged(nameof(IsLaunched));
             OnPropertyChanged(nameof(IsDownloading));
             OnPropertyChanged(nameof(AnyProcessActive));
-        }
-
-
-        private void SetState(InstanceState state, [CallerMemberName] string methodName = null)
-        {
-            State = state;
         }
 
         /// <summary>

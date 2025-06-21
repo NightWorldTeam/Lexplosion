@@ -162,7 +162,6 @@
     <Compile Include="Mvvm\Models\InstanceModel\DownloadingData.cs" />
     <Compile Include="Mvvm\Models\InstanceModel\InstanceLocation.cs" />
     <Compile Include="Mvvm\Models\InstanceModel\InstanceModelArgs.cs" />
-    <Compile Include="Mvvm\Models\InstanceModel\InstanceState.cs" />
     <Compile Include="Mvvm\Models\InstanceTransfer\DistributedInstance.cs" />
     <Compile Include="Mvvm\Models\InstanceTransfer\InstanceDistributionModel.cs" />
     <Compile Include="Mvvm\Models\InstanceTransfer\InstanceExportModel.cs" />
