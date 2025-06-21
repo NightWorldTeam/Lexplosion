@@ -655,6 +655,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         /// </summary>
         public void Update(string version = null)
         {
+            IsPrepare = true;
             Runtime.TaskRun(() =>
             {
                 var result = _instanceClient.Update(version);
