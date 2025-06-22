@@ -223,17 +223,11 @@
 
                                                     <StackPanel Grid.Column="1" Margin="8,0,0,0">
 
-                                                        <Grid>
-                                                            <TextBlock
-                                                                FontSize="13"
-                                                                FontWeight="Medium"
-                                                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                                                Text="{Binding Name}" />
-                                                            <TextBlock
-                                                                HorizontalAlignment="Right"
-                                                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
-                                                                Text="{Binding Author}" />
-                                                        </Grid>
+                                                        <TextBlock
+                                                            FontSize="13"
+                                                            FontWeight="Medium"
+                                                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                                            Text="{Binding Name}" />
 
                                                         <core:If Condition="{Binding HasSummary}">
                                                             <core:If.True>

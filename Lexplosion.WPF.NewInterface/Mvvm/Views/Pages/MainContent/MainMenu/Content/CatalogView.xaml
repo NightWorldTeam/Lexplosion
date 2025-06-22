@@ -73,11 +73,10 @@
 
                 <ScrollViewer
                     x:Name="ContainerPage_ScrollViewer"
-                    extensions:ScrollViewerExtensions.ChildItemsUpdated="{Binding IsLoaded}"
-                    extensions:ScrollViewerExtensions.OnScrollCommand="{Binding OnScrollCommand}"
                     IsTabStop="False"
                     KeyboardNavigation.IsTabStop="False"
-                    KeyboardNavigation.TabNavigation="None">
+                    KeyboardNavigation.TabNavigation="None"
+                    ScrollViewer.ScrollChanged="ContainerPage_ScrollViewer_ScrollChanged">
                     <!--  ScrollChanged="ContainerPage_ScrollChanged"  -->
                     <Grid Focusable="True">
 
@@ -389,7 +388,10 @@
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
 
-                                    <ItemsControl ItemsSource="{Binding Model.Instances}" ScrollViewer.CanContentScroll="True">
+                                    <ItemsControl
+                                        x:Name="InstanceList"
+                                        ItemsSource="{Binding Model.Instances}"
+                                        ScrollViewer.CanContentScroll="True">
                                         <ItemsControl.ItemsPanel>
                                             <ItemsPanelTemplate>
                                                 <virtualization:VirtualizingWrapPanel Margin="0,0,0,0" IsItemsHost="True" />
