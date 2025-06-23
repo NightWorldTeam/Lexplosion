@@ -76,7 +76,6 @@
                     IsTabStop="False"
                     KeyboardNavigation.IsTabStop="False"
                     KeyboardNavigation.TabNavigation="None">
-                    <!--  ScrollChanged="ContainerPage_ScrollChanged"  -->
                     <Grid Focusable="True">
 
                         <Grid.RowDefinitions>

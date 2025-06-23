@@ -235,25 +235,34 @@ namespace Lexplosion.WPF.NewInterface.Controls.OldInstanceForm
 
         private void PlayDeleteAnimation() 
         {
-            var doubleAnim = new DoubleAnimation()
+            var opacityAnim = new DoubleAnimation()
             {
                 From = 1,
-                To = 0.9,
-                Duration = TimeSpan.FromSeconds(0.20)
+                To = 0.5,
+                Duration = TimeSpan.FromSeconds(0.10)
             };
 
-            doubleAnim.Completed += (e, e1) =>
+            opacityAnim.Completed += (e, e1) =>
             {
-                var doubleAnim1 = new DoubleAnimation()
+                var heightAnim = new DoubleAnimation()
                 {
                     From = this.ActualHeight,
                     To = 0,
+                    Duration = TimeSpan.FromSeconds(0.15)
+                };
+
+                var marginAnim = new ThicknessAnimation()
+                {
+                    From = Margin,
+                    To = new Thickness(0),
                     Duration = TimeSpan.FromSeconds(0.10)
                 };
-                this.BeginAnimation(HeightProperty, doubleAnim1);
+
+                this.BeginAnimation(HeightProperty, heightAnim);
+                this.BeginAnimation(MarginProperty, marginAnim);
             };
 
-            this.BeginAnimation(OpacityProperty, doubleAnim);
+            this.BeginAnimation(OpacityProperty, opacityAnim);
         }
 
         #endregion Lower Button Click
