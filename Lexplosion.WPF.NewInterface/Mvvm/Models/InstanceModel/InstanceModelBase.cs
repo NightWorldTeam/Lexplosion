@@ -790,7 +790,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
                     {
                         // TODO: ПОДПИСАТЬСЯ НА эвент и удалять через него.
                         GlobalDeletedEvent?.Invoke(this);
+                        Runtime.TaskRun(() => 
+                        {
                         _clientsManager.DeleteFromLibrary(_instanceClient);
+                        });
                         DeletedEvent?.Invoke(this);
                     }));
         }
