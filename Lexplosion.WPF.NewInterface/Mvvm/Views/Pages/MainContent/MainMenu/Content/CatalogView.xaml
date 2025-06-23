@@ -75,8 +75,7 @@
                     x:Name="ContainerPage_ScrollViewer"
                     IsTabStop="False"
                     KeyboardNavigation.IsTabStop="False"
-                    KeyboardNavigation.TabNavigation="None"
-                    ScrollViewer.ScrollChanged="ContainerPage_ScrollViewer_ScrollChanged">
+                    KeyboardNavigation.TabNavigation="None">
                     <!--  ScrollChanged="ContainerPage_ScrollChanged"  -->
                     <Grid Focusable="True">
 

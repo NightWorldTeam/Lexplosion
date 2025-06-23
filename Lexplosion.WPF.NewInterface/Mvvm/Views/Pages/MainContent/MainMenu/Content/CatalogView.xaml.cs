@@ -42,5 +42,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu
             FiltersButton.IsChecked = false;
             //PropertyChanged?.Invoke(FiltersButton, new PropertyChangedEventArgs(nameof(FiltersButton.IsChecked)));
         }
+
+        private void ContainerPage_ScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+
+        }
     }
 }
