@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using Lexplosion.Tools;
 using static Lexplosion.Logic.Management.Import.ImportInterruption;
@@ -13,12 +14,15 @@ namespace Lexplosion.Logic.Management.Import
 
 		private readonly CancellationTokenSource _cancellationTokenSource;
 
-		public ImportData(DynamicStateHandler<ImportInterruption, InterruptionType> interruptionHandler)
+		public ImportData(DynamicStateHandler<ImportInterruption, InterruptionType> interruptionHandler, Action<InstanceInit, IReadOnlyCollection<string>> resultHandler)
 		{
 			InterruptionHandler = interruptionHandler;
+			ResultHandler = resultHandler;
 			_cancellationTokenSource = new CancellationTokenSource();
 			CancelToken = _cancellationTokenSource.Token;
 		}
+
+		public Action<InstanceInit, IReadOnlyCollection<string>> ResultHandler { get; }
 
 		public void CancelImport()
 		{

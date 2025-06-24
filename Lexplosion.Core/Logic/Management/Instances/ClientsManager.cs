@@ -417,14 +417,20 @@ namespace Lexplosion.Logic.Management.Instances
 			return instanceId;
 		}
 
-		private ImportResult Import(in InstanceClient client, string fileAddr, bool fileAddrIsLocal, ImportData importData)
+		private void Import(in InstanceClient client, string fileAddr, bool fileAddrIsLocal, ImportData importData)
 		{
 			client.State = StateType.DownloadPrepare;
 
 			var executor = new ImportExecutor(fileAddr, fileAddrIsLocal, GlobalData.GeneralSettings, _services, client.DownloadStateHandler, importData);
-			ImportResult res = executor.Prepeare(out PrepeareResult result);
+			InstanceInit res = executor.Prepeare(out PrepeareResult result);
 
-			if (res != ImportResult.Successful) return res;
+			if (res != InstanceInit.Successful)
+			{
+				importData.ResultHandler(res, new List<string>());
+				client.State = StateType.Default;
+
+				return;
+			}
 
 			string localId = GenerateInstanceId(result.Name);
 
@@ -436,20 +442,24 @@ namespace Lexplosion.Logic.Management.Instances
 
 			if (importRes != InstanceInit.Successful)
 			{
-				client.CompleteInitialization(importRes, errors);
+				client.CompleteInitialization(importRes);
 				client.DeleteLocalStruct();
-				return res;
+
+				importData.ResultHandler(importRes, errors);
+				client.State = StateType.Default;
+
+				return;
 			}
 
 			_installedInstances[localId] = client;
 			SaveInstalledInstancesList();
 
-			client.CompleteInitialization(InstanceInit.Successful, errors);
-
-			return ImportResult.Successful;
+			client.CompleteInitialization(InstanceInit.Successful);
+			client.State = StateType.Default;
+			importData.ResultHandler(InstanceInit.Successful, errors);
 		}
 
-		public InstanceClient Import(string zipFile, Action<ImportResult> callback, ImportData importData)
+		public InstanceClient Import(string zipFile, ImportData importData)
 		{
 			var client = new InstanceClient(CreateSourceFactory(InstanceSource.Local), _services, SaveInstalledInstancesList);
 			client.MakeFictitiousClient("Importing...");
@@ -457,13 +467,13 @@ namespace Lexplosion.Logic.Management.Instances
 			new Thread(() =>
 			{
 				client.State = StateType.DownloadPrepare;
-				callback(Import(client, zipFile, true, importData));
+				Import(client, zipFile, true, importData);
 			}).Start();
 
 			return client;
 		}
 
-		public InstanceClient Import(FileReceiver reciver, Action<ImportResult> callback, Action<DownloadShareState> stateHandler, ImportData importData)
+		public InstanceClient Import(FileReceiver reciver, ImportData importData)
 		{
 			var client = new InstanceClient(CreateSourceFactory(InstanceSource.Local), _services, SaveInstalledInstancesList);
 			client.MakeFictitiousClient("Importing...");
@@ -475,39 +485,42 @@ namespace Lexplosion.Logic.Management.Instances
 				reciver.StateChanged += () =>
 				{
 					var state = reciver.State;
-					DownloadShareState resState = DownloadShareState.InQueue;
+					StateType resState = StateType.InQueue;
 					switch (state)
 					{
 						case FileReceiver.DistributionState.InQueue:
-							resState = DownloadShareState.InQueue;
+							resState = StateType.InQueue;
 							break;
 						case FileReceiver.DistributionState.InConnect:
-							resState = DownloadShareState.InConnect;
+							resState = StateType.InConnect;
 							break;
 						case FileReceiver.DistributionState.InProcess:
-							resState = DownloadShareState.InProcess;
+							resState = StateType.DownloadClient;
 							break;
 					}
 
-					stateHandler(resState);
+					client.State = resState;
 				};
 
 				FileRecvResult result = _services.DirectoryService.ReceiveFile(reciver, out string file);
 				if (result == FileRecvResult.Successful)
 				{
-					stateHandler(DownloadShareState.PostProcessing);
-					callback(Import(in client, file, true, importData));
+					client.State = StateType.PostProcessing;
+					Import(in client, file, true, importData);
 				}
 				else
 				{
-					callback(result == FileRecvResult.Canceled ? ImportResult.Canceled : ImportResult.DownloadError);
+					importData.ResultHandler(
+						result == FileRecvResult.Canceled ? InstanceInit.IsCancelled : InstanceInit.DownloadFilesError,
+						new List<string>() { "modpack file" }
+					);
 				}
 			}).Start();
 
 			return client;
 		}
 
-		public InstanceClient Import(Uri fileURL, Action<ImportResult> callback, ImportData importData)
+		public InstanceClient Import(Uri fileURL, ImportData importData)
 		{
 			var client = new InstanceClient(CreateSourceFactory(InstanceSource.Local), _services, SaveInstalledInstancesList);
 
@@ -524,7 +537,7 @@ namespace Lexplosion.Logic.Management.Instances
 						string[] parts = fileURL.PathAndQuery.Split('/');
 						if (parts.Length < 4 || string.IsNullOrWhiteSpace(parts[3]))
 						{
-							callback(ImportResult.WrongUrl);
+							importData.ResultHandler(InstanceInit.WrongClientFileUrl, new List<string>());
 							return;
 						}
 
@@ -535,7 +548,7 @@ namespace Lexplosion.Logic.Management.Instances
 							string data = _services.WebService.HttpGet(downloadUrl);
 							if (string.IsNullOrWhiteSpace(data))
 							{
-								callback(ImportResult.WrongUrl);
+								importData.ResultHandler(InstanceInit.WrongClientFileUrl, new List<string>());
 								return;
 							}
 
@@ -566,7 +579,7 @@ namespace Lexplosion.Logic.Management.Instances
 
 							if (urlBase == null)
 							{
-								callback(ImportResult.WrongUrl);
+								importData.ResultHandler(InstanceInit.WrongClientFileUrl, new List<string>());
 								return;
 							}
 
@@ -592,7 +605,7 @@ namespace Lexplosion.Logic.Management.Instances
 						string result = _services.WebService.HttpGet(queryUrl);
 						if (result == null)
 						{
-							callback(ImportResult.WrongUrl);
+							importData.ResultHandler(InstanceInit.WrongClientFileUrl, new List<string>());
 							return;
 						}
 
@@ -603,19 +616,17 @@ namespace Lexplosion.Logic.Management.Instances
 				catch (Exception ex)
 				{
 					Runtime.DebugWrite("Exception " + ex);
-					callback(ImportResult.WrongUrl);
+					importData.ResultHandler(InstanceInit.WrongClientFileUrl, new List<string>());
 					return;
 				}
 
-				ImportResult impurtRes = Import(client, downloadUrl, false, importData);
-
-				callback(impurtRes);
+				Import(client, downloadUrl, false, importData);
 			}).Start();
 
 			return client;
 		}
 
-		private InstanceClient CopyClient(InstanceClient client, BaseInstanceData newClientData)
+		private InstanceClient CopyClient(InstanceClient client, BaseInstanceData newClientData, ImportData importData)
 		{
 			string name = client.Name + " (Copy)";
 			string id = GenerateInstanceId(name);
@@ -633,6 +644,7 @@ namespace Lexplosion.Logic.Management.Instances
 
 			new Thread(() =>
 			{
+				var result = InstanceInit.Successful;
 				try
 				{
 					client.State = StateType.DownloadPrepare;
@@ -643,40 +655,56 @@ namespace Lexplosion.Logic.Management.Instances
 
 					foreach (string dirPath in Directory.GetDirectories(from, "*", SearchOption.AllDirectories))
 					{
+						if (importData.CancelToken.IsCancellationRequested)
+						{
+							result = InstanceInit.IsCancelled;
+							return;
+						}
+
 						Directory.CreateDirectory(dirPath.Replace(from, to));
 					}
 
 					foreach (string sourcePath in Directory.GetFiles(from, "*.*", SearchOption.AllDirectories))
 					{
+						if (importData.CancelToken.IsCancellationRequested)
+						{
+							result = InstanceInit.IsCancelled;
+							return;
+						}
+
 						string fileName = Path.GetFileName(sourcePath);
 						if (fileName == DataFilesManager.MANIFEST_FILE || fileName == DataFilesManager.MANIFEST_FILE_OLD) continue;
 
 						File.Copy(sourcePath, sourcePath.Replace(from, to), true);
 					}
 				}
-				catch { }
+				catch (Exception ex)
+				{
+					Runtime.DebugWrite("Exception " + ex);
+				}
 				finally
 				{
-					client.CompleteInitialization(InstanceInit.Successful, new List<string>());
+					client.State = StateType.Default;
+					importData.ResultHandler(result, new List<string>());
 				}
 			}).Start();
 
 			return newClient;
 		}
 
-		public InstanceClient CopyClient(InstanceClient client)
+		public InstanceClient CopyClient(InstanceClient client, ImportData importData)
 		{
-			return CopyClient(client, null);
+			return CopyClient(client, null, importData);
 		}
 
-		public InstanceClient CopyClient(InstanceClient client, MinecraftVersion gameVersion, ClientType clientType, string modloaderVersion, Action<List<InstanceAddon>> getUncopiedAddons)
+		public InstanceClient CopyClient(InstanceClient client, MinecraftVersion gameVersion, ClientType clientType, string modloaderVersion, Action<List<InstanceAddon>> getUncopiedAddons, ImportData importData)
 		{
 			BaseInstanceData baseData = client.GetBaseData;
 
 			if (baseData.Modloader == clientType && baseData.GameVersion == gameVersion)
 			{
 				baseData.ModloaderVersion = modloaderVersion;
-				return CopyClient(client, baseData);
+				return CopyClient(client, baseData, importData);
 			}
 
 			string name = client.Name + " (Copy)";
@@ -694,6 +722,7 @@ namespace Lexplosion.Logic.Management.Instances
 
 			new Thread(() =>
 			{
+				var initRes = InstanceInit.Successful;
 				try
 				{
 					client.State = StateType.DownloadPrepare;
@@ -712,11 +741,23 @@ namespace Lexplosion.Logic.Management.Instances
 
 					foreach (string dirPath in Directory.GetDirectories(from, "*", SearchOption.AllDirectories))
 					{
+						if (importData.CancelToken.IsCancellationRequested)
+						{
+							initRes = InstanceInit.IsCancelled;
+							return;
+						}
+
 						Directory.CreateDirectory(dirPath.Replace(from, to));
 					}
 
 					foreach (string sourcePath in Directory.GetFiles(from, "*.*", SearchOption.AllDirectories))
 					{
+						if (importData.CancelToken.IsCancellationRequested)
+						{
+							initRes = InstanceInit.IsCancelled;
+							return;
+						}
+
 						string _sourcePath = sourcePath.Replace("\\", "/");
 						foreach (string dir in directoriesBlackList)
 						{
@@ -753,6 +794,12 @@ namespace Lexplosion.Logic.Management.Instances
 					int filesCount = 0;
 					foreach (var addon in addonsToDownload)
 					{
+						if (importData.CancelToken.IsCancellationRequested)
+						{
+							initRes = InstanceInit.IsCancelled;
+							return;
+						}
+
 						DownloadAddonRes result = addon.Update();
 						if (result != DownloadAddonRes.Successful) errors.Add(addon);
 
@@ -771,10 +818,14 @@ namespace Lexplosion.Logic.Management.Instances
 					if (errors.Count > 0) getUncopiedAddons(errors);
 
 				}
-				catch { }
+				catch (Exception ex)
+				{
+					Runtime.DebugWrite("Exception " + ex);
+				}
 				finally
 				{
-					client.CompleteInitialization(InstanceInit.Successful, new List<string>());
+					client.State = StateType.Default;
+					importData.ResultHandler(initRes, new List<string>());
 				}
 
 			}).Start();

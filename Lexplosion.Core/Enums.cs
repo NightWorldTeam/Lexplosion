@@ -1,22 +1,5 @@
 ﻿namespace Lexplosion
 {
-	public enum ImportResult
-	{
-		Successful,
-		ZipFileError,
-		GameVersionError,
-		ManifestError,
-		JavaDownloadError,
-		IsOfflineMode,
-		MovingFilesError,
-		DownloadError,
-		DirectoryCreateError,
-		WrongUrl,
-		UnknownFileType,
-		Canceled,
-		UnknownError
-	}
-
 	public enum ExportResult
 	{
 		Successful,
@@ -138,6 +121,23 @@
 		Follows
 	}
 
+	public enum ImportResult
+	{
+		Successful,
+		ZipFileError,
+		GameVersionError,
+		ManifestError,
+		JavaDownloadError,
+		IsOfflineMode,
+		MovingFilesError,
+		DownloadError,
+		DirectoryCreateError,
+		WrongUrl,
+		UnknownFileType,
+		Canceled,
+		UnknownError
+	}
+
 	public enum InstanceInit
 	{
 		Successful,
@@ -153,6 +153,12 @@
 		JavaDownloadError,
 		IsCancelled,
 		MoveFilesError,
+		ZipFileOpenError,
+		GameVersionError,
+		IsOfflineMode,
+		DirectoryCreateError,
+		WrongClientFileUrl,
+		UnknownClientFileType,
 		UnknownError
 	}
 

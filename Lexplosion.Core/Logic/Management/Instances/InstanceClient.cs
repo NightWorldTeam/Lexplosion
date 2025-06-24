@@ -516,7 +516,7 @@ namespace Lexplosion.Logic.Management.Instances
 			IsComplete = false;
 		}
 
-		internal void CompleteInitialization(InstanceInit initResult, IReadOnlyCollection<string> errors)
+		internal void CompleteInitialization(InstanceInit initResult)
 		{
 			if (initResult == InstanceInit.Successful) IsComplete = true;
 			IsFictitious = false;
@@ -1109,5 +1109,6 @@ namespace Lexplosion.Logic.Management.Instances
 
 			SaveSettings(settings);
 		}
+
 	}
 }

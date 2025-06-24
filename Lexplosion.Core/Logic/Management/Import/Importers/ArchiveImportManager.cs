@@ -53,7 +53,7 @@ namespace Lexplosion.Logic.Management.Import.Importers
 
 		protected abstract string DetermineAthor(TManifest manifest);
 
-		public virtual ImportResult Prepeare(ProgressHandler progressHandler, out PrepeareResult result)
+		public virtual InstanceInit Prepeare(ProgressHandler progressHandler, out PrepeareResult result)
 		{
 			result = new PrepeareResult();
 
@@ -80,13 +80,13 @@ namespace Lexplosion.Logic.Management.Import.Importers
 
 			if (_cancelToken.IsCancellationRequested)
 			{
-				return ImportResult.Canceled;
+				return InstanceInit.IsCancelled;
 			}
 
 			if (!ManifestIsValid(manifest))
 			{
 				Runtime.DebugWrite("Manifest is invalid");
-				return ImportResult.ManifestError;
+				return InstanceInit.ManifestError;
 			}
 
 			DetermineGameType(manifest, out ClientType gameType, out string modLoaderVersion);
@@ -107,7 +107,7 @@ namespace Lexplosion.Logic.Management.Import.Importers
 			result.Summary = DetermineSummary(manifest);
 			result.Author = DetermineAthor(manifest);
 
-			return ImportResult.Successful;
+			return InstanceInit.Successful;
 		}
 
 		public virtual InstanceInit Import(ProgressHandler progressHandler, out IReadOnlyCollection<string> errors)

@@ -93,7 +93,7 @@ namespace Lexplosion.Logic.Management.Import.Importers
 			}
 		}
 
-		public ImportResult Prepeare(out PrepeareResult result)
+		public InstanceInit Prepeare(out PrepeareResult result)
 		{
 			ProgressHandler progressHandler = _progressHandler;
 
@@ -122,7 +122,7 @@ namespace Lexplosion.Logic.Management.Import.Importers
 				if (!_withDirectory.DownloadFile(_filePath, fileName, tempDir, taskArgs))
 				{
 					result = new PrepeareResult();
-					return ImportResult.DownloadError;
+					return InstanceInit.DownloadFilesError;
 				}
 
 				_filePath = tempDir + fileName;
@@ -144,7 +144,7 @@ namespace Lexplosion.Logic.Management.Import.Importers
 			if (_importManager == null)
 			{
 				result = new PrepeareResult();
-				return ImportResult.UnknownFileType;
+				return InstanceInit.UnknownClientFileType;
 			}
 
 			return _importManager.Prepeare(progressHandler, out result);

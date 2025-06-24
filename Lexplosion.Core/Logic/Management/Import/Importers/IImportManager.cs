@@ -11,7 +11,7 @@ namespace Lexplosion.Logic.Management.Import.Importers
 		/// <param name="progressHandler">Обработчик прогресса</param>
 		/// <param name="result">Основная информация о клиенте</param>
 		/// <returns>Результат</returns>
-		public ImportResult Prepeare(ProgressHandler progressHandler, out PrepeareResult result);
+		public InstanceInit Prepeare(ProgressHandler progressHandler, out PrepeareResult result);
 
 		/// <summary>
 		/// Выполняет сам импорт. Локальный id сборки уже должен быть определен 

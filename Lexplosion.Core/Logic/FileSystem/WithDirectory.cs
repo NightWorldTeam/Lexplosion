@@ -493,7 +493,7 @@ namespace Lexplosion.Logic.FileSystem
 			}
 		}
 
-		public ImportResult UnzipInstance(string zipFile, out string resultingDirectory)
+		public InstanceInit UnzipInstance(string zipFile, out string resultingDirectory)
 		{
 			resultingDirectory = CreateTempDir() + "import/";
 
@@ -511,7 +511,7 @@ namespace Lexplosion.Logic.FileSystem
 			catch (Exception ex)
 			{
 				Runtime.DebugWrite("Exception " + ex);
-				return ImportResult.DirectoryCreateError;
+				return InstanceInit.DirectoryCreateError;
 			}
 
 			try
@@ -522,10 +522,10 @@ namespace Lexplosion.Logic.FileSystem
 			{
 				Directory.Delete(resultingDirectory, true);
 
-				return ImportResult.ZipFileError;
+				return InstanceInit.ZipFileOpenError;
 			}
 
-			return ImportResult.Successful;
+			return InstanceInit.Successful;
 		}
 
 		public InstanceInit MoveUnpackedInstance(string instanceId, string unzipPath)
