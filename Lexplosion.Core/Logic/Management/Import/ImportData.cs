@@ -14,7 +14,7 @@ namespace Lexplosion.Logic.Management.Import
 
 		private readonly CancellationTokenSource _cancellationTokenSource;
 
-		public ImportData(DynamicStateHandler<ImportInterruption, InterruptionType> interruptionHandler, Action<InstanceInit, IReadOnlyCollection<string>> resultHandler)
+		public ImportData(DynamicStateHandler<ImportInterruption, InterruptionType> interruptionHandler, Action<ClientInitResult> resultHandler)
 		{
 			InterruptionHandler = interruptionHandler;
 			ResultHandler = resultHandler;
@@ -22,7 +22,7 @@ namespace Lexplosion.Logic.Management.Import
 			CancelToken = _cancellationTokenSource.Token;
 		}
 
-		public Action<InstanceInit, IReadOnlyCollection<string>> ResultHandler { get; }
+		public Action<ClientInitResult> ResultHandler { get; }
 
 		public void CancelImport()
 		{

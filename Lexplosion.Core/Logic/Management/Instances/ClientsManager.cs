@@ -426,7 +426,7 @@ namespace Lexplosion.Logic.Management.Instances
 
 			if (res != InstanceInit.Successful)
 			{
-				importData.ResultHandler(res, new List<string>());
+				importData.ResultHandler(new ClientInitResult(res));
 				client.State = StateType.Default;
 
 				return;
@@ -445,7 +445,7 @@ namespace Lexplosion.Logic.Management.Instances
 				client.CompleteInitialization(importRes);
 				client.DeleteLocalStruct();
 
-				importData.ResultHandler(importRes, errors);
+				importData.ResultHandler(new ClientInitResult(res, errors));
 				client.State = StateType.Default;
 
 				return;
@@ -456,7 +456,7 @@ namespace Lexplosion.Logic.Management.Instances
 
 			client.CompleteInitialization(InstanceInit.Successful);
 			client.State = StateType.Default;
-			importData.ResultHandler(InstanceInit.Successful, errors);
+			importData.ResultHandler(new ClientInitResult(InstanceInit.Successful, errors));
 		}
 
 		public InstanceClient Import(string zipFile, ImportData importData)
@@ -510,10 +510,7 @@ namespace Lexplosion.Logic.Management.Instances
 				}
 				else
 				{
-					importData.ResultHandler(
-						result == FileRecvResult.Canceled ? InstanceInit.IsCancelled : InstanceInit.DownloadFilesError,
-						new List<string>() { "modpack file" }
-					);
+					importData.ResultHandler(new ClientInitResult(result == FileRecvResult.Canceled ? InstanceInit.IsCancelled : InstanceInit.DownloadFilesError, new List<string>() { "modpack file" }));
 				}
 			}).Start();
 
@@ -537,7 +534,7 @@ namespace Lexplosion.Logic.Management.Instances
 						string[] parts = fileURL.PathAndQuery.Split('/');
 						if (parts.Length < 4 || string.IsNullOrWhiteSpace(parts[3]))
 						{
-							importData.ResultHandler(InstanceInit.WrongClientFileUrl, new List<string>());
+							importData.ResultHandler(new ClientInitResult(InstanceInit.WrongClientFileUrl));
 							return;
 						}
 
@@ -548,7 +545,7 @@ namespace Lexplosion.Logic.Management.Instances
 							string data = _services.WebService.HttpGet(downloadUrl);
 							if (string.IsNullOrWhiteSpace(data))
 							{
-								importData.ResultHandler(InstanceInit.WrongClientFileUrl, new List<string>());
+								importData.ResultHandler(new ClientInitResult(InstanceInit.WrongClientFileUrl));
 								return;
 							}
 
@@ -579,7 +576,7 @@ namespace Lexplosion.Logic.Management.Instances
 
 							if (urlBase == null)
 							{
-								importData.ResultHandler(InstanceInit.WrongClientFileUrl, new List<string>());
+								importData.ResultHandler(new ClientInitResult(InstanceInit.WrongClientFileUrl));
 								return;
 							}
 
@@ -605,7 +602,7 @@ namespace Lexplosion.Logic.Management.Instances
 						string result = _services.WebService.HttpGet(queryUrl);
 						if (result == null)
 						{
-							importData.ResultHandler(InstanceInit.WrongClientFileUrl, new List<string>());
+							importData.ResultHandler(new ClientInitResult(InstanceInit.WrongClientFileUrl));
 							return;
 						}
 
@@ -616,7 +613,7 @@ namespace Lexplosion.Logic.Management.Instances
 				catch (Exception ex)
 				{
 					Runtime.DebugWrite("Exception " + ex);
-					importData.ResultHandler(InstanceInit.WrongClientFileUrl, new List<string>());
+					importData.ResultHandler(new ClientInitResult(InstanceInit.WrongClientFileUrl));
 					return;
 				}
 
@@ -685,7 +682,7 @@ namespace Lexplosion.Logic.Management.Instances
 				finally
 				{
 					client.State = StateType.Default;
-					importData.ResultHandler(result, new List<string>());
+					importData.ResultHandler(new ClientInitResult(result));
 				}
 			}).Start();
 
@@ -825,7 +822,7 @@ namespace Lexplosion.Logic.Management.Instances
 				finally
 				{
 					client.State = StateType.Default;
-					importData.ResultHandler(initRes, new List<string>());
+					importData.ResultHandler(new ClientInitResult(initRes));
 				}
 
 			}).Start();
