@@ -340,7 +340,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 
         private void OnStateChanged(StateType stageType)
         {
-            Runtime.DebugWrite($"prev: {State} | now: {stageType}", color: ConsoleColor.Magenta);
+            Runtime.DebugWrite($"Id: {Id} | IC: {_instanceClient.GetHashCode()} | prev: {State} | now: {stageType}", color: ConsoleColor.Magenta);
             State = stageType;
             switch (stageType)
             {
@@ -351,6 +351,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
                     IsLaunching = false;
                     IsLaunched = false;
                     DownloadCancelling = false;
+                    OnPropertyChanged(_instanceClient, nameof(_instanceClient.IsInstalled));
                     break;
                 case StateType.DownloadPrepare:
                     IsPrepare = true;
@@ -372,6 +373,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
                         DataChanged?.Invoke();
                     }
                     break;
+                case StateType.Launching:
+                    IsDownloading = false;
+                    break;
                 case StateType.GameRunning:
                     IsDownloading = false;
                     IsLaunching = true;
@@ -379,6 +383,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
                 default:
                     break;
             }
+            OnPropertyChanged(string.Empty);
         }
 
         /// <summary>Add commentMore actions
@@ -591,7 +596,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         /// <summary>
         /// Скачивание раздачи завершено
         /// </summary>
-        private void OnShareDownloadFinished(ImportResult obj)
+        private void OnShareDownloadFinished(InstanceInit obj)
         {
             IsShareDownloading = false;
         }
@@ -788,11 +793,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
                     _appCore.Resources("YesIWantDeleteInstance") as string,
                     (obj) =>
                     {
-                        // TODO: ПОДПИСАТЬСЯ НА эвент и удалять через него.
                         GlobalDeletedEvent?.Invoke(this);
                         Runtime.TaskRun(() => 
                         {
-                        _clientsManager.DeleteFromLibrary(_instanceClient);
+                            _clientsManager.DeleteFromLibrary(_instanceClient);
                         });
                         DeletedEvent?.Invoke(this);
                     }));

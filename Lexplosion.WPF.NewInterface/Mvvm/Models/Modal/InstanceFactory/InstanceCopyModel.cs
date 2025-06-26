@@ -1,5 +1,7 @@
 ﻿using Lexplosion.Logic.Management;
+using Lexplosion.Logic.Management.Import;
 using Lexplosion.Logic.Management.Instances;
+using Lexplosion.Tools;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.GameExtensions;
 using Lexplosion.WPF.NewInterface.Core.ViewModel;
@@ -7,6 +9,8 @@ using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal;
 using System;
+using System.Collections.Generic;
+using static Lexplosion.Logic.Management.Import.ImportInterruption;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Model.Modal
 {
@@ -150,19 +154,27 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Model.Modal
         public InstanceClient Copy()
         {
             var instanceClient = _instanceModelBase.InstanceClient;
+
+            var dynamicStateHandler = new DynamicStateData<ImportInterruption, InterruptionType>();
+            var importData = new ImportData(dynamicStateHandler.GetHandler, OnInstanceCopyResultHandler);
+
             if (IsCopyWithoutChanges)
             {
-                return _clientsManager.CopyClient(instanceClient);
+                return _clientsManager.CopyClient(instanceClient, importData);
             }
             else 
             {
                 return _clientsManager.CopyClient(instanceClient, Version, ClientType, ModloaderVersion, (uncopiedAddons) => 
                 {
                     _appCore.ModalNavigationStore.Open(new InstanceCopyErrorsViewModel(_appCore, instanceClient.Name, uncopiedAddons));
-                });
+                }, importData);
             }
         }
 
+        private void OnInstanceCopyResultHandler(ClientInitResult clientInitResult) 
+        {
+
+        }
 
         public void ChangeGameType(object parameter)
         {

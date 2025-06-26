@@ -152,6 +152,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
             // Обновляем элементы меню, так как ContextMenu находится в другом визуальном дереве
             // и через DynamicResource обновление просто не сделать
             RuntimeApp.TrayContextMenuOpened += InitTrayComponents;
+
+            //ModalNavigationStore.Open(new ErrorViewerViewModel());
         }
 
 

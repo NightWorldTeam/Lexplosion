@@ -1,4 +1,5 @@
-﻿using Lexplosion.Logic.Management.Import;
+﻿using Lexplosion.Logic.Management;
+using Lexplosion.Logic.Management.Import;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Tools;
 using Lexplosion.WPF.NewInterface.Core;
@@ -89,16 +90,15 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
             var dynamicStateHandler = new DynamicStateData<ImportInterruption, InterruptionType>();
             dynamicStateHandler.StateChanged += OnImportDynamicStateHandlerStateChanged;
 
-			var importData = new ImportData(dynamicStateHandler.GetHandler);
+            ImportProcess importProcess = null;
+
+			var importData = new ImportData(dynamicStateHandler.GetHandler, (init) => ImportResultHandler(init, ref importProcess, instanceClient));
 
             var importFile = new ImportProcess(importData.ImportId, path, importData.CancelImport);
             importFile.ImportCancelled += OnImportCancelled;
             ImportProcesses.Add(importFile);
 
-            instanceClient = _clientsManager.Import(path, (ir) =>
-            {
-                ImportResultHandler(ir, importFile, instanceClient);
-            }, importData);
+            instanceClient = _clientsManager.Import(path, importData);
             importFile.TargetInstanceClient = instanceClient;
 
             // Добавляем в библиотеку.
@@ -178,18 +178,19 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
             var dynamicStateHandler = new DynamicStateData<ImportInterruption, InterruptionType>();
             dynamicStateHandler.StateChanged += OnImportDynamicStateHandlerStateChanged;
 
-            var importData = new ImportData(dynamicStateHandler.GetHandler);
+            var importProcessLazy = new Lazy<ImportData>();
+
+            ImportProcess importProcess = null;
+            var importData = new ImportData(dynamicStateHandler.GetHandler, (init) => ImportResultHandler(init, ref importProcess, instanceClient));
 
             var uri = new Uri(ImportURL);
-            var importFile = new ImportProcess(importData.ImportId, uri, importData.CancelImport);
-            importFile.ImportCancelled += OnImportCancelled;
-            ImportProcesses.Add(importFile);
+            importProcess = new ImportProcess(importData.ImportId, uri, importData.CancelImport);
+            importProcess.ImportCancelled += OnImportCancelled;
+            ImportProcesses.Add(importProcess);
+            
+            instanceClient = _clientsManager.Import(uri, importData);
 
-            instanceClient = _clientsManager.Import(uri, (ir) =>
-            {
-                ImportResultHandler(ir, importFile, instanceClient);
-            }, importData);
-            importFile.TargetInstanceClient = instanceClient;
+            importProcess.TargetInstanceClient = instanceClient;
 
             // Добавляем в библиотеку.
             _addToLibrary(instanceClient, importData);
@@ -202,8 +203,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
         #region Private Methods
 
 
-        private void ImportResultHandler(ImportResult importResult, ImportProcess importFile, InstanceClient instanceClient)
+        private void ImportResultHandler(ClientInitResult clientInitResult, ref ImportProcess importFileRef, InstanceClient instanceClient)
         {
+            var initResult = clientInitResult.State;
+            var importFile = importFileRef;
             _appCore.UIThread(() =>
             {
                 importFile.IsImporing = false;
@@ -212,49 +215,49 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
                 // TODO: Send Notification
                 OnPropertyChanged(nameof(instanceClient.Name));
 
-                if (importResult != ImportResult.Successful)
+                if (initResult != InstanceInit.Successful)
                 {
                     importFile.IsSuccessful = false;
                     _removeFromLibrary(instanceClient);
                 }
             });
 
-            switch (importResult)
+            switch (initResult)
             {
-                case ImportResult.Successful:
+                case InstanceInit.Successful:
                     _appCore.MessageService.Success("ImportResultSuccessful", true, importFile.Name);
                     break;
-                case ImportResult.ZipFileError:
-                    _appCore.MessageService.Error("ImportResultZipFileError", true);
+                case InstanceInit.ZipFileOpenError:
+                    _appCore.MessageService.Error("ImportResultZipFileOpenError", true);
                     break;
-                case ImportResult.GameVersionError:
+                case InstanceInit.GameVersionError:
                     _appCore.MessageService.Error("ImportResultGameVersionError", true);
                     break;
-                case ImportResult.ManifestError:
+                case InstanceInit.ManifestError:
                     _appCore.MessageService.Error("ImportResultManifestError", true);
                     break;
-                case ImportResult.JavaDownloadError:
+                case InstanceInit.JavaDownloadError:
                     _appCore.MessageService.Error("ImportResultJavaDownloadError", true);
                     break;
-                case ImportResult.IsOfflineMode:
+                case InstanceInit.IsOfflineMode:
                     _appCore.MessageService.Error("ImportResultIsOfflineMode", true);
                     break;
-                case ImportResult.MovingFilesError:
-                    _appCore.MessageService.Error("ImportResultMovingFilesError", true);
+                case InstanceInit.MoveFilesError:
+                    _appCore.MessageService.Error("ImportResultMoveFilesError", true);
                     break;
-                case ImportResult.DownloadError:
-                    _appCore.MessageService.Error("ImportResultDownloadError", true);
+                case InstanceInit.DownloadFilesError:
+                    _appCore.MessageService.Error("ImportResultDownloadFilesError", true);
                     break;
-                case ImportResult.DirectoryCreateError:
+                case InstanceInit.DirectoryCreateError:
                     _appCore.MessageService.Error("ImportResultDirectoryCreateError", true);
                     break;
-                case ImportResult.WrongUrl:
+                case InstanceInit.WrongClientFileUrl:
                     _appCore.MessageService.Error("ImportResultWrongUrl", true);
                     break;
-                case ImportResult.UnknownFileType:
+                case InstanceInit.UnknownClientFileType:
                     _appCore.MessageService.Error("ImportResultUnknownFileType", true);
                     break;
-                case ImportResult.Canceled:
+                case InstanceInit.IsCancelled:
                     _appCore.MessageService.Error("ImportCancelledNotification", true);
                     break;
                 default:

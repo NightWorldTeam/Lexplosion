@@ -74,6 +74,9 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Linq.Dynamic.Core, Version=1.6.6.0, Culture=neutral, PublicKeyToken=0f07ec44de6ac832, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Linq.Dynamic.Core.1.6.6\lib\net46\System.Linq.Dynamic.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -201,6 +204,8 @@
     <Compile Include="Mvvm\Models\Modal\InstanceGroupsConfiguratorModel.cs" />
     <Compile Include="Mvvm\Models\Modal\InstanceFactory\InstanceCopyModel.cs" />
     <Compile Include="Mvvm\Models\Modal\InstanceFactory\InstanceCopyErrorsModel.cs" />
+    <Compile Include="Mvvm\ViewModels\Modal\DownloadViewerViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\Modal\ErrorViewerViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\InstanceFactory\InstanceCopyErrorsViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\InstanceFactory\InstanceCopyViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\InstancesGroup\InstanceGroupsConfiguratorViewModel.cs" />
@@ -224,6 +229,12 @@
     </Compile>
     <Compile Include="Mvvm\Views\Modal\ConfirmAction\ConfirmActionView.xaml.cs">
       <DependentUpon>ConfirmActionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Views\Modal\DownloadViewer.xaml.cs">
+      <DependentUpon>DownloadViewer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Views\Modal\ErrorViewer.xaml.cs">
+      <DependentUpon>ErrorViewer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Mvvm\Views\Modal\InstanceFactory\InstanceCopyErrorsView.xaml.cs">
       <DependentUpon>InstanceCopyErrorsView.xaml</DependentUpon>
@@ -695,6 +706,14 @@
     <Page Include="Mvvm\Views\Modal\ConfirmAction\ConfirmActionView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Mvvm\Views\Modal\DownloadViewer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Mvvm\Views\Modal\ErrorViewer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Mvvm\Views\Modal\InstanceFactory\InstanceCopyErrorsView.xaml">
       <SubType>Designer</SubType>

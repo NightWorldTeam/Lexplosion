@@ -147,6 +147,9 @@
     <DataTemplate DataType="{x:Type modalvm:InstanceCopyErrorsViewModel}">
         <modalviews:InstanceCopyErrorsView />
     </DataTemplate>
+    <DataTemplate DataType="{x:Type modalvm:ErrorViewerViewModel}">
+        <modalviews:ErrorViewer />
+    </DataTemplate>
 
     <!--  Instance Profile  -->
     <DataTemplate DataType="{x:Type instanceprofilevm:InstanceProfileLeftPanelViewModel}">

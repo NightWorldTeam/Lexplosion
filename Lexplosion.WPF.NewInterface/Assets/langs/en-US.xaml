@@ -518,7 +518,7 @@
     <s:String x:Key="AddonInfoCreationDateTooltip">Date of creation</s:String>
     <s:String x:Key="AddonInfoGameVersionTooltip">Game version</s:String>
 
-    <s:String x:Key="Completed">Completed</s:String>
+    <s:String x:Key="Completed">Завершено</s:String>
 
 
     <!--  region Authorization  -->
@@ -713,12 +713,12 @@
 
 
     <s:String x:Key="ImportResultSuccessful">Instance {0} has been successfully imported and is waiting for you in the library.</s:String>
-    <s:String x:Key="ImportResultZipFileError">Error opening zip file</s:String>
+    <s:String x:Key="ImportResultZipFileOpenError">Error opening zip file</s:String>
     <s:String x:Key="ImportResultGameVersionError">Game version error</s:String>
     <s:String x:Key="ImportResultJavaDownloadError">Java downloading problem</s:String>
     <s:String x:Key="ImportResultIsOfflineMode">Offline mode</s:String>
-    <s:String x:Key="ImportResultMovingFilesError">Error while moving files</s:String>
-    <s:String x:Key="ImportResultDownloadError">Download error</s:String>
+    <s:String x:Key="ImportResultMoveFilesError">Error while moving files</s:String>
+    <s:String x:Key="ImportResultDownloadFilesError">Download error</s:String>
     <s:String x:Key="ImportResultDirectoryCreateError">Error creating directory</s:String>
     <s:String x:Key="ImportResultWrongUrl">The URL for importing the file is incorrect. We currently only support Yandex Disk and Google Drive.</s:String>
     <s:String x:Key="ImportResultManifestError">Manifest file error.</s:String>
@@ -842,7 +842,6 @@
 
     <s:String x:Key="WelcomeDescription">Welcome to a new era</s:String>
     <s:String x:Key="WelcomePageThemeSelectDescription">Choose your prefered interface apperarance. You have the option to pick a theme manually or enable automatic theme switching that aligns with your system settings.</s:String>
-
 
     <!--  Tray  -->
     <s:String x:Key="ContactSupport">Contact Support</s:String>
@@ -972,6 +971,7 @@
     <s:String x:Key="InstanceGroups">Instance Groups</s:String>
     <s:String x:Key="GroupName">Group name</s:String>
     <s:String x:Key="CreateNewGroup">Create a new instance</s:String>
+    <s:String x:Key="SelectInstancesForGroup">Select instances for this group</s:String>
     <s:String x:Key="GroupEditTitle">Group editing</s:String>
     <s:String x:Key="AvailableGroups">Available Group</s:String>
     <s:String x:Key="SelectGroupsForInstance">Select groups for instance</s:String>
@@ -990,4 +990,8 @@
 
     <s:String x:Key="LibraryGroupEmpty">This group is empty</s:String>
     <s:String x:Key="LibraryGroupEmptyDescription">You can add instances to this group from other groups or when creating an instance...</s:String>
+
+    <s:String x:Key="UpdateAvailable">Update Available</s:String>
+    <s:String x:Key="MbitPerS">Mbit/s</s:String>
+
 </ResourceDictionary>

@@ -5,29 +5,14 @@ using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Tools;
 using Lexplosion.WPF.NewInterface.Core.ViewModel;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers;
-using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Documents;
 using static Lexplosion.Logic.Management.Import.ImportInterruption;
-using static System.Windows.Forms.AxHost;
 
 namespace Lexplosion.WPF.NewInterface.Core.Objects
 {
-    public enum InstanceDistributionStates
-    {
-        InQuque,
-        Downloading,
-        DownloadComplitedSuccessful,
-        DownloadComplitedError,
-    }
-
     public sealed class InstanceDistributionArgs
     {
-        public InstanceDistributionArgs(FileReceiver fileReceiver, Action<ImportResult> resultHandler, Action<InstanceDistribution> removeFileReceiver, LibraryController libraryController, InstanceSharesController instanceSharesController)
+        public InstanceDistributionArgs(FileReceiver fileReceiver, Action<InstanceInit> resultHandler, Action<InstanceDistribution> removeFileReceiver, LibraryController libraryController, InstanceSharesController instanceSharesController)
         {
             FileReceiver = fileReceiver;
             ResultHandler = resultHandler;
@@ -43,7 +28,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
         /// <summary>
         /// Обработчки результата
         /// </summary>
-        public Action<ImportResult> ResultHandler { get; }
+        public Action<InstanceInit> ResultHandler { get; }
         /// <summary>
         /// 
         /// </summary>
@@ -54,11 +39,11 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
 
     public sealed class InstanceDistribution : ObservableObject
     {
-        public event Action<ImportResult> DownloadFinished;
+        public event Action<InstanceInit> DownloadFinished;
 
         private readonly InstanceDistributionArgs _args;
         private readonly FileReceiver _receiver;
-        private readonly Action<ImportResult> _resultHandler;
+        private readonly Action<InstanceInit> _resultHandler;
         private InstanceClient _instanceClient;
         private readonly Action<InstanceDistribution> _removeFileReceiver;
         private readonly ClientsManager _clientsManager = Runtime.ClientsManager;
@@ -102,8 +87,8 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
             }
         }
 
-        private DownloadShareState _instanceState = DownloadShareState.InQueue;
-        public DownloadShareState InstanceState
+        private StateType _instanceState = StateType.InQueue;
+        public StateType InstanceState
         {
             get => _instanceState; private set
             {
@@ -154,13 +139,21 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
         public void Download()
         {
             var dynamicStateHandler = new DynamicStateData<ImportInterruption, InterruptionType>();
-			var importData = new ImportData(dynamicStateHandler.GetHandler);
-            _instanceClient = _clientsManager.Import(_receiver, DownloadResultHandler, (state) => { InstanceState = state; }, importData);
+			var importData = new ImportData(dynamicStateHandler.GetHandler, (init) => DownloadResultHandler(init));
+
+            _instanceClient = _clientsManager.Import(_receiver, importData);
+            _instanceClient.StateChanged += OnStateChanged;
+
             IsDownloadStarted = true;
             _args.LibraryController.Add(_instanceClient, this);
 
             var s = _args.LibraryController.GetByInstanceClient(_instanceClient);
             s.DeletedEvent += OnDeletedInstance;
+        }
+
+        private void OnStateChanged(StateType state)
+        {
+            InstanceState = state; 
         }
 
         /// <summary>
@@ -202,11 +195,12 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
         /// Обрабатывает результат скачинвание раздачи сборки.
         /// </summary>
         /// <param name="result"></param>
-        private void DownloadResultHandler(ImportResult result)
+        private void DownloadResultHandler(ClientInitResult clientInitResult)
         {
+            var result = clientInitResult.State;
             DownloadFinished?.Invoke(result);
             IsDownloadStarted = false;
-            if (result == ImportResult.Successful)
+            if (result == InstanceInit.Successful)
             {
                 IsDownloadSuccessful = true;
             }
@@ -219,7 +213,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
             _resultHandler.Invoke(result);
             switch (result)
             {
-                case ImportResult.Successful:
+                case InstanceInit.Successful:
                     break;
                 default:
                     _args.LibraryController.Remove(_instanceClient);
@@ -229,7 +223,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
 
         private void OnDeletedInstance(object obj)
         {
-            InstanceState = DownloadShareState.InQueue;
+            InstanceState = StateType.InQueue;
             Percentages = 0;
             Speed = 0;
         }

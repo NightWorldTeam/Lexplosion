@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq.Dynamic;
 
 namespace Lexplosion.WPF.NewInterface.Core.Converters.ValueConverters
 {
