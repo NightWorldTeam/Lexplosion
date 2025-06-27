@@ -153,7 +153,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
             // и через DynamicResource обновление просто не сделать
             RuntimeApp.TrayContextMenuOpened += InitTrayComponents;
 
-            //ModalNavigationStore.Open(new ErrorViewerViewModel());
+            //ModalNavigationStore.Open(new ErrorViewerViewModel(["test/test.org not found", "test-pc/test-pc.org not found"]));
         }
 
 

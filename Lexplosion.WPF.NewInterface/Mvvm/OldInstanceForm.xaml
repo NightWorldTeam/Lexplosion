@@ -406,6 +406,16 @@
 
                                             <Setter Property="Visibility" Value="Collapsed" />
                                         </MultiDataTrigger>
+
+                                        <DataTrigger Binding="{Binding Model.State}" Value="{x:Static lexplosion:StateType.InConnect}">
+                                            <Setter Property="Text" Value="{DynamicResource InConnect}" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Model.State}" Value="{x:Static lexplosion:StateType.InQueue}">
+                                            <Setter Property="Text" Value="{DynamicResource InQueue}" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Model.State}" Value="{x:Static lexplosion:StateType.PostProcessing}">
+                                            <Setter Property="Text" Value="{DynamicResource PostProcessing}" />
+                                        </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
                             </TextBlock.Style>
@@ -657,6 +667,19 @@
                                             <Setter Property="Value" Value="{Binding DownloadingData.Percentages, Mode=OneWay}" />
                                             <Setter Property="IsIndeterminate" Value="False" />
                                         </MultiDataTrigger>
+
+                                        <DataTrigger Binding="{Binding Model.State}" Value="{x:Static lexplosion:StateType.InConnect}">
+                                            <Setter Property="IsIndeterminate" Value="True" />
+                                        </DataTrigger>
+
+                                        <DataTrigger Binding="{Binding Model.State}" Value="{x:Static lexplosion:StateType.InQueue}">
+                                            <Setter Property="IsIndeterminate" Value="True" />
+                                        </DataTrigger>
+
+                                        <DataTrigger Binding="{Binding Model.State}" Value="{x:Static lexplosion:StateType.PostProcessing}">
+                                            <Setter Property="IsIndeterminate" Value="True" />
+                                        </DataTrigger>
+
                                     </Style.Triggers>
 
                                 </Style>
@@ -875,7 +898,7 @@
                                             Template="{StaticResource DropDownButton}"
                                             Text="{DynamicResource Addons}" />
 
-                                        <core:If></core:If>
+                                        <core:If />
                                         <!--  Скопировать  -->
                                         <controls:AdvancedButton
                                             x:Name="CopyButton"

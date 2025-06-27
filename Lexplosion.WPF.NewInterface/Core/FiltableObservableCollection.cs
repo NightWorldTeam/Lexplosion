@@ -109,7 +109,7 @@ namespace Lexplosion.WPF.NewInterface.Core
 
         IEnumerator<object> IEnumerable<object>.GetEnumerator()
         {
-            throw new NotImplementedException();
+            return _filteredCollection.GetEnumerator();
         }
 
 

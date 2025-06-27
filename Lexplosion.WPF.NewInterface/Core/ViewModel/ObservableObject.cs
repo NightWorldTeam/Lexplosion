@@ -15,7 +15,7 @@ namespace Lexplosion.WPF.NewInterface.Core.ViewModel
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        protected void OnPropertyChanged(object sender, string propertyName)
+        protected void OnPropertyChanged(object sender, string? propertyName = null)
         {
             PropertyChanged?.Invoke(sender, new PropertyChangedEventArgs(propertyName));
         }

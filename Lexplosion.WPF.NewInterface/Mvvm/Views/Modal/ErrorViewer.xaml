@@ -4,10 +4,13 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:Lexplosion.WPF.NewInterface.Controls"
     xmlns:converters="clr-namespace:Lexplosion.WPF.NewInterface.Core.Converters"
+    xmlns:core="clr-namespace:Lexplosion.WPF.NewInterface.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Modal"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:modal="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal"
+    d:DataContext="{d:DesignInstance Type=modal:ErrorViewerViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
@@ -43,6 +46,7 @@
                         </Grid.ColumnDefinitions>
 
                         <!--  Selected Page Title  -->
+                        <!--  TODO: 1.0.1.0 Translate  -->
                         <TextBlock
                             Margin="20,0"
                             VerticalAlignment="Top"
@@ -68,29 +72,113 @@
                 <Grid
                     x:Name="AccountFactoryForm"
                     Grid.Row="1"
-                    Margin="0,16,0,0"
-                    IsEnabled="{Binding Model.IsAuthorizationInProcess, Converter={converters:NegativeBooleanValueConverter}}">
+                    Margin="0,16,0,0">
 
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
-                    <TextBlock FontSize="14" Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}">
-                        <Run Text="Заголовок: " />
-                        <Run Text="Не удалось скачать некоторые файлы" />
-                    </TextBlock>
+                    <Grid>
+
+                        <!--  TODO: 1.0.1.0 Translate  -->
+                        <TextBlock FontSize="14" Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}">
+                            <Run FontWeight="Medium" Text="Заголовок: " />
+                            <Run Text="Не удалось скачать некоторые файлы" />
+                        </TextBlock>
+
+                        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                            <Border
+                                Padding="2,0"
+                                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                BorderThickness="1,0,0,0">
+                                <Button
+                                    x:Name="CopyAllButton"
+                                    Height="20"
+                                    Content="CopyAll"
+                                    Cursor="Hand"
+                                    Style="{StaticResource x32IconButtonWithHover}"
+                                    ToolTip="Copy All" />
+                            </Border>
+                            <Border
+                                Padding="2,0"
+                                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                BorderThickness="1,0,0,0">
+                                <Button
+                                    Height="20"
+                                    Content="FileUpload"
+                                    Cursor="Hand"
+                                    Style="{StaticResource x32IconButtonWithHover}"
+                                    ToolTip="Save to file" />
+                            </Border>
+                        </StackPanel>
+
+                    </Grid>
 
 
-                    <Border
-                        Grid.Row="1"
-                        Margin="0,16,0,0"
-                        Padding="8"
-                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                        BorderThickness="1"
-                        CornerRadius="5">
-                        <ListBox ItemsSource="{Binding ErrorsList}" />
-                    </Border>
+                    <Grid Grid.Row="1" Margin="0,16,0,0">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <!--  TODO: 1.0.1.0 Translate  -->
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                FontSize="14"
+                                FontWeight="Medium"
+                                Foreground="{DynamicResource PrimaryForegroundSolidColor}"
+                                Text="Дополнительная информация:" />
+
+                            <controls:SearchBox
+                                Grid.Column="1"
+                                Placeholder="Название файла/ошибки"
+                                Style="{StaticResource sm-searchbox-default}"
+                                Text="{Binding Model.SearchText, UpdateSourceTrigger=PropertyChanged}" />
+                        </Grid>
+
+                        <Border
+                            Grid.Row="1"
+                            Margin="0,8,0,0"
+                            Padding="8,0,0,0"
+                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                            BorderThickness="1"
+                            CornerRadius="5">
+                            <core:If Condition="{Binding Model.AdditionalInfo, Converter={converters:IsCollectionEmptyConverter}}">
+                                <core:If.True>
+                                    <controls:Empty Title="Дополнительная информация отсутствует" />
+                                </core:If.True>
+                                <core:If.False>
+                                    <RichTextBox />
+                                    <!--<ListBox
+                                        ItemsSource="{Binding Model.AdditionalInfo.Filtered}"
+                                        ScrollViewer.VerticalScrollBarVisibility="Visible"
+                                        Style="{StaticResource TransparentListBox}">
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border
+                                                    Padding="0,6"
+                                                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                                    BorderThickness="0,0,0,1">
+                                                    <TextBlock
+                                                        FontSize="14"
+                                                        Foreground="Red"
+                                                        Text="{Binding}" />
+                                                </Border>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>-->
+                                </core:If.False>
+                            </core:If>
+                        </Border>
+                    </Grid>
                 </Grid>
             </Grid>
 

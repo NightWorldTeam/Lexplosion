@@ -14,9 +14,14 @@ namespace Lexplosion.WPF.NewInterface.Core.Converters
                 return true;
             }
 
-            if (value is IEnumerable collection)
+            if (value is ICollection collection) 
             {
-                return collection.Cast<object>().Count() == 0;
+                return collection.Count == 0;
+            }
+
+            if (value is IEnumerable enumerable)
+            {
+                return enumerable.Cast<object>().Count() == 0;
             }
 
             throw new ArgumentException($"Неверный формат данных ожидалась колекция, но значение {value}");
