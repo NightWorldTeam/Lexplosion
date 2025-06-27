@@ -267,7 +267,7 @@ namespace Lexplosion.Logic.Management.Instances
 
 		public bool IsSharing { get; private set; } = false;
 
-		public bool IsInstalled { get; private set; } = false;
+		public bool IsInstalled { get; internal set; } = false;
 
 		public string FolderPath { get => _services.DirectoryService.GetInstancePath(_localId); }
 

@@ -634,9 +634,10 @@ namespace Lexplosion.Logic.Management.Instances
 			BaseInstanceData baseData = newClientData ?? client.GetBaseData;
 			newClient.UpdateInfo(null, null, client.Categories, client.Summary, client.Description, client.Author, client.WebsiteUrl);
 			newClient.SetLogo(client.Logo);
+			newClient.IsInstalled = client.IsInstalled;
 			newClient.DeployLocally(baseData.Modloader, baseData.IsNwClient, null, baseData.ModloaderVersion, baseData.OptifineVersion, false);
 
-			_installedInstances[id] = client;
+			_installedInstances[id] = newClient;
 			SaveInstalledInstancesList();
 
 			new Thread(() =>
@@ -644,7 +645,7 @@ namespace Lexplosion.Logic.Management.Instances
 				var result = InstanceInit.Successful;
 				try
 				{
-					client.State = StateType.DownloadPrepare;
+					newClient.State = StateType.DownloadPrepare;
 
 					WithDirectory directoryService = _services.DirectoryService;
 					string from = directoryService.GetInstancePath(client.LocalId);
@@ -658,7 +659,14 @@ namespace Lexplosion.Logic.Management.Instances
 							return;
 						}
 
-						Directory.CreateDirectory(dirPath.Replace(from, to));
+						try
+						{
+							Directory.CreateDirectory(dirPath.Replace(from, to));
+						}
+						catch (Exception ex)
+						{
+							Runtime.DebugWrite("Exception " + ex);
+						}
 					}
 
 					foreach (string sourcePath in Directory.GetFiles(from, "*.*", SearchOption.AllDirectories))
@@ -672,7 +680,14 @@ namespace Lexplosion.Logic.Management.Instances
 						string fileName = Path.GetFileName(sourcePath);
 						if (fileName == DataFilesManager.MANIFEST_FILE || fileName == DataFilesManager.MANIFEST_FILE_OLD) continue;
 
-						File.Copy(sourcePath, sourcePath.Replace(from, to), true);
+						try
+						{
+							File.Copy(sourcePath, sourcePath.Replace(from, to), true);
+						}
+						catch (Exception ex)
+						{
+							Runtime.DebugWrite("Exception " + ex);
+						}
 					}
 				}
 				catch (Exception ex)
@@ -681,7 +696,7 @@ namespace Lexplosion.Logic.Management.Instances
 				}
 				finally
 				{
-					client.State = StateType.Default;
+					newClient.State = StateType.Default;
 					importData.ResultHandler(new ClientInitResult(result));
 				}
 			}).Start();
@@ -707,14 +722,15 @@ namespace Lexplosion.Logic.Management.Instances
 			string name = client.Name + " (Copy)";
 			string id = GenerateInstanceId(name);
 
-			IInstanceSource source = CreateSourceFactory(client.Type);
-			var newClient = new InstanceClient(name, source, _services, SaveInstalledInstancesList, gameVersion, client.ExternalId, id);
+			IInstanceSource source = CreateSourceFactory(InstanceSource.Local);
+			var newClient = new InstanceClient(name, source, _services, SaveInstalledInstancesList, gameVersion, null, id);
 
 			newClient.UpdateInfo(null, null, client.Categories, client.Summary, client.Description, client.Author, client.WebsiteUrl);
 			newClient.SetLogo(client.Logo);
+			newClient.IsInstalled = client.IsInstalled;
 			newClient.DeployLocally(clientType, baseData.IsNwClient, null, modloaderVersion, baseData.OptifineVersion, false);
 
-			_installedInstances[id] = client;
+			_installedInstances[id] = newClient;
 			SaveInstalledInstancesList();
 
 			new Thread(() =>
@@ -722,7 +738,7 @@ namespace Lexplosion.Logic.Management.Instances
 				var initRes = InstanceInit.Successful;
 				try
 				{
-					client.State = StateType.DownloadPrepare;
+					newClient.State = StateType.DownloadPrepare;
 
 					WithDirectory directoryService = _services.DirectoryService;
 
@@ -744,7 +760,14 @@ namespace Lexplosion.Logic.Management.Instances
 							return;
 						}
 
-						Directory.CreateDirectory(dirPath.Replace(from, to));
+						try
+						{
+							Directory.CreateDirectory(dirPath.Replace(from, to));
+						}
+						catch (Exception ex)
+						{
+							Runtime.DebugWrite("Exception " + ex);
+						}
 					}
 
 					foreach (string sourcePath in Directory.GetFiles(from, "*.*", SearchOption.AllDirectories))
@@ -763,9 +786,17 @@ namespace Lexplosion.Logic.Management.Instances
 
 						string fileName = Path.GetFileName(sourcePath);
 						if (fileName == DataFilesManager.MANIFEST_FILE || fileName == DataFilesManager.MANIFEST_FILE_OLD
-						|| fileName == DataFilesManager.INSTANCE_PLATFORM_DATA_FILE || fileName == DataFilesManager.INSTANCE_PLATFORM_DATA_FILE_OLD) continue;
+						|| fileName == DataFilesManager.INSTANCE_PLATFORM_DATA_FILE || fileName == DataFilesManager.INSTANCE_PLATFORM_DATA_FILE_OLD)
+							continue;
 
-						File.Copy(sourcePath, sourcePath.Replace(from, to), true);
+						try
+						{
+							File.Copy(sourcePath, sourcePath.Replace(from, to), true);
+						}
+						catch (Exception ex)
+						{
+							Runtime.DebugWrite("Exception " + ex);
+						}
 
 					ToNextIteration:;
 					}
@@ -821,7 +852,7 @@ namespace Lexplosion.Logic.Management.Instances
 				}
 				finally
 				{
-					client.State = StateType.Default;
+					newClient.State = StateType.Default;
 					importData.ResultHandler(new ClientInitResult(initRes));
 				}
 
