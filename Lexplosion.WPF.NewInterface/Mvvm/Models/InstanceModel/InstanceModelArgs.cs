@@ -16,7 +16,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         public ImportData? ImportData = null;
         public InstancesGroup? Group;
         public InstanceLocation Location;
-        public Action<InstanceClient>? AddToLibraryByInstanceClient = null;
+        public Action<InstanceClient, ImportData>? AddToLibrary = null;
 
         public InstanceModelArgs()
         {
@@ -32,7 +32,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             ImportData? importData = null, 
             InstancesGroup? group = null, 
             InstanceLocation instanceLocation = InstanceLocation.Library,
-            Action<InstanceClient> addByInstanceClient = null)
+            Action<InstanceClient, ImportData> addToLibrary = null)
         {
             AppCore = appCore;
             InstanceClient = instanceClient;
@@ -42,7 +42,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             ImportData = importData;
             Group = group;
             Location = instanceLocation;
-            AddToLibraryByInstanceClient = addByInstanceClient;
+            AddToLibrary = addToLibrary;
         }
     }
 }

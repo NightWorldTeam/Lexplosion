@@ -151,7 +151,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Model.Modal
         #region Public Methods
 
 
-        public InstanceClient Copy()
+        public (InstanceClient instanceClient, ImportData importData) Copy()
         {
             var instanceClient = _instanceModelBase.InstanceClient;
 
@@ -160,14 +160,14 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Model.Modal
 
             if (IsCopyWithoutChanges)
             {
-                return _clientsManager.CopyClient(instanceClient, importData);
+                return (_clientsManager.CopyClient(instanceClient, importData), importData);
             }
             else 
             {
-                return _clientsManager.CopyClient(instanceClient, Version, ClientType, ModloaderVersion, (uncopiedAddons) => 
+                return (_clientsManager.CopyClient(instanceClient, Version, ClientType, ModloaderVersion, (uncopiedAddons) => 
                 {
                     _appCore.ModalNavigationStore.Open(new InstanceCopyErrorsViewModel(_appCore, instanceClient.Name, uncopiedAddons));
-                }, importData);
+                }, importData), importData);
             }
         }
 

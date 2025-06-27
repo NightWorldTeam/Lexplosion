@@ -9,9 +9,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
         public event Action<Guid> ImportCancelled;
 
 
-        private readonly Action _cancelImport;
-
-
         #region Properties
 
 
@@ -62,24 +59,22 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
         #region Constructors
 
 
-        public ImportProcess(Guid id, string path, Action cancel, bool isImporting = true, bool isSuccessful = false)
+        public ImportProcess(Guid id, string path, bool isImporting = true, bool isSuccessful = false)
         {
             Id = id;
             Name = System.IO.Path.GetFileName(path);
             Path = path;
             IsImporing = isImporting;
             IsSuccessful = isSuccessful;
-            _cancelImport = cancel;
         }
 
-        public ImportProcess(Guid id, Uri url, Action cancel, bool isImporting = true, bool isSuccessful = false)
+        public ImportProcess(Guid id, Uri url, bool isImporting = true, bool isSuccessful = false)
         {
             Id = id;
             Name = System.IO.Path.GetFileName(url.LocalPath);
             Path = url.OriginalString;
             IsImporing = isImporting;
             IsSuccessful = isSuccessful;
-            _cancelImport = cancel;
         }
 
 
@@ -88,7 +83,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
 
         public void Cancel() 
         {
-            _cancelImport?.Invoke();
             ImportCancelled?.Invoke(Id);
         }
     }

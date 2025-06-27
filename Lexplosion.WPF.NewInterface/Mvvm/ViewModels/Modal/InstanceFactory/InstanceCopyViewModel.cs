@@ -1,4 +1,5 @@
-﻿using Lexplosion.Logic.Management.Instances;
+﻿using Lexplosion.Logic.Management.Import;
+using Lexplosion.Logic.Management.Instances;
 using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Modal;
@@ -11,7 +12,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
 {
     public sealed class InstanceCopyViewModel : ActionModalViewModelBase
     {
-        private readonly Action<InstanceClient> _addToLibrary;
+        private readonly Action<InstanceClient, ImportData> _addToLibrary;
 
 
         #region Properties
@@ -80,7 +81,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
         #endregion Properties
 
 
-        public InstanceCopyViewModel(AppCore appCore, ClientsManager clientsManager, InstanceModelBase instance, Action<InstanceClient> addToLibrary)
+        public InstanceCopyViewModel(AppCore appCore, ClientsManager clientsManager, InstanceModelBase instance, Action<InstanceClient, ImportData> addToLibrary)
         {
             Model = new(appCore, clientsManager, instance);
             _addToLibrary = addToLibrary;
@@ -103,8 +104,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal
 
         private void OnAction(object obj)
         {
-            var ic = Model.Copy();
-            _addToLibrary?.Invoke(ic);
+            var instanceData = Model.Copy();
+            _addToLibrary?.Invoke(instanceData.instanceClient, instanceData.importData);
         }
     }
 }

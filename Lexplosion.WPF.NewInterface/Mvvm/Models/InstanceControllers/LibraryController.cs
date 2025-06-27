@@ -124,7 +124,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
             {
                 if (instanceModelBase == null)
                 {
-                    var args = new InstanceModelArgs(_appCore, instanceClient, _exportFunc, _setRunningGame, addByInstanceClient: (ic) => Add(ic), group: SelectedGroup);
+                    var args = new InstanceModelArgs(_appCore, instanceClient, _exportFunc, _setRunningGame, addToLibrary: (ic, id) => Add(ic, id), group: SelectedGroup);
                     instanceModelBase = new InstanceModelBase(args);
                     _addInstanceModel(instanceModelBase);
                 }
@@ -143,7 +143,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
             InstanceModelBase? instanceModelBase = null;
             App.Current.Dispatcher.Invoke(() =>
             {
-                var args = new InstanceModelArgs(_appCore, instanceClient, _exportFunc, _setRunningGame, instanceDistribution, addByInstanceClient: (ic) => Add(ic), group: SelectedGroup);
+                var args = new InstanceModelArgs(_appCore, instanceClient, _exportFunc, _setRunningGame, instanceDistribution, addToLibrary: (ic, id) => Add(ic, id), group: SelectedGroup);
                 instanceModelBase = new InstanceModelBase(args);
                 Add(instanceModelBase);
             });
@@ -152,7 +152,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
         }
 
         /// <summary>
-        /// Добавляет сборку используется только при импорте.
+        /// Добавляет сборку используется только в случае наличия ImportData (импорт, копирование).
         /// Следовательно, добавляется всегда единственный экземпляр без существующих копий
         /// </summary>
         public InstanceModelBase? Add(InstanceClient instanceClient, ImportData? importData, [CallerMemberName] string member = "")
@@ -160,7 +160,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
             InstanceModelBase? instanceModelBase = null;
             App.Current.Dispatcher.Invoke(() =>
             {
-                var args = new InstanceModelArgs(_appCore, instanceClient, _exportFunc, _setRunningGame, addByInstanceClient: (ic) => Add(ic), importData: importData, group: SelectedGroup);
+                var args = new InstanceModelArgs(_appCore, instanceClient, _exportFunc, _setRunningGame, addToLibrary: (ic, id) => Add(ic, id), importData: importData, group: SelectedGroup);
                 instanceModelBase = new InstanceModelBase(args);
                 Add(instanceModelBase);
             });

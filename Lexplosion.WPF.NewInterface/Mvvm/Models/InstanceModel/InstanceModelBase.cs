@@ -3,7 +3,6 @@ using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.Logic.Management.Import;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Objects;
-using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Notifications;
 using Lexplosion.WPF.NewInterface.Core.Objects;
@@ -111,7 +110,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         #endregion Events
 
 
-        private readonly Action<InstanceClient> _addToLibraryByInstanceClient;
+        private readonly Action<InstanceClient, ImportData> _addToLibrary;
 
 
         #region Properties
@@ -295,24 +294,24 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         #region Constructors
 
 
-        public InstanceModelBase(InstanceModelArgs instanceModel)
+        public InstanceModelBase(InstanceModelArgs instanceModelArgs)
         {
             Id = Guid.NewGuid();
-            _appCore = instanceModel.AppCore;
+            _appCore = instanceModelArgs.AppCore;
 
-            _instanceClient = instanceModel.InstanceClient;
-            _exportFunc = instanceModel.ExportFunc;
-            InstanceDistribution = instanceModel.InstanceDistribution;
-            ImportData = instanceModel.ImportData;
-            _addToLibraryByInstanceClient = instanceModel.AddToLibraryByInstanceClient;
+            _instanceClient = instanceModelArgs.InstanceClient;
+            _exportFunc = instanceModelArgs.ExportFunc;
+            InstanceDistribution = instanceModelArgs.InstanceDistribution;
+            ImportData = instanceModelArgs.ImportData;
+            _addToLibrary = instanceModelArgs.AddToLibrary;
 
-            OnStateChanged(instanceModel.InstanceClient.State);
-            instanceModel.InstanceClient.StateChanged += OnStateChanged;
+            OnStateChanged(instanceModelArgs.InstanceClient.State);
+            instanceModelArgs.InstanceClient.StateChanged += OnStateChanged;
 
-            if (instanceModel.Group != null)
+            if (instanceModelArgs.Group != null)
             {
-                IsSelectedGroupDefault = instanceModel.Group.IsDefaultGroup;
-                _instancesGroup = instanceModel.Group;
+                IsSelectedGroupDefault = instanceModelArgs.Group.IsDefaultGroup;
+                _instancesGroup = instanceModelArgs.Group;
             }
 
             if (InstanceDistribution != null)
@@ -868,7 +867,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             InstanceDistribution.CancelDownload();
         }
 
-        public void CancelImport()
+        public void CancelByImportData()
         {
             if (ImportData.HasValue)
             {
@@ -894,7 +893,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 
         public void OpenCoping()
         {
-            var viewModel = new InstanceCopyViewModel(_appCore, _clientsManager, this, _addToLibraryByInstanceClient);
+            var viewModel = new InstanceCopyViewModel(_appCore, _clientsManager, this, _addToLibrary);
             _appCore.ModalNavigationStore.Open(viewModel);
         }
 

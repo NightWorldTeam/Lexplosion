@@ -94,12 +94,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
 
 			var importData = new ImportData(dynamicStateHandler.GetHandler, (init) => ImportResultHandler(init, ref importProcess, instanceClient));
 
-            var importFile = new ImportProcess(importData.ImportId, path, importData.CancelImport);
-            importFile.ImportCancelled += OnImportCancelled;
-            ImportProcesses.Add(importFile);
+            importProcess = new ImportProcess(importData.ImportId, path);
+            importProcess.ImportCancelled += OnImportCancelled;
+            ImportProcesses.Add(importProcess);
 
             instanceClient = _clientsManager.Import(path, importData);
-            importFile.TargetInstanceClient = instanceClient;
+            importProcess.TargetInstanceClient = instanceClient;
 
             // Добавляем в библиотеку.
             _addToLibrary(instanceClient, importData);
@@ -184,7 +184,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
             var importData = new ImportData(dynamicStateHandler.GetHandler, (init) => ImportResultHandler(init, ref importProcess, instanceClient));
 
             var uri = new Uri(ImportURL);
-            importProcess = new ImportProcess(importData.ImportId, uri, importData.CancelImport);
+            importProcess = new ImportProcess(importData.ImportId, uri);
             importProcess.ImportCancelled += OnImportCancelled;
             ImportProcesses.Add(importProcess);
             

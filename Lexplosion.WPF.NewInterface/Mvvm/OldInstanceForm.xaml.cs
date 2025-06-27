@@ -152,6 +152,16 @@ namespace Lexplosion.WPF.NewInterface.Controls.OldInstanceForm
         private void CancelDownloadButton_Click(object sender, RoutedEventArgs e)
         {
             PART_DropDownMenu.IsOpen = false;
+            if (_model == null) 
+            {
+                return;
+            }
+
+            if (_model.ImportData != null) 
+            {
+                _model.CancelByImportData();
+            }
+
             _model.CancelDownload();
         }
 
@@ -277,7 +287,7 @@ namespace Lexplosion.WPF.NewInterface.Controls.OldInstanceForm
         {
             if (_model != null) 
             {
-                _model.CancelImport();
+                _model.CancelByImportData();
             }
         }
 
