@@ -352,6 +352,23 @@
                                         <DataTrigger Binding="{Binding Model.Name, Converter={converters:IsStringNullOrEmptyConverter}}" Value="True">
                                             <Setter Property="IsEnabled" Value="False" />
                                         </DataTrigger>
+
+                                        <DataTrigger Binding="{Binding Model.IsGameVersionsAvaliable}" Value="False">
+                                            <Setter Property="IsLoading" Value="True" />
+                                            <Setter Property="Cursor" Value="Arrow" />
+                                            <Setter Property="LoadingText" Value="{DynamicResource RequiredDataLoading}" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Model.ModloaderManager.IsCurrentAvaliable}" Value="False">
+                                            <Setter Property="IsLoading" Value="True" />
+                                            <Setter Property="Cursor" Value="Arrow" />
+                                            <Setter Property="LoadingText" Value="{DynamicResource RequiredDataLoading}" />
+                                        </DataTrigger>
+
+                                        <DataTrigger Binding="{Binding Model.ModloaderManager.IsCurrentExistsOnSelectedVersion}" Value="False">
+                                            <Setter Property="IsEnabled" Value="False" />
+                                            <Setter Property="IsLoading" Value="False" />
+                                            <Setter Property="Content" Value="{DynamicResource FailedToLoadRequiredData}" />
+                                        </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
                             </controls:AdvancedButton.Style>

@@ -994,4 +994,6 @@
     <s:String x:Key="UpdateAvailable">Update Available</s:String>
     <s:String x:Key="MbitPerS">Mbit/s</s:String>
 
+    <s:String x:Key="RequiredDataLoading">Loading the required data</s:String>
+    <s:String x:Key="FailedToLoadRequiredData">Failed to load the required data</s:String>
 </ResourceDictionary>

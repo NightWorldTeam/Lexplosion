@@ -994,4 +994,6 @@
     <s:String x:Key="UpdateAvailable">Доступно обновление</s:String>
     <s:String x:Key="MbitPerS">Мбит/с</s:String>
 
+    <s:String x:Key="RequiredDataLoading">Загрузка необходимых данных</s:String>
+    <s:String x:Key="FailedToLoadRequiredData">Не удалось загрузить необходимые данные</s:String>
 </ResourceDictionary>
