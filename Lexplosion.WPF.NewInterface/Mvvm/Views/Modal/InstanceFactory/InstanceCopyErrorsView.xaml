@@ -45,7 +45,6 @@
                         </Grid.ColumnDefinitions>
 
                         <!--  Selected Page Title  -->
-                        <!--  TODO: 1.0.1.0 Translate  -->
                         <TextBlock
                             Margin="20,0,0,0"
                             VerticalAlignment="Top"

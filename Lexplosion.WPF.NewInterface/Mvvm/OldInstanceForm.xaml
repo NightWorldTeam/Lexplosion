@@ -898,38 +898,60 @@
                                             Template="{StaticResource DropDownButton}"
                                             Text="{DynamicResource Addons}" />
 
-                                        <core:If />
-                                        <!--  Скопировать  -->
-                                        <controls:AdvancedButton
-                                            x:Name="CopyButton"
-                                            Click="CopyButton_Click"
-                                            IconData="{DynamicResource PDCopy}"
-                                            Template="{StaticResource DropDownButton}"
-                                            Text="{DynamicResource Copy}" />
+                                        <core:If Condition="{Binding IsInstalled}">
+                                            <core:If.Style>
+                                                <Style TargetType="{x:Type core:If}">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding State}" Value="{x:Static lexplosion:StateType.Default}">
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </core:If.Style>
 
-                                        <!--  Экспорт  -->
-                                        <controls:AdvancedButton
-                                            x:Name="ExportButton"
-                                            Click="ExportButton_Click"
-                                            IconData="{DynamicResource PDExport}"
-                                            Template="{StaticResource DropDownButton}"
-                                            Text="{DynamicResource Export}" />
+                                            <core:If.True>
+                                                <StackPanel>
+                                                    <!--  Скопировать  -->
+                                                    <controls:AdvancedButton
+                                                        x:Name="CopyButton"
+                                                        Click="CopyButton_Click"
+                                                        IconData="{DynamicResource PDCopy}"
+                                                        Template="{StaticResource DropDownButton}"
+                                                        Text="{DynamicResource Copy}" />
 
+                                                    <!--  Экспорт  -->
+                                                    <controls:AdvancedButton
+                                                        x:Name="ExportButton"
+                                                        Click="ExportButton_Click"
+                                                        IconData="{DynamicResource PDExport}"
+                                                        Template="{StaticResource DropDownButton}"
+                                                        Text="{DynamicResource Export}" />
+                                                </StackPanel>
+                                            </core:If.True>
+                                        </core:If>
 
-                                        <core:If Condition="{Binding IsDownloading}">
-                                            <core:If.False>
-                                                <core:If Condition="{Binding InstanceClient.UpdateAvailable}">
-                                                    <core:If.True>
-                                                        <!--  Обновить  -->
-                                                        <controls:AdvancedButton
-                                                            x:Name="UpdateButton"
-                                                            Click="UpdateButton_Click"
-                                                            IconData="{DynamicResource PDUpdate}"
-                                                            Template="{StaticResource DropDownButton}"
-                                                            Text="{DynamicResource Update}" />
-                                                    </core:If.True>
-                                                </core:If>
-                                            </core:If.False>
+                                        <core:If Condition="{Binding InstanceClient.UpdateAvailable}">
+                                            <core:If.Style>
+                                                <Style TargetType="{x:Type core:If}">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding State}" Value="{x:Static lexplosion:StateType.Default}">
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </core:If.Style>
+
+                                            <core:If.True>
+                                                <!--  Обновить  -->
+                                                <controls:AdvancedButton
+                                                    x:Name="UpdateButton"
+                                                    Click="UpdateButton_Click"
+                                                    IconData="{DynamicResource PDUpdate}"
+                                                    Template="{StaticResource DropDownButton}"
+                                                    Text="{DynamicResource Update}" />
+                                            </core:If.True>
                                         </core:If>
 
                                         <core:If Condition="{Binding IsSelectedGroupDefault}">
