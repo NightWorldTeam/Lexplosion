@@ -656,6 +656,8 @@ namespace Lexplosion.Logic.Management.Instances
 						if (importData.CancelToken.IsCancellationRequested)
 						{
 							result = InstanceInit.IsCancelled;
+							newClient.State = StateType.DownloadInCancellation;
+							DeleteFromLibrary(newClient);
 							return;
 						}
 
@@ -674,6 +676,8 @@ namespace Lexplosion.Logic.Management.Instances
 						if (importData.CancelToken.IsCancellationRequested)
 						{
 							result = InstanceInit.IsCancelled;
+							newClient.State = StateType.DownloadInCancellation;
+							DeleteFromLibrary(newClient);
 							return;
 						}
 
@@ -757,6 +761,8 @@ namespace Lexplosion.Logic.Management.Instances
 						if (importData.CancelToken.IsCancellationRequested)
 						{
 							initRes = InstanceInit.IsCancelled;
+							newClient.State = StateType.DownloadInCancellation;
+							DeleteFromLibrary(newClient);
 							return;
 						}
 
@@ -775,6 +781,8 @@ namespace Lexplosion.Logic.Management.Instances
 						if (importData.CancelToken.IsCancellationRequested)
 						{
 							initRes = InstanceInit.IsCancelled;
+							newClient.State = StateType.DownloadInCancellation;
+							DeleteFromLibrary(newClient);
 							return;
 						}
 
@@ -825,6 +833,8 @@ namespace Lexplosion.Logic.Management.Instances
 						if (importData.CancelToken.IsCancellationRequested)
 						{
 							initRes = InstanceInit.IsCancelled;
+							newClient.State = StateType.DownloadInCancellation;
+							DeleteFromLibrary(newClient);
 							return;
 						}
 
@@ -839,7 +849,7 @@ namespace Lexplosion.Logic.Management.Instances
 							StagesCount = 1,
 							TotalFilesCount = totalAddonsCount,
 							FilesCount = filesCount,
-							Procents = (filesCount / totalAddonsCount) * 100
+							Procents = (int)(((double)filesCount / totalAddonsCount) * 100)
 						});
 					}
 
