@@ -128,8 +128,8 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="{Binding Percentages, StringFormat='{}{0}% Complited'}">
-                                <Run Text="{Binding Percentages, StringFormat='{}{0}% Complited'}" />
+                            <TextBlock Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="{Binding Percentages, Mode=OneWay, StringFormat='{}{0}% Complited'}">
+                                <Run Text="{Binding Percentages, Mode=OneWay, StringFormat='{}{0}% Complited'}" />
                                 <Run Text="{DynamicResource Complited}" />
                             </TextBlock>
 
