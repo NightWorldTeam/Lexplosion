@@ -41,7 +41,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
                 new FrameworkPropertyMetadata(null));
 
         public static readonly DependencyProperty ToCommandProperty
-            = DependencyProperty.Register(nameof(ToCommand), typeof(ICommand), typeof(Paginator), 
+            = DependencyProperty.Register(nameof(ToCommand), typeof(ICommand), typeof(Paginator),
                 new FrameworkPropertyMetadata(null));
 
         public static readonly DependencyProperty PageCountProperty
@@ -50,10 +50,11 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
         public static readonly DependencyProperty CurrentPageIndexProperty
             = DependencyProperty.Register(nameof(CurrentPageIndex), typeof(uint), typeof(Paginator),
-                new FrameworkPropertyMetadata(defaultValue: (uint)0, propertyChangedCallback: OnCurrentPageIndexChanged));
+                new FrameworkPropertyMetadata(defaultValue: (uint)0, propertyChangedCallback: OnCurrentPageIndexChanged, 
+                    flags: FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public static readonly DependencyProperty PageNumberStyleProperty
-            = DependencyProperty.Register(nameof(PageNumberStyle), typeof(Style), typeof(Paginator), 
+            = DependencyProperty.Register(nameof(PageNumberStyle), typeof(Style), typeof(Paginator),
                 new FrameworkPropertyMetadata(null));
 
         public ICommand PrevCommand
@@ -62,19 +63,19 @@ namespace Lexplosion.WPF.NewInterface.Controls
             set => SetValue(PrevCommandProperty, value);
         }
 
-        public ICommand NextCommand 
+        public ICommand NextCommand
         {
             get => (ICommand)GetValue(NextCommandProperty);
             set => SetValue(NextCommandProperty, value);
         }
 
-        public ICommand ToCommand 
+        public ICommand ToCommand
         {
             get => (ICommand)GetValue(ToCommandProperty);
             set => SetValue(ToCommandProperty, value);
         }
 
-        public uint PageCount 
+        public uint PageCount
         {
             get => (uint)GetValue(PageCountProperty);
             set => SetValue(PageCountProperty, value);
@@ -86,7 +87,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
             set => SetValue(CurrentPageIndexProperty, value);
         }
 
-        public Style PageNumberStyle 
+        public Style PageNumberStyle
         {
             set => SetValue(PageNumberStyleProperty, value);
             get => (Style)GetValue(PageNumberStyleProperty);
@@ -119,7 +120,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
             _maxCountTextBlock = GetPartHandler("MaxPage") as TextBlock;
             _numbersPanel = GetPartHandler(PART_NUMBERS_PANEL) as Panel;
             _currentIndexValueTextBlock.Text = (CurrentPageIndex + 1).ToString();
-            _maxCountTextBlock.Text = 1.ToString();
+            _maxCountTextBlock.Text = PageCount.ToString();
 
             _previousPageButton.IsEnabled = CurrentPageIndex > 0;
             _nextPageButton.IsEnabled = true;
@@ -156,7 +157,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
             }
         }
 
-        private void _pageIndex_Click() 
+        private void _pageIndex_Click()
         {
             if (CurrentPageIndex - 1 > 0 && CurrentPageIndex + 1 <= PageCount)
             {
@@ -187,18 +188,18 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
         private static void OnCurrentPageIndexChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is Paginator _this) 
+            if (d is Paginator _this)
             {
-                _this._isFirst = _this.CurrentPageIndex - 1 == uint.MaxValue; 
+                _this._isFirst = _this.CurrentPageIndex - 1 == uint.MaxValue;
                 _this._isLast = _this.CurrentPageIndex + 1 == _this.PageCount;
 
                 if (_this._previousPageButton != null)
                     _this._previousPageButton.IsEnabled = !_this._isFirst;
-                
+
                 if (_this._nextPageButton != null)
                     _this._nextPageButton.IsEnabled = !_this._isLast;
 
-                if (_this._currentIndexValueTextBlock != null) 
+                if (_this._currentIndexValueTextBlock != null)
                 {
                     _this._currentIndexValueTextBlock.Text = ((uint)e.NewValue + 1).ToString();
                 }
@@ -207,9 +208,9 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
         private static void OnPageCountPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is Paginator _this) 
+            if (d is Paginator _this)
             {
-                if (_this._maxCountTextBlock != null) 
+                if (_this._maxCountTextBlock != null)
                 {
                     _this._maxCountTextBlock.Text = e.NewValue.ToString();
                 }

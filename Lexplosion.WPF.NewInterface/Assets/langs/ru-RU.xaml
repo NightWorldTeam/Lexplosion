@@ -996,4 +996,5 @@
 
     <s:String x:Key="RequiredDataLoading">Загрузка необходимых данных</s:String>
     <s:String x:Key="FailedToLoadRequiredData">Не удалось загрузить необходимые данные</s:String>
+    <s:String x:Key="CatalogLoading">Идет загрузка каталога...</s:String>
 </ResourceDictionary>

@@ -361,10 +361,10 @@
                             <controls:Paginator
                                 Grid.Row="2"
                                 Margin="0,0,0,16"
-                                CurrentPageIndex="{Binding Model.CurrentPageIndex, UpdateSourceTrigger=PropertyChanged}"
+                                CurrentPageIndex="{Binding Model.CurrentPageIndex, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                 NextCommand="{Binding NextPageCommand}"
                                 PageChanged="Paginator_PageChanged"
-                                PageCount="{Binding Model.PageCount}"
+                                PageCount="{Binding Model.PageCount, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                 PrevCommand="{Binding PrevPageCommand}"
                                 ToCommand="{Binding ToCurrentPageIndexCommand}"
                                 Visibility="{Binding IsChecked, ElementName=HeadPaginatorSwitch, Converter={converters:BooleanToVisibilityConverter}}" />
@@ -401,10 +401,10 @@
                                         Grid.Row="1"
                                         Grid.Column="1"
                                         Margin="0,16,0,32"
-                                        CurrentPageIndex="{Binding Model.CurrentPageIndex, UpdateSourceTrigger=PropertyChanged}"
+                                        CurrentPageIndex="{Binding Model.CurrentPageIndex, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                         NextCommand="{Binding NextPageCommand}"
                                         PageChanged="Paginator_PageChanged"
-                                        PageCount="{Binding Model.PageCount}"
+                                        PageCount="{Binding Model.PageCount, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                         PrevCommand="{Binding PrevPageCommand}"
                                         ToCommand="{Binding ToCurrentPageIndexCommand}" />
                                 </Grid>
@@ -422,13 +422,14 @@
                 </Border>
             </Grid>
 
+            <!--  TODO: 1.0.1.0 Translate  -->
             <controls:LoadingBoard
                 Margin="0,-40,0,0"
                 Background="Black"
                 BackgroundOpacity="0.3"
                 BlurTarget="{Binding ElementName=Context}"
                 IsActive="{Binding Model.IsLoading}"
-                Placeholder="Идет загрузка каталога Curseforge" />
+                Placeholder="{DynamicResource CatalogLoading}" />
         </Grid>
     </Border>
 </UserControl>
