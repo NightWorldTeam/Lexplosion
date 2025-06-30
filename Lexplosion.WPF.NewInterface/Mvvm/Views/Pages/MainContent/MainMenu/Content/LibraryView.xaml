@@ -874,7 +874,7 @@
                             FontSize="20"
                             Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
                             IsEnabled="False"
-                            Text="{DynamicResource AddonDragAndDropDescription}" />
+                            Text="{DynamicResource LibraryImportDragAndDropDescription}" />
                     </StackPanel>
                 </Grid>
             </Border>

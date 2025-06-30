@@ -638,7 +638,7 @@
                                         <!--  Скачивание раздачи  -->
                                         <DataTrigger Binding="{Binding IsShareDownloading}" Value="True">
                                             <Setter Property="Visibility" Value="Visible" />
-                                            <Setter Property="Value" Value="{Binding InstanceDistribution.Percentages}" />
+                                            <Setter Property="Value" Value="{Binding InstanceDistribution.Percentages, Mode=OneWay}" />
                                             <Setter Property="IsIndeterminate" Value="False" />
                                         </DataTrigger>
 
