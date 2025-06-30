@@ -29,9 +29,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
         public static event Action AllVersionsLoaded;
 
         private readonly MainMenuLayoutViewModel _mainMenuLayoutViewModel;
-		private readonly ClientsManager _clientsManager = Runtime.ClientsManager;
+        private readonly ClientsManager _clientsManager = Runtime.ClientsManager;
 
-		public AppCore AppCore { get; private set; }
+        public AppCore AppCore { get; private set; }
 
 
         #region Properties
@@ -82,7 +82,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
         private GlobalLoadingArgs _globalLoadingArgs;
         public GlobalLoadingArgs GlobalLoadingArgs
         {
-            get => _globalLoadingArgs; set 
+            get => _globalLoadingArgs; set
             {
                 _globalLoadingArgs = value;
                 OnPropertyChanged();
@@ -141,7 +141,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
             // Register Modal Window Contents
             ModalNavigationStore.RegisterAbstractFactory(
                 typeof(InstanceFactoryViewModel),
-                new ModalInstanceCreatorFactory(appCore, Model.LibraryController as LibraryController, Model.InstanceSharesController)
+                new ModalInstanceCreatorFactory(appCore,
+                    Model.StartImport,
+                    Model.GetActiveImports,
+                    Model.LibraryController as LibraryController,
+                    Model.InstanceSharesController)
             );
 
             _mainMenuLayoutViewModel = new MainMenuLayoutViewModel(appCore, Model, _clientsManager);

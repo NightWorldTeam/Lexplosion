@@ -155,7 +155,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
         /// Добавляет сборку используется только в случае наличия ImportData (импорт, копирование).
         /// Следовательно, добавляется всегда единственный экземпляр без существующих копий
         /// </summary>
-        public InstanceModelBase? Add(InstanceClient instanceClient, ImportData? importData, [CallerMemberName] string member = "")
+        public InstanceModelBase? Add(InstanceClient instanceClient, ImportData? importData)
         {
             InstanceModelBase? instanceModelBase = null;
             App.Current.Dispatcher.Invoke(() =>

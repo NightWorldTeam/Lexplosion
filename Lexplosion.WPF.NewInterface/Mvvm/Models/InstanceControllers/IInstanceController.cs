@@ -1,4 +1,5 @@
-﻿using Lexplosion.Logic.Management.Instances;
+﻿using Lexplosion.Logic.Management.Import;
+using Lexplosion.Logic.Management.Instances;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
 {
     public interface ILibraryInstanceController : IInstanceController 
     {
+        public InstanceModelBase? Add(InstanceClient instanceClient, ImportData? importData);
+        /// <summary>
+        /// Удаляет сборку по InstanceClient
+        /// </summary>
+        public void Remove(InstanceClient instanceClient);
         /// <summary>
         /// Выбранная группа
         /// </summary>

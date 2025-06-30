@@ -6,7 +6,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
 {
     public class ImportProcess : ObservableObject
     {
-        public event Action<Guid> ImportCancelled;
+        public event Action<ImportProcess> ImportCancelled;
 
 
         #region Properties
@@ -83,7 +83,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
 
         public void Cancel() 
         {
-            ImportCancelled?.Invoke(Id);
+            ImportCancelled?.Invoke(this);
         }
     }
 }

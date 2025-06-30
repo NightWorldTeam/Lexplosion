@@ -5,7 +5,6 @@ using Lexplosion.WPF.NewInterface.Mvvm.Models;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Args;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Limited;
-using Lexplosion.WPF.NewInterface.Stores;
 using System;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
@@ -46,14 +45,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
         public MainMenuLayoutViewModel(AppCore appCore, MainModel mainModel, ClientsManager clientsManager)
         {
-            Func<ViewModelBase> s = () => this;
-            var ToMainMenuLayoutCommand = new NavigateCommand<ViewModelBase>(appCore.NavigationStore, s);
+            var ToMainMenuLayoutCommand = new NavigateCommand<ViewModelBase>(appCore.NavigationStore, () => this);
 
             // Catalog Section
             _catalogViewModel = new CatalogViewModel(appCore, ToMainMenuLayoutCommand, mainModel.CatalogController);
 
             // Library Section
-            _libraryViewModel = new LibraryViewModel(appCore, clientsManager, ToMainMenuLayoutCommand, mainModel.LibraryController, OpenCatalog);
+            _libraryViewModel = new LibraryViewModel(appCore, mainModel.StartImport, clientsManager, ToMainMenuLayoutCommand, mainModel.LibraryController, OpenCatalog);
             var toLibraryCommand = new NavigateCommand<ViewModelBase>(appCore.NavigationStore, () => _libraryViewModel);
 
             // Multiplayer Section

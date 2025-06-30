@@ -997,4 +997,7 @@
     <s:String x:Key="RequiredDataLoading">Loading the required data</s:String>
     <s:String x:Key="FailedToLoadRequiredData">Failed to load the required data</s:String>
     <s:String x:Key="CatalogLoading">Catalog loading...</s:String>
+
+    <s:String x:Key="ImportResultWrongUrlOrPath">Wrong file path or file URL.</s:String>
+    <s:String x:Key="LibraryImportDragAndDropDescription">Drop mrpack, .zip or .nwpk, file to install it</s:String>
 </ResourceDictionary>

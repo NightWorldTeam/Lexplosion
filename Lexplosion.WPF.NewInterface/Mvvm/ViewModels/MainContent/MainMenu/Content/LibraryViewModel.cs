@@ -3,6 +3,7 @@ using Lexplosion.Logic.Objects;
 using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Objects.TranslatableObjects;
+using Lexplosion.WPF.NewInterface.Mvvm.Models;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
@@ -163,11 +164,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
 
         // TODO: думаю делегат с инстансами это костыль ченить другое надо придумать
-        public LibraryViewModel(AppCore appCore, ClientsManager clientsManager, ICommand toMainMenuLayoutCommand, ILibraryInstanceController instanceController, Action moveToCatalog)
+        public LibraryViewModel(AppCore appCore, ImportStartFunc importStart, ClientsManager clientsManager, ICommand toMainMenuLayoutCommand, ILibraryInstanceController instanceController, Action moveToCatalog)
         {
             _appCore = appCore;
             _clientsManager = clientsManager;
-            Model = new LibraryModel(_appCore, clientsManager, instanceController);
+            Model = new LibraryModel(_appCore, importStart, clientsManager, instanceController);
             _navigationStore = appCore.NavigationStore;
             _toMainMenuLayoutCommand = toMainMenuLayoutCommand;
             _modalNavigationStore = appCore.ModalNavigationStore;

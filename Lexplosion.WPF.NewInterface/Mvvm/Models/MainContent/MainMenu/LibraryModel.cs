@@ -1,8 +1,14 @@
-﻿using Lexplosion.Logic.Management.Instances;
+﻿using Lexplosion.Logic.Management;
+using Lexplosion.Logic.Management.Addons;
+using Lexplosion.Logic.Management.Instances;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers;
+using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Windows.Input;
@@ -18,6 +24,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
 
         #region Properties
 
+
+        public IEnumerable<string> AvailableImportFileExtensions { get; } = ["zip", "nwpk", "mrpack"];
+        public Action<IEnumerable<string>> ImportAction { get; }
 
         public FiltableObservableCollection InstancesCollectionViewSource { get; } = new();
         /// <summary>
@@ -105,7 +114,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
         #region Constructors
 
 
-        public LibraryModel(AppCore appCore, ClientsManager clientsManager, ILibraryInstanceController instanceController, string defaultGroupName = "default")
+        public LibraryModel(AppCore appCore, ImportStartFunc importStart, ClientsManager clientsManager, ILibraryInstanceController instanceController, string defaultGroupName = "default")
         {
             _appCore = appCore;
             _instanceController = instanceController;
@@ -121,6 +130,17 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
             }
 
             OpenInstanceGroup(_defaultGroup);
+
+            ImportAction = (files) =>
+            {
+                Runtime.TaskRun(() =>
+                {
+                    foreach (var file in files) 
+                    {
+                        importStart(file, false, null, null, null);
+                    }
+                });
+            };
         }
 
 
@@ -293,6 +313,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
                 return group.Name.IndexOf(GroupSearchText, System.StringComparison.InvariantCultureIgnoreCase) > -1;
             });
         }
+
 
         #endregion Private Methods
     }

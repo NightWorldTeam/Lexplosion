@@ -997,4 +997,7 @@
     <s:String x:Key="RequiredDataLoading">Загрузка необходимых данных</s:String>
     <s:String x:Key="FailedToLoadRequiredData">Не удалось загрузить необходимые данные</s:String>
     <s:String x:Key="CatalogLoading">Идет загрузка каталога...</s:String>
+
+    <s:String x:Key="ImportResultWrongUrlOrPath">Неверный путь или URL-адрес до импорт-файла.</s:String>
+    <s:String x:Key="LibraryImportDragAndDropDescription">Перенесите mrpack, .zip или .nwpk, что установить его</s:String>
 </ResourceDictionary>
