@@ -518,7 +518,7 @@
     <s:String x:Key="AddonInfoCreationDateTooltip">Date of creation</s:String>
     <s:String x:Key="AddonInfoGameVersionTooltip">Game version</s:String>
 
-    <s:String x:Key="Completed">Завершено</s:String>
+    <s:String x:Key="Completed">Completed</s:String>
 
 
     <!--  region Authorization  -->

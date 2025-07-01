@@ -407,14 +407,27 @@
                                             <Setter Property="Visibility" Value="Collapsed" />
                                         </MultiDataTrigger>
 
+                                        <MultiDataTrigger>
+
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding IsShareDownloading, Mode=OneWay}" Value="True" />
+                                                <Condition Binding="{Binding State, Mode=OneWay}" Value="{x:Static lexplosion:StateType.DownloadClient}" />
+                                            </MultiDataTrigger.Conditions>
+
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                        </MultiDataTrigger>
+
                                         <DataTrigger Binding="{Binding State}" Value="{x:Static lexplosion:StateType.InConnect}">
                                             <Setter Property="Text" Value="{DynamicResource InConnect}" />
+                                            <Setter Property="Visibility" Value="Visible" />
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding State}" Value="{x:Static lexplosion:StateType.InQueue}">
                                             <Setter Property="Text" Value="{DynamicResource InQueue}" />
+                                            <Setter Property="Visibility" Value="Visible" />
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding State}" Value="{x:Static lexplosion:StateType.PostProcessing}">
                                             <Setter Property="Text" Value="{DynamicResource PostProcessing}" />
+                                            <Setter Property="Visibility" Value="Visible" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -447,16 +460,23 @@
                                     <Setter Property="Visibility" Value="Collapsed" />
                                     <Style.Triggers>
 
-                                        <!--  Скачивание Java  -->
-                                        <DataTrigger Binding="{Binding State, UpdateSourceTrigger=PropertyChanged}" Value="{x:Static lexplosion:StateType.DownloadClient}">
+                                        <!--  Downloading  -->
+                                        <MultiDataTrigger>
+
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding IsShareDownloading, Mode=OneWay}" Value="False" />
+                                                <Condition Binding="{Binding State, Mode=OneWay}" Value="{x:Static lexplosion:StateType.DownloadClient}" />
+                                            </MultiDataTrigger.Conditions>
+
                                             <Setter Property="Visibility" Value="Visible" />
-                                        </DataTrigger>
+                                        </MultiDataTrigger>
 
                                         <!--  Import Downloading  -->
                                         <MultiDataTrigger>
 
                                             <MultiDataTrigger.Conditions>
                                                 <Condition Binding="{Binding IsImporting, Mode=OneWay}" Value="True" />
+                                                <Condition Binding="{Binding IsShareDownloading, Mode=OneWay}" Value="False" />
                                                 <Condition Binding="{Binding State, Mode=OneWay}" Value="{x:Static lexplosion:StateType.DownloadClient}" />
                                             </MultiDataTrigger.Conditions>
 
@@ -480,6 +500,24 @@
                                     TextWrapping="WrapWithOverflow">
                                     <Run Text="{DynamicResource Completed}" />
                                     <Run Text="{Binding InstanceDistribution.Percentages, Mode=OneWay, StringFormat='{}{0}%'}" />
+                                    <TextBlock.Style>
+                                        <Style TargetType="{x:Type TextBlock}">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                            <Style.Triggers>
+
+                                                <MultiDataTrigger>
+                                                    <MultiDataTrigger.Conditions>
+                                                        <Condition Binding="{Binding IsShareDownloading, Mode=OneWay}" Value="True" />
+                                                        <Condition Binding="{Binding State, Mode=OneWay}" Value="{x:Static lexplosion:StateType.DownloadClient}" />
+                                                    </MultiDataTrigger.Conditions>
+
+                                                    <MultiDataTrigger.Setters>
+                                                        <Setter Property="Visibility" Value="Visible" />
+                                                    </MultiDataTrigger.Setters>
+                                                </MultiDataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
                                 </TextBlock>
                             </core:If.True>
                         </core:If>
@@ -554,21 +592,27 @@
 
                                     <Style.Triggers>
 
-                                        <!--  Скачивание Java  -->
                                         <DataTrigger Binding="{Binding State}" Value="{x:Static lexplosion:StateType.DownloadJava}">
                                             <Setter Property="Visibility" Value="Visible" />
                                         </DataTrigger>
 
-                                        <!--  Скачивание Клиента  -->
-                                        <DataTrigger Binding="{Binding State}" Value="{x:Static lexplosion:StateType.DownloadClient}">
+                                        <!--  Скачивание  -->
+                                        <MultiDataTrigger>
+
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding IsShareDownloading, Mode=OneWay}" Value="False" />
+                                                <Condition Binding="{Binding State}" Value="{x:Static lexplosion:StateType.DownloadClient}" />
+                                            </MultiDataTrigger.Conditions>
+
                                             <Setter Property="Visibility" Value="Visible" />
-                                        </DataTrigger>
+                                        </MultiDataTrigger>
 
                                         <!--  Import  -->
                                         <MultiDataTrigger>
 
                                             <MultiDataTrigger.Conditions>
                                                 <Condition Binding="{Binding IsImporting, Mode=OneWay}" Value="True" />
+                                                <Condition Binding="{Binding IsShareDownloading, Mode=OneWay}" Value="False" />
                                                 <Condition Binding="{Binding State, Mode=OneWay}" Value="{x:Static lexplosion:StateType.DownloadClient}" />
                                             </MultiDataTrigger.Conditions>
 
@@ -591,7 +635,7 @@
                             <core:If.True>
                                 <TextBlock FontSize="14" Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}">
                                     <Run Text="{Binding InstanceDistribution.Speed, Mode=OneWay}" />
-                                    <Run Text="{DynamicResource Mbit/s}" />
+                                    <Run Text="{DynamicResource MbitPerS}" />
                                 </TextBlock>
                             </core:If.True>
 
@@ -801,8 +845,10 @@
                                                 </DataTrigger>
 
                                                 <DataTrigger Binding="{Binding IsShareDownloading}" Value="True">
-                                                    <Setter TargetName="Icon" Property="extensions:PathExtensions.StringKeyData" Value="Cancel" />
-                                                    <Setter Property="FontSize" Value="20" />
+                                                    <Setter TargetName="Icon" Property="Visibility" Value="Collapsed" />
+                                                    <Setter TargetName="Percentage" Property="Visibility" Value="Collapsed" />
+                                                    <Setter TargetName="Percentage" Property="Text" Value="{Binding InstanceDistribution.Percentages, Mode=OneWay, StringFormat='{}{0}%'}" />
+                                                    <Setter Property="IsEnabled" Value="False" />
                                                 </DataTrigger>
 
                                                 <!--    -->

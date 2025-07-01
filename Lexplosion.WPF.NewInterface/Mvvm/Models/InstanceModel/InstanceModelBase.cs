@@ -874,6 +874,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
                 ImportData.Value.CancelImport();
                 DeletedEvent?.Invoke(this);
             }
+
+            if (InstanceDistribution != null) 
+            {
+                InstanceDistribution.CancelDownload();
+            }
         }
 
 

@@ -67,7 +67,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends
         private int _currentPageIndex = 0;
         public int CurrentPageIndex
         {
-            get => _currentPageIndex; private set
+            get => _currentPageIndex; set
             {
                 _currentPageIndex = value;
                 OnPropertyChanged();
