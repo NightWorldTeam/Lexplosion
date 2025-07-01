@@ -482,6 +482,7 @@ namespace Lexplosion.Logic.Management.Instances
 			{
 				client.State = StateType.DownloadPrepare;
 
+				reciver.DownloadCanceled += () => { client.State = StateType.DownloadInCancellation; };
 				reciver.StateChanged += () =>
 				{
 					var state = reciver.State;

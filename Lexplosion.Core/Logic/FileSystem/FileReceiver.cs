@@ -76,6 +76,7 @@ namespace Lexplosion.Logic.FileSystem
 		public event Action<double> ProcentUpdate;
 		public event Action<double> SpeedUpdate;
 		public event Action StateChanged;
+		public event Action DownloadCanceled;
 
 		private DistributionState _state;
 		public DistributionState State
@@ -128,6 +129,7 @@ namespace Lexplosion.Logic.FileSystem
 			{
 				_dataClient?.Close();
 				_dataClient = null;
+				DownloadCanceled?.Invoke();
 			}
 		}
 
