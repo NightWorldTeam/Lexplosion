@@ -1000,4 +1000,6 @@
 
     <s:String x:Key="ImportResultWrongUrlOrPath">Wrong file path or file URL.</s:String>
     <s:String x:Key="LibraryImportDragAndDropDescription">Drop mrpack, .zip or .nwpk, file to install it</s:String>
+    <s:String x:Key="AccountError">Account error: {0}</s:String>
+    <s:String x:Key="NoLaunchAccountDescription">Failed to launch {0}. No launch account selected, required to launch the instance.</s:String>
 </ResourceDictionary>

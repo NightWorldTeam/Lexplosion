@@ -689,8 +689,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             // если запускамый аккаунт отсутствует, то выкидываем уведомление об этом 
             if (launchAcc == null)
             {
-                // TODO: 1.0.1.0 Translate
-                _appCore.MessageService.Warning("$\"Не удалось запустить {Name}\", \"Запускаемый аккаунт не выбран, он требуется для запуска клиента.\"");
+                _appCore.MessageService.Warning(string.Format("NoLaunchAccountDescription", Name));
                 return;
             }
 
@@ -713,9 +712,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
                         });
                     }
                     else
-                    {
-                        // TODO: 1.0.1.0 Translate
-                        _appCore.MessageService.Error($"Ошибка аккаунта: {authResult}");
+                    {\
+                        _appCore.MessageService.Error(string.Format("AccountError", authResult));
                     }
                 });
                 return;
