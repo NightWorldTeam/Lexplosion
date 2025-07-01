@@ -55,8 +55,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu
         {
 			if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add) 
 			{
-                var lastItem = InstanceList.Items[InstanceList.Items.Count - 1];
-                InstanceList.ScrollIntoView(lastItem);
+                var scrollViewer = InstanceList.FindVisualDescendant<ScrollViewer>();
+                if (scrollViewer != null)
+                {
+                    scrollViewer.ScrollToBottom();
+                }
             }
         }
 
