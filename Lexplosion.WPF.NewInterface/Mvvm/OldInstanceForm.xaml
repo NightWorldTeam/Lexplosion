@@ -644,13 +644,12 @@
                         <ProgressBar
                             Grid.Row="1"
                             Height="5"
-                            VerticalAlignment="Bottom"
-                            Value="{Binding DownloadingData.Percentages}">
+                            VerticalAlignment="Bottom">
                             <ProgressBar.Style>
                                 <Style BasedOn="{StaticResource {x:Type ProgressBar}}" TargetType="{x:Type ProgressBar}">
                                     <Setter Property="Visibility" Value="Collapsed" />
                                     <Setter Property="IsIndeterminate" Value="False" />
-
+                                    <Setter Property="Value" Value="{Binding DownloadingData.Percentages}" />
                                     <Style.Triggers>
 
                                         <!--    -->
@@ -714,16 +713,31 @@
 
                                         <DataTrigger Binding="{Binding State}" Value="{x:Static lexplosion:StateType.InConnect}">
                                             <Setter Property="IsIndeterminate" Value="True" />
+                                            <Setter Property="Visibility" Value="Visible" />
                                         </DataTrigger>
 
                                         <DataTrigger Binding="{Binding State}" Value="{x:Static lexplosion:StateType.InQueue}">
                                             <Setter Property="IsIndeterminate" Value="True" />
+                                            <Setter Property="Visibility" Value="Visible" />
                                         </DataTrigger>
 
                                         <DataTrigger Binding="{Binding State}" Value="{x:Static lexplosion:StateType.PostProcessing}">
                                             <Setter Property="IsIndeterminate" Value="True" />
+                                            <Setter Property="Visibility" Value="Visible" />
                                         </DataTrigger>
 
+                                        <!--  Share Downloading  -->
+                                        <MultiDataTrigger>
+
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding IsShareDownloading, Mode=OneWay}" Value="True" />
+                                                <Condition Binding="{Binding State, Mode=OneWay}" Value="{x:Static lexplosion:StateType.DownloadClient}" />
+                                            </MultiDataTrigger.Conditions>
+
+                                            <Setter Property="Visibility" Value="Visible" />
+                                            <Setter Property="Value" Value="{Binding InstanceDistribution.Percentages, Mode=OneWay}" />
+                                            <Setter Property="IsIndeterminate" Value="False" />
+                                        </MultiDataTrigger>
                                     </Style.Triggers>
 
                                 </Style>
