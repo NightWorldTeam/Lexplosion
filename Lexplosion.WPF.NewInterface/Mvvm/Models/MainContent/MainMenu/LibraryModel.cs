@@ -25,6 +25,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
         #region Properties
 
 
+        internal ILibraryInstanceController InstanceController { get; }
         public IEnumerable<string> AvailableImportFileExtensions { get; } = ["zip", "nwpk", "mrpack"];
         public Action<IEnumerable<string>> ImportAction { get; }
 
@@ -118,6 +119,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
         {
             _appCore = appCore;
             _instanceController = instanceController;
+            InstanceController = instanceController;
 
             if (defaultGroupName == "default")
             {

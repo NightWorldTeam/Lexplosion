@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Threading;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using System.Windows.Media;
+using System.Collections.Specialized;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu
 {
@@ -39,7 +40,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu
 				return;
 			}
 
-			_viewModel.InstanceProfileOpened += (instanceModel) =>
+            (_viewModel.Model.InstanceController.Instances as INotifyCollectionChanged).CollectionChanged += OnInstanceListChanged;
+
+
+            _viewModel.InstanceProfileOpened += (instanceModel) =>
 			{
 				posIndex = GetFirstVisibleItemIndex();
 			};
@@ -47,7 +51,16 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu
 			InstanceModelBase.GlobalDeletedEvent += InstanceModelBase_GlobalDeletedEvent;
 		}
 
-		private void InstanceModelBase_GlobalDeletedEvent(InstanceModelBase obj)
+        private void OnInstanceListChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+			if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add) 
+			{
+                var lastItem = InstanceList.Items[InstanceList.Items.Count - 1];
+                InstanceList.ScrollIntoView(lastItem);
+            }
+        }
+
+        private void InstanceModelBase_GlobalDeletedEvent(InstanceModelBase obj)
 		{
 			//if (_viewModel.Model.InstancesCollectionViewSource.Count == 1)
 			//{
