@@ -33,6 +33,7 @@
                             Padding="4"
                             Background="Transparent"
                             CornerRadius="5"
+                            PreviewMouseLeftButtonDown="border_PreviewMouseLeftButtonDown"
                             MouseUp="OnFilterPanelSourceClicked">
                             <Grid>
                                 <Viewbox Width="24" Height="20">
