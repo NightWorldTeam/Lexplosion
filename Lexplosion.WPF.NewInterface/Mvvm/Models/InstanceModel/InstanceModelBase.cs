@@ -712,7 +712,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
                         });
                     }
                     else
-                    {\
+                    {
                         _appCore.MessageService.Error(string.Format("AccountError", authResult));
                     }
                 });

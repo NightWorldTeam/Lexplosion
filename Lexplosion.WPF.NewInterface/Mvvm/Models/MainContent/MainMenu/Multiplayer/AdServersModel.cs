@@ -63,7 +63,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
                 _appCore.ModalNavigationStore.Open(new AskServerInstanceInstallingViewModel(_appCore, (isAutoConnectToServer) =>
                 {
                     var ic = _clientsManager.CreateClient(server, isAutoConnectToServer);
-                    _selectInstanceForServerArgs.AddNewInstanceInLibrary(ic);
                     _appCore.MessageService.Success("InstanceForServerAddedToLibrary", true, server.Name);
                 }));
             }
