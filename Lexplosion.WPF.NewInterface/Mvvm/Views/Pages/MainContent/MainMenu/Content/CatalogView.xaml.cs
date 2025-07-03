@@ -38,18 +38,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu
             );
         }
 
-        private void OnFilterPanelSourceClicked(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            FiltersButton.IsChecked = false;
-            //PropertyChanged?.Invoke(FiltersButton, new PropertyChangedEventArgs(nameof(FiltersButton.IsChecked)));
-        }
-
         private void ContainerPage_ScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
 
         }
 
-		private void border_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+		private void OnFilterPanelSourceClicked(object sender, System.Windows.Input.MouseButtonEventArgs e)
 		{
 			ThreadPool.QueueUserWorkItem((object _) =>
 			{
