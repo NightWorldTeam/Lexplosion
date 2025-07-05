@@ -55,12 +55,12 @@ namespace Lexplosion.Logic.Management.Instances
 			return CreateClient(CreateSourceFactory(type), name, type, gameVersion, modloader, isNwClient, logoPath: logoPath, modloaderVersion: modloaderVersion, optifineVersion: optifineVersion, sodium: sodium);
 		}
 
-		private InstanceClient CreateClient(IInstanceSource source, string name, InstanceSource type, MinecraftVersion gameVersion, ClientType modloader, bool isNwClient, string logoPath = null, string modloaderVersion = null, string optifineVersion = null, bool sodium = false, string externalId = null)
+		private InstanceClient CreateClient(IInstanceSource source, string name, InstanceSource type, MinecraftVersion gameVersion, ClientType modloader, bool isNwClient, string logoPath = null, string modloaderVersion = null, string optifineVersion = null, bool sodium = false, string externalId = null, string profileVersion = null)
 		{
 			var localId = GenerateInstanceId(name);
 			var client = new InstanceClient(name, source, _services, SaveInstalledInstancesList, gameVersion, externalId, localId);
 
-			client.DeployLocally(modloader, isNwClient, logoPath, modloaderVersion, optifineVersion, sodium);
+			client.DeployLocally(modloader, isNwClient, logoPath, modloaderVersion, optifineVersion, sodium, profileVersion);
 
 			AddToDefaultGroup(client);
 			_installedInstances[client.LocalId] = client;
@@ -91,7 +91,7 @@ namespace Lexplosion.Logic.Management.Instances
 
 			bool isNwClient = GlobalData.GeneralSettings.NwClientByDefault == true;
 
-			var client = CreateClient(source, name, server.InstanceSource, minecraftVersion, ClientType.Vanilla, isNwClient, externalId: externalId);
+			var client = CreateClient(source, name, server.InstanceSource, minecraftVersion, ClientType.Vanilla, isNwClient, externalId: externalId, profileVersion: modpackVersion);
 			client.UpdateInfo(server, autoLogin);
 
 			return client;

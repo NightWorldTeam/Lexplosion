@@ -73,6 +73,8 @@ namespace Lexplosion
 				File.WriteAllText(LaunсherSettings.LauncherDataPath + "/crash-report_" + DateTime.Now.ToString("dd.MM.yyyy-h.mm.ss") + ".log", exception.ToString());
 			};
 
+			ServicePointManager.DefaultConnectionLimit = 20;
+
 			var withDirectory = new WithDirectory();
 			var dataFilesManager = new DataFilesManager(withDirectory);
 			var toServer = new ToServer();

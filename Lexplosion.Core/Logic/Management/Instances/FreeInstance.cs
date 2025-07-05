@@ -76,7 +76,7 @@ namespace Lexplosion.Logic.Management.Instances
 			var images = new List<byte[]>();
 			if (manifest?.Images != null && manifest.Images.Count > 0)
 			{
-				var perfomer = new TasksPerfomer(3, manifest.Images.Count);
+				var perfomer = new TasksPerfomer(15, manifest.Images.Count);
 				foreach (var item in manifest.Images)
 				{
 					perfomer.ExecuteTask(delegate ()

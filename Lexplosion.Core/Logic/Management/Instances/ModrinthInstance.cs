@@ -65,7 +65,7 @@ namespace Lexplosion.Logic.Management.Instances
 			var images = new List<byte[]>();
 			if (data.Images != null && data.Images.Count > 0)
 			{
-				var perfomer = new TasksPerfomer(3, data.Images.Count);
+				var perfomer = new TasksPerfomer(15, data.Images.Count);
 				foreach (var item in data.Images)
 				{
 					if (item == null || !item.ContainsKey("url")) continue;

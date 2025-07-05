@@ -119,7 +119,7 @@ namespace Lexplosion.Logic.Management.Addons
 			Runtime.DebugWrite("Start calculate files hashes");
 
 			var locker = new object();
-			TasksPerfomer perfomer = new TasksPerfomer(3, files.Count);
+			TasksPerfomer perfomer = new TasksPerfomer(7, files.Count);
 			foreach (string file in files)
 			{
 				perfomer.ExecuteTask(() =>

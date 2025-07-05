@@ -326,7 +326,7 @@ namespace Lexplosion.Logic.Management.Instances
 			GameVersion = gameVersion;
 		}
 
-		internal void DeployLocally(ClientType modloader, bool isNwClient, string logoPath = null, string modloaderVersion = null, string optifineVersion = null, bool sodium = false)
+		internal void DeployLocally(ClientType modloader, bool isNwClient, string logoPath = null, string modloaderVersion = null, string optifineVersion = null, bool sodium = false, string profileVersion = null)
 		{
 			CreatedLocally = true;
 			Author = Account.AnyFuckingLogin;
@@ -362,7 +362,7 @@ namespace Lexplosion.Logic.Management.Instances
 				installer = AdditionalInstallerType.Optifine;
 			}
 
-			CreateFileStruct(modloader, modloaderVersion, isNwClient, installer, installerVer);
+			CreateFileStruct(modloader, modloaderVersion, isNwClient, installer, installerVer, profileVersion);
 			SaveAssets();
 
 			if (sodium && (modloader == ClientType.Fabric || modloader == ClientType.Quilt))
@@ -423,7 +423,7 @@ namespace Lexplosion.Logic.Management.Instances
 			}
 
 			Settings settings = GetSettings();
-			settings.IsAutoUpdate = true;
+			settings.IsAutoUpdate = string.IsNullOrWhiteSpace(modpackVersion);
 			SaveSettings(settings);
 		}
 
@@ -844,7 +844,8 @@ namespace Lexplosion.Logic.Management.Instances
 		/// <param name="modloaderVersion">Версия модлоадера</param>
 		/// <param name="additionalInstaller">Оптифайн. Если не нужен, то null</param>
 		/// <param name="additionalInstallerVer">Версия оптифайна. null если не нужен</param>
-		private void CreateFileStruct(ClientType modloader, string modloaderVersion, bool isNwClient, AdditionalInstallerType? additionalInstaller = null, string additionalInstallerVer = null)
+		/// <param name="profileVersion">Версия сборки. Null если сборка локальная, или нужно поставить последнюю версию</param>
+		private void CreateFileStruct(ClientType modloader, string modloaderVersion, bool isNwClient, AdditionalInstallerType? additionalInstaller = null, string additionalInstallerVer = null, string profileVersion = null)
 		{
 			// TODO: тут надо трай. И если будет исключение надо передавать ошибку
 
@@ -874,7 +875,7 @@ namespace Lexplosion.Logic.Management.Instances
 
 			if (_instanceSource != null)
 			{
-				InstancePlatformData instanceData = _instanceSource.CreateInstancePlatformData(_externalId, _localId, null);
+				InstancePlatformData instanceData = _instanceSource.CreateInstancePlatformData(_externalId, _localId, profileVersion);
 				if (instanceData != null)
 				{
 					_services.DataFilesService.SavePlatfromData(_localId, instanceData);
