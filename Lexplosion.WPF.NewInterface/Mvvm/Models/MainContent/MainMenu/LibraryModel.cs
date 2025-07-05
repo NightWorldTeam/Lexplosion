@@ -1,6 +1,9 @@
-﻿using Lexplosion.WPF.NewInterface.Core;
-using Lexplosion.WPF.NewInterface.Core.Objects;
+﻿using Lexplosion.Logic.Management;
+using Lexplosion.Logic.Management.Addons;
+using Lexplosion.Logic.Management.Instances;
+using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers;
+using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using System;
@@ -8,39 +11,102 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
-using System.Windows.Data;
+using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
 {
     public sealed class LibraryModel : ViewModelBase
     {
-        private readonly IInstanceController _instanceController;
-        private readonly ObservableCollection<InstanceGroup> _groups = [];
+        private readonly ILibraryInstanceController _instanceController;
+        private readonly AppCore _appCore;
+        private readonly InstancesGroup _defaultGroup;
 
 
         #region Properties
 
 
-        public IReadOnlyCollection<InstanceModelBase> InstanceList { get => _instanceController.Instances; }
-        public FiltableObservableCollection InstancesCollectionViewSource { get; } = new();
-        public IReadOnlyCollection<InstanceGroup> Groups { get => _groups; }
-        public InstanceGroup SelectedGroup { get; private set; } = null;
-        public bool HasSelectedGroup { get => SelectedGroup != null; }
-        public bool IsEmpty { get => _instanceController.Instances.Count == 0; }
+        internal ILibraryInstanceController InstanceController { get; }
+        public IEnumerable<string> AvailableImportFileExtensions { get; } = ["zip", "nwpk", "mrpack"];
+        public Action<IEnumerable<string>> ImportAction { get; }
 
+        public FiltableObservableCollection InstancesCollectionViewSource { get; } = new();
+        /// <summary>
+        /// Группы сборок.
+        /// </summary>
+        public FiltableObservableCollection Groups { get; } = new();
+        /// <summary>
+        /// Группа пустая?
+        /// </summary>
+        public bool IsEmpty { get; private set; }
+        /// <summary>
+        /// Выбранная группа.
+        /// </summary>
+        public InstancesGroup SelectedGroup { get => _instanceController.SelectedGroup; }
+        /// <summary>
+        /// Класс отвечающий за логику панели фильтрации.
+        /// </summary>
+        public LibraryFilterPanel FilterPanel { get; private set; }
+        /// <summary>
+        /// Открыто ли меню со списком групп
+        /// </summary>
+        private bool _isGroupDrawerOpen;
+        public bool IsGroupDrawerOpen
+        {
+            get => _isGroupDrawerOpen; set
+            {
+                _isGroupDrawerOpen = value;
+                IsGroupDrawerEnabled = !value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _isGroupDrawerEnabled = true;
+        public bool IsGroupDrawerEnabled
+        {
+            get => _isGroupDrawerEnabled; set
+            {
+                _isGroupDrawerEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _isModalOpened = false;
+        public bool IsModalOpened
+        {
+            get => _isModalOpened; set
+            {
+                _isModalOpened = value;
+                OnPropertyChanged();
+            }
+        }
 
         private string _searchText;
-        public string SearchText 
+        /// <summary>
+        /// Текст поиска для сборки
+        /// </summary>
+        public string SearchText
         {
-            get => _searchText; set 
+            get => _searchText; set
             {
                 _searchText = value;
                 OnFilterChanged();
             }
         }
 
+        private string _groupSearchText;
+        /// <summary>
+        /// Текст поиска для групп сборок
+        /// </summary>
+        public string GroupSearchText
+        {
+            get => _groupSearchText; set
+            {
+                _groupSearchText = value;
+                OnGroupsFilterChanged();
+            }
+        }
 
-        public LibraryFilterPanel FilterPanel { get; }
+        public bool IsSelectedGroupDefault { get => SelectedGroup == null ? true : SelectedGroup.IsDefaultGroup; }
 
 
         #endregion Properties
@@ -49,26 +115,37 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
         #region Constructors
 
 
-        public LibraryModel(IInstanceController instanceController)
+        public LibraryModel(AppCore appCore, ImportStartFunc importStart, ClientsManager clientsManager, ILibraryInstanceController instanceController, string defaultGroupName = "default")
         {
+            _appCore = appCore;
             _instanceController = instanceController;
+            InstanceController = instanceController;
 
-            FilterPanel = new(instanceController);
-
-            FilterPanel.FilterChanged += OnFilterChanged;
-
-            InstancesCollectionViewSource.Source = instanceController.Instances;
-
-            if (_instanceController.Instances is INotifyCollectionChanged notifyChangeCollection) 
+            if (defaultGroupName == "default")
             {
-                notifyChangeCollection.CollectionChanged += OnInstancesCollectionChanged;
+                // Предполагаем, что стандартная группа всегда первая.
+                _defaultGroup = _instanceController.InstancesGroups.First();
             }
+            else
+            {
+                _defaultGroup = _instanceController.InstancesGroups.FirstOrDefault(ig => ig.Name == defaultGroupName);
+            }
+
+            OpenInstanceGroup(_defaultGroup);
+
+            ImportAction = (files) =>
+            {
+                Runtime.TaskRun(() =>
+                {
+                    foreach (var file in files) 
+                    {
+                        importStart(file, false, null, null, null);
+                    }
+                });
+            };
         }
 
-        private void OnInstancesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            OnPropertyChanged(nameof(IsEmpty));
-        }
+
 
 
         #endregion Constructors
@@ -77,26 +154,84 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
         #region Public Methods
 
 
-        public void SelectGroup(InstanceGroup instanceGroup) 
+        public void OpenInstanceGroup(InstancesGroup instancesGroup)
         {
-            SelectedGroup = instanceGroup;
-            OnPropertyChanged(nameof(SelectedGroup));
-            OnPropertyChanged(nameof(HasSelectedGroup));
-        
-            if (SelectedGroup != null) 
+            if (FilterPanel != null)
             {
-                InstancesCollectionViewSource.Source = instanceGroup.Instances;
-            } 
+                FilterPanel.FilterChanged -= OnFilterChanged;
+            }
+
+            if (SelectedGroup != null && SelectedGroup.Clients is INotifyCollectionChanged oldNotifyChangeCollection)
+            {
+                oldNotifyChangeCollection.CollectionChanged -= OnInstancesCollectionChanged;
+            }
+
+            _instanceController.SelectGroup(instancesGroup);
+
+            FilterPanel = new(_instanceController);
+            FilterPanel.FilterChanged += OnFilterChanged;
+
+
+            if (instancesGroup.Clients is INotifyCollectionChanged notifyChangeCollection)
+            {
+                notifyChangeCollection.CollectionChanged += OnInstancesCollectionChanged;
+            }
+
+            OnPropertyChanged(nameof(SelectedGroup));
+
+            Groups.Source = _instanceController.InstancesGroups;
+            IsEmpty = _instanceController.Instances.Count == 0;
+            OnPropertyChanged(nameof(IsEmpty));
+            OnPropertyChanged(nameof(IsSelectedGroupDefault));
+            InstancesCollectionViewSource.Source = _instanceController.Instances;
         }
 
+        /// <summary>
+        /// Открывает/закрывает меню со списком групп
+        /// </summary>
+        public void ChangeOpenStateGroupDrawer(bool state)
+        {
+            IsGroupDrawerOpen = state;
+            OnPropertyChanged(nameof(IsGroupDrawerOpen));
+        }
+
+        ///
+        public void AddGroup(InstancesGroup instancesGroup)
+        {
+            _instanceController.AddGroup(instancesGroup);
+        }
+
+        public void RemoveGroup(InstancesGroup instancesGroup)
+        {
+            if (SelectedGroup == instancesGroup)
+            {
+                _instanceController.SelectGroup(_defaultGroup);
+            }
+            _instanceController.RemoveGroup(instancesGroup);
+        }
 
         #endregion Public Methods
 
 
         #region Private Methods
 
+        private void OnInstancesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Remove || e.Action == NotifyCollectionChangedAction.Reset)
+            {
+                if (e.OldItems.Count == _instanceController.Instances.Count)
+                    IsEmpty = true;
+            }
+            else if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                if (_instanceController.Instances.Count == 0)
+                    IsEmpty = false;
+            }
 
-        private void OnFilterChanged() 
+            OnPropertyChanged(nameof(IsEmpty));
+        }
+
+        private void OnFilterChanged()
         {
             InstancesCollectionViewSource.Filter = (i =>
             {
@@ -106,7 +241,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
 
 
                 // check versions
-                if (FilterPanel.SelectedVersion == null) 
+                if (FilterPanel.SelectedVersion == null)
                 {
                     FilterPanel.SelectedVersion = FilterPanel.Versions[0];
                     FilterPanel.SelectedIndex = 0;
@@ -117,7 +252,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
                 {
                     selectedVersionRes = true;
                 }
-                else 
+                else
                 {
                     return false;
                 }
@@ -129,7 +264,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
                 {
                     selectedSourceRes = true;
                 }
-                else 
+                else
                 {
                     return false;
                 }
@@ -138,9 +273,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
 
                 // skip first element because its version.
                 var categories = instanceModelBase.BaseData.Categories.Skip(0);
-                
+
                 var selectedCategoriesRes = false;
-                if (FilterPanel.SelectedCategories.Count == 0) 
+                if (FilterPanel.SelectedCategories.Count == 0)
                 {
                     return selectedSourceRes && selectedVersionRes && searchBoxRes;
                 }
@@ -148,12 +283,36 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
                 {
                     selectedCategoriesRes = categories.Union(FilterPanel.SelectedCategories).ToArray().Length == categories.Count();
                 }
-                else 
+                else
                 {
                     selectedCategoriesRes = categories.Intersect(FilterPanel.SelectedCategories).Any();
                 }
 
                 return selectedCategoriesRes && selectedSourceRes && selectedVersionRes && searchBoxRes;
+            });
+        }
+
+
+        private void OnGroupsFilterChanged()
+        {
+            Groups.Filter = (i =>
+            {
+                var group = i as InstancesGroup;
+
+                if (string.IsNullOrEmpty(GroupSearchText))
+                {
+                    return true;
+                }
+
+                if (group.Name == "All")
+                {
+                    var defaultGroupCurrentLangName = _appCore.Resources("AllInstanceGroupName") as string;
+                    return defaultGroupCurrentLangName.IndexOf(GroupSearchText, System.StringComparison.InvariantCultureIgnoreCase) > -1;
+                }
+
+
+
+                return group.Name.IndexOf(GroupSearchText, System.StringComparison.InvariantCultureIgnoreCase) > -1;
             });
         }
 

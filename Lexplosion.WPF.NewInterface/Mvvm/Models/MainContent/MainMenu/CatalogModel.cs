@@ -170,6 +170,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent
         /// <returns>Tuple[IEnumerable InstanceClient & InstanceClient count </returns>
         private CatalogResult<InstanceClient> GetInstanceClients(string searchInput, int scrollTo, InstanceSource source, IEnumerable<IProjectCategory> selectedCategories, int sortBy, MinecraftVersion gameVersion, bool isPaginatorInvoke = false)
         {
+            if (gameVersion == null)
+                return new CatalogResult<InstanceClient>();
+
             ISearchParams searchParams = null;
 
             switch(source) 

@@ -9,7 +9,7 @@
         == TRANSLATE
     -->
 
-    <!-- Languages -->
+    <!--  Languages  -->
     <s:String x:Key="en-US">Англійська</s:String>
     <s:String x:Key="ru-RU">Російська</s:String>
     <s:String x:Key="uk-UA">Українська</s:String>
@@ -649,12 +649,12 @@
     <s:String x:Key="ImportUrlWrongPathNotification">Неправильний формат посилання</s:String>
 
     <s:String x:Key="ImportResultSuccessful">Збірку {0} успішно імпортовано і вона чекає вас у бібліотеці</s:String>
-    <s:String x:Key="ImportResultZipFileError">Помилка відкриття zip-файлу</s:String>
+    <s:String x:Key="ImportResultZipFileOpenError">Помилка відкриття zip-файлу</s:String>
     <s:String x:Key="ImportResultGameVersionError">Помилка версії гри</s:String>
     <s:String x:Key="ImportResultJavaDownloadError">Проблема із завантаженням Java</s:String>
     <s:String x:Key="ImportResultIsOfflineMode">Офлайн-режим</s:String>
-    <s:String x:Key="ImportResultMovingFilesError">Помилка під час переміщення файлів</s:String>
-    <s:String x:Key="ImportResultDownloadError">Помилка завантаження</s:String>
+    <s:String x:Key="ImportResultMoveFilesError">Помилка під час переміщення файлів</s:String>
+    <s:String x:Key="ImportResultDownloadFilesError">Помилка завантаження</s:String>
     <s:String x:Key="ImportResultDirectoryCreateError">Помилка створення директорії</s:String>
     <s:String x:Key="ImportResultWrongUrl">URL-адреса для імпорту файлу неправильна. Наразі ми підтримуємо лише Яндекс Диск і Google Диск.</s:String>
     <s:String x:Key="ImportResultManifestError">Помилка маніфест-файлу.</s:String>

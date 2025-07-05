@@ -11,7 +11,6 @@ using Lexplosion.WPF.NewInterface.Mvvm.Models;
 using System;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.ModalFactory;
-using Lexplosion.Logic;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Tools;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
@@ -21,7 +20,6 @@ using Lexplosion.WPF.NewInterface.TrayMenu;
 using System.Windows.Input;
 using Lexplosion.Logic.Management.Accounts;
 using System.Diagnostics;
-using System.Windows.Controls;
 using Lexplosion.WPF.NewInterface.Mvvm.Views.Windows;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
@@ -31,9 +29,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
         public static event Action AllVersionsLoaded;
 
         private readonly MainMenuLayoutViewModel _mainMenuLayoutViewModel;
-		private readonly ClientsManager _clientsManager = Runtime.ClientsManager;
+        private readonly ClientsManager _clientsManager = Runtime.ClientsManager;
 
-		public AppCore AppCore { get; private set; }
+        public AppCore AppCore { get; private set; }
 
 
         #region Properties
@@ -84,7 +82,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
         private GlobalLoadingArgs _globalLoadingArgs;
         public GlobalLoadingArgs GlobalLoadingArgs
         {
-            get => _globalLoadingArgs; set 
+            get => _globalLoadingArgs; set
             {
                 _globalLoadingArgs = value;
                 OnPropertyChanged();
@@ -129,7 +127,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
                 GlobalLoadingArgs = val;
             };
 
-            Model = new MainModel(appCore);
+            Model = new MainModel(appCore, _clientsManager);
 
             SubscribeToOpenModpackEvent();
 
@@ -143,10 +141,14 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
             // Register Modal Window Contents
             ModalNavigationStore.RegisterAbstractFactory(
                 typeof(InstanceFactoryViewModel),
-                new ModalInstanceCreatorFactory(appCore, Model.LibraryController as LibraryController, Model.InstanceSharesController)
+                new ModalInstanceCreatorFactory(appCore,
+                    Model.StartImport,
+                    Model.GetActiveImports,
+                    Model.LibraryController as LibraryController,
+                    Model.InstanceSharesController)
             );
 
-            _mainMenuLayoutViewModel = new MainMenuLayoutViewModel(appCore, NavigationStore, ModalNavigationStore, Model);
+            _mainMenuLayoutViewModel = new MainMenuLayoutViewModel(appCore, Model, _clientsManager);
             ToMainMenu = new NavigateCommand<ViewModelBase>(NavigationStore, () => _mainMenuLayoutViewModel);
 
             InitTrayComponents();
@@ -154,6 +156,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
             // Обновляем элементы меню, так как ContextMenu находится в другом визуальном дереве
             // и через DynamicResource обновление просто не сделать
             RuntimeApp.TrayContextMenuOpened += InitTrayComponents;
+
+            //ModalNavigationStore.Open(new ErrorViewerViewModel(["test/test.org not found", "test-pc/test-pc.org not found"]));
         }
 
 
@@ -225,7 +229,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
 
                         if (viewModel == null)
                         {
-                            viewModel = new InstanceModelBase(AppCore, instanceClient, Model.Export, Model.SetRunningGame);
+                            var args = new InstanceModelArgs(AppCore, instanceClient, Model.Export, Model.SetRunningGame);
+                            viewModel = new InstanceModelBase(args);
                         }
                     }
                     _mainMenuLayoutViewModel.ToInstanceProfile(viewModel);

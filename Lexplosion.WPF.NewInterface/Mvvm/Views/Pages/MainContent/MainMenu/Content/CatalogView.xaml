@@ -32,7 +32,8 @@
                             Height="32"
                             Padding="4"
                             Background="Transparent"
-                            CornerRadius="5">
+                            CornerRadius="5"
+                            PreviewMouseLeftButtonDown="OnFilterPanelSourceClicked">
                             <Grid>
                                 <Viewbox Width="24" Height="20">
                                     <Path
@@ -58,6 +59,7 @@
         <DataTemplate DataType="{x:Type instanceModel:InstanceModelBase}">
             <oldinstanceform:OldInstanceForm
                 Margin="0,0,0,16"
+                InCatalog="True"
                 LogoButtonCommand="{Binding DataContext.OpenInstanceProfileMenu, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
                 LogoButtonCommandParameter="{Binding}"
                 OpenAddonsPageCommand="{Binding DataContext.OpenAddonsPageCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
@@ -71,12 +73,9 @@
 
                 <ScrollViewer
                     x:Name="ContainerPage_ScrollViewer"
-                    extensions:ScrollViewerExtensions.ChildItemsUpdated="{Binding IsLoaded}"
-                    extensions:ScrollViewerExtensions.OnScrollCommand="{Binding OnScrollCommand}"
                     IsTabStop="False"
                     KeyboardNavigation.IsTabStop="False"
                     KeyboardNavigation.TabNavigation="None">
-                    <!--  ScrollChanged="ContainerPage_ScrollChanged"  -->
                     <Grid Focusable="True">
 
                         <Grid.RowDefinitions>
@@ -161,7 +160,7 @@
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
 
-                                    <!--  Source  -->
+                                    <!--  Sources  -->
 
                                     <Border BorderBrush="{DynamicResource SeparateSolidColorBrush}" BorderThickness="0,0,1,1">
                                         <Grid Margin="8">
@@ -362,10 +361,10 @@
                             <controls:Paginator
                                 Grid.Row="2"
                                 Margin="0,0,0,16"
-                                CurrentPageIndex="{Binding Model.CurrentPageIndex, UpdateSourceTrigger=PropertyChanged}"
+                                CurrentPageIndex="{Binding Model.CurrentPageIndex, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                 NextCommand="{Binding NextPageCommand}"
                                 PageChanged="Paginator_PageChanged"
-                                PageCount="{Binding Model.PageCount}"
+                                PageCount="{Binding Model.PageCount, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                 PrevCommand="{Binding PrevPageCommand}"
                                 ToCommand="{Binding ToCurrentPageIndexCommand}"
                                 Visibility="{Binding IsChecked, ElementName=HeadPaginatorSwitch, Converter={converters:BooleanToVisibilityConverter}}" />
@@ -387,7 +386,10 @@
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
 
-                                    <ItemsControl ItemsSource="{Binding Model.Instances}">
+                                    <ItemsControl
+                                        x:Name="InstanceList"
+                                        ItemsSource="{Binding Model.Instances}"
+                                        ScrollViewer.CanContentScroll="True">
                                         <ItemsControl.ItemsPanel>
                                             <ItemsPanelTemplate>
                                                 <virtualization:VirtualizingWrapPanel Margin="0,0,0,0" IsItemsHost="True" />
@@ -399,10 +401,10 @@
                                         Grid.Row="1"
                                         Grid.Column="1"
                                         Margin="0,16,0,32"
-                                        CurrentPageIndex="{Binding Model.CurrentPageIndex, UpdateSourceTrigger=PropertyChanged}"
+                                        CurrentPageIndex="{Binding Model.CurrentPageIndex, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                         NextCommand="{Binding NextPageCommand}"
                                         PageChanged="Paginator_PageChanged"
-                                        PageCount="{Binding Model.PageCount}"
+                                        PageCount="{Binding Model.PageCount, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                         PrevCommand="{Binding PrevPageCommand}"
                                         ToCommand="{Binding ToCurrentPageIndexCommand}" />
                                 </Grid>
@@ -420,13 +422,14 @@
                 </Border>
             </Grid>
 
+            <!--  TODO: 1.0.1.0 Translate  -->
             <controls:LoadingBoard
                 Margin="0,-40,0,0"
                 Background="Black"
                 BackgroundOpacity="0.3"
                 BlurTarget="{Binding ElementName=Context}"
                 IsActive="{Binding Model.IsLoading}"
-                Placeholder="Идет загрузка каталога Curseforge" />
+                Placeholder="{DynamicResource CatalogLoading}" />
         </Grid>
     </Border>
 </UserControl>

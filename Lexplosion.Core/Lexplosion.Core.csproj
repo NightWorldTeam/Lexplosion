@@ -33,7 +33,7 @@
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>5</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums.cs" />
+    <Compile Include="Extensions\ObservableCollectionExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="Logic\FileSystem\DownloadUrlHandler.cs" />
@@ -82,6 +83,8 @@
     <Compile Include="Logic\Management\Addons\IAddonProjectInfo.cs" />
     <Compile Include="Logic\Management\Addons\InstaceAddonsSynchronizer.cs" />
     <Compile Include="Logic\Management\Addons\InstanceAddon.cs" />
+    <Compile Include="Logic\Management\ClientInitResult.cs" />
+    <Compile Include="Logic\Management\ClientRunResult.cs" />
     <Compile Include="Logic\Management\Import\ImportData.cs" />
     <Compile Include="Logic\Management\Import\Importers\CurseforgeImportManager.cs" />
     <Compile Include="Logic\Management\Import\Importers\ImportExecutor.cs" />
@@ -118,6 +121,7 @@
     <Compile Include="Logic\Management\Instances\FreeInstance.cs" />
     <Compile Include="Logic\Management\Instances\InstancesGroup.cs" />
     <Compile Include="Logic\Management\MinecraftVersion.cs" />
+    <Compile Include="Logic\Management\RunCommandBuilder.cs" />
     <Compile Include="Logic\Management\Sources\CurseforgeSource.cs" />
     <Compile Include="Logic\Management\Sources\FreeSource.cs" />
     <Compile Include="Logic\Management\Sources\IInstanceSource.cs" />
@@ -148,6 +152,7 @@
     <Compile Include="Logic\Network\SMP\SmpClient_Objects.cs" />
     <Compile Include="Logic\Network\SMP\SmpReceiveService.cs" />
     <Compile Include="Logic\Network\Web\ProxyHandler.cs" />
+    <Compile Include="Logic\Network\Web\RedirectToMirrorHandler.cs" />
     <Compile Include="Logic\Objects\CatalogResult.cs" />
     <Compile Include="Logic\Objects\FreeSource.cs" />
     <Compile Include="Logic\Objects\ISearchParams.cs" />
@@ -239,6 +244,6 @@
     </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>powershell Compress-Archive "$(TargetPath)" "$(SolutionDir)DLL\Lexplosion.Core.zip" -Force</PostBuildEvent>
+    <PostBuildEvent>powershell -Command "Compress-Archive -Path \"$(TargetPath)\" -DestinationPath \"$(SolutionDir)DLL\Lexplosion.Core.zip\" -Force"</PostBuildEvent>
   </PropertyGroup>
 </Project>

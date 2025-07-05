@@ -53,11 +53,11 @@ namespace Lexplosion.Logic.Management.Import.Importers
 
 		protected abstract string DetermineAthor(TManifest manifest);
 
-		public virtual ImportResult Prepeare(ProgressHandlerCallback progressHandler, out PrepeareResult result)
+		public virtual InstanceInit Prepeare(ProgressHandler progressHandler, out PrepeareResult result)
 		{
 			result = new PrepeareResult();
 
-			progressHandler(StageType.Client, new ProgressHandlerArguments()
+			progressHandler(StateType.DownloadClient, new ProgressHandlerArguments()
 			{
 				StagesCount = 2,
 				Stage = 1,
@@ -66,7 +66,7 @@ namespace Lexplosion.Logic.Management.Import.Importers
 
 			installer.MainFileDownload += (int pr) =>
 			{
-				progressHandler(StageType.Client, new ProgressHandlerArguments()
+				progressHandler(StateType.DownloadClient, new ProgressHandlerArguments()
 				{
 					StagesCount = 2,
 					Stage = 1,
@@ -80,13 +80,13 @@ namespace Lexplosion.Logic.Management.Import.Importers
 
 			if (_cancelToken.IsCancellationRequested)
 			{
-				return ImportResult.Canceled;
+				return InstanceInit.IsCancelled;
 			}
 
 			if (!ManifestIsValid(manifest))
 			{
 				Runtime.DebugWrite("Manifest is invalid");
-				return ImportResult.ManifestError;
+				return InstanceInit.ManifestError;
 			}
 
 			DetermineGameType(manifest, out ClientType gameType, out string modLoaderVersion);
@@ -107,10 +107,10 @@ namespace Lexplosion.Logic.Management.Import.Importers
 			result.Summary = DetermineSummary(manifest);
 			result.Author = DetermineAthor(manifest);
 
-			return ImportResult.Successful;
+			return InstanceInit.Successful;
 		}
 
-		public virtual InstanceInit Import(ProgressHandlerCallback progressHandler, out IReadOnlyCollection<string> errors)
+		public virtual InstanceInit Import(ProgressHandler progressHandler, out IReadOnlyCollection<string> errors)
 		{
 			errors = null;
 			if (versionManifest == null)
@@ -120,7 +120,7 @@ namespace Lexplosion.Logic.Management.Import.Importers
 
 			installer.AddonsDownload += (int totalDataCount, int nowDataCount) =>
 			{
-				progressHandler(StageType.Client, new ProgressHandlerArguments()
+				progressHandler(StateType.DownloadClient, new ProgressHandlerArguments()
 				{
 					TotalFilesCount = totalDataCount,
 					FilesCount = nowDataCount,

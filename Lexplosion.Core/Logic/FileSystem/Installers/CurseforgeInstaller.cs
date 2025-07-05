@@ -171,7 +171,7 @@ namespace Lexplosion.Logic.FileSystem.Installers
 
 					TasksPerfomer perfomer = null;
 					if (filesCount > 0)
-						perfomer = new TasksPerfomer(3, filesCount);
+						perfomer = new TasksPerfomer(7, filesCount);
 
 					var noDownloaded = new ConcurrentBag<InstanceManifest.FileData>();
 					int downloadedCount = 0;

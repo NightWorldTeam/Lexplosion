@@ -3,8 +3,10 @@ using Lexplosion.Logic.Management.Instances;
 using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Modal;
+using Lexplosion.WPF.NewInterface.Mvvm.Models;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer;
 using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Windows.Input;
 
@@ -35,7 +37,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer
         /// </summary>
         public ICommand CancelImportCommand
         {
-            get => RelayCommand.GetCommand<ImportProcess>(ref _cancelImportCommand, Model.CancelImport);
+            get => RelayCommand.GetCommand<ImportProcess>(ref _cancelImportCommand, Model.OnImportCancelled);
         }
 
 
@@ -55,9 +57,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal.InstanceTransfer
         #region Contructors
 
 
-        public InstanceImportViewModel(AppCore appCore, Action<InstanceClient, ImportData?> addToLibrary, Action<InstanceClient> removeFromLibrary)
+        public InstanceImportViewModel(AppCore appCore, ImportStartFunc importStart, Func<IEnumerable<ImportProcess>> getActiveImports, Action<InstanceClient, ImportData?> addToLibrary, Action<InstanceClient> removeFromLibrary)
         {
-            Model = new InstanceImportModel(appCore, addToLibrary, removeFromLibrary);
+            Model = new InstanceImportModel(appCore, importStart, getActiveImports, addToLibrary, removeFromLibrary);
             ActionCommandExecutedEvent += Action;
         }
 

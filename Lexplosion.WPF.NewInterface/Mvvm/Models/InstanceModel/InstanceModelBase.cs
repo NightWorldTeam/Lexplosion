@@ -6,126 +6,28 @@ using Lexplosion.Logic.Objects;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Notifications;
 using Lexplosion.WPF.NewInterface.Core.Objects;
-using Lexplosion.WPF.NewInterface.Core.ViewModel;
 using Lexplosion.WPF.NewInterface.Extensions;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Modal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 {
-    public sealed class DownloadingData : ObservableObject
+    public class InstanceModelBase : ViewModelBase, IEquatable<InstanceClient>
     {
-        /// <summary>
-        /// Текущий этап
-        /// </summary>
-        private StageType _stage;
-        public StageType Stage
-        {
-            get => _stage; set
-            {
-                _stage = value;
-                OnPropertyChanged();
-            }
-        }
-        /// <summary>
-        /// Всего этапов
-        /// </summary>
-        private int _totalStages;
-        public int TotalStages
-        {
-            get => _totalStages; set
-            {
-                _totalStages = value;
-                OnPropertyChanged();
-            }
-        }
-        /// <summary>
-        /// Активный этап
-        /// </summary>
-        private int _currentStage;
-        public int CurrentStage
-        {
-            get => _currentStage; set
-            {
-                _currentStage = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(StageFormatted));
-            }
-        }
-        /// <summary>
-        /// Всего файлов
-        /// </summary>
-        private int _totalFiles;
-        public int TotalFiles
-        {
-            get => _totalFiles; set
-            {
-                _totalFiles = value;
-                OnPropertyChanged();
-            }
-        }
-        /// <summary>
-        /// Текущие количество скаченных файлов
-        /// </summary>
-        private int _filesCounts;
-        public int FilesCounts
-        {
-            get => _filesCounts; set
-            {
-                _filesCounts = value;
-                OnPropertyChanged();
-            }
-        }
-        /// <summary>
-        /// Процент скачивания
-        /// </summary>
-        private int _persentages;
-        public int Percentages
-        {
-            get => _persentages; set
-            {
-                _persentages = value;
-                OnPropertyChanged();
-            }
-        }
+        public readonly Guid Id;
+        private readonly InstanceClient _instanceClient;
+        private readonly ClientsManager _clientsManager = Runtime.ClientsManager;
+        private readonly Action<InstanceClient> _exportFunc;
+        private readonly Action<InstanceModelBase> _setRunningGame;
+        private InstancesGroup _instancesGroup;
 
-
-        public string StageFormatted { get; }
-
-        public DownloadingData()
-        {
-            StageFormatted = $"{FilesCounts}/{TotalFiles}";
-            OnPropertyChanged(string.Empty);
-        }
-    }
-
-    /// <summary>
-    /// Перечисление состояний формы.
-    /// </summary>
-    public enum InstanceState
-    {
-        Default,
-        Downloading,
-        DownloadCanceling,
-        Launching,
-        Preparing,
-        Running
-    }
-
-	public class InstanceModelBase : ViewModelBase, IEquatable<InstanceClient>
-	{
-		private readonly InstanceClient _instanceClient;
-		private readonly ClientsManager _clientsManager = Runtime.ClientsManager;
-		private readonly Action<InstanceClient> _exportFunc;
-		private readonly Action<InstanceModelBase> _setRunningGame;
-
-		private readonly AppCore _appCore;
-
+        private readonly AppCore _appCore;
 
         private Action _openAddonPage;
+
+        private StateType _instanceState;
 
 
         #region Events
@@ -139,7 +41,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         /// Эвент для контроллеров для удаление из библиотеки.
         /// </summary>
         public static event Action<InstanceModelBase> GlobalDeletedEvent;
-
+        /// <summary>
+        /// Эвент для контроллеров для удаление из группы.
+        /// </summary>
+        public static event Action<InstanceModelBase> GlobalGroupRemovedEvent;
 
         public event Action StateChanged;
         public event Action DataChanged;
@@ -167,7 +72,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         /// <summary>
         /// Информация о прогресс было изменено.
         /// </summary>
-        public event Action<StageType, ProgressHandlerArguments> DownloadProgressChanged;
+        public event Action<StateType, ProgressHandlerArguments> DownloadProgressChanged;
         /// <summary>
         /// Процесс скачивания клиента игры был завершен.
         /// </summary>
@@ -205,19 +110,23 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         #endregion Events
 
 
+        private readonly Action<InstanceClient, ImportData> _addToLibrary;
+
+
         #region Properties
 
 
-        private InstanceState _state;
-        public InstanceState State
+        private StateType _state;
+        public StateType State
         {
             get => _state; private set
             {
                 _state = value;
-                StateChanged?.Invoke();
                 OnPropertyChanged();
             }
         }
+
+        public InstanceClient InstanceClient { get => _instanceClient; }
 
         public string LocalId { get => _instanceClient.LocalId; }
         public string WebsiteUrl { get => _instanceClient.WebsiteUrl; }
@@ -250,7 +159,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             }
         }
 
-        
+
         #endregion Visual Data
 
 
@@ -281,10 +190,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             }
         }
 
-		public bool IsInstalled { get => _instanceClient.IsInstalled; }
-		public bool InLibrary { get => _instanceClient.CreatedLocally || _instanceClient.IsFictitious; }
-		public string DirectoryPath { get => _instanceClient.GetDirectoryPath(); }
-		public bool HasAvailableUpdate { get => _instanceClient.UpdateAvailable && _instanceClient.IsInstalled; }
+        public bool IsInstalled { get => _instanceClient.IsInstalled; }
+        public bool InLibrary { get => _instanceClient.CreatedLocally || _instanceClient.IsFictitious; }
+        public string DirectoryPath { get => _instanceClient.GetDirectoryPath(); }
 
         public bool IsImporting
         {
@@ -296,11 +204,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
 
         public BaseInstanceData BaseData
         {
-            get
-            {
-                var s = _instanceClient.GetBaseData;
-                return s;
-            }
+            get => _instanceClient.GetBaseData;
         }
 
         private InstanceData _addionalData;
@@ -346,6 +250,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             get => _isDownloading; set
             {
                 _isDownloading = value;
+                OnPropertyChanged(nameof(AnyProcessActive));
                 OnPropertyChanged();
             }
         }
@@ -376,36 +281,52 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         public ImportData? ImportData { get; }
 
 
+        public bool IsSelectedGroupDefault { get; private set; }
+        /// <summary>
+        /// Количество доступных групп сборок больше 1
+        /// </summary>
+        public bool AvailableGroupsForAdding { get => _clientsManager.GetExistsGroups().Count > 1; }
+
+
         #endregion Properties
 
 
         #region Constructors
 
 
-        public InstanceModelBase(AppCore appCore, InstanceClient instanceClient, Action<InstanceClient> exportFunc, Action<InstanceModelBase> setRunningGame, InstanceDistribution instanceDistribution = null, ImportData? importData = null)
+        public InstanceModelBase(InstanceModelArgs instanceModelArgs)
         {
-            _appCore = appCore;
+            Id = Guid.NewGuid();
+            _appCore = instanceModelArgs.AppCore;
 
-            _instanceClient = instanceClient;
-            _exportFunc = exportFunc;
-            InstanceDistribution = instanceDistribution;
-            ImportData = importData;
+            _instanceClient = instanceModelArgs.InstanceClient;
+            _exportFunc = instanceModelArgs.ExportFunc;
+            InstanceDistribution = instanceModelArgs.InstanceDistribution;
+            ImportData = instanceModelArgs.ImportData;
+            _addToLibrary = instanceModelArgs.AddToLibrary;
 
-            if (instanceDistribution != null)
+            OnStateChanged(instanceModelArgs.InstanceClient.State);
+            instanceModelArgs.InstanceClient.StateChanged += OnStateChanged;
+
+            if (instanceModelArgs.Group != null)
             {
-                instanceDistribution.DownloadFinished += OnShareDownloadFinished;
+                IsSelectedGroupDefault = instanceModelArgs.Group.IsDefaultGroup;
+                _instancesGroup = instanceModelArgs.Group;
+            }
+
+            if (InstanceDistribution != null)
+            {
+                InstanceDistribution.DownloadFinished += OnShareDownloadFinished;
                 IsShareDownloading = true;
             }
 
             _instanceClient.NameChanged += OnNameChanged;
             _instanceClient.LogoChanged += OnLogoChanged;
-            _instanceClient.StateChanged += OnStateClientChanged;
-            _instanceClient.ProgressHandler += OnDownloadProgressChanged;
-            _instanceClient.DownloadStarted += OnDownloadStarted;
-            _instanceClient.Initialized += OnDownloadCompleted;
-            _instanceClient.LaunchComplited += OnLaunchComplited;
+            _instanceClient.DownloadHandler += OnDownloadProgressChanged;
             _instanceClient.BuildFinished += OnBuildFinished;
-            _instanceClient.GameExited += OnGameExited;
+
+            _clientsManager.GroupAdded += OnInstancesGroupAdded;
+            _clientsManager.GroupDeleted += OnInstancesGroupDeleted;
 
             Logo = _instanceClient.Logo;
             TotalDownloads = _instanceClient.DownloadCounts.LongToString();
@@ -416,390 +337,55 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             Tags = tags;
         }
 
-        private void OnGameExited(string instanceId)
+        private void OnStateChanged(StateType stageType)
         {
-            IsLaunched = false;
-            State = InstanceState.Default;
-        }
-
-        /// <summary>
-        /// Скачивание раздачи завершено
-        /// </summary>
-        private void OnShareDownloadFinished(ImportResult obj)
-        {
-            IsShareDownloading = false;
-        }
-
-        private void OnSharingStateChanged()
-        {
-            OnPropertyChanged(nameof(IsShareDownloading));
-        }
-
-        private void OnDownloadStarted()
-        {
-            IsDownloading = true;
-
-            DownloadStarted?.Invoke();
-            DataChanged?.Invoke();
-        }
-
-        private void OnLaunchComplited(string instanceId, bool isSuccessful)
-        {
-            if (isSuccessful)
+            Runtime.DebugWrite($"Id: {Id} | IC: {_instanceClient.GetHashCode()} | prev: {State} | now: {stageType}", color: ConsoleColor.Magenta);
+            State = stageType;
+            switch (stageType)
             {
-                IsLaunched = true;
-                SetState(InstanceState.Running);
-
-                _appCore.MessageService.Success("InstanceLaunchedSuccessfulNotification", true, _instanceClient.Name);
-            }
-            else
-            {
-                SetState(InstanceState.Default);
-                _appCore.MessageService.Error("InstanceLaunchedUnsuccessfulNotification", true, _instanceClient.Name);
-                IsLaunched = false;
-            }
-
-            IsLaunching = false;
-            GameLaunchCompleted?.Invoke(isSuccessful);
-            DataChanged?.Invoke();
-        }
-
-
-        #endregion Constructors
-
-
-        #region Public Methods
-
-
-        #region Download
-
-
-        /// <summary>
-        /// Запустить скачивание сборки. 
-        /// Перед выполнением отрабатывает эвент DownloadStartedEvent.
-        /// При успешном выполнение отрабатывает эвент DownloadCompleted.
-        /// </summary>
-        /// <param name="version">Версия сборки сборки (not minecraft)</param>
-        public void Download(string? version = null)
-        {
-            if (!InLibrary)
-            {
-                AddToLibrary();
-            }
-
-            IsDownloading = true;
-
-            Lexplosion.Runtime.TaskRun(() =>
-            {
-                _instanceClient.Update(version);
-            });
-            DownloadStarted?.Invoke();
-
-            OnPropertyChanged(nameof(AnyProcessActive));
-            DataChanged?.Invoke();
-        }
-
-		/// <summary>
-		/// Добавить сборку в библиотеку.
-		/// </summary>
-		public void AddToLibrary()
-		{
-			_clientsManager.AddToLibrary(_instanceClient);
-			GlobalAddedToLibrary?.Invoke(this);
-			AddedToLibraryEvent?.Invoke(this);
-			DataChanged?.Invoke();
-		}
-
-        /// <summary>
-        /// Отменить текущие скачивание
-        /// </summary>
-        public void CancelDownload()
-        {
-            IsDownloading = false;
-            Runtime.TaskRun(() => _instanceClient.CancelDownload());
-
-            if (State != InstanceState.DownloadCanceling)
-                SetState(InstanceState.DownloadCanceling);
-
-            DownloadCancelling = true;
-            OnPropertyChanged(nameof(IsDownloading));
-
-            DownloadCanceled?.Invoke();
-            DataChanged?.Invoke();
-        }
-
-        /// <summary>
-        /// Обновить сборку.
-        /// </summary>
-        public void Update()
-        {
-            Runtime.TaskRun(() =>
-            {
-                _instanceClient.Update();
-                DataChanged?.Invoke();
-            });
-        }
-
-
-        #endregion Download
-
-
-        #region  Launch
-
-
-        /// <summary>
-        /// Запустить сборку. При успешном выполнении отрабатывает эвент Launched.
-        /// </summary>
-        public void Run()
-        {
-            // TODO: !!!IMPORTANT сделать бесконечный progressbar и вместо описания фразу "Идет авторизация запускаемого аккаунта..."
-            var launchAcc = Account.LaunchAccount;
-
-            // если запускамый аккаунт отсутствует, то выкидываем уведомление об этом 
-            if (launchAcc == null)
-            {
-                _appCore.MessageService.Warning("$\"Не удалось запустить {Name}\", \"Запускаемый аккаунт не выбран, он требуется для запуска клиента.\"");
-                return;
-            }
-
-            if (!launchAcc.IsAuthed)
-            {
-                Runtime.TaskRun(() =>
-                {
-                    var authResult = launchAcc.Auth();
-
-                    if (authResult == AuthCode.Successfully)
-                    {
-                        App.Current.Dispatcher.Invoke(() =>
-                        {
-                            if (!IsLaunching)
-                            {
-                                IsLaunching = true;
-                                Runtime.TaskRun(() => _instanceClient.Run());
-                            }
-                            GameLaunched?.Invoke();
-                        });
-                    }
-                    else
-                    {
-                        _appCore.MessageService.Error($"Ошибка аккаунта: {authResult}");
-                    }
-                });
-                return;
-            }
-
-            if (!IsLaunching)
-            {
-                IsLaunching = true;
-                Runtime.TaskRun(() => _instanceClient.Run());
-            }
-            GameLaunched?.Invoke();
-        }
-
-        /// <summary>
-        /// Закрыть сборку. При успешном выполнении отрабатывает эвент Closed.
-        /// </summary>
-        public void Close()
-        {
-            _instanceClient.StopGame();
-
-            IsLaunching = false;
-            IsLaunched = false;
-            IsDownloading = false;
-
-            GameClosed?.Invoke();
-            DataChanged?.Invoke();
-            State = InstanceState.Default;
-        }
-
-        #endregion Launch
-
-
-        public bool CheckInstanceClient(InstanceClient instanceClient)
-        {
-            return _instanceClient == instanceClient;
-        }
-
-        /// <summary>
-        /// Открыть папку с игрой.
-        /// </summary>
-        public void OpenFolder()
-        {
-            System.Diagnostics.Process.Start("explorer", _instanceClient.GetDirectoryPath());
-        }
-
-        /// <summary>
-        /// Открыть веб-страницу для сборки, если она есть.
-        /// </summary>
-        public void GoToWebsite()
-        {
-            try
-            {
-                System.Diagnostics.Process.Start(_instanceClient.WebsiteUrl);
-            }
-            catch
-            {
-
-            }
-        }
-
-        /// <summary>
-        /// Открыть модальное окна для экспорта сборки.
-        /// </summary>
-        public void Export()
-        {
-            _exportFunc(_instanceClient);
-        }
-
-		/// <summary>
-		/// Удалять сборку.
-		/// Если сборка только добавлена в библиотеку (не установлена), то сборка будет удалена из библиотеки.
-		/// Если сборка установлена, то она будет удалена полностью.
-		/// </summary>
-		public void Delete()
-		{
-			if (_clientsManager.LibrarySize == 1) return;
-
-			_appCore.ModalNavigationStore.Open(new ConfirmActionViewModel(
-					_appCore.Resources("DeletingInstance") as string,
-					string.Format(_appCore.Resources("DeletingInstanceDescription") as string, Name),
-					_appCore.Resources("YesIWantDeleteInstance") as string,
-					(obj) =>
-					{
-						// TODO: ПОДПИСАТЬСЯ НА эвент и удалять через него.
-						GlobalDeletedEvent?.Invoke(this);
-						_clientsManager.DeleteFromLibrary(_instanceClient);
-						DeletedEvent?.Invoke(this);
-					}));
-		}
-
-        public Logic.Settings Settings
-        {
-            get => _instanceClient.GetSettings(); set
-            {
-                _instanceClient.SaveSettings(value);
-            }
-        }
-
-        /// <summary>
-        /// Задает новые данные о сборке
-        /// </summary>
-        /// <param name="baseInstance">Новые данные о сборке</param>
-        /// <param name="logoPath">Путь до лого</param>
-        public void ChangeOverviewParameters(BaseInstanceData baseInstance, string logoPath = null)
-        {
-            _instanceClient.ChangeParameters(baseInstance, logoPath);
-            DataChanged?.Invoke();
-            LogoChanged?.Invoke();
-        }
-
-        /// <summary>
-        /// Загружает данные о сборке которые необходимы только профилю
-        /// </summary>
-        public void PrepareDataForProfile()
-        {
-            Runtime.TaskRun(() =>
-            {
-                PageData = _instanceClient.GetFullInfo();
-                PageData.TotalDownloads.ToString();
-                OnPropertyChanged(nameof(TotalDownloads));
-            });
-        }
-
-
-        public bool Equals(InstanceClient other)
-        {
-            if (other == null || other == null)
-            {
-                return false;
-            }
-
-            return _instanceClient == other;
-        }
-
-
-        /// <summary>
-        /// Добавить сервер в игру
-        /// </summary>
-        public void AddServer(MinecraftServerInstance server, bool isAutoLogin)
-        {
-            _instanceClient.AddGameServer(server, isAutoLogin);
-        }
-
-        /// <summary>
-        /// Получить все версии сборки
-        /// </summary>
-        public IEnumerable<InstanceVersion> GetInstanceVersions()
-        {
-            return _instanceClient.GetVersions();
-        }
-
-        public void CancelShareInstanceDownloading()
-        {
-            InstanceDistribution.CancelDownload();
-        }
-
-        public void CancelImport()
-        {
-            if (ImportData.HasValue) 
-            {
-                ImportData.Value.CancelImport();
-                DeletedEvent?.Invoke(this);
-            }
-        }
-
-        #endregion Public Methods
-
-
-        #region Private Methods
-
-
-        #region Handlers
-
-
-
-
-
-        #endregion Handlers
-
-
-        private void OnDownloadProgressChanged(StageType stageType, ProgressHandlerArguments progressHandlerArguments)
-        {
-            // Данный код вызывается при скачивании и запуске.
-            // Поэтому мы будет при StageType.Prepare изменять состояние клиента на Preparing; 
-            // Иначе устанавливаем состояние клиента Downloading;
-            if (stageType == StageType.Prepare && State != InstanceState.Preparing)
-            {
-                SetState(InstanceState.Preparing);
-                IsPrepare = true;
-            }
-            else if (stageType != StageType.Prepare)
-            {
-                SetState(State = InstanceState.Downloading);
-                if (IsPrepare)
-                {
+                case StateType.Default:
+                    IsShareDownloading = false;
                     IsPrepare = false;
-                }
+                    IsDownloading = false;
+                    IsLaunching = false;
+                    IsLaunched = false;
+                    DownloadCancelling = false;
+                    OnPropertyChanged(_instanceClient, nameof(_instanceClient.IsInstalled));
+                    break;
+                case StateType.DownloadPrepare:
+                    IsPrepare = true;
+                    IsDownloading = true;
+                    break;
+                case StateType.DownloadClient:
+                    IsPrepare = false;
+                    IsDownloading = true;
+                    break;
+                case StateType.DownloadJava:
+                    IsDownloading = true;
+                    break;
+                case StateType.DownloadInCancellation:
+                    {
+                        IsDownloading = false;
+                        DownloadCancelling = true;
+
+                        DownloadCanceled?.Invoke();
+                        DataChanged?.Invoke();
+                    }
+                    break;
+                case StateType.Launching:
+                    IsDownloading = false;
+                    break;
+                case StateType.GameRunning:
+                    IsDownloading = false;
+                    IsLaunching = true;
+                    break;
+                default:
+                    break;
             }
-
-            if (DownloadingData == null)
-            {
-                DownloadingData = new();
-                OnPropertyChanged(nameof(DownloadingData));
-            }
-
-            DownloadingData.Stage = stageType;
-            DownloadingData.CurrentStage = progressHandlerArguments.Stage;
-            DownloadingData.TotalStages = progressHandlerArguments.StagesCount;
-            DownloadingData.FilesCounts = progressHandlerArguments.FilesCount;
-            DownloadingData.TotalFiles = progressHandlerArguments.TotalFilesCount;
-            DownloadingData.Percentages = progressHandlerArguments.Procents;
-
-            DownloadProgressChanged?.Invoke(stageType, progressHandlerArguments);
-            DataChanged?.Invoke();
+            OnPropertyChanged(string.Empty);
         }
 
-        /// <summary>
+        /// <summary>Add commentMore actions
         /// Завершнение скачивание файлов
         /// </summary>
         /// <param name="init"></param>
@@ -807,6 +393,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
         /// <param name="isRun"></param>
         private void OnDownloadCompleted(InstanceInit init, IEnumerable<string> errors, bool isRun)
         {
+            Runtime.DebugWrite(Id, color: ConsoleColor.Red);
             IsDownloading = false;
 
             if (IsPrepare)
@@ -814,13 +401,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
                 IsPrepare = false;
             }
 
-            if (isRun && init == InstanceInit.Successful)
+            if (!isRun && init != InstanceInit.Successful)
             {
-                SetState(InstanceState.Launching);
-            }
-            else
-            {
-                SetState(InstanceState.Default);
                 IsLaunched = false;
                 IsLaunching = false;
             }
@@ -831,7 +413,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             DownloadComplited?.Invoke(init, errors, isRun);
             DataChanged?.Invoke();
 
-            if (ImportData.HasValue) 
+            if (ImportData.HasValue)
             {
                 return;
             }
@@ -875,7 +457,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
                 case InstanceInit.ServerError:
                     {
                         var title = _appCore.Resources("ServerError") as string;
-                        var notifyContent = _appCore.Resources("FailedGetDataFromServer") as string;
+                        var notifyContent = _appCore.Resources("FailedToGetDataFromServer") as string;
 
                         _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent, type: NotificationType.Error));
                     }
@@ -949,19 +531,405 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             }
         }
 
-        private void OnLaunchStarted()
+        private void RunGame()
         {
-            IsLaunching = true;
+            var isDownloaded = false;
+
+            Action<StateType> stateHandler = (state)
+                => isDownloaded = state == StateType.DownloadJava || state == StateType.DownloadClient;
+
+            Runtime.TaskRun(() =>
+            {
+                _instanceClient.StateChanged += stateHandler;
+                var result = _instanceClient.Run();
+                _instanceClient.StateChanged -= stateHandler;
+                _appCore.UIThread(() =>
+                {
+                    if (isDownloaded)
+                    {
+                        OnDownloadCompleted(result.InitResult.State, result.InitResult.DownloadErrors, true);
+                    }
+
+                    OnLaunchComplited(result.RunResult);
+                });
+            });
+        }
+
+        private void OnLaunchComplited(bool isSuccessful)
+        {
+            IsDownloading = false;
+            IsPrepare = false;
+
+            if (isSuccessful)
+            {
+                IsLaunched = true;
+                _appCore.MessageService.Success("InstanceLaunchedSuccessfulNotification", true, _instanceClient.Name);
+            }
+            else
+            {
+                _appCore.MessageService.Error("InstanceLaunchedUnsuccessfulNotification", true, _instanceClient.Name);
+                IsLaunched = false;
+            }
+
+            IsLaunching = false;
+            GameLaunchCompleted?.Invoke(isSuccessful);
             DataChanged?.Invoke();
         }
 
-        private void OnGameClosed()
+        public void UpdateInstancesGroup(InstancesGroup group)
         {
-            IsLaunching = false;
-            IsLaunched = false;
+            _instancesGroup = group;
+            IsSelectedGroupDefault = group.IsDefaultGroup;
+        }
+
+        private void OnInstancesGroupDeleted(InstancesGroup group)
+        {
+            OnPropertyChanged(nameof(AvailableGroupsForAdding));
+        }
+
+        private void OnInstancesGroupAdded(InstancesGroup group)
+        {
+            OnPropertyChanged(nameof(AvailableGroupsForAdding));
+        }
+
+        /// <summary>
+        /// Скачивание раздачи завершено
+        /// </summary>
+        private void OnShareDownloadFinished(InstanceInit obj)
+        {
+            IsShareDownloading = false;
+        }
+
+        private void OnSharingStateChanged()
+        {
+            OnPropertyChanged(nameof(IsShareDownloading));
+        }
+
+
+        #endregion Constructors
+
+
+        #region Public Methods
+
+
+        #region Download
+
+
+        /// <summary>
+        /// Запустить скачивание сборки. 
+        /// Перед выполнением отрабатывает эвент DownloadStartedEvent.
+        /// При успешном выполнение отрабатывает эвент DownloadCompleted.
+        /// </summary>
+        /// <param name="version">Версия сборки сборки (not minecraft)</param>
+        public void Download(string? version = null)
+        {
+            if (!InLibrary)
+            {
+                AddToLibrary();
+            }
+
+            IsDownloading = true;
+
+            Update(version);
+
+            OnPropertyChanged(nameof(AnyProcessActive));
+            DownloadStarted?.Invoke();
+            DataChanged?.Invoke();
+        }
+
+        /// <summary>
+        /// Добавить сборку в библиотеку.
+        /// </summary>
+        public void AddToLibrary()
+        {
+            _clientsManager.AddToLibrary(_instanceClient);
+            DataChanged?.Invoke();
+        }
+
+        /// <summary>
+        /// Отменить текущие скачивание
+        /// </summary>
+        public void CancelDownload()
+        {
+            Runtime.TaskRun(() => _instanceClient.CancelDownload());
+        }
+
+        /// <summary>
+        /// Обновить сборку.
+        /// </summary>
+        public void Update(string version = null)
+        {
+            IsPrepare = true;
+            Runtime.TaskRun(() =>
+            {
+                var result = _instanceClient.Update(version);
+                _appCore.UIThread(() =>
+                {
+                    OnDownloadCompleted(result.State, result.DownloadErrors, false);
+                    DataChanged?.Invoke();
+                });
+            });
+        }
+
+
+        #endregion Download
+
+
+        #region  Launch
+
+
+        /// <summary>
+        /// Запустить сборку. При успешном выполнении отрабатывает эвент Launched.
+        /// </summary>
+        public void Run()
+        {
+            // TODO: !!!IMPORTANT сделать бесконечный progressbar и вместо описания фразу "Идет авторизация запускаемого аккаунта..."
+            var launchAcc = Account.LaunchAccount;
+
+            // если запускамый аккаунт отсутствует, то выкидываем уведомление об этом 
+            if (launchAcc == null)
+            {
+                _appCore.MessageService.Warning(string.Format("NoLaunchAccountDescription", Name));
+                return;
+            }
+
+            if (!launchAcc.IsAuthed)
+            {
+                Runtime.TaskRun(() =>
+                {
+                    var authResult = launchAcc.Auth();
+
+                    if (authResult == AuthCode.Successfully)
+                    {
+                        App.Current.Dispatcher.Invoke(() =>
+                        {
+                            if (!IsLaunching)
+                            {
+                                IsLaunching = true;
+                            }
+                            RunGame();
+                            GameLaunched?.Invoke();
+                        });
+                    }
+                    else
+                    {
+                        _appCore.MessageService.Error(string.Format("AccountError", authResult));
+                    }
+                });
+                return;
+            }
+
+            if (!IsLaunching)
+            {
+                IsLaunching = true;
+                RunGame();
+            }
+            GameLaunched?.Invoke();
+        }
+
+        /// <summary>
+        /// Закрыть сборку. При успешном выполнении отрабатывает эвент Closed.
+        /// </summary>
+        public void Close()
+        {
+            _instanceClient.StopGame();
 
             GameClosed?.Invoke();
-            SetState(InstanceState.Default);
+            DataChanged?.Invoke();
+        }
+
+        #endregion Launch
+
+
+        public bool CheckInstanceClient(InstanceClient instanceClient)
+        {
+            return _instanceClient == instanceClient;
+        }
+
+        /// <summary>
+        /// Открыть папку с игрой.
+        /// </summary>
+        public void OpenFolder()
+        {
+            System.Diagnostics.Process.Start("explorer", _instanceClient.GetDirectoryPath());
+        }
+
+        /// <summary>
+        /// Открыть веб-страницу для сборки, если она есть.
+        /// </summary>
+        public void GoToWebsite()
+        {
+            try
+            {
+                System.Diagnostics.Process.Start(_instanceClient.WebsiteUrl);
+            }
+            catch
+            {
+
+            }
+        }
+
+        /// <summary>
+        /// Открыть модальное окна для экспорта сборки.
+        /// </summary>
+        public void Export()
+        {
+            _exportFunc(_instanceClient);
+        }
+
+        /// <summary>
+        /// Удалять сборку.
+        /// Если сборка только добавлена в библиотеку (не установлена), то сборка будет удалена из библиотеки.
+        /// Если сборка установлена, то она будет удалена полностью.
+        /// </summary>
+        public void Delete()
+        {
+            _appCore.ModalNavigationStore.Open(new ConfirmActionViewModel(
+                    _appCore.Resources("DeletingInstance") as string,
+                    string.Format(_appCore.Resources("DeletingInstanceDescription") as string, Name),
+                    _appCore.Resources("YesIWantDeleteInstance") as string,
+                    (obj) =>
+                    {
+                        GlobalDeletedEvent?.Invoke(this);
+                        Runtime.TaskRun(() => 
+                        {
+                            _clientsManager.DeleteFromLibrary(_instanceClient);
+                        });
+                        DeletedEvent?.Invoke(this);
+                    }));
+        }
+
+        public Logic.Settings Settings
+        {
+            get => _instanceClient.GetSettings(); set
+            {
+                _instanceClient.SaveSettings(value);
+            }
+        }
+
+        /// <summary>
+        /// Задает новые данные о сборке
+        /// </summary>
+        /// <param name="baseInstance">Новые данные о сборке</param>
+        /// <param name="logoPath">Путь до лого</param>
+        public void ChangeOverviewParameters(BaseInstanceData baseInstance, string logoPath = null)
+        {
+            _instanceClient.ChangeParameters(baseInstance, logoPath);
+            DataChanged?.Invoke();
+            LogoChanged?.Invoke();
+        }
+
+        /// <summary>
+        /// Загружает данные о сборке которые необходимы только профилю
+        /// </summary>
+        public void PrepareDataForProfile()
+        {
+            Runtime.TaskRun(() =>
+            {
+                PageData = _instanceClient.GetFullInfo();
+                PageData.TotalDownloads.ToString();
+                OnPropertyChanged(nameof(TotalDownloads));
+            });
+        }
+
+
+        public bool Equals(InstanceClient other)
+        {
+            if (other == null || other == null)
+            {
+                return false;
+            }
+
+            return _instanceClient == other;
+        }
+
+
+        /// <summary>
+        /// Добавить сервер в игру
+        /// </summary>
+        public void AddServer(MinecraftServerInstance server, bool isAutoLogin)
+        {
+            _instanceClient.AddGameServer(server, isAutoLogin);
+        }
+
+        /// <summary>
+        /// Получить все версии сборки
+        /// </summary>
+        public IEnumerable<InstanceVersion> GetInstanceVersions()
+        {
+            return _instanceClient.GetVersions();
+        }
+
+        public void CancelShareInstanceDownloading()
+        {
+            InstanceDistribution.CancelDownload();
+        }
+
+        public void CancelByImportData()
+        {
+            if (ImportData.HasValue)
+            {
+                ImportData.Value.CancelImport();
+                DeletedEvent?.Invoke(this);
+            }
+
+            if (InstanceDistribution != null) 
+            {
+                InstanceDistribution.CancelDownload();
+            }
+        }
+
+
+        public void RemoveFromGroup()
+        {
+            _instancesGroup.RemoveInstance(_instanceClient);
+            _instancesGroup.SaveGroupInfo();
+            GlobalGroupRemovedEvent?.Invoke(this);
+        }
+
+
+        public void OpenInstanceToGroupsConfigurator()
+        {
+            var viewModel = new InstanceGroupsConfiguratorViewModel(this, _clientsManager);
+            _appCore.ModalNavigationStore.Open(viewModel);
+        }
+
+        public void OpenCoping()
+        {
+            var viewModel = new InstanceCopyViewModel(_appCore, _clientsManager, this, _addToLibrary);
+            _appCore.ModalNavigationStore.Open(viewModel);
+        }
+
+
+        #endregion Public Methods
+
+
+        #region Private Methods
+
+
+        private void OnDownloadProgressChanged(ProgressHandlerArguments progressHandlerArguments)
+        {
+            if (!IsDownloading)
+            {
+                IsDownloading = true;
+                DownloadStarted?.Invoke();
+                DataChanged?.Invoke();
+            }
+
+            if (DownloadingData == null)
+            {
+                DownloadingData = new();
+                OnPropertyChanged(nameof(DownloadingData));
+            }
+
+            DownloadingData.Stage = State;
+            DownloadingData.CurrentStage = progressHandlerArguments.Stage;
+            DownloadingData.TotalStages = progressHandlerArguments.StagesCount;
+            DownloadingData.FilesCounts = progressHandlerArguments.FilesCount;
+            DownloadingData.TotalFiles = progressHandlerArguments.TotalFilesCount;
+            DownloadingData.Percentages = progressHandlerArguments.Procents;
+
+            DownloadProgressChanged?.Invoke(_instanceState, progressHandlerArguments);
             DataChanged?.Invoke();
         }
 
@@ -1000,23 +968,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             DataChanged?.Invoke();
         }
 
-        private void OnStateClientChanged()
-        {
-            //StateChanged?.Invoke();
-            OnPropertyChanged(string.Empty);
-        }
-
         /// <summary>
         /// Отмена скачивания завершена
         /// </summary>
         private void OnDownloadCanceled()
         {
-            SetState(InstanceState.Default);
-
             IsLaunching = false;
             IsLaunched = false;
-            //IsDownloading = false;
-
 
             DownloadCanceled?.Invoke();
             DataChanged?.Invoke();
@@ -1025,12 +983,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             OnPropertyChanged(nameof(IsLaunched));
             OnPropertyChanged(nameof(IsDownloading));
             OnPropertyChanged(nameof(AnyProcessActive));
-        }
-
-
-        private void SetState(InstanceState state, [CallerMemberName] string methodName = null)
-        {
-            State = state;
         }
 
         /// <summary>
@@ -1044,6 +996,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel
             OnPropertyChanged(nameof(Summary));
             OnPropertyChanged(nameof(Name));
             OnPropertyChanged(nameof(Logo));
+        }
+
+        internal void UpdateExportFunc()
+        {
+            throw new NotImplementedException();
         }
 
 

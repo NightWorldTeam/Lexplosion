@@ -132,8 +132,23 @@
     <DataTemplate DataType="{x:Type modalvm:ConfirmActionViewModel}">
         <modalviews:ConfirmActionView />
     </DataTemplate>
-    <DataTemplate DataType="{x:Type modalvm:GroupFactoryViewModel}">
-        <modalviews:GroupFactoryView />
+    <DataTemplate DataType="{x:Type modalvm:InstancesGroupFactoryViewModel}">
+        <modalviews:InstancesGroupFactoryView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type modalvm:InstancesGroupEditViewModel}">
+        <modalviews:InstancesGroupEditView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type modalvm:InstanceGroupsConfiguratorViewModel}">
+        <modalviews:InstanceGroupsConfiguratorView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type modalvm:InstanceCopyViewModel}">
+        <modalviews:InstanceCopyView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type modalvm:InstanceCopyErrorsViewModel}">
+        <modalviews:InstanceCopyErrorsView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type modalvm:ErrorViewerViewModel}">
+        <modalviews:ErrorViewer />
     </DataTemplate>
 
     <!--  Instance Profile  -->

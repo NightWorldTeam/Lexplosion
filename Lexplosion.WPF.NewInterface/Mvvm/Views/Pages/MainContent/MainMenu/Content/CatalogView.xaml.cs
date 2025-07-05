@@ -4,6 +4,7 @@ using System;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
 using Lexplosion.WPF.NewInterface.Extensions;
+using System.Threading;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu
 {
@@ -37,6 +38,21 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu
             );
         }
 
+        private void ContainerPage_ScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
 
-    }
+        }
+
+		private void OnFilterPanelSourceClicked(object sender, System.Windows.Input.MouseButtonEventArgs e)
+		{
+			ThreadPool.QueueUserWorkItem((object _) =>
+			{
+				Thread.Sleep(10);
+				App.Current.Dispatcher.Invoke(() =>
+				{
+					FiltersButton.IsChecked = false;
+				});
+			});
+		}
+	}
 }

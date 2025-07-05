@@ -37,6 +37,8 @@ namespace Lexplosion.Logic.Management
 		private CancellationToken _cancelToken;
 		private Dictionary<string, JavaFiles.Unit> _updateList = new();
 
+		private int _mirrorDownloadsCount = 0;
+
 		private const string MANIFEST_FILE = "/java/javaVersionsManifest.json";
 		private const string FILES_DIR = "/java/versions/";
 		private const string VERSIONS_MANIFEST_DIR = "/java/versionsManifests/";
@@ -223,11 +225,10 @@ namespace Lexplosion.Logic.Management
 						CancelToken = _cancelToken
 					};
 
-					if (!_withDirectory.InstallFile(_updateList[unitName].Downloads.Raw.DownloadUrl, fileName, javaPath + path, taskArgs))
+					if (_mirrorDownloadsCount > 1)
 					{
 						string url = _updateList[unitName].Downloads.Raw.DownloadUrl.Replace("https://", "");
 						url = LaunсherSettings.URL.MirrorUrl + url;
-						Runtime.DebugWrite("Download error, try mirror. Url " + url);
 
 						if (!_withDirectory.InstallFile(url, fileName, javaPath + path, taskArgs))
 						{
@@ -235,10 +236,38 @@ namespace Lexplosion.Logic.Management
 							_downloadSemaphore.Release(_thisJava.JavaName);
 							return false;
 						}
+
+						continue;
+					}
+
+					if (!_withDirectory.InstallFile(_updateList[unitName].Downloads.Raw.DownloadUrl, fileName, javaPath + path, taskArgs))
+					{
+						//скачать через прямой источник не удалось, качайем с нашего зеркала
+						string url = _updateList[unitName].Downloads.Raw.DownloadUrl.Replace("https://", "");
+						url = LaunсherSettings.URL.MirrorUrl + url;
+						Runtime.DebugWrite($"Download error, try mirror. Url: {url}, current mirror downloads count: {_mirrorDownloadsCount}");
+
+						bool isMirrorMode = _withDirectory.IsMirrorModeToNw;
+						_mirrorDownloadsCount++;
+						if (!_withDirectory.InstallFile(url, fileName, javaPath + path, taskArgs))
+						{
+							// скачать с зеркала не удалось. Переводим WithDirectory на резервный сервер и пробуем скачать еще раз
+							if (!isMirrorMode)
+							{
+								_withDirectory.ChangeDownloadToMirrorMode();
+
+								if (_withDirectory.InstallFile(url, fileName, javaPath + path, taskArgs)) continue;
+							}
+
+							_semIsReleased = true;
+							_downloadSemaphore.Release(_thisJava.JavaName);
+							return false;
+						}
 					}
 				}
-				catch
+				catch (Exception ex)
 				{
+					Runtime.DebugWrite("Exception " + ex);
 					_semIsReleased = true;
 					_downloadSemaphore.Release(_thisJava.JavaName);
 					return false;

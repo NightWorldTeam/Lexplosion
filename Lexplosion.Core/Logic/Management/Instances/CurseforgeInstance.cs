@@ -65,7 +65,7 @@ namespace Lexplosion.Logic.Management.Instances
 			var images = new List<byte[]>();
 			if (data.screenshots != null && data.screenshots.Count > 0)
 			{
-				var perfomer = new TasksPerfomer(3, data.screenshots.Count);
+				var perfomer = new TasksPerfomer(15, data.screenshots.Count);
 				foreach (var item in data.screenshots)
 				{
 					perfomer.ExecuteTask(delegate ()

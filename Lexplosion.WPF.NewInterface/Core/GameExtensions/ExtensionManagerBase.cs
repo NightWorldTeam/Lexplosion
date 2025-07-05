@@ -45,30 +45,33 @@ namespace Lexplosion.WPF.NewInterface.Core.GameExtensions
         protected ExtensionManagerBase(GameExtension gameExtension, MinecraftVersion minecraftVersion, bool isEnable = true)
         {
             CurrentMinecraftExtension = new MinecraftExtension(new ReadOnlyCollection<string>(new List<string>()), gameExtension);
-            if (MinecraftExtension.CheckExistsOnVersion(minecraftVersion, gameExtension))
+
+            foreach (var enumValue in Enum.GetValues(typeof(GameExtension)))
             {
-                foreach (var enumValue in Enum.GetValues(typeof(GameExtension)))
+                if (!MinecraftExtension.CheckExistsOnVersion(minecraftVersion, (GameExtension)enumValue))
                 {
-                    if (gameExtension == (GameExtension)enumValue)
+                    continue;
+                }
+
+                if (gameExtension == (GameExtension)enumValue)
+                {
+                    // load extension versions
+                    Lexplosion.Runtime.TaskRun(() =>
                     {
-                        // load extension versions
-                        Lexplosion.Runtime.TaskRun(() =>
-                        {
-                            CurrentMinecraftExtension = LoadExtensionVersions(gameExtension, minecraftVersion);
-                            OnPropertyChanged(nameof(CurrentMinecraftExtension));
-                            MinecraftExtensionLoaded?.Invoke(CurrentMinecraftExtension);
-                            OnPropertiesChanged();
-                        });
-                        // load extensions versions and select first version
-                    }
-                    else
+                        CurrentMinecraftExtension = LoadExtensionVersions(gameExtension, minecraftVersion);
+                        OnPropertyChanged(nameof(CurrentMinecraftExtension));
+                        MinecraftExtensionLoaded?.Invoke(CurrentMinecraftExtension);
+                        OnPropertiesChanged();
+                    });
+                    // load extensions versions and select first version
+                }
+                else
+                {
+                    Lexplosion.Runtime.TaskRun(() =>
                     {
-                        Lexplosion.Runtime.TaskRun(() =>
-                        {
-                            LoadExtensionVersions((GameExtension)enumValue, minecraftVersion);
-                            OnPropertiesChanged();
-                        });
-                    }
+                        LoadExtensionVersions((GameExtension)enumValue, minecraftVersion);
+                        OnPropertiesChanged();
+                    });
                 }
             }
 
@@ -90,41 +93,43 @@ namespace Lexplosion.WPF.NewInterface.Core.GameExtensions
         private static KeySemaphore<GameExtension> _loadExtensionVersionsSync = new();
 
 
-		/// <summary>
-		/// Возвращает класс для расширения майнкрафта.
-		/// Также сохраняет класс в словарь.
-		/// </summary>
-		/// <param name="extension">Расширение игры (optifine, fabric, etc)</param>
-		/// <param name="gameVersion">Версия майнкрафта</param>
-		/// <returns>MinecraftExtension</returns>
-		public static MinecraftExtension LoadExtensionVersions(GameExtension extension, MinecraftVersion minecraftVersion)
+        /// <summary>
+        /// Возвращает класс для расширения майнкрафта.
+        /// Также сохраняет класс в словарь.
+        /// </summary>
+        /// <param name="extension">Расширение игры (optifine, fabric, etc)</param>
+        /// <param name="gameVersion">Версия майнкрафта</param>
+        /// <returns>MinecraftExtension</returns>
+        public static MinecraftExtension LoadExtensionVersions(GameExtension extension, MinecraftVersion minecraftVersion)
         {
+            Runtime.DebugWrite("1", color: ConsoleColor.Blue);
             _loadExtensionVersionsSync.WaitOne(extension);
+            Runtime.DebugWrite("2", color: ConsoleColor.Red);
 
             try
             {
-				// Todo: optimize code, do not save empty value, just return constant for it.
+                // Todo: optimize code, do not save empty value, just return constant for it.
 
-				// if current game version is not contains extension versions 
-				if (!_extensionVersions[extension].ContainsKey(minecraftVersion))
-				{
-					IList<string> extensionVersion;
+                // if current game version is not contains extension versions 
+                if (!_extensionVersions[extension].ContainsKey(minecraftVersion))
+                {
+                    IList<string> extensionVersion;
 
-					// if optifine
-					if (GameExtension.Optifine == extension)
-						extensionVersion = Runtime.ServicesContainer.MinecraftService.GetOptifineVersions(minecraftVersion.Id);
-					else
-						extensionVersion = Runtime.ServicesContainer.MinecraftService.GetModloadersList(minecraftVersion.Id, (ClientType)extension);
+                    // if optifine
+                    if (GameExtension.Optifine == extension)
+                        extensionVersion = Runtime.ServicesContainer.MinecraftService.GetOptifineVersions(minecraftVersion.Id);
+                    else
+                        extensionVersion = Runtime.ServicesContainer.MinecraftService.GetModloadersList(minecraftVersion.Id, (ClientType)extension);
 
-					_extensionVersions[extension].TryAdd(minecraftVersion, new MinecraftExtension(new ReadOnlyCollection<string>(extensionVersion), extension));
-				}
-				return _extensionVersions[extension][minecraftVersion];
-			}
+                    _extensionVersions[extension].TryAdd(minecraftVersion, new MinecraftExtension(new ReadOnlyCollection<string>(extensionVersion), extension));
+                }
+                return _extensionVersions[extension][minecraftVersion];
+            }
             finally
             {
-				_loadExtensionVersionsSync.Release(extension);
-			}			
-		}
+                _loadExtensionVersionsSync.Release(extension);
+            }
+        }
 
         /// <summary>
         /// Загружены ли версии расширения для данной версии игры.

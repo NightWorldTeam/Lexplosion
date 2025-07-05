@@ -1,5 +1,4 @@
 ﻿using Lexplosion.Logic.Management.Addons;
-using Lexplosion.Logic.Management.Instances;
 using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.InstanceProfile;

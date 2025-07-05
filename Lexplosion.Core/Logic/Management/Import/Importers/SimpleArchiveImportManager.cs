@@ -37,7 +37,7 @@ namespace Lexplosion.Logic.Management.Import.Importers
 			_dataFilesManager =  services.DataFilesService;
 		}
 
-		public InstanceInit Import(ProgressHandlerCallback progressHandler, out IReadOnlyCollection<string> errors)
+		public InstanceInit Import(ProgressHandler progressHandler, out IReadOnlyCollection<string> errors)
 		{
 			errors = new List<string>();
 			InstanceInit result = _withDirectory.MoveUnpackedInstance(_localId, _unzipPath);
@@ -58,11 +58,11 @@ namespace Lexplosion.Logic.Management.Import.Importers
 			return InstanceInit.Successful;
 		}
 
-		public ImportResult Prepeare(ProgressHandlerCallback progressHandler, out PrepeareResult result)
+		public InstanceInit Prepeare(ProgressHandler progressHandler, out PrepeareResult result)
 		{
 			result = new PrepeareResult();
 
-			progressHandler(StageType.Client, new ProgressHandlerArguments()
+			progressHandler(StateType.DownloadClient, new ProgressHandlerArguments()
 			{
 				StagesCount = 2,
 				Stage = 1,
@@ -86,7 +86,7 @@ namespace Lexplosion.Logic.Management.Import.Importers
 			catch (Exception ex)
 			{
 				Runtime.DebugWrite("Exception " + ex);
-				return ImportResult.DirectoryCreateError;
+				return InstanceInit.DirectoryCreateError;
 			}
 
 			try
@@ -100,7 +100,7 @@ namespace Lexplosion.Logic.Management.Import.Importers
 			catch (Exception ex)
 			{
 				Runtime.DebugWrite("Exception " + ex);
-				return ImportResult.ZipFileError;
+				return InstanceInit.ZipFileOpenError;
 			}
 
 			//Вызываем эвент, говорящий что нам нужны данные для сборки
@@ -108,7 +108,7 @@ namespace Lexplosion.Logic.Management.Import.Importers
 			_interruptionHandler.ChangeState(interruption, InterruptionType.BasicDataRequired);
 
 			BaseInstanceData data = interruption.BaseData;
-			if (_cancelToken.IsCancellationRequested) return ImportResult.Canceled;
+			if (_cancelToken.IsCancellationRequested) return InstanceInit.IsCancelled;
 
 			result.Name = data.Name ?? "Pochemy";
 			result.Author = data.Author;
@@ -127,7 +127,7 @@ namespace Lexplosion.Logic.Management.Import.Importers
 				}
 			};
 
-			return ImportResult.Successful;
+			return InstanceInit.Successful;
 		}
 
 		public void SetInstanceId(string id)

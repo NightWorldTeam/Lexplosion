@@ -73,6 +73,8 @@ namespace Lexplosion
 				File.WriteAllText(LaunсherSettings.LauncherDataPath + "/crash-report_" + DateTime.Now.ToString("dd.MM.yyyy-h.mm.ss") + ".log", exception.ToString());
 			};
 
+			ServicePointManager.DefaultConnectionLimit = 20;
+
 			var withDirectory = new WithDirectory();
 			var dataFilesManager = new DataFilesManager(withDirectory);
 			var toServer = new ToServer();
@@ -108,40 +110,53 @@ namespace Lexplosion
 			}
 
 			int version = nightWorldApi.CheckLauncherUpdates();
+			Runtime.DebugWrite($"last launcher version: {version}");
 			if (version == -1)
 			{
-				var proxies = ProxyFetcher.GetProxies();
-				if (proxies.Count > 0)
+				Runtime.DebugWrite($"Change to mirror mode");
+				toServer.ChangeToMirrorMode();
+				withDirectory.ChangeDownloadToMirrorMode();
+
+				version = nightWorldApi.CheckLauncherUpdates(15000);
+
+				if (version > LaunсherSettings.version)
 				{
-					toServer.ChangeToProxyMode();
-					withDirectory.ChangeDownloadToProxyMode();
-
-					var waiter = new ManualResetEvent(false);
-					ProxyFetcher.FindWorkingProxy(proxies, (Proxy proxy) =>
-					{
-						if (proxy.CalculatedDelay < 0) return;
-
-						toServer.AddProxy(proxy);
-						withDirectory.AddProxy(proxy);
-
-						waiter.Set();
-					}, () => waiter.Set());
-
-					waiter.WaitOne();
-
-					version = nightWorldApi.CheckLauncherUpdates(15000);
-
-					if (version > LaunсherSettings.version)
-					{
-						OnUpdateStart?.Invoke();
-						LauncherUpdate(version, updaterOffsetLeft, updaterOffsetRight);
-					}
+					OnUpdateStart?.Invoke();
+					LauncherUpdate(version, updaterOffsetLeft, updaterOffsetRight, true);
 				}
+
+				//var proxies = ProxyFetcher.GetProxies();
+				//if (proxies.Count > 0)
+				//{
+				//	toServer.ChangeToProxyMode();
+				//	withDirectory.ChangeDownloadToProxyMode();
+
+				//	var waiter = new ManualResetEvent(false);
+				//	ProxyFetcher.FindWorkingProxy(proxies, (Proxy proxy) =>
+				//	{
+				//		if (proxy.CalculatedDelay < 0) return;
+
+				//		toServer.AddProxy(proxy);
+				//		withDirectory.AddProxy(proxy);
+
+				//		waiter.Set();
+				//	}, () => waiter.Set());
+
+				//	waiter.WaitOne();
+
+				//	version = nightWorldApi.CheckLauncherUpdates(15000);
+
+				//	if (version > LaunсherSettings.version)
+				//	{
+				//		OnUpdateStart?.Invoke();
+				//		LauncherUpdate(version, updaterOffsetLeft, updaterOffsetRight);
+				//	}
+				//}
 			}
 			else if (version > LaunсherSettings.version)
 			{
 				OnUpdateStart?.Invoke();
-				LauncherUpdate(version, updaterOffsetLeft, updaterOffsetRight);
+				LauncherUpdate(version, updaterOffsetLeft, updaterOffsetRight, false);
 			}
 
 			Account.Init();
@@ -175,11 +190,13 @@ namespace Lexplosion
 			CommandReceiver.OnLexplosionOpened += OnLexplosionOpened;
 		}
 
-		private static bool LauncherUpdate(int version, int updaterOffsetLeft, int updaterOffsetRight)
+		private static bool LauncherUpdate(int version, int updaterOffsetLeft, int updaterOffsetRight, bool isMirror)
 		{
 			try
 			{
-				int upgradeToolVersion = Int32.Parse(ServicesContainer.WebService.HttpPost(LaunсherSettings.URL.LauncherParts + "upgradeToolVersion.html"));
+				string url = isMirror ? LaunсherSettings.URL.LauncherPartsMirror : LaunсherSettings.URL.LauncherParts;
+
+				int upgradeToolVersion = Int32.Parse(ServicesContainer.WebService.HttpPost(url + "upgradeToolVersion.html"));
 				string gamePath = GlobalData.GeneralSettings.GamePath;
 
 				// скачивание и проверка версии UpgradeTool.exe
@@ -189,20 +206,20 @@ namespace Lexplosion
 					if (ServicesContainer.DataFilesService.GetUpgradeToolVersion() < upgradeToolVersion && File.Exists(gamePath + "/UpgradeTool.exe"))
 					{
 						File.Delete(gamePath + "/UpgradeTool.exe");
-						wc.DownloadFile(LaunсherSettings.URL.LauncherParts + "UpgradeTool.exe?" + upgradeToolVersion, gamePath + "/UpgradeTool.exe");
+						wc.DownloadFile(url + "UpgradeTool.exe?" + upgradeToolVersion, gamePath + "/UpgradeTool.exe");
 						ServicesContainer.DataFilesService.SetUpgradeToolVersion(upgradeToolVersion);
 
 					}
 					else if (!File.Exists(gamePath + "/UpgradeTool.exe"))
 					{
-						wc.DownloadFile(LaunсherSettings.URL.LauncherParts + "UpgradeTool.exe?" + upgradeToolVersion, gamePath + "/UpgradeTool.exe");
+						wc.DownloadFile(url + "UpgradeTool.exe?" + upgradeToolVersion, gamePath + "/UpgradeTool.exe");
 						ServicesContainer.DataFilesService.SetUpgradeToolVersion(upgradeToolVersion);
 					}
 				}
 
 				var arguments =
 					"\"" + Assembly.GetEntryAssembly().Location + "\" " +
-					"\"" + LaunсherSettings.URL.LauncherParts + "Lexplosion.exe?" + version + "\" " +
+					"\"" + url + "Lexplosion.exe?" + version + "\" " +
 					Process.GetCurrentProcess().Id + " " +
 					Convert.ToInt32(updaterOffsetLeft) + " " +
 					Convert.ToInt32(updaterOffsetRight);

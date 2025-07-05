@@ -301,10 +301,7 @@
                         </Grid>
 
                         <ScrollViewer Grid.Row="1" Margin="0,0,0,0">
-                            <ItemsControl
-                                Margin="0,0,0,0"
-                                Background="Transparent"
-                                ItemsSource="{Binding Model.NotificationService.Notifications}" />
+                            <ItemsControl Margin="0,0,0,0" Background="Transparent" />
                         </ScrollViewer>
                     </Grid>
                 </Border>

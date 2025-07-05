@@ -220,6 +220,12 @@ namespace Lexplosion.WPF.NewInterface.Controls
             return (!double.IsNaN(v) && v >= 0.0d);
         }
 
+        protected override void OnMouseWheel(MouseWheelEventArgs e)
+        {
+            IsOpen = false;
+            base.OnMouseWheel(e);
+        }
+
         private static void OnTransformDirty(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             // Callback for MinWidth, MaxWidth, Width, MinHeight, MaxHeight, Height, and RenderTransformOffset

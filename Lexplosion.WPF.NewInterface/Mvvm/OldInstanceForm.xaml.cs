@@ -3,10 +3,9 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
 using System.Windows.Media;
-using System.Runtime.CompilerServices;
 using System.Windows.Media.Animation;
+using System.Windows.Media.Imaging;
 
 namespace Lexplosion.WPF.NewInterface.Controls.OldInstanceForm
 {
@@ -37,10 +36,20 @@ namespace Lexplosion.WPF.NewInterface.Controls.OldInstanceForm
             = DependencyProperty.Register(nameof(CanBeDeleted), typeof(bool), typeof(OldInstanceForm),
             new FrameworkPropertyMetadata(false));
 
+        public static readonly DependencyProperty InCatalogProperty
+            = DependencyProperty.Register(nameof(InCatalog), typeof(bool), typeof(OldInstanceForm),
+            new FrameworkPropertyMetadata(false));
+
         public bool CanBeDeleted
         {
             get => (bool)GetValue(CanBeDeletedProperty);
             set => SetValue(CanBeDeletedProperty, value);
+        }
+        
+        public bool InCatalog
+        {
+            get => (bool)GetValue(InCatalogProperty);
+            set => SetValue(InCatalogProperty, value);
         }
 
         public ICommand LogoButtonCommand
@@ -113,7 +122,8 @@ namespace Lexplosion.WPF.NewInterface.Controls.OldInstanceForm
                 return;
             }
 
-            if (_model.IsDownloading)
+
+            if (_model.IsDownloading && (_model.IsLaunched))
             {
                 // TODO: Открыть меню со списком файлов
                 return;
@@ -142,6 +152,16 @@ namespace Lexplosion.WPF.NewInterface.Controls.OldInstanceForm
         private void CancelDownloadButton_Click(object sender, RoutedEventArgs e)
         {
             PART_DropDownMenu.IsOpen = false;
+            if (_model == null) 
+            {
+                return;
+            }
+
+            if (_model.ImportData != null) 
+            {
+                _model.CancelByImportData();
+            }
+
             _model.CancelDownload();
         }
 
@@ -159,8 +179,8 @@ namespace Lexplosion.WPF.NewInterface.Controls.OldInstanceForm
         /// </summary>
         private void ExportButton_Click(object sender, RoutedEventArgs e)
         {
-            PART_DropDownMenu.IsOpen = false;
             _model.Export();
+            PART_DropDownMenu.IsOpen = false;
         }
 
         /// <summary>
@@ -225,32 +245,41 @@ namespace Lexplosion.WPF.NewInterface.Controls.OldInstanceForm
 
         private void PlayDeleteAnimation() 
         {
-            var doubleAnim = new DoubleAnimation()
+            var opacityAnim = new DoubleAnimation()
             {
                 From = 1,
-                To = 0.9,
-                Duration = TimeSpan.FromSeconds(0.20)
+                To = 0.5,
+                Duration = TimeSpan.FromSeconds(0.10)
             };
 
-            doubleAnim.Completed += (e, e1) =>
+            opacityAnim.Completed += (e, e1) =>
             {
-                var doubleAnim1 = new DoubleAnimation()
+                var heightAnim = new DoubleAnimation()
                 {
                     From = this.ActualHeight,
                     To = 0,
+                    Duration = TimeSpan.FromSeconds(0.15)
+                };
+
+                var marginAnim = new ThicknessAnimation()
+                {
+                    From = Margin,
+                    To = new Thickness(0),
                     Duration = TimeSpan.FromSeconds(0.10)
                 };
-                this.BeginAnimation(HeightProperty, doubleAnim1);
+
+                this.BeginAnimation(HeightProperty, heightAnim);
+                this.BeginAnimation(MarginProperty, marginAnim);
             };
 
-            this.BeginAnimation(OpacityProperty, doubleAnim);
+            this.BeginAnimation(OpacityProperty, opacityAnim);
         }
 
         #endregion Lower Button Click
 
         private void UpdateIndicatorMouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (_model.State == InstanceState.Default)
+            if (_model.State == StateType.Default)
                 _model.Update();
         }
 
@@ -258,15 +287,50 @@ namespace Lexplosion.WPF.NewInterface.Controls.OldInstanceForm
         {
             if (_model != null) 
             {
-                _model.CancelImport();
+                _model.CancelByImportData();
             }
         }
 
         private void UpdateButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_model != null && _model.State == InstanceState.Default)
+            if (_model != null && _model.State == StateType.Default)
             {
                 _model.Update();
+            }
+        }
+
+        private void RemoveFromGroup_Click(object sender, RoutedEventArgs e)
+        {
+            if (_model != null && !_model.IsSelectedGroupDefault)
+            {
+                _model.RemoveFromGroup();
+            }
+        }
+
+        private void PART_DropDownMenu_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape) 
+            {
+                var dropDown = (sender as DropdownMenu);
+                dropDown.IsOpen = false;
+            }
+        }
+
+        private void AddToGroup_Click(object sender, RoutedEventArgs e)
+        {
+            if (_model != null && _model.IsSelectedGroupDefault)
+            {
+                _model.OpenInstanceToGroupsConfigurator();
+                PART_DropDownMenu.IsOpen = false;
+            }
+        }
+
+        private void CopyButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_model != null && _model.State == StateType.Default)
+            {
+                _model.OpenCoping();
+                PART_DropDownMenu.IsOpen = false;
             }
         }
     }

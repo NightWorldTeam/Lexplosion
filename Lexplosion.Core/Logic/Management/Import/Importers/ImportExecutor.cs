@@ -18,13 +18,13 @@ namespace Lexplosion.Logic.Management.Import.Importers
 		private readonly IAllFileServicesContainer _services;
 		private readonly WithDirectory _withDirectory;
 		private IImportManager _importManager;
-		private ProgressHandlerCallback _progressHandler;
+		private ProgressHandler _progressHandler;
 		private readonly DynamicStateHandler<ImportInterruption, InterruptionType> _interruptionHandler;
 		private readonly Guid _importId;
 		private CancellationToken _cancellationToken;
 		private bool _fileAddrIsLocalPath;
 
-		public ImportExecutor(string fileAddr, bool fileAddrIsLocalPath, Settings settings, IAllFileServicesContainer services, ProgressHandlerCallback progressHandler, ImportData importData)
+		public ImportExecutor(string fileAddr, bool fileAddrIsLocalPath, Settings settings, IAllFileServicesContainer services, ProgressHandler progressHandler, ImportData importData)
 		{
 			_filePath = fileAddr;
 			_settings = settings;
@@ -93,9 +93,9 @@ namespace Lexplosion.Logic.Management.Import.Importers
 			}
 		}
 
-		public ImportResult Prepeare(out PrepeareResult result)
+		public InstanceInit Prepeare(out PrepeareResult result)
 		{
-			ProgressHandlerCallback progressHandler = _progressHandler;
+			ProgressHandler progressHandler = _progressHandler;
 
 			//Если мы имеем ссылку на файл, а не локальный путь, то скачиваем этот файл
 			if (!_fileAddrIsLocalPath)
@@ -108,7 +108,7 @@ namespace Lexplosion.Logic.Management.Import.Importers
 					CancelToken = _cancellationToken,
 					PercentHandler = (int pr) =>
 					{
-						_progressHandler(StageType.Client, new ProgressHandlerArguments()
+						_progressHandler(StateType.DownloadClient, new ProgressHandlerArguments()
 						{
 							StagesCount = 3,
 							Stage = 1,
@@ -122,12 +122,12 @@ namespace Lexplosion.Logic.Management.Import.Importers
 				if (!_withDirectory.DownloadFile(_filePath, fileName, tempDir, taskArgs))
 				{
 					result = new PrepeareResult();
-					return ImportResult.DownloadError;
+					return InstanceInit.DownloadFilesError;
 				}
 
 				_filePath = tempDir + fileName;
 
-				progressHandler = (StageType stageType, ProgressHandlerArguments data) =>
+				progressHandler = (StateType stageType, ProgressHandlerArguments data) =>
 				{
 					// в калбеке обработки прогресса прибавляем в количества стадий и в номер стадии по еденице, потому что одна стадия у нас уже была (скачивание файла по url)
 					_progressHandler(stageType, new ProgressHandlerArguments()
@@ -144,7 +144,7 @@ namespace Lexplosion.Logic.Management.Import.Importers
 			if (_importManager == null)
 			{
 				result = new PrepeareResult();
-				return ImportResult.UnknownFileType;
+				return InstanceInit.UnknownClientFileType;
 			}
 
 			return _importManager.Prepeare(progressHandler, out result);

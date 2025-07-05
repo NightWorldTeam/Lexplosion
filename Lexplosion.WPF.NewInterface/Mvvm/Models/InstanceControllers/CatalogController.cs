@@ -1,6 +1,5 @@
 ﻿using Lexplosion.Logic.Management.Instances;
 using Lexplosion.WPF.NewInterface.Core;
-using Lexplosion.WPF.NewInterface.Core.Notifications;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using System;
 using System.Collections.Generic;
@@ -19,9 +18,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
         private readonly AppCore _appCore;
         private readonly Action<InstanceClient> _exportFunc;
         private readonly Action<InstanceModelBase> _setRunningGame;
-
+        private readonly Func<InstanceClient, InstanceModelBase> _getInstanceModelByInstanceClient;
+        private readonly Action<InstanceModelBase> _addInstanceModel;
         private ObservableCollection<InstanceModelBase> _instances = new ObservableCollection<InstanceModelBase>();
-
 
 
         #region Properties
@@ -36,7 +35,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
         #region Constructors
 
 
-        public CatalogController(AppCore appCore, Action<InstanceClient> exportFunc, Action<InstanceModelBase> setRunningGame)
+        public CatalogController(AppCore appCore, Action<InstanceClient> exportFunc, Action<InstanceModelBase> setRunningGame, Func<InstanceClient, InstanceModelBase> getInstanceModelByInstanceClient, Action<InstanceModelBase> addInstanceModel)
         {
             _appCore = appCore;
 
@@ -46,6 +45,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
 
             _exportFunc = exportFunc;
             _setRunningGame = setRunningGame;
+            _getInstanceModelByInstanceClient = getInstanceModelByInstanceClient;
+            _addInstanceModel = addInstanceModel;
         }
 
 
@@ -66,11 +67,16 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
 
         public InstanceModelBase? Add(InstanceClient instanceClient, [CallerMemberName] string member = "")
         {
-            InstanceModelBase? instanceModelBase = null;
-            Runtime.DebugWrite($"{member} {instanceClient.Name}");
+            InstanceModelBase? instanceModelBase = _getInstanceModelByInstanceClient(instanceClient);
+
             App.Current.Dispatcher.Invoke(() =>
             {
-                instanceModelBase = new InstanceModelBase(_appCore, instanceClient, _exportFunc, _setRunningGame);
+                if (instanceModelBase == null) 
+                {
+                    var args = new InstanceModelArgs(_appCore, instanceClient, _exportFunc, _setRunningGame, group: null, instanceLocation: InstanceLocation.Catalog);
+                    instanceModelBase = new InstanceModelBase(args);
+                    _addInstanceModel(instanceModelBase);
+                }
                 _instances.Add(instanceModelBase);
             });
 

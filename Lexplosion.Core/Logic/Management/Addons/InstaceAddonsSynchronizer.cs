@@ -42,6 +42,11 @@ namespace Lexplosion.Logic.Management.Addons
 			ChacheSemaphore.Release();
 		}
 
+		public bool AddonsCatalogChacheContains(string modId)
+		{
+			return AddonsCatalogChache?.ContainsKey(modId) == true;
+		}
+
 		public void InitAddonsListChache()
 		{
 			AddonsCatalogChache = new Dictionary<string, InstanceAddon>();

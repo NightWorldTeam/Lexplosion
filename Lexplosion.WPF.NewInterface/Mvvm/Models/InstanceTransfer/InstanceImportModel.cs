@@ -19,6 +19,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
         private readonly Action<InstanceClient, ImportData?> _addToLibrary;
         private readonly Action<InstanceClient> _removeFromLibrary;
         private readonly AppCore _appCore;
+        private readonly ImportStartFunc _startImport;
         private IModalViewModel _currentModalViewModelBase;
 		private readonly ClientsManager _clientsManager = Runtime.ClientsManager;
 
@@ -36,9 +37,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
         #region Constructors
 
 
-        public InstanceImportModel(AppCore appCore, Action<InstanceClient, ImportData?> addToLibrary, Action<InstanceClient> removeFromLibrary)
+        public InstanceImportModel(AppCore appCore, ImportStartFunc startImport, Func<IEnumerable<ImportProcess>> getActiveImports, Action<InstanceClient, ImportData?> addToLibrary, Action<InstanceClient> removeFromLibrary)
         {
             _appCore = appCore;
+            _startImport = startImport;
             _addToLibrary = addToLibrary;
             _removeFromLibrary = removeFromLibrary;
             _appCore.ModalNavigationStore.CurrentViewModelChanged += OnCurrentViewModelChanged;
@@ -48,6 +50,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
                 foreach (var path in filePaths)
                     Import(path);
             };
+
+            foreach (var process in getActiveImports()) 
+            {
+                ImportProcesses.Add(process);
+            }
         }
 
         private void OnCurrentViewModelChanged()
@@ -81,39 +88,16 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
             }
         }
 
-
         public void Import(string path)
         {
-            InstanceClient instanceClient = null;
-
-            // Запускаем импорт
-            var dynamicStateHandler = new DynamicStateData<ImportInterruption, InterruptionType>();
-            dynamicStateHandler.StateChanged += OnImportDynamicStateHandlerStateChanged;
-
-			var importData = new ImportData(dynamicStateHandler.GetHandler);
-
-            var importFile = new ImportProcess(importData.ImportId, path, importData.CancelImport);
-            importFile.ImportCancelled += OnImportCancelled;
-            ImportProcesses.Add(importFile);
-
-            instanceClient = _clientsManager.Import(path, (ir) =>
-            {
-                ImportResultHandler(ir, importFile, instanceClient);
-            }, importData);
-            importFile.TargetInstanceClient = instanceClient;
-
-            // Добавляем в библиотеку.
-            _addToLibrary(instanceClient, importData);
+            var importProcess = _startImport(path, false, OnImportDynamicStateHandlerStateChanged, null, OnImportCancelled);
+            ImportProcesses.Add(importProcess);
         }
 
-        /// <summary>
-        /// Импорт отменен
-        /// </summary>
-        private void OnImportCancelled(Guid id)
+        public void ImportByUrl() 
         {
-            var importProcess = ImportProcesses.FirstOrDefault(i => i.Id == id);
-            CancelImport(importProcess);
-            _appCore.MessageService.Info("ImportCancelledNotification", true);
+            var importProcess = _startImport(ImportURL, true, OnImportDynamicStateHandlerStateChanged, null, OnImportCancelled);
+            ImportProcesses.Add(importProcess);
         }
 
         private void OnImportDynamicStateHandlerStateChanged(ImportInterruption importInterruption, InterruptionType arg2)
@@ -147,7 +131,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
             }
         }
 
-        public void CancelImport(ImportProcess importProcess)
+        public void OnImportCancelled(ImportProcess importProcess)
         {
             if (!importProcess.IsImporing)
                 return;
@@ -164,105 +148,13 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceTransfer
         }
 
 
-        public void ImportByUrl() 
-        {
-            if (string.IsNullOrEmpty(ImportURL))
-            {
-                _appCore.MessageService.Info("ImportCancelledNotification", true);
-                return;
-            }
-
-            
-            InstanceClient instanceClient = null;
-
-            // Запускаем импорт
-            var dynamicStateHandler = new DynamicStateData<ImportInterruption, InterruptionType>();
-            dynamicStateHandler.StateChanged += OnImportDynamicStateHandlerStateChanged;
-
-            var importData = new ImportData(dynamicStateHandler.GetHandler);
-
-            var uri = new Uri(ImportURL);
-            var importFile = new ImportProcess(importData.ImportId, uri, importData.CancelImport);
-            importFile.ImportCancelled += OnImportCancelled;
-            ImportProcesses.Add(importFile);
-
-            instanceClient = _clientsManager.Import(uri, (ir) =>
-            {
-                ImportResultHandler(ir, importFile, instanceClient);
-            }, importData);
-            importFile.TargetInstanceClient = instanceClient;
-
-            // Добавляем в библиотеку.
-            _addToLibrary(instanceClient, importData);
-        }
-
-
         #endregion Public Methods
 
 
         #region Private Methods
 
 
-        private void ImportResultHandler(ImportResult importResult, ImportProcess importFile, InstanceClient instanceClient)
-        {
-            _appCore.UIThread(() =>
-            {
-                importFile.IsImporing = false;
-                importFile.IsSuccessful = true;
 
-                // TODO: Send Notification
-                OnPropertyChanged(nameof(instanceClient.Name));
-
-                if (importResult != ImportResult.Successful)
-                {
-                    importFile.IsSuccessful = false;
-                    _removeFromLibrary(instanceClient);
-                }
-            });
-
-            switch (importResult)
-            {
-                case ImportResult.Successful:
-                    _appCore.MessageService.Success("ImportResultSuccessful", true, importFile.Name);
-                    break;
-                case ImportResult.ZipFileError:
-                    _appCore.MessageService.Error("ImportResultZipFileError", true);
-                    break;
-                case ImportResult.GameVersionError:
-                    _appCore.MessageService.Error("ImportResultGameVersionError", true);
-                    break;
-                case ImportResult.ManifestError:
-                    _appCore.MessageService.Error("ImportResultManifestError", true);
-                    break;
-                case ImportResult.JavaDownloadError:
-                    _appCore.MessageService.Error("ImportResultJavaDownloadError", true);
-                    break;
-                case ImportResult.IsOfflineMode:
-                    _appCore.MessageService.Error("ImportResultIsOfflineMode", true);
-                    break;
-                case ImportResult.MovingFilesError:
-                    _appCore.MessageService.Error("ImportResultMovingFilesError", true);
-                    break;
-                case ImportResult.DownloadError:
-                    _appCore.MessageService.Error("ImportResultDownloadError", true);
-                    break;
-                case ImportResult.DirectoryCreateError:
-                    _appCore.MessageService.Error("ImportResultDirectoryCreateError", true);
-                    break;
-                case ImportResult.WrongUrl:
-                    _appCore.MessageService.Error("ImportResultWrongUrl", true);
-                    break;
-                case ImportResult.UnknownFileType:
-                    _appCore.MessageService.Error("ImportResultUnknownFileType", true);
-                    break;
-                case ImportResult.Canceled:
-                    _appCore.MessageService.Error("ImportCancelledNotification", true);
-                    break;
-                default:
-                    _appCore.MessageService.Error("ImportResultUnknownError", true);
-                    break;
-            }
-        }
 
 
         #endregion Private Methods

@@ -528,16 +528,16 @@ namespace Lexplosion.Logic.Management.Addons
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		private InstanceAddon CreateAddonData(AddonType type, IPrototypeAddon prototypeAddon, string projectId, Dictionary<string, SetValues<InstanceAddon, string, ProjectSource>> existsAddons, List<InstanceAddon> addons, InstalledAddonsFormat actualAddonsList, ProjectSource addonSourse)
+		private InstanceAddon CreateAddonData(AddonType type, IPrototypeAddon prototypeAddon, string projectId, Dictionary<string, SetValues<InstanceAddon, string, ProjectSource>> existsAddons, List<InstanceAddon> addons, InstalledAddonsFormat actualAddonsList, ProjectSource addonSourse, BaseInstanceData clientData)
 		{
 			InstalledAddonInfo info = actualAddonsList[projectId];
-			var obj = new InstanceAddon(type, _synchronizer, _services, prototypeAddon, _modpackInfo)
+			var obj = new InstanceAddon(type, _synchronizer, _services, prototypeAddon, clientData)
 			{
 				Version = ""
 			};
 
 			// проверяем наличие обновлений для мода
-			if (_modpackInfo.Type == InstanceSource.Local)
+			if (clientData.Type == InstanceSource.Local)
 			{
 				prototypeAddon.CompareVersions(actualAddonsList[projectId].FileID, () =>
 				{
@@ -560,9 +560,11 @@ namespace Lexplosion.Logic.Management.Addons
 		private delegate void IternalAddonInfoGetter(string fileAddr, out string displayName, out string authors, out string version, out string description, out string modId);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		private List<InstanceAddon> InstalledAddonsHandle(AddonType addonType, string folderName, string fileExtension, IternalAddonInfoGetter infoHandler)
+		private List<InstanceAddon> InstalledAddonsHandle(AddonType addonType, string folderName, string fileExtension, BaseInstanceData clientFor, IternalAddonInfoGetter infoHandler)
 		{
 			_synchronizer.AddonsHandleSemaphore.WaitOne();
+
+			if (clientFor == null) clientFor = _modpackInfo;
 
 			string clientPath = _services.DirectoryService.GetInstancePath(_modpackInfo.LocalId);
 			var addons = new List<InstanceAddon>();
@@ -637,8 +639,8 @@ namespace Lexplosion.Logic.Management.Addons
 							string projectId = addon.id;
 							if (existsCfMods.Contains(projectId))
 							{
-								IPrototypeAddon prototypeAddon = new CurseforgeAddon(_modpackInfo, addon, _services);
-								CreateAddonData(addonType, prototypeAddon, projectId, existsAddons, addons, actualAddonsList, ProjectSource.Curseforge);
+								IPrototypeAddon prototypeAddon = new CurseforgeAddon(clientFor, addon, _services);
+								CreateAddonData(addonType, prototypeAddon, projectId, existsAddons, addons, actualAddonsList, ProjectSource.Curseforge, clientFor);
 							}
 						}
 					}
@@ -654,8 +656,8 @@ namespace Lexplosion.Logic.Management.Addons
 						string projectId = addon.ProjectId;
 						if (existsMdMods.Contains(projectId))
 						{
-							IPrototypeAddon prototypeAddon = new ModrinthAddon(_modpackInfo, addon, _services, _modrinthCategoriesGetter);
-							CreateAddonData(addonType, prototypeAddon, projectId, existsAddons, addons, actualAddonsList, ProjectSource.Modrinth);
+							IPrototypeAddon prototypeAddon = new ModrinthAddon(clientFor, addon, _services, _modrinthCategoriesGetter);
+							CreateAddonData(addonType, prototypeAddon, projectId, existsAddons, addons, actualAddonsList, ProjectSource.Modrinth, clientFor);
 						}
 					}
 				}
@@ -690,7 +692,7 @@ namespace Lexplosion.Logic.Management.Addons
 				Dictionary<string, IPrototypeAddon> addonsData = null;
 				if (unknownAddons.Count > 0)
 				{
-					addonsData = AddonsPrototypesCreater.CreateFromFiles(_modpackInfo, unknownAddons, _services, _services.CategoriesService);
+					addonsData = AddonsPrototypesCreater.CreateFromFiles(clientFor, unknownAddons, _services, _services.CategoriesService);
 					Runtime.DebugWrite("addonsData lenght " + addonsData.Count);
 				}
 
@@ -739,7 +741,7 @@ namespace Lexplosion.Logic.Management.Addons
 										Source = addonData.Source
 									};
 
-									var obj = CreateAddonData(addonType, addonData, addonData.ProjectId, existsAddons, addons, actualAddonsList, addonData.Source);
+									var obj = CreateAddonData(addonType, addonData, addonData.ProjectId, existsAddons, addons, actualAddonsList, addonData.Source, clientFor);
 									obj.FileName = filename;
 									obj.SetIsEnable = isAddonExtension;
 
@@ -924,14 +926,19 @@ namespace Lexplosion.Logic.Management.Addons
 		/// Возвращает список модов. При вызове так же сохраняет список модов, 
 		/// анализирует папку mods и пихает в список моды которые были в папке, но которых не было в списке.
 		/// </summary>
-		/// <param name="modpackInfo">Инфа о модпаке с которого нужно получить список модов</param>
-		public List<InstanceAddon> GetInstalledMods()
+		/// <param name="modpackInfo">
+		/// Инфа о модпаке, для которого нужно построить список модов. 
+		/// null если построить список для того же клиента, к котором принадлежит этот AddonsManager.
+		/// Список аддонов в любом лучае будет строиться на основе того клиента, к которому принадлежит AddonsManager,
+		/// но этим параметром можно изменить принадлежность этого списка, то есть построить для сборки modpackInfo список модов сборки к которой принадлежит AddonsManager
+		/// </param>
+		public List<InstanceAddon> GetInstalledMods(BaseInstanceData modpackInfo = null)
 		{
 			string folderName = AddonsUtils.GetFolderName(AddonType.Mods);
-			return InstalledAddonsHandle(AddonType.Mods, folderName, ".jar", DefineIternalModInfo);
+			return InstalledAddonsHandle(AddonType.Mods, folderName, ".jar", modpackInfo, DefineIternalModInfo);
 		}
 
-		public List<InstanceAddon> GetInstalledResourcepacks()
+		public List<InstanceAddon> GetInstalledResourcepacks(BaseInstanceData modpackInfo = null)
 		{
 			IternalAddonInfoGetter addonInfo = delegate (string fileAddr, out string displayName, out string authors, out string version, out string description, out string modId)
 			{
@@ -943,7 +950,7 @@ namespace Lexplosion.Logic.Management.Addons
 			};
 
 			string folderName = AddonsUtils.GetFolderName(AddonType.Resourcepacks);
-			return InstalledAddonsHandle(AddonType.Resourcepacks, folderName, ".zip", addonInfo);
+			return InstalledAddonsHandle(AddonType.Resourcepacks, folderName, ".zip", modpackInfo, addonInfo);
 		}
 
 		public List<InstanceAddon> GetInstalledWorlds()
@@ -1024,7 +1031,7 @@ namespace Lexplosion.Logic.Management.Addons
 			return addons;
 		}
 
-		public List<InstanceAddon> GetInstalledShaders()
+		public List<InstanceAddon> GetInstalledShaders(BaseInstanceData modpackInfo = null)
 		{
 			IternalAddonInfoGetter addonInfo = delegate (string fileAddr, out string displayName, out string authors, out string version, out string description, out string modId)
 			{
@@ -1036,7 +1043,7 @@ namespace Lexplosion.Logic.Management.Addons
 			};
 
 			string folderName = AddonsUtils.GetFolderName(AddonType.Shaders);
-			return InstalledAddonsHandle(AddonType.Shaders, folderName, ".zip", addonInfo);
+			return InstalledAddonsHandle(AddonType.Shaders, folderName, ".zip", modpackInfo, addonInfo);
 		}
 
 		/// <summary>

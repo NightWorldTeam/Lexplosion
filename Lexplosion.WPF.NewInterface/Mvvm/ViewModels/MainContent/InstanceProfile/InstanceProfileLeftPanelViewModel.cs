@@ -143,13 +143,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfil
             _instanceModel.StateChanged += OnStateChanged;
             _instanceModel.DownloadProgressChanged += OnDownloadProgressChanged;
 
-            //_instanceModel.DataChanged += OnInstanceModelDataChanged;
-
 
             GenerateAdditionalInfo();
         }
 
-        private void OnDownloadProgressChanged(StageType type, ProgressHandlerArguments progressArgs)
+        private void OnDownloadProgressChanged(StateType type, ProgressHandlerArguments progressArgs)
         {
             if (IsInstalled)
                 OnPropertyChanged(nameof(IsInstalled));

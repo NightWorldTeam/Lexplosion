@@ -55,7 +55,12 @@ namespace Lexplosion.Logic.FileSystem
 
 				if (shiftNumber == 1) // используем bmclApi
 				{
-					if (!_bmclApiUrls.TryGetValue(domain, out var replaceData)) return addr;
+					// в bmclApi ссылки нет, используем наше зеркало
+					if (!_bmclApiUrls.TryGetValue(domain, out var replaceData)) 
+					{
+						addr = addr.ReplaceFirst("https://", "").ReplaceFirst("http://", "");
+						return _libraiesMirrorUrl + addr;
+					}
 
 					foreach (var item in replaceData)
 					{

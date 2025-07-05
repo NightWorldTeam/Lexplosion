@@ -128,7 +128,11 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="{Binding Percentages, StringFormat='{}{0}% Complited'}" />
+                            <TextBlock Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}">
+                                <Run Text="{Binding Percentages, Mode=OneWay, StringFormat='{}{0}%'}" />
+                                <Run Text="{DynamicResource Completed}" />
+                            </TextBlock>
+
                             <TextBlock
                                 Grid.Column="1"
                                 HorizontalAlignment="Right"
@@ -152,22 +156,22 @@
 
             <DataTemplate.Triggers>
                 <!--  In Queue Text  -->
-                <DataTrigger Binding="{Binding InstanceState}" Value="{x:Static lexplosion:DownloadShareState.InQueue}">
+                <DataTrigger Binding="{Binding InstanceState}" Value="{x:Static lexplosion:StateType.InQueue}">
                     <Setter TargetName="StatusTextBlock" Property="Text" Value="{DynamicResource InQueue}" />
                 </DataTrigger>
 
                 <!--  In Connect Text  -->
-                <DataTrigger Binding="{Binding InstanceState}" Value="{x:Static lexplosion:DownloadShareState.InConnect}">
+                <DataTrigger Binding="{Binding InstanceState}" Value="{x:Static lexplosion:StateType.InConnect}">
                     <Setter TargetName="StatusTextBlock" Property="Text" Value="{DynamicResource InConnect}" />
                 </DataTrigger>
 
                 <!--  Post Processing Text  -->
-                <DataTrigger Binding="{Binding InstanceState}" Value="{x:Static lexplosion:DownloadShareState.PostProcessing}">
+                <DataTrigger Binding="{Binding InstanceState}" Value="{x:Static lexplosion:StateType.PostProcessing}">
                     <Setter TargetName="StatusTextBlock" Property="Text" Value="{DynamicResource PostProcessing}" />
                 </DataTrigger>
 
                 <!--  In Process Hide  -->
-                <DataTrigger Binding="{Binding InstanceState}" Value="{x:Static lexplosion:DownloadShareState.InProcess}">
+                <DataTrigger Binding="{Binding InstanceState}" Value="{x:Static lexplosion:StateType.DownloadClient}">
                     <Setter TargetName="StatusTextBlock" Property="Visibility" Value="Collapsed" />
                     <Setter TargetName="SpeedPersentagesBlock" Property="Visibility" Value="Visible" />
                     <Setter TargetName="ProgressBar" Property="IsIndeterminate" Value="False" />

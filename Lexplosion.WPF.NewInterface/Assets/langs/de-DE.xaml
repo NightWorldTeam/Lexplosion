@@ -9,7 +9,7 @@
         == TRANSLATE
     -->
 
-    <!-- Languages -->
+    <!--  Languages  -->
     <s:String x:Key="en-US">Englisch</s:String>
     <s:String x:Key="ru-RU">Russisch</s:String>
     <s:String x:Key="uk-UA">Ukrainisch</s:String>
@@ -650,12 +650,12 @@
     <s:String x:Key="ImportUrlWrongPathNotification">Falsches Link-Format</s:String>
 
     <s:String x:Key="ImportResultSuccessful">Modpack {0} wurde erfolgreich importiert und wartet in der Bibliothek auf dich</s:String>
-    <s:String x:Key="ImportResultZipFileError">Fehler beim Öffnen der Zip-Datei</s:String>
+    <s:String x:Key="ImportResultZipFileOpenError">Fehler beim Öffnen der Zip-Datei</s:String>
     <s:String x:Key="ImportResultGameVersionError">Spielversionsfehler</s:String>
     <s:String x:Key="ImportResultJavaDownloadError">Problem beim Herunterladen von Java</s:String>
     <s:String x:Key="ImportResultIsOfflineMode">Offline-Modus</s:String>
-    <s:String x:Key="ImportResultMovingFilesError">Fehler beim Verschieben von Dateien</s:String>
-    <s:String x:Key="ImportResultDownloadError">Download-Fehler</s:String>
+    <s:String x:Key="ImportResultMoveFilesError">Fehler beim Verschieben von Dateien</s:String>
+    <s:String x:Key="ImportResultDownloadFilesError">Download-Fehler</s:String>
     <s:String x:Key="ImportResultDirectoryCreateError">Fehler beim Erstellen des Verzeichnisses</s:String>
     <s:String x:Key="ImportResultWrongUrl">Ungültige URL für den Dateiimport. Derzeit unterstützen wir nur Yandex Disk und Google Drive.</s:String>
     <s:String x:Key="ImportResultManifestError">Manifestdatei-Fehler.</s:String>

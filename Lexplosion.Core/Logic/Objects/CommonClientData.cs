@@ -10,19 +10,19 @@ namespace Lexplosion.Logic.Objects.CommonClientData
 	///<summary>
 	public class LastUpdates : Dictionary<string, long> { }
 
+	public class ActivationConditions
+	{
+		public List<string> accountTypes = null;
+		public bool? nightWorldClient = null;
+		public List<string> clientTypes = null;
+		public bool? nightWorldSkinSystem = null;
+	}
+
 	/// <summary>
 	/// Информация о майкрафтовской либе
 	/// </summary>
 	public class LibInfo
 	{
-		public class ActivationConditions
-		{
-			public List<string> accountTypes = null;
-			public bool? nightWorldClient = null;
-			public List<string> clientTypes = null;
-			public bool? nightWorldSkinSystem = null;
-		}
-
 		public bool notArchived;
 		public string url;
 		public List<List<string>> obtainingMethod;
@@ -119,6 +119,24 @@ namespace Lexplosion.Logic.Objects.CommonClientData
 		}
 	}
 
+	public class AdditionaMinecraftArgument
+	{
+		public enum ArgumentType
+		{
+			[JsonProperty("game")]
+			Game,
+			[JsonProperty("jvm")]
+			Jvm
+		}
+
+		[JsonProperty("activationConditions")]
+		public ActivationConditions ActivationConditions;
+		[JsonProperty("type")]
+		public ArgumentType Type;
+		[JsonProperty("value")]
+		public string Value;
+	}
+
 	public class MinecraftArgument
 	{
 		[JsonIgnore]
@@ -141,7 +159,7 @@ namespace Lexplosion.Logic.Objects.CommonClientData
 		}
 	}
 
-	public class DefaultMinecraftArguments
+	public class BasicMinecraftArguments
 	{
 		[JsonIgnore]
 		public IEnumerable<MinecraftArgument> Game;
@@ -326,20 +344,17 @@ namespace Lexplosion.Logic.Objects.CommonClientData
 		[JsonProperty("javaVersionName")]
 		public string JavaVersionName;
 
+		[JsonProperty("defaultArguments")]
+		public BasicMinecraftArguments BasicArguments;
+
+		[JsonProperty("additionaArguments")]
+		public List<AdditionaMinecraftArgument> AdditionaArguments;
+
 		[JsonProperty("arguments")]
-		/// <summary>
-		/// Аргументы игры
-		/// </summary>
 		public string Arguments;
 
 		[JsonProperty("jvmArguments")]
-		/// <summary>
-		/// Аргументы для java
-		/// </summary>
 		public string JvmArguments;
-
-		[JsonProperty("defaultArguments")]
-		public DefaultMinecraftArguments DefaultArguments;
 
 		[JsonProperty("gameVersion")]
 		/// <summary>

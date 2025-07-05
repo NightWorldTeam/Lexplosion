@@ -164,7 +164,7 @@
                                                 Command="{Binding DataContext.ConnectToServerCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
                                                 CommandParameter="{Binding}"
                                                 FontSize="12"
-                                                IconData="{StaticResource PDAddToLibrary}"
+                                                IconData="{StaticResource PDAddToList}"
                                                 Style="{StaticResource sm-default}"
                                                 Text="{DynamicResource Add}" />
                                         </StackPanel>

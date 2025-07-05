@@ -3,11 +3,11 @@
 namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Modal
 {
     /// <summary>
-    /// Interaction logic for GroupFactoryView.xaml
+    /// Interaction logic for InstanceCopyView.xaml
     /// </summary>
-    public partial class GroupFactoryView : UserControl
+    public partial class InstanceCopyView : UserControl
     {
-        public GroupFactoryView()
+        public InstanceCopyView()
         {
             InitializeComponent();
         }

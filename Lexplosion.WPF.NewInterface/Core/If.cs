@@ -33,7 +33,6 @@ namespace Lexplosion.WPF.NewInterface.Core
         private static void OnLeftOperanderChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var _this = d as Condition;
-
             _this.Result = _this.Compile();
         }
 

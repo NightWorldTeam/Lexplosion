@@ -1,16 +1,12 @@
 ﻿using Lexplosion.WPF.NewInterface.Extensions;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu;
-using System.Reflection;
 using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Forms;
-using System.Windows.Media;
 using System.Windows.Threading;
-using WpfToolkit.Controls;
-using System.Collections;
-using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
+using System.Windows.Media;
+using System.Collections.Specialized;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu
 {
@@ -44,7 +40,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu
 				return;
 			}
 
-			_viewModel.InstanceProfileOpened += (instanceModel) =>
+            (_viewModel.Model.InstanceController.Instances as INotifyCollectionChanged).CollectionChanged += OnInstanceListChanged;
+
+
+            _viewModel.InstanceProfileOpened += (instanceModel) =>
 			{
 				posIndex = GetFirstVisibleItemIndex();
 			};
@@ -52,7 +51,19 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu
 			InstanceModelBase.GlobalDeletedEvent += InstanceModelBase_GlobalDeletedEvent;
 		}
 
-		private void InstanceModelBase_GlobalDeletedEvent(InstanceModelBase obj)
+        private void OnInstanceListChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+			if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add) 
+			{
+                var scrollViewer = InstanceList.FindVisualDescendant<ScrollViewer>();
+                if (scrollViewer != null)
+                {
+                    scrollViewer.ScrollToBottom();
+                }
+            }
+        }
+
+        private void InstanceModelBase_GlobalDeletedEvent(InstanceModelBase obj)
 		{
 			//if (_viewModel.Model.InstancesCollectionViewSource.Count == 1)
 			//{
@@ -120,5 +131,47 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu
 				BackTopButton.TargetScroll = e.OriginalSource as ScrollViewer;
 			}
 		}
-	}
+
+
+		private void CloseContextMenuWhenButtonClicked() 
+		{
+			(Resources["GroupItemContextMenu"] as ContextMenu).IsOpen = false;
+        }
+
+
+        private void Remove_Click(object sender, RoutedEventArgs e)
+        {
+			CloseContextMenuWhenButtonClicked();
+        }
+		
+		private void Edit_Click(object sender, RoutedEventArgs e)
+        {
+            CloseContextMenuWhenButtonClicked();
+        }
+
+        private void Grid_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+			if (_viewModel != null) 
+			{
+				_viewModel.Model.IsGroupDrawerOpen = false;
+			}
+        }
+
+        private void Grid_DragEnter(object sender, System.Windows.DragEventArgs e)
+        {
+            DragDropField.Visibility = System.Windows.Visibility.Visible;
+        }
+
+        private void DragDropField_DragLeave(object sender, System.Windows.DragEventArgs e)
+        {
+            DragDropField.Visibility = System.Windows.Visibility.Collapsed;
+        }
+
+        private void DragDropField_Drop(object sender, System.Windows.DragEventArgs e)
+        {
+            var fe = sender as FrameworkElement;
+
+            fe.Visibility = System.Windows.Visibility.Collapsed;
+        }
+    }
 }

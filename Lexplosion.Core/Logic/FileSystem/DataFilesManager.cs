@@ -428,8 +428,9 @@ namespace Lexplosion.Logic.FileSystem
 			SaveFile(_withDirectory.GetInstancePath(instanceId) + INSTANCE_CONTENT_FILE, JsonConvert.SerializeObject(content));
 		}
 
-		public string CreateAcceptableGamePath(string path)
+		public string CreateAcceptableGamePath(string path, out bool newDirIsEmpty)
 		{
+			newDirIsEmpty = true;
 			try
 			{
 				// заменяем обратный слеш на нормальный слеш
@@ -452,6 +453,7 @@ namespace Lexplosion.Logic.FileSystem
 				var data = GetFile<InstalledInstancesFormat>(path + "/instanesList.json");
 				if (data == null) return _withDirectory.CreateValidPath(path);
 
+				newDirIsEmpty = false;
 				return path;
 			}
 			catch (Exception ex)
@@ -474,6 +476,11 @@ namespace Lexplosion.Logic.FileSystem
 			allGroups.Add(instanceGroup);
 
 			SaveFile($"{_withDirectory.DirectoryPath}/{INSTANCES_GROUPS_FILE}", JsonConvert.SerializeObject(allGroups));
+		}
+
+		public void RewriteGroupsInfo(IEnumerable<InstalledInstancesGroup> clients)
+		{
+			SaveFile($"{_withDirectory.DirectoryPath}/{INSTANCES_GROUPS_FILE}", JsonConvert.SerializeObject(clients));
 		}
 	}
 }

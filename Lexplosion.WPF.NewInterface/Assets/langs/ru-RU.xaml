@@ -483,9 +483,6 @@
         Временной интервал (в миллисекундах), в течение которого можно переходить от одной всплывающей подсказки к другой без задержки, определяемой свойством InitialShowDelay.
     </s:String>
 
-
-
-
     <!--  InstanceForm  -->
     <s:String x:Key="Downloaded">Скачано</s:String>
     <!--  Instance Form Download Process  -->
@@ -507,7 +504,6 @@
     <s:String x:Key="Resolutions">Разрешение текстур</s:String>
 
     <s:String x:Key="Website">Веб-страница</s:String>
-
     <s:String x:Key="Installed">Установленно</s:String>
 
     <s:String x:Key="Paginator">Пагинатор</s:String>
@@ -519,6 +515,8 @@
     <s:String x:Key="AddonInfoLatestReleaseTooltip">Дата последнего обновления</s:String>
     <s:String x:Key="AddonInfoCreationDateTooltip">Дата создания</s:String>
     <s:String x:Key="AddonInfoGameVersionTooltip">Версия игры</s:String>
+
+    <s:String x:Key="Completed">Завершено</s:String>
 
 
     <!--  region Authorization  -->
@@ -566,22 +564,8 @@
     <!--  endregion Authorization  -->
 
 
-
-
-
-
-    <!--  region Notifications Content  -->
-
-
-
-
-
-    <!--  endregion Notifications Content  -->
-
-
     <s:String x:Key="CustomColor">Свой цвет</s:String>
     <s:String x:Key="CustomColorDescription">Выберите свой акцентный цвет</s:String>
-
 
 
     <!--  Instance Configuration  -->
@@ -729,12 +713,12 @@
 
 
     <s:String x:Key="ImportResultSuccessful">Сборка {0} успешно импортирована и ожидает вас в библиотеке</s:String>
-    <s:String x:Key="ImportResultZipFileError">Ошибка открытия zip файла</s:String>
+    <s:String x:Key="ImportResultZipFileOpenError">Ошибка открытия zip файла</s:String>
     <s:String x:Key="ImportResultGameVersionError">Ошибка версии игры</s:String>
     <s:String x:Key="ImportResultJavaDownloadError">Проблема со скачиванием Java</s:String>
     <s:String x:Key="ImportResultIsOfflineMode">Оффлайн мод</s:String>
-    <s:String x:Key="ImportResultMovingFilesError">Ошибка при перемещении файлов</s:String>
-    <s:String x:Key="ImportResultDownloadError">Ошибка скачивания</s:String>
+    <s:String x:Key="ImportResultMoveFilesError">Ошибка при перемещении файлов</s:String>
+    <s:String x:Key="ImportResultDownloadFilesError">Ошибка скачивания</s:String>
     <s:String x:Key="ImportResultDirectoryCreateError">Ошибка с создание директории</s:String>
     <s:String x:Key="ImportResultWrongUrl">URL-адрес для импорта файла неверен. На данный момент мы поддерживаем только Яндекс Диск и Google Диск.</s:String>
     <s:String x:Key="ImportResultManifestError">Ошибка манифест-файла.</s:String>
@@ -815,7 +799,7 @@
 
     <s:String x:Key="Information">Информация</s:String>
     <s:String x:Key="MicrosoftAccountAuthorizationDescription">Для авторизации лицензионого аккаунта вы будете автоматически перенаправлены на страницу авторизации Microsoft.</s:String>
-    <s:String x:Key="DoInstallTheLatestVersion">Установить последнию версию?</s:String>
+    <s:String x:Key="DoInstallTheLatestVersion">Установить последнюю версию?</s:String>
     <s:String x:Key="NWClientNotAvailableForThisVersion">NWClient недоступен на данную версию</s:String>
     <s:String x:Key="YouHaveNoActiveDistributions">У вас отсутствуют активные раздачи</s:String>
 
@@ -823,7 +807,7 @@
     <s:String x:Key="InQueue">В очереди</s:String>
     <s:String x:Key="InConnect">Идёт соединение</s:String>
     <s:String x:Key="PostProcessing">Обработка файлов</s:String>
-    <s:String x:Key="InProcess">В очереди</s:String>
+    <s:String x:Key="InProcess">В процессе</s:String>
     <s:String x:Key="Successful">Успешно</s:String>
 
 
@@ -850,6 +834,7 @@
     <s:String x:Key="Notifications">Уведомления</s:String>
     <s:String x:Key="LibraryEmptyDescription">Вы можете добавить сборки в библиотеку через каталог или создания своей сборки</s:String>
     <s:String x:Key="CreateNewInstance">Создать новую сборку</s:String>
+    <s:String x:Key="YourColorColon:">Ваш цвет:</s:String>
     <s:String x:Key="MinecraftNotRunning">Minercaft не запущен.</s:String>
     <s:String x:Key="InstanceDash_">Сборка - {0}</s:String>
     <s:String x:Key="GoToCatalog">Перейти в каталог</s:String>
@@ -953,4 +938,68 @@
     <s:String x:Key="OurYoutube">Наш Youtube</s:String>
     <s:String x:Key="SourceCode">Исходный код</s:String>
     <s:String x:Key="OutWebsite">Наш веб-сайт</s:String>
+
+
+    <s:String x:Key="Edit">Редатировать</s:String>
+    <s:String x:Key="AllInstanceGroupName">Все сборки</s:String>
+    <s:String x:Key="AllInstanceGroupSummary">Данная группа содержит все сборки из библиотеки. (Не изменяемая)</s:String>
+    <s:String x:Key="OpenGroupTooltip">Открыть меню групп (ESC)</s:String>
+
+    <s:String x:Key="RemoveInstancesGroupTitle">Удаление группы</s:String>
+    <s:String x:Key="RemoveInstancesGroupDescription">
+        Вы действительно хотите группу: {0}?
+        Сборки из данной группы удалены не будут, и будут находится в других группах!
+    </s:String>
+    <s:String x:Key="YesIWantToRemoveGroup">Да я хочу удалить данную группу</s:String>
+
+    <s:String x:Key="WithoutGroup">Без группы</s:String>
+
+    <s:String x:Key="RemoveFromGroup">Убрать из группы</s:String>
+    <s:String x:Key="AddToGroup">Добавить в группу</s:String>
+
+
+
+    <!--  Metadata  -->
+    <s:String x:Key="EmptyDescriptionPlaceholder">
+        Описания нет, но мы надеемся что оно будет.
+    </s:String>
+
+    <s:String x:Key="CreatingGroupTitle">Создание группы</s:String>
+    <s:String x:Key="YourInstances">Ваши сборки</s:String>
+    <s:String x:Key="SelectInstancesForThisGroup">Выберите сборки для группы</s:String>
+    <s:String x:Key="CreateGroup">Создать группу</s:String>
+    <s:String x:Key="InstanceGroups">Группы сборок</s:String>
+    <s:String x:Key="GroupName">Название группы</s:String>
+    <s:String x:Key="CreateNewGroup">Создать новую группу</s:String>
+    <s:String x:Key="SelectInstancesForGroup">Выберите сборки для группы</s:String>
+    <s:String x:Key="GroupEditTitle">Редактирование группы</s:String>
+    <s:String x:Key="AvailableGroups">Доступные группы</s:String>
+    <s:String x:Key="SelectGroupsForInstance">Выберите группы для сборки</s:String>
+    <s:String x:Key="Group">Группа</s:String>
+    <s:String x:Key="GroupDescription">Выберите группы для сборки</s:String>
+
+    <s:String x:Key="GroupSummary">Описание группы</s:String>
+    <s:String x:Key="GroupSummaryDescription">Краткое описание для данной группы.</s:String>
+
+    <s:String x:Key="Copy">Скопировать</s:String>
+    <s:String x:Key="CopyingAnInstance">Копирование сборки</s:String>
+    <s:String x:Key="CopyWithoutChangingParameters">Копирование без изменений параметров</s:String>
+    <s:String x:Key="StartCopying">Начать копирование</s:String>
+    <s:String x:Key="UncopiedAddons">Нескопированные дополнения</s:String>
+    <s:String x:Key="InstanceCopyUncopiedAddonsDescription">При копировании сборки {0} не удалось перенести следующие аддоны:</s:String>
+
+    <s:String x:Key="LibraryGroupEmpty">Данная группа пуста</s:String>
+    <s:String x:Key="LibraryGroupEmptyDescription">Вы можете добавить сборки в данную группу из других групп или при создании сборки.</s:String>
+
+    <s:String x:Key="UpdateAvailable">Доступно обновление</s:String>
+    <s:String x:Key="MbitPerS">Мбит/с</s:String>
+
+    <s:String x:Key="RequiredDataLoading">Загрузка необходимых данных</s:String>
+    <s:String x:Key="FailedToLoadRequiredData">Не удалось загрузить необходимые данные</s:String>
+    <s:String x:Key="CatalogLoading">Идет загрузка каталога...</s:String>
+
+    <s:String x:Key="ImportResultWrongUrlOrPath">Неверный путь или URL-адрес до импорт-файла.</s:String>
+    <s:String x:Key="LibraryImportDragAndDropDescription">Перенесите mrpack, .zip или .nwpk, что установить его</s:String>
+    <s:String x:Key="AccountError">Ошибка аккаунта: {0}</s:String>
+    <s:String x:Key="NoLaunchAccountDescription">Не удалось запустить {0}. Запускаемый аккаунт не выбран, он требуется для запуска клиента.</s:String>
 </ResourceDictionary>

@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Threading;
-using System.Linq;
-using Newtonsoft.Json;
-using NightWorld.Tools.Minecraft.NBT.StorageFiles;
 using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
-using Lexplosion.Tools;
-using Lexplosion.Logic.Objects;
-using Lexplosion.Logic.Objects.CommonClientData;
-using Lexplosion.Logic.Management.Sources;
 using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.Logic.Management.Addons;
+using Lexplosion.Logic.Management.Sources;
+using Lexplosion.Logic.Objects;
+using Lexplosion.Logic.Objects.CommonClientData;
+using Lexplosion.Tools;
+using NightWorld.Tools.Minecraft.NBT.StorageFiles;
+using Newtonsoft.Json;
 
 namespace Lexplosion.Logic.Management.Instances
 {
@@ -36,32 +36,23 @@ namespace Lexplosion.Logic.Management.Instances
 		private const string UnknownAuthor = "Unknown author";
 		private const string NoDescription = "Описания нет, но мы надеемся что оно будет.";
 
+		public static Func<byte[]> LogoGenerator { set; private get; }
+
 		#region events
 		/// <summary>
-		/// Вызывается когда происходит обновление состояния инициализации
+		/// Вызывается когда происходит изменение состояния скачивания
 		/// </summary>
-		public event ProgressHandlerCallback ProgressHandler;
+		public event DownloadHandlerCallback DownloadHandler;
 		/// <summary>
-		/// Вызывается когда инициализация закончена
+		/// Вызывается когда происходит измнение состояния текущего класса
 		/// </summary>
-		public event InitializedCallback Initialized;
-		/// <summary>
-		/// Вызывается когда запуск игры выполнен
-		/// </summary>
-		public event LaunchComplitedCallback LaunchComplited;
-		/// <summary>
-		/// Вызывается когда игра закрывается
-		/// </summary>
-		public event GameExitedCallback GameExited;
-		/// <summary>
-		/// Вызывается если начинается скачивание
-		/// </summary>
-		public event Action DownloadStarted;
+		public event Action<StateType> StateChanged;
+
 		/// <summary>
 		/// Используется, для того чтобы сообщить InstanceFormViewModel,
 		/// что данные обновились, и нужно обновить инфу о данных.
 		/// </summary>
-		public event Action StateChanged;
+		public event Action DataChanged;
 		/// <summary>
 		/// Обновляется после того как InstanceClient будет иметь завершенную версию;
 		/// </summary>
@@ -81,10 +72,25 @@ namespace Lexplosion.Logic.Management.Instances
 		/// Вызывается когда у сборки обноавляются данные.
 		/// Существует чтобы <see cref="ClientsManager"/> при срабатывании этого эвента перезаписывал список сборок в файл
 		/// </summary>
-		internal event Action InternalDataChanged;
+		private Action _internalDataChanged;
 		#endregion
 
 		#region info
+
+
+		private StateType _state = StateType.Default;
+		public StateType State
+		{
+			get => _state; internal set
+			{
+				if (_state != value)
+				{
+					_state = value;
+					StateChanged?.Invoke(value);
+				}
+			}
+		}
+
 		public string LocalId { get => _localId; }
 		public string ExternalId { get => _externalId; }
 
@@ -172,7 +178,7 @@ namespace Lexplosion.Logic.Management.Instances
 				_summary = value;
 				OnPropertyChanged();
 				SummaryChanged?.Invoke();
-				StateChanged?.Invoke();
+				DataChanged?.Invoke();
 			}
 		}
 
@@ -198,7 +204,7 @@ namespace Lexplosion.Logic.Management.Instances
 			{
 				_createdLocally = value;
 				OnPropertyChanged();
-				StateChanged?.Invoke();
+				DataChanged?.Invoke();
 			}
 		}
 
@@ -210,9 +216,9 @@ namespace Lexplosion.Logic.Management.Instances
 			get => _updateAvailable;
 			set
 			{
-				_updateAvailable = value;
+				_updateAvailable = IsInstalled && value;
 				OnPropertyChanged();
-				StateChanged?.Invoke();
+				DataChanged?.Invoke();
 			}
 		}
 
@@ -240,7 +246,7 @@ namespace Lexplosion.Logic.Management.Instances
 			private set
 			{
 				_websiteUrl = value;
-				StateChanged?.Invoke();
+				DataChanged?.Invoke();
 			}
 		}
 
@@ -261,19 +267,9 @@ namespace Lexplosion.Logic.Management.Instances
 
 		public bool IsSharing { get; private set; } = false;
 
-		public bool IsInstalled { get; private set; } = false;
+		public bool IsInstalled { get; internal set; } = false;
 
 		public string FolderPath { get => _services.DirectoryService.GetInstancePath(_localId); }
-
-		internal ProgressHandlerCallback GetProgressHandler
-		{
-			get
-			{
-				ProgressHandlerCallback value = ProgressHandler;
-				if (value == null) return (StageType stageType, ProgressHandlerArguments data) => { };
-				return value;
-			}
-		}
 
 		#endregion
 
@@ -288,17 +284,13 @@ namespace Lexplosion.Logic.Management.Instances
 		/// Базовый конструктор, от него должны наследоваться все остальные
 		/// </summary>
 		/// <param name="source">Источник модпака</param>
-		internal InstanceClient(IInstanceSource source, AllServicesContainer services)
+		internal InstanceClient(IInstanceSource source, AllServicesContainer services, Action internalDataChanged)
 		{
 			Type = source.SourceType;
 			_instanceSource = source;
 			_services = services;
+			_internalDataChanged = internalDataChanged;
 			_dataManager = source.ContentManager;
-
-			GameExited += delegate (string _)
-			{
-				_gameManager = null;
-			};
 		}
 
 		/// <summary>
@@ -306,7 +298,7 @@ namespace Lexplosion.Logic.Management.Instances
 		/// </summary>
 		/// <param name="source">Источник модпака</param>
 		/// <param name="externalID">Внешний ID</param>
-		internal InstanceClient(IInstanceSource source, AllServicesContainer services, string externalID) : this(source, services)
+		internal InstanceClient(IInstanceSource source, AllServicesContainer services, Action internalDataChanged, string externalID) : this(source, services, internalDataChanged)
 		{
 			_externalId = externalID;
 		}
@@ -317,7 +309,7 @@ namespace Lexplosion.Logic.Management.Instances
 		/// <param name="source">Источник модпака</param>
 		/// <param name="externalID">Внешний ID</param>
 		/// <param name="externalID">Локальный ID</param>
-		internal InstanceClient(IInstanceSource source, AllServicesContainer services, string externalID, string localId) : this(source, services, externalID)
+		internal InstanceClient(IInstanceSource source, AllServicesContainer services, Action internalDataChanged, string externalID, string localId) : this(source, services, internalDataChanged, externalID)
 		{
 			_localId = localId;
 		}
@@ -328,13 +320,13 @@ namespace Lexplosion.Logic.Management.Instances
 		/// <param name="name">Название сборки</param>
 		/// <param name="source">Источник модпака</param>
 		/// <param name="gameVersion">Версия игры</param>
-		internal InstanceClient(string name, IInstanceSource source, AllServicesContainer services, MinecraftVersion gameVersion, string externalId, string localId) : this(source, services, externalId, localId)
+		internal InstanceClient(string name, IInstanceSource source, AllServicesContainer services, Action internalDataChanged, MinecraftVersion gameVersion, string externalId, string localId) : this(source, services, internalDataChanged, externalId, localId)
 		{
 			Name = name;
 			GameVersion = gameVersion;
 		}
 
-		internal void DeployLocally(ClientType modloader, bool isNwClient, string logoPath = null, string modloaderVersion = null, string optifineVersion = null, bool sodium = false)
+		internal void DeployLocally(ClientType modloader, bool isNwClient, string logoPath = null, string modloaderVersion = null, string optifineVersion = null, bool sodium = false, string profileVersion = null)
 		{
 			CreatedLocally = true;
 			Author = Account.AnyFuckingLogin;
@@ -345,12 +337,22 @@ namespace Lexplosion.Logic.Management.Instances
 
 			try
 			{
-				if (logoPath != null && File.Exists(logoPath))
+				if (Logo == null)
 				{
-					Logo = File.ReadAllBytes(logoPath);
+					if (logoPath != null && File.Exists(logoPath))
+					{
+						Logo = File.ReadAllBytes(logoPath);
+					}
+					else
+					{
+						Logo = LogoGenerator?.Invoke();
+					}
 				}
 			}
-			catch { }
+			catch
+			{
+				Logo = LogoGenerator?.Invoke();
+			}
 
 			AdditionalInstallerType? installer = null;
 			string installerVer = null;
@@ -360,7 +362,7 @@ namespace Lexplosion.Logic.Management.Instances
 				installer = AdditionalInstallerType.Optifine;
 			}
 
-			CreateFileStruct(modloader, modloaderVersion, isNwClient, installer, installerVer);
+			CreateFileStruct(modloader, modloaderVersion, isNwClient, installer, installerVer, profileVersion);
 			SaveAssets();
 
 			if (sodium && (modloader == ClientType.Fabric || modloader == ClientType.Quilt))
@@ -421,7 +423,7 @@ namespace Lexplosion.Logic.Management.Instances
 			}
 
 			Settings settings = GetSettings();
-			settings.IsAutoUpdate = true;
+			settings.IsAutoUpdate = string.IsNullOrWhiteSpace(modpackVersion);
 			SaveSettings(settings);
 		}
 
@@ -514,11 +516,11 @@ namespace Lexplosion.Logic.Management.Instances
 			IsComplete = false;
 		}
 
-		internal void CompleteInitialization(InstanceInit initResult, IReadOnlyCollection<string> errors)
+		internal void CompleteInitialization(InstanceInit initResult)
 		{
 			if (initResult == InstanceInit.Successful) IsComplete = true;
 			IsFictitious = false;
-			Initialized?.Invoke(initResult, (List<string>)errors, false);
+			State = StateType.Default;
 		}
 
 		/// <summary>
@@ -637,7 +639,7 @@ namespace Lexplosion.Logic.Management.Instances
 			SaveAssets();
 
 			Name = data.Name;
-			InternalDataChanged?.Invoke();
+			_internalDataChanged?.Invoke();
 		}
 
 		/// <summary>
@@ -646,6 +648,7 @@ namespace Lexplosion.Logic.Management.Instances
 		public void StopGame()
 		{
 			_gameManager?.Stop();
+			State = StateType.Default;
 		}
 
 		/// <summary>
@@ -653,16 +656,23 @@ namespace Lexplosion.Logic.Management.Instances
 		/// </summary>
 		public void CancelDownload()
 		{
+			State = StateType.DownloadInCancellation;
 			_cancelTokenSource?.Cancel();
+		}
+
+		internal void DownloadStateHandler(StateType stageType, ProgressHandlerArguments data)
+		{
+			State = stageType;
+			DownloadHandler?.Invoke(data);
 		}
 
 		/// <summary>
 		/// Обновляет или скачивает сборку. Сборка должна быть добавлена в библиотеку.
 		/// </summary>
-		public void Update(string instanceVersion = null)
+		public ClientInitResult Update(string instanceVersion = null)
 		{
 			_cancelTokenSource = new CancellationTokenSource();
-			ProgressHandler?.Invoke(StageType.Prepare, new ProgressHandlerArguments());
+			State = StateType.DownloadPrepare;
 
 			Settings instanceSettings = GetSettings();
 			instanceSettings.Merge(GlobalData.GeneralSettings, true);
@@ -674,7 +684,7 @@ namespace Lexplosion.Logic.Management.Instances
 			var launchAccount = Account.LaunchAccount;
 
 			LaunchGame launchGame = new LaunchGame(_localId, generalSettings, instanceSettings, activeAccount, launchAccount, _instanceSource, _services, _cancelTokenSource.Token);
-			InitData data = launchGame.Update(ProgressHandler, FileDownloadEvent, DownloadStarted, instanceVersion);
+			InitData data = launchGame.Update(DownloadStateHandler, FileDownloadEvent, instanceVersion);
 
 			UpdateAvailable = data.UpdatesAvailable;
 			if (data.InitResult == InstanceInit.IsCancelled)
@@ -691,24 +701,26 @@ namespace Lexplosion.Logic.Management.Instances
 				IsInstalled = (data.InitResult == InstanceInit.Successful);
 				_instanceVersionToDownload = null;
 
-				InternalDataChanged?.Invoke(); // чтобы если сборка установилась то флаг IsInstalled сохранился
+				_internalDataChanged?.Invoke(); // чтобы если сборка установилась то флаг IsInstalled сохранился
 			}
 
-			Initialized?.Invoke(data.InitResult, data.DownloadErrors, false);
 			Runtime.DebugWrite("UpdateInstance-end " + data.InitResult);
 
 			_cancelTokenSource = null;
 			_gameManager?.DeleteCancellationToken();
+			State = StateType.Default;
+
+			return new ClientInitResult(data.InitResult, data.DownloadErrors);
 		}
 
 		/// <summary>
 		/// Запускает сборку. Если надо её докачивает. Сборка должна быть доавлена в библиотеку
 		/// </summary>
-		public void Run()
+		public ClientRunResult Run()
 		{
 			_cancelTokenSource = new CancellationTokenSource();
 
-			ProgressHandler?.Invoke(StageType.Prepare, new ProgressHandlerArguments());
+			State = StateType.DownloadPrepare;
 
 			Settings instanceSettings = GetSettings();
 			instanceSettings.Merge(GlobalData.GeneralSettings, true);
@@ -718,30 +730,31 @@ namespace Lexplosion.Logic.Management.Instances
 			var launchAccount = Account.LaunchAccount;
 
 			_gameManager = new LaunchGame(_localId, generalSettings, instanceSettings, activeAccount, launchAccount, _instanceSource, _services, _cancelTokenSource.Token);
-			InitData data = _gameManager.Initialization(ProgressHandler, FileDownloadEvent, DownloadStarted);
+			InitData data = _gameManager.Initialization(DownloadStateHandler, FileDownloadEvent);
 
 			UpdateAvailable = data.UpdatesAvailable;
 			ProfileVersion = data.ClientVersion;
 
+			bool runResult = false;
+
 			if (data.InitResult == InstanceInit.Successful)
 			{
 				IsInstalled = true;
-				InternalDataChanged?.Invoke(); // чтобы если сборка установилась то флаг IsInstalled сохранился
-				Initialized?.Invoke(data.InitResult, data.DownloadErrors, true);
+				_internalDataChanged?.Invoke(); // чтобы если сборка установилась то флаг IsInstalled сохранился
+				State = StateType.Launching;
 
-				_gameManager.Run(data, LaunchComplited, GameExited, Name);
+				runResult = _gameManager.Run(data, () => { _gameManager = null; State = StateType.Default; }, Name);
 				_services.DataFilesService.SaveSettings(GlobalData.GeneralSettings);
 				// TODO: тут надо как-то определять что сборка обновилась и UpdateAvailable = false делать, если было обновление
-			}
-			else
-			{
-				Initialized?.Invoke(data.InitResult, data.DownloadErrors, false);
 			}
 
 			Runtime.DebugWrite("Run-end " + data.InitResult);
 
 			_cancelTokenSource = null;
 			_gameManager?.DeleteCancellationToken();
+			State = runResult ? StateType.GameRunning : StateType.Default;
+
+			return new ClientRunResult(data.InitResult, data.DownloadErrors, runResult);
 		}
 
 		internal void CheckUpdates()
@@ -771,7 +784,6 @@ namespace Lexplosion.Logic.Management.Instances
 
 		internal void SetLogo(string logoFilePath)
 		{
-
 			try
 			{
 				if (File.Exists(logoFilePath))
@@ -832,7 +844,8 @@ namespace Lexplosion.Logic.Management.Instances
 		/// <param name="modloaderVersion">Версия модлоадера</param>
 		/// <param name="additionalInstaller">Оптифайн. Если не нужен, то null</param>
 		/// <param name="additionalInstallerVer">Версия оптифайна. null если не нужен</param>
-		private void CreateFileStruct(ClientType modloader, string modloaderVersion, bool isNwClient, AdditionalInstallerType? additionalInstaller = null, string additionalInstallerVer = null)
+		/// <param name="profileVersion">Версия сборки. Null если сборка локальная, или нужно поставить последнюю версию</param>
+		private void CreateFileStruct(ClientType modloader, string modloaderVersion, bool isNwClient, AdditionalInstallerType? additionalInstaller = null, string additionalInstallerVer = null, string profileVersion = null)
 		{
 			// TODO: тут надо трай. И если будет исключение надо передавать ошибку
 
@@ -862,7 +875,7 @@ namespace Lexplosion.Logic.Management.Instances
 
 			if (_instanceSource != null)
 			{
-				InstancePlatformData instanceData = _instanceSource.CreateInstancePlatformData(_externalId, _localId, null);
+				InstancePlatformData instanceData = _instanceSource.CreateInstancePlatformData(_externalId, _localId, profileVersion);
 				if (instanceData != null)
 				{
 					_services.DataFilesService.SavePlatfromData(_localId, instanceData);
@@ -1097,5 +1110,6 @@ namespace Lexplosion.Logic.Management.Instances
 
 			SaveSettings(settings);
 		}
+
 	}
 }

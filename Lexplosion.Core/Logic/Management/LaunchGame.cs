@@ -15,6 +15,7 @@ using Lexplosion.Logic.Management.Installers;
 using Lexplosion.Logic.Management.Sources;
 using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.Logic.FileSystem.Services;
+using static Lexplosion.Logic.Objects.CommonClientData.NightWorldClientData;
 
 namespace Lexplosion.Logic.Management
 {
@@ -247,34 +248,37 @@ namespace Lexplosion.Logic.Management
 			return string.Empty;
 		}
 
+		private bool CheckActivationConditions(ActivationConditions activation, bool isNwClient, bool isNwSkinSystem, string accountType, string modloaderType)
+		{
+			if (activation == null) return true;
+			bool byAccountType = (activation?.accountTypes == null || activation.accountTypes.Contains(accountType));
+			bool byNwClient = (activation?.nightWorldClient == null || activation.nightWorldClient == isNwClient);
+			bool byClientType = (activation?.clientTypes == null || activation.clientTypes.Contains(modloaderType));
+			bool bySkinSystem = activation?.nightWorldSkinSystem == null || (activation.nightWorldSkinSystem == isNwSkinSystem);
+
+			return byAccountType && byNwClient && byClientType && bySkinSystem;
+		}
+
 		private string CreateCommand(InitData data)
 		{
-			// TODO: отрефакторить всю эту хуйню. Сделать класс билдер
+			var builder = new RunCommandBuilder();
+
 			string gamePath = _settings.GamePath.Replace('\\', '/') + "/";
 			gamePath = gamePath.Replace("//", "/");
 			string versionPath = gamePath + "instances/" + _instanceId + "/version/" + data.VersionFile.MinecraftJar.name;
 
-			if (_settings.GameArgs.Length > 0 && _settings.GameArgs[_settings.GameArgs.Length - 1] != ' ')
-				_settings.GameArgs += " ";
-
-			if (_settings.JVMArgs.Length > 0 && _settings.JVMArgs[_settings.JVMArgs.Length - 1] != ' ')
-				_settings.JVMArgs += " ";
-
 			bool isNwClient = (data.VersionFile?.NightWorldClientData != null) && data.VersionFile.IsNightWorldClient && _launchAccount.AccountType == AccountType.NightWorld;
 			bool isNwSkinSystem = _launchAccount.AccountType == AccountType.NightWorld && _settings.IsNightWorldSkinSystem != false;
-
+			string modloaderType = data.VersionFile.ModloaderType.ToString();
 			string accountType = _launchAccount.AccountType.ToString();
+
 			string libs = string.Empty;
 			foreach (string lib in data.Libraries.Keys)
 			{
 				var activation = data.Libraries[lib].activationConditions;
 
-				bool byAccountType = (activation?.accountTypes == null || activation.accountTypes.Contains(accountType));
-				bool byNwClient = (activation?.nightWorldClient == null || activation.nightWorldClient == isNwClient);
-				bool byClientType = (activation?.clientTypes == null || activation.clientTypes.Contains(data.VersionFile.ModloaderType.ToString()));
-				bool bySkinSystem = activation?.nightWorldSkinSystem == null || (activation.nightWorldSkinSystem == isNwSkinSystem);
-
-				if (byAccountType && byNwClient && byClientType && bySkinSystem && !data.Libraries[lib].notLaunch)
+				bool isActivated = CheckActivationConditions(activation, isNwClient, isNwSkinSystem, accountType, modloaderType);
+				if (isActivated && !data.Libraries[lib].notLaunch)
 				{
 					libs += "\"" + gamePath + "libraries/" + lib + "\";";
 				}
@@ -284,43 +288,22 @@ namespace Lexplosion.Logic.Management
 
 			string mainClass = data.VersionFile.MainClass;
 
-			string additionalInstallerArgumentsBefore = string.Empty;
-			string additionalInstallerArgumentsAfter = " ";
-
 			var installer = data.VersionFile.AdditionalInstaller;
 			if (installer != null)
 			{
 				if (!string.IsNullOrWhiteSpace(installer.jvmArguments))
 				{
-					additionalInstallerArgumentsBefore += installer.jvmArguments + " ";
+					builder.AddJvmArgs(installer.jvmArguments);
 				}
 
 				if (!string.IsNullOrWhiteSpace(installer.arguments))
 				{
-					additionalInstallerArgumentsAfter += installer.arguments + " ";
+					builder.AddGameArgs(installer.arguments);
 				}
 
 				mainClass = installer.mainClass;
 			}
 
-			string jvmArgs = data.VersionFile.JvmArguments ?? string.Empty;
-
-			string nwClientMinecraftArgs = string.Empty;
-			string nwClientJvmArgs = string.Empty;
-			NightWorldClientData.ComlexArgument[] nwClientComplexArguments = null;
-			if (isNwClient)
-			{
-				var nwClientData = data.VersionFile.NightWorldClientData;
-				NightWorldClientData.Arguments arguments = nwClientData.GetByClientType(data.VersionFile.ModloaderType);
-				if (arguments != null)
-				{
-					nwClientMinecraftArgs = arguments.Minecraft ?? string.Empty;
-					nwClientJvmArgs = arguments.Jvm ?? string.Empty;
-					nwClientComplexArguments = arguments.Complex;
-				}
-			}
-
-			string autologin = string.Empty;
 			if (!string.IsNullOrWhiteSpace(_settings.AutoLoginServer))
 			{
 				if (_settings.AutoLoginServer.Contains(":"))
@@ -329,58 +312,84 @@ namespace Lexplosion.Logic.Management
 					string ip = parts[0];
 					string port = parts[1];
 
-					autologin = " --server \"" + ip + "\" --port \"" + port + "\" --quickPlayMultiplayer \"" + _settings.AutoLoginServer + "\"";
+					builder.AddGameArgs($"--server \"{ip}\" --port \"{port}\" --quickPlayMultiplayer \"{_settings.AutoLoginServer}\"");
 				}
 				else
 				{
-					autologin = " --server \"" + _settings.AutoLoginServer + "\" --quickPlayMultiplayer \"" + _settings.AutoLoginServer + "\"";
+					builder.AddGameArgs($"--server \"{_settings.AutoLoginServer}\" --quickPlayMultiplayer \"{_settings.AutoLoginServer}\"");
 				}
 			}
+
+			builder.AddGameArgs(_settings.GameArgs);
 
 			if ((isNwClient && !string.IsNullOrWhiteSpace(data.VersionFile.NightWorldClientData.MainClass)))
 				mainClass = data.VersionFile.NightWorldClientData.MainClass;
 
-			string command;
-			if (data.VersionFile.DefaultArguments != null)
+			if (data.VersionFile.AdditionaArguments != null)
 			{
-				command = string.Empty;
-				foreach (MinecraftArgument arg in data.VersionFile.DefaultArguments.Jvm)
+				foreach (var argument in data.VersionFile.AdditionaArguments)
+				{
+					if (!CheckActivationConditions(argument.ActivationConditions, isNwClient, isNwSkinSystem, accountType, modloaderType)) continue;
+
+					if (argument.Type == AdditionaMinecraftArgument.ArgumentType.Jvm)
+					{
+						builder.AddJvmArgs(argument.Value);
+					}
+					else if (argument.Type == AdditionaMinecraftArgument.ArgumentType.Game)
+					{
+						builder.AddGameArgs(argument.Value);
+					}
+				}
+			}
+
+			NightWorldClientData.ComlexArgument[] nwClientComplexArguments = null;
+			if (isNwClient)
+			{
+				var nwClientData = data.VersionFile.NightWorldClientData;
+				NightWorldClientData.Arguments arguments = nwClientData.GetByClientType(data.VersionFile.ModloaderType);
+				if (arguments != null)
+				{
+					builder.AddGameArgs(arguments.Minecraft);
+					builder.AddJvmArgs(arguments.Jvm);
+					nwClientComplexArguments = arguments.Complex;
+				}
+			}
+
+			string command;
+			if (data.VersionFile.BasicArguments != null)
+			{
+				foreach (MinecraftArgument arg in data.VersionFile.BasicArguments.Jvm)
 				{
 					string param = ParseCommandArgument(arg);
 					if (!string.IsNullOrWhiteSpace(param))
 					{
-						command += " " + param;
+						builder.AddJvmArgs(param);
 					}
 				}
 
-				command += additionalInstallerArgumentsBefore;
-				command += jvmArgs;
 				if (_keyStorePath != null)
 				{
-					command += " -Djavax.net.ssl.trustStore=\"" + _keyStorePath + "\"";
+					builder.AddJvmArgs("-Djavax.net.ssl.trustStore=\"" + _keyStorePath + "\"");
 				}
-				command += " " + _settings.JVMArgs;
-				command += @"-Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true -XX:TargetSurvivorRatio=90";
-				command += " -Dhttp.agent=\"Mozilla/5.0\"";
-				command += " -Djava.net.preferIPv4Stack=true";
-				command += " -Xmx" + _settings.Xmx + "M -Xms" + _settings.Xms + "M " + _settings.GameArgs;
-				command += nwClientJvmArgs + " ";
-				command += mainClass + " ";
-				command += nwClientMinecraftArgs;
 
-				foreach (MinecraftArgument arg in data.VersionFile.DefaultArguments.Game)
+				builder.AddJvmArgs(_settings.JVMArgs);
+				builder.AddJvmArgs(@"-Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true -XX:TargetSurvivorRatio=90");
+				builder.AddJvmArgs("-Dhttp.agent=\"Mozilla/5.0\"");
+				builder.AddJvmArgs("-Djava.net.preferIPv4Stack=true");
+				builder.AddJvmArgs($"-Xmx{_settings.Xmx}M -Xms{_settings.Xms}M");
+
+				foreach (MinecraftArgument arg in data.VersionFile.BasicArguments.Game)
 				{
 					string param = ParseCommandArgument(arg);
 					if (!string.IsNullOrWhiteSpace(param))
 					{
-						command += " " + param;
+						builder.AddGameArgs(param);
 					}
 				}
 
-				command += " " + data.VersionFile.Arguments;
-				command += " --width " + _settings.WindowWidth + " --height " + _settings.WindowHeight;
-				command += autologin;
-				command += additionalInstallerArgumentsAfter;
+				builder.AddGameArgs("--width " + _settings.WindowWidth + " --height " + _settings.WindowHeight);
+
+				command = builder.Build(mainClass);
 				command = command.Replace("${auth_player_name}", _launchAccount.Login);
 				command = command.Replace("${version_name}", data.VersionFile.GameVersion);
 				command = command.Replace("${game_directory}", "\"" + gamePath + "instances/" + _instanceId + "\"");
@@ -388,42 +397,35 @@ namespace Lexplosion.Logic.Management
 				command = command.Replace("${assets_index_name}", data.VersionFile.AssetsVersion);
 				command = command.Replace("${auth_uuid}", _launchAccount.UUID);
 				command = command.Replace("${auth_access_token}", _launchAccount.AccessToken);
-				command = command.Replace("${user_type}", "legacy");
+				command = command.Replace("${user_type}", "mojang");
 				command = command.Replace("${version_type}", "release");
 				command = command.Replace("${natives_directory}", "\"" + gamePath + "natives/" + (data.VersionFile.CustomVersionName ?? data.VersionFile.GameVersion) + "\"");
 				command = command.Replace("${launcher_name}", "nw-lexplosion");
 				command = command.Replace("${launcher_version}", "0.7.9");
-				command = command.Replace("${classpath}", " " + libs);
+				command = command.Replace("${classpath}", libs);
 			}
 			else
 			{
-				command = " -Djava.library.path=\"" + gamePath + "natives/" + (data.VersionFile.CustomVersionName ?? data.VersionFile.GameVersion) + "\" -cp ";
-				command += libs;
-
-				command += additionalInstallerArgumentsBefore;
-				command += jvmArgs + " ";
-				command += _settings.JVMArgs;
-				command += nwClientJvmArgs;
+				builder.AddJvmArgs($"-Djava.library.path=\"{gamePath}natives/{(data.VersionFile.CustomVersionName ?? data.VersionFile.GameVersion)}\" -cp {libs}");
+				builder.AddJvmArgs(_settings.JVMArgs);
 
 				if (_keyStorePath != null)
 				{
-					command += " -Djavax.net.ssl.trustStore=\"" + _keyStorePath + "\"";
+					builder.AddJvmArgs("-Djavax.net.ssl.trustStore=\"" + _keyStorePath + "\"");
 				}
-				command += @" -Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true -XX:TargetSurvivorRatio=90";
-				command += " -Dhttp.agent=\"Mozilla/5.0\"";
-				command += " -Djava.net.preferIPv4Stack=true";
-				command += " -Xmx" + _settings.Xmx + "M -Xms" + _settings.Xms + "M " + _settings.GameArgs;
-				command += mainClass + " ";
-				command += nwClientMinecraftArgs;
-				command += " --username " + _launchAccount.Login + " --version " + data.VersionFile.GameVersion;
-				command += " --gameDir \"" + gamePath + "instances/" + _instanceId + "\"";
-				command += " --assetsDir \"" + gamePath + "assets" + "\"";
-				command += " --assetIndex " + data.VersionFile.AssetsVersion;
-				command += " --uuid " + _launchAccount.UUID + " --accessToken " + _launchAccount.AccessToken + " --userProperties [] --userType legacy ";
-				command += data.VersionFile.Arguments;
-				command += " --width " + _settings.WindowWidth + " --height " + _settings.WindowHeight;
-				command += autologin;
-				command += additionalInstallerArgumentsAfter;
+
+				builder.AddJvmArgs(@"-Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true -XX:TargetSurvivorRatio=90");
+				builder.AddJvmArgs("-Dhttp.agent=\"Mozilla/5.0\"");
+				builder.AddJvmArgs("-Djava.net.preferIPv4Stack=true");
+				builder.AddJvmArgs("-Xmx" + _settings.Xmx + "M -Xms" + _settings.Xms + "M");
+				builder.AddGameArgs("--username " + _launchAccount.Login + " --version " + data.VersionFile.GameVersion);
+				builder.AddGameArgs("--gameDir \"" + gamePath + "instances/" + _instanceId + "\"");
+				builder.AddGameArgs("--assetsDir \"" + gamePath + "assets" + "\"");
+				builder.AddGameArgs("--assetIndex " + data.VersionFile.AssetsVersion);
+				builder.AddGameArgs("--uuid " + _launchAccount.UUID + " --accessToken " + _launchAccount.AccessToken + " --userProperties [] --userType mojang");
+				builder.AddGameArgs("--width " + _settings.WindowWidth + " --height " + _settings.WindowHeight);
+
+				command = builder.Build(mainClass);
 			}
 
 			if (nwClientComplexArguments != null)
@@ -449,8 +451,6 @@ namespace Lexplosion.Logic.Management
 			command = command.Replace("${appearanceElementsDir}", gamePath + "appearanceElements");
 			command = command.Replace("${mainClass}", mainClass);
 			command = command.Replace("${appearanceElementsDir}", gamePath + "appearanceElements");
-
-			//TODO: сделать функционал для автоматического коннекта - --server 192.168.1.114 --port 55538 --quickPlayMultiplayer "192.168.1.114:55538";
 
 			return command;
 		}
@@ -545,7 +545,7 @@ namespace Lexplosion.Logic.Management
 			}
 		}
 
-		public bool Run(InitData data, LaunchComplitedCallback ComplitedLaunch, GameExitedCallback GameExited, string gameClientName)
+		public bool Run(InitData data, Action gameExited, string gameClientName)
 		{
 			GameClientName = gameClientName;
 			GameVersion = data?.VersionFile?.GameVersion;
@@ -601,8 +601,6 @@ namespace Lexplosion.Logic.Management
 			Runtime.DebugWrite("Run javaPath " + _javaPath);
 			Runtime.DebugWrite($"Minecraft run command: \"{_javaPath}\" {command}");
 
-			bool gameVisible = false;
-
 			try
 			{
 				_process.StartInfo.FileName = _javaPath;
@@ -648,66 +646,52 @@ namespace Lexplosion.Logic.Management
 						}
 					}
 
-					if (!gameVisible)
-					{
-						ComplitedLaunch?.Invoke(_instanceId, false);
-					}
-
 					_classInstance = null;
-					GameExited(_instanceId);
+					gameExited();
 				};
 
 				_processIsWork = _process.Start();
 				_process.BeginOutputReadLine();
-
-				// отслеживаем появление окна
-				Lexplosion.Runtime.TaskRun(delegate ()
-				{
-					while (_processIsWork)
-					{
-						Thread.Sleep(1000);
-
-						try
-						{
-							if (GuiIsExists(_process.Id))
-							{
-								ComplitedLaunch?.Invoke(_instanceId, true);
-								OnGameStarted?.Invoke(this);
-
-								gameVisible = true;
-								break;
-							}
-						}
-						catch
-						{
-							break;
-						}
-					}
-				});
 
 				lock (loocker)
 				{
 					_gameGateway?.Initialization(_process.Id);
 				}
 
-				return true;
+				// отслеживаем появление окна
+				while (_processIsWork)
+				{
+					Thread.Sleep(1000);
+
+					try
+					{
+						if (GuiIsExists(_process.Id))
+						{
+							OnGameStarted?.Invoke(this);
+							return true;
+						}
+					}
+					catch
+					{
+						break;
+					}
+				}
+
+				return false;
 			}
 			catch (Exception ex)
 			{
 				_processIsWork = false;
-				ComplitedLaunch(_instanceId, false);
 				Runtime.DebugWrite(ex);
 
 				return false;
 			}
 		}
 
-		public InitData Update(ProgressHandlerCallback progressHandler, Action<string, int, DownloadFileProgress> fileDownloadHandler, Action downloadStarted, string version = null, bool onlyBase = false)
+		public InitData Update(ProgressHandler progressHandler, Action<string, int, DownloadFileProgress> fileDownloadHandler, string version = null, bool onlyBase = false)
 		{
 			IInstallManager instance = _source.GetInstaller(_instanceId, onlyBase, _updateCancelToken);
-
 			instance.FileDownloadEvent += fileDownloadHandler;
-			instance.DownloadStarted += downloadStarted;
 
 			InstanceInit result = instance.Check(out string javaVersionName, version);
 
@@ -755,7 +739,7 @@ namespace Lexplosion.Logic.Management
 				{
 					if (javaCheck.Check(out JavaChecker.CheckResult checkResult, out JavaVersion javaVersion))
 					{
-						progressHandler?.Invoke(StageType.Java, new ProgressHandlerArguments()
+						progressHandler?.Invoke(StateType.DownloadJava, new ProgressHandlerArguments()
 						{
 							StagesCount = 0,
 							Stage = 0,
@@ -766,7 +750,7 @@ namespace Lexplosion.Logic.Management
 
 						bool downloadResult = javaCheck.Update(delegate (int percent, int file, int filesCount, string fileName)
 						{
-							progressHandler?.Invoke(StageType.Java, new ProgressHandlerArguments()
+							progressHandler?.Invoke(StateType.DownloadJava, new ProgressHandlerArguments()
 							{
 								StagesCount = 0,
 								Stage = 0,
@@ -823,7 +807,7 @@ namespace Lexplosion.Logic.Management
 			return instance.Update(_javaPath, progressHandler);
 		}
 
-		public InitData Initialization(ProgressHandlerCallback progressHandler, Action<string, int, DownloadFileProgress> fileDownloadHandler, Action downloadStarted)
+		public InitData Initialization(ProgressHandler progressHandler, Action<string, int, DownloadFileProgress> fileDownloadHandler)
 		{
 			try
 			{
@@ -845,7 +829,7 @@ namespace Lexplosion.Logic.Management
 
 				if (!versionIsStatic && _services.NwApi.ServerIsOnline())
 				{
-					data = Update(progressHandler, fileDownloadHandler, downloadStarted, null, (_settings.IsAutoUpdate == false));
+					data = Update(progressHandler, fileDownloadHandler, null, (_settings.IsAutoUpdate == false));
 				}
 				else
 				{

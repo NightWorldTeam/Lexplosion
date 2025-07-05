@@ -13,13 +13,14 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends
     {
         public event Action<NightWorldUserBase> FriendAdded;
 
-
+        private AppCore _appCore;
         private ObservableCollection<object> _outgoing = [];
         private ObservableCollection<object> _incoming = [];
 
 
         public FiltableObservableCollection Incoming { get; } = new();
         public FiltableObservableCollection Outgoing { get; } = new();
+
 
         private string _searchBoxText;
         public string SearchBoxText
@@ -36,8 +37,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends
         #region Contrustors
 
 
-        public FriendRequestsModel()
+        public FriendRequestsModel(AppCore appCore)
         {
+            _appCore = appCore;
             Outgoing.Source = _outgoing;
             Incoming.Source = _incoming;
 
@@ -69,15 +71,27 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends
 
         public void AddFriend(NightWorldUserRequest friend)
         {
-            friend.AddFriend();
-            UpdateRequestsData();
-            FriendAdded?.Invoke(friend);
+            Runtime.TaskRun(() =>
+            {
+                friend.AddFriend();
+                _appCore.UIThread(() =>
+                {
+                    UpdateRequestsData();
+                    FriendAdded?.Invoke(friend);
+                });
+            });
         }
 
         public void DeclineFriend(NightWorldUserRequest friend)
         {
-            friend.DeclineFriend();
-            UpdateRequestsData();
+            Runtime.TaskRun(() =>
+            {
+                friend.DeclineFriend();
+                _appCore.UIThread(() =>
+                {
+                    UpdateRequestsData();
+                });
+            });
         }
 
         #endregion Publuc & Protected Methods

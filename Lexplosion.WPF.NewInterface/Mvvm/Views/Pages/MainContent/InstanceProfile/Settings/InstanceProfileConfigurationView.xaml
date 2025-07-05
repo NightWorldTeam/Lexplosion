@@ -519,7 +519,6 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <!--  TODO : Translate  -->
                 <TextBlock
                     VerticalAlignment="Center"
                     FontSize="14"

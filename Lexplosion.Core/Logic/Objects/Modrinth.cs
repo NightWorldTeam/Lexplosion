@@ -182,7 +182,19 @@ namespace Lexplosion.Logic.Objects.Modrinth
 			public string ProjectId;
 
 			[JsonProperty("dependency_type")]
-			public string DependencyType;
+			public Dependency DependencyType;
+
+			public enum Dependency
+			{
+				[JsonProperty("required")]
+				Required,
+				[JsonProperty("optional")]
+				Optional,
+				[JsonProperty("incompatible")]
+				Incompatible,
+				[JsonProperty("embedded")]
+				Embedded,
+			}
 		}
 
 		[JsonProperty("project_id")]

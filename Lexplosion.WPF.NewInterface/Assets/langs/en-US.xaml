@@ -142,6 +142,7 @@
     <s:String x:Key="NightWorldSkins">NightWorld Skins</s:String>
     <s:String x:Key="NightWorldSkinsDescription">In Minecraft, the skin setted in the profile will be displayed.</s:String>
 
+
     <!--    -->
     <!--  Appearance  -->
     <!--    -->
@@ -161,7 +162,6 @@
     <!--  Accounts  -->
     <!--    -->
     <s:String x:Key="Accounts">Accounts</s:String>
-
 
     <!--    -->
     <!--  About  -->
@@ -225,7 +225,6 @@
     <s:String x:Key="Addons">Addons</s:String>
     <s:String x:Key="AboutInstance">About Instance</s:String>
 
-
     <!--    -->
     <!--  Instance Profile Left Panel  -->
     <!--    -->
@@ -234,7 +233,6 @@
     <s:String x:Key="GameType:">Game Type:</s:String>
     <s:String x:Key="PlayedTime:">Played Time:</s:String>
     <s:String x:Key="DownloadCount:">Downloads:</s:String>
-
 
     <!--    -->
     <!--  Instance Profile Addons  -->
@@ -304,6 +302,7 @@
     <s:String x:Key="SortBy">Sort By</s:String>
     <s:String x:Key="ShowPerPage">Show per page</s:String>
     <s:String x:Key="Accept">Accept</s:String>
+    <s:String x:Key="Installing...">Installing...</s:String>
 
 
     <!--    -->
@@ -344,7 +343,6 @@
     <s:String x:Key="MinecraftVersion">Minecraft Version</s:String>
     <s:String x:Key="ShowSnaphosts">Minecraft Version</s:String>
 
-
     <!--  Instance Factory  -->
     <s:String x:Key="InstanceName">Instance Name</s:String>
     <s:String x:Key="CreateInstance">Create Instance</s:String>
@@ -358,6 +356,10 @@
     <s:String x:Key="InstanceExport">Instance Export</s:String>
     <s:String x:Key="ExportProcessActive">Export Process is active</s:String>
 
+
+    <!--  Import  -->
+    <s:String x:Key="ImportDragDropFieldDescription">Drag and drop the archive with the assembly to start the download.</s:String>
+    <s:String x:Key="Review">Browse</s:String>
 
     <!--  Filter Sorting  -->
     <s:String x:Key="Source">Source</s:String>
@@ -374,7 +376,7 @@
     <s:String x:Key="And">And</s:String>
 
     <!--  Categories  -->
-    <s:String x:Key="CategoriesSearchBoxPlaceholder">Select a tag to filter...</s:String>
+    <s:String x:Key="CategoriesSearchBoxPlaceholder">Select a category to filter...</s:String>
 
     <!--  Modrinth  -->
     <s:String x:Key="ModrinthRelevance">Relevancy</s:String>
@@ -391,18 +393,17 @@
     <s:String x:Key="CurseforgeTotalDownloads">TotalDownloads</s:String>
     <s:String x:Key="CurseforgeName">A-Z</s:String>
 
-
     <!--  Accounts  -->
     <s:String x:Key="Active">Active</s:String>
     <s:String x:Key="NotActive">Not active</s:String>
+    <s:String x:Key="TypingNicknamePlaceholder">Typing nickname...</s:String>
 
     <!--  Funcs  -->
     <s:String x:Key="Activate">Activate</s:String>
     <s:String x:Key="DoGameLauncher">Do game launcher</s:String>
     <s:String x:Key="Signout">Sign-out</s:String>
-    <s:String x:Key="TypingNicknamePlaceholder">Typing nickname...</s:String>
 
-    <s:String x:Key="GameLauncher">Game Launch</s:String>
+    <s:String x:Key="GameLauncher">Запуск игры</s:String>
 
 
     <!--  Account Factory  -->
@@ -419,10 +420,7 @@
 
     <!--  Nightworld Limited Pages Curtains  -->
     <s:String x:Key="OnlyAvailableWithNightWorldAccount">Only available with a NightWorld account</s:String>
-    <s:String x:Key="OnlyAvailableWithNightWorldAccountDescription">
-        This launch feature is only available if you are logged in through your NightWorld account;
-        P.S you don't need to run it.
-    </s:String>
+    <s:String x:Key="OnlyAvailableWithNightWorldAccountDescription">This launch feature is only available if you are logged in through your NightWorld account; P.S you don't need to run it.</s:String>
     <s:String x:Key="CreateNightWorldAccount">Create a NightWorld account</s:String>
     <s:String x:Key="LoginWithYourNightWorldAccount">Login with your NightWorld account</s:String>
 
@@ -435,6 +433,9 @@
     <s:String x:Key="Share">Shares</s:String>
     <s:String x:Key="ShareInstance">Share this instance</s:String>
     <s:String x:Key="ActiveShares">Active Shares</s:String>
+
+
+    <s:String x:Key="CurseforgeCatalogLoading">Curseforge catalog loading...</s:String>
 
 
     <!--  Account Funcs  -->
@@ -494,7 +495,7 @@
     <s:String x:Key="VerifyIntegrityGameFiles">Verify integrity of game files...</s:String>
     <s:String x:Key="DownloadCanceling">Download canceling...</s:String>
 
-    <s:String x:Key="AddonsListLoadingPlaceholder">Addons List Loading...</s:String>
+    <s:String x:Key="AddonsListLoadingPlaceholder">Addon list loading...</s:String>
 
     <s:String x:Key="Technology">Technology</s:String>
     <s:String x:Key="WorldGen">World Gen</s:String>
@@ -510,10 +511,14 @@
     <s:String x:Key="Paginator">Paginator</s:String>
     <s:String x:Key="Searchbox">Searchbox</s:String>
     <s:String x:Key="InstalledList">Installed</s:String>
-
     <s:String x:Key="SearchAddonByNamePlaceholder">Addon name</s:String>
 
-    <s:String x:Key="Completed">Завершено</s:String>
+    <s:String x:Key="AddonInfoDownloadsTooltip">Download Count</s:String>
+    <s:String x:Key="AddonInfoLatestReleaseTooltip">Latest updated date</s:String>
+    <s:String x:Key="AddonInfoCreationDateTooltip">Date of creation</s:String>
+    <s:String x:Key="AddonInfoGameVersionTooltip">Game version</s:String>
+
+    <s:String x:Key="Completed">Completed</s:String>
 
 
     <!--  region Authorization  -->
@@ -531,6 +536,7 @@
     <s:String x:Key="EmailAddress">Email Address</s:String>
     <s:String x:Key="CreateAccount">Create Account</s:String>
     <s:String x:Key="AlreadyHaveAnyAccount">Already have any account?</s:String>
+
 
     <s:String x:Key="ViaNightWorld">Via NightWorld</s:String>
     <s:String x:Key="ViaMicrosoft">Via Microsoft</s:String>
@@ -557,11 +563,12 @@
     <s:String x:Key="Important">Important!</s:String>
     <s:String x:Key="MicrosoftManualInputImportantMessage">Never give/show your authentication token to anyone. If third parties receive the token, they will gain access to your account!</s:String>
 
-
-    <s:String x:Key="CustomColor">Custom color</s:String>
-    <s:String x:Key="CustomColorDescription">Select custom color</s:String>
-
     <!--  endregion Authorization  -->
+
+
+    <s:String x:Key="CustomColor">Свой цвет</s:String>
+    <s:String x:Key="CustomColorDescription">Выберите свой акцентный цвет</s:String>
+
 
     <!--  Instance Configuration  -->
     <s:String x:Key="SaveChanges">Save Changes</s:String>
@@ -571,6 +578,7 @@
 
     <s:String x:Key="Files">Files</s:String>
     <s:String x:Key="Files_LowerCase">files</s:String>
+
 
     <!--  Ad Servers  -->
     <s:String x:Key="PartnerServers">Partner Servers</s:String>
@@ -584,12 +592,67 @@
 
     <s:String x:Key="InstallServerInstance">Install Server Instance</s:String>
     <s:String x:Key="InstallServerInstanceDescription">To play on this server you need to install the assembly, do you want to install this instance?</s:String>
-    <s:String x:Key="InstanceForServerAddedToLibrary">Instance {0} successfully added to the library!</s:String>
     <s:String x:Key="ServerIpAddressCopied">Server IP address copied</s:String>
 
-    <s:String x:Key="LoadingInstanceClientVersions">Loading Client Versions</s:String>
+
+    <s:String x:Key="LoadingInstanceClientVersions">Loading instance versions</s:String>
     <s:String x:Key="NoDistributionsAvailableForDownload">There are no distributions available for download</s:String>
 
+
+    <!--  region Notifications  -->
+
+
+    <!--    -->
+    <!--  Ad Server  -->
+    <!--    -->
+
+    <s:String x:Key="InstanceForServerAddedToLibrary">Instance {0} successfully added to the library!</s:String>
+
+    <!--    -->
+    <!--  Multiplayer  -->
+    <!--    -->
+    <s:String x:Key="MultiplayerReloaded">Multiplayer reloaded</s:String>
+
+
+    <!--    -->
+    <!--  InstanceForm  -->
+    <!--    -->
+
+
+    <!--  Instance Launch  -->
+    <s:String x:Key="InstanceLaunchedSuccessfulNotification">Instance {0} successfully launched.</s:String>
+    <s:String x:Key="InstanceLaunchedUnsuccessfulNotification">Failed to launched instance {0}.</s:String>
+
+    <!--  Instance Installing  -->
+    <s:String x:Key="DownloadCompletedSuccessfully">Instance download {0} completed successfully.</s:String>
+
+    <s:String x:Key="FailedToDownloadFollowingFiles:_">The following files could not be downloaded: {0}</s:String>
+    <s:String x:Key="FailedToDownloadSomeFiles">Failed to download some files</s:String>
+    <s:String x:Key="RedownloadingMaySolveTheProblem">Re-downloading may solve the problem, but it is not certain.</s:String>
+    <s:String x:Key="ExternalIdIncorrect">External instance id is invalid.</s:String>
+    <s:String x:Key="ServerError">Server error.</s:String>
+    <s:String x:Key="FailedToGetDataFromServer">Failed to get data from server.</s:String>
+    <s:String x:Key="FileVerificationFailed">File Verification Failed.</s:String>
+    <s:String x:Key="VersionVerificationFailed">Version Verification Failed.</s:String>
+    <s:String x:Key="ModloaderVerificationFailed">Modloader Verification Failed.</s:String>
+    <s:String x:Key="InvalidGameDirectory">Invalid game directory</s:String>
+    <s:String x:Key="FailedLoadInstanceManifest">Failed load instance manifest.</s:String>
+    <s:String x:Key="TrySetCustomJavaPath">Try set custom java path.</s:String>
+    <s:String x:Key="InstanceDownloadCanceledSuccessfully">Instance download canceled successfully.</s:String>
+    <s:String x:Key="UnknownErrorTryRestartLauncher">Something strange happened... We recommend turning it off and on again.</s:String>
+
+    <s:String x:Key="CurseforgeErrorTitle">Curseforge error</s:String>
+    <s:String x:Key="NightWorldErrorTitle">NightWorld error</s:String>
+    <s:String x:Key="GuardErrorTitle">Guard Error</s:String>
+    <s:String x:Key="VersionErrorTitle">Version Error</s:String>
+    <s:String x:Key="ForgeVersionErrorTitle">Forge version error</s:String>
+    <s:String x:Key="GamePathErrorTitle">Game Path error</s:String>
+    <s:String x:Key="ManifestErrorTitle">Manifest-file error</s:String>
+    <s:String x:Key="JavaDownloadErrorTitle">Java download error</s:String>
+    <s:String x:Key="UnknownErrorTitle">Unknown Error</s:String>
+    <s:String x:Key="InstanceName:_">InstanceName: {0}</s:String>
+
+    <!--  endregion Notifications  -->
 
 
     <!--  region ServerProfile  -->
@@ -650,12 +713,12 @@
 
 
     <s:String x:Key="ImportResultSuccessful">Instance {0} has been successfully imported and is waiting for you in the library.</s:String>
-    <s:String x:Key="ImportResultZipFileError">Error opening zip file</s:String>
+    <s:String x:Key="ImportResultZipFileOpenError">Error opening zip file</s:String>
     <s:String x:Key="ImportResultGameVersionError">Game version error</s:String>
     <s:String x:Key="ImportResultJavaDownloadError">Java downloading problem</s:String>
     <s:String x:Key="ImportResultIsOfflineMode">Offline mode</s:String>
-    <s:String x:Key="ImportResultMovingFilesError">Error while moving files</s:String>
-    <s:String x:Key="ImportResultDownloadError">Download error</s:String>
+    <s:String x:Key="ImportResultMoveFilesError">Error while moving files</s:String>
+    <s:String x:Key="ImportResultDownloadFilesError">Download error</s:String>
     <s:String x:Key="ImportResultDirectoryCreateError">Error creating directory</s:String>
     <s:String x:Key="ImportResultWrongUrl">The URL for importing the file is incorrect. We currently only support Yandex Disk and Google Drive.</s:String>
     <s:String x:Key="ImportResultManifestError">Manifest file error.</s:String>
@@ -669,25 +732,35 @@
     <!--  region Accounts  -->
 
 
-    <s:String x:Key="RemoveAccount">Remove account</s:String>
+    <s:String x:Key="RemoveAccount">Deleting an account</s:String>
     <s:String x:Key="RemoveAccountDescription">
-        Do you really want to remove account: {0}?
-        Access to your account can only be restored after re-authorization!
+        Do you really want an account: {0}?
+        Account access can only be restored after re-authorization!
     </s:String>
-    <s:String x:Key="YesIWantRemoveAccount">I want to remove this account</s:String>
+    <s:String x:Key="YesIWantRemoveAccount">Yes, I want to delete my account</s:String>
 
-    <s:String x:Key="RemoveAllAccount">Removing all account</s:String>
+    <s:String x:Key="RemoveAllAccount">Delete all accounts</s:String>
     <s:String x:Key="RemoveAllAccountDescription">
-        Do you really want to remove all accounts?
-        Access to your accounts can only be restored after re-authorization!
+        Are you sure you want to delete all accounts??
+        It will be possible to restore access to accounts only after re-authorization!
     </s:String>
-    <s:String x:Key="YesIWantRemoveAllAccount">Yes, I want to remove all accounts</s:String>
+    <s:String x:Key="YesIWantRemoveAllAccount">Yes, I want to delete all accounts</s:String>
 
+    <!--  Notification  -->
+    <s:String x:Key="WrongLoginOrPassword">Incorrect login or password.</s:String>
+    <s:String x:Key="NoConnectionToTheServer">No connection to the server!</s:String>
+    <s:String x:Key="TokenError">Token error!</s:String>
+    <s:String x:Key="UnknownError">Unknown error!</s:String>
+    <s:String x:Key="SessionExpiredRedirectToMicrosoft">Session expired. Redirecting to Microsoft authorization page</s:String>
+    <s:String x:Key="TokenErrorRedirectToMicrosoft">Token Error. Redirecting to Microsoft Authorization Page</s:String>
+    <s:String x:Key="SessionExpiredTryAuthAgain">Session expired. You should try authorizing again.</s:String>
+    <s:String x:Key="TokenErrorTryAuthAgain">Token error. You should try authorizing again.</s:String>
 
     <!--  endregion Accounts  -->
 
 
     <!--  region Library  -->
+
 
     <s:String x:Key="DeletingInstance">Deleting instance</s:String>
     <s:String x:Key="DeletingInstanceDescription">
@@ -699,22 +772,42 @@
 
     <!--  endregion Library  -->
 
+    <!--  region Friends  -->
 
-    <s:String x:Key="LoginOrPasswordNotFilled">Login or password is not filled in</s:String>
+
+    <!--  Notifications  -->
+    <s:String x:Key="FriendRequestHasBeenSent">Friend request has been sent.</s:String>
+    <s:String x:Key="FriendRequestWasCancelled">Friend request was cancelled.</s:String>
+    <s:String x:Key="YouAnd_AreFriendsNow">You and {0} are now friends!</s:String>
+    <s:String x:Key="YouHaveDeclinedYourFriendRequest_">You have rejected your friend request {0}.</s:String>
+
+
+    <!--  endregion Friends  -->
+
+
+    <!--  region Instance  -->
+
+    <!--  Notification  -->
+    <s:String x:Key="Instance_HasBeenInstalledSuccessful">Instance {0} installed successfully</s:String>
+    <s:String x:Key="FailedToInstallColon_">Failed to install: {0}</s:String>
+
+    <!--  endregion Instance  -->
+
+    <s:String x:Key="LoginOrPasswordNotFilled">Login or password is not filled in!</s:String>
 
     <s:String x:Key="AuthorizationProcessInProgress">The authorization process is in progress...</s:String>
 
     <s:String x:Key="Information">Information</s:String>
     <s:String x:Key="MicrosoftAccountAuthorizationDescription">To authorize your license account, you will be automatically redirected to the Microsoft authorization page.</s:String>
     <s:String x:Key="DoInstallTheLatestVersion">Install the latest version?</s:String>
-    <s:String x:Key="NWClientNotAvailableForThisVersion">NWClient not available for this version</s:String>
+    <s:String x:Key="NWClientNotAvailableForThisVersion">NWClient is not available for this version</s:String>
     <s:String x:Key="YouHaveNoActiveDistributions">You have no active distributions</s:String>
 
 
-    <s:String x:Key="InQueue">In Queue</s:String>
-    <s:String x:Key="InConnect">In Connect</s:String>
-    <s:String x:Key="PostProcessing">Post Processing</s:String>
-    <s:String x:Key="InProcess">In Process</s:String>
+    <s:String x:Key="InQueue">In queue</s:String>
+    <s:String x:Key="InConnect">In connect</s:String>
+    <s:String x:Key="PostProcessing">File processing</s:String>
+    <s:String x:Key="InProcess">In process</s:String>
     <s:String x:Key="Successful">Successful</s:String>
 
 
@@ -747,9 +840,8 @@
     <s:String x:Key="GoToCatalog">Go to Catalog</s:String>
     <s:String x:Key="LibraryEmpty">Library is empty</s:String>
 
-    <s:String x:Key="WelcomeDescription">Добро пожаловать в новую эру</s:String>
+    <s:String x:Key="WelcomeDescription">Welcome to a new era</s:String>
     <s:String x:Key="WelcomePageThemeSelectDescription">Choose your prefered interface apperarance. You have the option to pick a theme manually or enable automatic theme switching that aligns with your system settings.</s:String>
-
 
     <!--  Tray  -->
     <s:String x:Key="ContactSupport">Contact Support</s:String>
@@ -776,7 +868,6 @@
     <s:String x:Key="ThereAreNoAddonVersion">
         The version list was empty. We don't know what happened.
     </s:String>
-
 
     <s:String x:Key="SuccessDirectoryTransfer">
         The directory data transfer to the new directory has been completed successfully.
@@ -848,4 +939,67 @@
     <s:String x:Key="OurYoutube">Our Youtube</s:String>
     <s:String x:Key="SourceCode">Source Code</s:String>
     <s:String x:Key="OutWebsite">Out website</s:String>
+
+    <s:String x:Key="Edit">Edit</s:String>
+    <s:String x:Key="AllInstanceGroupName">All Instances</s:String>
+    <s:String x:Key="AllInstanceGroupSummary">This group contains all instances from the library. (Unchangeable)</s:String>
+    <s:String x:Key="OpenGroupTooltip">Open group menu (ESC)</s:String>
+
+    <s:String x:Key="RemoveInstancesGroupTitle">Remove instances group</s:String>
+    <s:String x:Key="RemoveInstancesGroupDescription">
+        Do you really want to remove group: {0}?
+        All instances from this group will not be removed and will be located in other groups.!
+    </s:String>
+    <s:String x:Key="YesIWantToRemoveGroup">Yes I want to remove this group</s:String>
+
+    <s:String x:Key="WithoutGroup">No group</s:String>
+
+    <s:String x:Key="RemoveFromGroup">Remove from group</s:String>
+    <s:String x:Key="AddToGroup">Add to group</s:String>
+
+
+
+    <!--  Metadata  -->
+    <s:String x:Key="EmptyDescriptionPlaceholder">
+        There is no description but we hope you will add it.
+    </s:String>
+
+    <s:String x:Key="CreatingGroupTitle">Creation an group</s:String>
+    <s:String x:Key="YourInstances">Your instances</s:String>
+    <s:String x:Key="SelectInstancesForThisGroup">Select instances for this group</s:String>
+    <s:String x:Key="CreateGroup">Create a group</s:String>
+    <s:String x:Key="InstanceGroups">Instance Groups</s:String>
+    <s:String x:Key="GroupName">Group name</s:String>
+    <s:String x:Key="CreateNewGroup">Create a new instance</s:String>
+    <s:String x:Key="SelectInstancesForGroup">Select instances for this group</s:String>
+    <s:String x:Key="GroupEditTitle">Group editing</s:String>
+    <s:String x:Key="AvailableGroups">Available Group</s:String>
+    <s:String x:Key="SelectGroupsForInstance">Select groups for instance</s:String>
+    <s:String x:Key="Group">Group</s:String>
+    <s:String x:Key="GroupDescription">Select groups for this instance</s:String>
+
+    <s:String x:Key="GroupSummary">Group summary</s:String>
+    <s:String x:Key="GroupSummaryDescription">Write summary for this group.</s:String>
+
+    <s:String x:Key="Copy">Copy</s:String>
+    <s:String x:Key="CopyingAnInstance">Copying an instance</s:String>
+    <s:String x:Key="CopyWithoutChangingParameters">Copy without changes parameters</s:String>
+    <s:String x:Key="StartCopying">Start copying</s:String>
+    <s:String x:Key="UncopiedAddons">Uncopied addons</s:String>
+    <s:String x:Key="InstanceCopyUncopiedAddonsDescription">While copying instance {0}, the following addons could not be migrated:</s:String>
+
+    <s:String x:Key="LibraryGroupEmpty">This group is empty</s:String>
+    <s:String x:Key="LibraryGroupEmptyDescription">You can add instances to this group from other groups or when creating an instance...</s:String>
+
+    <s:String x:Key="UpdateAvailable">Update Available</s:String>
+    <s:String x:Key="MbitPerS">Mbit/s</s:String>
+
+    <s:String x:Key="RequiredDataLoading">Loading the required data</s:String>
+    <s:String x:Key="FailedToLoadRequiredData">Failed to load the required data</s:String>
+    <s:String x:Key="CatalogLoading">Catalog loading...</s:String>
+
+    <s:String x:Key="ImportResultWrongUrlOrPath">Wrong file path or file URL.</s:String>
+    <s:String x:Key="LibraryImportDragAndDropDescription">Drop mrpack, .zip or .nwpk, file to install it</s:String>
+    <s:String x:Key="AccountError">Account error: {0}</s:String>
+    <s:String x:Key="NoLaunchAccountDescription">Failed to launch {0}. No launch account selected, required to launch the instance.</s:String>
 </ResourceDictionary>

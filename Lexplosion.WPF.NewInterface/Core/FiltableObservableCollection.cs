@@ -80,6 +80,8 @@ namespace Lexplosion.WPF.NewInterface.Core
                 this, 
                 new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset)
             );
+
+            OnPropertyChanged(nameof(Count));
         }
 
         protected virtual void OnFilterChanged()
@@ -107,7 +109,7 @@ namespace Lexplosion.WPF.NewInterface.Core
 
         IEnumerator<object> IEnumerable<object>.GetEnumerator()
         {
-            throw new NotImplementedException();
+            return _filteredCollection.GetEnumerator();
         }
 
 

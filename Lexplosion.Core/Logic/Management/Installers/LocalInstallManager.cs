@@ -36,8 +36,6 @@ namespace Lexplosion.Logic.Management.Installers
 			}
 		}
 
-		public event Action DownloadStarted;
-
 		public LocalInstallManager(string instanceid, IFileServicesContainer services, CancellationToken cancelToken)
 		{
 			InstanceId = instanceid;
@@ -82,7 +80,6 @@ namespace Lexplosion.Logic.Management.Installers
 				if (updatesCount > 0)
 				{
 					stagesCount = 1;
-					DownloadStarted?.Invoke();
 				}
 
 				javaVersionName = Manifest.version.JavaVersionName;
@@ -104,11 +101,11 @@ namespace Lexplosion.Logic.Management.Installers
 			}
 		}
 
-		public InitData Update(string javaPath, ProgressHandlerCallback progressHandler)
+		public InitData Update(string javaPath, ProgressHandler progressHandler)
 		{
 			if (stagesCount == 1)
 			{
-				progressHandler(StageType.Client, new ProgressHandlerArguments()
+				progressHandler(StateType.DownloadClient, new ProgressHandlerArguments()
 				{
 					StagesCount = 1,
 					Stage = 1,
@@ -119,7 +116,7 @@ namespace Lexplosion.Logic.Management.Installers
 				{
 					installer.BaseDownloadEvent += delegate (int totalDataCount, int nowDataCount)
 					{
-						progressHandler(StageType.Client, new ProgressHandlerArguments()
+						progressHandler(StateType.DownloadClient, new ProgressHandlerArguments()
 						{
 							StagesCount = 1,
 							Stage = 1,
@@ -133,7 +130,7 @@ namespace Lexplosion.Logic.Management.Installers
 				{
 					installer.FileDownloadEvent += delegate (string file, int pr, DownloadFileProgress stage_)
 					{
-						progressHandler(StageType.Client, new ProgressHandlerArguments()
+						progressHandler(StateType.DownloadClient, new ProgressHandlerArguments()
 						{
 							StagesCount = 1,
 							Stage = 1,

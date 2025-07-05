@@ -874,7 +874,7 @@ namespace Lexplosion.Logic.FileSystem.Installers
 										CancelToken = cancelToken
 									};
 
-									if (!withDirectory.DownloadFile(downloadUrl, fileName, tempDir, taskArgs))
+									if (!TryMultipleDownload(downloadUrl, fileName, tempDir, taskArgs))
 									{
 										CallFileDownloadEvent(fileName, 100, DownloadFileProgress.Error);
 										goto EndWhile; //возникла ошибка

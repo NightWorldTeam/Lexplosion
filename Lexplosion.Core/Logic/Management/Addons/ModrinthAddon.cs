@@ -1,16 +1,16 @@
-﻿using Lexplosion.Logic.Objects;
-using Lexplosion.Logic.Objects.Modrinth;
-using Lexplosion.Logic.Network.Web;
-using Lexplosion.Tools;
-using System.Collections.Generic;
-using Lexplosion.Logic.Management.Instances;
+﻿using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System;
 using System.Threading;
-using NightWorld.Collections.Concurrent;
+using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network.Services;
 using Lexplosion.Logic.FileSystem.Extensions;
 using Lexplosion.Logic.FileSystem.Services;
+using Lexplosion.Logic.Objects;
+using Lexplosion.Logic.Objects.Modrinth;
+using Lexplosion.Logic.Network.Web;
+using Lexplosion.Tools;
+using NightWorld.Collections.Concurrent;
 
 namespace Lexplosion.Logic.Management.Addons
 {
@@ -134,7 +134,7 @@ namespace Lexplosion.Logic.Management.Addons
 				{
 					foreach (var dependencie in _versionInfo.Dependencies)
 					{
-						if (dependencie?.ProjectId != null)
+						if (dependencie?.ProjectId != null && dependencie.DependencyType == ModrinthProjectFile.Dependencie.Dependency.Required)
 						{
 							if (dependencie.VersionId != null)
 							{

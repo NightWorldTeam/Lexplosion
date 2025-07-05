@@ -67,7 +67,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends
         private int _currentPageIndex = 0;
         public int CurrentPageIndex
         {
-            get => _currentPageIndex; private set
+            get => _currentPageIndex; set
             {
                 _currentPageIndex = value;
                 OnPropertyChanged();
@@ -130,9 +130,15 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends
         /// </summary>
         public void SendFriendRequest(NightWorldUser user)
         {
-            user.SendFriendRequest();
-            FriendRequestSent?.Invoke(user);
-            _appCore.MessageService.Success("FriendRequestHasBeenSent", true);
+            Runtime.TaskRun(() =>
+            {
+                user.SendFriendRequest();
+                _appCore.UIThread(() => 
+                {
+                    FriendRequestSent?.Invoke(user);
+                    _appCore.MessageService.Success("FriendRequestHasBeenSent", true);
+                });
+            });
         }
 
         /// <summary>
@@ -140,8 +146,15 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends
         /// </summary>
         public void CancelFriendRequest(NightWorldUser user)
         {
-            user.CancelFriendRequest();
-            _appCore.MessageService.Info("FriendRequestWasCancelled", true);
+            Runtime.TaskRun(() =>
+            {
+                user.CancelFriendRequest();
+                _appCore.UIThread(() =>
+                {
+                    FriendRequestSent?.Invoke(user);
+                    _appCore.MessageService.Info("FriendRequestWasCancelled", true);
+                });
+            });
         }
 
 
@@ -173,9 +186,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends
 
             ThreadPool.QueueUserWorkItem((obj) =>
             {
-				var services = Runtime.ServicesContainer;
+                var services = Runtime.ServicesContainer;
 
-				var activeAccount = Account.ActiveAccount;
+                var activeAccount = Account.ActiveAccount;
                 if (reboot)
                 {
                     CurrentPageIndex = 0;

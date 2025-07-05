@@ -483,11 +483,11 @@
     <SolidColorBrush
         x:Key="ConfirmAlertSolidColorBrush"
         x:Shared="False"
-        Color="{DynamicResource SecondaryForegroundColor}" />
+        Color="{DynamicResource SecondaryColor}" />
     <SolidColorBrush
         x:Key="ConfirmAlertBorderSolidColorBrush"
         x:Shared="False"
-        Color="{DynamicResource SecondaryForegroundColor}" />
+        Color="{DynamicResource SeparateColor}" />
 
 
     <!--  endregion Confirm Alert  -->

@@ -74,6 +74,9 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Linq.Dynamic.Core, Version=1.6.6.0, Culture=neutral, PublicKeyToken=0f07ec44de6ac832, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Linq.Dynamic.Core.1.6.6\lib\net46\System.Linq.Dynamic.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -84,8 +87,8 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="VirtualizingWrapPanel, Version=2.0.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\VirtualizingWrapPanel.2.0.5\lib\net462\VirtualizingWrapPanel.dll</HintPath>
+    <Reference Include="VirtualizingWrapPanel, Version=2.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\VirtualizingWrapPanel.2.2.1\lib\net462\VirtualizingWrapPanel.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
@@ -134,7 +137,6 @@
     <Compile Include="Core\Objects\Accounts.cs" />
     <Compile Include="Core\Objects\DownloableAddonFile.cs" />
     <Compile Include="Core\Objects\InstanceDistribution.cs" />
-    <Compile Include="Core\Objects\InstanceGroup.cs" />
     <Compile Include="Core\Objects\Modloader.cs" />
     <Compile Include="Core\Objects\SelecteableItem.cs" />
     <Compile Include="Core\Objects\Test.cs" />
@@ -149,6 +151,7 @@
     <Compile Include="Core\Switch.cs" />
     <Compile Include="Core\ViewModel\ILimitedAccess.cs" />
     <Compile Include="Core\ViewModel\LimitedContentViewModelBase.cs" />
+    <Compile Include="Extensions\ListBoxExtensions.cs" />
     <Compile Include="Extensions\LongExtensions.cs" />
     <Compile Include="Extensions\ResourceDictionaryExtensions.cs" />
     <Compile Include="Extensions\ScrollViewerExtensions.cs" />
@@ -159,6 +162,9 @@
     <Compile Include="Mvvm\Models\Authorization\NightWorldRegistrationModel.cs" />
     <Compile Include="Mvvm\Models\Authorization\NoAccountAuthorizationModel.cs" />
     <Compile Include="Mvvm\Models\InstanceControllers\InstanceSharesController.cs" />
+    <Compile Include="Mvvm\Models\InstanceModel\DownloadingData.cs" />
+    <Compile Include="Mvvm\Models\InstanceModel\InstanceLocation.cs" />
+    <Compile Include="Mvvm\Models\InstanceModel\InstanceModelArgs.cs" />
     <Compile Include="Mvvm\Models\InstanceTransfer\DistributedInstance.cs" />
     <Compile Include="Mvvm\Models\InstanceTransfer\InstanceDistributionModel.cs" />
     <Compile Include="Mvvm\Models\InstanceTransfer\InstanceExportModel.cs" />
@@ -167,6 +173,7 @@
     <Compile Include="Mvvm\Models\MainContent\MainMenu\Friends\FriendRequestsModel.cs" />
     <Compile Include="Mvvm\Models\MainContent\MainMenu\Friends\FriendsModel.cs" />
     <Compile Include="Mvvm\Models\MainContent\MainMenu\GeneralSettings\AccountsSettingsModel.cs" />
+    <Compile Include="Mvvm\Models\Modal\InstanceFactory\InstanceFactoryModel.cs" />
     <Compile Include="Mvvm\OldInstanceForm.xaml.cs">
       <DependentUpon>OldInstanceForm.xaml</DependentUpon>
     </Compile>
@@ -181,6 +188,7 @@
     <Compile Include="Mvvm\ViewModels\MainContent\InstanceProfile\Overview\InstanceProfileVersionsViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\MainContent\InstanceProfile\Overview\InstanceProfileOverviewGalleryViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\MainContent\InstanceProfile\Overview\InstanceProfileOverviewLayoutViewModel.cs" />
+    <Compile Include="Mvvm\Models\MainContent\MainMenu\Multiplayer\AdServersModel.cs" />
     <Compile Include="Mvvm\ViewModels\MainContent\MainMenu\Content\Multiplayer\AdServersViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\MainContent\ServerProfile\Overview\ServerProfileOverviewGalleryViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\MainContent\ServerProfile\ServerProfileLayoutViewModel.cs" />
@@ -193,7 +201,16 @@
     <Compile Include="Mvvm\ViewModels\Modal\AdServers\AskServerInstanceInstallingViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\AdServers\SelectInstanceForServerViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\ConfirmActionViewModel.cs" />
-    <Compile Include="Mvvm\ViewModels\Modal\GroupFactory\GroupFactoryViewModel.cs" />
+    <Compile Include="Mvvm\Models\Modal\InstanceGroupsConfiguratorModel.cs" />
+    <Compile Include="Mvvm\Models\Modal\InstanceFactory\InstanceCopyModel.cs" />
+    <Compile Include="Mvvm\Models\Modal\InstanceFactory\InstanceCopyErrorsModel.cs" />
+    <Compile Include="Mvvm\ViewModels\Modal\DownloadViewerViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\Modal\ErrorViewerViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\Modal\InstanceFactory\InstanceCopyErrorsViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\Modal\InstanceFactory\InstanceCopyViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\Modal\InstancesGroup\InstanceGroupsConfiguratorViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\Modal\InstancesGroup\InstancesGroupEditViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\Modal\InstancesGroup\InstancesGroupFactoryViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\ActiveSharesViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\Import\InstanceImportFillDataViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\InstanceDistributionViewModel.cs" />
@@ -213,8 +230,26 @@
     <Compile Include="Mvvm\Views\Modal\ConfirmAction\ConfirmActionView.xaml.cs">
       <DependentUpon>ConfirmActionView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Mvvm\Views\Modal\GroupFactory\GroupFactoryView.xaml.cs">
-      <DependentUpon>GroupFactoryView.xaml</DependentUpon>
+    <Compile Include="Mvvm\Views\Modal\DownloadViewer.xaml.cs">
+      <DependentUpon>DownloadViewer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Views\Modal\ErrorViewer.xaml.cs">
+      <DependentUpon>ErrorViewer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Views\Modal\InstanceFactory\InstanceCopyErrorsView.xaml.cs">
+      <DependentUpon>InstanceCopyErrorsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Views\Modal\InstanceFactory\InstanceCopyView.xaml.cs">
+      <DependentUpon>InstanceCopyView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Views\Modal\InstancesGroup\InstanceGroupsConfiguratorView.xaml.cs">
+      <DependentUpon>InstanceGroupsConfiguratorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Views\Modal\InstancesGroup\InstancesGroupEditView.xaml.cs">
+      <DependentUpon>InstancesGroupEditView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Views\Modal\InstancesGroup\InstancesGroupFactoryView.xaml.cs">
+      <DependentUpon>InstancesGroupFactoryView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Mvvm\Views\Modal\InstanceTransfer\ActiveSharesView.xaml.cs">
       <DependentUpon>ActiveSharesView.xaml</DependentUpon>
@@ -672,7 +707,31 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Mvvm\Views\Modal\GroupFactory\GroupFactoryView.xaml">
+    <Page Include="Mvvm\Views\Modal\DownloadViewer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Mvvm\Views\Modal\ErrorViewer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Mvvm\Views\Modal\InstanceFactory\InstanceCopyErrorsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Mvvm\Views\Modal\InstanceFactory\InstanceCopyView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Mvvm\Views\Modal\InstancesGroup\InstanceGroupsConfiguratorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Mvvm\Views\Modal\InstancesGroup\InstancesGroupEditView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Mvvm\Views\Modal\InstancesGroup\InstancesGroupFactoryView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1238,6 +1297,7 @@
     <Resource Include="Assets\images\icons\neoforge.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Assets\images\icons\non_image_template.png" />
     <Content Include="Resources\Libraries\Compression.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

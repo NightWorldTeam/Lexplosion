@@ -27,7 +27,6 @@ namespace Lexplosion.Logic.Management.Addons
 		public event Action LoadLoaded;
 
 
-		//private readonly CurseforgeAddonInfo _modInfo;
 		private readonly BaseInstanceData _modpackInfo;
 		private readonly IPrototypeAddon _addonPrototype;
 		private readonly string _projectId;
@@ -288,6 +287,16 @@ namespace Lexplosion.Logic.Management.Addons
 
 		public void InstallLatestVersion(DynamicStateHandler<SetValues<InstanceAddon, DownloadAddonRes>, InstallAddonState> stateHandler, bool downloadDependencies = true, bool isDependencie = false, IEnumerable<Modloader> acceptableModloaders = null)
 		{
+			if (_addonPrototype == null)
+			{
+				stateHandler.ChangeState(new SetValues<InstanceAddon, DownloadAddonRes>
+				{
+					Value1 = this,
+					Value2 = DownloadAddonRes.ProjectDataError
+				}, InstallAddonState.EndDownload);
+				return;
+			}
+
 			IsInstalling = true;
 			_addonPrototype.SetAcceptableModloaders(acceptableModloaders);
 			_addonPrototype.DefineLatestVersion();
@@ -397,7 +406,7 @@ namespace Lexplosion.Logic.Management.Addons
 							var addonPointer = new Pointer<InstanceAddon>();
 							addonPointer.Point = null;
 							_synchronizer.ChacheSemaphore.WaitOne();
-							if (_synchronizer.AddonsCatalogChache.ContainsKey(modId))
+							if (_synchronizer.AddonsCatalogChacheContains(modId))
 							{
 								addonPointer.Point = _synchronizer.AddonsCatalogChache[modId];
 								addonPointer.Point.IsInstalling = true;

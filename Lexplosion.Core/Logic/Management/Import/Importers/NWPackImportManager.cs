@@ -30,26 +30,26 @@ namespace Lexplosion.Logic.Management.Import.Importers
 			_dataFilesManager = services.DataFilesService;
 		}
 
-		public ImportResult Prepeare(ProgressHandlerCallback progressHandler, out PrepeareResult result)
+		public InstanceInit Prepeare(ProgressHandler progressHandler, out PrepeareResult result)
 		{
 			result = new PrepeareResult();
 
-			progressHandler(StageType.Client, new ProgressHandlerArguments()
+			progressHandler(StateType.DownloadClient, new ProgressHandlerArguments()
 			{
 				StagesCount = 2,
 				Stage = 1,
 				Procents = 0
 			});
 
-			ImportResult res = _withDirectory.UnzipInstance(_fileAddres, out _unzipPath);
+			InstanceInit res = _withDirectory.UnzipInstance(_fileAddres, out _unzipPath);
 			var parameters = _dataFilesManager.GetFile<ArchivedClientData>($"{_unzipPath}instanceInfo.json");
 
-			if (res != ImportResult.Successful) return res;
+			if (res != InstanceInit.Successful) return res;
 
 			if (parameters?.GameVersionInfo?.IsNan != false)
 			{
 				Runtime.DebugWrite("GameVersionError");
-				return ImportResult.GameVersionError;
+				return InstanceInit.GameVersionError;
 			}
 
 			_versionManifest = new VersionManifest
@@ -79,12 +79,12 @@ namespace Lexplosion.Logic.Management.Import.Importers
 			result.GameVersionInfo = parameters.GameVersionInfo;
 			result.LogoPath = _unzipPath + parameters.LogoFileName;
 
-			return ImportResult.Successful;
+			return InstanceInit.Successful;
 		}
 
-		public InstanceInit Import(ProgressHandlerCallback progressHandler, out IReadOnlyCollection<string> errors)
+		public InstanceInit Import(ProgressHandler progressHandler, out IReadOnlyCollection<string> errors)
 		{
-			progressHandler(StageType.Client, new ProgressHandlerArguments()
+			progressHandler(StateType.DownloadClient, new ProgressHandlerArguments()
 			{
 				StagesCount = 2,
 				Stage = 2,

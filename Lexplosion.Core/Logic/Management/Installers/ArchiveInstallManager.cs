@@ -53,8 +53,6 @@ namespace Lexplosion.Logic.Management.Installers
 			}
 		}
 
-		public event Action DownloadStarted;
-
 		public ArchiveInstallManager(TInstaller installer, string instanceid, bool onlyBase, IFileServicesContainer services, CancellationToken cancelToken)
 		{
 			_instanceId = instanceid;
@@ -107,13 +105,6 @@ namespace Lexplosion.Logic.Management.Installers
 		protected abstract string ArchiveDownloadUrl { get; }
 		protected abstract string ArchiveFileName { get; }
 
-		private bool _downloadStartedIsCalled = false;
-		private void DownloadStartedCall()
-		{
-			if (!_downloadStartedIsCalled)
-				DownloadStarted?.Invoke();
-		}
-
 		public InstanceInit Check(out string javaVersionName, string instanceVersion)
 		{
 			javaVersionName = string.Empty;
@@ -147,10 +138,6 @@ namespace Lexplosion.Logic.Management.Installers
 					if (_updatesCount == -1)
 					{
 						return InstanceInit.GuardError;
-					}
-					else if (_updatesCount > 0)
-					{
-						DownloadStartedCall();
 					}
 				}
 				else
@@ -193,7 +180,7 @@ namespace Lexplosion.Logic.Management.Installers
 			return InstanceInit.Successful;
 		}
 
-		public InitData Update(string javaPath, ProgressHandlerCallback progressHandler)
+		public InitData Update(string javaPath, ProgressHandler progressHandler)
 		{
 			if (_serverManifestIsNull)
 			{
@@ -213,7 +200,6 @@ namespace Lexplosion.Logic.Management.Installers
 			if (projectInfo != null || _installer.InvalidStruct(localFiles))
 			{
 				Runtime.DebugWrite("ProjectInfo != null " + (projectInfo != null));
-				DownloadStartedCall();
 
 				if (projectInfo == null)
 				{
@@ -240,7 +226,7 @@ namespace Lexplosion.Logic.Management.Installers
 
 				_installer.MainFileDownload += delegate (int percent)
 				{
-					progressHandler(StageType.Client, new ProgressHandlerArguments()
+					progressHandler(StateType.DownloadClient, new ProgressHandlerArguments()
 					{
 						StagesCount = 3,
 						Stage = 1,
@@ -298,7 +284,7 @@ namespace Lexplosion.Logic.Management.Installers
 					};
 				}
 
-				progressHandler(StageType.Client, new ProgressHandlerArguments()
+				progressHandler(StateType.DownloadClient, new ProgressHandlerArguments()
 				{
 					StagesCount = 3,
 					Stage = 2,
@@ -317,7 +303,8 @@ namespace Lexplosion.Logic.Management.Installers
 				if (!_baseFilesIsCheckd || baseFFilesIsUpdates) // в данном случае в манифесте версии форджа не была и нам надо её получить. Или же были измнения в модлоадере или версии игры
 				{
 					bool isNwClient = versionData?.IsNightWorldClient == true;
-					_manifest = _infoService.GetVersionManifest(DetermineGameVersion(manifest), gameType, isNwClient, modLoaderVersion);
+					string gameVersion = DetermineGameVersion(manifest);
+					_manifest = _infoService.GetVersionManifest(gameVersion, gameType, isNwClient, modLoaderVersion);
 
 					if (_manifest != null)
 					{
@@ -346,6 +333,8 @@ namespace Lexplosion.Logic.Management.Installers
 					}
 					else
 					{
+						Runtime.DebugWrite($"manifest error. gameVersion: {gameVersion}, gameType: {gameType}, isNwClient: {isNwClient}, modLoaderVersion: {modLoaderVersion}");
+
 						return new InitData
 						{
 							InitResult = InstanceInit.ServerError,
@@ -361,7 +350,7 @@ namespace Lexplosion.Logic.Management.Installers
 				{
 					_installer.BaseDownloadEvent += delegate (int totalDataCount, int nowDataCount)
 					{
-						progressHandler(StageType.Client, new ProgressHandlerArguments()
+						progressHandler(StateType.DownloadClient, new ProgressHandlerArguments()
 						{
 							StagesCount = 3,
 							Stage = 2,
@@ -375,7 +364,7 @@ namespace Lexplosion.Logic.Management.Installers
 				{
 					singleDownloadMethod = delegate (string file, int pr, DownloadFileProgress stage_)
 					{
-						progressHandler(StageType.Client, new ProgressHandlerArguments()
+						progressHandler(StateType.DownloadClient, new ProgressHandlerArguments()
 						{
 							StagesCount = 3,
 							Stage = 2,
@@ -417,7 +406,7 @@ namespace Lexplosion.Logic.Management.Installers
 					};
 				}
 
-				progressHandler(StageType.Client, new ProgressHandlerArguments()
+				progressHandler(StateType.DownloadClient, new ProgressHandlerArguments()
 				{
 					StagesCount = 3,
 					Stage = 2,
@@ -433,7 +422,7 @@ namespace Lexplosion.Logic.Management.Installers
 				{
 					if (nowDataCount != 0)
 					{
-						progressHandler(StageType.Client, new ProgressHandlerArguments()
+						progressHandler(StateType.DownloadClient, new ProgressHandlerArguments()
 						{
 							StagesCount = 3,
 							Stage = 3,
@@ -444,7 +433,7 @@ namespace Lexplosion.Logic.Management.Installers
 					}
 					else
 					{
-						progressHandler(StageType.Client, new ProgressHandlerArguments()
+						progressHandler(StateType.DownloadClient, new ProgressHandlerArguments()
 						{
 							StagesCount = 3,
 							Stage = 3,
@@ -493,7 +482,7 @@ namespace Lexplosion.Logic.Management.Installers
 					{
 						_installer.BaseDownloadEvent += delegate (int totalDataCount, int nowDataCount)
 						{
-							progressHandler(StageType.Client, new ProgressHandlerArguments()
+							progressHandler(StateType.DownloadClient, new ProgressHandlerArguments()
 							{
 								StagesCount = 1,
 								Stage = 1,
@@ -507,7 +496,7 @@ namespace Lexplosion.Logic.Management.Installers
 					{
 						_installer.FileDownloadEvent += delegate (string file, int pr, DownloadFileProgress stage_)
 						{
-							progressHandler(StageType.Client, new ProgressHandlerArguments()
+							progressHandler(StateType.DownloadClient, new ProgressHandlerArguments()
 							{
 								StagesCount = 1,
 								Stage = 1,

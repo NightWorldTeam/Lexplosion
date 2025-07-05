@@ -118,8 +118,8 @@ namespace Lexplosion.Logic.Management.Addons
 
 			Runtime.DebugWrite("Start calculate files hashes");
 
-			object locker = new object();
-			TasksPerfomer perfomer = new TasksPerfomer(3, files.Count);
+			var locker = new object();
+			TasksPerfomer perfomer = new TasksPerfomer(7, files.Count);
 			foreach (string file in files)
 			{
 				perfomer.ExecuteTask(() =>
@@ -162,7 +162,7 @@ namespace Lexplosion.Logic.Management.Addons
 
 			var hashesToCurseforge = new List<string>();
 			var cfHaches = new Dictionary<string, string>(); // ключ - хэш курсфорджа, значение - путь до файла
-			var knownProjectFiles = new Dictionary<string, SetValues<string, ModrinthProjectFile>>(); // ключ - айди проекта, значение - путь до файла и CurseforgeFileInfo этого проекта
+			var knownProjectFiles = new Dictionary<string, SetValues<string, ModrinthProjectFile>>(); // ключ - айди проекта, значение - путь до файла и ModrinthProjectFile этого проекта
 			foreach (var value in falesSha512)
 			{
 				string sha512 = value.Key; //sha512
