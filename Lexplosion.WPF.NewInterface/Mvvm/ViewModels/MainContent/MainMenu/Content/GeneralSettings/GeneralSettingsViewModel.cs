@@ -100,7 +100,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             {
                 case JavaHelper.JavaPathCheckResult.EmptyOrNull:
                     {
-                        _appCore.MessageService.Error("WrongJavaPathFormat", true);
+                        _appCore.MessageService.Info("JavaPathResets", true);
                         break;
                     }
                 case JavaHelper.JavaPathCheckResult.JaveExeDoesNotExists:
