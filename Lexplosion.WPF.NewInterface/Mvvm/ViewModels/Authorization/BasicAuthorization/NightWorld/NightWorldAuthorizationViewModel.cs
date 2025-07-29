@@ -4,6 +4,7 @@ using Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.Authorization.BasicAuthorization;
 using Lexplosion.WPF.NewInterface.Stores;
 using System;
+using System.Diagnostics;
 using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Authorization
@@ -46,7 +47,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Authorization
         {
             get => _passwordResetCommand ?? (_passwordResetCommand = new RelayCommand(obj =>
             {
-                _navigationStore.CurrentViewModel = new PasswordResetViewModel(_appCore, _navigationStore);
+                //_navigationStore.CurrentViewModel = new PasswordResetViewModel(_appCore, _navigationStore);
+                Process.Start("https://night-world.org/auth");
             }));
         }
 
@@ -69,7 +71,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Authorization
             ToRegistrationCommand = toRegistrationCommand;
 
             _navigationStore = appCore.NavigationStore;
-            
+
             Model = new NightWorldAuthorizationModel(appCore);
         }
 
