@@ -31,6 +31,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models
         private readonly ClientsManager _clientsManager = Runtime.ClientsManager;
 
 
+        public Action _toAuthorization;
+
+
         #region Properties
 
 
@@ -58,6 +61,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models
 
         #region Public Methods
 
+
+        public void SetToAuthorization(Action toAuthorization) 
+        {
+            _toAuthorization = toAuthorization;
+        }
 
         public ImportProcess StartImport(
             string path, bool isUrl,
@@ -163,8 +171,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models
             leftmenu.AddTabItems(new ModalLeftMenuTabItem[]
             {
                 new ModalLeftMenuTabItem(0, "Export", "Download", exportVM, true),
-                new ModalLeftMenuTabItem(1, "Share", "Share", new NightWorldLimitedContentLayoutViewModel(instanceShare, true), true),
-                new ModalLeftMenuTabItem(2, "ActiveShares", "ActiveShares", new NightWorldLimitedContentLayoutViewModel(activeShares, true), true)
+                new ModalLeftMenuTabItem(1, "Share", "Share", new NightWorldLimitedContentLayoutViewModel(instanceShare, _toAuthorization, true), true),
+                new ModalLeftMenuTabItem(2, "ActiveShares", "ActiveShares", new NightWorldLimitedContentLayoutViewModel(activeShares, _toAuthorization, true), true)
             }, true);
 
             leftmenu.LoaderPlaceholderKey = "ExportProcessActive";

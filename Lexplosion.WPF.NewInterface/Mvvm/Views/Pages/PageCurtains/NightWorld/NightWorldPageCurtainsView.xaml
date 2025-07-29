@@ -5,8 +5,10 @@
     xmlns:controls="clr-namespace:Lexplosion.WPF.NewInterface.Controls"
     xmlns:converters="clr-namespace:Lexplosion.WPF.NewInterface.Core.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:limited="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Limited"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.PageCurtains.NightWorld"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DataContext="{d:DesignInstance Type=limited:NightWorldLimitedContentLayoutViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
@@ -49,6 +51,7 @@
 
                     <controls:AdvancedButton
                         Padding="8,6"
+                        Command="{Binding ToCreateAccountCommand}"
                         FontSize="12"
                         FontWeight="Medium"
                         Style="{DynamicResource DefaultAdvancedButton}"
@@ -56,7 +59,7 @@
                     <controls:AdvancedButton
                         Margin="8,0,0,0"
                         Padding="8,6"
-                        Command="{Binding DataContext.Authorzation, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                        Command="{Binding ToAuthorizationCommand}"
                         FontSize="12"
                         FontWeight="Medium"
                         Style="{DynamicResource DefaultAdvancedButton}"

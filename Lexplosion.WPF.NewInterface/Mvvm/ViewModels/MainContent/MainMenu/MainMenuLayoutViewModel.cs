@@ -63,10 +63,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
                 return instanceModel;
             });
             var multiplayerLayoutArgs = new MultiplayerLayoutArgs(OpenAccountFactory, selectInstanceForServerArgs);
-            _multiplayerLayoutViewModel = new NightWorldLimitedContentLayoutViewModel(new MultiplayerLayoutViewModel(appCore, ToMainMenuLayoutCommand, multiplayerLayoutArgs));
+            _multiplayerLayoutViewModel = new NightWorldLimitedContentLayoutViewModel(new MultiplayerLayoutViewModel(appCore, ToMainMenuLayoutCommand, multiplayerLayoutArgs), OpenAccountFactory);
 
             // Friends Section
-            _friendsLayoutViewModel = new NightWorldLimitedContentLayoutViewModel(new FriendsLayoutViewModel(appCore, OpenAccountFactory));
+            _friendsLayoutViewModel = new NightWorldLimitedContentLayoutViewModel(new FriendsLayoutViewModel(appCore), OpenAccountFactory);
 
             // Settings Section
             _generalSettingsLayoutViewModel = new GeneralSettingsLayoutViewModel(appCore);
@@ -104,7 +104,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             OnPropertyChanged(nameof(Content));
         }
 
-        private void OpenAccountFactory() 
+        public void OpenAccountFactory() 
         {
             LeftPanel.GetByContentType(typeof(GeneralSettingsLayoutViewModel)).IsSelected = true;
             var generalSettingsLayout = _generalSettingsLayoutViewModel as GeneralSettingsLayoutViewModel;
@@ -117,11 +117,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         private void OpenCatalog() 
         {
             LeftPanel.GetByContentType(typeof(CatalogViewModel)).IsSelected = true;
-        }
-
-        public void Refresh()
-        {
-            //_multiplayerLayoutViewModel = new 
         }
 
 

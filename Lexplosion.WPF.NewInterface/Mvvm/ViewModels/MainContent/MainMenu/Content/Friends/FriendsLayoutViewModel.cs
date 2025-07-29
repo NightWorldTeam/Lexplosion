@@ -3,22 +3,18 @@ using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Objects;
 using Lexplosion.WPF.NewInterface.Core.ViewModel;
-using System.Threading;
 using System;
 using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 {
-    public class FriendsLayoutViewModel : ContentLayoutViewModelBase, ILimitedAccess
+    public sealed class FriendsLayoutViewModel : ContentLayoutViewModelBase, ILimitedAccess
     {
         private readonly AppCore _appCore;
 
         private FriendsViewModel _friendsViewModel;
         private FriendRequestsViewModel _friendsRequestsViewModel;
         private FindFriendsViewModel _findFriendsViewModel;
-
-
-        private Action _openAccountFactory;
 
 
         #region Properties
@@ -34,26 +30,15 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             }
         }
 
-        private RelayCommand _authorzation;
-        public ICommand Authorzation 
-        {
-            get => RelayCommand.GetCommand(ref _authorzation, () =>
-            {
-                _openAccountFactory?.Invoke();
-            });
-        }
-
-
         #endregion Properties
 
 
         #region Constructors
 
 
-        public FriendsLayoutViewModel(AppCore appCore, Action openFactoryAction) : base()
+        public FriendsLayoutViewModel(AppCore appCore) : base()
         {
             _appCore = appCore;
-            _openAccountFactory = openFactoryAction;
 
             HasAccess = Account.ActiveAccount?.AccountType == AccountType.NightWorld;
 

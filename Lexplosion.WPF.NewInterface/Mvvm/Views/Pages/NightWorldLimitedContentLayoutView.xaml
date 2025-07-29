@@ -23,10 +23,10 @@
                 <!--<controls:PageCurtains IsActive="{Binding HasAccess, Converter={converters:NegativeBooleanValueConverter}}" />-->
                 <core:If Condition="{Binding IsModalTarget}">
                     <core:If.True>
-                        <nightworld:NightWorldModalPageCurtainsView />
+                        <nightworld:NightWorldModalPageCurtainsView DataContext="{Binding}" />
                     </core:If.True>
                     <core:If.False>
-                        <nightworld:NightWorldPageCurtainsView />
+                        <nightworld:NightWorldPageCurtainsView DataContext="{Binding}" />
                     </core:If.False>
                 </core:If>
             </core:If.False>

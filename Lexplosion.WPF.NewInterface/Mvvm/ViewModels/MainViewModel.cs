@@ -137,6 +137,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
             ModalNavigationStore.CurrentViewModelChanged += Instance_CurrentViewModelChanged;
             NavigationStore.CurrentViewModelChanged += NavigationStore_CurrentViewModelChanged;
 
+            _mainMenuLayoutViewModel = new MainMenuLayoutViewModel(appCore, Model, _clientsManager);
+            Model.SetToAuthorization(_mainMenuLayoutViewModel.OpenAccountFactory);
 
             // Register Modal Window Contents
             ModalNavigationStore.RegisterAbstractFactory(
@@ -145,10 +147,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
                     Model.StartImport,
                     Model.GetActiveImports,
                     Model.LibraryController as LibraryController,
-                    Model.InstanceSharesController)
-            );
+                    Model.InstanceSharesController, 
+                    _mainMenuLayoutViewModel.OpenAccountFactory));
 
-            _mainMenuLayoutViewModel = new MainMenuLayoutViewModel(appCore, Model, _clientsManager);
             ToMainMenu = new NavigateCommand<ViewModelBase>(NavigationStore, () => _mainMenuLayoutViewModel);
 
             InitTrayComponents();

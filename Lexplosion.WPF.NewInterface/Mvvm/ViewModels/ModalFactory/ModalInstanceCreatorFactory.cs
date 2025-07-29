@@ -16,17 +16,19 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.ModalFactory
     {
         private readonly LibraryController _libraryController;
         private readonly InstanceSharesController _shareController;
+        private readonly Action _toAuthorization;
         private readonly AppCore _appCore;
         private readonly ImportStartFunc _importStart;
         private readonly Func<IEnumerable<ImportProcess>> _getActiveImports;
 
-        public ModalInstanceCreatorFactory(AppCore appCore, ImportStartFunc importStart, Func<IEnumerable<ImportProcess>> getActiveImports, LibraryController controller, InstanceSharesController sharesController)
+        public ModalInstanceCreatorFactory(AppCore appCore, ImportStartFunc importStart, Func<IEnumerable<ImportProcess>> getActiveImports, LibraryController controller, InstanceSharesController sharesController, Action toAuthorization)
         {
             _appCore = appCore;
             _importStart = importStart;
             _getActiveImports = getActiveImports;
             _libraryController = controller;
             _shareController = sharesController;
+            _toAuthorization = toAuthorization;
         }
 
 
@@ -44,7 +46,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.ModalFactory
                 TitleKey = "Create",
                 IsEnable = hasMinecraftVersions,
                 IsSelected = hasMinecraftVersions,
-                Content = !hasMinecraftVersions ? null : new InstanceFactoryViewModel((i) => _libraryController.Add(i), leftMenuControl.CloseCommand, 
+                Content = !hasMinecraftVersions ? null : new InstanceFactoryViewModel((i) => _libraryController.Add(i), leftMenuControl.CloseCommand,
                     _libraryController.InstancesGroups, _libraryController.SelectedGroup)
             });
 
@@ -66,14 +68,14 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.ModalFactory
                 TitleKey = "Distributions",
                 IsEnable = hasMinecraftVersions,
                 IsSelected = false,
-                Content = new NightWorldLimitedContentLayoutViewModel(new InstanceDistributionViewModel(_libraryController, _shareController), true)
+                Content = new NightWorldLimitedContentLayoutViewModel(new InstanceDistributionViewModel(_libraryController, _shareController), _toAuthorization, true)
             });
 
             if (hasMinecraftVersions)
             {
                 leftMenuControl.AddTabItems(menuItems, hasMinecraftVersions);
             }
-            else 
+            else
             {
                 leftMenuControl.AddTabItems(menuItems, selectedPageType: typeof(InstanceImportViewModel));
             }

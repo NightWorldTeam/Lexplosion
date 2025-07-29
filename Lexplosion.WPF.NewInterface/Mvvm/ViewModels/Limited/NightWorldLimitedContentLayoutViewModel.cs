@@ -1,21 +1,39 @@
 ﻿using Lexplosion.Logic.Management.Accounts;
+using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.ViewModel;
+using System;
+using System.Diagnostics;
 using System.Threading;
+using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Limited
 {
     public class NightWorldLimitedContentLayoutViewModel : LimitedContentLayoutViewModelBase
     {
-        public override bool HasAccess 
-        { 
-            get => Account.ActiveAccount != null && Account.ActiveAccount.AccountType == AccountType.NightWorld; 
+        private readonly Action _toCreateAccount;
+        private readonly Action _toAuthorization;
+
+        public override bool HasAccess
+        {
+            get => Account.ActiveAccount != null && Account.ActiveAccount.AccountType == AccountType.NightWorld;
         }
 
         public bool IsModalTarget { get; }
 
+        private RelayCommand toCreateAccountCommand;
+        public ICommand ToCreateAccountCommand
+        {
+            get => RelayCommand.GetCommand(ref toCreateAccountCommand, _toCreateAccount);
+        }
 
-        public NightWorldLimitedContentLayoutViewModel(ILimitedAccess viewModelBase, bool isModalTarget = false) : base(viewModelBase)
+        private RelayCommand _toAuthorizationCommand;
+        public ICommand ToAuthorizationCommand
+        {
+            get => RelayCommand.GetCommand(ref _toAuthorizationCommand, _toAuthorization);
+        }
+
+        public NightWorldLimitedContentLayoutViewModel(ILimitedAccess viewModelBase, Action toAuthorization, bool isModalTarget = false) : base(viewModelBase)
         {
             Account.ActiveAccountChanged += (acc) =>
             {
@@ -29,6 +47,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Limited
             };
 
             IsModalTarget = isModalTarget;
+
+            _toCreateAccount = () => Process.Start("https://night-world.org/auth");
+            _toAuthorization = toAuthorization;
         }
 
 
