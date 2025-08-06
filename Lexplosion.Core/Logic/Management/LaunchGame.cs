@@ -401,7 +401,7 @@ namespace Lexplosion.Logic.Management
 				command = command.Replace("${version_type}", "release");
 				command = command.Replace("${natives_directory}", "\"" + gamePath + "natives/" + (data.VersionFile.CustomVersionName ?? data.VersionFile.GameVersion) + "\"");
 				command = command.Replace("${launcher_name}", "nw-lexplosion");
-				command = command.Replace("${launcher_version}", "0.7.9");
+				command = command.Replace("${launcher_version}", "1.0.1.1");
 				command = command.Replace("${classpath}", libs);
 			}
 			else
