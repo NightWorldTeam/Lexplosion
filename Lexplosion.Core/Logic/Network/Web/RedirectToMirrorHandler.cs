@@ -8,21 +8,9 @@ using System.Threading.Tasks;
 
 namespace Lexplosion.Logic.Network.Web
 {
-	internal class RedirectToMirrorHandler : HttpClientHandler
+	internal class RedirectToMirrorHandler : MirrorHttpHandler
 	{
-		private const string MIRROR_CERT_SHA1 = "8DDAD6C33EFAFD9D1F5FB17A322159F1D71F9C73";
-		public RedirectToMirrorHandler()
-		{
-			ServerCertificateCustomValidationCallback = (message, cert, chain, errors) =>
-			{
-				if (message.RequestUri.Host.Equals("mirror.night-world.org", StringComparison.OrdinalIgnoreCase))
-				{
-					return cert != null && cert.Thumbprint?.Equals(MIRROR_CERT_SHA1, StringComparison.OrdinalIgnoreCase) == true;
-				}
-
-				return errors == System.Net.Security.SslPolicyErrors.None;
-			};
-		}
+		public RedirectToMirrorHandler() : base() { }
 
 		protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
 		{

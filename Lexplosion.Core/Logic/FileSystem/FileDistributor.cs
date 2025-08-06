@@ -117,6 +117,8 @@ namespace Lexplosion.Logic.FileSystem
 
 					_dataServer.ClientFinishedDownloading += (string uuid, string fileId) =>
 					{
+						if (uuid == null || fileId == null) return;
+
 						_distributors.TryGetValue(fileId, out FileDistributor distributor);
 						if (distributor == null) return;
 

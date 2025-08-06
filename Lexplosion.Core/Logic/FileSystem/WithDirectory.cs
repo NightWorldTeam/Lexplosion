@@ -28,7 +28,7 @@ namespace Lexplosion.Logic.FileSystem
 		private HttpClient _httpClient = new();
 		private ProxyHandler _clientHandler;
 
-		private const string USER_AGENT = "Mozilla/5.0 Lexplosion/1.0.0.5";
+		private const string USER_AGENT = "Mozilla/5.0 Lexplosion/1.0.1.1";
 
 		internal WithDirectory()
 		{

@@ -455,28 +455,6 @@ namespace Lexplosion.Logic.Management
 			return command;
 		}
 
-		private byte[] LoadCertificate()
-		{
-			Runtime.DebugWrite("Load certificate");
-
-			try
-			{
-				HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Global.LaunсherSettings.URL.Base);
-				HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-				response.Close();
-
-				X509Certificate2 cert = new X509Certificate2(request.ServicePoint.Certificate);
-				byte[] certData = cert.Export(X509ContentType.Cert);
-
-				return certData;
-			}
-			catch (Exception ex)
-			{
-				Runtime.DebugWrite("Exception " + ex);
-				return null;
-			}
-		}
-
 		private void CreateJavaKeyStore(string javaPath)
 		{
 			try
@@ -493,27 +471,54 @@ namespace Lexplosion.Logic.Management
 				string keyStorePath = keyStoreRoot + Cryptography.Sha256(javaPath);
 				string keyStoreFile = (keyStorePath + "/cacerts");
 				keyStoreFile = keyStoreFile.Replace("//", "/");
-				string certFile = _settings.GamePath + "/java/keystore/night-world.org.crt";
-				Runtime.DebugWrite("certFile: " + certFile);
 
+				string mainCertFile = _settings.GamePath + "/java/keystore/night-world.org.crt";
+				string mirrorCertFile = _settings.GamePath + "/java/keystore/(v1)mirror.night-world.org.crt";
+				Runtime.DebugWrite("mainCertFile: " + mainCertFile);
+				Runtime.DebugWrite("mirrorCertFile: " + mirrorCertFile);
 
 				bool keyStoreToUpdate = false;
-				byte[] certificate = LoadCertificate();
-				if (!File.Exists(certFile) || (certificate != null && Cryptography.Sha256(certificate) != Cryptography.FileSha256(certFile)))
+				byte[] mainCertificate = _services.WebService.LoadCertificate(Global.LaunсherSettings.URL.Base);
+				byte[] mirrorCertificate = _services.WebService.LoadCertificate(Global.LaunсherSettings.URL.MirrorBase);
+
+				//проверяем существует ли сертификат для night-world.org на диске и сверяем его хэш с сертификатом на сервере
+				if (!File.Exists(mainCertFile) || (mainCertificate != null && Cryptography.Sha256(mainCertificate) != Cryptography.FileSha256(mainCertFile)))
 				{
-					Runtime.DebugWrite("Certificate is not valid");
-					keyStoreToUpdate = true;
-					if (Directory.Exists(keyStoreRoot))
+					Runtime.DebugWrite("Main certificate is not valid");
+
+					if (mainCertificate != null)
 					{
-						Directory.Delete(keyStoreRoot, true);
-						Directory.CreateDirectory(keyStoreRoot);
+						keyStoreToUpdate = true;
+						if (Directory.Exists(keyStoreRoot))
+						{
+							Directory.Delete(keyStoreRoot, true);
+							Directory.CreateDirectory(keyStoreRoot);
+						}
+						else
+						{
+							Directory.CreateDirectory(keyStoreRoot);
+						}
+
+						File.WriteAllBytes(mainCertFile, mainCertificate);
 					}
 					else
 					{
-						Directory.CreateDirectory(keyStoreRoot);
+						Runtime.DebugWrite("Error. mainCertificate is null");
 					}
+				}
 
-					File.WriteAllBytes(certFile, certificate);
+				// просто проверяем есть ли сертификат для mirror.night-world.org на диске
+				if (!File.Exists(mirrorCertFile))
+				{
+					if (mirrorCertificate != null)
+					{
+						keyStoreToUpdate = true;
+						File.WriteAllBytes(mirrorCertFile, mirrorCertificate);
+					}
+					else
+					{
+						Runtime.DebugWrite("Error. mirrorCertificate is null");
+					}
 				}
 
 				if (keyStoreToUpdate || !File.Exists(keyStoreFile))
@@ -524,16 +529,13 @@ namespace Lexplosion.Logic.Management
 						Directory.CreateDirectory(keyStorePath);
 					}
 
-					string baseKeyStoreFile = javaPath.Replace("/", "\\") + "\\lib\\security\\cacerts";
-					File.Copy(baseKeyStoreFile, keyStoreFile.Replace("/", "\\"));
+					bool result = AddToTrustCacerts(javaPath, mainCertFile, keyStoreFile, "nightworld_cer");
+					Runtime.DebugWrite($"nightworld_cer add result: {result}");
 
-					string keyTool = javaPath + "/bin/keytool.exe";
-					string command = "-import -noprompt -trustcacerts -alias nightworld_cer -file \"" + certFile + "\" -keystore \"" + keyStoreFile + "\" -storepass changeit";
-					Runtime.DebugWrite("Add to keystore command: \"" + keyTool + "\" " + command);
-					if (Utils.StartProcess(command, Utils.ProcessExecutor.Java, keyTool))
-					{
-						_keyStorePath = keyStoreFile;
-					}
+					bool result2 = AddToTrustCacerts(javaPath, mirrorCertFile, keyStoreFile, "mirror_nightworld_cer");
+					Runtime.DebugWrite($"mirror_nightworld_cer add result: {result2}");
+
+					if (result || result2) _keyStorePath = keyStoreFile;
 				}
 
 				Runtime.DebugWrite("Keystore file: " + keyStoreFile);
@@ -543,6 +545,20 @@ namespace Lexplosion.Logic.Management
 			{
 				Runtime.DebugWrite("Exception " + ex);
 			}
+		}
+
+		private bool AddToTrustCacerts(string javaPath, string certFile, string keyStoreFile, string certAlias)
+		{
+			string baseKeyStoreFile = javaPath.Replace("/", "\\") + "\\lib\\security\\cacerts";
+			if (!File.Exists(keyStoreFile))
+			{
+				File.Copy(baseKeyStoreFile, keyStoreFile.Replace("/", "\\"));
+			}
+
+			string keyTool = javaPath + "/bin/keytool.exe";
+			string command = $"-import -noprompt -trustcacerts -alias {certAlias} -file \"{certFile}\" -keystore \"{keyStoreFile}\" -storepass changeit";
+			Runtime.DebugWrite("Add to keystore command: \"" + keyTool + "\" " + command);
+			return Utils.StartProcess(command, Utils.ProcessExecutor.Java, keyTool);
 		}
 
 		public bool Run(InitData data, Action gameExited, string gameClientName)
@@ -609,6 +625,9 @@ namespace Lexplosion.Logic.Management
 				_process.StartInfo.RedirectStandardOutput = true;
 				_process.EnableRaisingEvents = true;
 				_process.StartInfo.EnvironmentVariables["_JAVA_OPTIONS"] = "";
+				_process.StartInfo.EnvironmentVariables["NvOptimusEnablement"] = "1";
+				_process.StartInfo.EnvironmentVariables["AmdPowerXpressRequestHighPerformance"] = "1";
+				_process.StartInfo.EnvironmentVariables["SHIM_MCCOMPAT"] = "0x800000000";
 				_process.StartInfo.UseShellExecute = false;
 				_process.StartInfo.CreateNoWindow = true;
 				_process.StartInfo.WindowStyle = ProcessWindowStyle.Normal;

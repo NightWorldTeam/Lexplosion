@@ -13,6 +13,9 @@ using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Network.Web;
 using Newtonsoft.Json;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
+using System.Runtime.ConstrainedExecution;
+using System.Runtime.Remoting.Messaging;
 
 namespace Lexplosion.Logic.Network
 {
@@ -21,7 +24,7 @@ namespace Lexplosion.Logic.Network
 		private HttpClient _httpClient;
 		private ProxyHandler _clientHandler;
 
-		private const string USER_AGENT = "Mozilla/5.0 Lexplosion/1.0.0.5";
+		private const string USER_AGENT = "Mozilla/5.0 Lexplosion/1.0.1.1";
 
 		public bool IsMirrorModeToNw { get; private set; } = false;
 
@@ -56,7 +59,7 @@ namespace Lexplosion.Logic.Network
 				_httpClient = newHttpClient;
 
 				IsMirrorModeToNw = true;
-			}		
+			}
 		}
 
 		public T ProtectedRequest<T>(string url, int timeout = 0) where T : ProtectedManifest
@@ -220,8 +223,7 @@ namespace Lexplosion.Logic.Network
 					Content = content
 				};
 
-				request.Content.Headers.ContentType =
-					new System.Net.Http.Headers.MediaTypeHeaderValue("application/x-www-form-urlencoded");
+				request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
 
 				AddHeaders(request, headers);
 
@@ -350,6 +352,50 @@ namespace Lexplosion.Logic.Network
 			return (null, httpStatus);
 		}
 
+		public byte[] LoadCertificate(string url)
+		{
+			var task = Task.Run(() => LoadCertificateAsync(url));
+			task.Wait();
+			return task.Result;
+		}
+
+		public async Task<byte[]> LoadCertificateAsync(string url)
+		{
+			Runtime.DebugWrite($"Load certificate for {url}");
+
+			try
+			{
+				X509Certificate2 ServerCertificate = null;
+
+				var handler = new MirrorHttpHandler();
+
+				handler.ValidCertificateHandler += (X509Certificate2 cert) =>
+				{
+					ServerCertificate = cert;
+				};
+
+				using (var httpClient = new HttpClient(handler))
+				{
+					httpClient.Timeout = TimeSpan.FromMilliseconds(5000);
+
+					var response = await httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Head, url));
+
+					if (ServerCertificate != null)
+					{
+						byte[] certData = ServerCertificate.Export(X509ContentType.Cert);
+						return certData;
+					}
+				}
+
+				return null;
+			}
+			catch (Exception ex)
+			{
+				Runtime.DebugWrite("Exception " + ex);
+				return null;
+			}
+		}
+
 		private void AddHeaders(HttpRequestMessage request, IDictionary<string, string> headers)
 		{
 			if (headers != null)
@@ -370,5 +416,6 @@ namespace Lexplosion.Logic.Network
 				}
 			}
 		}
+
 	}
 }
