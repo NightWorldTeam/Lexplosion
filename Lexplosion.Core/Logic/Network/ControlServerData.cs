@@ -1,5 +1,7 @@
-﻿using LumiSoft.Net.Mime;
+﻿using System.Linq;
+using System;
 using System.Net;
+using System.Net.Sockets;
 
 namespace Lexplosion.Logic.Network
 {
@@ -19,7 +21,19 @@ namespace Lexplosion.Logic.Network
 		public ControlServerData(string serverAddr)
 		{
 			if (!IPAddress.TryParse(serverAddr, out IPAddress ipAddress))
-				ipAddress = Dns.GetHostEntry(serverAddr).AddressList[0];
+			{
+				try
+				{
+					var addresses = Dns.GetHostEntry(serverAddr).AddressList;
+					ipAddress = addresses.FirstOrDefault(a => a.AddressFamily == AddressFamily.InterNetwork);
+				}
+				catch { }
+
+				if (ipAddress == null)
+				{
+					ipAddress = IPAddress.Parse("83.147.192.203");
+				}
+			}
 
 			HandshakeServerPoint = new IPEndPoint(ipAddress, 4565);
 			TurnPoint = new IPEndPoint(ipAddress, 9765);

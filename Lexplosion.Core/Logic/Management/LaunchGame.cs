@@ -625,9 +625,6 @@ namespace Lexplosion.Logic.Management
 				_process.StartInfo.RedirectStandardOutput = true;
 				_process.EnableRaisingEvents = true;
 				_process.StartInfo.EnvironmentVariables["_JAVA_OPTIONS"] = "";
-				_process.StartInfo.EnvironmentVariables["NvOptimusEnablement"] = "1";
-				_process.StartInfo.EnvironmentVariables["AmdPowerXpressRequestHighPerformance"] = "1";
-				_process.StartInfo.EnvironmentVariables["SHIM_MCCOMPAT"] = "0x800000000";
 				_process.StartInfo.UseShellExecute = false;
 				_process.StartInfo.CreateNoWindow = true;
 				_process.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
