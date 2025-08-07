@@ -104,6 +104,7 @@ namespace Lexplosion.Logic.FileSystem.Extensions
 						folderName = "saves";
 						break;
 					case AddonType.Resourcepacks:
+					case AddonType.DataPacks:
 						folderName = "resourcepacks";
 						break;
 					case AddonType.Shaders:
@@ -211,6 +212,7 @@ namespace Lexplosion.Logic.FileSystem.Extensions
 						folderName = "saves";
 						break;
 					case AddonType.Resourcepacks:
+					case AddonType.DataPacks:
 						folderName = "resourcepacks";
 						break;
 					case AddonType.Shaders:

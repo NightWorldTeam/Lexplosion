@@ -34,53 +34,6 @@
 					return ProjectSource.None;
 			}
 		}
-
-		public static AddonType ToAddonType(this CfProjectType cfProjectType)
-		{
-			switch (cfProjectType)
-			{
-				case CfProjectType.Mods:
-					return AddonType.Mods;
-				case CfProjectType.Resourcepacks:
-					return AddonType.Resourcepacks;
-				case CfProjectType.Maps:
-					return AddonType.Maps;
-				default:
-					return AddonType.Unknown;
-			}
-		}
-
-		public static CfProjectType ToCfProjectType(this AddonType cfProjectType)
-		{
-			switch (cfProjectType)
-			{
-				case AddonType.Mods:
-					return CfProjectType.Mods;
-				case AddonType.Resourcepacks:
-					return CfProjectType.Resourcepacks;
-				case AddonType.Maps:
-					return CfProjectType.Maps;
-				case AddonType.Shaders:
-					return CfProjectType.Shaders;
-				default:
-					return CfProjectType.Maps;
-			}
-		}
-
-		public static Modloader ToModloader(this ClientType cfProjectType)
-		{
-			switch (cfProjectType)
-			{
-				case ClientType.Forge:
-					return Modloader.Forge;
-				case ClientType.Fabric:
-					return Modloader.Fabric;
-				case ClientType.Quilt:
-					return Modloader.Quilt;
-				default:
-					return Modloader.Forge;
-			}
-		}
 	}
 
 	public enum InstanceSource
@@ -208,7 +161,8 @@
 		Mods = 6,
 		Resourcepacks = 12,
 		Maps = 17,
-		Shaders = 6552
+		Shaders = 6552,
+		DataPacks = 6945
 	}
 
 	/// <summary>
@@ -220,7 +174,8 @@
 		Resourcepacks = 12,
 		Maps = 17,
 		Modpacks = 4471,
-		Shaders = 6552
+		Shaders = 6552,
+		DataPacks = 6945
 	}
 
 	public enum StateType
