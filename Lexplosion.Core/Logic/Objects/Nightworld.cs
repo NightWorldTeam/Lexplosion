@@ -75,7 +75,21 @@ namespace Lexplosion.Logic.Objects.Nightworld
 		{
 			get => LaunсherSettings.URL.Base + "requestProcessing/getUserImage.php?user_login=" + Login;
 		}
+
+		[JsonIgnore]
+		public NwUserBanner Banner 
+		{
+			get => new();
+		}
 	}
+
+	public sealed class NwUserBanner 
+	{
+		public string Url { get; }
+		public uint NameColor { get; } = 0xFFFFFF;
+		public uint AtivityColor { get; } = 0xFFFFFF;
+        public uint MoreButtonColor { get; } = 0xFFFFFF;
+    }
 
 	public struct UsersCatalogPage
 	{

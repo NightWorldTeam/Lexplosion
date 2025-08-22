@@ -87,6 +87,7 @@
                     <local:Friend
                         Margin="0,0,4,4"
                         Avatar="{Binding AvatarUrl}"
+                        BannerUrl="{Binding BannerUrl}"
                         Nickname="{Binding Name}"
                         RunningClientName="{Binding RunningClientName}"
                         Status="{Binding Status.Value}" />

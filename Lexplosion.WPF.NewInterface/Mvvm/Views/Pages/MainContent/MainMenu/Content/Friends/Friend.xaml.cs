@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu
 {
@@ -12,7 +13,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu
     /// </summary>
     public partial class Friend : UserControl
     {
-        static Friend() 
+        static Friend()
         {
         }
 
@@ -22,11 +23,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu
         }
 
         public static readonly DependencyProperty NicknameProperty
-            = DependencyProperty.Register(nameof(Nickname), typeof(string), typeof(Friend), 
+            = DependencyProperty.Register(nameof(Nickname), typeof(string), typeof(Friend),
                 new PropertyMetadata(defaultValue: "NW Player", propertyChangedCallback: OnUserNameChanged));
 
         public static readonly DependencyProperty StatusProperty
-            = DependencyProperty.Register(nameof(Status), typeof(ActivityStatus), typeof(Friend), 
+            = DependencyProperty.Register(nameof(Status), typeof(ActivityStatus), typeof(Friend),
                 new PropertyMetadata(defaultValue: ActivityStatus.Offline, propertyChangedCallback: OnUserStatusChanged));
 
         public static readonly DependencyProperty RunningClientNameProperty
@@ -36,6 +37,20 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu
         public static readonly DependencyProperty AvatarProperty
             = DependencyProperty.Register(nameof(Avatar), typeof(ImageSource), typeof(Friend),
                 new PropertyMetadata(defaultValue: null, propertyChangedCallback: OnAvatarChanged));
+
+        public static readonly DependencyProperty BannerUrlProperty
+            = DependencyProperty.Register(nameof(BannerUrl), typeof(string), typeof(Friend),
+                new PropertyMetadata(defaultValue: null, propertyChangedCallback: OnBannerUrlLoaded));
+
+        private static void OnBannerUrlLoaded(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is Friend _this)
+            {
+                _this.UpdateBanner();
+            }
+        }
+
+
 
         public string Nickname
         {
@@ -55,10 +70,16 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu
             set => SetValue(AvatarProperty, value);
         }
 
-        public string RunningClientName 
+        public string RunningClientName
         {
             get => (string)GetValue(RunningClientNameProperty);
             set => SetValue(RunningClientNameProperty, value);
+        }
+
+        public string BannerUrl
+        {
+            get => (string)GetValue(BannerUrlProperty);
+            set => SetValue(BannerUrlProperty, value);
         }
 
         protected override void OnInitialized(EventArgs e)
@@ -66,6 +87,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu
             NicknameTB.Text = Nickname;
             StatusTB.SetResourceReference(TextBlock.TextProperty, Status.ToString());
             StatusIndicator.SetResourceReference(Border.BackgroundProperty, GetStatusColorKey(Status));
+
+            UpdateBanner();
 
             base.OnInitialized(e);
         }
@@ -100,11 +123,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu
             {
                 var f = (Friend)d;
 
-                if (f.Status == ActivityStatus.InGame) 
+                if (f.Status == ActivityStatus.InGame)
                 {
                     f.StatusTB.Text = string.Empty;
 
-                    var status = new Run(); 
+                    var status = new Run();
                     status.SetResourceReference(Run.TextProperty, "PlayingIn");
                     f.StatusTB.Inlines.Add(status);
                     f.StatusTB.Inlines.Add(" ");
@@ -135,9 +158,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu
             //}
         }
 
-        private static string GetStatusColorKey(ActivityStatus status) 
+        private static string GetStatusColorKey(ActivityStatus status)
         {
-            switch(status) 
+            switch (status)
             {
                 case ActivityStatus.InGame:
                     return "InGameSolidColorBrush";
@@ -152,6 +175,18 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu
             }
         }
 
+
+        private void UpdateBanner()
+        {
+            if (!string.IsNullOrEmpty(BannerUrl))
+            {
+                BodyBorder.Background = new ImageBrush(new BitmapImage(uriSource: new Uri(BannerUrl)));
+            }
+            else
+            {
+                SetResourceReference(Border.BackgroundProperty, "FriendSolidColorBrush");
+            }
+        }
         //private static string Stat
 
         #endregion Private Methods

@@ -14,15 +14,16 @@
     mc:Ignorable="d">
 
     <Border
+        x:Name="BodyBorder"
         Grid.Column="0"
         Width="300"
         Height="64"
         Padding="16,12"
         VerticalAlignment="Top"
-        Background="{DynamicResource FriendSolidColorBrush}"
         BorderBrush="{DynamicResource FriendBorderSolidColorBrush}"
         BorderThickness="1"
         CornerRadius="5">
+
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />

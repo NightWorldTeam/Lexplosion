@@ -54,15 +54,17 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends
         public ActivityStatus ActivityStatus { get; set; }
         public string AvatarUrl { get; set; }
         public string RunningClientName { get; set; }
+        public string BannerUrl { get; }
 
 
-        public Friend(string name, FriendStatus status, FriendState state, string avatar, string runningClientName)
+        public Friend(string name, FriendStatus status, FriendState state, string avatar, string runningClientName, string bannerUrl = null)
         {
             Name = name;
             Status = status;
             State = state;
             AvatarUrl = avatar;
             RunningClientName = runningClientName;
+            BannerUrl = bannerUrl;
         }
 
         public void Unfriend() 

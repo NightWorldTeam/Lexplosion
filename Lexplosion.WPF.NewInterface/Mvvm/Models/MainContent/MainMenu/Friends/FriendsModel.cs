@@ -79,7 +79,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends
 
                 foreach (var friend in friends)
                 {
-                    var friendObj = new Friend(friend.Login, new FriendStatus(friend.ActivityStatus), Friend.FriendState.Added, friend.AvatarUrl, friend.GameClientName);
+                    var friendObj = new Friend(friend.Login, new FriendStatus(friend.ActivityStatus), Friend.FriendState.Added, friend.AvatarUrl, friend.GameClientName, friend.Banner.Url);
                     friendObj.Unfriended += FriendObj_Unfriended;
                     _allFriends.Add(friendObj);
                     OnPropertyChanged(nameof(HasFriends));
