@@ -60,6 +60,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends
             Runtime.TaskRun(() =>
             {
                 var activeAccount = Account.ActiveAccount;
+                activeAccount.WaitAuth();
                 var friends = Runtime.ServicesContainer.NwApi.GetFriends(activeAccount.UUID, activeAccount.SessionToken, activeAccount.Login);
                 App.Current.Dispatcher.Invoke(() => UpdateFriends(friends));
             });

@@ -189,6 +189,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends
                 var services = Runtime.ServicesContainer;
 
                 var activeAccount = Account.ActiveAccount;
+                activeAccount.WaitAuth();
+
                 if (reboot)
                 {
                     CurrentPageIndex = 0;

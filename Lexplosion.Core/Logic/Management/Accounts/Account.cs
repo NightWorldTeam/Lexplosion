@@ -81,6 +81,8 @@ namespace Lexplosion.Logic.Management.Accounts
 
 		public bool IsTokenValid { get; private set; } = true;
 
+		private readonly ManualResetEvent _authWait = new ManualResetEvent(false);
+
 		/// <summary>
 		/// Ссылка на картинку головы скина. Может быть null.
 		/// </summary>
@@ -471,8 +473,15 @@ namespace Lexplosion.Logic.Management.Accounts
 			AuthozationFinished?.Invoke(this);
 			AuthorizationCodeResult = result.Code;
 			IsAuthInProcess = false;
-			Runtime.DebugWrite($"Auth {Login}, Account type: {AccountType}, Result: {result.Code}");
+            _authWait.Set();
+
+            Runtime.DebugWrite($"Auth {Login}, Account type: {AccountType}, Result: {result.Code}");
 			return result.Code;
+		}
+
+		public void WaitAuth()
+		{
+			_authWait.WaitOne();
 		}
 
 		private string _gameClientName = "";
