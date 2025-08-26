@@ -83,14 +83,14 @@ namespace Lexplosion.Logic.Objects.Nightworld
     public sealed class NwUserBanner
     {
         [JsonProperty("url")]
-        public string Url { get; }
-        public uint? NameColor { get; } = null;
-        public uint? AtivityColor { get; } = null;
-        public uint? MoreButtonColor { get; } = null;
-        public uint? StatusIndecatorBorderColor { get; } = null;
+        public string Url { get; set; }
+        public uint? NameColor { get; set; } = null;
+        public uint? AtivityColor { get; set; } = null;
+        public uint? MoreButtonColor { get; set; } = null;
+        public uint? StatusIndecatorBorderColor { get; set; } = null;
         // хз зачем возможно не понадобиться
-        public uint? ActivityColor { get; } = null;
-        public uint? MoreButtonIconColor { get; } = null;
+        public uint? ActivityColor { get; set; } = null;
+        public uint? MoreButtonIconColor { get; set; } = null;
     }
 
     public struct UsersCatalogPage
