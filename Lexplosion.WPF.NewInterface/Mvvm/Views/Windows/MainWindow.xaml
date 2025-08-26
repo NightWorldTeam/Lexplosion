@@ -416,5 +416,50 @@
                 IsActive="{Binding GlobalLoadingArgs.State}"
                 Placeholder="{Binding GlobalLoadingArgs.ProcessDescription}" />
         </Grid>
+
+
+        <Border
+            Width="240"
+            Height="300" Visibility="Collapsed"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Background="{DynamicResource SecondarySolidColorBrush}"
+            BorderBrush="Yellow"
+            BorderThickness="1"
+            CornerRadius="5">
+            <Grid>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.3*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Border CornerRadius="5,5,0,0">
+                    <Border.Background>
+                        <ImageBrush ImageSource="https://psv4.userapi.com/s/v1/d2/-XUqN80S-xb1WOSEO0Bw-KHMiTmzgBqzBd_SgIcSyIkmjOyGJz3jLxOCMYsb5vikd3MhY6QeIrGSebv1991UzFAclpC1BisVwE5I84z55LiPoKALXf3Hclsl-IGdy44lM4j7MGG2Gq_N/Frame_1000004955.png" />
+                    </Border.Background>
+                </Border>
+
+                <Border HorizontalAlignment="Left" Margin="16,0,0,0" Width="32" Height="32">
+                    <Border.Background>
+                        <ImageBrush ImageSource="/Assets/images/icons/hel2xhead.png" />
+                    </Border.Background>
+                </Border>
+
+                <Border Grid.Row="1">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <StackPanel>
+                            <TextBlock Text="Title: Барин" Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" FontSize="14" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Border>
     </Grid>
 </Window>

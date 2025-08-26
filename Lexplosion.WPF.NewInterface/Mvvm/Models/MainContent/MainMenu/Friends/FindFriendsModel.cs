@@ -1,11 +1,10 @@
-﻿using Lexplosion.Logic.Objects.Nightworld;
-using Lexplosion.WPF.NewInterface.Core.Objects;
+﻿using Lexplosion.Logic.Management.Accounts;
+using Lexplosion.Logic.Objects.Nightworld;
 using Lexplosion.WPF.NewInterface.Core;
+using Lexplosion.WPF.NewInterface.Core.Objects.Users;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading;
-using Lexplosion.Logic.Management.Accounts;
-using Lexplosion.Logic.Network;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends
 {
@@ -91,9 +90,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends
         {
             _appCore = appCore;
             Users.Source = _users;
+
             LoadUsersList();
         }
-
 
         #endregion Constructors
 
@@ -133,7 +132,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends
             Runtime.TaskRun(() =>
             {
                 user.SendFriendRequest();
-                _appCore.UIThread(() => 
+                _appCore.UIThread(() =>
                 {
                     FriendRequestSent?.Invoke(user);
                     _appCore.MessageService.Success("FriendRequestHasBeenSent", true);
@@ -209,7 +208,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends
 
                     foreach (var user in _usersCatalogPage.Data)
                     {
-                        _users.Add(new NightWorldUser(user));
+                        _users.Add(new NightWorldUser(user, NightWorldUserFriendshipState.NotAdded));
                     }
                 });
                 PageCount = _usersCatalogPage.PagesCount;
@@ -218,7 +217,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends
                 IsLoading = false;
             });
         }
-
 
         #endregion Private Methods
     }

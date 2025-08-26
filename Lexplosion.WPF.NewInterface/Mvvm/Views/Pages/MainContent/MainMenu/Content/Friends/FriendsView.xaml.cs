@@ -1,6 +1,5 @@
-﻿using Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends;
+﻿using Lexplosion.WPF.NewInterface.Core.Objects.Users;
 using System.Collections;
-using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Windows.Data;
 
@@ -32,8 +31,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu
                 return 0;
 
 
-            var status1 = group1.Name as FriendStatus;
-            var status2 = group2.Name as FriendStatus;
+            var status1 = group1.Name as NightWorldUserStatus;
+            var status2 = group2.Name as NightWorldUserStatus;
 
             if (status1.Priority > status2.Priority)
                 return -1;

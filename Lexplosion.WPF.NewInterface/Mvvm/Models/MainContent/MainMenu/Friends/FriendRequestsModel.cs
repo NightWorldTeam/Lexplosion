@@ -6,6 +6,7 @@ using Lexplosion.WPF.NewInterface.Core;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Lexplosion.WPF.NewInterface.Core.Objects.Users;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends
 {

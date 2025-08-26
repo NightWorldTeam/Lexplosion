@@ -29,7 +29,7 @@
                 <Setter Property="Cursor" Value="Hand" />
             </Trigger>
             <Trigger Property="IsChecked" Value="True">
-                <Setter Property="Background">
+                <Setter Property="Foreground">
                     <Setter.Value>
                         <SolidColorBrush Opacity="0.1" Color="{DynamicResource ActivityColor}" />
                     </Setter.Value>

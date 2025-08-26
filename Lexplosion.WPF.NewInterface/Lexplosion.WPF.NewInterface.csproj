@@ -121,6 +121,7 @@
     <Compile Include="Core\Converters\ValueConverters\CountToVisibilityConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\ImagePathValidateConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\IsCollectionEmptyConverter.cs" />
+    <Compile Include="Core\Converters\ValueConverters\NullableToVisibilityConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\RowElementCountConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\StringCollectionToShortString.cs" />
     <Compile Include="Core\FiltableObservableCollection.cs" />
@@ -140,6 +141,11 @@
     <Compile Include="Core\Objects\Modloader.cs" />
     <Compile Include="Core\Objects\SelecteableItem.cs" />
     <Compile Include="Core\Objects\Test.cs" />
+    <Compile Include="Core\Objects\Users\Base\NightWorldUserBase.cs" />
+    <Compile Include="Core\Objects\Users\Friends\Friend.cs" />
+    <Compile Include="Core\Objects\Users\Base\NightWorldUserStatus.cs" />
+    <Compile Include="Core\Objects\Users\Base\NightWorldUserFriendshipState.cs" />
+    <Compile Include="Core\Objects\Users\NightWorldUserRequest.cs" />
     <Compile Include="Core\ObservableModelBase.cs" />
     <Compile Include="Core\Resources\IResourceLoader.cs" />
     <Compile Include="Core\Resources\Language\LanguageItem.cs" />
@@ -218,6 +224,9 @@
     <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\InstanceShareViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\WelcomePageThemeSelectViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\WelcomeViewModel.cs" />
+    <Compile Include="ViewComponents\Users\NightWorldUser.xaml.cs">
+      <DependentUpon>NightWorldUser.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Mvvm\Views\Modal\AddonRepository\SelectAddonVersionView.xaml.cs">
       <DependentUpon>SelectAddonVersionView.xaml</DependentUpon>
     </Compile>
@@ -334,15 +343,22 @@
     </Compile>
     <Compile Include="TrayMenu\TrayButton.cs" />
     <Compile Include="TrayMenu\TrayComponentBase.cs" />
-    <Compile Include="WindowComponents\Header\Variants\HeaderBase.cs" />
-    <Compile Include="WindowComponents\Header\Variants\MacOSHeader.xaml.cs">
+    <Compile Include="ViewComponents\Users\NightWorldUserViewBase.cs" />
+    <Compile Include="ViewComponents\Users\OutgoingRequestUser.xaml.cs">
+      <DependentUpon>OutgoingRequestUser.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewComponents\Users\PendingRequestUser.xaml.cs">
+      <DependentUpon>PendingRequestUser.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewComponents\WindowHeaders\Variants\HeaderBase.cs" />
+    <Compile Include="ViewComponents\WindowHeaders\Variants\MacOSHeader.xaml.cs">
       <DependentUpon>MacOSHeader.xaml</DependentUpon>
     </Compile>
-    <Compile Include="WindowComponents\Header\Variants\WindowsOSHeader.xaml.cs">
+    <Compile Include="ViewComponents\WindowHeaders\Variants\WindowsOSHeader.xaml.cs">
       <DependentUpon>WindowsOSHeader.xaml</DependentUpon>
     </Compile>
-    <Compile Include="WindowComponents\Header\WindowHeaderArgs.cs" />
-    <Compile Include="WindowComponents\Header\WindowHeaderContainer.xaml.cs">
+    <Compile Include="ViewComponents\WindowHeaders\WindowHeaderArgs.cs" />
+    <Compile Include="ViewComponents\WindowHeaders\WindowHeaderContainer.xaml.cs">
       <DependentUpon>WindowHeaderContainer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Mvvm\Views\Windows\ConsoleWindow.xaml.cs">
@@ -397,7 +413,7 @@
     <Compile Include="Core\Converters\ValueConverters\WindowWidthToXProcentWidth.cs" />
     <Compile Include="Core\If.cs" />
     <Compile Include="Core\Objects\PlayerWrapper.cs" />
-    <Compile Include="Core\Objects\NightWorldUser.cs" />
+    <Compile Include="Core\Objects\Users\NightWorldUser.cs" />
     <Compile Include="Core\TranslatableObjects\InstanceSourceObject.cs" />
     <Compile Include="Core\TranslatableObjects\ITranslatableObject.cs" />
     <Compile Include="Core\TranslatableObjects\TranslatableObject.cs" />
@@ -440,7 +456,6 @@
     <Compile Include="Mvvm\Models\MainContent\InstanceProfile\Addons\InstanceAddonsContainerModel.cs" />
     <Compile Include="Mvvm\Models\MainContent\MainMenu\FIlterPanel\CatalogFilterPanel.cs" />
     <Compile Include="Mvvm\Models\MainContent\MainMenu\FIlterPanel\LibraryFilterPanel.cs" />
-    <Compile Include="Mvvm\Models\MainContent\MainMenu\Friends\Friend.cs" />
     <Compile Include="Mvvm\Models\MainContent\MainMenu\Multiplayer\MultiplayerModel.cs" />
     <Compile Include="Mvvm\Models\Modal\AccountFactoryModel.cs" />
     <Compile Include="Mvvm\ViewModels\AddonsRepositories\LexplosionAddonsRepositoryViewModel.cs" />
@@ -466,7 +481,7 @@
     <Compile Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\Friends\FindFriendsView.xaml.cs">
       <DependentUpon>FindFriendsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\Friends\Friend.xaml.cs">
+    <Compile Include="ViewComponents\Users\Friend.xaml.cs">
       <DependentUpon>Friend.xaml</DependentUpon>
     </Compile>
     <Compile Include="Mvvm\Views\Windows\TestWindow.xaml.cs">
@@ -687,6 +702,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="ViewComponents\Users\NightWorldUser.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Mvvm\Views\Modal\AccountFactoryView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -811,7 +830,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\Friends\Friend.xaml">
+    <Page Include="ViewComponents\Users\Friend.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -871,15 +890,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="WindowComponents\Header\Variants\MacOSHeader.xaml">
+    <Page Include="ViewComponents\Users\OutgoingRequestUser.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="WindowComponents\Header\Variants\WindowsOSHeader.xaml">
+    <Page Include="ViewComponents\Users\PendingRequestUser.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="WindowComponents\Header\WindowHeaderContainer.xaml">
+    <Page Include="ViewComponents\WindowHeaders\Variants\MacOSHeader.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ViewComponents\WindowHeaders\Variants\WindowsOSHeader.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ViewComponents\WindowHeaders\WindowHeaderContainer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1250,6 +1277,7 @@
   <ItemGroup>
     <Folder Include="Core\StyleSelectors\" />
     <Folder Include="Mvvm\ViewModels\Welcome\" />
+    <Folder Include="Mvvm\Views\Components\" />
     <Folder Include="Mvvm\Views\Windows\Components\" />
   </ItemGroup>
   <ItemGroup>

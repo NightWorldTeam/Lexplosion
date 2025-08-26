@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Windows;
-using System.Windows.Documents;
-using System.Windows.Forms;
 using System.Windows.Media;
 
 namespace Lexplosion.WPF.NewInterface.Tools
@@ -14,7 +9,7 @@ namespace Lexplosion.WPF.NewInterface.Tools
     {
         public static IEnumerable<string> _colors;
 
-        static ColorTools() 
+        static ColorTools()
         {
             Type colorType = typeof(Colors);
             PropertyInfo[] propInfos = colorType.GetProperties(BindingFlags.Static | BindingFlags.DeclaredOnly | BindingFlags.Public);
@@ -88,12 +83,12 @@ namespace Lexplosion.WPF.NewInterface.Tools
             return color;
         }
 
-        public static float CalculateLuminance(Color color) 
+        public static float CalculateLuminance(Color color)
         {
             return (float)(0.2126 * color.R + 0.7152 * color.G + 0.0722 * color.B);
         }
 
-        public static Color ForegroundByColor(Color color) 
+        public static Color ForegroundByColor(Color color)
         {
             var luminance = CalculateLuminance(color);
             return luminance < 140 ? Colors.White : Colors.Black;
@@ -135,7 +130,7 @@ namespace Lexplosion.WPF.NewInterface.Tools
             return true;
         }
 
-        public static IEnumerable<Color> GetIntervalColor(Color color1, Color color2, int intervalCount = 50) 
+        public static IEnumerable<Color> GetIntervalColor(Color color1, Color color2, int intervalCount = 50)
         {
             var rMin = color1.R;
             var rMax = color2.R;
@@ -173,6 +168,16 @@ namespace Lexplosion.WPF.NewInterface.Tools
             //    currentG += intervalG;
             //    currentB += intervalB;
             //}
+        }
+
+        public static Color GetColor(uint hex)
+        {
+            return Color.FromArgb(
+                (byte)((hex >> 24) & 0xFF), // Alpha
+                (byte)((hex >> 16) & 0xFF), // Red
+                (byte)((hex >> 8) & 0xFF),  // Green
+                (byte)(hex & 0xFF)          // Blue
+            );
         }
     }
 }

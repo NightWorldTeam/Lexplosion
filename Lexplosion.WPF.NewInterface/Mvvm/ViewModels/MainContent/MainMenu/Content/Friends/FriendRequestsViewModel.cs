@@ -1,6 +1,6 @@
 ﻿using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
-using Lexplosion.WPF.NewInterface.Core.Objects;
+using Lexplosion.WPF.NewInterface.Core.Objects.Users;
 using Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends;
 using System.Windows.Input;
 

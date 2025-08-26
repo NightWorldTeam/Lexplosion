@@ -1,12 +1,10 @@
 ﻿using Lexplosion.Logic.Management.Accounts;
-using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects.Nightworld;
 using Lexplosion.WPF.NewInterface.Core;
+using Lexplosion.WPF.NewInterface.Core.Objects.Users;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Windows.Data;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends
 {
@@ -78,12 +76,14 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends
             {
                 _allFriends.Clear();
 
+                var i = 0;
                 foreach (var friend in friends)
                 {
-                    var friendObj = new Friend(friend.Login, new FriendStatus(friend.ActivityStatus), Friend.FriendState.Added, friend.AvatarUrl, friend.GameClientName, friend.Banner.Url);
+                    var friendObj = new Friend(friend);
                     friendObj.Unfriended += FriendObj_Unfriended;
                     _allFriends.Add(friendObj);
                     OnPropertyChanged(nameof(HasFriends));
+                    i++;
                 }
             });
         }
@@ -91,7 +91,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends
         private void OnSearchBoxTextChanged(string value)
         {
             value ??= string.Empty;
-            AllFriends.Filter = (obj => (obj as Friend).Name.IndexOf(value, System.StringComparison.InvariantCultureIgnoreCase) > -1);
+            AllFriends.Filter = (obj => (obj as Friend).Login.IndexOf(value, System.StringComparison.InvariantCultureIgnoreCase) > -1);
         }
 
         /// <summary>

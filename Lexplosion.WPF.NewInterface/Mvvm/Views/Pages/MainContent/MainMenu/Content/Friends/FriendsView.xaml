@@ -4,12 +4,14 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:Lexplosion.WPF.NewInterface.Controls"
     xmlns:converters="clr-namespace:Lexplosion.WPF.NewInterface.Core.Converters"
+    xmlns:core="clr-namespace:Lexplosion.WPF.NewInterface.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.MainMenu"
     xmlns:mainmenu="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:model="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends"
+    xmlns:userComponents="clr-namespace:Lexplosion.WPF.NewInterface.ViewComponents.Users"
+    xmlns:users="clr-namespace:Lexplosion.WPF.NewInterface.Core.Objects.Users"
     d:DataContext="{d:DesignInstance Type=mainmenu:FriendsViewModel}"
     mc:Ignorable="d">
 
@@ -18,6 +20,8 @@
             x:Key="FriendsViewSource"
             x:Name="FriendsCollectionViewSource"
             Source="{Binding Path=Model.AllFriends.Filtered}" />
+
+        <core:BindingProxy x:Key="ViewModel" Data="{Binding}" />
     </UserControl.Resources>
 
     <Grid Margin="32,16,0,0" HorizontalAlignment="Stretch">
@@ -59,7 +63,7 @@
                                         FontWeight="Medium"
                                         Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
                                     <TextBlock
-                                        Margin="8,0,0,0"
+                                        Margin="8,2,0,0"
                                         VerticalAlignment="Center"
                                         FontSize="12"
                                         FontWeight="Medium"
@@ -83,14 +87,16 @@
             </ItemsControl.ItemsPanel>
 
             <ListBox.ItemTemplate>
-                <DataTemplate DataType="{x:Type model:Friend}">
-                    <local:Friend
+                <DataTemplate DataType="{x:Type users:Friend}">
+                    <userComponents:Friend
                         Margin="0,0,4,4"
                         Avatar="{Binding AvatarUrl}"
-                        BannerUrl="{Binding BannerUrl}"
-                        Nickname="{Binding Name}"
+                        Banner="{Binding Banner}"
+                        DataContext="{Binding}"
+                        Nickname="{Binding Login}"
                         RunningClientName="{Binding RunningClientName}"
-                        Status="{Binding Status.Value}" />
+                        Status="{Binding Status.Value}"
+                        ViewModelDataContext="{Binding Data, Source={StaticResource ViewModel}}" />
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
