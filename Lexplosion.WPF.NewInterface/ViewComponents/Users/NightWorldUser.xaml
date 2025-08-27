@@ -12,6 +12,11 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
+
+    <local:NightWorldUserViewBase.Resources>
+        <core:BindingProxy x:Key="SelfContext" Data="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:NightWorldUserViewBase}}}" />
+    </local:NightWorldUserViewBase.Resources>
+
     <Border
         x:Name="PART_BodyBorder"
         MinWidth="300"
@@ -202,7 +207,7 @@
                         Width="32"
                         Height="32"
                         HorizontalContentAlignment="Center"
-                        Command="{Binding ViewModelDataContext.SendFriendRequestCommand, RelativeSource={RelativeSource AncestorType={x:Type local:NightWorldUserViewBase}}}"
+                        Command="{Binding Data.ViewModelDataContext.SendFriendRequestCommand, Source={StaticResource SelfContext}}"
                         CommandParameter="{Binding}"
                         Cursor="Hand"
                         Foreground="{DynamicResource ActivitySolidColorBrush}"
@@ -216,7 +221,7 @@
                         Width="32"
                         Height="32"
                         HorizontalContentAlignment="Center"
-                        Command="{Binding ViewModelDataContext.CancelFriendRequestCommand, RelativeSource={RelativeSource AncestorType={x:Type local:NightWorldUserViewBase}}}"
+                        Command="{Binding Data.ViewModelDataContext.CancelFriendRequestCommand, Source={StaticResource SelfContext}}"
                         CommandParameter="{Binding}"
                         Cursor="Hand"
                         Foreground="{DynamicResource ActivitySolidColorBrush}"

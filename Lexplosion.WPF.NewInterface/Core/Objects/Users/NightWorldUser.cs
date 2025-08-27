@@ -8,6 +8,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects.Users
     {
 		private readonly NightWorldApi _api = Runtime.ServicesContainer.NwApi;
 
+        public string Test { get; } = "123";
 
         private bool _hasFriendRequestSent;
         public bool HasFriendRequestSent

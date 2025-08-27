@@ -200,12 +200,11 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends
                     _usersCatalogPage = services.NwApi.FindUsers(activeAccount.UUID, activeAccount.SessionToken, (uint)CurrentPageIndex, searchFilter ?? string.Empty);
                 }
 
+                UpdateIsPageExistsProperties();
+                IsEmpty = _usersCatalogPage.Data.Count == 0;
+
                 App.Current.Dispatcher.Invoke(() =>
                 {
-                    UpdateIsPageExistsProperties();
-
-                    IsEmpty = _usersCatalogPage.Data.Count == 0;
-
                     foreach (var user in _usersCatalogPage.Data)
                     {
                         _users.Add(new NightWorldUser(user, NightWorldUserFriendshipState.NotAdded));

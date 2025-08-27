@@ -123,6 +123,7 @@ namespace Lexplosion.WPF.NewInterface.ViewComponents.Users
             NicknameTB.Text = Nickname;
             StatusTB.SetResourceReference(TextBlock.TextProperty, Status.ToString());
             StatusIndicator.SetResourceReference(Border.BackgroundProperty, GetStatusColorKey(Status));
+
             UpdateBanner();
 
             base.OnInitialized(e);
@@ -212,6 +213,10 @@ namespace Lexplosion.WPF.NewInterface.ViewComponents.Users
         {
             if (Banner == null)
             {
+                BodyBorder.SetResourceReference(Border.BackgroundProperty, "FriendSolidColorBrush");
+                NicknameTB.SetResourceReference(ForegroundProperty, "PrimaryForegroundSolidColorBrush");
+                StatusIndicator.SetResourceReference(BorderBrushProperty, "SeparateSolidColorBrush");
+                StatusTB.SetResourceReference(ForegroundProperty, "SecondaryForegroundSolidColorBrush");
                 return;
             }
 
@@ -225,7 +230,7 @@ namespace Lexplosion.WPF.NewInterface.ViewComponents.Users
             }
             else
             {
-                SetResourceReference(Border.BackgroundProperty, "FriendSolidColorBrush");
+                BodyBorder.SetResourceReference(Border.BackgroundProperty, "FriendSolidColorBrush");
             }
 
             if (Banner.NameColor != null)
@@ -251,7 +256,7 @@ namespace Lexplosion.WPF.NewInterface.ViewComponents.Users
                 StatusTB.Foreground = new SolidColorBrush(ColorTools.GetColor(Banner.ActivityColor.Value));
             }
             else
-            {
+            {;
                 StatusTB.SetResourceReference(ForegroundProperty, "SecondaryForegroundSolidColorBrush");
             }
         }

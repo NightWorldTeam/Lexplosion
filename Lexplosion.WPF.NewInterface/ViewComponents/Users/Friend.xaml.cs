@@ -46,12 +46,13 @@ namespace Lexplosion.WPF.NewInterface.ViewComponents.Users
 
         protected override void UpdateBanner()
         {
+            base.UpdateBanner();
+
             if (Banner == null)
             {
+                //MoreMenuToggleButton.Background = new SolidColorBrush(ColorTools.GetColor(Banner.MoreButtonIconColor.Value));
                 return;
             }
-
-            base.UpdateBanner();
 
             if (Banner.MoreButtonColor != null)
             {

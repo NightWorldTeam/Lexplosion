@@ -82,9 +82,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.MainContent.MainMenu.Friends
                     var friendObj = new Friend(friend);
                     friendObj.Unfriended += FriendObj_Unfriended;
                     _allFriends.Add(friendObj);
-                    OnPropertyChanged(nameof(HasFriends));
                     i++;
                 }
+
+                OnPropertyChanged(nameof(HasFriends));
             });
         }
 
