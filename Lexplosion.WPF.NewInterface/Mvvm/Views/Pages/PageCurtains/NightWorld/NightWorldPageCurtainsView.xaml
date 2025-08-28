@@ -35,7 +35,7 @@
                     Text="{DynamicResource OnlyAvailableWithNightWorldAccount}"
                     TextAlignment="Left" />
                 <TextBlock
-                    Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={converters:WindowWidthToXProcentWidth}, ConverterParameter=60}"
+                    Width="{Binding MainWindow.ActualWidth, Source={x:Static Application.Current}, Converter={converters:WindowWidthToXProcentWidth}, ConverterParameter=60}"
                     MaxWidth="600"
                     Margin="0,8,0,0"
                     FontSize="16"
