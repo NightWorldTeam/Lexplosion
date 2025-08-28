@@ -13,6 +13,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:objects="clr-namespace:Lexplosion.WPF.NewInterface.Core.Objects"
     xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+    xmlns:system="clr-namespace:System;assembly=mscorlib"
     d:DataContext="{d:DesignInstance Type=localVm:AccountsSettingsViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
@@ -75,11 +76,16 @@
 
                     <!--  Profile Button  -->
                     <Border
+                        x:Name="AvatarBorder"
                         Width="32"
                         Height="32"
                         CornerRadius="5">
+                        <Border.Resources>
+                            <!--  Такие костыли пришлось делать, потому-что ImageBrush не имеет DataContext, и выкидывает при каждом открытии страницы ошибку привязки!  -->
+                            <core:BindingProxy x:Key="AccountHeadImageUrlProxy" Data="{Binding Account.HeadImageUrl}" />
+                        </Border.Resources>
                         <Border.Background>
-                            <ImageBrush ImageSource="{Binding Account.HeadImageUrl}" />
+                            <ImageBrush ImageSource="{Binding Data, Source={StaticResource AccountHeadImageUrlProxy}}" />
                         </Border.Background>
                     </Border>
 
@@ -357,11 +363,16 @@
                                 BorderThickness="0,0,0,2">
                                 <StackPanel Orientation="Horizontal">
                                     <Border
+                                        x:Name="TypeBorder"
                                         Width="28"
                                         Height="28"
                                         Margin="0,0,8,0">
+                                        <Border.Resources>
+                                            <!--  Такие костыли пришлось делать, потому-что ImageBrush не имеет DataContext, и выкидывает при каждом открытии страницы ошибку привязки!  -->
+                                            <core:BindingProxy x:Key="IconSourceProxy" Data="{Binding Name.IconSource}" />
+                                        </Border.Resources>
                                         <Border.Background>
-                                            <ImageBrush ImageSource="{Binding Name.IconSource, Converter={converters:ImagePathValidateConverter}}" />
+                                            <ImageBrush ImageSource="{Binding Data, Source={StaticResource IconSourceProxy}, Converter={converters:ImagePathValidateConverter}}" />
                                         </Border.Background>
                                     </Border>
 
