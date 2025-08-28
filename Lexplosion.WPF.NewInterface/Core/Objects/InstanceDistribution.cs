@@ -147,7 +147,7 @@ namespace Lexplosion.WPF.NewInterface.Core.Objects
             IsDownloadStarted = true;
             _args.LibraryController.Add(_instanceClient, this);
 
-            var s = _args.LibraryController.GetByInstanceClient(_instanceClient);
+            var s = _args.LibraryController.Get(_instanceClient);
             s.DeletedEvent += OnDeletedInstance;
         }
 
