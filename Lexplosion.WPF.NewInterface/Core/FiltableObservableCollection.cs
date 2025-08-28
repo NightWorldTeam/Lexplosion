@@ -14,6 +14,7 @@ namespace Lexplosion.WPF.NewInterface.Core
 
         private Action? _disposeObservableColletion = null;
 
+        
         #region Properties
 
 
@@ -61,27 +62,31 @@ namespace Lexplosion.WPF.NewInterface.Core
 
         protected virtual void UpdateCollectionWithFilter()
         {
-            _filteredCollection.Clear();
-
-            foreach (var newItem in Source)
+            // TODO: Перевести на делегат, чтобы можно было использовать в любом MVVM проекте (пригодиться в avalonia)
+            App.Current.Dispatcher.Invoke(() =>
             {
-                if (Filter == null)
-                {
-                    _filteredCollection.Add(newItem);
-                    continue;
-                }
+                _filteredCollection.Clear();
 
-                if (Filter(newItem))
+                foreach (var newItem in Source)
                 {
-                    _filteredCollection.Add(newItem);
-                }
-            }
-            CollectionChanged?.Invoke(
-                this, 
-                new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset)
-            );
+                    if (Filter == null)
+                    {
+                        _filteredCollection.Add(newItem);
+                        continue;
+                    }
 
-            OnPropertyChanged(nameof(Count));
+                    if (Filter(newItem))
+                    {
+                        _filteredCollection.Add(newItem);
+                    }
+                }
+                CollectionChanged?.Invoke(
+                    this,
+                    new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset)
+                );
+
+                OnPropertyChanged(nameof(Count));
+            });
         }
 
         protected virtual void OnFilterChanged()
