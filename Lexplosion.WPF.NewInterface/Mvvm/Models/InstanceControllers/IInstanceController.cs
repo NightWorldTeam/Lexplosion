@@ -37,6 +37,12 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
         /// </summary>
         /// <param name="instancesGroup">Удаляемая группа</param>
         public void RemoveGroup(InstancesGroup instancesGroup);
+        /// <summary>
+        /// Возвращает InstanceModelBase по InstanceClient;
+        /// </summary>
+        /// <param name="instanceClient">Instance Client</param>
+        /// <returns>InstanceModelBase или null</returns>
+        public InstanceModelBase? Get(InstanceClient instanceClient);
     }
 
     public interface IInstanceController

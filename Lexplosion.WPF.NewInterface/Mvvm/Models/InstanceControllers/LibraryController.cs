@@ -196,7 +196,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.InstanceControllers
         }
 
 
-        public InstanceModelBase? GetByInstanceClient(InstanceClient? instanceClient)
+        public InstanceModelBase? Get(InstanceClient instanceClient)
         {
             if (instanceClient == null)
                 return null;

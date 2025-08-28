@@ -6,6 +6,7 @@ using Lexplosion.WPF.NewInterface.Mvvm.Models.Mvvm.InstanceModel;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Args;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.Limited;
 using System;
+using System.Linq;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 {
@@ -57,7 +58,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
             // Multiplayer Section
             var selectInstanceForServerArgs = new SelectInstanceForServerArgs(() => mainModel.LibraryController.Instances, (ic) => 
             {
-                var instanceModel = mainModel.LibraryController.Add(ic);
+                var instanceModel = mainModel.LibraryController.Get(ic);
                 var item = LeftPanel.SelectItem(1);
                 (item.Content as LibraryViewModel).IsScrollToEnd = true;
                 return instanceModel;
