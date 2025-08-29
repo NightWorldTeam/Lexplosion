@@ -7,6 +7,18 @@ using System.Net;
 
 namespace Lexplosion.Logic.Objects
 {
+    public readonly struct Link
+    {
+        public string Name { get; }
+        public string Url { get; }
+
+        public Link(string name, string url) : this()
+        {
+            Name = name;
+            Url = url;
+        }
+    }
+
     public class MinecraftServerInstance : VMBase
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -23,18 +35,6 @@ namespace Lexplosion.Logic.Objects
             {
                 Name = name;
                 Id = id;
-            }
-        }
-
-        public readonly struct Link
-        {
-            public string Name { get; }
-            public string Url { get; }
-
-            public Link(string name, string url) : this()
-            {
-                Name = name;
-                Url = url;
             }
         }
 
@@ -66,11 +66,11 @@ namespace Lexplosion.Logic.Objects
 
                 AllLinks = new List<Link>()
                 {
-                    new Link("Discrod", discord),
-                    new Link("Vk", vk),
+                    new Link("Discord", discord),
+                    new Link("VKontaktes", vk),
                     new Link("Youtube", youTube),
                     new Link("Telegram", telegram),
-                    new Link("Website", website)
+                    new Link("Public", website)
                 };
             }
         }

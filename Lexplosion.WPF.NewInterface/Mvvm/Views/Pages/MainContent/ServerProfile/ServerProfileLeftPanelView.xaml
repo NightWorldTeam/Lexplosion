@@ -5,11 +5,13 @@
     xmlns:controls="clr-namespace:Lexplosion.WPF.NewInterface.Controls"
     xmlns:converters="clr-namespace:Lexplosion.WPF.NewInterface.Core.Converters"
     xmlns:core="clr-namespace:Lexplosion.WPF.NewInterface.Core"
+    xmlns:coreObjects="clr-namepsace:Lexplosion.Logic.Objects;assembly=Lexplosion.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.ServerProfile"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:objects="clr-namespace:Lexplosion.WPF.NewInterface.Core.Objects"
+    xmlns:objectsCore="clr-namespace:Lexplosion.Logic.Objects;assembly=Lexplosion.Core"
     xmlns:serverprofile="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.ServerProfile"
     d:DataContext="{d:DesignInstance Type=serverprofile:ServerProfileLeftPanelViewModel}"
     d:DesignHeight="450"
@@ -56,6 +58,39 @@
                 <Run Foreground="{DynamicResource ActivitySolidColorBrush}" Text="{Binding Value, Mode=OneWay}" />
             </TextBlock>
         </DataTemplate>
+
+        <DataTemplate DataType="{x:Type objectsCore:Link}">
+            <Border
+                x:Name="Border"
+                Width="34"
+                Height="34"
+                Margin="4,0,0,0"
+                Padding="6"
+                Background="{DynamicResource SecondarySolidColorBrush}"
+                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                BorderThickness="1"
+                CornerRadius="5"
+                Cursor="Hand"
+                MouseDown="Border_MouseDown">
+                <Border>
+                    <Viewbox>
+                        <Path
+                            x:Name="Path"
+                            extensions:PathExtensions.StringKeyData="{Binding Name}"
+                            Fill="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                            Stretch="Fill" />
+                    </Viewbox>
+                </Border>
+            </Border>
+
+            <DataTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter TargetName="Path" Property="Fill" Value="{DynamicResource ActivitySolidColorBrush}" />
+                    <Setter TargetName="Border" Property="Background" Value="{DynamicResource PrimarySolidColorBrush}" />
+                </Trigger>
+            </DataTemplate.Triggers>
+
+        </DataTemplate>
     </UserControl.Resources>
 
     <Grid>
@@ -69,6 +104,8 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
@@ -150,13 +187,57 @@
                     </Grid>
                 </Grid>
 
+
+                <Border
+                    Grid.Row="3"
+                    Height="32"
+                    Margin="16,8,16,0"
+                    Padding="8,4"
+                    BorderBrush="{DynamicResource ActivitySolidColorBrush}"
+                    BorderThickness="1"
+                    CornerRadius="5">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock
+                            Grid.Column="1"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontSize="14"
+                            Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                            Text="lexoria.night-world.org" />
+
+                        <controls:AdvancedButton
+                            Grid.Column="2"
+                            Foreground="{DynamicResource ActivitySolidColorBrush}"
+                            IconData="{DynamicResource PDCopy}" />
+                    </Grid>
+                </Border>
+
                 <!--  Tabs  -->
                 <ItemsControl
-                    Grid.Row="3"
+                    Grid.Row="4"
                     Margin="16,32,0,0"
                     AlternationCount="2"
                     ItemsSource="{Binding Items}"
                     KeyboardNavigation.IsTabStop="False" />
+
+                <Border Grid.Row="5" Background="Transparent" Margin="0,0,0,8">
+                    <ItemsControl
+                        Margin="0,4,0,0"
+                        HorizontalAlignment="Center"
+                        ItemsSource="{Binding ServerModel.SocialLinks.AllLinks, Mode=OneWay}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel IsItemsHost="True" Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </Border>
             </Grid>
         </Border>
     </Grid>
