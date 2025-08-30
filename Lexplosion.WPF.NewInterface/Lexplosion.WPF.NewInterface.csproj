@@ -222,8 +222,12 @@
     <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\InstanceDistributionViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\InstanceShareLayoutViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\InstanceShareViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\NotificationsViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\WelcomePageThemeSelectViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\WelcomeViewModel.cs" />
+    <Compile Include="ViewComponents\Notifications\NotificationsPanel.xaml.cs">
+      <DependentUpon>NotificationsPanel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewComponents\Users\NightWorldUser.xaml.cs">
       <DependentUpon>NightWorldUser.xaml</DependentUpon>
     </Compile>
@@ -349,6 +353,9 @@
     </Compile>
     <Compile Include="ViewComponents\Users\PendingRequestUser.xaml.cs">
       <DependentUpon>PendingRequestUser.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewComponents\WindowHeaders\HeaderAddtionalFuncsPanelVIew.xaml.cs">
+      <DependentUpon>HeaderAddtionalFuncsPanelVIew.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewComponents\WindowHeaders\Variants\HeaderBase.cs" />
     <Compile Include="ViewComponents\WindowHeaders\Variants\MacOSHeader.xaml.cs">
@@ -702,6 +709,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="ViewComponents\Notifications\NotificationsPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ViewComponents\Users\NightWorldUser.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -895,6 +906,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ViewComponents\Users\PendingRequestUser.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ViewComponents\WindowHeaders\HeaderAddtionalFuncsPanelVIew.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

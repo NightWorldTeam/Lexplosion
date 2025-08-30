@@ -1,8 +1,6 @@
 ﻿using Lexplosion.Global;
-using Lexplosion.Logic.FileSystem;
 using System;
 using System.Windows;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 
@@ -18,10 +16,12 @@ namespace Lexplosion.WPF.NewInterface.WindowComponents.Header.Variants
             InitializeComponent();
 
             WindowHeaderPanelButtonsGrid.HorizontalAlignment = GlobalData.GeneralSettings.NavBarInLeft ? HorizontalAlignment.Left : HorizontalAlignment.Right;
-            ChangeOrintation(null, null);
+            AdditionalFuncsPanel.ChangedOrintation += ChangeOrintation;
+            AdditionalFuncsPanel.NotificationsButtonState += NotificationOpenedChanged;
+            ChangeOrintation();
         }
 
-        public override void ChangeOrintation(object sender, MouseButtonEventArgs e)
+        public override void ChangeOrintation()
         {
             var opacityHideAnimation = new DoubleAnimation()
             {
@@ -53,7 +53,7 @@ namespace Lexplosion.WPF.NewInterface.WindowComponents.Header.Variants
                 WindowHeaderPanelButtons.RenderTransform = new RotateTransform(180);
                 WindowHeaderPanelButtonsGrid.HorizontalAlignment = HorizontalAlignment.Right;
 
-                AddtionalFuncs.HorizontalAlignment = HorizontalAlignment.Left;
+                AdditionalFuncsPanel.HorizontalAlignment = HorizontalAlignment.Left;
 
                 GlobalData.GeneralSettings.NavBarInLeft = true;
             }
@@ -62,12 +62,12 @@ namespace Lexplosion.WPF.NewInterface.WindowComponents.Header.Variants
                 WindowHeaderPanelButtons.RenderTransform = new RotateTransform(360);
                 WindowHeaderPanelButtonsGrid.HorizontalAlignment = HorizontalAlignment.Left;
 
-                AddtionalFuncs.HorizontalAlignment = HorizontalAlignment.Right;
+                AdditionalFuncsPanel.HorizontalAlignment = HorizontalAlignment.Right;
 
                 GlobalData.GeneralSettings.NavBarInLeft = false;
             }
 
 			Runtime.ServicesContainer.DataFilesService.SaveSettings(GlobalData.GeneralSettings);
-        } 
+        }
     }
 }

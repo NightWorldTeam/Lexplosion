@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lexplosion.WPF.NewInterface.WindowComponents.Header.Variants;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -9,6 +10,14 @@ namespace Lexplosion.WPF.NewInterface.WindowComponents.Header
     /// </summary>
     public partial class WindowHeaderContainer : UserControl
     {
+        #region Dependency Properties
+
+
+        public static readonly DependencyProperty IsNotificationsOpenedProperty
+            = DependencyProperty.Register(nameof(IsNotificationsOpened), typeof(bool), typeof(WindowHeaderContainer),
+                new FrameworkPropertyMetadata(
+                    defaultValue: false));
+
         public static readonly DependencyProperty HeaderTypeProperty
             = DependencyProperty.Register(nameof(HeaderType), typeof(string), typeof(WindowHeaderContainer),
                 new FrameworkPropertyMetadata(defaultValue: string.Empty));
@@ -19,9 +28,25 @@ namespace Lexplosion.WPF.NewInterface.WindowComponents.Header
             set => SetValue(HeaderTypeProperty, value);
         }
 
+        public bool IsNotificationsOpened
+        {
+            get => (bool)GetValue(IsNotificationsOpenedProperty);
+            set => SetValue(IsNotificationsOpenedProperty, value);
+        }
+
+
+        #endregion Dependency Properties
+
+
         public WindowHeaderContainer()
         {
             InitializeComponent();
+
+        }
+
+        private void NotificationOpenedChanged(bool obj)
+        {
+            IsNotificationsOpened = obj;
         }
     }
 }

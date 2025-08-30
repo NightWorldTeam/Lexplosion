@@ -7,6 +7,7 @@
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.WindowComponents.Header"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:variants="clr-namespace:Lexplosion.WPF.NewInterface.WindowComponents.Header.Variants"
+    x:Name="Container"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
@@ -14,10 +15,10 @@
         <core:Switch SelectedExpression="{Binding TemplateName}">
             <core:Switch.Cases>
                 <core:SwitchCaseItem Key="MacOS">
-                    <variants:MacOSHeader DataContext="{Binding}" />
+                    <variants:MacOSHeader DataContext="{Binding}" IsNotificationOpenedChanged="NotificationOpenedChanged" />
                 </core:SwitchCaseItem>
                 <core:SwitchCaseItem Key="WindowsOS">
-                    <variants:WindowsOSHeader DataContext="{Binding}" />
+                    <variants:WindowsOSHeader DataContext="{Binding}" IsNotificationOpenedChanged="NotificationOpenedChanged" />
                 </core:SwitchCaseItem>
             </core:Switch.Cases>
         </core:Switch>

@@ -1,18 +1,31 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.WindowComponents.Header.Variants
 {
     public abstract class HeaderBase : UserControl
     {
+        public event Action<bool> IsNotificationOpenedChanged;
+
+
         private WindowHeaderArgs _windowHeaderArgs;
+
+
+        #region Constructors
 
 
         protected HeaderBase()
         {
             DataContextChanged += OnDataContextChanged;
         }
+
+
+        #endregion Constructors
+
+
+        #region Public Methods
+
 
         public void Close(object sender, RoutedEventArgs e)
         {
@@ -29,7 +42,15 @@ namespace Lexplosion.WPF.NewInterface.WindowComponents.Header.Variants
             _windowHeaderArgs.Minimized();
         }
 
-        public abstract void ChangeOrintation(object sender, MouseButtonEventArgs e);
+        protected void NotificationOpenedChanged(bool value) 
+        {
+            IsNotificationOpenedChanged?.Invoke(value);
+        }
+
+        public abstract void ChangeOrintation();
+
+
+        #endregion Public Methods
 
 
         #region Private Method
