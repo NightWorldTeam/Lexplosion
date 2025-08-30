@@ -9,6 +9,7 @@ using Lexplosion.Logic.FileSystem;
 using Newtonsoft.Json;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Network.Services;
+using Lexplosion.Logic.Objects.Nightworld;
 
 namespace Lexplosion.Logic.Management.Accounts
 {
@@ -33,6 +34,7 @@ namespace Lexplosion.Logic.Management.Accounts
 		public string UUID { get; private set; }
 		public string AccessToken { get; private set; }
 		public string SessionToken { get; private set; }
+		public NwUserBanner ProfileBanner { get; private set; }
 		public AccountType AccountType { get; private set; }
 
 		private ActivityStatus _status = ActivityStatus.Offline;
@@ -461,8 +463,12 @@ namespace Lexplosion.Logic.Management.Accounts
 				Status = result.Status;
 				AccessToken = result.AccessToken;
 				SessionToken = result.SessionToken;
+				ProfileBanner = new NwUserBanner()
+				{
+					Url = "https://night-world.org/assets/img/banners/1.png"
+				};
 
-				TryInitNwServices();
+                TryInitNwServices();
 			}
 
 			if (result.Code != AuthCode.Successfully)
