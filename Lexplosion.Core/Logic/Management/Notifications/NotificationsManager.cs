@@ -31,19 +31,14 @@ namespace Lexplosion.Logic.Management.Notifications
         }
 
         /// <summary>
-        /// Возвращает непросомтренные новости. Null если таких нет
+        /// Возвращает непросмотренные новости. Null если таких нет
         /// </summary>
-        public News GetUnseenNews()
+        public List<News> GetUnseenNews()
         {
             var id = _dataFilesManager.GetLastViewedNewsId();
             if (id > -1) return null;
 
-            return new News(_dataFilesManager)
-            {
-                Id = 0,
-                Content = "ЕБАТЬСЯ ВРЕДНО! СПЕРМА ЯДОВИТА!",
-                Summary = "Последние научные исследования"
-            };
+            return GetAllNews(0, 0);
         }
     }
 }
