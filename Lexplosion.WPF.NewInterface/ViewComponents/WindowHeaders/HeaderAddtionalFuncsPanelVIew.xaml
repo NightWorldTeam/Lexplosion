@@ -1,0 +1,113 @@
+﻿<UserControl
+    x:Class="Lexplosion.WPF.NewInterface.ViewComponents.WindowHeaders.HeaderAddtionalFuncsPanelView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Lexplosion.WPF.NewInterface.Controls"
+    xmlns:converters="clr-namespace:Lexplosion.WPF.NewInterface.Core.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
+    xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.ViewComponents.WindowHeaders"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+
+    <Grid
+        x:Name="AddtionalFuncs"
+        Margin="16,12"
+        HorizontalAlignment="Right"
+        VerticalAlignment="Top"
+        RenderTransformOrigin="0.5, 0.5"
+        Visibility="{Binding IsAdditionalButtonEnabled, Converter={converters:BooleanToVisibilityConverter}}">
+        <!--  Change Panel Orintation  -->
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <!--  Notifications  -->
+        <ToggleButton
+            x:Name="NotificationsToggleButton"
+            Grid.Column="0"
+            Margin="0,0,8,0"
+            Visibility="Collapsed">
+            <ToggleButton.Template>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Border
+                        Width="20"
+                        Height="20"
+                        Padding="2"
+                        VerticalAlignment="Top"
+                        Background="{DynamicResource SeparateSolidColorBrush}"
+                        CornerRadius="2">
+
+                        <Grid>
+                            <Viewbox Height="16">
+                                <Path
+                                    Data="M160-200v-80h80v-280q0-83 50-147.5T420-792v-28q0-25 17.5-42.5T480-880q25 0 42.5 17.5T540-820v28q80 20 130 84.5T720-560v280h80v80H160Zm320-300Zm0 420q-33 0-56.5-23.5T400-160h160q0 33-23.5 56.5T480-80ZM320-280h320v-280q0-66-47-113t-113-47q-66 0-113 47t-47 113v280Z"
+                                    Fill="{DynamicResource ActivitySolidColorBrush}"
+                                    Stretch="Fill" />
+                            </Viewbox>
+
+                            <Border
+                                x:Name="UnreadedNotificationIndicator"
+                                Width="6"
+                                Height="6"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Top"
+                                Background="Red"
+                                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                BorderThickness="1"
+                                CornerRadius="50" />
+                        </Grid>
+                        <Border.ToolTip>
+
+                            <controls:AdvancedToolTip
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Placement="Left"
+                                PlacementRectangle="-10,-15,0,0">
+
+                                <TextBlock
+                                    Padding="15,14,15,14"
+                                    VerticalAlignment="Center"
+                                    FontSize="12"
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource CheckBoxMarkSolidColorBrush}"
+                                    Text="{DynamicResource Notifications}" />
+                            </controls:AdvancedToolTip>
+                        </Border.ToolTip>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="UnreadedNotificationIndicator" Property="Background" Value="Green" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </ToggleButton.Template>
+        </ToggleButton>
+
+        <Border
+            Grid.Column="1"
+            Width="20"
+            Height="20"
+            Padding="2"
+            Background="{DynamicResource SeparateSolidColorBrush}"
+            CornerRadius="2"
+            MouseDown="ChangeOrintation"
+            ToolTip="{DynamicResource ChangeMenuPosition}"
+            ToolTipService.BetweenShowDelay="0"
+            ToolTipService.InitialShowDelay="0"
+            ToolTipService.PlacementRectangle="7,40,0,0">
+            <Viewbox Height="14">
+                <Path
+                    extensions:PathExtensions.StringKeyData="IndentDecrease"
+                    Fill="{DynamicResource ActivitySolidColorBrush}"
+                    Stretch="Fill" />
+            </Viewbox>
+        </Border>
+    </Grid>
+
+</UserControl>
