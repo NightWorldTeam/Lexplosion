@@ -1,4 +1,8 @@
-﻿using System.Windows.Controls;
+﻿using System.Diagnostics;
+using System.Windows;
+using System.Windows.Controls;
+using Lexplosion.Logic.Objects;
+using Lexplosion.WPF.NewInterface.Core;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.ServerProfile
 {
@@ -10,6 +14,16 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.ServerProfile
         public ServerProfileLeftPanelView()
         {
             InitializeComponent();
+        }
+
+        /// <summary>
+        /// Social Media Clicked
+        /// </summary>
+        private void Border_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            var border = (Border)sender;
+            var url = ((Link)border.DataContext).Url;
+            Process.Start(url);
         }
     }
 }

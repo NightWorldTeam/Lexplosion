@@ -1,11 +1,13 @@
 ﻿using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Objects;
+using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.InstanceProfile;
 using Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.ServerProfile
@@ -34,6 +36,17 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.ServerProfile
 
 
         public ICommand BackCommand { get; }
+
+        private RelayCommand _copyIpAddressCommand;
+        public ICommand CopyIpAddressCommand
+        {
+            get => RelayCommand.GetCommand(ref _copyIpAddressCommand, () => 
+            {
+                // в будущем заменить на обертку, чтобы на прямую не работать с System.Windows.
+                Clipboard.SetText(ServerModel.Address);
+                _appCore.MessageService.Success("ServerIpAddressCopied", true);
+            });
+        }
 
 
         #endregion Commands
