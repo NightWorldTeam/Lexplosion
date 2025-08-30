@@ -121,6 +121,8 @@
     <Compile Include="Logic\Management\Instances\FreeInstance.cs" />
     <Compile Include="Logic\Management\Instances\InstancesGroup.cs" />
     <Compile Include="Logic\Management\MinecraftVersion.cs" />
+    <Compile Include="Logic\Management\Notifications\News.cs" />
+    <Compile Include="Logic\Management\Notifications\NotificationsManager.cs" />
     <Compile Include="Logic\Management\RunCommandBuilder.cs" />
     <Compile Include="Logic\Management\Sources\CurseforgeSource.cs" />
     <Compile Include="Logic\Management\Sources\FreeSource.cs" />

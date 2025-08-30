@@ -14,6 +14,7 @@ using Lexplosion.Logic.Network.Services;
 using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.Logic.Objects;
+using Lexplosion.Logic.Management.Notifications;
 
 namespace Lexplosion
 {
@@ -85,8 +86,9 @@ namespace Lexplosion
 			var mojangApi = new MojangApi(toServer);
 
 			var categoriesManager = new CategoriesManager(modrinthApi, curesforgeApi);
+			var notificationsManager = new NotificationsManager(dataFilesManager);
 
-			var services = new AllServicesContainer(toServer, minecraftInfo, withDirectory, dataFilesManager, curesforgeApi, modrinthApi, nightWorldApi, mojangApi, categoriesManager);
+			var services = new AllServicesContainer(toServer, minecraftInfo, withDirectory, dataFilesManager, curesforgeApi, modrinthApi, nightWorldApi, mojangApi, categoriesManager, notificationsManager);
 			ServicesContainer = services;
 
 			ClientsManager = new ClientsManager(services);
