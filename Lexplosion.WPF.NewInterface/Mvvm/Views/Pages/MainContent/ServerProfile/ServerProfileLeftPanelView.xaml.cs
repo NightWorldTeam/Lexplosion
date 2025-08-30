@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
+using System.Windows;
 using System.Windows.Controls;
 using Lexplosion.Logic.Objects;
+using Lexplosion.WPF.NewInterface.Core;
 
 namespace Lexplosion.WPF.NewInterface.Mvvm.Views.Pages.MainContent.ServerProfile
 {

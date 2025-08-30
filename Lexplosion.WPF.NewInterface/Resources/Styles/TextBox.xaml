@@ -12,5 +12,6 @@
         <Setter Property="Foreground" Value="{DynamicResource PrimaryForegroundSolidColorBrush}" />
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="ContextMenu" Value="{x:Null}" />
+        <Setter Property="CaretBrush" Value="{DynamicResource ActivitySolidColorBrush}" />
     </Style>
 </ResourceDictionary>

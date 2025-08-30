@@ -431,7 +431,7 @@
                 <Setter Property="Background" Value="{DynamicResource SeparateSolidColorBrush}" />
             </Trigger>
             <Trigger Property="IsPressed" Value="True">
-                <Setter Property="Background" Value="{DynamicResource LatestForegroundSolidColorBrush}" />
+                <Setter Property="Foreground" Value="{DynamicResource ActivitySolidColorBrush}" />
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
                 <Setter Property="Background" Value="{DynamicResource DefaultButtonDisableBackgroundColorBrush}" />

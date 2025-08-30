@@ -56,22 +56,42 @@ namespace Lexplosion.Logic.Objects
 
 
             [JsonConstructor]
-            public Links(string discord, string vk, string youTube, string telegram, string website)
+            public Links(string discord, string vk, string youtube, string telegram, string website)
             {
                 Discord = discord;
                 Vk = vk;
-                Youtube = youTube;
+                Youtube = youtube;
                 Telegram = telegram;
                 Website = website;
 
-                AllLinks = new List<Link>()
+                var allLinks = new List<Link>();
+
+                if (!string.IsNullOrEmpty(discord))
                 {
-                    new Link("Discord", discord),
-                    new Link("VKontaktes", vk),
-                    new Link("Youtube", youTube),
-                    new Link("Telegram", telegram),
-                    new Link("Public", website)
-                };
+                    allLinks.Add(new Link("Discord", discord));
+                }
+
+                if (!string.IsNullOrEmpty(vk))
+                {
+                    allLinks.Add(new Link("VKontakte", vk));
+                }
+
+                if (!string.IsNullOrEmpty(youtube))
+                {
+                    allLinks.Add(new Link("Youtube", youtube));
+                }
+
+                if (!string.IsNullOrEmpty(telegram))
+                {
+                    allLinks.Add(new Link("Telegram", telegram));
+                }
+
+                if (!string.IsNullOrEmpty(website))
+                {
+                    allLinks.Add(new Link("Public", website));
+                }
+
+                AllLinks = allLinks;
             }
         }
 
