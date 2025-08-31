@@ -189,6 +189,7 @@
     <Compile Include="Mvvm\ViewModels\Authorization\NightWorldRegistrationViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Authorization\NoAccountAuthorizationViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Authorization\OAuth2\MicrosoftAuthorizationViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\Feedback\LatestNewsViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Limited\LimitedContentLayoutViewModelBase.cs" />
     <Compile Include="Mvvm\ViewModels\Limited\NightWorldLimitedContentLayoutViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\MainContent\InstanceProfile\Overview\InstanceProfileVersionsViewModel.cs" />
@@ -222,9 +223,12 @@
     <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\InstanceDistributionViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\InstanceShareLayoutViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\InstanceShareViewModel.cs" />
-    <Compile Include="Mvvm\ViewModels\NotificationsViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\Feedback\NotificationsViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\WelcomePageThemeSelectViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\WelcomeViewModel.cs" />
+    <Compile Include="ViewComponents\News\LatestNewsView.xaml.cs">
+      <DependentUpon>LatestNewsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewComponents\Notifications\NotificationsPanel.xaml.cs">
       <DependentUpon>NotificationsPanel.xaml</DependentUpon>
     </Compile>
@@ -708,6 +712,10 @@
     <Page Include="Mvvm\OldInstanceForm.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ViewComponents\News\LatestNewsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ViewComponents\Notifications\NotificationsPanel.xaml">
       <SubType>Designer</SubType>

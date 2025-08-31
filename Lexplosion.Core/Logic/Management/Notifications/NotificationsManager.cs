@@ -36,7 +36,7 @@ namespace Lexplosion.Logic.Management.Notifications
         public List<News> GetUnseenNews()
         {
             var id = _dataFilesManager.GetLastViewedNewsId();
-            if (id > -1) return null;
+            if (id < -1) return null;
 
             return GetAllNews(0, 0);
         }

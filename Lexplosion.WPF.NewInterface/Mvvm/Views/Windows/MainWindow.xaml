@@ -9,6 +9,7 @@
     xmlns:header="clr-namespace:Lexplosion.WPF.NewInterface.WindowComponents.Header"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:message="clr-namespace:Lexplosion.WPF.NewInterface.Controls.Message.Core"
+    xmlns:news="clr-namespace:Lexplosion.WPF.NewInterface.ViewComponents.News"
     xmlns:notification="clr-namespace:Lexplosion.WPF.NewInterface.Core.Notifications"
     xmlns:notifications="clr-namespace:Lexplosion.WPF.NewInterface.ViewComponents.Notifications"
     xmlns:objects="clr-namespace:Lexplosion.WPF.NewInterface.Core.Objects"
@@ -128,6 +129,7 @@
                 x:Name="HeaderContainer"
                 Height="40"
                 VerticalAlignment="Top"
+                Panel.ZIndex="1000"
                 HeaderType="WindowsOS" />
 
             <!--  Notification Panel  -->
@@ -194,6 +196,8 @@
 
             <!--  Notification Dropdown  -->
             <notifications:NotificationsPanel Visibility="{Binding IsNotificationsOpened, ElementName=HeaderContainer, Mode=OneWay, Converter={converters:BooleanToVisibilityConverter}}" />
+
+            <news:LatestNewsView DataContext="{Binding LatestNewsViewModel}" Visibility="{Binding Model.HasUnseenNews, Converter={converters:BooleanToVisibilityConverter}}" />
 
             <!--  Image Overview  -->
             <Border x:Name="ImageViewer" Padding="16">

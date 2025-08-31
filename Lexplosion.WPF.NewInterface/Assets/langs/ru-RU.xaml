@@ -1003,4 +1003,5 @@
     <s:String x:Key="AccountError">Ошибка аккаунта: {0}</s:String>
     <s:String x:Key="NoLaunchAccountDescription">Не удалось запустить {0}. Запускаемый аккаунт не выбран, он требуется для запуска клиента.</s:String>
     <s:String x:Key="JavaPathResets">Путь до JAVA сброшен к значению по умолчанию</s:String>
+    <s:String x:Key="WhatIsNew">Что нового?</s:String>
 </ResourceDictionary>
