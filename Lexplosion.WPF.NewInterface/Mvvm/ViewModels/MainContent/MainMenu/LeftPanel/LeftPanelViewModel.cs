@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.Logic.Management.Instances;
+using Lexplosion.Logic.Objects.Nightworld;
 using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Core;
 using Lexplosion.WPF.NewInterface.Core.Objects;
@@ -48,6 +49,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
         //TODO: вынести header в отдельный компонетн.
 
+        public NwUserBanner ProfileBanner { get; }
 
         private string _userLogin = "Unknown";
         public string UserLogin
