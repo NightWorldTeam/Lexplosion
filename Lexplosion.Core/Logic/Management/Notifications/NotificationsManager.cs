@@ -1,4 +1,5 @@
-﻿using Lexplosion.Logic.FileSystem;
+﻿using Lexplosion.Global;
+using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.FileSystem.Services;
 using System;
 using System.Collections.Generic;
@@ -10,35 +11,32 @@ namespace Lexplosion.Logic.Management.Notifications
 {
     public class NotificationsManager
     {
-        private readonly DataFilesManager _dataFilesManager;
+        private readonly INightWorldFileServicesContainer _services;
 
-        internal NotificationsManager(DataFilesManager dataFilesManager)
+        internal NotificationsManager(INightWorldFileServicesContainer services)
         {
-            _dataFilesManager = dataFilesManager;
+            _services = services;
         }
 
         public List<News> GetAllNews(int page, int pageSize)
         {
             var result = new List<News>();
-            result.Add(new News(_dataFilesManager)
-            {
-                Id = 0,
-                Content = "ЕБАТЬСЯ ВРЕДНО! СПЕРМА ЯДОВИТА!",
-                Summary = "Последние научные исследования"
-            });
-
             return result;
         }
 
         /// <summary>
-        /// Возвращает непросмотренные новости. Null если таких нет
+        /// Возвращает непросмотренные новости.
         /// </summary>
         public List<News> GetUnseenNews()
         {
-            var id = _dataFilesManager.GetLastViewedNewsId();
-            if (id < -1) return null;
+            var id = _services.DataFilesService.GetLastViewedNewsId();
 
-            return GetAllNews(0, 0);
+            GlobalData.LastNewsId = 0; // TODO: временная херь. Потом починить
+            if (id >= GlobalData.LastNewsId) return new();
+
+            var news = _services.NwApi.GetUnseenNews(id);
+
+            return news.Select(x => new News(x, _services.DataFilesService, x.Id <= id)).ToList();
         }
     }
 }

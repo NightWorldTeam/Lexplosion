@@ -86,10 +86,10 @@ namespace Lexplosion
 			var mojangApi = new MojangApi(toServer);
 
 			var categoriesManager = new CategoriesManager(modrinthApi, curesforgeApi);
-			var notificationsManager = new NotificationsManager(dataFilesManager);
 
-			var services = new AllServicesContainer(toServer, minecraftInfo, withDirectory, dataFilesManager, curesforgeApi, modrinthApi, nightWorldApi, mojangApi, categoriesManager, notificationsManager);
-			ServicesContainer = services;
+			var services = new AllServicesContainer(toServer, minecraftInfo, withDirectory, dataFilesManager, curesforgeApi, modrinthApi, nightWorldApi, mojangApi, categoriesManager, null);
+            services.NotificationsService = new NotificationsManager(services);
+            ServicesContainer = services;
 
 			ClientsManager = new ClientsManager(services);
 

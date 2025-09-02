@@ -13,7 +13,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
 
         public News LatestUnseenNews { get; }
 
-        public bool HasUnseenNews { get => LatestUnseenNews == null || !LatestUnseenNews.IsViewed; }
+        public bool HasUnseenNews { get => LatestUnseenNews != null && !LatestUnseenNews.IsViewed; }
 
         public LatestNewsModel()
         {

@@ -486,6 +486,7 @@ namespace Lexplosion.Logic.FileSystem
         public long GetLastViewedNewsId()
         {
             string content = GetFile(LaunсherSettings.LauncherDataPath + "/lastViewedNewsId");
+            if (content == null) return -1;
             long id = -1;
             long.TryParse(content, out id);
 

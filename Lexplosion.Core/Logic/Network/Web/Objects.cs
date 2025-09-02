@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Lexplosion.Logic.Objects.CommonClientData;
+using Lexplosion.Logic.Objects.Nightworld;
 using Newtonsoft.Json;
 
 namespace Lexplosion.Logic.Network
@@ -69,7 +70,9 @@ namespace Lexplosion.Logic.Network
 		public int BaseStatus;
 		public string SessionToken;
 		public string AccessID;
-	}
+		public long LastNewsId;
+		public NwUserBanner Banner;
+    }
 
 	public class MojangAuthResult : AuthResult
 	{

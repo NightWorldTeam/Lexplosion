@@ -28,6 +28,7 @@
 			public string AccessData;
 			public string AccessToken;
 			public string SessionToken;
+			public object AdditionalInfo;
 			public ActivityStatus Status;
 		}
 	}

@@ -463,10 +463,7 @@ namespace Lexplosion.Logic.Management.Accounts
 				Status = result.Status;
 				AccessToken = result.AccessToken;
 				SessionToken = result.SessionToken;
-				ProfileBanner = new NwUserBanner()
-				{
-					Url = "https://night-world.org/assets/img/banners/1.png"
-				};
+				ProfileBanner = result.AdditionalInfo as NwUserBanner;
 
                 TryInitNwServices();
 			}

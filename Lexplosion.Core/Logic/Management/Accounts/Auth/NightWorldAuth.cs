@@ -1,4 +1,5 @@
-﻿using Lexplosion.Logic.Network;
+﻿using Lexplosion.Global;
+using Lexplosion.Logic.Network;
 using System.Runtime.CompilerServices;
 
 namespace Lexplosion.Logic.Management.Accounts.Auth
@@ -62,7 +63,9 @@ namespace Lexplosion.Logic.Management.Accounts.Auth
 					status = ActivityStatus.NotDisturb;
 				}
 
-				var result = new IAuthHandler.AuthResult
+				GlobalData.LastNewsId = response.LastNewsId;
+
+                var result = new IAuthHandler.AuthResult
 				{
 					Login = response.Login,
 					UUID = response.UUID,
@@ -70,8 +73,9 @@ namespace Lexplosion.Logic.Management.Accounts.Auth
 					SessionToken = response.SessionToken,
 					AccessData = response.AccessID,
 					Status = status,
-					Code = AuthCode.Successfully
-				};
+					Code = AuthCode.Successfully,
+					AdditionalInfo = response.Banner
+                };
 
 				return result;
 			}

@@ -26,7 +26,7 @@ namespace Lexplosion.Logic.Management
         public MojangApi MjApi { get; }
 
         public CategoriesManager CategoriesService { get; }
-        public NotificationsManager NotificationsService { get;}
+        public NotificationsManager NotificationsService { get; internal set; }
 
         public AllServicesContainer(ToServer webService, MinecraftInfoService minecraftService, WithDirectory directoryService, DataFilesManager dataFilesService, CurseforgeApi cfApi, ModrinthApi mdApi, NightWorldApi nwApi, MojangApi mjApi, CategoriesManager categoriesService, NotificationsManager notificationsService)
         {

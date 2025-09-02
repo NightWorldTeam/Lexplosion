@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Lexplosion.Global;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Newtonsoft.Json;
@@ -122,5 +123,27 @@ namespace Lexplosion.Logic.Objects.Nightworld
         /// </summary>
         [JsonProperty("outgoing")]
         public List<NwUser> Outgoing;
+    }
+
+    public class NewsModel
+    {
+        public long Id { get; set; }
+        public string Title { get; set; }
+        public string Summary { get; set; }
+        public string Content { get; set; }
+
+        [JsonIgnore]
+        public DateTime CreationDate { get; private set; } = DateTime.Today;
+
+        [JsonProperty("Date")]
+        public long DateUnix
+        {
+            get; set
+            {
+                DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+                CreationDate = dateTime.AddSeconds(value).ToLocalTime();
+            }
+        }
+
     }
 }

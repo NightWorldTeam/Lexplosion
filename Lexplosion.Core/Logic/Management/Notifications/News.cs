@@ -1,4 +1,6 @@
 ﻿using Lexplosion.Logic.FileSystem;
+using Lexplosion.Logic.Objects.Nightworld;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,18 +9,14 @@ using System.Threading.Tasks;
 
 namespace Lexplosion.Logic.Management.Notifications
 {
-    public class News
+    public class News : NewsModel
     {
         private static object _fileLoacker = new object();
         private readonly DataFilesManager _dataFilesManager;
 
-        public long Id { get; set; }
-        public string Title { get; set; }
-        public string Summary { get; set; }
         public string? BannerUrl { get; set; } = null;
-        public string Content { get; set; }
-        public DateTime CreationDate { get; set; } = DateTime.Today;
 
+        [JsonIgnore]
         public bool IsViewed { get; private set; }
 
         public void MarkAsViewed()
@@ -35,9 +33,16 @@ namespace Lexplosion.Logic.Management.Notifications
             }
         }
 
-        internal News(DataFilesManager dataFilesManager)
+        internal News(NewsModel model, DataFilesManager dataFilesManager, bool isViewed)
         {
             _dataFilesManager = dataFilesManager;
+            IsViewed = isViewed;
+
+            Id = model.Id;
+            Title = model.Title;
+            Summary = model.Summary;
+            Content = model.Content;
+            DateUnix = model.DateUnix;
         }
     }
 }
