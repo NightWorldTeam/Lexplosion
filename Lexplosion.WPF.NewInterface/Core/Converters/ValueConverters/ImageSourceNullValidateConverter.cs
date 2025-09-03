@@ -14,7 +14,9 @@ namespace Lexplosion.WPF.NewInterface.Core.Converters
     {
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            Stretch stretch = parameter == null || parameter is not Stretch ? Stretch.Fill : (Stretch)(parameter);
             ImageSource resBitmapImage = ImageTools.defaultBitmapImage;
+            ImageBrush imageBrush = null;
 
             if (value == null)
             {
@@ -44,7 +46,9 @@ namespace Lexplosion.WPF.NewInterface.Core.Converters
                 return new ImageBrush(resBitmapImage);
             }
 
-            return new ImageBrush(resBitmapImage);
+            imageBrush = new ImageBrush(resBitmapImage);
+            imageBrush.Stretch = stretch;
+            return imageBrush;
         }
     }
 }

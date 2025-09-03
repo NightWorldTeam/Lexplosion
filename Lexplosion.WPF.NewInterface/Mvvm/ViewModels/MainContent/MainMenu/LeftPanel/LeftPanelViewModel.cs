@@ -49,7 +49,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
 
         //TODO: вынести header в отдельный компонетн.
 
-        public NwUserBanner ProfileBanner { get; }
+        public NwUserBanner ProfileBanner { get; private set; }
 
         private string _userLogin = "Unknown";
         public string UserLogin
@@ -241,6 +241,8 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
                 UserLogin = Account.ActiveAccount.Login;
                 UserAvatar = Account.ActiveAccount.HeadImageUrl;
                 UserAccountType = AccountType.NightWorld;
+                ProfileBanner = Account.ActiveAccount.ProfileBanner;
+                OnPropertyChanged(nameof(ProfileBanner));
                 return;
             }
 

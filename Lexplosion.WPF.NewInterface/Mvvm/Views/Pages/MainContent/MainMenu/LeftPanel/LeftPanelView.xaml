@@ -125,8 +125,7 @@
                                 <Setter Property="Background" Value="{DynamicResource SecondarySolidColorBrush}" />
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding ProfileBanner.Url, Converter={valueconverters:IsValueNullConverter}}" Value="False">
-                                        <Setter Property="Background" Value="{Binding ProfileBanner.Url, Converter={valueconverters:ImageSourceNullValidateConverter}}">
-                                        </Setter>
+                                        <Setter Property="Background" Value="{Binding ProfileBanner.Url, Converter={valueconverters:ImageSourceNullValidateConverter}, ConverterParameter={x:Static Stretch.UniformToFil}}" />
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
