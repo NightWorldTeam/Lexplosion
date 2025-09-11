@@ -104,10 +104,17 @@
                     <Grid Margin="0,0,16,0">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
 
-                        <core:If Condition="{Binding Model.LatestUnseenNews.BannerUrl, Converter={converters:IsValueNullConverter}}">
+                        <TextBlock
+                            Margin="0,0,0,16"
+                            FontSize="20"
+                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                            Text="{Binding Model.LatestUnseenNews.Title}" />
+
+                        <core:If Grid.Row="1" Condition="{Binding Model.LatestUnseenNews.BannerUrl, Converter={converters:IsValueNullConverter}}">
                             <core:If.True>
                                 <Image
                                     Margin="0,0,0,16"
@@ -118,7 +125,8 @@
                         </core:If>
 
                         <TextBlock
-                            Grid.Row="1"
+                            Grid.Row="2"
+                            FontSize="15"
                             Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
                             Text="{Binding Model.LatestUnseenNews.Content}"
                             TextWrapping="WrapWithOverflow" />
