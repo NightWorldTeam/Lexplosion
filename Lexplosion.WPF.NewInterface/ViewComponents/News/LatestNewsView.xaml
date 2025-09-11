@@ -53,7 +53,7 @@
                             FontSize="12"
                             FontWeight="Medium"
                             Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
-                            Text="{Binding Model.LatestUnseenNews.CreationDate, StringFormat='dd MMMM yy'}" />
+                            Text="{Binding Model.LatestUnseenNews.CreationDate, StringFormat='dd MMMM yyyy'}" />
                     </StackPanel>
 
                     <!--  Close Button  -->
