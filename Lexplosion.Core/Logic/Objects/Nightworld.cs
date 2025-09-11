@@ -81,16 +81,56 @@ namespace Lexplosion.Logic.Objects.Nightworld
         public NwUserBanner Banner { get; set; }
     }
 
-    public sealed class NwUserBanner
+	public sealed class NwUserBannerColors
+	{
+		[JsonProperty("primaryForeColor")]
+		public uint? PrimaryForeColor { get; set; } = null;
+
+		[JsonProperty("secondaryForeColor")]
+		public uint? SecondaryForeColor { get; set; } = null;
+
+		[JsonProperty("primaryColor")]
+		public uint? PrimaryColor { get; set; } = null;
+
+		[JsonProperty("secondaryColor")]
+		public uint? SecondaryColor { get; set; } = null;
+
+		// хз зачем возможно не понадобиться
+		[JsonProperty("activityColor")]
+		public uint? ActivityColor { get; set; } = null;
+
+		[JsonProperty("separateColor")]
+		public uint? SeparateColor { get; set; } = null;
+	}
+
+
+	public sealed class NwUserBanner
     {
         [JsonProperty("url")]
         public string Url { get; set; }
-        public uint? NameColor { get; set; } = null;
+
+		[JsonProperty("colors")]
+		public NwUserBannerColors Colors { get; set; }
+
+
+		[JsonProperty("primaryForeColor")]
+		public uint? NameColor { get; set; } = null;
+
+
+		[JsonProperty("secondaryForeColor")]
         public uint? AtivityColor { get; set; } = null;
+
+		[JsonProperty("primaryColor")]
         public uint? MoreButtonColor { get; set; } = null;
+
+		[JsonProperty("secondaryColor")]
         public uint? StatusIndecatorBorderColor { get; set; } = null;
-        // хз зачем возможно не понадобиться
-        public uint? ActivityColor { get; set; } = null;
+
+		// хз зачем возможно не понадобиться
+		[JsonProperty("activityColor")]
+		public uint? ActivityColor { get; set; } = null;
+
+		[JsonProperty("separateColor")]
         public uint? MoreButtonIconColor { get; set; } = null;
     }
 
