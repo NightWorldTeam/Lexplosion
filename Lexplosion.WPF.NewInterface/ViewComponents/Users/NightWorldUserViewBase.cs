@@ -120,11 +120,11 @@ namespace Lexplosion.WPF.NewInterface.ViewComponents.Users
             StatusTB = GetStatusTB();
             StatusIndicator = GetStatusIndicator();
 
+            //UpdateBanner();
+
             NicknameTB.Text = Nickname;
             StatusTB.SetResourceReference(TextBlock.TextProperty, Status.ToString());
             StatusIndicator.SetResourceReference(Border.BackgroundProperty, GetStatusColorKey(Status));
-
-            UpdateBanner();
 
             base.OnInitialized(e);
         }
@@ -233,27 +233,35 @@ namespace Lexplosion.WPF.NewInterface.ViewComponents.Users
                 BodyBorder.SetResourceReference(Border.BackgroundProperty, "FriendSolidColorBrush");
             }
 
-            if (Banner.NameColor != null)
+            if (Banner.Colors == null) 
             {
-                NicknameTB.Foreground = new SolidColorBrush(ColorTools.GetColor(Banner.NameColor.Value));
+                NicknameTB.SetResourceReference(ForegroundProperty, "PrimaryForegroundSolidColorBrush");
+                StatusIndicator.SetResourceReference(BorderBrushProperty, "SeparateSolidColorBrush");
+                StatusTB.SetResourceReference(ForegroundProperty, "SecondaryForegroundSolidColorBrush");
+                return;
+            }
+
+            if (Banner.Colors.PrimaryForeColor != null && Banner.Colors.PrimaryForeColor > 0x01000000)
+            {
+                NicknameTB.Foreground = new SolidColorBrush(ColorTools.GetColor(Banner.Colors.PrimaryForeColor.Value));
             }
             else
             {
                 NicknameTB.SetResourceReference(ForegroundProperty, "PrimaryForegroundSolidColorBrush");
             }
 
-            if (Banner.StatusIndecatorBorderColor != null)
+            if (Banner.Colors.SecondaryColor != null && Banner.Colors.SecondaryColor > 0x01000000)
             {
-                StatusIndicator.BorderBrush = new SolidColorBrush(ColorTools.GetColor(Banner.StatusIndecatorBorderColor.Value));
+                StatusIndicator.BorderBrush = new SolidColorBrush(ColorTools.GetColor(Banner.Colors.SecondaryColor.Value));
             }
             else
             {
                 StatusIndicator.SetResourceReference(BorderBrushProperty, "SeparateSolidColorBrush");
             }
 
-            if (Banner.ActivityColor != null)
+            if (Banner.Colors.SecondaryForeColor != null && Banner.Colors.SecondaryForeColor > 0x01000000)
             {
-                StatusTB.Foreground = new SolidColorBrush(ColorTools.GetColor(Banner.ActivityColor.Value));
+                StatusTB.Foreground = new SolidColorBrush(ColorTools.GetColor(Banner.Colors.SecondaryForeColor.Value));
             }
             else
             {;

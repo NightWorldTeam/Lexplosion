@@ -70,12 +70,15 @@ namespace Lexplosion.WPF.NewInterface.Controls
             {
                 if (_this.IconFill == null)
                 {
-                    _this._iconPath.SetValue(Path.FillProperty, new TemplateBindingExtension(AdvancedToggleButton.ForegroundProperty));
+                    _this._iconPath?.SetValue(Path.FillProperty, new TemplateBindingExtension(AdvancedToggleButton.ForegroundProperty));
                 }
                 else
                 {
-                    _this._iconPath.SetValue(Path.FillProperty, new TemplateBindingExtension(AdvancedToggleButton.IconFillProperty));
-                    _this._iconPath.Fill = _this.IconFill;
+                    if (_this._iconPath != null) 
+                    {
+                        _this._iconPath.SetValue(Path.FillProperty, new TemplateBindingExtension(AdvancedToggleButton.IconFillProperty));
+                        _this._iconPath.Fill = _this.IconFill;
+                    }
                 }
             }
         }

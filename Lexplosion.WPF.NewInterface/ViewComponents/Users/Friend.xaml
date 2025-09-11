@@ -79,8 +79,9 @@
                             Grid.Column="1"
                             Height="12"
                             Margin="4,1,0,0"
-                            Opacity="1">
-                            <Viewbox.Style>
+                            Opacity="1"
+                            Visibility="Collapsed">
+                            <!--<Viewbox.Style>
                                 <Style TargetType="Viewbox">
                                     <Setter Property="Visibility" Value="Collapsed" />
                                     <Style.Triggers>
@@ -94,7 +95,7 @@
                                         </MultiDataTrigger>
                                     </Style.Triggers>
                                 </Style>
-                            </Viewbox.Style>
+                            </Viewbox.Style>-->
                             <Path
                                 Data="M5.18182 13L3.88636 11.019L1.43182 10.5238L1.67045 8.23333L0 6.5L1.67045 4.76667L1.43182 2.47619L3.88636 1.98095L5.18182 0L7.5 0.897619L9.81818 0L11.1136 1.98095L13.5682 2.47619L13.3295 4.76667L15 6.5L13.3295 8.23333L13.5682 10.5238L11.1136 11.019L9.81818 13L7.5 12.1024L5.18182 13ZM6.78409 8.69762L10.6364 5.2L9.68182 4.30238L6.78409 6.93333L5.31818 5.63333L4.36364 6.5L6.78409 8.69762Z"
                                 Fill="#5afaff"
@@ -141,12 +142,12 @@
                     Width="32"
                     Height="32"
                     Padding="6,0"
-                    FocusVisualStyle="{x:Null}"
-                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrSSSush}"
                     IconData="{DynamicResource PDMore}">
                     <controls:AdvancedToggleButton.Style>
                         <Style BasedOn="{StaticResource IconTextTransparentAdvancedToggleButton}" TargetType="{x:Type controls:AdvancedToggleButton}">
                             <Setter Property="Visibility" Value="{Binding IsMouseOver, ElementName=PART_BodyBorder, Converter={valueconverters:BooleanToVisibilityConverter}}" />
+                            <Setter Property="Foreground" Value="{DynamicResource ActivitySolidColorBrush}" />
+                            <Setter Property="OverridesDefaultStyle" Value="True" />
 
                             <Style.Triggers>
                                 <Trigger Property="IsChecked" Value="True">

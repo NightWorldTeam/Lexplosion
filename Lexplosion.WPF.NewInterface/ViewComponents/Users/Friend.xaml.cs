@@ -1,4 +1,6 @@
-﻿using Lexplosion.WPF.NewInterface.Tools;
+﻿using Lexplosion.WPF.NewInterface.Controls;
+using Lexplosion.WPF.NewInterface.Tools;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -50,29 +52,20 @@ namespace Lexplosion.WPF.NewInterface.ViewComponents.Users
 
             if (Banner == null)
             {
-                //MoreMenuToggleButton.Background = new SolidColorBrush(ColorTools.GetColor(Banner.MoreButtonIconColor.Value));
                 return;
             }
 
-            if (Banner.MoreButtonColor != null)
+            if (Banner.Colors != null)
             {
-                MoreMenuToggleButton.Background = new SolidColorBrush(ColorTools.GetColor(Banner.MoreButtonIconColor.Value));
-                MoreMenuToggleButton.Style.Triggers.Clear();
-                var isCheckedTrigger = new Trigger();
-                isCheckedTrigger.Property = ToggleButton.IsCheckedProperty;
-                isCheckedTrigger.Value = true;
-                // не даем кнопке исчезнуть
-                isCheckedTrigger.Setters.Add(new Setter(FrameworkElement.VisibilityProperty, true));
-                //
-                //isCheckedTrigger.Setters.Add(new Setter(FrameworkElement));
+                if (Banner.Colors.PrimaryColor != null && Banner.Colors.PrimaryColor > 0x01000000) 
+                {
+                    MoreMenuToggleButton.Background = new SolidColorBrush(ColorTools.GetColor(Banner.Colors.PrimaryColor.Value));
+                }
 
-                MoreMenuToggleButton.Style.Triggers.Add(isCheckedTrigger);
-                
-
-            }
-            else
-            {
-                //NicknameTB.SetResourceReference(ForegroundProperty, "PrimaryForegroundSolidColorBrush");
+                if (Banner.Colors.ActivityColor != null && Banner.Colors.ActivityColor > 0x01000000) 
+                {
+                    MoreMenuToggleButton.Style.Setters.Add(new Setter(AdvancedToggleButton.ForegroundProperty, Banner.Colors.ActivityColor));
+                }
             }
         }
 
