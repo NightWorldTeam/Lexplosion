@@ -175,15 +175,18 @@ namespace Lexplosion.Logic.Objects.Nightworld
         [JsonIgnore]
         public DateTime CreationDate { get; private set; } = DateTime.Today;
 
-        [JsonProperty("Date")]
-        public long DateUnix
+		private long _dateUnix;
+		[JsonProperty("Date")]
+		public long DateUnix
         {
-            get; set
+            get => _dateUnix; 
+			set
             {
-                DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+				_dateUnix = value;
+				DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
                 CreationDate = dateTime.AddSeconds(value).ToLocalTime();
             }
         }
 
-    }
+	}
 }
