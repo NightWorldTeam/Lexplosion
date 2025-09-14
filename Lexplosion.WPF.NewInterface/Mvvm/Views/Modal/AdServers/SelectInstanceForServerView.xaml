@@ -165,9 +165,6 @@
                             </Border>
 
                             <ControlTemplate.Triggers>
-                                <DataTrigger Binding="{Binding IsActive, ElementName=Loader}" Value="True">
-                                    <Setter TargetName="CloseIcon" Property="Fill" Value="White" />
-                                </DataTrigger>
                                 <Trigger Property="IsMouseOver" Value="True">
                                     <Setter TargetName="border" Property="Background" Value="{DynamicResource SecondarySolidColorBrush}" />
                                 </Trigger>
