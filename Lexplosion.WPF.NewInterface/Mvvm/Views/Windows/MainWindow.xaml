@@ -196,8 +196,8 @@
 
             <!--  Notification Dropdown  -->
             <notifications:NotificationsPanel Visibility="{Binding IsNotificationsOpened, ElementName=HeaderContainer, Mode=OneWay, Converter={converters:BooleanToVisibilityConverter}}" />
-
-            <news:LatestNewsView DataContext="{Binding LatestNewsViewModel}" Visibility="{Binding Model.HasUnseenNews, Converter={converters:BooleanToVisibilityConverter}}" />
+            <!--  Latest News View  -->
+            <news:LatestNewsView DataContext="{Binding LatestNewsViewModel}" Visibility="{Binding Model.HasUnseenNews, UpdateSourceTrigger=PropertyChanged, Converter={converters:BooleanToVisibilityConverter}}" />
 
             <!--  Image Overview  -->
             <Border x:Name="ImageViewer" Padding="16">

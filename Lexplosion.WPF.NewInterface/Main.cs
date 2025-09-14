@@ -148,7 +148,10 @@ namespace Lexplosion.WPF.NewInterface
         {
             ResourceNames = GetResourceNames();
 
-            App.Current.MainWindow.Topmost = true;
+            if (App.Current.MainWindow != null) 
+            {
+                App.Current.MainWindow.Topmost = true;
+            }
 
             // инициализируем mainViewModel.
             MainViewModel mainViewModel;
@@ -181,6 +184,9 @@ namespace Lexplosion.WPF.NewInterface
                 DataContext = viewmodel,
             };
 
+            _leftPos = mainWindow.Left;
+            _topPos = mainWindow.Top;
+
             if (firstLaunch)
             {
                 Account.AccountDeleted += (account) =>
@@ -191,15 +197,13 @@ namespace Lexplosion.WPF.NewInterface
                         mainWindow.DataContext = GetAuthorizationViewModel(mainViewModel.ToMainMenu);
                     }
                 };
+
+                // При первом запуске App.Current.MainWindow будет SplashWindow
+                (App.Current.MainWindow as SplashWindow).SmoothClosing();
             }
 
-            _leftPos = mainWindow.Left;
-            _topPos = mainWindow.Top;
-
-            (App.Current.MainWindow as SplashWindow).SmoothClosing();
             mainWindow.Show();
             App.Current.MainWindow = mainWindow;
-
         }
 
         private static void NavigateAfterWelcomePage(ICommand toMainMenu)
@@ -420,24 +424,20 @@ namespace Lexplosion.WPF.NewInterface
                 _nofityIcon.Dispose();
             });
         }
-
+        
         public static void ShowMainWindow()
         {
             Runtime.CancelingExit();
             App.Current.Dispatcher.Invoke(() =>
             {
+
                 if (App.Current.MainWindow == null)
                 {
-                    App.Current.MainWindow = new MainWindow(_appCore)
-                    {
-                        Left = _leftPos,
-                        Top = _topPos
-                    };
-                    App.Current.MainWindow.Show();
+                    SetMainWindow(false);
                 }
                 else
                 {
-					Lexplosion.Tools.NativeMethods.ShowProcessWindows(Runtime.CurrentProcess.MainWindowHandle);
+                    Lexplosion.Tools.NativeMethods.ShowProcessWindows(Runtime.CurrentProcess.MainWindowHandle);
                 }
             });
         }
