@@ -13,10 +13,10 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Modal
         private readonly Action AuthFinished;
         private readonly AppCore _appCore;
         private readonly Action _toAccountFactory;
-		private readonly AllServicesContainer _allServicesContainer = Runtime.ServicesContainer;
+        private readonly AllServicesContainer _allServicesContainer = Runtime.ServicesContainer;
 
 
-		private event Action<string> MicrosoftInputTokenPassed;
+        private event Action<string> MicrosoftInputTokenPassed;
 
         private Action UnsubscribeMicrosoftAuthPassedEvent;
 
@@ -146,7 +146,7 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Modal
             _appCore.ModalNavigationStore.CurrentViewModelChanged += OpenAccountFactoryModal;
         }
 
-        void OpenAccountFactoryModal() 
+        void OpenAccountFactoryModal()
         {
             _appCore.ModalNavigationStore.CurrentViewModelChanged -= OpenAccountFactoryModal;
             _toAccountFactory?.Invoke();
@@ -168,9 +168,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Modal
             Runtime.TaskRun(() =>
             {
                 var authCode = account.Auth(Password);
-                if (authCode == AuthCode.Successfully)
+                App.Current.Dispatcher.Invoke(() =>
                 {
-                    App.Current.Dispatcher.Invoke(() =>
+                    if (authCode == AuthCode.Successfully)
                     {
                         if (Account.ActiveAccount == null)
                         {
@@ -178,11 +178,59 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Modal
                         }
 
                         account.Save();
-                        IsAuthorizationInProcess = false;
                         AuthFinished?.Invoke();
-                    });
-                }
+                    }
+                    else
+                    {
+                        HandleNWAuthCode(authCode);
+                    }
+
+                    IsAuthorizationInProcess = false;
+                });
             });
+        }
+
+        private void HandleNWAuthCode(AuthCode authCode)
+        {
+            switch (authCode)
+            {
+                case AuthCode.DataError:
+                    _appCore.MessageService.Error("AuthCodeDataError", true);
+                    break;
+                case AuthCode.NoConnect:
+                    _appCore.MessageService.Error("AuthCodeNoConnectNightWorld", true);
+                    break;
+                case AuthCode.TokenError:
+                    _appCore.MessageService.Error("TokenError", true);
+                    break;
+                case AuthCode.SessionExpired:
+                    _appCore.MessageService.Error("SessionExpiredTryAuthAgain", true);
+                    break;
+                case AuthCode.NeedMicrosoftAuth:
+                    _appCore.MessageService.Error("AuthCodeNeedMicrosoftAuth", true);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void HandleMicrosoftAuthCode(MicrosoftAuthRes code)
+        {
+            switch (code)
+            {
+                case MicrosoftAuthRes.UserDenied:
+                    _appCore.MessageService.Error("AuthCodeUserDenied", true);
+                    break;
+                case MicrosoftAuthRes.Minor:
+                    _appCore.MessageService.Error("AuthCodeMinor", true);
+                    break;
+                case MicrosoftAuthRes.NoXbox:
+                    _appCore.MessageService.Error("AuthCodeNoXbox", true);
+                    break;
+                default:
+                    _appCore.MessageService.Error("UnknownError", true);
+                    break;
+            }
         }
 
         private void MicrosoftAuth()
@@ -196,31 +244,36 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.Models.Modal
                     Runtime.TaskRun(() =>
                     {
                         var code = account.Auth(token);
-                        if (code == AuthCode.Successfully)
+                        App.Current.Dispatcher.Invoke(() =>
                         {
-                            App.Current.Dispatcher.Invoke(() =>
+                            if (code == AuthCode.Successfully)
                             {
                                 account.Save();
                                 CommandReceiver.MicrosoftAuthPassed -= SuccessAuth;
                                 IsAuthorizationInProcess = false;
                                 AuthFinished?.Invoke();
-                            });
-                        }
+                            }
 
-                        _appCore.ModalNavigationStore.Close();
+                            _appCore.ModalNavigationStore.Close();
+                        });
                     });
+                }
+                else
+                {
+                    HandleMicrosoftAuthCode(res);
+                    IsAuthorizationInProcess = false;
                 }
             }
 
             CommandReceiver.MicrosoftAuthPassed += SuccessAuth;
 
-            UnsubscribeMicrosoftAuthPassedEvent = () => 
+            UnsubscribeMicrosoftAuthPassedEvent = () =>
             {
                 CommandReceiver.MicrosoftAuthPassed -= SuccessAuth;
                 UnsubscribeMicrosoftAuthPassedEvent = null;
             };
 
-            MicrosoftInputTokenPassed += (token) => 
+            MicrosoftInputTokenPassed += (token) =>
             {
                 SuccessAuth(token, MicrosoftAuthRes.Successful);
             };

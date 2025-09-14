@@ -1004,4 +1004,11 @@
     <s:String x:Key="NoLaunchAccountDescription">Не удалось запустить {0}. Запускаемый аккаунт не выбран, он требуется для запуска клиента.</s:String>
     <s:String x:Key="JavaPathResets">Путь до JAVA сброшен к значению по умолчанию</s:String>
     <s:String x:Key="WhatIsNew">Что нового?</s:String>
+
+    <s:String x:Key="AuthCodeDataError">Неверный данный логин или пароль!</s:String>
+    <s:String x:Key="AuthCodeNoConnectNightWorld">Нет соединения с серверами NightWorld!</s:String>
+    <s:String x:Key="AuthCodeNeedMicrosoftAuth">Необходима авторизация через Microsoft!</s:String>
+    <s:String x:Key="AuthCodeUserDenied">User denied!</s:String>
+    <s:String x:Key="AuthCodeMinor">Mirror error</s:String>
+    <s:String x:Key="AuthCodeNoXbox">No xbox</s:String>
 </ResourceDictionary>
