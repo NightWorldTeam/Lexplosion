@@ -163,7 +163,7 @@
                 Background="Transparent">
 
                 <Grid.Resources>
-                    <CollectionViewSource x:Key="Messages" Source="{Binding AppCore.MessageService.Messages, Source={StaticResource MainViewModel}}">
+                    <CollectionViewSource x:Key="UnreadMessages" Source="{Binding AppCore.MessageService.UnreadMessages, Source={StaticResource MainViewModel}}">
                         <CollectionViewSource.SortDescriptions>
                             <scm:SortDescription Direction="Ascending" PropertyName="CreationDate" />
                         </CollectionViewSource.SortDescriptions>
@@ -173,7 +173,7 @@
                 <ItemsControl
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
-                    ItemsSource="{Binding Source={StaticResource Messages}}">
+                    ItemsSource="{Binding Source={StaticResource UnreadMessages}}">
 
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
@@ -186,6 +186,7 @@
                         <DataTemplate DataType="{x:Type message:MessageItemModel}">
                             <controls:MessageItem
                                 Margin="0,0,0,16"
+                                IsViewed="{Binding IsViewed, Mode=TwoWay}"
                                 Text="{Binding Text}"
                                 Type="{Binding Type}" />
                         </DataTemplate>

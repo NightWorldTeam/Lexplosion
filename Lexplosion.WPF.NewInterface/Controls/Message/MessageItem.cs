@@ -103,16 +103,28 @@ namespace Lexplosion.WPF.NewInterface.Controls
                 )
             );
 
-        public static readonly DependencyProperty LiveTimeProperty =
+        public static readonly DependencyProperty LifeTimeProperty =
             DependencyProperty.Register(
-                nameof(LiveTime),
+                nameof(LifeTime),
                 typeof(TimeSpan),
                 typeof(MessageItem),
                 new FrameworkPropertyMetadata(
                     defaultValue: TimeSpan.FromSeconds(4),
-                    propertyChangedCallback: OnLiveTimeChanged
+                    propertyChangedCallback: OnLifeTimeChanged
                 )
             );
+
+        public static readonly DependencyProperty IsViewedProperty =
+            DependencyProperty.Register(nameof(IsViewed), typeof(bool), typeof(MessageItem),
+                new FrameworkPropertyMetadata(defaultValue: false, propertyChangedCallback: OnIsViewedChanged));
+
+        private static void OnIsViewedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is MessageItem _this) 
+            {
+                _this.Visibility = (bool)e.NewValue ? Visibility.Visible : Visibility.Collapsed;
+            }
+        }
 
         public string Text
         {
@@ -151,12 +163,17 @@ namespace Lexplosion.WPF.NewInterface.Controls
             set => SetValue(ErrorIconColorProperty, value);
         }
 
-        public TimeSpan LiveTime
+        public TimeSpan LifeTime
         {
-            get => (TimeSpan)GetValue(LiveTimeProperty);
-            set => SetValue(LiveTimeProperty, value);
+            get => (TimeSpan)GetValue(LifeTimeProperty);
+            set => SetValue(LifeTimeProperty, value);
         }
 
+        public bool IsViewed
+        {
+            get => (bool)GetValue(IsViewedProperty);
+            set => SetValue(IsViewedProperty, value);
+        }
 
         #endregion Properties
 
@@ -185,7 +202,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
             _partIcon = (Path)Template.FindName(PART_ICON_NAME, this);
 
             ChangeIconByType(Type);
-            SetLiveTime(LiveTime);
+            SetLifeTime(LifeTime);
         }
 
 
@@ -195,10 +212,10 @@ namespace Lexplosion.WPF.NewInterface.Controls
         #region Private Methods
 
 
-        private void SetLiveTime(TimeSpan span) 
+        private void SetLifeTime(TimeSpan span)
         {
             _timer.Tick += _timer_Tick;
-            _timer.Interval = LiveTime;
+            _timer.Interval = LifeTime;
             _timer.Start();
         }
 
@@ -206,15 +223,16 @@ namespace Lexplosion.WPF.NewInterface.Controls
         {
             var timer = (DispatcherTimer)sender;
             timer.Stop();
+            IsViewed = true;
             this.Visibility = Visibility.Collapsed;
         }
 
-        private void ChangeIconColor(SolidColorBrush brush) 
+        private void ChangeIconColor(SolidColorBrush brush)
         {
             _partIcon.Fill = brush;
         }
 
-        private void ChangeIconByType(MessageType type) 
+        private void ChangeIconByType(MessageType type)
         {
             if (_partIcon == null)
                 return;
@@ -261,7 +279,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
         private static void OnInfoIconColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is MessageItem _this) 
+            if (d is MessageItem _this)
             {
                 if (_this.Type == MessageType.Warning)
                     _this.ChangeIconColor((SolidColorBrush)e.NewValue);
@@ -270,7 +288,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
         private static void OnSuccessIconColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is MessageItem _this) 
+            if (d is MessageItem _this)
             {
                 if (_this.Type == MessageType.Success)
                     _this.ChangeIconColor((SolidColorBrush)e.NewValue);
@@ -279,7 +297,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
         private static void OnWarningIconColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is MessageItem _this) 
+            if (d is MessageItem _this)
             {
                 if (_this.Type == MessageType.Warning)
                     _this.ChangeIconColor((SolidColorBrush)e.NewValue);
@@ -288,21 +306,41 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
         private static void OnErrorIconColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is MessageItem _this) 
+            if (d is MessageItem _this)
             {
                 if (_this.Type == MessageType.Warning)
                     _this.ChangeIconColor((SolidColorBrush)e.NewValue);
             }
         }
 
-        private static void OnLiveTimeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnLifeTimeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is MessageItem _this)
             {
+                _this.Visibility = (bool)e.NewValue ? Visibility.Visible : Visibility.Collapsed;
 
+
+                _this.RemoveItSelfFromParent();
             }
         }
 
+
+        private void RemoveItSelfFromParent() 
+        {
+            if (Parent == null)
+            {
+                return;
+            }
+
+            if (Parent is ContentControl contentControl) 
+            {
+                contentControl.Content = null;
+            }
+            else if (Parent is Panel panel) 
+            {
+                panel.Children.Remove(this);
+            }
+        }
 
         #endregion Private Methods
     }

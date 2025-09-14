@@ -7,9 +7,11 @@ namespace Lexplosion.WPF.NewInterface.Controls.Message.Core
     public class MessageService : IMessageService
     {
         private readonly ObservableCollection<MessageItemModel> _messages = new();
+        private readonly ObservableCollection<MessageItemModel> _unreadMessages = new();
 
 
         public IEnumerable<MessageItemModel> Messages => _messages;
+        public IEnumerable<MessageItemModel> UnreadMessages => _unreadMessages;
 
 
         public void Error(string message, bool isResourceKey = false, params object[] formatParams)
@@ -54,40 +56,56 @@ namespace Lexplosion.WPF.NewInterface.Controls.Message.Core
             {
                 Publish(message, MessageType.Warning, isResourceKey);
             }
-            else 
+            else
             {
                 PublishFormatterString(message, MessageType.Warning, isResourceKey, formatParams);
             }
         }
 
-        private void Publish(string message, MessageType type, bool isResourceKey)
+        private void Publish(string messageText, MessageType type, bool isResourceKey)
         {
-            App.Current.Dispatcher.Invoke(() =>
+            App.Current.Dispatcher.Invoke((System.Delegate)(() =>
             {
-                _messages.Add(new()
+                MessageItemModel message = new()
                 {
-                    Text = !isResourceKey ? message : (string)App.Current.Resources[message],
+                    Text = !isResourceKey ? messageText : (string)App.Current.Resources[messageText],
                     Type = type,
                     CreationDate = System.DateTime.Now
-                });
-            });
+                };
+
+                message.IsViewedChanged += OnMessageIsViewedChanged;
+
+                _messages.Add(message);
+                _unreadMessages.Add(message);
+            }));
         }
 
-        public void PublishFormatterString(string message, MessageType type, bool isResourceKey = false, params object[] formatParams)
+        public void PublishFormatterString(string messageText, MessageType type, bool isResourceKey = false, params object[] formatParams)
         {
-            var messageResult = !isResourceKey ? message : (string)App.Current.Resources[message];
+            var messageResult = !isResourceKey ? messageText : (string)App.Current.Resources[messageText];
 
             messageResult = string.Format(messageResult, formatParams);
 
-            App.Current.Dispatcher.Invoke(() =>
+            App.Current.Dispatcher.Invoke((System.Delegate)(() =>
             {
-                _messages.Add(new()
+                MessageItemModel message = new()
                 {
                     Text = messageResult,
                     Type = type,
                     CreationDate = System.DateTime.Now
-                });
-            });
+                };
+
+                message.IsViewedChanged += OnMessageIsViewedChanged;
+
+                _messages.Add(message);
+                _unreadMessages.Add(message);
+            }));
+        }
+
+        private void OnMessageIsViewedChanged(MessageItemModel sender, bool value)
+        {
+            sender.IsViewedChanged -= OnMessageIsViewedChanged;
+            _unreadMessages.Remove(sender);
         }
     }
 }
