@@ -198,7 +198,23 @@
             <!--  Notification Dropdown  -->
             <notifications:NotificationsPanel Visibility="{Binding IsNotificationsOpened, ElementName=HeaderContainer, Mode=OneWay, Converter={converters:BooleanToVisibilityConverter}}" />
             <!--  Latest News View  -->
-            <news:LatestNewsView DataContext="{Binding LatestNewsViewModel}" Visibility="{Binding Model.HasUnseenNews, UpdateSourceTrigger=PropertyChanged, Converter={converters:BooleanToVisibilityConverter}}" />
+            <news:LatestNewsView DataContext="{Binding LatestNewsViewModel}">
+                <news:LatestNewsView.Style>
+                    <Style TargetType="{x:Type news:LatestNewsView}">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding}" Value="{x:Type viewmodels:MainViewModel}" />
+                                    <Condition Binding="{Binding Model.HasUnseenNews, UpdateSourceTrigger=PropertyChanged}" Value="True" />
+                                </MultiDataTrigger.Conditions>
+
+                                <Setter Property="Visibility" Value="Visible" />
+                            </MultiDataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </news:LatestNewsView.Style>
+            </news:LatestNewsView>
 
             <!--  Image Overview  -->
             <Border x:Name="ImageViewer" Padding="16">
