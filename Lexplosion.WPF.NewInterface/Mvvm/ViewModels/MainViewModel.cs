@@ -89,8 +89,6 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels
             }
         }
 
-        public LatestNewsViewModel LatestNewsViewModel { get; } = new();
-
 
         #endregion Properties
 

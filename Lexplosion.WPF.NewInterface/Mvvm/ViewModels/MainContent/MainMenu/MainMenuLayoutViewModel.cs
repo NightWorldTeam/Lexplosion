@@ -38,6 +38,9 @@ namespace Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu
         public Action<InstanceModelBase> ToInstanceProfile { get; }
 
 
+        public LatestNewsViewModel LatestNewsViewModel { get; } = new();
+
+
         #endregion Properties
 
 

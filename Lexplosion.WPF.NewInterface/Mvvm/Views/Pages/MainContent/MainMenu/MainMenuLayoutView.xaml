@@ -3,9 +3,11 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:Lexplosion.WPF.NewInterface.Controls"
+    xmlns:converters="clr-namespace:Lexplosion.WPF.NewInterface.Core.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Mvvm.ViewModels.MainContent.MainMenu"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:news="clr-namespace:Lexplosion.WPF.NewInterface.ViewComponents.News"
     d:DataContext="{d:DesignInstance Type=local:MainMenuLayoutViewModel}"
     d:DesignHeight="528"
     d:DesignWidth="944"
@@ -27,5 +29,8 @@
             Content="{Binding Content}"
             KeyboardNavigation.IsTabStop="False"
             KeyboardNavigation.TabNavigation="None" />
+
+        <!--  Latest News View  -->
+        <news:LatestNewsView Grid.ColumnSpan="2" DataContext="{Binding LatestNewsViewModel}" Visibility="{Binding Model.HasUnseenNews, UpdateSourceTrigger=PropertyChanged, Converter={converters:BooleanToVisibilityConverter}}" />
     </Grid>
 </UserControl>
