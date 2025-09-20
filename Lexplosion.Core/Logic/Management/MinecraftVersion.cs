@@ -49,13 +49,18 @@ namespace Lexplosion.Logic.Management
 
 		public MinecraftVersion(string id)
 		{
-			Type = VersionType.Release;
 			if (!string.IsNullOrWhiteSpace(id))
 			{
-				if (!id.Contains("."))
+				Type = VersionType.Release;
+
+				if (!id.Contains(".") || !IsAllDigits(id.Replace(".", "")))
 					Type = VersionType.Snapshot;
 
 				Weight = CalcWeight(id);
+			}
+			else
+			{
+				Type = VersionType.Snapshot;
 			}
 
 			Id = id;
@@ -187,6 +192,16 @@ namespace Lexplosion.Logic.Management
 				i /= 10000;
 			}
 			return weight;
+		}
+
+		private bool IsAllDigits(string s)
+		{
+			foreach (char c in s)
+			{
+				if (!char.IsDigit(c))
+					return false;
+			}
+			return true;
 		}
 
 
