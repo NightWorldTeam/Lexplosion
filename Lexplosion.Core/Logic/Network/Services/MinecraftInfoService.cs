@@ -49,6 +49,37 @@ namespace Lexplosion.Logic.Network.Services
 			}
 		}
 
+		public JavaFiles GetJavaFilesList(JavaVersion version, out string manifestString)
+		{			
+			manifestString = null;
+			try
+			{
+				try
+				{
+					manifestString = _toServer.HttpGet(version.ManifestUrl);
+				}
+				catch (Exception ex)
+				{
+					Runtime.DebugWrite(ex);
+				}
+
+				if (manifestString == null)
+				{
+					string url = LaunсherSettings.URL.MirrorUrl + version.ManifestUrl.Replace("https://", "");
+					Runtime.DebugWrite("Try mirror, url " + url);
+					manifestString = _toServer.HttpGet(url);
+				}
+
+				return JsonConvert.DeserializeObject<JavaFiles>(manifestString);
+			}
+			catch (Exception ex)
+			{
+				Runtime.DebugWrite("answer is null " + (manifestString == null) + ", exception: " + ex);
+				return null;
+			}
+
+		}
+
 		public List<MCVersionInfo> GetVersionsList()
 		{
 			bool isMirrorMode = _toServer.IsMirrorModeToNw;

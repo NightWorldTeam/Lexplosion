@@ -164,12 +164,7 @@ namespace Lexplosion.Logic.Management
 
 			if (javaFiles?.Files == null || javaFiles.Files.Count < 1)
 			{
-				string manifestString = _toServer.HttpGet(_thisJava.ManifestUrl);
-				try
-				{
-					javaFiles = JsonConvert.DeserializeObject<JavaFiles>(manifestString);
-				}
-				catch { }
+				javaFiles = _minecraftInfoService.GetJavaFilesList(_thisJava, out string manifestString);
 
 				if (javaFiles?.Files == null || javaFiles.Files.Count < 1)
 				{
