@@ -65,7 +65,7 @@ namespace Lexplosion.UI.WPF
         public static ICollection<INotification> Notification = new ObservableCollection<INotification>();
 
         [STAThread]
-        static void Main()
+        internal static void Main()
         {
             //SetupTestEnviroment();
             //return;

@@ -1,5 +1,5 @@
 ﻿using Lexplosion.Core.Tools;
-using Lexplosion.WPF.NewInterface.Tools;
+using Lexplosion.UI.WPF.Tools;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;

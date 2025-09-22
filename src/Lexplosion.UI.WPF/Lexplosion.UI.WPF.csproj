@@ -54,7 +54,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>Lexplosion.WPF.NewInterface.RuntimeApp</StartupObject>
+    <StartupObject>Lexplosion.UI.WPF.RuntimeApp</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Assets\images\icons\logo.ico</ApplicationIcon>
