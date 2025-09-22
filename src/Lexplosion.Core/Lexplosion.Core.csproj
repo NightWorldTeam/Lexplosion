@@ -247,6 +247,7 @@
     </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>powershell -Command "Compress-Archive -Path \"$(TargetPath)\" -DestinationPath \"$(SolutionDir)DLL\Lexplosion.Core.zip\" -Force"</PostBuildEvent>
+    <PostBuildEvent>powershell -Command "New-Item -ItemType Directory -Force -Path $(SolutionDir)DLL"
+powershell -Command "Compress-Archive -Path \"$(TargetPath)\" -DestinationPath \"$(SolutionDir)DLL\Lexplosion.Core.zip\" -Force"</PostBuildEvent>
   </PropertyGroup>
 </Project>
