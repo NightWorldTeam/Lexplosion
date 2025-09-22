@@ -1354,6 +1354,6 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>copy "$(SolutionDir)DLL\Lexplosion.Core.zip" "$(ProjectDir)Resources\Libraries\Lexplosion.Core.zip"
-powershell Remove-Item -LiteralPath "$(SolutionDir)DLL" -Force -Recurse</PreBuildEvent>
+powershell Remove-Item -LiteralPath \"$(SolutionDir)DLL\" -Force -Recurse</PreBuildEvent>
   </PropertyGroup>
 </Project>
