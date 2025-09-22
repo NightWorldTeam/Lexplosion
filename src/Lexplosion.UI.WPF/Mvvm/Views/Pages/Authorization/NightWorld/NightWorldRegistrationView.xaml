@@ -1,0 +1,109 @@
+﻿<UserControl
+    x:Class="Lexplosion.UI.WPF.Mvvm.Views.Pages.Authorization.NightWorldRegistrationView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:authorization="clr-namespace:Lexplosion.UI.WPF.Mvvm.ViewModels.Authorization"
+    xmlns:controls="clr-namespace:Lexplosion.UI.WPF.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Lexplosion.UI.WPF.Mvvm.Views.Pages.Authorization"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Width="350"
+    Height="470"
+    d:DataContext="{d:DesignInstance Type=authorization:NightWorldRegistrationViewModel}"
+    mc:Ignorable="d">
+    <Grid>
+        <Border Padding="50,16,50,0">
+            <Grid ShowGridLines="False">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!--  Logo  -->
+
+                <Border
+                    Width="70"
+                    Height="70"
+                    Margin="0,16,0,0"
+                    CornerRadius="100">
+                    <Border.Background>
+                        <ImageBrush ImageSource="pack://application:,,,/Assets/images/icons/logo.ico" />
+                    </Border.Background>
+                </Border>
+
+
+                <!--  Content  -->
+                <StackPanel Grid.Row="1" Margin="0,16,0,0">
+                    <StackPanel Margin="0,0,0,8" Orientation="Horizontal">
+                        <controls:AdvancedButton
+                            Height="16"
+                            Margin="0,1,12,0"
+                            Command="{Binding ToAuthMenu}"
+                            IconData="{StaticResource PDLeftBackArrow}"
+                            IconPadding="4"
+                            IsCancel="True" />
+                        <TextBlock
+                            FontSize="17"
+                            FontWeight="Medium"
+                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                            SnapsToDevicePixels="True"
+                            Text="{DynamicResource RegistrationInNightWorld}"
+                            UseLayoutRounding="True" />
+                    </StackPanel>
+
+                    <!--  Login Field  -->
+                    <controls:UpperPlaceholderTextBox
+                        Margin="0,8,0,0"
+                        IsError="False"
+                        Placeholder="{DynamicResource Login}"
+                        Text="{Binding Model.Login, UpdateSourceTrigger=PropertyChanged}" />
+
+                    <!--  Login Field  -->
+                    <controls:UpperPlaceholderTextBox
+                        Margin="0,8,0,0"
+                        IsError="False"
+                        Placeholder="{DynamicResource EmailAddress}"
+                        Text="{Binding Model.Email, UpdateSourceTrigger=PropertyChanged}" />
+
+                    <!--  Password Field  -->
+                    <controls:BindablePasswordBox
+                        Margin="0,8,0,0"
+                        FontSize="14"
+                        Password="{Binding Model.Password, UpdateSourceTrigger=PropertyChanged}" />
+
+                    <controls:BindablePasswordBox
+                        Margin="0,8,0,0"
+                        FontSize="14"
+                        Password="{Binding Model.RepeatPassword, UpdateSourceTrigger=PropertyChanged}" />
+
+                    <Grid Grid.Row="1" Margin="0,16,0,0">
+                        <StackPanel>
+                            <Button
+                                Height="32"
+                                HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Center"
+                                Command="{Binding SignUpCommand}"
+                                Content="{DynamicResource SignUp}"
+                                FontWeight="Medium"
+                                Foreground="White" />
+
+                            <WrapPanel
+                                Grid.Row="3"
+                                Margin="0,16,0,0"
+                                HorizontalAlignment="Center">
+                                <TextBlock Margin="4,0,0,0">
+                                    <Run Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="{DynamicResource AlreadyHaveAnyAccount}" />
+                                    <Hyperlink Command="{Binding ToSignInCommand}">
+                                        <Run Text="{DynamicResource LogIn}" />
+                                    </Hyperlink>
+                                </TextBlock>
+                            </WrapPanel>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

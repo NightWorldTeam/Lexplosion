@@ -1,0 +1,326 @@
+﻿<Window
+    x:Class="Lexplosion.UI.WPF.Mvvm.Views.Windows.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Lexplosion.UI.WPF.Controls"
+    xmlns:converters="clr-namespace:Lexplosion.UI.WPF.Core.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="clr-namespace:Lexplosion.UI.WPF.Extensions"
+    xmlns:header="clr-namespace:Lexplosion.UI.WPF.WindowComponents.Header"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:message="clr-namespace:Lexplosion.UI.WPF.Controls.Message.Core"
+    xmlns:news="clr-namespace:Lexplosion.UI.WPF.ViewComponents.News"
+    xmlns:notification="clr-namespace:Lexplosion.UI.WPF.Core.Notifications"
+    xmlns:notifications="clr-namespace:Lexplosion.UI.WPF.ViewComponents.Notifications"
+    xmlns:objects="clr-namespace:Lexplosion.UI.WPF.Core.Objects"
+    xmlns:pages="clr-namespace:Lexplosion.UI.WPF.Mvvm.Views.Pages"
+    xmlns:runtime="clr-namespace:Lexplosion.UI.WPF"
+    xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+    xmlns:viewmodels="clr-namespace:Lexplosion.UI.WPF.Mvvm.ViewModels"
+    Title="Lexplosion"
+    Width="944"
+    Height="528"
+    MinWidth="944"
+    MinHeight="528"
+    d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
+    ResizeMode="CanResize"
+    SnapsToDevicePixels="True"
+    UseLayoutRounding="True"
+    WindowStyle="SingleBorderWindow"
+    mc:Ignorable="d">
+
+    <Window.TaskbarItemInfo>
+        <TaskbarItemInfo />
+    </Window.TaskbarItemInfo>
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome
+            CaptionHeight="0"
+            NonClientFrameEdges="None"
+            UseAeroCaptionButtons="False" />
+    </WindowChrome.WindowChrome>
+
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type objects:InstanceNotification}">
+            <Border
+                Padding="16,8,8,8"
+                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                BorderThickness="0,1,0,1">
+                <Grid HorizontalAlignment="Left">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!--  Logo or Icon  -->
+                    <Border
+                        Width="40"
+                        Height="40"
+                        VerticalAlignment="Top"
+                        Background="{DynamicResource ActivitySolidColorBrush}"
+                        CornerRadius="5" />
+
+                    <StackPanel Grid.Column="1" Margin="16,0,0,0">
+                        <!--  Title  -->
+                        <TextBlock
+                            FontSize="14"
+                            FontWeight="Medium"
+                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                            Text="{Binding Title}" />
+
+                        <!--  Content  -->
+                        <TextBlock
+                            Margin="0,4,0,0"
+                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                            Text="{Binding Content}"
+                            TextWrapping="WrapWithOverflow" />
+
+                        <!--  Time  -->
+                        <Grid Margin="0,5,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="{Binding Time}" />
+
+                            <TextBlock
+                                Grid.Column="1"
+                                Margin="8,0,0,0"
+                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                Text="{Binding InstanceName, StringFormat=(in {0})}" />
+                        </Grid>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </DataTemplate>
+    </Window.Resources>
+
+    <!--
+        Width="350"
+        Height="470"
+    -->
+
+    <Grid>
+
+        <Grid
+            x:Name="ContainerGrid"
+            Grid.Row="1"
+            Background="{DynamicResource SecondarySolidColorBrush}"
+            KeyboardNavigation.IsTabStop="False"
+            MouseEnter="Grid_MouseEnter"
+            RenderTransformOrigin="0.5, 0.5">
+
+            <!--  Content  -->
+            <!--  IsEnabled="{Binding IsModalOpen, Converter={converters:NegativeBooleanValueConverter}, Source={StaticResource MainViewModel}}"  -->
+            <ContentControl Content="{Binding CurrentViewModel, Source={StaticResource MainViewModel}}" KeyboardNavigation.IsTabStop="False" />
+
+            <!--<pages:WelcomeView />-->
+
+            <!--  Modal Control  -->
+            <controls:ModalControl
+                Content="{Binding CurrentModalViewModel, Source={StaticResource MainViewModel}}"
+                IsOpen="{Binding IsModalOpen, Source={StaticResource MainViewModel}}"
+                KeyboardNavigation.IsTabStop="False" />
+
+            <!--  Window Header Panel Margin="16,12"  -->
+            <header:WindowHeaderContainer
+                x:Name="HeaderContainer"
+                Height="40"
+                VerticalAlignment="Top"
+                Panel.ZIndex="1000"
+                HeaderType="WindowsOS" />
+
+            <!--  Notification Panel  -->
+            <ItemsControl
+                Height="300"
+                Margin="0,22,-14,0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                ItemsSource="{Binding AppCore.NotificationService.Notifications, Source={StaticResource MainViewModel}}">
+
+                <ItemsControl.Resources>
+
+                    <DataTemplate DataType="{x:Type notification:SimpleNotification}">
+                        <controls:ToastMessage
+                            Title="{Binding Title}"
+                            CloseCommand="{Binding CloseCommand}"
+                            Message="{Binding Content}"
+                            State="Notification"
+                            VisibilityTime="{Binding VisibleTime}" />
+                    </DataTemplate>
+
+                </ItemsControl.Resources>
+
+            </ItemsControl>
+
+            <!--  Toast Message Panel  -->
+            <Grid
+                Margin="16,12"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Top"
+                Background="Transparent">
+
+                <Grid.Resources>
+                    <CollectionViewSource x:Key="UnreadMessages" Source="{Binding AppCore.MessageService.UnreadMessages, Source={StaticResource MainViewModel}}">
+                        <CollectionViewSource.SortDescriptions>
+                            <scm:SortDescription Direction="Ascending" PropertyName="CreationDate" />
+                        </CollectionViewSource.SortDescriptions>
+                    </CollectionViewSource>
+                </Grid.Resources>
+
+                <ItemsControl
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    ItemsSource="{Binding Source={StaticResource UnreadMessages}}">
+
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel IsItemsHost="True" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+
+                    <ItemsControl.Resources>
+
+                        <DataTemplate DataType="{x:Type message:MessageItemModel}">
+                            <controls:MessageItem
+                                Margin="0,0,0,16"
+                                IsViewed="{Binding IsViewed, Mode=TwoWay}"
+                                Text="{Binding Text}"
+                                Type="{Binding Type}" />
+                        </DataTemplate>
+
+                    </ItemsControl.Resources>
+                </ItemsControl>
+            </Grid>
+
+            <!--  Notification Dropdown  -->
+            <notifications:NotificationsPanel Visibility="{Binding IsNotificationsOpened, ElementName=HeaderContainer, Mode=OneWay, Converter={converters:BooleanToVisibilityConverter}}" />
+
+            <!--  Image Overview  -->
+            <Border x:Name="ImageViewer" Padding="16">
+                <Border.Background>
+                    <SolidColorBrush Opacity="0.6" Color="Black" />
+                </Border.Background>
+                <Grid>
+                    <Border CornerRadius="5">
+                        <Border.Background>
+                            <ImageBrush x:Name="Image" />
+                        </Border.Background>
+                    </Border>
+
+                    <Border
+                        Margin="0,0,0,-12"
+                        Padding="16,8"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Bottom"
+                        Background="{DynamicResource PrimarySolidColorBrush}"
+                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                        BorderThickness="1"
+                        CornerRadius="10">
+                        <StackPanel Orientation="Horizontal">
+
+                            <controls:AdvancedButton
+                                x:Name="CloseImage"
+                                Width="32"
+                                Height="32"
+                                Margin="0,0,0,0"
+                                IconData="{DynamicResource PDClose}"
+                                Style="{StaticResource sm-button-icon}"
+                                ToolTip="{DynamicResource Close}" />
+                            <!--<controls:AdvancedButton
+                                x:Name="PrevImage"
+                                Width="32"
+                                Height="32"
+                                IconData="{DynamicResource PDLeftBackArrow}"
+                                Style="{StaticResource sm-button-icon}" />
+                            <controls:AdvancedButton
+                                x:Name="NextImage"
+                                Width="32"
+                                Height="32"
+                                Margin="8,0,0,0"
+                                IconData="{DynamicResource PDLeftBackArrow}"
+                                RenderTransformOrigin="0.5,0.5"
+                                Style="{StaticResource sm-button-icon}">
+                                <controls:AdvancedButton.RenderTransform>
+                                    <RotateTransform Angle="180" />
+                                </controls:AdvancedButton.RenderTransform>
+                            </controls:AdvancedButton>-->
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <!--  Circle Animation Block  -->
+            <Grid x:Name="PaintArea">
+                <Grid.RenderTransform>
+                    <TranslateTransform X="0" Y="0" />
+                </Grid.RenderTransform>
+                <Grid.Clip>
+                    <EllipseGeometry x:Name="CircleReveal" Center="101,22" />
+                </Grid.Clip>
+            </Grid>
+
+            <controls:LoadingBoard
+                Background="Black"
+                BackgroundOpacity="0.8"
+                IsActive="{Binding GlobalLoadingArgs.State}"
+                Placeholder="{Binding GlobalLoadingArgs.ProcessDescription}" />
+        </Grid>
+
+
+        <!--  Заготовка видимая при наведении на друзей  -->
+        <!--<Border
+            Width="240"
+            Height="300"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Background="{DynamicResource SecondarySolidColorBrush}"
+            BorderBrush="Yellow"
+            BorderThickness="1"
+            CornerRadius="5"
+            Visibility="Collapsed">
+            <Grid>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.3*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Border CornerRadius="5,5,0,0">
+                    <Border.Background>
+                        <ImageBrush ImageSource="https://psv4.userapi.com/s/v1/d2/-XUqN80S-xb1WOSEO0Bw-KHMiTmzgBqzBd_SgIcSyIkmjOyGJz3jLxOCMYsb5vikd3MhY6QeIrGSebv1991UzFAclpC1BisVwE5I84z55LiPoKALXf3Hclsl-IGdy44lM4j7MGG2Gq_N/Frame_1000004955.png" />
+                    </Border.Background>
+                </Border>
+
+                <Border
+                    Width="32"
+                    Height="32"
+                    Margin="16,0,0,0"
+                    HorizontalAlignment="Left">
+                    <Border.Background>
+                        <ImageBrush ImageSource="/Assets/images/icons/hel2xhead.png" />
+                    </Border.Background>
+                </Border>
+
+                <Border Grid.Row="1">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <StackPanel>
+                            <TextBlock
+                                FontSize="14"
+                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                Text="Title: Барин" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Border>-->
+    </Grid>
+</Window>

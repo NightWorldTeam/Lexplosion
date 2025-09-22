@@ -1,0 +1,285 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:addonsrepositoriesviews="clr-namespace:Lexplosion.UI.WPF.Mvvm.Views.Pages.AddonsRepositories"
+    xmlns:addonsrepositoriesvm="clr-namespace:Lexplosion.UI.WPF.Mvvm.ViewModels.AddonsRepositories"
+    xmlns:authviewmodels="clr-namespace:Lexplosion.UI.WPF.Mvvm.ViewModels.Authorization"
+    xmlns:authviews="clr-namespace:Lexplosion.UI.WPF.Mvvm.Views.Pages.Authorization"
+    xmlns:converters="clr-namespace:Lexplosion.UI.WPF.Core.Converters"
+    xmlns:instanceTransferView="clr-namespace:Lexplosion.UI.WPF.Mvvm.Views.Modal.InstanceTransfer"
+    xmlns:instanceTransferViewModel="clr-namespace:Lexplosion.UI.WPF.Mvvm.ViewModels.Modal.InstanceTransfer"
+    xmlns:instanceprofileview="clr-namespace:Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.InstanceProfile"
+    xmlns:instanceprofilevm="clr-namespace:Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.InstanceProfile"
+    xmlns:limited="clr-namespace:Lexplosion.UI.WPF.Mvvm.ViewModels.Limited"
+    xmlns:mainmenuview="clr-namespace:Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.MainMenu"
+    xmlns:mainmenuvm="clr-namespace:Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu"
+    xmlns:modalviews="clr-namespace:Lexplosion.UI.WPF.Mvvm.Views.Modal"
+    xmlns:modalvm="clr-namespace:Lexplosion.UI.WPF.Mvvm.ViewModels.Modal"
+    xmlns:pages="clr-namespace:Lexplosion.UI.WPF.Mvvm.Views.Pages"
+    xmlns:s="clr-namespace:System;assembly=mscorlib"
+    xmlns:serverprofile="clr-namespace:Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.ServerProfile"
+    xmlns:serverprofileview="clr-namespace:Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.ServerProfile"
+    xmlns:tb="http://www.hardcodet.net/taskbar"
+    xmlns:trayMenu="clr-namespace:Lexplosion.UI.WPF.TrayMenu"
+    xmlns:viewmodels="clr-namespace:Lexplosion.UI.WPF.Mvvm.ViewModels">
+
+    <ImageBrush x:Key="NoneImageBrush" ImageSource="pack://Application:,,,/Assets/images/icons/non_image.png" />
+
+    <!--  Authorization  -->
+    <DataTemplate DataType="{x:Type authviewmodels:AuthorizationMenuViewModel}">
+        <authviews:AuthorizationMenuView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type authviewmodels:NightWorldAuthorizationViewModel}">
+        <authviews:NightWorldAuthFormView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type authviewmodels:PasswordResetViewModel}">
+        <authviews:PasswordResetView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type authviewmodels:DigitCodeConfirmationViewModel}">
+        <authviews:DigitCodeConfirmationVIew />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type authviewmodels:NightWorldRegistrationViewModel}">
+        <authviews:NightWorldRegistrationView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type authviewmodels:MicrosoftAuthorizationViewModel}">
+        <authviews:MicrosoftAuthorizationView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type authviewmodels:MicrosoftManualInputViewModel}">
+        <modalviews:MicrosoftManualInputView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type authviewmodels:NoAccountAuthorizationViewModel}">
+        <authviews:NoAccountAuthorizationView />
+    </DataTemplate>
+
+
+    <!--  Limited  -->
+    <DataTemplate DataType="{x:Type limited:NightWorldLimitedContentLayoutViewModel}">
+        <pages:NightWorldLimitedContentLayoutView />
+    </DataTemplate>
+
+    <!--  MainContent  -->
+
+    <!--  Main Menu  -->
+    <DataTemplate DataType="{x:Type mainmenuvm:MainMenuLayoutViewModel}">
+        <mainmenuview:MainMenuLayoutView />
+    </DataTemplate>
+
+    <!--  Left Panel  -->
+    <DataTemplate DataType="{x:Type mainmenuvm:LeftPanelViewModel}">
+        <mainmenuview:LeftPanelView />
+    </DataTemplate>
+
+    <!--  Contents  -->
+    <DataTemplate DataType="{x:Type mainmenuvm:CatalogViewModel}">
+        <mainmenuview:CatalogView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type mainmenuvm:LibraryViewModel}">
+        <mainmenuview:LibraryView />
+    </DataTemplate>
+
+    <!--  Multiplayer  -->
+    <DataTemplate DataType="{x:Type mainmenuvm:MultiplayerLayoutViewModel}">
+        <mainmenuview:MultiplayerLayoutView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type mainmenuvm:MultiplayerViewModel}">
+        <mainmenuview:MultiplayerView />
+    </DataTemplate>
+
+    <!--  Friends  -->
+    <DataTemplate DataType="{x:Type mainmenuvm:FriendsLayoutViewModel}">
+        <mainmenuview:FriendsLayoutViewModel />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type mainmenuvm:FriendsViewModel}">
+        <mainmenuview:FriendsViewModel />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type mainmenuvm:FriendRequestsViewModel}">
+        <mainmenuview:FriendsRequestsView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type mainmenuvm:FindFriendsViewModel}">
+        <mainmenuview:FindFriendsView />
+    </DataTemplate>
+
+
+    <!--  General Settings  -->
+    <DataTemplate DataType="{x:Type mainmenuvm:GeneralSettingsLayoutViewModel}">
+        <mainmenuview:GeneralSettingsLayoutView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type mainmenuvm:GeneralSettingsViewModel}">
+        <mainmenuview:GeneralSettingsView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type mainmenuvm:AppearanceSettingsViewModel}">
+        <mainmenuview:AppearanceSettingsView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type mainmenuvm:LanguageSettingsViewModel}">
+        <mainmenuview:LanguageSettingsView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type mainmenuvm:AccountsSettingsViewModel}">
+        <mainmenuview:AccountsSettingsView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type mainmenuvm:AboutUsViewModel}">
+        <mainmenuview:AboutUsView />
+    </DataTemplate>
+
+    <!--  Modal  -->
+    <DataTemplate DataType="{x:Type modalvm:LeftMenuControl}">
+        <modalviews:LeftMenuControl />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type modalvm:InstanceFactoryViewModel}">
+        <modalviews:InstanceFactoryView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type modalvm:ConfirmActionViewModel}">
+        <modalviews:ConfirmActionView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type modalvm:InstancesGroupFactoryViewModel}">
+        <modalviews:InstancesGroupFactoryView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type modalvm:InstancesGroupEditViewModel}">
+        <modalviews:InstancesGroupEditView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type modalvm:InstanceGroupsConfiguratorViewModel}">
+        <modalviews:InstanceGroupsConfiguratorView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type modalvm:InstanceCopyViewModel}">
+        <modalviews:InstanceCopyView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type modalvm:InstanceCopyErrorsViewModel}">
+        <modalviews:InstanceCopyErrorsView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type modalvm:ErrorViewerViewModel}">
+        <modalviews:ErrorViewer />
+    </DataTemplate>
+
+    <!--  Instance Profile  -->
+    <DataTemplate DataType="{x:Type instanceprofilevm:InstanceProfileLeftPanelViewModel}">
+        <instanceprofileview:InstanceProfileLeftPanelView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type instanceprofilevm:InstanceProfileLayoutViewModel}">
+        <instanceprofileview:InstanceProfileLayoutView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type instanceprofilevm:InstanceProfileOverviewViewModel}">
+        <instanceprofileview:InstanceProfileOverviewView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type instanceprofilevm:InstanceAddonsContainerViewModel}">
+        <instanceprofileview:InstanceProfileAddonsView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type instanceprofilevm:InstanceProfileAddonsLayoutViewModel}">
+        <instanceprofileview:InstanceProfileAddonsLayoutView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type instanceprofilevm:InstanceProfileSettingsLayoutViewModel}">
+        <instanceprofileview:InstanceProfileSettingsLayoutView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type instanceprofilevm:InstanceProfileSettingsViewModel}">
+        <instanceprofileview:InstanceProfileSettingsView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type instanceprofilevm:InstanceProfileAboutViewModel}">
+        <instanceprofileview:InstanceProfileAboutView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type instanceprofilevm:InstanceProfileConfigurationViewModel}">
+        <instanceprofileview:InstanceProfileConfigurationView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type instanceprofilevm:InstanceProfileVersionsViewModel}">
+        <instanceprofileview:InstanceProfileVersionsView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type instanceprofilevm:InstanceProfileOverviewLayoutViewModel}">
+        <instanceprofileview:InstanceProfileOverviewLayoutView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type instanceprofilevm:InstanceProfileOverviewGalleryViewModel}">
+        <instanceprofileview:InstanceProfileOverviewGalleryView />
+    </DataTemplate>
+
+
+    <!--  Instance Transfer  -->
+    <DataTemplate DataType="{x:Type instanceTransferViewModel:InstanceExportViewModel}">
+        <instanceTransferView:InstanceExportView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type instanceTransferViewModel:InstanceShareLayoutViewModel}">
+        <instanceTransferView:InstanceShareLayoutView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type instanceTransferViewModel:InstanceShareViewModel}">
+        <instanceTransferView:InstanceShareView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type instanceTransferViewModel:ActiveSharesViewModel}">
+        <instanceTransferView:ActiveSharesView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type instanceTransferViewModel:InstanceImportViewModel}">
+        <instanceTransferView:InstanceImportView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type instanceTransferViewModel:InstanceDistributionViewModel}">
+        <instanceTransferView:InstanceDistributionView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type instanceTransferViewModel:InstanceImportFillDataViewModel}">
+        <instanceTransferView:InstanceImportFillDataView />
+    </DataTemplate>
+
+    <!--  Instance Addons  -->
+
+
+    <DataTemplate DataType="{x:Type addonsrepositoriesvm:LexplosionAddonsRepositoryViewModel}">
+        <addonsrepositoriesviews:LexplosionAddonsRepository />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type modalvm:SelectAddonVersionViewModel}">
+        <modalviews:SelectAddonVersionView />
+    </DataTemplate>
+
+
+    <!--  Accounts  -->
+    <DataTemplate DataType="{x:Type modalvm:AccountFactoryViewModel}">
+        <modalviews:AccountFactoryView />
+    </DataTemplate>
+
+
+    <!--  Ad Servers  -->
+    <DataTemplate DataType="{x:Type mainmenuvm:AdServersViewModel}">
+        <mainmenuview:AdServersView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type modalvm:SelectInstanceForServerViewModel}">
+        <modalviews:SelectInstanceForServerView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type modalvm:AskServerInstanceInstallingViewModel}">
+        <modalviews:AskServerInstanceInstallingView />
+    </DataTemplate>
+
+
+    <!--  Welcome  -->
+    <DataTemplate DataType="{x:Type viewmodels:WelcomeViewModel}">
+        <pages:WelcomeView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type viewmodels:WelcomePageThemeSelectViewModel}">
+        <pages:WelcomePageThemeSelectView />
+    </DataTemplate>
+
+
+    <!--    -->
+    <!--  Server Profile  -->
+    <!--    -->
+
+    <DataTemplate DataType="{x:Type serverprofile:ServerProfileLayoutViewModel}">
+        <serverprofileview:ServerProfileLayoutView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type serverprofile:ServerProfileLeftPanelViewModel}">
+        <serverprofileview:ServerProfileLeftPanelView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type serverprofile:ServerProfileOverviewLayoutViewModel}">
+        <serverprofileview:ServerProfileOverviewLayoutView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type serverprofile:ServerProfileOverviewViewModel}">
+        <serverprofileview:ServerProfileOverviewView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type serverprofile:ServerProfileOverviewGalleryViewModel}">
+        <serverprofileview:InstanceProfileOverviewGalleryView />
+    </DataTemplate>
+</ResourceDictionary>

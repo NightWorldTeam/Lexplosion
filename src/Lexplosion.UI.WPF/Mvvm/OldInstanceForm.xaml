@@ -1,0 +1,1135 @@
+﻿<UserControl
+    x:Class="Lexplosion.UI.WPF.Controls.OldInstanceForm.OldInstanceForm"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Lexplosion.UI.WPF.Controls"
+    xmlns:converters="clr-namespace:Lexplosion.UI.WPF.Core.Converters"
+    xmlns:core="clr-namespace:Lexplosion.UI.WPF.Core"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="clr-namespace:Lexplosion.UI.WPF.Extensions"
+    xmlns:instancemodel="clr-namespace:Lexplosion.UI.WPF.Mvvm.Models.Mvvm.InstanceModel"
+    xmlns:lexplosion="clr-namespace:Lexplosion;assembly=Lexplosion.Core"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:objects="clr-namespace:Lexplosion.Logic.Objects;assembly=Lexplosion.Core"
+    d:DataContext="{d:DesignInstance Type=instancemodel:InstanceModelBase}"
+    d:DesignHeight="120"
+    d:DesignWidth="597"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <ControlTemplate x:Key="DropDownButton" TargetType="{x:Type controls:AdvancedButton}">
+            <Border
+                x:Name="border"
+                Margin="1"
+                Padding="5,2,5,2"
+                Background="Transparent"
+                CornerRadius="5">
+
+                <Grid Margin="5,3,5,3" ShowGridLines="False">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="30" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Border
+                        Padding="2"
+                        Background="Transparent"
+                        CornerRadius="5">
+                        <Viewbox Width="20" Height="20">
+                            <Path
+                                x:Name="Path"
+                                HorizontalAlignment="Center"
+                                extensions:PathExtensions.StringData="{TemplateBinding IconData}"
+                                Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                Stretch="Fill" />
+                        </Viewbox>
+                    </Border>
+
+                    <TextBlock
+                        x:Name="TextBlock"
+                        Grid.Column="1"
+                        Margin="7,0,5,0"
+                        FontSize="12pt"
+                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                        Text="{TemplateBinding Text}"
+                        TextAlignment="Justify" />
+                </Grid>
+            </Border>
+
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter TargetName="border" Property="Background">
+                        <Setter.Value>
+                            <SolidColorBrush Opacity="0.1" Color="{DynamicResource ActivityColor}" />
+                        </Setter.Value>
+                    </Setter>
+                    <Setter TargetName="TextBlock" Property="TextElement.Foreground" Value="{DynamicResource ActivitySolidColorBrush}" />
+
+                    <Setter TargetName="Path" Property="Fill" Value="{DynamicResource ActivitySolidColorBrush}" />
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+    </UserControl.Resources>
+
+    <Grid>
+        <Border
+            Width="597"
+            Height="120"
+            MaxWidth="597"
+            HorizontalAlignment="Stretch"
+            Background="{DynamicResource InstanceFormSolidColorBrush}"
+            BorderBrush="{DynamicResource InstanceFormBorderSolidColorBrush}"
+            BorderThickness="1"
+            CornerRadius="5">
+
+            <Grid HorizontalAlignment="Stretch" ShowGridLines="False">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="120" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="60" />
+                </Grid.ColumnDefinitions>
+
+                <!--  Left Block  -->
+                <Grid x:Name="PART_LogoBlock" MouseDown="PART_LogoBlock_MouseDown">
+                    <!--  Avatar  -->
+                    <!--  Circle loader here>???  -->
+                    <Border
+                        x:Name="PART_Logo"
+                        Background="{Binding Logo, Converter={converters:ImageSourceNullValidateConverter}}"
+                        CornerRadius="5" />
+
+                    <core:If Condition="{Binding IsShareDownloading}">
+                        <core:If.True>
+                            <controls:CircleLoader
+                                Width="32"
+                                Height="32"
+                                Padding="0"
+                                BlurTarget="{Binding Source={x:Reference PART_Logo}}"
+                                IsActive="{Binding IsShareDownloading}" />
+                        </core:If.True>
+                    </core:If>
+
+                    <core:If Condition="{Binding IsImporting}">
+                        <core:If.True>
+                            <controls:CircleLoader
+                                Width="32"
+                                Height="32"
+                                Padding="0"
+                                BlurTarget="{Binding Source={x:Reference PART_Logo}}"
+                                IsActive="{Binding IsImporting}" />
+                        </core:If.True>
+                    </core:If>
+
+                    <!--  More Button  -->
+                    <Grid Cursor="Hand" Opacity="0">
+                        <Border CornerRadius="5">
+                            <Border.Background>
+                                <SolidColorBrush Opacity="0.5" Color="Black" />
+                            </Border.Background>
+                            <Border.Effect>
+                                <BlurEffect Radius="0" />
+                            </Border.Effect>
+                        </Border>
+
+
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontSize="22"
+                            FontWeight="Bold"
+                            Foreground="{DynamicResource CheckBoxMarkSolidColorBrush}"
+                            Text="{DynamicResource More}" />
+
+                        <Grid.Style>
+                            <Style TargetType="{x:Type Grid}">
+                                <Style.Triggers>
+
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType={x:Type Grid}}}" Value="True" />
+                                            <Condition Binding="{Binding IsInstanceCompleted}" Value="True" />
+                                        </MultiDataTrigger.Conditions>
+
+                                        <MultiDataTrigger.EnterActions>
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <DoubleAnimation
+                                                        Storyboard.TargetProperty="Opacity"
+                                                        To="1"
+                                                        Duration="0:0:0.35" />
+
+                                                    <DoubleAnimation
+                                                        Storyboard.TargetProperty="Opacity"
+                                                        To="1"
+                                                        Duration="0:0:0.35" />
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </MultiDataTrigger.EnterActions>
+                                        <MultiDataTrigger.ExitActions>
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <DoubleAnimation
+                                                        Storyboard.TargetProperty="Opacity"
+                                                        To="0"
+                                                        Duration="0:0:0.35" />
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </MultiDataTrigger.ExitActions>
+                                    </MultiDataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Grid.Style>
+                    </Grid>
+
+                    <!--  Modloader Icon  -->
+                    <Border
+                        x:Name="ModloaderIcon"
+                        Width="20"
+                        Height="20"
+                        Margin="6"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
+                        Background="Transparent"
+                        CornerRadius="0,5,0,5" />
+
+                    <!--  Modloader Icon  -->
+                    <Border
+                        Padding="4"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Bottom"
+                        CornerRadius="0,5,0,5"
+                        Visibility="{Binding HasTotalDownloads, Converter={converters:BooleanToVisibilityConverter}}">
+
+                        <Border.Background>
+                            <SolidColorBrush Opacity="0.6" Color="Black" />
+                        </Border.Background>
+
+                        <StackPanel Orientation="Horizontal">
+                            <Viewbox
+                                Width="10"
+                                Height="10"
+                                Margin="0,0,4,0">
+
+                                <Path
+                                    extensions:PathExtensions.StringKeyData="Download"
+                                    Fill="White"
+                                    Stretch="Fill" />
+                            </Viewbox>
+
+                            <TextBlock
+                                x:Name="DownloadCountIcon"
+                                Background="Transparent"
+                                FontWeight="Medium"
+                                Foreground="White"
+                                Text="{Binding TotalDownloads}" />
+                        </StackPanel>
+                    </Border>
+
+                    <!--  Update Button  -->
+                    <core:If Condition="{Binding InstanceClient.UpdateAvailable}">
+                        <core:If.True>
+                            <Border
+                                x:Name="UpdateIndicator"
+                                Width="28"
+                                Height="28"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Bottom"
+                                CornerRadius="5,0,0,0"
+                                ToolTip="{DynamicResource UpdateAvailable}"
+                                ToolTipService.PlacementRectangle="115,13,0,0">
+
+                                <Border.Background>
+                                    <SolidColorBrush Opacity="0.5" Color="Black" />
+                                </Border.Background>
+
+                                <Viewbox Width="22" Height="22">
+                                    <Path
+                                        Data="M 24.15 42 q -3.75 0 -7.05 -1.425 T 11.325 36.7 q -2.475 -2.45 -3.9 -5.75 Q 6 27.65 6 23.9 t 1.425 -7 q 1.425 -3.25 3.9 -5.675 Q 13.8 8.8 17.1 7.4 Q 20.4 6 24.15 6 q 4 0 7.575 1.75 t 6.175 4.8 v -5.3 h 3 v 10.4 H 30.45 v -3 h 5.25 q -2.2 -2.55 -5.175 -4.1 Q 27.55 9 24.15 9 q -6.25 0 -10.7 4.275 Q 9 17.55 9 23.75 q 0 6.35 4.4 10.8 Q 17.8 39 24.15 39 q 6.25 0 10.55 -4.4 Q 39 30.2 39 23.95 h 3 q 0 7.5 -5.2 12.775 T 24.15 42 Z m 6.1 -9.85 l -7.7 -7.6 v -10.7 h 3 v 9.45 L 32.4 30 Z"
+                                        Fill="{DynamicResource CheckBoxMarkSolidColorBrush}"
+                                        Stretch="Fill" />
+                                </Viewbox>
+                            </Border>
+                        </core:If.True>
+                    </core:If>
+                </Grid>
+
+                <!--  Center Block  -->
+                <Grid
+                    Grid.Column="1"
+                    Margin="8,0"
+                    ShowGridLines="False">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+
+                    <!--  Name and Author  -->
+                    <Grid Margin="0,0,0,2">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <!--  Name  -->
+                        <TextBlock
+                            Margin="0,4,0,0"
+                            FontSize="20"
+                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                            Text="{Binding Name}"
+                            TextTrimming="CharacterEllipsis" />
+
+                        <!--  Author  -->
+                        <TextBlock
+                            Grid.Column="1"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                            Text="{Binding Author, StringFormat='by {0}'}" />
+                    </Grid>
+
+
+                    <Grid Grid.Row="1" ShowGridLines="False">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" MinHeight="26" />
+                            <RowDefinition Height="4*" />
+                        </Grid.RowDefinitions>
+
+                        <!--  Description  -->
+                        <TextBlock
+                            Margin="0,0,0,4"
+                            Background="Transparent"
+                            FontSize="16"
+                            Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                            TextTrimming="WordEllipsis"
+                            TextWrapping="WrapWithOverflow">
+                            <TextBlock.Style>
+                                <Style TargetType="{x:Type TextBlock}">
+
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding AnyProcessActive}" Value="False">
+                                            <Setter Property="Text" Value="{Binding Summary}" />
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+
+                                        <!--  Подготовка к скачиванию  -->
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding State}" Value="{x:Static lexplosion:StateType.DownloadPrepare}" />
+                                            </MultiDataTrigger.Conditions>
+
+                                            <MultiDataTrigger.Setters>
+                                                <Setter Property="Text" Value="{DynamicResource DownloadPreparing}" />
+                                                <Setter Property="Visibility" Value="Visible" />
+                                            </MultiDataTrigger.Setters>
+                                        </MultiDataTrigger>
+
+                                        <!--  Скачивание игры  -->
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding State}" Value="{x:Static lexplosion:StateType.DownloadClient}" />
+                                            </MultiDataTrigger.Conditions>
+
+                                            <MultiDataTrigger.Setters>
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                            </MultiDataTrigger.Setters>
+                                        </MultiDataTrigger>
+
+                                        <!--  Скачивание Java  -->
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding IsDownloading}" Value="True" />
+                                                <Condition Binding="{Binding State}" Value="{x:Static lexplosion:StateType.DownloadJava}" />
+                                            </MultiDataTrigger.Conditions>
+
+                                            <MultiDataTrigger.Setters>
+                                                <Setter Property="Text" Value="{DynamicResource JavaInstalling}" />
+                                                <Setter Property="Visibility" Value="Visible" />
+                                            </MultiDataTrigger.Setters>
+                                        </MultiDataTrigger>
+
+                                        <!--  Проверка целостности игровых файлов  -->
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding IsLaunching}" Value="True" />
+                                                <Condition Binding="{Binding State}" Value="{x:Static lexplosion:StateType.DownloadPrepare}" />
+                                            </MultiDataTrigger.Conditions>
+
+                                            <MultiDataTrigger.Setters>
+                                                <Setter Property="Text" Value="{DynamicResource VerifyIntegrityGameFiles}" />
+                                                <Setter Property="Visibility" Value="Visible" />
+                                            </MultiDataTrigger.Setters>
+                                        </MultiDataTrigger>
+
+                                        <!--  Запуск игры  -->
+                                        <DataTrigger Binding="{Binding State}" Value="{x:Static lexplosion:StateType.Launching}">
+                                            <DataTrigger.Setters>
+                                                <Setter Property="Text" Value="{DynamicResource GameLaunching}" />
+                                                <Setter Property="Visibility" Value="Visible" />
+                                            </DataTrigger.Setters>
+                                        </DataTrigger>
+
+                                        <!--  Download Cancelling  -->
+                                        <DataTrigger Binding="{Binding State}" Value="{x:Static lexplosion:StateType.DownloadInCancellation}">
+                                            <Setter Property="Text" Value="{DynamicResource DownloadCanceling}" />
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+
+                                        <DataTrigger Binding="{Binding IsInstanceCompleted}" Value="False">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                        </DataTrigger>
+
+                                        <!--  Import prepare  -->
+                                        <MultiDataTrigger>
+
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding IsImporting, Mode=OneWay}" Value="True" />
+                                                <Condition Binding="{Binding State, Mode=OneWay}" Value="{x:Static lexplosion:StateType.DownloadPrepare}" />
+                                            </MultiDataTrigger.Conditions>
+
+                                            <Setter Property="Visibility" Value="Visible" />
+                                            <Setter Property="Text" Value="{DynamicResource DownloadPreparing}" />
+                                        </MultiDataTrigger>
+
+                                        <!--  Import Downloading  -->
+                                        <MultiDataTrigger>
+
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding IsImporting, Mode=OneWay}" Value="True" />
+                                                <Condition Binding="{Binding State, Mode=OneWay}" Value="{x:Static lexplosion:StateType.DownloadClient}" />
+                                            </MultiDataTrigger.Conditions>
+
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                        </MultiDataTrigger>
+
+                                        <MultiDataTrigger>
+
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding IsShareDownloading, Mode=OneWay}" Value="True" />
+                                                <Condition Binding="{Binding State, Mode=OneWay}" Value="{x:Static lexplosion:StateType.DownloadClient}" />
+                                            </MultiDataTrigger.Conditions>
+
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                        </MultiDataTrigger>
+
+                                        <DataTrigger Binding="{Binding State}" Value="{x:Static lexplosion:StateType.InConnect}">
+                                            <Setter Property="Text" Value="{DynamicResource InConnect}" />
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding State}" Value="{x:Static lexplosion:StateType.InQueue}">
+                                            <Setter Property="Text" Value="{DynamicResource InQueue}" />
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding State}" Value="{x:Static lexplosion:StateType.PostProcessing}">
+                                            <Setter Property="Text" Value="{DynamicResource PostProcessing}" />
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+
+                        <!--  Downloading Message  -->
+                        <TextBlock
+                            Margin="0,0,0,4"
+                            Background="Transparent"
+                            FontSize="16"
+                            Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                            TextTrimming="WordEllipsis"
+                            TextWrapping="WrapWithOverflow">
+
+                            <Run Text="{DynamicResource InstanceDownloading}" />
+                            <Run Text="" />
+                            <Run Text="{DynamicResource Stage}" />
+                            <Run>
+                                <Run.Text>
+                                    <MultiBinding StringFormat="{}{0}/{1}">
+                                        <Binding Path="DownloadingData.CurrentStage" />
+                                        <Binding Path="DownloadingData.TotalStages" />
+                                    </MultiBinding>
+                                </Run.Text>
+                            </Run>
+
+                            <TextBlock.Style>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                    <Style.Triggers>
+
+                                        <!--  Downloading  -->
+                                        <MultiDataTrigger>
+
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding IsShareDownloading, Mode=OneWay}" Value="False" />
+                                                <Condition Binding="{Binding State, Mode=OneWay}" Value="{x:Static lexplosion:StateType.DownloadClient}" />
+                                            </MultiDataTrigger.Conditions>
+
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </MultiDataTrigger>
+
+                                        <!--  Import Downloading  -->
+                                        <MultiDataTrigger>
+
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding IsImporting, Mode=OneWay}" Value="True" />
+                                                <Condition Binding="{Binding IsShareDownloading, Mode=OneWay}" Value="False" />
+                                                <Condition Binding="{Binding State, Mode=OneWay}" Value="{x:Static lexplosion:StateType.DownloadClient}" />
+                                            </MultiDataTrigger.Conditions>
+
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </MultiDataTrigger>
+
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+
+                        </TextBlock>
+
+                        <!--  Download Share Message  -->
+                        <core:If Margin="0,0,0,4" Condition="{Binding IsShareDownloading}">
+                            <core:If.True>
+                                <TextBlock
+                                    Background="Transparent"
+                                    FontSize="16"
+                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                    TextTrimming="WordEllipsis"
+                                    TextWrapping="WrapWithOverflow">
+                                    <Run Text="{DynamicResource Completed}" />
+                                    <Run Text="{Binding InstanceDistribution.Percentages, Mode=OneWay, StringFormat='{}{0}%'}" />
+                                    <TextBlock.Style>
+                                        <Style TargetType="{x:Type TextBlock}">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                            <Style.Triggers>
+
+                                                <MultiDataTrigger>
+                                                    <MultiDataTrigger.Conditions>
+                                                        <Condition Binding="{Binding IsShareDownloading, Mode=OneWay}" Value="True" />
+                                                        <Condition Binding="{Binding State, Mode=OneWay}" Value="{x:Static lexplosion:StateType.DownloadClient}" />
+                                                    </MultiDataTrigger.Conditions>
+
+                                                    <MultiDataTrigger.Setters>
+                                                        <Setter Property="Visibility" Value="Visible" />
+                                                    </MultiDataTrigger.Setters>
+                                                </MultiDataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </core:If.True>
+                        </core:If>
+
+                        <!--  Tags  -->
+                        <ItemsControl
+                            x:Name="PART_TagsPanel"
+                            Grid.Row="1"
+                            Margin="0,0,1,8"
+                            ItemsSource="{Binding Tags}">
+
+                            <ItemsControl.Style>
+                                <Style TargetType="{x:Type ItemsControl}">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding State}" Value="{x:Static lexplosion:StateType.Default}">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding State}" Value="{x:Static lexplosion:StateType.GameRunning}">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ItemsControl.Style>
+
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="{x:Type objects:CategoryBase}">
+                                    <!--  В будущем кнопки наверное  -->
+                                    <Border
+                                        Margin="0,2,3,0"
+                                        Padding="8,2"
+                                        Background="{DynamicResource InstanceFormTagSolidColorBrush}"
+                                        CornerRadius="5">
+                                        <TextBlock
+                                            FontSize="14"
+                                            Foreground="{DynamicResource InstanceFormTagForegroundSolidColorBrush}"
+                                            Text="{Binding Name}" />
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                            <!--  Tags ItemsPanel  -->
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel IsItemsHost="True" Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+
+                        <!--  Download Files Info  -->
+                        <TextBlock
+                            Grid.Row="2"
+                            Margin="0,0,4,8"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom"
+                            FontSize="14"
+                            Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}">
+
+                            <Run Text="{DynamicResource Downloaded}" />
+                            <Run>
+                                <Run.Text>
+                                    <MultiBinding StringFormat="{}{0}/{1}">
+                                        <Binding Path="DownloadingData.FilesCounts" />
+                                        <Binding Path="DownloadingData.TotalFiles" />
+                                    </MultiBinding>
+                                </Run.Text>
+                            </Run>
+                            <Run Text="{DynamicResource Files_LowerCase}" />
+
+                            <TextBlock.Style>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+
+                                    <Style.Triggers>
+
+                                        <DataTrigger Binding="{Binding State}" Value="{x:Static lexplosion:StateType.DownloadJava}">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+
+                                        <!--  Скачивание  -->
+                                        <MultiDataTrigger>
+
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding IsShareDownloading, Mode=OneWay}" Value="False" />
+                                                <Condition Binding="{Binding State}" Value="{x:Static lexplosion:StateType.DownloadClient}" />
+                                            </MultiDataTrigger.Conditions>
+
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </MultiDataTrigger>
+
+                                        <!--  Import  -->
+                                        <MultiDataTrigger>
+
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding IsImporting, Mode=OneWay}" Value="True" />
+                                                <Condition Binding="{Binding IsShareDownloading, Mode=OneWay}" Value="False" />
+                                                <Condition Binding="{Binding State, Mode=OneWay}" Value="{x:Static lexplosion:StateType.DownloadClient}" />
+                                            </MultiDataTrigger.Conditions>
+
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </MultiDataTrigger>
+
+                                    </Style.Triggers>
+
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+
+                        <!--  Download Import Speed  -->
+                        <core:If
+                            Grid.Row="2"
+                            Margin="0,0,4,8"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom"
+                            Condition="{Binding IsShareDownloading}">
+                            <core:If.True>
+                                <TextBlock FontSize="14" Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}">
+                                    <Run Text="{Binding InstanceDistribution.Speed, Mode=OneWay}" />
+                                    <Run Text="{DynamicResource MbitPerS}" />
+                                </TextBlock>
+                            </core:If.True>
+
+                        </core:If>
+
+                        <ProgressBar
+                            Grid.Row="1"
+                            Height="5"
+                            VerticalAlignment="Bottom">
+                            <ProgressBar.Style>
+                                <Style BasedOn="{StaticResource {x:Type ProgressBar}}" TargetType="{x:Type ProgressBar}">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                    <Setter Property="IsIndeterminate" Value="False" />
+                                    <Setter Property="Value" Value="{Binding DownloadingData.Percentages}" />
+                                    <Style.Triggers>
+
+                                        <!--    -->
+                                        <DataTrigger Binding="{Binding State}" Value="{x:Static lexplosion:StateType.DownloadPrepare}">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                            <Setter Property="IsIndeterminate" Value="True" />
+                                        </DataTrigger>
+
+                                        <DataTrigger Binding="{Binding State}" Value="{x:Static lexplosion:StateType.DownloadJava}">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+
+                                        <DataTrigger Binding="{Binding State}" Value="{x:Static lexplosion:StateType.DownloadClient}">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+
+                                        <!--  Запуск  -->
+                                        <DataTrigger Binding="{Binding State}" Value="{x:Static lexplosion:StateType.Launching}">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                            <Setter Property="IsIndeterminate" Value="True" />
+                                        </DataTrigger>
+
+                                        <!--  Отмена скачивания  -->
+                                        <DataTrigger Binding="{Binding State}" Value="{x:Static lexplosion:StateType.DownloadInCancellation}">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                            <Setter Property="IsIndeterminate" Value="True" />
+                                        </DataTrigger>
+
+                                        <!--  Скачивание раздачи  -->
+                                        <DataTrigger Binding="{Binding IsShareDownloading}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                            <Setter Property="Value" Value="{Binding InstanceDistribution.Percentages, Mode=OneWay}" />
+                                            <Setter Property="IsIndeterminate" Value="False" />
+                                        </DataTrigger>
+
+                                        <!--  Import prepare  -->
+                                        <MultiDataTrigger>
+
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding IsImporting, Mode=OneWay}" Value="True" />
+                                                <Condition Binding="{Binding State, Mode=OneWay}" Value="{x:Static lexplosion:StateType.DownloadPrepare}" />
+                                            </MultiDataTrigger.Conditions>
+
+                                            <Setter Property="Visibility" Value="Visible" />
+                                            <Setter Property="IsIndeterminate" Value="True" />
+                                        </MultiDataTrigger>
+
+
+                                        <!--  Import Downloading  -->
+                                        <MultiDataTrigger>
+
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding IsImporting, Mode=OneWay}" Value="True" />
+                                                <Condition Binding="{Binding State, Mode=OneWay}" Value="{x:Static lexplosion:StateType.DownloadClient}" />
+                                            </MultiDataTrigger.Conditions>
+
+                                            <Setter Property="Visibility" Value="Visible" />
+                                            <Setter Property="Value" Value="{Binding DownloadingData.Percentages, Mode=OneWay}" />
+                                            <Setter Property="IsIndeterminate" Value="False" />
+                                        </MultiDataTrigger>
+
+                                        <DataTrigger Binding="{Binding State}" Value="{x:Static lexplosion:StateType.InConnect}">
+                                            <Setter Property="IsIndeterminate" Value="True" />
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+
+                                        <DataTrigger Binding="{Binding State}" Value="{x:Static lexplosion:StateType.InQueue}">
+                                            <Setter Property="IsIndeterminate" Value="True" />
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+
+                                        <DataTrigger Binding="{Binding State}" Value="{x:Static lexplosion:StateType.PostProcessing}">
+                                            <Setter Property="IsIndeterminate" Value="True" />
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+
+                                        <!--  Share Downloading  -->
+                                        <MultiDataTrigger>
+
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding IsShareDownloading, Mode=OneWay}" Value="True" />
+                                                <Condition Binding="{Binding State, Mode=OneWay}" Value="{x:Static lexplosion:StateType.DownloadClient}" />
+                                            </MultiDataTrigger.Conditions>
+
+                                            <Setter Property="Visibility" Value="Visible" />
+                                            <Setter Property="Value" Value="{Binding InstanceDistribution.Percentages, Mode=OneWay}" />
+                                            <Setter Property="IsIndeterminate" Value="False" />
+                                        </MultiDataTrigger>
+                                    </Style.Triggers>
+
+                                </Style>
+                            </ProgressBar.Style>
+                        </ProgressBar>
+                    </Grid>
+                </Grid>
+
+                <!--  Right Block - Buttons  -->
+                <Grid Grid.Column="2" ShowGridLines="False">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <Button x:Name="PART_MainActionButton" Click="PART_MainActionButton_Click">
+                        <Button.Style>
+                            <Style TargetType="{x:Type Button}">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type Button}">
+                                            <Grid>
+                                                <Border
+                                                    x:Name="ActivityColorBorder"
+                                                    Background="Transparent"
+                                                    CornerRadius="0,5,0,0" />
+
+
+                                                <Viewbox Height="{TemplateBinding FontSize}">
+                                                    <Path
+                                                        x:Name="Icon"
+                                                        Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                                        Stretch="Fill" />
+                                                </Viewbox>
+                                                <!--  Percentages  -->
+                                                <TextBlock
+                                                    x:Name="Percentage"
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center"
+                                                    FontSize="18"
+                                                    FontWeight="SemiBold"
+                                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                                    Text="{Binding DownloadingData.Percentages, Mode=OneWay, StringFormat='{}{0}%'}"
+                                                    Visibility="Collapsed" />
+
+                                            </Grid>
+
+                                            <ControlTemplate.Triggers>
+
+                                                <!--  MouseOver  -->
+                                                <MultiTrigger>
+
+                                                    <MultiTrigger.Conditions>
+                                                        <Condition Property="IsMouseOver" Value="True" />
+                                                        <Condition Property="IsEnabled" Value="True" />
+                                                    </MultiTrigger.Conditions>
+
+                                                    <Setter Property="Cursor" Value="Hand" />
+                                                    <Setter TargetName="ActivityColorBorder" Property="Background" Value="{DynamicResource ActivitySolidColorBrush}" />
+                                                    <Setter TargetName="Icon" Property="Fill" Value="{DynamicResource BrandColorForegroundSolidColorBrush}" />
+                                                    <Setter TargetName="Percentage" Property="Foreground" Value="{DynamicResource BrandColorForegroundSolidColorBrush}" />
+                                                </MultiTrigger>
+
+                                                <!--  Default Not Installed  -->
+                                                <MultiDataTrigger>
+                                                    <MultiDataTrigger.Conditions>
+                                                        <Condition Binding="{Binding State}" Value="{x:Static lexplosion:StateType.Default}" />
+                                                        <Condition Binding="{Binding IsInstalled}" Value="False" />
+                                                    </MultiDataTrigger.Conditions>
+                                                    <Setter TargetName="Icon" Property="extensions:PathExtensions.StringKeyData" Value="Download" />
+                                                    <Setter Property="FontSize" Value="20" />
+                                                    <Setter TargetName="Icon" Property="Visibility" Value="Visible" />
+                                                </MultiDataTrigger>
+
+                                                <!--  Default Installed  -->
+                                                <MultiDataTrigger>
+                                                    <MultiDataTrigger.Conditions>
+                                                        <Condition Binding="{Binding State}" Value="{x:Static lexplosion:StateType.Default}" />
+                                                        <Condition Binding="{Binding InstanceClient.IsInstalled}" Value="True" />
+                                                    </MultiDataTrigger.Conditions>
+                                                    <Setter TargetName="Icon" Property="extensions:PathExtensions.StringKeyData" Value="Play" />
+                                                    <Setter Property="FontSize" Value="22" />
+                                                    <Setter TargetName="Icon" Property="Visibility" Value="Visible" />
+                                                </MultiDataTrigger>
+
+                                                <!--  Prepare  -->
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static lexplosion:StateType.DownloadPrepare}">
+                                                    <Setter TargetName="Icon" Property="Visibility" Value="Collapsed" />
+                                                    <Setter TargetName="Percentage" Property="Text" Value="0%" />
+                                                    <Setter TargetName="Percentage" Property="Visibility" Value="Visible" />
+                                                    <!--  TODO: Вынести в отдельный цвет  -->
+                                                    <Setter TargetName="Percentage" Property="Foreground" Value="Gray" />
+                                                </DataTrigger>
+
+                                                <!--  Java Downloading  -->
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static lexplosion:StateType.DownloadJava}">
+                                                    <Setter TargetName="Percentage" Property="Visibility" Value="Visible" />
+                                                    <Setter TargetName="Percentage" Property="Foreground" Value="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                                </DataTrigger>
+
+                                                <!--  Client  -->
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static lexplosion:StateType.DownloadClient}">
+                                                    <Setter TargetName="Percentage" Property="Visibility" Value="Visible" />
+                                                    <Setter TargetName="Percentage" Property="Foreground" Value="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                                </DataTrigger>
+
+                                                <!--  Download Cancelling  -->
+                                                <DataTrigger Binding="{Binding DownloadCancelling}" Value="True">
+                                                    <Setter TargetName="Icon" Property="Visibility" Value="Collapsed" />
+                                                    <Setter TargetName="Percentage" Property="Visibility" Value="Collapsed" />
+                                                    <Setter Property="IsEnabled" Value="False" />
+                                                </DataTrigger>
+
+                                                <!--  Подготовка к скачиванию  -->
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static lexplosion:StateType.Launching}">
+                                                    <Setter TargetName="Icon" Property="extensions:PathExtensions.StringKeyData" Value="Cancel" />
+                                                    <Setter Property="FontSize" Value="20" />
+                                                </DataTrigger>
+
+                                                <DataTrigger Binding="{Binding IsShareDownloading}" Value="True">
+                                                    <Setter TargetName="Icon" Property="Visibility" Value="Collapsed" />
+                                                    <Setter TargetName="Percentage" Property="Visibility" Value="Collapsed" />
+                                                    <Setter TargetName="Percentage" Property="Text" Value="{Binding InstanceDistribution.Percentages, Mode=OneWay, StringFormat='{}{0}%'}" />
+                                                    <Setter Property="IsEnabled" Value="False" />
+                                                </DataTrigger>
+
+                                                <!--    -->
+                                                <DataTrigger Binding="{Binding IsLaunched}" Value="True">
+                                                    <Setter TargetName="Icon" Property="extensions:PathExtensions.StringKeyData" Value="Cancel" />
+                                                    <Setter Property="FontSize" Value="20" />
+                                                </DataTrigger>
+
+                                                <!--  Import prepare  -->
+                                                <MultiDataTrigger>
+
+                                                    <MultiDataTrigger.Conditions>
+                                                        <Condition Binding="{Binding IsImporting, Mode=OneWay}" Value="True" />
+                                                        <Condition Binding="{Binding State, Mode=OneWay}" Value="{x:Static lexplosion:StateType.DownloadPrepare}" />
+                                                    </MultiDataTrigger.Conditions>
+
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                </MultiDataTrigger>
+
+
+                                                <!--  Import Downloading  -->
+                                                <MultiDataTrigger>
+
+                                                    <MultiDataTrigger.Conditions>
+                                                        <Condition Binding="{Binding IsImporting, Mode=OneWay}" Value="True" />
+                                                        <Condition Binding="{Binding State, Mode=OneWay}" Value="{x:Static lexplosion:StateType.DownloadClient}" />
+                                                    </MultiDataTrigger.Conditions>
+
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                    <Setter TargetName="Percentage" Property="Visibility" Value="Visible" />
+                                                </MultiDataTrigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Button.Style>
+
+                    </Button>
+
+                    <controls:DropdownMenu
+                        x:Name="PART_DropDownMenu"
+                        Grid.Row="1"
+                        Background="{DynamicResource PrimarySolidColorBrush}"
+                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                        BorderThickness="1"
+                        KeyDown="PART_DropDownMenu_KeyDown"
+                        Visibility="{Binding IsInstanceCompleted, Converter={converters:BooleanToVisibilityConverter}}">
+                        <StackPanel>
+
+                            <core:If Condition="{Binding IsDownloading}">
+                                <core:If.True>
+
+                                    <!--  Отмена скачивания  -->
+                                    <controls:AdvancedButton
+                                        x:Name="CancelDownloadButton"
+                                        Click="CancelDownloadButton_Click"
+                                        IconData="{DynamicResource PDCancel}"
+                                        Template="{StaticResource DropDownButton}"
+                                        Text="{DynamicResource CancelDownload}" />
+
+                                </core:If.True>
+                            </core:If>
+                            <core:If Condition="{Binding IsLocal}">
+                                <core:If.False>
+
+                                    <!--  Посетить сайт  -->
+                                    <controls:AdvancedButton
+                                        x:Name="VisitWebsiteButton"
+                                        Click="VisitWebsiteButton_Click"
+                                        Template="{StaticResource DropDownButton}" />
+
+                                </core:If.False>
+                            </core:If>
+
+                            <core:If Condition="{Binding InLibrary}">
+                                <core:If.True>
+                                    <StackPanel>
+
+                                        <!--  Открыть папку  -->
+                                        <controls:AdvancedButton
+                                            x:Name="OpenFolderButton"
+                                            Click="OpenFolderButton_Click"
+                                            IconData="{DynamicResource PDFolder}"
+                                            Template="{StaticResource DropDownButton}"
+                                            Text="{DynamicResource OpenFolder}" />
+
+                                        <!--  Дополнения  -->
+                                        <controls:AdvancedButton
+                                            x:Name="OpenAddonManagerButton"
+                                            Click="OpenAddonManagerButton_Click"
+                                            IconData="{DynamicResource PDAddons}"
+                                            Template="{StaticResource DropDownButton}"
+                                            Text="{DynamicResource Addons}" />
+
+                                        <core:If Condition="{Binding IsInstalled}">
+                                            <core:If.Style>
+                                                <Style TargetType="{x:Type core:If}">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding State}" Value="{x:Static lexplosion:StateType.Default}">
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </core:If.Style>
+
+                                            <core:If.True>
+                                                <StackPanel>
+                                                    <!--  Скопировать  -->
+                                                    <controls:AdvancedButton
+                                                        x:Name="CopyButton"
+                                                        Click="CopyButton_Click"
+                                                        IconData="{DynamicResource PDCopy}"
+                                                        Template="{StaticResource DropDownButton}"
+                                                        Text="{DynamicResource Copy}" />
+
+                                                    <!--  Экспорт  -->
+                                                    <controls:AdvancedButton
+                                                        x:Name="ExportButton"
+                                                        Click="ExportButton_Click"
+                                                        IconData="{DynamicResource PDExport}"
+                                                        Template="{StaticResource DropDownButton}"
+                                                        Text="{DynamicResource Export}" />
+                                                </StackPanel>
+                                            </core:If.True>
+                                        </core:If>
+
+                                        <core:If Condition="{Binding InstanceClient.UpdateAvailable}">
+                                            <core:If.Style>
+                                                <Style TargetType="{x:Type core:If}">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding State}" Value="{x:Static lexplosion:StateType.Default}">
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </core:If.Style>
+
+                                            <core:If.True>
+                                                <!--  Обновить  -->
+                                                <controls:AdvancedButton
+                                                    x:Name="UpdateButton"
+                                                    Click="UpdateButton_Click"
+                                                    IconData="{DynamicResource PDUpdate}"
+                                                    Template="{StaticResource DropDownButton}"
+                                                    Text="{DynamicResource Update}" />
+                                            </core:If.True>
+                                        </core:If>
+
+                                        <core:If Condition="{Binding IsSelectedGroupDefault}">
+                                            <core:If.True>
+                                                <core:If Condition="{Binding AvailableGroupsForAdding}">
+                                                    <core:If.True>
+                                                        <!--  Удалить из группы  -->
+                                                        <controls:AdvancedButton
+                                                            x:Name="AddToGroup"
+                                                            Click="AddToGroup_Click"
+                                                            IconData="{DynamicResource PDAddToList}"
+                                                            Template="{StaticResource DropDownButton}"
+                                                            Text="{DynamicResource AddToGroup}" />
+                                                    </core:If.True>
+                                                </core:If>
+                                            </core:If.True>
+                                            <core:If.False>
+                                                <!--  Удалить из группы  -->
+                                                <controls:AdvancedButton
+                                                    x:Name="RemoveFromGroup"
+                                                    Click="RemoveFromGroup_Click"
+                                                    IconData="{DynamicResource PDRemoveFromLibrary}"
+                                                    Template="{StaticResource DropDownButton}"
+                                                    Text="{DynamicResource RemoveFromGroup}" />
+                                            </core:If.False>
+                                        </core:If>
+
+
+                                        <core:If Condition="{Binding IsInstalled}">
+
+                                            <core:If.True>
+                                                <!--  Удалить  -->
+                                                <controls:AdvancedButton
+                                                    x:Name="DeleteButton"
+                                                    Click="DeleteButton_Click"
+                                                    IconData="{DynamicResource PDDelete}"
+                                                    Template="{StaticResource DropDownButton}"
+                                                    Text="{DynamicResource DeleteInstance}" />
+                                            </core:If.True>
+                                            <core:If.False>
+
+                                                <!--  Удалить из библиотеки  -->
+                                                <controls:AdvancedButton
+                                                    x:Name="DeleteFromLibraryButton"
+                                                    Click="DeleteFromLibraryButton_Click"
+                                                    IconData="{DynamicResource PDDelete}"
+                                                    Template="{StaticResource DropDownButton}"
+                                                    Text="{DynamicResource RemoveFromLibrary}" />
+
+                                            </core:If.False>
+                                        </core:If>
+                                    </StackPanel>
+                                </core:If.True>
+                                <core:If.False>
+
+                                    <!--  Добавить в библиотеку  -->
+                                    <controls:AdvancedButton
+                                        x:Name="AddToLibraryButton"
+                                        Click="AddToLibraryButton_Click"
+                                        IconData="{DynamicResource PDAddToList}"
+                                        Template="{StaticResource DropDownButton}"
+                                        Text="{DynamicResource AddToLibrary}" />
+
+                                </core:If.False>
+                            </core:If>
+                        </StackPanel>
+                    </controls:DropdownMenu>
+
+                    <!--  Import Cancel  -->
+                    <Button
+                        Grid.Row="2"
+                        Click="ImportCancelClicked"
+                        FontSize="20"
+                        Visibility="{Binding IsInstanceCompleted, Converter={converters:NegativeBooleanToVisibilityConverter}}">
+                        <Button.Style>
+                            <Style TargetType="{x:Type Button}">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type Button}">
+                                            <Grid>
+                                                <Border
+                                                    x:Name="ActivityColorBorder"
+                                                    Background="Transparent"
+                                                    CornerRadius="0,5,0,0" />
+
+
+                                                <Viewbox Height="{TemplateBinding FontSize}">
+                                                    <Path
+                                                        x:Name="Icon"
+                                                        extensions:PathExtensions.StringKeyData="Cancel"
+                                                        Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                                        Stretch="Fill" />
+                                                </Viewbox>
+                                            </Grid>
+
+                                            <ControlTemplate.Triggers>
+                                                <!--  MouseOver  -->
+                                                <MultiTrigger>
+
+                                                    <MultiTrigger.Conditions>
+                                                        <Condition Property="IsMouseOver" Value="True" />
+                                                        <Condition Property="IsEnabled" Value="True" />
+                                                    </MultiTrigger.Conditions>
+
+                                                    <Setter Property="Cursor" Value="Hand" />
+                                                    <Setter TargetName="ActivityColorBorder" Property="Background" Value="{DynamicResource ActivitySolidColorBrush}" />
+                                                    <Setter TargetName="Icon" Property="Fill" Value="{DynamicResource BrandColorForegroundSolidColorBrush}" />
+                                                </MultiTrigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Button.Style>
+
+                    </Button>
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

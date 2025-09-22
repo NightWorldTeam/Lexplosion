@@ -1,0 +1,26 @@
+﻿<UserControl
+    x:Class="Lexplosion.UI.WPF.WindowComponents.Header.WindowHeaderContainer"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:core="clr-namespace:Lexplosion.UI.WPF.Core"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Lexplosion.UI.WPF.WindowComponents.Header"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:variants="clr-namespace:Lexplosion.UI.WPF.WindowComponents.Header.Variants"
+    x:Name="Container"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <Grid>
+        <core:Switch SelectedExpression="{Binding TemplateName}">
+            <core:Switch.Cases>
+                <core:SwitchCaseItem Key="MacOS">
+                    <variants:MacOSHeader DataContext="{Binding}" IsNotificationOpenedChanged="NotificationOpenedChanged" />
+                </core:SwitchCaseItem>
+                <core:SwitchCaseItem Key="WindowsOS">
+                    <variants:WindowsOSHeader DataContext="{Binding}" IsNotificationOpenedChanged="NotificationOpenedChanged" />
+                </core:SwitchCaseItem>
+            </core:Switch.Cases>
+        </core:Switch>
+    </Grid>
+</UserControl>

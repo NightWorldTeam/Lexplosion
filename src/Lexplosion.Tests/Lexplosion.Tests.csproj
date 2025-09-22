@@ -19,7 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Lexplosion.Core\Lexplosion.Core.csproj" />
-    <ProjectReference Include="..\Lexplosion.WPF.NewInterface\Lexplosion.WPF.NewInterface.csproj" />
+    <ProjectReference Include="..\Lexplosion.WPF.NewInterface\Lexplosion.UI.WPF.csproj" />
   </ItemGroup>
 
 </Project>

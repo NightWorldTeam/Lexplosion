@@ -1,0 +1,229 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:Lexplosion.UI.WPF.Core.Converters"
+    xmlns:extensions="clr-namespace:Lexplosion.UI.WPF.Extensions">
+
+    <ControlTemplate x:Key="ComboBoxTextBox" TargetType="{x:Type TextBox}">
+        <Border
+            x:Name="PART_ContentHost"
+            Background="Transparent"
+            Focusable="False" />
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="ComboBoxToggleButton" TargetType="{x:Type ToggleButton}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="20" />
+            </Grid.ColumnDefinitions>
+
+            <!--  Body Border  -->
+            <Border
+                x:Name="Border"
+                Grid.ColumnSpan="2"
+                Background="{DynamicResource PrimarySolidColorBrush}"
+                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                BorderThickness="1"
+                CornerRadius="5">
+                <Border.Effect>
+                    <DropShadowEffect
+                        BlurRadius="4"
+                        Direction="270"
+                        Opacity="0.07"
+                        ShadowDepth="-1"
+                        Color="#0A090B" />
+                </Border.Effect>
+            </Border>
+
+            <!--  Content Border  -->
+            <Border
+                Grid.Column="0"
+                Margin="1"
+                Background="Transparent"
+                CornerRadius="2,0,0,2" />
+
+            <!--  Arrow  -->
+            <Viewbox
+                x:Name="ArrowViewBox"
+                Grid.Column="1"
+                Height="6"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center">
+                <Path
+                    x:Name="Arrow"
+                    Data="M34.1213 38.945C32.9497 40.1166 31.0503 40.1166 29.8787 38.945L17.8667 26.933C16.8357 25.9021 16.8357 24.2306 17.8667 23.1997V23.1997C18.8976 22.1687 20.5691 22.1687 21.6 23.1997L29.8787 31.4784C31.0503 32.6499 32.9497 32.6499 34.1213 31.4784L42.4 23.1997C43.4309 22.1687 45.1024 22.1687 46.1333 23.1997V23.1997C47.1643 24.2306 47.1643 25.9021 46.1333 26.933L34.1213 38.945Z"
+                    Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                    Stretch="Fill" />
+            </Viewbox>
+        </Grid>
+
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter TargetName="ArrowViewBox" Property="Visibility" Value="Collapsed" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <Style x:Key="{x:Type ComboBox}" TargetType="{x:Type ComboBox}">
+        <Setter Property="SnapsToDevicePixels" Value="true" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+        <Setter Property="ScrollViewer.CanContentScroll" Value="true" />
+        <Setter Property="TextBlock.FontWeight" Value="Medium" />
+        <Setter Property="MinWidth" Value="120" />
+        <Setter Property="MinHeight" Value="32" />
+        <Setter Property="TextBlock.FontSize" Value="12" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ComboBox}">
+                    <Grid>
+                        <ToggleButton
+                            x:Name="ToggleButton"
+                            Grid.Column="2"
+                            ClickMode="Press"
+                            Focusable="false"
+                            IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                            IsEnabled="{TemplateBinding IsEnabled}"
+                            Template="{StaticResource ComboBoxToggleButton}" />
+                        <ContentPresenter
+                            x:Name="ContentSite"
+                            Margin="16,6,36,6"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Content="{TemplateBinding SelectionBoxItem}"
+                            ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                            ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                            IsHitTestVisible="False"
+                            TextBlock.FontSize="14" />
+                        <TextBox
+                            x:Name="PART_EditableTextBox"
+                            Margin="3,3,23,3"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Bottom"
+                            Background="Transparent"
+                            Focusable="True"
+                            IsReadOnly="{TemplateBinding IsReadOnly}"
+                            Style="{x:Null}"
+                            Template="{StaticResource ComboBoxTextBox}"
+                            Visibility="Hidden" />
+                        <Popup
+                            x:Name="Popup"
+                            AllowsTransparency="True"
+                            Focusable="False"
+                            IsOpen="{TemplateBinding IsDropDownOpen}"
+                            Placement="Bottom"
+                            PopupAnimation="Slide"
+                            VerticalOffset="4">
+                            <Grid
+                                x:Name="DropDown"
+                                MinWidth="{TemplateBinding ActualWidth}"
+                                MaxHeight="{TemplateBinding MaxDropDownHeight}"
+                                SnapsToDevicePixels="True">
+                                <Border
+                                    x:Name="DropDownBorder"
+                                    Background="{DynamicResource PrimarySolidColorBrush}"
+                                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="5" />
+                                <ScrollViewer Margin="1,3,1,1" SnapsToDevicePixels="True">
+                                    <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                                </ScrollViewer>
+                            </Grid>
+                        </Popup>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="HasItems" Value="false">
+                            <Setter TargetName="DropDownBorder" Property="MinHeight" Value="95" />
+                        </Trigger>
+                        <Trigger Property="IsGrouping" Value="true">
+                            <Setter Property="ScrollViewer.CanContentScroll" Value="false" />
+                        </Trigger>
+                        <Trigger SourceName="Popup" Property="AllowsTransparency" Value="true">
+                            <Setter TargetName="DropDownBorder" Property="CornerRadius" Value="4" />
+                            <Setter TargetName="DropDownBorder" Property="Margin" Value="0,2,0,0" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="{x:Type ComboBoxItem}" TargetType="{x:Type ComboBoxItem}">
+        <Setter Property="SnapsToDevicePixels" Value="true" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="Medium" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ComboBoxItem}">
+                    <Grid Background="Transparent">
+                        <Border
+                            x:Name="Border"
+                            Padding="16,8,4,8"
+                            HorizontalAlignment="Stretch"
+                            Background="{DynamicResource PrimarySolidColorBrush}"
+                            SnapsToDevicePixels="true">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="20" />
+                                </Grid.ColumnDefinitions>
+
+                                <Border
+                                    x:Name="Marker"
+                                    Width="3"
+                                    Margin="-16,-8"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Stretch"
+                                    Background="{DynamicResource ActivitySolidColorBrush}"
+                                    CornerRadius="0,3,3,0"
+                                    Visibility="Collapsed" />
+
+                                <ContentPresenter HorizontalAlignment="Stretch" />
+
+                                <Viewbox
+                                    x:Name="Check"
+                                    Grid.Column="1"
+                                    Height="8"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Visibility="Collapsed">
+                                    <Path
+                                        Data="M16.5869 28.878C15.4154 30.0495 13.5159 30.0495 12.3443 28.878L1.16563 17.6993C0.116286 16.6499 0.116284 14.9486 1.16563 13.8993V13.8993C2.21497 12.8499 3.91628 12.8499 4.96563 13.8993L12.3443 21.278C13.5159 22.4495 15.4154 22.4495 16.5869 21.278L37.0323 0.832619C38.0816 -0.216722 39.7829 -0.216723 40.8323 0.832618V0.832618C41.8816 1.88196 41.8816 3.58328 40.8323 4.63262L16.5869 28.878Z"
+                                        Fill="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                        Stretch="Fill" />
+                                </Viewbox>
+                            </Grid>
+                        </Border>
+                    </Grid>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="TextBlock.Foreground" Value="{DynamicResource ActivitySolidColorBrush}" />
+                            <Setter Property="TextBlock.FontWeight" Value="Medium" />
+                            <Setter TargetName="Border" Property="CornerRadius" Value="5" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="Check" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="Marker" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="Border" Property="CornerRadius" Value="5" />
+                            <Setter Property="Cursor" Value="Arrow" />
+                            <Setter Property="FontWeight" Value="Medium" />
+                        </Trigger>
+                        <Trigger Property="IsFocused" Value="True">
+                            <Setter Property="TextBlock.Foreground" Value="{DynamicResource ActivitySolidColorBrush}" />
+                            <Setter Property="TextBlock.FontWeight" Value="Medium" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

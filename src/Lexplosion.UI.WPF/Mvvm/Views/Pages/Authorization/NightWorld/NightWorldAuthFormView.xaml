@@ -1,0 +1,170 @@
+﻿<UserControl
+    x:Class="Lexplosion.UI.WPF.Mvvm.Views.Pages.Authorization.NightWorldAuthFormView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Lexplosion.UI.WPF.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="clr-namespace:Lexplosion.UI.WPF.Extensions"
+    xmlns:local="clr-namespace:Lexplosion.UI.WPF.Mvvm.Views.Pages.Authorization"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:Lexplosion.UI.WPF.Mvvm.ViewModels.Authorization"
+    Width="350"
+    Height="470"
+    d:DataContext="{d:DesignInstance Type=vm:NightWorldAuthorizationViewModel}"
+    mc:Ignorable="d">
+    <Grid>
+        <Border Padding="50,32">
+            <Grid ShowGridLines="False">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!--  Logo  -->
+
+                <Border
+                    Width="70"
+                    Height="70"
+                    Margin="0,16,0,0"
+                    CornerRadius="100">
+                    <Border.Background>
+                        <ImageBrush ImageSource="pack://application:,,,/Assets/images/icons/logo.ico" />
+                    </Border.Background>
+                </Border>
+
+
+                <!--  Content  -->
+                <StackPanel Grid.Row="1" Margin="0,16,0,0">
+                    <TextBlock
+                        Margin="0,0,0,8"
+                        HorizontalAlignment="Center"
+                        FontSize="17"
+                        FontWeight="Medium"
+                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                        SnapsToDevicePixels="True"
+                        Text="{DynamicResource AuthorizationViaNightWorld}"
+                        UseLayoutRounding="True" />
+
+                    <!--  Login Field  -->
+                    <controls:UpperPlaceholderTextBox
+                        Margin="0,8,0,0"
+                        IsError="False"
+                        Placeholder="{DynamicResource Login}"
+                        Text="{Binding Model.Login, UpdateSourceTrigger=PropertyChanged}" />
+
+                    <!--  Password Field  -->
+                    <controls:BindablePasswordBox
+                        Margin="0,8,0,0"
+                        FontSize="14"
+                        Password="{Binding Model.Password, UpdateSourceTrigger=PropertyChanged}" />
+
+                    <Grid Margin="0,8,0,0" ShowGridLines="False">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <!--  Is Remember Me  -->
+                        <CheckBox
+                            VerticalAlignment="Center"
+                            Content="{DynamicResource RememberMe}"
+                            IsChecked="{Binding Model.IsRememberMe, UpdateSourceTrigger=PropertyChanged}" />
+                        <!--  Forgot Password Hyperlink  -->
+                        <TextBlock
+                            Grid.Column="1"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}">
+                            <Hyperlink Command="{Binding PasswordResetCommand}">
+                                <Run Text="{DynamicResource ForgotPassword}" />
+                            </Hyperlink>
+                        </TextBlock>
+                    </Grid>
+
+                    <Grid Grid.Row="1" Margin="0,16,0,0">
+                        <StackPanel>
+                            <controls:AdvancedButton
+                                Padding="0,0,0,0"
+                                Command="{Binding AuthorizationCommand}"
+                                Content="{DynamicResource LogIn}"
+                                FontSize="12"
+                                FontWeight="Medium" LoadingText="Авторизация"
+                                IsLoading="{Binding Model.IsLoading}"
+                                Style="{StaticResource sm-default}" />
+
+                            <WrapPanel Margin="0,12,0,0" HorizontalAlignment="Center">
+
+                                <!--  microsoft  -->
+                                <Button
+                                    Height="32"
+                                    Command="{Binding ToMicrosoftCommand}"
+                                    ToolTip="{DynamicResource ViaMicrosoft}"
+                                    ToolTipService.HorizontalOffset="-85"
+                                    ToolTipService.VerticalOffset="40">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="{x:Type Button}">
+                                            <Border
+                                                Width="32"
+                                                Height="32"
+                                                Padding="6"
+                                                Background="{DynamicResource SeparateSolidColorBrush}"
+                                                CornerRadius="5">
+                                                <Border>
+                                                    <Border.Background>
+                                                        <ImageBrush ImageSource="pack://application:,,,/assets/images/icons/microsoft.png" />
+                                                    </Border.Background>
+                                                </Border>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+
+                                <!--  no account  -->
+                                <Button
+                                    Height="32"
+                                    Command="{Binding ToNoAccountCommand}"
+                                    ToolTip="{DynamicResource WithoutAccount}"
+                                    ToolTipService.HorizontalOffset="90"
+                                    ToolTipService.VerticalOffset="40">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="{x:Type Button}">
+                                            <Border
+                                                Width="32"
+                                                Height="32"
+                                                Margin="12,0,0,0"
+                                                Padding="6"
+                                                Background="{DynamicResource SeparateSolidColorBrush}"
+                                                CornerRadius="5">
+
+                                                <Border>
+                                                    <Border.Background>
+                                                        <ImageBrush ImageSource="pack://application:,,,/assets/images/icons/non_image1.png" />
+                                                    </Border.Background>
+                                                </Border>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+                            </WrapPanel>
+
+                            <WrapPanel
+                                Grid.Row="3"
+                                Margin="0,16,0,0"
+                                HorizontalAlignment="Center"
+                                Visibility="Collapsed">
+                                <TextBlock Margin="4,0,0,0">
+                                    <Run Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="{DynamicResource DoNothaveAnyAccount}" />
+                                    <Hyperlink Command="{Binding ToRegistrationCommand}">
+                                        <Run Text="{DynamicResource SingUp}" />
+                                    </Hyperlink>
+                                </TextBlock>
+                            </WrapPanel>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

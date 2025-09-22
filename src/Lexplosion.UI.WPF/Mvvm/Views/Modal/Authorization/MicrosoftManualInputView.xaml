@@ -1,0 +1,175 @@
+﻿<UserControl
+    x:Class="Lexplosion.UI.WPF.Mvvm.Views.Modal.MicrosoftManualInputView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:authorization="clr-namespace:Lexplosion.UI.WPF.Mvvm.ViewModels.Authorization"
+    xmlns:controls="clr-namespace:Lexplosion.UI.WPF.Controls"
+    xmlns:converters="clr-namespace:Lexplosion.UI.WPF.Core.Converters"
+    xmlns:core="clr-namespace:Lexplosion.UI.WPF.Core"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="clr-namespace:Lexplosion.UI.WPF.Extensions"
+    xmlns:local="clr-namespace:Lexplosion.UI.WPF.Mvvm.Views.Modal"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DataContext="{d:DesignInstance Type=authorization:MicrosoftManualInputViewModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+
+    <Border
+        Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={converters:WindowWidthToXProcentWidth}, ConverterParameter=50}"
+        Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={converters:WindowHeightToXProcentHeight}, ConverterParameter=70}"
+        Padding="20,0,20,12"
+        Background="{DynamicResource PrimarySolidColorBrush}"
+        CornerRadius="10">
+
+        <Grid>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!--  Header  -->
+            <Border
+                Margin="-20,16,-20,0"
+                Padding="0,0,0,10"
+                VerticalAlignment="Top"
+                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                BorderThickness="0,0,0,1">
+                <Grid>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <!--  Selected Page Title  -->
+                    <TextBlock
+                        Margin="20,0"
+                        VerticalAlignment="Top"
+                        FontSize="18"
+                        FontWeight="Medium"
+                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                        Text="{DynamicResource ManualInputMicrosoftTokenTitle}" />
+
+                    <!--  Close Button  -->
+                    <controls:AdvancedButton
+                        Margin="0,0,20,0"
+                        Padding="8"
+                        HorizontalAlignment="Right"
+                        Panel.ZIndex="10000"
+                        Command="{Binding CloseCommand}"
+                        IconData="{DynamicResource PDClose}"
+                        IsCancel="True"
+                        Style="{StaticResource TransparentAdvancedButton}" />
+                </Grid>
+
+            </Border>
+
+            <Grid Grid.Row="1" Margin="0,16,0,0">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Border
+                    Margin="0,0,0,16"
+                    Padding="16"
+                    CornerRadius="5">
+
+                    <Border.Background>
+                        <SolidColorBrush Opacity="0.2" Color="#ffbf2f" />
+                    </Border.Background>
+
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+
+                            <Viewbox Height="16" Stretch="Fill">
+                                <Path
+                                    extensions:PathExtensions.StringKeyData="WarningTriangle"
+                                    Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                    Stretch="Fill" />
+                            </Viewbox>
+
+                            <TextBlock
+                                Margin="8,0,0,0"
+                                FontSize="16"
+                                FontWeight="Medium"
+                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                Text="{DynamicResource Important}" />
+                        </StackPanel>
+
+
+                        <StackPanel>
+
+                            <TextBlock
+                                Margin="0,8,0,0"
+                                FontSize="16"
+                                FontWeight="Normal"
+                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                Text="{DynamicResource MicrosoftManualInputImportantMessage}"
+                                TextWrapping="WrapWithOverflow" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <Grid Grid.Row="1" Margin="0,0,0,16">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <core:If
+                        Margin="0,0,0,8"
+                        HorizontalAlignment="Right"
+                        Condition="{Binding Model.IsTokenValid}">
+                        <core:If.True>
+                            <StackPanel Orientation="Horizontal">
+                                <Viewbox Height="16" Stretch="Fill">
+                                    <Path
+                                        extensions:PathExtensions.StringKeyData="Verified"
+                                        Fill="Green"
+                                        Stretch="Fill" />
+                                </Viewbox>
+                                <TextBlock
+                                    Margin="8,0,0,0"
+                                    FontSize="14"
+                                    FontWeight="Medium"
+                                    Foreground="Green"
+                                    Text="{DynamicResource CorrectTokenFormat}" />
+
+
+                            </StackPanel>
+                        </core:If.True>
+                        <core:If.False>
+                            <TextBlock
+                                FontSize="14"
+                                FontWeight="Medium"
+                                Foreground="Red"
+                                Text="{DynamicResource WrongTokenFormat}" />
+                        </core:If.False>
+                    </core:If>
+
+                    <controls:AdvancedTextBox
+                        Grid.Row="1"
+                        VerticalAlignment="Stretch"
+                        Placeholder="{DynamicResource ManualInputTokenPlaceholder}"
+                        Text="{Binding Model.MicrosoftToken, UpdateSourceTrigger=PropertyChanged}"
+                        TextWrapping="WrapWithOverflow" />
+                </Grid>
+
+                <controls:AdvancedButton
+                    Grid.Row="2"
+                    Height="32"
+                    Padding="16,0"
+                    HorizontalAlignment="Stretch"
+                    Command="{Binding ActionCommand}"
+                    IsEnabled="{Binding Model.IsTokenValid}"
+                    Style="{StaticResource DefaultAdvancedButton}"
+                    Text="{DynamicResource Apply}" />
+            </Grid>
+        </Grid>
+    </Border>
+</UserControl>

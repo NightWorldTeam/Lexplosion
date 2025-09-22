@@ -1,0 +1,104 @@
+﻿<UserControl
+    x:Class="Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.MainMenu.FriendsViewModel"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Lexplosion.UI.WPF.Controls"
+    xmlns:converters="clr-namespace:Lexplosion.UI.WPF.Core.Converters"
+    xmlns:core="clr-namespace:Lexplosion.UI.WPF.Core"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="clr-namespace:Lexplosion.UI.WPF.Extensions"
+    xmlns:local="clr-namespace:Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.MainMenu"
+    xmlns:mainmenu="clr-namespace:Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:userComponents="clr-namespace:Lexplosion.UI.WPF.ViewComponents.Users"
+    xmlns:users="clr-namespace:Lexplosion.UI.WPF.Core.Objects.Users"
+    d:DataContext="{d:DesignInstance Type=mainmenu:FriendsViewModel}"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <CollectionViewSource
+            x:Key="FriendsViewSource"
+            x:Name="FriendsCollectionViewSource"
+            Source="{Binding Path=Model.AllFriends.Filtered}" />
+
+        <core:BindingProxy x:Key="ViewModel" Data="{Binding}" />
+    </UserControl.Resources>
+
+    <Grid Margin="32,16,0,0" HorizontalAlignment="Stretch">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!--  TODO: Убирать SearchBox все друзья влазять и скролить не надо и друзей нет???  -->
+        <controls:SearchBox
+            Margin="0,0,32,8"
+            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+            Placeholder="{DynamicResource TypingNicknamePlaceholder}"
+            Style="{StaticResource sm-searchbox-default}"
+            Text="{Binding Model.SearchBoxText, UpdateSourceTrigger=PropertyChanged}"
+            Visibility="{Binding Model.HasFriends, Converter={converters:BooleanToVisibilityConverter}}" />
+
+
+        <ListBox
+            Grid.Row="1"
+            ItemsSource="{Binding Source={StaticResource FriendsViewSource}}"
+            Style="{StaticResource TransparentListBox}"
+            VirtualizingPanel.IsVirtualizingWhenGrouping="True"
+            VirtualizingPanel.ScrollUnit="Pixel">
+
+            <ListBox.GroupStyle>
+                <GroupStyle>
+                    <GroupStyle.HeaderTemplate>
+                        <DataTemplate>
+                            <Border
+                                Margin="8,8,0,8"
+                                BorderBrush="Gray"
+                                BorderThickness="0">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock
+                                        extensions:TextBlockExtensions.TextByKey="{Binding Name.Value}"
+                                        FontSize="13"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                    <TextBlock
+                                        Margin="8,2,0,0"
+                                        VerticalAlignment="Center"
+                                        FontSize="12"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                        Text="{Binding StringFormat='({0})', Path=ItemCount}" />
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </GroupStyle.HeaderTemplate>
+                </GroupStyle>
+            </ListBox.GroupStyle>
+
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel
+                        Margin="0,0,0,16"
+                        HorizontalAlignment="Stretch"
+                        IsItemsHost="True"
+                        VirtualizingPanel.IsVirtualizing="True" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+
+            <ListBox.ItemTemplate>
+                <DataTemplate DataType="{x:Type users:Friend}">
+                    <userComponents:Friend
+                        Margin="0,0,4,4"
+                        Avatar="{Binding AvatarUrl}"
+                        Banner="{Binding Banner}"
+                        DataContext="{Binding}"
+                        Nickname="{Binding Login}"
+                        RunningClientName="{Binding RunningClientName}"
+                        Status="{Binding Status.Value}"
+                        ViewModelDataContext="{Binding Data, Source={StaticResource ViewModel}}" />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</UserControl>

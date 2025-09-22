@@ -1,0 +1,163 @@
+﻿<UserControl
+    x:Class="Lexplosion.UI.WPF.Mvvm.Views.Modal.SelectAddonVersionView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Lexplosion.UI.WPF.Controls"
+    xmlns:converters="clr-namespace:Lexplosion.UI.WPF.Core.Converters"
+    xmlns:core="clr-namespace:Lexplosion.UI.WPF.Core"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Lexplosion.UI.WPF.Mvvm.Views.Modal"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:modal="clr-namespace:Lexplosion.UI.WPF.Mvvm.ViewModels.Modal"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    d:DataContext="{d:DesignInstance Type=modal:SelectAddonVersionViewModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <Border
+        MaxWidth="450"
+        MaxHeight="{Binding ActualHeight, Converter={converters:WindowHeightToXProcentHeight}, ConverterParameter=60, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+        Padding="20,0,20,16"
+        Background="{DynamicResource PrimarySolidColorBrush}"
+        CornerRadius="10">
+
+        <Grid>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!--  Header  -->
+            <Border Margin="-20,16,-20,0" VerticalAlignment="Top">
+                <Grid>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <!--  Selected Page Title  -->
+                    <TextBlock
+                        Margin="20,0,0,0"
+                        VerticalAlignment="Top"
+                        FontSize="18"
+                        FontWeight="Medium"
+                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                        TextTrimming="CharacterEllipsis">
+                        <Run Text="{DynamicResource Install}" />
+                        <Run Text="{Binding Model.AddonName, Mode=OneWay}" />
+                    </TextBlock>
+
+                    <!--  Close Button  -->
+                    <controls:AdvancedButton
+                        Grid.Column="1"
+                        Margin="0,-4,20,0"
+                        Padding="8"
+                        HorizontalAlignment="Right"
+                        Panel.ZIndex="10000"
+                        Command="{Binding CloseCommand}"
+                        IconData="{DynamicResource PDClose}"
+                        IsCancel="True"
+                        Style="{StaticResource TransparentAdvancedButton}" />
+                </Grid>
+
+            </Border>
+
+            <core:If Grid.Row="1" Condition="{Binding Model.HasVersions}">
+                <core:If.True>
+                    <!--  Content  -->
+                    <Grid>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Grid Margin="0,8,0,0">
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <Border
+                                Padding="0,12,0,12"
+                                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                BorderThickness="0,1,0,1">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock
+                                        FontSize="14"
+                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                        Text="{DynamicResource DoInstallTheLatestVersion}" />
+                                    <ToggleButton
+                                        x:Name="SelectVersionSwitch"
+                                        Grid.Column="1"
+                                        IsChecked="{Binding Model.IsInstallLatestVersion}"
+                                        Style="{StaticResource SwitchButton}" />
+                                </Grid>
+                            </Border>
+
+                            <!--    -->
+                            <ListBox
+                                Grid.Row="1"
+                                Margin="0,8,0,20"
+                                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                BorderThickness="1"
+                                IsSynchronizedWithCurrentItem="True"
+                                ItemContainerStyle="{StaticResource {x:Type ListBoxItem}}"
+                                ItemsSource="{Binding Model.AddonVersions}"
+                                SelectedValue="{Binding Model.SelectedAddonVersion, UpdateSourceTrigger=PropertyChanged}"
+                                Style="{StaticResource TransparentListBox}"
+                                VirtualizingPanel.ScrollUnit="Pixel"
+                                Visibility="{Binding IsChecked, ElementName=SelectVersionSwitch, Converter={converters:NegativeBooleanToVisibilityConverter}}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border HorizontalAlignment="Center" Background="Transparent">
+                                            <TextBlock
+                                                FontSize="16"
+                                                FontWeight="Medium"
+                                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                                Text="{Binding Converter={converters:ToStringConverter}}" />
+                                        </Border>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+
+                            <controls:CircleLoader
+                                Grid.Row="1"
+                                Width="24"
+                                Height="24"
+                                Margin="0,8,0,20"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                IsActive="{Binding Model.IsVersionLoading}" />
+                        </Grid>
+
+                        <Border
+                            Grid.Row="1"
+                            Margin="-20"
+                            Padding="20,8,20,16"
+                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                            BorderThickness="0,1,0,0">
+                            <controls:AdvancedButton
+                                Command="{Binding ActionCommand}"
+                                Content="{DynamicResource Install}"
+                                FontWeight="Medium"
+                                IsEnabled="{Binding Model.CanInstall, Mode=OneWay}"
+                                Style="{StaticResource DefaultAdvancedButton}" />
+                        </Border>
+                    </Grid>
+                </core:If.True>
+                <core:If.False>
+                    <controls:Empty Description="{DynamicResource ThereAreNoAddonVersion}" />
+                </core:If.False>
+            </core:If>
+        </Grid>
+    </Border>
+</UserControl>

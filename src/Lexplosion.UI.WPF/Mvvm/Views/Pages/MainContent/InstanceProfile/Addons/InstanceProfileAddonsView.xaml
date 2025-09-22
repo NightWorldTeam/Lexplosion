@@ -1,0 +1,766 @@
+﻿<UserControl
+    x:Class="Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.InstanceProfile.InstanceProfileAddonsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Lexplosion.UI.WPF.Controls"
+    xmlns:controls1="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
+    xmlns:core="clr-namespace:Lexplosion.UI.WPF.Core"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="clr-namespace:Lexplosion.UI.WPF.Extensions"
+    xmlns:instanceprofile="clr-namespace:Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.InstanceProfile"
+    xmlns:lexplosion="clr-namespace:Lexplosion;assembly=Lexplosion.Core"
+    xmlns:local="clr-namespace:Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.InstanceProfile"
+    xmlns:logicInstances="clr-namespace:Lexplosion.Logic.Management.Addons;assembly=Lexplosion.Core"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:valueconverters="clr-namespace:Lexplosion.UI.WPF.Core.Converters"
+    d:DataContext="{d:DesignInstance Type=instanceprofile:InstanceAddonsContainerViewModel}"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+
+        <Style
+            x:Key="RotateAnimatedButton"
+            BasedOn="{StaticResource IconButton}"
+            TargetType="{x:Type Button}">
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border
+                            x:Name="ButtonBorder"
+                            Background="Transparent"
+                            RenderTransformOrigin="0.5, 0.5">
+
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+
+                            <Border.RenderTransform>
+                                <RotateTransform Angle="0" />
+                            </Border.RenderTransform>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <DataTrigger Binding="{Binding IsRefreshingDLC}" Value="True">
+                                <DataTrigger.EnterActions>
+                                    <BeginStoryboard x:Name="BorderBeginStoryboard">
+                                        <Storyboard Storyboard.TargetName="ButtonBorder" Storyboard.TargetProperty="(Border.RenderTransform).(RotateTransform.Angle)">
+                                            <DoubleAnimation
+                                                RepeatBehavior="Forever"
+                                                From="0"
+                                                To="360"
+                                                Duration="0:0:1" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.EnterActions>
+
+                                <DataTrigger.ExitActions>
+                                    <PauseStoryboard BeginStoryboardName="BorderBeginStoryboard" />
+                                    <BeginStoryboard x:Name="BorderEndBeginStoryboard">
+                                        <Storyboard Storyboard.TargetName="ButtonBorder" Storyboard.TargetProperty="(Border.RenderTransform).(RotateTransform.Angle)">
+                                            <DoubleAnimation To="360" Duration="0:0:1" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.ExitActions>
+
+                                <Setter Property="Opacity" Value="0.8" />
+                            </DataTrigger>
+
+                            <DataTrigger Binding="{Binding IsInstalling}" Value="True">
+                                <DataTrigger.EnterActions>
+                                    <BeginStoryboard x:Name="AddonBorderBeginStoryboard">
+                                        <Storyboard Storyboard.TargetName="ButtonBorder" Storyboard.TargetProperty="(Border.RenderTransform).(RotateTransform.Angle)">
+                                            <DoubleAnimation
+                                                RepeatBehavior="Forever"
+                                                From="0"
+                                                To="360"
+                                                Duration="0:0:1" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.EnterActions>
+
+                                <DataTrigger.ExitActions>
+                                    <PauseStoryboard BeginStoryboardName="AddonBorderBeginStoryboard" />
+                                    <BeginStoryboard x:Name="AddonBorderEndBeginStoryboard">
+                                        <Storyboard Storyboard.TargetName="ButtonBorder" Storyboard.TargetProperty="(Border.RenderTransform).(RotateTransform.Angle)">
+                                            <DoubleAnimation To="360" Duration="0:0:1" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.ExitActions>
+
+                                <Setter Property="Opacity" Value="0.8" />
+                            </DataTrigger>
+
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="{x:Type ListBoxItem}">
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="UseLayoutRounding" Value="True" />
+            <Setter Property="MaxWidth" Value="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Border
+                            x:Name="Border"
+                            Padding="2"
+                            Background="Transparent"
+                            BorderThickness="1"
+                            CornerRadius="5"
+                            SnapsToDevicePixels="True">
+                            <ContentPresenter />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <!--<Setter TargetName="Border" Property="Background">
+                                    <Setter.Value>
+                                        <SolidColorBrush Opacity="0.2" Color="{DynamicResource ActivityColor}" />
+                                    </Setter.Value>
+                                </Setter>-->
+                                <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource ActivitySolidColorBrush}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="{x:Type ListBox}" TargetType="ListBox">
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+            <Setter Property="ScrollViewer.CanContentScroll" Value="True" />
+            <Setter Property="MinWidth" Value="120" />
+            <Setter Property="MinHeight" Value="95" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBox">
+                        <Border
+                            Name="Border"
+                            Padding="4"
+                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                            BorderThickness="1"
+                            CornerRadius="2">
+                            <ScrollViewer Margin="0" Focusable="false">
+                                <StackPanel IsItemsHost="True" />
+                            </ScrollViewer>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <!--<Setter TargetName="Border" Property="Background">
+                                    <Setter.Value>
+                                        <SolidColorBrush Color="{StaticResource DisabledControlLightColor}" />
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter TargetName="Border" Property="BorderBrush">
+                                    <Setter.Value>
+                                        <SolidColorBrush Color="{DynamicResource DisabledBorderLightColor}" />
+                                    </Setter.Value>
+
+                                </Setter>-->
+                            </Trigger>
+                            <Trigger Property="IsGrouping" Value="true">
+                                <Setter Property="ScrollViewer.CanContentScroll" Value="false" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Storyboard x:Key="ItemAnimation" AutoReverse="False">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="AnimatableUIElement" Storyboard.TargetProperty="(UIElement.Opacity)">
+                <EasingDoubleKeyFrame KeyTime="0" Value="0.5" />
+                <EasingDoubleKeyFrame KeyTime="0:0:0.34" Value="1" />
+            </DoubleAnimationUsingKeyFrames>
+            <!--<DoubleAnimationUsingKeyFrames Storyboard.TargetName="MyGrid" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
+                <EasingDoubleKeyFrame KeyTime="0" Value="0" />
+                <EasingDoubleKeyFrame KeyTime="0:0:0.34" Value="1" />
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="MyGrid" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
+                <EasingDoubleKeyFrame KeyTime="0" Value="0" />
+                <EasingDoubleKeyFrame KeyTime="0:0:0.34" Value="1" />
+            </DoubleAnimationUsingKeyFrames>-->
+        </Storyboard>
+
+        <DataTemplate x:Key="RectInstanceAddon" DataType="{x:Type logicInstances:InstanceAddon}">
+            <Border
+                x:Name="AnimatableUIElement"
+                Width="217"
+                Height="200"
+                Margin="0,8,8,0"
+                Padding="8"
+                HorizontalAlignment="Center"
+                Background="Transparent"
+                BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
+                BorderThickness="1"
+                CornerRadius="10">
+
+                <!--  TODO: Background в отдельный цвет  -->
+
+                <Border.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform />
+                    </TransformGroup>
+                </Border.RenderTransform>
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Grid HorizontalAlignment="Left" VerticalAlignment="Center">
+                                <Border
+                                    x:Name="LogoBorder"
+                                    Width="64"
+                                    Height="64"
+                                    Background="{Binding Logo, Converter={valueconverters:ImageSourceNullValidateConverter}}"
+                                    CornerRadius="5" />
+
+                                <controls:CircleLoader
+                                    Width="32"
+                                    Height="32"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    BlurTarget="{Binding ElementName=LogoBorder}"
+                                    IsActive="{Binding Logo, Converter={valueconverters:IsValueNullConverter}}" />
+                            </Grid>
+
+                            <StackPanel Grid.Column="1" Margin="8,0,0,0">
+
+                                <TextBlock
+                                    MaxHeight="48"
+                                    FontWeight="Bold"
+                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                    Text="{Binding Name}"
+                                    TextTrimming="CharacterEllipsis"
+                                    TextWrapping="WrapWithOverflow" />
+                                <TextBlock>
+                                    <Run Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" Text="by" />
+                                    <Run Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" Text="{Binding Author}" />
+                                </TextBlock>
+                            </StackPanel>
+                        </Grid>
+
+                        <core:If Condition="{Binding Version, Converter={valueconverters:IsStringNullOrEmptyConverter}}">
+                            <core:If.False>
+                                <StackPanel Margin="0,8,0,0" Visibility="{Binding Version, Converter={valueconverters:IsStringNullOrEmptyConverter}}">
+                                    <TextBlock Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" TextWrapping="WrapWithOverflow">
+                                        <Run FontWeight="Medium" Text="Version:" />
+                                        <Run Text="{Binding Version, Mode=OneWay}" />
+                                    </TextBlock>
+                                </StackPanel>
+                            </core:If.False>
+                        </core:If>
+
+                        <StackPanel Margin="0,8,0,0">
+                            <TextBlock
+                                FontWeight="Medium"
+                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                Text="File Name:" />
+
+                            <TextBlock
+                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                Text="{Binding FileName}"
+                                TextWrapping="WrapWithOverflow" />
+                        </StackPanel>
+                    </StackPanel>
+
+                    <Border
+                        Grid.Row="1"
+                        Padding="8,4,4,0"
+                        HorizontalAlignment="Stretch"
+                        BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
+                        BorderThickness="0,1,0,0"
+                        CornerRadius="10">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <WrapPanel HorizontalAlignment="Left" VerticalAlignment="Center">
+                                <Button
+                                    Height="32"
+                                    Command="{Binding DataContext.OpenExternalResourceCommand, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                    CommandParameter="{Binding}">
+                                    <Button.Style>
+                                        <Style BasedOn="{StaticResource IconButton}" TargetType="{x:Type Button}">
+
+                                            <Setter Property="Content" Value="{x:Null}" />
+
+                                            <Style.Triggers>
+                                                <!--  If Curseforge  -->
+                                                <DataTrigger Binding="{Binding Source}" Value="{x:Static lexplosion:ProjectSource.Curseforge}">
+                                                    <Setter Property="Content">
+                                                        <Setter.Value>
+                                                            <Viewbox Height="12">
+                                                                <Path
+                                                                    extensions:PathExtensions.StringKeyData="Curseforge"
+                                                                    Fill="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                                                    Stretch="Fill" />
+                                                            </Viewbox>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </DataTrigger>
+
+                                                <!--  If Modrinth  -->
+                                                <DataTrigger Binding="{Binding Source}" Value="{x:Static lexplosion:ProjectSource.Modrinth}">
+                                                    <Setter Property="Content">
+                                                        <Setter.Value>
+                                                            <Viewbox Height="18">
+                                                                <Path
+                                                                    extensions:PathExtensions.StringKeyData="Modrinth"
+                                                                    Fill="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                                                    Stretch="Fill" />
+                                                            </Viewbox>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
+
+                                <Button
+                                    Height="16"
+                                    Content="Update"
+                                    Style="{StaticResource x32IconButtonWithHover}"
+                                    Visibility="{Binding UpdateAvailable, UpdateSourceTrigger=PropertyChanged, Converter={valueconverters:BooleanToVisibilityConverter}}" />
+
+                                <!--  Addon Switch Enable  -->
+                                <ToggleButton
+                                    Margin="8,0,0,0"
+                                    IsChecked="{Binding IsEnable}"
+                                    Style="{StaticResource EllipseToggleButton}" />
+                            </WrapPanel>
+
+                            <!--  Addon Uninstall  -->
+                            <Button
+                                Grid.Column="1"
+                                Margin="8,0,0,0"
+                                Command="{Binding DataContext.UninstallCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                CommandParameter="{Binding}"
+                                Content="Delete"
+                                Foreground="Red"
+                                Style="{StaticResource x32IconButtonActivityColor}" />
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <DataTemplate.Triggers>
+                <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                    <BeginStoryboard Storyboard="{StaticResource ItemAnimation}" />
+                </EventTrigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+
+        <ControlTemplate x:Key="DLCHeaderControlTemplate">
+            <Border
+                HorizontalAlignment="Stretch"
+                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                BorderThickness="1"
+                CornerRadius="5">
+                <ScrollViewer>
+                    <ItemsPresenter
+                        VirtualizingPanel.ScrollUnit="Pixel"
+                        VirtualizingStackPanel.IsVirtualizing="True"
+                        VirtualizingStackPanel.VirtualizationMode="Recycling" />
+                </ScrollViewer>
+            </Border>
+        </ControlTemplate>
+
+        <DataTemplate x:Key="LineInstanceAddon" DataType="{x:Type logicInstances:InstanceAddon}">
+            <Border
+                x:Name="AnimatableUIElement"
+                BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
+                BorderThickness="0,0,0,1">
+                <Grid
+                    MinHeight="60"
+                    HorizontalAlignment="Stretch"
+                    Background="Transparent"
+                    ShowGridLines="False">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid>
+                        <Border
+                            x:Name="LogoBorder"
+                            Width="48"
+                            Height="48"
+                            Margin="4,0,0,0"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Background="{Binding Logo, Converter={valueconverters:ImageSourceNullValidateConverter}}"
+                            CornerRadius="5" />
+
+                        <controls:CircleLoader
+                            Width="24"
+                            Height="24"
+                            Margin="4,0,0,0"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            BlurTarget="{Binding ElementName=LogoBorder}"
+                            IsActive="{Binding Logo, Converter={valueconverters:IsValueNullConverter}}" />
+                    </Grid>
+
+                    <Grid
+                        Grid.Column="1"
+                        Height="48"
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Center">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock
+                                FontSize="14"
+                                FontWeight="Medium"
+                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                Text="{Binding Name}"
+                                TextTrimming="CharacterEllipsis" />
+
+                            <Border
+                                Margin="12,0,0,0"
+                                Padding="12,0,0,0"
+                                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                BorderThickness="2,0,0,0">
+                                <TextBlock FontSize="14">
+                                    <Run Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="by" />
+                                    <Run Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="{Binding Author}" />
+                                </TextBlock>
+                            </Border>
+
+                            <core:If Condition="{Binding Version, Converter={valueconverters:IsStringNullOrEmptyConverter}}">
+                                <core:If.False>
+                                    <Border
+                                        Margin="12,0,0,0"
+                                        Padding="12,0,0,0"
+                                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                        BorderThickness="2,0,0,0">
+                                        <TextBlock FontSize="14">
+                                            <Run Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="{Binding Version, Mode=OneWay}" />
+                                        </TextBlock>
+                                    </Border>
+                                </core:If.False>
+                            </core:If>
+
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="1" Margin="0,4,0,0">
+                            <TextBlock Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" Text="{Binding FileName}" />
+                        </StackPanel>
+                    </Grid>
+
+                    <WrapPanel
+                        Grid.Column="3"
+                        Margin="4,0,0,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
+
+                        <!--  Addon update  -->
+                        <!--  TODO: Анимация при кнопке обновления.  -->
+                        <Button
+                            Command="{Binding DataContext.UpdateCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                            CommandParameter="{Binding}"
+                            Style="{StaticResource IconButton}"
+                            Visibility="{Binding UpdateAvailable, Converter={valueconverters:BooleanToVisibilityConverter}}">
+                            <Viewbox Height="18" Margin="4,0,0,0">
+                                <Path
+                                    extensions:PathExtensions.StringKeyData="Update"
+                                    Fill="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                    Stretch="Fill" />
+                            </Viewbox>
+                        </Button>
+
+
+                        <!--  Addon External Link  -->
+                        <Button
+                            Margin="8,0,0,0"
+                            Command="{Binding DataContext.OpenExternalResourceCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                            CommandParameter="{Binding}">
+                            <Button.Style>
+                                <Style BasedOn="{StaticResource IconButton}" TargetType="{x:Type Button}">
+
+                                    <Setter Property="Content" Value="{x:Null}" />
+
+                                    <Style.Triggers>
+                                        <!--  If Curseforge  -->
+                                        <DataTrigger Binding="{Binding Source}" Value="{x:Static lexplosion:ProjectSource.Curseforge}">
+                                            <Setter Property="Content">
+                                                <Setter.Value>
+                                                    <Viewbox Height="12">
+                                                        <Path
+                                                            extensions:PathExtensions.StringKeyData="Curseforge"
+                                                            Fill="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                                            Stretch="Fill" />
+                                                    </Viewbox>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </DataTrigger>
+
+                                        <!--  If Modrinth  -->
+                                        <DataTrigger Binding="{Binding Source}" Value="{x:Static lexplosion:ProjectSource.Modrinth}">
+                                            <Setter Property="Content">
+                                                <Setter.Value>
+                                                    <Viewbox Height="18">
+                                                        <Path
+                                                            extensions:PathExtensions.StringKeyData="Modrinth"
+                                                            Fill="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                                            Stretch="Fill" />
+                                                    </Viewbox>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+
+                        <!--  Addon Switch Enable  -->
+                        <ToggleButton
+                            Margin="8,0,0,0"
+                            IsChecked="{Binding IsEnable}"
+                            Style="{StaticResource EllipseToggleButton}" />
+
+                        <!--  Addon Uninstall  -->
+                        <Button
+                            Margin="8,0,0,0"
+                            Command="{Binding DataContext.UninstallCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                            CommandParameter="{Binding}"
+                            Content="Delete"
+                            Foreground="Red"
+                            Style="{StaticResource x32IconButtonActivityColor}" />
+                    </WrapPanel>
+                </Grid>
+            </Border>
+
+            <DataTemplate.Triggers>
+                <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                    <BeginStoryboard Storyboard="{StaticResource ItemAnimation}" />
+                </EventTrigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+
+        <ControlTemplate x:Key="RectInstanceHeaderControlTemplate">
+            <ScrollViewer HorizontalAlignment="Stretch">
+                <ItemsPresenter
+                    Margin="0,0,-10,0"
+                    VirtualizingPanel.ScrollUnit="Pixel"
+                    VirtualizingStackPanel.IsVirtualizing="True"
+                    VirtualizingStackPanel.VirtualizationMode="Recycling" />
+            </ScrollViewer>
+        </ControlTemplate>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid
+            x:Name="Content"
+            AllowDrop="True"
+            Background="Transparent"
+            DragEnter="Grid_DragEnter">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid Margin="8,4,8,0">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <controls:SearchBox
+                    x:Name="SearchBox"
+                    Height="40"
+                    Margin="0,0,4,0"
+                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                    Text="{Binding Model.SearchBoxText, UpdateSourceTrigger=PropertyChanged}" />
+
+                <ComboBox
+                    Grid.Column="1"
+                    Width="120"
+                    Height="40"
+                    ItemsSource="{Binding Model.SortByList}"
+                    SelectedIndex="0"
+                    SelectedValue="{Binding Model.SelectedSortByParam, UpdateSourceTrigger=PropertyChanged}"
+                    SelectionChanged="OnAddonsSearchSortParamChangedChanged">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock extensions:TextBlockExtensions.TextByKey="{Binding}" Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+
+                <Grid.Style>
+                    <Style TargetType="{x:Type Grid}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Model.IsSearchEnabled, UpdateSourceTrigger=PropertyChanged}" Value="True">
+                                <Setter Property="Visibility" Value="Visible" />
+                                <Setter Property="FocusManager.FocusedElement" Value="{Binding ElementName=SearchBox}" />
+                                <DataTrigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard Storyboard.TargetProperty="Height">
+                                            <DoubleAnimation
+                                                From="0"
+                                                To="44"
+                                                Duration="0:0:0.24" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.EnterActions>
+                                <DataTrigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard Storyboard.TargetProperty="Height">
+                                            <DoubleAnimation
+                                                From="44"
+                                                To="0"
+                                                Duration="0:0:0.24" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.ExitActions>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+            </Grid>
+
+            <!--  TODO: Scrool To Start  -->
+            <!--  TODO: IconButton MouseOver fill Activity Color  -->
+
+
+            <core:If Grid.Row="1" Condition="{Binding IsCurrentFormatBlock, UpdateSourceTrigger=PropertyChanged}">
+                <core:If.True>
+                    <controls1:VirtualizingItemsControl
+                        Margin="0,8"
+                        ItemTemplate="{StaticResource RectInstanceAddon}"
+                        ItemsSource="{Binding Model.InstanceAddonCollectionViewSource.View}"
+                        Template="{StaticResource RectInstanceHeaderControlTemplate}"
+                        VirtualizingPanel.CacheLengthUnit="Item"
+                        VirtualizingPanel.IsVirtualizingWhenGrouping="True"
+                        VirtualizingPanel.ScrollUnit="Pixel"
+                        VirtualizingPanel.VirtualizationMode="Recycling"
+                        Visibility="{Binding IsCurrentFormatBlock, Converter={valueconverters:BooleanToVisibilityConverter}}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <controls1:VirtualizingWrapPanel
+                                    HorizontalAlignment="Stretch"
+                                    Orientation="Horizontal"
+                                    SpacingMode="StartAndEndOnly"
+                                    StretchItems="False" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </controls1:VirtualizingItemsControl>
+                </core:If.True>
+                <core:If.False>
+                    <ListBox
+                        Margin="4,8,4,8"
+                        ItemTemplate="{StaticResource LineInstanceAddon}"
+                        ItemsSource="{Binding Model.InstanceAddonCollectionViewSource.View}"
+                        ScrollViewer.CanContentScroll="True"
+                        Template="{StaticResource DLCHeaderControlTemplate}"
+                        VirtualizingStackPanel.CacheLength="1,5"
+                        VirtualizingStackPanel.CacheLengthUnit="Page"
+                        VirtualizingStackPanel.IsVirtualizing="True"
+                        VirtualizingStackPanel.VirtualizationMode="Recycling"
+                        Visibility="{Binding IsCurrentFormatBlock, UpdateSourceTrigger=PropertyChanged, Converter={valueconverters:NegativeBooleanToVisibilityConverter}}" />
+                </core:If.False>
+            </core:If>
+
+            <controls:Empty
+                Grid.RowSpan="2"
+                Margin="0,48,0,0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                CollectionCount="{Binding Model.InstanceAddonCollectionViewSource.Source.Count}"
+                Description="{DynamicResource ThereAreNotAddons}"
+                IsContentLoading="{Binding Model.IsAddonsLoading}" />
+
+        </Grid>
+
+        <controls:DragDropBoard
+            x:Name="DragDropField"
+            AllowFolder="True"
+            AvailableFileExtensions="{Binding Model.AvailableImportFileExtensions}"
+            DragDrop.Drop="DragDropField_Drop"
+            DragLeave="DragDropField_DragLeave"
+            ImportAction="{Binding Model.ImportAction}"
+            Visibility="Collapsed">
+
+            <Border
+                Margin="0,2,3,2"
+                AllowDrop="True"
+                BorderThickness="3"
+                CornerRadius="5">
+
+                <Border.Background>
+                    <SolidColorBrush Opacity="0.8" Color="{DynamicResource PrimaryColor}" />
+                </Border.Background>
+
+                <Border.BorderBrush>
+                    <DrawingBrush
+                        TileMode="Tile"
+                        Viewport="0,0,20,23"
+                        ViewportUnits="Absolute">
+                        <DrawingBrush.Drawing>
+                            <DrawingGroup>
+                                <GeometryDrawing Brush="{DynamicResource ActivitySolidColorBrush}">
+                                    <GeometryDrawing.Geometry>
+                                        <GeometryGroup>
+                                            <RectangleGeometry Rect="0,0,100,100" />
+                                            <RectangleGeometry Rect="100,100,100,100" />
+                                        </GeometryGroup>
+                                    </GeometryDrawing.Geometry>
+                                </GeometryDrawing>
+                            </DrawingGroup>
+                        </DrawingBrush.Drawing>
+                    </DrawingBrush>
+                </Border.BorderBrush>
+
+                <Grid Background="Transparent" IsEnabled="False">
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Viewbox Width="64" Height="64">
+                            <Path
+                                extensions:PathExtensions.StringData="M440-200h80v-167l64 64 56-57-160-160-160 160 57 56 63-63v167ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z"
+                                Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                Stretch="Fill" />
+                        </Viewbox>
+
+                        <TextBlock
+                            FontSize="20"
+                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                            IsEnabled="False"
+                            Text="{DynamicResource AddonDragAndDropDescription}" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </controls:DragDropBoard>
+
+        <controls:LoadingBoard
+            Background="Black"
+            BackgroundOpacity="0.2"
+            BlurTarget="{Binding ElementName=Content}"
+            IsActive="{Binding Model.IsAddonsLoading, UpdateSourceTrigger=PropertyChanged}"
+            Placeholder="{DynamicResource AddonsListLoadingPlaceholder}" />
+    </Grid>
+</UserControl>
