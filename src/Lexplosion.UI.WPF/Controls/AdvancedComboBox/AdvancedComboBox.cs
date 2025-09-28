@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace Lexplosion.UI.WPF.Controls.AdvancedComboBox
+namespace Lexplosion.UI.WPF.Controls
 {
     public class AdvancedComboBox : ComboBox
     {

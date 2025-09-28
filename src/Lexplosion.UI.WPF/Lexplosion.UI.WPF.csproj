@@ -120,6 +120,7 @@
     <Compile Include="Core\Converters\ValueConverters\CollectionToStringWithBreaklineConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\CountToVisibilityConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\ImagePathValidateConverter.cs" />
+    <Compile Include="Core\Converters\ValueConverters\UIntToSolidColorBrushConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\IsCollectionEmptyConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\NullableToVisibilityConverter.cs" />
     <Compile Include="Core\Converters\ValueConverters\RowElementCountConverter.cs" />
@@ -162,6 +163,7 @@
     <Compile Include="Extensions\ResourceDictionaryExtensions.cs" />
     <Compile Include="Extensions\ScrollViewerExtensions.cs" />
     <Compile Include="Extensions\StyleSelectors\LastRowItemWrapPanelStyleSelector.cs" />
+    <Compile Include="Extensions\System\ObjectExtensions.cs" />
     <Compile Include="Extensions\VisualExtensions.cs" />
     <Compile Include="Mvvm\Models\Authorization\AuthorizationMenuModel.cs" />
     <Compile Include="Mvvm\Models\Authorization\Modal\MicrosoftManualInputModal.cs" />
@@ -180,6 +182,10 @@
     <Compile Include="Mvvm\Models\MainContent\MainMenu\Friends\FriendsModel.cs" />
     <Compile Include="Mvvm\Models\MainContent\MainMenu\GeneralSettings\AccountsSettingsModel.cs" />
     <Compile Include="Mvvm\Models\Modal\InstanceFactory\InstanceFactoryModel.cs" />
+    <Compile Include="Mvvm\Models\Profile\ProfileInfo.cs" />
+    <Compile Include="Mvvm\Models\Profile\ProfileModel.cs" />
+    <Compile Include="Mvvm\Models\Profile\ProfileSocialMedia.cs" />
+    <Compile Include="Mvvm\Models\Profile\ProfileTitle.cs" />
     <Compile Include="Mvvm\OldInstanceForm.xaml.cs">
       <DependentUpon>OldInstanceForm.xaml</DependentUpon>
     </Compile>
@@ -224,8 +230,26 @@
     <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\InstanceShareLayoutViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\InstanceShareViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Feedback\NotificationsViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\Profile\ProfileLayoutViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\Profile\ProfileSettingsViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\Profile\ProfileViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\WelcomePageThemeSelectViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\WelcomeViewModel.cs" />
+    <Compile Include="Mvvm\Views\Pages\Profile\ProfileFriendsView.xaml.cs">
+      <DependentUpon>ProfileFriendsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Views\Pages\Profile\ProfileInfoView.xaml.cs">
+      <DependentUpon>ProfileInfoView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Views\Pages\Profile\ProfileLayoutView.xaml.cs">
+      <DependentUpon>ProfileLayoutView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Views\Pages\Profile\ProfileSettingsView.xaml.cs">
+      <DependentUpon>ProfileSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Views\Pages\Profile\ProfileView.xaml.cs">
+      <DependentUpon>ProfileView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewComponents\News\LatestNewsView.xaml.cs">
       <DependentUpon>LatestNewsView.xaml</DependentUpon>
     </Compile>
@@ -710,6 +734,26 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Mvvm\OldInstanceForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Mvvm\Views\Pages\Profile\ProfileFriendsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Mvvm\Views\Pages\Profile\ProfileInfoView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Mvvm\Views\Pages\Profile\ProfileLayoutView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Mvvm\Views\Pages\Profile\ProfileSettingsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Mvvm\Views\Pages\Profile\ProfileView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

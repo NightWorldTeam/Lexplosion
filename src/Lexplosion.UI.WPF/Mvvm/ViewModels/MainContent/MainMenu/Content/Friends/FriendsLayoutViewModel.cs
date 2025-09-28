@@ -1,10 +1,7 @@
 ﻿using Lexplosion.Logic.Management.Accounts;
-using Lexplosion.UI.WPF.Commands;
 using Lexplosion.UI.WPF.Core;
 using Lexplosion.UI.WPF.Core.Objects;
 using Lexplosion.UI.WPF.Core.ViewModel;
-using System;
-using System.Windows.Input;
 
 namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
 {

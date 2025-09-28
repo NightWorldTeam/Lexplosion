@@ -16,6 +16,8 @@
     xmlns:modalviews="clr-namespace:Lexplosion.UI.WPF.Mvvm.Views.Modal"
     xmlns:modalvm="clr-namespace:Lexplosion.UI.WPF.Mvvm.ViewModels.Modal"
     xmlns:pages="clr-namespace:Lexplosion.UI.WPF.Mvvm.Views.Pages"
+    xmlns:profile="clr-namespace:Lexplosion.UI.WPF.Mvvm.ViewModels.Profile"
+    xmlns:profile1="clr-namespace:Lexplosion.UI.WPF.Mvvm.Views.Pages.Profile"
     xmlns:s="clr-namespace:System;assembly=mscorlib"
     xmlns:serverprofile="clr-namespace:Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.ServerProfile"
     xmlns:serverprofileview="clr-namespace:Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.ServerProfile"
@@ -281,5 +283,19 @@
     </DataTemplate>
     <DataTemplate DataType="{x:Type serverprofile:ServerProfileOverviewGalleryViewModel}">
         <serverprofileview:InstanceProfileOverviewGalleryView />
+    </DataTemplate>
+
+
+    <!--    -->
+    <!--  Profile  -->
+    <!--    -->
+    <DataTemplate DataType="{x:Type profile:ProfileLayoutViewModel}">
+        <profile1:ProfileLayoutView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type profile:ProfileViewModel}">
+        <profile1:ProfileView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type profile:ProfileSettingsViewModel}">
+        <profile1:ProfileSettingsView />
     </DataTemplate>
 </ResourceDictionary>
