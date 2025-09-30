@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
@@ -16,6 +17,7 @@ namespace Lexplosion.UI.WPF.Controls
         SlideToRight,
         SlideToTop,
         SlideToBottom,
+        ZoomInEntrance
     }
 
     public class AnimatedContentControl : ContentControl
@@ -70,12 +72,72 @@ namespace Lexplosion.UI.WPF.Controls
                     case ContentControlAnimation.Fade:
                         BeginFadeAnimationContentReplacement();
                         break;
+                    case ContentControlAnimation.ZoomInEntrance:
+                        BeginZoomInEntranceAnimationContentReplacement();
+                        break;
                     default:
+                        _paintArea.Visibility = Visibility.Hidden;
                         break;
                 }
 
             }
             base.OnContentChanged(oldContent, newContent);
+        }
+
+        private void BeginScopeAnimationContentReplacement()
+        private void BeginZoomInEntranceAnimationContentReplacement()
+        {
+            _contentPresenter.Opacity = 0;
+
+            var opac = new DoubleAnimation()
+            {
+                To = 0,
+                Duration = TimeSpan.FromSeconds(0.5)
+            };
+
+            // Анимация масштаба - создает эффект "выдвижения вперед"
+            var scaleAnimation = new DoubleAnimation
+            {
+                From = 0.7,
+                To = 1.0,
+                Duration = TimeSpan.FromSeconds(0.6),
+                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+            };
+
+            // Анимация прозрачности
+            var opacityAnimation = new DoubleAnimation
+            {
+                From = 0,
+                To = 1,
+                Duration = TimeSpan.FromSeconds(0.4)
+            };
+
+            // Анимация тени для усиления эффекта глубины
+            var shadowAnimation = new DoubleAnimation
+            {
+                From = 0,
+                To = 20,
+                Duration = TimeSpan.FromSeconds(0.6),
+                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+            };
+
+            // Создаем трансформацию масштаба
+            var scaleTransform = new ScaleTransform(0.7, 0.7);
+            _contentPresenter.RenderTransformOrigin = new Point(0.5, 0.5);
+            _contentPresenter.RenderTransform = scaleTransform;
+
+            // Применяем анимации
+            scaleTransform.BeginAnimation(ScaleTransform.ScaleXProperty, scaleAnimation);
+            scaleTransform.BeginAnimation(ScaleTransform.ScaleYProperty, scaleAnimation);
+            _contentPresenter.BeginAnimation(OpacityProperty, opacityAnimation);
+
+            var shadowEffect = _contentPresenter.Effect as DropShadowEffect;
+            if (shadowEffect != null)
+            {
+                shadowEffect.BeginAnimation(DropShadowEffect.BlurRadiusProperty, shadowAnimation);
+            }
+
+            _paintArea.Visibility = Visibility.Hidden;
         }
 
         /// <summary>
