@@ -10,6 +10,7 @@
     xmlns:instanceprofile="clr-namespace:Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.InstanceProfile"
     xmlns:local="clr-namespace:Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.InstanceProfile"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
     d:DataContext="{d:DesignInstance Type=instanceprofile:InstanceProfileOverviewGalleryViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
@@ -17,6 +18,11 @@
 
     <UserControl.Resources>
         <core:BindingProxy x:Key="ViewModel" Data="{Binding}" />
+
+        <x:Array x:Key="ThumbnailSizes" Type="{x:Type sys:Double}">
+            <sys:Double>200</sys:Double>
+            <sys:Double>110</sys:Double>
+        </x:Array>
     </UserControl.Resources>
 
     <Grid>
@@ -59,7 +65,7 @@
                                                 </Border.CacheMode>
 
                                                 <Border.Background>
-                                                    <ImageBrush ImageSource="{Binding}" Stretch="UniformToFill" />
+                                                    <ImageBrush ImageSource="{Binding Converter={converters:ImageToThumbnailConverter}, ConverterParameter={StaticResource ThumbnailSizes}}" Stretch="UniformToFill" />
                                                 </Border.Background>
 
                                             </Border>
