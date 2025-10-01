@@ -185,6 +185,7 @@
 
                         <DataTemplate DataType="{x:Type message:MessageItemModel}">
                             <controls:MessageItem
+                                MaxWidth="400"
                                 Margin="0,0,0,16"
                                 IsViewed="{Binding IsViewed, Mode=TwoWay}"
                                 Text="{Binding Text}"
