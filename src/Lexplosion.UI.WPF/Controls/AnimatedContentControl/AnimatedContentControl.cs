@@ -84,7 +84,6 @@ namespace Lexplosion.UI.WPF.Controls
             base.OnContentChanged(oldContent, newContent);
         }
 
-        private void BeginScopeAnimationContentReplacement()
         private void BeginZoomInEntranceAnimationContentReplacement()
         {
             _contentPresenter.Opacity = 0;
