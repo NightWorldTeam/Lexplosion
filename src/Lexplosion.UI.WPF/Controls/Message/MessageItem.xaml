@@ -26,7 +26,10 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <Viewbox Height="14">
+                            <Viewbox
+                                Height="14"
+                                Margin="0,3,0,0"
+                                VerticalAlignment="Top">
                                 <Path
                                     x:Name="PART_Icon"
                                     Data="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z M464 336a48 48 0 1 0 96 0 48 48 0 1 0-96 0zm72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z"
@@ -37,11 +40,12 @@
                             <TextBlock
                                 x:Name="PART_Text"
                                 Grid.Column="1"
-                                Margin="12,-1,0,0"
+                                Margin="12,0,0,0"
                                 VerticalAlignment="Center"
                                 FontSize="14"
                                 Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                Text="{TemplateBinding Text}" />
+                                Text="{TemplateBinding Text}"
+                                TextWrapping="WrapWithOverflow" />
                         </Grid>
                     </Border>
                 </ControlTemplate>
