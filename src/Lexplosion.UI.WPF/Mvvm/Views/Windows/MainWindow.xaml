@@ -109,7 +109,6 @@
             Grid.Row="1"
             Background="{DynamicResource SecondarySolidColorBrush}"
             KeyboardNavigation.IsTabStop="False"
-            MouseEnter="Grid_MouseEnter"
             RenderTransformOrigin="0.5, 0.5">
 
             <!--  Content  -->
@@ -269,7 +268,6 @@
                 IsActive="{Binding GlobalLoadingArgs.State}"
                 Placeholder="{Binding GlobalLoadingArgs.ProcessDescription}" />
         </Grid>
-
 
         <!--  Заготовка видимая при наведении на друзей  -->
         <!--<Border

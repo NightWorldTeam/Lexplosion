@@ -8,7 +8,6 @@ using Lexplosion.UI.WPF.Core.ViewModel;
 using Lexplosion.UI.WPF.Mvvm.Models.InstanceControllers;
 using Lexplosion.UI.WPF.Mvvm.Models.InstanceTransfer;
 using System;
-using System.Windows.Forms;
 using System.Windows.Input;
 
 namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Modal.InstanceTransfer
@@ -154,8 +153,8 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Modal.InstanceTransfer
                 default:
                     _appCore.NotificationService.Notify(
                         new SimpleNotification(
-                            string.Format(_appCore.Resources("InstanceShareColon_") as string, InstanceName),
-                            _appCore.Resources($"ShareExport{exportResult}") as string)
+                            string.Format(_appCore.Resources["InstanceShareColon_"] as string, InstanceName),
+                            _appCore.Resources[$"ShareExport{exportResult}"] as string)
                         );
                     break;
             }

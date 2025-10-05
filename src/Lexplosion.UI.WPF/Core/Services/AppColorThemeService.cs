@@ -1,16 +1,17 @@
-﻿using System.Collections.Generic;
-using System.Windows;
-using System;
-using System.Windows.Media;
+﻿using Lexplosion.Logic;
+using Lexplosion.Logic.Management;
 using Lexplosion.UI.WPF.Core.Objects;
-using Lexplosion.UI.WPF.Tools;
-using Lexplosion.UI.WPF.Extensions;
-using System.Linq;
-using Lexplosion.UI.WPF.NWColorTools;
-using System.Threading;
-using Lexplosion.Global;
 using Lexplosion.UI.WPF.Core.ViewModel;
+using Lexplosion.UI.WPF.Extensions;
+using Lexplosion.UI.WPF.NWColorTools;
+using Lexplosion.UI.WPF.Tools;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading;
+using System.Windows;
+using System.Windows.Media;
 
 namespace Lexplosion.UI.WPF.Core.Services
 {
@@ -19,6 +20,9 @@ namespace Lexplosion.UI.WPF.Core.Services
         public event Action ColorThemeChanged;
         public event Action ActivityColorChanged;
         public event Action AppHeaderTemplateNameChanged;
+
+        private readonly Settings _settingsCore;
+        private readonly AllServicesContainer _serviceContainer;
 
         private ResourceDictionary _selectedThemeResourceDictionary;
         private Color _selectedActivityColor;
@@ -50,8 +54,10 @@ namespace Lexplosion.UI.WPF.Core.Services
         #endregion Properties
 
 
-        public AppColorThemeService()
+        public AppColorThemeService(AllServicesContainer serviceContainer, Settings settings)
         {
+            _settingsCore = settings;
+            _serviceContainer = serviceContainer;
             LoadDefaultTheme();
             LoadActivityColors();
             LoadHeaderTemplates();
@@ -63,11 +69,11 @@ namespace Lexplosion.UI.WPF.Core.Services
 
         public void ChangeWindowHeaderTemplate(string templateName)
         {
-            if (templateName != GlobalData.GeneralSettings.AppHeaderTemplateName) 
+            if (templateName != _settingsCore.AppHeaderTemplateName) 
             {
                 SelectedAppHeaderTemplateName = templateName;
-                GlobalData.GeneralSettings.AppHeaderTemplateName = templateName;
-                Runtime.ServicesContainer.DataFilesService.SaveSettings(GlobalData.GeneralSettings);
+                _settingsCore.AppHeaderTemplateName = templateName;
+                _serviceContainer.DataFilesService.SaveSettings(_settingsCore);
                 AppHeaderTemplateNameChanged?.Invoke();
             }
         }
@@ -211,8 +217,8 @@ namespace Lexplosion.UI.WPF.Core.Services
             if (isSelected && color != null)
             {
                 ChangeActivityColor(color.Brush.Color);
-                GlobalData.GeneralSettings.AccentColor = color.Brush.Color.ToString();
-                Runtime.ServicesContainer.DataFilesService.SaveSettings(GlobalData.GeneralSettings);
+                _settingsCore.AccentColor = color.Brush.Color.ToString();
+                _serviceContainer.DataFilesService.SaveSettings(_settingsCore);
             }
         }
 
@@ -221,8 +227,8 @@ namespace Lexplosion.UI.WPF.Core.Services
             if (isSelected)
             {
                 ChangeTheme(theme, theme.HasChangeAnimation);
-                GlobalData.GeneralSettings.ThemeName = theme.Name;
-				Runtime.ServicesContainer.DataFilesService.SaveSettings(GlobalData.GeneralSettings);
+                _settingsCore.ThemeName = theme.Name;
+                _serviceContainer.DataFilesService.SaveSettings(_settingsCore);
             }
         }
 
@@ -232,7 +238,7 @@ namespace Lexplosion.UI.WPF.Core.Services
 
         protected virtual void LoadHeaderTemplates()
         {
-            SelectedAppHeaderTemplateName = GlobalData.GeneralSettings.AppHeaderTemplateName;
+            SelectedAppHeaderTemplateName = _settingsCore.AppHeaderTemplateName;
             _headerTemplateNames = ["WindowsOS", "MacOS"];
         }
 
@@ -248,7 +254,7 @@ namespace Lexplosion.UI.WPF.Core.Services
                 //Runtime.DebugWrite(theme.Name + " >>> " + GlobalData.GeneralSettings.ThemeName, color: System.ConsoleColor.Red);
             }
 
-            var savedTheme = _themes.FirstOrDefault(t => t.Name == GlobalData.GeneralSettings.ThemeName);
+            var savedTheme = _themes.FirstOrDefault(t => t.Name == _settingsCore.ThemeName);
 
             if (savedTheme == null)
                 _themes[0].IsSelected = true;
@@ -274,7 +280,7 @@ namespace Lexplosion.UI.WPF.Core.Services
                 color.SelectedEvent += SelectedColorChanged;
             }
 
-            var savedColorBrush = (SolidColorBrush)new BrushConverter().ConvertFrom(GlobalData.GeneralSettings.AccentColor);
+            var savedColorBrush = (SolidColorBrush)new BrushConverter().ConvertFrom(_settingsCore.AccentColor);
             var savedColor = new ActivityColor(savedColorBrush);
             savedColor.SelectedEvent += SelectedColorChanged;
             if (savedColorBrush == null)

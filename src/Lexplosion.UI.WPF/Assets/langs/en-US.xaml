@@ -1011,4 +1011,12 @@
     <s:String x:Key="AuthCodeUserDenied">User denied!</s:String>
     <s:String x:Key="AuthCodeMinor">Mirror error</s:String>
     <s:String x:Key="AuthCodeNoXbox">No xbox</s:String>
+
+    <s:String x:Key="Scaling">Scaling</s:String>
+    <s:String x:Key="ZoomLevel">Zoom level</s:String>
+    <s:String x:Key="ZoomLevelDescription">Control the zoom level to adjust the size of interface</s:String>
+    <s:String x:Key="IsCenterWindowAuto">Center window automatically</s:String>
+    <s:String x:Key="IsCenterWindowAutoDescription">Center window automatically after scaling</s:String>
+    <s:String x:Key="IsScalingAnimationEnabled">Scaling Animation</s:String>
+    <s:String x:Key="IsScalingAnimationEnabledDescription">Toggle animation for scaling</s:String>
 </ResourceDictionary>

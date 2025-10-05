@@ -1011,4 +1011,13 @@
     <s:String x:Key="AuthCodeUserDenied">User denied!</s:String>
     <s:String x:Key="AuthCodeMinor">Mirror error</s:String>
     <s:String x:Key="AuthCodeNoXbox">No xbox</s:String>
+
+
+    <s:String x:Key="Scaling">Масштабирование</s:String>
+    <s:String x:Key="ZoomLevel">Масштабирование интерфейса</s:String>
+    <s:String x:Key="ZoomLevelDescription">Управляет уровнем масштабирования, позволяет изменять размер интерфейса</s:String>
+    <s:String x:Key="IsCenterWindowAuto">Центрирование окна</s:String>
+    <s:String x:Key="IsCenterWindowAutoDescription">Центрировать окно по центру после масштабирования</s:String>
+    <s:String x:Key="IsScalingAnimationEnabled">Анимации при масштабировании</s:String>
+    <s:String x:Key="IsScalingAnimationEnabledDescription">Вкл/Выкл анимации при масштабировании</s:String>
 </ResourceDictionary>

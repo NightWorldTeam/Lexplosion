@@ -428,8 +428,8 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.Mvvm.InstanceModel
                 case InstanceInit.DownloadFilesError:
                     {
                         // TODO: В будещем переделать ToastMessage на работу с ключами
-                        var title = _appCore.Resources("FailedToDownloadSomeFiles") as string;
-                        var notifyContent = _appCore.Resources("FailedToDownloadFollowingFiles:_") as string;
+                        var title = _appCore.Resources["FailedToDownloadSomeFiles"] as string;
+                        var notifyContent = _appCore.Resources["FailedToDownloadFollowingFiles:_"] as string;
                         if (errors.Count() > 0)
                         {
                             notifyContent = string.Format(notifyContent, errors.Cast<object>().ToArray());
@@ -440,80 +440,80 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.Mvvm.InstanceModel
                     break;
                 case InstanceInit.CurseforgeIdError:
                     {
-                        var title = _appCore.Resources("CurseforgeErrorTitle") as string;
-                        var notifyContent = _appCore.Resources("ExternalIdIncorrect") as string;
+                        var title = _appCore.Resources["CurseforgeErrorTitle"] as string;
+                        var notifyContent = _appCore.Resources["ExternalIdIncorrect"] as string;
 
                         _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent, type: NotificationType.Error));
                     }
                     break;
                 case InstanceInit.NightworldIdError:
                     {
-                        var title = _appCore.Resources("NightWorldErrorTitle") as string;
-                        var notifyContent = _appCore.Resources("ExternalIdIncorrect") as string;
+                        var title = _appCore.Resources["NightWorldErrorTitle"] as string;
+                        var notifyContent = _appCore.Resources["ExternalIdIncorrect"] as string;
 
                         _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent, type: NotificationType.Error));
                     }
                     break;
                 case InstanceInit.ServerError:
                     {
-                        var title = _appCore.Resources("ServerError") as string;
-                        var notifyContent = _appCore.Resources("FailedToGetDataFromServer") as string;
+                        var title = _appCore.Resources["ServerError"] as string;
+                        var notifyContent = _appCore.Resources["FailedToGetDataFromServer"] as string;
 
                         _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent, type: NotificationType.Error));
                     }
                     break;
                 case InstanceInit.GuardError:
                     {
-                        var title = _appCore.Resources("GuardErrorTitle") as string;
-                        var notifyContent = _appCore.Resources("FileVerificationFailed") as string;
+                        var title = _appCore.Resources["GuardErrorTitle"] as string;
+                        var notifyContent = _appCore.Resources["FileVerificationFailed"] as string;
 
                         _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent, type: NotificationType.Error));
                     }
                     break;
                 case InstanceInit.VersionError:
                     {
-                        var title = _appCore.Resources("VersionErrorTitle") as string;
-                        var notifyContent = _appCore.Resources("VersionVerificationFailed") as string;
+                        var title = _appCore.Resources["VersionErrorTitle"] as string;
+                        var notifyContent = _appCore.Resources["VersionVerificationFailed"] as string;
 
                         _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent, type: NotificationType.Error));
                     }
                     break;
                 case InstanceInit.ForgeVersionError:
                     {
-                        var title = _appCore.Resources("ForgeVersionErrorTitle") as string;
-                        var notifyContent = _appCore.Resources("ModloaderVerificationFailed") as string;
+                        var title = _appCore.Resources["ForgeVersionErrorTitle"] as string;
+                        var notifyContent = _appCore.Resources["ModloaderVerificationFailed"] as string;
 
                         _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent, type: NotificationType.Error));
                     }
                     break;
                 case InstanceInit.GamePathError:
                     {
-                        var title = _appCore.Resources("GamePathErrorTitle") as string;
-                        var notifyContent = _appCore.Resources("InvalidGameDirectory") as string;
+                        var title = _appCore.Resources["GamePathErrorTitle"] as string;
+                        var notifyContent = _appCore.Resources["InvalidGameDirectory"] as string;
 
                         _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent, type: NotificationType.Error));
                     }
                     break;
                 case InstanceInit.ManifestError:
                     {
-                        var title = _appCore.Resources("ManifestErrorTitle") as string;
-                        var notifyContent = _appCore.Resources("FailedLoadInstanceManifest") as string;
+                        var title = _appCore.Resources["ManifestErrorTitle"] as string;
+                        var notifyContent = _appCore.Resources["FailedLoadInstanceManifest"] as string;
 
                         _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent, type: NotificationType.Error));
                     }
                     break;
                 case InstanceInit.JavaDownloadError:
                     {
-                        var title = _appCore.Resources("JavaDownloadErrorTitle") as string;
-                        var notifyContent = _appCore.Resources("TrySetCustomJavaPath") as string;
+                        var title = _appCore.Resources["JavaDownloadErrorTitle"] as string;
+                        var notifyContent = _appCore.Resources["TrySetCustomJavaPath"] as string;
 
                         _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent, type: NotificationType.Error));
                     }
                     break;
                 case InstanceInit.IsCancelled:
                     {
-                        var title = _appCore.Resources("InstanceDownloadCanceledSuccessfully") as string;
-                        var notifyContent = string.Format(_appCore.Resources("InstanceName:_") as string, Name);
+                        var title = _appCore.Resources["InstanceDownloadCanceledSuccessfully"] as string;
+                        var notifyContent = string.Format(_appCore.Resources["InstanceName:_"] as string, Name);
 
                         _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent, type: NotificationType.Error));
 
@@ -522,8 +522,8 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.Mvvm.InstanceModel
                     }
                 default:
                     {
-                        var title = _appCore.Resources("UnknownErrorTitle") as string;
-                        var notifyContent = _appCore.Resources("UnknownErrorTryRestartLauncher") as string;
+                        var title = _appCore.Resources["UnknownErrorTitle"] as string;
+                        var notifyContent = _appCore.Resources["UnknownErrorTryRestartLauncher"] as string;
 
                         _appCore.NotificationService.Notify(new SimpleNotification(title, notifyContent, type: NotificationType.Error));
                     }
@@ -785,9 +785,9 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.Mvvm.InstanceModel
         public void Delete()
         {
             _appCore.ModalNavigationStore.Open(new ConfirmActionViewModel(
-                    _appCore.Resources("DeletingInstance") as string,
-                    string.Format(_appCore.Resources("DeletingInstanceDescription") as string, Name),
-                    _appCore.Resources("YesIWantDeleteInstance") as string,
+                    _appCore.Resources["DeletingInstance"] as string,
+                    string.Format(_appCore.Resources["DeletingInstanceDescription"] as string, Name),
+                    _appCore.Resources["YesIWantDeleteInstance"] as string,
                     (obj) =>
                     {
                         GlobalDeletedEvent?.Invoke(this);

@@ -5,16 +5,11 @@ using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Tools;
 using Lexplosion.UI.WPF.Core;
 using Lexplosion.UI.WPF.Core.Notifications;
-using Lexplosion.UI.WPF.Core.Services;
 using Lexplosion.UI.WPF.Core.Tools;
 using Lexplosion.UI.WPF.Mvvm.ViewModels.Modal;
 using Microsoft.VisualBasic.Devices;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Net.Http.Headers;
 using System.Windows.Forms;
 
 namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.Content.GeneralSettings
@@ -83,9 +78,9 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.Content.GeneralSettings
 					if (_clientsManager.LibrarySize > 0 && newDirIsEmpty)
 					{
 						var entireDirectoryCopyModal = new ConfirmActionViewModel(
-							_appCore.Resources("DirectoryTransfer") as string,
-							string.Format(_appCore.Resources("DirectoryTransferDescription") as string),
-							_appCore.Resources("DirectoryTransferAgreeButtonText") as string,
+							_appCore.Resources["DirectoryTransfer"] as string,
+							string.Format(_appCore.Resources["DirectoryTransferDescription"] as string),
+							_appCore.Resources["DirectoryTransferAgreeButtonText"] as string,
 							(obj) =>
 							{
 								copyEntireOldDirectory = true;
@@ -97,8 +92,8 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.Content.GeneralSettings
 							if (!copyEntireOldDirectory)
 							{
 								_appCore.NotificationService.Notify(new SimpleNotification(
-									_appCore.Resources("RestartLauncher") as string,
-									_appCore.Resources("RestartLauncherDescription") as string)
+									_appCore.Resources["RestartLauncher"] as string,
+									_appCore.Resources["RestartLauncherDescription"] as string)
 									);
 							}
 						};
@@ -108,8 +103,8 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.Content.GeneralSettings
 					else
 					{
 						_appCore.NotificationService.Notify(new SimpleNotification(
-									_appCore.Resources("RestartLauncher") as string,
-									_appCore.Resources("RestartLauncherDescription") as string)
+									_appCore.Resources["RestartLauncher"] as string,
+									_appCore.Resources["RestartLauncherDescription"] as string)
 									);
 					}
 				}
@@ -374,8 +369,8 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.Content.GeneralSettings
 				_appCore.MessageService.Success("SuccessDirectoryTransfer", true);
 				_appCore.SetGlobalLoadingStatus(false);
 				_appCore.NotificationService.Notify(new SimpleNotification(
-					_appCore.Resources("RestartLauncher") as string,
-					_appCore.Resources("RestartLauncherDescription") as string)
+					_appCore.Resources["RestartLauncher"] as string,
+					_appCore.Resources["RestartLauncherDescription"] as string)
 					);
 			});
 		}

@@ -272,23 +272,23 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels
                     });
                 }
 
-                TrayComponents.Add(new TrayButton(1, (string)resources("TrayHideLauncher"), RuntimeApp.CloseMainWindow)
+                TrayComponents.Add(new TrayButton(1, (string)resources["TrayHideLauncher"], RuntimeApp.CloseMainWindow)
                 {
                     IsEnabled = App.Current.MainWindow?.GetType() == typeof(MainWindow)
                 });
-                TrayComponents.Add(new TrayButton(2, (string)resources("MaximizeLauncher"), RuntimeApp.ShowMainWindow)
+                TrayComponents.Add(new TrayButton(2, (string)resources["MaximizeLauncher"], RuntimeApp.ShowMainWindow)
                 {
                     IsEnabled = App.Current.MainWindow?.GetType() != typeof(MainWindow)
                 });
-                TrayComponents.Add(new TrayButton(3, (string)resources("TrayReloadMultiplayer"), LaunchGame.RebootOnlineGame)
+                TrayComponents.Add(new TrayButton(3, (string)resources["TrayReloadMultiplayer"], LaunchGame.RebootOnlineGame)
                 {
                     IsEnabled = Account.ActiveAccount != null && Account.ActiveAccount.AccountType == AccountType.NightWorld
                 });
-                TrayComponents.Add(new TrayButton(4, (string)resources("ContactSupport"), ContentSupport)
+                TrayComponents.Add(new TrayButton(4, (string)resources["ContactSupport"], ContentSupport)
                 {
                     IsEnabled = true
                 });
-                TrayComponents.Add(new TrayButton(5, (string)resources("Close"), Runtime.KillApp)
+                TrayComponents.Add(new TrayButton(5, (string)resources["Close"], Runtime.KillApp)
                 {
                     IsEnabled = true
                 });

@@ -6,7 +6,9 @@ using Lexplosion.UI.WPF.Core.Services;
 using Lexplosion.UI.WPF.Core.ViewModel;
 using Lexplosion.UI.WPF.Stores;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Windows.Input;
 
@@ -43,23 +45,23 @@ namespace Lexplosion.UI.WPF.Core
 
         public Gallery()
         {
-            
+
         }
 
         /// <summary>
         /// Закрывает изображение и очищает ImageSources
         /// </summary>
-        public void CloseImage() 
+        public void CloseImage()
         {
             _imageSources.Clear();
             SelectedImageSource = null;
             UpdateState();
         }
-        
+
         /// <summary>
         /// Заменяет контекст
         /// </summary>
-        public void ChangeContext(IEnumerable<object> imageSources) 
+        public void ChangeContext(IEnumerable<object> imageSources)
         {
             _imageSources.Clear();
             _imageSources = new(imageSources);
@@ -70,17 +72,17 @@ namespace Lexplosion.UI.WPF.Core
         /// Пытается найти изображение в ресурсах заданных при контексте. Сохраняет индекс.
         /// Если изображение не найдено в ресурсах, отрисовывает изображение.
         /// </summary>
-        public void SelectImage(object imageSource) 
+        public void SelectImage(object imageSource)
         {
             _imageSourceIndex = -1;
 
-            if (imageSource is string) 
+            if (imageSource is string)
             {
                 _imageSourceIndex = _imageSources.FindIndex(i => i == imageSource);
             }
             else
             {
-                if (imageSource is IEnumerable<byte> bytes) 
+                if (imageSource is IEnumerable<byte> bytes)
                 {
                     _imageSourceIndex = _imageSources.FindIndex(i => i is IEnumerable<byte> && (i as IEnumerable<byte>).SequenceEqual(bytes));
                 }
@@ -92,7 +94,7 @@ namespace Lexplosion.UI.WPF.Core
             UpdateState();
         }
 
-        public void Next() 
+        public void Next()
         {
             throw new NotImplementedException();
         }
@@ -102,11 +104,37 @@ namespace Lexplosion.UI.WPF.Core
             throw new NotImplementedException();
         }
 
-        private void UpdateState() 
+        private void UpdateState()
         {
             OnPropertyChanged(null);
             StateChanged?.Invoke();
         }
+    }
+
+    public sealed class AppResources : INotifyCollectionChanged
+    {
+        public event NotifyCollectionChangedEventHandler CollectionChanged;
+
+        private readonly IDictionary _resources;
+
+        public AppResources(IDictionary resources)
+        {
+            _resources = resources;
+        }
+
+        public object this[object key]
+        {
+            get => _resources[key];
+            set
+            {
+                _resources[key] = value;
+                CollectionChanged?.Invoke(
+                    this,
+                    new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace)
+                    );
+            }
+        }
+
     }
 
     public sealed class AppCore
@@ -126,7 +154,7 @@ namespace Lexplosion.UI.WPF.Core
         /// <summary>
         /// Метод для получения ресурсов приложения по ключу.
         /// </summary>
-        public readonly Func<object, object> Resources;
+        public AppResources Resources { get; }
 
 
         #region Properties
@@ -157,22 +185,22 @@ namespace Lexplosion.UI.WPF.Core
         #endregion Properties
 
 
-        public AppCore(Action<Action> uiThread, Func<object, object> getResource, Action restartApp)
+        public AppCore(Action<Action> uiThread, AppResources appResources, Action restartApp)
         {
             _restartApp = restartApp;
-            Resources = getResource;
+            Resources = appResources;
             UIThread = uiThread;
             MessageService = new MessageService();
             NotificationService = new NotificationService();
         }
 
 
-        public ICommand BuildNavigationCommand(ViewModelBase viewModel, Action<ViewModelBase> action = null) 
+        public ICommand BuildNavigationCommand(ViewModelBase viewModel, Action<ViewModelBase> action = null)
         {
             return BuildNavigationCommand<ViewModelBase>(viewModel, action);
         }
 
-        public ICommand BuildNavigationCommand<T>(T viewModel, Action<T> action = null) where T : ViewModelBase 
+        public ICommand BuildNavigationCommand<T>(T viewModel, Action<T> action = null) where T : ViewModelBase
         {
             return new NavigateCommand<ViewModelBase>(NavigationStore, () =>
             {
@@ -181,19 +209,19 @@ namespace Lexplosion.UI.WPF.Core
             });
         }
 
-        public void SetGlobalLoadingStatus(bool status, string processDescription = "", bool isProcessDescriptionKey = false) 
+        public void SetGlobalLoadingStatus(bool status, string processDescription = "", bool isProcessDescriptionKey = false)
         {
             var description = processDescription;
 
-            if (isProcessDescriptionKey) 
+            if (isProcessDescriptionKey)
             {
-                description = Resources(processDescription) as string;
+                description = Resources["processDescription"] as string;
             }
 
             GlobalLoadingStarted?.Invoke(new GlobalLoadingArgs(status, description));
         }
 
-        public void RestartApp() 
+        public void RestartApp()
         {
             _restartApp();
         }

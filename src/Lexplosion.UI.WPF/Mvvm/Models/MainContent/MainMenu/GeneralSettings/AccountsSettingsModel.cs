@@ -6,7 +6,6 @@ using Lexplosion.UI.WPF.Mvvm.ViewModels.Modal;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Xml.Linq;
 
 namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.MainMenu.GeneralSettings
 {
@@ -208,9 +207,9 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.MainMenu.GeneralSettings
         public void SignOut(Account acc)
         {
             _appCore.ModalNavigationStore.Open(new ConfirmActionViewModel(
-                    _appCore.Resources("RemoveAccount") as string,
-                    string.Format(_appCore.Resources("RemoveAccountDescription") as string, acc.Login),
-                    _appCore.Resources("YesIWantRemoveAccount") as string,
+                    _appCore.Resources["RemoveAccount"] as string,
+                    string.Format(_appCore.Resources["RemoveAccountDescription"] as string, acc.Login),
+                    _appCore.Resources["YesIWantRemoveAccount"] as string,
                     (obj) =>
                     {
                         RemoveAccount(acc);
@@ -221,9 +220,9 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.MainMenu.GeneralSettings
         public void SingOutAllAccounts()
         {
             _appCore.ModalNavigationStore.Open(new ConfirmActionViewModel(
-                _appCore.Resources("RemoveAllAccount") as string,
-                _appCore.Resources("RemoveAllAccountDescription") as string,
-                _appCore.Resources("YesIWantRemoveAllAccount") as string,
+                _appCore.Resources["RemoveAllAccount"] as string,
+                _appCore.Resources["RemoveAllAccountDescription"] as string,
+                _appCore.Resources["YesIWantRemoveAllAccount"] as string,
                 (obj) =>
                 {
                     foreach (var acc in new List<AccountItem>(_accounts))

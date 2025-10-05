@@ -9,10 +9,16 @@ namespace Lexplosion.UI.WPF.Core.Converters
         {
             if (value is double) 
             {
-                //Runtime.DebugWrite(((double)value / 100) * double.Parse(parameter.ToString(), CultureInfo.InvariantCulture));
-                return ((double)value / 100) * double.Parse(parameter.ToString(), CultureInfo.InvariantCulture);
+                return ((double)value / 100) * double.Parse(parameter.ToString(), CultureInfo.InvariantCulture) / GetScalingFactor();
             }
             return 620;
+        }
+
+        private double GetScalingFactor()
+        {
+            var value = App.Current.Resources["ScalingFactorValue"];
+            value ??= 1.0d;
+            return (double)value;
         }
     }
 }

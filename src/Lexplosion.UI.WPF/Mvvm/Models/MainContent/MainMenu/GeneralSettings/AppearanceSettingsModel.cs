@@ -6,6 +6,7 @@ using Lexplosion.UI.WPF.Core.Services;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.Content.GeneralSettings
@@ -58,6 +59,54 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.Content.GeneralSettings
         }
 
 
+        private double _scalingFactor;
+        public double ScalingFactor 
+        {
+            get => _scalingFactor; set 
+            {
+                if (_scalingFactor != value) 
+                {
+                    _scalingFactor = value;
+                    _appCore.Settings.Core.ZoomLevel = value / 100;
+                    _appCore.Settings.SaveCore();
+                    _appCore.Resources["ScalingFactorValue"] = value / 100;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+
+        private bool _isCenterWindowAuto;
+        public bool IsCenterWindowAuto 
+        {
+            get => _isCenterWindowAuto; set 
+            {
+                if (_isCenterWindowAuto != value) 
+                {
+                    _isCenterWindowAuto = value;
+                    _appCore.Settings.Core.IsCenterWindowAuto = value;
+                    _appCore.Settings.SaveCore();
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private bool _isScalingAnimationEnabled;
+        public bool IsScalingAnimationEnabled
+        {
+            get => _isScalingAnimationEnabled; set
+            {
+                if (_isScalingAnimationEnabled != value)
+                {
+                    _isScalingAnimationEnabled = value;
+                    _appCore.Settings.Core.IsScalingAnimationEnabled = value;
+                    _appCore.Settings.SaveCore();
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+
         #region Tooltip
 
 
@@ -102,6 +151,9 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.Content.GeneralSettings
         public AppearanceSettingsModel(AppCore appCore)
         {
             _appCore = appCore;
+            _scalingFactor = _appCore.Settings.Core.ZoomLevel * 100;
+            OnPropertyChanged(nameof(ScalingFactor));
+            IsCenterWindowAuto = _appCore.Settings.Core.IsCenterWindowAuto;
             _themeService = _appCore.Settings.ThemeService;
         }
 

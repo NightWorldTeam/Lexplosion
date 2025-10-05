@@ -1,34 +1,26 @@
-﻿using Lexplosion.UI.WPF.Core.Services;
-using Lexplosion.UI.WPF.Mvvm.Models.MainContent.Content.GeneralSettings;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using Lexplosion.Logic;
+using Lexplosion.Logic.Management;
+using Lexplosion.UI.WPF.Core.Services;
 
 namespace Lexplosion.UI.WPF.Core
 {
     public class AppSettings
     {
         public AppColorThemeService ThemeService { get; set; }
-        public LanguageService LanguageService { get; set; }
 
-        public AppSettings()
+        public readonly Settings Core;
+        public readonly AllServicesContainer ServiceContainer;
+
+        public AppSettings(AllServicesContainer serviceContainer, Settings settingsCore, AppResources resources)
         {
-            ThemeService = new();
-            LanguageService = new();
+            ServiceContainer = serviceContainer;
+            Core = settingsCore;
+            ThemeService = new(serviceContainer, settingsCore);
         }
-    }
 
-    public class LanguageService 
-    {
-        public void Add() { }
-
-        public void Remove() { }
-
-        public void AddAndSelect() { }
-
-        public void Select() { }
+        public void SaveCore() 
+        {
+            ServiceContainer.DataFilesService.SaveSettings(Core);
+        }
     }
 }

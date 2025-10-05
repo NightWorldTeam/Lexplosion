@@ -218,6 +218,10 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
                     <Border
@@ -345,7 +349,7 @@
                         Margin="0,16,0,0"
                         Padding="0,0,0,16"
                         BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
-                        BorderThickness="0,0,0,0">
+                        BorderThickness="0,0,0,1">
                         <StackPanel Orientation="Vertical">
 
                             <TextBlock
@@ -373,7 +377,123 @@
                         </StackPanel>
                     </Border>
 
-                    <Border
+                    <StackPanel Grid.Row="3">
+
+                        <!--  Header  -->
+                        <Border
+                            Padding="0,32,0,12"
+                            BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
+                            BorderThickness="0,0,0,2">
+                            <TextBlock
+                                FontSize="16"
+                                FontWeight="Bold"
+                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                Text="{DynamicResource Scaling}" />
+                        </Border>
+
+
+                        <Border
+                            Grid.Row="3"
+                            Margin="0,16,0,16"
+                            Padding="0,0,0,16">
+
+                            <Grid>
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+
+                                <StackPanel Orientation="Vertical">
+
+                                    <TextBlock
+                                        FontSize="16"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                        Text="{DynamicResource ZoomLevel}" />
+                                    <TextBlock
+                                        FontSize="14"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                        Text="{DynamicResource ZoomLevelDescription}" />
+                                </StackPanel>
+
+                                <Slider
+                                    Grid.Row="1"
+                                    Margin="0,16,0,0"
+                                    AutoToolTipPlacement="TopLeft"
+                                    IsSelectionRangeEnabled="True"
+                                    IsSnapToTickEnabled="True"
+                                    Maximum="200"
+                                    Minimum="100"
+                                    SelectionStart="100"
+                                    TickFrequency="25"
+                                    TickPlacement="Both"
+                                    Value="{Binding Model.ScalingFactor, UpdateSourceTrigger=PropertyChanged}" />
+                            </Grid>
+                        </Border>
+
+                        <Border
+                            Padding="0,16,0,8"
+                            BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
+                            BorderThickness="0,0,0,1">
+                            <Grid>
+
+                                <!--  Header  -->
+                                <StackPanel>
+                                    <TextBlock
+                                        FontSize="14"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                        Text="{DynamicResource IsCenterWindowAuto}" />
+                                    <TextBlock
+                                        FontSize="14"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                        Text="{DynamicResource IsCenterWindowAutoDescription}" />
+                                </StackPanel>
+
+
+                                <!--  Content  -->
+                                <ToggleButton
+                                    HorizontalAlignment="Right"
+                                    IsChecked="{Binding Model.IsCenterWindowAuto}"
+                                    Style="{StaticResource SwitchButton}" />
+                            </Grid>
+                        </Border>
+
+                        <Border
+                            Padding="0,16,0,8"
+                            BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
+                            BorderThickness="0,0,0,0">
+                            <Grid>
+
+                                <!--  Header  -->
+                                <StackPanel>
+                                    <TextBlock
+                                        FontSize="14"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                        Text="{DynamicResource IsScalingAnimationEnabled}" />
+                                    <TextBlock
+                                        FontSize="14"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                        Text="{DynamicResource IsScalingAnimationEnabledDescription}" />
+                                </StackPanel>
+
+
+                                <!--  Content  -->
+                                <ToggleButton
+                                    HorizontalAlignment="Right"
+                                    IsChecked="{Binding Model.IsScalingAnimationEnabled}"
+                                    Style="{StaticResource SwitchButton}" />
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+
+
+                    <!--<Border
                         Grid.Row="2"
                         Margin="0,16,0,32"
                         Padding="0,0,0,16"
@@ -400,7 +520,9 @@
 
                             <StackPanel>
 
-                                <!--  ToolTip Enabled Switch  -->
+                    -->
+                    <!--  ToolTip Enabled Switch  -->
+                    <!--
 
                                 <Border
                                     Padding="0,16,0,8"
@@ -408,7 +530,9 @@
                                     BorderThickness="0,0,0,0">
                                     <Grid>
 
-                                        <!--  Header  -->
+                    -->
+                    <!--  Header  -->
+                    <!--
                                         <StackPanel>
                                             <TextBlock
                                                 FontSize="14"
@@ -423,7 +547,9 @@
                                         </StackPanel>
 
 
-                                        <!--  Content  -->
+                    -->
+                    <!--  Content  -->
+                    <!--
                                         <ToggleButton
                                             HorizontalAlignment="Right"
                                             IsChecked="{Binding Model.IsToolTipsEnabled}"
@@ -431,7 +557,9 @@
                                     </Grid>
                                 </Border>
 
-                                <!--  InitialShowDelay  -->
+                    -->
+                    <!--  InitialShowDelay  -->
+                    <!--
 
                                 <Border
                                     Padding="0,16,0,8"
@@ -444,7 +572,9 @@
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
 
-                                        <!--  Header  -->
+                    -->
+                    <!--  Header  -->
+                    <!--
                                         <StackPanel>
                                             <TextBlock
                                                 FontSize="14"
@@ -460,7 +590,9 @@
                                         </StackPanel>
 
 
-                                        <!--  Content  -->
+                    -->
+                    <!--  Content  -->
+                    <!--
                                         <controls:AdvancedTextBox
                                             Grid.Column="1"
                                             Width="90"
@@ -473,7 +605,9 @@
                                 </Border>
 
 
-                                <!--  BetweenShowDelay  -->
+                    -->
+                    <!--  BetweenShowDelay  -->
+                    <!--
 
                                 <Border
                                     Padding="0,16,0,8"
@@ -486,7 +620,9 @@
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
 
-                                        <!--  Header  -->
+                    -->
+                    <!--  Header  -->
+                    <!--
                                         <StackPanel>
                                             <TextBlock
                                                 FontSize="14"
@@ -502,7 +638,9 @@
                                         </StackPanel>
 
 
-                                        <!--  Content  -->
+                    -->
+                    <!--  Content  -->
+                    <!--
                                         <controls:AdvancedTextBox
                                             Grid.Column="1"
                                             Width="90"
@@ -515,7 +653,7 @@
                                 </Border>
                             </StackPanel>
                         </StackPanel>
-                    </Border>
+                    </Border>-->
                 </Grid>
             </Border>
         </ScrollViewer>

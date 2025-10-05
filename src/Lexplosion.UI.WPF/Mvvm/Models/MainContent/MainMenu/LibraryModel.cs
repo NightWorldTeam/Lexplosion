@@ -1,17 +1,12 @@
-﻿using Lexplosion.Logic.Management;
-using Lexplosion.Logic.Management.Addons;
-using Lexplosion.Logic.Management.Instances;
+﻿using Lexplosion.Logic.Management.Instances;
 using Lexplosion.UI.WPF.Core;
 using Lexplosion.UI.WPF.Mvvm.Models.InstanceControllers;
-using Lexplosion.UI.WPF.Mvvm.Models.InstanceTransfer;
 using Lexplosion.UI.WPF.Mvvm.Models.MainContent.MainMenu;
 using Lexplosion.UI.WPF.Mvvm.Models.Mvvm.InstanceModel;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
-using System.Windows.Input;
 
 namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent
 {
@@ -306,7 +301,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent
 
                 if (group.Name == "All")
                 {
-                    var defaultGroupCurrentLangName = _appCore.Resources("AllInstanceGroupName") as string;
+                    var defaultGroupCurrentLangName = _appCore.Resources["AllInstanceGroupName"] as string;
                     return defaultGroupCurrentLangName.IndexOf(GroupSearchText, System.StringComparison.InvariantCultureIgnoreCase) > -1;
                 }
 

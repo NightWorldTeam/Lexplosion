@@ -72,7 +72,7 @@ namespace Lexplosion.UI.WPF
             // Подписываемся на эвент для загрузки всех строенных dll'ников
             AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
 
-            _appCore = new AppCore(App.Current.Dispatcher.Invoke, (key) => App.Current.Resources[key], RestartApp);
+            _appCore = new AppCore(App.Current.Dispatcher.Invoke, new AppResources(App.Current.Resources), RestartApp);
 
             _app.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
@@ -256,7 +256,7 @@ namespace Lexplosion.UI.WPF
 
 			_appCore.UIThread.Invoke(() =>
             {
-                _appCore.Settings = new AppSettings();
+                _appCore.Settings = new AppSettings(Runtime.ServicesContainer, GlobalData.GeneralSettings, _appCore.Resources);
             });
 
             // Выставляем язык
@@ -293,7 +293,7 @@ namespace Lexplosion.UI.WPF
                 discordClient?.SetPresence(new RichPresence()
                 {
                     State = "Minecraft " + gameManager.GameVersion,
-                    Details = string.Format((_appCore.Resources("InstanceDash_") as string), gameManager.GameClientName),
+                    Details = string.Format((_appCore.Resources["InstanceDash_"] as string), gameManager.GameClientName),
                     Timestamps = Timestamps.Now,
                     Assets = new Assets()
                     {
@@ -314,7 +314,7 @@ namespace Lexplosion.UI.WPF
 
                 discordClient?.SetPresence(new RichPresence()
                 {
-                    State = _appCore.Resources("MinecraftNotRunning") as string,
+                    State = _appCore.Resources["MinecraftNotRunning"] as string,
                     Timestamps = Timestamps.Now,
                     Assets = new Assets()
                     {
@@ -401,7 +401,7 @@ namespace Lexplosion.UI.WPF
 
 			client.SetPresence(new RichPresence()
             {
-                State = _appCore.Resources("MinecraftNotRunning") as string,
+                State = _appCore.Resources["MinecraftNotRunning"] as string,
                 Timestamps = Timestamps.Now,
                 Assets = new Assets()
                 {

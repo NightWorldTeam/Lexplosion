@@ -219,9 +219,9 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
         private void RemoveInstancesGroupModal(InstancesGroup instancesGroup)
         {
             var instancesFactoryModalViewModel = new ConfirmActionViewModel(
-                    _appCore.Resources("RemoveInstancesGroupTitle") as string,
-                    string.Format(_appCore.Resources("RemoveInstancesGroupDescription") as string, instancesGroup.Name),
-                    _appCore.Resources("YesIWantToRemoveGroup") as string,
+                    _appCore.Resources["RemoveInstancesGroupTitle"] as string,
+                    string.Format(_appCore.Resources["RemoveInstancesGroupDescription"] as string, instancesGroup.Name),
+                    _appCore.Resources["YesIWantToRemoveGroup"] as string,
                 (obj) => Model.RemoveGroup(instancesGroup));
             _appCore.ModalNavigationStore.Open(instancesFactoryModalViewModel);
         }

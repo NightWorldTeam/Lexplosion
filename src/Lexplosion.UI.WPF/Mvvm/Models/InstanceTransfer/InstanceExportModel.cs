@@ -107,8 +107,8 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.InstanceTransfer
                 default:
                     _appCore.NotificationService.Notify(
                         new SimpleNotification(
-                            string.Format(_appCore.Resources("InstanceShareColon_") as string, InstanceName),
-                            _appCore.Resources($"Export{exportResult}") as string)
+                            string.Format(_appCore.Resources["InstanceShareColon_"] as string, InstanceName),
+                            _appCore.Resources[$"Export{exportResult}"] as string)
                         );
                     break;
             }

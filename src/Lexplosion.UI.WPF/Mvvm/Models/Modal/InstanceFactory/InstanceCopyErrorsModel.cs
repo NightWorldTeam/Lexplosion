@@ -14,7 +14,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Modal
         public InstanceCopyErrorsModel(AppCore appCore, string instanceName, IEnumerable<InstanceAddon> uncopiedAddons)
         {
             InstanceName = instanceName;
-            Description = string.Format(appCore.Resources("InstanceCopyUncopiedAddonsDescription") as string, instanceName);
+            Description = string.Format(appCore.Resources["InstanceCopyUncopiedAddonsDescription"] as string, instanceName);
             UncopiedAddons = uncopiedAddons;
         }
     }

@@ -1,7 +1,6 @@
 ﻿using Lexplosion.Core.Tools;
 using Lexplosion.UI.WPF.Commands;
 using Lexplosion.UI.WPF.Core;
-using Lexplosion.UI.WPF.Core.ViewModel;
 using Lexplosion.UI.WPF.Mvvm.Models.MainContent.Content.GeneralSettings;
 using System.IO;
 using System.Windows.Input;

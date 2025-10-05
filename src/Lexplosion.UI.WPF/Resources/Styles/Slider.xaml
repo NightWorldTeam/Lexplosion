@@ -53,10 +53,11 @@
             <TickBar
                 x:Name="TopTick"
                 Height="4"
-                Fill="Red"
+                Fill="{DynamicResource SecondaryForegroundSolidColorBrush}"
                 Placement="Top"
                 SnapsToDevicePixels="True"
                 Visibility="Collapsed" />
+
             <Border
                 x:Name="TrackBackground"
                 Grid.Row="1"
@@ -67,7 +68,10 @@
                 BorderThickness="1"
                 CornerRadius="2" />
 
-            <Track x:Name="PART_Track" Grid.Row="1">
+            <Track
+                x:Name="PART_Track"
+                Grid.Row="1"
+                Cursor="ScrollWE">
                 <Track.DecreaseRepeatButton>
                     <RepeatButton Command="Slider.DecreaseLarge" Style="{StaticResource SliderButtonStyle}" />
                 </Track.DecreaseRepeatButton>
@@ -83,7 +87,8 @@
                 x:Name="BottomTick"
                 Grid.Row="2"
                 Height="4"
-                Fill="{TemplateBinding Foreground}"
+                Margin="0"
+                Fill="{DynamicResource SecondaryForegroundSolidColorBrush}"
                 Placement="Bottom"
                 SnapsToDevicePixels="True"
                 Visibility="Collapsed" />
