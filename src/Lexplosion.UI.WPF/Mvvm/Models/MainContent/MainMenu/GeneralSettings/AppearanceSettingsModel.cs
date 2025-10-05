@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Controls;
+using System.Windows.Forms;
 using System.Windows.Media;
 
 namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.Content.GeneralSettings
@@ -152,6 +153,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.Content.GeneralSettings
         {
             _appCore = appCore;
             _scalingFactor = _appCore.Settings.Core.ZoomLevel * 100;
+            IsScalingAnimationEnabled = _appCore.Settings.Core.IsScalingAnimationEnabled;
             OnPropertyChanged(nameof(ScalingFactor));
             IsCenterWindowAuto = _appCore.Settings.Core.IsCenterWindowAuto;
             _themeService = _appCore.Settings.ThemeService;

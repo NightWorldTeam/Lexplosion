@@ -37,20 +37,20 @@ namespace Lexplosion.UI.WPF.Core.Services
 
         private void OnAppSettingsFieldChanged(string obj)
         {
-            if (obj == "ZoomLevel") 
+            if (obj == "ZoomLevel")
             {
                 if (_appCore.Settings.Core.IsScalingAnimationEnabled)
                 {
                     RescaleWithAnimation(_target, _targetContainer);
                 }
-                else 
+                else
                 {
                     Rescale(_target, _targetContainer);
                 }
             }
         }
 
-        public void ChangeNoFactorSizeValues(double noFactorWidth = 944, double noFactorHeight = 528) 
+        public void ChangeNoFactorSizeValues(double noFactorWidth = 944, double noFactorHeight = 528)
         {
             NoFactorWidth = noFactorWidth;
             NoFactorHeight = noFactorHeight;
@@ -79,17 +79,24 @@ namespace Lexplosion.UI.WPF.Core.Services
                 // Удаляем scope анимаций, чтобы иметь возможность изменить значения свойств.
                 target.BeginAnimation(Window.MinWidthProperty, null);
                 target.BeginAnimation(Window.MinHeightProperty, null);
+                target.BeginAnimation(Window.LeftProperty, null);
+                target.BeginAnimation(Window.TopProperty, null);
+                target.BeginAnimation(Window.WidthProperty, null);
+                target.BeginAnimation(Window.HeightProperty, null);
 
                 target.MinWidth = newMinWidth;
                 target.MinHeight = newMinHeight;
                 target.Width = newWidth;
                 target.Height = newHeight;
 
-                double screenWidth = System.Windows.SystemParameters.PrimaryScreenWidth;
-                double screenHeight = System.Windows.SystemParameters.PrimaryScreenHeight;
+                if (isCenterWindowAuto)
+                {
+                    double screenWidth = System.Windows.SystemParameters.PrimaryScreenWidth;
+                    double screenHeight = System.Windows.SystemParameters.PrimaryScreenHeight;
 
-                target.Left = (screenWidth / 2) - (target.Width / 2);
-                target.Top = (screenHeight / 2) - (target.Height / 2);
+                    target.Left = (screenWidth / 2) - (target.Width / 2);
+                    target.Top = (screenHeight / 2) - (target.Height / 2);
+                }
             }
         }
 
