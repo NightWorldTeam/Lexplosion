@@ -23,7 +23,7 @@ namespace Lexplosion
 		public static bool IsFirtsLaunch { get; private set; }
 		public static Process CurrentProcess { get; private set; }
 
-		public static AllServicesContainer ServicesContainer { get; private set; }
+		public static AppServiceContainer ServicesContainer { get; private set; }
 		public static ClientsManager ClientsManager { get; private set; }
 
 		/// <summary>
@@ -87,7 +87,7 @@ namespace Lexplosion
 
 			var categoriesManager = new CategoriesManager(modrinthApi, curesforgeApi);
 
-			var services = new AllServicesContainer(toServer, minecraftInfo, withDirectory, dataFilesManager, curesforgeApi, modrinthApi, nightWorldApi, mojangApi, categoriesManager, null);
+			var services = new AppServiceContainer(toServer, minecraftInfo, withDirectory, dataFilesManager, curesforgeApi, modrinthApi, nightWorldApi, mojangApi, categoriesManager, null);
             services.NotificationsService = new NotificationsManager(services);
             ServicesContainer = services;
 

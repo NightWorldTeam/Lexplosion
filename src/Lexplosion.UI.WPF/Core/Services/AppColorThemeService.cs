@@ -22,7 +22,7 @@ namespace Lexplosion.UI.WPF.Core.Services
         public event Action AppHeaderTemplateNameChanged;
 
         private readonly Settings _settingsCore;
-        private readonly AllServicesContainer _serviceContainer;
+        private readonly AppServiceContainer _serviceContainer;
 
         private ResourceDictionary _selectedThemeResourceDictionary;
         private Color _selectedActivityColor;
@@ -54,7 +54,7 @@ namespace Lexplosion.UI.WPF.Core.Services
         #endregion Properties
 
 
-        public AppColorThemeService(AllServicesContainer serviceContainer, Settings settings)
+        public AppColorThemeService(AppServiceContainer serviceContainer, Settings settings)
         {
             _settingsCore = settings;
             _serviceContainer = serviceContainer;

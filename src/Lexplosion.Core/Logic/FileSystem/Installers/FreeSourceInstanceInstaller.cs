@@ -26,7 +26,7 @@ namespace Lexplosion.Logic.FileSystem.Installers
 
 		private string _extractedFilesDir;
 
-		public FreeSourceInstanceInstaller(string instanceID, IAllFileServicesContainer servicesContainer) : base(instanceID, servicesContainer)
+		public FreeSourceInstanceInstaller(string instanceID, IPlatfromServiceContainer servicesContainer) : base(instanceID, servicesContainer)
 		{
 			_modrinthApi = servicesContainer.MdApi;
 			_curseforgeApi = servicesContainer.CfApi;

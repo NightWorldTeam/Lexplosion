@@ -13,7 +13,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.Modal
         private readonly Action AuthFinished;
         private readonly AppCore _appCore;
         private readonly Action _toAccountFactory;
-        private readonly AllServicesContainer _allServicesContainer = Runtime.ServicesContainer;
+        private readonly AppServiceContainer _allServicesContainer = Runtime.ServicesContainer;
 
 
         private event Action<string> MicrosoftInputTokenPassed;

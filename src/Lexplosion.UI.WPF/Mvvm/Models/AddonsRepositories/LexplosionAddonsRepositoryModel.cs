@@ -26,7 +26,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.AddonsRepositories
         private readonly Dictionary<string, List<CategoryWrapper>> _categoriesGroupsByName = new();
         private readonly Action _launchInstanceAction;
         private readonly InstanceModelBase _instanceModelBase;
-		private readonly AllServicesContainer _allServicesContainer = Runtime.ServicesContainer;
+		private readonly AppServiceContainer _allServicesContainer = Runtime.ServicesContainer;
 
         public ObservableCollection<InstanceAddon> InstalledAddons { get; set; } = [];
         public ObservableCollection<DownloableAddonFile> InProgressAddons { get; set; } = [];

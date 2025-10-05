@@ -15,7 +15,7 @@ namespace Lexplosion.Logic.Management.Import.Importers
 	{
 		private string _filePath;
 		private Settings _settings;
-		private readonly IAllFileServicesContainer _services;
+		private readonly IPlatfromServiceContainer _services;
 		private readonly WithDirectory _withDirectory;
 		private IImportManager _importManager;
 		private ProgressHandler _progressHandler;
@@ -24,7 +24,7 @@ namespace Lexplosion.Logic.Management.Import.Importers
 		private CancellationToken _cancellationToken;
 		private bool _fileAddrIsLocalPath;
 
-		public ImportExecutor(string fileAddr, bool fileAddrIsLocalPath, Settings settings, IAllFileServicesContainer services, ProgressHandler progressHandler, ImportData importData)
+		public ImportExecutor(string fileAddr, bool fileAddrIsLocalPath, Settings settings, IPlatfromServiceContainer services, ProgressHandler progressHandler, ImportData importData)
 		{
 			_filePath = fileAddr;
 			_settings = settings;

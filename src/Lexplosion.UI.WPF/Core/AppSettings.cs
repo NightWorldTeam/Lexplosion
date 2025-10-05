@@ -9,9 +9,9 @@ namespace Lexplosion.UI.WPF.Core
         public AppColorThemeService ThemeService { get; set; }
 
         public readonly Settings Core;
-        public readonly AllServicesContainer ServiceContainer;
+        public readonly AppServiceContainer ServiceContainer;
 
-        public AppSettings(AllServicesContainer serviceContainer, Settings settingsCore, AppResources resources)
+        public AppSettings(AppServiceContainer serviceContainer, Settings settingsCore, AppResources resources)
         {
             ServiceContainer = serviceContainer;
             Core = settingsCore;

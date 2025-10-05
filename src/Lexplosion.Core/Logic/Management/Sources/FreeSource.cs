@@ -22,10 +22,10 @@ namespace Lexplosion.Logic.Management.Sources
 
 		public string SourceId = null;
 		public string SourceUrl = null;
-		private readonly IAllFileServicesContainer _services;
+		private readonly IPlatfromServiceContainer _services;
 
 		public FreeSource() { }
-		public FreeSource(string sourceId, string sourceUrl, IAllFileServicesContainer services)
+		public FreeSource(string sourceId, string sourceUrl, IPlatfromServiceContainer services)
 		{
 			SourceId = sourceId;
 			SourceUrl = sourceUrl;

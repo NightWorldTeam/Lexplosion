@@ -13,7 +13,7 @@ namespace Lexplosion.Logic.Management.Addons
 {
 	static class AddonsPrototypesCreater
 	{
-		public static IPrototypeAddon CreateFromFile(BaseInstanceData indtanceData, string filePath, IAllFileServicesContainer services, CategoriesManager categoriesManager)
+		public static IPrototypeAddon CreateFromFile(BaseInstanceData indtanceData, string filePath, IPlatfromServiceContainer services, CategoriesManager categoriesManager)
 		{
 			Runtime.DebugWrite("CreateFromFile");
 			string md5;
@@ -103,7 +103,7 @@ namespace Lexplosion.Logic.Management.Addons
 			return null;
 		}
 
-		public static Dictionary<string, IPrototypeAddon> CreateFromFiles(BaseInstanceData indtanceData, List<string> files, IAllFileServicesContainer services, CategoriesManager categoriesManager)
+		public static Dictionary<string, IPrototypeAddon> CreateFromFiles(BaseInstanceData indtanceData, List<string> files, IPlatfromServiceContainer services, CategoriesManager categoriesManager)
 		{
 			var result = new Dictionary<string, IPrototypeAddon>();
 

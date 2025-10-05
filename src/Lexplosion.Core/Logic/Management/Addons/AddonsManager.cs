@@ -51,7 +51,7 @@ namespace Lexplosion.Logic.Management.Addons
 
 		private InstaceAddonsSynchronizer _synchronizer = new();
 		private BaseInstanceData _modpackInfo;
-		private readonly AllServicesContainer _services;
+		private readonly AppServiceContainer _services;
 		private object _watchingLocker = new object();
 		private FileSystemWatcher _modsDirectoryWathcer;
 		private FileSystemWatcher _resourcepacksDirectoryWathcer;
@@ -71,7 +71,7 @@ namespace Lexplosion.Logic.Management.Addons
 			remove => _synchronizer.AddonRemoved -= value;
 		}
 
-		internal AddonsManager(BaseInstanceData instanceData, AllServicesContainer services)
+		internal AddonsManager(BaseInstanceData instanceData, AppServiceContainer services)
 		{
 			_modpackInfo = instanceData;
 			_services = services;
@@ -85,7 +85,7 @@ namespace Lexplosion.Logic.Management.Addons
 		private static Dictionary<string, AddonsManager> _managers = new();
 		private static object _getManagerLocker = new object();
 
-		public static AddonsManager GetManager(BaseInstanceData instanceData, AllServicesContainer services)
+		public static AddonsManager GetManager(BaseInstanceData instanceData, AppServiceContainer services)
 		{
 			lock (_getManagerLocker)
 			{

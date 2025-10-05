@@ -16,7 +16,7 @@ namespace Lexplosion.Logic.Management.Installers
 		private SourceMap _urlsMap;
 		private ToServer _toServer;
 
-		public FreeSourceInstanceInstallManager(SourceMap urlsMap, string instanceid, bool onlyBase, IAllFileServicesContainer services, CancellationToken cancelToken) : base(new FreeSourceInstanceInstaller(instanceid, services), instanceid, onlyBase, services, cancelToken)
+		public FreeSourceInstanceInstallManager(SourceMap urlsMap, string instanceid, bool onlyBase, IPlatfromServiceContainer services, CancellationToken cancelToken) : base(new FreeSourceInstanceInstaller(instanceid, services), instanceid, onlyBase, services, cancelToken)
 		{
 			_urlsMap = urlsMap;
 			_toServer = services.WebService;

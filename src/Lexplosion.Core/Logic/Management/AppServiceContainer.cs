@@ -7,7 +7,7 @@ using Lexplosion.Logic.Network.Web;
 
 namespace Lexplosion.Logic.Management
 {
-    public class AllServicesContainer : IAllFileServicesContainer, IAuthServicesContainer
+    public class AppServiceContainer : IPlatfromServiceContainer, IAuthServicesContainer
     {
         public ToServer WebService { get; }
 
@@ -28,7 +28,7 @@ namespace Lexplosion.Logic.Management
         public CategoriesManager CategoriesService { get; }
         public NotificationsManager NotificationsService { get; internal set; }
 
-        public AllServicesContainer(ToServer webService, MinecraftInfoService minecraftService, WithDirectory directoryService, DataFilesManager dataFilesService, CurseforgeApi cfApi, ModrinthApi mdApi, NightWorldApi nwApi, MojangApi mjApi, CategoriesManager categoriesService, NotificationsManager notificationsService)
+        public AppServiceContainer(ToServer webService, MinecraftInfoService minecraftService, WithDirectory directoryService, DataFilesManager dataFilesService, CurseforgeApi cfApi, ModrinthApi mdApi, NightWorldApi nwApi, MojangApi mjApi, CategoriesManager categoriesService, NotificationsManager notificationsService)
         {
             WebService = webService;
             MinecraftService = minecraftService;
