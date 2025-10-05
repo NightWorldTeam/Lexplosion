@@ -9,6 +9,8 @@ namespace Lexplosion.Logic
 	[Serializable]
 	public class Settings
 	{
+		public event Action<string> ValueChanged;
+
 		private string _javaPath = null;
 		public string JavaPath
 		{
@@ -80,7 +82,15 @@ namespace Lexplosion.Logic
 		/// <summary>
 		/// Уровень масштабирования интерфейса.
 		/// </summary>
-		public double ZoomLevel = 1;
+		private double _zoomLevel;
+		public double ZoomLevel 
+		{
+			get => _zoomLevel; set 
+			{
+				_zoomLevel = value;
+				ValueChanged?.Invoke(nameof(ZoomLevel));
+            }
+		}
 		/// <summary>
 		/// Центрирование окна на экране после масштабирования.
 		/// </summary>

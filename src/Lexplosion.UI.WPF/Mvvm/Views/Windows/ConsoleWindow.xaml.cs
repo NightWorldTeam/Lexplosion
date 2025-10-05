@@ -1,6 +1,7 @@
 ﻿using DiscordRPC.Message;
 using Lexplosion.Logic.Management;
 using Lexplosion.UI.WPF.Core;
+using Lexplosion.UI.WPF.Core.Services;
 using Lexplosion.UI.WPF.WindowComponents.Header;
 using System;
 using System.Collections;
@@ -20,10 +21,9 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Windows
     public partial class ConsoleWindow : Window
     {
         private static ConsoleWindow _classInstance;
-
+        private readonly AppCore _appCore;
         private LaunchGame _gameManager;
-
-
+        private ScalingService _scalingService;
         private ObservableCollection<ConsoleLog> _logs = [];
         public FiltableObservableCollection Logs { get; } = [];
 
@@ -38,11 +38,13 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Windows
         #region Constructors
 
 
-        public ConsoleWindow(LaunchGame gameManager)
+        public ConsoleWindow(AppCore appCore, LaunchGame gameManager)
         {
             InitializeComponent();
             MouseDown += delegate { try { DragMove(); } catch { } };
 
+
+            _appCore = appCore;
             _gameManager = gameManager;
             Logs.Source = _logs;
             LogsContainer.ItemsSource = Logs;
@@ -58,17 +60,28 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Windows
                 () => MaximazedWindow_Click(null, null),
                 () => MinimazedWindow_Click(null, null),
                 false);
+
+            Loaded += ConsoleWindow_Loaded;
         }
+
+        private void ConsoleWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            _scalingService = new ScalingService(_appCore, this, ContainerGrid);
+            _scalingService.ChangeNoFactorSizeValues(Width, Height);
+            _scalingService.Rescale(this, ContainerGrid);
+        }
+
+
 
 
         #endregion Constructors
 
 
-        public static void SetWindow(LaunchGame gameManager)
+        public static void SetWindow(AppCore appCore, LaunchGame gameManager)
         {
             if (_classInstance == null)
             {
-                _classInstance = new ConsoleWindow(gameManager)
+                _classInstance = new ConsoleWindow(appCore, gameManager)
                 {
                     Left = App.Current.MainWindow.Left + 322,
                     Top = App.Current.MainWindow.Top + 89
@@ -237,7 +250,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Windows
                 return (i as ConsoleLog).Message.IndexOf(tb.Text, System.StringComparison.InvariantCultureIgnoreCase) > -1;
             });
         }
-        
+
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             var stringBuilder = new StringBuilder();

@@ -152,7 +152,7 @@ namespace Lexplosion.UI.WPF.Core
         /// </summary>
         public readonly Action<Action> UIThread;
         /// <summary>
-        /// Метод для получения ресурсов приложения по ключу.
+        /// Обертка на ResourceDictionary из WPF, позволяющая работать с ресурсами приложения.
         /// </summary>
         public AppResources Resources { get; }
 

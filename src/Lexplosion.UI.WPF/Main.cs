@@ -6,6 +6,7 @@ using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.UI.WPF.Core;
 using Lexplosion.UI.WPF.Core.Notifications;
+using Lexplosion.UI.WPF.Core.Services;
 using Lexplosion.UI.WPF.Core.Tools;
 using Lexplosion.UI.WPF.Extensions;
 using Lexplosion.UI.WPF.Mvvm.Models.MainContent.Content.GeneralSettings;
@@ -277,7 +278,7 @@ namespace Lexplosion.UI.WPF
 
                 if (gameManager.ClientSettings.IsShowConsole == true)
                 {
-                    App.Current.Dispatcher.Invoke(() => ConsoleWindow.SetWindow(gameManager));
+                    App.Current.Dispatcher.Invoke(() => ConsoleWindow.SetWindow(_appCore, gameManager));
                 }
             };
 
@@ -328,7 +329,7 @@ namespace Lexplosion.UI.WPF
             {
                 if (isShow && _activeGameManager != null)
                 {
-                    App.Current.Dispatcher.Invoke(() => ConsoleWindow.SetWindow(_activeGameManager));
+                    App.Current.Dispatcher.Invoke(() => ConsoleWindow.SetWindow(_appCore, _activeGameManager));
                 }
             };
 
@@ -337,7 +338,7 @@ namespace Lexplosion.UI.WPF
             {
                 if (isShow && _activeGameManager != null && _activeGameManager.InstanceId == instanceId)
                 {
-                    App.Current.Dispatcher.Invoke(() => ConsoleWindow.SetWindow(_activeGameManager));
+                    App.Current.Dispatcher.Invoke(() => ConsoleWindow.SetWindow(_appCore, _activeGameManager));
                 }
             };
 
