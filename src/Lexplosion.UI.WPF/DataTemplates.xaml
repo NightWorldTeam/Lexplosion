@@ -298,4 +298,10 @@
     <DataTemplate DataType="{x:Type profile:ProfileSettingsViewModel}">
         <profile1:ProfileSettingsView />
     </DataTemplate>
+    <DataTemplate DataType="{x:Type profile:ProfilePurchasesViewModel}">
+        <profile1:ProfilePurchasesView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type profile:ProfileCosmeticsViewModel}">
+        <profile1:ProfileCosmeticsView />
+    </DataTemplate>
 </ResourceDictionary>

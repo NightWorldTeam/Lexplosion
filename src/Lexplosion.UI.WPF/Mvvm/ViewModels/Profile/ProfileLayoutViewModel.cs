@@ -17,6 +17,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Profile
 
         public ProfileLayoutViewModel(AppCore appCore)
         {
+            // Load data here?
             _profileInfo = new(
                 "_Hel2x_",
                 new("dotnet", 0xFF00ffb5),
@@ -46,21 +47,30 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Profile
             });
             Tabs.Add(new()
             {
-                Id = 1,
-                Content = null,
-                TextKey = "Library"
+                Id = 2,
+                Content = new ProfileCosmeticsViewModel(),
+                TextKey = "Diamond"
             });
             Tabs.Add(new()
             {
-                Id = 1,
+                Id = 3,
                 Content = new ProfileSettingsViewModel(_profileInfo),
                 TextKey = "Settings"
+            });
+            Tabs.Add(new()
+            {
+                Id = 4,
+                Content = new ProfilePurchasesViewModel(),
+                TextKey = "AccountWallet"
             });
 
             foreach (var i in Tabs)
             {
                 i.SelectedChanged += OnTabSelectedChanged;
             }
+
+            Content = Tabs[0].Content;
+            OnPropertyChanged(nameof(Content));
         }
 
         private void OnTabSelectedChanged(TabItemModel arg1, bool arg2)

@@ -6,7 +6,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{C7328845-AB10-4FAC-99D8-F52FE705B628}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <RootNamespace>Lexplosion.UI.WPF</RootNamespace>
     <AssemblyName>Lexplosion</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
@@ -165,7 +165,6 @@
     <Compile Include="Extensions\ResourceDictionaryExtensions.cs" />
     <Compile Include="Extensions\ScrollViewerExtensions.cs" />
     <Compile Include="Extensions\StyleSelectors\LastRowItemWrapPanelStyleSelector.cs" />
-    <Compile Include="Extensions\System\ObjectExtensions.cs" />
     <Compile Include="Extensions\VisualExtensions.cs" />
     <Compile Include="Mvvm\Models\Authorization\AuthorizationMenuModel.cs" />
     <Compile Include="Mvvm\Models\Authorization\Modal\MicrosoftManualInputModal.cs" />
@@ -232,11 +231,16 @@
     <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\InstanceShareLayoutViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\InstanceShareViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Feedback\NotificationsViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\Profile\ProfileCosmeticsViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Profile\ProfileLayoutViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\Profile\ProfilePurchasesViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Profile\ProfileSettingsViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Profile\ProfileViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\WelcomePageThemeSelectViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\WelcomeViewModel.cs" />
+    <Compile Include="Mvvm\Views\Pages\Profile\ProfileCosmeticsView.xaml.cs">
+      <DependentUpon>ProfileCosmeticsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Mvvm\Views\Pages\Profile\ProfileFriendsView.xaml.cs">
       <DependentUpon>ProfileFriendsView.xaml</DependentUpon>
     </Compile>
@@ -245,6 +249,9 @@
     </Compile>
     <Compile Include="Mvvm\Views\Pages\Profile\ProfileLayoutView.xaml.cs">
       <DependentUpon>ProfileLayoutView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Views\Pages\Profile\ProfilePurchasesView.xaml.cs">
+      <DependentUpon>ProfilePurchasesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Mvvm\Views\Pages\Profile\ProfileSettingsView.xaml.cs">
       <DependentUpon>ProfileSettingsView.xaml</DependentUpon>
@@ -739,6 +746,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Mvvm\Views\Pages\Profile\ProfileCosmeticsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Mvvm\Views\Pages\Profile\ProfileFriendsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -750,6 +761,10 @@
     <Page Include="Mvvm\Views\Pages\Profile\ProfileLayoutView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Mvvm\Views\Pages\Profile\ProfilePurchasesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Mvvm\Views\Pages\Profile\ProfileSettingsView.xaml">
       <Generator>MSBuild:Compile</Generator>

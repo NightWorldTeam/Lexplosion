@@ -1,0 +1,275 @@
+﻿<UserControl
+    x:Class="Lexplosion.UI.WPF.Mvvm.Views.Pages.Profile.ProfilePurchasesView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Lexplosion.UI.WPF.Mvvm.Views.Pages.Profile"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:profile="clr-namespace:Lexplosion.UI.WPF.Mvvm.ViewModels.Profile"
+    d:DataContext="{d:DesignInstance Type=profile:ProfilePurchasesViewModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+
+        <Style x:Key="StatusCellStyle" TargetType="DataGridCell">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type DataGridCell}">
+                        <Border
+                            Padding="8,4"
+                            Background="Transparent"
+                            BorderBrush="Transparent"
+                            BorderThickness="0">
+                            <Border
+                                Padding="8,4"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="1"
+                                CornerRadius="5">
+                                <ContentPresenter VerticalAlignment="Center" />
+                            </Border>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <DataTrigger Binding="{Binding Status}" Value="{x:Static profile:FinanceOperationStatus.Finished}">
+                                <Setter Property="BorderBrush" Value="Green" />
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <SolidColorBrush Opacity="0.1" Color="Green" />
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Foreground" Value="Green" />
+                            </DataTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!--  Стиль для DataGrid  -->
+        <Style TargetType="{x:Type DataGrid}">
+            <Setter Property="RowDetailsVisibilityMode" Value="VisibleWhenSelected" />
+            <Setter Property="ScrollViewer.CanContentScroll" Value="true" />
+            <Setter Property="ScrollViewer.PanningMode" Value="Both" />
+            <Setter Property="Stylus.IsFlicksEnabled" Value="False" />
+            <Setter Property="HeadersVisibility" Value="Column" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="ClipToBounds" Value="True" />
+            <Setter Property="GridLinesVisibility" Value="None" />
+            <Setter Property="SelectionMode" Value="Single" />
+            <Setter Property="SelectionUnit" Value="FullRow" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type DataGrid}">
+                        <Border
+                            Background="{DynamicResource PrimarySolidColorBrush}"
+                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                            BorderThickness="2"
+                            ClipToBounds="True"
+                            CornerRadius="10">
+                            <ScrollViewer x:Name="DG_ScrollViewer" Focusable="false">
+                                <ScrollViewer.Template>
+                                    <ControlTemplate TargetType="{x:Type ScrollViewer}">
+                                        <Grid>
+
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="*" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+
+                                            <!--  Заголовки столбцов  -->
+                                            <Border
+                                                Grid.Column="1"
+                                                Grid.ColumnSpan="3"
+                                                Background="{StaticResource SecondarySolidColorBrush}"
+                                                ClipToBounds="True"
+                                                CornerRadius="8,8,0,0">
+                                                <DataGridColumnHeadersPresenter x:Name="PART_ColumnHeadersPresenter" HorizontalContentAlignment="Left" />
+                                            </Border>
+
+                                            <!--  Содержимое DataGrid  -->
+                                            <ScrollContentPresenter
+                                                x:Name="PART_ScrollContentPresenter"
+                                                Grid.Row="1"
+                                                Grid.Column="1"
+                                                CanContentScroll="{TemplateBinding CanContentScroll}" />
+
+                                            <!--  Скроллбар  -->
+                                            <ScrollBar
+                                                x:Name="PART_VerticalScrollBar"
+                                                Grid.Row="1"
+                                                Grid.Column="2"
+                                                Maximum="{TemplateBinding ScrollableHeight}"
+                                                Orientation="Vertical"
+                                                ViewportSize="{TemplateBinding ViewportHeight}"
+                                                Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"
+                                                Value="{Binding VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" />
+
+                                            <ScrollBar
+                                                x:Name="PART_HorizontalScrollBar"
+                                                Grid.Row="2"
+                                                Grid.Column="1"
+                                                Maximum="{TemplateBinding ScrollableWidth}"
+                                                Orientation="Horizontal"
+                                                ViewportSize="{TemplateBinding ViewportWidth}"
+                                                Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}"
+                                                Value="{Binding HorizontalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" />
+                                        </Grid>
+                                    </ControlTemplate>
+                                </ScrollViewer.Template>
+                                <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                            </ScrollViewer>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+        </Style>
+
+        <!--  Стиль для заголовков столбцов  -->
+        <Style TargetType="{x:Type DataGridColumnHeader}">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Height" Value="40" />
+            <Setter Property="BorderThickness" Value="0,0,1,2" />
+            <Setter Property="BorderBrush" Value="{StaticResource SeparateSolidColorBrush}" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="Padding" Value="10,5" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type DataGridColumnHeader}">
+                        <Grid Background="Transparent">
+                            <Border
+                                x:Name="headerBorder"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="0,0,0,0"
+                                SnapsToDevicePixels="True">
+                                <Grid>
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <ContentPresenter
+                                        x:Name="contentPresenter"
+                                        Margin="{TemplateBinding Padding}"
+                                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                        RecognizesAccessKey="True"
+                                        SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+
+                                    <Viewbox
+                                        x:Name="SortIcon"
+                                        Grid.Column="1"
+                                        Height="12"
+                                        Margin="0,0,8,0"
+                                        Stretch="Fill">
+
+                                        <Path Data="M8.574 11.024h6.852a2.075 2.075 0 0 0 1.847-1.086 1.9 1.9 0 0 0-.11-1.986L13.736 2.9a2.122 2.122 0 0 0-3.472 0L6.837 7.952a1.9 1.9 0 0 0-.11 1.986 2.074 2.074 0 0 0 1.847 1.086Zm6.852 1.952H8.574a2.072 2.072 0 0 0-1.847 1.087 1.9 1.9 0 0 0 .11 1.985l3.426 5.05a2.123 2.123 0 0 0 3.472 0l3.427-5.05a1.9 1.9 0 0 0 .11-1.985 2.074 2.074 0 0 0-1.846-1.087Z" Fill="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                                    </Viewbox>
+                                </Grid>
+                            </Border>
+                        </Grid>
+
+                        <ControlTemplate.Triggers>
+                            <!--  Скрываем иконку если Content пустой или это последняя колонка  -->
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding Column.DisplayIndex, RelativeSource={RelativeSource Self}}" Value="{x:Null}" />
+                                </MultiDataTrigger.Conditions>
+                                <Setter TargetName="SortIcon" Property="Visibility" Value="Collapsed" />
+                            </MultiDataTrigger>
+                        </ControlTemplate.Triggers>
+
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!--  Стиль для строк  -->
+        <Style TargetType="{x:Type DataGridRow}">
+            <Setter Property="Background" Value="{DynamicResource PrimarySolidColorBrush}" />
+            <Setter Property="Height" Value="36" />
+            <Setter Property="BorderThickness" Value="0,0,0,2" />
+            <Setter Property="Foreground" Value="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource SeparateSolidColorBrush}" />
+        </Style>
+
+        <!--  Стиль для ячеек  -->
+        <Style TargetType="{x:Type DataGridCell}">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="10,8" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type DataGridCell}">
+                        <Border
+                            Padding="{TemplateBinding Padding}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Border
+        Padding="12,16"
+        Background="{DynamicResource PrimarySolidColorBrush}"
+        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+        BorderThickness="1"
+        CornerRadius="10">
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <StackPanel>
+
+                <TextBlock
+                    FontSize="16"
+                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                    Text="Платежная история" />
+                <TextBlock
+                    FontSize="14"
+                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                    Text="История платежных операций совершенные вами за весь период использования платформы" />
+            </StackPanel>
+
+            <DataGrid
+                Grid.Row="1"
+                Margin="0,24,0,0"
+                HorizontalContentAlignment="Left"
+                AutoGeneratingColumn="DataGrid_AutoGeneratingColumn"
+                CanUserReorderColumns="False"
+                CanUserResizeColumns="False"
+                HorizontalScrollBarVisibility="Disabled"
+                IsReadOnly="True"
+                ItemsSource="{Binding Model.Orders}"
+                VerticalScrollBarVisibility="Auto" />
+        </Grid>
+    </Border>
+
+</UserControl>

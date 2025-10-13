@@ -61,7 +61,7 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <local:ProfileInfoView Margin="0,0,8,8" DataContext="{Binding Model.ProfileInfo}" />
+        <local:ProfileInfoView Margin="0,0,8,0" DataContext="{Binding Model.ProfileInfo}" />
 
         <Grid
             x:Name="MainContentGrid"
@@ -84,6 +84,7 @@
                     Padding="0,16,0,0"
                     Background="{DynamicResource PrimarySolidColorBrush}"
                     BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                    BorderThickness="1"
                     CornerRadius="5">
                     <StackPanel>
                         <Border
@@ -422,6 +423,7 @@
                 Padding="8,12"
                 Background="{DynamicResource PrimarySolidColorBrush}"
                 BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                BorderThickness="1"
                 CornerRadius="5">
                 <TextBlock
                     FontSize="16"

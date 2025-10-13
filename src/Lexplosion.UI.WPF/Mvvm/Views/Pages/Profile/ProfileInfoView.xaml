@@ -48,9 +48,13 @@
         </DataTemplate>
     </UserControl.Resources>
 
+    <!--    -->
+    <!--  Sidebar  -->
+    <!--    -->
     <Border
         Background="{DynamicResource PrimarySolidColorBrush}"
         BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+        BorderThickness="1"
         CornerRadius="5">
         <Grid>
 
@@ -62,11 +66,15 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <Border
-                MaxHeight="220"
+            <!--
                 Background="DarkCyan"
-                CornerRadius="10"
-                Opacity="0.3" />
+                Opacity="0.3"
+            -->
+            <Border MaxHeight="220" CornerRadius="10">
+                <Border.Background>
+                    <ImageBrush ImageSource="https://night-world.org/assets/img/profileCovers/1.jpg" />
+                </Border.Background>
+            </Border>
 
             <Border
                 Grid.Row="1"
@@ -123,7 +131,7 @@
                             </Style>
                         </Border.Style>
 
-                        <Border CornerRadius="1000">
+                        <Border CornerRadius="100">
                             <Border.Background>
                                 <ImageBrush ImageSource="/Assets/images/icons/hel2xhead.png" />
                             </Border.Background>

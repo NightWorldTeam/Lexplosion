@@ -84,6 +84,72 @@ namespace Lexplosion.UI.WPF.Controls
             base.OnContentChanged(oldContent, newContent);
         }
 
+        private void BeginTestScopeAnimation()
+        {
+            //_paintArea.Visibility = Visibility.Visible;
+            //_contentPresenter.Opacity = 0;
+
+            //var opac = new DoubleAnimation()
+            //{
+            //    To = 0,
+            //    Duration = TimeSpan.FromSeconds(0.5)
+            //};
+
+            ////scaleAnimation.Completed += OpacityAnimation_Completed; //(s, e) => _paintArea.Visibility = Visibility.Hidden;
+
+            //_paintArea.BeginAnimation(OpacityProperty, opac);
+
+            //// Создаем группу трансформаций
+            //var transformGroup = new TransformGroup();
+            //var scaleTransform = new ScaleTransform(0.9, 0.9);
+            //var translateTransform = new TranslateTransform(0, 5);
+
+            //transformGroup.Children.Add(scaleTransform);
+            //transformGroup.Children.Add(translateTransform);
+
+            //_contentPresenter.RenderTransformOrigin = new Point(0.5, 0.5);
+            //_contentPresenter.RenderTransform = transformGroup;
+
+            //// Анимация масштаба
+            //var scaleAnimation = new DoubleAnimation
+            //{
+            //    From = 0.9,
+            //    To = 1.0,
+            //    Duration = TimeSpan.FromSeconds(0.2),
+            //    EasingFunction = new ElasticEase { EasingMode = EasingMode.EaseOut, Oscillations = 1, Springiness = 2 }
+            //};
+
+            //// Анимация перемещения (для эффекта "выплывания")
+            //var translateAnimation = new DoubleAnimation
+            //{
+            //    From = 5,
+            //    To = 20,
+            //    Duration = TimeSpan.FromSeconds(0.3),
+            //    EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+            //};
+
+            //// Анимация прозрачности
+            //var opacityAnimation = new DoubleAnimation
+            //{
+            //    From = 0,
+            //    To = 1,
+            //    Duration = TimeSpan.FromSeconds(0.4)
+            //};
+
+            //scaleAnimation.Completed += (s, e) =>
+            //{
+            //    _paintArea.Visibility = Visibility.Collapsed;
+            //    _paintArea.Opacity = 1;
+            //};
+
+            //// Запускаем анимации
+            //scaleTransform.BeginAnimation(ScaleTransform.ScaleXProperty, scaleAnimation);
+            //scaleTransform.BeginAnimation(ScaleTransform.ScaleYProperty, scaleAnimation);
+            //translateTransform.BeginAnimation(TranslateTransform.YProperty, translateAnimation);
+            //_contentPresenter.BeginAnimation(OpacityProperty, opacityAnimation);
+
+        }
+
         private void BeginZoomInEntranceAnimationContentReplacement()
         {
             _contentPresenter.Opacity = 0;

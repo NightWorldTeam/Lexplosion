@@ -1,6 +1,7 @@
 ﻿using Lexplosion.Tools;
 using System;
 using System.Globalization;
+using System.Windows.Controls;
 
 namespace Lexplosion.UI.WPF.Core.Converters
 {
@@ -34,6 +35,11 @@ namespace Lexplosion.UI.WPF.Core.Converters
             if (value is byte[] imageArray)
             {
                 return ImageTools.ResizeImage(imageArray, (int)sizes[0], (int)sizes[1]);
+            }
+
+            if (value is string imageUrl) 
+            {
+
             }
 
             return null;

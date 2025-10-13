@@ -60,7 +60,7 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <local:ProfileInfoView Margin="0,0,8,8" DataContext="{Binding Model.Info}" />
+        <local:ProfileInfoView Margin="0,0,8,0" DataContext="{Binding Model.Info}" />
 
         <Grid Grid.Column="1" SizeChanged="Grid_SizeChanged">
             <Grid.RowDefinitions>
@@ -71,7 +71,7 @@
             <!--  Header Title  -->
             <Border
                 Height="40"
-                Margin="0,0,14,8"
+                Margin="0,0,6,8"
                 Padding="16,0"
                 Background="{DynamicResource PrimarySolidColorBrush}"
                 BorderBrush="{DynamicResource SeparateSolidColorBrush}"
@@ -86,462 +86,466 @@
             </Border>
 
             <!--  Settings Content  -->
-            <ScrollViewer Grid.Row="1" Padding="0,0,6,0">
-                <Border
-                    Padding="16,18,16,0"
-                    Background="{DynamicResource PrimarySolidColorBrush}"
-                    BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                    BorderThickness="1"
-                    CornerRadius="5">
-                    <StackPanel>
+            <Border
+                Grid.Row="1"
+                Margin="0,0,6,0"
+                Background="{DynamicResource PrimarySolidColorBrush}"
+                BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                BorderThickness="1"
+                CornerRadius="5">
 
-                        <!--  General Settings  -->
-                        <Border Margin="0,0,0,32">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="*" />
-                                </Grid.RowDefinitions>
+                <ScrollViewer Padding="0,0,6,0">
+                    <Border Padding="16,18,16,0">
+                        <StackPanel>
 
-                                <!--  Header  -->
-                                <TextBlock
-                                    FontSize="18"
-                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                    Text="Общие настройки" />
+                            <!--  General Settings  -->
+                            <Border Margin="0,0,0,32">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
 
-                                <StackPanel Grid.Row="1" Margin="0,16,0,0">
-
-
-                                    <!--  Показывать список моих друзей  -->
-                                    <Border
-                                        Margin="0,0,0,8"
-                                        Padding="0,0,0,8"
-                                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                                        BorderThickness="0,0,0,1">
-                                        <Grid>
-
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="*" />
-                                            </Grid.ColumnDefinitions>
-
-                                            <!--  Header  -->
-                                            <TextBlock
-                                                Margin="0,0,16,0"
-                                                VerticalAlignment="Center"
-                                                FontSize="{DynamicResource SettingsFieldText}"
-                                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                                Text="Показывать список моих друзей:" />
-
-                                            <ComboBox
-                                                Grid.Column="1"
-                                                MinWidth="200"
-                                                MaxWidth="200"
-                                                HorizontalAlignment="Right"
-                                                ItemsSource="{Binding Source={StaticResource FriendListVisibilityOptions}}"
-                                                SelectedItem="{Binding SelectedFriendListVisibilityOption}">
-                                                <ComboBox.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <TextBlock extensions:TextBlockExtensions.TextByKey="{Binding}" />
-                                                    </DataTemplate>
-                                                </ComboBox.ItemTemplate>
-                                            </ComboBox>
-                                        </Grid>
-                                    </Border>
-
-                                    <!--  Онлайн статус  -->
-                                    <Border
-                                        Margin="0,0,0,8"
-                                        Padding="0,0,0,8"
-                                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                                        BorderThickness="0,0,0,1">
-                                        <Grid>
-
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="*" />
-                                            </Grid.ColumnDefinitions>
-
-                                            <!--  Header  -->
-                                            <TextBlock
-                                                Margin="0,0,16,0"
-                                                VerticalAlignment="Center"
-                                                FontSize="{DynamicResource SettingsFieldText}"
-                                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                                Text="Онлайн статус:" />
-
-                                            <ComboBox
-                                                Grid.Column="1"
-                                                MinWidth="200"
-                                                MaxWidth="200"
-                                                HorizontalAlignment="Right"
-                                                ItemsSource="{Binding Source={StaticResource FriendListVisibilityOptions}}"
-                                                SelectedItem="{Binding SelectedFriendListVisibilityOption}">
-                                                <ComboBox.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <TextBlock extensions:TextBlockExtensions.TextByKey="{Binding}" />
-                                                    </DataTemplate>
-                                                </ComboBox.ItemTemplate>
-                                            </ComboBox>
-                                        </Grid>
-                                    </Border>
-
-                                    <!--  Возможность оставлять записи  -->
-                                    <Border
-                                        Margin="0,0,0,8"
-                                        Padding="0,0,0,8"
-                                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                                        BorderThickness="0,0,0,1">
-                                        <Grid>
-
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="*" />
-                                            </Grid.ColumnDefinitions>
-
-                                            <!--  Header  -->
-                                            <TextBlock
-                                                Margin="0,0,16,0"
-                                                VerticalAlignment="Center"
-                                                FontSize="{DynamicResource SettingsFieldText}"
-                                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                                Text="Возможность оставлять записи:" />
-
-                                            <ComboBox
-                                                Grid.Column="1"
-                                                MinWidth="200"
-                                                MaxWidth="200"
-                                                HorizontalAlignment="Right"
-                                                ItemsSource="{Binding Source={StaticResource FriendListVisibilityOptions}}"
-                                                SelectedItem="{Binding SelectedFriendListVisibilityOption}">
-                                                <ComboBox.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <TextBlock extensions:TextBlockExtensions.TextByKey="{Binding}" />
-                                                    </DataTemplate>
-                                                </ComboBox.ItemTemplate>
-                                            </ComboBox>
-                                        </Grid>
-                                    </Border>
-
-                                    <!--  Возможность оставлять записи  -->
-                                    <Border
-                                        Height="40"
-                                        Margin="0,0,0,8"
-                                        Padding="0,0,0,8"
-                                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                                        BorderThickness="0,0,0,1">
-                                        <Grid>
-
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="*" />
-                                            </Grid.ColumnDefinitions>
-
-                                            <!--  Header  -->
-                                            <TextBlock
-                                                Margin="0,0,16,0"
-                                                VerticalAlignment="Center"
-                                                FontSize="{DynamicResource SettingsFieldText}"
-                                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                                Text="Отображать имя запущенного клиента?" />
-
-                                            <ToggleButton
-                                                Grid.Column="1"
-                                                HorizontalAlignment="Right"
-                                                Style="{StaticResource SwitchButton}" />
-                                        </Grid>
-                                    </Border>
-
-                                </StackPanel>
-                            </Grid>
-                        </Border>
-
-                        <!--  Skin  -->
-                        <Border Margin="0,0,0,32">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="*" />
-                                </Grid.RowDefinitions>
-
-                                <!--  Header  -->
-                                <TextBlock
-                                    FontSize="18"
-                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                    Text="{DynamicResource SkinSettings}" />
-
-                                <StackPanel Grid.Row="1" Margin="0,16,0,0">
-
-                                    <!--  Модель скина + Смена скинаы  -->
-                                    <Border
-                                        Margin="0,0,0,8"
-                                        Padding="0,0,0,8"
-                                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                                        BorderThickness="0,0,0,1">
-                                        <Grid>
-
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                            </Grid.RowDefinitions>
-
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="*" />
-                                            </Grid.ColumnDefinitions>
-
-                                            <!--  Header  -->
-                                            <TextBlock
-                                                Margin="0,0,16,0"
-                                                VerticalAlignment="Center"
-                                                FontSize="{DynamicResource SettingsFieldText}"
-                                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                                Text="{DynamicResource MinecraftSkinModelTypeColon}" />
-
-                                            <ComboBox
-                                                Grid.Column="1"
-                                                MinWidth="200"
-                                                MaxWidth="200"
-                                                HorizontalAlignment="Right"
-                                                ItemsSource="{Binding Source={StaticResource FriendListVisibilityOptions}}"
-                                                SelectedItem="{Binding SelectedFriendListVisibilityOption}">
-                                                <ComboBox.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <TextBlock extensions:TextBlockExtensions.TextByKey="{Binding}" />
-                                                    </DataTemplate>
-                                                </ComboBox.ItemTemplate>
-                                            </ComboBox>
-
-                                            <controls:AdvancedButton
-                                                Grid.Row="2"
-                                                Height="28"
-                                                Margin="0,8,0,0"
-                                                Content="{DynamicResource ChangeMinecraftSkin}"
-                                                FontSize="12"
-                                                Style="{StaticResource sm-default}" />
-                                        </Grid>
-                                    </Border>
-
-                                </StackPanel>
-                            </Grid>
-                        </Border>
-
-                        <!--  Summary  -->
-                        <Border Margin="0,0,0,32">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="*" />
-                                </Grid.RowDefinitions>
-
-                                <!--  Header  -->
-                                <TextBlock
-                                    FontSize="18"
-                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                    Text="{DynamicResource ProfileSummary}" />
-
-                                <controls:AdvancedTextBox MinHeight="150" Margin="0,32,0,0" />
-                            </Grid>
-                        </Border>
-
-                        <!--  Смена ника  -->
-                        <Border Margin="0,0,0,32">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="*" />
-                                </Grid.RowDefinitions>
-
-                                <!--  Header  -->
-                                <TextBlock
-                                    FontSize="18"
-                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                    Text="{DynamicResource NicknameChanging}" />
-
-                                <StackPanel Margin="0,32,0,0">
-                                    <!--  Поле ввода ника  -->
-                                    <Border
-                                        Grid.Row="2"
-                                        Margin="0,0,0,8"
-                                        Padding="0,0,0,8"
-                                        BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                                        BorderThickness="0,0,0,1">
-                                        <Grid>
-
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="*" />
-                                            </Grid.ColumnDefinitions>
-
-                                            <!--  Header  -->
-                                            <TextBlock
-                                                Margin="0,0,16,0"
-                                                VerticalAlignment="Center"
-                                                FontSize="{DynamicResource SettingsFieldText}"
-                                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                                Text="Новый ник:" />
-
-                                            <controls:AdvancedTextBox
-                                                Grid.Column="1"
-                                                MinWidth="200"
-                                                MaxWidth="200"
-                                                HorizontalAlignment="Right" />
-                                        </Grid>
-                                    </Border>
-
-                                    <Border>
-                                        <Grid>
-
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="*" />
-                                            </Grid.ColumnDefinitions>
-
-                                            <!--  Header  -->
-                                            <TextBlock
-                                                Margin="0,0,16,0"
-                                                VerticalAlignment="Center"
-                                                FontSize="{DynamicResource SettingsFieldText}"
-                                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                                Text="Текуший пароль:" />
-
-                                            <controls:AdvancedTextBox
-                                                Grid.Column="1"
-                                                MinWidth="200"
-                                                MaxWidth="200"
-                                                HorizontalAlignment="Right" />
-                                        </Grid>
-                                    </Border>
-
-                                    <controls:AdvancedButton
-                                        Grid.Row="2"
-                                        Height="28"
-                                        MinWidth="100"
-                                        Margin="0,8,0,0"
-                                        HorizontalAlignment="Left"
-                                        Content="{DynamicResource ChangeNickname}"
-                                        FontSize="12"
-                                        Style="{StaticResource sm-default}" />
-                                </StackPanel>
-                            </Grid>
-                        </Border>
-
-                        <!--  Обложка профиля  -->
-                        <Border Margin="0,0,0,32">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="*" />
-                                </Grid.RowDefinitions>
-
-                                <!--  Header  -->
-                                <TextBlock
-                                    FontSize="18"
-                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                    Text="{DynamicResource ProfileCover}" />
-
-
-                                <ItemsControl Margin="0,32,0,0" ItemsSource="{Binding Model.Covers}">
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <WrapPanel IsItemsHost="True" />
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <Border
-                                                Width="{DynamicResource CoverWidth}"
-                                                Height="{DynamicResource CoverHeight}"
-                                                Margin="0,0,8,8"
-                                                BorderBrush="{DynamicResource ActivitySolidColorBrush}"
-                                                BorderThickness="2.5"
-                                                ClipToBounds="True"
-                                                CornerRadius="5">
-                                                <Border.Background>
-                                                    <ImageBrush ImageSource="{Binding}" Stretch="UniformToFill" />
-                                                </Border.Background>
-                                            </Border>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </Grid>
-                        </Border>
-
-                        <!--  Завершение всех сессий  -->
-                        <Border Margin="0,0,0,32">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="*" />
-                                </Grid.RowDefinitions>
-
-                                <!--  Header  -->
-                                <TextBlock
-                                    FontSize="18"
-                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                    Text="{DynamicResource ClosingAllSessions}" />
-
-
-                                <StackPanel Margin="0,32,0,0">
+                                    <!--  Header  -->
                                     <TextBlock
-                                        FontSize="14"
-                                        Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
-                                        Text="{DynamicResource ClosingAllSessionsDescription}"
-                                        TextWrapping="WrapWithOverflow" />
+                                        FontSize="18"
+                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                        Text="{DynamicResource GeneralSettings}" />
 
-                                    <controls:AdvancedButton
-                                        Grid.Row="2"
-                                        Height="28"
-                                        MinWidth="100"
-                                        Margin="0,16,0,0"
-                                        HorizontalAlignment="Left"
-                                        Content="{DynamicResource CloseAllSessions}"
-                                        FontSize="12"
-                                        Style="{StaticResource sm-default}" />
-                                </StackPanel>
-                            </Grid>
-                        </Border>
+                                    <StackPanel Grid.Row="1" Margin="0,16,0,0">
 
-                        <!--  Contacts  -->
-                        <Border
-                            Padding="0,16,0,8"
-                            BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
-                            BorderThickness="0,0,0,2"
-                            Visibility="Collapsed">
-                            <Grid>
 
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
+                                        <!--  Показывать список моих друзей  -->
+                                        <Border
+                                            Margin="0,0,0,8"
+                                            Padding="0,0,0,8"
+                                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                            BorderThickness="0,0,0,1">
+                                            <Grid>
 
-                                <!--  Header  -->
-                                <StackPanel>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <!--  Header  -->
+                                                <TextBlock
+                                                    Margin="0,0,16,0"
+                                                    VerticalAlignment="Center"
+                                                    FontSize="{DynamicResource SettingsFieldText}"
+                                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                                    Text="Показывать список моих друзей:" />
+
+                                                <ComboBox
+                                                    Grid.Column="1"
+                                                    MinWidth="200"
+                                                    MaxWidth="200"
+                                                    HorizontalAlignment="Right"
+                                                    ItemsSource="{Binding Source={StaticResource FriendListVisibilityOptions}}"
+                                                    SelectedItem="{Binding SelectedFriendListVisibilityOption}">
+                                                    <ComboBox.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock extensions:TextBlockExtensions.TextByKey="{Binding}" />
+                                                        </DataTemplate>
+                                                    </ComboBox.ItemTemplate>
+                                                </ComboBox>
+                                            </Grid>
+                                        </Border>
+
+                                        <!--  Онлайн статус  -->
+                                        <Border
+                                            Margin="0,0,0,8"
+                                            Padding="0,0,0,8"
+                                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                            BorderThickness="0,0,0,1">
+                                            <Grid>
+
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <!--  Header  -->
+                                                <TextBlock
+                                                    Margin="0,0,16,0"
+                                                    VerticalAlignment="Center"
+                                                    FontSize="{DynamicResource SettingsFieldText}"
+                                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                                    Text="Онлайн статус:" />
+
+                                                <ComboBox
+                                                    Grid.Column="1"
+                                                    MinWidth="200"
+                                                    MaxWidth="200"
+                                                    HorizontalAlignment="Right"
+                                                    ItemsSource="{Binding Source={StaticResource FriendListVisibilityOptions}}"
+                                                    SelectedItem="{Binding SelectedFriendListVisibilityOption}">
+                                                    <ComboBox.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock extensions:TextBlockExtensions.TextByKey="{Binding}" />
+                                                        </DataTemplate>
+                                                    </ComboBox.ItemTemplate>
+                                                </ComboBox>
+                                            </Grid>
+                                        </Border>
+
+                                        <!--  Возможность оставлять записи  -->
+                                        <Border
+                                            Margin="0,0,0,8"
+                                            Padding="0,0,0,8"
+                                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                            BorderThickness="0,0,0,1">
+                                            <Grid>
+
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <!--  Header  -->
+                                                <TextBlock
+                                                    Margin="0,0,16,0"
+                                                    VerticalAlignment="Center"
+                                                    FontSize="{DynamicResource SettingsFieldText}"
+                                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                                    Text="Возможность оставлять записи:" />
+
+                                                <ComboBox
+                                                    Grid.Column="1"
+                                                    MinWidth="200"
+                                                    MaxWidth="200"
+                                                    HorizontalAlignment="Right"
+                                                    ItemsSource="{Binding Source={StaticResource FriendListVisibilityOptions}}"
+                                                    SelectedItem="{Binding SelectedFriendListVisibilityOption}">
+                                                    <ComboBox.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock extensions:TextBlockExtensions.TextByKey="{Binding}" />
+                                                        </DataTemplate>
+                                                    </ComboBox.ItemTemplate>
+                                                </ComboBox>
+                                            </Grid>
+                                        </Border>
+
+                                        <!--  Возможность оставлять записи  -->
+                                        <Border
+                                            Height="40"
+                                            Margin="0,0,0,8"
+                                            Padding="0,0,0,8"
+                                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                            BorderThickness="0,0,0,1">
+                                            <Grid>
+
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <!--  Header  -->
+                                                <TextBlock
+                                                    Margin="0,0,16,0"
+                                                    VerticalAlignment="Center"
+                                                    FontSize="{DynamicResource SettingsFieldText}"
+                                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                                    Text="Отображать имя запущенного клиента?" />
+
+                                                <ToggleButton
+                                                    Grid.Column="1"
+                                                    HorizontalAlignment="Right"
+                                                    Style="{StaticResource SwitchButton}" />
+                                            </Grid>
+                                        </Border>
+
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+
+                            <!--  Skin  -->
+                            <Border Margin="0,0,0,32">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+
+                                    <!--  Header  -->
                                     <TextBlock
-                                        extensions:TextBlockExtensions.TextByKey="JVMArguments"
-                                        FontSize="{DynamicResource StatsFontSize}"
-                                        FontWeight="Medium"
-                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                        FontSize="18"
+                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                        Text="{DynamicResource SkinSettings}" />
+
+                                    <StackPanel Grid.Row="1" Margin="0,16,0,0">
+
+                                        <!--  Модель скина + Смена скинаы  -->
+                                        <Border
+                                            Margin="0,0,0,8"
+                                            Padding="0,0,0,8"
+                                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                            BorderThickness="0,0,0,1">
+                                            <Grid>
+
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                </Grid.RowDefinitions>
+
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <!--  Header  -->
+                                                <TextBlock
+                                                    Margin="0,0,16,0"
+                                                    VerticalAlignment="Center"
+                                                    FontSize="{DynamicResource SettingsFieldText}"
+                                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                                    Text="{DynamicResource MinecraftSkinModelTypeColon}" />
+
+                                                <ComboBox
+                                                    Grid.Column="1"
+                                                    MinWidth="200"
+                                                    MaxWidth="200"
+                                                    HorizontalAlignment="Right"
+                                                    ItemsSource="{Binding Source={StaticResource FriendListVisibilityOptions}}"
+                                                    SelectedItem="{Binding SelectedFriendListVisibilityOption}">
+                                                    <ComboBox.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock extensions:TextBlockExtensions.TextByKey="{Binding}" />
+                                                        </DataTemplate>
+                                                    </ComboBox.ItemTemplate>
+                                                </ComboBox>
+
+                                                <controls:AdvancedButton
+                                                    Grid.Row="2"
+                                                    Height="28"
+                                                    Margin="0,8,0,0"
+                                                    Content="{DynamicResource ChangeMinecraftSkin}"
+                                                    FontSize="12"
+                                                    Style="{StaticResource sm-default}" />
+                                            </Grid>
+                                        </Border>
+
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+
+                            <!--  Summary  -->
+                            <Border Margin="0,0,0,32">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+
+                                    <!--  Header  -->
                                     <TextBlock
-                                        extensions:TextBlockExtensions.TextByKey="JVMArgumentsDescription"
-                                        FontSize="14"
-                                        FontWeight="Medium"
-                                        Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
-                                </StackPanel>
+                                        FontSize="18"
+                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                        Text="{DynamicResource ProfileSummary}" />
 
-                                <!--  Content  -->
-                                <controls:AdvancedTextBox
-                                    Grid.Column="1"
-                                    Width="300"
-                                    Height="32"
-                                    Margin="16,0,0,0"
-                                    HorizontalAlignment="Right" />
-                            </Grid>
-                        </Border>
+                                    <controls:AdvancedTextBox MinHeight="150" Margin="0,32,0,0" />
+                                </Grid>
+                            </Border>
 
-                    </StackPanel>
-                </Border>
-            </ScrollViewer>
+                            <!--  Смена ника  -->
+                            <Border Margin="0,0,0,32">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+
+                                    <!--  Header  -->
+                                    <TextBlock
+                                        FontSize="18"
+                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                        Text="{DynamicResource NicknameChanging}" />
+
+                                    <StackPanel Margin="0,32,0,0">
+                                        <!--  Поле ввода ника  -->
+                                        <Border
+                                            Grid.Row="2"
+                                            Margin="0,0,0,8"
+                                            Padding="0,0,0,8"
+                                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                            BorderThickness="0,0,0,1">
+                                            <Grid>
+
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <!--  Header  -->
+                                                <TextBlock
+                                                    Margin="0,0,16,0"
+                                                    VerticalAlignment="Center"
+                                                    FontSize="{DynamicResource SettingsFieldText}"
+                                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                                    Text="Новый ник:" />
+
+                                                <controls:AdvancedTextBox
+                                                    Grid.Column="1"
+                                                    MinWidth="200"
+                                                    MaxWidth="200"
+                                                    HorizontalAlignment="Right" />
+                                            </Grid>
+                                        </Border>
+
+                                        <Border>
+                                            <Grid>
+
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <!--  Header  -->
+                                                <TextBlock
+                                                    Margin="0,0,16,0"
+                                                    VerticalAlignment="Center"
+                                                    FontSize="{DynamicResource SettingsFieldText}"
+                                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                                    Text="Текуший пароль:" />
+
+                                                <controls:AdvancedTextBox
+                                                    Grid.Column="1"
+                                                    MinWidth="200"
+                                                    MaxWidth="200"
+                                                    HorizontalAlignment="Right" />
+                                            </Grid>
+                                        </Border>
+
+                                        <controls:AdvancedButton
+                                            Grid.Row="2"
+                                            Height="28"
+                                            MinWidth="100"
+                                            Margin="0,8,0,0"
+                                            HorizontalAlignment="Left"
+                                            Content="{DynamicResource ChangeNickname}"
+                                            FontSize="12"
+                                            Style="{StaticResource sm-default}" />
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+
+                            <!--  Обложка профиля  -->
+                            <Border Margin="0,0,0,32">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+
+                                    <!--  Header  -->
+                                    <TextBlock
+                                        FontSize="18"
+                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                        Text="{DynamicResource ProfileCover}" />
+
+
+                                    <ItemsControl Margin="0,32,0,0" ItemsSource="{Binding Model.Covers}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel IsItemsHost="True" />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border
+                                                    Width="{DynamicResource CoverWidth}"
+                                                    Height="{DynamicResource CoverHeight}"
+                                                    Margin="0,0,8,8"
+                                                    BorderBrush="{DynamicResource ActivitySolidColorBrush}"
+                                                    BorderThickness="2.5"
+                                                    ClipToBounds="True"
+                                                    CornerRadius="5">
+                                                    <Border.Background>
+                                                        <ImageBrush ImageSource="{Binding}" Stretch="UniformToFill" />
+                                                    </Border.Background>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </Grid>
+                            </Border>
+
+                            <!--  Завершение всех сессий  -->
+                            <Border Margin="0,0,0,32">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+
+                                    <!--  Header  -->
+                                    <TextBlock
+                                        FontSize="18"
+                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                        Text="{DynamicResource ClosingAllSessions}" />
+
+
+                                    <StackPanel Margin="0,32,0,0">
+                                        <TextBlock
+                                            FontSize="14"
+                                            Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                            Text="{DynamicResource ClosingAllSessionsDescription}"
+                                            TextWrapping="WrapWithOverflow" />
+
+                                        <controls:AdvancedButton
+                                            Grid.Row="2"
+                                            Height="28"
+                                            MinWidth="100"
+                                            Margin="0,16,0,0"
+                                            HorizontalAlignment="Left"
+                                            Content="{DynamicResource CloseAllSessions}"
+                                            FontSize="12"
+                                            Style="{StaticResource sm-default}" />
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+
+                            <!--  Contacts  -->
+                            <Border
+                                Padding="0,16,0,8"
+                                BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
+                                BorderThickness="0,0,0,2"
+                                Visibility="Collapsed">
+                                <Grid>
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <!--  Header  -->
+                                    <StackPanel>
+                                        <TextBlock
+                                            extensions:TextBlockExtensions.TextByKey="JVMArguments"
+                                            FontSize="{DynamicResource StatsFontSize}"
+                                            FontWeight="Medium"
+                                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                        <TextBlock
+                                            extensions:TextBlockExtensions.TextByKey="JVMArgumentsDescription"
+                                            FontSize="14"
+                                            FontWeight="Medium"
+                                            Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                                    </StackPanel>
+
+                                    <!--  Content  -->
+                                    <controls:AdvancedTextBox
+                                        Grid.Column="1"
+                                        Width="300"
+                                        Height="32"
+                                        Margin="16,0,0,0"
+                                        HorizontalAlignment="Right" />
+                                </Grid>
+                            </Border>
+
+                        </StackPanel>
+                    </Border>
+                </ScrollViewer>
+            </Border>
         </Grid>
     </Grid>
 </UserControl>

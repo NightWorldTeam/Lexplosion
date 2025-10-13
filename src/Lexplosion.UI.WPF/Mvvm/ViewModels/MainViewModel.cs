@@ -12,6 +12,7 @@ using Lexplosion.UI.WPF.Mvvm.Models.Mvvm.InstanceModel;
 using Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu;
 using Lexplosion.UI.WPF.Mvvm.ViewModels.Modal;
 using Lexplosion.UI.WPF.Mvvm.ViewModels.ModalFactory;
+using Lexplosion.UI.WPF.Mvvm.ViewModels.Profile;
 using Lexplosion.UI.WPF.Mvvm.Views.Windows;
 using Lexplosion.UI.WPF.Stores;
 using Lexplosion.UI.WPF.TrayMenu;
@@ -150,8 +151,8 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels
                     Model.InstanceSharesController,
                     _mainMenuLayoutViewModel.OpenAccountFactory));
 
-            ToMainMenu = new NavigateCommand<ViewModelBase>(NavigationStore, () => _mainMenuLayoutViewModel);
-            //ToMainMenu = new NavigateCommand<ViewModelBase>(NavigationStore, () => new ProfileLayoutViewModel(appCore));
+            //ToMainMenu = new NavigateCommand<ViewModelBase>(NavigationStore, () => _mainMenuLayoutViewModel);
+            ToMainMenu = new NavigateCommand<ViewModelBase>(NavigationStore, () => new ProfileLayoutViewModel(appCore));
 
             InitTrayComponents();
             RuntimeApp.TrayMenuElementClicked += InitTrayComponents;
