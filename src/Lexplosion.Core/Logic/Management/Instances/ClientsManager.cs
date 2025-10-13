@@ -414,7 +414,7 @@ namespace Lexplosion.Logic.Management.Instances
 				instanceId = instanceId_;
 			}
 
-			return instanceId;
+			return instanceId.Trim();
 		}
 
 		private void Import(in InstanceClient client, string fileAddr, bool fileAddrIsLocal, ImportData importData)
