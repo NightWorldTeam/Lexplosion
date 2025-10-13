@@ -1,6 +1,5 @@
 ﻿using Lexplosion.UI.WPF.Core.ViewModel;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace Lexplosion.UI.WPF.Core

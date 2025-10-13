@@ -22,26 +22,26 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.MainMenu
 
             //Runtime.TaskRun(() =>
             //{
-                var hel2xBitmap = new BitmapImage();
-                hel2xBitmap.BeginInit();
-                hel2xBitmap.UriSource = new System.Uri("https://night-world.org/requestProcessing/getUserImage.php?user_login=_Hel2x_");
-                hel2xBitmap.EndInit();
+            var hel2xBitmap = new BitmapImage();
+            hel2xBitmap.BeginInit();
+            hel2xBitmap.UriSource = new System.Uri("https://night-world.org/requestProcessing/getUserImage.php?user_login=_Hel2x_");
+            hel2xBitmap.EndInit();
 
-                var sklaipBitmap = new BitmapImage();
-                sklaipBitmap.BeginInit();
-                sklaipBitmap.UriSource = new System.Uri("https://night-world.org/requestProcessing/getUserImage.php?user_login=Sklaip");
-                sklaipBitmap.EndInit();
+            var sklaipBitmap = new BitmapImage();
+            sklaipBitmap.BeginInit();
+            sklaipBitmap.UriSource = new System.Uri("https://night-world.org/requestProcessing/getUserImage.php?user_login=Sklaip");
+            sklaipBitmap.EndInit();
 
-                //var vasGenBitmap = new BitmapImage();
-                //vasGenBitmap.BeginInit();
-                //vasGenBitmap.UriSource = new System.Uri("https://night-world.org/requestProcessing/getUserImage.php?user_login=VasGen");
-                //vasGenBitmap.EndInit();
+            //var vasGenBitmap = new BitmapImage();
+            //vasGenBitmap.BeginInit();
+            //vasGenBitmap.UriSource = new System.Uri("https://night-world.org/requestProcessing/getUserImage.php?user_login=VasGen");
+            //vasGenBitmap.EndInit();
 
-                //App.Current.Dispatcher.Invoke(() =>
-                //{
-                    Hel2xHead.Background = new ImageBrush(hel2xBitmap);
-                    SklaipHead.Background = new ImageBrush(sklaipBitmap);
-                    //VasGenBitmap.Background = new ImageBrush(vasGenBitmap);
+            //App.Current.Dispatcher.Invoke(() =>
+            //{
+            Hel2xHead.Background = new ImageBrush(hel2xBitmap);
+            SklaipHead.Background = new ImageBrush(sklaipBitmap);
+            //VasGenBitmap.Background = new ImageBrush(vasGenBitmap);
             //    });
             //});
         }

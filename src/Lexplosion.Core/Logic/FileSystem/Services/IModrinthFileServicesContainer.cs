@@ -2,7 +2,7 @@
 
 namespace Lexplosion.Logic.FileSystem.Services
 {
-	public interface IModrinthFileServicesContainer : IFileServicesContainer, IModrinthWebServicesContainer
-	{
-	}
+    public interface IModrinthFileServicesContainer : IFileServicesContainer, IModrinthWebServicesContainer
+    {
+    }
 }

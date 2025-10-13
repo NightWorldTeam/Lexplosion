@@ -6,9 +6,9 @@ namespace Lexplosion.UI.WPF.Core.Objects.Users
 {
     public class NightWorldUserRequest : NightWorldUserBase
     {
-		private NightWorldApi _api = Runtime.ServicesContainer.NwApi;
-        
-        
+        private NightWorldApi _api = Runtime.ServicesContainer.NwApi;
+
+
         #region Constructors
 
 
@@ -23,17 +23,17 @@ namespace Lexplosion.UI.WPF.Core.Objects.Users
         }
 
 
-		#endregion Constructors
+        #endregion Constructors
 
 
-		public void AddFriend() 
+        public void AddFriend()
         {
-			_api.AddFriend(Account.ActiveAccount.UUID, Account.ActiveAccount.SessionToken, Login);
+            _api.AddFriend(Account.ActiveAccount.UUID, Account.ActiveAccount.SessionToken, Login);
         }
 
-        public void DeclineFriend() 
+        public void DeclineFriend()
         {
-			_api.RemoveFriend(Account.ActiveAccount.UUID, Account.ActiveAccount.SessionToken, Login);
+            _api.RemoveFriend(Account.ActiveAccount.UUID, Account.ActiveAccount.SessionToken, Login);
         }
     }
 }

@@ -8,7 +8,7 @@ namespace Lexplosion.UI.WPF.Controls
     public class CircleLoader : Control
     {
         public static readonly DependencyProperty IsActiveProperty =
-                   DependencyProperty.Register(nameof(IsActive), typeof(bool), typeof(CircleLoader), 
+                   DependencyProperty.Register(nameof(IsActive), typeof(bool), typeof(CircleLoader),
                        new FrameworkPropertyMetadata(false, OnIsActiveChanged));
 
         public static readonly DependencyProperty CornerRadiusProperty
@@ -136,7 +136,7 @@ namespace Lexplosion.UI.WPF.Controls
 
         private static void OnIconWidthChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is CircleLoader _this) 
+            if (d is CircleLoader _this)
             {
                 _this.OnIconWidthChanged();
             }
@@ -154,7 +154,7 @@ namespace Lexplosion.UI.WPF.Controls
         protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
         {
             Runtime.DebugWrite("Circle Loader OnRenderSizeChanged");
-            if (sizeInfo.WidthChanged) 
+            if (sizeInfo.WidthChanged)
             {
                 IconWidth = sizeInfo.NewSize.Width * 0.5625;
                 IconHeight = sizeInfo.NewSize.Height * 0.5625;

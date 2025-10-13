@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
-using System.Windows;
 
 namespace Lexplosion.UI.WPF.Controls
 {
@@ -46,7 +46,7 @@ namespace Lexplosion.UI.WPF.Controls
         #region getters / settes
 
 
-        public Guid Id 
+        public Guid Id
         {
             get => (Guid)GetValue(IdProperty);
             set => SetValue(IdProperty, value);

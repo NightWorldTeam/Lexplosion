@@ -23,7 +23,7 @@ namespace Lexplosion.UI.WPF.Core
             Core.ValueChanged += (str) => SettingsFieldChanged?.Invoke(str);
         }
 
-        public void SaveCore() 
+        public void SaveCore()
         {
             ServiceContainer.DataFilesService.SaveSettings(Core);
         }

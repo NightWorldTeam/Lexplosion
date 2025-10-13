@@ -8,7 +8,7 @@ namespace Lexplosion.UI.WPF.Core.Converters
     {
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is string path && path.Contains("pack://application:,,,/")) 
+            if (value is string path && path.Contains("pack://application:,,,/"))
             {
                 if (RuntimeApp.ResourceNames.Contains(path.Replace("pack://application:,,,/", "").ToLower()))
                     return path;

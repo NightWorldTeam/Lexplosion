@@ -1,7 +1,5 @@
-﻿using Microsoft.VisualBasic;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -40,10 +38,10 @@ namespace Lexplosion.UI.WPF.Core
             = DependencyProperty.Register(nameof(RightOperander), typeof(object), typeof(Condition),
             new FrameworkPropertyMetadata(null));
 
-        public object LeftOperander 
+        public object LeftOperander
         {
-            get => GetValue(LeftOperanderProperty); 
-            set => SetValue(LeftOperanderProperty, value); 
+            get => GetValue(LeftOperanderProperty);
+            set => SetValue(LeftOperanderProperty, value);
         }
 
         public object RightOperander
@@ -63,7 +61,7 @@ namespace Lexplosion.UI.WPF.Core
 
             if (LeftOperander == null)
                 return false;
-            if (LeftOperander is bool && RightOperander is string right) 
+            if (LeftOperander is bool && RightOperander is string right)
             {
                 if (string.Equals(right, "True", StringComparison.OrdinalIgnoreCase))
                 {

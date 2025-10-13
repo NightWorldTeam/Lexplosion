@@ -3,7 +3,7 @@ using System.Windows;
 
 namespace Lexplosion.Core.Resources
 {
-    public class ResourcesLoader 
+    public class ResourcesLoader
     {
         public (string, ResourceDictionary) LoadThemeFromPath(string path)
         {

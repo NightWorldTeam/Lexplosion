@@ -1,7 +1,5 @@
 ﻿using Lexplosion.UI.WPF.Core;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Schema;
 using System;
 
 namespace Lexplosion.UI.WPF.Mvvm.Models.Authorization.Modal
@@ -62,7 +60,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.Authorization.Modal
             return true;
         }
 
-        struct MicrosoftAuthData 
+        struct MicrosoftAuthData
         {
             [JsonProperty("uhs")]
             public string Uhs { get; set; }
@@ -71,7 +69,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.Authorization.Modal
             public string XstsToken { get; set; }
         }
 
-        bool IsRightMicrosoftToken(string token) 
+        bool IsRightMicrosoftToken(string token)
         {
             try
             {
@@ -82,7 +80,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.Authorization.Modal
 
                 return true;
             }
-            catch 
+            catch
             {
                 return false;
             }

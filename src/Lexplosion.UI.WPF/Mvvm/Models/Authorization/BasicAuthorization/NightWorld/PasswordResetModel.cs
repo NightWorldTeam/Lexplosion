@@ -1,5 +1,4 @@
 ﻿using Lexplosion.UI.WPF.Core;
-using System;
 
 namespace Lexplosion.UI.WPF.Mvvm.Models.Authorization.BasicAuthorization.NightWorld
 {

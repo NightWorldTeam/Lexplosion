@@ -2,19 +2,19 @@
 
 namespace Lexplosion.Logic.Network
 {
-	public delegate void PointHandle(IPEndPoint point);
+    public delegate void PointHandle(IPEndPoint point);
 
-	interface IClientTransmitter
-	{
-		void Send(byte[] inputData);
+    interface IClientTransmitter
+    {
+        void Send(byte[] inputData);
 
-		bool Receive(out byte[] data);
+        bool Receive(out byte[] data);
 
-		event PointHandle ClientClosing;
+        event PointHandle ClientClosing;
 
-		bool IsConnected { get; }
+        bool IsConnected { get; }
 
-		void Close();
-	}
+        void Close();
+    }
 
 }

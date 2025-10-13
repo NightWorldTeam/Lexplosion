@@ -20,9 +20,9 @@ namespace Lexplosion.UI.WPF.Controls
             = DependencyProperty.Register("AllowFolder", typeof(bool), typeof(DragDropBoard),
             new FrameworkPropertyMetadata(false));
 
-/*        public static readonly DependencyProperty CheckFolderContentProperty
-            = DependencyProperty.Register("CheckFolderContent", typeof(bool), typeof(DragDropBoard),
-            new FrameworkPropertyMetadata(false));*/
+        /*        public static readonly DependencyProperty CheckFolderContentProperty
+                    = DependencyProperty.Register("CheckFolderContent", typeof(bool), typeof(DragDropBoard),
+                    new FrameworkPropertyMetadata(false));*/
 
         public Action<IEnumerable<string>> ImportAction
         {
@@ -42,11 +42,11 @@ namespace Lexplosion.UI.WPF.Controls
             set => SetValue(AllowFolderProperty, value);
         }
 
-/*        public bool CheckFolderContent
-        {
-            get => (bool)GetValue(CheckFolderContentProperty);
-            set => SetValue(CheckFolderContentProperty, value);
-        }*/
+        /*        public bool CheckFolderContent
+                {
+                    get => (bool)GetValue(CheckFolderContentProperty);
+                    set => SetValue(CheckFolderContentProperty, value);
+                }*/
 
 
         #region Contructors

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -173,9 +172,9 @@ namespace Lexplosion.UI.WPF.Controls
             if (!IsInfoBox)
             {
                 _toggle = Template.FindName(PART_TOGGLE_NAME, this) as CheckBox;
-                _toggle.Checked += (s, e) => 
+                _toggle.Checked += (s, e) =>
                 {
-                    IsOpen = true; 
+                    IsOpen = true;
                     PopupOpenedEvent?.Invoke(this);
                 };
                 _control = _toggle;

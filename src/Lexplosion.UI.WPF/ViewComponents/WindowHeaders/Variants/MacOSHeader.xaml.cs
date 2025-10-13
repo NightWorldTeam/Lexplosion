@@ -46,7 +46,7 @@ namespace Lexplosion.UI.WPF.WindowComponents.Header.Variants
             WindowHeaderPanelButtonsGrid.BeginAnimation(OpacityProperty, opacityHideAnimation);
         }
 
-        public void ChangeWHPHorizontalOrintation() 
+        public void ChangeWHPHorizontalOrintation()
         {
             if (WindowHeaderPanelButtonsGrid.HorizontalAlignment == HorizontalAlignment.Left)
             {
@@ -67,7 +67,7 @@ namespace Lexplosion.UI.WPF.WindowComponents.Header.Variants
                 GlobalData.GeneralSettings.NavBarInLeft = false;
             }
 
-			Runtime.ServicesContainer.DataFilesService.SaveSettings(GlobalData.GeneralSettings);
+            Runtime.ServicesContainer.DataFilesService.SaveSettings(GlobalData.GeneralSettings);
         }
     }
 }

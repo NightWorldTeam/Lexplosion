@@ -49,12 +49,12 @@ namespace Lexplosion.UI.WPF.Core.Services
 
         public void Notify(INotification notification)
         {
-            if (_notifications.Count == 2) 
+            if (_notifications.Count == 2)
             {
                 _notifications[0].CloseCommand.Execute(notification.Id);
             }
 
-            App.Current.Dispatcher.Invoke(() => 
+            App.Current.Dispatcher.Invoke(() =>
             {
                 _notifications.Add(notification);
                 notification.CloseCommand = new RelayCommand((obj) => App.Current.Dispatcher.Invoke(() =>
@@ -66,9 +66,9 @@ namespace Lexplosion.UI.WPF.Core.Services
         }
 
 
-        public void Remove(Guid notificationId) 
+        public void Remove(Guid notificationId)
         {
-            App.Current.Dispatcher.Invoke(() => 
+            App.Current.Dispatcher.Invoke(() =>
             {
                 _notifications.Remove(_notifications.FirstOrDefault(i => i.Id == notificationId));
             });

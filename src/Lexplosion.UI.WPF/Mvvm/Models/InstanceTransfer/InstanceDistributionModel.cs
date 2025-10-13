@@ -1,11 +1,9 @@
 ﻿using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Management.Accounts;
-using Lexplosion.Logic.Management.Instances;
 using Lexplosion.UI.WPF.Core;
 using Lexplosion.UI.WPF.Core.Objects;
 using Lexplosion.UI.WPF.Mvvm.Models.InstanceControllers;
 using System.Threading.Tasks;
-using static Lexplosion.UI.WPF.Mvvm.Models.Mvvm.InstanceModel.InstanceModelBase;
 
 namespace Lexplosion.UI.WPF.Mvvm.Models.InstanceTransfer
 {
@@ -60,8 +58,8 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.InstanceTransfer
                 return;
             }
 
-			var services = Runtime.ServicesContainer;
-			var receivers = await Task.Run(() => FileReceiver.GetDistributors(Account.ActiveAccount.UUID, Account.ActiveAccount.SessionToken, services));
+            var services = Runtime.ServicesContainer;
+            var receivers = await Task.Run(() => FileReceiver.GetDistributors(Account.ActiveAccount.UUID, Account.ActiveAccount.SessionToken, services));
 
             foreach (var receiver in receivers)
             {

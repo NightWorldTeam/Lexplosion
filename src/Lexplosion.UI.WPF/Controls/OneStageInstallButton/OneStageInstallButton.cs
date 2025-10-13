@@ -1,10 +1,4 @@
-﻿using Lexplosion.UI.WPF.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Remoting.Contexts;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -31,7 +25,7 @@ namespace Lexplosion.UI.WPF.Controls
         public static readonly DependencyProperty BeforeInstallContentProperty
             = DependencyProperty.Register(nameof(BeforeInstallContent), typeof(object), typeof(OneStageInstallButton),
                 new FrameworkPropertyMetadata(null, propertyChangedCallback: OnContentDependencyPropertyChanged));
-        
+
         public static readonly DependencyProperty AfterInstallContentProperty
             = DependencyProperty.Register(nameof(AfterInstallContent), typeof(object), typeof(OneStageInstallButton),
                 new FrameworkPropertyMetadata(null, propertyChangedCallback: OnContentDependencyPropertyChanged));
@@ -40,11 +34,11 @@ namespace Lexplosion.UI.WPF.Controls
             = DependencyProperty.Register(nameof(ProgressValue), typeof(double), typeof(OneStageInstallButton),
                 new PropertyMetadata(defaultValue: 0d, propertyChangedCallback: OnProgressValueChanged));
 
-        public static readonly DependencyProperty IsInstalledProperty = 
+        public static readonly DependencyProperty IsInstalledProperty =
             DependencyProperty.RegisterAttached(nameof(IsInstalled), typeof(bool), typeof(OneStageInstallButton),
                 new PropertyMetadata(defaultValue: false, propertyChangedCallback: OnIsInstalledChanged));
-        
-        public object BeforeInstallContent 
+
+        public object BeforeInstallContent
         {
             get => (object)GetValue(BeforeInstallContentProperty);
             set => SetValue(BeforeInstallContentProperty, value);
@@ -57,13 +51,13 @@ namespace Lexplosion.UI.WPF.Controls
         }
 
 
-        public bool IsInstalled 
+        public bool IsInstalled
         {
             get => (bool)GetValue(IsInstalledProperty);
             set => SetValue(IsInstalledProperty, value);
         }
 
-        public double ProgressValue 
+        public double ProgressValue
         {
             get => (double)GetValue(ProgressValueProperty);
             set => SetValue(ProgressValueProperty, value);
@@ -96,7 +90,7 @@ namespace Lexplosion.UI.WPF.Controls
             _progressBar = GetTemplateChild(PART_PROGRESS_BAR) as ProgressBar;
             _persentageTextBlock = GetTemplateChild(PART_PERCENTAGES_TEXTBLOCK) as TextBlock;
             _content = GetTemplateChild(PART_CONTENT) as ContentPresenter;
-           
+
             if (_progressBar == null || _persentageTextBlock == null || _content == null)
             {
                 throw new NullReferenceException("Template parts not available");

@@ -125,9 +125,9 @@ namespace Lexplosion.UI.WPF.Core.Objects
             Player._unkickMethod();
 
 #if DEBUG
-            if (_unkickedAction == null) 
+            if (_unkickedAction == null)
             {
-                Runtime.DebugWrite("Unkicked Action is null");      
+                Runtime.DebugWrite("Unkicked Action is null");
             }
 #endif
             _unkickedAction?.Invoke(Player);

@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Threading;
-using Newtonsoft.Json;
-using Lexplosion.Global;
+﻿using Lexplosion.Global;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Objects.Nightworld;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Net;
 
 namespace Lexplosion.Logic.Network
 {

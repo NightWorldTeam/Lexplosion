@@ -36,7 +36,8 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
                     {
                         SetOnlineInfoToServer(server);
                         Servers.Add(server);
-                    };
+                    }
+                    ;
                 });
             });
         }

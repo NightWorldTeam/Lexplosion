@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Windows;
-using System.Windows.Media.Animation;
-using static Lexplosion.Logic.Objects.Curseforge.CurseforgeProjectInfo;
 
 namespace Lexplosion.UI.WPF.Mvvm.Views.Windows
 {
@@ -45,7 +43,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Windows
         {
             //try
             //{
-                //var newColor = (Color)ColorConverter.ConvertFromString(hex.Text);
+            //var newColor = (Color)ColorConverter.ConvertFromString(hex.Text);
             //    object latestColor = Color.FromRgb(22, 127, 252); // App.Current.Resources["ActivityColor"] ?? ;
             //    var updatedColor = (Color)ColorConverter.ConvertFromString(hex.Text);
             //    var intervalColors = Gradient.GenerateGradient((Color)latestColor, updatedColor, 50); //ColorTools.GetIntervalColor((Color)latestColor, (Color)ColorConverter.ConvertFromString(hex.Text), 50);

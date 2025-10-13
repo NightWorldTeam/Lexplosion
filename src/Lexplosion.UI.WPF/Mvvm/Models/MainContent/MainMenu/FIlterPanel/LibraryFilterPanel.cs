@@ -74,7 +74,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.MainMenu
                 _isOperatorAnd = value;
                 FilterChanged?.Invoke();
                 OnPropertyChanged();
-            } 
+            }
         }
 
 
@@ -90,7 +90,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.MainMenu
 
             Versions.Add(AllVersion);
 
-            foreach (var instance in instanceController.Instances) 
+            foreach (var instance in instanceController.Instances)
             {
                 InstanceModelBase_GlobalAddedToLibrary(instance);
             }
@@ -99,7 +99,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.MainMenu
             InstanceModelBase.GlobalDeletedEvent += InstanceModelBase_GlobalDeletedEvent;
 
             SelectedSource = NoneSource;
-            
+
             Sources.Add(new InstanceSourceObject("NightWorld", InstanceSource.Nightworld));
             Sources.Add(new InstanceSourceObject("Curseforge", InstanceSource.Curseforge));
             Sources.Add(new InstanceSourceObject("Modrinth", InstanceSource.Modrinth));
@@ -115,7 +115,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.MainMenu
         #region Public Methods
 
 
-        public void FilterChangedExecuteEvent() 
+        public void FilterChangedExecuteEvent()
         {
             FilterChanged?.Invoke();
         }
@@ -134,17 +134,17 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.MainMenu
             {
                 VersionsCount[instanceModel.GameVersion]++;
             }
-            else 
+            else
             {
                 VersionsCount.Add(instanceModel.GameVersion, 1);
                 Versions.Add(instanceModel.GameVersion);
             }
 
-            if (instanceModel.Tags != null) 
-            { 
+            if (instanceModel.Tags != null)
+            {
                 // Categories
-                foreach (var category in instanceModel.Tags) 
-                { 
+                foreach (var category in instanceModel.Tags)
+                {
                     if (CategoriesCount.ContainsKey(category.Name))
                     {
                         CategoriesCount[category.Name]++;
@@ -163,7 +163,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.MainMenu
             // получаем количество клиент с данной версией, если остался один клиент удаляем версию из списка.
             if (VersionsCount.TryGetValue(instanceModel.GameVersion, out var countV))
             {
-                if (countV == 1) 
+                if (countV == 1)
                 {
                     Versions.Remove(instanceModel.GameVersion);
                     VersionsCount[instanceModel.GameVersion] = 0;
@@ -174,7 +174,8 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.MainMenu
 
             // получаем количество клиент с данной категорией, если остался один клиент удаляем категорию из списка.
             // O(n^2), O(n)?
-            foreach (var category in instanceModel.Tags.Skip(0)) { 
+            foreach (var category in instanceModel.Tags.Skip(0))
+            {
                 if (CategoriesCount.TryGetValue(category.Name, out var countC))
                 {
                     if (countC == 1)

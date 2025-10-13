@@ -1,6 +1,4 @@
-﻿using Lexplosion.Logic;
-using Lexplosion.Logic.Management;
-using Lexplosion.Logic.Network;
+﻿using Lexplosion.Logic.Management;
 using Lexplosion.Tools;
 using Lexplosion.UI.WPF.Core.ViewModel;
 using System;

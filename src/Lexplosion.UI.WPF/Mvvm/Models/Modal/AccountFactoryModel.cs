@@ -4,7 +4,6 @@ using Lexplosion.Logic.Network;
 using Lexplosion.UI.WPF.Core;
 using Lexplosion.UI.WPF.Mvvm.ViewModels.Authorization;
 using System;
-using System.Windows.Forms;
 
 namespace Lexplosion.UI.WPF.Mvvm.Models.Modal
 {

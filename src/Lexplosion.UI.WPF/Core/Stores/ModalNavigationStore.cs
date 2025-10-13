@@ -29,7 +29,7 @@ namespace Lexplosion.UI.WPF.Stores
         public void Open(IModalViewModel viewModel)
         {
             CurrentViewModel = viewModel;
-            if (viewModel != null) 
+            if (viewModel != null)
             {
                 LatestModal = viewModel.ToString().Split('.').LastOrDefault();
             }
@@ -37,7 +37,7 @@ namespace Lexplosion.UI.WPF.Stores
             Opened?.Invoke();
         }
 
-        public void RegisterAbstractFactory(Type type, ModalFactoryBase factory) 
+        public void RegisterAbstractFactory(Type type, ModalFactoryBase factory)
         {
             if (_modalAbstractFactoriesByType.ContainsKey(type))
                 throw new ArgumentException($"{type.ToString()} уже существует в словаре абстрактных фабрик модального окна");
@@ -53,7 +53,7 @@ namespace Lexplosion.UI.WPF.Stores
             _modalAbstractFactoriesByType.Add(type, factory);
         }
 
-        public void OpenModalPageByType(Type type) 
+        public void OpenModalPageByType(Type type)
         {
             if (!_modalAbstractFactoriesByType.ContainsKey(type))
                 throw new ArgumentException($"{type.ToString()} не существует в словаре абстрактных фабрик модального окна");
@@ -63,7 +63,7 @@ namespace Lexplosion.UI.WPF.Stores
 
         public void Close()
         {
-            if (CurrentViewModel == null) 
+            if (CurrentViewModel == null)
             {
                 return;
             }
@@ -75,7 +75,7 @@ namespace Lexplosion.UI.WPF.Stores
             Closed?.Invoke();
         }
 
-        private void CloseInternal(object obj) 
+        private void CloseInternal(object obj)
         {
             Close();
         }

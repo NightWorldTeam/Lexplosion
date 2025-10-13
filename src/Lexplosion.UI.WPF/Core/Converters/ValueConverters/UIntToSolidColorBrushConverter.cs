@@ -8,7 +8,7 @@ namespace Lexplosion.UI.WPF.Core.Converters
     {
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null) 
+            if (value == null)
             {
                 throw new ArgumentNullException("Must be uint not null");
             }
@@ -21,7 +21,7 @@ namespace Lexplosion.UI.WPF.Core.Converters
             throw new ArgumentException($"Must be uint not {value.GetType()}");
         }
 
-        private SolidColorBrush ConvertNumericToColor(uint value) 
+        private SolidColorBrush ConvertNumericToColor(uint value)
         {
             return new SolidColorBrush(GetColor(value));
         }

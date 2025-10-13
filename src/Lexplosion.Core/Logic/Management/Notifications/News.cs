@@ -1,11 +1,6 @@
 ﻿using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Objects.Nightworld;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Lexplosion.Logic.Management.Notifications
 {

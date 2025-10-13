@@ -171,7 +171,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.InstanceProfile.Settings
         /// </summary>
         public string JVMArgs
         {
-            get => InstanceSettings.JVMArgs; set 
+            get => InstanceSettings.JVMArgs; set
             {
                 InstanceSettings.JVMArgs = value;
                 _instanceSettingsCopy.JVMArgs = value;

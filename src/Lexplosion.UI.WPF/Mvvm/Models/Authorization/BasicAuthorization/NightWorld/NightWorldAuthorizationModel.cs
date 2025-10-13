@@ -1,6 +1,5 @@
 ﻿using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.UI.WPF.Core;
-using System.Threading;
 
 namespace Lexplosion.UI.WPF.Mvvm.Models.Authorization.BasicAuthorization
 {
@@ -44,9 +43,9 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.Authorization.BasicAuthorization
 
 
         private bool _isLoading;
-        public bool IsLoading 
+        public bool IsLoading
         {
-            get => _isLoading; set 
+            get => _isLoading; set
             {
                 _isLoading = value;
                 OnPropertyChanged();
@@ -74,7 +73,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.Authorization.BasicAuthorization
 
         public void LogIn()
         {
-            if (string.IsNullOrWhiteSpace(Login) || string.IsNullOrWhiteSpace(Password)) 
+            if (string.IsNullOrWhiteSpace(Login) || string.IsNullOrWhiteSpace(Password))
             {
                 _appCore.MessageService.Info("LoginOrPasswordNotFilled", true);
                 return;
@@ -82,7 +81,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.Authorization.BasicAuthorization
 
             IsLoading = true;
             var services = Runtime.ServicesContainer;
-			var account = new Account(AccountType.NightWorld, services, services.DataFilesService, Login);
+            var account = new Account(AccountType.NightWorld, services, services.DataFilesService, Login);
 
             Runtime.TaskRun(() =>
             {

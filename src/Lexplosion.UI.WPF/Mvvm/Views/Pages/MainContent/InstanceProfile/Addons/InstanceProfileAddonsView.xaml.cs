@@ -1,9 +1,7 @@
 ﻿using Lexplosion.UI.WPF.Controls;
 using Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.InstanceProfile;
-using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 
 namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.InstanceProfile
 {
@@ -23,7 +21,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.InstanceProfile
         private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             _model = (InstanceAddonsContainerViewModel)DataContext;
-            if (_model != null) 
+            if (_model != null)
             {
                 SetSearchBoxPlaceholder(_model.Model.SelectedSortByParam);
             }
@@ -53,7 +51,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.InstanceProfile
                 SetSearchBoxPlaceholder(selectedItem.ToString());
         }
 
-        private void SetSearchBoxPlaceholder(string sortParam) 
+        private void SetSearchBoxPlaceholder(string sortParam)
         {
             var addonType = _model.Model.Type switch
             {

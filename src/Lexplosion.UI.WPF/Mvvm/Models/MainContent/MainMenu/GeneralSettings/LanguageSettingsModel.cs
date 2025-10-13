@@ -1,5 +1,4 @@
 ﻿using Lexplosion.Global;
-using Lexplosion.Logic.FileSystem;
 using Lexplosion.UI.WPF.Core;
 using Lexplosion.UI.WPF.Core.Objects;
 using System;
@@ -59,7 +58,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.Content.GeneralSettings
             _selectedLang = langModel;
             ChangeLangauge(cultureId);
             GlobalData.GeneralSettings.LanguageId = cultureId;
-			Runtime.ServicesContainer.DataFilesService.SaveSettings(GlobalData.GeneralSettings);
+            Runtime.ServicesContainer.DataFilesService.SaveSettings(GlobalData.GeneralSettings);
         }
     }
 }

@@ -1,20 +1,18 @@
-﻿using Lexplosion.Logic.Management.Instances;
+﻿using Lexplosion.Logic.Management;
+using Lexplosion.Logic.Management.Addons;
+using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Objects;
+using Lexplosion.Tools;
+using Lexplosion.UI.WPF.Core;
 using Lexplosion.UI.WPF.Core.Objects;
+using Lexplosion.UI.WPF.Core.Objects.TranslatableObjects;
+using Lexplosion.UI.WPF.Mvvm.Models.AddonsRepositories.Groups;
+using Lexplosion.UI.WPF.Mvvm.Models.Mvvm.InstanceModel;
+using Lexplosion.UI.WPF.Mvvm.ViewModels.Modal;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Lexplosion.Logic.Network.Web;
-using System;
-using Lexplosion.UI.WPF.Core.Objects.TranslatableObjects;
-using Lexplosion.Tools;
-using Lexplosion.UI.WPF.Mvvm.Models.AddonsRepositories.Groups;
-using Lexplosion.UI.WPF.Core.GameExtensions;
-using Lexplosion.UI.WPF.Mvvm.Models.Mvvm.InstanceModel;
-using Lexplosion.Logic.Management.Addons;
-using Lexplosion.Logic.Management;
-using Lexplosion.UI.WPF.Core;
-using Lexplosion.UI.WPF.Mvvm.ViewModels.Modal;
 
 namespace Lexplosion.UI.WPF.Mvvm.Models.AddonsRepositories
 {
@@ -26,7 +24,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.AddonsRepositories
         private readonly Dictionary<string, List<CategoryWrapper>> _categoriesGroupsByName = new();
         private readonly Action _launchInstanceAction;
         private readonly InstanceModelBase _instanceModelBase;
-		private readonly AppServiceContainer _allServicesContainer = Runtime.ServicesContainer;
+        private readonly AppServiceContainer _allServicesContainer = Runtime.ServicesContainer;
 
         public ObservableCollection<InstanceAddon> InstalledAddons { get; set; } = [];
         public ObservableCollection<DownloableAddonFile> InProgressAddons { get; set; } = [];

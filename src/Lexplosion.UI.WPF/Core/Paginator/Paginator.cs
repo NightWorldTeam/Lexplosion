@@ -102,9 +102,9 @@ namespace Lexplosion.UI.WPF.Core.Paginator
             return _paginate.Invoke(CurrentPageIndex);
         }
 
-        public IEnumerable<T> To(uint pageIndex) 
+        public IEnumerable<T> To(uint pageIndex)
         {
-            if (!(pageIndex - 1 > 0 && CurrentPageIndex + 1 <= PageCount))             
+            if (!(pageIndex - 1 > 0 && CurrentPageIndex + 1 <= PageCount))
                 throw new ArgumentException($"{pageIndex} out of range max page index {PageCount}");
 
             CurrentPageIndex = pageIndex;

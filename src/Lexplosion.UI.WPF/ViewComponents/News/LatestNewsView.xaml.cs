@@ -1,6 +1,4 @@
-﻿using Lexplosion.UI.WPF.Mvvm.ViewModels;
-using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 
 namespace Lexplosion.UI.WPF.ViewComponents.News
 {

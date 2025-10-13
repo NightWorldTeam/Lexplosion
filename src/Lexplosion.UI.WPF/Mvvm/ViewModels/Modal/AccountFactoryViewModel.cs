@@ -2,14 +2,13 @@
 using Lexplosion.UI.WPF.Core;
 using Lexplosion.UI.WPF.Core.Modal;
 using Lexplosion.UI.WPF.Mvvm.Models.Modal;
-using Lexplosion.UI.WPF.Mvvm.ViewModels.Authorization;
 using System.Windows.Input;
 
 namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Modal
 {
     public class AccountFactoryViewModel : ActionModalViewModelBase
     {
-        public AccountFactoryModel Model { get;  }
+        public AccountFactoryModel Model { get; }
 
 
         public ICommand ManualInputCommand { get; }

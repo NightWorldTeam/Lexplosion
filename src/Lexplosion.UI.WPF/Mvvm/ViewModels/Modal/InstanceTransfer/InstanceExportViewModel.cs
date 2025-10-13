@@ -29,12 +29,12 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Modal.InstanceTransfer
 
 
         private RelayCommand _treeViewItemExpandCommand;
-        public ICommand TreeViewItemExpandCommand 
+        public ICommand TreeViewItemExpandCommand
         {
-            get => _treeViewItemExpandCommand ?? (_treeViewItemExpandCommand = new RelayCommand(obj => 
+            get => _treeViewItemExpandCommand ?? (_treeViewItemExpandCommand = new RelayCommand(obj =>
             {
                 Model.InstanceFileTree.SubTreeExpand(obj as PathLevel);
-            })); 
+            }));
         }
 
 
@@ -66,12 +66,12 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Modal.InstanceTransfer
         /// <param name="obj">Параметр команды ActionCommand</param>
         private void OnActionCommandExecuted(object obj)
         {
-            using (var saveFileDialog = new System.Windows.Forms.SaveFileDialog()) 
+            using (var saveFileDialog = new System.Windows.Forms.SaveFileDialog())
             {
                 Runtime.DebugWrite(GlobalData.GeneralSettings.GamePath);
 
                 var exportDirPath = GlobalData.GeneralSettings.GamePath.Replace('/', '\\') + @"\export";
-                
+
                 // Проверяем существует ли директория по умолчанию.
                 if (!Directory.Exists(exportDirPath))
                     // Создаём директорию по умолчанию.
@@ -84,7 +84,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Modal.InstanceTransfer
                 saveFileDialog.FileName = Model.InstanceName + ".nwpk";
 
 
-                if (saveFileDialog.ShowDialog() == DialogResult.OK) 
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     // ExportedInstance.Add(this);
 

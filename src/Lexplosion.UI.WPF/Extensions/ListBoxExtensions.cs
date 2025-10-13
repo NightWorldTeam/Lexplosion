@@ -32,15 +32,15 @@ namespace Lexplosion.UI.WPF.Extensions
         {
             var listBox = (sender as ListBox);
 
-            foreach (var i in e.RemovedItems) 
+            foreach (var i in e.RemovedItems)
             {
                 listBox.SelectedItems.Remove(i);
             }
 
-            foreach (var i in e.AddedItems) 
+            foreach (var i in e.AddedItems)
             {
                 listBox.SelectedItems.Add(i);
-            } 
+            }
         }
     }
 }

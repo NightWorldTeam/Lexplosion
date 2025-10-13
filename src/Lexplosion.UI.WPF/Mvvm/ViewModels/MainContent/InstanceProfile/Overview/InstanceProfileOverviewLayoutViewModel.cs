@@ -11,9 +11,9 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.InstanceProfile
         private ViewModelBase _versionViewModel;
 
         private bool _isLoading;
-        public bool IsLoading 
+        public bool IsLoading
         {
-            get => _isLoading; private set 
+            get => _isLoading; private set
             {
                 _isLoading = value;
                 OnPropertyChanged();
@@ -37,7 +37,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.InstanceProfile
             }
         }
 
-        private void ChangeLoadingStatus(bool newStatus) 
+        private void ChangeLoadingStatus(bool newStatus)
         {
             IsLoading = newStatus;
         }

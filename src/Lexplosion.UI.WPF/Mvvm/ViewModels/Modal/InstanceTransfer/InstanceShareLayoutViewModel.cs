@@ -18,7 +18,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Modal.InstanceTransfer
             var activeShares = new ActiveSharesViewModel(controller);
 
             Tabs = [
-                new TabItemModel("Share", instanceShare, true), 
+                new TabItemModel("Share", instanceShare, true),
                 new TabItemModel("ActiveShares", activeShares, false)
             ];
         }

@@ -255,7 +255,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.Modal
                 false
                 );
 
-            if (!SelectedGroup.IsDefaultGroup) 
+            if (!SelectedGroup.IsDefaultGroup)
             {
                 SelectedGroup.AddInstance(newInstance);
                 SelectedGroup.SaveGroupInfo();

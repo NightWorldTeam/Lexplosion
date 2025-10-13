@@ -1,9 +1,7 @@
 ﻿using Lexplosion.UI.WPF.Controls;
 using Lexplosion.UI.WPF.Tools;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 
 namespace Lexplosion.UI.WPF.ViewComponents.Users
@@ -57,12 +55,12 @@ namespace Lexplosion.UI.WPF.ViewComponents.Users
 
             if (Banner.Colors != null)
             {
-                if (Banner.Colors.PrimaryColor != null && Banner.Colors.PrimaryColor > 0x01000000) 
+                if (Banner.Colors.PrimaryColor != null && Banner.Colors.PrimaryColor > 0x01000000)
                 {
                     MoreMenuToggleButton.Background = new SolidColorBrush(ColorTools.GetColor(Banner.Colors.PrimaryColor.Value));
                 }
 
-                if (Banner.Colors.ActivityColor != null && Banner.Colors.ActivityColor > 0x01000000) 
+                if (Banner.Colors.ActivityColor != null && Banner.Colors.ActivityColor > 0x01000000)
                 {
                     MoreMenuToggleButton.Style.Setters.Add(new Setter(AdvancedToggleButton.ForegroundProperty, Banner.Colors.ActivityColor));
                 }

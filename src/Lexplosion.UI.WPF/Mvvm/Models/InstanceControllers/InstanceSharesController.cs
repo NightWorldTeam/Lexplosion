@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 
 namespace Lexplosion.UI.WPF.Mvvm.Models.InstanceControllers
 {
@@ -36,7 +35,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.InstanceControllers
             });
         }
 
-        public void AddFileReceiver(InstanceDistribution instanceDistribution) 
+        public void AddFileReceiver(InstanceDistribution instanceDistribution)
         {
             _availableInstanceDistribution.Add(instanceDistribution);
         }
@@ -46,12 +45,12 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.InstanceControllers
             _availableInstanceDistribution.Remove(instanceDistribution);
         }
 
-        public bool Contains(string id) 
+        public bool Contains(string id)
         {
             return _availableInstanceDistribution.FirstOrDefault(i => i.Id == id) != null;
         }
 
-        public void RemoveAllShares() 
+        public void RemoveAllShares()
         {
             App.Current.Dispatcher.Invoke(() =>
             {
@@ -62,7 +61,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.InstanceControllers
 
         public void RemoveActiveShare(DistributedInstance distributedInstance)
         {
-            App.Current.Dispatcher.Invoke(() => 
+            App.Current.Dispatcher.Invoke(() =>
             {
                 distributedInstance.Stop();
                 _activeShares.Remove(distributedInstance);

@@ -1,7 +1,5 @@
-﻿using Lexplosion.Logic.Management;
-using Lexplosion.Logic.Management.Import;
+﻿using Lexplosion.Logic.Management.Import;
 using Lexplosion.Logic.Management.Instances;
-using Lexplosion.Tools;
 using Lexplosion.UI.WPF.Core;
 using Lexplosion.UI.WPF.Core.Modal;
 using Lexplosion.UI.WPF.Mvvm.ViewModels.Modal.InstanceTransfer;
@@ -21,10 +19,10 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.InstanceTransfer
         private readonly AppCore _appCore;
         private readonly ImportStartFunc _startImport;
         private IModalViewModel _currentModalViewModelBase;
-		private readonly ClientsManager _clientsManager = Runtime.ClientsManager;
+        private readonly ClientsManager _clientsManager = Runtime.ClientsManager;
 
 
-		public ObservableCollection<ImportProcess> ImportProcesses { get; } = new();
+        public ObservableCollection<ImportProcess> ImportProcesses { get; } = new();
         public Action<IEnumerable<string>> ImportAction { get; }
 
         public Queue<InstanceImportFillDataViewModel> FillDataViewModels { get; } = [];
@@ -51,7 +49,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.InstanceTransfer
                     Import(path);
             };
 
-            foreach (var process in getActiveImports()) 
+            foreach (var process in getActiveImports())
             {
                 ImportProcesses.Add(process);
             }
@@ -94,7 +92,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.InstanceTransfer
             ImportProcesses.Add(importProcess);
         }
 
-        public void ImportByUrl() 
+        public void ImportByUrl()
         {
             var importProcess = _startImport(ImportURL, true, OnImportDynamicStateHandlerStateChanged, null, OnImportCancelled);
             ImportProcesses.Add(importProcess);

@@ -1,60 +1,59 @@
 ﻿using Lexplosion.UI.WPF.Extensions;
+using Lexplosion.UI.WPF.Mvvm.Models.Mvvm.InstanceModel;
 using Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu;
 using System;
+using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
-using Lexplosion.UI.WPF.Mvvm.Models.Mvvm.InstanceModel;
-using System.Windows.Media;
-using System.Collections.Specialized;
 
 namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.MainMenu
 {
-	/// <summary>
-	/// Логика взаимодействия для LibraryView.xaml
-	/// </summary>
-	public partial class LibraryView : System.Windows.Controls.UserControl
-	{
-		LibraryViewModel _viewModel;
-		static int posIndex = 0;
-		bool _isFilterHidden = false;
+    /// <summary>
+    /// Логика взаимодействия для LibraryView.xaml
+    /// </summary>
+    public partial class LibraryView : System.Windows.Controls.UserControl
+    {
+        LibraryViewModel _viewModel;
+        static int posIndex = 0;
+        bool _isFilterHidden = false;
 
-		public LibraryView()
-		{
-			InitializeComponent();
-			DataContextChanged += OnDataContextChanged;
-			InstanceList.Loaded += OnInstanceListLoaded;
-			Runtime.DebugWrite("LibraryView ctor");
-		}
+        public LibraryView()
+        {
+            InitializeComponent();
+            DataContextChanged += OnDataContextChanged;
+            InstanceList.Loaded += OnInstanceListLoaded;
+            Runtime.DebugWrite("LibraryView ctor");
+        }
 
-		private void OnDataContextChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
-		{
-			Runtime.DebugWrite("OnDataContextChanged");
+        private void OnDataContextChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
+        {
+            Runtime.DebugWrite("OnDataContextChanged");
 
-			_viewModel = (LibraryViewModel)DataContext;
+            _viewModel = (LibraryViewModel)DataContext;
 
-			if (_viewModel == null)
-			{
-				posIndex = GetFirstVisibleItemIndex();
-				Runtime.DebugWrite($"Pos: {posIndex}", color: System.ConsoleColor.Red);
-				return;
-			}
+            if (_viewModel == null)
+            {
+                posIndex = GetFirstVisibleItemIndex();
+                Runtime.DebugWrite($"Pos: {posIndex}", color: System.ConsoleColor.Red);
+                return;
+            }
 
             (_viewModel.Model.InstanceController.Instances as INotifyCollectionChanged).CollectionChanged += OnInstanceListChanged;
 
 
             _viewModel.InstanceProfileOpened += (instanceModel) =>
-			{
-				posIndex = GetFirstVisibleItemIndex();
-			};
+            {
+                posIndex = GetFirstVisibleItemIndex();
+            };
 
-			InstanceModelBase.GlobalDeletedEvent += InstanceModelBase_GlobalDeletedEvent;
-		}
+            InstanceModelBase.GlobalDeletedEvent += InstanceModelBase_GlobalDeletedEvent;
+        }
 
         private void OnInstanceListChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-			if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add) 
-			{
+            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
+            {
                 var scrollViewer = InstanceList.FindVisualDescendant<ScrollViewer>();
                 if (scrollViewer != null)
                 {
@@ -64,97 +63,97 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.MainMenu
         }
 
         private void InstanceModelBase_GlobalDeletedEvent(InstanceModelBase obj)
-		{
-			//if (_viewModel.Model.InstancesCollectionViewSource.Count == 1)
-			//{
-			//	Runtime.DebugWrite("Clear VirtualizingWrapPanel cache");
-			//	var panel = InstanceList.FindVisualDescendant<VirtualizingWrapPanel>();
-			//	panel.ClearItemSizeCache();
-			//}
-		}
+        {
+            //if (_viewModel.Model.InstancesCollectionViewSource.Count == 1)
+            //{
+            //	Runtime.DebugWrite("Clear VirtualizingWrapPanel cache");
+            //	var panel = InstanceList.FindVisualDescendant<VirtualizingWrapPanel>();
+            //	panel.ClearItemSizeCache();
+            //}
+        }
 
-		private int GetFirstVisibleItemIndex()
-		{
-			var scrollViewer = InstanceList.FindVisualDescendant<ScrollViewer>();
-			if (scrollViewer == null) return -1;
+        private int GetFirstVisibleItemIndex()
+        {
+            var scrollViewer = InstanceList.FindVisualDescendant<ScrollViewer>();
+            if (scrollViewer == null) return -1;
 
-			// Получаем первый видимый элемент
-			for (int i = 0; i < InstanceList.Items.Count; i++)
-			{
-				var container = InstanceList.ItemContainerGenerator.ContainerFromIndex(i) as FrameworkElement;
-				if (container != null && container.TransformToVisual(scrollViewer).Transform(new Point(0, 0)).Y >= 0)
-				{
-					return i; // Возвращаем индекс первого видимого элемента
-				}
-			}
+            // Получаем первый видимый элемент
+            for (int i = 0; i < InstanceList.Items.Count; i++)
+            {
+                var container = InstanceList.ItemContainerGenerator.ContainerFromIndex(i) as FrameworkElement;
+                if (container != null && container.TransformToVisual(scrollViewer).Transform(new Point(0, 0)).Y >= 0)
+                {
+                    return i; // Возвращаем индекс первого видимого элемента
+                }
+            }
 
-			return -1; // Если ничего не найдено
-		}
+            return -1; // Если ничего не найдено
+        }
 
-		private void OnInstanceListLoaded(object sender, System.Windows.RoutedEventArgs e)
-		{
-			Runtime.DebugWrite($"OnInstanceListLoaded", color: System.ConsoleColor.Red);
-			if (InstanceList.Items.Count > 0)
-			{
-				if (_viewModel != null)
-				{
-					if (_viewModel.IsScrollToEnd)
-					{
-						var lastItem = InstanceList.Items[InstanceList.Items.Count - 1];
-						InstanceList.ScrollIntoView(lastItem);
-						return;
-					}
-				}
+        private void OnInstanceListLoaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            Runtime.DebugWrite($"OnInstanceListLoaded", color: System.ConsoleColor.Red);
+            if (InstanceList.Items.Count > 0)
+            {
+                if (_viewModel != null)
+                {
+                    if (_viewModel.IsScrollToEnd)
+                    {
+                        var lastItem = InstanceList.Items[InstanceList.Items.Count - 1];
+                        InstanceList.ScrollIntoView(lastItem);
+                        return;
+                    }
+                }
 
-				if (posIndex > 0 && posIndex < InstanceList.Items.Count)
-				{
-					var item = InstanceList.Items[posIndex + 2];
-					InstanceList.ScrollIntoView(item);
+                if (posIndex > 0 && posIndex < InstanceList.Items.Count)
+                {
+                    var item = InstanceList.Items[posIndex + 2];
+                    InstanceList.ScrollIntoView(item);
 
-					// Ожидание рендеринга элемента
-					InstanceList.Dispatcher.BeginInvoke(new Action(() =>
-					{
-						var container = InstanceList.ItemContainerGenerator.ContainerFromIndex(posIndex) as FrameworkElement;
-						if (container != null)
-						{
-							container.BringIntoView();
-						}
-					}), DispatcherPriority.Render);
-				}
-			}
-		}
+                    // Ожидание рендеринга элемента
+                    InstanceList.Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        var container = InstanceList.ItemContainerGenerator.ContainerFromIndex(posIndex) as FrameworkElement;
+                        if (container != null)
+                        {
+                            container.BringIntoView();
+                        }
+                    }), DispatcherPriority.Render);
+                }
+            }
+        }
 
-		private void ListBox_ScrollChanged(object sender, ScrollChangedEventArgs e)
-		{
-			if (BackTopButton.TargetScroll == null)
-			{
-				BackTopButton.TargetScroll = e.OriginalSource as ScrollViewer;
-			}
-		}
+        private void ListBox_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            if (BackTopButton.TargetScroll == null)
+            {
+                BackTopButton.TargetScroll = e.OriginalSource as ScrollViewer;
+            }
+        }
 
 
-		private void CloseContextMenuWhenButtonClicked() 
-		{
-			(Resources["GroupItemContextMenu"] as ContextMenu).IsOpen = false;
+        private void CloseContextMenuWhenButtonClicked()
+        {
+            (Resources["GroupItemContextMenu"] as ContextMenu).IsOpen = false;
         }
 
 
         private void Remove_Click(object sender, RoutedEventArgs e)
         {
-			CloseContextMenuWhenButtonClicked();
+            CloseContextMenuWhenButtonClicked();
         }
-		
-		private void Edit_Click(object sender, RoutedEventArgs e)
+
+        private void Edit_Click(object sender, RoutedEventArgs e)
         {
             CloseContextMenuWhenButtonClicked();
         }
 
         private void Grid_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-			if (_viewModel != null) 
-			{
-				_viewModel.Model.IsGroupDrawerOpen = false;
-			}
+            if (_viewModel != null)
+            {
+                _viewModel.Model.IsGroupDrawerOpen = false;
+            }
         }
 
         private void Grid_DragEnter(object sender, System.Windows.DragEventArgs e)

@@ -2,8 +2,8 @@
 
 namespace Lexplosion.Logic.Network.Services
 {
-	public interface IModrinthWebServicesContainer : IWebServicesContainer
-	{
-		public ModrinthApi MdApi { get; }
-	}
+    public interface IModrinthWebServicesContainer : IWebServicesContainer
+    {
+        public ModrinthApi MdApi { get; }
+    }
 }

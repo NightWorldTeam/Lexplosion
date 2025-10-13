@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 
 namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.MainMenu
 {

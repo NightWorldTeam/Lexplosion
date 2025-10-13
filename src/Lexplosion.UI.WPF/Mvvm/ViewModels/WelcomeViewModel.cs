@@ -1,9 +1,7 @@
 ﻿using Lexplosion.UI.WPF.Commands;
 using Lexplosion.UI.WPF.Core;
-using Lexplosion.UI.WPF.Core.Objects;
 using System;
 using System.Linq;
-using System.Windows;
 using System.Windows.Input;
 
 namespace Lexplosion.UI.WPF.Mvvm.ViewModels

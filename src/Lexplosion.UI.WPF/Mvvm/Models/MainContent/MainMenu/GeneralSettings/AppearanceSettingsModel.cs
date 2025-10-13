@@ -1,14 +1,7 @@
-﻿using Lexplosion.Global;
-using Lexplosion.Logic.FileSystem;
-using Lexplosion.UI.WPF.Core;
+﻿using Lexplosion.UI.WPF.Core;
 using Lexplosion.UI.WPF.Core.Objects;
 using Lexplosion.UI.WPF.Core.Services;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Windows.Controls;
-using System.Windows.Forms;
-using System.Windows.Media;
 
 namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.Content.GeneralSettings
 {
@@ -24,7 +17,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.Content.GeneralSettings
         {
             get => _themeService.SelectedAppHeaderTemplateName; set
             {
-                if (!string.IsNullOrEmpty(value)) 
+                if (!string.IsNullOrEmpty(value))
                 {
                     _themeService.ChangeWindowHeaderTemplate(value);
                     OnPropertyChanged();
@@ -61,11 +54,11 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.Content.GeneralSettings
 
 
         private double _scalingFactor;
-        public double ScalingFactor 
+        public double ScalingFactor
         {
-            get => _scalingFactor; set 
+            get => _scalingFactor; set
             {
-                if (_scalingFactor != value) 
+                if (_scalingFactor != value)
                 {
                     _scalingFactor = value;
                     _appCore.Settings.Core.ZoomLevel = value / 100;
@@ -78,11 +71,11 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.Content.GeneralSettings
 
 
         private bool _isCenterWindowAuto;
-        public bool IsCenterWindowAuto 
+        public bool IsCenterWindowAuto
         {
-            get => _isCenterWindowAuto; set 
+            get => _isCenterWindowAuto; set
             {
-                if (_isCenterWindowAuto != value) 
+                if (_isCenterWindowAuto != value)
                 {
                     _isCenterWindowAuto = value;
                     _appCore.Settings.Core.IsCenterWindowAuto = value;

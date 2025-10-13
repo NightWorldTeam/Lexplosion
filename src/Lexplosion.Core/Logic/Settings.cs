@@ -1,41 +1,41 @@
-﻿using System;
+﻿using Lexplosion.Global;
+using Lexplosion.Tools;
+using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using Lexplosion.Global;
-using Lexplosion.Tools;
 
 namespace Lexplosion.Logic
 {
-	[Serializable]
-	public class Settings
-	{
-		public event Action<string> ValueChanged;
+    [Serializable]
+    public class Settings
+    {
+        public event Action<string> ValueChanged;
 
-		private string _javaPath = null;
-		public string JavaPath
-		{
-			get
-			{
-				return (IsCustomJava == true) ? _javaPath : "";
-			}
-			set
-			{
-				_javaPath = value;
-			}
-		}
+        private string _javaPath = null;
+        public string JavaPath
+        {
+            get
+            {
+                return (IsCustomJava == true) ? _javaPath : "";
+            }
+            set
+            {
+                _javaPath = value;
+            }
+        }
 
-		private string _java17Path = null;
-		public string Java17Path
-		{
-			get
-			{
-				return (IsCustomJava17 == true) ? _java17Path : "";
-			}
-			set
-			{
-				_java17Path = value;
-			}
-		}
+        private string _java17Path = null;
+        public string Java17Path
+        {
+            get
+            {
+                return (IsCustomJava17 == true) ? _java17Path : "";
+            }
+            set
+            {
+                _java17Path = value;
+            }
+        }
 
         public bool? IsCustomJava = null;
         public bool? IsCustomJava17 = null;
@@ -62,43 +62,43 @@ namespace Lexplosion.Logic
         /// Параметр только для настроек конкретного клиента. 
         /// </summary>
         public string AutoLoginServer = null;
-		/// <summary>
-		/// Указывает новый ли это интерфейс. null или false - старый. В новом ставится true
-		/// </summary>
-		public bool? ItIsNotShit = null;
-		/// <summary>
-		/// Использовать систему скинов NightWorld
-		/// </summary>
-		public bool? IsNightWorldSkinSystem = null;
-		/// <summary>
-		/// Аргументы JVM
-		/// </summary>
-		public string JVMArgs = null;
-		/// <summary>
-		/// Положение шапки
-		/// </summary>
-		public bool NavBarInLeft = true;
-		public bool IsPortableMode = false;
-		/// <summary>
-		/// Уровень масштабирования интерфейса.
-		/// </summary>
-		private double _zoomLevel;
-		public double ZoomLevel 
-		{
-			get => _zoomLevel; set 
-			{
-				_zoomLevel = value;
-				ValueChanged?.Invoke(nameof(ZoomLevel));
+        /// <summary>
+        /// Указывает новый ли это интерфейс. null или false - старый. В новом ставится true
+        /// </summary>
+        public bool? ItIsNotShit = null;
+        /// <summary>
+        /// Использовать систему скинов NightWorld
+        /// </summary>
+        public bool? IsNightWorldSkinSystem = null;
+        /// <summary>
+        /// Аргументы JVM
+        /// </summary>
+        public string JVMArgs = null;
+        /// <summary>
+        /// Положение шапки
+        /// </summary>
+        public bool NavBarInLeft = true;
+        public bool IsPortableMode = false;
+        /// <summary>
+        /// Уровень масштабирования интерфейса.
+        /// </summary>
+        private double _zoomLevel;
+        public double ZoomLevel
+        {
+            get => _zoomLevel; set
+            {
+                _zoomLevel = value;
+                ValueChanged?.Invoke(nameof(ZoomLevel));
             }
-		}
-		/// <summary>
-		/// Центрирование окна на экране после масштабирования.
-		/// </summary>
-		public bool IsCenterWindowAuto = true;
-		/// <summary>
-		/// Статус значения отвечающего работу анимаций в момент изменения масштабирования.
-		/// </summary>
-		public bool IsScalingAnimationEnabled;
+        }
+        /// <summary>
+        /// Центрирование окна на экране после масштабирования.
+        /// </summary>
+        public bool IsCenterWindowAuto = true;
+        /// <summary>
+        /// Статус значения отвечающего работу анимаций в момент изменения масштабирования.
+        /// </summary>
+        public bool IsScalingAnimationEnabled;
 
         /// <summary>
         /// Выполняет слияние с другим экземпляром настроек.
@@ -108,31 +108,31 @@ namespace Lexplosion.Logic
         /// <param name="settings">Экземпляр, с которым нужно выполнить слияние</param>
         /// <param name="priority">Приоритетный ли режим</param>
         public void Merge(Settings settings, bool priority = false)
-		{
-			if (priority)
-			{
-				if (string.IsNullOrWhiteSpace(JavaPath)) JavaPath = settings.JavaPath;
-				if (string.IsNullOrWhiteSpace(Java17Path)) Java17Path = settings.Java17Path;
-				if (IsCustomJava == null) IsCustomJava = settings.IsCustomJava;
-				if (IsCustomJava17 == null) IsCustomJava17 = settings.IsCustomJava17;
-				if (GamePath == null) GamePath = settings.GamePath;
-				if (Xmx == null) Xmx = settings.Xmx;
-				if (Xms == null) Xms = settings.Xms;
-				if (WindowWidth == null) WindowWidth = settings.WindowWidth;
-				if (WindowHeight == null) WindowHeight = settings.WindowHeight;
-				if (IsShowConsole == null) IsShowConsole = settings.IsShowConsole;
-				if (IsHiddenMode == null) IsHiddenMode = settings.IsHiddenMode;
-				if (IsAutoUpdate == null) IsAutoUpdate = settings.IsAutoUpdate;
-				if (NwClientByDefault == null) NwClientByDefault = settings.NwClientByDefault;
-				if (IsNightWorldSkinSystem == null) IsNightWorldSkinSystem = settings.IsNightWorldSkinSystem;
-				if (GameArgs == null) GameArgs = settings.GameArgs;
-				if (JVMArgs == null) JVMArgs = settings.JVMArgs;
-				if (string.IsNullOrWhiteSpace(AutoLoginServer)) AutoLoginServer = settings.AutoLoginServer;
+        {
+            if (priority)
+            {
+                if (string.IsNullOrWhiteSpace(JavaPath)) JavaPath = settings.JavaPath;
+                if (string.IsNullOrWhiteSpace(Java17Path)) Java17Path = settings.Java17Path;
+                if (IsCustomJava == null) IsCustomJava = settings.IsCustomJava;
+                if (IsCustomJava17 == null) IsCustomJava17 = settings.IsCustomJava17;
+                if (GamePath == null) GamePath = settings.GamePath;
+                if (Xmx == null) Xmx = settings.Xmx;
+                if (Xms == null) Xms = settings.Xms;
+                if (WindowWidth == null) WindowWidth = settings.WindowWidth;
+                if (WindowHeight == null) WindowHeight = settings.WindowHeight;
+                if (IsShowConsole == null) IsShowConsole = settings.IsShowConsole;
+                if (IsHiddenMode == null) IsHiddenMode = settings.IsHiddenMode;
+                if (IsAutoUpdate == null) IsAutoUpdate = settings.IsAutoUpdate;
+                if (NwClientByDefault == null) NwClientByDefault = settings.NwClientByDefault;
+                if (IsNightWorldSkinSystem == null) IsNightWorldSkinSystem = settings.IsNightWorldSkinSystem;
+                if (GameArgs == null) GameArgs = settings.GameArgs;
+                if (JVMArgs == null) JVMArgs = settings.JVMArgs;
+                if (string.IsNullOrWhiteSpace(AutoLoginServer)) AutoLoginServer = settings.AutoLoginServer;
                 if (string.IsNullOrWhiteSpace(LanguageId)) LanguageId = settings.LanguageId;
                 if (string.IsNullOrWhiteSpace(ThemeName)) ThemeName = settings.ThemeName;
                 if (string.IsNullOrWhiteSpace(AccentColor)) AccentColor = settings.AccentColor;
                 if (string.IsNullOrWhiteSpace(AppHeaderTemplateName)) AppHeaderTemplateName = settings.AppHeaderTemplateName;
-				if (ZoomLevel == 1) ZoomLevel = settings.ZoomLevel;
+                if (ZoomLevel == 1) ZoomLevel = settings.ZoomLevel;
             }
             else
             {
@@ -148,10 +148,10 @@ namespace Lexplosion.Logic
                 if (settings.IsShowConsole != null) IsShowConsole = settings.IsShowConsole;
                 if (settings.IsHiddenMode != null) IsHiddenMode = settings.IsHiddenMode;
                 if (settings.IsAutoUpdate != null) IsAutoUpdate = settings.IsAutoUpdate;
-				if (settings.IsNightWorldSkinSystem != null) IsNightWorldSkinSystem = settings.IsNightWorldSkinSystem;
-				if (settings.GameArgs != null) GameArgs = settings.GameArgs;
-				if (settings.JVMArgs != null) JVMArgs = settings.JVMArgs;
-				if (!string.IsNullOrWhiteSpace(settings.LanguageId)) LanguageId = settings.LanguageId;
+                if (settings.IsNightWorldSkinSystem != null) IsNightWorldSkinSystem = settings.IsNightWorldSkinSystem;
+                if (settings.GameArgs != null) GameArgs = settings.GameArgs;
+                if (settings.JVMArgs != null) JVMArgs = settings.JVMArgs;
+                if (!string.IsNullOrWhiteSpace(settings.LanguageId)) LanguageId = settings.LanguageId;
                 if (!string.IsNullOrWhiteSpace(settings.ThemeName)) ThemeName = settings.ThemeName;
                 if (!string.IsNullOrWhiteSpace(settings.AccentColor)) AccentColor = settings.AccentColor;
                 if (!string.IsNullOrWhiteSpace(settings.AppHeaderTemplateName)) AppHeaderTemplateName = settings.AppHeaderTemplateName;
@@ -159,59 +159,59 @@ namespace Lexplosion.Logic
                 AutoLoginServer = settings.AutoLoginServer;
             }
 
-			NetworkDirectConnection = settings.NetworkDirectConnection;
-			ItIsNotShit = settings.ItIsNotShit;
-			NavBarInLeft = settings.NavBarInLeft;
-			NwClientByDefault = settings.NwClientByDefault;
+            NetworkDirectConnection = settings.NetworkDirectConnection;
+            ItIsNotShit = settings.ItIsNotShit;
+            NavBarInLeft = settings.NavBarInLeft;
+            NwClientByDefault = settings.NwClientByDefault;
             IsScalingAnimationEnabled = settings.IsScalingAnimationEnabled;
 
         }
 
-		public Settings Copy()
-		{
-			using (MemoryStream ms = new MemoryStream())
-			{
-				BinaryFormatter formatter = new BinaryFormatter();
-				formatter.Serialize(ms, this);
-				ms.Position = 0;
-				return (Settings)formatter.Deserialize(ms);
-			}
-		}
+        public Settings Copy()
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(ms, this);
+                ms.Position = 0;
+                return (Settings)formatter.Deserialize(ms);
+            }
+        }
 
-		public static Settings GetDefault()
-		{
-			uint xmx = Environment.Is64BitOperatingSystem ? (uint)(NativeMethods.GetRamCount() / 2) : (uint)1024;
-			if (xmx > 8192) xmx = 8192;
-			if (xmx < 1024) xmx = 1024;
+        public static Settings GetDefault()
+        {
+            uint xmx = Environment.Is64BitOperatingSystem ? (uint)(NativeMethods.GetRamCount() / 2) : (uint)1024;
+            if (xmx > 8192) xmx = 8192;
+            if (xmx < 1024) xmx = 1024;
 
-			return new Settings
-			{
-				JavaPath = "",
-				Java17Path = "",
-				IsCustomJava = false,
-				IsCustomJava17 = false,
-				GamePath = LaunсherSettings.gamePath,
-				Xmx = xmx,
-				Xms = 256,
-				WindowWidth = 854,
-				WindowHeight = 480,
-				IsShowConsole = false,
-				IsHiddenMode = false,
-				GameArgs = "",
-				JVMArgs = "",
-				IsAutoUpdate = false,
-				NetworkDirectConnection = true,
-				NwClientByDefault = null,
-				LanguageId = "ru-RU",
-				ThemeName = "DarkColorTheme",
-				AccentColor = "#167ffc",
-				ItIsNotShit = true,
-				NavBarInLeft = true,
-				IsPortableMode = false,
+            return new Settings
+            {
+                JavaPath = "",
+                Java17Path = "",
+                IsCustomJava = false,
+                IsCustomJava17 = false,
+                GamePath = LaunсherSettings.gamePath,
+                Xmx = xmx,
+                Xms = 256,
+                WindowWidth = 854,
+                WindowHeight = 480,
+                IsShowConsole = false,
+                IsHiddenMode = false,
+                GameArgs = "",
+                JVMArgs = "",
+                IsAutoUpdate = false,
+                NetworkDirectConnection = true,
+                NwClientByDefault = null,
+                LanguageId = "ru-RU",
+                ThemeName = "DarkColorTheme",
+                AccentColor = "#167ffc",
+                ItIsNotShit = true,
+                NavBarInLeft = true,
+                IsPortableMode = false,
                 IsNightWorldSkinSystem = true,
                 AppHeaderTemplateName = "MacOS",
-				ZoomLevel = 1,
-				IsCenterWindowAuto = true,
+                ZoomLevel = 1,
+                IsCenterWindowAuto = true,
                 IsScalingAnimationEnabled = true,
             };
         }

@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using Lexplosion.Global;
+﻿using Lexplosion.Global;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 
 namespace Lexplosion.Logic.Objects.Nightworld
 {
@@ -81,56 +81,56 @@ namespace Lexplosion.Logic.Objects.Nightworld
         public NwUserBanner Banner { get; set; }
     }
 
-	public sealed class NwUserBannerColors
-	{
-		[JsonProperty("primaryForeColor")]
-		public uint? PrimaryForeColor { get; set; } = null;
+    public sealed class NwUserBannerColors
+    {
+        [JsonProperty("primaryForeColor")]
+        public uint? PrimaryForeColor { get; set; } = null;
 
-		[JsonProperty("secondaryForeColor")]
-		public uint? SecondaryForeColor { get; set; } = null;
+        [JsonProperty("secondaryForeColor")]
+        public uint? SecondaryForeColor { get; set; } = null;
 
-		[JsonProperty("primaryColor")]
-		public uint? PrimaryColor { get; set; } = null;
+        [JsonProperty("primaryColor")]
+        public uint? PrimaryColor { get; set; } = null;
 
-		[JsonProperty("secondaryColor")]
-		public uint? SecondaryColor { get; set; } = null;
+        [JsonProperty("secondaryColor")]
+        public uint? SecondaryColor { get; set; } = null;
 
-		// хз зачем возможно не понадобиться
-		[JsonProperty("activityColor")]
-		public uint? ActivityColor { get; set; } = null;
+        // хз зачем возможно не понадобиться
+        [JsonProperty("activityColor")]
+        public uint? ActivityColor { get; set; } = null;
 
-		[JsonProperty("separateColor")]
-		public uint? SeparateColor { get; set; } = null;
-	}
+        [JsonProperty("separateColor")]
+        public uint? SeparateColor { get; set; } = null;
+    }
 
 
-	public sealed class NwUserBanner
+    public sealed class NwUserBanner
     {
         [JsonProperty("url")]
         public string Url { get; set; }
 
-		[JsonProperty("colors")]
-		public NwUserBannerColors Colors { get; set; }
+        [JsonProperty("colors")]
+        public NwUserBannerColors Colors { get; set; }
 
 
-		[JsonProperty("primaryForeColor")]
-		public uint? NameColor { get; set; } = null;
+        [JsonProperty("primaryForeColor")]
+        public uint? NameColor { get; set; } = null;
 
 
-		[JsonProperty("secondaryForeColor")]
+        [JsonProperty("secondaryForeColor")]
         public uint? AtivityColor { get; set; } = null;
 
-		[JsonProperty("primaryColor")]
+        [JsonProperty("primaryColor")]
         public uint? MoreButtonColor { get; set; } = null;
 
-		[JsonProperty("secondaryColor")]
+        [JsonProperty("secondaryColor")]
         public uint? StatusIndecatorBorderColor { get; set; } = null;
 
-		// хз зачем возможно не понадобиться
-		[JsonProperty("activityColor")]
-		public uint? ActivityColor { get; set; } = null;
+        // хз зачем возможно не понадобиться
+        [JsonProperty("activityColor")]
+        public uint? ActivityColor { get; set; } = null;
 
-		[JsonProperty("separateColor")]
+        [JsonProperty("separateColor")]
         public uint? MoreButtonIconColor { get; set; } = null;
     }
 
@@ -175,18 +175,18 @@ namespace Lexplosion.Logic.Objects.Nightworld
         [JsonIgnore]
         public DateTime CreationDate { get; private set; } = DateTime.Today;
 
-		private long _dateUnix;
-		[JsonProperty("Date")]
-		public long DateUnix
+        private long _dateUnix;
+        [JsonProperty("Date")]
+        public long DateUnix
         {
-            get => _dateUnix; 
-			set
+            get => _dateUnix;
+            set
             {
-				_dateUnix = value;
-				DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+                _dateUnix = value;
+                DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
                 CreationDate = dateTime.AddSeconds(value).ToLocalTime();
             }
         }
 
-	}
+    }
 }

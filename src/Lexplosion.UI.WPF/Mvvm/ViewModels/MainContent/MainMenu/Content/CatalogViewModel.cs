@@ -1,13 +1,12 @@
-﻿using Lexplosion.UI.WPF.Commands;
+﻿using Lexplosion.Logic.Objects;
+using Lexplosion.UI.WPF.Commands;
 using Lexplosion.UI.WPF.Core;
-using Lexplosion.UI.WPF.Mvvm.Models.Mvvm.InstanceModel;
-using Lexplosion.UI.WPF.Mvvm.Models.MainContent;
-using Lexplosion.UI.WPF.Stores;
-using Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.InstanceProfile;
-using System.Windows.Input;
 using Lexplosion.UI.WPF.Mvvm.Models.InstanceControllers;
-using Lexplosion.Logic.Objects;
-using Lexplosion.UI.WPF.Core.Notifications;
+using Lexplosion.UI.WPF.Mvvm.Models.MainContent;
+using Lexplosion.UI.WPF.Mvvm.Models.Mvvm.InstanceModel;
+using Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.InstanceProfile;
+using Lexplosion.UI.WPF.Stores;
+using System.Windows.Input;
 
 namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
 {
@@ -25,9 +24,9 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
 
 
         private bool _isCategoriesListOpen;
-        public bool IsCategoriesListOpen 
+        public bool IsCategoriesListOpen
         {
-            get => _isCategoriesListOpen; set 
+            get => _isCategoriesListOpen; set
             {
                 _isCategoriesListOpen = value;
                 OnPropertyChanged();
@@ -65,19 +64,19 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
         }
 
         private RelayCommand _searchCommand;
-        public ICommand SearchCommand 
+        public ICommand SearchCommand
         {
             get => RelayCommand.GetCommand(ref _searchCommand, (obj) => Model.SearchFilterChanged(obj.ToString()));
         }
 
         private RelayCommand _nextPageCommand;
-        public ICommand NextPageCommand 
+        public ICommand NextPageCommand
         {
             get => RelayCommand.GetCommand<uint>(ref _nextPageCommand, Model.Paginate);
         }
 
         private RelayCommand _prevPageCommand;
-        public ICommand PrevPageCommand 
+        public ICommand PrevPageCommand
         {
             get => RelayCommand.GetCommand<uint>(ref _prevPageCommand, Model.Paginate);
         }
@@ -98,7 +97,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
                 {
                     Model.FilterPanel.SelectedCategories.Remove(category);
                 }
-                else 
+                else
                 {
                     Model.FilterPanel.SelectedCategories.Add(category);
                 }

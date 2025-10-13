@@ -19,7 +19,7 @@ namespace Lexplosion.UI.WPF.Core.Converters
 
                 var size = (int)Math.Log10(number);
 
-                switch (size) 
+                switch (size)
                 {
                     //k
                     case 4:

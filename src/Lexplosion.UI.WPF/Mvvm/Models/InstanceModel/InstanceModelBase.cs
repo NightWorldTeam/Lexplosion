@@ -791,7 +791,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.Mvvm.InstanceModel
                     (obj) =>
                     {
                         GlobalDeletedEvent?.Invoke(this);
-                        Runtime.TaskRun(() => 
+                        Runtime.TaskRun(() =>
                         {
                             _clientsManager.DeleteFromLibrary(_instanceClient);
                         });
@@ -873,7 +873,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.Mvvm.InstanceModel
                 DeletedEvent?.Invoke(this);
             }
 
-            if (InstanceDistribution != null) 
+            if (InstanceDistribution != null)
             {
                 InstanceDistribution.CancelDownload();
             }

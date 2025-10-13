@@ -1,9 +1,6 @@
-﻿using System;
-using static System.Net.Mime.MediaTypeNames;
-
-namespace Lexplosion.UI.WPF.Core
+﻿namespace Lexplosion.UI.WPF.Core
 {
-    public enum LogType 
+    public enum LogType
     {
         Info,
         InfoGame,

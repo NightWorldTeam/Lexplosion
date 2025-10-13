@@ -9,7 +9,7 @@ namespace Lexplosion.UI.WPF.Core.Modal
         /// Данное модальное окно закрыто, вызывается когда ModalNavigationStore уже окончательно удалило CurrentViewModel
         /// </summary>
         public event Action Closed;
-        
+
         public event Action<object> CloseCommandExecutedEvent;
         /// <summary>
         /// Команда на закрытие модального окна.

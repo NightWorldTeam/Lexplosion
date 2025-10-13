@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 
 namespace Lexplosion.UI.WPF.Mvvm.Models.InstanceControllers
 {
-    public interface ILibraryInstanceController : IInstanceController 
+    public interface ILibraryInstanceController : IInstanceController
     {
         public InstanceModelBase? Add(InstanceClient instanceClient, ImportData? importData);
         /// <summary>

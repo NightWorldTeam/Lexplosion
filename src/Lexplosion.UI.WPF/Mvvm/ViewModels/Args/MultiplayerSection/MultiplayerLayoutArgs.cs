@@ -1,10 +1,4 @@
-﻿using Lexplosion.Logic.Management.Instances;
-using Lexplosion.UI.WPF.Mvvm.Models.Mvvm.InstanceModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
 namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Args
 {

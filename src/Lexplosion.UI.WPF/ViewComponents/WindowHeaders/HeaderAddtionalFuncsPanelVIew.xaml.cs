@@ -35,7 +35,7 @@ namespace Lexplosion.UI.WPF.ViewComponents.WindowHeaders
             {
                 AddtionalFuncs.RenderTransform = new RotateTransform(360);
             }
-            
+
             ChangedOrintation.Invoke();
         }
     }

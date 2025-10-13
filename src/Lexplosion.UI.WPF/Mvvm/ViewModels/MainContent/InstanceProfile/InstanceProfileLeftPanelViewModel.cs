@@ -1,19 +1,19 @@
-﻿using Lexplosion.UI.WPF.Commands;
+﻿using Lexplosion.Logic.Management;
+using Lexplosion.Logic.Management.Addons;
+using Lexplosion.Logic.Objects;
+using Lexplosion.UI.WPF.Commands;
+using Lexplosion.UI.WPF.Core;
 using Lexplosion.UI.WPF.Core.Tools;
+using Lexplosion.UI.WPF.Extensions;
 using Lexplosion.UI.WPF.Mvvm.Models.Mvvm.InstanceModel;
-using Lexplosion.UI.WPF.Stores;
 using Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu;
+using Lexplosion.UI.WPF.Stores;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Threading;
-using System;
-using Lexplosion.Logic.Management;
-using Lexplosion.Logic.Management.Addons;
-using Lexplosion.UI.WPF.Core;
-using Lexplosion.Logic.Objects;
-using Lexplosion.UI.WPF.Extensions;
 
 namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.InstanceProfile
 {
@@ -178,7 +178,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.InstanceProfile
                 _additionalInfo.Clear();
                 _additionalInfo.Add(new InstanceFieldInfo<MinecraftVersion>("Version:", _instanceModel.GameVersion));
                 _additionalInfo.Add(new LeftPanelFieldInfo("GameType:", _instanceModel.BaseData.Modloader.ToString()));
-                
+
                 if (_instanceModel.IsInstalled && false)
                 {
                     _additionalInfo.Add(new InstanceFieldInfo<long>("PlayedTime:", 100000, SecondsToPlayTime));

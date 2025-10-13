@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using System;
 using System.Windows.Controls;
 
 namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.Profile

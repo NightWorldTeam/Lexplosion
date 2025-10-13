@@ -53,7 +53,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
         public void RefreshAccessData()
         {
             HasAccess = Account.ActiveAccount?.AccountType == AccountType.NightWorld;
-            if (!HasAccess) 
+            if (!HasAccess)
             {
                 _tabs.Clear();
                 _friendsViewModel = null;
@@ -72,7 +72,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
         #region Private Methods
 
 
-        private void OnAccessChanged() 
+        private void OnAccessChanged()
         {
             if (HasAccess)
             {
@@ -94,7 +94,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
                     _findFriendsViewModel.Refresh();
                 };
 
-                _findFriendsViewModel.Model.FriendRequestSent += (user) => 
+                _findFriendsViewModel.Model.FriendRequestSent += (user) =>
                 {
                     _friendsRequestsViewModel.Refresh();
                 };

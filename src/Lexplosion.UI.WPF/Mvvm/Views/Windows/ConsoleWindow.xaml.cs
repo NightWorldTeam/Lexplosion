@@ -1,5 +1,4 @@
-﻿using DiscordRPC.Message;
-using Lexplosion.Logic.Management;
+﻿using Lexplosion.Logic.Management;
 using Lexplosion.UI.WPF.Core;
 using Lexplosion.UI.WPF.Core.Services;
 using Lexplosion.UI.WPF.WindowComponents.Header;

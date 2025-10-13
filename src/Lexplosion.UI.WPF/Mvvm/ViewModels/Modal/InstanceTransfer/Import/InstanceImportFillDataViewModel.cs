@@ -10,11 +10,11 @@ using System.Windows.Input;
 
 namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Modal.InstanceTransfer
 {
-    public sealed class InstanceImportFillDataModel  : ObservableObject
+    public sealed class InstanceImportFillDataModel : ObservableObject
     {
         public event Action<ClientType> GameTypeChanged;
 
-        
+
         private readonly AppCore _appCore;
 
 
@@ -36,14 +36,14 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Modal.InstanceTransfer
 
         #region Properties
 
-        
+
         public bool AllFieldsFilled { get => !string.IsNullOrEmpty(InstanceName) && (ClientType == ClientType.Vanilla || (ClientType != ClientType.Vanilla && !string.IsNullOrEmpty(ModloaderVersion))); }
 
 
         private string _instanceName;
         public string InstanceName
         {
-            get => _instanceName; set 
+            get => _instanceName; set
             {
                 _instanceName = value;
                 OnPropertyChanged(nameof(AllFieldsFilled));
@@ -151,7 +151,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Modal.InstanceTransfer
         /// Собирает класс baseinstancedata, для дальнейшего импорта.
         /// </summary>
         /// <returns></returns>
-        public BaseInstanceData BuildBaseInstanceData() 
+        public BaseInstanceData BuildBaseInstanceData()
         {
             return new BaseInstanceData()
             {
@@ -334,7 +334,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Modal.InstanceTransfer
 
             CloseCommandExecutedEvent += (cancel) =>
             {
-                if (cancel != null && (bool)cancel) 
+                if (cancel != null && (bool)cancel)
                 {
                     cancelImport.Invoke();
                 }

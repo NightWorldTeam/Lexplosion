@@ -1,6 +1,4 @@
-﻿using Lexplosion.UI.WPF.WindowComponents.Header.Variants;
-using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 
 namespace Lexplosion.UI.WPF.WindowComponents.Header

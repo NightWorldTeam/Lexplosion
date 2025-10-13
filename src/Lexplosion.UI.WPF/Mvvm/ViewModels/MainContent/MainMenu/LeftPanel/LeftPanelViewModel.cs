@@ -32,7 +32,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
         {
             get => _selectedItem; set
             {
-                if (_selectedItem != null && _selectedItem != value) 
+                if (_selectedItem != null && _selectedItem != value)
                 {
                     _selectedItem.IsSelected = false;
                 }
@@ -101,7 +101,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
         private RelayCommand _toUserHowToPlayGuideCommand;
         public ICommand ToUserHowToPlayGuideCommand
         {
-            get => RelayCommand.GetCommand(ref _toUserHowToPlayGuideCommand, () => 
+            get => RelayCommand.GetCommand(ref _toUserHowToPlayGuideCommand, () =>
             {
                 try
                 {

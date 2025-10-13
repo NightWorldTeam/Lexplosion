@@ -10,7 +10,7 @@ namespace Lexplosion.UI.WPF.Controls
             new FrameworkPropertyMetadata());
 
 
-        public bool IsLoading 
+        public bool IsLoading
         {
             get => (bool)GetValue(IsLoadingProperty);
             set => SetValue(IsLoadingProperty, value);
@@ -20,7 +20,7 @@ namespace Lexplosion.UI.WPF.Controls
         #region Constructors
 
 
-        static AdvancedComboBox() 
+        static AdvancedComboBox()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(AdvancedComboBox), new FrameworkPropertyMetadata(typeof(AdvancedComboBox)));
         }

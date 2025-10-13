@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Modal
 {
-    public class InstanceCopyErrorsModel : ObservableObject 
+    public class InstanceCopyErrorsModel : ObservableObject
     {
         public string InstanceName { get; }
         public string Description { get; }

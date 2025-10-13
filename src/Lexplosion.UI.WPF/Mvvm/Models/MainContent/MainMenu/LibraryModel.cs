@@ -132,7 +132,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent
             {
                 Runtime.TaskRun(() =>
                 {
-                    foreach (var file in files) 
+                    foreach (var file in files)
                     {
                         importStart(file, false, null, null, null);
                     }

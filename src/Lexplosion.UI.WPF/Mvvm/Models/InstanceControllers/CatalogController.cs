@@ -71,7 +71,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.InstanceControllers
 
             App.Current.Dispatcher.Invoke(() =>
             {
-                if (instanceModelBase == null) 
+                if (instanceModelBase == null)
                 {
                     var args = new InstanceModelArgs(_appCore, instanceClient, _exportFunc, _setRunningGame, group: null, instanceLocation: InstanceLocation.Catalog);
                     instanceModelBase = new InstanceModelBase(args);
@@ -107,7 +107,8 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.InstanceControllers
 
         public void Clear()
         {
-            App.Current.Dispatcher.Invoke(() => { 
+            App.Current.Dispatcher.Invoke(() =>
+            {
                 _instances.Clear();
             });
         }

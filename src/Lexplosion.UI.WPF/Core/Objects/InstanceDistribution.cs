@@ -139,7 +139,7 @@ namespace Lexplosion.UI.WPF.Core.Objects
         public void Download()
         {
             var dynamicStateHandler = new DynamicStateData<ImportInterruption, InterruptionType>();
-			var importData = new ImportData(dynamicStateHandler.GetHandler, (init) => DownloadResultHandler(init));
+            var importData = new ImportData(dynamicStateHandler.GetHandler, (init) => DownloadResultHandler(init));
 
             _instanceClient = _clientsManager.Import(_receiver, importData);
             _instanceClient.StateChanged += OnStateChanged;
@@ -153,7 +153,7 @@ namespace Lexplosion.UI.WPF.Core.Objects
 
         private void OnStateChanged(StateType state)
         {
-            InstanceState = state; 
+            InstanceState = state;
         }
 
         /// <summary>

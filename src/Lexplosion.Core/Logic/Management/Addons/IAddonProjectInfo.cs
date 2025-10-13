@@ -1,6 +1,6 @@
 ﻿namespace Lexplosion.Logic.Management.Addons
 {
-	internal interface IAddonProjectInfo
-	{
-	}
+    internal interface IAddonProjectInfo
+    {
+    }
 }

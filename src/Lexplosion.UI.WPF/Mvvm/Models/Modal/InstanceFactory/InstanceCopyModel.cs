@@ -9,7 +9,6 @@ using Lexplosion.UI.WPF.Mvvm.Models.Mvvm.InstanceModel;
 using Lexplosion.UI.WPF.Mvvm.ViewModels;
 using Lexplosion.UI.WPF.Mvvm.ViewModels.Modal;
 using System;
-using System.Collections.Generic;
 using static Lexplosion.Logic.Management.Import.ImportInterruption;
 
 namespace Lexplosion.UI.WPF.Mvvm.Model.Modal
@@ -162,16 +161,16 @@ namespace Lexplosion.UI.WPF.Mvvm.Model.Modal
             {
                 return (_clientsManager.CopyClient(instanceClient, importData), importData);
             }
-            else 
+            else
             {
-                return (_clientsManager.CopyClient(instanceClient, Version, ClientType, ModloaderVersion, (uncopiedAddons) => 
+                return (_clientsManager.CopyClient(instanceClient, Version, ClientType, ModloaderVersion, (uncopiedAddons) =>
                 {
                     _appCore.ModalNavigationStore.Open(new InstanceCopyErrorsViewModel(_appCore, instanceClient.Name, uncopiedAddons));
                 }, importData), importData);
             }
         }
 
-        private void OnInstanceCopyResultHandler(ClientInitResult clientInitResult) 
+        private void OnInstanceCopyResultHandler(ClientInitResult clientInitResult)
         {
 
         }

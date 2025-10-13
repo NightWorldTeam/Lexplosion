@@ -1,5 +1,4 @@
-﻿using Lexplosion.Logic.Management;
-using Lexplosion.Logic.Objects;
+﻿using Lexplosion.Logic.Objects;
 using Lexplosion.UI.WPF.Commands;
 using Lexplosion.UI.WPF.Core;
 using Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.InstanceProfile;
@@ -40,7 +39,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.ServerProfile
         private RelayCommand _copyIpAddressCommand;
         public ICommand CopyIpAddressCommand
         {
-            get => RelayCommand.GetCommand(ref _copyIpAddressCommand, () => 
+            get => RelayCommand.GetCommand(ref _copyIpAddressCommand, () =>
             {
                 // в будущем заменить на обертку, чтобы на прямую не работать с System.Windows.
                 Clipboard.SetText(ServerModel.Address);

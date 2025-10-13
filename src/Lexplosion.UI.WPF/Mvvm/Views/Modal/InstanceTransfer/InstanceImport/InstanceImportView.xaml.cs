@@ -1,5 +1,4 @@
 ﻿using Lexplosion.UI.WPF.Mvvm.ViewModels.Modal.InstanceTransfer;
-using System.Runtime.InteropServices;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -20,13 +19,13 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Modal.InstanceTransfer
 
         private void OnDataContextChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
         {
-            if (_importViewModel != null) 
+            if (_importViewModel != null)
             {
-              _importViewModel.Model.ImportProcesses.CollectionChanged -= ImportProcessesChanged;
+                _importViewModel.Model.ImportProcesses.CollectionChanged -= ImportProcessesChanged;
             }
             _importViewModel = (InstanceImportViewModel)DataContext;
 
-            if (_importViewModel != null) 
+            if (_importViewModel != null)
             {
                 _importViewModel.Model.ImportProcesses.CollectionChanged += ImportProcessesChanged;
             }
@@ -34,7 +33,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Modal.InstanceTransfer
 
         private void ImportProcessesChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add) 
+            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
             {
                 PageScroll.ScrollToBottom();
             }

@@ -1,7 +1,5 @@
 ﻿using Lexplosion.UI.WPF.Commands;
 using System;
-using System.Drawing;
-using System.Windows.Media;
 
 namespace Lexplosion.UI.WPF.TrayMenu
 {

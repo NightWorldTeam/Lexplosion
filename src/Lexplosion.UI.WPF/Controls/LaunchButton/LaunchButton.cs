@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 
 namespace Lexplosion.UI.WPF.Controls
@@ -50,7 +49,7 @@ namespace Lexplosion.UI.WPF.Controls
             if (d is LaunchButton _this)
             {
                 var newValue = (bool)e.NewValue;
-                if (newValue) 
+                if (newValue)
                 {
                     _this.IsLoading = newValue;
                     _this.IsLoaded = false;

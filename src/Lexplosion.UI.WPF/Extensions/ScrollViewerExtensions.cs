@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Lexplosion.UI.WPF.Commands;
+using System;
+using System.Windows;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
-using System.Windows;
-using Lexplosion.UI.WPF.Commands;
-using System.Windows.Controls.Primitives;
 
 namespace Lexplosion.UI.WPF.Extensions
 {

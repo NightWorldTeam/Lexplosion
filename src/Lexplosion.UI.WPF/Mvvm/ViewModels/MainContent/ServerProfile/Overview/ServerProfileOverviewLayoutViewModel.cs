@@ -1,7 +1,6 @@
 ﻿using Lexplosion.Logic.Objects;
 using Lexplosion.UI.WPF.Core;
 using Lexplosion.UI.WPF.Core.Objects;
-using Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.ServerProfile;
 
 namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.ServerProfile
 {

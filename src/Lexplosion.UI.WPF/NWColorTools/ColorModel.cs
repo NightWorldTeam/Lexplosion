@@ -1,6 +1,4 @@
-﻿using Lexplosion.UI.WPF.Tools;
-using System;
-using System.Windows.Media;
+﻿using System;
 
 namespace Lexplosion.UI.WPF.NWColorTools
 {
@@ -23,7 +21,7 @@ namespace Lexplosion.UI.WPF.NWColorTools
 
         public ColorModel((byte, byte, byte) rbgTyple) : this(rbgTyple.Item1, rbgTyple.Item2, rbgTyple.Item3)
         {
-            
+
         }
 
         public ColorModel(byte r, byte g, byte b)
@@ -48,7 +46,7 @@ namespace Lexplosion.UI.WPF.NWColorTools
         #region Private Methods
 
 
-        private double CalculateHue() 
+        private double CalculateHue()
         {
             double hue;
 
@@ -62,7 +60,7 @@ namespace Lexplosion.UI.WPF.NWColorTools
             {
                 hue = 2.0 + (B - R) / maxMinDiff;
             }
-            else 
+            else
             {
                 hue = 4 + (R - G) / maxMinDiff;
             }
@@ -78,7 +76,7 @@ namespace Lexplosion.UI.WPF.NWColorTools
         #endregion Private Methods
 
 
-        public string ToHex(bool hasNumberSign = true) 
+        public string ToHex(bool hasNumberSign = true)
         {
             var r = string.Format("{0:x}", R);
             var g = string.Format("{0:x}", G);

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Lexplosion.UI.WPF.NWColorTools
 {
@@ -55,7 +51,7 @@ namespace Lexplosion.UI.WPF.NWColorTools
         }
 
 
-        public (byte, byte, byte) ToRGBTuple() 
+        public (byte, byte, byte) ToRGBTuple()
         {
             double chroma = Value * Saturation;
             // intermediate value X for the second largest component of this color
@@ -106,7 +102,7 @@ namespace Lexplosion.UI.WPF.NWColorTools
             return (Convert.ToByte((tempR + matchValue) * 255), Convert.ToByte((tempG + matchValue) * 255), Convert.ToByte((tempB + matchValue) * 255));
         }
 
-        public ColorModel ToColorModel() 
+        public ColorModel ToColorModel()
         {
             return new(ToRGBTuple());
         }

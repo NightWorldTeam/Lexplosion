@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 
 namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.ServerProfile
 {

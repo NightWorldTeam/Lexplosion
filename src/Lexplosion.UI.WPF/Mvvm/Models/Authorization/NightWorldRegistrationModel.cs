@@ -1,11 +1,4 @@
 ﻿using Lexplosion.UI.WPF.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Documents;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 
 namespace Lexplosion.UI.WPF.Mvvm.Models.Authorization
 {
@@ -28,9 +21,9 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.Authorization
         }
 
         private string _emain;
-        public string Email 
+        public string Email
         {
-            get => _emain; set 
+            get => _emain; set
             {
                 _emain = value;
                 OnPropertyChanged();
@@ -70,9 +63,9 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.Authorization
         #region Public Methods
 
 
-        public void Register() 
+        public void Register()
         {
-            if (!ValidForm()) 
+            if (!ValidForm())
             {
                 return;
             }
@@ -87,7 +80,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.Authorization
         #region Private Methods
 
 
-        bool ValidForm() 
+        bool ValidForm()
         {
             if (string.IsNullOrWhiteSpace(Login))
             {
@@ -125,13 +118,13 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.Authorization
                 return false;
             }
 
-            if (Password.Length < 6) 
+            if (Password.Length < 6)
             {
                 _appCore.MessageService.Error("Минимальная длинна пароля 6 символов.");
                 return false;
             }
 
-            if (Password == RepeatPassword) 
+            if (Password == RepeatPassword)
             {
                 _appCore.MessageService.Info("Пароли не совпадают");
                 return false;
@@ -141,7 +134,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.Authorization
         }
 
 
-        bool IsValidEmail(string email) 
+        bool IsValidEmail(string email)
         {
             var trimmedEmail = email.Trim();
 

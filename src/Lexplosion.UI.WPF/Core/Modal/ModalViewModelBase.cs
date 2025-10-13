@@ -59,7 +59,7 @@ namespace Lexplosion.UI.WPF.Core.Modal
         private RelayCommand _closeCommand;
         public ICommand CloseCommand
         {
-            get => RelayCommand.GetCommand(ref _closeCommand, (obj) => 
+            get => RelayCommand.GetCommand(ref _closeCommand, (obj) =>
             {
                 CloseCommandExecutedEvent?.Invoke(obj);
             });

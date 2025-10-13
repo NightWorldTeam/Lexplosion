@@ -6,7 +6,7 @@ namespace Lexplosion.UI.WPF.Core.Objects.Users
 {
     public class NightWorldUser : NightWorldUserBase
     {
-		private readonly NightWorldApi _api = Runtime.ServicesContainer.NwApi;
+        private readonly NightWorldApi _api = Runtime.ServicesContainer.NwApi;
 
         public string Test { get; } = "123";
 
@@ -26,12 +26,12 @@ namespace Lexplosion.UI.WPF.Core.Objects.Users
 
         public NightWorldUser() : base()
         {
-            
+
         }
 
         public NightWorldUser(NwUser nwUser, NightWorldUserFriendshipState friendshipState) : base(nwUser, friendshipState)
         {
-            
+
         }
 
 
@@ -50,7 +50,7 @@ namespace Lexplosion.UI.WPF.Core.Objects.Users
             }
 
             HasFriendRequestSent = true;
-			_api.AddFriend(Account.ActiveAccount.UUID, Account.ActiveAccount.SessionToken, Login);
+            _api.AddFriend(Account.ActiveAccount.UUID, Account.ActiveAccount.SessionToken, Login);
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace Lexplosion.UI.WPF.Core.Objects.Users
             }
 
             HasFriendRequestSent = false;
-			_api.RemoveFriend(Account.ActiveAccount.UUID, Account.ActiveAccount.SessionToken, Login);
+            _api.RemoveFriend(Account.ActiveAccount.UUID, Account.ActiveAccount.SessionToken, Login);
         }
     }
 }

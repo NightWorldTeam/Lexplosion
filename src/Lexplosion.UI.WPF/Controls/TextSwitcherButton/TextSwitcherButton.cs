@@ -27,7 +27,7 @@ namespace Lexplosion.UI.WPF.Controls
             = DependencyProperty.Register(nameof(SecondText), typeof(string), typeof(TextSwitcherButton),
                 new FrameworkPropertyMetadata(string.Empty));
 
-        public string FirstText 
+        public string FirstText
         {
             get => (string)GetValue(FirstTextProperty);
             set => SetValue(FirstTextProperty, value);

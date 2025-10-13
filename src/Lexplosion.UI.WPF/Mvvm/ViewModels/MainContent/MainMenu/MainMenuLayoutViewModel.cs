@@ -6,7 +6,6 @@ using Lexplosion.UI.WPF.Mvvm.Models.Mvvm.InstanceModel;
 using Lexplosion.UI.WPF.Mvvm.ViewModels.Args;
 using Lexplosion.UI.WPF.Mvvm.ViewModels.Limited;
 using System;
-using System.Linq;
 
 namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
 {
@@ -59,7 +58,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
             var toLibraryCommand = new NavigateCommand<ViewModelBase>(appCore.NavigationStore, () => _libraryViewModel);
 
             // Multiplayer Section
-            var selectInstanceForServerArgs = new SelectInstanceForServerArgs(() => mainModel.LibraryController.Instances, (ic) => 
+            var selectInstanceForServerArgs = new SelectInstanceForServerArgs(() => mainModel.LibraryController.Instances, (ic) =>
             {
                 var instanceModel = mainModel.LibraryController.Get(ic);
                 var item = LeftPanel.SelectItem(1);
@@ -108,7 +107,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
             OnPropertyChanged(nameof(Content));
         }
 
-        public void OpenAccountFactory() 
+        public void OpenAccountFactory()
         {
             LeftPanel.GetByContentType(typeof(GeneralSettingsLayoutViewModel)).IsSelected = true;
             var generalSettingsLayout = _generalSettingsLayoutViewModel as GeneralSettingsLayoutViewModel;
@@ -118,7 +117,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
             accountsSettings?.OpenAccountFactoryCommand.Execute(null);
         }
 
-        private void OpenCatalog() 
+        private void OpenCatalog()
         {
             LeftPanel.GetByContentType(typeof(CatalogViewModel)).IsSelected = true;
         }

@@ -1,8 +1,5 @@
 ﻿using Lexplosion.UI.WPF.Controls.Message.Core.Types;
 using System;
-using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.ComTypes;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -120,7 +117,7 @@ namespace Lexplosion.UI.WPF.Controls
 
         private static void OnIsViewedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is MessageItem _this) 
+            if (d is MessageItem _this)
             {
                 _this.Visibility = (bool)e.NewValue ? Visibility.Visible : Visibility.Collapsed;
             }
@@ -325,18 +322,18 @@ namespace Lexplosion.UI.WPF.Controls
         }
 
 
-        private void RemoveItSelfFromParent() 
+        private void RemoveItSelfFromParent()
         {
             if (Parent == null)
             {
                 return;
             }
 
-            if (Parent is ContentControl contentControl) 
+            if (Parent is ContentControl contentControl)
             {
                 contentControl.Content = null;
             }
-            else if (Parent is Panel panel) 
+            else if (Parent is Panel panel)
             {
                 panel.Children.Remove(this);
             }

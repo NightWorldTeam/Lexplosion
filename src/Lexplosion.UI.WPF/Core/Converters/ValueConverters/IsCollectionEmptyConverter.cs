@@ -9,12 +9,12 @@ namespace Lexplosion.UI.WPF.Core.Converters
     {
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null) 
+            if (value == null)
             {
                 return true;
             }
 
-            if (value is ICollection collection) 
+            if (value is ICollection collection)
             {
                 return collection.Count == 0;
             }

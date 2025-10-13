@@ -57,7 +57,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Profile
                 TextKey = "Settings"
             });
 
-            foreach (var i in Tabs) 
+            foreach (var i in Tabs)
             {
                 i.SelectedChanged += OnTabSelectedChanged;
             }

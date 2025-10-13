@@ -1,7 +1,6 @@
 ﻿using Lexplosion.Logic.Management.Instances;
 using Lexplosion.UI.WPF.Core;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Lexplosion.UI.WPF.Mvvm.Models.InstanceTransfer
 {
@@ -65,11 +64,11 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.InstanceTransfer
         /// Загружает поддиректорию для текущего PathLevelю
         /// </summary>
         /// <param name="pathLevel"></param>
-        public void SubTreeExpand(PathLevel pathLevel) 
+        public void SubTreeExpand(PathLevel pathLevel)
         {
             ContentPreload(
                 LoadDirContent(pathLevel.FullPath, pathLevel)
-                );    
+                );
         }
 
 

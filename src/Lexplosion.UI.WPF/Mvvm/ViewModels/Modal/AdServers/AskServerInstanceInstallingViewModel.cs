@@ -4,7 +4,7 @@ using System;
 
 namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Modal
 {
-    public class AskServerInstanceInstallingModel 
+    public class AskServerInstanceInstallingModel
     {
         private readonly Action<bool> _action;
 
@@ -17,7 +17,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Modal
             _action = action;
         }
 
-        public void Apply() 
+        public void Apply()
         {
             _action(IsAutoConnectToServer);
         }
@@ -30,8 +30,8 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Modal
         public AskServerInstanceInstallingViewModel(AppCore _appCore, Action<bool> action)
         {
             Model = new(action);
-            ActionCommandExecutedEvent += (obj) => 
-            { 
+            ActionCommandExecutedEvent += (obj) =>
+            {
                 Model.Apply();
             };
         }

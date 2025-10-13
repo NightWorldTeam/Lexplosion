@@ -1,9 +1,9 @@
-﻿using System.Windows;
+﻿using Lexplosion.UI.WPF.Mvvm.ViewModels;
 using System;
+using System.Threading;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
-using Lexplosion.UI.WPF.Mvvm.ViewModels;
-using System.Threading;
 
 namespace Lexplosion.UI.WPF.Mvvm.Views.Pages
 {

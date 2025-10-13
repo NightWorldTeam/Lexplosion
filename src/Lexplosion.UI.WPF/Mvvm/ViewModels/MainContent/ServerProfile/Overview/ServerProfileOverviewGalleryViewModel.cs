@@ -2,9 +2,7 @@
 using Lexplosion.UI.WPF.Commands;
 using Lexplosion.UI.WPF.Core;
 using Lexplosion.UI.WPF.Core.ViewModel;
-using System;
 using System.Collections.ObjectModel;
-using System.Windows.Forms;
 using System.Windows.Input;
 
 namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.ServerProfile

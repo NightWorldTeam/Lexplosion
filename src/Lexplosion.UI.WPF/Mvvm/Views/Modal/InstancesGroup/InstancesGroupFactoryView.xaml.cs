@@ -24,16 +24,16 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Modal
             _viewModel = (InstancesGroupFactoryViewModel)DataContext;
         }
 
-        public void InstancesList_SelectionChanged(object sender, SelectionChangedEventArgs e) 
+        public void InstancesList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (_viewModel == null) 
+            if (_viewModel == null)
             {
                 return;
             }
 
             var collection = _viewModel.Model.SelectedInstances;
 
-            foreach (var ic in e.RemovedItems) 
+            foreach (var ic in e.RemovedItems)
             {
                 collection.Remove(ic as InstanceClient);
             }

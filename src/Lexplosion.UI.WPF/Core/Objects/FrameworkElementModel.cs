@@ -34,7 +34,7 @@ namespace Lexplosion.UI.WPF.Core.Objects
 
         #endregion Commands
 
-        
+
         #region Constructors
 
 

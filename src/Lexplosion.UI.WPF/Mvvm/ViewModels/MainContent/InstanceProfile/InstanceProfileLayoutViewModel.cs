@@ -1,5 +1,4 @@
 ﻿using Lexplosion.UI.WPF.Core;
-using Lexplosion.UI.WPF.Core.Notifications;
 using Lexplosion.UI.WPF.Mvvm.Models.Mvvm.InstanceModel;
 using Lexplosion.UI.WPF.Stores;
 using System.Windows.Input;
@@ -37,9 +36,9 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.InstanceProfile
 
 
         private bool _isLoading;
-        public bool IsLoading 
+        public bool IsLoading
         {
-            get => _isLoading; set 
+            get => _isLoading; set
             {
                 _isLoading = value;
                 OnPropertyChanged();

@@ -1,6 +1,5 @@
 ﻿using Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu;
 using Lexplosion.UI.WPF.Tools;
-using System.Runtime.CompilerServices;
 using System.Windows.Controls;
 using System.Windows.Media;
 
@@ -25,18 +24,18 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.MainMenu
             }
         }
 
-        private void UpdateBannerProperties(LeftPanelViewModel leftPanelViewModel) 
+        private void UpdateBannerProperties(LeftPanelViewModel leftPanelViewModel)
         {
             var profileBanner = leftPanelViewModel.ProfileBanner;
 
-            if (profileBanner == null || profileBanner.Colors == null) 
+            if (profileBanner == null || profileBanner.Colors == null)
             {
                 UserNickname.SetResourceReference(ForegroundProperty, "PrimaryForegroundSolidColorBrush");
                 GladToSeeYouText.SetResourceReference(ForegroundProperty, "SecondaryForegroundSolidColorBrush");
                 return;
             }
 
-            if (profileBanner.Colors.PrimaryForeColor != null && profileBanner.Colors.PrimaryForeColor > 0x01000000) 
+            if (profileBanner.Colors.PrimaryForeColor != null && profileBanner.Colors.PrimaryForeColor > 0x01000000)
             {
                 UserNickname.Foreground = (SolidColorBrush)new SolidColorBrush(ColorTools.GetColor(profileBanner.Colors.PrimaryForeColor.Value));
             }

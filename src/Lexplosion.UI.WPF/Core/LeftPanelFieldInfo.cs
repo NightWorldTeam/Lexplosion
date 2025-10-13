@@ -1,5 +1,4 @@
-﻿using Lexplosion.UI.WPF.Core.Objects;
-using Lexplosion.UI.WPF.Core.ViewModel;
+﻿using Lexplosion.UI.WPF.Core.ViewModel;
 using System;
 
 namespace Lexplosion.UI.WPF.Core
@@ -26,7 +25,7 @@ namespace Lexplosion.UI.WPF.Core
         {
             IsLoading = true;
             Name = name;
-            Runtime.TaskRun(() => 
+            Runtime.TaskRun(() =>
             {
                 Value = value?.Invoke().ToString();
                 OnPropertyChanged(nameof(Value));

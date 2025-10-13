@@ -13,9 +13,9 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.Profile
         public string AccountAge { get; }
 
         private int _friendsCount;
-        public int FriendsCount 
+        public int FriendsCount
         {
-            get => _friendsCount; set 
+            get => _friendsCount; set
             {
                 _friendsCount = value;
                 OnPropertyChanged();

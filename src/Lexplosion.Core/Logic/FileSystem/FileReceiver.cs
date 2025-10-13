@@ -9,167 +9,167 @@ using System.Collections.Generic;
 
 namespace Lexplosion.Logic.FileSystem
 {
-	public class FileReceiver
-	{
-		#region staticData
-		private class RecieverInfo
-		{
-			public string Login;
-			public string UserUUID;
-			public string FileId;
-			public string Parameters;
-		}
+    public class FileReceiver
+    {
+        #region staticData
+        private class RecieverInfo
+        {
+            public string Login;
+            public string UserUUID;
+            public string FileId;
+            public string Parameters;
+        }
 
-		private static object _dataClientInitLocker = new object();
+        private static object _dataClientInitLocker = new object();
 
-		public static List<FileReceiver> GetDistributors(string uuid, string sessionToken, INightWorldFileServicesContainer services)
-		{
-			var data = new List<FileReceiver>();
-			string anwer = services.WebService.HttpPost(LaunсherSettings.URL.UserApi + "getFileDistributions", new Dictionary<string, string>
-			{
-				["UUID"] = uuid,
-				["sessionToken"] = sessionToken
-			});
+        public static List<FileReceiver> GetDistributors(string uuid, string sessionToken, INightWorldFileServicesContainer services)
+        {
+            var data = new List<FileReceiver>();
+            string anwer = services.WebService.HttpPost(LaunсherSettings.URL.UserApi + "getFileDistributions", new Dictionary<string, string>
+            {
+                ["UUID"] = uuid,
+                ["sessionToken"] = sessionToken
+            });
 
-			if (anwer == null)
-			{
-				return data;
-			}
+            if (anwer == null)
+            {
+                return data;
+            }
 
-			try
-			{
-				var recieversInfo = JsonConvert.DeserializeObject<List<RecieverInfo>>(anwer);
+            try
+            {
+                var recieversInfo = JsonConvert.DeserializeObject<List<RecieverInfo>>(anwer);
 
-				if (recieversInfo != null)
-				{
-					foreach (RecieverInfo reciverInfo in recieversInfo)
-					{
-						var parameters = JsonConvert.DeserializeObject<DistributionData>(reciverInfo.Parameters);
-						data.Add(new FileReceiver(uuid, sessionToken, reciverInfo.Login, reciverInfo.UserUUID, reciverInfo.FileId, parameters));
-					}
-				}
-			}
-			catch { }
+                if (recieversInfo != null)
+                {
+                    foreach (RecieverInfo reciverInfo in recieversInfo)
+                    {
+                        var parameters = JsonConvert.DeserializeObject<DistributionData>(reciverInfo.Parameters);
+                        data.Add(new FileReceiver(uuid, sessionToken, reciverInfo.Login, reciverInfo.UserUUID, reciverInfo.FileId, parameters));
+                    }
+                }
+            }
+            catch { }
 
-			return data;
-		}
+            return data;
+        }
 
-		private static KeySemaphore<string> _downloadSemaphore = new();
+        private static KeySemaphore<string> _downloadSemaphore = new();
 
 
-		public enum DistributionState
-		{
-			InQueue,
-			InConnect,
-			InProcess
-		}
+        public enum DistributionState
+        {
+            InQueue,
+            InConnect,
+            InProcess
+        }
 
-		#endregion
+        #endregion
 
-		private string _ownerLogin;
-		private string _ownerUUID;
-		private string _fileId;
+        private string _ownerLogin;
+        private string _ownerUUID;
+        private string _fileId;
 
-		private DataClient _dataClient = null;
-		private DistributionData _info;
+        private DataClient _dataClient = null;
+        private DistributionData _info;
 
-		public event Action<double> ProcentUpdate;
-		public event Action<double> SpeedUpdate;
-		public event Action StateChanged;
-		public event Action DownloadCanceled;
+        public event Action<double> ProcentUpdate;
+        public event Action<double> SpeedUpdate;
+        public event Action StateChanged;
+        public event Action DownloadCanceled;
 
-		private DistributionState _state;
-		public DistributionState State
-		{
-			get => _state;
-			private set
-			{
-				_state = value;
-				StateChanged?.Invoke();
-				Runtime.DebugWrite($"New state: {_state}");
-			}
-		}
+        private DistributionState _state;
+        public DistributionState State
+        {
+            get => _state;
+            private set
+            {
+                _state = value;
+                StateChanged?.Invoke();
+                Runtime.DebugWrite($"New state: {_state}");
+            }
+        }
 
-		private object _locker = new object();
+        private object _locker = new object();
 
-		public string OwnerLogin
-		{
-			get => _ownerLogin;
-		}
+        public string OwnerLogin
+        {
+            get => _ownerLogin;
+        }
 
-		public string Name
-		{
-			get => _info?.Name;
-		}
+        public string Name
+        {
+            get => _info?.Name;
+        }
 
-		public string Id
-		{
-			get => _fileId;
-		}
+        public string Id
+        {
+            get => _fileId;
+        }
 
-		private string _myUUID;
-		private string _mySessionToken;
+        private string _myUUID;
+        private string _mySessionToken;
 
-		private FileReceiver(string myUUID, string mySessionToken, string ownerLogin, string ownerUUID, string fileId, DistributionData info)
-		{
-			_ownerLogin = ownerLogin;
-			_ownerUUID = ownerUUID;
-			_fileId = fileId;
-			_info = info;
+        private FileReceiver(string myUUID, string mySessionToken, string ownerLogin, string ownerUUID, string fileId, DistributionData info)
+        {
+            _ownerLogin = ownerLogin;
+            _ownerUUID = ownerUUID;
+            _fileId = fileId;
+            _info = info;
 
-			_myUUID = myUUID;
-			_mySessionToken = mySessionToken;
+            _myUUID = myUUID;
+            _mySessionToken = mySessionToken;
 
-			_state = DistributionState.InQueue;
-		}
+            _state = DistributionState.InQueue;
+        }
 
-		public void CancelDownload()
-		{
-			lock (_locker)
-			{
-				_dataClient?.Close();
-				_dataClient = null;
-				DownloadCanceled?.Invoke();
-			}
-		}
+        public void CancelDownload()
+        {
+            lock (_locker)
+            {
+                _dataClient?.Close();
+                _dataClient = null;
+                DownloadCanceled?.Invoke();
+            }
+        }
 
-		public FileRecvResult StartDownload(string fileName)
-		{
-			try
-			{
-				State = DistributionState.InQueue;
+        public FileRecvResult StartDownload(string fileName)
+        {
+            try
+            {
+                State = DistributionState.InQueue;
 
-				_downloadSemaphore.WaitOne(_ownerUUID);
-				lock (_locker)
-				{
-					var publicKey = Cryptography.DecodeRsaParams(_info.PublicRsaKey);
-					var serverData = new ControlServerData(LaunсherSettings.ServerIp);
+                _downloadSemaphore.WaitOne(_ownerUUID);
+                lock (_locker)
+                {
+                    var publicKey = Cryptography.DecodeRsaParams(_info.PublicRsaKey);
+                    var serverData = new ControlServerData(LaunсherSettings.ServerIp);
 
-					_dataClient?.Close();
-					_dataClient = new DataClient(publicKey, _info.ConfirmWord, serverData, fileName, _fileId);
-					_dataClient.SpeedUpdate += SpeedUpdate;
-					_dataClient.ProcentUpdate += ProcentUpdate;
+                    _dataClient?.Close();
+                    _dataClient = new DataClient(publicKey, _info.ConfirmWord, serverData, fileName, _fileId);
+                    _dataClient.SpeedUpdate += SpeedUpdate;
+                    _dataClient.ProcentUpdate += ProcentUpdate;
 
-					lock (_dataClientInitLocker)
-					{
-						State = DistributionState.InConnect;
-						bool result = _dataClient.Initialization(_myUUID, _mySessionToken, _ownerUUID);
-						if (!result)
-						{
-							_dataClient.Close();
-							return FileRecvResult.ConnectionClose;
-						}
-					}
+                    lock (_dataClientInitLocker)
+                    {
+                        State = DistributionState.InConnect;
+                        bool result = _dataClient.Initialization(_myUUID, _mySessionToken, _ownerUUID);
+                        if (!result)
+                        {
+                            _dataClient.Close();
+                            return FileRecvResult.ConnectionClose;
+                        }
+                    }
 
-					State = DistributionState.InProcess;
-				}
+                    State = DistributionState.InProcess;
+                }
 
-				return _dataClient?.WorkWait() ?? FileRecvResult.Canceled;
-			}
-			finally
-			{
-				_downloadSemaphore.Release(_ownerUUID);
-			}
-		}
-	}
+                return _dataClient?.WorkWait() ?? FileRecvResult.Canceled;
+            }
+            finally
+            {
+                _downloadSemaphore.Release(_ownerUUID);
+            }
+        }
+    }
 }

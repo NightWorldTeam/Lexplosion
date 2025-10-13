@@ -123,7 +123,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.InstanceProfile
             _selectedSortByParam = SortByList[0];
             _instanceModelBase = instanceModelBase;
 
-			string folderName = string.Empty;
+            string folderName = string.Empty;
 
             switch (type)
             {
@@ -153,7 +153,8 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.InstanceProfile
                     break;
                 default:
                     break;
-            };
+            }
+            ;
 
             GetDirectoryPath = getDirectoryPath;
 
@@ -164,7 +165,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.InstanceProfile
                 _baseInstanceData = instanceModelBase.BaseData;
                 var instanceAddons = AddonsManager.GetManager(_baseInstanceData, Runtime.ServicesContainer).GetInstalledAddons(type);
 
-                App.Current.Dispatcher.Invoke(() => 
+                App.Current.Dispatcher.Invoke(() =>
                 {
                     _addonsList = new ObservableCollection<InstanceAddon>(instanceAddons);
                     InstanceAddonCollectionViewSource.Source = _addonsList;
@@ -178,9 +179,9 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.InstanceProfile
                 });
             });
 
-            ImportAction = (files) => 
+            ImportAction = (files) =>
             {
-                Runtime.TaskRun(() => 
+                Runtime.TaskRun(() =>
                 {
                     if (files.Count() > 10)
                         IsAddonsLoading = true;
@@ -190,8 +191,8 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.InstanceProfile
                     if (addons == null)
                         return;
 
-                    App.Current.Dispatcher?.Invoke(() => 
-                    { 
+                    App.Current.Dispatcher?.Invoke(() =>
+                    {
                         _addonsList = new ObservableCollection<InstanceAddon>(addons);
                         OnPropertyChanged(nameof(AddonsList));
                         IsAddonsLoading = false;
@@ -216,7 +217,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.InstanceProfile
                 {
                     Process.Start("explorer", _directoryPath);
                 }
-                else 
+                else
                 {
                     Process.Start("explorer", GetDirectoryPath());
                 }
@@ -280,7 +281,8 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.InstanceProfile
         {
             if (instanceAddon is InstanceAddon)
             {
-                Runtime.TaskRun(() => {
+                Runtime.TaskRun(() =>
+                {
                     (instanceAddon as InstanceAddon).Update();
                 });
             }
@@ -294,7 +296,8 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.InstanceProfile
         {
             if (instanceAddon is InstanceAddon addon)
             {
-                Runtime.TaskRun(() => {
+                Runtime.TaskRun(() =>
+                {
                     addon.Delete();
                 });
                 _addonsList.Remove(addon);
@@ -338,7 +341,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.InstanceProfile
             {
                 InstanceAddonCollectionViewSource.View.Filter = (m => (m as InstanceAddon).Author?.IndexOf(value, System.StringComparison.InvariantCultureIgnoreCase) > -1);
             }
-            else if (SelectedSortByParam == "FileName") 
+            else if (SelectedSortByParam == "FileName")
             {
                 InstanceAddonCollectionViewSource.View.Filter = (m => (m as InstanceAddon).FileName?.IndexOf(value, System.StringComparison.InvariantCultureIgnoreCase) > -1);
             }
@@ -346,14 +349,15 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.InstanceProfile
 
         private void InstanceAddon_AddonRemoved(InstanceAddon obj)
         {
-            App.Current.Dispatcher.Invoke(() => {
+            App.Current.Dispatcher.Invoke(() =>
+            {
                 _addonsList.Remove(obj);
             });
         }
 
         private void InstanceAddon_AddonAdded(InstanceAddon obj)
         {
-            if (obj.Type != Type) 
+            if (obj.Type != Type)
             {
                 return;
             }

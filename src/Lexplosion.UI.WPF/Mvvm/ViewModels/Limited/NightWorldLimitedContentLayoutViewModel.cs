@@ -1,6 +1,5 @@
 ﻿using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.UI.WPF.Commands;
-using Lexplosion.UI.WPF.Core;
 using Lexplosion.UI.WPF.Core.ViewModel;
 using System;
 using System.Diagnostics;

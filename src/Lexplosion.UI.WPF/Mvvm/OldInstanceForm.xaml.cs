@@ -45,7 +45,7 @@ namespace Lexplosion.UI.WPF.Controls.OldInstanceForm
             get => (bool)GetValue(CanBeDeletedProperty);
             set => SetValue(CanBeDeletedProperty, value);
         }
-        
+
         public bool InCatalog
         {
             get => (bool)GetValue(InCatalogProperty);
@@ -88,7 +88,7 @@ namespace Lexplosion.UI.WPF.Controls.OldInstanceForm
             SetVisitButtonIconAndText();
         }
 
-        private void SetVisitButtonIconAndText() 
+        private void SetVisitButtonIconAndText()
         {
             VisitWebsiteButton.SetResourceReference(AdvancedButton.IconDataProperty, $"PD{_model.Source}");
             VisitWebsiteButton.SetResourceReference(AdvancedButton.TextProperty, $"Visit{_model.Source}");
@@ -111,7 +111,7 @@ namespace Lexplosion.UI.WPF.Controls.OldInstanceForm
 
         private void PART_MainActionButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_model.IsImporting) 
+            if (_model.IsImporting)
             {
                 return;
             }
@@ -135,7 +135,7 @@ namespace Lexplosion.UI.WPF.Controls.OldInstanceForm
                 return;
             }
 
-            if (_model.IsShareDownloading) 
+            if (_model.IsShareDownloading)
             {
                 _model.CancelShareInstanceDownloading();
             }
@@ -152,12 +152,12 @@ namespace Lexplosion.UI.WPF.Controls.OldInstanceForm
         private void CancelDownloadButton_Click(object sender, RoutedEventArgs e)
         {
             PART_DropDownMenu.IsOpen = false;
-            if (_model == null) 
+            if (_model == null)
             {
                 return;
             }
 
-            if (_model.ImportData != null) 
+            if (_model.ImportData != null)
             {
                 _model.CancelByImportData();
             }
@@ -230,20 +230,20 @@ namespace Lexplosion.UI.WPF.Controls.OldInstanceForm
 
         private void PART_LogoBlock_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (_model.IsInstanceCompleted) 
+            if (_model.IsInstanceCompleted)
             {
                 LogoButtonCommand.Execute(LogoButtonCommandParameter);
             }
         }
 
 
-        private void OnInstanceDeleted(object obj) 
+        private void OnInstanceDeleted(object obj)
         {
             PlayDeleteAnimation();
             _model.DeletedEvent -= OnInstanceDeleted;
         }
 
-        private void PlayDeleteAnimation() 
+        private void PlayDeleteAnimation()
         {
             var opacityAnim = new DoubleAnimation()
             {
@@ -285,7 +285,7 @@ namespace Lexplosion.UI.WPF.Controls.OldInstanceForm
 
         private void ImportCancelClicked(object sender, RoutedEventArgs e)
         {
-            if (_model != null) 
+            if (_model != null)
             {
                 _model.CancelByImportData();
             }
@@ -309,7 +309,7 @@ namespace Lexplosion.UI.WPF.Controls.OldInstanceForm
 
         private void PART_DropDownMenu_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Escape) 
+            if (e.Key == Key.Escape)
             {
                 var dropDown = (sender as DropdownMenu);
                 dropDown.IsOpen = false;

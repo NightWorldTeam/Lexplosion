@@ -6,9 +6,9 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.Authorization
     public sealed class NoAccountAuthorizationModel : ViewModelBase, IAuthModel
     {
         private string _nickname;
-        public string Nickname 
+        public string Nickname
         {
-            get => _nickname; set 
+            get => _nickname; set
             {
                 _nickname = value;
 
@@ -23,26 +23,26 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.Authorization
 
         public NoAccountAuthorizationModel()
         {
-            
+
         }
 
 
-        public void LogIn() 
+        public void LogIn()
         {
-			var services = Runtime.ServicesContainer;
+            var services = Runtime.ServicesContainer;
             var account = new Account(AccountType.NoAuth, services, services.DataFilesService, Nickname);
             account.IsLaunch = true;
             account.Save();
         }
 
-        private bool IsNicknameValid(string nickname) 
+        private bool IsNicknameValid(string nickname)
         {
-            if (string.IsNullOrWhiteSpace(nickname)) 
+            if (string.IsNullOrWhiteSpace(nickname))
             {
                 return false;
             }
 
-            if (nickname.Length < 3 && nickname.Length > 16) 
+            if (nickname.Length < 3 && nickname.Length > 16)
             {
                 return false;
             }

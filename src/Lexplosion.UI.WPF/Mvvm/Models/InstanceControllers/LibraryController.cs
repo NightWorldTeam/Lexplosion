@@ -66,7 +66,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.InstanceControllers
         #region Constructors
 
 
-        public LibraryController(AppCore appCore, ClientsManager clientsManager, Action<InstanceClient> export, Action<InstanceModelBase> setRunningGame, 
+        public LibraryController(AppCore appCore, ClientsManager clientsManager, Action<InstanceClient> export, Action<InstanceModelBase> setRunningGame,
             Func<InstanceClient, InstanceModelBase> getInstanceModelByInstanceClient, Action<InstanceModelBase> addInstanceModel)
         {
             _appCore = appCore;
@@ -74,7 +74,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.InstanceControllers
             _groups = new(_clientsManager.GetExistsGroups());
             _exportFunc = export;
             _setRunningGame = setRunningGame;
-            
+
             _getInstanceModelByInstanceClient = getInstanceModelByInstanceClient;
             _addInstanceModel = addInstanceModel;
 
@@ -110,7 +110,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.InstanceControllers
         {
             InstanceModelBase? instanceModelBase = _getInstanceModelByInstanceClient(instanceClient);
 
-            if (instanceModelBase != null) 
+            if (instanceModelBase != null)
             {
                 instanceModelBase.UpdateInstancesGroup(SelectedGroup);
             }
@@ -224,7 +224,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.InstanceControllers
 
             foreach (var ic in SelectedGroup.Clients)
             {
-                var im = _getInstanceModelByInstanceClient(ic); 
+                var im = _getInstanceModelByInstanceClient(ic);
                 if (im == null)
                 {
                     Add(ic);

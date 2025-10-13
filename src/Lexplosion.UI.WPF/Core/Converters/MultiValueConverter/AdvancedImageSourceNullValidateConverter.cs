@@ -1,11 +1,10 @@
 ﻿using Lexplosion.UI.WPF.Core.Converters.MultiValueConverter;
 using Lexplosion.UI.WPF.Core.Tools;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Globalization;
-using System.Windows.Media.Imaging;
-using System.Windows.Media;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace Lexplosion.UI.WPF.Core.Converters
 {
@@ -20,7 +19,7 @@ namespace Lexplosion.UI.WPF.Core.Converters
 
         public override object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            if (values.Length == 0) 
+            if (values.Length == 0)
             {
                 return new ImageBrush(_defaultBitmapValue);
             }

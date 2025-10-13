@@ -8,7 +8,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.AddonsRepositories.Groups
     /// </summary>
     public class ModloaderGroup : AddonSearchParamsGroupBase
     {
-        public ModloaderGroup(string header, IEnumerable<Modloader> modloaders, string? iconData = null) : 
+        public ModloaderGroup(string header, IEnumerable<Modloader> modloaders, string? iconData = null) :
             base(header, modloaders.Select(e => (object)e).ToArray(), iconData)
         {
         }

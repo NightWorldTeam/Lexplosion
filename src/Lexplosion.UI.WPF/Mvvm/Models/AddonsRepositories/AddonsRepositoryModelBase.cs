@@ -1,13 +1,13 @@
-﻿using Lexplosion.Logic.Management.Instances;
+﻿using Lexplosion.Logic.Management.Addons;
+using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Objects;
-using Lexplosion.UI.WPF.Core.Objects.TranslatableObjects;
-using Lexplosion.UI.WPF.Core.Objects;
 using Lexplosion.UI.WPF.Core;
+using Lexplosion.UI.WPF.Core.Objects;
+using Lexplosion.UI.WPF.Core.Objects.TranslatableObjects;
+using Lexplosion.UI.WPF.Mvvm.Models.AddonsRepositories.Groups;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using Lexplosion.UI.WPF.Mvvm.Models.AddonsRepositories.Groups;
-using Lexplosion.Logic.Management.Addons;
-using System;
 
 namespace Lexplosion.UI.WPF.Mvvm.Models.AddonsRepositories
 {
@@ -34,7 +34,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.AddonsRepositories
         protected ObservableCollection<Core.Objects.Modloader> _modloaders = new();
         protected ObservableCollection<Core.Objects.Modloader> _selectedModloaders = new();
 
-        
+
         protected bool _isClearFilters = false;
 
 
@@ -120,9 +120,9 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.AddonsRepositories
         }
 
         private bool _isLoading;
-        public bool IsLoading 
-        { 
-            get => _isLoading; set 
+        public bool IsLoading
+        {
+            get => _isLoading; set
             {
                 _isLoading = value;
                 OnPropertyChanged();
@@ -147,7 +147,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.AddonsRepositories
             foreach (Modloader value in Enum.GetValues(typeof(Modloader)))
             {
                 Core.Objects.Modloader modloader = new(value.ToString(), value);
-                
+
                 modloader.SelectedChanged += OnModloaderSelectedChanged;
 
                 if (instanceData.Modloader != ClientType.Vanilla && (int)instanceData.Modloader == (int)value)

@@ -1,6 +1,4 @@
-﻿using Lexplosion.UI.WPF.Mvvm.Models.Profile;
-using System;
-using System.Diagnostics;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
 

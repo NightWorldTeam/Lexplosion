@@ -206,9 +206,9 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.AddonsRepositories
         }
 
 
-        private void OpenAddonModpack() 
+        private void OpenAddonModpack()
         {
-            
+
         }
 
 

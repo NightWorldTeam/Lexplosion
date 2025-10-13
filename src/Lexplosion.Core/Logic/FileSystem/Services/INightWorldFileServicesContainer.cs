@@ -2,7 +2,7 @@
 
 namespace Lexplosion.Logic.FileSystem.Services
 {
-	public interface INightWorldFileServicesContainer: IFileServicesContainer, INightWorldWebServicesContainer
-	{
-	}
+    public interface INightWorldFileServicesContainer : IFileServicesContainer, INightWorldWebServicesContainer
+    {
+    }
 }

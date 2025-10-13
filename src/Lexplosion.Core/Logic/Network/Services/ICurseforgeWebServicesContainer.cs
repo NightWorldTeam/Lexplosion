@@ -2,8 +2,8 @@
 
 namespace Lexplosion.Logic.Network.Services
 {
-	public interface ICurseforgeWebServicesContainer : IWebServicesContainer
-	{
-		public CurseforgeApi CfApi { get; }
-	}
+    public interface ICurseforgeWebServicesContainer : IWebServicesContainer
+    {
+        public CurseforgeApi CfApi { get; }
+    }
 }

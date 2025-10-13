@@ -13,7 +13,7 @@ using System.Windows.Input;
 
 namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Modal
 {
-    public sealed class InstanceForServer 
+    public sealed class InstanceForServer
     {
         public InstanceModelBase InstanceModel { get; }
         public bool IsSelected { get; set; }
@@ -25,20 +25,20 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Modal
             IsAutoConnect = !string.IsNullOrEmpty(instanceModel.Settings.AutoLoginServer);
         }
 
-        public void AddServer(MinecraftServerInstance server, bool isAutoLogin) 
+        public void AddServer(MinecraftServerInstance server, bool isAutoLogin)
         {
             InstanceModel.AddServer(server, isAutoLogin);
         }
     }
 
-    public class SelectInstanceForServerModel : ObservableObject 
+    public class SelectInstanceForServerModel : ObservableObject
     {
         private readonly MinecraftServerInstance _server;
         private readonly Func<InstanceClient, InstanceModelBase> _prepareLibraryAndGetInstanceModelBase;
-		private readonly ClientsManager _clientsManager = Runtime.ClientsManager;
+        private readonly ClientsManager _clientsManager = Runtime.ClientsManager;
 
 
-		private ObservableCollection<InstanceForServer> _availableInstances;
+        private ObservableCollection<InstanceForServer> _availableInstances;
         public IEnumerable<InstanceForServer> AvailableInstances { get => _availableInstances; }
 
         public SelectInstanceForServerModel(MinecraftServerInstance server, SelectInstanceForServerArgs selectInstanceForServerArgs)
@@ -56,7 +56,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Modal
         /// <summary>
         /// Создать новую сборку для сервера.
         /// </summary>
-        public void AddNewInstance() 
+        public void AddNewInstance()
         {
             var newInstance = _clientsManager.CreateClient(_server, false);
             var instanceModelBase = _prepareLibraryAndGetInstanceModelBase(newInstance);
@@ -70,7 +70,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Modal
         /// <summary>
         /// Подтвердить выбор
         /// </summary>
-        public void Apply() 
+        public void Apply()
         {
             foreach (var instance in AvailableInstances)
             {

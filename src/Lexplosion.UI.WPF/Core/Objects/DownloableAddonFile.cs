@@ -31,7 +31,7 @@ namespace Lexplosion.UI.WPF.Core.Objects
 
         public override bool Equals(object obj)
         {
-            if (obj is DownloableAddonFile file) 
+            if (obj is DownloableAddonFile file)
             {
                 return file.Addon.Equals(Addon);
             }

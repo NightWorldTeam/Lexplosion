@@ -1,6 +1,6 @@
 ﻿namespace Lexplosion.UI.WPF.Mvvm.Models.Mvvm.InstanceModel
 {
-    public enum InstanceLocation 
+    public enum InstanceLocation
     {
         Catalog,
         Library

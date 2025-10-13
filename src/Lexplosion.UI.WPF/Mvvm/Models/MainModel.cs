@@ -62,7 +62,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models
         #region Public Methods
 
 
-        public void SetToAuthorization(Action toAuthorization) 
+        public void SetToAuthorization(Action toAuthorization)
         {
             _toAuthorization = toAuthorization;
         }

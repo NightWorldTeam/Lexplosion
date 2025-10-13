@@ -76,7 +76,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.MainMenu.FIlterPanel
             {
                 _selectedSource = value;
 
-                if (_isInitialized) 
+                if (_isInitialized)
                 {
                     UpdateCategories(value.Value);
                 }

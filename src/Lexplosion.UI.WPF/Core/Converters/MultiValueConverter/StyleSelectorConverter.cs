@@ -7,7 +7,7 @@ namespace Lexplosion.UI.WPF.Core.Converters.MultiValueConverter
     {
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is double test) 
+            if (value is double test)
             {
                 var s = test / (double)parameter;
 

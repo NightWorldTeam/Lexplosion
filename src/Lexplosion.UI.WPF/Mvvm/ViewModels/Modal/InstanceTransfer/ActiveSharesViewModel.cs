@@ -1,7 +1,6 @@
 ﻿using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.UI.WPF.Commands;
 using Lexplosion.UI.WPF.Core;
-using Lexplosion.UI.WPF.Core.Notifications;
 using Lexplosion.UI.WPF.Core.ViewModel;
 using Lexplosion.UI.WPF.Mvvm.Models.InstanceControllers;
 using Lexplosion.UI.WPF.Mvvm.Models.InstanceTransfer;
@@ -16,7 +15,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Modal.InstanceTransfer
 
 
         public IReadOnlyCollection<DistributedInstance> DistributedInstances { get => _controller.ActiveShares; }
-        public bool IsEmpty { get => DistributedInstances.Count == 0;}
+        public bool IsEmpty { get => DistributedInstances.Count == 0; }
         public string Author { get => Account.ActiveAccount.Login; }
 
 
@@ -65,7 +64,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Modal.InstanceTransfer
 
         public void RefreshAccessData()
         {
-            
+
         }
     }
 }

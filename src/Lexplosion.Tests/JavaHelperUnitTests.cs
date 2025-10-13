@@ -1,5 +1,5 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Lexplosion.Core.Tools;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Lexplosion.Tests
 {
@@ -23,7 +23,7 @@ namespace Lexplosion.Tests
         [TestCase("C:\\Program Files\\Java\\jdk-17.0.1\\bin\\java.exe", JavaHelper.JavaPathCheckResult.Success)]
         [TestCase("C:\\Program Files\\Java\\jdk-17.0.1\\bin\\javaw.exe\\", JavaHelper.JavaPathCheckResult.Success)]
         [TestCase("C:\\Program Files\\Java\\jdk-17.0.1\\bin\\java.exe\\", JavaHelper.JavaPathCheckResult.Success)]
-        public void SuccessJavaPath(string exceptedPath, JavaHelper.JavaPathCheckResult exceptedCurrentPath) 
+        public void SuccessJavaPath(string exceptedPath, JavaHelper.JavaPathCheckResult exceptedCurrentPath)
         {
             var result = JavaHelper.TryValidateJavaPath(exceptedPath, out var s);
             NUnit.Framework.Assert.AreEqual(JavaHelper.JavaPathCheckResult.Success, result);

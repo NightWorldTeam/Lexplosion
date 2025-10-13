@@ -73,7 +73,7 @@ namespace Lexplosion.UI.WPF.Controls
             _tabPanel = Template.FindName("HeaderPanel", this) as TabPanel;
             _header = Template.FindName(PART_HEADER_NAME, this) as Border;
             _selectedTabItem = ItemContainerGenerator.ContainerFromItem(SelectedValue) as TabItem;
-            
+
             if (_header != null)
             {
                 //Runtime.DebugWrite(_header);

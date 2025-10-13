@@ -52,24 +52,24 @@ namespace Lexplosion.UI.WPF.Core
             };
         }
 
-        public TabItemModel GetByTypeOfContent(Type type) 
+        public TabItemModel GetByTypeOfContent(Type type)
         {
             return _tabs.FirstOrDefault(t => t.Content.GetType() == type);
         }
 
         public ContentLayoutViewModelBase()
         {
-            _tabs.CollectionChanged += _tabs_CollectionChanged; 
+            _tabs.CollectionChanged += _tabs_CollectionChanged;
         }
 
         private void _tabs_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             var tabItem = sender as Collection<TabItemModel>;
-            
+
             if (tabItem.Count == 0 || tabItem[0] == null)
                 return;
 
-            switch (e.Action) 
+            switch (e.Action)
             {
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
                     {
@@ -83,7 +83,7 @@ namespace Lexplosion.UI.WPF.Core
                         tabItem[0].SelectedChanged -= OnSelectedItemChanged;
                     }
                     break;
-                case System.Collections.Specialized.NotifyCollectionChangedAction.Replace: 
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Replace:
                     {
                         (e.OldItems[0] as TabItemModel).SelectedChanged -= OnSelectedItemChanged;
                         var newItem = (e.NewItems[0] as TabItemModel);
@@ -97,7 +97,7 @@ namespace Lexplosion.UI.WPF.Core
                     break;
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Reset:
                     {
-                        foreach (var oldItem in e.OldItems) 
+                        foreach (var oldItem in e.OldItems)
                         {
                             (oldItem as TabItemModel).SelectedChanged -= OnSelectedItemChanged;
                         }
@@ -106,7 +106,7 @@ namespace Lexplosion.UI.WPF.Core
             }
         }
 
-        protected void OnSelectedItemChanged(TabItemModel tabItemModel, bool state = true) 
+        protected void OnSelectedItemChanged(TabItemModel tabItemModel, bool state = true)
         {
             SelectedItem = tabItemModel;
             OnPropertyChanged(nameof(SelectedItem));

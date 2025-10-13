@@ -11,8 +11,8 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Authorization
     {
         private readonly AppCore _appCore;
         private readonly Dictionary<Type, Action> _navigationByType = new();
-        
-     
+
+
         public AuthorizationMenuModel Model { get; }
 
 
@@ -32,7 +32,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Authorization
         {
             _appCore = appCore;
 
-            Account.AccountAdded += (account) => 
+            Account.AccountAdded += (account) =>
             {
                 toMainMenu.Execute(null);
             };
@@ -56,9 +56,9 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Authorization
         #endregion Constructors
 
 
-        void NavigateTo(Type type) 
+        void NavigateTo(Type type)
         {
-            if (_navigationByType.TryGetValue(type, out var navigate)) 
+            if (_navigationByType.TryGetValue(type, out var navigate))
             {
                 navigate();
             }

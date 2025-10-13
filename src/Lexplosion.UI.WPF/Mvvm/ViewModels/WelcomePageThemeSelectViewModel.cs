@@ -1,12 +1,10 @@
 ﻿using Lexplosion.Global;
-using Lexplosion.Logic.FileSystem;
 using Lexplosion.UI.WPF.Commands;
 using Lexplosion.UI.WPF.Core;
 using Lexplosion.UI.WPF.Core.Objects;
-using System.Collections.ObjectModel;
 using System;
-using System.Windows.Input;
 using System.Collections.Generic;
+using System.Windows.Input;
 
 namespace Lexplosion.UI.WPF.Mvvm.ViewModels
 {
@@ -23,7 +21,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels
 
 
         private RelayCommand _toAuthCommand;
-        public ICommand ToAuthCommand 
+        public ICommand ToAuthCommand
         {
             get => RelayCommand.GetCommand(ref _toAuthCommand, _navigateToAuth);
         }
@@ -46,7 +44,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels
             {
                 _appCore.Settings.ThemeService.ChangeTheme(theme, true);
                 GlobalData.GeneralSettings.ThemeName = theme.Name;
-				Runtime.ServicesContainer.DataFilesService.SaveSettings(GlobalData.GeneralSettings);
+                Runtime.ServicesContainer.DataFilesService.SaveSettings(GlobalData.GeneralSettings);
             }
         }
     }

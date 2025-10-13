@@ -31,7 +31,7 @@ namespace Lexplosion.UI.WPF.Core.Services
         public Dictionary<string, Action<Action>> AnimationsList = [];
         public Dictionary<string, Action> BeforeAnimationsList = [];
 
-        
+
         #region Properties
 
 
@@ -69,7 +69,7 @@ namespace Lexplosion.UI.WPF.Core.Services
 
         public void ChangeWindowHeaderTemplate(string templateName)
         {
-            if (templateName != _settingsCore.AppHeaderTemplateName) 
+            if (templateName != _settingsCore.AppHeaderTemplateName)
             {
                 SelectedAppHeaderTemplateName = templateName;
                 _settingsCore.AppHeaderTemplateName = templateName;

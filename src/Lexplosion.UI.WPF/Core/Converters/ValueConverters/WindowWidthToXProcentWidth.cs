@@ -7,7 +7,7 @@ namespace Lexplosion.UI.WPF.Core.Converters
     {
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is double) 
+            if (value is double)
             {
                 return ((double)value / 100) * double.Parse(parameter.ToString(), CultureInfo.InvariantCulture) / GetScalingFactor();
             }

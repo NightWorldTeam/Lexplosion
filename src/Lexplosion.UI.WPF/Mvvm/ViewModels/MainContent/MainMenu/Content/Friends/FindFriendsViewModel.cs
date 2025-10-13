@@ -33,7 +33,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
         }
 
         private RelayCommand _searchCommand;
-        public ICommand SearchCommand 
+        public ICommand SearchCommand
         {
             get => RelayCommand.GetCommand(ref _searchCommand, (obj) => Model.LoadUsersList(obj as string, reboot: string.IsNullOrEmpty(obj as string), isClear: true));
         }
@@ -67,7 +67,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
 
         public void Refresh()
         {
-            
+
         }
     }
 }

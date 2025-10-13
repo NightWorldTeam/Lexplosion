@@ -1,13 +1,10 @@
 ﻿using Lexplosion.Logic.Management.Accounts;
-using Lexplosion.Logic.Management.Instances;
 using Lexplosion.UI.WPF.Commands;
 using Lexplosion.UI.WPF.Core;
 using Lexplosion.UI.WPF.Core.Objects;
 using Lexplosion.UI.WPF.Core.ViewModel;
-using Lexplosion.UI.WPF.Mvvm.Models.Mvvm.InstanceModel;
 using Lexplosion.UI.WPF.Mvvm.ViewModels.Args;
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Windows.Input;
 
@@ -67,7 +64,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
 
             HasAccess = Account.ActiveAccount?.AccountType == AccountType.NightWorld;
 
-            if (HasAccess) 
+            if (HasAccess)
             {
                 _generalMultiplayerViewModel = new MultiplayerViewModel(appCore);
             }

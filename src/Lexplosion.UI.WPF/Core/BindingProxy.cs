@@ -5,7 +5,7 @@ namespace Lexplosion.UI.WPF.Core
     public class BindingProxy : Freezable
     {
         public static readonly DependencyProperty DataProperty =
-            DependencyProperty.Register("Data", typeof(object), typeof(BindingProxy), 
+            DependencyProperty.Register("Data", typeof(object), typeof(BindingProxy),
                 new UIPropertyMetadata(null));
 
         public object Data

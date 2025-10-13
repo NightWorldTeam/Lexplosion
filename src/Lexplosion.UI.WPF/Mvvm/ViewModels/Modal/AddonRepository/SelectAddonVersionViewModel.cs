@@ -77,7 +77,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Modal
 
                             IsVersionLoading = false;
 
-                            if (HasVersions) 
+                            if (HasVersions)
                             {
                                 SelectedAddonVersion = AddonVersions[0];
                             }

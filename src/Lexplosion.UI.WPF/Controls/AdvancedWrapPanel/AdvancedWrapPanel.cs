@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 
 namespace Lexplosion.UI.WPF.Controls
@@ -18,7 +13,7 @@ namespace Lexplosion.UI.WPF.Controls
             = DependencyProperty.Register("DefaultElementStyle", typeof(Style), typeof(AdvancedWrapPanel),
             new FrameworkPropertyMetadata(propertyChangedCallback: OnDefaultElementStyleChanged));
 
-        public Style LastRowElementStyle 
+        public Style LastRowElementStyle
         {
             get => (Style)GetValue(LastRowElementStyleProperty);
             set => SetValue(LastRowElementStyleProperty, value);
@@ -41,14 +36,14 @@ namespace Lexplosion.UI.WPF.Controls
             base.OnRenderSizeChanged(sizeInfo);
         }
 
-        private void UpdateLastRowElementStyle() 
+        private void UpdateLastRowElementStyle()
         {
             if (Children.Count == 0)
                 return;
 
             var i = 0;
             var countInRow = (int)(ActualWidth / (Children[0] as FrameworkElement).ActualWidth);
-            foreach (FrameworkElement item in Children) 
+            foreach (FrameworkElement item in Children)
             {
                 if (i % countInRow == 0)
                     item.Style = LastRowElementStyle;
@@ -59,7 +54,7 @@ namespace Lexplosion.UI.WPF.Controls
 
         private static void OnLastRowElementStyleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is AdvancedWrapPanel awp) 
+            if (d is AdvancedWrapPanel awp)
             {
                 awp.UpdateLastRowElementStyle();
             }

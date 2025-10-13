@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Media;
-using System.Windows.Threading;
 
 namespace Lexplosion.UI.WPF.Controls
 {
@@ -31,7 +28,7 @@ namespace Lexplosion.UI.WPF.Controls
 
         public Orientation Orientation
         {
-            get => (Orientation)base.GetValue(Controls.AdvancedToolTip.OrintationProperty); 
+            get => (Orientation)base.GetValue(Controls.AdvancedToolTip.OrintationProperty);
             set => SetValue(TextKeyProperty, value);
         }
 
@@ -84,7 +81,7 @@ namespace Lexplosion.UI.WPF.Controls
         private static void OnOrintationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var advancedToolTip = d as AdvancedToolTip;
-            switch (advancedToolTip.Orientation) 
+            switch (advancedToolTip.Orientation)
             {
                 case Orientation.Left:
                     {
@@ -93,17 +90,17 @@ namespace Lexplosion.UI.WPF.Controls
                     break;
                 case Orientation.Right:
                     {
-                        
+
                     }
                     break;
                 case Orientation.Top:
                     {
-                        
+
                     }
                     break;
                 case Orientation.Bottom:
                     {
-                        
+
                     }
                     break;
             }

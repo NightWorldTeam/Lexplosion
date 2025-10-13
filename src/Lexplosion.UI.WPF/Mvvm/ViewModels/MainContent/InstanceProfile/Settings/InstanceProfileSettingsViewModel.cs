@@ -1,8 +1,8 @@
 ﻿using Lexplosion.UI.WPF.Commands;
 using Lexplosion.UI.WPF.Core;
+using Lexplosion.UI.WPF.Mvvm.Models.MainContent.InstanceProfile.Settings;
 using Lexplosion.UI.WPF.Mvvm.Models.Mvvm.InstanceModel;
 using System.Windows.Input;
-using Lexplosion.UI.WPF.Mvvm.Models.MainContent.InstanceProfile.Settings;
 
 namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.InstanceProfile
 {

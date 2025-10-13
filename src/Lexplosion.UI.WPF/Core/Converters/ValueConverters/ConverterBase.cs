@@ -30,14 +30,14 @@ namespace Lexplosion.UI.WPF.Core.Converters
 
 
         public abstract object Convert(object value, Type targetType, object parameter, CultureInfo culture);
-        public virtual object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) 
+        public virtual object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return default(object);
         }
 
         public override object ProvideValue(IServiceProvider serviceProvider)
         {
-            if (ConverterBase<T>._instance == null) 
+            if (ConverterBase<T>._instance == null)
             {
                 ConverterBase<T>._instance = Activator.CreateInstance<T>();
             }

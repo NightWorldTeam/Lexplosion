@@ -42,7 +42,7 @@ namespace Lexplosion.UI.WPF.WindowComponents.Header.Variants
             _windowHeaderArgs.Minimized();
         }
 
-        protected void NotificationOpenedChanged(bool value) 
+        protected void NotificationOpenedChanged(bool value)
         {
             IsNotificationOpenedChanged?.Invoke(value);
         }

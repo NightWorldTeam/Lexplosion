@@ -4,7 +4,7 @@ using Lexplosion.UI.WPF.Core.ViewModel;
 
 namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.ServerProfile
 {
-    public sealed class ServerProfileOverviewModel : ObservableObject 
+    public sealed class ServerProfileOverviewModel : ObservableObject
     {
         public MinecraftServerInstance ServerModel { get; }
 

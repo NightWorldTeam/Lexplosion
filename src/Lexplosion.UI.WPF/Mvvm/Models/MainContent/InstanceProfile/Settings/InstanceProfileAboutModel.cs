@@ -1,6 +1,6 @@
 ﻿using Lexplosion.Logic.Management.Instances;
-using Lexplosion.UI.WPF.Core.Tools;
 using Lexplosion.UI.WPF.Core;
+using Lexplosion.UI.WPF.Core.Tools;
 using Lexplosion.UI.WPF.Mvvm.Models.Mvvm.InstanceModel;
 using System;
 using System.IO;

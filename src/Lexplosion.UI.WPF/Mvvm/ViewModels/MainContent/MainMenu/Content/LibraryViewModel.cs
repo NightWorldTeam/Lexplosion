@@ -194,7 +194,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
             Model.IsGroupDrawerEnabled = false;
         }
 
-        private void OpenInstanceToGroupsConfigurator(InstanceModelBase instanceModelBase) 
+        private void OpenInstanceToGroupsConfigurator(InstanceModelBase instanceModelBase)
         {
             var instancesFactoryModalViewModel = new InstanceGroupsConfiguratorViewModel(instanceModelBase, _clientsManager);
             _appCore.ModalNavigationStore.Open(instancesFactoryModalViewModel);

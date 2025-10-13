@@ -18,7 +18,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Authorization
         public ICommand CancelCommand { get; }
 
 
-        public MicrosoftAuthorizationViewModel(AppCore appCore, Action<Type> navigateTo, ICommand backToMenu) 
+        public MicrosoftAuthorizationViewModel(AppCore appCore, Action<Type> navigateTo, ICommand backToMenu)
         {
             ToNightWorldCommand = new RelayCommand((obj) => navigateTo(typeof(NightWorldAuthorizationViewModel)));
             ToNoAccountCommand = new RelayCommand((obj) => navigateTo(typeof(NoAccountAuthorizationViewModel)));

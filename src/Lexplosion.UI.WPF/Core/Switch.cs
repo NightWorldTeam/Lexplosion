@@ -6,12 +6,12 @@ using System.Windows.Controls;
 
 namespace Lexplosion.UI.WPF.Core
 {
-    public class SwitchCaseCollection : ObservableCollection<SwitchCaseItem> 
+    public class SwitchCaseCollection : ObservableCollection<SwitchCaseItem>
     {
-        
+
     }
 
-    public class SwitchCaseItem : ContentControl 
+    public class SwitchCaseItem : ContentControl
     {
         public event Action KeyChanged;
 
@@ -19,7 +19,7 @@ namespace Lexplosion.UI.WPF.Core
             = DependencyProperty.Register(nameof(Key), typeof(object), typeof(SwitchCaseItem),
                 new FrameworkPropertyMetadata(defaultValue: null, propertyChangedCallback: OnKeyPropertyChanged));
 
-        public object Key 
+        public object Key
         {
             get => (object)GetValue(KeyProperty);
             set => SetValue(KeyProperty, value);
@@ -87,11 +87,11 @@ namespace Lexplosion.UI.WPF.Core
 
         private void UpdateContent()
         {
-            Content = Cases?.FirstOrDefault(c => IsEqualsKeys(c.Key, SelectedExpression)); 
+            Content = Cases?.FirstOrDefault(c => IsEqualsKeys(c.Key, SelectedExpression));
         }
 
 
-        private bool IsEqualsKeys(object key, object key2) 
+        private bool IsEqualsKeys(object key, object key2)
         {
             if (key?.GetType() != key2?.GetType())
                 return false;
@@ -139,7 +139,7 @@ namespace Lexplosion.UI.WPF.Core
             {
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
                     {
-                        foreach (var sci in e.NewItems) 
+                        foreach (var sci in e.NewItems)
                         {
                             (sci as SwitchCaseItem).KeyChanged += UpdateContent;
                         }

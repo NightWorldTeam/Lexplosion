@@ -1,10 +1,9 @@
-﻿using Lexplosion.UI.WPF.Controls;
-using System.Windows;
+﻿using Lexplosion.UI.WPF.Extensions;
 using System;
+using System.Threading;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
-using Lexplosion.UI.WPF.Extensions;
-using System.Threading;
 
 namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.MainMenu
 {
@@ -43,16 +42,16 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.MainMenu
 
         }
 
-		private void OnFilterPanelSourceClicked(object sender, System.Windows.Input.MouseButtonEventArgs e)
-		{
-			ThreadPool.QueueUserWorkItem((object _) =>
-			{
-				Thread.Sleep(10);
-				App.Current.Dispatcher.Invoke(() =>
-				{
-					FiltersButton.IsChecked = false;
-				});
-			});
-		}
-	}
+        private void OnFilterPanelSourceClicked(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            ThreadPool.QueueUserWorkItem((object _) =>
+            {
+                Thread.Sleep(10);
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    FiltersButton.IsChecked = false;
+                });
+            });
+        }
+    }
 }

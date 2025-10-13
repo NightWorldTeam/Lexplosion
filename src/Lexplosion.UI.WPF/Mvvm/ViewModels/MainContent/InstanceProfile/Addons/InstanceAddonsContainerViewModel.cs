@@ -10,7 +10,7 @@ using System.Windows.Input;
 
 namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.InstanceProfile
 {
-    public interface IInstanceAddonContainerActions 
+    public interface IInstanceAddonContainerActions
     {
         public void SearchStateChanged(bool state);
         public void OpenAddonRepository();

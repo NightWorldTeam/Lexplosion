@@ -31,7 +31,7 @@ namespace Lexplosion.UI.WPF.Core.Objects
             Brush = brush;
         }
 
-        public ActivityColor(Color color, bool isSelected) : this(isSelected) 
+        public ActivityColor(Color color, bool isSelected) : this(isSelected)
         {
             Brush = new SolidColorBrush(color);
         }
@@ -58,9 +58,9 @@ namespace Lexplosion.UI.WPF.Core.Objects
             OnPropertyChanged();
         }
 
-        public static bool TryCreateColor(string value, out ActivityColor? color) 
+        public static bool TryCreateColor(string value, out ActivityColor? color)
         {
-            if (value.IsHexColor()) 
+            if (value.IsHexColor())
             {
                 color = new(value);
                 return true;
@@ -76,6 +76,6 @@ namespace Lexplosion.UI.WPF.Core.Objects
                 color = null;
                 return false;
             }
-        } 
+        }
     }
 }

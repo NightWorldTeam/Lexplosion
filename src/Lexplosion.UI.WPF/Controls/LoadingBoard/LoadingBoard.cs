@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
@@ -42,11 +41,11 @@ namespace Lexplosion.UI.WPF.Controls
                                   new ValidateValueCallback(IsCornerRadiusValid));
 
         public static readonly DependencyProperty BlurTargetProperty
-            = DependencyProperty.Register("BlurTarget", typeof(UIElement), typeof(LoadingBoard), 
+            = DependencyProperty.Register("BlurTarget", typeof(UIElement), typeof(LoadingBoard),
                 new FrameworkPropertyMetadata(propertyChangedCallback: OnBlurTargetChanged));
 
         public static readonly DependencyProperty PlaceholderKeyProperty
-            = DependencyProperty.Register("PlaceholderKey", typeof(string), typeof(LoadingBoard), 
+            = DependencyProperty.Register("PlaceholderKey", typeof(string), typeof(LoadingBoard),
                 new PropertyMetadata(string.Empty, propertyChangedCallback: OnPlaceholderKeyChanged));
 
         public bool IsActive
@@ -61,7 +60,7 @@ namespace Lexplosion.UI.WPF.Controls
             set => SetValue(PlaceholderProperty, value);
         }
 
-        public string PlaceholderKey 
+        public string PlaceholderKey
         {
             get => (string)GetValue(PlaceholderKeyProperty);
             set => SetValue(PlaceholderKeyProperty, value);
@@ -92,7 +91,7 @@ namespace Lexplosion.UI.WPF.Controls
             set => SetValue(CornerRadiusProperty, value);
         }
 
-        public UIElement BlurTarget 
+        public UIElement BlurTarget
         {
             get => (UIElement)GetValue(BlurTargetProperty);
             set => SetValue(BlurTargetProperty, value);
@@ -129,9 +128,10 @@ namespace Lexplosion.UI.WPF.Controls
         #region Private Methods
 
 
-        private void SetBlurToTarget() 
+        private void SetBlurToTarget()
         {
-            if (BlurTarget != null) {  
+            if (BlurTarget != null)
+            {
                 BlurTarget.Effect = IsActive ? new BlurEffect() : null;
             }
         }
@@ -174,9 +174,9 @@ namespace Lexplosion.UI.WPF.Controls
 
         private static void OnPlaceholderKeyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is LoadingBoard _this) 
+            if (d is LoadingBoard _this)
             {
-                if (string.IsNullOrEmpty(_this.PlaceholderKey)) 
+                if (string.IsNullOrEmpty(_this.PlaceholderKey))
                 {
                     return;
                 }

@@ -111,7 +111,7 @@ namespace Lexplosion.UI.WPF.Controls
             }
 
             _searchButton.Click += searchButton_Click;
-            
+
             _clearButton.Click += _clearButton_Click;
             _clearButton.Loaded += (sender, e) =>
             {
@@ -157,7 +157,7 @@ namespace Lexplosion.UI.WPF.Controls
 
         private void searchButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_lastRequests == Text) 
+            if (_lastRequests == Text)
                 return;
 
             _lastRequests = Text;
@@ -166,7 +166,7 @@ namespace Lexplosion.UI.WPF.Controls
 
         private void inputField_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            if (e.Key != Key.Enter || _lastRequests == Text) 
+            if (e.Key != Key.Enter || _lastRequests == Text)
                 return;
 
             _lastRequests = Text;
@@ -218,19 +218,19 @@ namespace Lexplosion.UI.WPF.Controls
                 return;
             }
 
-                if (IsEmpty)
-                {
-                    if (this.IsFocused)
-                        HidePlaceholderBox();
-                    else
-                        ShowPlaceholderBox();
-                    HideClearButton();
-                }
-                else
-                {
+            if (IsEmpty)
+            {
+                if (this.IsFocused)
                     HidePlaceholderBox();
-                    ShowClearButton();
-                }
+                else
+                    ShowPlaceholderBox();
+                HideClearButton();
+            }
+            else
+            {
+                HidePlaceholderBox();
+                ShowClearButton();
+            }
         }
 
         private void HidePlaceholderBox()
@@ -257,7 +257,7 @@ namespace Lexplosion.UI.WPF.Controls
             _placeholderBlock.BeginAnimation(FrameworkElement.OpacityProperty, dA);
         }
 
-        private void ShowClearButton() 
+        private void ShowClearButton()
         {
             var tA = new ThicknessAnimation()
             {

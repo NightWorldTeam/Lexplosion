@@ -1,6 +1,6 @@
-﻿using System.Windows.Media;
+﻿using System;
 using System.Windows;
-using System;
+using System.Windows.Media;
 
 namespace Lexplosion.UI.WPF.Controls
 {
@@ -9,7 +9,7 @@ namespace Lexplosion.UI.WPF.Controls
         public static T FindControl<T>(this DependencyObject parent, Type targetType, string controlName) where T : FrameworkElement
         {
 
-            if (parent == null) 
+            if (parent == null)
                 return null;
 
             if (parent.GetType() == targetType && ((T)parent).Name == controlName)
@@ -19,7 +19,7 @@ namespace Lexplosion.UI.WPF.Controls
 
             T result = null;
             int count = VisualTreeHelper.GetChildrenCount(parent);
-            
+
             for (int i = 0; i < count; i++)
             {
                 DependencyObject child = (DependencyObject)VisualTreeHelper.GetChild(parent, i);
@@ -30,7 +30,7 @@ namespace Lexplosion.UI.WPF.Controls
                     break;
                 }
             }
-            
+
             return result;
         }
 

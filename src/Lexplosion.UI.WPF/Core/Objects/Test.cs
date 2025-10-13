@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Lexplosion.UI.WPF.Core.Objects
+﻿namespace Lexplosion.UI.WPF.Core.Objects
 {
     public class Test
     {

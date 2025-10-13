@@ -14,7 +14,7 @@ namespace Lexplosion.UI.WPF.Core
 
         private Action? _disposeObservableColletion = null;
 
-        
+
         #region Properties
 
 

@@ -18,9 +18,9 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.InstanceTransfer
 
 
         private bool _isImporting;
-        public bool IsImporing 
+        public bool IsImporing
         {
-            get => _isImporting; set 
+            get => _isImporting; set
             {
                 _isImporting = value;
                 OnPropertyChanged();
@@ -30,7 +30,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.InstanceTransfer
         private bool _isSuccessful;
         public bool IsSuccessful
         {
-            get => _isSuccessful; set 
+            get => _isSuccessful; set
             {
                 _isSuccessful = value;
                 OnPropertyChanged();
@@ -39,7 +39,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.InstanceTransfer
 
 
         private InstanceClient _targetInstanceClient;
-        public InstanceClient TargetInstanceClient 
+        public InstanceClient TargetInstanceClient
         {
             get => _targetInstanceClient; set
             {
@@ -81,7 +81,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.InstanceTransfer
         #endregion Constructors
 
 
-        public void Cancel() 
+        public void Cancel()
         {
             ImportCancelled?.Invoke(this);
         }

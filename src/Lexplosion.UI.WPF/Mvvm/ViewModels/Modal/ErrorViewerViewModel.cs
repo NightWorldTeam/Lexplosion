@@ -1,21 +1,20 @@
 ﻿using Lexplosion.UI.WPF.Core;
 using Lexplosion.UI.WPF.Core.Modal;
 using Lexplosion.UI.WPF.Core.ViewModel;
-using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Modal
 {
-    public readonly struct InstanceInfo 
+    public readonly struct InstanceInfo
     {
         public InstanceInfo(string name, string version, string modloader, IEnumerable<string> addons)
         {
-            
+
         }
     }
 
-    public readonly struct InstanceErrorInfo 
+    public readonly struct InstanceErrorInfo
     {
         public readonly string Title;
         public readonly string Description;
@@ -23,7 +22,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Modal
 
         public InstanceErrorInfo(string errorTitle, string errorDescription, IEnumerable<string> addtionalInfo)
         {
-            
+
         }
     }
 
@@ -34,9 +33,9 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Modal
         public FiltableObservableCollection AdditionalInfo { get; }
 
         private string _searchText;
-        public string SearchText 
+        public string SearchText
         {
-            get => _searchText; set 
+            get => _searchText; set
             {
                 _searchText = value;
                 OnSearchTextChanged(value);
@@ -53,7 +52,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Modal
             stringBuilder.AppendLine($"Заголовок: {errorInfo.Title}");
             stringBuilder.AppendLine($"Описание: {errorInfo.Description}");
             stringBuilder.AppendLine($"Дополнительная информация:");
-            
+
             foreach (string log in errorInfo.AdditionalInfo)
             {
                 stringBuilder.AppendLine(log);
@@ -64,13 +63,13 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Modal
 
         private void OnSearchTextChanged(string value)
         {
-            AdditionalInfo.Filter = (item) => 
+            AdditionalInfo.Filter = (item) =>
             {
                 return (item as string).IndexOf(SearchText, System.StringComparison.InvariantCultureIgnoreCase) > -1;
             };
         }
 
-        public void SaveToFile() 
+        public void SaveToFile()
         {
             //var dialog = new System.Windows.Forms.SaveFileDialog()
             //{

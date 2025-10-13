@@ -1,5 +1,4 @@
 ﻿using Lexplosion.Global;
-using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Management;
 using Lexplosion.UI.WPF.Core;
 using Lexplosion.UI.WPF.Core.Objects;
@@ -27,9 +26,9 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.MainMenu
         /// <summary>
         /// Статус сетевой игры. 
         /// </summary>
-        public OnlineGameStatus GameStatus 
+        public OnlineGameStatus GameStatus
         {
-            get => _gameStatus; set 
+            get => _gameStatus; set
             {
                 _gameStatus = value;
                 OnPropertyChanged();
@@ -58,7 +57,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.MainMenu
             {
                 GlobalData.GeneralSettings.NetworkDirectConnection = value;
                 OnPropertyChanged();
-				Runtime.ServicesContainer.DataFilesService.SaveSettings(GlobalData.GeneralSettings);
+                Runtime.ServicesContainer.DataFilesService.SaveSettings(GlobalData.GeneralSettings);
             }
         }
 
@@ -88,7 +87,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.MainMenu
         /// <summary>
         /// Перезапускает сетевую игру.
         /// </summary>
-        public void Reboot() 
+        public void Reboot()
         {
             LaunchGame.RebootOnlineGame();
             _appCore.MessageService.Success("MultiplayerReloaded", true);
@@ -108,7 +107,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.MainMenu
         {
             var playerWrapper = _players.Where(p => p.Player.Nickname == player.Nickname).First();
 
-            if (playerWrapper != null) 
+            if (playerWrapper != null)
             {
                 _players.Remove(playerWrapper);
             }

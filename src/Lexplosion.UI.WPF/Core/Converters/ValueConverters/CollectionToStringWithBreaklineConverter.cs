@@ -12,7 +12,7 @@ namespace Lexplosion.UI.WPF.Core.Converters
             if (value == null)
                 return string.Empty;
 
-            if (value is IEnumerable collection) 
+            if (value is IEnumerable collection)
             {
                 if (int.TryParse(parameter as string, out int skipCount))
                 {

@@ -1,12 +1,7 @@
 ﻿using Lexplosion.UI.WPF.Commands;
 using Lexplosion.UI.WPF.Core;
 using Lexplosion.UI.WPF.Mvvm.Models.Authorization;
-using Lexplosion.UI.WPF.Mvvm.Models.Authorization.BasicAuthorization;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Authorization

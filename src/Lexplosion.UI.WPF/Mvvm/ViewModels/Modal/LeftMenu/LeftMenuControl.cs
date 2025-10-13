@@ -82,9 +82,9 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Modal
             {
                 ModalLeftMenuTabItem selected;
 
-                for (var i = 0; i < _tabItems.Count; i++) 
+                for (var i = 0; i < _tabItems.Count; i++)
                 {
-                    if (_tabItems[i].Content?.GetType() == selectedPageType) 
+                    if (_tabItems[i].Content?.GetType() == selectedPageType)
                     {
                         var selectedTmp = _tabItems[i];
                         selectedTmp.IsSelected = true;

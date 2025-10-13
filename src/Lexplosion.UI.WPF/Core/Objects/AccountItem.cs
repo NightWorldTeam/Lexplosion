@@ -3,7 +3,7 @@ using Lexplosion.UI.WPF.Core.ViewModel;
 
 namespace Lexplosion.UI.WPF.Core.Objects
 {
-    public class AccountSource 
+    public class AccountSource
     {
         public AccountType Type { get; }
         public string IconSource { get; }
@@ -26,7 +26,7 @@ namespace Lexplosion.UI.WPF.Core.Objects
     public class AccountItem : ObservableObject
     {
         public Account Account { get; set; }
-        public AccountSource Source { get; set;}
+        public AccountSource Source { get; set; }
         public bool IsNightWorldAccount { get; }
 
         public AccountItem(Account account)

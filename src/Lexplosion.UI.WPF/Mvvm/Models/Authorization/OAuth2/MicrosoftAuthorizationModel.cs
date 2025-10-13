@@ -79,7 +79,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.Authorization.OAuth2
 
         private void CommandReceiver_MicrosoftAuthPassed(string microsoftData, MicrosoftAuthRes result)
         {
-            if (_isCanceled) 
+            if (_isCanceled)
             {
                 _isCanceled = false;
                 return;
@@ -90,8 +90,8 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.Authorization.OAuth2
 
         private void LogInInternal(string microsoftData)
         {
-			var services = Runtime.ServicesContainer;
-			var account = new Account(AccountType.Microsoft, services, services.DataFilesService);
+            var services = Runtime.ServicesContainer;
+            var account = new Account(AccountType.Microsoft, services, services.DataFilesService);
 
             if (Account.LaunchAccount == null)
             {

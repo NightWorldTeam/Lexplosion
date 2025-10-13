@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Modal
 {
-    public sealed class InstancesGroupFactoryModel : ObservableObject 
+    public sealed class InstancesGroupFactoryModel : ObservableObject
     {
         public event Action<InstancesGroup> GroupCreated;
 
@@ -46,14 +46,14 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Modal
         {
             AllInstancesViewSource.Source = allInstances;
             _clientsManager = clientsManager;
-        }   
+        }
 
-        public void CreateGroup() 
+        public void CreateGroup()
         {
             var newGroup = _clientsManager.CreateGroup(Name, Summary);
 
-            foreach (var ic in SelectedInstances) 
-            {   
+            foreach (var ic in SelectedInstances)
+            {
                 newGroup.AddInstance(ic);
             }
             newGroup.SaveGroupInfo();
@@ -67,8 +67,8 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Modal
         {
             AllInstancesViewSource.Filter = (ic =>
             {
-                return string.IsNullOrEmpty(SearchText) 
-                    ? true 
+                return string.IsNullOrEmpty(SearchText)
+                    ? true
                     : (ic as InstanceClient).Name.IndexOf(SearchText, System.StringComparison.InvariantCultureIgnoreCase) > -1;
             });
         }

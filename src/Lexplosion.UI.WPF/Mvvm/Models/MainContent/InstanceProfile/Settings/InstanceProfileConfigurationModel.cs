@@ -240,7 +240,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.InstanceProfile.Settings
 
                 IsNWClientAvailable = NWClientSupportedVersions.FirstOrDefault(verStr => verStr == Version.Id) != null;
                 OnPropertyChanged(nameof(IsNWClientAvailable));
-                
+
                 if (IsNWClientAvailable)
                 {
                     IsNWClientEnabled = _instanceData.IsNwClient;

@@ -1,16 +1,10 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
 namespace Lexplosion.WPF.NewInterface.Extensions.System
 {
     public static class ObjectExtensions
     {
-        public static bool IsNumber(this object value) 
+        public static bool IsNumber(this object value)
         {
             if (value == null) return false;
 

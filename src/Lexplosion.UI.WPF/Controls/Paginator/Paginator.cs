@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 
 namespace Lexplosion.UI.WPF.Controls
@@ -50,7 +49,7 @@ namespace Lexplosion.UI.WPF.Controls
 
         public static readonly DependencyProperty CurrentPageIndexProperty
             = DependencyProperty.Register(nameof(CurrentPageIndex), typeof(uint), typeof(Paginator),
-                new FrameworkPropertyMetadata(defaultValue: (uint)0, propertyChangedCallback: OnCurrentPageIndexChanged, 
+                new FrameworkPropertyMetadata(defaultValue: (uint)0, propertyChangedCallback: OnCurrentPageIndexChanged,
                     flags: FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public static readonly DependencyProperty PageNumberStyleProperty

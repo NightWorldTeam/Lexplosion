@@ -1,5 +1,4 @@
 ﻿using Lexplosion.Logic.Management.Instances;
-using Lexplosion.UI.WPF.Core;
 using Lexplosion.UI.WPF.Mvvm.ViewModels.Modal;
 using System.Windows.Controls;
 

@@ -21,9 +21,9 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Modal.InstanceTransfer
 
 
         private RelayCommand _browseFileFromLocalCommand;
-        public ICommand BrowseFileFromLocalCommand 
+        public ICommand BrowseFileFromLocalCommand
         {
-            get => RelayCommand.GetCommand(ref _browseFileFromLocalCommand, () => 
+            get => RelayCommand.GetCommand(ref _browseFileFromLocalCommand, () =>
             {
                 Model.BrowseFiles();
             });
@@ -45,7 +45,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Modal.InstanceTransfer
         /// <summary>
         /// Запускает импорт по ссылке
         /// </summary>
-        public ICommand ImportByUrlCommand 
+        public ICommand ImportByUrlCommand
         {
             get => RelayCommand.GetCommand(ref _importByUrlCommand, Model.ImportByUrl);
         }
@@ -72,11 +72,11 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Modal.InstanceTransfer
 
         private void Action(object obj)
         {
-            using (var dialog = new OpenFileDialog()) 
+            using (var dialog = new OpenFileDialog())
             {
                 dialog.Filter = Constants.ImportFileDialogFilters;
 
-                if (dialog.ShowDialog() == DialogResult.OK) 
+                if (dialog.ShowDialog() == DialogResult.OK)
                 {
                     if (dialog.FileName.EndsWith(Constants.ImportFileExtensionZip) || dialog.FileName.EndsWith(Constants.ImportFileExtensionNWPack) || dialog.FileName.EndsWith(Constants.ImportFileExtensionMRPack))
                     {

@@ -48,13 +48,14 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
         private RelayCommand _reauthAccountCommand;
         public ICommand ReauthAccountCommand
         {
-            get => RelayCommand.GetCommand<Account>(ref _reauthAccountCommand, Model.ReauthAccount); 
+            get => RelayCommand.GetCommand<Account>(ref _reauthAccountCommand, Model.ReauthAccount);
         }
 
 
         private RelayCommand _addAccountCommand;
-        public ICommand OpenAccountFactoryCommand {
-            get => RelayCommand.GetCommand(ref _addAccountCommand, () => 
+        public ICommand OpenAccountFactoryCommand
+        {
+            get => RelayCommand.GetCommand(ref _addAccountCommand, () =>
             {
                 _appCore.ModalNavigationStore.Open(new AccountFactoryViewModel(_appCore));
             });

@@ -1,12 +1,10 @@
 ﻿using Lexplosion.Logic.Management.Accounts;
-using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects.Nightworld;
-using Lexplosion.UI.WPF.Core.Objects;
 using Lexplosion.UI.WPF.Core;
+using Lexplosion.UI.WPF.Core.Objects.Users;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using Lexplosion.UI.WPF.Core.Objects.Users;
 
 namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.MainMenu.Friends
 {

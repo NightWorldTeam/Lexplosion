@@ -1,10 +1,7 @@
-﻿using Lexplosion.UI.WPF.Core.Objects;
-using Lexplosion.UI.WPF.Core.Resources.Language;
+﻿using Lexplosion.UI.WPF.Core.Resources.Language;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Xml.Linq;
 
@@ -41,7 +38,7 @@ namespace Lexplosion.UI.WPF.Core.Resources
             LoadLanguage(xElement);
         }
 
-        void LoadLanguage(XElement xElement) 
+        void LoadLanguage(XElement xElement)
         {
             // firstNode - первый элемент
             // Содержит свойство nextNode - следующий элемент
@@ -61,7 +58,7 @@ namespace Lexplosion.UI.WPF.Core.Resources
 
                     Content.Add(new(key, value));
                 }
-                else if (element.Name.LocalName.ToLower() == "languagename") 
+                else if (element.Name.LocalName.ToLower() == "languagename")
                 {
                     var key = element.Attributes().FirstOrDefault(a => a.Name.LocalName == "targetLanguage").Value;
                     var value = element.Value;
@@ -77,7 +74,7 @@ namespace Lexplosion.UI.WPF.Core.Resources
         {
             var resourceDictionary = new ResourceDictionary();
 
-            foreach (var item in Content) 
+            foreach (var item in Content)
             {
                 resourceDictionary.Add(item.Key, item.Value);
             }

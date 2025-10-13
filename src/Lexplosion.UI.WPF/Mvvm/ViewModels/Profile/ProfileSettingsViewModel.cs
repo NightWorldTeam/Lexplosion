@@ -6,19 +6,19 @@ using System.Collections.ObjectModel;
 
 namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Profile
 {
-    public enum FriendListVisibilityOptions 
+    public enum FriendListVisibilityOptions
     {
         ForEveryone,
         ToFriends,
         ToNobody
     }
 
-    public class ProfileSettings 
+    public class ProfileSettings
     {
         public FriendListVisibilityOptions SelectedFriendListVisibilityOption { get; }
     }
 
-    public sealed class ProfileSettingsModel : ObservableObject 
+    public sealed class ProfileSettingsModel : ObservableObject
     {
         public ProfileInfo Info { get; }
 
@@ -29,7 +29,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Profile
             Info = info;
             var path = "https://night-world.org/assets/img/profileCovers/";
             Covers.Add($"https://night-world.org/assets/img/profileCovers/{0}.jpeg");
-            for (var i = 1; i < 8; i++) 
+            for (var i = 1; i < 8; i++)
             {
                 Covers.Add($"https://night-world.org/assets/img/profileCovers/{i}.jpg");
             }

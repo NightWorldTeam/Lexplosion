@@ -233,7 +233,7 @@ namespace Lexplosion.UI.WPF.ViewComponents.Users
                 BodyBorder.SetResourceReference(Border.BackgroundProperty, "FriendSolidColorBrush");
             }
 
-            if (Banner.Colors == null) 
+            if (Banner.Colors == null)
             {
                 NicknameTB.SetResourceReference(ForegroundProperty, "PrimaryForegroundSolidColorBrush");
                 StatusIndicator.SetResourceReference(BorderBrushProperty, "SeparateSolidColorBrush");
@@ -264,7 +264,8 @@ namespace Lexplosion.UI.WPF.ViewComponents.Users
                 StatusTB.Foreground = new SolidColorBrush(ColorTools.GetColor(Banner.Colors.SecondaryForeColor.Value));
             }
             else
-            {;
+            {
+                ;
                 StatusTB.SetResourceReference(ForegroundProperty, "SecondaryForegroundSolidColorBrush");
             }
         }

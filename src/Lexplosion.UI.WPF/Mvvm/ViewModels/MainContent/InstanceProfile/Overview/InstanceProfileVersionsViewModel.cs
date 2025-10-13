@@ -33,11 +33,11 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.InstanceProfile
                     if (instanceModelBase.IsInstalled || instanceModelBase.InLibrary)
                         UpdateVersionStates();
 
-                    if (InstanceModel.IsDownloading) 
+                    if (InstanceModel.IsDownloading)
                     {
                         var version = Versions.FirstOrDefault(i => i.Id == InstanceModel.ClientVersion);
 
-                        if (version != null) 
+                        if (version != null)
                         {
                             version.IsDownloading = true;
                         }
@@ -58,7 +58,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.InstanceProfile
             {
                 var version = Versions.FirstOrDefault(i => i.Id == InstanceModel.ClientVersion);
 
-                if (version != null) 
+                if (version != null)
                 {
                     version.IsDownloading = true;
                 }
@@ -75,7 +75,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.InstanceProfile
         {
             var version = Versions.FirstOrDefault(i => i.IsDownloading);
 
-            if (version != null) 
+            if (version != null)
             {
                 version.IsDownloading = false;
             }

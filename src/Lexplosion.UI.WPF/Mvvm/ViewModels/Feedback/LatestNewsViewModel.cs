@@ -20,7 +20,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels
             LatestUnseenNews = NotificationsManager.GetUnseenNews().FirstOrDefault();
         }
 
-        public void MarkAsViewed() 
+        public void MarkAsViewed()
         {
             LatestUnseenNews.MarkAsViewed();
             OnPropertyChanged(nameof(HasUnseenNews));
@@ -32,12 +32,12 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels
         public LatestNewsModel Model { get; }
 
         private RelayCommand _closeCommand;
-        public ICommand CloseCommand 
+        public ICommand CloseCommand
         {
-            get => RelayCommand.GetCommand(ref _closeCommand, () => 
+            get => RelayCommand.GetCommand(ref _closeCommand, () =>
             {
                 Model.MarkAsViewed();
-            }); 
+            });
         }
 
         public LatestNewsViewModel()

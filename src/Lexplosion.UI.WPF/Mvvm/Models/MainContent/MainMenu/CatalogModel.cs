@@ -10,7 +10,7 @@ using System.Threading;
 
 namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent
 {
-	public sealed class CatalogModel : VMBase
+    public sealed class CatalogModel : VMBase
     {
         private static readonly SimpleCategory AllCategory = new SimpleCategory()
         {
@@ -25,13 +25,13 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent
 
 
         private readonly ManualResetEvent _resetEvent = new ManualResetEvent(false);
-		private readonly ClientsManager _clientsManager = Runtime.ClientsManager;
+        private readonly ClientsManager _clientsManager = Runtime.ClientsManager;
 
 
-		#region Properties
+        #region Properties
 
 
-		public IEnumerable<InstanceModelBase> Instances { get => _instanceController.Instances; }
+        public IEnumerable<InstanceModelBase> Instances { get => _instanceController.Instances; }
 
 
         public CatalogFilterPanel FilterPanel { get; }
@@ -71,7 +71,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent
         private uint _pageCount = 100;
         public uint PageCount
         {
-            get => _pageCount; set 
+            get => _pageCount; set
             {
                 _pageCount = value;
                 OnPropertyChanged();
@@ -79,9 +79,9 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent
         }
 
         private bool _isLoading;
-        public bool IsLoading 
+        public bool IsLoading
         {
-            get => _isLoading; set 
+            get => _isLoading; set
             {
                 _isLoading = value;
                 OnPropertyChanged();
@@ -106,28 +106,28 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent
 
 
         #region Public & Properties Methods
-        
 
-        private void OnFilterChanged(bool paginatorChanged = false) 
+
+        private void OnFilterChanged(bool paginatorChanged = false)
         {
             IsLoading = true;
             _instanceController.Clear();
 
-            if (!paginatorChanged) 
+            if (!paginatorChanged)
             {
-                CurrentPageIndex = 0;            
+                CurrentPageIndex = 0;
             }
 
             Runtime.TaskRun(() =>
             {
                 _resetEvent.WaitOne();
                 var catalogResult = GetInstanceClients(
-                    SearchFilter, 
+                    SearchFilter,
                     (int)CurrentPageIndex,
-                    FilterPanel.SelectedSource.Value, 
-                    FilterPanel.SelectedCategories.Count == 0 ? new IProjectCategory[] { AllCategory } : FilterPanel.SelectedCategories, 
+                    FilterPanel.SelectedSource.Value,
+                    FilterPanel.SelectedCategories.Count == 0 ? new IProjectCategory[] { AllCategory } : FilterPanel.SelectedCategories,
                     FilterPanel.SelectedSortByParam.Value,
-                    FilterPanel.SelectedVersion, 
+                    FilterPanel.SelectedVersion,
                     false);
 
                 IsEmptyPage = catalogResult.Count == 0;
@@ -144,14 +144,14 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent
             });
         }
 
-        
+
         public void Paginate(uint scrollTo)
         {
             CurrentPageIndex = scrollTo;
             OnFilterChanged(true);
         }
 
-        public void SearchFilterChanged(string searchFilter) 
+        public void SearchFilterChanged(string searchFilter)
         {
             SearchFilter = searchFilter;
             OnFilterChanged();
@@ -175,7 +175,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent
 
             ISearchParams searchParams = null;
 
-            switch(source) 
+            switch (source)
             {
                 case InstanceSource.Modrinth:
                     searchParams = new ModrinthSearchParams(searchInput, gameVersion.Id, selectedCategories, (int)ItemsPerPage, (int)CurrentPageIndex, (ModrinthSortField)sortBy);

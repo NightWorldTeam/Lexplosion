@@ -40,7 +40,7 @@ namespace Lexplosion.UI.WPF.Core.Objects
 
         public TabItemModel()
         {
-            
+
         }
 
         public TabItemModel(string textKey, ViewModelBase content, bool isSelected = false)

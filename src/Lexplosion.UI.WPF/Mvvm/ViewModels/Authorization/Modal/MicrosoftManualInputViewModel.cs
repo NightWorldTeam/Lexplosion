@@ -21,11 +21,10 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Authorization
                 TokenEntered?.Invoke(Model.MicrosoftToken);
             };
 
-            CloseCommandExecutedEvent += (obj) => 
+            CloseCommandExecutedEvent += (obj) =>
             {
                 Closed?.Invoke();
             };
         }
     }
 }
- 

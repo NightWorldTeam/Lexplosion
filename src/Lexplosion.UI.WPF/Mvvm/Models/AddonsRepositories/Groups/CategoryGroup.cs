@@ -9,7 +9,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.AddonsRepositories.Groups
     /// </summary>
     public class CategoryGroup : AddonSearchParamsGroupBase
     {
-        public CategoryGroup(string header, IEnumerable<CategoryWrapper> categories, string iconData = null) : 
+        public CategoryGroup(string header, IEnumerable<CategoryWrapper> categories, string iconData = null) :
             base(header, categories.ToArray<object>(), iconData)
         {
         }

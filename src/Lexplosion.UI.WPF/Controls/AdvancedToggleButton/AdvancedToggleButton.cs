@@ -50,7 +50,7 @@ namespace Lexplosion.UI.WPF.Controls
 
         public static readonly DependencyProperty IconWidthProperty
             = DependencyProperty.Register(nameof(IconWidth), typeof(double), typeof(AdvancedToggleButton),
-            new FrameworkPropertyMetadata(Double.NaN, FrameworkPropertyMetadataOptions.AffectsMeasure), 
+            new FrameworkPropertyMetadata(Double.NaN, FrameworkPropertyMetadataOptions.AffectsMeasure),
             new ValidateValueCallback(IsWidthHeightValid));
 
         public static readonly DependencyProperty IconHeightProperty
@@ -74,7 +74,7 @@ namespace Lexplosion.UI.WPF.Controls
                 }
                 else
                 {
-                    if (_this._iconPath != null) 
+                    if (_this._iconPath != null)
                     {
                         _this._iconPath.SetValue(Path.FillProperty, new TemplateBindingExtension(AdvancedToggleButton.IconFillProperty));
                         _this._iconPath.Fill = _this.IconFill;
@@ -119,13 +119,13 @@ namespace Lexplosion.UI.WPF.Controls
             set => SetValue(IconWidthProperty, value);
         }
 
-        public double IconHeight 
+        public double IconHeight
         {
             get => (double)GetValue(IconHeightProperty);
             set => SetValue(IconHeightProperty, value);
         }
 
-        public Brush IconFill 
+        public Brush IconFill
         {
             get => (Brush)GetValue(IconFillProperty);
             set => SetValue(IconFillProperty, value);

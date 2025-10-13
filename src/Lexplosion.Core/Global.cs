@@ -1,6 +1,6 @@
-﻿using System;
-using Lexplosion.Logic;
+﻿using Lexplosion.Logic;
 using Lexplosion.Logic.FileSystem;
+using System;
 
 namespace Lexplosion.Global
 {

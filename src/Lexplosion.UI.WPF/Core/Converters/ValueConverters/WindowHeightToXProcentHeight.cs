@@ -1,5 +1,4 @@
-﻿using Lexplosion.UI.WPF.Mvvm.Views.Windows;
-using System;
+﻿using System;
 using System.Globalization;
 
 namespace Lexplosion.UI.WPF.Core.Converters
@@ -14,7 +13,7 @@ namespace Lexplosion.UI.WPF.Core.Converters
     {
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is double) 
+            if (value is double)
             {
                 var height = (double)value;
                 return (height / 100) * double.Parse(parameter.ToString(), CultureInfo.InvariantCulture) / GetScalingFactor();
@@ -23,7 +22,7 @@ namespace Lexplosion.UI.WPF.Core.Converters
             return 620;
         }
 
-        private double GetScalingFactor() 
+        private double GetScalingFactor()
         {
             var value = App.Current.Resources["ScalingFactorValue"];
             value ??= 1.0d;
