@@ -722,7 +722,25 @@ namespace Lexplosion.Logic.FileSystem.Installers
 			return errors;
 		}
 
-		private void LibHandle(string lib, long librariesVersion, CancellationToken cancelToken, string gameVersionName, object downloadedLibsLocker, List<string> downloadedLibs, string downloadedLibsAddr, List<string> errors, ref int updated)
+        private bool IsUrlRoot(string urlString)
+        {
+            if (string.IsNullOrWhiteSpace(urlString))
+            {
+                return false;
+            }
+
+            try
+            {
+                Uri uri = new Uri(urlString);
+                return uri.Segments.Length == 1 && uri.Segments[0] == "/";
+            }
+            catch (UriFormatException)
+            {
+                return false;
+            }
+        }
+
+        private void LibHandle(string lib, long librariesVersion, CancellationToken cancelToken, string gameVersionName, object downloadedLibsLocker, List<string> downloadedLibs, string downloadedLibsAddr, List<string> errors, ref int updated)
 		{
 			bool isNwDownload = false;
 			string addr;
@@ -741,7 +759,7 @@ namespace Lexplosion.Logic.FileSystem.Installers
 			string[] folders = lib.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
 			string libFolder = lib.Replace(folders[folders.Length - 1], "");
 
-			if (addr.Length > 5 && addr.Substring(addr.Length - 4) != ".jar" && addr.Substring(addr.Length - 4) != ".zip")
+			if (IsUrlRoot(addr))
 			{
 				addr = addr + lib;
 			}
