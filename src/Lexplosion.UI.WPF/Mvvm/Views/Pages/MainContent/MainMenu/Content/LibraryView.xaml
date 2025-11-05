@@ -72,6 +72,7 @@
         <DataTemplate DataType="{x:Type instanceModel:InstanceModelBase}">
             <oldinstanceform:OldInstanceForm
                 Margin="0,0,0,16"
+                AllowDrop="True"
                 CanBeDeleted="True"
                 LogoButtonCommand="{Binding DataContext.OpenInstanceProfileMenuCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
                 LogoButtonCommandParameter="{Binding}"
@@ -566,14 +567,16 @@
                 <core:If
                     Grid.Row="2"
                     Grid.ColumnSpan="3"
-                    Padding="41,0,0,0"
+                    Padding="0,0,0,0"
+                    Background="Transparent"
                     Condition="{Binding Model.IsEmpty}">
                     <core:If.False>
                         <ListBox
                             x:Name="InstanceList"
+                            Padding="41,0,0,0"
+                            AllowDrop="True"
                             Background="Transparent"
                             BorderThickness="0"
-                            ItemContainerStyle="{StaticResource InstanceFormListBoxItem}"
                             ItemsSource="{Binding Model.InstancesCollectionViewSource.Filtered}"
                             KeyboardNavigation.IsTabStop="False"
                             ScrollViewer.CanContentScroll="True"
@@ -591,6 +594,13 @@
                                         VirtualizingPanel.VirtualizationMode="Recycling" />
                                 </ItemsPanelTemplate>
                             </ListBox.ItemsPanel>
+                            <ListBox.ItemContainerStyle>
+                                <Style BasedOn="{StaticResource InstanceFormListBoxItem}" TargetType="{x:Type ListBoxItem}">
+                                    <EventSetter Event="MouseMove" Handler="InstancesListListBoxItem_MouseMove" />
+                                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="InstancesListListBoxItem_PreviewMouseLeftButtonDown" />
+                                    <EventSetter Event="DragOver" Handler="InstancesListListBoxItem_DragOver" />
+                                </Style>
+                            </ListBox.ItemContainerStyle>
                         </ListBox>
                     </core:If.False>
                     <core:If.True>
@@ -879,5 +889,14 @@
                 </Grid>
             </Border>
         </controls:DragDropBoard>
+
+        <Canvas
+            x:Name="dragCanvas"
+            Background="Transparent"
+            IsHitTestVisible="False"
+            Visibility="Collapsed">
+            <ContentControl x:Name="dragDropContentControl" />
+        </Canvas>
+
     </Grid>
 </UserControl>

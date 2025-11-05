@@ -23,6 +23,8 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.Mvvm.InstanceModel
         private readonly Action<InstanceModelBase> _setRunningGame;
         private InstancesGroup _instancesGroup;
 
+        public bool IsMoving;
+
         private readonly AppCore _appCore;
 
         private Action _openAddonPage;

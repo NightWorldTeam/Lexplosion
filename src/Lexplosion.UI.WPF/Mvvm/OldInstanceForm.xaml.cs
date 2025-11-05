@@ -83,6 +83,17 @@ namespace Lexplosion.UI.WPF.Controls.OldInstanceForm
         private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             _model = (InstanceModelBase)DataContext;
+
+            if (_model == null) 
+            {
+                return; 
+            }
+
+            if (_model.IsMoving) 
+            {
+                SelectBorder();
+            }
+
             _model.DeletedEvent += OnInstanceDeleted;
             InstanceModel_ModloaderChanged();
             SetVisitButtonIconAndText();
@@ -332,6 +343,41 @@ namespace Lexplosion.UI.WPF.Controls.OldInstanceForm
                 _model.OpenCoping();
                 PART_DropDownMenu.IsOpen = false;
             }
+        }
+
+        private void Grid_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            SelectBorder();
+        }
+
+
+
+        void SelectBorder() 
+        {
+            MainBorder.SetResourceReference(Border.BorderBrushProperty, "ActivitySolidColorBrush");
+            MainBorder.BorderThickness = new Thickness(2);
+            _model.IsMoving = true;
+        }
+
+        void UnselectBorder() 
+        {
+            MainBorder.BorderThickness = new Thickness(0);
+            _model.IsMoving = false;
+        }
+
+        private void Grid_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            UnselectBorder();
+        }
+
+        private void Grid_DragOver(object sender, DragEventArgs e)
+        {
+
+        }
+
+        private void Grid_Drop(object sender, DragEventArgs e)
+        {
+            UnselectBorder();
         }
     }
 }

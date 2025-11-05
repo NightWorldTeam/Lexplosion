@@ -38,6 +38,12 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.InstanceControllers
         /// <param name="instancesGroup">Удаляемая группа</param>
         public void RemoveGroup(InstancesGroup instancesGroup);
         /// <summary>
+        /// Перемещает сборку в коллекции на место другой сборки
+        /// </summary>
+        /// <param name="inserted">Что перемещаем</param>
+        /// <param name="target">Заместо кого перемещаем</param>
+        public void Insert(InstanceModelBase inserted, InstanceModelBase target);
+        /// <summary>
         /// Возвращает InstanceModelBase по InstanceClient;
         /// </summary>
         /// <param name="instanceClient">Instance Client</param>

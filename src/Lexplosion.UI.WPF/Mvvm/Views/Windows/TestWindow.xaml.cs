@@ -1,121 +1,170 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media.Animation;
+using System.Windows.Shapes;
 using static Lexplosion.Logic.Objects.Curseforge.CurseforgeProjectInfo;
 
 namespace Lexplosion.UI.WPF.Mvvm.Views.Windows
 {
+    public class ObjModel
+    {
+        public string Name { get; set; }
+    }
+
     /// <summary>
     /// Логика взаимодействия для TestWindow.xaml
     /// </summary>
     public partial class TestWindow : Window
     {
+        private Rectangle dragVisual;
+
+        private bool isDragging;
+        private ObjModel draggedModel;
+        private object draggedItem;
+
+        private readonly ObservableCollection<ObjModel> list = new ObservableCollection<ObjModel>();
+
         public TestWindow()
         {
             InitializeComponent();
 
-            //hex.TextChanged += Hex_TextChanged;
-            //var newColor = Color.FromRgb(19, 242, 135);
-            //Console.WriteLine(ColorTools.GetDarkerColor(newColor, 10));
-            //Console.WriteLine(ColorTools.GetDarkerColor(newColor, 20));
-            //Console.WriteLine(ColorTools.GetDarkerColor(newColor, 70));
-
-            //var list = new List<ConsoleLog>();
-
-
-            //for (var i = 0; i < 10000; i++) 
-            //{
-            //    list.Add(new ConsoleLog(RandomString(random.Next(60, 700))));
-            //}
-
-            //LogsContainer.ItemsSource = list;
+            for (var i = 0; i < 1000; i++) 
+            {
+                list.Add(new() { Name = $"Obj {i}" });
+            }
+            CurrentListBox.ItemsSource = list;
         }
 
-        private static Random random = new Random();
-
-        public static string RandomString(int length)
+        private void Moving(DependencyObject element)
         {
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            return new string(Enumerable.Repeat(chars, length)
-                .Select(s => s[random.Next(s.Length)]).ToArray());
+            object dataContext = draggedModel;
+
+            DragDropEffects dragDropResult = DragDrop.DoDragDrop(element, new DataObject(DataFormats.Serializable, dataContext), DragDropEffects.Move);
+
+            if (dragDropResult == DragDropEffects.None)
+            {
+
+            }
         }
 
-        private void Hex_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        private void Insert(ObjModel insertedTodoItem, ObjModel targetTodoItem)
         {
-            //try
-            //{
-                //var newColor = (Color)ColorConverter.ConvertFromString(hex.Text);
-            //    object latestColor = Color.FromRgb(22, 127, 252); // App.Current.Resources["ActivityColor"] ?? ;
-            //    var updatedColor = (Color)ColorConverter.ConvertFromString(hex.Text);
-            //    var intervalColors = Gradient.GenerateGradient((Color)latestColor, updatedColor, 50); //ColorTools.GetIntervalColor((Color)latestColor, (Color)ColorConverter.ConvertFromString(hex.Text), 50);
+            if (insertedTodoItem == targetTodoItem)
+            {
+                return;
+            }
 
-            //    Runtime.TaskRun(() =>
-            //    { 
-            //        var i = 0;
-            //        foreach (var newColor in intervalColors) 
-            //        {
-            //            Console.ForegroundColor = ConsoleColor.Green;
-            //            Console.WriteLine($"{i}. {newColor.ToString()}");
-            //            App.Current.Dispatcher.Invoke(() => { 
-            //                App.Current.Resources["DefaultButtonBackgroundColor"] = newColor;
-            //                App.Current.Resources["DefaultButtonBackgroundColorBrush"] = new SolidColorBrush(newColor);
-            //            });
-            //            App.Current.Resources["HoverAccentColor1"] = ColorTools.GetDarkerColor(newColor, 10);
-            //            App.Current.Resources["HoverAccentColor"] = new SolidColorBrush((Color)App.Current.Resources["HoverAccentColor1"]);
-            //            App.Current.Resources["PressedAccentColor1"] = ColorTools.GetDarkerColor(newColor, 20);
-            //            App.Current.Resources["PressedAccentColor"] = new SolidColorBrush((Color)App.Current.Resources["PressedAccentColor1"]);
-            //            App.Current.Resources["DisableAccentColor1"] = ColorTools.GetDarkerColor(newColor, 70);
-            //            App.Current.Resources["DisableAccentColor"] = new SolidColorBrush((Color)App.Current.Resources["DisableAccentColor1"]);
+            int oldIndex = list.IndexOf(insertedTodoItem);
+            int nextIndex = list.IndexOf(targetTodoItem);
 
-            //            App.Current.Resources["ForegroundAccentColor1"] = ColorTools.ForegroundByColor(newColor);
-            //            App.Current.Resources["ForegroundAccentColor"] = new SolidColorBrush((Color)App.Current.Resources["ForegroundAccentColor1"]);
-            //            Thread.Sleep(10);
-            //            i++;
-            //        }
-            //        Thread.Sleep(10);
-            //        App.Current.Dispatcher.Invoke(() => {
-            //            App.Current.Resources["DefaultButtonBackgroundColor"] = updatedColor;
-            //            App.Current.Resources["DefaultButtonBackgroundColorBrush"] = new SolidColorBrush(updatedColor);
-            //        });
-            //    });
-            //    Console.ForegroundColor = ConsoleColor.White;
-            //    Console.WriteLine(App.Current.Resources["AccentColor1"]);
-            //}
-            //catch (Exception ea) 
-            //{
-            //    Console.ForegroundColor = ConsoleColor.Red;
-            //    Console.WriteLine(ea);
-            //    Console.ForegroundColor = ConsoleColor.White;
-            //}
-
-            // #13f287
-            // #167FFC
+            if (oldIndex != -1 && nextIndex != -1)
+            {
+                list.Move(oldIndex, nextIndex);
+            }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void ListViewItem_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (draggedModel == null)
+            {
+                return;
+            }
+
+            if (e.LeftButton != System.Windows.Input.MouseButtonState.Pressed)
+            {
+                return;
+            }
+
+            if (sender is DependencyObject dpObj)
+            {
+                Moving(dpObj);
+            }
+        }
+
+        private void ListViewItem_DragOver(object sender, DragEventArgs e)
+        {
+            if (sender is FrameworkElement element)
+            {
+                var targetTodoItem = (ObjModel)element.DataContext;
+                var insertedTodoItem = (ObjModel)e.Data.GetData(DataFormats.Serializable);
+
+                Insert(insertedTodoItem, targetTodoItem);
+            }
+        }
+
+        private void ListViewItem_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (sender is FrameworkElement element && element.DataContext is ObjModel model)
+            {
+                draggedModel = model;
+            }
+        }
+
+        private void Grid_DragOver(object sender, DragEventArgs e)
         {
 
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void Grid_DragLeave(object sender, DragEventArgs e)
         {
-
-        }
-
-        private void Grid_Loaded(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void Da_Completed(object sender, EventArgs e)
-        {
-
-        }
-
-        private void SubtitleLoaded(object sender, EventArgs e)
-        {
-
+            (sender as Grid).DataContext = draggedModel;
         }
     }
 }
+
+
+//private void Hex_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+//{
+//try
+//{
+//var newColor = (Color)ColorConverter.ConvertFromString(hex.Text);
+//    object latestColor = Color.FromRgb(22, 127, 252); // App.Current.Resources["ActivityColor"] ?? ;
+//    var updatedColor = (Color)ColorConverter.ConvertFromString(hex.Text);
+//    var intervalColors = Gradient.GenerateGradient((Color)latestColor, updatedColor, 50); //ColorTools.GetIntervalColor((Color)latestColor, (Color)ColorConverter.ConvertFromString(hex.Text), 50);
+
+//    Runtime.TaskRun(() =>
+//    { 
+//        var i = 0;
+//        foreach (var newColor in intervalColors) 
+//        {
+//            Console.ForegroundColor = ConsoleColor.Green;
+//            Console.WriteLine($"{i}. {newColor.ToString()}");
+//            App.Current.Dispatcher.Invoke(() => { 
+//                App.Current.Resources["DefaultButtonBackgroundColor"] = newColor;
+//                App.Current.Resources["DefaultButtonBackgroundColorBrush"] = new SolidColorBrush(newColor);
+//            });
+//            App.Current.Resources["HoverAccentColor1"] = ColorTools.GetDarkerColor(newColor, 10);
+//            App.Current.Resources["HoverAccentColor"] = new SolidColorBrush((Color)App.Current.Resources["HoverAccentColor1"]);
+//            App.Current.Resources["PressedAccentColor1"] = ColorTools.GetDarkerColor(newColor, 20);
+//            App.Current.Resources["PressedAccentColor"] = new SolidColorBrush((Color)App.Current.Resources["PressedAccentColor1"]);
+//            App.Current.Resources["DisableAccentColor1"] = ColorTools.GetDarkerColor(newColor, 70);
+//            App.Current.Resources["DisableAccentColor"] = new SolidColorBrush((Color)App.Current.Resources["DisableAccentColor1"]);
+
+//            App.Current.Resources["ForegroundAccentColor1"] = ColorTools.ForegroundByColor(newColor);
+//            App.Current.Resources["ForegroundAccentColor"] = new SolidColorBrush((Color)App.Current.Resources["ForegroundAccentColor1"]);
+//            Thread.Sleep(10);
+//            i++;
+//        }
+//        Thread.Sleep(10);
+//        App.Current.Dispatcher.Invoke(() => {
+//            App.Current.Resources["DefaultButtonBackgroundColor"] = updatedColor;
+//            App.Current.Resources["DefaultButtonBackgroundColorBrush"] = new SolidColorBrush(updatedColor);
+//        });
+//    });
+//    Console.ForegroundColor = ConsoleColor.White;
+//    Console.WriteLine(App.Current.Resources["AccentColor1"]);
+//}
+//catch (Exception ea) 
+//{
+//    Console.ForegroundColor = ConsoleColor.Red;
+//    Console.WriteLine(ea);
+//    Console.ForegroundColor = ConsoleColor.White;
+//}
+
+// #13f287
+// #167FFC
+//}
+

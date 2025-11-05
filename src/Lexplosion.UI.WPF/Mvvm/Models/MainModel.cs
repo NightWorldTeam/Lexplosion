@@ -62,7 +62,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models
         #region Public Methods
 
 
-        public void SetToAuthorization(Action toAuthorization) 
+        public void SetToAuthorization(Action toAuthorization)
         {
             _toAuthorization = toAuthorization;
         }
@@ -113,7 +113,11 @@ namespace Lexplosion.UI.WPF.Mvvm.Models
 
             importProcess.ImportCancelled += (process) =>
             {
-                _activeImports.Remove(process);
+                // TODO: Stackoverflow при отмене файла не сборки
+                if (_activeImports.Contains(process))
+                {
+                    _activeImports.Remove(process);
+                }
                 onCancelled?.Invoke(process);
                 _appCore.MessageService.Info("ImportCancelledNotification", true);
             };

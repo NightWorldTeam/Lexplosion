@@ -72,8 +72,9 @@
         </ControlTemplate>
     </UserControl.Resources>
 
-    <Grid>
+    <Grid DragDrop.Drop="Grid_Drop" PreviewMouseLeftButtonUp="Grid_PreviewMouseLeftButtonUp" PreviewMouseLeftButtonDown="Grid_PreviewMouseLeftButtonDown">
         <Border
+            x:Name="MainBorder"
             Width="597"
             Height="120"
             MaxWidth="597"

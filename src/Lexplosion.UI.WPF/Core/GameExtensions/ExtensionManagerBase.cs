@@ -102,9 +102,7 @@ namespace Lexplosion.UI.WPF.Core.GameExtensions
         /// <returns>MinecraftExtension</returns>
         public static MinecraftExtension LoadExtensionVersions(GameExtension extension, MinecraftVersion minecraftVersion)
         {
-            Runtime.DebugWrite("1", color: ConsoleColor.Blue);
             _loadExtensionVersionsSync.WaitOne(extension);
-            Runtime.DebugWrite("2", color: ConsoleColor.Red);
 
             try
             {

@@ -15,5 +15,29 @@
     MaxWidth="944"
     MaxHeight="528"
     mc:Ignorable="d">
-    <Grid Background="white" Loaded="Grid_Loaded" />
+    <Grid
+        AllowDrop="True"
+        Background="white"
+        DragLeave="Grid_DragLeave"
+        DragOver="ListViewItem_DragOver">
+        <ListBox
+            x:Name="CurrentListBox"
+            Margin="32,16"
+            AllowDrop="True">
+            <ListBox.ItemTemplate>
+                <DataTemplate DataType="{x:Type local:ObjModel}">
+                    <Border Padding="16,8" Background="Transparent">
+                        <TextBlock Text="{Binding Name}" />
+                    </Border>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="{x:Type ListBoxItem}">
+                    <EventSetter Event="MouseMove" Handler="ListViewItem_MouseMove" />
+                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="ListViewItem_MouseLeftButtonDown" />
+                    <EventSetter Event="DragOver" Handler="ListViewItem_DragOver" />
+                </Style>
+            </ListBox.ItemContainerStyle>
+        </ListBox>
+    </Grid>
 </Window>

@@ -1,6 +1,4 @@
-﻿using Lexplosion.Logic.Management;
-using Lexplosion.Logic.Management.Addons;
-using Lexplosion.Logic.Management.Instances;
+﻿using Lexplosion.Logic.Management.Instances;
 using Lexplosion.UI.WPF.Core;
 using Lexplosion.UI.WPF.Mvvm.Models.InstanceControllers;
 using Lexplosion.UI.WPF.Mvvm.Models.InstanceTransfer;
@@ -8,10 +6,8 @@ using Lexplosion.UI.WPF.Mvvm.Models.MainContent.MainMenu;
 using Lexplosion.UI.WPF.Mvvm.Models.Mvvm.InstanceModel;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
-using System.Windows.Input;
 
 namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent
 {
@@ -26,7 +22,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent
 
 
         internal ILibraryInstanceController InstanceController { get; }
-        public IEnumerable<string> AvailableImportFileExtensions { get; } = ["zip", "nwpk", "mrpack"];
+        public IEnumerable<string> AvailableImportFileExtensions { get; } = [".zip", ".nwpk", ".mrpack"];
         public Action<IEnumerable<string>> ImportAction { get; }
 
         public FiltableObservableCollection InstancesCollectionViewSource { get; } = new();
@@ -209,6 +205,13 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent
             }
             _instanceController.RemoveGroup(instancesGroup);
         }
+
+
+        public void Insert(InstanceModelBase inserted, InstanceModelBase target) 
+        {
+            _instanceController.Insert(inserted, target);
+        }
+
 
         #endregion Public Methods
 

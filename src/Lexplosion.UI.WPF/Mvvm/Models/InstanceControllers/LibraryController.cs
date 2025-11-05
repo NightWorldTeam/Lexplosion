@@ -10,6 +10,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using System.Windows.Documents;
 
 namespace Lexplosion.UI.WPF.Mvvm.Models.InstanceControllers
 {
@@ -244,6 +245,22 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.InstanceControllers
         {
             _groups.Remove(instancesGroup);
             _clientsManager.DeleteGroup(instancesGroup);
+        }
+
+        public void Insert(InstanceModelBase inserted, InstanceModelBase target)
+        {
+            if (inserted == target)
+            {
+                return;
+            }
+
+            int oldIndex = _instances.IndexOf(inserted);
+            int nextIndex = _instances.IndexOf(target);
+
+            if (oldIndex != -1 && nextIndex != -1)
+            {
+                _instances.Move(oldIndex, nextIndex);
+            }
         }
 
 
