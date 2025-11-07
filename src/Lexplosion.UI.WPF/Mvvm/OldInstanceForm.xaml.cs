@@ -80,6 +80,12 @@ namespace Lexplosion.UI.WPF.Controls.OldInstanceForm
             DataContextChanged += OnDataContextChanged;
         }
 
+        //protected override void OnLostFocus(RoutedEventArgs e)
+        //{
+        //    UnselectBorder();
+        //    base.OnLostFocus(e);
+        //}
+
         private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             _model = (InstanceModelBase)DataContext;
@@ -347,7 +353,10 @@ namespace Lexplosion.UI.WPF.Controls.OldInstanceForm
 
         private void Grid_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            SelectBorder();
+            if (e.LeftButton == MouseButtonState.Pressed) 
+            {
+                SelectBorder();
+            }
         }
 
 

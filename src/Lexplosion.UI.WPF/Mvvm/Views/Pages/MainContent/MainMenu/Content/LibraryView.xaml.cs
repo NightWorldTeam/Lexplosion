@@ -3,6 +3,7 @@ using Lexplosion.UI.WPF.Mvvm.Models.Mvvm.InstanceModel;
 using Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu;
 using System;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -255,16 +256,23 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.MainMenu
                 var screenPos = this.TranslatePoint(mousePos, InstanceList);
 
                 // Проверяем, находится ли курсор в зоне прокрутки
-                if (mousePos.Y < InstanceList.ActualHeight - 100)
+
+                var container = InstanceList;
+                double tolerance = 60;
+                double verticalPos = e.GetPosition(container).Y;
+                double offset = App.Current.MainWindow.ActualHeight * 0.03787;
+
+                if (verticalPos < tolerance) // Top of visible list? 
                 {
-                    // Прокрутка вверх
-                    ScrollListBox(-scrollStep);
+                    //Scroll up
+                    ScrollListBox(-offset);
                 }
-                else if (mousePos.Y > InstanceList.ActualHeight - scrollZoneHeight)
+                else if (verticalPos > container.ActualHeight - tolerance)
                 {
-                    // Прокрутка вниз
-                    ScrollListBox(scrollStep);
+                    //Scroll down
+                    ScrollListBox(offset);
                 }
+
 
                 Insert(inserted, target);
             }
