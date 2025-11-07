@@ -748,21 +748,21 @@ namespace Lexplosion.Logic.FileSystem.Installers
 
 			if (libInfo.url == null)
 			{
-				addr = LaunсherSettings.URL.Upload + "libraries/";
+				addr = LaunсherSettings.URL.Upload + "libraries/" + lib;
 				isNwDownload = true;
 			}
 			else
 			{
 				addr = libInfo.url;
-			}
+
+                if (IsUrlRoot(addr))
+                {
+                    addr = addr + lib;
+                }
+            }
 
 			string[] folders = lib.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
 			string libFolder = lib.Replace(folders[folders.Length - 1], "");
-
-			if (IsUrlRoot(addr))
-			{
-				addr = addr + lib;
-			}
 
 			bool isDownload;
 			string name = folders[folders.Length - 1];
