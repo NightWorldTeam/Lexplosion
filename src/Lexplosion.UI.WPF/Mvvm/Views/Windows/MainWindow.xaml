@@ -40,6 +40,13 @@
             UseAeroCaptionButtons="False" />
     </WindowChrome.WindowChrome>
 
+    <Window.InputBindings>
+        <KeyBinding
+            Key="P"
+            Command="{Binding ViewProfileCommand}"
+            Modifiers="Ctrl" />
+    </Window.InputBindings>
+
     <Window.Resources>
         <DataTemplate DataType="{x:Type objects:InstanceNotification}">
             <Border

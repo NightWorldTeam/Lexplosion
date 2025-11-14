@@ -62,10 +62,26 @@
             BorderBrush="{DynamicResource SeparateSolidColorBrush}"
             BorderThickness="1"
             CornerRadius="5">
-            <ItemsControl
-                Margin="0,8,0,0"
-                HorizontalAlignment="Stretch"
-                ItemsSource="{Binding Tabs}" />
+            <Grid>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <ItemsControl
+                    Margin="0,8,0,0"
+                    HorizontalAlignment="Stretch"
+                    ItemsSource="{Binding Tabs}" />
+
+                <controls:AdvancedButton
+                    Grid.Row="1"
+                    Margin="0,0,0,8"
+                    Command="{Binding ToMainMenuCommand}"
+                    IconData="M360-240 120-480l240-240 56 56-144 144h488v-160h80v240H272l144 144-56 56Z"
+                    IsCancel="True"
+                    Style="{StaticResource sm-icon-button}" />
+            </Grid>
         </Border>
 
         <controls:AnimatedContentControl

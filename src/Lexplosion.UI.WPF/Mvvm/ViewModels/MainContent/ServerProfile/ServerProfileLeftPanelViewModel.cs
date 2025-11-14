@@ -20,7 +20,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.ServerProfile
         { }
     }
 
-    public sealed class ServerProfileLeftPanelViewModel : LeftPanelViewModel
+    public sealed class ServerProfileLeftPanelViewModel : LeftPanelViewModelBase
     {
         private readonly AppCore _appCore;
 

@@ -1,0 +1,57 @@
+﻿using Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu;
+using Lexplosion.UI.WPF.Tools;
+using System;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Input;
+using System.Windows.Media;
+
+namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.MainMenu.LeftPanel.Components
+{
+    /// <summary>
+    /// Interaction logic for MainMenuLeftPanelHeaderView.xaml
+    /// </summary>
+    public partial class MainMenuLeftPanelHeaderView : UserControl
+    {
+        public MainMenuLeftPanelHeaderView()
+        {
+            InitializeComponent();
+            DataContextChanged += OnDataContextChanged;
+        }
+
+        private void OnDataContextChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
+        {
+            if (DataContext != null)
+            {
+                UpdateBannerProperties((LeftPanelViewModel)DataContext);
+            }
+        }
+
+        private void UpdateBannerProperties(LeftPanelViewModel leftPanelViewModel)
+        {
+            var profileBanner = leftPanelViewModel.ProfileBanner;
+
+            if (profileBanner == null || profileBanner.Colors == null)
+            {
+                UserNickname.SetResourceReference(ForegroundProperty, "PrimaryForegroundSolidColorBrush");
+                GladToSeeYouText.SetResourceReference(ForegroundProperty, "SecondaryForegroundSolidColorBrush");
+                return;
+            }
+
+            if (profileBanner.Colors.PrimaryForeColor != null && profileBanner.Colors.PrimaryForeColor > 0x01000000)
+            {
+                UserNickname.Foreground = (SolidColorBrush)new SolidColorBrush(ColorTools.GetColor(profileBanner.Colors.PrimaryForeColor.Value));
+            }
+
+            if (profileBanner.Colors.SecondaryForeColor != null && profileBanner.Colors.PrimaryForeColor > 0x01000000)
+            {
+                GladToSeeYouText.Foreground = (SolidColorBrush)new SolidColorBrush(ColorTools.GetColor(profileBanner.Colors.SecondaryForeColor.Value));
+            }
+        }
+
+        private void Toggle_Checked(object sender, System.Windows.RoutedEventArgs e)
+        {
+            Console.WriteLine(Toggle.IsChecked);
+        }
+    }
+}

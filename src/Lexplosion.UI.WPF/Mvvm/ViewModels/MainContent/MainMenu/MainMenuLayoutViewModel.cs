@@ -5,6 +5,7 @@ using Lexplosion.UI.WPF.Mvvm.Models;
 using Lexplosion.UI.WPF.Mvvm.Models.Mvvm.InstanceModel;
 using Lexplosion.UI.WPF.Mvvm.ViewModels.Args;
 using Lexplosion.UI.WPF.Mvvm.ViewModels.Limited;
+using Lexplosion.UI.WPF.Mvvm.ViewModels.Profile;
 using System;
 
 namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
@@ -48,13 +49,13 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
 
         public MainMenuLayoutViewModel(AppCore appCore, MainModel mainModel, ClientsManager clientsManager)
         {
-            var ToMainMenuLayoutCommand = new NavigateCommand<ViewModelBase>(appCore.NavigationStore, () => this);
+            var toMainMenuLayoutCommand = new NavigateCommand<ViewModelBase>(appCore.NavigationStore, () => this);
 
             // Catalog Section
-            _catalogViewModel = new CatalogViewModel(appCore, ToMainMenuLayoutCommand, mainModel.CatalogController);
+            _catalogViewModel = new CatalogViewModel(appCore, toMainMenuLayoutCommand, mainModel.CatalogController);
 
             // Library Section
-            _libraryViewModel = new LibraryViewModel(appCore, mainModel.StartImport, clientsManager, ToMainMenuLayoutCommand, mainModel.LibraryController, OpenCatalog);
+            _libraryViewModel = new LibraryViewModel(appCore, mainModel.StartImport, clientsManager, toMainMenuLayoutCommand, mainModel.LibraryController, OpenCatalog);
             var toLibraryCommand = new NavigateCommand<ViewModelBase>(appCore.NavigationStore, () => _libraryViewModel);
 
             // Multiplayer Section
@@ -66,7 +67,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
                 return instanceModel;
             });
             var multiplayerLayoutArgs = new MultiplayerLayoutArgs(OpenAccountFactory, selectInstanceForServerArgs);
-            _multiplayerLayoutViewModel = new NightWorldLimitedContentLayoutViewModel(new MultiplayerLayoutViewModel(appCore, ToMainMenuLayoutCommand, multiplayerLayoutArgs), OpenAccountFactory);
+            _multiplayerLayoutViewModel = new NightWorldLimitedContentLayoutViewModel(new MultiplayerLayoutViewModel(appCore, toMainMenuLayoutCommand, multiplayerLayoutArgs), OpenAccountFactory);
 
             // Friends Section
             _friendsLayoutViewModel = new NightWorldLimitedContentLayoutViewModel(new FriendsLayoutViewModel(appCore), OpenAccountFactory);
@@ -76,7 +77,9 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
 
             Content = _catalogViewModel;
 
-            LeftPanel = new LeftPanelViewModel();
+            var toProfileCommand = new NavigateCommand<ViewModelBase>(appCore.NavigationStore, () => new ProfileLayoutViewModel(appCore, toMainMenuLayoutCommand));
+            
+            LeftPanel = new LeftPanelViewModel(toProfileCommand);
             LeftPanel.SelectedItemChanged += OnLeftPanelSelectedItemChanged;
 
             ToInstanceProfile = (instanceModel) => (_libraryViewModel as LibraryViewModel).OpenInstanceProfileMenuCommand.Execute(instanceModel);

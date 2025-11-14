@@ -111,6 +111,9 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels
         #endregion Commands
 
 
+        public ICommand ViewProfileCommand { get; }
+
+
         #region Constructors
 
 
@@ -151,8 +154,17 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels
                     Model.InstanceSharesController,
                     _mainMenuLayoutViewModel.OpenAccountFactory));
 
-            //ToMainMenu = new NavigateCommand<ViewModelBase>(NavigationStore, () => _mainMenuLayoutViewModel);
-            ToMainMenu = new NavigateCommand<ViewModelBase>(NavigationStore, () => new ProfileLayoutViewModel(appCore));
+            ToMainMenu = new NavigateCommand<ViewModelBase>(NavigationStore, () => _mainMenuLayoutViewModel);
+
+            // For keybinding
+            ViewProfileCommand = new NavigateCommand<ViewModelBase>(NavigationStore, () =>
+            {
+                var currentViewModel = NavigationStore.CurrentViewModel;
+                return new ProfileLayoutViewModel(
+                    appCore,
+                    new NavigateCommand<ViewModelBase>(NavigationStore, () => currentViewModel)
+                    );
+            });
 
             InitTrayComponents();
             RuntimeApp.TrayMenuElementClicked += InitTrayComponents;

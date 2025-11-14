@@ -203,6 +203,7 @@
     <Compile Include="Mvvm\ViewModels\MainContent\InstanceProfile\Overview\InstanceProfileOverviewGalleryViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\MainContent\InstanceProfile\Overview\InstanceProfileOverviewLayoutViewModel.cs" />
     <Compile Include="Mvvm\Models\MainContent\MainMenu\Multiplayer\AdServersModel.cs" />
+    <Compile Include="Mvvm\ViewModels\MainContent\LeftPanelViewModelBase.cs" />
     <Compile Include="Mvvm\ViewModels\MainContent\MainMenu\Content\Multiplayer\AdServersViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\MainContent\ServerProfile\Overview\ServerProfileOverviewGalleryViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\MainContent\ServerProfile\ServerProfileLayoutViewModel.cs" />
@@ -238,6 +239,12 @@
     <Compile Include="Mvvm\ViewModels\Profile\ProfileViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\WelcomePageThemeSelectViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\WelcomeViewModel.cs" />
+    <Compile Include="Mvvm\Views\Pages\MainContent\MainMenu\LeftPanel\Components\AccountSidebarMenuView.xaml.cs">
+      <DependentUpon>AccountSidebarMenuView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Views\Pages\MainContent\MainMenu\LeftPanel\Components\SidebarHeaderView.xaml.cs">
+      <DependentUpon>SidebarHeaderView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Mvvm\Views\Pages\Profile\ProfileCosmeticsView.xaml.cs">
       <DependentUpon>ProfileCosmeticsView.xaml</DependentUpon>
     </Compile>
@@ -745,6 +752,14 @@
     <Page Include="Mvvm\OldInstanceForm.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Mvvm\Views\Pages\MainContent\MainMenu\LeftPanel\Components\AccountSidebarMenuView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Mvvm\Views\Pages\MainContent\MainMenu\LeftPanel\Components\SidebarHeaderView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Mvvm\Views\Pages\Profile\ProfileCosmeticsView.xaml">
       <SubType>Designer</SubType>

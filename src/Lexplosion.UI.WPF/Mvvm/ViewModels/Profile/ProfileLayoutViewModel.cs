@@ -4,6 +4,7 @@ using Lexplosion.UI.WPF.Mvvm.Models.Profile;
 using Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows.Input;
 
 namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Profile
 {
@@ -15,8 +16,12 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Profile
 
         public ViewModelBase Content { get; set; }
 
-        public ProfileLayoutViewModel(AppCore appCore)
+        public ICommand ToMainMenuCommand { get; }
+
+        public ProfileLayoutViewModel(AppCore appCore, ICommand toMainMenu)
         {
+            ToMainMenuCommand = toMainMenu;
+            ToMainMenuCommand.Execute(null);
             // Load data here?
             _profileInfo = new(
                 "_Hel2x_",

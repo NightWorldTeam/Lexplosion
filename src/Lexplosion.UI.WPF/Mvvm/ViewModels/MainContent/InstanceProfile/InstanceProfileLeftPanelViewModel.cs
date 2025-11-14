@@ -29,7 +29,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.InstanceProfile
         { }
     }
 
-    public class InstanceProfileLeftPanelViewModel : LeftPanelViewModel
+    public class InstanceProfileLeftPanelViewModel : LeftPanelViewModelBase
     {
         private readonly AppCore _appCore;
 
