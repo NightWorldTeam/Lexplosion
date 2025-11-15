@@ -84,9 +84,25 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
             });
         }
 
-        public ICommand ViewProfileCommand
+        public ICommand ViewProfileCommand { get; }
+
+        private RelayCommand _selectAccountCommand;
+        public ICommand SelectAccountCommand 
         {
-            get;
+            get => RelayCommand.GetCommand<Account>(ref _selectAccountCommand, (acc) =>
+            {
+                if (acc.AccountType == AccountType.NightWorld)
+                {
+                    acc.IsActive = true;
+                    acc.IsLaunch = true;
+                }
+                else 
+                {
+                    acc.IsLaunch = true; ;
+                }
+
+                Account.SaveAll();
+            });
         }
 
         #endregion Commands

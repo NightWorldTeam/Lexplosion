@@ -2,8 +2,6 @@
 using Lexplosion.UI.WPF.Tools;
 using System;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Input;
 using System.Windows.Media;
 
 namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.MainMenu.LeftPanel.Components
@@ -11,9 +9,9 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.MainMenu.LeftPanel.Comp
     /// <summary>
     /// Interaction logic for MainMenuLeftPanelHeaderView.xaml
     /// </summary>
-    public partial class MainMenuLeftPanelHeaderView : UserControl
+    public partial class SidebarHeaderView : UserControl
     {
-        public MainMenuLeftPanelHeaderView()
+        public SidebarHeaderView()
         {
             InitializeComponent();
             DataContextChanged += OnDataContextChanged;

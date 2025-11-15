@@ -111,7 +111,7 @@
                 </Grid.RowDefinitions>
 
                 <!--  Header  -->
-                <components:MainMenuLeftPanelHeaderView />
+                <components:SidebarHeaderView DataContext="{Binding}" />
 
                 <!--  Tabs  -->
                 <ItemsControl
