@@ -6,7 +6,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Threading;
 
-namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.MainMenu.Friends
+namespace Lexplosion.UI.WPF.Mvvm.Models.Profile.Friends
 {
     public sealed class FindFriendsModel : ViewModelBase
     {

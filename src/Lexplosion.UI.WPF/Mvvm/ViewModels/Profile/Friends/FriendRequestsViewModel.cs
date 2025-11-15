@@ -1,10 +1,10 @@
 ﻿using Lexplosion.UI.WPF.Commands;
 using Lexplosion.UI.WPF.Core;
 using Lexplosion.UI.WPF.Core.Objects.Users;
-using Lexplosion.UI.WPF.Mvvm.Models.MainContent.MainMenu.Friends;
+using Lexplosion.UI.WPF.Mvvm.Models.Profile.Friends;
 using System.Windows.Input;
 
-namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
+namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Profile.Friends
 {
     public sealed class FriendRequestsViewModel : ViewModelBase, IRefreshable
     {

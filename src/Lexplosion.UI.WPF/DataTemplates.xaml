@@ -6,6 +6,8 @@
     xmlns:authviewmodels="clr-namespace:Lexplosion.UI.WPF.Mvvm.ViewModels.Authorization"
     xmlns:authviews="clr-namespace:Lexplosion.UI.WPF.Mvvm.Views.Pages.Authorization"
     xmlns:converters="clr-namespace:Lexplosion.UI.WPF.Core.Converters"
+    xmlns:friendsViewModels="clr-namespace:Lexplosion.UI.WPF.Mvvm.ViewModels.Profile.Friends"
+    xmlns:friendsViews="clr-namespace:Lexplosion.UI.WPF.Mvvm.Views.Pages.Profile.Friends"
     xmlns:instanceTransferView="clr-namespace:Lexplosion.UI.WPF.Mvvm.Views.Modal.InstanceTransfer"
     xmlns:instanceTransferViewModel="clr-namespace:Lexplosion.UI.WPF.Mvvm.ViewModels.Modal.InstanceTransfer"
     xmlns:instanceprofileview="clr-namespace:Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.InstanceProfile"
@@ -90,17 +92,17 @@
     </DataTemplate>
 
     <!--  Friends  -->
-    <DataTemplate DataType="{x:Type mainmenuvm:FriendsLayoutViewModel}">
-        <mainmenuview:FriendsLayoutViewModel />
+    <DataTemplate DataType="{x:Type friendsViewModels:FriendsLayoutViewModel}">
+        <friendsViews:FriendsLayoutView />
     </DataTemplate>
-    <DataTemplate DataType="{x:Type mainmenuvm:FriendsViewModel}">
-        <mainmenuview:FriendsViewModel />
+    <DataTemplate DataType="{x:Type friendsViewModels:FriendsViewModel}">
+        <friendsViews:FriendsView />
     </DataTemplate>
-    <DataTemplate DataType="{x:Type mainmenuvm:FriendRequestsViewModel}">
-        <mainmenuview:FriendsRequestsView />
+    <DataTemplate DataType="{x:Type friendsViewModels:FriendRequestsViewModel}">
+        <friendsViews:FriendsRequestsView />
     </DataTemplate>
-    <DataTemplate DataType="{x:Type mainmenuvm:FindFriendsViewModel}">
-        <mainmenuview:FindFriendsView />
+    <DataTemplate DataType="{x:Type friendsViewModels:FindFriendsViewModel}">
+        <friendsViews:FindFriendsView />
     </DataTemplate>
 
 

@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.MainMenu.Friends
+namespace Lexplosion.UI.WPF.Mvvm.Models.Profile.Friends
 {
     public sealed class FriendRequestsModel : ViewModelBase
     {

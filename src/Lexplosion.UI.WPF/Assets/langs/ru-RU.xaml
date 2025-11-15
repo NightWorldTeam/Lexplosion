@@ -19,6 +19,7 @@
     <!--    -->
     <!--  LeftPanel  -->
     <!--    -->
+    <s:String x:Key="Home">Главная</s:String>
     <s:String x:Key="Catalog">Каталог</s:String>
     <s:String x:Key="Library">Библиотека</s:String>
     <s:String x:Key="Friends">Друзья</s:String>

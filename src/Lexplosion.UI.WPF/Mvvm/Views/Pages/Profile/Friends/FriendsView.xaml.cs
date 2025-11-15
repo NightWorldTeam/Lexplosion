@@ -3,14 +3,14 @@ using System.Collections;
 using System.Windows.Controls;
 using System.Windows.Data;
 
-namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.MainMenu
+namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.Profile.Friends
 {
     /// <summary>
     /// Логика взаимодействия для FriendsViewModel.xaml
     /// </summary>
-    public partial class FriendsViewModel : UserControl
+    public partial class FriendsView : UserControl
     {
-        public FriendsViewModel()
+        public FriendsView()
         {
             InitializeComponent();
             var collectionViewSource = (Resources["FriendsViewSource"] as CollectionViewSource);

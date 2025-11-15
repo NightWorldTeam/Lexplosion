@@ -15,8 +15,8 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
         private readonly ViewModelBase _catalogViewModel;
         private readonly ViewModelBase _libraryViewModel;
         private readonly ViewModelBase _multiplayerLayoutViewModel;
-        private readonly ViewModelBase _friendsLayoutViewModel;
         private readonly ViewModelBase _generalSettingsLayoutViewModel;
+        private readonly ViewModelBase _homeLayoutViewModel;
 
 
         #region Properties
@@ -51,6 +51,8 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
         {
             var toMainMenuLayoutCommand = new NavigateCommand<ViewModelBase>(appCore.NavigationStore, () => this);
 
+            _homeLayoutViewModel = null;
+
             // Catalog Section
             _catalogViewModel = new CatalogViewModel(appCore, toMainMenuLayoutCommand, mainModel.CatalogController);
 
@@ -68,9 +70,6 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
             });
             var multiplayerLayoutArgs = new MultiplayerLayoutArgs(OpenAccountFactory, selectInstanceForServerArgs);
             _multiplayerLayoutViewModel = new NightWorldLimitedContentLayoutViewModel(new MultiplayerLayoutViewModel(appCore, toMainMenuLayoutCommand, multiplayerLayoutArgs), OpenAccountFactory);
-
-            // Friends Section
-            _friendsLayoutViewModel = new NightWorldLimitedContentLayoutViewModel(new FriendsLayoutViewModel(appCore), OpenAccountFactory);
 
             // Settings Section
             _generalSettingsLayoutViewModel = new GeneralSettingsLayoutViewModel(appCore);
@@ -98,10 +97,10 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
 
         private void InitDefaultLeftPanelTabs()
         {
+            LeftPanel.AddTabItem("Home", "Home", _homeLayoutViewModel, 18, 20);
             LeftPanel.AddTabItem("Catalog", "Catalog", _catalogViewModel);
             LeftPanel.AddTabItem("Library", "Library", _libraryViewModel);
             LeftPanel.AddTabItem("Multiplayer", "Multiplayer", _multiplayerLayoutViewModel);
-            LeftPanel.AddTabItem("Friends", "Friends", _friendsLayoutViewModel, 18, 20);
             LeftPanel.AddTabItem("Settings", "Settings", _generalSettingsLayoutViewModel);
             LeftPanel.SelectFirst();
         }

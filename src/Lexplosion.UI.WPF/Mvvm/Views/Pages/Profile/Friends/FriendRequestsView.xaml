@@ -1,5 +1,5 @@
 ﻿<UserControl
-    x:Class="Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.MainMenu.FriendsRequestsView"
+    x:Class="Lexplosion.UI.WPF.Mvvm.Views.Pages.Profile.Friends.FriendsRequestsView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:auth="clr-namespace:Lexplosion.UI.WPF.Mvvm.Views.Pages.Authorization"

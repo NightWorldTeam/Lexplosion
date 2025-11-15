@@ -2,6 +2,7 @@
 using Lexplosion.UI.WPF.Core.Objects;
 using Lexplosion.UI.WPF.Mvvm.Models.Profile;
 using Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu;
+using Lexplosion.UI.WPF.Mvvm.ViewModels.Profile.Friends;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;

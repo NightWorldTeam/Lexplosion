@@ -178,9 +178,9 @@
     <Compile Include="Mvvm\Models\InstanceTransfer\InstanceDistributionModel.cs" />
     <Compile Include="Mvvm\Models\InstanceTransfer\InstanceExportModel.cs" />
     <Compile Include="Mvvm\Models\MainContent\InstanceProfile\Settings\InstanceProfileAboutModel.cs" />
-    <Compile Include="Mvvm\Models\MainContent\MainMenu\Friends\FindFriendsModel.cs" />
-    <Compile Include="Mvvm\Models\MainContent\MainMenu\Friends\FriendRequestsModel.cs" />
-    <Compile Include="Mvvm\Models\MainContent\MainMenu\Friends\FriendsModel.cs" />
+    <Compile Include="Mvvm\Models\Profile\Friends\FindFriendsModel.cs" />
+    <Compile Include="Mvvm\Models\Profile\Friends\FriendRequestsModel.cs" />
+    <Compile Include="Mvvm\Models\Profile\Friends\FriendsModel.cs" />
     <Compile Include="Mvvm\Models\MainContent\MainMenu\GeneralSettings\AccountsSettingsModel.cs" />
     <Compile Include="Mvvm\Models\Modal\InstanceFactory\InstanceFactoryModel.cs" />
     <Compile Include="Mvvm\Models\Profile\ProfileInfo.cs" />
@@ -197,6 +197,10 @@
     <Compile Include="Mvvm\ViewModels\Authorization\NoAccountAuthorizationViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Authorization\OAuth2\MicrosoftAuthorizationViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Feedback\LatestNewsViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\Profile\Friends\FindFriendsViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\Profile\Friends\FriendRequestsViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\Profile\Friends\FriendsLayoutViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\Profile\Friends\FriendsViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Limited\LimitedContentLayoutViewModelBase.cs" />
     <Compile Include="Mvvm\ViewModels\Limited\NightWorldLimitedContentLayoutViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\MainContent\InstanceProfile\Overview\InstanceProfileVersionsViewModel.cs" />
@@ -239,6 +243,18 @@
     <Compile Include="Mvvm\ViewModels\Profile\ProfileViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\WelcomePageThemeSelectViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\WelcomeViewModel.cs" />
+    <Compile Include="Mvvm\Views\Pages\Profile\Friends\FindFriendsView.xaml.cs">
+      <DependentUpon>FindFriendsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Views\Pages\Profile\Friends\FriendRequestsView.xaml.cs">
+      <DependentUpon>FriendRequestsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Views\Pages\Profile\Friends\FriendsLayoutView.xaml.cs">
+      <DependentUpon>FriendsLayoutView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Views\Pages\Profile\Friends\FriendsView.xaml.cs">
+      <DependentUpon>FriendsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Mvvm\Views\Pages\MainContent\MainMenu\LeftPanel\Components\AccountSidebarMenuView.xaml.cs">
       <DependentUpon>AccountSidebarMenuView.xaml</DependentUpon>
     </Compile>
@@ -247,9 +263,6 @@
     </Compile>
     <Compile Include="Mvvm\Views\Pages\Profile\ProfileCosmeticsView.xaml.cs">
       <DependentUpon>ProfileCosmeticsView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Mvvm\Views\Pages\Profile\ProfileFriendsView.xaml.cs">
-      <DependentUpon>ProfileFriendsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Mvvm\Views\Pages\Profile\ProfileInfoView.xaml.cs">
       <DependentUpon>ProfileInfoView.xaml</DependentUpon>
@@ -513,7 +526,6 @@
     <Compile Include="Mvvm\ViewModels\MainContent\InstanceProfile\Addons\InstanceAddonsContainerViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\MainContent\InstanceProfile\Addons\IVisualFormat.cs" />
     <Compile Include="Mvvm\ViewModels\MainContent\InstanceProfile\Addons\VisualFormat.cs" />
-    <Compile Include="Mvvm\ViewModels\MainContent\MainMenu\Content\Friends\FindFriendsViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\AccountFactoryViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\InstanceExportViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\Modal\InstanceTransfer\Import\InstanceImportViewModel.cs" />
@@ -528,9 +540,6 @@
     </Compile>
     <Compile Include="Mvvm\Views\Pages\AddonsRepositories\LexplosionAddonsRepository.xaml.cs">
       <DependentUpon>LexplosionAddonsRepository.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\Friends\FindFriendsView.xaml.cs">
-      <DependentUpon>FindFriendsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewComponents\Users\Friend.xaml.cs">
       <DependentUpon>Friend.xaml</DependentUpon>
@@ -583,9 +592,6 @@
     <Compile Include="Mvvm\ViewModels\MainContent\InstanceProfile\Settings\InstanceProfileSettingsLayoutViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\MainContent\InstanceProfile\Settings\InstanceProfileSettingsViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\MainContent\MainMenu\Content\CatalogViewModel.cs" />
-    <Compile Include="Mvvm\ViewModels\MainContent\MainMenu\Content\Friends\FriendsLayoutViewModel.cs" />
-    <Compile Include="Mvvm\ViewModels\MainContent\MainMenu\Content\Friends\FriendRequestsViewModel.cs" />
-    <Compile Include="Mvvm\ViewModels\MainContent\MainMenu\Content\Friends\FriendsViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\MainContent\MainMenu\Content\GeneralSettings\AboutUsViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\MainContent\MainMenu\Content\GeneralSettings\AccountsSettingsViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\MainContent\MainMenu\Content\GeneralSettings\AppearanceSettingsViewModel.cs" />
@@ -753,6 +759,22 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Mvvm\Views\Pages\Profile\Friends\FindFriendsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Mvvm\Views\Pages\Profile\Friends\FriendRequestsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Mvvm\Views\Pages\Profile\Friends\FriendsLayoutView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Mvvm\Views\Pages\Profile\Friends\FriendsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Mvvm\Views\Pages\MainContent\MainMenu\LeftPanel\Components\AccountSidebarMenuView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -764,10 +786,6 @@
     <Page Include="Mvvm\Views\Pages\Profile\ProfileCosmeticsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Mvvm\Views\Pages\Profile\ProfileFriendsView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="Mvvm\Views\Pages\Profile\ProfileInfoView.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -920,10 +938,6 @@
     <Page Include="Mvvm\Views\Pages\MainContent\InstanceProfile\Overview\InstanceProfileOverviewLayoutView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\Friends\FindFriendsView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ViewComponents\Users\Friend.xaml">
       <SubType>Designer</SubType>
@@ -1193,18 +1207,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\Friends\FriendsLayoutViewModel.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\Friends\FriendRequestsView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\Friends\FriendsView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\GeneralSettings\AboutUsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1288,15 +1290,6 @@
     </Compile>
     <Compile Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\CatalogView.xaml.cs">
       <DependentUpon>CatalogView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\Friends\FriendsLayoutViewModel.xaml.cs">
-      <DependentUpon>FriendsLayoutViewModel.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\Friends\FriendRequestsView.xaml.cs">
-      <DependentUpon>FriendRequestsView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\Friends\FriendsView.xaml.cs">
-      <DependentUpon>FriendsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Mvvm\Views\Pages\MainContent\MainMenu\Content\GeneralSettings\AboutUsView.xaml.cs">
       <DependentUpon>AboutUsView.xaml</DependentUpon>

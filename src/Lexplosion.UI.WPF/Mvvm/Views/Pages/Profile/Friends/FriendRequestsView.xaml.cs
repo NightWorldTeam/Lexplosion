@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.MainMenu
+namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.Profile.Friends
 {
     /// <summary>
     /// Логика взаимодействия для FriendsRequestsView.xaml

@@ -3,7 +3,7 @@ using Lexplosion.UI.WPF.Core;
 using Lexplosion.UI.WPF.Core.Objects;
 using Lexplosion.UI.WPF.Core.ViewModel;
 
-namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
+namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Profile.Friends
 {
     public sealed class FriendsLayoutViewModel : ContentLayoutViewModelBase, ILimitedAccess
     {
