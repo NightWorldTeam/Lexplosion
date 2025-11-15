@@ -185,9 +185,10 @@
                     Style="{StaticResource AccountSidebarButton}"
                     Text="Account Settings" />
                 <controls:AdvancedButton
+                    Command="{Binding ViewFriendsCommand}"
                     IconData="{DynamicResource PDCatalog}"
                     Style="{StaticResource AccountSidebarButton}"
-                    Text="Documentation" />
+                    Text="Friends" />
             </StackPanel>
 
             <!--  Accounts  -->
