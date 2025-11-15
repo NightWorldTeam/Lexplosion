@@ -85,6 +85,8 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
         }
 
         public ICommand ViewProfileCommand { get; }
+        public ICommand ViewProfileSettingsCommand { get; }
+
 
         private RelayCommand _selectAccountCommand;
         public ICommand SelectAccountCommand 
@@ -111,9 +113,10 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
         #region Constructors
 
 
-        public LeftPanelViewModel(ICommand toProfile)
+        public LeftPanelViewModel(ICommand toProfile, ICommand toProfileSettingsCommand)
         {
             ViewProfileCommand = toProfile;
+            ViewProfileSettingsCommand = toProfileSettingsCommand;
 
             Account.LaunchAccountChanged += (acc) => SetUserDataToHeader();
             Account.ActiveAccountChanged += (acc) => SetUserDataToHeader();

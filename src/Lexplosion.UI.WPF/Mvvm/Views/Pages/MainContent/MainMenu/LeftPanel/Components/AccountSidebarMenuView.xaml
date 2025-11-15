@@ -180,6 +180,7 @@
                     Style="{StaticResource AccountSidebarButton}"
                     Text="View Profile" />
                 <controls:AdvancedButton
+                    Command="{Binding ViewProfileSettingsCommand}"
                     IconData="{DynamicResource PDSettings}"
                     Style="{StaticResource AccountSidebarButton}"
                     Text="Account Settings" />

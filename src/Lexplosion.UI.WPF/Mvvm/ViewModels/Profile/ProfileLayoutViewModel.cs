@@ -18,7 +18,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Profile
 
         public ICommand ToMainMenuCommand { get; }
 
-        public ProfileLayoutViewModel(AppCore appCore, ICommand toMainMenu)
+        public ProfileLayoutViewModel(AppCore appCore, ICommand toMainMenu, int activeTab = 0)
         {
             ToMainMenuCommand = toMainMenu;
             ToMainMenuCommand.Execute(null);
@@ -41,7 +41,6 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Profile
             {
                 Id = 0,
                 Content = new ProfileViewModel(_profileInfo),
-                IsSelected = true,
                 TextKey = "Profile"
             });
             Tabs.Add(new()
@@ -74,7 +73,8 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Profile
                 i.SelectedChanged += OnTabSelectedChanged;
             }
 
-            Content = Tabs[0].Content;
+            Tabs[activeTab].IsSelected = true;
+            Content = Tabs[activeTab].Content;
             OnPropertyChanged(nameof(Content));
         }
 
