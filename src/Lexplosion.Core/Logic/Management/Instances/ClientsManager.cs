@@ -309,6 +309,7 @@ namespace Lexplosion.Logic.Management.Instances
 		private void AddToDefaultGroup(InstanceClient client)
 		{
 			_existsGroups[0].AddInstance(client);
+			_existsGroups[0].SaveGroupInfo();
 		}
 
 		public void SaveAllGroups()
