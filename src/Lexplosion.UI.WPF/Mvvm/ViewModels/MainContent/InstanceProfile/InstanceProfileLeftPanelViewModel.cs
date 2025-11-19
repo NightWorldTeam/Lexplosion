@@ -125,11 +125,15 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.InstanceProfile
             _appCore = appCore;
             BackCommand = new RelayCommand((obj) =>
             {
+                var addonManager = AddonsManager.GetManager(instanceModelBase.BaseData, Runtime.ServicesContainer);
                 if (instanceModelBase.IsInstalled || instanceModelBase.IsDownloading)
                 {
                     // Останавливаем обновление директорий сборки.
-                    AddonsManager.GetManager(instanceModelBase.BaseData, Runtime.ServicesContainer).StopWatchingDirectory();
+                    addonManager.StopWatchingDirectory();
                 }
+
+                // Чистим кеш аддонов
+                addonManager.ClearAddonsLibraryCache();
                 toMainMenuLayoutCommand.Execute(obj);
             });
 
