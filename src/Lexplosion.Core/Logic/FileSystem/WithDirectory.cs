@@ -25,20 +25,26 @@ namespace Lexplosion.Logic.FileSystem
 		public bool IsMirrorModeToNw { get; private set; } = false;
 		public string GetInstancePath(string instanceId) => $"{InstancesPath}{instanceId}/";
 
-		private HttpClient _httpClient = new();
+		private HttpClient _httpClient;
 		private ProxyHandler _clientHandler;
 
 		private const string USER_AGENT = "Mozilla/5.0 Lexplosion/1.0.1.1";
+		private const int MAX_CONNECTIONS_PER_SERVER = 30;
 
 		internal WithDirectory()
 		{
+			var handler = new HttpClientHandler
+			{
+				MaxConnectionsPerServer = MAX_CONNECTIONS_PER_SERVER
+			};
+			_httpClient = new HttpClient(handler);
 			_httpClient.DefaultRequestHeaders.Add("User-Agent", USER_AGENT);
 		}
 
 		[MethodImpl(MethodImplOptions.Synchronized)]
 		public void ChangeDownloadToProxyMode()
 		{
-			_clientHandler = new ProxyHandler(USER_AGENT);
+			_clientHandler = new ProxyHandler(USER_AGENT, MAX_CONNECTIONS_PER_SERVER);
 			var newhttpClient = new HttpClient(_clientHandler);
 			newhttpClient.DefaultRequestHeaders.Add("User-Agent", USER_AGENT);
 
@@ -56,7 +62,7 @@ namespace Lexplosion.Logic.FileSystem
 
 				_httpClient = newhttpClient;
 				IsMirrorModeToNw = true;
-			}			
+			}
 		}
 
 		public void AddProxy(Proxy proxy)
@@ -276,7 +282,7 @@ namespace Lexplosion.Logic.FileSystem
 
 		public async Task<(bool, HttpStatusCode?)> DownloadFileAsync(string url, string savePath, TaskArgs taskArgs)
 		{
-			var httpClient =  _httpClient;
+			var httpClient = _httpClient;
 			HttpStatusCode? httpStatus = null;
 			Runtime.DebugWrite($"Start Download url: {url}, savePath: {savePath}");
 

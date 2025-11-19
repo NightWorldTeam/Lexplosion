@@ -161,9 +161,9 @@ namespace Lexplosion.Logic.Management.Addons
 			}
 			else if (_addonInfo.Team != null)
 			{
-				ThreadPool.QueueUserWorkItem(delegate (object state)
+				_pool.Enqueue(() =>
 				{
-					List<ModrinthTeam> teamsData = _services.MdApi.GetTeam(_addonInfo.Team);
+					ModrinthTeam teamsData = _services.MdApi.GetTeam(_addonInfo.Team);
 					if (teamsData.Count > 0)
 					{
 						AuthorName = teamsData[0]?.User?.Username;
@@ -311,9 +311,12 @@ namespace Lexplosion.Logic.Management.Addons
 			return _services.MdApi.DownloadAddon(_addonInfo, _versionInfo.FileId, "instances/" + _instanceData.LocalId + "/", _services.DirectoryService, taskArgs);
 		}
 
+		private static NightWorld.Threading.ThreadPool _pool = new(20, 30);
 
+		private bool _compared = false;
 		public void CompareVersions(string addonFileId, Action actionIfTrue)
 		{
+			_compared = true;
 			var addonInfo = _addonInfo;
 			if (addonInfo == null) return;
 
@@ -323,7 +326,7 @@ namespace Lexplosion.Logic.Management.Addons
 				if (lastEelem == null || addonInfo.GameVersions?.Count > 1 || addonInfo.Loaders?.Count > 1)
 				{
 					//неизвестно для каокго модлоадера и для какой версии игры предназначена последняя версия аддона, поэтому делаем дополнительный запрос
-					ThreadPool.QueueUserWorkItem((object o) =>
+					_pool.Enqueue(() =>
 					{
 						Modloader? modloader = (addonInfo.Type == "mod") ? (Modloader?)_instanceData?.Modloader : null;
 						var files = _services.MdApi.GetProjectFiles(ProjectId, modloader, _instanceData?.GameVersion?.Id ?? "");

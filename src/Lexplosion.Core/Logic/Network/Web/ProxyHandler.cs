@@ -19,12 +19,13 @@ namespace Lexplosion.Logic.Network.Web
 		private List<(double, HttpClient)> _fallbackClients = [];
 		private string _defaultUserAgent;
 
-		public ProxyHandler(string userAgent)
+		public ProxyHandler(string userAgent, int maxConnectionsPerServer)
 		{
 			_defaultUserAgent = userAgent;
 			InnerHandler = new HttpClientHandler
 			{
-				UseProxy = false
+				UseProxy = false,
+				MaxAutomaticRedirections = maxConnectionsPerServer
 			};
 		}
 

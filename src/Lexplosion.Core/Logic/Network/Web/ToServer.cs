@@ -25,19 +25,27 @@ namespace Lexplosion.Logic.Network
 		private ProxyHandler _clientHandler;
 
 		private const string USER_AGENT = "Mozilla/5.0 Lexplosion/1.0.1.1";
+		private const int MAX_CONNECTIONS_PER_SERVER = 30;
 
 		public bool IsMirrorModeToNw { get; private set; } = false;
 
 		internal ToServer()
 		{
-			_httpClient = new HttpClient();
+			var handler = new HttpClientHandler
+			{
+				MaxConnectionsPerServer = MAX_CONNECTIONS_PER_SERVER
+			};
+
+			_httpClient = new HttpClient(handler);
 			_httpClient.DefaultRequestHeaders.Add("User-Agent", USER_AGENT);
 		}
 
 		[MethodImpl(MethodImplOptions.Synchronized)]
 		public void ChangeToProxyMode()
 		{
-			_clientHandler = new ProxyHandler(USER_AGENT);
+			_clientHandler = new ProxyHandler(USER_AGENT, MAX_CONNECTIONS_PER_SERVER);
+			
+
 			var newHttpClient = new HttpClient(_clientHandler);
 			newHttpClient.DefaultRequestHeaders.Add("User-Agent", USER_AGENT);
 			_httpClient = newHttpClient;
@@ -251,7 +259,7 @@ namespace Lexplosion.Logic.Network
 
 		public string HttpGet(string url, Dictionary<string, string> headers = null, int timeout = 0)
 		{
-			var task = Task.Run(() => HttpGetAsync(url, headers, timeout));
+			var task = HttpGetAsync(url, headers, timeout);
 			task.Wait();
 			return task.Result;
 		}

@@ -74,8 +74,6 @@ namespace Lexplosion
 				File.WriteAllText(LaunсherSettings.LauncherDataPath + "/crash-report_" + DateTime.Now.ToString("dd.MM.yyyy-h.mm.ss") + ".log", exception.ToString());
 			};
 
-			ServicePointManager.DefaultConnectionLimit = 20;
-
 			var withDirectory = new WithDirectory();
 			var dataFilesManager = new DataFilesManager(withDirectory);
 			var toServer = new ToServer();
@@ -190,6 +188,11 @@ namespace Lexplosion
 
 			//подписываемся на эвент открытия второй копии лаунчера
 			CommandReceiver.OnLexplosionOpened += OnLexplosionOpened;
+
+			ThreadPool.GetAvailableThreads(out int worker, out int io);
+			ThreadPool.GetMaxThreads(out int maxWorker, out int maxIO);
+
+			Console.WriteLine($"Available: {worker}/{maxWorker}, IO: {io}/{maxIO}");
 		}
 
 		private static bool LauncherUpdate(int version, int updaterOffsetLeft, int updaterOffsetRight, bool isMirror)

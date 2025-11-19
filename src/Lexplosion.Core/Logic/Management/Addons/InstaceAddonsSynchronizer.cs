@@ -34,7 +34,7 @@ namespace Lexplosion.Logic.Management.Addons
 		/// <summary>
 		/// Очищает сохранённый список аддонов. Нужно вызывать при закрытии каталога чтобы очистить память.
 		/// </summary>
-		public void ClearAddonsListCache()
+		public void ClearAddonsCatalogCache()
 		{
 			Runtime.DebugWrite("Clear chache");
 			ChacheSemaphore.WaitOne();

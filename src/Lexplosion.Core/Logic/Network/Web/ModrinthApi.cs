@@ -1,21 +1,26 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Runtime.CompilerServices;
 using System.Text;
-using Newtonsoft.Json;
-using Lexplosion.Logic.FileSystem;
+using System.Threading.Tasks;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.Modrinth;
-using Lexplosion.Tools;
+using NightWorld.Threading;
+using Newtonsoft.Json;
+
+using static Lexplosion.Logic.Objects.Curseforge.CurseforgeProjectInfo;
+using static Lexplosion.Logic.Objects.Curseforge.InstanceManifest;
 
 namespace Lexplosion.Logic.Network.Web
 {
 	public class ModrinthApi
 	{
 		private readonly ToServer _toServer;
+
+		private DataAccumulator<ModrinthTeam, string> _teamIdsAccumulator;
 
 		public struct SearchFilters
 		{
@@ -37,6 +42,8 @@ namespace Lexplosion.Logic.Network.Web
 		public ModrinthApi(ToServer toServer)
 		{
 			_toServer = toServer;
+			_teamIdsAccumulator = new(2000, PerformAccumulatedTemsIds);
+
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -45,6 +52,25 @@ namespace Lexplosion.Logic.Network.Web
 			try
 			{
 				string answer = _toServer.HttpGet(url);
+				if (answer != null)
+				{
+					var data = JsonConvert.DeserializeObject<T>(answer);
+					return data ?? new T();
+				}
+
+				return new T();
+			}
+			catch
+			{
+				return new T();
+			}
+		}
+
+		private async Task<T> GetApiDataAsync<T>(string url) where T : new()
+		{
+			try
+			{
+				string answer = await _toServer.HttpGetAsync(url);
 				if (answer != null)
 				{
 					var data = JsonConvert.DeserializeObject<T>(answer);
@@ -79,9 +105,68 @@ namespace Lexplosion.Logic.Network.Web
 			}
 		}
 
-		public List<ModrinthTeam> GetTeam(string teamId)
+		private List<TRes> MultipleGetRequest<TRes>(string baseUrl, string[] parameters)
 		{
-			return GetApiData<List<ModrinthTeam>>("https://api.modrinth.com/v2/team/" + teamId + "/members");
+			// не понятно на кой хуй modrinth сделал это через get запрос. Максимальные размер url 1024,
+			// в него все айдишники могут не вместится поэтому мутим костыли.
+			// Если айдишников слишком много, то делаем несколько запросов.
+			var files = new List<TRes>();
+
+			int maxLenght = 2000 - baseUrl.Length;
+
+			var str = new StringBuilder(950);
+			str.Append("%22"); // это "
+			for (int i = 0; i < parameters.Length; i++)
+			{
+				str.Append(WebUtility.UrlEncode(parameters[i]));
+
+				// Если это последний элемент, или если при добавлении еще одного id строка будет длиннее максимальной длинны, то отправляем запрос.
+				// Вычитаем 18 потому что дальше будут добавлены еще симолы
+				if (i == parameters.Length - 1 || str.Length + parameters[i + 1].Length > maxLenght - 18)
+				{
+					str.Append("%22");
+					string url = $"{baseUrl}%5B{str.ToString()}%5D";
+					var data = GetApiData<List<TRes>>(url);
+					files.AddRange(data);
+
+					str = new StringBuilder(950);
+					str.Append("%22");
+				}
+				else
+				{
+					str.Append("%22%2C%22"); // это "," 
+				}
+			}
+
+			return files;
+		}
+
+		private void PerformAccumulatedTemsIds(ICollection<string> teamsIds, ConcurrentDictionary<string, ModrinthTeam> teams)
+		{
+			var allTeams = GetTeams(teamsIds.ToArray());
+			foreach (var team in allTeams)
+			{
+				var teamId = team.FirstOrDefault().TeamId;
+				if (teamId != null)
+				{
+					teams[teamId] = team;
+				}
+			}
+		}
+
+		public List<ModrinthTeam> GetTeams(string[] teamsIds)
+		{
+			return MultipleGetRequest<ModrinthTeam>("https://api.modrinth.com/v2/teams?ids=", teamsIds);
+		}
+
+		public ModrinthTeam GetTeam(string teamId)
+		{
+			return _teamIdsAccumulator.Perform(teamId) ?? new ModrinthTeam();
+		}
+
+		public ModrinthTeam GetTeamImmediately(string teamId)
+		{
+			return GetApiData<ModrinthTeam>("https://api.modrinth.com/v2/team/" + teamId + "/members");
 		}
 
 		public List<ModrinthCategory> GetCategories()
@@ -99,6 +184,18 @@ namespace Lexplosion.Logic.Network.Web
 			return GetApiData<List<ModrinthProjectFile>>("https://api.modrinth.com/v2/project/" + projectId + "/version");
 		}
 
+		private string BuildProjectFilesUrl(string projectId, IEnumerable<Modloader> modloaders, string gameVersion)
+		{
+			string param = "?game_versions=" + WebUtility.UrlEncode($"[\"{gameVersion}\"]");
+			if (modloaders != null)
+			{
+				param += "&loaders=" + WebUtility.UrlEncode($"[{string.Join(",", modloaders.Select(x => $"\"{x.ToString().ToLower()}\""))}]");
+			}
+
+			string url = "https://api.modrinth.com/v2/project/" + projectId + "/version" + param;
+			return url;
+		}
+
 		/// <summary>
 		/// Возвращает список файлов проекта
 		/// </summary>
@@ -107,13 +204,20 @@ namespace Lexplosion.Logic.Network.Web
 		/// <param name="gameVersion">Версия игры</param>
 		public List<ModrinthProjectFile> GetProjectFiles(string projectId, IEnumerable<Modloader> modloaders, string gameVersion)
 		{
-			string param = "?game_versions=" + WebUtility.UrlEncode($"[\"{gameVersion}\"]");
-			if (modloaders != null)
-			{
-				param += "&loaders=" + WebUtility.UrlEncode($"[{string.Join(",", modloaders.Select(x => $"\"{x.ToString().ToLower()}\""))}]");
-			}
-			string url = "https://api.modrinth.com/v2/project/" + projectId + "/version" + param;
+			var url = BuildProjectFilesUrl(projectId, modloaders, gameVersion);
 			return GetApiData<List<ModrinthProjectFile>>(url);
+		}
+
+		/// <summary>
+		/// Возвращает список файлов проекта
+		/// </summary>
+		/// <param name="projectId">id проекта</param>
+		/// <param name="modloaders">Белый список модлоадеров. Если он не нужен, то null</param>
+		/// <param name="gameVersion">Версия игры</param>
+		public async Task<List<ModrinthProjectFile>> GetProjectFilesAsync(string projectId, IEnumerable<Modloader> modloaders, string gameVersion)
+		{
+			var url = BuildProjectFilesUrl(projectId, modloaders, gameVersion);
+			return await GetApiDataAsync<List<ModrinthProjectFile>>(url);
 		}
 
 		/// <summary>
@@ -123,6 +227,14 @@ namespace Lexplosion.Logic.Network.Web
 		/// <param name="modloader">Допустимый модлоадер. Если модлоадер не важен, то null</param>
 		/// <param name="gameVersion">Версия игры</param>
 		public List<ModrinthProjectFile> GetProjectFiles(string projectId, Modloader? modloader, string gameVersion)
+		{
+			Modloader[] modloaders = null;
+			if (modloader != null) modloaders = new Modloader[] { modloader ?? (Modloader)modloader };
+
+			return GetProjectFiles(projectId, modloaders, gameVersion);
+		}
+
+		public async Task<List<ModrinthProjectFile>> GetProjectFilesAsync(string projectId, Modloader? modloader, string gameVersion)
 		{
 			Modloader[] modloaders = null;
 			if (modloader != null) modloaders = new Modloader[] { modloader ?? (Modloader)modloader };
@@ -163,37 +275,7 @@ namespace Lexplosion.Logic.Network.Web
 
 		public List<ModrinthProjectInfo> GetProjects(string[] ids)
 		{
-			// не понятно на кой хуй modrinth сделал это через get запрос. Максимальные размер url 1024,
-			// в него все айдишники могут не вместится поэтому мутим костыли.
-			// Если айдишников слишком много, то делаем несколько запросов.
-			var files = new List<ModrinthProjectInfo>();
-
-			var str = new StringBuilder(950);
-			str.Append("%22"); // это "
-			for (int i = 0; i < ids.Length; i++)
-			{
-				str.Append(WebUtility.UrlEncode(ids[i]));
-
-				// Если это последний элемент, или если при добавлении еще одного id строка будет длиннее 950, то отправляем запрос.
-				// На учитывание дополнительных символов кладем хуй, ибо максимальная длинна url 1024, минус 47 символов начало ссылки
-				// это будет 977. Мы с запасом взяли 950.
-				if (i == ids.Length - 1 || str.Length + ids[i + 1].Length > 950)
-				{
-					str.Append("%22");
-					string url = $"https://api.modrinth.com/v2/projects?ids=%5B{str.ToString()}%5D";
-					var data = GetApiData<List<ModrinthProjectInfo>>(url);
-					files.AddRange(data);
-
-					str = new StringBuilder(950);
-					str.Append("%22");
-				}
-				else
-				{
-					str.Append("%22%2C%22"); // это "," 
-				}
-			}
-
-			return files;
+			return MultipleGetRequest<ModrinthProjectInfo>("https://api.modrinth.com/v2/projects?ids=", ids);
 		}
 
 		public CatalogResult<ModrinthCtalogUnit> GetInstances(int pageSize, int index, IEnumerable<IProjectCategory> categories, string sortField, string searchFilter, string gameVersion)
