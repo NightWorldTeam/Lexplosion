@@ -213,7 +213,7 @@ namespace Lexplosion.Logic.Management.Addons
 		/// Если же количество аддонов больше или равно 10, то эвент AddonAdded не отработает и InstanceAddon'ы надо брать от сюда</param>
 		/// <returns>Требуется ли полное обновление списка. 
 		/// Если количество аддонов больше или равно 10, то список надо будет обновить полностью и здесь будет true, иначе false</returns>
-		public bool AddAddons(IEnumerable<string> locations, AddonType type, out IList<InstanceAddon> addons)
+		public bool AddAddons(IEnumerable<string> locations, AddonType type, out IReadOnlyCollection<InstanceAddon> addons)
 		{
 			addons = null;
 
@@ -516,7 +516,7 @@ namespace Lexplosion.Logic.Management.Addons
 		/// <param name="type">Тип аддонов</param>
 		/// <returns>Лист адднов определенного типа указанной сборки</returns>
 		/// <exception cref="ArgumentException">Сообщает о том, что был передан тип аддонов который не рассматривается в методе.</exception>
-		public IList<InstanceAddon> GetInstalledAddons(AddonType type)
+		public IReadOnlyCollection<InstanceAddon> GetInstalledAddons(AddonType type)
 		{
 			lock (_installedAddons)
 			{
@@ -536,7 +536,7 @@ namespace Lexplosion.Logic.Management.Addons
 			}
 		}
 
-		public IList<InstanceAddon> GetInstalledAddonsWithoutCache(AddonType type)
+		public IReadOnlyCollection<InstanceAddon> GetInstalledAddonsWithoutCache(AddonType type)
 		{
 			lock (_installedAddons)
 			{

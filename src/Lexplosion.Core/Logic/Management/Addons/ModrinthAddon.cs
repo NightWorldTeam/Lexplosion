@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System;
-using System.Threading;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network.Services;
 using Lexplosion.Logic.FileSystem.Extensions;
@@ -11,6 +10,7 @@ using Lexplosion.Logic.Objects.Modrinth;
 using Lexplosion.Logic.Network.Web;
 using Lexplosion.Tools;
 using NightWorld.Collections.Concurrent;
+using NightWorld.Threading;
 
 namespace Lexplosion.Logic.Management.Addons
 {
@@ -26,6 +26,8 @@ namespace Lexplosion.Logic.Management.Addons
 		private string _fileId;
 
 		private ConcurrentHashSet<Modloader> _acceptableModloaders = null;
+
+		private static ThreadPool _pool = new(15, 20);
 
 		public ModrinthAddon(BaseInstanceData instanceData, ModrinthProjectInfo addonInfo, IModrinthFileServicesContainer services, Func<AddonType, IEnumerable<string>, IEnumerable<CategoryBase>> categoriesGetter)
 		{
@@ -311,12 +313,8 @@ namespace Lexplosion.Logic.Management.Addons
 			return _services.MdApi.DownloadAddon(_addonInfo, _versionInfo.FileId, "instances/" + _instanceData.LocalId + "/", _services.DirectoryService, taskArgs);
 		}
 
-		private static NightWorld.Threading.ThreadPool _pool = new(20, 30);
-
-		private bool _compared = false;
 		public void CompareVersions(string addonFileId, Action actionIfTrue)
 		{
-			_compared = true;
 			var addonInfo = _addonInfo;
 			if (addonInfo == null) return;
 

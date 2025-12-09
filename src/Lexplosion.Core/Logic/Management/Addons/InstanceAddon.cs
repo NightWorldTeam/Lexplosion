@@ -452,6 +452,7 @@ namespace Lexplosion.Logic.Management.Addons
 					return;
 				}
 
+				string oldFileName = FileName;
 				FileName = Path.GetFileName(ressult.Value1.ActualPath);
 				IsInstalling = false;
 
@@ -511,10 +512,15 @@ namespace Lexplosion.Logic.Management.Addons
 							}
 							catch { }
 						}
-					}
 
-					installedAddons[_addonPrototype.ProjectId] = ressult.Value1;
-					_synchronizer.AddInstalledAddon(this);
+						installedAddons[_addonPrototype.ProjectId] = ressult.Value1;
+						_synchronizer.UpdateInstalledAddon(oldFileName, this);
+					}
+					else
+					{
+						installedAddons[_addonPrototype.ProjectId] = ressult.Value1;
+						_synchronizer.AddInstalledAddon(this);
+					}				
 				}
 				else
 				{
