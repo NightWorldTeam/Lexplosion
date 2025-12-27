@@ -43,8 +43,7 @@ namespace Lexplosion.Logic.Network
 		[MethodImpl(MethodImplOptions.Synchronized)]
 		public void ChangeToProxyMode()
 		{
-			_clientHandler = new ProxyHandler(USER_AGENT, MAX_CONNECTIONS_PER_SERVER);
-			
+			_clientHandler = new ProxyHandler(USER_AGENT, MAX_CONNECTIONS_PER_SERVER);	
 
 			var newHttpClient = new HttpClient(_clientHandler);
 			newHttpClient.DefaultRequestHeaders.Add("User-Agent", USER_AGENT);
@@ -375,7 +374,7 @@ namespace Lexplosion.Logic.Network
 			{
 				X509Certificate2 ServerCertificate = null;
 
-				var handler = new MirrorHttpHandler();
+				var handler = new MirrorCertValidator();
 
 				handler.ValidCertificateHandler += (X509Certificate2 cert) =>
 				{

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Lexplosion.Logic.Network.Web
 {
-	internal class RedirectToMirrorHandler : MirrorHttpHandler
+	internal class RedirectToMirrorHandler : MirrorCertValidator
 	{
 		public RedirectToMirrorHandler() : base() { }
 
