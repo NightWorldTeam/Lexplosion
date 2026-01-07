@@ -119,7 +119,7 @@ namespace Lexplosion.Logic.Management.Import.Importers
 					}
 				};
 
-				if (!_withDirectory.DownloadFile(_filePath, fileName, tempDir, taskArgs))
+				if (!_withDirectory.DownloadFile(_filePath, fileName, tempDir, taskArgs).IsSucces)
 				{
 					result = new PrepeareResult();
 					return InstanceInit.DownloadFilesError;

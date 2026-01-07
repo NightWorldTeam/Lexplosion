@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace Lexplosion.Logic.Network.Web
 {
-	internal class RedirectToMirrorHandler : MirrorCertValidator
-	{
+	internal class RedirectToMirrorHandler : DelegatingHandler
+    {
 		public RedirectToMirrorHandler() : base() { }
 
-		protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
 		{
 			if (request.RequestUri.Host.Equals("night-world.org", StringComparison.OrdinalIgnoreCase))
 			{

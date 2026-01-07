@@ -70,7 +70,7 @@ namespace Lexplosion.Logic.Network.Web
 		{
 			try
 			{
-				string answer = await _toServer.HttpGetAsync(url);
+				string answer = (await _toServer.HttpGetAsync(url)).Content;
 				if (answer != null)
 				{
 					var data = JsonConvert.DeserializeObject<T>(answer);
@@ -90,7 +90,7 @@ namespace Lexplosion.Logic.Network.Web
 		{
 			try
 			{
-				string answer = _toServer.HttpPostJson(url, JsonConvert.SerializeObject(inputData), out _);
+				string answer = _toServer.HttpPostJson(url, JsonConvert.SerializeObject(inputData)).Content;
 				if (answer != null)
 				{
 					var data = JsonConvert.DeserializeObject<T>(answer);

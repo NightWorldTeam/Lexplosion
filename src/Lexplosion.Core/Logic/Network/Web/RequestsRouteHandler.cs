@@ -1,149 +1,143 @@
-﻿using Lexplosion.Logic.Objects;
+﻿using Lexplosion.Logic.Network.Web.Models;
+using Lexplosion.Logic.Objects;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Lexplosion.Logic.Network.Web
 {
-	internal class RequestsRouteHandler : DelegatingHandler
-	{
-		public RequestsRouteHandler() : base() { }
+    internal class RequestsRouteHandler : DelegatingHandler
+    {
+        public RequestsRouteHandler() : base() { }
 
-		private List<(double, HttpClient)> _fallbackClients = [];
-		private string _defaultUserAgent;
+        private Dictionary<string, DomainRouteData> _routeData = new();
+        private List<(double, HttpClient)> _fallbackClients = [];
+        private Dictionary<Proxy, HttpClient> _proxies = new();
+        private string _defaultUserAgent;
 
-		public RequestsRouteHandler(string userAgent, int maxConnectionsPerServer)
-		{
-			_defaultUserAgent = userAgent;
-			InnerHandler = new HttpClientHandler
-			{
-				UseProxy = false,
-				MaxAutomaticRedirections = maxConnectionsPerServer
-			};
-		}
+        public RequestsRouteHandler(string userAgent, int maxConnectionsPerServer)
+        {
+            _defaultUserAgent = userAgent;
+            InnerHandler = new HttpClientHandler
+            {
+                UseProxy = false,
+                MaxAutomaticRedirections = maxConnectionsPerServer
+            };
+        }
 
-		public void AddProxy(Proxy proxy)
-		{
-			lock (_fallbackClients)
-			{
-				var handler = new HttpClientHandler
-				{
-					Proxy = new WebProxy(proxy.Url),
-					UseProxy = true
-				};
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public void AddRouteData(DomainRouteData routeData)
+        {
+            _routeData[routeData.Domain] = routeData;
+        }
 
-				var client = new HttpClient(handler);
-				client.DefaultRequestHeaders.Add("User-Agent", _defaultUserAgent);
+        protected async Task<HttpResponseMessage> SendThroughProxy(DomainRouteData routeData, HttpRequestMessage request, CancellationToken cancellationToken)
+        {
+            Exception lastException = null;
 
-				var newFallbackClients = new List<(double, HttpClient)>(_fallbackClients);
-				newFallbackClients.Add((proxy.CalculatedDelay, client));
+            foreach (var proxy in routeData.Proxies)
+            {
+                try
+                {
+                    var client = _proxies[proxy];
+                    var clonedRequest = await CloneHttpRequestAsync(request);
+                    var response = await client.SendAsync(clonedRequest, cancellationToken);
 
-				newFallbackClients.Sort(((double, HttpClient) x, (double, HttpClient) y) =>
-				{
-					if (x.Item1 < y.Item1) return -1;
-					if (x.Item1 > y.Item1) return 1;
-					return 0;
-				});
+                    return response;
+                }
+                catch (Exception ex)
+                {
+                    lastException = ex;
+                    routeData.ProxyFailed(proxy);
+                    Runtime.DebugWrite($"Send with proxy error {request.RequestUri} {ex}");
+                }
+            }
 
-				_fallbackClients = newFallbackClients;
-			}
-		}
+            Runtime.DebugWrite("All proxies failed");
+            throw lastException ?? new HttpRequestException("All proxies failed");
+        }
 
-		protected async Task<HttpResponseMessage> SendThroughProxy(HttpRequestMessage request, CancellationToken cancellationToken)
-		{
-			if (request.RequestUri == null)
-				return await base.SendAsync(request, cancellationToken);
+        protected Task<HttpResponseMessage> SendThroughMirror(HttpRequestMessage request, CancellationToken cancellationToken)
+        {
+            var uriBuilder = new UriBuilder(request.RequestUri)
+            {
+                Host = "mirror.night-world.org"
+            };
 
-			var domain = request.RequestUri.Host;
-			if (domain != "night-world.org" && domain != "api.curseforge.com" && domain != "curseforge.com")
-				return await base.SendAsync(request, cancellationToken);
+            if (request.RequestUri.Host.Equals("night-world.org", StringComparison.OrdinalIgnoreCase))
+            {
+                request.RequestUri = uriBuilder.Uri;
+            }
+            else
+            {
+                uriBuilder.Path = $"/mirror/{request.RequestUri.Host}{uriBuilder.Path}";
+                request.RequestUri = uriBuilder.Uri;
+            }
 
-			HttpResponseMessage lastResponse = null;
-			Exception lastException = null;
+            return base.SendAsync(request, cancellationToken);
+        }
 
-			List<(double, HttpClient)> clients = _fallbackClients;
-			foreach (var clientData in clients)
-			{
-				try
-				{
-					var client = clientData.Item2;
-					var clonedRequest = await CloneHttpRequestAsync(request);
-					lastResponse = await client.SendAsync(clonedRequest, cancellationToken);
+        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        {
+            if (request.RequestUri == null || !_routeData.TryGetValue(request.RequestUri.Host, out DomainRouteData routeData))
+            {
+                return await base.SendAsync(request, cancellationToken);
+            }
 
-					if (lastResponse.IsSuccessStatusCode)
-						return lastResponse;
+            if (routeData.RouteMethod == DomainRouteMethod.Proxy)
+            {
+                return await SendThroughProxy(routeData, request, cancellationToken);
+            }
 
-					Runtime.DebugWrite($"send with proxy error {request.RequestUri} {lastResponse.StatusCode}");
-				}
-				catch (Exception ex)
-				{
-					lastException = ex;
-					Runtime.DebugWrite($"send with proxy error {request.RequestUri} {ex}");
-				}
-			}
+            if (routeData.RouteMethod == DomainRouteMethod.Mirror)
+            {
+                return await SendThroughMirror(request, cancellationToken);
+            }
 
-			Runtime.DebugWrite("All proxies failed");
-			throw lastException ?? new HttpRequestException("All proxies failed");
-		}
+            return await base.SendAsync(request, cancellationToken);
 
-		private async Task<HttpRequestMessage> CloneHttpRequestAsync(HttpRequestMessage request)
-		{
-			var clone = new HttpRequestMessage(request.Method, request.RequestUri)
-			{
-				Content = await CloneHttpContentAsync(request.Content).ConfigureAwait(false),
-				Version = request.Version
-			};
-			foreach (KeyValuePair<string, object> prop in request.Properties)
-			{
-				clone.Properties.Add(prop);
-			}
-			foreach (KeyValuePair<string, IEnumerable<string>> header in request.Headers)
-			{
-				clone.Headers.TryAddWithoutValidation(header.Key, header.Value);
-			}
+        }
 
-			return clone;
-		}
+        private async Task<HttpRequestMessage> CloneHttpRequestAsync(HttpRequestMessage request)
+        {
+            var clone = new HttpRequestMessage(request.Method, request.RequestUri)
+            {
+                Content = await CloneHttpContentAsync(request.Content).ConfigureAwait(false),
+                Version = request.Version
+            };
+            foreach (KeyValuePair<string, object> prop in request.Properties)
+            {
+                clone.Properties.Add(prop);
+            }
+            foreach (KeyValuePair<string, IEnumerable<string>> header in request.Headers)
+            {
+                clone.Headers.TryAddWithoutValidation(header.Key, header.Value);
+            }
 
-		private async Task<HttpContent> CloneHttpContentAsync(HttpContent content)
-		{
-			if (content == null) return null;
+            return clone;
+        }
 
-			var ms = new MemoryStream();
-			await content.CopyToAsync(ms).ConfigureAwait(false);
-			ms.Position = 0;
+        private async Task<HttpContent> CloneHttpContentAsync(HttpContent content)
+        {
+            if (content == null) return null;
 
-			var clone = new StreamContent(ms);
-			foreach (KeyValuePair<string, IEnumerable<string>> header in content.Headers)
-			{
-				clone.Headers.Add(header.Key, header.Value);
-			}
-			return clone;
-		}
+            var ms = new MemoryStream();
+            await content.CopyToAsync(ms).ConfigureAwait(false);
+            ms.Position = 0;
 
-		protected Task<HttpResponseMessage> SendThroughMirror(HttpRequestMessage request, CancellationToken cancellationToken)
-		{
-			if (request.RequestUri.Host.Equals("night-world.org", StringComparison.OrdinalIgnoreCase))
-			{
-				var builder = new UriBuilder(request.RequestUri)
-				{
-					Host = "mirror.night-world.org"
-				};
-				request.RequestUri = builder.Uri;
-			}
-
-			return base.SendAsync(request, cancellationToken);
-		}
-
-		//protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
-		//{
-
-		//}
-	}
+            var clone = new StreamContent(ms);
+            foreach (KeyValuePair<string, IEnumerable<string>> header in content.Headers)
+            {
+                clone.Headers.Add(header.Key, header.Value);
+            }
+            return clone;
+        }
+    }
 }

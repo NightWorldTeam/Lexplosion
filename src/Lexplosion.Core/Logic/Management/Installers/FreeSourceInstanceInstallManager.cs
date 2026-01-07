@@ -26,9 +26,7 @@ namespace Lexplosion.Logic.Management.Installers
 
 		protected override bool ProfectInfoIsValid => !string.IsNullOrWhiteSpace(projectInfo?.DownloadUrl);
 
-		protected override string ArchiveDownloadUrl => projectInfo.DownloadUrl;
-
-		protected override string ArchiveFileName
+        protected override string ArchiveFileName
 		{
 			get
 			{
@@ -44,7 +42,11 @@ namespace Lexplosion.Logic.Management.Installers
 			}
 		}
 
-		protected override void DetermineGameType(InstanceManifest manifest, out ClientType clienType, out string modloaderVersion)
+        protected override string GetArchiveDownloadUrl() => projectInfo.DownloadUrl;
+
+        protected override string GetReserveArchiveDownloadUrl() => null;
+
+        protected override void DetermineGameType(InstanceManifest manifest, out ClientType clienType, out string modloaderVersion)
 		{
 			modloaderVersion = "";
 			clienType = ClientType.Vanilla;
@@ -128,7 +130,7 @@ namespace Lexplosion.Logic.Management.Installers
 			return projectData?.Version;
 		}
 
-		protected override bool LocalInfoIsValid(FreeSourcePlatformData data)
+        protected override bool LocalInfoIsValid(FreeSourcePlatformData data)
 		{
 			return data?.IsValid() == true;
 		}

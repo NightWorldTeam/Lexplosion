@@ -157,14 +157,15 @@ namespace Lexplosion.Logic.FileSystem.Installers
 
 				MainFileDownload?.Invoke(0);
 
-				(bool, string, string) res = instanceFileGetter(_extractedFilesDir, BuildTaskArgs);
+				var res = instanceFileGetter(_extractedFilesDir, BuildTaskArgs);
 
-				if (!res.Item1)
+				if (!res.IsSuccess)
 				{
-					_fileDownloadHandler?.Invoke(res.Item3, 100, DownloadFileProgress.Error);
+					_fileDownloadHandler?.Invoke(res.FileName, 100, DownloadFileProgress.Error);
 					return default;
 				}
-				_fileDownloadHandler?.Invoke(res.Item3, 100, DownloadFileProgress.Successful);
+
+				_fileDownloadHandler?.Invoke(res.FileName, 100, DownloadFileProgress.Successful);
 
 				if (Directory.Exists(_extractedFilesDir + "dataDownload"))
 				{
@@ -173,7 +174,7 @@ namespace Lexplosion.Logic.FileSystem.Installers
 
 				// Извлекаем содержимое этого архима
 				Directory.CreateDirectory(_extractedFilesDir + "dataDownload");
-				ZipFile.ExtractToDirectory(res.Item2, _extractedFilesDir + "dataDownload");
+				ZipFile.ExtractToDirectory(res.FilePath, _extractedFilesDir + "dataDownload");
 
 				return LoadManifest(_extractedFilesDir + "dataDownload/");
 			}

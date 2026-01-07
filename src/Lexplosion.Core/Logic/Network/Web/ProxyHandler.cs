@@ -11,6 +11,7 @@ using System.Collections.Concurrent;
 using NightWorld.Collections.Concurrent;
 using System.Linq;
 using System.Net.Security;
+using Lexplosion.Logic.Network.Web.Models;
 
 namespace Lexplosion.Logic.Network.Web
 {
@@ -43,7 +44,7 @@ namespace Lexplosion.Logic.Network.Web
 				client.DefaultRequestHeaders.Add("User-Agent", _defaultUserAgent);
 
 				var newFallbackClients = new List<(double, HttpClient)>(_fallbackClients);
-				newFallbackClients.Add((proxy.CalculatedDelay, client));
+				//newFallbackClients.Add((proxy.CalculatedDelay, client));
 
 				newFallbackClients.Sort(((double, HttpClient) x, (double, HttpClient) y) =>
 				{

@@ -60,6 +60,19 @@ namespace Lexplosion.Logic.FileSystem
 	/// </summary>
 	/// <param name="tempDir">Путь до папки temp</param>
 	/// <param name="taskArgsBuilder">Делегат, который создаст TaskArgs. Принимает имя файла модпака</param>
-	/// <returns>Первое значение - удачен ли результат выполнения, второе - путь до файла модпака, третье - имя файла модпака</returns>
-	public delegate (bool, string, string) InstanceFileGetter(string tempDir, Func<string, TaskArgs> taskArgsBuilder);
+	public delegate InstanceFileGetterResult InstanceFileGetter(string tempDir, Func<string, TaskArgs> taskArgsBuilder);
+
+	public readonly struct InstanceFileGetterResult
+	{
+		public readonly bool IsSuccess;
+        public readonly string FilePath;
+        public readonly string FileName;
+
+        public InstanceFileGetterResult(bool isSuccess, string filePath, string fileName)
+        {
+            this.IsSuccess = isSuccess;
+            this.FilePath = filePath;
+            this.FileName = fileName;
+        }
+    }
 }

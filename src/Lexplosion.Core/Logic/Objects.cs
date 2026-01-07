@@ -103,7 +103,7 @@ namespace Lexplosion.Logic.Objects
 
 		public bool IsExists(string instancePath)
 		{
-			if (Type == AddonType.Mods || Type == AddonType.Resourcepacks || Type == AddonType.Shaders)
+			if (Type == AddonType.Mods || Type == AddonType.Resourcepacks || Type == AddonType.Shaders || Type == AddonType.DataPacks)
 			{
 				try
 				{
@@ -437,16 +437,6 @@ namespace Lexplosion.Logic.Objects
 		[JsonProperty("files")]
 		public Dictionary<string, Unit> Files;
 
-	}
-
-	public struct Proxy
-	{
-		public string IP { get; set; }
-		public int Port { get; set; }
-
-		public double CalculatedDelay { get; set; }
-
-		public string Url { get => $"http://{IP}:{Port}"; }
 	}
 
 }

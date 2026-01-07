@@ -14,6 +14,9 @@ using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Network.Web;
 using System.Threading;
 using System.Runtime.CompilerServices;
+using Lexplosion.Logic.Network.Web.Models;
+using Lexplosion.Logic.Network;
+using Lexplosion.Logic.FileSystem.Models;
 
 namespace Lexplosion.Logic.FileSystem
 {
@@ -22,52 +25,13 @@ namespace Lexplosion.Logic.FileSystem
 		// TODO: во всём WithDirectory я заменяю элементы адресов директорий через replace. Не знаю как на винде, но на линуксе могут появиться проблемы, ведь replace заменяет подстроки в строке, а не только конечную подстроку
 		public string DirectoryPath { get; private set; }
 		public string InstancesPath { get => $"{DirectoryPath}/instances/"; }
-		public bool IsMirrorModeToNw { get; private set; } = false;
 		public string GetInstancePath(string instanceId) => $"{InstancesPath}{instanceId}/";
 
-		private HttpClient _httpClient;
-		private ProxyHandler _clientHandler;
+		public readonly ToServer ServerManager;
 
-		private const string USER_AGENT = "Mozilla/5.0 Lexplosion/1.0.1.1";
-		private const int MAX_CONNECTIONS_PER_SERVER = 30;
-
-		internal WithDirectory()
+		internal WithDirectory(ToServer toServer)
 		{
-			var handler = new HttpClientHandler
-			{
-				MaxConnectionsPerServer = MAX_CONNECTIONS_PER_SERVER
-			};
-			_httpClient = new HttpClient(handler);
-			_httpClient.DefaultRequestHeaders.Add("User-Agent", USER_AGENT);
-		}
-
-		[MethodImpl(MethodImplOptions.Synchronized)]
-		public void ChangeDownloadToProxyMode()
-		{
-			_clientHandler = new ProxyHandler(USER_AGENT, MAX_CONNECTIONS_PER_SERVER);
-			var newhttpClient = new HttpClient(_clientHandler);
-			newhttpClient.DefaultRequestHeaders.Add("User-Agent", USER_AGENT);
-
-			_httpClient = newhttpClient;
-		}
-
-		[MethodImpl(MethodImplOptions.Synchronized)]
-		public void ChangeDownloadToMirrorMode()
-		{
-			if (!IsMirrorModeToNw)
-			{
-				Runtime.DebugWrite("Enable mirror mode");
-				var newhttpClient = new HttpClient(new RedirectToMirrorHandler());
-				newhttpClient.DefaultRequestHeaders.Add("User-Agent", USER_AGENT);
-
-				_httpClient = newhttpClient;
-				IsMirrorModeToNw = true;
-			}
-		}
-
-		public void AddProxy(Proxy proxy)
-		{
-			_clientHandler.AddProxy(proxy);
+			ServerManager = toServer;
 		}
 
 		public void Create(string path)
@@ -195,13 +159,15 @@ namespace Lexplosion.Logic.FileSystem
 			}
 		}
 
-		public bool InstallZipContent(string url, string fileName, string path, TaskArgs taskArgs)
+		public DownloadFileResult InstallZipContent(string url, string fileName, string path, TaskArgs taskArgs)
 		{
-			path = DirectoryPath + "/" + path;
+            path = DirectoryPath + "/" + path;
 			string tempDir = CreateTempDir();
-			if (!DownloadFile(url, fileName, tempDir, taskArgs))
+
+			var result = DownloadFile(url, fileName, tempDir, taskArgs);
+            if (!result.IsSucces)
 			{
-				return false;
+				return result;
 			}
 
 			try
@@ -225,8 +191,8 @@ namespace Lexplosion.Logic.FileSystem
 			}
 			catch
 			{
-				return false;
-			}
+                return DownloadFileResult.HandleError();
+            }
 			finally
 			{
 				try
@@ -236,10 +202,10 @@ namespace Lexplosion.Logic.FileSystem
 				catch { }
 			}
 
-			return true;
+			return result;
 		}
 
-		public bool InstallFile(string url, string fileName, string path, TaskArgs taskArgs)
+		public DownloadFileResult InstallFile(string url, string fileName, string path, TaskArgs taskArgs)
 		{
 			Runtime.DebugWrite("INSTALL " + url);
 
@@ -252,20 +218,21 @@ namespace Lexplosion.Logic.FileSystem
 					Directory.CreateDirectory(DirectoryPath + "/" + path);
 				}
 
-				if (DownloadFile(url, fileName, tempDir, taskArgs))
+				var result = DownloadFile(url, fileName, tempDir, taskArgs);
+                if (result.IsSucces)
 				{
 					DelFile(DirectoryPath + "/" + path + "/" + fileName);
 					File.Move((tempDir + fileName).Replace("/", "\\"), (DirectoryPath + "/" + path + "/" + fileName).Replace("/", "\\"));
 					Directory.Delete(tempDir, true);
-					return true;
 				}
 				else
 				{
 					DelFile(tempDir + fileName);
-					DelFile(DirectoryPath + "/" + path + "/" + fileName);
-					return false;
+					DelFile(DirectoryPath + "/" + path + "/" + fileName);				
 				}
-			}
+
+                return result;
+            }
 			catch (Exception ex)
 			{
 				if (tempDir != null)
@@ -276,21 +243,18 @@ namespace Lexplosion.Logic.FileSystem
 
 				Runtime.DebugWrite($"Downloading error fileName: {fileName}, path: {path}, gamePath: {DirectoryPath}, url: {url}, Exception:" + ex);
 
-				return false;
+				return DownloadFileResult.HandleError();
 			}
 		}
 
-		public async Task<(bool, HttpStatusCode?)> DownloadFileAsync(string url, string savePath, TaskArgs taskArgs)
+		public async Task<DownloadFileResult> DownloadFileAsync(string url, string savePath, TaskArgs taskArgs)
 		{
-			var httpClient = _httpClient;
-			HttpStatusCode? httpStatus = null;
 			Runtime.DebugWrite($"Start Download url: {url}, savePath: {savePath}");
 
 			try
 			{
-				using (HttpResponseMessage response = await httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, taskArgs.CancelToken))
+				using (HttpResponseMessage response = await ServerManager.GetResponse(url, HttpCompletionOption.ResponseHeadersRead, taskArgs.CancelToken))
 				{
-					httpStatus = response.StatusCode;
 					response.EnsureSuccessStatusCode();
 
 					long? contentLength = response.Content.Headers.ContentLength;
@@ -330,45 +294,41 @@ namespace Lexplosion.Logic.FileSystem
 							taskArgs.PercentHandler(100);
 						}
 
-						return (true, httpStatus);
+						return DownloadFileResult.Success(response.StatusCode);
 					}
 				}
 			}
 			catch (HttpRequestException ex)
 			{
-				Runtime.DebugWrite("Downloading error " + savePath + " " + url + " " + ex);
+                HttpStatusCode? httpStatus = null;
+
+                Runtime.DebugWrite("Downloading error " + savePath + " " + url + " " + ex);
 				if (ex.Data.Contains("StatusCode")) httpStatus = (HttpStatusCode)ex.Data["StatusCode"];
-			}
+
+                return DownloadFileResult.DownloadError(httpStatus);
+            }
 			catch (WebException ex)
 			{
 				Runtime.DebugWrite("Downloading error " + savePath + " " + url + " " + ex);
-				if (ex.Response is HttpWebResponse httpResponse) httpStatus = httpResponse.StatusCode;
-			}
+                return DownloadFileResult.DownloadError((ex.Response as HttpWebResponse)?.StatusCode);
+            }
 			catch (Exception ex)
 			{
 				Runtime.DebugWrite("Downloading error " + savePath + " " + url + " " + ex);
 
-				if (!IsMirrorModeToNw && url != null && url.StartsWith(LaunсherSettings.URL.Base))
+				if (url.StartsWith(LaunсherSettings.URL.Base))
 				{
-					ChangeDownloadToMirrorMode();
+					ServerManager.ChangeToMirrorMode();
 				}
-			}
 
-			return (false, httpStatus);
+                return DownloadFileResult.NetworkError();
+            }
 		}
 
-		public bool DownloadFile(string url, string fileName, string tempDir, TaskArgs taskArgs)
+		public DownloadFileResult DownloadFile(string url, string fileName, string tempDir, TaskArgs taskArgs)
 		{
 			DelFile(tempDir + fileName);
-			return DownloadFileAsync(url, tempDir + fileName, taskArgs).Result.Item1;
-		}
-
-		public bool DownloadFile(string url, string fileName, string tempDir, out HttpStatusCode? statusCode, TaskArgs taskArgs)
-		{
-			DelFile(tempDir + fileName);
-			var res = DownloadFileAsync(url, tempDir + fileName, taskArgs).Result;
-			statusCode = res.Item2;
-			return res.Item1;
+			return DownloadFileAsync(url, tempDir + fileName, taskArgs).Result;
 		}
 
 		/// <summary>

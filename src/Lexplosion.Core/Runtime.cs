@@ -74,9 +74,9 @@ namespace Lexplosion
 				File.WriteAllText(LaunсherSettings.LauncherDataPath + "/crash-report_" + DateTime.Now.ToString("dd.MM.yyyy-h.mm.ss") + ".log", exception.ToString());
 			};
 
-			var withDirectory = new WithDirectory();
+            var toServer = new ToServer();
+            var withDirectory = new WithDirectory(toServer);
 			var dataFilesManager = new DataFilesManager(withDirectory);
-			var toServer = new ToServer();
 			var minecraftInfo = new MinecraftInfoService(toServer);
 			var nightWorldApi = new NightWorldApi(toServer);
 			var modrinthApi = new ModrinthApi(toServer);
@@ -115,7 +115,6 @@ namespace Lexplosion
 			{
 				Runtime.DebugWrite($"Change to mirror mode");
 				toServer.ChangeToMirrorMode();
-				withDirectory.ChangeDownloadToMirrorMode();
 
 				version = nightWorldApi.CheckLauncherUpdates(15000);
 
