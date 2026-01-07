@@ -17,19 +17,21 @@ namespace Lexplosion.Logic.FileSystem
 
 		private Dictionary<string, (string, string)[]> _bmclApiUrls = new()
 		{
-			["launchermeta.mojang.com"] = [("://bmclapi2.bangbang93.com", "://launchermeta.mojang.com")],
-			["launcher.mojang.com"] = [("://bmclapi2.bangbang93.com", "://launcher.mojang.com")],
-			["piston-data.mojang.com"] = [("://bmclapi2.bangbang93.com", "://piston-data.mojang.com")],
-			["resources.download.minecraft.net"] = [("://bmclapi2.bangbang93.com/assets", "://resources.download.minecraft.net")],
-			["libraries.minecraft.net"] = [("://bmclapi2.bangbang93.com/maven", "://libraries.minecraft.net")],
-			["files.minecraftforge.net/maven"] = [("://bmclapi2.bangbang93.com/maven", "://files.minecraftforge.net/maven")],
-			["meta.fabricmc.net"] = [("://bmclapi2.bangbang93.com/fabric-meta", "://meta.fabricmc.net")],
-			["maven.fabricmc.net"] = [("://bmclapi2.bangbang93.com/maven", "://maven.fabricmc.net")],
+			["launchermeta.mojang.com"] = [("https://bmclapi2.bangbang93.com", "https://launchermeta.mojang.com")],
+			["launcher.mojang.com"] = [("https://bmclapi2.bangbang93.com", "https://launcher.mojang.com")],
+			["piston-data.mojang.com"] = [("https://bmclapi2.bangbang93.com", "https://piston-data.mojang.com")],
+			["resources.download.minecraft.net"] = [("https://bmclapi2.bangbang93.com/assets", "https://resources.download.minecraft.net")],
+			["libraries.minecraft.net"] = [("https://bmclapi2.bangbang93.com/maven", "https://libraries.minecraft.net")],
+			["files.minecraftforge.net/maven"] = [("https://bmclapi2.bangbang93.com/maven", "https://files.minecraftforge.net/maven")],
+            ["maven.minecraftforge.net/maven"] = [("https://bmclapi2.bangbang93.com/maven", "https://maven.minecraftforge.net")],
+            ["meta.fabricmc.net"] = [("https://bmclapi2.bangbang93.com/fabric-meta", "https://meta.fabricmc.net")],
+			["maven.fabricmc.net"] = [("https://bmclapi2.bangbang93.com/maven", "https://maven.fabricmc.net")],
 			["maven.neoforged.net"] =
 			[
-				("://bmclapi2.bangbang93.com/maven/net/neoforged/forge", "://maven.neoforged.net/releases/net/neoforged/forge"),
-				("://bmclapi2.bangbang93.com/maven/net/neoforged/neoforge", "://maven.neoforged.net/releases/net/neoforged/neoforge")
-			]
+                ("https://bmclapi2.bangbang93.com/maven/net/neoforged/forge", "https://maven.neoforged.net/releases/net/neoforged/forge"),
+				("https://bmclapi2.bangbang93.com/maven/net/neoforged/neoforge", "https://maven.neoforged.net/releases/net/neoforged/neoforge"),
+                ("https://bmclapi2.bangbang93.com/maven", "https://maven.neoforged.net")
+            ]
 		};
 
 		/// <summary>
@@ -53,21 +55,22 @@ namespace Lexplosion.Logic.FileSystem
 				string domain = (new Uri(addr).Host);
 				if (!_domainsToReplace.TryGetValue(domain, out shiftNumber)) return addr;
 
-				if (shiftNumber == 1) // используем bmclApi
+				if (shiftNumber == 2) // используем bmclApi
 				{
-					// в bmclApi ссылки нет, используем наше зеркало
+					// в bmclApi ссылки нет, возвращаем оригинальный url
 					if (!_bmclApiUrls.TryGetValue(domain, out var replaceData)) 
 					{
-						addr = addr.ReplaceFirst("https://", "").ReplaceFirst("http://", "");
-						return _libraiesMirrorUrl + addr;
-					}
+                        //addr = addr.ReplaceFirst("https://", "").ReplaceFirst("http://", "");
+                        //return _libraiesMirrorUrl + addr;
+                        return addr;
+                    }
 
 					foreach (var item in replaceData)
 					{
 						if (addr.Contains(item.Item2)) return addr.Replace(item.Item2, item.Item1);
 					}
 				}
-				else if (shiftNumber == 2) // используем наше зеркало
+				else if (shiftNumber == 1) // используем наше зеркало
 				{
 					addr = addr.ReplaceFirst("https://", "").ReplaceFirst("http://", "");
 					return _libraiesMirrorUrl + addr;

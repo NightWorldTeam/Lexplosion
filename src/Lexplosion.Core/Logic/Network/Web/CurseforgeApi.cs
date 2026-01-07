@@ -17,7 +17,7 @@ namespace Lexplosion.Logic.Network.Web
     {
         private const string TOKEN = "$2a$10$Ky9zG9R9.ha.kf5BRrvwU..OGSvC0I2Wp56hgXI/4aRtGbizrm3we";
         private const string API_URL_BASE = "https://api.curseforge.com/";
-        private const string MIRROR_API_URL_BASE = $"{Global.LaunсherSettings.URL.MirrorBase}api.curseforge.com/";
+        private const string MIRROR_API_URL_BASE = $"{Global.LaunсherSettings.URL.MirrorUrl}api.curseforge.com/";
 
         private readonly ToServer _toServer;
         private bool _isMirorModeToMainUrl = false;
@@ -25,10 +25,7 @@ namespace Lexplosion.Logic.Network.Web
         private string[] _mirrorAvalableDomains = new string[]
         {
             "curseforge.com",
-            "forgecdn.net",
-            //"maven.minecraftforge.net",
-            //"maven.neoforged.net",
-            //"neoforged.net"
+            "forgecdn.net"
         };
 
         private Dictionary<string, string> _mirrorTranslations = new Dictionary<string, string>();
@@ -85,7 +82,7 @@ namespace Lexplosion.Logic.Network.Web
             {
                 if (uri.Host.EndsWith(domain))
                 {
-                    var mirrorUrl = $"{Global.LaunсherSettings.URL.MirrorBase}mirror/{uri.Host}";
+                    var mirrorUrl = $"{Global.LaunсherSettings.URL.MirrorUrl}{uri.Host}";
 
                     _mirrorTranslations[baseUrl] = mirrorUrl;
                     MirrorTranlationsEnabled = true;

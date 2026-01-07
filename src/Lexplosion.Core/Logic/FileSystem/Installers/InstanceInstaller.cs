@@ -365,7 +365,7 @@ namespace Lexplosion.Logic.FileSystem.Installers
 
             bool? result = false;
             int shiftCounts = 2; // количество попыток смены источника
-            while (!taskArgs.CancelToken.IsCancellationRequested && (result = TryDownload(url_, file, temp, 2, taskArgs)) != true && shiftCounts > 0)
+            while (!taskArgs.CancelToken.IsCancellationRequested && (result = TryDownload(url_, file, temp, 1, taskArgs)) != true && shiftCounts > 0)
             {
                 if (result == null) break; // сервер доступен, но файл нам не вернул. Менять источник смысла нет. Выходим
                 _downloadUrlHandler.ErrorOccured(url, shiftNumber);

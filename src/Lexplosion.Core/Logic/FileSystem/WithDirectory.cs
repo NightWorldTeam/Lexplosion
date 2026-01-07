@@ -263,14 +263,14 @@ namespace Lexplosion.Logic.FileSystem
 					{
 						using (var fileStream = File.Create(savePath))
 						{
-							byte[] buffer = new byte[8192];
+							byte[] buffer = new byte[8 * 1024];
 							long bytesRead = 0;
 							int bytesReadTotal = 0;
 
 							var source = CancellationTokenSource.CreateLinkedTokenSource(taskArgs.CancelToken);
 							var readToken = source.Token;
 							source.Token.Register(() => stream.Close());
-							source.CancelAfter(TimeSpan.FromMinutes(1));
+							source.CancelAfter(TimeSpan.FromSeconds(20));
 
 							int bytesReadThisTime;
 							while (!readToken.IsCancellationRequested && (bytesReadThisTime = await stream.ReadAsync(buffer, 0, buffer.Length, readToken)) != 0)
@@ -287,7 +287,14 @@ namespace Lexplosion.Logic.FileSystem
 									taskArgs.PercentHandler((int)percentage);
 								}
 
-								source.CancelAfter(TimeSpan.FromMinutes(1));
+								if (bytesReadTotal < 64 * 1024)
+								{
+                                    source.CancelAfter(TimeSpan.FromSeconds(20));
+                                }
+								else
+								{
+                                    source.CancelAfter(TimeSpan.FromMinutes(1));
+                                }
 							}
 
 							readToken.ThrowIfCancellationRequested();
