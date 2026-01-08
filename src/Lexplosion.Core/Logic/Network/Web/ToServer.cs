@@ -255,14 +255,14 @@ namespace Lexplosion.Logic.Network
 
         public string HttpGet(string url, Dictionary<string, string> headers = null, int timeout = 0)
         {
-            var task = HttpGetAsync(url, headers, timeout);
+            var task = Task.Run(() => HttpGetAsync(url, headers, timeout));
             task.Wait();
             return task.Result.Content;
         }
 
         public RequestResult HttpGetWithFullResult(string url, Dictionary<string, string> headers = null, int timeout = 0)
         {
-            var task = HttpGetAsync(url, headers, timeout);
+            var task = Task.Run(() => HttpGetAsync(url, headers, timeout));
             task.Wait();
             return task.Result;
         }
