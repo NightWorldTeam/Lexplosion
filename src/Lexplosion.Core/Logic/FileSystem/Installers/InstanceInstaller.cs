@@ -733,6 +733,8 @@ namespace Lexplosion.Logic.FileSystem.Installers
                 return false;
             }
 
+            if (urlString.EndsWith("/")) return true;
+
             try
             {
                 Uri uri = new Uri(urlString);
