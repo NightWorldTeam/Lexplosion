@@ -76,7 +76,7 @@
                 Focusable="False" />
         </ControlTemplate>
 
-        <Style x:Key="{x:Type ComboBox}" TargetType="{x:Type ComboBox}">
+        <Style x:Key="WindowResolutionComboBox" TargetType="{x:Type ComboBox}">
             <Setter Property="SnapsToDevicePixels" Value="true" />
             <Setter Property="OverridesDefaultStyle" Value="true" />
             <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
@@ -206,6 +206,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
 
@@ -263,7 +264,7 @@
                                 HorizontalAlignment="Right"
                                 Orientation="Horizontal">
 
-                                <ComboBox
+                                <ComboBox Style="{StaticResource WindowResolutionComboBox}"
                                     ItemsSource="{Binding Model.Resolutions}"
                                     MaxDropDownHeight="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={converters:WindowHeightToXProcentHeight}, ConverterParameter=52}"
                                     SelectedIndex="0"
@@ -645,8 +646,69 @@
                 </StackPanel>
 
 
-                <!--  Launcher Settings  -->
+                <!-- Network Settings -->
                 <StackPanel Grid.Row="2" Margin="0,32,0,0">
+
+                    <!--  Header  -->
+                    <Border
+                        Padding="0,0,0,8"
+                        BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
+                        BorderThickness="0,0,0,2">
+                        <StackPanel>
+                            <TextBlock
+                                Text="{DynamicResource NetworkProperties}"
+                                FontSize="16"
+                                FontWeight="Bold"
+                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                            <TextBlock
+                                Text="{DynamicResource NetworkPropertiesDescription}"
+                                FontSize="14"
+                                FontWeight="Medium"
+                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                        </StackPanel>
+                    </Border>
+
+
+                    <!--  Priority download source  -->
+
+                    <Border
+                        Grid.Row="1"
+                        Margin="0,16,0,0"
+                        Padding="0,0,0,16"
+                        BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
+                        BorderThickness="0,0,0,1">
+                        <Grid>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <StackPanel Orientation="Vertical">
+
+                                <TextBlock
+                                    FontSize="14"
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                    Text="{DynamicResource PriorityDownloadSource}" />
+                                <TextBlock
+                                    FontSize="14"
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                    Text="{DynamicResource PriorityDownloadSourceDescription}" />
+                            </StackPanel>
+
+                            <ComboBox Height="32" Margin="0,12,0,0"
+                                Grid.Row="1">
+                                <ComboBoxItem FontSize="14">NightWorld</ComboBoxItem>
+                                <ComboBoxItem FontSize="14">BMCL</ComboBoxItem>
+                            </ComboBox>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+
+                <!--  Launcher Settings  -->
+                <StackPanel Grid.Row="3" Margin="0,32,0,0">
 
                     <!--  Header  -->
                     <Border
@@ -799,7 +861,7 @@
                     <Border
                         Padding="0,16,0,8"
                         BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
-                        BorderThickness="0,0,0,0">
+                        BorderThickness="0,0,0,1">
                         <Grid>
 
                             <!--  Header  -->

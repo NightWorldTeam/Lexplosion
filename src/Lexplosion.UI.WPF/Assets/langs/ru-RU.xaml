@@ -127,6 +127,12 @@
     <s:String x:Key="JVMArguments">Аргуметны JVM</s:String>
     <s:String x:Key="JVMArgumentsDescription">Аргументы виртуальной Java машины</s:String>
 
+    <!-- Network Properties -->
+    <s:String x:Key="NetworkProperties">Параметры сети</s:String>
+    <s:String x:Key="NetworkPropertiesDescription">Настройки связанные с сетью</s:String>
+    <s:String x:Key="PriorityDownloadSource">Приоритетный источник скачивания</s:String>
+    <s:String x:Key="PriorityDownloadSourceDescription">Приоритетный источник скачивания файлов Minecraft</s:String>
+
     <!--  Launcher Properties  -->
     <!--  Console  -->
     <s:String x:Key="Console">Консоль</s:String>

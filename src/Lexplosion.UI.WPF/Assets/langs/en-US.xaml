@@ -127,6 +127,12 @@
     <!--  JVM Arguments  -->
     <s:String x:Key="JVMArguments">JVM Arguments</s:String>
     <s:String x:Key="JVMArgumentsDescription">Arguments for Java Virtual Machine.</s:String>
+    
+    <!-- Network Properties -->
+    <s:String x:Key="NetworkProperties">Network Properties</s:String>
+    <s:String x:Key="NetworkPropertiesDescription">Network related settings</s:String>
+    <s:String x:Key="PriorityDownloadSource">Priority Download Source</s:String>
+    <s:String x:Key="PriorityDownloadSourceDescription">Priority Download Source for minecraft files</s:String>
 
     <!--  Launcher Properties  -->
     <!--  Console  -->
