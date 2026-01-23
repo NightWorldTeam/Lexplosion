@@ -264,11 +264,12 @@
                                 HorizontalAlignment="Right"
                                 Orientation="Horizontal">
 
-                                <ComboBox Style="{StaticResource WindowResolutionComboBox}"
+                                <ComboBox
                                     ItemsSource="{Binding Model.Resolutions}"
                                     MaxDropDownHeight="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={converters:WindowHeightToXProcentHeight}, ConverterParameter=52}"
                                     SelectedIndex="0"
                                     SelectedValue="{Binding Model.SelectedResolution}"
+                                    Style="{StaticResource WindowResolutionComboBox}"
                                     ToolTip="{DynamicResource DisplayResolution}" />
 
                                 <controls:AdvancedTextBox
@@ -646,8 +647,11 @@
                 </StackPanel>
 
 
-                <!-- Network Settings -->
-                <StackPanel Grid.Row="2" Margin="0,32,0,0">
+                <!--  Network Settings  -->
+                <StackPanel
+                    Grid.Row="2"
+                    Margin="0,32,0,0"
+                    Visibility="Collapsed">
 
                     <!--  Header  -->
                     <Border
@@ -656,15 +660,15 @@
                         BorderThickness="0,0,0,2">
                         <StackPanel>
                             <TextBlock
-                                Text="{DynamicResource NetworkProperties}"
                                 FontSize="16"
                                 FontWeight="Bold"
-                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                Text="{DynamicResource NetworkProperties}" />
                             <TextBlock
-                                Text="{DynamicResource NetworkPropertiesDescription}"
                                 FontSize="14"
                                 FontWeight="Medium"
-                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                Text="{DynamicResource NetworkPropertiesDescription}" />
                         </StackPanel>
                     </Border>
 
@@ -698,8 +702,10 @@
                                     Text="{DynamicResource PriorityDownloadSourceDescription}" />
                             </StackPanel>
 
-                            <ComboBox Height="32" Margin="0,12,0,0"
-                                Grid.Row="1">
+                            <ComboBox
+                                Grid.Row="1"
+                                Height="32"
+                                Margin="0,12,0,0">
                                 <ComboBoxItem FontSize="14">NightWorld</ComboBoxItem>
                                 <ComboBoxItem FontSize="14">BMCL</ComboBoxItem>
                             </ComboBox>
