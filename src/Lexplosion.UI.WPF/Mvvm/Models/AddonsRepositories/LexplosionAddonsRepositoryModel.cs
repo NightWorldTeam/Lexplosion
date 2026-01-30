@@ -1,20 +1,21 @@
-﻿using Lexplosion.Logic.Management.Instances;
+﻿using Lexplosion.Logic.Management;
+using Lexplosion.Logic.Management.Addons;
+using Lexplosion.Logic.Management.Instances;
+using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects;
+using Lexplosion.Tools;
+using Lexplosion.UI.WPF.Core;
+using Lexplosion.UI.WPF.Core.GameExtensions;
 using Lexplosion.UI.WPF.Core.Objects;
+using Lexplosion.UI.WPF.Core.Objects.TranslatableObjects;
+using Lexplosion.UI.WPF.Mvvm.Models.AddonsRepositories.Groups;
+using Lexplosion.UI.WPF.Mvvm.Models.Mvvm.InstanceModel;
+using Lexplosion.UI.WPF.Mvvm.ViewModels.Modal;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
-using Lexplosion.Logic.Network.Web;
-using System;
-using Lexplosion.UI.WPF.Core.Objects.TranslatableObjects;
-using Lexplosion.Tools;
-using Lexplosion.UI.WPF.Mvvm.Models.AddonsRepositories.Groups;
-using Lexplosion.UI.WPF.Core.GameExtensions;
-using Lexplosion.UI.WPF.Mvvm.Models.Mvvm.InstanceModel;
-using Lexplosion.Logic.Management.Addons;
-using Lexplosion.Logic.Management;
-using Lexplosion.UI.WPF.Core;
-using Lexplosion.UI.WPF.Mvvm.ViewModels.Modal;
 
 namespace Lexplosion.UI.WPF.Mvvm.Models.AddonsRepositories
 {
@@ -235,7 +236,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.AddonsRepositories
             if (_projectSource == ProjectSource.Curseforge)
             {
                 return new CurseforgeSearchParams(SearchFilter, _instanceData.GameVersion.ToString(),
-                    SelectedCategories, (int)PageSize, (int)CurrentPageIndex, (CfSortField)SelectedSortByIndex,
+                    SelectedCategories, (int)PageSize, (int)CurrentPageIndex, (CfSortField)(SelectedSortByIndex < 0 ? 1 : SelectedSortByIndex),
                     SelectedModloaders.Select(m => m.EnumValue).ToList());
             }
             else
