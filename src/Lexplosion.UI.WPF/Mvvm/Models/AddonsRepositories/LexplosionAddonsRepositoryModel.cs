@@ -236,7 +236,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.AddonsRepositories
             if (_projectSource == ProjectSource.Curseforge)
             {
                 return new CurseforgeSearchParams(SearchFilter, _instanceData.GameVersion.ToString(),
-                    SelectedCategories, (int)PageSize, (int)CurrentPageIndex, (CfSortField)(SelectedSortByIndex < 0 ? 1 : SelectedSortByIndex),
+                    SelectedCategories, (int)PageSize, (int)CurrentPageIndex, (CfSortField)(SelectedSortByIndex < 1 ? 1 : SelectedSortByIndex),
                     SelectedModloaders.Select(m => m.EnumValue).ToList());
             }
             else
