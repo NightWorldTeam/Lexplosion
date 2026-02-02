@@ -112,6 +112,8 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
         }
 
         private RelayCommand _toSupportCommand;
+        private readonly AppCore _appCore;
+
         public ICommand ToSupportCommand
         {
             get => RelayCommand.GetCommand(ref _toSupportCommand, () =>
@@ -131,12 +133,25 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
         #region Constructors
 
 
-        public LeftPanelViewModel()
+        public LeftPanelViewModel(AppCore appCore)
         {
+            _appCore = appCore;
+
             Account.LaunchAccountChanged += (acc) => SetUserDataToHeader();
             Account.ActiveAccountChanged += (acc) => SetUserDataToHeader();
 
+            _appCore.Settings.ThemeService.SidebarBannerActivityChanged += (value) =>
+            {
+                ProfileBanner = value ? Account.ActiveAccount.ProfileBanner : null;
+                OnPropertyChanged(nameof(ProfileBanner));
+            };
+
             SetUserDataToHeader();
+        }
+
+        protected LeftPanelViewModel() 
+        {
+
         }
 
 
@@ -240,8 +255,11 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
                 UserLogin = Account.ActiveAccount.Login;
                 UserAvatar = Account.ActiveAccount.HeadImageUrl;
                 UserAccountType = AccountType.NightWorld;
-                ProfileBanner = Account.ActiveAccount.ProfileBanner;
-                OnPropertyChanged(nameof(ProfileBanner));
+                if (Global.GlobalData.GeneralSettings.IsSidebarBannerEnabled == true) 
+                {
+                    ProfileBanner = Account.ActiveAccount.ProfileBanner;
+                    OnPropertyChanged(nameof(ProfileBanner));
+                }
                 return;
             }
 

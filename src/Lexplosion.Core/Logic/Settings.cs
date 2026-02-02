@@ -55,6 +55,7 @@ namespace Lexplosion.Logic
         public string AccentColor = string.Empty;
         public string ThemeName = string.Empty;
         public string AppHeaderTemplateName = string.Empty;
+		public bool? IsSidebarBannerEnabled = null;
         /// <summary>
         /// Адрес сервера для автовхода при запуске майкрафта.
         /// Параметр только для настроек конкретного клиента. 
@@ -111,6 +112,7 @@ namespace Lexplosion.Logic
                 if (string.IsNullOrWhiteSpace(ThemeName)) ThemeName = settings.ThemeName;
                 if (string.IsNullOrWhiteSpace(AccentColor)) AccentColor = settings.AccentColor;
                 if (string.IsNullOrWhiteSpace(AppHeaderTemplateName)) AppHeaderTemplateName = settings.AppHeaderTemplateName;
+                if (IsSidebarBannerEnabled == null) IsSidebarBannerEnabled = settings.IsSidebarBannerEnabled;
             }
             else
             {
@@ -133,6 +135,7 @@ namespace Lexplosion.Logic
                 if (!string.IsNullOrWhiteSpace(settings.ThemeName)) ThemeName = settings.ThemeName;
                 if (!string.IsNullOrWhiteSpace(settings.AccentColor)) AccentColor = settings.AccentColor;
                 if (!string.IsNullOrWhiteSpace(settings.AppHeaderTemplateName)) AppHeaderTemplateName = settings.AppHeaderTemplateName;
+                if (IsSidebarBannerEnabled != null) IsSidebarBannerEnabled = settings.IsSidebarBannerEnabled;
                 AutoLoginServer = settings.AutoLoginServer;
             }
 
@@ -184,7 +187,8 @@ namespace Lexplosion.Logic
 				NavBarInLeft = true,
 				IsPortableMode = false,
                 IsNightWorldSkinSystem = true,
-                AppHeaderTemplateName = "MacOS"
+                AppHeaderTemplateName = "MacOS",
+                IsSidebarBannerEnabled = true,
             };
         }
     }

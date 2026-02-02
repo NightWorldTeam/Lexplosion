@@ -22,7 +22,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.Content.GeneralSettings
         {
             get => _themeService.SelectedAppHeaderTemplateName; set
             {
-                if (!string.IsNullOrEmpty(value)) 
+                if (!string.IsNullOrEmpty(value))
                 {
                     _themeService.ChangeWindowHeaderTemplate(value);
                     OnPropertyChanged();
@@ -30,6 +30,16 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.Content.GeneralSettings
             }
         }
 
+        private bool _isSidebarBannerEnabled;
+        public bool IsSidebarBannerEnabled
+        {
+            get => _isSidebarBannerEnabled; set
+            {
+                _isSidebarBannerEnabled = value;
+                _appCore.Settings.ThemeService.ChangeSidebarBannerActivity(value);
+                OnPropertyChanged();
+            }
+        }
 
         public IEnumerable<ActivityColor> Colors { get => _themeService.Colors; }
         public IEnumerable<Theme> Themes { get => _themeService.Themes; }
