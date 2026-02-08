@@ -8,7 +8,7 @@ namespace NightWorld.Tools
 		public static class LittleEndian
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			public static short ToShort2<T>(T bytes, int index) where T : IList<byte>
+			public static short ToShortGeneric<T>(T bytes, int index) where T : IReadOnlyList<byte>
 			{
 				short result = bytes[index + 1];
 				result = (short)(result << 8);

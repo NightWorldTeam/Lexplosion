@@ -35,9 +35,9 @@ namespace Lexplosion.Logic.Network
 				}
 			}
 
-			HandshakeServerPoint = new IPEndPoint(ipAddress, 4565);
+			HandshakeServerPoint = new IPEndPoint(ipAddress, 4465);
 			TurnPoint = new IPEndPoint(ipAddress, 9765);
-			SmpProxyPoint = new IPEndPoint(ipAddress, 4729);
+			SmpProxyPoint = new IPEndPoint(ipAddress, 9775);
 		}
 	}
 }
