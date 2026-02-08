@@ -1,15 +1,19 @@
-﻿using Lexplosion.Global;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Security.Policy;
+using Lexplosion.Global;
+using Lexplosion.Logic.Objects.CommonClientData;
+using Lexplosion.Tools;
 
 namespace Lexplosion.Logic.FileSystem
 {
-    internal class DownloadUrlHandler
-    {
-        private string _libraiesMirrorUrl = LaunсherSettings.URL.MirrorUrl;
+	internal class DownloadUrlHandler
+	{
+		private string _libraiesMirrorUrl = LaunсherSettings.URL.MirrorUrl;
 
-        private bool _sourceChanged = false;
-        private object _locker = new object();
+		private bool _sourceChanged = false;
+		private object _locker = new object();
 
 		private Dictionary<string, (string, string)[]> _bmclApiUrls = new()
 		{
@@ -30,26 +34,26 @@ namespace Lexplosion.Logic.FileSystem
             ]
 		};
 
-        /// <summary>
-        /// Ключ - домен для замены, значение - номер смены.
-        /// Если в коллекции нет ключа или ключ есть и значение 0, значит возвращаем стандартный url.
-        /// Если Ключ в коллекции есть и значение 1, то вместо этого домена скачивать нужно с bmclApi
-        /// Если ключ в коллекции есть и значение 2, то вместо этого домена нужно качать с нашего зеркала
-        /// Если ключ в коллекции есть и значение больше 2, то возращаемся к стандартному url, ибо со весми другими источниками тоже возникли проблемы
-        /// </summary>
-        private Dictionary<string, int> _domainsToReplace = new();
+		/// <summary>
+		/// Ключ - домен для замены, значение - номер смены.
+		/// Если в коллекции нет ключа или ключ есть и значение 0, значит возвращаем стандартный url.
+		/// Если Ключ в коллекции есть и значение 1, то вместо этого домена скачивать нужно с bmclApi
+		/// Если ключ в коллекции есть и значение 2, то вместо этого домена нужно качать с нашего зеркала
+		/// Если ключ в коллекции есть и значение больше 2, то возращаемся к стандартному url, ибо со весми другими источниками тоже возникли проблемы
+		/// </summary>
+		private Dictionary<string, int> _domainsToReplace = new();
 
-        public string GenerateFileUrl(string baseUrl, out int shiftNumber)
-        {
-            string addr = baseUrl;
+		public string GenerateFileUrl(string baseUrl, out int shiftNumber)
+		{
+			string addr = baseUrl;
 
-            shiftNumber = 0;
-            lock (_locker)
-            {
-                if (!_sourceChanged) return addr;
+			shiftNumber = 0;
+			lock (_locker)
+			{
+				if (!_sourceChanged) return addr;
 
-                string domain = (new Uri(addr).Host);
-                if (!_domainsToReplace.TryGetValue(domain, out shiftNumber)) return addr;
+				string domain = (new Uri(addr).Host);
+				if (!_domainsToReplace.TryGetValue(domain, out shiftNumber)) return addr;
 
 				if (shiftNumber == 2) // используем bmclApi
 				{
@@ -72,29 +76,29 @@ namespace Lexplosion.Logic.FileSystem
 					return _libraiesMirrorUrl + addr;
 				}
 
-                return addr;
-            }
-        }
+				return addr;
+			}
+		}
 
-        public void ErrorOccured(string fileUrl, int currentShiftNumber)
-        {
-            lock (_locker)
-            {
-                _sourceChanged = true;
+		public void ErrorOccured(string fileUrl, int currentShiftNumber)
+		{
+			lock (_locker)
+			{
+				_sourceChanged = true;
 
-                var url = new Uri(fileUrl);
-                if (_domainsToReplace.TryGetValue(url.Host, out int shiftNumber))
-                {
-                    if (shiftNumber > currentShiftNumber) return;
-                    _domainsToReplace[url.Host]++;
+				var url = new Uri(fileUrl);
+				if (_domainsToReplace.TryGetValue(url.Host, out int shiftNumber))
+				{
+					if (shiftNumber > currentShiftNumber) return;
+					_domainsToReplace[url.Host]++;
 
-                    Runtime.DebugWrite($"Shift for {fileUrl}, last shift: {shiftNumber}");
-                    return;
-                }
+					Runtime.DebugWrite($"Shift for {fileUrl}, last shift: {shiftNumber}");
+					return;
+				}
 
-                Runtime.DebugWrite($"First for {fileUrl}");
-                _domainsToReplace[url.Host] = 1;
-            }
-        }
-    }
+				Runtime.DebugWrite($"First for {fileUrl}");
+				_domainsToReplace[url.Host] = 1;
+			}
+		}
+	}
 }

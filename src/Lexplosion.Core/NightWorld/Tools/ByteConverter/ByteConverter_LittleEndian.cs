@@ -15,18 +15,18 @@ namespace NightWorld.Tools
 				return (short)(result | bytes[index]);
 			}
 
-            public static short ToShort(byte[] bytes, int index)
-            {
-                short result = bytes[index + 1];
-                result = (short)(result << 8);
-                return (short)(result | bytes[index]);
-            }
+			public static short ToShort(byte[] bytes, int index)
+			{
+				short result = bytes[index + 1];
+				result = (short)(result << 8);
+				return (short)(result | bytes[index]);
+			}
 
-            public static ushort ToUShort(byte[] bytes, int index)
-            {
-                return (ushort)ToShort(bytes, index);
-            }
-        }
+			public static ushort ToUShort(byte[] bytes, int index)
+			{
+				return (ushort)ToShort(bytes, index);
+			}
+		}
 
-    }
+	}
 }

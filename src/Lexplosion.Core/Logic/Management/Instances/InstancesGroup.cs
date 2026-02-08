@@ -1,10 +1,12 @@
-﻿using Lexplosion.Logic.FileSystem.Services;
-using Lexplosion.Logic.Objects;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
+using Lexplosion.Core.Extensions;
+using Lexplosion.Logic.FileSystem.Services;
+using Lexplosion.Logic.Objects;
 
 namespace Lexplosion.Logic.Management.Instances
 {
