@@ -267,7 +267,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.InstanceProfile
             IsAddonsLoading = true;
             Runtime.TaskRun(() =>
             {
-                var installedAddons = AddonsManager.GetManager(_baseInstanceData, Runtime.ServicesContainer).GetInstalledAddons(Type);
+                var installedAddons = AddonsManager.GetManager(_baseInstanceData, Runtime.ServicesContainer).GetInstalledAddonsWithoutCache(Type);
                 //IsAddonsLoaded = !false;
                 SetAddons(installedAddons, true, true);
             });

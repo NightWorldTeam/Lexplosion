@@ -115,11 +115,6 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.InstanceControllers
                 instanceModelBase.UpdateInstancesGroup(SelectedGroup);
             }
 
-            foreach (var i in _instances)
-            {
-                Runtime.DebugWrite($"{instanceClient.Name} {i.InstanceClient.Name}\t|\t{instanceClient.ExternalId} {i.InstanceClient.ExternalId}\t|\t{i.InstanceClient == instanceClient}");
-            }
-
             App.Current.Dispatcher.Invoke(() =>
             {
                 if (instanceModelBase == null)

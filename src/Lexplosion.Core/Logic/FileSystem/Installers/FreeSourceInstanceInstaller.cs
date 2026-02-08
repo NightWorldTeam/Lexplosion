@@ -63,14 +63,15 @@ namespace Lexplosion.Logic.FileSystem.Installers
 
                 MainFileDownload?.Invoke(0);
 
-                (bool, string, string) res = instanceFileGetter(_extractedFilesDir, BuildTaskArgs);
+                var res = instanceFileGetter(_extractedFilesDir, BuildTaskArgs);
 
-                if (!res.Item1)
-                {
-                    _fileDownloadHandler?.Invoke(res.Item3, 100, DownloadFileProgress.Error);
-                    return default;
-                }
-                _fileDownloadHandler?.Invoke(res.Item3, 100, DownloadFileProgress.Successful);
+				if (!res.IsSuccess)
+				{
+					_fileDownloadHandler?.Invoke(res.FileName, 100, DownloadFileProgress.Error);
+					return default;
+				}
+
+				_fileDownloadHandler?.Invoke(res.FileName, 100, DownloadFileProgress.Successful);
 
 
                 string unzipFolder = _extractedFilesDir + "dataDownload/";
@@ -102,14 +103,14 @@ namespace Lexplosion.Logic.FileSystem.Installers
                     }
                 }
 
-                if (files != null)
-                {
-                    // у нас есть список разрешенных файлов. Проходимся по всему архиву и берем только нужные файлы
-                    using (ZipArchive zip = ZipFile.Open(res.Item2, ZipArchiveMode.Read))
-                    {
-                        foreach (ZipArchiveEntry entry in zip.Entries)
-                        {
-                            if (cancelToken.IsCancellationRequested) return null;
+				if (files != null)
+				{
+					// у нас есть список разрешенных файлов. Проходимся по всему архиву и берем только нужные файлы
+					using (ZipArchive zip = ZipFile.Open(res.FilePath, ZipArchiveMode.Read))
+					{
+						foreach (ZipArchiveEntry entry in zip.Entries)
+						{
+							if (cancelToken.IsCancellationRequested) return null;
 
                             string entryPath = entry.FullName.Replace("\\", "/");
                             bool isModsFolder = entryPath.StartsWith("/files/mods/") || entryPath.StartsWith("files/mods/");
@@ -133,15 +134,15 @@ namespace Lexplosion.Logic.FileSystem.Installers
                                 Directory.CreateDirectory(folderToExtract);
                             }
 
-                            entry.ExtractToFile(pathToExtract);
-                        }
-                    }
-                }
-                else
-                {
-                    //белого спсика нет. Тупо потрошим архив
-                    ZipFile.ExtractToDirectory(res.Item2, unzipFolder);
-                }
+							entry.ExtractToFile(pathToExtract);
+						}
+					}
+				}
+				else
+				{
+					//белого спсика нет. Тупо потрошим архив
+					ZipFile.ExtractToDirectory(res.FilePath, unzipFolder);
+				}
 
                 var manifest = dataFilesManager.GetFile<InstanceManifest>(unzipFolder + "instanceInfo.json");
                 if (manifest == null || (string.IsNullOrWhiteSpace(manifest.GameVersion) && manifest.GameVersionInfo?.IsNan != false))

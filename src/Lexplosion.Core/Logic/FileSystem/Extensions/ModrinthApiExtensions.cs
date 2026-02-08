@@ -38,15 +38,15 @@ namespace Lexplosion.Logic.FileSystem.Extensions
                     };
             }
 
-            // устанавливаем
-            if (!withDirectory.InstallFile(fileUrl, fileName, path + folderName, taskArgs))
-            {
-                return new SetValues<InstalledAddonInfo, DownloadAddonRes>
-                {
-                    Value1 = null,
-                    Value2 = taskArgs.CancelToken.IsCancellationRequested ? DownloadAddonRes.IsCanselled : DownloadAddonRes.DownloadError
-                };
-            }
+			// устанавливаем
+			if (!withDirectory.InstallFile(fileUrl, fileName, path + folderName, taskArgs).IsSucces)
+			{
+				return new SetValues<InstalledAddonInfo, DownloadAddonRes>
+				{
+					Value1 = null,
+					Value2 = taskArgs.CancelToken.IsCancellationRequested ? DownloadAddonRes.IsCanselled : DownloadAddonRes.DownloadError
+				};
+			}
 
             Runtime.DebugWrite("SYS " + fileUrl);
 

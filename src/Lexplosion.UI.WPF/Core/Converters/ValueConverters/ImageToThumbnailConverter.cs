@@ -34,7 +34,14 @@ namespace Lexplosion.UI.WPF.Core.Converters
 
             if (value is byte[] imageArray)
             {
-                return ImageTools.ResizeImage(imageArray, (int)sizes[0], (int)sizes[1]);
+                try
+                {
+                    return ImageTools.ResizeImage(imageArray, (int)sizes[0], (int)sizes[1]);
+                }
+                catch
+                {
+                    Runtime.DebugWrite("[Error] Image resize failed", color: ConsoleColor.DarkGray);
+                }
             }
 
             if (value is string imageUrl) 

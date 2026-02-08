@@ -1,23 +1,44 @@
-﻿using Lexplosion.Logic.Network.Web;
-using Lexplosion.Logic.Objects;
-using Lexplosion.Logic.Objects.Curseforge;
-using Lexplosion.Tools;
-using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System;
+using Lexplosion.Logic.FileSystem.Services;
+using Lexplosion.Logic.Network.Web;
+using Lexplosion.Logic.Objects.Curseforge;
+using Lexplosion.Logic.Objects;
+using Lexplosion.Tools;
+using Lexplosion.Logic.FileSystem.Models;
 
 namespace Lexplosion.Logic.FileSystem.Extensions
 {
     public static class CurseforgeApiExtensions
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static SetValues<InstalledAddonInfo, DownloadAddonRes> InstallAddon(AddonType addonType, string fileUrl, string fileName, string path, string folderName, string projectID, string fileID, WithDirectory withDirecory, TaskArgs taskArgs)
+        private static SetValues<InstalledAddonInfo, DownloadAddonRes> InstallAddon(CurseforgeApi api, AddonType addonType, string fileUrl, string fileName, string path, string folderName, string projectID, string fileID, WithDirectory withDirecory, TaskArgs taskArgs)
         {
+            if (api.MirrorTranlationsEnabled)
+            {
+                api.TryTranslateUrlToMirror(ref fileUrl);
+            }
+
             if (addonType != AddonType.Maps)
             {
-                if (!withDirecory.InstallFile(fileUrl, fileName, path + folderName, taskArgs))
+                var result = withDirecory.InstallFile(fileUrl, fileName, path + folderName, taskArgs);
+                if (!result.IsSucces)
                 {
+                    if (!api.MirrorTranlationsEnabled && result.State == RequestResultState.NetworkError)
+                    {
+                        api.TryTranslateUrlToMirror(ref fileUrl);
+                        if (!withDirecory.InstallFile(fileUrl, fileName, path + folderName, taskArgs).IsSucces)
+                        {
+                            return new SetValues<InstalledAddonInfo, DownloadAddonRes>
+                            {
+                                Value1 = null,
+                                Value2 = taskArgs.CancelToken.IsCancellationRequested ? DownloadAddonRes.IsCanselled : DownloadAddonRes.DownloadError
+                            };
+                        }
+                    }
+
                     return new SetValues<InstalledAddonInfo, DownloadAddonRes>
                     {
                         Value1 = null,
@@ -29,8 +50,22 @@ namespace Lexplosion.Logic.FileSystem.Extensions
             }
             else
             {
-                if (!withDirecory.InstallZipContent(fileUrl, fileName, path + folderName, taskArgs))
+                var result = withDirecory.InstallZipContent(fileUrl, fileName, path + folderName, taskArgs);
+                if (!result.IsSucces)
                 {
+                    if (!api.MirrorTranlationsEnabled && result.State == RequestResultState.NetworkError)
+                    {
+                        api.TryTranslateUrlToMirror(ref fileUrl);
+                        if (!withDirecory.InstallZipContent(fileUrl, fileName, path + folderName, taskArgs).IsSucces)
+                        {
+                            return new SetValues<InstalledAddonInfo, DownloadAddonRes>
+                            {
+                                Value1 = null,
+                                Value2 = taskArgs.CancelToken.IsCancellationRequested ? DownloadAddonRes.IsCanselled : DownloadAddonRes.DownloadError
+                            };
+                        }
+                    }
+
                     return new SetValues<InstalledAddonInfo, DownloadAddonRes>
                     {
                         Value1 = null,
@@ -118,7 +153,7 @@ namespace Lexplosion.Logic.FileSystem.Extensions
                 }
 
                 // устанавливаем
-                return InstallAddon(addonType, fileUrl, fileName, path, folderName, projectID, fileID, withDirectory, taskArgs);
+                return InstallAddon(api, addonType, fileUrl, fileName, path, folderName, projectID, fileID, withDirectory, taskArgs);
             }
             catch
             {
@@ -226,7 +261,7 @@ namespace Lexplosion.Logic.FileSystem.Extensions
                 }
 
                 // устанавливаем
-                return InstallAddon(addonType, fileUrl, fileName, path, folderName, projectID, fileID, withDirectory, taskArgs);
+                return InstallAddon(api, addonType, fileUrl, fileName, path, folderName, projectID, fileID, withDirectory, taskArgs);
             }
             catch
             {

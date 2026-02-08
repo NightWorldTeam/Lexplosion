@@ -1,18 +1,35 @@
-﻿using Lexplosion.Logic.Objects;
-using Lexplosion.Logic.Objects.Curseforge;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Runtime.CompilerServices;
+using Lexplosion.Logic.FileSystem;
+using Lexplosion.Logic.FileSystem.Models;
+using Lexplosion.Logic.Objects;
+using Lexplosion.Logic.Objects.Curseforge;
+using Lexplosion.Tools;
+using Newtonsoft.Json;
 
 namespace Lexplosion.Logic.Network.Web
 {
     public class CurseforgeApi
     {
-        private const string Token = "$2a$10$Ky9zG9R9.ha.kf5BRrvwU..OGSvC0I2Wp56hgXI/4aRtGbizrm3we";
+        private const string TOKEN = "$2a$10$Ky9zG9R9.ha.kf5BRrvwU..OGSvC0I2Wp56hgXI/4aRtGbizrm3we";
+        private const string API_URL_BASE = "https://api.curseforge.com/";
+        private const string MIRROR_API_URL_BASE = $"{Global.LaunсherSettings.URL.MirrorUrl}api.curseforge.com/";
+
         private readonly ToServer _toServer;
+        private bool _isMirorModeToMainUrl = false;
+
+        private string[] _mirrorAvalableDomains = new string[]
+        {
+            "curseforge.com",
+            "forgecdn.net"
+        };
+
+        private Dictionary<string, string> _mirrorTranslations = new Dictionary<string, string>();
+        public bool MirrorTranlationsEnabled { get; private set; } = false;
 
         private class DataContainer<T>
         {
@@ -50,8 +67,38 @@ namespace Lexplosion.Logic.Network.Web
             _toServer = toServer;
         }
 
+        public bool TryTranslateUrlToMirror(ref string url)
+        {
+            var uri = new Uri(url);
+            var baseUrl = $"{uri.Scheme}://{uri.Host}";
+
+            if (_mirrorTranslations.TryGetValue(baseUrl, out string toMirrorUrl))
+            {
+                url = url.Replace(baseUrl, toMirrorUrl);
+                return true;
+            }
+
+            foreach (var domain in _mirrorAvalableDomains)
+            {
+                if (uri.Host.EndsWith(domain))
+                {
+                    var mirrorUrl = $"{Global.LaunсherSettings.URL.MirrorUrl}{uri.Host}";
+
+                    _mirrorTranslations[baseUrl] = mirrorUrl;
+                    MirrorTranlationsEnabled = true;
+                    url = url.Replace(baseUrl, mirrorUrl);
+
+                    Runtime.DebugWrite($"Use mirror. From {baseUrl} to {mirrorUrl}");
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private T GetApiData<T>(string url, out Pagination pagination) where T : new()
+        private T GetApiData<T>(string url, out Pagination pagination, Func<string, Dictionary<string, string>, RequestResult> reuestMethod) 
+            where T : new()
         {
             pagination = null;
 
@@ -59,13 +106,21 @@ namespace Lexplosion.Logic.Network.Web
             {
                 var headers = new Dictionary<string, string>()
                 {
-                    ["x-api-key"] = Token
+                    ["x-api-key"] = TOKEN
                 };
 
-                string answer = _toServer.HttpGet(url, headers);
-                if (answer != null)
+                var result = reuestMethod((_isMirorModeToMainUrl ? MIRROR_API_URL_BASE : API_URL_BASE) + url, headers);
+                if (!result.IsSucces && !_isMirorModeToMainUrl && result.State == RequestResultState.NetworkError)
                 {
-                    var data = JsonConvert.DeserializeObject<DataContainer<T>>(answer);
+                    result = _toServer.HttpGetWithFullResult(MIRROR_API_URL_BASE + url, headers);
+                    if (!result.IsSucces) return new T();
+
+                    _isMirorModeToMainUrl = true;
+                }
+
+                if (result.IsSucces && result.Content != null)
+                {
+                    var data = JsonConvert.DeserializeObject<DataContainer<T>>(result.Content);
                     if (data == null) return new T();
 
                     pagination = data.Paginator;
@@ -81,33 +136,21 @@ namespace Lexplosion.Logic.Network.Web
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private T GetApiData<T>(string url, out Pagination pagination) where T : new()
+        {
+            return GetApiData<T>(url, out pagination, (string fullUrl, Dictionary<string, string> headers) =>
+            {
+                return _toServer.HttpGetWithFullResult(fullUrl, headers);
+            });
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private T GetApiData<T>(string url, string jsonInputData, out Pagination pagination) where T : new()
         {
-            pagination = null;
-
-            try
+            return GetApiData<T>(url, out pagination, (string fullUrl, Dictionary<string, string> headers) =>
             {
-                var headers = new Dictionary<string, string>()
-                {
-                    ["x-api-key"] = Token
-                };
-
-                string answer = _toServer.HttpPostJson(url, jsonInputData, out _, headers);
-                if (answer != null)
-                {
-                    var data = JsonConvert.DeserializeObject<DataContainer<T>>(answer);
-                    if (data == null) return new T();
-
-                    pagination = data.Paginator;
-                    return data.Data ?? new T();
-                }
-
-                return new T();
-            }
-            catch
-            {
-                return new T();
-            }
+                return _toServer.HttpPostJson(fullUrl, jsonInputData, headers);
+            });
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -118,7 +161,7 @@ namespace Lexplosion.Logic.Network.Web
 
         public CatalogResult<CurseforgeInstanceInfo> GetInstances(CurseforgeSearchParams searchParams)
         {
-            var queryBuilder = new QueryApiBuilder("https://api.curseforge.com/v1/mods/search");
+            var queryBuilder = new QueryApiBuilder("v1/mods/search");
 
             queryBuilder.Add("gameId", "432");
             queryBuilder.Add("classId", "4471");
@@ -156,7 +199,7 @@ namespace Lexplosion.Logic.Network.Web
              https://api.curseforge.com/v1/mods/search?gameId=432&classId=12&sortOrder=desc&pageSize=10&index=0&gameVersion=1.20.1&categoryIds=&sortField=0
              */
 
-            var queryBuilder = new QueryApiBuilder("https://api.curseforge.com/v1/mods/search");
+            var queryBuilder = new QueryApiBuilder("v1/mods/search");
 
             queryBuilder.Add("gameId", "432");
             queryBuilder.Add("classId", (int)type);
@@ -204,7 +247,7 @@ namespace Lexplosion.Logic.Network.Web
             }
 
             // TODO: у курсфорджа ограничения на 50 файлов, поэтому нужный нам файл иногда может просто не найтись
-            return GetApiData<List<CurseforgeFileInfo>>("https://api.curseforge.com/v1/mods/" + projectId + "/files?gameVersion=" + gameVersion + modloaderStr);
+            return GetApiData<List<CurseforgeFileInfo>>("v1/mods/" + projectId + "/files?gameVersion=" + gameVersion + modloaderStr);
         }
 
         public List<CurseforgeFileInfo> GetProjectFiles(string projectId, string gameVersion, IEnumerable<Modloader> modloaders)
@@ -216,14 +259,14 @@ namespace Lexplosion.Logic.Network.Web
             }
 
             // TODO: у курсфорджа ограничения на 50 файлов, поэтому нужный нам файл иногда может просто не найтись
-            return GetApiData<List<CurseforgeFileInfo>>("https://api.curseforge.com/v1/mods/" + projectId + "/files?gameVersion=" + gameVersion + modloaderStr);
+            return GetApiData<List<CurseforgeFileInfo>>("v1/mods/" + projectId + "/files?gameVersion=" + gameVersion + modloaderStr);
         }
 
         public List<CurseforgeFileInfo> GetFilesFromFingerprints(List<string> fingerprint)
         {
             var jsonContent = "{\"fingerprints\": [" + string.Join(",", fingerprint) + "]}";
 
-            var data = GetApiData<FingerprintSearchAnswer>("https://api.curseforge.com/v1/fingerprints/432", jsonContent);
+            var data = GetApiData<FingerprintSearchAnswer>("v1/fingerprints/432", jsonContent);
             var result = new List<CurseforgeFileInfo>();
             if (data?.exactMatches != null)
             {
@@ -238,24 +281,24 @@ namespace Lexplosion.Logic.Network.Web
 
         public List<CurseforgeFileInfo> GetProjectFiles(string projectId)
         {
-            return GetApiData<List<CurseforgeFileInfo>>("https://api.curseforge.com/v1/mods/" + projectId + "/files");
+            return GetApiData<List<CurseforgeFileInfo>>("v1/mods/" + projectId + "/files");
         }
 
         public CurseforgeFileInfo GetProjectFile(string projecrId, string fileId)
         {
-            return GetApiData<CurseforgeFileInfo>("https://api.curseforge.com/v1/mods/" + projecrId + "/files/" + fileId);
+            return GetApiData<CurseforgeFileInfo>("v1/mods/" + projecrId + "/files/" + fileId);
         }
 
         public CurseforgeAddonInfo GetAddonInfo(string id)
         {
-            return GetApiData<CurseforgeAddonInfo>("https://api.curseforge.com/v1/mods/" + id + "/");
+            return GetApiData<CurseforgeAddonInfo>("v1/mods/" + id + "/");
         }
 
         public List<CurseforgeAddonInfo> GetAddonsInfo(string[] ids)
         {
             string jsonContent = "{\"modIds\": [" + string.Join(",", ids) + "]}";
 
-            var data = GetApiData<List<CurseforgeAddonInfo>>("https://api.curseforge.com/v1/mods", jsonContent);
+            var data = GetApiData<List<CurseforgeAddonInfo>>("v1/mods", jsonContent);
             return data ?? new List<CurseforgeAddonInfo>();
         }
 
@@ -263,7 +306,7 @@ namespace Lexplosion.Logic.Network.Web
         {
             try
             {
-                return GetApiData<CurseforgeInstanceInfo>("https://api.curseforge.com/v1/mods/" + id + "/");
+                return GetApiData<CurseforgeInstanceInfo>("v1/mods/" + id + "/");
             }
             catch
             {
@@ -282,9 +325,9 @@ namespace Lexplosion.Logic.Network.Web
         {
             try
             {
-                string result = _toServer.HttpGet($"https://api.curseforge.com/v1/mods/{projectId}/description", new Dictionary<string, string>()
+                string result = _toServer.HttpGet($"v1/mods/{projectId}/description", new Dictionary<string, string>()
                 {
-                    ["x-api-key"] = Token
+                    ["x-api-key"] = TOKEN
                 });
 
                 if (result == null) return string.Empty;
@@ -300,7 +343,7 @@ namespace Lexplosion.Logic.Network.Web
 
         public List<CurseforgeCategory> GetCategories(CfProjectType type)
         {
-            List<CurseforgeCategory> categories = GetApiData<List<CurseforgeCategory>>("https://api.curseforge.com/v1/categories?gameId=432&classId=" + (int)type);
+            List<CurseforgeCategory> categories = GetApiData<List<CurseforgeCategory>>("v1/categories?gameId=432&classId=" + (int)type);
             categories.Insert(0, new CurseforgeCategory
             {
                 Id = "-1",

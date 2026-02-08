@@ -11,66 +11,36 @@ using System.Net;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Threading;
-using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
+using Lexplosion.Logic.Network.Web.Models;
+using Lexplosion.Logic.Network;
+using Lexplosion.Logic.FileSystem.Models;
 
 namespace Lexplosion.Logic.FileSystem
 {
-    public class WithDirectory
-    {
-        // TODO: во всём WithDirectory я заменяю элементы адресов директорий через replace. Не знаю как на винде, но на линуксе могут появиться проблемы, ведь replace заменяет подстроки в строке, а не только конечную подстроку
-        public string DirectoryPath { get; private set; }
-        public string InstancesPath { get => $"{DirectoryPath}/instances/"; }
-        public bool IsMirrorModeToNw { get; private set; } = false;
-        public string GetInstancePath(string instanceId) => $"{InstancesPath}{instanceId}/";
+	public class WithDirectory
+	{
+		// TODO: во всём WithDirectory я заменяю элементы адресов директорий через replace. Не знаю как на винде, но на линуксе могут появиться проблемы, ведь replace заменяет подстроки в строке, а не только конечную подстроку
+		public string DirectoryPath { get; private set; }
+		public string InstancesPath { get => $"{DirectoryPath}/instances/"; }
+		public string GetInstancePath(string instanceId) => $"{InstancesPath}{instanceId}/";
 
-        private HttpClient _httpClient = new();
-        private ProxyHandler _clientHandler;
+		public readonly ToServer ServerManager;
 
-        private const string USER_AGENT = "Mozilla/5.0 Lexplosion/1.0.1.1";
+		internal WithDirectory(ToServer toServer)
+		{
+			ServerManager = toServer;
+		}
 
-        internal WithDirectory()
-        {
-            _httpClient.DefaultRequestHeaders.Add("User-Agent", USER_AGENT);
-        }
-
-        [MethodImpl(MethodImplOptions.Synchronized)]
-        public void ChangeDownloadToProxyMode()
-        {
-            _clientHandler = new ProxyHandler(USER_AGENT);
-            var newhttpClient = new HttpClient(_clientHandler);
-            newhttpClient.DefaultRequestHeaders.Add("User-Agent", USER_AGENT);
-
-            _httpClient = newhttpClient;
-        }
-
-        [MethodImpl(MethodImplOptions.Synchronized)]
-        public void ChangeDownloadToMirrorMode()
-        {
-            if (!IsMirrorModeToNw)
-            {
-                Runtime.DebugWrite("Enable mirror mode");
-                var newhttpClient = new HttpClient(new RedirectToMirrorHandler());
-                newhttpClient.DefaultRequestHeaders.Add("User-Agent", USER_AGENT);
-
-                _httpClient = newhttpClient;
-                IsMirrorModeToNw = true;
-            }
-        }
-
-        public void AddProxy(Proxy proxy)
-        {
-            _clientHandler.AddProxy(proxy);
-        }
-
-        public void Create(string path)
-        {
-            try
-            {
-                path = path.Replace(@"\", "/");
-                if (path[path.Length - 1] == '/')
-                {
-                    path = path.TrimEnd('/');
-                }
+		public void Create(string path)
+		{
+			try
+			{
+				path = path.Replace(@"\", "/");
+				if (path[path.Length - 1] == '/')
+				{
+					path = path.TrimEnd('/');
+				}
 
                 DirectoryPath = path;
 
@@ -187,14 +157,16 @@ namespace Lexplosion.Logic.FileSystem
             }
         }
 
-        public bool InstallZipContent(string url, string fileName, string path, TaskArgs taskArgs)
-        {
+		public DownloadFileResult InstallZipContent(string url, string fileName, string path, TaskArgs taskArgs)
+		{
             path = DirectoryPath + "/" + path;
-            string tempDir = CreateTempDir();
-            if (!DownloadFile(url, fileName, tempDir, taskArgs))
-            {
-                return false;
-            }
+			string tempDir = CreateTempDir();
+
+			var result = DownloadFile(url, fileName, tempDir, taskArgs);
+            if (!result.IsSucces)
+			{
+				return result;
+			}
 
             try
             {
@@ -211,29 +183,29 @@ namespace Lexplosion.Logic.FileSystem
                     foreach (string dirPath in Directory.GetDirectories(directoryInfo.FullName, "*", SearchOption.AllDirectories))
                         Directory.CreateDirectory(dirPath.Replace(directoryInfo.FullName, resultFolder));
 
-                    foreach (string newPath in Directory.GetFiles(directoryInfo.FullName, "*.*", SearchOption.AllDirectories))
-                        File.Copy(newPath, newPath.Replace(directoryInfo.FullName, resultFolder), true);
-                }
+					foreach (string newPath in Directory.GetFiles(directoryInfo.FullName, "*.*", SearchOption.AllDirectories))
+						File.Copy(newPath, newPath.Replace(directoryInfo.FullName, resultFolder), true);
+				}
+			}
+			catch
+			{
+                return DownloadFileResult.HandleError();
             }
-            catch
-            {
-                return false;
-            }
-            finally
-            {
-                try
-                {
-                    Directory.Delete(tempDir, true);
-                }
-                catch { }
-            }
+			finally
+			{
+				try
+				{
+					Directory.Delete(tempDir, true);
+				}
+				catch { }
+			}
 
-            return true;
-        }
+			return result;
+		}
 
-        public bool InstallFile(string url, string fileName, string path, TaskArgs taskArgs)
-        {
-            Runtime.DebugWrite("INSTALL " + url);
+		public DownloadFileResult InstallFile(string url, string fileName, string path, TaskArgs taskArgs)
+		{
+			Runtime.DebugWrite("INSTALL " + url);
 
             string tempDir = null;
             try
@@ -244,61 +216,59 @@ namespace Lexplosion.Logic.FileSystem
                     Directory.CreateDirectory(DirectoryPath + "/" + path);
                 }
 
-                if (DownloadFile(url, fileName, tempDir, taskArgs))
-                {
-                    DelFile(DirectoryPath + "/" + path + "/" + fileName);
-                    File.Move((tempDir + fileName).Replace("/", "\\"), (DirectoryPath + "/" + path + "/" + fileName).Replace("/", "\\"));
-                    Directory.Delete(tempDir, true);
-                    return true;
-                }
-                else
-                {
-                    DelFile(tempDir + fileName);
-                    DelFile(DirectoryPath + "/" + path + "/" + fileName);
-                    return false;
-                }
+				var result = DownloadFile(url, fileName, tempDir, taskArgs);
+                if (result.IsSucces)
+				{
+					DelFile(DirectoryPath + "/" + path + "/" + fileName);
+					File.Move((tempDir + fileName).Replace("/", "\\"), (DirectoryPath + "/" + path + "/" + fileName).Replace("/", "\\"));
+					Directory.Delete(tempDir, true);
+				}
+				else
+				{
+					DelFile(tempDir + fileName);
+					DelFile(DirectoryPath + "/" + path + "/" + fileName);				
+				}
+
+                return result;
             }
-            catch (Exception ex)
-            {
-                if (tempDir != null)
-                {
-                    DelFile(tempDir + fileName);
-                    DelFile(DirectoryPath + "/" + path + "/" + fileName);
-                }
+			catch (Exception ex)
+			{
+				if (tempDir != null)
+				{
+					DelFile(tempDir + fileName);
+					DelFile(DirectoryPath + "/" + path + "/" + fileName);
+				}
 
                 Runtime.DebugWrite($"Downloading error fileName: {fileName}, path: {path}, gamePath: {DirectoryPath}, url: {url}, Exception:" + ex);
 
-                return false;
-            }
-        }
+				return DownloadFileResult.HandleError();
+			}
+		}
 
-        public async Task<(bool, HttpStatusCode?)> DownloadFileAsync(string url, string savePath, TaskArgs taskArgs)
-        {
-            var httpClient = _httpClient;
-            HttpStatusCode? httpStatus = null;
-            Runtime.DebugWrite($"Start Download url: {url}, savePath: {savePath}");
+		public async Task<DownloadFileResult> DownloadFileAsync(string url, string savePath, TaskArgs taskArgs)
+		{
+			Runtime.DebugWrite($"Start Download url: {url}, savePath: {savePath}");
 
-            try
-            {
-                using (HttpResponseMessage response = await httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, taskArgs.CancelToken))
-                {
-                    httpStatus = response.StatusCode;
-                    response.EnsureSuccessStatusCode();
+			try
+			{
+				using (HttpResponseMessage response = await ServerManager.GetResponse(url, HttpCompletionOption.ResponseHeadersRead, taskArgs.CancelToken))
+				{
+					response.EnsureSuccessStatusCode();
 
                     long? contentLength = response.Content.Headers.ContentLength;
 
-                    using (var stream = await response.Content.ReadAsStreamAsync())
-                    {
-                        using (var fileStream = File.Create(savePath))
-                        {
-                            byte[] buffer = new byte[8192];
-                            long bytesRead = 0;
-                            int bytesReadTotal = 0;
+					using (var stream = await response.Content.ReadAsStreamAsync())
+					{
+						using (var fileStream = File.Create(savePath))
+						{
+							byte[] buffer = new byte[8 * 1024];
+							long bytesRead = 0;
+							int bytesReadTotal = 0;
 
-                            var source = CancellationTokenSource.CreateLinkedTokenSource(taskArgs.CancelToken);
-                            var readToken = source.Token;
-                            source.Token.Register(() => stream.Close());
-                            source.CancelAfter(TimeSpan.FromMinutes(1));
+							var source = CancellationTokenSource.CreateLinkedTokenSource(taskArgs.CancelToken);
+							var readToken = source.Token;
+							source.Token.Register(() => stream.Close());
+							source.CancelAfter(TimeSpan.FromSeconds(20));
 
                             int bytesReadThisTime;
                             while (!readToken.IsCancellationRequested && (bytesReadThisTime = await stream.ReadAsync(buffer, 0, buffer.Length, readToken)) != 0)
@@ -315,53 +285,56 @@ namespace Lexplosion.Logic.FileSystem
                                     taskArgs.PercentHandler((int)percentage);
                                 }
 
-                                source.CancelAfter(TimeSpan.FromMinutes(1));
-                            }
+								if (bytesReadTotal < 64 * 1024)
+								{
+                                    source.CancelAfter(TimeSpan.FromSeconds(20));
+                                }
+								else
+								{
+                                    source.CancelAfter(TimeSpan.FromMinutes(1));
+                                }
+							}
 
                             readToken.ThrowIfCancellationRequested();
                             taskArgs.PercentHandler(100);
                         }
 
-                        return (true, httpStatus);
-                    }
-                }
-            }
-            catch (HttpRequestException ex)
-            {
+						return DownloadFileResult.Success(response.StatusCode);
+					}
+				}
+			}
+			catch (HttpRequestException ex)
+			{
+                HttpStatusCode? httpStatus = null;
+
                 Runtime.DebugWrite("Downloading error " + savePath + " " + url + " " + ex);
-                if (ex.Data.Contains("StatusCode")) httpStatus = (HttpStatusCode)ex.Data["StatusCode"];
+				if (ex.Data.Contains("StatusCode")) httpStatus = (HttpStatusCode)ex.Data["StatusCode"];
+
+                return DownloadFileResult.DownloadError(httpStatus);
             }
-            catch (WebException ex)
-            {
-                Runtime.DebugWrite("Downloading error " + savePath + " " + url + " " + ex);
-                if (ex.Response is HttpWebResponse httpResponse) httpStatus = httpResponse.StatusCode;
+			catch (WebException ex)
+			{
+				Runtime.DebugWrite("Downloading error " + savePath + " " + url + " " + ex);
+                return DownloadFileResult.DownloadError((ex.Response as HttpWebResponse)?.StatusCode);
             }
-            catch (Exception ex)
-            {
-                Runtime.DebugWrite("Downloading error " + savePath + " " + url + " " + ex);
+			catch (Exception ex)
+			{
+				Runtime.DebugWrite("Downloading error " + savePath + " " + url + " " + ex);
 
-                if (!IsMirrorModeToNw && url != null && url.StartsWith(LaunсherSettings.URL.Base))
-                {
-                    ChangeDownloadToMirrorMode();
-                }
+				if (url.StartsWith(LaunсherSettings.URL.Base))
+				{
+					ServerManager.ChangeToMirrorMode();
+				}
+
+                return DownloadFileResult.NetworkError();
             }
+		}
 
-            return (false, httpStatus);
-        }
-
-        public bool DownloadFile(string url, string fileName, string tempDir, TaskArgs taskArgs)
-        {
-            DelFile(tempDir + fileName);
-            return DownloadFileAsync(url, tempDir + fileName, taskArgs).Result.Item1;
-        }
-
-        public bool DownloadFile(string url, string fileName, string tempDir, out HttpStatusCode? statusCode, TaskArgs taskArgs)
-        {
-            DelFile(tempDir + fileName);
-            var res = DownloadFileAsync(url, tempDir + fileName, taskArgs).Result;
-            statusCode = res.Item2;
-            return res.Item1;
-        }
+		public DownloadFileResult DownloadFile(string url, string fileName, string tempDir, TaskArgs taskArgs)
+		{
+			DelFile(tempDir + fileName);
+			return DownloadFileAsync(url, tempDir + fileName, taskArgs).Result;
+		}
 
         /// <summary>
         /// Удаляет файл, если он существует.

@@ -1,12 +1,13 @@
-﻿using Lexplosion.Logic.FileSystem;
-using Lexplosion.Logic.FileSystem.Installers;
-using Lexplosion.Logic.FileSystem.Services;
-using Lexplosion.Logic.Network.Services;
-using Lexplosion.Logic.Objects.CommonClientData;
-using Lexplosion.Tools;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using Lexplosion.Logic.FileSystem;
+using Lexplosion.Logic.Objects.CommonClientData;
+using Lexplosion.Tools;
+using Lexplosion.Logic.Network.Services;
+using Lexplosion.Logic.FileSystem.Installers;
+using Lexplosion.Logic.FileSystem.Services;
+using Lexplosion.Logic.FileSystem.Models;
 
 namespace Lexplosion.Logic.Management.Installers
 {
@@ -100,10 +101,28 @@ namespace Lexplosion.Logic.Management.Installers
 
         protected abstract bool LocalInfoIsValid(CPlatformData data);
 
+        protected abstract string GetArchiveDownloadUrl();
+
+        protected abstract string GetReserveArchiveDownloadUrl();
+
         public abstract string ProjectId { get; }
         protected abstract bool ProfectInfoIsValid { get; }
-        protected abstract string ArchiveDownloadUrl { get; }
         protected abstract string ArchiveFileName { get; }
+
+        protected virtual InstanceFileGetterResult DownloadArchive(string tempDir, Func<string, TaskArgs> taskArgsGetter)
+        {
+            var res = _withDirectory.DownloadFile(GetArchiveDownloadUrl(), ArchiveFileName, tempDir, taskArgsGetter(ArchiveFileName));
+            if (!res.IsSucces && res.State == RequestResultState.NetworkError)
+            {
+                var reserveUrl = GetReserveArchiveDownloadUrl();
+                if (reserveUrl != null)
+                {
+                    res = _withDirectory.DownloadFile(reserveUrl, ArchiveFileName, tempDir, taskArgsGetter(ArchiveFileName));
+                }
+            }
+
+            return new InstanceFileGetterResult(res.IsSucces, tempDir + ArchiveFileName, ArchiveFileName);
+        }
 
         public InstanceInit Check(out string javaVersionName, string instanceVersion)
         {
@@ -244,14 +263,8 @@ namespace Lexplosion.Logic.Management.Installers
                     };
                 }
 
-                InstanceFileGetter fileGetter = (string tempDir, Func<string, TaskArgs> taskArgsGetter) =>
-                {
-                    bool res = _withDirectory.DownloadFile(ArchiveDownloadUrl, ArchiveFileName, tempDir, taskArgsGetter(ArchiveFileName));
-                    return (res, tempDir + ArchiveFileName, ArchiveFileName);
-                };
-
                 // скачиваем архив модпака и из него получаем манифест
-                var manifest = _installer.Extraction(fileGetter, _cancelToken);
+                var manifest = _installer.Extraction(DownloadArchive, _cancelToken);
 
                 if (_cancelToken.IsCancellationRequested)
                 {

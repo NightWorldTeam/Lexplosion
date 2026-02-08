@@ -128,6 +128,12 @@
     <s:String x:Key="JVMArguments">Аргуметны JVM</s:String>
     <s:String x:Key="JVMArgumentsDescription">Аргументы виртуальной Java машины</s:String>
 
+    <!--  Network Properties  -->
+    <s:String x:Key="NetworkProperties">Параметры сети</s:String>
+    <s:String x:Key="NetworkPropertiesDescription">Настройки связанные с сетью</s:String>
+    <s:String x:Key="PriorityDownloadSource">Приоритетный источник скачивания</s:String>
+    <s:String x:Key="PriorityDownloadSourceDescription">Приоритетный источник скачивания файлов Minecraft</s:String>
+
     <!--  Launcher Properties  -->
     <!--  Console  -->
     <s:String x:Key="Console">Консоль</s:String>
@@ -1012,6 +1018,9 @@
     <s:String x:Key="AuthCodeUserDenied">User denied!</s:String>
     <s:String x:Key="AuthCodeMinor">Mirror error</s:String>
     <s:String x:Key="AuthCodeNoXbox">No xbox</s:String>
+
+    <s:String x:Key="EnableHeaderBanner">Отображение баннера в левой панели</s:String>
+    <s:String x:Key="EnableHeaderBannerDescription">Показывать ли премиум банер в левой панели</s:String>
 
 
     <s:String x:Key="Scaling">Масштабирование</s:String>

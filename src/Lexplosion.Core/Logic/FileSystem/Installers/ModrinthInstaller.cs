@@ -373,21 +373,21 @@ namespace Lexplosion.Logic.FileSystem.Installers
                         CancelToken = cancelToken
                     };
 
-                    if (withDirectory.InstallFile(fileData.downloads[0], fileName, folderName, taskArgs))
-                    {
-                        string filePath = "/" + fileData.Path;
-                        if (!existsFiles.Contains(filePath))
-                        {
-                            compliteDownload.Files.Add(filePath);
-                            SaveInstanceContent(compliteDownload);
-                        }
-                    }
-                    else
-                    {
-                        errors.Add("File: " + fileName);
-                        Runtime.DebugWrite("ERROR " + fileName);
-                        _fileDownloadHandler?.Invoke(fileName, 100, DownloadFileProgress.Error);
-                    }
+					if (withDirectory.InstallFile(fileData.downloads[0], fileName, folderName, taskArgs).IsSucces)
+					{
+						string filePath = "/" + fileData.Path;
+						if (!existsFiles.Contains(filePath))
+						{
+							compliteDownload.Files.Add(filePath);
+							SaveInstanceContent(compliteDownload);
+						}
+					}
+					else
+					{
+						errors.Add("File: " + fileName);
+						Runtime.DebugWrite("ERROR " + fileName);
+						_fileDownloadHandler?.Invoke(fileName, 100, DownloadFileProgress.Error);
+					}
 
                     downloadedCount++;
                     AddonsDownloadEventInvoke(totalFilesCount, downloadedCount);

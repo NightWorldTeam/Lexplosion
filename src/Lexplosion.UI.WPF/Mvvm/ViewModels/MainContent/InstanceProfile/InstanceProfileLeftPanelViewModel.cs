@@ -127,9 +127,13 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.InstanceProfile
             {
                 if (instanceModelBase.IsInstalled || instanceModelBase.IsDownloading)
                 {
+                    var addonManager = AddonsManager.GetManager(instanceModelBase.BaseData, Runtime.ServicesContainer);
                     // Останавливаем обновление директорий сборки.
-                    AddonsManager.GetManager(instanceModelBase.BaseData, Runtime.ServicesContainer).StopWatchingDirectory();
+                    addonManager.StopWatchingDirectory();
+                    // Чистим кеш аддонов
+                    addonManager.ClearAddonsLibraryCache();
                 }
+
                 toMainMenuLayoutCommand.Execute(obj);
             });
 

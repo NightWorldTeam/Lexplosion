@@ -1,11 +1,11 @@
-﻿using Lexplosion.Logic.FileSystem;
-using Lexplosion.Logic.FileSystem.Services;
-using Lexplosion.Logic.Objects.CommonClientData;
-using Lexplosion.Tools;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using Lexplosion.Logic.FileSystem;
+using Lexplosion.Logic.FileSystem.Services;
+using Lexplosion.Logic.Objects.CommonClientData;
+using Lexplosion.Tools;
 
 namespace Lexplosion.Logic.Management.Import.Importers
 {
@@ -74,7 +74,8 @@ namespace Lexplosion.Logic.Management.Import.Importers
                 });
             };
 
-            InstanceFileGetter instanceFileGetter = (string tempDir, Func<string, TaskArgs> taskArgsGetter) => (true, fileAddres, Path.GetFileName(fileAddres));
+            InstanceFileGetter instanceFileGetter = (string tempDir, Func<string, TaskArgs> taskArgsGetter)
+                => new InstanceFileGetterResult(true, fileAddres, Path.GetFileName(fileAddres));
 
             manifest = installer.Extraction(instanceFileGetter, _cancelToken);
 

@@ -14,6 +14,16 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using Tommy;
+using Newtonsoft.Json;
+using Lexplosion.Tools;
+using Lexplosion.Logic.FileSystem;
+using Lexplosion.Logic.Management.Instances;
+using Lexplosion.Logic.Objects;
+using Lexplosion.Logic.Network.Web;
+using Lexplosion.Logic.Objects.Curseforge;
+using Lexplosion.Logic.Objects.Modrinth;
+using Lexplosion.Logic.Management.Addons.AddonsCatalogParams;
+using Lexplosion.Logic.Management.Accounts;
 
 namespace Lexplosion.Logic.Management.Addons
 {
@@ -53,14 +63,14 @@ namespace Lexplosion.Logic.Management.Addons
         private FileSystemWatcher _modsDirectoryWathcer;
         private FileSystemWatcher _resourcepacksDirectoryWathcer;
 
-        private Func<AddonType, IEnumerable<string>, IEnumerable<CategoryBase>> _modrinthCategoriesGetter;
+		private Func<AddonType, IEnumerable<string>, IEnumerable<CategoryBase>> _modrinthCategoriesGetter;
 
 
-        public event Action<InstanceAddon> AddonAdded
-        {
-            add => _synchronizer.AddonAdded += value;
-            remove => _synchronizer.AddonAdded -= value;
-        }
+		public event Action<InstanceAddon> AddonAdded
+		{
+			add => _synchronizer.AddonAdded += value;
+			remove => _synchronizer.AddonAdded -= value;
+		}
 
         public event Action<InstanceAddon> AddonRemoved
         {
@@ -199,19 +209,19 @@ namespace Lexplosion.Logic.Management.Addons
             });
         }
 
-        /// <summary>
-        /// Добавляет в клиент аддоны
-        /// </summary>
-        /// <param name="locations">Пути к аддонам</param>
-        /// <param name="type">Тип аддонов</param>
-        /// <param name="addons">Результрующий список. 
-        /// Если количество аддонов меньше 10, то здесь будет null и InstanceAddon'ы надо будет получить через эвент AddonAdded.
-        /// Если же количество аддонов больше или равно 10, то эвент AddonAdded не отработает и InstanceAddon'ы надо брать от сюда</param>
-        /// <returns>Требуется ли полное обновление списка. 
-        /// Если количество аддонов больше или равно 10, то список надо будет обновить полностью и здесь будет true, иначе false</returns>
-        public bool AddAddons(IEnumerable<string> locations, AddonType type, out IList<InstanceAddon> addons)
-        {
-            addons = null;
+		/// <summary>
+		/// Добавляет в клиент аддоны
+		/// </summary>
+		/// <param name="locations">Пути к аддонам</param>
+		/// <param name="type">Тип аддонов</param>
+		/// <param name="addons">Результрующий список. 
+		/// Если количество аддонов меньше 10, то здесь будет null и InstanceAddon'ы надо будет получить через эвент AddonAdded.
+		/// Если же количество аддонов больше или равно 10, то эвент AddonAdded не отработает и InstanceAddon'ы надо брать от сюда</param>
+		/// <returns>Требуется ли полное обновление списка. 
+		/// Если количество аддонов больше или равно 10, то список надо будет обновить полностью и здесь будет true, иначе false</returns>
+		public bool AddAddons(IEnumerable<string> locations, AddonType type, out IList<InstanceAddon> addons)
+		{
+			addons = null;
 
             string path = _services.DirectoryService.GetInstancePath(_modpackInfo.LocalId);
             string folderName = AddonsUtils.GetFolderName(type);
@@ -241,7 +251,7 @@ namespace Lexplosion.Logic.Management.Addons
 
             if (!bigQuantity) return false;
 
-            addons = GetInstalledAddons(type);
+			addons = GetInstalledAddons(type);
 
             if (bigQuantity) StartWathingDirecoty();
 
@@ -506,23 +516,23 @@ namespace Lexplosion.Logic.Management.Addons
             catch { }
         }
 
-        /// <summary>
-        /// Возвращает список аддонов. 
-        /// </summary>
-        /// <param name="type">Тип аддонов</param>
-        /// <returns>Лист адднов определенного типа указанной сборки</returns>
-        /// <exception cref="ArgumentException">Сообщает о том, что был передан тип аддонов который не рассматривается в методе.</exception>
-        public IList<InstanceAddon> GetInstalledAddons(AddonType type)
-        {
-            return type switch
-            {
-                AddonType.Mods => GetInstalledMods(),
-                AddonType.Maps => GetInstalledWorlds(),
-                AddonType.Resourcepacks => GetInstalledResourcepacks(),
-                AddonType.Shaders => GetInstalledShaders(),
-                _ => throw new ArgumentException("Ты еблан блять?")
-            };
-        }
+		/// <summary>
+		/// Возвращает список аддонов. 
+		/// </summary>
+		/// <param name="type">Тип аддонов</param>
+		/// <returns>Лист адднов определенного типа указанной сборки</returns>
+		/// <exception cref="ArgumentException">Сообщает о том, что был передан тип аддонов который не рассматривается в методе.</exception>
+		public IList<InstanceAddon> GetInstalledAddons(AddonType type)
+		{
+			return type switch
+			{
+				AddonType.Mods => GetInstalledMods(),
+				AddonType.Maps => GetInstalledWorlds(),
+				AddonType.Resourcepacks => GetInstalledResourcepacks(),
+				AddonType.Shaders => GetInstalledShaders(),
+				_ => throw new ArgumentException("Ты еблан блять?")
+			};
+		}
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private InstanceAddon CreateAddonData(AddonType type, IPrototypeAddon prototypeAddon, string projectId, Dictionary<string, SetValues<InstanceAddon, string, ProjectSource>> existsAddons, List<InstanceAddon> addons, InstalledAddonsFormat actualAddonsList, ProjectSource addonSourse, BaseInstanceData clientData)
@@ -1043,9 +1053,9 @@ namespace Lexplosion.Logic.Management.Addons
             return InstalledAddonsHandle(AddonType.Shaders, folderName, ".zip", modpackInfo, addonInfo);
         }
 
-        /// <summary>
-        /// Очищает сохранённый список аддонов. Нужно вызывать при закрытии каталога чтобы очистить память.
-        /// </summary>
-        public void ClearAddonsListCache() => _synchronizer.ClearAddonsListCache();
-    }
+		/// <summary>
+		/// Очищает сохранённый список аддонов. Нужно вызывать при закрытии каталога чтобы очистить память.
+		/// </summary>
+		public void ClearAddonsListCache() => _synchronizer.ClearAddonsListCache();
+	}
 }

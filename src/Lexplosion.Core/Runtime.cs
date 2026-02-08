@@ -73,16 +73,14 @@ namespace Lexplosion
                 File.WriteAllText(LaunсherSettings.LauncherDataPath + "/crash-report_" + DateTime.Now.ToString("dd.MM.yyyy-h.mm.ss") + ".log", exception.ToString());
             };
 
-            ServicePointManager.DefaultConnectionLimit = 20;
-
-            var withDirectory = new WithDirectory();
-            var dataFilesManager = new DataFilesManager(withDirectory);
             var toServer = new ToServer();
-            var minecraftInfo = new MinecraftInfoService(toServer);
-            var nightWorldApi = new NightWorldApi(toServer);
-            var modrinthApi = new ModrinthApi(toServer);
-            var curesforgeApi = new CurseforgeApi(toServer);
-            var mojangApi = new MojangApi(toServer);
+            var withDirectory = new WithDirectory(toServer);
+			var dataFilesManager = new DataFilesManager(withDirectory);
+			var minecraftInfo = new MinecraftInfoService(toServer);
+			var nightWorldApi = new NightWorldApi(toServer);
+			var modrinthApi = new ModrinthApi(toServer);
+			var curesforgeApi = new CurseforgeApi(toServer);
+			var mojangApi = new MojangApi(toServer);
 
             var categoriesManager = new CategoriesManager(modrinthApi, curesforgeApi);
 
@@ -110,13 +108,12 @@ namespace Lexplosion
                 CurrentProcess.Kill(); //стопаем этот процесс
             }
 
-            int version = nightWorldApi.CheckLauncherUpdates();
-            Runtime.DebugWrite($"last launcher version: {version}");
-            if (version == -1)
-            {
-                Runtime.DebugWrite($"Change to mirror mode");
-                toServer.ChangeToMirrorMode();
-                withDirectory.ChangeDownloadToMirrorMode();
+			int version = nightWorldApi.CheckLauncherUpdates();
+			Runtime.DebugWrite($"last launcher version: {version}");
+			if (version == -1)
+			{
+				Runtime.DebugWrite($"Change to mirror mode");
+				toServer.ChangeToMirrorMode();
 
                 version = nightWorldApi.CheckLauncherUpdates(15000);
 
@@ -187,9 +184,14 @@ namespace Lexplosion
                 dataFilesManager.SaveSettings(GlobalData.GeneralSettings);
             }
 
-            //подписываемся на эвент открытия второй копии лаунчера
-            CommandReceiver.OnLexplosionOpened += OnLexplosionOpened;
-        }
+			//подписываемся на эвент открытия второй копии лаунчера
+			CommandReceiver.OnLexplosionOpened += OnLexplosionOpened;
+
+			ThreadPool.GetAvailableThreads(out int worker, out int io);
+			ThreadPool.GetMaxThreads(out int maxWorker, out int maxIO);
+
+			Console.WriteLine($"Available: {worker}/{maxWorker}, IO: {io}/{maxIO}");
+		}
 
         private static bool LauncherUpdate(int version, int updaterOffsetLeft, int updaterOffsetRight, bool isMirror)
         {

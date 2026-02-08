@@ -72,6 +72,8 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
         }
 
         private RelayCommand _toSupportCommand;
+        private readonly AppCore _appCore;
+
         public ICommand ToSupportCommand
         {
             get => RelayCommand.GetCommand(ref _toSupportCommand, () =>
@@ -88,9 +90,69 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
         public ICommand ViewProfileSettingsCommand { get; }
         public ICommand ViewFriendsCommand { get; }
 
+        #endregion Commands
+
+
+        #region Constructors
+
+
+        public LeftPanelViewModel(AppCore appCore)
         private RelayCommand _selectAccountCommand;
         public ICommand SelectAccountCommand 
         {
+            _appCore = appCore;
+
+            Account.LaunchAccountChanged += (acc) => SetUserDataToHeader();
+            Account.ActiveAccountChanged += (acc) => SetUserDataToHeader();
+
+            _appCore.Settings.ThemeService.SidebarBannerActivityChanged += (value) =>
+            {
+                ProfileBanner = value ? Account.ActiveAccount.ProfileBanner : null;
+                OnPropertyChanged(nameof(ProfileBanner));
+            };
+
+            SetUserDataToHeader();
+        }
+
+        protected LeftPanelViewModel() 
+        {
+
+        }
+
+
+        #endregion Constructors
+
+
+        #region Public Methods
+
+
+        public void AddTabItem(string name, string icon, ViewModelBase content, int id = -1, double iconWidth = 20, double iconHeight = 20)
+        {
+            if (id == -1 || id < 0)
+            {
+                id = _items.Count + 1;
+            }
+
+            var newTabItem = new LeftPanelMenuItem
+            {
+                Id = (uint)id,
+                TextKey = name,
+                Icon = icon,
+                Content = content,
+                IconWidth = iconWidth,
+                IconHeight = iconHeight
+            };
+
+            newTabItem.SelectedEvent += OnSelectedTabItemChanged;
+
+            _items.Add(newTabItem);
+        }
+
+        public void AddTabItem(LeftPanelMenuItem tabItem)
+        {
+            tabItem.SelectedEvent += OnSelectedTabItemChanged;
+            _items.Add(tabItem);
+        }
             get => RelayCommand.GetCommand<Account>(ref _selectAccountCommand, (acc) =>
             {
                 if (acc.AccountType == AccountType.NightWorld)
@@ -139,8 +201,11 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
                 UserLogin = Account.ActiveAccount.Login;
                 UserAvatar = Account.ActiveAccount.HeadImageUrl;
                 UserAccountType = AccountType.NightWorld;
-                ProfileBanner = Account.ActiveAccount.ProfileBanner;
-                OnPropertyChanged(nameof(ProfileBanner));
+                if (Global.GlobalData.GeneralSettings.IsSidebarBannerEnabled == true) 
+                {
+                    ProfileBanner = Account.ActiveAccount.ProfileBanner;
+                    OnPropertyChanged(nameof(ProfileBanner));
+                }
                 return;
             }
 

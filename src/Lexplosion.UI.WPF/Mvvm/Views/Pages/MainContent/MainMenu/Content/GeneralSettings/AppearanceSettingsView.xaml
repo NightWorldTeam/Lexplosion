@@ -349,7 +349,42 @@
                         Margin="0,16,0,0"
                         Padding="0,0,0,16"
                         BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
-                        BorderThickness="0,0,0,1">
+                        BorderThickness="0,0,0,0">
+                        <Grid>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Orientation="Vertical">
+
+                                <TextBlock
+                                    FontSize="16"
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                    Text="{DynamicResource EnableHeaderBanner}" />
+                                <TextBlock
+                                    FontSize="14"
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                    Text="{DynamicResource EnableHeaderBannerDescription}" />
+                            </StackPanel>
+
+                            <ToggleButton
+                                Grid.Column="1"
+                                HorizontalAlignment="Right"
+                                IsChecked="{Binding Model.IsSidebarBannerEnabled}"
+                                Style="{StaticResource SwitchButton}" />
+                        </Grid>
+                    </Border>
+
+                    <Border
+                        Grid.Row="3"
+                        Margin="0,16,0,0"
+                        Padding="0,0,0,16"
+                        BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
+                        BorderThickness="0,0,0,0">
                         <StackPanel Orientation="Vertical">
 
                             <TextBlock
@@ -462,6 +497,8 @@
                             </Grid>
                         </Border>
 
+                    <Border
+                        Grid.Row="3"
                         <Border
                             Padding="0,16,0,8"
                             BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"

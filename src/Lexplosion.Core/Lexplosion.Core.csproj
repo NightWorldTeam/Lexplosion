@@ -69,6 +69,9 @@
     <Compile Include="Logic\FileSystem\Extensions\CurseforgeApiExtensions.cs" />
     <Compile Include="Logic\FileSystem\Extensions\ModrinthApiExtensions.cs" />
     <Compile Include="Logic\FileSystem\Installers\FreeSourceInstanceInstaller.cs" />
+    <Compile Include="Logic\FileSystem\Models\DownloadFileResult.cs" />
+    <Compile Include="Logic\FileSystem\Models\RequestResult.cs" />
+    <Compile Include="Logic\FileSystem\Models\RequestResultState.cs" />
     <Compile Include="Logic\FileSystem\Services\ICurseforgeFileServicesContainer.cs" />
     <Compile Include="Logic\FileSystem\Services\IPlatfromServiceContainer.cs" />
     <Compile Include="Logic\FileSystem\Services\IModrinthFileServicesContainer.cs" />
@@ -153,9 +156,13 @@
     <Compile Include="Logic\Network\Services\MinecraftInfoService.cs" />
     <Compile Include="Logic\Network\SMP\SmpClient_Objects.cs" />
     <Compile Include="Logic\Network\SMP\SmpReceiveService.cs" />
-    <Compile Include="Logic\Network\Web\MirrorHttpHandler.cs" />
+    <Compile Include="Logic\Network\Web\ExtendedHttpClientHandler.cs" />
+    <Compile Include="Logic\Network\Web\Models\DomainRouteData.cs" />
+    <Compile Include="Logic\Network\Web\Models\DomainRouteMethod.cs" />
+    <Compile Include="Logic\Network\Web\Models\Proxy.cs" />
     <Compile Include="Logic\Network\Web\ProxyHandler.cs" />
     <Compile Include="Logic\Network\Web\RedirectToMirrorHandler.cs" />
+    <Compile Include="Logic\Network\Web\RequestsRouteHandler.cs" />
     <Compile Include="Logic\Objects\CatalogResult.cs" />
     <Compile Include="Logic\Objects\FreeSource.cs" />
     <Compile Include="Logic\Objects\ISearchParams.cs" />
@@ -201,6 +208,8 @@
     <Compile Include="Logic\Cryptography.cs" />
     <Compile Include="NightWorld\Collections\Concurrent\ConcurrentHashSet.cs" />
     <Compile Include="NightWorld\Logging\LoggerBase.cs" />
+    <Compile Include="NightWorld\Threading\DataAccumulator.cs" />
+    <Compile Include="NightWorld\Threading\ThreadPool.cs" />
     <Compile Include="NightWorld\Tools\Minecraft\NBT\INbtNode.cs" />
     <Compile Include="NightWorld\Tools\Minecraft\NBT\NbtDocoder.cs" />
     <Compile Include="NightWorld\Tools\Minecraft\NBT\NbtEncoder.cs" />

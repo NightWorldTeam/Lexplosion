@@ -506,19 +506,15 @@ namespace Lexplosion.Logic.FileSystem.Installers
                     Directory.CreateDirectory(to);
                 }
 
-                //пробуем скачать 4 раза
-                int i = 0;
-                while (!withDirectory.DownloadFile(url + ".zip", zipFile, temp, taskArgs) && i < 4 && !taskArgs.CancelToken.IsCancellationRequested)
+                //пробуем скачать 2 раза
+                var res = withDirectory.DownloadFile(url + ".zip", zipFile, temp, taskArgs);
+                if (!res.IsSucces && res.State == Models.RequestResultState.NetworkError)
                 {
                     Thread.Sleep(1500);
-                    i++;
+                    res = withDirectory.DownloadFile(url + ".zip", zipFile, temp, taskArgs);
                 }
 
-                // все попытки неувенчались успехом
-                if (i > 3 || taskArgs.CancelToken.IsCancellationRequested)
-                {
-                    return false;
-                }
+                if (!res.IsSucces) return false;
 
                 withDirectory.DelFile(to + file);
 

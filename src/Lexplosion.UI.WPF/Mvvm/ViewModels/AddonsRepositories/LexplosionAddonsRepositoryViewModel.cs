@@ -152,7 +152,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.AddonsRepositories
 
             BackToInstanceProfileCommand = new RelayCommand((obj) =>
             {
-                AddonsManager.GetManager(instanceModelBase.BaseData, Runtime.ServicesContainer).ClearAddonsListCache();
+                AddonsManager.GetManager(instanceModelBase.BaseData, Runtime.ServicesContainer).ClearAddonsCatalogCache();
                 backCommand.Execute(null);
             });
             _navigationStore = navigationStore;

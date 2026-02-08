@@ -129,6 +129,12 @@
     <s:String x:Key="JVMArguments">JVM Arguments</s:String>
     <s:String x:Key="JVMArgumentsDescription">Arguments for Java Virtual Machine.</s:String>
 
+    <!--  Network Properties  -->
+    <s:String x:Key="NetworkProperties">Network Properties</s:String>
+    <s:String x:Key="NetworkPropertiesDescription">Network related settings</s:String>
+    <s:String x:Key="PriorityDownloadSource">Priority Download Source</s:String>
+    <s:String x:Key="PriorityDownloadSourceDescription">Priority Download Source for minecraft files</s:String>
+
     <!--  Launcher Properties  -->
     <!--  Console  -->
     <s:String x:Key="Console">Console</s:String>
@@ -1012,6 +1018,9 @@
     <s:String x:Key="AuthCodeUserDenied">User denied!</s:String>
     <s:String x:Key="AuthCodeMinor">Mirror error</s:String>
     <s:String x:Key="AuthCodeNoXbox">No xbox</s:String>
+
+    <s:String x:Key="EnableHeaderBanner">Displaying a banner on the left panel</s:String>
+    <s:String x:Key="EnableHeaderBannerDescription">Show premium banner on the left panel</s:String>
 
     <s:String x:Key="Scaling">Scaling</s:String>
     <s:String x:Key="ZoomLevel">Zoom level</s:String>

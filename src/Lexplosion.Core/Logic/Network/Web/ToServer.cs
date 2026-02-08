@@ -1,49 +1,45 @@
-﻿using Lexplosion.Global;
-using Lexplosion.Logic.Network.Web;
-using Lexplosion.Logic.Objects;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using System.Threading;
+using System.Security.Cryptography;
+using System.Net.Http;
 using System.Threading.Tasks;
+using System.Net.Http.Headers;
+using System.Threading;
+using System.Linq;
+using Lexplosion.Global;
+using Lexplosion.Logic.Objects;
+using Lexplosion.Logic.Network.Web;
+using Newtonsoft.Json;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
+using System.Runtime.ConstrainedExecution;
+using System.Runtime.Remoting.Messaging;
+using Lexplosion.Logic.Network.Web.Models;
+using Lexplosion.Tools;
+using Lexplosion.Logic.FileSystem.Models;
 
 namespace Lexplosion.Logic.Network
 {
     public class ToServer
     {
         private HttpClient _httpClient;
-        private ProxyHandler _clientHandler;
 
-        private const string USER_AGENT = "Mozilla/5.0 Lexplosion/1.0.1.1";
+        private const string USER_AGENT = "Mozilla/5.0 Lexplosion/1.0.2.4";
+        private const int MAX_CONNECTIONS_PER_SERVER = 30;
 
         public bool IsMirrorModeToNw { get; private set; } = false;
 
         internal ToServer()
         {
-            _httpClient = new HttpClient();
+            var handler = new ExtendedHttpClientHandler
+            {
+                MaxConnectionsPerServer = MAX_CONNECTIONS_PER_SERVER
+            };
+
+            _httpClient = new HttpClient(handler);
             _httpClient.DefaultRequestHeaders.Add("User-Agent", USER_AGENT);
-        }
-
-        [MethodImpl(MethodImplOptions.Synchronized)]
-        public void ChangeToProxyMode()
-        {
-            _clientHandler = new ProxyHandler(USER_AGENT);
-            var newHttpClient = new HttpClient(_clientHandler);
-            newHttpClient.DefaultRequestHeaders.Add("User-Agent", USER_AGENT);
-            _httpClient = newHttpClient;
-        }
-
-        public void AddProxy(Proxy proxy)
-        {
-            _clientHandler.AddProxy(proxy);
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
@@ -52,9 +48,19 @@ namespace Lexplosion.Logic.Network
             if (!IsMirrorModeToNw)
             {
                 Runtime.DebugWrite("Enable mirror mode");
-                var newHttpClient = new HttpClient(new RedirectToMirrorHandler());
+
+                var mirrorHandler = new RedirectToMirrorHandler()
+                {
+                    InnerHandler = new ExtendedHttpClientHandler
+                    {
+                        MaxConnectionsPerServer = MAX_CONNECTIONS_PER_SERVER
+                    }
+                };
+
+                var newHttpClient = new HttpClient(mirrorHandler);
                 newHttpClient.DefaultRequestHeaders.Add("User-Agent", USER_AGENT);
-                _httpClient = newHttpClient;
+
+                Interlocked.Exchange(ref _httpClient, newHttpClient);
 
                 IsMirrorModeToNw = true;
             }
@@ -251,10 +257,17 @@ namespace Lexplosion.Logic.Network
         {
             var task = Task.Run(() => HttpGetAsync(url, headers, timeout));
             task.Wait();
+            return task.Result.Content;
+        }
+
+        public RequestResult HttpGetWithFullResult(string url, Dictionary<string, string> headers = null, int timeout = 0)
+        {
+            var task = Task.Run(() => HttpGetAsync(url, headers, timeout));
+            task.Wait();
             return task.Result;
         }
 
-        public async Task<string> HttpGetAsync(string url, IDictionary<string, string> headers = null, int timeout = 0)
+        public async Task<RequestResult> HttpGetAsync(string url, IDictionary<string, string> headers = null, int timeout = 0)
         {
             Runtime.DebugWrite($"Request url: {url}");
 
@@ -277,14 +290,19 @@ namespace Lexplosion.Logic.Network
                     response = await httpClient.SendAsync(request);
                 }
 
-                response.EnsureSuccessStatusCode();
+                if (!response.IsSuccessStatusCode)
+                {
+                    Runtime.DebugWrite($"url: {url}, Error Status Code {response.StatusCode}, stack trace: {new System.Diagnostics.StackTrace()}");
+                    return RequestResult.Error(response.StatusCode);
+                }
 
-                return await response.Content.ReadAsStringAsync();
+                var result = await response.Content.ReadAsStringAsync();
+                return RequestResult.Success(result, response.StatusCode);
             }
             catch (Exception ex)
             {
                 Runtime.DebugWrite($"url: {url}, Exception: {ex}, stack trace: {new System.Diagnostics.StackTrace()}");
-                return null;
+                return RequestResult.Error();
             }
         }
 
@@ -296,15 +314,12 @@ namespace Lexplosion.Logic.Network
             return (request.GetResponse().ContentType.StartsWith("text/html"));
         }
 
-        public string HttpPostJson(string url, string data, out HttpStatusCode? httpStatus, Dictionary<string, string> headers = null)
+        public RequestResult HttpPostJson(string url, string data, IDictionary<string, string> headers = null)
         {
-            var result = HttpPostJsonAsync(url, data, headers).ConfigureAwait(false).GetAwaiter().GetResult();
-
-            httpStatus = result.Item2;
-            return result.Item1;
+            return HttpPostJsonAsync(url, data, headers).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
-        public async Task<(string, HttpStatusCode?)> HttpPostJsonAsync(string url, string data, IDictionary<string, string> headers = null)
+        public async Task<RequestResult> HttpPostJsonAsync(string url, string data, IDictionary<string, string> headers = null)
         {
             Runtime.DebugWrite($"Request url: {url}");
             HttpStatusCode? httpStatus = null;
@@ -322,11 +337,11 @@ namespace Lexplosion.Logic.Network
 
                 var response = await httpClient.SendAsync(request);
                 httpStatus = response.StatusCode;
-                if (!response.IsSuccessStatusCode) return (null, httpStatus);
+                if (!response.IsSuccessStatusCode) return RequestResult.Error(httpStatus);
 
                 string result = await response.Content.ReadAsStringAsync();
 
-                return (result, httpStatus);
+                return RequestResult.Success(result, httpStatus);
             }
             catch (HttpRequestException ex)
             {
@@ -347,7 +362,7 @@ namespace Lexplosion.Logic.Network
                 Runtime.DebugWrite($"url: {url}, Exception: {ex}, stack trace: {new System.Diagnostics.StackTrace()}");
             }
 
-            return (null, httpStatus);
+            return RequestResult.Error(httpStatus);
         }
 
         public byte[] LoadCertificate(string url)
@@ -365,7 +380,7 @@ namespace Lexplosion.Logic.Network
             {
                 X509Certificate2 ServerCertificate = null;
 
-                var handler = new MirrorHttpHandler();
+                var handler = new ExtendedHttpClientHandler();
 
                 handler.ValidCertificateHandler += (X509Certificate2 cert) =>
                 {
@@ -392,6 +407,11 @@ namespace Lexplosion.Logic.Network
                 Runtime.DebugWrite("Exception " + ex);
                 return null;
             }
+        }
+
+        public async Task<HttpResponseMessage> GetResponse(string url, HttpCompletionOption completionOption, CancellationToken token)
+        {
+            return await _httpClient.GetAsync(url, completionOption, token);
         }
 
         private void AddHeaders(HttpRequestMessage request, IDictionary<string, string> headers)

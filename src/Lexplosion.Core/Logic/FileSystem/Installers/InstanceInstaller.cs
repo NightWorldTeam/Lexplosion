@@ -15,6 +15,14 @@ using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System.Threading;
+using Lexplosion.Global;
+using Lexplosion.Logic.FileSystem.Models;
+using Lexplosion.Logic.FileSystem.Services;
+using Lexplosion.Logic.Management;
+using Lexplosion.Logic.Network;
+using Lexplosion.Logic.Objects.CommonClientData;
+using Lexplosion.Tools;
+using Newtonsoft.Json;
 
 namespace Lexplosion.Logic.FileSystem.Installers
 {
@@ -330,19 +338,22 @@ namespace Lexplosion.Logic.FileSystem.Installers
         /// <param name="temp">Временная директория (тоже без имени файла). Должно заканчиваться слешем. В эту директорию будет скачиваться файл</param>
         /// <param name="tryCount">Количество попыток скачивания</param>
         /// <param name="taskArgs">аргументы задачи</param>
-        /// <returns>true - удачно, null - файла на серваке нет или доступ закрыт, false - неизвестная ошибка</returns>
+        /// <returns>true - удачно, null - сервак ответил, но скачать не получилось, false - иная ошибка или скачивание омтенено</returns>
         private bool? TryDownload(string url, string file, string temp, int tryCount, TaskArgs taskArgs)
         {
             int i = 0;
-            while (i < tryCount && !taskArgs.CancelToken.IsCancellationRequested && !withDirectory.DownloadFile(url, file, temp, out HttpStatusCode? statusCode, taskArgs))
+            while (i < tryCount && !taskArgs.CancelToken.IsCancellationRequested)
             {
-                if (statusCode == HttpStatusCode.NotFound || statusCode == HttpStatusCode.Unauthorized || statusCode == HttpStatusCode.Forbidden) return null;
+                var result = withDirectory.DownloadFile(url, file, temp, taskArgs);
+
+                if (result.IsSucces) return true;
+                if (result.State == RequestResultState.RequestError || result.State == RequestResultState.HandleError) return null;
 
                 Thread.Sleep(1500);
                 i++;
             }
 
-            return i < tryCount && !taskArgs.CancelToken.IsCancellationRequested;
+            return false;
         }
 
 
@@ -360,7 +371,7 @@ namespace Lexplosion.Logic.FileSystem.Installers
 
             bool? result = false;
             int shiftCounts = 2; // количество попыток смены источника
-            while (!taskArgs.CancelToken.IsCancellationRequested && (result = TryDownload(url_, file, temp, 2, taskArgs)) != true && shiftCounts > 0)
+            while (!taskArgs.CancelToken.IsCancellationRequested && (result = TryDownload(url_, file, temp, 1, taskArgs)) != true && shiftCounts > 0)
             {
                 if (result == null) break; // сервер доступен, но файл нам не вернул. Менять источник смысла нет. Выходим
                 _downloadUrlHandler.ErrorOccured(url, shiftNumber);
@@ -700,7 +711,7 @@ namespace Lexplosion.Logic.FileSystem.Installers
                         CancelToken = cancelToken
                     };
 
-                    if (!withDirectory.InstallFile(manifest.version.AssetsIndexes, filename, "/assets/indexes/", taskArgs))
+                    if (!withDirectory.InstallFile(manifest.version.AssetsIndexes, filename, "/assets/indexes/", taskArgs).IsSucces)
                     {
                         string url = manifest.version.AssetsIndexes.Replace("https://", "");
                         url = LaunсherSettings.URL.MirrorUrl + url;
@@ -721,6 +732,26 @@ namespace Lexplosion.Logic.FileSystem.Installers
             return errors;
         }
 
+        private bool IsUrlRoot(string urlString)
+        {
+            if (string.IsNullOrWhiteSpace(urlString))
+            {
+                return false;
+            }
+
+            if (urlString.EndsWith("/")) return true;
+
+            try
+            {
+                Uri uri = new Uri(urlString);
+                return uri.Segments.Length == 1 && uri.Segments[0] == "/";
+            }
+            catch (UriFormatException)
+            {
+                return false;
+            }
+        }
+
         private void LibHandle(string lib, long librariesVersion, CancellationToken cancelToken, string gameVersionName, object downloadedLibsLocker, List<string> downloadedLibs, string downloadedLibsAddr, List<string> errors, ref int updated)
         {
             bool isNwDownload = false;
@@ -729,21 +760,21 @@ namespace Lexplosion.Logic.FileSystem.Installers
 
             if (libInfo.url == null)
             {
-                addr = LaunсherSettings.URL.Upload + "libraries/";
+                addr = LaunсherSettings.URL.Upload + "libraries/" + lib;
                 isNwDownload = true;
             }
             else
             {
                 addr = libInfo.url;
+
+                if (IsUrlRoot(addr))
+                {
+                    addr = addr + lib;
+                }
             }
 
             string[] folders = lib.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
             string libFolder = lib.Replace(folders[folders.Length - 1], "");
-
-            if (addr.Length > 5 && addr.Substring(addr.Length - 4) != ".jar" && addr.Substring(addr.Length - 4) != ".zip")
-            {
-                addr = addr + lib;
-            }
 
             bool isDownload;
             string name = folders[folders.Length - 1];

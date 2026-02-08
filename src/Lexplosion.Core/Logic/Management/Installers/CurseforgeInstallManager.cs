@@ -1,17 +1,20 @@
-﻿using Lexplosion.Logic.FileSystem.Installers;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading;
+using Lexplosion.Logic.FileSystem;
+using Lexplosion.Logic.FileSystem.Installers;
 using Lexplosion.Logic.FileSystem.Services;
+using Lexplosion.Logic.Network.Services;
 using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Objects.Curseforge;
-using System;
-using System.Collections.Generic;
-using System.Threading;
 
 namespace Lexplosion.Logic.Management.Installers
 {
     class CurseforgeInstallManager : ArchiveInstallManager<CurseforgeInstaller, InstanceManifest, CurseforgeFileInfo, InstancePlatformData>
     {
         private CurseforgeApi _curseforgeApi;
+        private bool _mirrorIsUsed = false;
 
         public CurseforgeInstallManager(string instanceid, bool onlyBase, ICurseforgeFileServicesContainer services, CancellationToken cancelToken) : base(new CurseforgeInstaller(instanceid, services), instanceid, onlyBase, services, cancelToken)
         {
@@ -108,16 +111,30 @@ namespace Lexplosion.Logic.Management.Installers
             return manifest.minecraft?.version ?? "";
         }
 
+        protected override string GetArchiveDownloadUrl()
+        {
+            var url = projectInfo.downloadUrl;
+            if (!_curseforgeApi.MirrorTranlationsEnabled) return url;
+
+            _mirrorIsUsed = _curseforgeApi.TryTranslateUrlToMirror(ref url);
+            return url;
+
+
+        }
+        protected override string GetReserveArchiveDownloadUrl()
+        {
+            if (_mirrorIsUsed) return null;
+
+            var url = projectInfo.downloadUrl;
+            _curseforgeApi.TryTranslateUrlToMirror(ref url);
+            return url;
+        }
+
         public override string ProjectId { get => projectInfo?.id.ToString() ?? ""; }
 
         protected override bool ProfectInfoIsValid
         {
             get => !string.IsNullOrWhiteSpace(projectInfo?.downloadUrl) && !string.IsNullOrWhiteSpace(projectInfo.fileName);
-        }
-
-        protected override string ArchiveDownloadUrl
-        {
-            get => projectInfo.downloadUrl;
         }
 
         protected override string ArchiveFileName
