@@ -91,7 +91,7 @@ namespace Lexplosion.Logic.FileSystem
 					Cryptography.CreateRsaKeys(out RSAParameters privateKey, out _publicRsaKey);
 					_confirmWord = new Random().GenerateString(32);
 
-					var serverData = new ControlServerData(LaunсherSettings.ServerIp);
+					var serverData = new ControlServerData(LaunсherSettings.ServerIp, false);
 					_dataServer = new DataServer(privateKey, _confirmWord, userUUID, userSessionToken, serverData);
 
 					_dataServer.ClientStartedDownloading += (string uuid, string fileId) =>
