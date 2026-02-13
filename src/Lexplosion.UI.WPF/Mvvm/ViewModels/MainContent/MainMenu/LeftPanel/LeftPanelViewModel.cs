@@ -257,9 +257,9 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
                 UserLogin = Account.ActiveAccount.Login;
                 UserAvatar = Account.ActiveAccount.HeadImageUrl;
                 UserAccountType = AccountType.NightWorld;
-                if (Global.GlobalData.GeneralSettings.IsSidebarBannerEnabled == true) 
+                if (Global.GlobalData.GeneralSettings.DisplayPremiumBanner == true) 
                 {
-                    ProfileBanner = GlobalData.GeneralSettings.IsSidebarBannerEnabled.Value ? Account.ActiveAccount.ProfileBanner : null;
+                    ProfileBanner = GlobalData.GeneralSettings.DisplayPremiumBanner ? Account.ActiveAccount.ProfileBanner : null;
                     OnPropertyChanged(nameof(ProfileBanner));
                 }
                 return;

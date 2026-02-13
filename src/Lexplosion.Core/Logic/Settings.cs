@@ -55,7 +55,7 @@ namespace Lexplosion.Logic
         public string AccentColor = string.Empty;
         public string ThemeName = string.Empty;
         public string AppHeaderTemplateName = string.Empty;
-		public bool? IsSidebarBannerEnabled = null;
+		public bool DisplayPremiumBanner = true;
         /// <summary>
         /// Адрес сервера для автовхода при запуске майкрафта.
         /// Параметр только для настроек конкретного клиента. 
@@ -112,7 +112,7 @@ namespace Lexplosion.Logic
                 if (string.IsNullOrWhiteSpace(ThemeName)) ThemeName = settings.ThemeName;
                 if (string.IsNullOrWhiteSpace(AccentColor)) AccentColor = settings.AccentColor;
                 if (string.IsNullOrWhiteSpace(AppHeaderTemplateName)) AppHeaderTemplateName = settings.AppHeaderTemplateName;
-            }
+			}
             else
             {
                 if (settings.JavaPath != null) JavaPath = settings.JavaPath;
@@ -134,14 +134,14 @@ namespace Lexplosion.Logic
                 if (!string.IsNullOrWhiteSpace(settings.ThemeName)) ThemeName = settings.ThemeName;
                 if (!string.IsNullOrWhiteSpace(settings.AccentColor)) AccentColor = settings.AccentColor;
                 if (!string.IsNullOrWhiteSpace(settings.AppHeaderTemplateName)) AppHeaderTemplateName = settings.AppHeaderTemplateName;
-                AutoLoginServer = settings.AutoLoginServer;
+				AutoLoginServer = settings.AutoLoginServer;
             }
 
 			NetworkDirectConnection = settings.NetworkDirectConnection;
 			ItIsNotShit = settings.ItIsNotShit;
 			NavBarInLeft = settings.NavBarInLeft;
 			NwClientByDefault = settings.NwClientByDefault;
-			IsSidebarBannerEnabled = settings.IsSidebarBannerEnabled;
+			DisplayPremiumBanner = settings.DisplayPremiumBanner;
 		}
 
 		public Settings Copy()
@@ -187,7 +187,7 @@ namespace Lexplosion.Logic
 				IsPortableMode = false,
                 IsNightWorldSkinSystem = true,
                 AppHeaderTemplateName = "MacOS",
-                IsSidebarBannerEnabled = true,
+                DisplayPremiumBanner = true,
             };
         }
     }
