@@ -112,7 +112,6 @@ namespace Lexplosion.Logic
                 if (string.IsNullOrWhiteSpace(ThemeName)) ThemeName = settings.ThemeName;
                 if (string.IsNullOrWhiteSpace(AccentColor)) AccentColor = settings.AccentColor;
                 if (string.IsNullOrWhiteSpace(AppHeaderTemplateName)) AppHeaderTemplateName = settings.AppHeaderTemplateName;
-                if (IsSidebarBannerEnabled == null) IsSidebarBannerEnabled = settings.IsSidebarBannerEnabled;
             }
             else
             {
@@ -135,7 +134,6 @@ namespace Lexplosion.Logic
                 if (!string.IsNullOrWhiteSpace(settings.ThemeName)) ThemeName = settings.ThemeName;
                 if (!string.IsNullOrWhiteSpace(settings.AccentColor)) AccentColor = settings.AccentColor;
                 if (!string.IsNullOrWhiteSpace(settings.AppHeaderTemplateName)) AppHeaderTemplateName = settings.AppHeaderTemplateName;
-                if (IsSidebarBannerEnabled != null) IsSidebarBannerEnabled = settings.IsSidebarBannerEnabled;
                 AutoLoginServer = settings.AutoLoginServer;
             }
 
@@ -143,6 +141,7 @@ namespace Lexplosion.Logic
 			ItIsNotShit = settings.ItIsNotShit;
 			NavBarInLeft = settings.NavBarInLeft;
 			NwClientByDefault = settings.NwClientByDefault;
+			IsSidebarBannerEnabled = settings.IsSidebarBannerEnabled;
 		}
 
 		public Settings Copy()
