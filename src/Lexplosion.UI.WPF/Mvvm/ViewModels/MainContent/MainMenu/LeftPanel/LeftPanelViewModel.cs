@@ -1,8 +1,10 @@
-﻿using Lexplosion.Logic.Management.Accounts;
+﻿using Lexplosion.Global;
+using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.Logic.Objects.Nightworld;
 using Lexplosion.UI.WPF.Commands;
 using Lexplosion.UI.WPF.Core;
 using Lexplosion.UI.WPF.Core.Objects;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -257,7 +259,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
                 UserAccountType = AccountType.NightWorld;
                 if (Global.GlobalData.GeneralSettings.IsSidebarBannerEnabled == true) 
                 {
-                    ProfileBanner = Account.ActiveAccount.ProfileBanner;
+                    ProfileBanner = GlobalData.GeneralSettings.IsSidebarBannerEnabled.Value ? Account.ActiveAccount.ProfileBanner : null;
                     OnPropertyChanged(nameof(ProfileBanner));
                 }
                 return;
