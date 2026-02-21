@@ -6,6 +6,7 @@ using Lexplosion.Tools;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Lexplosion.Logic.FileSystem
 {
@@ -109,6 +110,7 @@ namespace Lexplosion.Logic.FileSystem
 
 		private string _myUUID;
 		private string _mySessionToken;
+		private long _offsetInFile = 0;
 
 		private FileReceiver(string myUUID, string mySessionToken, string ownerLogin, string ownerUUID, string fileId, DistributionData info)
 		{
@@ -127,8 +129,9 @@ namespace Lexplosion.Logic.FileSystem
 		{
 			lock (_locker)
 			{
-				_dataClient?.Close();
+				var dataClient = _dataClient;
 				_dataClient = null;
+				dataClient?.Close();
 				DownloadCanceled?.Invoke();
 			}
 		}
@@ -140,31 +143,48 @@ namespace Lexplosion.Logic.FileSystem
 				State = DistributionState.InQueue;
 
 				_downloadSemaphore.WaitOne(_ownerUUID);
-				lock (_locker)
+
+				long lastOffsetInFile = -1;
+				var recieveStatus = FileRecvResult.UnknownError;
+				//делаем пыпытки скачать пока порция данных полученных за одну попытку больше 1кб
+				while (lastOffsetInFile == -1 || (_offsetInFile > lastOffsetInFile + 1024))
 				{
-					var publicKey = Cryptography.DecodeRsaParams(_info.PublicRsaKey);
-					var serverData = new ControlServerData(LaunсherSettings.ServerIp, false);
+					lastOffsetInFile = _offsetInFile;
 
-					_dataClient?.Close();
-					_dataClient = new DataClient(publicKey, _info.ConfirmWord, serverData, fileName, _fileId);
-					_dataClient.SpeedUpdate += SpeedUpdate;
-					_dataClient.ProcentUpdate += ProcentUpdate;
-
-					lock (_dataClientInitLocker)
+					lock (_locker)
 					{
-						State = DistributionState.InConnect;
-						bool result = _dataClient.Initialization(_myUUID, _mySessionToken, _ownerUUID);
-						if (!result)
+						var publicKey = Cryptography.DecodeRsaParams(_info.PublicRsaKey);
+						var serverData = new ControlServerData(LaunсherSettings.ServerIp, false);
+
+						_dataClient?.Close();
+						_dataClient = new DataClient(publicKey, _info.ConfirmWord, serverData, fileName, _fileId, _offsetInFile);
+						_dataClient.SpeedUpdate += SpeedUpdate;
+						_dataClient.ProcentUpdate += ProcentUpdate;
+
+						lock (_dataClientInitLocker)
 						{
-							_dataClient.Close();
-							return FileRecvResult.ConnectionClose;
+							State = DistributionState.InConnect;
+							bool result = _dataClient.Initialization(_myUUID, _mySessionToken, _ownerUUID);
+							if (!result)
+							{
+								_dataClient.Close();
+								return FileRecvResult.ConnectionClose;
+							}
 						}
+
+						State = DistributionState.InProcess;
 					}
 
-					State = DistributionState.InProcess;
+					recieveStatus = _dataClient?.WorkWait() ?? FileRecvResult.Canceled;
+
+					if (recieveStatus == FileRecvResult.Successful || recieveStatus == FileRecvResult.Canceled)
+						return recieveStatus;
+
+					_offsetInFile = _dataClient.OffsetInFile;
+					Thread.Sleep(10000); // ждем 10 секунд прежде чем поробовать повторить подключение
 				}
 
-				return _dataClient?.WorkWait() ?? FileRecvResult.Canceled;
+				return recieveStatus;
 			}
 			finally
 			{
