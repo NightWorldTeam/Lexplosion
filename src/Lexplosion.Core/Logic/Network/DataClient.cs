@@ -61,9 +61,15 @@ namespace Lexplosion.Logic.Network
 				_fstream.Seek(offsetInFile, SeekOrigin.Begin);
 			}
 
-			var rnd = new Random();
-			_aesKey = rnd.GenerateBytes(32);
-			_aesIV = rnd.GenerateBytes(16);
+			using (Aes aes = Aes.Create())
+			{
+				aes.KeySize = 256;
+				aes.GenerateKey();
+				aes.GenerateIV();
+
+				_aesKey = aes.Key;
+				_aesIV = aes.IV;
+			}
 		}
 
 		protected override void Sending()
