@@ -106,7 +106,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.MainMenu
         /// <param name="player">Игрок которого нужно удалить из списка</param>
         private void RemovePlayerFromList(Player player)
         {
-            var playerWrapper = _players.Where(p => p.Player.Nickname == player.Nickname).First();
+            var playerWrapper = _players.Where(p => p.Player.Nickname == player.Nickname).FirstOrDefault();
 
             if (playerWrapper != null) 
             {
