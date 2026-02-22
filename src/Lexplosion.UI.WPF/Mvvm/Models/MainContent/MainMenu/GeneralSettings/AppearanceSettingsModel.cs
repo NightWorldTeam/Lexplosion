@@ -113,6 +113,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.Content.GeneralSettings
         {
             _appCore = appCore;
             _themeService = _appCore.Settings.ThemeService;
+            IsSidebarBannerEnabled = GlobalData.GeneralSettings.DisplayPremiumBanner;
         }
 
 
