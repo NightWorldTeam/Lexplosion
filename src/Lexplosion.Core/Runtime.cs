@@ -109,19 +109,19 @@ namespace Lexplosion
 				CurrentProcess.Kill(); //стопаем этот процесс
 			}
 
-			int version = nightWorldApi.CheckLauncherUpdates();
-			Runtime.DebugWrite($"last launcher version: {version}");
-			if (version == -1)
+			var initInfo = nightWorldApi.LoadLauncherInitInfo();
+			Runtime.DebugWrite($"Init info (launcher version: {initInfo?.LauncherVersion}, latest news id: {initInfo?.LatestNewsId})");
+			if (initInfo == null)
 			{
 				Runtime.DebugWrite($"Change to mirror mode");
 				toServer.ChangeToMirrorMode();
 
-				version = nightWorldApi.CheckLauncherUpdates(15000);
+				initInfo = nightWorldApi.LoadLauncherInitInfo(15000);
 
-				if (version > LaunсherSettings.version)
+				if (initInfo != null && initInfo.LauncherVersion > LaunсherSettings.version)
 				{
 					OnUpdateStart?.Invoke();
-					LauncherUpdate(version, updaterOffsetLeft, updaterOffsetRight, true);
+					LauncherUpdate(initInfo.LauncherVersion, updaterOffsetLeft, updaterOffsetRight, true);
 				}
 
 				//var proxies = ProxyFetcher.GetProxies();
@@ -152,11 +152,13 @@ namespace Lexplosion
 				//	}
 				//}
 			}
-			else if (version > LaunсherSettings.version)
+			else if (initInfo.LauncherVersion > LaunсherSettings.version)
 			{
 				OnUpdateStart?.Invoke();
-				LauncherUpdate(version, updaterOffsetLeft, updaterOffsetRight, false);
+				LauncherUpdate(initInfo.LauncherVersion, updaterOffsetLeft, updaterOffsetRight, false);
 			}
+
+			services.NotificationsService.LatestNewsId = initInfo.LatestNewsId;
 
 			Account.Init();
 
@@ -187,11 +189,6 @@ namespace Lexplosion
 
 			//подписываемся на эвент открытия второй копии лаунчера
 			CommandReceiver.OnLexplosionOpened += OnLexplosionOpened;
-
-			ThreadPool.GetAvailableThreads(out int worker, out int io);
-			ThreadPool.GetMaxThreads(out int maxWorker, out int maxIO);
-
-			Console.WriteLine($"Available: {worker}/{maxWorker}, IO: {io}/{maxIO}");
 		}
 
 		private static bool LauncherUpdate(int version, int updaterOffsetLeft, int updaterOffsetRight, bool isMirror)

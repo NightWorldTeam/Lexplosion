@@ -7,8 +7,6 @@ namespace Lexplosion.Global
     public static class GlobalData
     {
         public static Settings GeneralSettings { get; private set; } // инициализируется в методе Main
-        internal static long LastNewsId { get; set; } = -1;
-
 
         public static void InitSetting(DataFilesManager dataFilesManager)
         {

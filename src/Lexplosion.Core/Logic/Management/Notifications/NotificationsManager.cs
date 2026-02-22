@@ -9,34 +9,40 @@ using System.Threading.Tasks;
 
 namespace Lexplosion.Logic.Management.Notifications
 {
-    public class NotificationsManager
-    {
-        private readonly INightWorldFileServicesContainer _services;
+	public class NotificationsManager
+	{
+		private readonly INightWorldFileServicesContainer _services;
 
-        internal NotificationsManager(INightWorldFileServicesContainer services)
-        {
-            _services = services;
-        }
+		public long LatestNewsId { get; internal set; } = 0;
 
-        public List<News> GetAllNews(int page, int pageSize)
-        {
-            var result = new List<News>();
-            return result;
-        }
+		internal NotificationsManager(INightWorldFileServicesContainer services)
+		{
+			_services = services;
+		}
 
-        /// <summary>
-        /// Возвращает непросмотренные новости.
-        /// </summary>
-        public List<News> GetUnseenNews()
-        {
-            var id = _services.DataFilesService.GetLastViewedNewsId();
+		public List<News> GetAllNews(int page, int pageSize)
+		{
+			var result = new List<News>();
+			return result;
+		}
 
-            GlobalData.LastNewsId = 0; // TODO: временная херь. Потом починить
-            if (id >= GlobalData.LastNewsId) return new();
+		/// <summary>
+		/// Возвращает непросмотренные новости.
+		/// </summary>
+		public List<News> GetUnseenNews()
+		{
+			long id = _services.DataFilesService.GetLastViewedNewsId();
+			if (id == LatestNewsId) return new();
 
-            var news = _services.NwApi.GetUnseenNews(id);
+			if (id >= LatestNewsId)
+			{
+				_services.DataFilesService.SaveLastViewedNewsId(LatestNewsId);
+				return new();
+			}
 
-            return news.Select(x => new News(x, _services.DataFilesService, x.Id <= id)).ToList();
-        }
-    }
+			var news = _services.NwApi.GetUnseenNews(id);
+
+			return news.Select(x => new News(x, _services.DataFilesService, x.Id <= id)).ToList();
+		}
+	}
 }
