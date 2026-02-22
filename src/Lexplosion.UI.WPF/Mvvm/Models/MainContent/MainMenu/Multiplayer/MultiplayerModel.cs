@@ -124,7 +124,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.MainMenu
             {
                 if (player != null)
                 {
-                    var wrapper = _players.Where(p => p.Player.Nickname == player.Nickname).First();
+                    var wrapper = _players.Where(p => p.Player.Nickname == player.Nickname).FirstOrDefault();
 
                     if (!player.IsKicked)
                         RemovePlayerFromList(player);
