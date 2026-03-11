@@ -96,7 +96,7 @@ namespace Lexplosion.Logic
         public double ZoomLevel
         {
             get => _zoomLevel; set
-            {ься
+            {
                 _zoomLevel = value;
                 ValueChanged?.Invoke(nameof(ZoomLevel));
             }
