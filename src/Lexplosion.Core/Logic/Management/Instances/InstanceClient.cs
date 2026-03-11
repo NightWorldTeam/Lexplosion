@@ -27,7 +27,7 @@ namespace Lexplosion.Logic.Management.Instances
 		private string _localId = null;
 		private readonly PrototypeInstance _dataManager;
 		private readonly IInstanceSource _instanceSource;
-		private readonly AllServicesContainer _services;
+		private readonly AppServiceContainer _services;
 		private CancellationTokenSource _cancelTokenSource = null;
 		private LaunchGame _gameManager = null;
 
@@ -284,7 +284,7 @@ namespace Lexplosion.Logic.Management.Instances
 		/// Базовый конструктор, от него должны наследоваться все остальные
 		/// </summary>
 		/// <param name="source">Источник модпака</param>
-		internal InstanceClient(IInstanceSource source, AllServicesContainer services, Action internalDataChanged)
+		internal InstanceClient(IInstanceSource source, AppServiceContainer services, Action internalDataChanged)
 		{
 			Type = source.SourceType;
 			_instanceSource = source;
@@ -298,7 +298,7 @@ namespace Lexplosion.Logic.Management.Instances
 		/// </summary>
 		/// <param name="source">Источник модпака</param>
 		/// <param name="externalID">Внешний ID</param>
-		internal InstanceClient(IInstanceSource source, AllServicesContainer services, Action internalDataChanged, string externalID) : this(source, services, internalDataChanged)
+		internal InstanceClient(IInstanceSource source, AppServiceContainer services, Action internalDataChanged, string externalID) : this(source, services, internalDataChanged)
 		{
 			_externalId = externalID;
 		}
@@ -309,7 +309,7 @@ namespace Lexplosion.Logic.Management.Instances
 		/// <param name="source">Источник модпака</param>
 		/// <param name="externalID">Внешний ID</param>
 		/// <param name="externalID">Локальный ID</param>
-		internal InstanceClient(IInstanceSource source, AllServicesContainer services, Action internalDataChanged, string externalID, string localId) : this(source, services, internalDataChanged, externalID)
+		internal InstanceClient(IInstanceSource source, AppServiceContainer services, Action internalDataChanged, string externalID, string localId) : this(source, services, internalDataChanged, externalID)
 		{
 			_localId = localId;
 		}
@@ -320,7 +320,7 @@ namespace Lexplosion.Logic.Management.Instances
 		/// <param name="name">Название сборки</param>
 		/// <param name="source">Источник модпака</param>
 		/// <param name="gameVersion">Версия игры</param>
-		internal InstanceClient(string name, IInstanceSource source, AllServicesContainer services, Action internalDataChanged, MinecraftVersion gameVersion, string externalId, string localId) : this(source, services, internalDataChanged, externalId, localId)
+		internal InstanceClient(string name, IInstanceSource source, AppServiceContainer services, Action internalDataChanged, MinecraftVersion gameVersion, string externalId, string localId) : this(source, services, internalDataChanged, externalId, localId)
 		{
 			Name = name;
 			GameVersion = gameVersion;

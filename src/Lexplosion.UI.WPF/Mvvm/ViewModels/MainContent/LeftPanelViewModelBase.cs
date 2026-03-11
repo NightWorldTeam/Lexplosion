@@ -2,9 +2,9 @@
 using Lexplosion.UI.WPF.Core.Objects;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading;
 
 namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent
 {
@@ -37,9 +37,6 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent
                 OnPropertyChanged();
             }
         }
-
-
-
 
 
         #endregion Properties

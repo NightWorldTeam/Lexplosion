@@ -25,7 +25,7 @@ namespace Lexplosion.Logic.Management.Instances
 
 		public abstract List<InstanceVersion> GetVersions(string externalId);
 
-		public static Info GetInstance(InstanceSource type, AllServicesContainer servicesContainer, string instanceId)
+		public static Info GetInstance(InstanceSource type, AppServiceContainer servicesContainer, string instanceId)
 		{
 			switch (type)
 			{

@@ -31,11 +31,11 @@ namespace Lexplosion.Logic.Management.Instances
 		/// Содержит пары состоящие из внешнего и внутреннего id.
 		/// </summary>
 		private Dictionary<string, string> _idsPairs = new();
-		private readonly AllServicesContainer _services;
+		private readonly AppServiceContainer _services;
 
 		public int LibrarySize { get => _installedInstances.Count; }
 
-		internal ClientsManager(AllServicesContainer services)
+		internal ClientsManager(AppServiceContainer services)
 		{
 			_services = services;
 		}

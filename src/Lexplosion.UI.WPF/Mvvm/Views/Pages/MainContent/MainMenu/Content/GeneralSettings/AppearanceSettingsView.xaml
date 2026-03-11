@@ -497,9 +497,8 @@
                             </Grid>
                         </Border>
 
-                    <Border
-                        Grid.Row="3"
                         <Border
+                            Grid.Row="3"
                             Padding="0,16,0,8"
                             BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
                             BorderThickness="0,0,0,0">

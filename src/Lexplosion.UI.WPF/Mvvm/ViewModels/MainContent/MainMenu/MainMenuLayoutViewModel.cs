@@ -81,7 +81,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
             var toFriendsCommand = new NavigateCommand<ViewModelBase>(appCore.NavigationStore, () => new ProfileLayoutViewModel(appCore, toMainMenuLayoutCommand, 1));
 
             
-            LeftPanel = new LeftPanelViewModel(toProfileCommand, toProfileSettingsCommand, toFriendsCommand);
+            LeftPanel = new LeftPanelViewModel(appCore, toProfileCommand, toProfileSettingsCommand, toFriendsCommand);
             LeftPanel.SelectedItemChanged += OnLeftPanelSelectedItemChanged;
 
             ToInstanceProfile = (instanceModel) => (_libraryViewModel as LibraryViewModel).OpenInstanceProfileMenuCommand.Execute(instanceModel);

@@ -72,6 +72,13 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Windows
             _uiUpdateTimer.Start();
         }
 
+        private void ConsoleWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            _scalingService = new ScalingService(_appCore, this, ContainerGrid);
+            _scalingService.ChangeNoFactorSizeValues(Width, Height);
+            _scalingService.Rescale(this, ContainerGrid);
+        }
+
         private void ProcessLogQueue(object sender, EventArgs e)
         {
             if (_tempLogs.IsEmpty) return;
@@ -101,13 +108,6 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Windows
             {
                 Border border = (Border)VisualTreeHelper.GetChild(LogsContainer, 0);
                 ScrollViewer scrollViewer = (ScrollViewer)VisualTreeHelper.GetChild(border, 0);
-        private void ConsoleWindow_Loaded(object sender, RoutedEventArgs e)
-        {
-            _scalingService = new ScalingService(_appCore, this, ContainerGrid);
-            _scalingService.ChangeNoFactorSizeValues(Width, Height);
-            _scalingService.Rescale(this, ContainerGrid);
-        }
-
 
                 // Check if user is already at the bottom before autoscrolling
                 // (Optional: allows user to scroll up to read history without fighting the autoscroll)

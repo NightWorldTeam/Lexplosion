@@ -9,7 +9,9 @@ namespace Lexplosion.Logic
 	[Serializable]
 	public class Settings
 	{
-		private string _javaPath = null;
+        public event Action<string> ValueChanged;
+
+        private string _javaPath = null;
 		public string JavaPath
 		{
 			get
@@ -80,14 +82,38 @@ namespace Lexplosion.Logic
 		public bool NavBarInLeft = true;
 		public bool IsPortableMode = false;
 
-		/// <summary>
-		/// Выполняет слияние с другим экземпляром настроек.
-		/// Если режим приоритетный, то в данном экземпляре будут заменены только пустые поля на поля из settings,
-		/// Если режим не приоритетный, то в даном экземпляре будут заменены все поля, которые в settings не пустые.
-		/// </summary>
-		/// <param name="settings">Экземпляр, с которым нужно выполнить слияние</param>
-		/// <param name="priority">Приоритетный ли режим</param>
-		public void Merge(Settings settings, bool priority = false)
+        /// <summary>
+        /// Центрирование окна на экране после масштабирования.
+        /// </summary>
+        public bool IsCenterWindowAuto = true;
+        /// <summary>
+        /// Выполняет слияние с другим экземпляром настроек.
+        /// Если режим приоритетный, то в данном экземпляре будут заменены только пустые поля на поля из settings,
+        /// Если режим не приоритетный, то в даном экземпляре будут заменены все поля, которые в settings не пустые.
+        /// Уровень масштабирования интерфейса.
+        /// </summary>
+		private double _zoomLevel;
+        public double ZoomLevel
+        {
+            get => _zoomLevel; set
+            {ься
+                _zoomLevel = value;
+                ValueChanged?.Invoke(nameof(ZoomLevel));
+            }
+        }
+        /// <summary>
+        /// Статус значения отвечающего работу анимаций в момент изменения масштабирования.
+        /// </summary>
+        public bool IsScalingAnimationEnabled;
+
+        /// <summary>
+        /// Выполняет слияние с другим экземпляром настроек.
+        /// Если режим приоритетный, то в данном экземпляре будут заменены только пустые поля на поля из settings,
+        /// Если режим не приоритетный, то в даном экземпляре будут заменены все поля, которые в settings не пустые.
+        /// </summary>
+        /// <param name="settings">Экземпляр, с которым нужно выполнить слияние</param>
+        /// <param name="priority">Приоритетный ли режим</param>
+        public void Merge(Settings settings, bool priority = false)
 		{
 			if (priority)
 			{
@@ -113,6 +139,7 @@ namespace Lexplosion.Logic
                 if (string.IsNullOrWhiteSpace(AccentColor)) AccentColor = settings.AccentColor;
                 if (string.IsNullOrWhiteSpace(AppHeaderTemplateName)) AppHeaderTemplateName = settings.AppHeaderTemplateName;
                 if (IsSidebarBannerEnabled == null) IsSidebarBannerEnabled = settings.IsSidebarBannerEnabled;
+                if (ZoomLevel == 1) ZoomLevel = settings.ZoomLevel;
             }
             else
             {
@@ -136,6 +163,7 @@ namespace Lexplosion.Logic
                 if (!string.IsNullOrWhiteSpace(settings.AccentColor)) AccentColor = settings.AccentColor;
                 if (!string.IsNullOrWhiteSpace(settings.AppHeaderTemplateName)) AppHeaderTemplateName = settings.AppHeaderTemplateName;
                 if (IsSidebarBannerEnabled != null) IsSidebarBannerEnabled = settings.IsSidebarBannerEnabled;
+                if (settings.ZoomLevel > 0) ZoomLevel = settings.ZoomLevel;
                 AutoLoginServer = settings.AutoLoginServer;
             }
 
@@ -143,7 +171,8 @@ namespace Lexplosion.Logic
 			ItIsNotShit = settings.ItIsNotShit;
 			NavBarInLeft = settings.NavBarInLeft;
 			NwClientByDefault = settings.NwClientByDefault;
-		}
+            IsScalingAnimationEnabled = settings.IsScalingAnimationEnabled;
+        }
 
 		public Settings Copy()
 		{
@@ -189,6 +218,9 @@ namespace Lexplosion.Logic
                 IsNightWorldSkinSystem = true,
                 AppHeaderTemplateName = "MacOS",
                 IsSidebarBannerEnabled = true,
+                ZoomLevel = 1,
+                IsCenterWindowAuto = true,
+                IsScalingAnimationEnabled = true,
             };
         }
     }
