@@ -13,7 +13,6 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Modal.InstanceTransfer
         public InstanceDistributionModel Model { get; }
 
 
-
         #region Commands
 
 
@@ -23,13 +22,11 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Modal.InstanceTransfer
             get => RelayCommand.GetCommand<InstanceDistribution>(ref _downloadInstanceCommand, Model.Download);
         }
 
-
         private RelayCommand _refreshListCommand;
         public ICommand RefreshListCommand
         {
             get => RelayCommand.GetCommand(ref _refreshListCommand, Model.LoadInstanceDistribution);
         }
-
 
         private RelayCommand _cancelDownloadInstanceCommand;
         public ICommand CancelDownloadInstanceCommand
@@ -44,9 +41,9 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Modal.InstanceTransfer
 
 
 
-        public InstanceDistributionViewModel(LibraryController controller, InstanceSharesController instanceSharesController)
+        public InstanceDistributionViewModel(AppCore appCore, LibraryController controller, InstanceSharesController instanceSharesController)
         {
-            Model = new InstanceDistributionModel(controller, instanceSharesController);
+            Model = new InstanceDistributionModel(appCore, controller, instanceSharesController);
         }
 
         public void RefreshAccessData()

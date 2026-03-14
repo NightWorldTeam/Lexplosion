@@ -1020,4 +1020,25 @@
 
     <s:String x:Key="EnableHeaderBanner">Отображение баннера в левой панели</s:String>
     <s:String x:Key="EnableHeaderBannerDescription">Показывать ли премиум банер в левой панели</s:String>
+
+    <s:String x:Key="InstanceDistributionSuccessful">Сборка {0} успешно загружена и добавлена в вашу библиотеку.</s:String>
+    <s:String x:Key="InstanceDistributionDownloadFilesError">Произошла ошибка при скачивании файлов сборки.</s:String>
+    <s:String x:Key="InstanceDistributionJavaDownloadError">Проблема со скачиванием необходимых библиотек Java.</s:String>
+    <s:String x:Key="InstanceDistributionServerError">Ошибка соединения с сервером.</s:String>
+    <s:String x:Key="InstanceDistributionIsOfflineMode">Система раздачи недоступна в оффлайн-режиме.</s:String>
+    <s:String x:Key="InstanceDistributionNightworldIdError">Неверный идентификатор сборки Nightworld.</s:String>
+    <s:String x:Key="InstanceDistributionCurseforgeIdError">Неверный ID проекта CurseForge.</s:String>
+    <s:String x:Key="InstanceDistributionWrongClientFileUrl">URL-адрес для получения сборки неверен. На данный момент мы поддерживаем только Яндекс Диск и Google Диск.</s:String>
+    <s:String x:Key="InstanceDistributionVersionError">Указана неверная или неподдерживаемая версия сборки.</s:String>
+    <s:String x:Key="InstanceDistributionGameVersionError">Требуемая версия игры не найдена или не поддерживается.</s:String>
+    <s:String x:Key="InstanceDistributionForgeVersionError">Ошибка при проверке или установке версии Forge.</s:String>
+    <s:String x:Key="InstanceDistributionGuardError">Сборка не прошла проверку целостности (Guard).</s:String>
+    <s:String x:Key="InstanceDistributionManifestError">Ошибка чтения манифест-файла сборки.</s:String>
+    <s:String x:Key="InstanceDistributionUnknownClientFileType">Неизвестный тип файла сборки. Проверьте формат экспортированного архива.</s:String>
+    <s:String x:Key="InstanceDistributionGamePathError">Указан неверный путь к папке установки игры.</s:String>
+    <s:String x:Key="InstanceDistributionMoveFilesError">Ошибка при перемещении файлов сборки на диске.</s:String>
+    <s:String x:Key="InstanceDistributionZipFileOpenError">Ошибка открытия архива. Возможно, файл сборки поврежден.</s:String>
+    <s:String x:Key="InstanceDistributionDirectoryCreateError">Ошибка при создании директории для новой сборки.</s:String>
+    <s:String x:Key="InstanceDistributionIsCancelled">Загрузка сборки была отменена пользователем.</s:String>
+    <s:String x:Key="InstanceDistributionUnknownError">Произошла неизвестная ошибка в системе раздачи сборок.</s:String>
 </ResourceDictionary>

@@ -1020,4 +1020,26 @@
 
     <s:String x:Key="EnableHeaderBanner">Displaying a banner on the left panel</s:String>
     <s:String x:Key="EnableHeaderBannerDescription">Show premium banner on the left panel</s:String>
+
+    <s:String x:Key="InstanceDistributionSuccessful">The modpack {0} has been successfully downloaded and added to your library.</s:String>
+    <s:String x:Key="InstanceDistributionDownloadFilesError">An error occurred while downloading the modpack files.</s:String>
+    <s:String x:Key="InstanceDistributionJavaDownloadError">A problem occurred while downloading required Java libraries.</s:String>
+    <s:String x:Key="InstanceDistributionServerError">Server connection error.</s:String>
+    <s:String x:Key="InstanceDistributionIsOfflineMode">The distribution system is unavailable in offline mode.</s:String>
+    <s:String x:Key="InstanceDistributionNightworldIdError">Invalid Nightworld modpack ID.</s:String>
+    <s:String x:Key="InstanceDistributionCurseforgeIdError">Invalid CurseForge project ID.</s:String>
+    <s:String x:Key="InstanceDistributionWrongClientFileUrl">The URL to get the modpack is invalid. We currently only support Yandex Disk and Google Drive.</s:String>
+    <s:String x:Key="InstanceDistributionVersionError">An invalid or unsupported modpack version was specified.</s:String>
+    <s:String x:Key="InstanceDistributionGameVersionError">The required game version was not found or is not supported.</s:String>
+    <s:String x:Key="InstanceDistributionForgeVersionError">Error verifying or installing the Forge version.</s:String>
+    <s:String x:Key="InstanceDistributionGuardError">The modpack failed the integrity check (Guard).</s:String>
+    <s:String x:Key="InstanceDistributionManifestError">Error reading the modpack manifest file.</s:String>
+    <s:String x:Key="InstanceDistributionUnknownClientFileType">Unknown modpack file type. Check the format of the exported archive.</s:String>
+    <s:String x:Key="InstanceDistributionGamePathError">An invalid path to the game installation folder was specified.</s:String>
+    <s:String x:Key="InstanceDistributionMoveFilesError">Error moving modpack files on the disk.</s:String>
+    <s:String x:Key="InstanceDistributionZipFileOpenError">Error opening the archive. The modpack file might be corrupted.</s:String>
+    <s:String x:Key="InstanceDistributionDirectoryCreateError">Error creating the directory for the new modpack.</s:String>
+    <s:String x:Key="InstanceDistributionIsCancelled">The modpack download was canceled by the user.</s:String>
+    <s:String x:Key="InstanceDistributionUnknownError">An unknown error occurred in the modpack distribution system.</s:String>
+
 </ResourceDictionary>

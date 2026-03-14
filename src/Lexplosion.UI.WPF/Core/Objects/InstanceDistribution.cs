@@ -41,6 +41,7 @@ namespace Lexplosion.UI.WPF.Core.Objects
     {
         public event Action<InstanceInit> DownloadFinished;
 
+        private readonly AppCore _appCore;
         private readonly InstanceDistributionArgs _args;
         private readonly FileReceiver _receiver;
         private readonly Action<InstanceInit> _resultHandler;
@@ -115,8 +116,9 @@ namespace Lexplosion.UI.WPF.Core.Objects
         #region Constructors
 
 
-        public InstanceDistribution(InstanceDistributionArgs args)
+        public InstanceDistribution(AppCore appCore, InstanceDistributionArgs args)
         {
+            _appCore = appCore;
             _args = args;
             _receiver = args.FileReceiver;
             _resultHandler = args.ResultHandler;
@@ -216,6 +218,7 @@ namespace Lexplosion.UI.WPF.Core.Objects
                 case InstanceInit.Successful:
                     break;
                 default:
+                    HandleDownloadErrorResult(result);
                     _args.LibraryController.Remove(_instanceClient);
                     break;
             }
@@ -226,6 +229,22 @@ namespace Lexplosion.UI.WPF.Core.Objects
             InstanceState = StateType.InQueue;
             Percentages = 0;
             Speed = 0;
+        }
+
+        void HandleDownloadErrorResult(InstanceInit result) 
+        {
+            // Формируем ключ локализации, добавляя префикс
+            string resourceKey = $"InstanceDistribution{result}";
+
+            // Обрабатываем предупреждения
+            if (result == InstanceInit.IsCancelled || result == InstanceInit.IsOfflineMode)
+            {
+                _appCore.MessageService.Warning(resourceKey, true);
+                return;
+            }
+
+            // Все остальные статусы выводим как ошибки
+            _appCore.MessageService.Error(resourceKey, true);
         }
 
 
