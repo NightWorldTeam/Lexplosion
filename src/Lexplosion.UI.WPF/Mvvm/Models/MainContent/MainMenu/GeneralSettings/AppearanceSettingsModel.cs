@@ -2,6 +2,7 @@
 using Lexplosion.UI.WPF.Core.Objects;
 using Lexplosion.UI.WPF.Core.Services;
 using System.Collections.Generic;
+using Lexplosion.Global;
 
 namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.Content.GeneralSettings
 {

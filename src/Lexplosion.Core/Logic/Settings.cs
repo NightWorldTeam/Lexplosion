@@ -138,7 +138,6 @@ namespace Lexplosion.Logic
                 if (string.IsNullOrWhiteSpace(ThemeName)) ThemeName = settings.ThemeName;
                 if (string.IsNullOrWhiteSpace(AccentColor)) AccentColor = settings.AccentColor;
                 if (string.IsNullOrWhiteSpace(AppHeaderTemplateName)) AppHeaderTemplateName = settings.AppHeaderTemplateName;
-                if (IsSidebarBannerEnabled == null) IsSidebarBannerEnabled = settings.IsSidebarBannerEnabled;
                 if (ZoomLevel == 1) ZoomLevel = settings.ZoomLevel;
             }
             else
@@ -162,7 +161,6 @@ namespace Lexplosion.Logic
                 if (!string.IsNullOrWhiteSpace(settings.ThemeName)) ThemeName = settings.ThemeName;
                 if (!string.IsNullOrWhiteSpace(settings.AccentColor)) AccentColor = settings.AccentColor;
                 if (!string.IsNullOrWhiteSpace(settings.AppHeaderTemplateName)) AppHeaderTemplateName = settings.AppHeaderTemplateName;
-                if (IsSidebarBannerEnabled != null) IsSidebarBannerEnabled = settings.IsSidebarBannerEnabled;
                 if (settings.ZoomLevel > 0) ZoomLevel = settings.ZoomLevel;
                 AutoLoginServer = settings.AutoLoginServer;
             }
@@ -171,8 +169,7 @@ namespace Lexplosion.Logic
 			ItIsNotShit = settings.ItIsNotShit;
 			NavBarInLeft = settings.NavBarInLeft;
 			NwClientByDefault = settings.NwClientByDefault;
-            IsScalingAnimationEnabled = settings.IsScalingAnimationEnabled;
-        }
+			IsScalingAnimationEnabled = settings.IsScalingAnimationEnabled;
 			DisplayPremiumBanner = settings.DisplayPremiumBanner;
 		}
 
@@ -219,7 +216,6 @@ namespace Lexplosion.Logic
 				IsPortableMode = false,
                 IsNightWorldSkinSystem = true,
                 AppHeaderTemplateName = "MacOS",
-                IsSidebarBannerEnabled = true,
                 ZoomLevel = 1,
                 IsCenterWindowAuto = true,
                 IsScalingAnimationEnabled = true,

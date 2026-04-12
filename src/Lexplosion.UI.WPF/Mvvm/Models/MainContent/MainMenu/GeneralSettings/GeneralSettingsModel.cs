@@ -233,16 +233,16 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.Content.GeneralSettings
             {
                 var javaPathResult = JavaHelper.TryValidateJavaPath(value, out value);
 
-                if (javaPathResult == JavaHelper.JavaPathCheckResult.Success)
-                {
-                    GlobalData.GeneralSettings.Java17Path = value;
-                    GlobalData.GeneralSettings.IsCustomJava17 = false;
-                }
-                else if (javaPathResult == JavaHelper.JavaPathCheckResult.EmptyOrNull)
-                {
-                    GlobalData.GeneralSettings.Java17Path = value;
-                    GlobalData.GeneralSettings.IsCustomJava17 = true;
-                }
+				if (javaPathResult == JavaHelper.JavaPathCheckResult.Success)
+				{
+					GlobalData.GeneralSettings.Java17Path = value;
+					GlobalData.GeneralSettings.IsCustomJava17 = true;
+				}
+				else if (javaPathResult == JavaHelper.JavaPathCheckResult.EmptyOrNull)
+				{
+					GlobalData.GeneralSettings.Java17Path = value;
+					GlobalData.GeneralSettings.IsCustomJava17 = false;
+				}
 
                 Notify?.Invoke(javaPathResult);
                 _dataFilesManager.SaveSettings(GlobalData.GeneralSettings);
