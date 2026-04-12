@@ -9,6 +9,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.InstanceTransfer
 {
     public sealed class InstanceDistributionModel : ViewModelBase
     {
+        private readonly AppCore _appCore;
         private readonly LibraryController _controller;
         private readonly InstanceSharesController _sharesController;
 
@@ -31,9 +32,10 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.InstanceTransfer
 
         public bool IsLoading { get; private set; }
 
-        public InstanceDistributionModel(LibraryController controller, InstanceSharesController instanceSharesController)
+        public InstanceDistributionModel(AppCore appCore, LibraryController controller, InstanceSharesController instanceSharesController)
         {
             IsLoading = true;
+            _appCore = appCore;
             _controller = controller;
             _sharesController = instanceSharesController;
 
@@ -49,6 +51,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.InstanceTransfer
 
 
         #region Public Methods
+
 
         public async void LoadInstanceDistribution()
         {
@@ -66,7 +69,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.InstanceTransfer
                 if (!_sharesController.Contains(receiver.Id))
                 {
                     _sharesController.AddFileReceiver(
-                        new InstanceDistribution(
+                        new InstanceDistribution(_appCore,
                             new(receiver, (i) => { }, (i) => { }, _controller, _sharesController)
                             )
                         );

@@ -1,12 +1,13 @@
-﻿using Lexplosion.Tools;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
+using Lexplosion.Tools;
 using NightWorld.Collections.Concurrent;
+using NightWorld.Tools;
 
 namespace Lexplosion.Logic.Network
 {
@@ -155,8 +156,7 @@ namespace Lexplosion.Logic.Network
 
 		protected override void Reading()
 		{
-			//первое значение - стадия подключения, второе - aes ключ, третье - aes вектор инициализации
-			var connectionStages = new Dictionary<ClientDesc, ReferenceTuple<int, byte[], byte[]>>();
+			var connectionStages = new Dictionary<ClientDesc, UserAuth>();
 
 			while (IsWork)
 			{
@@ -179,9 +179,9 @@ namespace Lexplosion.Logic.Network
 							{
 								if (data.Length == 1 && data[0] == 0x00)
 								{
-									connectionStages[point] = new ReferenceTuple<int, byte[], byte[]>
+									connectionStages[point] = new UserAuth
 									{
-										Value1 = 0
+										Stage = 0
 									};
 								}
 								else
@@ -194,7 +194,8 @@ namespace Lexplosion.Logic.Network
 							}
 							else // в соотвествии со стадией подключения выполняем действия
 							{
-								if (connectionStages[point].Value1 == 0)
+								UserAuth userAuth = connectionStages[point];
+								if (userAuth.Stage == 0)
 								{
 									byte[] aesData = Cryptography.RsaDecode(data, _privateRsaKey); // получем aes ключ для шифрования
 									if (aesData.Length == 48)
@@ -208,31 +209,54 @@ namespace Lexplosion.Logic.Network
 										// отправляем кодовое слово клиенту в зашифрованном виде
 										Server.Send(Cryptography.AesEncode(_сonfirmWord, aesKey, aesIV), point);
 
-										connectionStages[point].Value2 = aesKey;
-										connectionStages[point].Value3 = aesIV;
-										connectionStages[point].Value1++;
+										userAuth.AesKey = aesKey;
+										userAuth.AesIV = aesIV;
+										userAuth.Stage++;
 									}
 									else
 									{
 										connectionStages.Remove(point);
 										Server.Close(point);
 										AcceptingBlock.Release();
+
+										Runtime.DebugConsoleWrite($"Disconect client, stage 0. Message lenght {data.Length}, decoded data lenght {aesData.Length}");
 										continue;
 									}
 								}
+								else if (userAuth.Stage == 1)
+								{
+									if (data.Length != 8)
+									{
+										connectionStages.Remove(point);
+										Server.Close(point);
+										AcceptingBlock.Release();
+
+										Runtime.DebugConsoleWrite($"Disconect client, stage 1. Message lenght {data.Length}");
+										continue;
+									}
+
+									userAuth.Stage++;
+
+									// получаем оффсет в файле
+									userAuth.OffsetInFile = ByteConverter.BigEndian.ToLong(data, 0);
+									Runtime.DebugConsoleWrite($"Offset in file {userAuth.OffsetInFile}");
+								}
 								else
 								{
-									byte[] aesKey = connectionStages[point].Value2;
-									byte[] aesIV = connectionStages[point].Value3;
+									byte[] aesKey = userAuth.AesKey;
+									byte[] aesIV = userAuth.AesIV;
+									long offsetInFile = userAuth.OffsetInFile;
 
 									string profileId = Encoding.UTF8.GetString(Cryptography.AesDecode(data, aesKey, aesIV));
 
-									if (SFilesList.ContainsKey(profileId))
+									if (SFilesList.TryGetValue(profileId, out FileData fileData))
 									{
+										if (offsetInFile >= fileData.FileSize) offsetInFile = 0;
+
 										ClientsData[point] = new ClientData
 										{
 											FileId = profileId,
-											ReadingOffset = 0,
+											ReadingOffset = offsetInFile,
 											EncodeKey = aesKey,
 											IV = aesIV
 										};
@@ -345,6 +369,14 @@ namespace Lexplosion.Logic.Network
 			{
 				file.Stream.Close();
 			}
+		}
+
+		private class UserAuth
+		{
+			public int Stage;
+			public long OffsetInFile;
+			public byte[] AesKey;
+			public byte[] AesIV;
 		}
 	}
 }

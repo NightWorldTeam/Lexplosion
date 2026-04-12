@@ -160,6 +160,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.Content.GeneralSettings
             OnPropertyChanged(nameof(ScalingFactor));
             IsCenterWindowAuto = _appCore.Settings.Core.IsCenterWindowAuto;
             _themeService = _appCore.Settings.ThemeService;
+            IsSidebarBannerEnabled = GlobalData.GeneralSettings.DisplayPremiumBanner;
         }
 
 

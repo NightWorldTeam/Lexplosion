@@ -63,8 +63,6 @@ namespace Lexplosion.Logic.Management.Accounts.Auth
 					status = ActivityStatus.NotDisturb;
 				}
 
-				GlobalData.LastNewsId = response.LastNewsId;
-
                 var result = new IAuthHandler.AuthResult
 				{
 					Login = response.Login,

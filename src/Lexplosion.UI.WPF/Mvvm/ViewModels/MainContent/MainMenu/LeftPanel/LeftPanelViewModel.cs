@@ -1,8 +1,15 @@
-﻿using Lexplosion.Logic.Management.Accounts;
+﻿using Lexplosion.Global;
+using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.Logic.Objects.Nightworld;
 using Lexplosion.UI.WPF.Commands;
 using Lexplosion.UI.WPF.Core;
 using Lexplosion.UI.WPF.Core.Objects;
+using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading;
 using System.Windows.Input;
 
 namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
@@ -137,9 +144,9 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
                 UserLogin = Account.ActiveAccount.Login;
                 UserAvatar = Account.ActiveAccount.HeadImageUrl;
                 UserAccountType = AccountType.NightWorld;
-                if (Global.GlobalData.GeneralSettings.IsSidebarBannerEnabled == true)
+                if (Global.GlobalData.GeneralSettings.DisplayPremiumBanner == true) 
                 {
-                    ProfileBanner = Account.ActiveAccount.ProfileBanner;
+                    ProfileBanner = GlobalData.GeneralSettings.DisplayPremiumBanner ? Account.ActiveAccount.ProfileBanner : null;
                     OnPropertyChanged(nameof(ProfileBanner));
                 }
                 return;

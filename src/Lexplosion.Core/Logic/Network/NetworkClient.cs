@@ -122,7 +122,7 @@ namespace Lexplosion.Logic.Network
 							}
 							else
 							{
-								Runtime.DebugConsoleWrite("UDP connect through proxy");
+								Runtime.DebugConsoleWrite($"UDP connect through proxy (point: {ControlServer.SmpProxyPoint})");
 								hostPoint = ControlServer.SmpProxyPoint;
 							}
 

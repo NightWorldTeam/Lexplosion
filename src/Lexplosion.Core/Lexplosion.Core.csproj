@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{BD1126B1-ABBE-424F-BF0C-F6B3DC107BF6}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>Lexplosion.Core</RootNamespace>
+    <RootNamespace>Lexplosion</RootNamespace>
     <AssemblyName>Lexplosion.Core</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <LangVersion>preview</LangVersion>
@@ -65,6 +65,7 @@
     <Compile Include="Extensions\ObservableCollectionExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Global.cs" />
+    <Compile Include="Logic\DTO\LauncherInitInfo.cs" />
     <Compile Include="Logic\FileSystem\DownloadUrlHandler.cs" />
     <Compile Include="Logic\FileSystem\Extensions\CurseforgeApiExtensions.cs" />
     <Compile Include="Logic\FileSystem\Extensions\ModrinthApiExtensions.cs" />

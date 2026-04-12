@@ -57,7 +57,7 @@ namespace Lexplosion.Logic
         public string AccentColor = string.Empty;
         public string ThemeName = string.Empty;
         public string AppHeaderTemplateName = string.Empty;
-		public bool? IsSidebarBannerEnabled = null;
+		public bool DisplayPremiumBanner = true;
         /// <summary>
         /// Адрес сервера для автовхода при запуске майкрафта.
         /// Параметр только для настроек конкретного клиента. 
@@ -173,6 +173,8 @@ namespace Lexplosion.Logic
 			NwClientByDefault = settings.NwClientByDefault;
             IsScalingAnimationEnabled = settings.IsScalingAnimationEnabled;
         }
+			DisplayPremiumBanner = settings.DisplayPremiumBanner;
+		}
 
 		public Settings Copy()
 		{
@@ -221,6 +223,7 @@ namespace Lexplosion.Logic
                 ZoomLevel = 1,
                 IsCenterWindowAuto = true,
                 IsScalingAnimationEnabled = true,
+                DisplayPremiumBanner = true,
             };
         }
     }

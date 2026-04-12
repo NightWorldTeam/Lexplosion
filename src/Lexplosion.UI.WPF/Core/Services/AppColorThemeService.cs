@@ -83,9 +83,9 @@ namespace Lexplosion.UI.WPF.Core.Services
         /// TODO: Move to another common class for all apperance settings
         public void ChangeSidebarBannerActivity(bool value) 
         {
-            if (value != GlobalData.GeneralSettings.IsSidebarBannerEnabled) 
+            if (value != GlobalData.GeneralSettings.DisplayPremiumBanner) 
             {
-                GlobalData.GeneralSettings.IsSidebarBannerEnabled = value;
+                GlobalData.GeneralSettings.DisplayPremiumBanner = value;
                 Runtime.ServicesContainer.DataFilesService.SaveSettings(GlobalData.GeneralSettings);
                 SidebarBannerActivityChanged?.Invoke(value);
             }
