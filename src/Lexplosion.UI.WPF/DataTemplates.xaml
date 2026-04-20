@@ -21,7 +21,9 @@
     xmlns:serverprofileview="clr-namespace:Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.ServerProfile"
     xmlns:tb="http://www.hardcodet.net/taskbar"
     xmlns:trayMenu="clr-namespace:Lexplosion.UI.WPF.TrayMenu"
-    xmlns:viewmodels="clr-namespace:Lexplosion.UI.WPF.Mvvm.ViewModels">
+    xmlns:viewmodels="clr-namespace:Lexplosion.UI.WPF.Mvvm.ViewModels"
+    xmlns:newshub="clr-namespace:Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.NewsHub"
+    xmlns:newshubview="clr-namespace:Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.NewsHub">
 
     <ImageBrush x:Key="NoneImageBrush" ImageSource="pack://Application:,,,/Assets/images/icons/non_image.png" />
 
@@ -281,5 +283,13 @@
     </DataTemplate>
     <DataTemplate DataType="{x:Type serverprofile:ServerProfileOverviewGalleryViewModel}">
         <serverprofileview:InstanceProfileOverviewGalleryView />
+    </DataTemplate>
+    
+    
+    <!--  -->
+    <!--  News Hub  -->
+    <!--  -->
+    <DataTemplate DataType="{x:Type newshub:NewsHubViewModel}">
+        <newshubview:NewsHubView />
     </DataTemplate>
 </ResourceDictionary>

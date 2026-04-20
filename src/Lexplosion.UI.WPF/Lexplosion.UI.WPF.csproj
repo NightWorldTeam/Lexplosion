@@ -7,7 +7,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{C7328845-AB10-4FAC-99D8-F52FE705B628}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Lexplosion.WPF.NewInterface</RootNamespace>
+    <RootNamespace>Lexplosion.UI.WPF</RootNamespace>
     <AssemblyName>Lexplosion</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -198,6 +198,7 @@
     <Compile Include="Mvvm\ViewModels\MainContent\InstanceProfile\Overview\InstanceProfileOverviewLayoutViewModel.cs" />
     <Compile Include="Mvvm\Models\MainContent\MainMenu\Multiplayer\AdServersModel.cs" />
     <Compile Include="Mvvm\ViewModels\MainContent\MainMenu\Content\Multiplayer\AdServersViewModel.cs" />
+    <Compile Include="Mvvm\ViewModels\MainContent\NewsHub\NewsHubViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\MainContent\ServerProfile\Overview\ServerProfileOverviewGalleryViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\MainContent\ServerProfile\ServerProfileLayoutViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\MainContent\ServerProfile\ServerProfileLeftPanelViewModel.cs" />
@@ -227,6 +228,12 @@
     <Compile Include="Mvvm\ViewModels\Feedback\NotificationsViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\WelcomePageThemeSelectViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\WelcomeViewModel.cs" />
+    <Compile Include="Mvvm\Views\Pages\MainContent\NewsHub\Components\NewsItem.xaml.cs">
+      <DependentUpon>NewsItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Views\Pages\MainContent\NewsHub\NewsHubView.xaml.cs">
+      <DependentUpon>NewsHubView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewComponents\News\LatestNewsView.xaml.cs">
       <DependentUpon>LatestNewsView.xaml</DependentUpon>
     </Compile>
@@ -713,6 +720,14 @@
     <Page Include="Mvvm\OldInstanceForm.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Mvvm\Views\Pages\MainContent\NewsHub\Components\NewsItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Mvvm\Views\Pages\MainContent\NewsHub\NewsHubView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ViewComponents\News\LatestNewsView.xaml">
       <SubType>Designer</SubType>
@@ -1350,6 +1365,7 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\images\icons\non_image_template.png" />
+    <Resource Include="Mvvm\Views\Pages\MainContent\NewsHub\Components\test-photo.png" />
     <Content Include="Resources\Libraries\Compression.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

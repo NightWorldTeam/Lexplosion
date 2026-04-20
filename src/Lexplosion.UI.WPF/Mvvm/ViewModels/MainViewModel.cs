@@ -21,6 +21,8 @@ using System.Windows.Input;
 using Lexplosion.Logic.Management.Accounts;
 using System.Diagnostics;
 using Lexplosion.UI.WPF.Mvvm.Views.Windows;
+using Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.NewsHub;
+
 
 namespace Lexplosion.UI.WPF.Mvvm.ViewModels
 {
@@ -47,7 +49,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels
         /// <summary>
         /// Выбранный в данный момент viewmodel для окна. 
         /// </summary>
-        public ViewModelBase CurrentViewModel => NavigationStore.CurrentViewModel;
+        public ViewModelBase CurrentViewModel => new NewsHubViewModel();//NavigationStore.CurrentViewModel;
 
         internal ModalNavigationStore ModalNavigationStore { get => AppCore.ModalNavigationStore; }
 
