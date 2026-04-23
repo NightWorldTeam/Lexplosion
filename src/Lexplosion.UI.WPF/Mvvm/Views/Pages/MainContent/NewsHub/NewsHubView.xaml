@@ -19,23 +19,20 @@
                FontSize="24"
                FontWeight="Bold"
                Foreground="#FFF"
-               Margin="0,36,0,16"/>
+               Margin="6,36,0,16"/>
 
-        <ScrollViewer Grid.Row="1"
-              VerticalScrollBarVisibility="Auto"
-              HorizontalScrollBarVisibility="Disabled">
-
+        <ScrollViewer Grid.Row="1">
             <ItemsControl ItemsSource="{Binding Items}">
 
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <WrapPanel/>
+                        <WrapPanel />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
 
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <components:NewsItem/>
+                        <components:NewsItem />
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
 
