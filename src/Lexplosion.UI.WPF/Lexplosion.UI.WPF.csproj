@@ -180,6 +180,8 @@
     <Compile Include="Mvvm\Models\MainContent\MainMenu\Friends\FriendRequestsModel.cs" />
     <Compile Include="Mvvm\Models\MainContent\MainMenu\Friends\FriendsModel.cs" />
     <Compile Include="Mvvm\Models\MainContent\MainMenu\GeneralSettings\AccountsSettingsModel.cs" />
+    <Compile Include="Mvvm\Models\MainContent\NewsHub\NewsHubModel.cs" />
+    <Compile Include="Mvvm\Models\MainContent\NewsHub\NewsPreviewModel.cs" />
     <Compile Include="Mvvm\Models\Modal\InstanceFactory\InstanceFactoryModel.cs" />
     <Compile Include="Mvvm\OldInstanceForm.xaml.cs">
       <DependentUpon>OldInstanceForm.xaml</DependentUpon>
@@ -228,8 +230,8 @@
     <Compile Include="Mvvm\ViewModels\Feedback\NotificationsViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\WelcomePageThemeSelectViewModel.cs" />
     <Compile Include="Mvvm\ViewModels\WelcomeViewModel.cs" />
-    <Compile Include="Mvvm\Views\Pages\MainContent\NewsHub\Components\NewsItem.xaml.cs">
-      <DependentUpon>NewsItem.xaml</DependentUpon>
+    <Compile Include="Mvvm\Views\Pages\MainContent\NewsHub\Components\NewsPreviewView.xaml.cs">
+      <DependentUpon>NewsPreviewView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Mvvm\Views\Pages\MainContent\NewsHub\NewsHubView.xaml.cs">
       <DependentUpon>NewsHubView.xaml</DependentUpon>
@@ -721,7 +723,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Mvvm\Views\Pages\MainContent\NewsHub\Components\NewsItem.xaml">
+    <Page Include="Mvvm\Views\Pages\MainContent\NewsHub\Components\NewsPreviewView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
