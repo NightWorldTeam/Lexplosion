@@ -410,7 +410,22 @@ namespace Lexplosion.Logic.Network
 
 		public List<NewsModel> GetUnseenNews(long lastViewedNewsId)
 		{
-			var data = _toServer.HttpGet(LaunсherSettings.URL.Base + "api/news/getUnseenNews");
+			var data = _toServer.HttpGet($"{LaunсherSettings.URL.Base}api/news/getUnseenNews?lastViewedNewsId={lastViewedNewsId}");
+			if (data == null) return new();
+
+			try
+			{
+				return JsonConvert.DeserializeObject<List<NewsModel>>(data);
+			}
+			catch
+			{
+				return new();
+			}
+		}
+
+		public List<NewsModel> GetNews()
+		{
+			var data = _toServer.HttpGet($"{LaunсherSettings.URL.Base}api/news/getNews");
 			if (data == null) return new();
 
 			try
