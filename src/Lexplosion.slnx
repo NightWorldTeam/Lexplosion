@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/.build/">
+    <File Path="../.editorconfig" />
+    <File Path="../.gitignore" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+  </Folder>
+  <Project Path="Lexplosion.Core/Lexplosion.Core.csproj" />
+  <Project Path="Lexplosion.Tests/Lexplosion.Tests.csproj" />
+  <Project Path="Lexplosion.UI.WPF/Lexplosion.UI.WPF.csproj" />
+</Solution>
