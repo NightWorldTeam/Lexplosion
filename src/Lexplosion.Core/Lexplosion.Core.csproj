@@ -5,30 +5,8 @@
     <RootNamespace>Lexplosion</RootNamespace>
     <AssemblyName>Lexplosion.Core</AssemblyName>
     <LangVersion>preview</LangVersion>
-    <Deterministic>true</Deterministic>
-    <Nullable>enable</Nullable>
-    <!-- Отключаем автоматическую генерацию AssemblyInfo, чтобы избежать конфликтов -->
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
-  <!-- Настройки для Debug -->
-  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <Optimize>false</Optimize>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-  </PropertyGroup>
-
-  <!-- Настройки для Release -->
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <Optimize>true</Optimize>
-    <DebugSymbols>false</DebugSymbols>
-    <DebugType>pdbonly</DebugType>
-    <DefineConstants>TRACE</DefineConstants>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-
-  <!-- Явно подключаем все базовые библиотеки .NET Framework 4.7.2 -->
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -43,14 +21,12 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
 
-  <!-- NuGet-пакеты -->
   <ItemGroup>
-    <PackageReference Include="LumiSoft.Net" Version="2.0.4492.11923" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="Tommy" Version="3.0.1" />
+    <PackageReference Include="LumiSoft.Net" />
+    <PackageReference Include="Newtonsoft.Json" />
+    <PackageReference Include="Tommy" />
   </ItemGroup>
 
-  <!-- Скрипт архивации после сборки -->
   <Target Name="ArchiveCore" AfterTargets="Build">
     <Exec Command="powershell -Command &quot;New-Item -ItemType Directory -Force -Path '$(SolutionDir)DLL'; Compress-Archive -Path '$(TargetPath)' -DestinationPath '$(SolutionDir)DLL\Lexplosion.Core.zip' -Force&quot;" />
   </Target>
