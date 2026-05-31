@@ -4,7 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
-namespace Lexplosion.WPF.NewInterface.Controls
+namespace Lexplosion.UI.WPF.Controls
 {
     public enum AlertBlockType 
     {
