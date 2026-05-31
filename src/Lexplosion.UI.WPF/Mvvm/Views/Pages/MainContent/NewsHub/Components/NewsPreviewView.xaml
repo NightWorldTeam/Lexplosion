@@ -34,7 +34,7 @@
 
                 <Border Grid.Row="0" CornerRadius="10,10,0,0">
                     <Border.Background>
-                        <ImageBrush ImageSource="/Mvvm/Views/Pages/MainContent/NewsHub/Components/test-photo.png" Stretch="UniformToFill" />
+                        <ImageBrush ImageSource="/Assets/images/test-photo.png" Stretch="UniformToFill" />
                     </Border.Background>
                 </Border>
 

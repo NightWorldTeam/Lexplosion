@@ -70,7 +70,7 @@
 
     <!--  Separate Color  -->
     <Color x:Key="SeparateColor">
-        #E6EDF4
+        #ECEEF0
     </Color>
 
     <sys:Double x:Key="SeparateColorOpacity">

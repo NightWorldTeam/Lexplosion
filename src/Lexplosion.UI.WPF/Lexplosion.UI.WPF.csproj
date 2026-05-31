@@ -48,6 +48,8 @@
   <ItemGroup>
     <PackageReference Include="DiscordRichPresence" />
     <PackageReference Include="Hardcodet.NotifyIcon.Wpf" />
+    <PackageReference Include="MarkdownWPF" />
+    <PackageReference Include="MarkdownWPF.Html" />
     <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="System.Linq.Dynamic.Core" />
     <PackageReference Include="VirtualizingWrapPanel" />

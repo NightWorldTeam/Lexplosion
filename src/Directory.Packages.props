@@ -2,12 +2,13 @@
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageVersion Include="coverlet.collector" Version="3.1.2" />
     <PackageVersion Include="DiscordRichPresence" Version="1.2.1.24" />
     <PackageVersion Include="Hardcodet.NotifyIcon.Wpf" Version="1.0.5" />
     <PackageVersion Include="LumiSoft.Net" Version="2.0.4492.11923" />
+    <PackageVersion Include="MarkdownWPF" Version="1.1.2" />
+    <PackageVersion Include="MarkdownWPF.Html" Version="1.1.2" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
     <PackageVersion Include="MSTest.TestAdapter" Version="2.2.10" />
     <PackageVersion Include="MSTest.TestFramework" Version="2.2.10" />

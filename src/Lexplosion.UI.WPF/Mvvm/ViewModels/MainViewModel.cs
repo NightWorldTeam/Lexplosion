@@ -49,7 +49,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels
         /// <summary>
         /// Выбранный в данный момент viewmodel для окна. 
         /// </summary>
-        public ViewModelBase CurrentViewModel => new NewsHubViewModel();//NavigationStore.CurrentViewModel;
+        public ViewModelBase CurrentViewModel => new NewsArticleViewModel();//new NewsHubViewModel();//NavigationStore.CurrentViewModel;
 
         internal ModalNavigationStore ModalNavigationStore { get => AppCore.ModalNavigationStore; }
 
