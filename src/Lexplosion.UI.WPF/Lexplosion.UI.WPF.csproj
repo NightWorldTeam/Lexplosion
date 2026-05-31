@@ -4,35 +4,20 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>Lexplosion.UI.WPF</RootNamespace>
     <AssemblyName>Lexplosion</AssemblyName>
-    <LangVersion>latest</LangVersion>
-    <Deterministic>true</Deterministic>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
     <StartupObject>Lexplosion.UI.WPF.RuntimeApp</StartupObject>
     <ApplicationIcon>Assets\images\icons\logo.ico</ApplicationIcon>
-    <Nullable>enable</Nullable>
-    <!-- Отключаем автоматическую генерацию AssemblyInfo, чтобы избежать конфликтов -->
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
-  <!-- Настройки для Debug -->
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <Optimize>false</Optimize>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
-  <!-- Настройки для Release -->
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <Optimize>true</Optimize>
-    <DebugSymbols>false</DebugSymbols>
-    <DebugType>pdbonly</DebugType>
-    <DefineConstants>TRACE</DefineConstants>
-  </PropertyGroup>
+  <ItemGroup>
+    <Compile Update="Core\**\*.cs" />
+  </ItemGroup>
 
-  <!-- Ресурсы (изображения, шрифты, иконки) подключаются одной маской -->
   <ItemGroup>
     <Resource Include="Assets\**\*.png" />
     <Resource Include="Assets\**\*.jpg" />
@@ -41,7 +26,6 @@
     <Resource Include="Assets\**\*.otf" />
   </ItemGroup>
 
-  <!-- Внешние библиотеки и архивы в проекте -->
   <ItemGroup>
     <Content Include="Resources\Libraries\Compression.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -49,7 +33,6 @@
     <None Include="Resources\Libraries\*.zip" />
   </ItemGroup>
 
-  <!-- Базовые системные библиотеки -->
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -62,22 +45,18 @@
     <Reference Include="Microsoft.VisualBasic" />
   </ItemGroup>
 
-  <!-- NuGet-пакеты -->
   <ItemGroup>
-    <PackageReference Include="DiscordRichPresence" Version="1.2.1.24" />
-    <PackageReference Include="Hardcodet.NotifyIcon.Wpf" Version="1.0.5" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <!-- Версия поднята для решения конфликта downgrade -->
-    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.6.6" />
-    <PackageReference Include="VirtualizingWrapPanel" Version="2.2.1" />
+    <PackageReference Include="DiscordRichPresence" />
+    <PackageReference Include="Hardcodet.NotifyIcon.Wpf" />
+    <PackageReference Include="Newtonsoft.Json" />
+    <PackageReference Include="System.Linq.Dynamic.Core" />
+    <PackageReference Include="VirtualizingWrapPanel" />
   </ItemGroup>
 
-  <!-- Связь с проектом Lexplosion.Core -->
   <ItemGroup>
     <ProjectReference Include="..\Lexplosion.Core\Lexplosion.Core.csproj" />
   </ItemGroup>
 
-  <!-- Копирование архива перед началом сборки с помощью встроенной задачи Copy -->
   <Target Name="CopyCoreZip" BeforeTargets="PreBuildEvent">
     <Copy SourceFiles="$(SolutionDir)DLL\Lexplosion.Core.zip" DestinationFolder="$(ProjectDir)Resources\Libraries" SkipUnchangedFiles="true" />
   </Target>
