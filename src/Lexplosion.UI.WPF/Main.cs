@@ -14,7 +14,6 @@ using Lexplosion.UI.WPF.Mvvm.ViewModels;
 using Lexplosion.UI.WPF.Mvvm.ViewModels.Authorization;
 using Lexplosion.UI.WPF.Mvvm.Views.Windows;
 using Lexplosion.UI.WPF.Properties;
-using Lexplosion.WPF.NewInterface.Properties;
 using System;
 using System.Collections;
 using System.Collections.Generic;
