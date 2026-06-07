@@ -410,7 +410,7 @@ namespace Lexplosion.Logic.Network
 
 		public List<NewsModel> GetUnseenNews(long lastViewedNewsId)
 		{
-			var data = _toServer.HttpGet($"{LaunсherSettings.URL.Base}api/news/getUnseenNews?lastViewedNewsId={lastViewedNewsId}");
+			var data = _toServer.HttpGet($"{LaunсherSettings.URL.Base}api/news/getUnseenNews?lastViewedNewsId={lastViewedNewsId}&onlyForLauncher=1");
 			if (data == null) return new();
 
 			try
@@ -425,7 +425,7 @@ namespace Lexplosion.Logic.Network
 
 		public List<NewsModel> GetNews()
 		{
-			var data = _toServer.HttpGet($"{LaunсherSettings.URL.Base}api/news/getNews");
+			var data = _toServer.HttpGet($"{LaunсherSettings.URL.Base}api/news/getNews&onlyForLauncher=1");
 			if (data == null) return new();
 
 			try

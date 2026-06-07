@@ -1,6 +1,7 @@
 ﻿using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.FileSystem.Services;
+using Lexplosion.Logic.Objects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,10 +21,13 @@ namespace Lexplosion.Logic.Management.Notifications
 			_services = services;
 		}
 
-		public List<News> GetAllNews(int page, int pageSize)
+		public CatalogResult<News> GetAllNews(int page, int pageSize)
 		{
-			var result = new List<News>();
-			return result;
+			long lastViewedNewsId = _services.DataFilesService.GetLastViewedNewsId();
+			var res = _services.NwApi.GetNews();
+
+			var news = res.Select(x => new News(x, _services.DataFilesService, x.Id <= lastViewedNewsId)).ToList();
+			return new CatalogResult<News>(news, res.Count);
 		}
 
 		/// <summary>
