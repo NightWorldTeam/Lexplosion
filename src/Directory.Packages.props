@@ -1,0 +1,21 @@
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageVersion Include="coverlet.collector" Version="3.1.2" />
+    <PackageVersion Include="DiscordRichPresence" Version="1.2.1.24" />
+    <PackageVersion Include="Hardcodet.NotifyIcon.Wpf" Version="1.0.5" />
+    <PackageVersion Include="LumiSoft.Net" Version="2.0.4492.11923" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
+    <PackageVersion Include="MSTest.TestAdapter" Version="2.2.10" />
+    <PackageVersion Include="MSTest.TestFramework" Version="2.2.10" />
+    <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageVersion Include="NUnit" Version="3.13.3" />
+    <PackageVersion Include="NUnit3TestAdapter" Version="4.5.0" />
+    <PackageVersion Include="System.Linq.Dynamic.Core" Version="1.6.6" />
+    <PackageVersion Include="Tommy" Version="3.0.1" />
+    <PackageVersion Include="VirtualizingWrapPanel" Version="2.2.1" />
+  </ItemGroup>
+</Project>
