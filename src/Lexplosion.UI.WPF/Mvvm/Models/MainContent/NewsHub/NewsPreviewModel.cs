@@ -8,17 +8,21 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.NewsHub
     public sealed class NewsPreviewModel
     {
         public string Title { get; }
-        public string Description { get; }
+        public string Summary { get; }
+        public string Context { get; }
         public DateTime Date { get; }
         public string Author { get; }
+        public string BannerUrl { get; }
         public ICommand OpenNewsViewerCommand { get; }
 
-        public NewsPreviewModel(string title, string description, DateTime date, string author, ICommand openViewerCommand)
+        public NewsPreviewModel(string title, string summary, string context, DateTime date, string author, string bannerUrl, ICommand openViewerCommand)
         {
             Title = title;
-            Description = description;
+            Summary = summary;
+            Context = context;
             Date = date;
             Author = author;
+            BannerUrl = bannerUrl;
             OpenNewsViewerCommand = openViewerCommand;
         }
     }

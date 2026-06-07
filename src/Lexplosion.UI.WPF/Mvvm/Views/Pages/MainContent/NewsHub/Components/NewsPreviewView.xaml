@@ -48,7 +48,7 @@
 
                         <Border Grid.Row="0" CornerRadius="10,10,0,0">
                             <Border.Background>
-                                <ImageBrush ImageSource="/Assets/images/test-photo.png" Stretch="UniformToFill" />
+                                <ImageBrush ImageSource="{Binding BannerUrl}" Stretch="UniformToFill" />
                             </Border.Background>
                         </Border>
 
@@ -71,17 +71,18 @@
                             <TextBlock
                                 Grid.Row="1"
                                 Height="50"
+                                Background="Transparent"
                                 FontSize="14"
                                 FontWeight="Regular"
                                 Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
-                                Text="{Binding Description}"
+                                Text="{Binding Summary}"
                                 TextTrimming="CharacterEllipsis"
                                 TextWrapping="WrapWithOverflow" />
 
                             <Border
                                 Grid.Row="2"
                                 Height="2"
-                                Margin="0,8"
+                                Margin="0,4"
                                 Background="{DynamicResource SeparateSolidColorBrush}" />
 
                             <Grid Grid.Row="3">

@@ -296,17 +296,16 @@
                     KeyboardNavigation.IsTabStop="False" />
 
                 <!--  Footer buttons  -->
-                <Grid Grid.Row="2">
 
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
+
+                <StackPanel
+                    Grid.Row="2"
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal">
 
                     <Button
                         Width="32"
                         Height="32"
-                        HorizontalAlignment="Left"
                         Command="{Binding ToNewsHubCommand}"
                         Cursor="Hand"
                         Template="{StaticResource NewsButtonContentTemplate}" />
@@ -320,7 +319,7 @@
                         Background="Transparent"
                         Cursor="Hand"
                         Template="{StaticResource HelpButtonContentTemplate}" />
-                </Grid>
+                </StackPanel>
 
                 <Popup
                     AllowsTransparency="True"

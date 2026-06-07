@@ -2,42 +2,77 @@
 using Lexplosion.UI.WPF.Core;
 using Lexplosion.UI.WPF.Core.ViewModel;
 using Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.NewsHub;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Net.Http;
+using System.Runtime.Remoting.Contexts;
+using System.Threading;
 
 namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.NewsHub
 {
     public sealed class NewsHubModel : ObservableObject
     {
-        public List<NewsPreviewModel> Items { get; }
+        public ObservableCollection<NewsPreviewModel> Items { get; } = [];
 
         public NewsHubModel(AppCore appCore)
-        { 
+        {
             var openNewsViewerCommand = new RelayCommand((parameter) =>
             {
-                Console.WriteLine("12312312312312312");
                 NewsPreviewModel model = (parameter as NewsPreviewModel)!;
                 var previusViewModel = appCore.NavigationStore.CurrentViewModel;
                 var backCommand = new NavigateCommand<ViewModelBase>(appCore.NavigationStore, () => previusViewModel);
                 appCore.NavigationStore.CurrentViewModel = new NewsArticleViewModel(backCommand, model);
             });
 
-            Items = Runtime.ServicesContainer.NwApi.GetNews()
-                .Select(i => new NewsPreviewModel(i.Title, i.Summary, i.CreationDate, "No Author", openNewsViewerCommand))
-                .ToList();
-
-            for (var i = 0; i < 10; i++)
+            ThreadPool.QueueUserWorkItem((obj) =>
             {
-                Items.Add(
+                var items = Runtime.ServicesContainer.NotificationsService
+                    .GetAllNews(0, 0)
+                    .Select(i => new NewsPreviewModel(i.Title, i.Summary, i.Content, i.CreationDate, "No Author", i.BannerUrl ?? "", openNewsViewerCommand));
 
-                    new NewsPreviewModel(
-                    "Ивент на ПОДПИСКИ",
-                    "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-                    DateTime.Now.AddDays(-i),
-                    "NightWorld", openNewsViewerCommand)
-                );
-            }
+                foreach (var item in items)
+                {
+                    Items.Add(item);
+                }
+
+                var _httpClient = new HttpClient();
+
+                try
+                {
+                    var url = $"https://api.modrinth.com/v2/project/NNAgCjsB";
+                    var jsonString = _httpClient.GetStringAsync(url).Result;
+
+                    JObject data = JObject.Parse(jsonString);
+                    var title = data["title"]?.ToString() ?? "No content";
+                    var description = data["description"]?.ToString() ?? "No content";
+                    var content = data["body"]?.ToString() ?? "No content";
+
+                    appCore.UIThread.Invoke(() =>
+                    {
+                        for (var i = 0; i < 10; i++)
+                        {
+                            Items.Add(
+
+                                new NewsPreviewModel(
+                                title,
+                                description,
+                                content,
+                                DateTime.Now.AddDays(-i),
+                                "NightWorld",
+                                "https://sun9-10.userapi.com/s/v1/ig2/ERZt9ooukow1cW71oD6ccG8bu1Wvixewjg3aOuNniYXnaYXU7nE3qElrehQpFMewL8_KD9zqAULDTJA_A5NKRggB.jpg?quality=95&as=32x18,48x27,72x40,108x60,160x89,240x134,360x201,480x268,540x302,640x358,720x403,1080x604,1180x660&from=bu&u=eY0hDzVZtylJDPNTDrIbCfSMMi-R-detyinFiWICAS8&cs=1180x0",
+                                openNewsViewerCommand)
+                            );
+                        }
+                    });
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error fetching data: {ex.InnerException?.Message ?? ex.Message}");
+                }
+            });
         }
     }
 }
