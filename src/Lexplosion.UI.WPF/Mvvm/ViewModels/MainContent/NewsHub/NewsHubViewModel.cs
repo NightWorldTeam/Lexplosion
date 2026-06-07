@@ -10,7 +10,6 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.NewsHub
 		public NewsHubModel Model { get; }
 		public ICommand BackCommand { get; }
 
-
         public NewsHubViewModel(AppCore appCore, ICommand backCommand)
 		{
 			Model = new NewsHubModel(appCore);
