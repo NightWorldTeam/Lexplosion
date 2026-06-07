@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Threading;
-using Newtonsoft.Json;
-using Lexplosion.Global;
+﻿using Lexplosion.Global;
+using Lexplosion.Logic.DTO;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Objects.Nightworld;
-using Lexplosion.Logic.DTO;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace Lexplosion.Logic.Network
 {
@@ -430,12 +431,43 @@ namespace Lexplosion.Logic.Network
 
 			try
 			{
-				return JsonConvert.DeserializeObject<List<NewsModel>>(data);
+				var newsList = JsonConvert.DeserializeObject<List<NewsModel>>(data);
+				if (newsList == null) return new();
+
+				foreach (var item in newsList)
+				{
+					if (string.IsNullOrWhiteSpace(item.Content)) continue;
+					item.Content = FixMarkdownImagePaths(item.Content, LaunсherSettings.URL.Base);
+				}
+
+				return newsList;
 			}
 			catch
 			{
 				return new();
 			}
+		}
+
+		static string FixMarkdownImagePaths(string text, string baseUrl)
+		{
+			// Регулярное выражение то же самое, но теперь мы будем умнее заменять путь
+			string pattern = @"(!\[.*?\])\(\s*(/[^)]+)\)";
+
+			// Используем MatchEvaluator для кастомной замены каждого совпадения
+			string updatedText = Regex.Replace(text, pattern, match =>
+			{
+				string imageTag = match.Groups[1].Value; // Например: ![]
+				string relativePath = match.Groups[2].Value; // Например: /assets/img/...
+
+				// Создаем правильный абсолютный URI (он сам уберет лишний слэш на стыке)
+				Uri baseUri = new Uri(baseUrl);
+				// TrimStart('/') нужен, чтобы Uri соединил их корректно без дублирования слэшей
+				Uri absoluteUri = new Uri(baseUri, relativePath.TrimStart('/'));
+
+				return $"{imageTag}({absoluteUri.AbsoluteUri})";
+			});
+
+			return updatedText;
 		}
 
 	}
