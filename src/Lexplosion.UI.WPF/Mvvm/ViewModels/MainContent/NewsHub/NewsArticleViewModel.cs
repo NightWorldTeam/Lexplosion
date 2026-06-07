@@ -1,7 +1,9 @@
 ﻿using Lexplosion.UI.WPF.Core;
 using Lexplosion.UI.WPF.Core.ViewModel;
+using Lexplosion.UI.WPF.Mvvm.Models.MainContent.NewsHub;
 using Markdig;
 using MarkdownWPF.Html;
+using System.Windows.Input;
 
 namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.NewsHub
 {
@@ -18,7 +20,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.NewsHub
             }
         }
 
-        public NewsArticleModel()
+        public NewsArticleModel(NewsPreviewModel newsModel)
         {
             HtmlPipeline = new MarkdownPipelineBuilder()
                 .UseAdvancedExtensions()
@@ -132,10 +134,12 @@ if __name__ == ""__main__"":
     public sealed class NewsArticleViewModel : ViewModelBase
     {
         public NewsArticleModel Model { get; }
+        public ICommand BackCommand { get; }
 
-        public NewsArticleViewModel()
+        public NewsArticleViewModel(ICommand backCommand, NewsPreviewModel newsModel)
         {
-            Model = new NewsArticleModel();
+            Model = new NewsArticleModel(newsModel);
+            BackCommand = backCommand;
         }
     }
 }

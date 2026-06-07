@@ -1042,4 +1042,7 @@
     <s:String x:Key="InstanceDistributionIsCancelled">The modpack download was canceled by the user.</s:String>
     <s:String x:Key="InstanceDistributionUnknownError">An unknown error occurred in the modpack distribution system.</s:String>
 
+    <!--  News  -->
+    <s:String x:Key="NewsTitle">News</s:String>
+    <s:String x:Key="CloseArticleButtonTooltip">Close the article</s:String>
 </ResourceDictionary>

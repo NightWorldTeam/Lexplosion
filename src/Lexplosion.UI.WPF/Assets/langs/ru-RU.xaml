@@ -1041,4 +1041,8 @@
     <s:String x:Key="InstanceDistributionDirectoryCreateError">Ошибка при создании директории для новой сборки.</s:String>
     <s:String x:Key="InstanceDistributionIsCancelled">Загрузка сборки была отменена пользователем.</s:String>
     <s:String x:Key="InstanceDistributionUnknownError">Произошла неизвестная ошибка в системе раздачи сборок.</s:String>
+
+    <!--  News  -->
+    <s:String x:Key="NewsTitle">Новости</s:String>
+    <s:String x:Key="CloseArticleButtonTooltip">Закрыть статью</s:String>
 </ResourceDictionary>

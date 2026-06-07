@@ -24,5 +24,23 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.NewsHub
         {
             InitializeComponent();
         }
+
+        private void ScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            if (sender is ScrollViewer scrollViewer)
+            {
+                // Check if the vertical scroll position is greater than 0
+                if (scrollViewer.VerticalOffset > 0)
+                {
+                    // Show bottom border
+                    HeaderBorder.BorderThickness = new Thickness(0, 0, 0, 2);
+                }
+                else
+                {
+                    // Hide all borders
+                    HeaderBorder.BorderThickness = new Thickness(0, 0, 0, 0);
+                }
+            }
+        }
     }
 }

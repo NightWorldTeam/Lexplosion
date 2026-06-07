@@ -1,5 +1,7 @@
-﻿using Lexplosion.UI.WPF.Core.ViewModel;
+﻿using Lexplosion.UI.WPF.Commands;
+using Lexplosion.UI.WPF.Core.ViewModel;
 using System;
+using System.Windows.Input;
 
 namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.NewsHub
 {
@@ -9,13 +11,15 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.NewsHub
         public string Description { get; }
         public DateTime Date { get; }
         public string Author { get; }
+        public ICommand OpenNewsViewerCommand { get; }
 
-        public NewsPreviewModel(string title, string description, DateTime date, string author)
+        public NewsPreviewModel(string title, string description, DateTime date, string author, ICommand openViewerCommand)
         {
             Title = title;
             Description = description;
             Date = date;
             Author = author;
+            OpenNewsViewerCommand = openViewerCommand;
         }
     }
 }
