@@ -33,10 +33,13 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.NewsHub
                     .GetAllNews(0, 0)
                     .Select(i => new NewsPreviewModel(i.Title, i.Summary, i.Content, i.CreationDate, "No Author", i.BannerUrl ?? "", openNewsViewerCommand));
 
-                foreach (var item in items)
+                appCore.UIThread.Invoke(() =>
                 {
-                    Items.Add(item);
-                }
+                    foreach (var item in items)
+                    {
+                        Items.Add(item);
+                    }
+                });
 
                 var _httpClient = new HttpClient();
 
