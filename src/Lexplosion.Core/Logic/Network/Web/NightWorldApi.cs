@@ -425,7 +425,7 @@ namespace Lexplosion.Logic.Network
 
 		public List<NewsModel> GetNews()
 		{
-			var data = _toServer.HttpGet($"{LaunсherSettings.URL.Base}api/news/getNews&onlyForLauncher=1");
+			var data = _toServer.HttpGet($"{LaunсherSettings.URL.Base}api/news/getNews?onlyForLauncher=1");
 			if (data == null) return new();
 
 			try
