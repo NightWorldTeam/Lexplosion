@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:components="clr-namespace:Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.NewsHub.Components"
     xmlns:controls="clr-namespace:Lexplosion.UI.WPF.Controls"
+    xmlns:converters="clr-namespace:Lexplosion.UI.WPF.Core.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.NewsHub"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -64,22 +65,34 @@
             </StackPanel>
         </Border>
 
-        <ScrollViewer Grid.Row="1" ScrollChanged="ScrollViewer_ScrollChanged">
-            <ItemsControl Padding="30,0,0,0" ItemsSource="{Binding Model.Items}">
+        <Grid Grid.Row="1">
 
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel Margin="0,0,0,16" />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
+            <controls:CircleLoader
+                Width="45"
+                Height="45"
+                Margin="0,-64,0,0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                CornerRadius="5"
+                IsActive="{Binding Model.Items, Converter={converters:IsCollectionEmptyConverter}}" />
 
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <components:NewsPreviewView />
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
+            <ScrollViewer ScrollChanged="ScrollViewer_ScrollChanged">
+                <ItemsControl Padding="30,0,0,0" ItemsSource="{Binding Model.Items}">
 
-            </ItemsControl>
-        </ScrollViewer>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Margin="0,0,0,16" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <components:NewsPreviewView />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+
+                </ItemsControl>
+            </ScrollViewer>
+        </Grid>
     </Grid>
 </UserControl>
