@@ -437,6 +437,20 @@ namespace Lexplosion.Logic.Network
 				foreach (var item in newsList)
 				{
 					if (string.IsNullOrWhiteSpace(item.Content)) continue;
+
+					if (item.BannerUrl != null && !item.BannerUrl.StartsWith("http"))
+					{
+						string baseUrl = LaunсherSettings.URL.Base;
+						if (item.BannerUrl.StartsWith("/"))
+						{
+							item.BannerUrl = $"{baseUrl.Remove(baseUrl.Length - 1)}{item.BannerUrl}";
+						}
+						else
+						{
+							item.BannerUrl = $"{baseUrl}{item.BannerUrl}";
+						}
+					}
+
 					item.Content = FixMarkdownImagePaths(item.Content, LaunсherSettings.URL.Base);
 				}
 
@@ -448,7 +462,7 @@ namespace Lexplosion.Logic.Network
 			}
 		}
 
-		static string FixMarkdownImagePaths(string text, string baseUrl)
+		private static string FixMarkdownImagePaths(string text, string baseUrl)
 		{
 			// Регулярное выражение то же самое, но теперь мы будем умнее заменять путь
 			string pattern = @"(!\[.*?\])\(\s*(/[^)]+)\)";
