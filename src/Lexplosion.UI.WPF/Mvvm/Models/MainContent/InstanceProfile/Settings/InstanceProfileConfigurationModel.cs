@@ -241,7 +241,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.InstanceProfile.Settings
                 NWClientSupportedVersions = Runtime.ServicesContainer.MinecraftService.GetNwClientGameVersions();
                 OnPropertyChanged(nameof(NWClientSupportedVersions));
 
-                IsNWClientAvailable = Version != null && NWClientSupportedVersions.FirstOrDefault(verStr => verStr == Version.Id) != null;
+                IsNWClientAvailable = Version != null && NWClientSupportedVersions.Contains(Version.Id);
                 OnPropertyChanged(nameof(IsNWClientAvailable));
                 
                 if (IsNWClientAvailable)
@@ -369,7 +369,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.InstanceProfile.Settings
             UpdateModloaderManager(_instanceData.Modloader, Version);
             UpdateOptimizationModManager(Version);
 
-            IsNWClientAvailable = Version != null && NWClientSupportedVersions.FirstOrDefault(verStr => verStr == Version.Id) != null;
+            IsNWClientAvailable = Version != null && NWClientSupportedVersions.Contains(Version.Id);
             OnPropertyChanged(nameof(IsNWClientAvailable));
         }
 
@@ -381,7 +381,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.InstanceProfile.Settings
         {
             if (!Equals(_oldInstanceData.GameVersion, Version))
                 return true;
-            if (!_oldInstanceData.Modloader.Equals(ClientType))
+            if (!Equals(_oldInstanceData.Modloader, ClientType))
                 return true;
             if (HasModloaderVersionChanged())
                 return true;
