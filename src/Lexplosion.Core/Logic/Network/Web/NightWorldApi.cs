@@ -411,12 +411,26 @@ namespace Lexplosion.Logic.Network
 
 		public List<NewsModel> GetUnseenNews(long lastViewedNewsId)
 		{
-			var data = _toServer.HttpGet($"{LaunсherSettings.URL.Base}api/news/getUnseenNews?lastViewedNewsId={lastViewedNewsId}&onlyForLauncher=1");
+			return GetNewsGeneral($"{LaunсherSettings.URL.Base}api/news/getUnseenNews?lastViewedNewsId={lastViewedNewsId}&onlyForLauncher=1");
+		}
+
+		public List<NewsModel> GetNews()
+		{
+			return GetNewsGeneral($"{LaunсherSettings.URL.Base}api/news/getNews?onlyForLauncher=1");
+		}
+
+		private List<NewsModel> GetNewsGeneral(string url)
+		{
+			var data = _toServer.HttpGet(url);
 			if (data == null) return new();
 
 			try
 			{
-				return JsonConvert.DeserializeObject<List<NewsModel>>(data);
+				var newsList = JsonConvert.DeserializeObject<List<NewsModel>>(data);
+				if (newsList == null) return new();
+				FixMarkdownImagePaths(newsList);
+
+				return newsList;
 			}
 			catch
 			{
@@ -424,41 +438,26 @@ namespace Lexplosion.Logic.Network
 			}
 		}
 
-		public List<NewsModel> GetNews()
+		private static void FixMarkdownImagePaths(List<NewsModel> newsList)
 		{
-			var data = _toServer.HttpGet($"{LaunсherSettings.URL.Base}api/news/getNews?onlyForLauncher=1");
-			if (data == null) return new();
-
-			try
+			foreach (var item in newsList)
 			{
-				var newsList = JsonConvert.DeserializeObject<List<NewsModel>>(data);
-				if (newsList == null) return new();
+				if (string.IsNullOrWhiteSpace(item.Content)) continue;
 
-				foreach (var item in newsList)
+				if (item.BannerUrl != null && !item.BannerUrl.StartsWith("http"))
 				{
-					if (string.IsNullOrWhiteSpace(item.Content)) continue;
-
-					if (item.BannerUrl != null && !item.BannerUrl.StartsWith("http"))
+					string baseUrl = LaunсherSettings.URL.Base;
+					if (item.BannerUrl.StartsWith("/"))
 					{
-						string baseUrl = LaunсherSettings.URL.Base;
-						if (item.BannerUrl.StartsWith("/"))
-						{
-							item.BannerUrl = $"{baseUrl.Remove(baseUrl.Length - 1)}{item.BannerUrl}";
-						}
-						else
-						{
-							item.BannerUrl = $"{baseUrl}{item.BannerUrl}";
-						}
+						item.BannerUrl = $"{baseUrl.Remove(baseUrl.Length - 1)}{item.BannerUrl}";
 					}
-
-					item.Content = FixMarkdownImagePaths(item.Content, LaunсherSettings.URL.Base);
+					else
+					{
+						item.BannerUrl = $"{baseUrl}{item.BannerUrl}";
+					}
 				}
 
-				return newsList;
-			}
-			catch
-			{
-				return new();
+				item.Content = FixMarkdownImagePaths(item.Content, LaunсherSettings.URL.Base);
 			}
 		}
 
