@@ -17,7 +17,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels
 
         public LatestNewsModel()
         {
-            LatestUnseenNews = NotificationsManager.GetUnseenNews().FirstOrDefault();
+            LatestUnseenNews = NotificationsManager.GetLastUnseenNews();
         }
 
         public void MarkAsViewed() 
