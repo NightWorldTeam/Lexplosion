@@ -4,6 +4,7 @@ using Lexplosion.UI.WPF.Core;
 using Lexplosion.UI.WPF.WindowComponents.Header;
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
@@ -11,6 +12,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace Lexplosion.UI.WPF.Mvvm.Views.Windows
 {
@@ -32,6 +34,10 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Windows
 
         private bool _hasSelectedItems;
         private bool _isLastLineError;
+
+        private const int MAX_LINES_PER_TICK = 100;
+        private readonly DispatcherTimer _uiUpdateTimer;
+        private readonly ConcurrentQueue<ConsoleLog> _tempLogs = new ConcurrentQueue<ConsoleLog>();
 
         // TODO: Подумать, возможно код отсюда вынести в ViewModel, для большей расширяемости
 
@@ -58,8 +64,51 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Windows
                 () => MaximazedWindow_Click(null, null),
                 () => MinimazedWindow_Click(null, null),
                 false);
+
+            _uiUpdateTimer = new System.Windows.Threading.DispatcherTimer();
+            _uiUpdateTimer.Interval = TimeSpan.FromMilliseconds(1000);
+            _uiUpdateTimer.Tick += ProcessLogQueue;
+            _uiUpdateTimer.Start();
         }
 
+        private void ProcessLogQueue(object sender, EventArgs e)
+        {
+            if (_tempLogs.IsEmpty) return;
+
+            int processedCount = 0;
+            bool needsScroll = false;
+
+            // Используем stringbuilder для большей эффективности сборка логов с троку
+            var sb = new StringBuilder();
+
+            while (processedCount < MAX_LINES_PER_TICK && _tempLogs.TryDequeue(out var log))
+            {
+
+                _logs.Add(log);
+                sb.AppendLine(log.Message);
+                processedCount++;
+                needsScroll = true;
+            }
+
+            // Закидываем в глобальный StringBuilder логи из очереди.
+            if (processedCount > 0)
+            {
+                _allStringContent.Append(sb.ToString());
+            }
+
+            if (needsScroll && VisualTreeHelper.GetChildrenCount(LogsContainer) > 0)
+            {
+                Border border = (Border)VisualTreeHelper.GetChild(LogsContainer, 0);
+                ScrollViewer scrollViewer = (ScrollViewer)VisualTreeHelper.GetChild(border, 0);
+
+                // Check if user is already at the bottom before autoscrolling
+                // (Optional: allows user to scroll up to read history without fighting the autoscroll)
+                if (scrollViewer.VerticalOffset >= scrollViewer.ScrollableHeight - 50)
+                {
+                    scrollViewer.ScrollToBottom();
+                }
+            }
+        }
 
         #endregion Constructors
 
@@ -101,18 +150,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Windows
             if (string.IsNullOrEmpty(text))
                 return;
 
-            App.Current.Dispatcher.Invoke(() =>
-            {
-                _logs.Add(new ConsoleLog(text));
-                _allStringContent.AppendLine(text);
-
-                if (VisualTreeHelper.GetChildrenCount(LogsContainer) > 0)
-                {
-                    Border border = (Border)VisualTreeHelper.GetChild(LogsContainer, 0);
-                    ScrollViewer scrollViewer = (ScrollViewer)VisualTreeHelper.GetChild(border, 0);
-                    scrollViewer.ScrollToBottom();
-                }
-            });
+            _tempLogs.Enqueue(new ConsoleLog(text));
         }
 
         private void LogsContainer_SelectionChanged(object sender, SelectionChangedEventArgs e)

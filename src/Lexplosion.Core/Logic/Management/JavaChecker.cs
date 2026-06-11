@@ -225,7 +225,7 @@ namespace Lexplosion.Logic.Management
 						string url = _updateList[unitName].Downloads.Raw.DownloadUrl.Replace("https://", "");
 						url = LaunсherSettings.URL.MirrorUrl + url;
 
-						if (!_withDirectory.InstallFile(url, fileName, javaPath + path, taskArgs))
+						if (!_withDirectory.InstallFile(url, fileName, javaPath + path, taskArgs).IsSucces)
 						{
 							_semIsReleased = true;
 							_downloadSemaphore.Release(_thisJava.JavaName);
@@ -235,23 +235,24 @@ namespace Lexplosion.Logic.Management
 						continue;
 					}
 
-					if (!_withDirectory.InstallFile(_updateList[unitName].Downloads.Raw.DownloadUrl, fileName, javaPath + path, taskArgs))
+					if (!_withDirectory.InstallFile(_updateList[unitName].Downloads.Raw.DownloadUrl, fileName, javaPath + path, taskArgs).IsSucces)
 					{
 						//скачать через прямой источник не удалось, качайем с нашего зеркала
 						string url = _updateList[unitName].Downloads.Raw.DownloadUrl.Replace("https://", "");
 						url = LaunсherSettings.URL.MirrorUrl + url;
 						Runtime.DebugWrite($"Download error, try mirror. Url: {url}, current mirror downloads count: {_mirrorDownloadsCount}");
 
-						bool isMirrorMode = _withDirectory.IsMirrorModeToNw;
+						bool isMirrorMode = _withDirectory.ServerManager.IsMirrorModeToNw;
 						_mirrorDownloadsCount++;
-						if (!_withDirectory.InstallFile(url, fileName, javaPath + path, taskArgs))
+						if (!_withDirectory.InstallFile(url, fileName, javaPath + path, taskArgs).IsSucces)
 						{
-							// скачать с зеркала не удалось. Переводим WithDirectory на резервный сервер и пробуем скачать еще раз
+							// скачать с зеркала не удалось. Переводим на резервный сервер и пробуем скачать еще раз
 							if (!isMirrorMode)
 							{
-								_withDirectory.ChangeDownloadToMirrorMode();
+                                // по сути это вызывать даже и не надо, WithDirectory сам вызовет, но на всякий случай пусть будет
+                                _withDirectory.ServerManager.ChangeToMirrorMode();
 
-								if (_withDirectory.InstallFile(url, fileName, javaPath + path, taskArgs)) continue;
+								if (_withDirectory.InstallFile(url, fileName, javaPath + path, taskArgs).IsSucces) continue;
 							}
 
 							_semIsReleased = true;

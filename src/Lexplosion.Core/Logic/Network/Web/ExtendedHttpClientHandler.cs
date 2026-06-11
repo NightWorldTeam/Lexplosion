@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace Lexplosion.Logic.Network.Web
 {
-	internal class MirrorHttpHandler : HttpClientHandler
+	internal class ExtendedHttpClientHandler : HttpClientHandler
 	{
 		private const string MIRROR_CERT_SHA1 = "8DDAD6C33EFAFD9D1F5FB17A322159F1D71F9C73";
 
 		public event Action<X509Certificate2> ValidCertificateHandler;
 
-		public MirrorHttpHandler()
+		public ExtendedHttpClientHandler()
 		{
 			ServerCertificateCustomValidationCallback = (message, cert, chain, errors) =>
 			{

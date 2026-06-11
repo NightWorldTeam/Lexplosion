@@ -7,9 +7,14 @@ namespace Lexplosion.Logic.Network
 {
 	struct ControlServerData
 	{
-		public IPEndPoint HandshakeServerPoint;
-		public IPEndPoint TurnPoint;
-		public IPEndPoint SmpProxyPoint;
+		public readonly IPEndPoint HandshakeServerPoint;
+		public readonly IPEndPoint TurnPoint;
+		public readonly IPEndPoint SmpProxyPoint;
+
+		public const int HandshakeServerPort = 4465;
+		public const int TurnServerPort = 9765;
+		public const int SmpProxyAPort = 9775;
+		public const int SmpProxyBPort = 9776;
 
 		public readonly (string, int)[] StunServers = new (string, int)[]
 		{
@@ -18,7 +23,9 @@ namespace Lexplosion.Logic.Network
 			new ("stun.webcalldirect.com", 3478)
 		};
 
-		public ControlServerData(string serverAddr)
+		/// <param name="serverAddr">IP адрес или домен сервера</param>
+		/// <param name="useASmpProxy">Если true, то для SmpProxy будет установлен порт SmpProxyAPort, иначе SmpProxyBPort</param>
+		public ControlServerData(string serverAddr, bool useASmpProxy)
 		{
 			if (!IPAddress.TryParse(serverAddr, out IPAddress ipAddress))
 			{
@@ -35,9 +42,9 @@ namespace Lexplosion.Logic.Network
 				}
 			}
 
-			HandshakeServerPoint = new IPEndPoint(ipAddress, 4565);
+			HandshakeServerPoint = new IPEndPoint(ipAddress, 4465);
 			TurnPoint = new IPEndPoint(ipAddress, 9765);
-			SmpProxyPoint = new IPEndPoint(ipAddress, 4729);
+			SmpProxyPoint = new IPEndPoint(ipAddress, useASmpProxy ? SmpProxyAPort : SmpProxyBPort);
 		}
 	}
 }

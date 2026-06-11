@@ -1,242 +1,276 @@
-﻿using Lexplosion.Logic.Objects.Curseforge;
-using Lexplosion.Logic.Objects;
-using Lexplosion.Tools;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System;
 using Lexplosion.Logic.FileSystem.Services;
 using Lexplosion.Logic.Network.Web;
+using Lexplosion.Logic.Objects.Curseforge;
+using Lexplosion.Logic.Objects;
+using Lexplosion.Tools;
+using Lexplosion.Logic.FileSystem.Models;
 
 namespace Lexplosion.Logic.FileSystem.Extensions
 {
-	public static class CurseforgeApiExtensions
-	{
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		private static SetValues<InstalledAddonInfo, DownloadAddonRes> InstallAddon(AddonType addonType, string fileUrl, string fileName, string path, string folderName, string projectID, string fileID, WithDirectory withDirecory, TaskArgs taskArgs)
-		{
-			if (addonType != AddonType.Maps)
-			{
-				if (!withDirecory.InstallFile(fileUrl, fileName, path + folderName, taskArgs))
-				{
-					return new SetValues<InstalledAddonInfo, DownloadAddonRes>
-					{
-						Value1 = null,
-						Value2 = taskArgs.CancelToken.IsCancellationRequested ? DownloadAddonRes.IsCanselled : DownloadAddonRes.DownloadError
-					};
-				}
+    public static class CurseforgeApiExtensions
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static SetValues<InstalledAddonInfo, DownloadAddonRes> InstallAddon(CurseforgeApi api, AddonType addonType, string fileUrl, string fileName, string path, string folderName, string projectID, string fileID, WithDirectory withDirecory, TaskArgs taskArgs)
+        {
+            if (api.MirrorTranlationsEnabled)
+            {
+                api.TryTranslateUrlToMirror(ref fileUrl);
+            }
 
-				Runtime.DebugWrite("SYS " + fileUrl);
-			}
-			else
-			{
-				if (!withDirecory.InstallZipContent(fileUrl, fileName, path + folderName, taskArgs))
-				{
-					return new SetValues<InstalledAddonInfo, DownloadAddonRes>
-					{
-						Value1 = null,
-						Value2 = taskArgs.CancelToken.IsCancellationRequested ? DownloadAddonRes.IsCanselled : DownloadAddonRes.DownloadError
-					};
-				}
+            if (addonType != AddonType.Maps)
+            {
+                var result = withDirecory.InstallFile(fileUrl, fileName, path + folderName, taskArgs);
+                if (!result.IsSucces)
+                {
+                    if (!api.MirrorTranlationsEnabled && result.State == RequestResultState.NetworkError)
+                    {
+                        api.TryTranslateUrlToMirror(ref fileUrl);
+                        if (!withDirecory.InstallFile(fileUrl, fileName, path + folderName, taskArgs).IsSucces)
+                        {
+                            return new SetValues<InstalledAddonInfo, DownloadAddonRes>
+                            {
+                                Value1 = null,
+                                Value2 = taskArgs.CancelToken.IsCancellationRequested ? DownloadAddonRes.IsCanselled : DownloadAddonRes.DownloadError
+                            };
+                        }
+                    }
 
-				Runtime.DebugWrite("SYS " + fileUrl);
-			}
+                    return new SetValues<InstalledAddonInfo, DownloadAddonRes>
+                    {
+                        Value1 = null,
+                        Value2 = taskArgs.CancelToken.IsCancellationRequested ? DownloadAddonRes.IsCanselled : DownloadAddonRes.DownloadError
+                    };
+                }
 
-			return new SetValues<InstalledAddonInfo, DownloadAddonRes>
-			{
-				Value1 = new InstalledAddonInfo
-				{
-					ProjectID = projectID,
-					FileID = fileID,
-					Path = (addonType != AddonType.Maps) ? (folderName + "/" + fileName) : (folderName + "/"),
-					Type = addonType,
-					Source = ProjectSource.Curseforge
+                Runtime.DebugWrite("SYS " + fileUrl);
+            }
+            else
+            {
+                var result = withDirecory.InstallZipContent(fileUrl, fileName, path + folderName, taskArgs);
+                if (!result.IsSucces)
+                {
+                    if (!api.MirrorTranlationsEnabled && result.State == RequestResultState.NetworkError)
+                    {
+                        api.TryTranslateUrlToMirror(ref fileUrl);
+                        if (!withDirecory.InstallZipContent(fileUrl, fileName, path + folderName, taskArgs).IsSucces)
+                        {
+                            return new SetValues<InstalledAddonInfo, DownloadAddonRes>
+                            {
+                                Value1 = null,
+                                Value2 = taskArgs.CancelToken.IsCancellationRequested ? DownloadAddonRes.IsCanselled : DownloadAddonRes.DownloadError
+                            };
+                        }
+                    }
 
-				},
-				Value2 = DownloadAddonRes.Successful
-			};
-		}
+                    return new SetValues<InstalledAddonInfo, DownloadAddonRes>
+                    {
+                        Value1 = null,
+                        Value2 = taskArgs.CancelToken.IsCancellationRequested ? DownloadAddonRes.IsCanselled : DownloadAddonRes.DownloadError
+                    };
+                }
 
-		public static SetValues<InstalledAddonInfo, DownloadAddonRes> DownloadAddon(this CurseforgeApi api, CurseforgeFileInfo addonInfo, AddonType addonType, string path, WithDirectory withDirectory, TaskArgs taskArgs)
-		{
-			Runtime.DebugWrite("PR ID " + addonInfo.id);
-			string projectID = addonInfo.modId;
-			string fileID = addonInfo.id.ToString();
-			try
-			{
-				Runtime.DebugWrite("fileData " + addonInfo.downloadUrl + " " + projectID + " " + fileID);
+                Runtime.DebugWrite("SYS " + fileUrl);
+            }
 
-				string fileUrl = addonInfo.downloadUrl;
-				string fileName = addonInfo.fileName;
+            return new SetValues<InstalledAddonInfo, DownloadAddonRes>
+            {
+                Value1 = new InstalledAddonInfo
+                {
+                    ProjectID = projectID,
+                    FileID = fileID,
+                    Path = (addonType != AddonType.Maps) ? (folderName + "/" + fileName) : (folderName + "/"),
+                    Type = addonType,
+                    Source = ProjectSource.Curseforge
 
-				if (String.IsNullOrWhiteSpace(addonInfo.downloadUrl))
-				{
-					return new SetValues<InstalledAddonInfo, DownloadAddonRes>
-					{
-						Value1 = null,
-						Value2 = DownloadAddonRes.UrlError
-					};
-				}
+                },
+                Value2 = DownloadAddonRes.Successful
+            };
+        }
 
-				Runtime.DebugWrite(fileUrl);
+        public static SetValues<InstalledAddonInfo, DownloadAddonRes> DownloadAddon(this CurseforgeApi api, CurseforgeFileInfo addonInfo, AddonType addonType, string path, WithDirectory withDirectory, TaskArgs taskArgs)
+        {
+            Runtime.DebugWrite("PR ID " + addonInfo.id);
+            string projectID = addonInfo.modId;
+            string fileID = addonInfo.id.ToString();
+            try
+            {
+                Runtime.DebugWrite("fileData " + addonInfo.downloadUrl + " " + projectID + " " + fileID);
 
-				// проверяем имя файла на валидность
-				char[] invalidFileChars = Path.GetInvalidFileNameChars();
-				bool isInvalidFilename = invalidFileChars.Any(s => fileName.Contains(s));
+                string fileUrl = addonInfo.downloadUrl;
+                string fileName = addonInfo.fileName;
 
-				if (isInvalidFilename)
-				{
-					return new SetValues<InstalledAddonInfo, DownloadAddonRes>
-					{
-						Value1 = null,
-						Value2 = DownloadAddonRes.FileNameError
-					};
-				}
+                if (String.IsNullOrWhiteSpace(addonInfo.downloadUrl))
+                {
+                    return new SetValues<InstalledAddonInfo, DownloadAddonRes>
+                    {
+                        Value1 = null,
+                        Value2 = DownloadAddonRes.UrlError
+                    };
+                }
 
-				// определяем папку в которую будет установлен данный аддон
-				string folderName = "";
-				switch (addonType)
-				{
-					case AddonType.Mods:
-						folderName = "mods";
-						break;
-					case AddonType.Maps:
-						folderName = "saves";
-						break;
-					case AddonType.Resourcepacks:
-					case AddonType.DataPacks:
-						folderName = "resourcepacks";
-						break;
-					case AddonType.Shaders:
-						folderName = "shaderpacks";
-						break;
-					default:
-						return new SetValues<InstalledAddonInfo, DownloadAddonRes>
-						{
-							Value1 = null,
-							Value2 = DownloadAddonRes.unknownAddonType
-						};
-				}
+                Runtime.DebugWrite(fileUrl);
 
-				// устанавливаем
-				return InstallAddon(addonType, fileUrl, fileName, path, folderName, projectID, fileID, withDirectory, taskArgs);
-			}
-			catch
-			{
-				return new SetValues<InstalledAddonInfo, DownloadAddonRes>
-				{
-					Value1 = null,
-					Value2 = DownloadAddonRes.unknownError
-				};
-			}
-		}
+                // проверяем имя файла на валидность
+                char[] invalidFileChars = Path.GetInvalidFileNameChars();
+                bool isInvalidFilename = invalidFileChars.Any(s => fileName.Contains(s));
 
-		public static SetValues<InstalledAddonInfo, DownloadAddonRes> DownloadAddon(this CurseforgeApi api, CurseforgeAddonInfo addonInfo, string fileID, string path, WithDirectory withDirectory, TaskArgs taskArgs)
-		{
-			try
-			{
-				string projectID = addonInfo.id;
-				Runtime.DebugWrite("");
-				Runtime.DebugWrite("PR ID " + projectID);
+                if (isInvalidFilename)
+                {
+                    return new SetValues<InstalledAddonInfo, DownloadAddonRes>
+                    {
+                        Value1 = null,
+                        Value2 = DownloadAddonRes.FileNameError
+                    };
+                }
 
-				if (addonInfo.latestFiles == null)
-				{
-					return new SetValues<InstalledAddonInfo, DownloadAddonRes>
-					{
-						Value1 = null,
-						Value2 = DownloadAddonRes.ProjectDataError
-					};
-				}
+                // определяем папку в которую будет установлен данный аддон
+                string folderName = "";
+                switch (addonType)
+                {
+                    case AddonType.Mods:
+                        folderName = "mods";
+                        break;
+                    case AddonType.Maps:
+                        folderName = "saves";
+                        break;
+                    case AddonType.Resourcepacks:
+                    case AddonType.DataPacks:
+                        folderName = "resourcepacks";
+                        break;
+                    case AddonType.Shaders:
+                        folderName = "shaderpacks";
+                        break;
+                    default:
+                        return new SetValues<InstalledAddonInfo, DownloadAddonRes>
+                        {
+                            Value1 = null,
+                            Value2 = DownloadAddonRes.unknownAddonType
+                        };
+                }
 
-				// получем информацию о файле
-				CurseforgeFileInfo fileData = null;
-				//ищем нужный файл
-				foreach (CurseforgeFileInfo data in addonInfo.latestFiles)
-				{
-					if (data.id.ToString() == fileID)
-					{
-						fileData = data;
-						break;
-					}
-				}
-				//не нашли, делаем дополнительный запрос и получаем его
-				if (fileData == null)
-				{
-					fileData = api.GetProjectFile(projectID, fileID);
-				}
+                // устанавливаем
+                return InstallAddon(api, addonType, fileUrl, fileName, path, folderName, projectID, fileID, withDirectory, taskArgs);
+            }
+            catch
+            {
+                return new SetValues<InstalledAddonInfo, DownloadAddonRes>
+                {
+                    Value1 = null,
+                    Value2 = DownloadAddonRes.unknownError
+                };
+            }
+        }
 
-				Runtime.DebugWrite("fileData " + fileData.downloadUrl + " " + projectID + " " + fileID);
+        public static SetValues<InstalledAddonInfo, DownloadAddonRes> DownloadAddon(this CurseforgeApi api, CurseforgeAddonInfo addonInfo, string fileID, string path, WithDirectory withDirectory, TaskArgs taskArgs)
+        {
+            try
+            {
+                string projectID = addonInfo.id;
+                Runtime.DebugWrite("");
+                Runtime.DebugWrite("PR ID " + projectID);
 
-				string fileUrl = fileData.downloadUrl;
-				if (String.IsNullOrWhiteSpace(fileUrl))
-				{
-					// пробуем второй раз
-					fileData = api.GetProjectFile(projectID, fileID);
-					if (String.IsNullOrWhiteSpace(fileData.downloadUrl))
-					{
-						Runtime.DebugWrite("URL ERROR - " + fileData.downloadUrl + " - " + fileData.fileName);
-						return new SetValues<InstalledAddonInfo, DownloadAddonRes>
-						{
-							Value1 = null,
-							Value2 = DownloadAddonRes.UrlError
-						};
-					}
-				}
+                if (addonInfo.latestFiles == null)
+                {
+                    return new SetValues<InstalledAddonInfo, DownloadAddonRes>
+                    {
+                        Value1 = null,
+                        Value2 = DownloadAddonRes.ProjectDataError
+                    };
+                }
 
-				Runtime.DebugWrite(fileUrl);
+                // получем информацию о файле
+                CurseforgeFileInfo fileData = null;
+                //ищем нужный файл
+                foreach (CurseforgeFileInfo data in addonInfo.latestFiles)
+                {
+                    if (data.id.ToString() == fileID)
+                    {
+                        fileData = data;
+                        break;
+                    }
+                }
+                //не нашли, делаем дополнительный запрос и получаем его
+                if (fileData == null)
+                {
+                    fileData = api.GetProjectFile(projectID, fileID);
+                }
 
-				string fileName = fileData.fileName;
+                Runtime.DebugWrite("fileData " + fileData.downloadUrl + " " + projectID + " " + fileID);
 
-				// проверяем имя файла на валидность
-				char[] invalidFileChars = Path.GetInvalidFileNameChars();
-				bool isInvalidFilename = invalidFileChars.Any(s => fileName.Contains(s));
+                string fileUrl = fileData.downloadUrl;
+                if (String.IsNullOrWhiteSpace(fileUrl))
+                {
+                    // пробуем второй раз
+                    fileData = api.GetProjectFile(projectID, fileID);
+                    if (String.IsNullOrWhiteSpace(fileData.downloadUrl))
+                    {
+                        Runtime.DebugWrite("URL ERROR - " + fileData.downloadUrl + " - " + fileData.fileName);
+                        return new SetValues<InstalledAddonInfo, DownloadAddonRes>
+                        {
+                            Value1 = null,
+                            Value2 = DownloadAddonRes.UrlError
+                        };
+                    }
+                }
 
-				if (isInvalidFilename)
-				{
-					return new SetValues<InstalledAddonInfo, DownloadAddonRes>
-					{
-						Value1 = null,
-						Value2 = DownloadAddonRes.FileNameError
-					};
-				}
+                Runtime.DebugWrite(fileUrl);
 
-				// определяем папку в которую будет установлен данный аддон
-				string folderName = "";
-				AddonType addonType = (AddonType)(addonInfo.classId ?? 0);
-				switch (addonType)
-				{
-					case AddonType.Mods:
-						folderName = "mods";
-						break;
-					case AddonType.Maps:
-						folderName = "saves";
-						break;
-					case AddonType.Resourcepacks:
-					case AddonType.DataPacks:
-						folderName = "resourcepacks";
-						break;
-					case AddonType.Shaders:
-						folderName = "shaderpacks";
-						break;
-					default:
-						return new SetValues<InstalledAddonInfo, DownloadAddonRes>
-						{
-							Value1 = null,
-							Value2 = DownloadAddonRes.unknownAddonType
-						};
-				}
+                string fileName = fileData.fileName;
 
-				// устанавливаем
-				return InstallAddon(addonType, fileUrl, fileName, path, folderName, projectID, fileID, withDirectory, taskArgs);
-			}
-			catch
-			{
-				return new SetValues<InstalledAddonInfo, DownloadAddonRes>
-				{
-					Value1 = null,
-					Value2 = DownloadAddonRes.unknownError
-				};
-			}
-		}
-	}
+                // проверяем имя файла на валидность
+                char[] invalidFileChars = Path.GetInvalidFileNameChars();
+                bool isInvalidFilename = invalidFileChars.Any(s => fileName.Contains(s));
+
+                if (isInvalidFilename)
+                {
+                    return new SetValues<InstalledAddonInfo, DownloadAddonRes>
+                    {
+                        Value1 = null,
+                        Value2 = DownloadAddonRes.FileNameError
+                    };
+                }
+
+                // определяем папку в которую будет установлен данный аддон
+                string folderName = "";
+                AddonType addonType = (AddonType)(addonInfo.classId ?? 0);
+                switch (addonType)
+                {
+                    case AddonType.Mods:
+                        folderName = "mods";
+                        break;
+                    case AddonType.Maps:
+                        folderName = "saves";
+                        break;
+                    case AddonType.Resourcepacks:
+                    case AddonType.DataPacks:
+                        folderName = "resourcepacks";
+                        break;
+                    case AddonType.Shaders:
+                        folderName = "shaderpacks";
+                        break;
+                    default:
+                        return new SetValues<InstalledAddonInfo, DownloadAddonRes>
+                        {
+                            Value1 = null,
+                            Value2 = DownloadAddonRes.unknownAddonType
+                        };
+                }
+
+                // устанавливаем
+                return InstallAddon(api, addonType, fileUrl, fileName, path, folderName, projectID, fileID, withDirectory, taskArgs);
+            }
+            catch
+            {
+                return new SetValues<InstalledAddonInfo, DownloadAddonRes>
+                {
+                    Value1 = null,
+                    Value2 = DownloadAddonRes.unknownError
+                };
+            }
+        }
+    }
 }

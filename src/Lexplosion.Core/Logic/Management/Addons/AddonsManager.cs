@@ -17,6 +17,7 @@ using Lexplosion.Logic.Objects.Curseforge;
 using Lexplosion.Logic.Objects.Modrinth;
 using Lexplosion.Logic.Management.Addons.AddonsCatalogParams;
 using Lexplosion.Logic.Management.Accounts;
+using System.Collections.Concurrent;
 
 namespace Lexplosion.Logic.Management.Addons
 {
@@ -57,7 +58,7 @@ namespace Lexplosion.Logic.Management.Addons
 		private FileSystemWatcher _resourcepacksDirectoryWathcer;
 
 		private Func<AddonType, IEnumerable<string>, IEnumerable<CategoryBase>> _modrinthCategoriesGetter;
-
+		private ConcurrentDictionary<AddonType, List<InstanceAddon>> _installedAddons = new();
 
 		public event Action<InstanceAddon> AddonAdded
 		{
@@ -212,7 +213,7 @@ namespace Lexplosion.Logic.Management.Addons
 		/// Если же количество аддонов больше или равно 10, то эвент AddonAdded не отработает и InstanceAddon'ы надо брать от сюда</param>
 		/// <returns>Требуется ли полное обновление списка. 
 		/// Если количество аддонов больше или равно 10, то список надо будет обновить полностью и здесь будет true, иначе false</returns>
-		public bool AddAddons(IEnumerable<string> locations, AddonType type, out IList<InstanceAddon> addons)
+		public bool AddAddons(IEnumerable<string> locations, AddonType type, out IReadOnlyCollection<InstanceAddon> addons)
 		{
 			addons = null;
 
@@ -244,7 +245,7 @@ namespace Lexplosion.Logic.Management.Addons
 
 			if (!bigQuantity) return false;
 
-			addons = GetInstalledAddons(type);
+			addons = GetInstalledAddonsWithoutCache(type);
 
 			if (bigQuantity) StartWathingDirecoty();
 
@@ -515,16 +516,42 @@ namespace Lexplosion.Logic.Management.Addons
 		/// <param name="type">Тип аддонов</param>
 		/// <returns>Лист адднов определенного типа указанной сборки</returns>
 		/// <exception cref="ArgumentException">Сообщает о том, что был передан тип аддонов который не рассматривается в методе.</exception>
-		public IList<InstanceAddon> GetInstalledAddons(AddonType type)
+		public IReadOnlyCollection<InstanceAddon> GetInstalledAddons(AddonType type)
 		{
-			return type switch
+			lock (_installedAddons)
 			{
-				AddonType.Mods => GetInstalledMods(),
-				AddonType.Maps => GetInstalledWorlds(),
-				AddonType.Resourcepacks => GetInstalledResourcepacks(),
-				AddonType.Shaders => GetInstalledShaders(),
-				_ => throw new ArgumentException("Ты еблан блять?")
-			};
+				if (_installedAddons.TryGetValue(type, out var value)) return value;
+
+				List<InstanceAddon> addons = type switch
+				{
+					AddonType.Mods => GetInstalledMods(),
+					AddonType.Maps => GetInstalledWorlds(),
+					AddonType.Resourcepacks => GetInstalledResourcepacks(),
+					AddonType.Shaders => GetInstalledShaders(),
+					_ => throw new ArgumentException("Ты еблан блять?")
+				};
+
+				_installedAddons[type] = addons;
+				return addons;
+			}
+		}
+
+		public IReadOnlyCollection<InstanceAddon> GetInstalledAddonsWithoutCache(AddonType type)
+		{
+			lock (_installedAddons)
+			{
+				List<InstanceAddon> addons = type switch
+				{
+					AddonType.Mods => GetInstalledMods(),
+					AddonType.Maps => GetInstalledWorlds(),
+					AddonType.Resourcepacks => GetInstalledResourcepacks(),
+					AddonType.Shaders => GetInstalledShaders(),
+					_ => throw new ArgumentException("Ты еблан блять?")
+				};
+
+				_installedAddons[type] = addons;
+				return addons;
+			}
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1049,6 +1076,11 @@ namespace Lexplosion.Logic.Management.Addons
 		/// <summary>
 		/// Очищает сохранённый список аддонов. Нужно вызывать при закрытии каталога чтобы очистить память.
 		/// </summary>
-		public void ClearAddonsListCache() => _synchronizer.ClearAddonsListCache();
+		public void ClearAddonsCatalogCache() => _synchronizer.ClearAddonsCatalogCache();
+
+		public void ClearAddonsLibraryCache()
+		{
+			_installedAddons.Clear();
+		}
 	}
 }

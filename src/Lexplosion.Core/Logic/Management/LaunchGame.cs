@@ -574,7 +574,7 @@ namespace Lexplosion.Logic.Management
 			{
 				lock (loocker)
 				{
-					var serverData = new ControlServerData(LaunсherSettings.ServerIp);
+					var serverData = new ControlServerData(LaunсherSettings.ServerIp, true);
 					_gameGateway = new OnlineGameGateway(_activeAccount.UUID, _activeAccount.SessionToken, _services.WebService, serverData, _generalSettings.NetworkDirectConnection);
 
 					_onlineGameStopedMark = false;
@@ -969,7 +969,7 @@ namespace Lexplosion.Logic.Management
 				}
 				catch { }
 
-				var serverData = new ControlServerData(LaunсherSettings.ServerIp);
+				var serverData = new ControlServerData(LaunсherSettings.ServerIp, true);
 				_gameGateway = new OnlineGameGateway(_activeAccount.UUID, _activeAccount.SessionToken, _services.WebService, serverData, _generalSettings.NetworkDirectConnection);
 				_gameGateway.Initialization(_classInstance._process.Id);
 			}

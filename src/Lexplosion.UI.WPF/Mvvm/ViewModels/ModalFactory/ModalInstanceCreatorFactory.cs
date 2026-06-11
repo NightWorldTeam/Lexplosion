@@ -68,7 +68,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.ModalFactory
                 TitleKey = "Distributions",
                 IsEnable = hasMinecraftVersions,
                 IsSelected = false,
-                Content = new NightWorldLimitedContentLayoutViewModel(new InstanceDistributionViewModel(_libraryController, _shareController), _toAuthorization, true)
+                Content = new NightWorldLimitedContentLayoutViewModel(new InstanceDistributionViewModel(_appCore, _libraryController, _shareController), _toAuthorization, true)
             });
 
             if (hasMinecraftVersions)

@@ -40,7 +40,7 @@ namespace Lexplosion.Logic.FileSystem.Extensions
 			}
 
 			// устанавливаем
-			if (!withDirectory.InstallFile(fileUrl, fileName, path + folderName, taskArgs))
+			if (!withDirectory.InstallFile(fileUrl, fileName, path + folderName, taskArgs).IsSucces)
 			{
 				return new SetValues<InstalledAddonInfo, DownloadAddonRes>
 				{

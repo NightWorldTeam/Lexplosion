@@ -127,9 +127,13 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.InstanceProfile
             {
                 if (instanceModelBase.IsInstalled || instanceModelBase.IsDownloading)
                 {
+                    var addonManager = AddonsManager.GetManager(instanceModelBase.BaseData, Runtime.ServicesContainer);
                     // Останавливаем обновление директорий сборки.
-                    AddonsManager.GetManager(instanceModelBase.BaseData, Runtime.ServicesContainer).StopWatchingDirectory();
+                    addonManager.StopWatchingDirectory();
+                    // Чистим кеш аддонов
+                    addonManager.ClearAddonsLibraryCache();
                 }
+
                 toMainMenuLayoutCommand.Execute(obj);
             });
 
@@ -178,7 +182,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.InstanceProfile
                 _additionalInfo.Clear();
                 _additionalInfo.Add(new InstanceFieldInfo<MinecraftVersion>("Version:", _instanceModel.GameVersion));
                 _additionalInfo.Add(new LeftPanelFieldInfo("GameType:", _instanceModel.BaseData.Modloader.ToString()));
-                
+
                 if (_instanceModel.IsInstalled && false)
                 {
                     _additionalInfo.Add(new InstanceFieldInfo<long>("PlayedTime:", 100000, SecondsToPlayTime));

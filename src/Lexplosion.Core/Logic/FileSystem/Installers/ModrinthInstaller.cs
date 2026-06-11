@@ -373,7 +373,7 @@ namespace Lexplosion.Logic.FileSystem.Installers
 						CancelToken = cancelToken
 					};
 
-					if (withDirectory.InstallFile(fileData.downloads[0], fileName, folderName, taskArgs))
+					if (withDirectory.InstallFile(fileData.downloads[0], fileName, folderName, taskArgs).IsSucces)
 					{
 						string filePath = "/" + fileData.Path;
 						if (!existsFiles.Contains(filePath))

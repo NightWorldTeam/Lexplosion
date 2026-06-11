@@ -60,9 +60,12 @@ namespace Lexplosion.Logic.Network.Web
 						"\"clientToken\": \"" + _random.GenerateString(20) + "\"" +
 					"}";
 
-				string answer = _toServer.HttpPostJson("https://authserver.mojang.com/authenticate", payload, out HttpStatusCode? statusCode);
+				var res = _toServer.HttpPostJson("https://authserver.mojang.com/authenticate", payload);
+				string answer = res.Content;
+				var statusCode = res.StatusCode;
 
-				if (answer == null)
+
+                if (answer == null)
 				{
 					if (statusCode == null)
 					{
@@ -123,9 +126,11 @@ namespace Lexplosion.Logic.Network.Web
 						"\"clientToken\": \"" + clientToken + "\"" +
 					"}";
 
-				string answer = _toServer.HttpPostJson("https://authserver.mojang.com/refresh", payload, out HttpStatusCode? statusCode);
+				var res = _toServer.HttpPostJson("https://authserver.mojang.com/refresh", payload);
+				string answer = res.Content;
+				var statusCode = res.StatusCode;
 
-				if (answer == null)
+                if (answer == null)
 				{
 					if (statusCode == null)
 					{
@@ -193,7 +198,7 @@ namespace Lexplosion.Logic.Network.Web
 						"\"ensureLegacyEnabled\" : true" +
 					"}";
 
-				string answer = _toServer.HttpPostJson("https://api.minecraftservices.com/authentication/login_with_xbox", payload, out _);
+				string answer = _toServer.HttpPostJson("https://api.minecraftservices.com/authentication/login_with_xbox", payload).Content;
 
 				if (answer == null)
 				{

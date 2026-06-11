@@ -53,18 +53,11 @@ namespace Lexplosion.Logic.Network
 		public QueryParams Params { get; }
 
 
-		#region Constructors
-
-
 		public QueryApiBuilder(string baseUrl)
 		{
 			BaseUrl = baseUrl;
 			Params = new();
 		}
-
-
-		#endregion Constructors
-
 
 		public void Add(Dictionary<string, string> queryParams)
 		{

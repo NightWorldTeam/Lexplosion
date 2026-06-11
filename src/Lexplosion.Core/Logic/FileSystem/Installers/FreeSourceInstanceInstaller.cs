@@ -64,14 +64,15 @@ namespace Lexplosion.Logic.FileSystem.Installers
 
 				MainFileDownload?.Invoke(0);
 
-				(bool, string, string) res = instanceFileGetter(_extractedFilesDir, BuildTaskArgs);
+                var res = instanceFileGetter(_extractedFilesDir, BuildTaskArgs);
 
-				if (!res.Item1)
+				if (!res.IsSuccess)
 				{
-					_fileDownloadHandler?.Invoke(res.Item3, 100, DownloadFileProgress.Error);
+					_fileDownloadHandler?.Invoke(res.FileName, 100, DownloadFileProgress.Error);
 					return default;
 				}
-				_fileDownloadHandler?.Invoke(res.Item3, 100, DownloadFileProgress.Successful);
+
+				_fileDownloadHandler?.Invoke(res.FileName, 100, DownloadFileProgress.Successful);
 
 
 				string unzipFolder = _extractedFilesDir + "dataDownload/";
@@ -106,7 +107,7 @@ namespace Lexplosion.Logic.FileSystem.Installers
 				if (files != null)
 				{
 					// у нас есть список разрешенных файлов. Проходимся по всему архиву и берем только нужные файлы
-					using (ZipArchive zip = ZipFile.Open(res.Item2, ZipArchiveMode.Read))
+					using (ZipArchive zip = ZipFile.Open(res.FilePath, ZipArchiveMode.Read))
 					{
 						foreach (ZipArchiveEntry entry in zip.Entries)
 						{
@@ -141,7 +142,7 @@ namespace Lexplosion.Logic.FileSystem.Installers
 				else
 				{
 					//белого спсика нет. Тупо потрошим архив
-					ZipFile.ExtractToDirectory(res.Item2, unzipFolder);
+					ZipFile.ExtractToDirectory(res.FilePath, unzipFolder);
 				}
 
 				var manifest = dataFilesManager.GetFile<InstanceManifest>(unzipFolder + "instanceInfo.json");

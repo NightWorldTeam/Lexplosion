@@ -102,16 +102,15 @@ namespace Lexplosion.Logic.Management.Installers
 			return manifest.dependencies["minecraft"] ?? "";
 		}
 
-		public override string ProjectId { get => projectInfo?.ProjectId ?? string.Empty; }
+        protected override string GetArchiveDownloadUrl() => projectInfo.Files[0].Url;
+
+        protected override string GetReserveArchiveDownloadUrl() => null;
+
+        public override string ProjectId { get => projectInfo?.ProjectId ?? string.Empty; }
 
 		protected override bool ProfectInfoIsValid
 		{
 			get => projectInfo?.Files != null && projectInfo.Files.Count > 0 && projectInfo.Files[0].Filename != null && projectInfo.Files[0].Url != null;
-		}
-
-		protected override string ArchiveDownloadUrl
-		{
-			get => projectInfo.Files[0].Url;
 		}
 
 		protected override string ArchiveFileName

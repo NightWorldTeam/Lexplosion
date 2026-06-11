@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System;
-using System.Threading;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network.Services;
 using Lexplosion.Logic.FileSystem.Extensions;
@@ -11,6 +10,7 @@ using Lexplosion.Logic.Objects.Modrinth;
 using Lexplosion.Logic.Network.Web;
 using Lexplosion.Tools;
 using NightWorld.Collections.Concurrent;
+using NightWorld.Threading;
 
 namespace Lexplosion.Logic.Management.Addons
 {
@@ -26,6 +26,8 @@ namespace Lexplosion.Logic.Management.Addons
 		private string _fileId;
 
 		private ConcurrentHashSet<Modloader> _acceptableModloaders = null;
+
+		private static ThreadPool _pool = new(15, 20);
 
 		public ModrinthAddon(BaseInstanceData instanceData, ModrinthProjectInfo addonInfo, IModrinthFileServicesContainer services, Func<AddonType, IEnumerable<string>, IEnumerable<CategoryBase>> categoriesGetter)
 		{
@@ -161,9 +163,9 @@ namespace Lexplosion.Logic.Management.Addons
 			}
 			else if (_addonInfo.Team != null)
 			{
-				ThreadPool.QueueUserWorkItem(delegate (object state)
+				_pool.Enqueue(() =>
 				{
-					List<ModrinthTeam> teamsData = _services.MdApi.GetTeam(_addonInfo.Team);
+					ModrinthTeam teamsData = _services.MdApi.GetTeam(_addonInfo.Team);
 					if (teamsData.Count > 0)
 					{
 						AuthorName = teamsData[0]?.User?.Username;
@@ -311,7 +313,6 @@ namespace Lexplosion.Logic.Management.Addons
 			return _services.MdApi.DownloadAddon(_addonInfo, _versionInfo.FileId, "instances/" + _instanceData.LocalId + "/", _services.DirectoryService, taskArgs);
 		}
 
-
 		public void CompareVersions(string addonFileId, Action actionIfTrue)
 		{
 			var addonInfo = _addonInfo;
@@ -323,7 +324,7 @@ namespace Lexplosion.Logic.Management.Addons
 				if (lastEelem == null || addonInfo.GameVersions?.Count > 1 || addonInfo.Loaders?.Count > 1)
 				{
 					//неизвестно для каокго модлоадера и для какой версии игры предназначена последняя версия аддона, поэтому делаем дополнительный запрос
-					ThreadPool.QueueUserWorkItem((object o) =>
+					_pool.Enqueue(() =>
 					{
 						Modloader? modloader = (addonInfo.Type == "mod") ? (Modloader?)_instanceData?.Modloader : null;
 						var files = _services.MdApi.GetProjectFiles(ProjectId, modloader, _instanceData?.GameVersion?.Id ?? "");

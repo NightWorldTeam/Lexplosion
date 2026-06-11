@@ -19,6 +19,7 @@ namespace Lexplosion.UI.WPF.Core.Services
         public event Action ColorThemeChanged;
         public event Action ActivityColorChanged;
         public event Action AppHeaderTemplateNameChanged;
+        public event Action<bool> SidebarBannerActivityChanged;
 
         private ResourceDictionary _selectedThemeResourceDictionary;
         private Color _selectedActivityColor;
@@ -60,7 +61,7 @@ namespace Lexplosion.UI.WPF.Core.Services
 
         #region Public Methods
 
-
+        /// TODO: Move to another common class for all apperance settings
         public void ChangeWindowHeaderTemplate(string templateName)
         {
             if (templateName != GlobalData.GeneralSettings.AppHeaderTemplateName) 
@@ -69,6 +70,17 @@ namespace Lexplosion.UI.WPF.Core.Services
                 GlobalData.GeneralSettings.AppHeaderTemplateName = templateName;
                 Runtime.ServicesContainer.DataFilesService.SaveSettings(GlobalData.GeneralSettings);
                 AppHeaderTemplateNameChanged?.Invoke();
+            }
+        }
+
+        /// TODO: Move to another common class for all apperance settings
+        public void ChangeSidebarBannerActivity(bool value) 
+        {
+            if (value != GlobalData.GeneralSettings.DisplayPremiumBanner) 
+            {
+                GlobalData.GeneralSettings.DisplayPremiumBanner = value;
+                Runtime.ServicesContainer.DataFilesService.SaveSettings(GlobalData.GeneralSettings);
+                SidebarBannerActivityChanged?.Invoke(value);
             }
         }
 

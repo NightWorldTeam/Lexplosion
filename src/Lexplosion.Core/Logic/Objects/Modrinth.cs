@@ -292,7 +292,7 @@ namespace Lexplosion.Logic.Objects.Modrinth
 		public string Avatar_url;
 	}
 
-	public class ModrinthTeam
+	public class ModrinthMember
 	{
 		[JsonProperty("team_id")]
 		public string TeamId;
@@ -300,4 +300,6 @@ namespace Lexplosion.Logic.Objects.Modrinth
 		[JsonProperty("user")]
 		public ModrinthUser User;
 	}
+
+	public class ModrinthTeam : List<ModrinthMember> { }
 }

@@ -107,7 +107,7 @@
                                                             FontSize="14"
                                                             FontWeight="Medium"
                                                             Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
-                                                            Text="Сooperation / Disign / Managing" />
+                                                            Text="Сooperation / Design / Managing" />
                                                     </StackPanel>
 
 

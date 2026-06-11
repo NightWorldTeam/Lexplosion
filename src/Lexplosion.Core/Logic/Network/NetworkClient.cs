@@ -4,7 +4,10 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Security.Cryptography;
+using NightWorld.Tools;
 using LumiSoft.Net.STUN.Client;
+
+using ByteConverter = NightWorld.Tools.ByteConverter;
 
 namespace Lexplosion.Logic.Network
 {
@@ -49,91 +52,47 @@ namespace Lexplosion.Logic.Network
 
 					NetworkStream stream = client.GetStream();
 					var st = "{\"UUID-server\" : \"" + serverUUID + "\", \"type\": \"" + ClientType + "\", \"UUID\": \"" + UUID + "\", \"sessionToken\": \"" + sessionToken + "\"}";
-					byte[] sendData = Encoding.UTF8.GetBytes(st);
-					stream.Write(sendData, 0, sendData.Length); //авторизируемся на управляющем сервере
+					WriteMessage(Encoding.UTF8.GetBytes(st), stream); //авторизируемся на управляющем сервере
+
 					Runtime.DebugConsoleWrite("Server uuid: " + serverUUID);
 
+					byte[] message = ReadMessage(stream, 2);
+					Runtime.DebugConsoleWrite("Data recieved");
+
+					if (message != null && message[0] == ControlSrverCodes.B) // сервер согласился, а управляющий сервер запрашивает порт
 					{
-						byte[] buf = new byte[2];
-						int bytes = stream.Read(buf, 0, buf.Length);
-						Runtime.DebugConsoleWrite("Data recieved");
+						Runtime.DebugConsoleWrite("ControlSrverCodes.B");
+						byte[] dataToSend = DefineCconnectionStrategy(message, UUID, ref directConnectPossible, ref myExternalPort);
 
-						if (buf[0] == ControlSrverCodes.B) // сервер согласился, а управляющий сервер запрашивает порт
-						{
-							Runtime.DebugConsoleWrite("ControlSrverCodes.B");
-							byte[] dataToSend;
-							if (buf[1] == 1) //Определяем по какому методу работает сервер. 1 - прямое подключение. 0 - через TURN
-							{
-								var udpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-								udpSocket.Bind(new IPEndPoint(IPAddress.Any, 0));
+						Runtime.DebugConsoleWrite("Send port to server");
+						WriteMessage(dataToSend, stream);//отправяем управляющему серверу наш порт
 
-								if (directConnectPossible)
-								{
-									STUN_Result result = StunQuery(udpSocket);
-									if (result?.PublicEndPoint != null)
-									{
-										myExternalPort = result.PublicEndPoint.Port.ToString();
-										if (result.NetType == STUN_NetType.UdpBlocked || result.NetType == STUN_NetType.Symmetric || result.NetType == STUN_NetType.SymmetricUdpFirewall)
-										{
-											directConnectPossible = false;
-											dataToSend = Encoding.UTF8.GetBytes(myExternalPort + ",proxy");
-											Runtime.DebugConsoleWrite("Nat type " + result.NetType);
-										}
-										else
-										{
-											Runtime.DebugConsoleWrite("My EndPoint " + result.PublicEndPoint.ToString() + " Nat type " + result.NetType);
-											dataToSend = Encoding.UTF8.GetBytes(myExternalPort);
-										}
-									}
-									else
-									{
-										directConnectPossible = false;
-										myExternalPort = ((IPEndPoint)udpSocket.LocalEndPoint).Port.ToString(); // в этом случае он нихуя не external
-										dataToSend = Encoding.UTF8.GetBytes(myExternalPort + ",proxy");
-										Runtime.DebugConsoleWrite("STUN_Result is null");
-									}
-								}
-								else
-								{
-									string pt = myExternalPort ?? ((IPEndPoint)udpSocket.LocalEndPoint).Port.ToString();
-									dataToSend = Encoding.UTF8.GetBytes(pt + ",proxy");
-								}
+						Bridge.ClientClosing += Close;
+					}
+					else
+					{
+						Runtime.DebugConsoleWrite(
+							$"Message is null {message == null}, message size {message?.Length}, message: {(message != null ? string.Join(",", message) : "")}");
 
-								var point = (IPEndPoint)udpSocket.LocalEndPoint;
-								udpSocket.Close();
-								Bridge = new SmpClient(point);
-
-								SmpConnection = true;
-							}
-							else
-							{
-								Bridge = new TurnBridgeClient(UUID, ClientType[0], ControlServer.TurnPoint);
-								dataToSend = Encoding.UTF8.GetBytes(" "); // если мы работает с TURN, то нам поебать на порт. Отправляем простой пробел
-								SmpConnection = false;
-							}
-
-							Runtime.DebugConsoleWrite("Send port to server");
-
-							stream.Write(dataToSend, 0, dataToSend.Length); //отправяем управляющему серверу наш порт
-
-							Bridge.ClientClosing += Close;
-						}
-						else
-						{
-							Runtime.DebugConsoleWrite("Bytes count: " + bytes + ", buf[0]=" + buf[0] + ", buf[1]=" + buf[1]);
-							return false;
-						}
+						return false;
 					}
 
-					byte[] data = new byte[50];
-					int data_lenght = stream.Read(data, 0, data.Length);
-
 					bool isConected;
+
+					message = null;
+					message = ReadMessage(stream, 2);
+
+					if (message == null)
+					{
+						Runtime.DebugConsoleWrite("Wrong server answer");
+						return false;
+					}
+
 					if (SmpConnection)
 					{
 						try
 						{
-							string hostPointData = Encoding.UTF8.GetString(data, 0, data_lenght);
+							string hostPointData = Encoding.UTF8.GetString(message, 0, message.Length);
 
 							byte[] connectionCode;
 							string hostPort;
@@ -163,7 +122,7 @@ namespace Lexplosion.Logic.Network
 							}
 							else
 							{
-								Runtime.DebugConsoleWrite("UDP connect through proxy");
+								Runtime.DebugConsoleWrite($"UDP connect through proxy (point: {ControlServer.SmpProxyPoint})");
 								hostPoint = ControlServer.SmpProxyPoint;
 							}
 
@@ -239,6 +198,102 @@ namespace Lexplosion.Logic.Network
 			}
 
 			return result;
+		}
+
+		private byte[] DefineCconnectionStrategy(byte[] message, string UUID, ref bool directConnectPossible, ref string myExternalPort)
+		{
+			Runtime.DebugConsoleWrite("ControlSrverCodes.B");
+			byte[] dataToSend;
+			if (message[1] == 1) //Определяем по какому методу работает сервер. 1 - прямое подключение. 0 - через TURN
+			{
+				var udpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+				udpSocket.Bind(new IPEndPoint(IPAddress.Any, 0));
+
+				if (directConnectPossible)
+				{
+					STUN_Result result = StunQuery(udpSocket);
+					if (result?.PublicEndPoint != null)
+					{
+						myExternalPort = result.PublicEndPoint.Port.ToString();
+						if (result.NetType == STUN_NetType.UdpBlocked || result.NetType == STUN_NetType.Symmetric || result.NetType == STUN_NetType.SymmetricUdpFirewall)
+						{
+							directConnectPossible = false;
+							dataToSend = Encoding.UTF8.GetBytes(myExternalPort + ",proxy");
+							Runtime.DebugConsoleWrite("Nat type " + result.NetType);
+						}
+						else
+						{
+							Runtime.DebugConsoleWrite("My EndPoint " + result.PublicEndPoint.ToString() + " Nat type " + result.NetType);
+							dataToSend = Encoding.UTF8.GetBytes(myExternalPort);
+						}
+					}
+					else
+					{
+						directConnectPossible = false;
+						myExternalPort = ((IPEndPoint)udpSocket.LocalEndPoint).Port.ToString(); // в этом случае он нихуя не external
+						dataToSend = Encoding.UTF8.GetBytes(myExternalPort + ",proxy");
+						Runtime.DebugConsoleWrite("STUN_Result is null");
+					}
+				}
+				else
+				{
+					string pt = myExternalPort ?? ((IPEndPoint)udpSocket.LocalEndPoint).Port.ToString();
+					dataToSend = Encoding.UTF8.GetBytes(pt + ",proxy");
+				}
+
+				var point = (IPEndPoint)udpSocket.LocalEndPoint;
+				udpSocket.Close();
+				Bridge = new SmpClient(point);
+
+				SmpConnection = true;
+			}
+			else
+			{
+				Bridge = new TurnBridgeClient(UUID, ClientType[0], ControlServer.TurnPoint);
+				dataToSend = Encoding.UTF8.GetBytes(" "); // если мы работает с TURN, то нам поебать на порт. Отправляем простой пробел
+				SmpConnection = false;
+			}
+
+			return dataToSend;
+		}
+
+		private void WriteMessage(byte[] data, NetworkStream stream)
+		{
+			var message = new byte[data.Length + 2];
+			ByteConverter.BigEndian.ToBytes(message, 0, (ushort)data.Length);
+
+			Buffer.BlockCopy(data, 0, message, 2, data.Length);
+			stream.Write(message, 0, message.Length);
+		}
+
+		private byte[] ReadMessage(NetworkStream stream, int minLenght)
+		{
+			var messageLenghtBytes = new byte[2];
+
+			int bte = stream.ReadByte();
+			if (bte == -1) return null;
+			messageLenghtBytes[0] = (byte)bte;
+
+			bte = stream.ReadByte();
+			if (bte == -1) return null;
+			messageLenghtBytes[1] = (byte)bte;
+
+			ushort messageLenght = ByteConverter.BigEndian.ToUShort(messageLenghtBytes, 0);
+
+			if (messageLenght < minLenght) return null;
+
+			byte[] buffer = new byte[messageLenght];
+
+			int dataReaded = 0;
+			while (dataReaded < messageLenght)
+			{
+				int lenght = stream.Read(buffer, dataReaded, buffer.Length - dataReaded);
+				if (lenght == 0 && dataReaded < messageLenght) return null;
+
+				dataReaded += lenght;
+			}
+
+			return buffer;
 		}
 
 		protected abstract void Close(IPEndPoint point);

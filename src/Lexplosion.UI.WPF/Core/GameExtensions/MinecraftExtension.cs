@@ -1,4 +1,5 @@
 ﻿using Lexplosion.Logic.Management;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -59,25 +60,47 @@ namespace Lexplosion.UI.WPF.Core.GameExtensions
         /// <returns></returns>
         public static bool CheckExistsOnVersion(MinecraftVersion minecraftVersion, GameExtension extension)
         {
-            if (minecraftVersion?.Id == null)
-            {
-                return false;
-            }
+            if (string.IsNullOrEmpty(minecraftVersion?.Id)) return false;
 
-            if (minecraftVersion?.Type == MinecraftVersion.VersionType.Snapshot)
+            // Снапшоты обычно обрабатываются отдельно
+            if (minecraftVersion.Type == MinecraftVersion.VersionType.Snapshot)
                 return true;
 
-            ushort[] version = minecraftVersion.Id.Split('.').Select(ushort.Parse).ToArray<ushort>();
+            string current = minecraftVersion.Id;
 
-            switch (extension)
+            return extension switch
             {
-                case GameExtension.Forge: return version[0] >= 1 && version[1] >= 1;
-                case GameExtension.Fabric: return version[0] >= 1 && version[1] >= 13;
-                case GameExtension.Quilt: return minecraftVersion >= new MinecraftVersion("1.14.4");/*version[0] >= 1 && version[1] > 14 || (version[1] == 14 && version[2] >= 4);*/
-                case GameExtension.Optifine: return version[0] >= 1 && version[1] > 7 || (version[1] == 7 && version[2] >= 2);
-                case GameExtension.Neoforge: return minecraftVersion >= new MinecraftVersion("1.20.2");
-                default: return false;
+                GameExtension.Forge => IsAtLeast(current, "1.1"),
+                GameExtension.Fabric => IsAtLeast(current, "1.13"),
+                GameExtension.Quilt => IsAtLeast(current, "1.14.4"),
+                GameExtension.Optifine => IsAtLeast(current, "1.7.2"),
+                GameExtension.Neoforge => IsAtLeast(current, "1.20.2"),
+                _ => false
+            };
+        }
+
+        /// <summary>
+        /// Безопасно проверяет, что версия current >= target.
+        /// Справляется с форматами "1.21", "1.7.10", "26.1.1" и т.д.
+        /// </summary>
+        private static bool IsAtLeast(string current, string target)
+        {
+            var v1 = current.Split('.');
+            var v2 = target.Split('.');
+
+            int maxLength = Math.Max(v1.Length, v2.Length);
+
+            for (int i = 0; i < maxLength; i++)
+            {
+                // Если сегмент отсутствует, считаем его за 0 (например, "1.21" станет "1.21.0")
+                int v1Part = i < v1.Length && int.TryParse(v1[i], out int res1) ? res1 : 0;
+                int v2Part = i < v2.Length && int.TryParse(v2[i], out int res2) ? res2 : 0;
+
+                if (v1Part > v2Part) return true;
+                if (v1Part < v2Part) return false;
             }
+
+            return true; // Версии полностью идентичны
         }
 
 

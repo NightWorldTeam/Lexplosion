@@ -31,10 +31,13 @@ namespace Lexplosion.Logic.Management.Addons
 		public event Action<InstanceAddon> AddonAdded;
 		public event Action<InstanceAddon> AddonRemoved;
 
+		private Dictionary<(AddonType addonType, string fileName), InstanceAddon> _installedAddons = new();
+		private object _installedAddonLocker = new();
+
 		/// <summary>
 		/// Очищает сохранённый список аддонов. Нужно вызывать при закрытии каталога чтобы очистить память.
 		/// </summary>
-		public void ClearAddonsListCache()
+		public void ClearAddonsCatalogCache()
 		{
 			Runtime.DebugWrite("Clear chache");
 			ChacheSemaphore.WaitOne();
@@ -119,15 +122,21 @@ namespace Lexplosion.Logic.Management.Addons
 			}
 		}
 
-		private Dictionary<ValueTuple<AddonType, string>, InstanceAddon> _installedAddons = new();
-		private object _installedAddonLocker = new();
-
 		public void AddInstalledAddon(InstanceAddon addon)
 		{
 			lock (_installedAddonLocker)
 			{
 				_installedAddons[(addon.Type, addon.FileName)] = addon;
 				AddonAdded?.Invoke(addon);
+			}
+		}
+
+		public void UpdateInstalledAddon(string oldFileName, InstanceAddon addon)
+		{
+			lock (_installedAddonLocker)
+			{
+				_installedAddons.Remove((addon.Type, oldFileName));
+				_installedAddons[(addon.Type, addon.FileName)] = addon;
 			}
 		}
 

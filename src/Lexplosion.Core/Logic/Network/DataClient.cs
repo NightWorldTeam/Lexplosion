@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NightWorld.Tools;
+using System;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -37,23 +38,38 @@ namespace Lexplosion.Logic.Network
 
 		private string _fileName;
 
+		public long OffsetInFile { get; private set; }
+
 		/// <param name="publicRsaKey">Публичный rsa ключ хоста, с которого будет идити получение файла</param>
 		/// <param name="confirmWord">Кодовое слово хоста. Используется для верификации передающего хоста</param>
 		/// <param name="controlServer">IP кправляющего сервера</param>
 		/// <param name="filename">Имя с которым файл будет сохранен на диске</param>
 		/// <param name="fileId">ID файла получения, он же его хэш</param>
-		public DataClient(RSAParameters publicRsaKey, string confirmWord, ControlServerData controlServer, string filename, string fileId) : base(CLIENT_TYPE, controlServer)
+		/// <param name="offsetInFile">Оффсет внутри файла. То есть с каого байта начать получение файла</param>
+		public DataClient(RSAParameters publicRsaKey, string confirmWord, ControlServerData controlServer, string filename, string fileId, long offsetInFile)
+			: base(CLIENT_TYPE, controlServer)
 		{
 			_fileName = filename;
-			_fstream = new FileStream(filename, FileMode.Create, FileAccess.ReadWrite);
+			_fstream = new FileStream(filename, FileMode.OpenOrCreate, FileAccess.ReadWrite);
 			_fileId = fileId;
-
+			OffsetInFile = offsetInFile;
 			_confirmWord = Encoding.UTF8.GetBytes(confirmWord);
 			_publicRsaKey = publicRsaKey;
 
-			var rnd = new Random();
-			_aesKey = rnd.GenerateBytes(32);
-			_aesIV = rnd.GenerateBytes(16);
+			if (offsetInFile != 0)
+			{
+				_fstream.Seek(offsetInFile, SeekOrigin.Begin);
+			}
+
+			using (Aes aes = Aes.Create())
+			{
+				aes.KeySize = 256;
+				aes.GenerateKey();
+				aes.GenerateIV();
+
+				_aesKey = aes.Key;
+				_aesIV = aes.IV;
+			}
 		}
 
 		protected override void Sending()
@@ -84,6 +100,11 @@ namespace Lexplosion.Logic.Network
 					goto EndPoint;
 				}
 
+				//отправляем сообщение с оффсетом в файле
+				var offsetMessage = new byte[8];
+				ByteConverter.BigEndian.ToBytes(offsetMessage, 0, OffsetInFile);
+				Bridge.Send(offsetMessage);
+
 				//отправляем id файла
 				Bridge.Send(Cryptography.AesEncode(Encoding.UTF8.GetBytes(_fileId), _aesKey, _aesIV));
 
@@ -92,7 +113,7 @@ namespace Lexplosion.Logic.Network
 				data = Cryptography.AesDecode(data, _aesKey, _aesIV);
 				if (data.Length != 8) // размер файла должен быть типа long, то есть 8 байт. если нет - выходим
 				{
-					Runtime.DebugConsoleWrite("data.Length != 8");
+					Runtime.DebugConsoleWrite($"data.Length != 8. Lenght {data.Length}");
 					_isWorking = false;
 					goto EndPoint;
 				}
@@ -118,16 +139,16 @@ namespace Lexplosion.Logic.Network
 
 					ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
 
-					long offset = 0;
-					while (offset < _fileSize && (_isWorking = Bridge.Receive(out data)) && data.Length > 0)
+					while (OffsetInFile < _fileSize && (_isWorking = Bridge.Receive(out data)) && data.Length > 0)
 					{
 						data = Cryptography.CryptoDecode(decryptor, data);
 
-						offset += data.Length;
+						OffsetInFile += data.Length;
 						_dataCount += data.Length;
+
 						try // чисто перестраховка на случай если в _fileSize как-то 0 попадёт
 						{
-							ProcentUpdate?.Invoke((offset / (double)_fileSize) * 100);
+							ProcentUpdate?.Invoke((OffsetInFile / (double)_fileSize) * 100);
 						}
 						catch { }
 

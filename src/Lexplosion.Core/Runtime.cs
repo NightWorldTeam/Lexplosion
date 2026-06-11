@@ -74,11 +74,9 @@ namespace Lexplosion
 				File.WriteAllText(LaunсherSettings.LauncherDataPath + "/crash-report_" + DateTime.Now.ToString("dd.MM.yyyy-h.mm.ss") + ".log", exception.ToString());
 			};
 
-			ServicePointManager.DefaultConnectionLimit = 20;
-
-			var withDirectory = new WithDirectory();
+            var toServer = new ToServer();
+            var withDirectory = new WithDirectory(toServer);
 			var dataFilesManager = new DataFilesManager(withDirectory);
-			var toServer = new ToServer();
 			var minecraftInfo = new MinecraftInfoService(toServer);
 			var nightWorldApi = new NightWorldApi(toServer);
 			var modrinthApi = new ModrinthApi(toServer);
@@ -111,20 +109,19 @@ namespace Lexplosion
 				CurrentProcess.Kill(); //стопаем этот процесс
 			}
 
-			int version = nightWorldApi.CheckLauncherUpdates();
-			Runtime.DebugWrite($"last launcher version: {version}");
-			if (version == -1)
+			var initInfo = nightWorldApi.LoadLauncherInitInfo();
+			Runtime.DebugWrite($"Init info (launcher version: {initInfo?.LauncherVersion}, latest news id: {initInfo?.LatestNewsId})");
+			if (initInfo == null)
 			{
 				Runtime.DebugWrite($"Change to mirror mode");
 				toServer.ChangeToMirrorMode();
-				withDirectory.ChangeDownloadToMirrorMode();
 
-				version = nightWorldApi.CheckLauncherUpdates(15000);
+				initInfo = nightWorldApi.LoadLauncherInitInfo(15000);
 
-				if (version > LaunсherSettings.version)
+				if (initInfo != null && initInfo.LauncherVersion > LaunсherSettings.version)
 				{
 					OnUpdateStart?.Invoke();
-					LauncherUpdate(version, updaterOffsetLeft, updaterOffsetRight, true);
+					LauncherUpdate(initInfo.LauncherVersion, updaterOffsetLeft, updaterOffsetRight, true);
 				}
 
 				//var proxies = ProxyFetcher.GetProxies();
@@ -155,11 +152,13 @@ namespace Lexplosion
 				//	}
 				//}
 			}
-			else if (version > LaunсherSettings.version)
+			else if (initInfo.LauncherVersion > LaunсherSettings.version)
 			{
 				OnUpdateStart?.Invoke();
-				LauncherUpdate(version, updaterOffsetLeft, updaterOffsetRight, false);
+				LauncherUpdate(initInfo.LauncherVersion, updaterOffsetLeft, updaterOffsetRight, false);
 			}
+
+			services.NotificationsService.LatestNewsId = initInfo?.LatestNewsId ?? 0;
 
 			Account.Init();
 

@@ -70,7 +70,6 @@ namespace Lexplosion.Logic.Network
 		public int BaseStatus;
 		public string SessionToken;
 		public string AccessID;
-		public long LastNewsId;
 		public NwUserBanner Banner;
     }
 

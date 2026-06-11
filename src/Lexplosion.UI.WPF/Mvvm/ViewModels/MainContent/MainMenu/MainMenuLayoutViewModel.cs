@@ -77,7 +77,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
 
             Content = _catalogViewModel;
 
-            LeftPanel = new LeftPanelViewModel();
+            LeftPanel = new LeftPanelViewModel(appCore);
             LeftPanel.SelectedItemChanged += OnLeftPanelSelectedItemChanged;
 
             ToInstanceProfile = (instanceModel) => (_libraryViewModel as LibraryViewModel).OpenInstanceProfileMenuCommand.Execute(instanceModel);
