@@ -8,6 +8,9 @@
     <UseWindowsForms>true</UseWindowsForms>
     <StartupObject>Lexplosion.UI.WPF.RuntimeApp</StartupObject>
     <ApplicationIcon>Assets\images\icons\logo.ico</ApplicationIcon>
+    <AssemblyVersion>1.0.3.6</AssemblyVersion>
+    <FileVersion>1.0.3.6</FileVersion>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
