@@ -24,7 +24,7 @@ namespace Lexplosion.UI.WPF.Core.Converters
                 return enumerable.Cast<object>().Count() == 0;
             }
 
-            throw new ArgumentException($"Неверный формат данных ожидалась колекция, но значение {value}");
+            throw new ArgumentException($"Неверный формат данных ожидалась коллекция, но значение {value}");
         }
     }
 }

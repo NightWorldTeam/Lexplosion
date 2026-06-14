@@ -11,6 +11,7 @@
                 <ResourceDictionary Source="Resources/ResourcesRegister.xaml" />
                 <ResourceDictionary Source="Controls/Controls.xaml" />
                 <ResourceDictionary Source="DataTemplates.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MarkdownWPF;component/Themes/MarkdownDefaultTheme.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

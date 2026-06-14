@@ -158,7 +158,7 @@ namespace Lexplosion
 				LauncherUpdate(initInfo.LauncherVersion, updaterOffsetLeft, updaterOffsetRight, false);
 			}
 
-			services.NotificationsService.LatestNewsId = initInfo?.LatestNewsId ?? 0;
+			services.NotificationsService.SetLatestNewsId(initInfo?.LatestNewsId);
 
 			Account.Init();
 

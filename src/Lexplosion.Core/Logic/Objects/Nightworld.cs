@@ -171,8 +171,12 @@ namespace Lexplosion.Logic.Objects.Nightworld
         public string Title { get; set; }
         public string Summary { get; set; }
         public string Content { get; set; }
+		public string Author { get; set; }
 
-        [JsonIgnore]
+		[JsonProperty("Banner")]
+		public string? BannerUrl { get; set; } = null;
+
+		[JsonIgnore]
         public DateTime CreationDate { get; private set; } = DateTime.Today;
 
 		private long _dateUnix;

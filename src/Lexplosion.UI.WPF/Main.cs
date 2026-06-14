@@ -510,8 +510,16 @@ namespace Lexplosion.UI.WPF
 
 		private static void ResourcesDictionariesRegister()
 		{
-			// Languages //
-			_app.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            _app.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            {
+                Source = new Uri("pack://application:,,,/MarkdownWPF;component/Themes/MarkdownDefaultTheme.xaml")
+            });
+            _app.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            {
+                Source = new Uri(ResourcePath + "MarkdownStyles.xaml")
+            });
+            // Languages //
+            _app.Resources.MergedDictionaries.Add(new ResourceDictionary()
 			{
 				Source = new Uri(AssetsPath + "LanguagesRegister.xaml")
 			});

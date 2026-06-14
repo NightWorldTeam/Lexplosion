@@ -1,0 +1,132 @@
+﻿<UserControl
+    x:Class="Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.NewsHub.Components.NewsPreviewView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:Lexplosion.UI.WPF.Core.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="clr-namespace:Lexplosion.UI.WPF.Extensions"
+    xmlns:local="clr-namespace:Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.NewsHub"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:newsHubModels="clr-namespace:Lexplosion.UI.WPF.Mvvm.Models.MainContent.NewsHub"
+    d:DataContext="{d:DesignInstance Type=newsHubModels:NewsPreviewModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <ControlTemplate x:Key="NewsPreviewButton" TargetType="{x:Type Button}">
+            <Border
+                Width="280"
+                Height="210"
+                Margin="6"
+                Padding="2"
+                Background="{DynamicResource SeparateSolidColorBrush}"
+                BorderThickness="1"
+                CornerRadius="10"
+                Cursor="Hand">
+
+                <Border.Style>
+                    <Style TargetType="{x:Type Border}">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="BorderBrush" Value="{DynamicResource ActivitySolidColorBrush}" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+
+                <Border
+                    Background="{DynamicResource PrimarySolidColorBrush}"
+                    ClipToBounds="True"
+                    CornerRadius="8">
+
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <Border
+                            Grid.Row="0"
+                            Background="{Binding BannerUrl, Converter={converters:ImageSourceNullValidateConverter}, ConverterParameter={x:Static Stretch.Uniform}}"
+                            CornerRadius="10,10,0,0" />
+
+                        <Grid Grid.Row="1" Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <TextBlock
+                                Grid.Row="0"
+                                Margin="0,0,0,4"
+                                FontSize="16"
+                                FontWeight="Medium"
+                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                Text="{Binding Title}" />
+
+                            <TextBlock
+                                Grid.Row="1"
+                                Height="50"
+                                Background="Transparent"
+                                FontSize="14"
+                                FontWeight="Regular"
+                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                Text="{Binding Summary}"
+                                TextTrimming="CharacterEllipsis"
+                                TextWrapping="WrapWithOverflow" />
+
+                            <Border
+                                Grid.Row="2"
+                                Height="2"
+                                Margin="0,4"
+                                Background="{DynamicResource SeparateSolidColorBrush}" />
+
+                            <Grid Grid.Row="3">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel
+                                    Grid.Column="0"
+                                    VerticalAlignment="Center"
+                                    Orientation="Horizontal">
+
+                                    <Viewbox Width="14" Height="14">
+                                        <Path
+                                            extensions:PathExtensions.StringKeyData="Calendar"
+                                            Fill="{DynamicResource LatestForegroundSolidColorBrush}"
+                                            Stretch="Uniform" />
+                                    </Viewbox>
+
+                                    <TextBlock
+                                        Margin="4,0,0,0"
+                                        VerticalAlignment="Center"
+                                        FontSize="12"
+                                        Foreground="{DynamicResource LatestForegroundSolidColorBrush}"
+                                        Text="{Binding Date, StringFormat=dd.MM.yyyy}" />
+                                </StackPanel>
+
+                                <TextBlock
+                                    Grid.Column="1"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center"
+                                    FontSize="12"
+                                    Foreground="{DynamicResource LatestForegroundSolidColorBrush}"
+                                    Text="{Binding Author}" />
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </Border>
+            </Border>
+        </ControlTemplate>
+    </UserControl.Resources>
+
+    <Button
+        Command="{Binding OpenNewsViewerCommand}"
+        CommandParameter="{Binding}"
+        Template="{StaticResource NewsPreviewButton}" />
+</UserControl>

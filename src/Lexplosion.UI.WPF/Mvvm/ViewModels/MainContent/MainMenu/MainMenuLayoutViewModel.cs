@@ -6,7 +6,6 @@ using Lexplosion.UI.WPF.Mvvm.Models.Mvvm.InstanceModel;
 using Lexplosion.UI.WPF.Mvvm.ViewModels.Args;
 using Lexplosion.UI.WPF.Mvvm.ViewModels.Limited;
 using System;
-using System.Linq;
 
 namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
 {
@@ -63,7 +62,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
             {
                 var instanceModel = mainModel.LibraryController.Get(ic);
                 var item = LeftPanel.SelectItem(1);
-                (item.Content as LibraryViewModel).IsScrollToEnd = true;
+                (item.Content as LibraryViewModel)!.IsScrollToEnd = true;
                 return instanceModel;
             });
             var multiplayerLayoutArgs = new MultiplayerLayoutArgs(OpenAccountFactory, selectInstanceForServerArgs);
@@ -77,10 +76,10 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
 
             Content = _catalogViewModel;
 
-            LeftPanel = new LeftPanelViewModel(appCore);
+            LeftPanel = new LeftPanelViewModel(appCore, ToMainMenuLayoutCommand);
             LeftPanel.SelectedItemChanged += OnLeftPanelSelectedItemChanged;
 
-            ToInstanceProfile = (instanceModel) => (_libraryViewModel as LibraryViewModel).OpenInstanceProfileMenuCommand.Execute(instanceModel);
+            ToInstanceProfile = (instanceModel) => (_libraryViewModel as LibraryViewModel)!.OpenInstanceProfileMenuCommand.Execute(instanceModel);
 
             InitDefaultLeftPanelTabs();
         }

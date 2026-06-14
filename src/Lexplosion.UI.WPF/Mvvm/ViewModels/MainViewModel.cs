@@ -1,26 +1,27 @@
 ﻿using Lexplosion.Logic.Management;
+using Lexplosion.Logic.Management.Accounts;
+using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network;
+using Lexplosion.Tools;
+using Lexplosion.UI.WPF.Commands;
 using Lexplosion.UI.WPF.Core;
 using Lexplosion.UI.WPF.Core.Modal;
-using Lexplosion.UI.WPF.Stores;
-using Lexplosion.UI.WPF.Mvvm.ViewModels.Modal;
-using System.Collections.Generic;
-using Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu;
-using Lexplosion.UI.WPF.Commands;
 using Lexplosion.UI.WPF.Mvvm.Models;
-using System;
 using Lexplosion.UI.WPF.Mvvm.Models.InstanceControllers;
-using Lexplosion.UI.WPF.Mvvm.ViewModels.ModalFactory;
-using Lexplosion.Logic.Management.Instances;
-using Lexplosion.Tools;
 using Lexplosion.UI.WPF.Mvvm.Models.Mvvm.InstanceModel;
-using System.Linq;
-using System.Collections.ObjectModel;
-using Lexplosion.UI.WPF.TrayMenu;
-using System.Windows.Input;
-using Lexplosion.Logic.Management.Accounts;
-using System.Diagnostics;
+using Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu;
+using Lexplosion.UI.WPF.Mvvm.ViewModels.Modal;
+using Lexplosion.UI.WPF.Mvvm.ViewModels.ModalFactory;
 using Lexplosion.UI.WPF.Mvvm.Views.Windows;
+using Lexplosion.UI.WPF.Stores;
+using Lexplosion.UI.WPF.TrayMenu;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Linq;
+using System.Windows.Input;
+
 
 namespace Lexplosion.UI.WPF.Mvvm.ViewModels
 {
@@ -146,7 +147,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels
                 new ModalInstanceCreatorFactory(appCore,
                     Model.StartImport,
                     Model.GetActiveImports,
-                    Model.LibraryController as LibraryController,
+                    (Model.LibraryController as LibraryController)!,
                     Model.InstanceSharesController, 
                     _mainMenuLayoutViewModel.OpenAccountFactory));
 
