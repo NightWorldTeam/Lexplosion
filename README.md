@@ -37,10 +37,10 @@
 **Графический интерфейс (`Lexplosion.UI.WPF`):**
 * **WPF** — десктопное приложение пользовательского интерфейса.
 * **Библиотеки:** 
-  * `Hardcodet.NotifyIcon.Wpf` для управления системным треем.
+  * [Hardcodet.NotifyIcon.Wpf](https://github.com/hardcodet/wpf-notifyicon) для управления системным треем.
   * `DiscordRichPresence` для интеграции статуса в Discord.
-  * `MarkdownWPF` для отрисовки динамических текстовых документов.
-  * `VirtualizingWrapPanel` для высокооптимизированного и плавного отображения элементов в каталогах и списках модов.
+  * [MarkdownWPF](https://github.com/IgorShaposhnikov/MarkdownWPF) для отрисовки динамических текстовых документов.
+  * [VirtualizingWrapPanel](https://github.com/sbaeumlisberger/VirtualizingWrapPanel) для высокооптимизированного и плавного отображения элементов в каталогах и списках модов.
 * **Зависимость сборки:** интегрирует шаг предварительной сборки (pre-build), который извлекает скомпилированную библиотеку `Lexplosion.Core` непосредственно в рабочие директории приложения.
 
 **Вспомогательные утилиты:**
