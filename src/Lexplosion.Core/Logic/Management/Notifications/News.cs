@@ -42,6 +42,7 @@ namespace Lexplosion.Logic.Management.Notifications
             Content = model.Content;
             DateUnix = model.DateUnix;
 			BannerUrl = model.BannerUrl;
+			Author = model.Author;
         }
     }
 }

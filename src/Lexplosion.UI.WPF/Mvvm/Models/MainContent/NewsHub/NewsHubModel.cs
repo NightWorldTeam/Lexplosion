@@ -29,7 +29,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.NewsHub
             {
                 var items = Runtime.ServicesContainer.NotificationsService
                     .GetAllNews(0, 0)
-                    .Select(i => new NewsPreviewModel(i.Title, i.Summary, i.Content, i.CreationDate, "No Author", i.BannerUrl ?? "", openNewsViewerCommand));
+                    .Select(i => new NewsPreviewModel(i.Title, i.Summary, i.Content, i.CreationDate, i.Author ?? "No Author", i.BannerUrl ?? "", openNewsViewerCommand));
 
                 appCore.UIThread.Invoke(() =>
                 {
