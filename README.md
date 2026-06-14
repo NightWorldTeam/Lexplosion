@@ -35,7 +35,7 @@ The desktop application is built using a decoupled architecture, dividing core l
 * **Packaging:** Includes an automated post-build script that archives the compiled core DLL into `Lexplosion.Core.zip` for consumption by the UI module.
 
 **Frontend Subsystem (`Lexplosion.UI.WPF`):**
-* **WPF & Windows Forms (.NET Framework 4.7.2)** — The desktop user interface application.
+* **WPF — The desktop user interface application.
 * **Libraries:** 
   * `Hardcodet.NotifyIcon.Wpf` for system tray control.
   * `DiscordRichPresence` for game status integration.
