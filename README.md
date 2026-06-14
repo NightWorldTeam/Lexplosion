@@ -35,10 +35,13 @@ The desktop application is built using a decoupled architecture, dividing core l
 * **Packaging:** Includes an automated post-build script that archives the compiled core DLL into `Lexplosion.Core.zip` for consumption by the UI module.
 
 **Frontend Subsystem (`Lexplosion.UI.WPF`):**
-* **WPF — The desktop user interface application.
+* **WPF** — The desktop user interface application.
 * **Libraries:** 
   * `Hardcodet.NotifyIcon.Wpf` for system tray control.
   * `DiscordRichPresence` for game status integration.
   * `MarkdownWPF` for rendering dynamic text documents.
   * `VirtualizingWrapPanel` for highly optimized, smooth item rendering in directories and mod list grids.
 * **Build Dependency:** Integrates a pre-build step that pulls and unzips the compiled `Lexplosion.Core` library directly into the application's runtime directories.
+
+**Auxiliary Utilities:**
+* [Lexplosion UpdateTool](https://github.com/NightWorldTeam/Lexplosion-UpdateTool) — An independent background utility responsible for managing launcher updates and checking build integrity.
