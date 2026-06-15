@@ -62,6 +62,21 @@
     <ProjectReference Include="..\Lexplosion.Core\Lexplosion.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
   <Target Name="CopyCoreZip" BeforeTargets="PreBuildEvent">
     <Copy SourceFiles="$(SolutionDir)DLL\Lexplosion.Core.zip" DestinationFolder="$(ProjectDir)Resources\Libraries" SkipUnchangedFiles="true" />
   </Target>

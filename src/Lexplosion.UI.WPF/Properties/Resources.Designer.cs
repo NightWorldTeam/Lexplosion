@@ -19,10 +19,10 @@ namespace Lexplosion.UI.WPF.Properties {
     // с помощью такого средства, как ResGen или Visual Studio.
     // Чтобы добавить или удалить член, измените файл .ResX и снова запустите ResGen
     // с параметром /str или перестройте свой проект VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace Lexplosion.UI.WPF.Properties {
         ///   Возвращает кэшированный экземпляр ResourceManager, использованный этим классом.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Lexplosion.UI.WPF.Properties.Resources", typeof(Resources).Assembly);
@@ -51,7 +51,7 @@ namespace Lexplosion.UI.WPF.Properties {
         ///   обращений к ресурсу с помощью этого класса ресурса со строгой типизацией.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace Lexplosion.UI.WPF.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Byte[].
         /// </summary>
-        internal static byte[] Compression {
+        public static byte[] Compression {
             get {
                 object obj = ResourceManager.GetObject("Compression", resourceCulture);
                 return ((byte[])(obj));
@@ -73,7 +73,7 @@ namespace Lexplosion.UI.WPF.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Byte[].
         /// </summary>
-        internal static byte[] DiscordRPC {
+        public static byte[] DiscordRPC {
             get {
                 object obj = ResourceManager.GetObject("DiscordRPC", resourceCulture);
                 return ((byte[])(obj));
@@ -83,7 +83,17 @@ namespace Lexplosion.UI.WPF.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Byte[].
         /// </summary>
-        internal static byte[] LexplosionCore {
+        public static byte[] HtmlAgilityPack {
+            get {
+                object obj = ResourceManager.GetObject("HtmlAgilityPack", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
+        public static byte[] LexplosionCore {
             get {
                 object obj = ResourceManager.GetObject("LexplosionCore", resourceCulture);
                 return ((byte[])(obj));
@@ -93,7 +103,7 @@ namespace Lexplosion.UI.WPF.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Byte[].
         /// </summary>
-        internal static byte[] LumiSoftNet {
+        public static byte[] LumiSoftNet {
             get {
                 object obj = ResourceManager.GetObject("LumiSoftNet", resourceCulture);
                 return ((byte[])(obj));
@@ -103,7 +113,37 @@ namespace Lexplosion.UI.WPF.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Byte[].
         /// </summary>
-        internal static byte[] NewtonsoftJson {
+        public static byte[] Markdig {
+            get {
+                object obj = ResourceManager.GetObject("Markdig", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
+        public static byte[] MarkdownWPF {
+            get {
+                object obj = ResourceManager.GetObject("MarkdownWPF", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
+        public static byte[] MarkdownWPFHtml {
+            get {
+                object obj = ResourceManager.GetObject("MarkdownWPFHtml", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
+        public static byte[] NewtonsoftJson {
             get {
                 object obj = ResourceManager.GetObject("NewtonsoftJson", resourceCulture);
                 return ((byte[])(obj));
@@ -113,7 +153,57 @@ namespace Lexplosion.UI.WPF.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Byte[].
         /// </summary>
-        internal static byte[] TaskbarNotification {
+        public static byte[] SystemBuffers {
+            get {
+                object obj = ResourceManager.GetObject("SystemBuffers", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
+        public static byte[] SystemLinqDynamicCore {
+            get {
+                object obj = ResourceManager.GetObject("SystemLinqDynamicCore", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
+        public static byte[] SystemMemory {
+            get {
+                object obj = ResourceManager.GetObject("SystemMemory", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
+        public static byte[] SystemNumericsVectors {
+            get {
+                object obj = ResourceManager.GetObject("SystemNumericsVectors", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
+        public static byte[] SystemRuntimeCompilerServicesUnsafe {
+            get {
+                object obj = ResourceManager.GetObject("SystemRuntimeCompilerServicesUnsafe", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
+        public static byte[] TaskbarNotification {
             get {
                 object obj = ResourceManager.GetObject("TaskbarNotification", resourceCulture);
                 return ((byte[])(obj));
@@ -123,7 +213,7 @@ namespace Lexplosion.UI.WPF.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Byte[].
         /// </summary>
-        internal static byte[] Tommy {
+        public static byte[] Tommy {
             get {
                 object obj = ResourceManager.GetObject("Tommy", resourceCulture);
                 return ((byte[])(obj));
@@ -133,7 +223,7 @@ namespace Lexplosion.UI.WPF.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Byte[].
         /// </summary>
-        internal static byte[] VirtualizingWrapPanel {
+        public static byte[] VirtualizingWrapPanel {
             get {
                 object obj = ResourceManager.GetObject("VirtualizingWrapPanel", resourceCulture);
                 return ((byte[])(obj));

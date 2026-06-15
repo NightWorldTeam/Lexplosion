@@ -596,6 +596,51 @@ namespace Lexplosion.UI.WPF
 				return Assembly.Load(UnzipBytesArray(Resources.VirtualizingWrapPanel));
 			}
 
+			if (args.Name.Contains("HtmlAgilityPack"))
+			{
+				return Assembly.Load(UnzipBytesArray(Resources.HtmlAgilityPack));
+			}
+
+			if (args.Name.Contains("Markdig"))
+			{
+				return Assembly.Load(UnzipBytesArray(Resources.Markdig));
+			}
+
+			if (args.Name.Contains("MarkdownWPF.Html"))
+			{
+				return Assembly.Load(UnzipBytesArray(Resources.MarkdownWPFHtml));
+			}
+
+			if (args.Name.Contains("MarkdownWPF"))
+			{
+				return Assembly.Load(UnzipBytesArray(Resources.MarkdownWPF));
+			}
+
+			if (args.Name.Contains("System.Linq.Dynamic.Core"))
+			{
+				return Assembly.Load(UnzipBytesArray(Resources.SystemLinqDynamicCore));
+			}
+
+			if (args.Name.Contains("System.Memory"))
+			{
+				return Assembly.Load(UnzipBytesArray(Resources.SystemMemory));
+			}
+
+			if (args.Name.Contains("System.Numerics.Vectors"))
+			{
+				return Assembly.Load(UnzipBytesArray(Resources.SystemNumericsVectors));
+			}
+
+			if (args.Name.Contains("System.Runtime.CompilerServices.Unsafe"))
+			{
+				return Assembly.Load(UnzipBytesArray(Resources.SystemRuntimeCompilerServicesUnsafe));
+			}
+
+			if (args.Name.Contains("System.Buffers"))
+			{
+				return Assembly.Load(UnzipBytesArray(Resources.SystemBuffers));
+			}
+
 			if (args.Name.Contains("System.IO.Compression"))
 			{
 				return Assembly.Load(Resources.Compression);
