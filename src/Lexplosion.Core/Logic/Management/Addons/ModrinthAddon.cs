@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System;
+using Lexplosion;
 using Lexplosion.Logic.Management.Instances;
+using Lexplosion.Logic.Management.Localization;
 using Lexplosion.Logic.Network.Services;
 using Lexplosion.Logic.FileSystem.Extensions;
 using Lexplosion.Logic.FileSystem.Services;
@@ -175,7 +177,7 @@ namespace Lexplosion.Logic.Management.Addons
 			}
 			else
 			{
-				AuthorName = "Unknown author";
+				AuthorName = Runtime.ServicesContainer.LocalizationService.GetString(LocalizationKeys.UnknownAuthor);
 			}
 		}
 

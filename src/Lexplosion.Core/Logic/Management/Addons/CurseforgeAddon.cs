@@ -10,6 +10,9 @@ using System.Runtime.CompilerServices;
 using Lexplosion.Logic.Network.Services;
 using Lexplosion.Logic.FileSystem.Services;
 using Lexplosion.Logic.FileSystem.Extensions;
+using Lexplosion.Global;
+using Lexplosion.Logic.Management;
+using Lexplosion.Logic.Management.Localization;
 
 namespace Lexplosion.Logic.Management.Addons
 {
@@ -66,7 +69,7 @@ namespace Lexplosion.Logic.Management.Addons
 		{
 			get
 			{
-				return _addonInfo?.GetAuthorName ?? "";
+				return _addonInfo?.GetAuthorName(Runtime.ServicesContainer.LocalizationService.GetString(LocalizationKeys.UnknownAuthor)) ?? "";
 			}
 		}
 
