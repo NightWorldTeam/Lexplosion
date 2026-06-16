@@ -55,12 +55,9 @@ namespace Lexplosion.Logic.Objects.Curseforge
 		public List<Author> authors;
 		public Logo logo;
 
-		public string GetAuthorName
+		public string GetAuthorName(string fallback = "")
 		{
-			get
-			{
-				return (authors != null && authors.Count > 0) ? authors[0].name : "Unknown author";
-			}
+			return (authors != null && authors.Count > 0) ? authors[0].name : fallback;
 		}
 	}
 

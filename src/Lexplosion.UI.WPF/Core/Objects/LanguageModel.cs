@@ -1,4 +1,4 @@
-﻿using Lexplosion.Global;
+using Lexplosion.Global;
 using System;
 using System.ComponentModel;
 using System.Globalization;
@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 
 namespace Lexplosion.UI.WPF.Core.Objects
 {
-    public struct LanguageModel : INotifyPropertyChanged
+    public class LanguageModel : INotifyPropertyChanged
     {
         public readonly CultureInfo _cultureInfo = null;
 
