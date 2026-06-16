@@ -177,7 +177,7 @@ namespace Lexplosion.Logic.Management.Addons
 			}
 			else
 			{
-				AuthorName = Runtime.ServicesContainer.LocalizationService.GetString(LocalizationKeys.UnknownAuthor);
+				AuthorName = _services.LocalizationService.GetUnknownAuthor();
 			}
 		}
 

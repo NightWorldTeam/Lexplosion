@@ -69,7 +69,7 @@ namespace Lexplosion.Logic.Management.Addons
 		{
 			get
 			{
-				return _addonInfo?.GetAuthorName(Runtime.ServicesContainer.LocalizationService.GetString(LocalizationKeys.UnknownAuthor)) ?? "";
+				return _addonInfo?.GetAuthorName(_services.LocalizationService.GetUnknownAuthor()) ?? "";
 			}
 		}
 

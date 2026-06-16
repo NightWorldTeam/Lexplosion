@@ -108,7 +108,7 @@ namespace Lexplosion.Logic.Management.Instances
 		public string Description
 		{
 			get => string.IsNullOrEmpty(_description)
-				? _services.LocalizationService.GetString(LocalizationKeys.NoDescription)
+				? _services.LocalizationService.GetNoDescription()
 				: _description;
 			private set
 			{
@@ -173,7 +173,7 @@ namespace Lexplosion.Logic.Management.Instances
 		public string Summary
 		{
 			get => string.IsNullOrEmpty(_summary)
-				? _services.LocalizationService.GetString(LocalizationKeys.NoDescription)
+				? _services.LocalizationService.GetNoDescription()
 				: _summary;
 			private set
 			{
@@ -452,9 +452,9 @@ namespace Lexplosion.Logic.Management.Instances
 
 			if (assetsData != null)
 			{
-				Name = name ?? localizationService.GetString(LocalizationKeys.UnknownName);
+				Name = name ?? localizationService.GetUnknownName();
 				Summary = NormalizePlaceholderText(assetsData.Summary, LocalizationKeys.NoDescription);
-				Author = assetsData.Author ?? localizationService.GetString(LocalizationKeys.UnknownAuthor);
+				Author = assetsData.Author ?? localizationService.GetUnknownAuthor();
 				Description = NormalizePlaceholderText(assetsData.Description, LocalizationKeys.NoDescription);
 				Categories = assetsData.Categories;
 				GameVersion = gameVersion;
@@ -463,9 +463,9 @@ namespace Lexplosion.Logic.Management.Instances
 			}
 			else
 			{
-				Name = name ?? localizationService.GetString(LocalizationKeys.UnknownName);
+				Name = name ?? localizationService.GetUnknownName();
 				Summary = null;
-				Author = localizationService.GetString(LocalizationKeys.UnknownAuthor);
+				Author = localizationService.GetUnknownAuthor();
 				Description = null;
 				GameVersion = gameVersion;
 				Logo = logo;
@@ -488,7 +488,7 @@ namespace Lexplosion.Logic.Management.Instances
 			if (!string.IsNullOrEmpty(name))
 				Name = name;
 			else if (string.IsNullOrEmpty(Name))
-				Name = localizationService.GetString(LocalizationKeys.UnknownName);
+				Name = localizationService.GetUnknownName();
 
 			if (!string.IsNullOrEmpty(summary))
 				Summary = summary;
@@ -503,7 +503,7 @@ namespace Lexplosion.Logic.Management.Instances
 			if (!string.IsNullOrEmpty(author))
 				Author = author;
 			else if (string.IsNullOrEmpty(Author))
-				Author = localizationService.GetString(LocalizationKeys.UnknownAuthor);
+				Author = localizationService.GetUnknownAuthor();
 
 			if (categories != null)
 				Categories = categories;
@@ -517,7 +517,7 @@ namespace Lexplosion.Logic.Management.Instances
 		{
 			Name = tempName;
 			IsFictitious = true;
-			Author = _services.LocalizationService.GetString(LocalizationKeys.UnknownAuthor);
+			Author = _services.LocalizationService.GetUnknownAuthor();
 			Summary = string.Empty;
 			IsComplete = false;
 		}
@@ -591,9 +591,9 @@ namespace Lexplosion.Logic.Management.Instances
 			var localizationService = _services.LocalizationService;
 
 			if (fullInfo.Description == null)
-				fullInfo.Description = localizationService.GetString(LocalizationKeys.NoDescription);
+				fullInfo.Description = localizationService.GetNoDescription();
 			if (fullInfo.Summary == null)
-				fullInfo.Summary = localizationService.GetString(LocalizationKeys.NoDescription);
+				fullInfo.Summary = localizationService.GetNoDescription();
 
 			return fullInfo;
 		}
