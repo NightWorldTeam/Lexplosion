@@ -812,4 +812,10 @@
     <s:String x:Key="RestartLauncherButtonAction">
         Ja, ich möchte den Launcher jetzt neu starten
     </s:String>
+
+    <!--  Core Localization Keys  -->
+    <s:String x:Key="NoDescription">Keine Beschreibung, aber wir hoffen, dass sie erscheinen wird.</s:String>
+    <s:String x:Key="UnknownName">Unbekannter Name</s:String>
+    <s:String x:Key="UnknownAuthor">Unbekannter Autor</s:String>
+    <s:String x:Key="LaunchingGame">Spiel wird gestartet...</s:String>
 </ResourceDictionary>

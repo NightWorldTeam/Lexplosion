@@ -1045,4 +1045,10 @@
     <!--  News  -->
     <s:String x:Key="NewsTitle">News</s:String>
     <s:String x:Key="CloseArticleButtonTooltip">Close the article</s:String>
+
+    <!--  Core Localization Keys  -->
+    <s:String x:Key="NoDescription">No description, but we hope it will appear.</s:String>
+    <s:String x:Key="UnknownName">Unknown name</s:String>
+    <s:String x:Key="UnknownAuthor">Unknown author</s:String>
+    <s:String x:Key="LaunchingGame">Launching game...</s:String>
 </ResourceDictionary>
