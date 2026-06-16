@@ -466,46 +466,21 @@ namespace Lexplosion.UI.WPF
 		}
 
 
-		private static ResourceDictionary CurrentLangDict;
 		internal const string LangPath = AssetsPath + "langs/";
 
+        // Не интерфейс, так как нужно переключать язык в рантайме
+        internal static WpfLocalizationService _wpfLocalizationService;
+
+		/// <summary>
+		/// Создаёт <see cref="WpfLocalizationService"/>, загружает язык и регистрирует сервис
+		/// в <see cref="Runtime.ServicesContainer"/>.
+		/// </summary>
 		public static void LoadCurrentLanguage()
 		{
-			var selectedLangId = GlobalData.GeneralSettings.LanguageId;
+			_wpfLocalizationService = new WpfLocalizationService(
+				Runtime.ServicesContainer.DataFilesService);
 
-			if (string.IsNullOrWhiteSpace(selectedLangId))
-			{
-				try
-				{
-					if (GlobalData.GeneralSettings.LanguageId.Length == 0)
-					{
-						var currentCultureName = Thread.CurrentThread.CurrentCulture.ToString();
-						//switch () тут код для стран cis
-						CurrentLangDict.Source = new Uri(LangPath + currentCultureName + ".xaml");
-						GlobalData.GeneralSettings.LanguageId = currentCultureName;
-						Runtime.ServicesContainer.DataFilesService.SaveSettings(GlobalData.GeneralSettings);
-					}
-					else
-					{
-						CurrentLangDict.Source = new Uri(LangPath + GlobalData.GeneralSettings.LanguageId + ".xaml");
-					}
-				}
-				catch
-				{
-					CurrentLangDict.Source = new Uri(LangPath + "ru-RU.xaml");
-					GlobalData.GeneralSettings.LanguageId = "ru-RU";
-					Runtime.ServicesContainer.DataFilesService.SaveSettings(GlobalData.GeneralSettings);
-				}
-			}
-			else
-			{
-
-			}
-
-			App.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
-			{
-				Source = new Uri("pack://application:,,,/Assets/langs/" + selectedLangId + ".xaml")
-			});
+			Runtime.ServicesContainer.SetLocalizationService(_wpfLocalizationService);
 		}
 
 		private static void ResourcesDictionariesRegister()
