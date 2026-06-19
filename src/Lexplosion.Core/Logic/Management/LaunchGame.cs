@@ -5,6 +5,7 @@ using System;
 using System.Threading;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
+using Lexplosion.Core.Tools;
 using Lexplosion.Global;
 using Lexplosion.Tools;
 using Lexplosion.Logic.Objects;
@@ -31,6 +32,7 @@ namespace Lexplosion.Logic.Management
 		private readonly WithDirectory _withDirectory;
 		private readonly DataFilesManager _dataFilesManager;
 		private string _javaPath = string.Empty;
+		private string _javaVersionName;
 		private bool _processIsWork;
 
 		private static LaunchGame _classInstance = null;
@@ -372,7 +374,21 @@ namespace Lexplosion.Logic.Management
 					builder.AddJvmArgs("-Djavax.net.ssl.trustStore=\"" + _keyStorePath + "\"");
 				}
 
-				builder.AddJvmArgs(_settings.JVMArgs);
+				string userJvmArgs = JvmArgsParser.StripHeapFlags(_settings.JVMArgs ?? "");
+				var gcFlags = JvmArgsParser.DetectGcFlags(userJvmArgs);
+				if (gcFlags.Count > 0)
+				{
+					int javaMajorVer = JvmArgsParser.ParseJavaMajorVersion(_javaVersionName);
+					foreach (string flag in gcFlags)
+					{
+						if (!JvmArgsParser.IsGcFlagCompatible(flag, javaMajorVer))
+						{
+							Runtime.DebugWrite($"JVM arg warning: removing incompatible GC flag '{flag}' (requires Java {(javaMajorVer < 0 ? "?" : javaMajorVer.ToString())}, current: {_javaVersionName ?? "unknown"})");
+							userJvmArgs = userJvmArgs.Replace(flag, "").Trim();
+						}
+					}
+				}
+				builder.AddJvmArgs(userJvmArgs);
 				builder.AddJvmArgs(@"-Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true -XX:TargetSurvivorRatio=90");
 				builder.AddJvmArgs("-Dhttp.agent=\"Mozilla/5.0\"");
 				builder.AddJvmArgs("-Djava.net.preferIPv4Stack=true");
@@ -407,7 +423,21 @@ namespace Lexplosion.Logic.Management
 			else
 			{
 				builder.AddJvmArgs($"-Djava.library.path=\"{gamePath}natives/{(data.VersionFile.CustomVersionName ?? data.VersionFile.GameVersion)}\" -cp {libs}");
-				builder.AddJvmArgs(_settings.JVMArgs);
+			string userJvmArgs = JvmArgsParser.StripHeapFlags(_settings.JVMArgs ?? "");
+			var gcFlags = JvmArgsParser.DetectGcFlags(userJvmArgs);
+			if (gcFlags.Count > 0)
+			{
+				int javaMajorVer = JvmArgsParser.ParseJavaMajorVersion(_javaVersionName);
+				foreach (string flag in gcFlags)
+				{
+					if (!JvmArgsParser.IsGcFlagCompatible(flag, javaMajorVer))
+					{
+							Runtime.DebugWrite($"JVM arg warning: removing incompatible GC flag '{flag}' (requires Java {(javaMajorVer < 0 ? "?" : javaMajorVer.ToString())}, current: {_javaVersionName ?? "unknown"})");
+							userJvmArgs = userJvmArgs.Replace(flag, "").Trim();
+					}
+				}
+			}
+			builder.AddJvmArgs(userJvmArgs);
 
 				if (_keyStorePath != null)
 				{
@@ -736,6 +766,7 @@ namespace Lexplosion.Logic.Management
 					// Если не использовать _customJavaPath, то для новых версий мы можем выбрать Java17Path, даже если в настройках
 					// сборки прописана конретная версия джавы, а это нам не надо.
 					_javaPath = _customJavaPath;
+					_javaVersionName = javaVersionName;
 					javaIsNotDefined = false;
 				}
 				else
@@ -744,6 +775,7 @@ namespace Lexplosion.Logic.Management
 					if (!string.IsNullOrWhiteSpace(javaPath))
 					{
 						_javaPath = javaPath;
+						_javaVersionName = javaVersionName;
 						javaIsNotDefined = false;
 					}
 				}
@@ -807,6 +839,7 @@ namespace Lexplosion.Logic.Management
 					if (checkResult == JavaChecker.CheckResult.Successful)
 					{
 						_javaPath = _withDirectory.DirectoryPath + "/java/versions/" + javaVersion.JavaName + javaVersion.ExecutableFile;
+						_javaVersionName = javaVersion.JavaName;
 						Runtime.DebugWrite("JavaPath " + _javaPath);
 					}
 					else
@@ -857,6 +890,7 @@ namespace Lexplosion.Logic.Management
 							if (!string.IsNullOrWhiteSpace(_customJavaPath))
 							{
 								_javaPath = _customJavaPath;
+								_javaVersionName = files.version.JavaVersionName;
 								javaIsNotDefined = false;
 							}
 							else
@@ -865,6 +899,7 @@ namespace Lexplosion.Logic.Management
 								if (!string.IsNullOrWhiteSpace(javaPath))
 								{
 									_javaPath = javaPath;
+									_javaVersionName = files.version.JavaVersionName;
 									javaIsNotDefined = false;
 								}
 							}
@@ -884,6 +919,7 @@ namespace Lexplosion.Logic.Management
 								}
 
 								_javaPath = _withDirectory.DirectoryPath + "/java/versions/" + javaInfo.JavaName + javaInfo.ExecutableFile;
+								_javaVersionName = javaInfo.JavaName;
 							}
 						}
 
