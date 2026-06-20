@@ -119,6 +119,21 @@
     <!--  JVM Arguments  -->
     <s:String x:Key="JVMArguments">Аргументи JVM</s:String>
     <s:String x:Key="JVMArgumentsDescription">Аргументи віртуальної машини Java.</s:String>
+    <!--  JVM Arguments Editor  -->
+    <s:String x:Key="JVMArgsEditor">Редактор аргументів JVM</s:String>
+    <s:String x:Key="JVMArgsEditorSearchPlaceholder">Пошук аргументів...</s:String>
+    <s:String x:Key="JVMArgsEditorKeyColumn">Ключ</s:String>
+    <s:String x:Key="JVMArgsEditorValueColumn">Значення</s:String>
+    <s:String x:Key="JVMArgsEditorTypeColumn">Тип</s:String>
+    <s:String x:Key="JVMArgsEditorBulkPaste">Масова вставка</s:String>
+    <s:String x:Key="JVMArgsEditorPasteAndMerge">Вставити та об'єднати</s:String>
+    <s:String x:Key="JVMArgsEditorSave">Зберегти</s:String>
+    <s:String x:Key="JVMArgsEditorCancel">Скасувати</s:String>
+    <s:String x:Key="JVMArgsEditorAdd">Додати</s:String>
+    <s:String x:Key="JVMArgsEditorRemove">Видалити</s:String>
+    <s:String x:Key="JVMArgsEditorEmpty">JVM аргументи відсутні</s:String>
+    <s:String x:Key="JVMArgsEditorNoInput">Немає даних для вставки.</s:String>
+    <s:String x:Key="JVMArgsEditorMergeSuccess">Успішно об'єднано. Всього: {0} записів.</s:String>
 
     <!--  Launcher Properties  -->
     <!--  Console  -->

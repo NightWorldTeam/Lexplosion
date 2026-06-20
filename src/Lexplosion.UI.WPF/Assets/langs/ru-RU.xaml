@@ -126,6 +126,21 @@
     <!--  JVM Arguments  -->
     <s:String x:Key="JVMArguments">Аргуметны JVM</s:String>
     <s:String x:Key="JVMArgumentsDescription">Аргументы виртуальной Java машины</s:String>
+    <!--  JVM Arguments Editor  -->
+    <s:String x:Key="JVMArgsEditor">Редактор аргументов JVM</s:String>
+    <s:String x:Key="JVMArgsEditorSearchPlaceholder">Поиск аргументов...</s:String>
+    <s:String x:Key="JVMArgsEditorKeyColumn">Ключ</s:String>
+    <s:String x:Key="JVMArgsEditorValueColumn">Значение</s:String>
+    <s:String x:Key="JVMArgsEditorTypeColumn">Тип</s:String>
+    <s:String x:Key="JVMArgsEditorBulkPaste">Массовая вставка</s:String>
+    <s:String x:Key="JVMArgsEditorPasteAndMerge">Вставить и объединить</s:String>
+    <s:String x:Key="JVMArgsEditorSave">Сохранить</s:String>
+    <s:String x:Key="JVMArgsEditorCancel">Отмена</s:String>
+    <s:String x:Key="JVMArgsEditorAdd">Добавить</s:String>
+    <s:String x:Key="JVMArgsEditorRemove">Удалить</s:String>
+    <s:String x:Key="JVMArgsEditorEmpty">JVM аргументы отсутствуют</s:String>
+    <s:String x:Key="JVMArgsEditorNoInput">Нет данных для вставки.</s:String>
+    <s:String x:Key="JVMArgsEditorMergeSuccess">Успешно объединено. Всего: {0} записей.</s:String>
 
     <!--  Network Properties  -->
     <s:String x:Key="NetworkProperties">Параметры сети</s:String>

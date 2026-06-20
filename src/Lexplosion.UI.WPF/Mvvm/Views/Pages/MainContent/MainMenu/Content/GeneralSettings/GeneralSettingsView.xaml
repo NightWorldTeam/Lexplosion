@@ -635,13 +635,16 @@
                             </StackPanel>
 
                             <!--  Content  -->
-                            <controls:AdvancedTextBox
-                                Grid.Column="1"
-                                Width="300"
-                                Height="32"
-                                Margin="16,0,0,0"
-                                HorizontalAlignment="Right"
-                                Text="{Binding Model.JVMArgs}" />
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                                <controls:AdvancedTextBox
+                                    Width="270"
+                                    Height="32"
+                                    Margin="16,0,0,0"
+                                    Cursor="Hand"
+                                    IsReadOnly="True"
+                                    PreviewMouseDown="JvmArgsTextBox_PreviewMouseDown"
+                                    Text="{Binding Model.JVMArgs}" />
+                            </StackPanel>
                         </Grid>
                     </Border>
                 </StackPanel>

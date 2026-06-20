@@ -3,6 +3,7 @@ using Lexplosion.UI.WPF.Commands;
 using Lexplosion.UI.WPF.Core;
 using Lexplosion.UI.WPF.Core.ViewModel;
 using Lexplosion.UI.WPF.Mvvm.Models.MainContent.Content.GeneralSettings;
+using Lexplosion.UI.WPF.Mvvm.ViewModels.Modal;
 using System.IO;
 using System.Windows.Input;
 using static Lexplosion.Core.Tools.JavaHelper;
@@ -61,6 +62,18 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
             {
                 Model.ResetJava17Path();
             }));
+        }
+
+        private RelayCommand _openJvmArgsEditorCommand;
+        public ICommand OpenJvmArgsEditorCommand
+        {
+            get => RelayCommand.GetCommand(ref _openJvmArgsEditorCommand, obj =>
+            {
+                var editorVm = new JvmArgsEditorViewModel(
+                    Model.JVMArgs,
+                    result => Model.JVMArgs = result);
+                _appCore.ModalNavigationStore.Open(editorVm);
+            });
         }
 
 

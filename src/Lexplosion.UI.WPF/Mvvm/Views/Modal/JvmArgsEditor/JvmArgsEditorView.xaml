@@ -1,0 +1,347 @@
+<UserControl
+    x:Class="Lexplosion.UI.WPF.Mvvm.Views.Modal.JvmArgsEditorView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Lexplosion.UI.WPF.Controls"
+    xmlns:converters="clr-namespace:Lexplosion.UI.WPF.Core.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="clr-namespace:Lexplosion.UI.WPF.Extensions"
+    xmlns:local="clr-namespace:Lexplosion.UI.WPF.Mvvm.Views.Modal"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:modal="clr-namespace:Lexplosion.UI.WPF.Mvvm.ViewModels.Modal"
+    xmlns:models="clr-namespace:Lexplosion.UI.WPF.Mvvm.Models.Modal"
+    d:DataContext="{d:DesignInstance Type=modal:JvmArgsEditorViewModel}"
+    d:DesignHeight="600"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <converters:EmptyValueToDashConverter x:Key="EmptyValueToDash" />
+        <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibility" />
+
+        <Style TargetType="{x:Type TextBox}" x:Key="DataGridEditingStyle">
+            <Setter Property="Background" Value="{DynamicResource SecondarySolidColorBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+            <Setter Property="CaretBrush" Value="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource LightSeparateSolidColorBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="4" />
+            <Setter Property="FontSize" Value="14" />
+        </Style>
+
+        <Style TargetType="{x:Type DataGridRow}" x:Key="DataGridRowStyle">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource LightSeparateSolidColorBrush}" />
+            <Setter Property="BorderThickness" Value="0,0,0,1" />
+            <Setter Property="MinHeight" Value="30" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Validation.ErrorTemplate" Value="{x:Null}" />
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="BorderBrush" Value="{DynamicResource ActivitySolidColorBrush}" />
+                    <Setter Property="BorderThickness" Value="3,0,0,0" />
+                    <Setter Property="Foreground" Value="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Opacity" Value="0.85" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="{x:Type DataGridCell}" x:Key="DataGridCellStyle">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Padding" Value="8,0" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type DataGridCell}">
+                        <Border
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            SnapsToDevicePixels="True">
+                            <ContentPresenter
+                                Margin="{TemplateBinding Padding}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="Transparent" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="{x:Type DataGridColumnHeader}" x:Key="DataGridColumnHeaderStyle">
+            <Setter Property="Background" Value="{DynamicResource SecondarySolidColorBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource LightSeparateSolidColorBrush}" />
+            <Setter Property="BorderThickness" Value="0,0,1,2" />
+            <Setter Property="Height" Value="32" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="Padding" Value="8,0" />
+            <Setter Property="FontWeight" Value="Medium" />
+            <Setter Property="FontSize" Value="13" />
+        </Style>
+
+        <Style TargetType="{x:Type DataGrid}">
+            <Setter Property="Background" Value="{DynamicResource PrimarySolidColorBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource LightSeparateSolidColorBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="GridLinesVisibility" Value="None" />
+            <Setter Property="HeadersVisibility" Value="Column" />
+            <Setter Property="RowDetailsVisibilityMode" Value="Visible" />
+            <Setter Property="ScrollViewer.CanContentScroll" Value="True" />
+            <Setter Property="AutoGenerateColumns" Value="False" />
+            <Setter Property="CanUserAddRows" Value="False" />
+            <Setter Property="CanUserDeleteRows" Value="False" />
+            <Setter Property="CanUserReorderColumns" Value="False" />
+            <Setter Property="CanUserResizeColumns" Value="True" />
+            <Setter Property="CanUserSortColumns" Value="False" />
+            <Setter Property="SelectionUnit" Value="FullRow" />
+            <Setter Property="SelectionMode" Value="Single" />
+            <Setter Property="HorizontalScrollBarVisibility" Value="Auto" />
+            <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
+            <Setter Property="RowStyle" Value="{StaticResource DataGridRowStyle}" />
+            <Setter Property="CellStyle" Value="{StaticResource DataGridCellStyle}" />
+            <Setter Property="ColumnHeaderStyle" Value="{StaticResource DataGridColumnHeaderStyle}" />
+        </Style>
+
+
+    </UserControl.Resources>
+
+    <Border
+        Width="650"
+        MaxHeight="560"
+        Padding="24,0,24,16"
+        Background="{DynamicResource PrimarySolidColorBrush}"
+        CornerRadius="10">
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!--  Header  -->
+            <Border Margin="-24,16,-24,0" VerticalAlignment="Top">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock
+                        Margin="24,0,0,0"
+                        VerticalAlignment="Top"
+                        extensions:TextBlockExtensions.TextByKey="JVMArgsEditor"
+                        FontSize="18"
+                        FontWeight="Medium"
+                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+
+                    <controls:AdvancedButton
+                        Grid.Column="1"
+                        Margin="0,0,24,0"
+                        Padding="8"
+                        HorizontalAlignment="Right"
+                        Panel.ZIndex="10000"
+                        Command="{Binding CloseCommand}"
+                        IconData="{DynamicResource PDClose}"
+                        IsCancel="True"
+                        Style="{StaticResource TransparentAdvancedButton}" />
+                </Grid>
+            </Border>
+
+            <!--  Toolbar: SearchBox + Clear All + Add  -->
+            <Grid Grid.Row="1" Margin="0,16,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <controls:SearchBox
+                    Grid.Column="0"
+                    Placeholder="{DynamicResource JVMArgsEditorSearchPlaceholder}"
+                    Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
+
+                <controls:AdvancedButton
+                    Grid.Column="1"
+                    Width="32"
+                    Height="32"
+                    Margin="8,0,0,0"
+                    VerticalAlignment="Center"
+                    Command="{Binding ClearAllCommand}"
+                    IconData="{DynamicResource PDCloseAll}"
+                    Style="{StaticResource TransparentAdvancedButton}" />
+
+                <controls:AdvancedButton
+                    Grid.Column="2"
+                    Height="30"
+                    Margin="8,0,0,0"
+                    Padding="12,0"
+                    VerticalAlignment="Center"
+                    Command="{Binding AddEntryCommand}"
+                    Content="{DynamicResource JVMArgsEditorAdd}"
+                    FontWeight="Medium"
+                    Style="{StaticResource DefaultAdvancedButton}" />
+            </Grid>
+
+            <!--  Table  -->
+            <Grid Grid.Row="2" Margin="0,8,0,0">
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    extensions:TextBlockExtensions.TextByKey="JVMArgsEditorEmpty"
+                    FontSize="14"
+                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                    Visibility="{Binding HasNoEntries, Converter={StaticResource BooleanToVisibility}}" />
+
+                <DataGrid
+                    x:Name="ArgsDataGrid"
+                    ItemsSource="{Binding FilteredEntries}"
+                    Visibility="{Binding HasEntries, Converter={StaticResource BooleanToVisibility}}">
+
+                    <DataGrid.Columns>
+                        <DataGridTextColumn
+                            Width="2*"
+                            Header="{DynamicResource JVMArgsEditorKeyColumn}"
+                            Binding="{Binding Key, UpdateSourceTrigger=PropertyChanged}"
+                            EditingElementStyle="{StaticResource DataGridEditingStyle}" />
+                        <DataGridTextColumn
+                            Width="*"
+                            Header="{DynamicResource JVMArgsEditorValueColumn}"
+                            Binding="{Binding Value, Converter={StaticResource EmptyValueToDash}, UpdateSourceTrigger=PropertyChanged}"
+                            EditingElementStyle="{StaticResource DataGridEditingStyle}" />
+                        <DataGridTemplateColumn
+                            Width="40"
+                            Header="">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <controls:AdvancedButton
+                                        Width="28"
+                                        Height="28"
+                                        Padding="4"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Command="{Binding DataContext.RemoveEntryCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                        CommandParameter="{Binding}"
+                                        IconData="{DynamicResource PDDelete}"
+                                        Style="{StaticResource TransparentAdvancedButton}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+
+            <!--  Separator  -->
+            <Border
+                Grid.Row="3"
+                Height="1"
+                Margin="0,12,0,0"
+                Background="{DynamicResource LightSeparateSolidColorBrush}" />
+
+            <!--  Bulk Paste  -->
+            <Border Grid.Row="4" Padding="0,12,0,0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock
+                        Grid.Row="0"
+                        extensions:TextBlockExtensions.TextByKey="JVMArgsEditorBulkPaste"
+                        FontSize="14"
+                        FontWeight="Medium"
+                        Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+
+                    <TextBox
+                        Grid.Row="1"
+                        Height="60"
+                        Margin="0,4,0,0"
+                        Padding="8"
+                        AcceptsReturn="True"
+                        Background="{DynamicResource SecondarySolidColorBrush}"
+                        BorderBrush="{DynamicResource LightSeparateSolidColorBrush}"
+                        BorderThickness="1"
+                        CaretBrush="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                        Text="{Binding BulkPasteText, UpdateSourceTrigger=PropertyChanged}"
+                        TextWrapping="Wrap"
+                        VerticalScrollBarVisibility="Auto" />
+                </Grid>
+            </Border>
+
+            <!--  Paste & Merge button  -->
+            <Border Grid.Row="5" Padding="0,8,0,0">
+                <StackPanel Orientation="Horizontal">
+                    <controls:AdvancedButton
+                        Height="30"
+                        Padding="12,0"
+                        Command="{Binding BulkPasteCommand}"
+                        Content="{DynamicResource JVMArgsEditorPasteAndMerge}"
+                        FontWeight="Medium"
+                        Style="{StaticResource DefaultAdvancedButton}" />
+
+                    <TextBlock
+                        Margin="12,0,0,0"
+                        VerticalAlignment="Center"
+                        FontSize="12"
+                        Foreground="{DynamicResource ActivitySolidColorBrush}"
+                        Text="{Binding StatusMessage}"
+                        Visibility="Visible" />
+                </StackPanel>
+            </Border>
+
+            <!--  Separator  -->
+            <Border
+                Grid.Row="6"
+                Height="1"
+                Margin="-24,12,-24,0"
+                Background="{DynamicResource LightSeparateSolidColorBrush}" />
+
+            <!--  Footer (Cancel / Save)  -->
+            <Border
+                Grid.Row="7"
+                Margin="-24,0,-24,-16"
+                Padding="24,12,24,16"
+                VerticalAlignment="Bottom"
+                BorderBrush="{DynamicResource LightSeparateSolidColorBrush}"
+                BorderThickness="0,1,0,0">
+                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                    <controls:AdvancedButton
+                        Height="32"
+                        Padding="16,0"
+                        Command="{Binding CloseCommand}"
+                        Content="{DynamicResource JVMArgsEditorCancel}"
+                        FontWeight="Medium"
+                        Style="{StaticResource DefaultAdvancedButton}" />
+                    <controls:AdvancedButton
+                        Height="32"
+                        Margin="8,0,0,0"
+                        Padding="16,0"
+                        Command="{Binding ActionCommand}"
+                        Content="{DynamicResource JVMArgsEditorSave}"
+                        FontWeight="Medium"
+                        Style="{StaticResource DefaultAdvancedButton}" />
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Border>
+</UserControl>
