@@ -423,21 +423,21 @@ namespace Lexplosion.Logic.Management
 			else
 			{
 				builder.AddJvmArgs($"-Djava.library.path=\"{gamePath}natives/{(data.VersionFile.CustomVersionName ?? data.VersionFile.GameVersion)}\" -cp {libs}");
-			string userJvmArgs = JvmArgsParser.StripHeapFlags(_settings.JVMArgs ?? "");
-			var gcFlags = JvmArgsParser.DetectGcFlags(userJvmArgs);
-			if (gcFlags.Count > 0)
-			{
-				int javaMajorVer = JvmArgsParser.ParseJavaMajorVersion(_javaVersionName);
-				foreach (string flag in gcFlags)
+				string userJvmArgs = JvmArgsParser.StripHeapFlags(_settings.JVMArgs ?? "");
+				var gcFlags = JvmArgsParser.DetectGcFlags(userJvmArgs);
+				if (gcFlags.Count > 0)
 				{
-					if (!JvmArgsParser.IsGcFlagCompatible(flag, javaMajorVer))
+					int javaMajorVer = JvmArgsParser.ParseJavaMajorVersion(_javaVersionName);
+					foreach (string flag in gcFlags)
 					{
+						if (!JvmArgsParser.IsGcFlagCompatible(flag, javaMajorVer))
+						{
 							Runtime.DebugWrite($"JVM arg warning: removing incompatible GC flag '{flag}' (requires Java {(javaMajorVer < 0 ? "?" : javaMajorVer.ToString())}, current: {_javaVersionName ?? "unknown"})");
 							userJvmArgs = userJvmArgs.Replace(flag, "").Trim();
+						}
 					}
 				}
-			}
-			builder.AddJvmArgs(userJvmArgs);
+				builder.AddJvmArgs(userJvmArgs);
 
 				if (_keyStorePath != null)
 				{
