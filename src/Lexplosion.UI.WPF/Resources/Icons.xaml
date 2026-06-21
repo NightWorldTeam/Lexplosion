@@ -377,4 +377,10 @@
     <sys:String x:Key="PDNewspaper">
         M160-120q-33 0-56.5-23.5T80-200v-640l67 67 66-67 67 67 67-67 66 67 67-67 67 67 66-67 67 67 67-67 66 67 67-67v640q0 33-23.5 56.5T800-120H160Zm0-80h280v-240H160v240Zm360 0h280v-80H520v80Zm0-160h280v-80H520v80ZM160-520h640v-120H160v120Z
     </sys:String>
+    <sys:String x:Key="PDOpenInFull">
+        M120-120v-320h80v184l504-504H520v-80h320v320h-80v-184L256-200h184v80H120Z
+    </sys:String>
+    <sys:String x:Key="PDCloseFullscreen">
+        m136-80-56-56 264-264H160v-80h320v320h-80v-184L136-80Zm344-400v-320h80v184l264-264 56 56-264 264h184v80H480Z
+    </sys:String>
 </ResourceDictionary>

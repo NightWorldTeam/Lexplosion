@@ -31,6 +31,17 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels
     {
         public LatestNewsModel Model { get; }
 
+        private bool _isFullScreen;
+        public bool IsFullScreen
+        {
+            get => _isFullScreen;
+            set
+            {
+                _isFullScreen = value;
+                OnPropertyChanged();
+            }
+        }
+
         private RelayCommand _closeCommand;
         public ICommand CloseCommand 
         {
@@ -38,6 +49,15 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels
             {
                 Model.MarkAsViewed();
             }); 
+        }
+
+        private RelayCommand _toggleFullScreenCommand;
+        public ICommand ToggleFullScreenCommand
+        {
+            get => RelayCommand.GetCommand(ref _toggleFullScreenCommand, () =>
+            {
+                IsFullScreen = !IsFullScreen;
+            });
         }
 
         public LatestNewsViewModel()
