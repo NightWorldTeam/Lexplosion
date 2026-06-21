@@ -15,6 +15,17 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.NewsHub
     {
         public ObservableCollection<NewsPreviewModel> Items { get; } = [];
 
+        private bool _isLoading = true;
+        public bool IsLoading
+        {
+            get => _isLoading;
+            set
+            {
+                _isLoading = value;
+                OnPropertyChanged();
+            }
+        }
+
         public NewsHubModel(AppCore appCore)
         {
             var openNewsViewerCommand = new RelayCommand((parameter) =>
@@ -37,6 +48,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.NewsHub
                     {
                         Items.Add(item);
                     }
+                    IsLoading = false;
                 });
             });
         }
