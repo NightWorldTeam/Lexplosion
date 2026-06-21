@@ -98,9 +98,9 @@
                 </Grid>
 
                 <!--  Content  -->
-                <ScrollViewer Grid.Row="1" Margin="0,0,0,8">
+                <ScrollViewer Grid.Row="1" Margin="0,0,-12,8">
                     <md:MarkdownViewer
-                        Margin="0,0,0,16"
+                        Margin="0,0,0,0"
                         IsScrollViewerEnabled="False"
                         Markdown="{Binding Model.LatestUnseenNews.Content, UpdateSourceTrigger=PropertyChanged}"
                         StyleResourceMode="Dynamic" />
