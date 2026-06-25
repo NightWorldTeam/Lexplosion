@@ -138,12 +138,14 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.InstanceProfile.Settings
                     InstanceSettings.JavaPath = value;
                     _instanceSettingsCopy.JavaPath = value;
                     InstanceSettings.IsCustomJava = true;
+                    _instanceSettingsCopy.IsCustomJava = true;
                 }
                 else if (javaPathResult == JavaHelper.JavaPathCheckResult.EmptyOrNull)
                 {
                     InstanceSettings.JavaPath = value;
                     _instanceSettingsCopy.JavaPath = value;
                     InstanceSettings.IsCustomJava = false;
+                    _instanceSettingsCopy.IsCustomJava = false;
                 }
 
                 Notify?.Invoke(javaPathResult);
