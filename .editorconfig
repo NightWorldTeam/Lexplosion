@@ -1,4 +1,8 @@
-﻿[*.cs]
+﻿[*]
+indent_style = tab
+tab_width = 4
+
+[*.cs]
 
 # IDE0058: Значение выражения никогда не используется
 csharp_style_unused_value_expression_statement_preference = discard_variable
@@ -8,3 +12,4 @@ dotnet_diagnostic.IDE0058.severity = none
 
 # Default severity for analyzer diagnostics with category 'Style'
 dotnet_analyzer_diagnostic.category-Style.severity = none
+
