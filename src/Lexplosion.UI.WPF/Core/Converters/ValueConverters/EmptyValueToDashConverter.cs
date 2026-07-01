@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace Lexplosion.UI.WPF.Core.Converters
 {
-    public class EmptyValueToDashConverter : ConverterBase<EmptyValueToDashConverter>
+    public sealed class EmptyValueToDashConverter : ConverterBase<EmptyValueToDashConverter>
     {
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

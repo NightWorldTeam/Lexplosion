@@ -2,6 +2,7 @@ using Lexplosion.UI.WPF.Commands;
 using Lexplosion.UI.WPF.Core.Modal;
 using Lexplosion.UI.WPF.Mvvm.Models.Modal;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
@@ -10,9 +11,9 @@ using System.Windows.Input;
 
 namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Modal
 {
-    public class JvmArgsEditorViewModel : ActionModalViewModelBase
+    public sealed class JvmArgsEditorViewModel : ActionModalViewModelBase
     {
-        private readonly JvmArgsEditorModel _model;
+        public JvmArgsEditorModel Model { get; }
         private readonly Action<string> _onSave;
 
         public event Action<JvmArgEntry> FocusNewEntryRequested;
@@ -55,8 +56,14 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Modal
         public string StatusMessage
         {
             get => _statusMessage;
-            set => RaiseAndSetIfChanged(ref _statusMessage, value);
+            set
+            {
+                if (RaiseAndSetIfChanged(ref _statusMessage, value))
+                    OnPropertyChanged(nameof(HasStatusMessage));
+            }
         }
+
+        public bool HasStatusMessage => !string.IsNullOrEmpty(StatusMessage);
 
         #region Commands
 
@@ -65,7 +72,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Modal
         {
             get => RelayCommand.GetCommand(ref _addEntryCommand, obj =>
             {
-                var entry = new JvmArgEntry("-Dnew", "");
+                var entry = new JvmArgEntry("-Dnew", string.Empty);
                 Entries.Insert(0, entry);
                 FilteredEntries.Refresh();
                 UpdateHasEntries();
@@ -101,28 +108,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Modal
         private RelayCommand _bulkPasteCommand;
         public ICommand BulkPasteCommand
         {
-            get => RelayCommand.GetCommand(ref _bulkPasteCommand, obj =>
-            {
-                if (string.IsNullOrWhiteSpace(BulkPasteText))
-                {
-                    StatusMessage = App.Current.Resources["JVMArgsEditorNoInput"] as string ?? "No input to paste.";
-                    return;
-                }
-
-                var newEntries = _model.MergeAndDeduplicate(
-                    new System.Collections.Generic.List<JvmArgEntry>(Entries),
-                    BulkPasteText);
-
-                Entries.Clear();
-                foreach (var entry in newEntries)
-                    Entries.Add(entry);
-
-                FilteredEntries.Refresh();
-                UpdateHasEntries();
-                BulkPasteText = "";
-                var format = App.Current.Resources["JVMArgsEditorMergeSuccess"] as string ?? "Merged successfully. Total: {0} entries.";
-                StatusMessage = string.Format(format, Entries.Count);
-            });
+            get => RelayCommand.GetCommand(ref _bulkPasteCommand, obj => ExecuteBulkPaste());
         }
 
         private RelayCommand _clearStatusCommand;
@@ -130,7 +116,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Modal
         {
             get => RelayCommand.GetCommand(ref _clearStatusCommand, obj =>
             {
-                StatusMessage = "";
+                StatusMessage = string.Empty;
             });
         }
 
@@ -138,10 +124,10 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Modal
 
         public JvmArgsEditorViewModel(string initialArgs, Action<string> onSave)
         {
-            _model = new JvmArgsEditorModel();
+            Model = new JvmArgsEditorModel();
             _onSave = onSave;
 
-            var parsed = _model.Parse(initialArgs);
+            var parsed = Model.Parse(initialArgs);
             Entries = new ObservableCollection<JvmArgEntry>(parsed);
 
             FilteredEntries = CollectionViewSource.GetDefaultView(Entries);
@@ -158,10 +144,33 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.Modal
             OnPropertyChanged(nameof(HasNoEntries));
         }
 
+        private void ExecuteBulkPaste()
+        {
+            if (string.IsNullOrWhiteSpace(BulkPasteText))
+            {
+                StatusMessage = App.Current.Resources["JVMArgsEditorNoInput"] as string ?? "No input to paste.";
+                return;
+            }
+
+            var newEntries = Model.MergeAndDeduplicate(
+                new List<JvmArgEntry>(Entries),
+                BulkPasteText);
+
+            Entries.Clear();
+            foreach (var entry in newEntries)
+                Entries.Add(entry);
+
+            FilteredEntries.Refresh();
+            UpdateHasEntries();
+            BulkPasteText = string.Empty;
+            var format = App.Current.Resources["JVMArgsEditorMergeSuccess"] as string ?? "Merged successfully. Total: {0} entries.";
+            StatusMessage = string.Format(format, Entries.Count);
+        }
+
         private void OnSave(object obj)
         {
-            var entries = new System.Collections.Generic.List<JvmArgEntry>(Entries);
-            var result = _model.Rebuild(entries);
+            var entries = new List<JvmArgEntry>(Entries);
+            var result = Model.Rebuild(entries);
             _onSave?.Invoke(result);
         }
 

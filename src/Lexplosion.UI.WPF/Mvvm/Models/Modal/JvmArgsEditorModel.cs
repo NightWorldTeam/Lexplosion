@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Lexplosion.UI.WPF.Mvvm.Models.Modal
 {
-    public class JvmArgEntry : ObservableObject
+    public sealed class JvmArgEntry : ObservableObject
     {
         private string _key;
         public string Key
@@ -40,8 +40,20 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.Modal
         }
     }
 
-    public class JvmArgsEditorModel
+    public sealed class JvmArgsEditorModel
     {
+        private static readonly Regex SplitArgsRegex = new(
+            @"[\""'].+?[\""']|[^\s]+", RegexOptions.Compiled);
+
+        private static readonly Regex XFlagRegex = new(
+            @"^(-X\w+?)(\d+[gGmMkKbB]?)$", RegexOptions.Compiled);
+
+        private static readonly Regex XEqRegex = new(
+            @"^(-X\w+)=(.+)$", RegexOptions.Compiled);
+
+        private static readonly Regex GenericEqRegex = new(
+            @"^(-[\w:]+)=(.+)$", RegexOptions.Compiled);
+
         public List<JvmArgEntry> Parse(string args)
         {
             if (string.IsNullOrWhiteSpace(args))
@@ -63,8 +75,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.Modal
         private List<string> SplitArgs(string args)
         {
             var result = new List<string>();
-            var regex = new Regex(@"[\""'].+?[\""']|[^\s]+");
-            var matches = regex.Matches(args);
+            var matches = SplitArgsRegex.Matches(args);
 
             foreach (Match match in matches)
                 result.Add(match.Value);
@@ -105,18 +116,18 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.Modal
 
             if (token.StartsWith("-X"))
             {
-                var match = Regex.Match(token, @"^(-X\w+?)(\d+[gGmMkKbB]?)$");
+                var match = XFlagRegex.Match(token);
                 if (match.Success)
                     return new JvmArgEntry(match.Groups[1].Value, match.Groups[2].Value);
 
-                var eqMatch = Regex.Match(token, @"^(-X\w+)=(.+)$");
+                var eqMatch = XEqRegex.Match(token);
                 if (eqMatch.Success)
                     return new JvmArgEntry(eqMatch.Groups[1].Value, eqMatch.Groups[2].Value);
             }
 
             if (token.StartsWith("-"))
             {
-                var eqMatch = Regex.Match(token, @"^(-[\w:]+)=(.+)$");
+                var eqMatch = GenericEqRegex.Match(token);
                 if (eqMatch.Success)
                     return new JvmArgEntry(eqMatch.Groups[1].Value, eqMatch.Groups[2].Value);
 
@@ -129,7 +140,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.Modal
         public string Rebuild(List<JvmArgEntry> entries)
         {
             if (entries == null || entries.Count == 0)
-                return "";
+                return string.Empty;
 
             var parts = entries.Select(e =>
             {
@@ -156,7 +167,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.Modal
                     dict[normalizedKey] = entry;
             }
 
-            var newEntries = Parse(string.Join(" ", SplitArgs(bulkText)));
+            var newEntries = Parse(bulkText);
 
             foreach (var entry in newEntries)
             {
@@ -170,7 +181,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.Modal
 
         private string NormalizeKey(string key)
         {
-            return key.Trim().ToLowerInvariant();
+            return key?.Trim().ToLowerInvariant() ?? string.Empty;
         }
     }
 }

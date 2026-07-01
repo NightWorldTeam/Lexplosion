@@ -635,19 +635,16 @@
                             </StackPanel>
 
                             <!--  Content  -->
-                            <StackPanel
+                            <controls:AdvancedTextBox
                                 Grid.Column="1"
+                                Width="270"
+                                Height="32"
+                                Margin="16,0,0,0"
                                 HorizontalAlignment="Right"
-                                Orientation="Horizontal">
-                                <controls:AdvancedTextBox
-                                    Width="270"
-                                    Height="32"
-                                    Margin="16,0,0,0"
-                                    Cursor="Hand"
-                                    IsReadOnly="True"
-                                    PreviewMouseDown="JvmArgsTextBox_PreviewMouseDown"
-                                    Text="{Binding Model.JVMArgs, UpdateSourceTrigger=PropertyChanged}" />
-                            </StackPanel>
+                                Cursor="Hand"
+                                IsReadOnly="True"
+                                PreviewMouseDown="JvmArgsTextBox_PreviewMouseDown"
+                                Text="{Binding Model.JVMArgs, UpdateSourceTrigger=PropertyChanged}" />
                         </Grid>
                     </Border>
                 </StackPanel>

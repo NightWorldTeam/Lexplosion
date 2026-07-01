@@ -1,7 +1,9 @@
 using Lexplosion.UI.WPF.Mvvm.Models.Modal;
 using Lexplosion.UI.WPF.Mvvm.ViewModels.Modal;
+using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 
 namespace Lexplosion.UI.WPF.Mvvm.Views.Modal
 {
@@ -23,14 +25,21 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Modal
 
         private void OnFocusNewEntryRequested(JvmArgEntry entry)
         {
-            ArgsDataGrid.ScrollIntoView(entry);
+            if (entry == null || ArgsDataGrid == null || ArgsDataGrid.Columns.Count == 0)
+                return;
+
             ArgsDataGrid.SelectedItem = entry;
+            ArgsDataGrid.ScrollIntoView(entry);
 
-            var column = ArgsDataGrid.Columns[0];
-            ArgsDataGrid.CurrentCell = new DataGridCellInfo(entry, column);
+            Dispatcher.BeginInvoke(DispatcherPriority.Background, () =>
+            {
+                if (ArgsDataGrid.Columns.Count == 0)
+                    return;
 
-            ArgsDataGrid.Focus();
-            ArgsDataGrid.BeginEdit();
+                ArgsDataGrid.CurrentCell = new DataGridCellInfo(entry, ArgsDataGrid.Columns[0]);
+                ArgsDataGrid.Focus();
+                ArgsDataGrid.BeginEdit();
+            });
         }
     }
 }
