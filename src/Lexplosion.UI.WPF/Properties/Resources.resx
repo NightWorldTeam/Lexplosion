@@ -124,14 +124,41 @@
   <data name="DiscordRPC" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Libraries\DiscordRPC.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="HtmlAgilityPack" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Libraries\HtmlAgilityPack.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="LexplosionCore" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Libraries\Lexplosion.Core.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="LumiSoftNet" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Libraries\LumiSoft.Net.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="Markdig" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Libraries\Markdig.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="MarkdownWPF" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Libraries\MarkdownWPF.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="MarkdownWPFHtml" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Libraries\MarkdownWPF.Html.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="NewtonsoftJson" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Libraries\NewtonsoftJson.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="SystemBuffers" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Libraries\System.Buffers.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="SystemLinqDynamicCore" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Libraries\System.Linq.Dynamic.Core.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="SystemMemory" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Libraries\System.Memory.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="SystemNumericsVectors" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Libraries\System.Numerics.Vectors.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="SystemRuntimeCompilerServicesUnsafe" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Libraries\System.Runtime.CompilerServices.Unsafe.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="TaskbarNotification" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Libraries\TaskbarNotification.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>

@@ -65,7 +65,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
             {
                 var instanceModel = mainModel.LibraryController.Get(ic);
                 var item = LeftPanel.SelectItem(1);
-                (item.Content as LibraryViewModel).IsScrollToEnd = true;
+                (item.Content as LibraryViewModel)!.IsScrollToEnd = true;
                 return instanceModel;
             });
             var multiplayerLayoutArgs = new MultiplayerLayoutArgs(OpenAccountFactory, selectInstanceForServerArgs);
@@ -81,10 +81,10 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
             var toFriendsCommand = new NavigateCommand<ViewModelBase>(appCore.NavigationStore, () => new ProfileLayoutViewModel(appCore, toMainMenuLayoutCommand, 1));
 
             
-            LeftPanel = new LeftPanelViewModel(appCore, toProfileCommand, toProfileSettingsCommand, toFriendsCommand);
+            LeftPanel = new LeftPanelViewModel(appCore, toMainMenuLayoutCommand, toProfileCommand, toProfileSettingsCommand, toFriendsCommand);
             LeftPanel.SelectedItemChanged += OnLeftPanelSelectedItemChanged;
 
-            ToInstanceProfile = (instanceModel) => (_libraryViewModel as LibraryViewModel).OpenInstanceProfileMenuCommand.Execute(instanceModel);
+            ToInstanceProfile = (instanceModel) => (_libraryViewModel as LibraryViewModel)!.OpenInstanceProfileMenuCommand.Execute(instanceModel);
 
             InitDefaultLeftPanelTabs();
         }

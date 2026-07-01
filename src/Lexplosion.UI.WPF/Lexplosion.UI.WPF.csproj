@@ -8,6 +8,9 @@
     <UseWindowsForms>true</UseWindowsForms>
     <StartupObject>Lexplosion.UI.WPF.RuntimeApp</StartupObject>
     <ApplicationIcon>Assets\images\icons\logo.ico</ApplicationIcon>
+    <AssemblyVersion>1.0.3.1</AssemblyVersion>
+    <FileVersion>1.0.3.1</FileVersion>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
@@ -48,6 +51,8 @@
   <ItemGroup>
     <PackageReference Include="DiscordRichPresence" />
     <PackageReference Include="Hardcodet.NotifyIcon.Wpf" />
+    <PackageReference Include="MarkdownWPF" />
+    <PackageReference Include="MarkdownWPF.Html" />
     <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="System.Linq.Dynamic.Core" />
     <PackageReference Include="VirtualizingWrapPanel" />
@@ -55,6 +60,21 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Lexplosion.Core\Lexplosion.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
   <Target Name="CopyCoreZip" BeforeTargets="PreBuildEvent">

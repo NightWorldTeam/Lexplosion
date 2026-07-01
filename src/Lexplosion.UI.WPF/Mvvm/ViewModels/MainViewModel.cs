@@ -150,8 +150,8 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels
                 new ModalInstanceCreatorFactory(appCore,
                     Model.StartImport,
                     Model.GetActiveImports,
-                    Model.LibraryController as LibraryController,
-                    Model.InstanceSharesController,
+                    (Model.LibraryController as LibraryController)!,
+                    Model.InstanceSharesController, 
                     _mainMenuLayoutViewModel.OpenAccountFactory));
 
             ToMainMenu = new NavigateCommand<ViewModelBase>(NavigationStore, () => _mainMenuLayoutViewModel);

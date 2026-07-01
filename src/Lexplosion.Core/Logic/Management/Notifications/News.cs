@@ -14,8 +14,6 @@ namespace Lexplosion.Logic.Management.Notifications
         private static object _fileLoacker = new object();
         private readonly DataFilesManager _dataFilesManager;
 
-        public string? BannerUrl { get; set; } = null;
-
         [JsonIgnore]
         public bool IsViewed { get; private set; }
 
@@ -43,6 +41,8 @@ namespace Lexplosion.Logic.Management.Notifications
             Summary = model.Summary;
             Content = model.Content;
             DateUnix = model.DateUnix;
+			BannerUrl = model.BannerUrl;
+			Author = model.Author;
         }
     }
 }

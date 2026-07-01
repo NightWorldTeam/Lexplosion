@@ -490,4 +490,10 @@
     <s:String x:Key="RestartLauncherButtonAction">
         是的，我想现在重启启动器
     </s:String>
+
+    <!--  Core Localization Keys  -->
+    <s:String x:Key="NoDescription">暂无描述，但我们希望它会出现。</s:String>
+    <s:String x:Key="UnknownName">未知名称</s:String>
+    <s:String x:Key="UnknownAuthor">未知作者</s:String>
+    <s:String x:Key="LaunchingGame">正在启动游戏...</s:String>
 </ResourceDictionary>

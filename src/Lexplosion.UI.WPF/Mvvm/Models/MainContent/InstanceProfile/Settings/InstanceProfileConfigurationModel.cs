@@ -223,10 +223,13 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.InstanceProfile.Settings
 
             _instanceData = instanceModelBase.BaseData;
             _oldInstanceData = instanceModelBase.BaseData;
+            _modloaderVersion = NormalizeVersion(_instanceData.ModloaderVersion);
+            _optifineVersion = NormalizeVersion(_instanceData.OptifineVersion);
+            _isNWClientEnabled = _instanceData.IsNwClient;
 
-            IsShowSnapshots = _instanceData.GameVersion.Type == MinecraftVersion.VersionType.Snapshot;
+            IsShowSnapshots = _instanceData.GameVersion?.Type == MinecraftVersion.VersionType.Snapshot;
 
-            Version = _instanceData.GameVersion ?? GameVersions[0];
+            Version = _instanceData.GameVersion ?? GameVersions?.FirstOrDefault();
 
             ModloaderManager = new ModloaderManager(GameExtension.Forge, Version);
 
@@ -238,7 +241,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.InstanceProfile.Settings
                 NWClientSupportedVersions = Runtime.ServicesContainer.MinecraftService.GetNwClientGameVersions();
                 OnPropertyChanged(nameof(NWClientSupportedVersions));
 
-                IsNWClientAvailable = NWClientSupportedVersions.FirstOrDefault(verStr => verStr == Version.Id) != null;
+                IsNWClientAvailable = Version != null && NWClientSupportedVersions.Contains(Version.Id);
                 OnPropertyChanged(nameof(IsNWClientAvailable));
 
                 if (IsNWClientAvailable)
@@ -247,6 +250,8 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.InstanceProfile.Settings
                     OnPropertyChanged(nameof(IsNWClientEnabled));
                 }
             });
+
+            UpdateSavedState();
         }
 
 
@@ -325,7 +330,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.InstanceProfile.Settings
             _instanceModelBase.ChangeOverviewParameters(_instanceData);
 
             /* _instanceData = _instanceModelBase.InstanceData;*/
-            _oldInstanceData = _instanceModelBase.BaseData;
+            UpdateSavedState();
             OnPropertyChanged(nameof(HasChanges));
         }
 
@@ -335,13 +340,14 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.InstanceProfile.Settings
         public void ResetChanges()
         {
             _instanceData = _instanceModelBase.BaseData;
-            IsShowSnapshots = _instanceData.GameVersion.Type == MinecraftVersion.VersionType.Snapshot;
-            Version = _instanceData.GameVersion ?? GameVersions[0];
+            IsShowSnapshots = _instanceData.GameVersion?.Type == MinecraftVersion.VersionType.Snapshot;
+            Version = _instanceData.GameVersion ?? GameVersions?.FirstOrDefault();
             ClientType = _instanceData.Modloader;
             IsNWClientEnabled = _instanceData.IsNwClient;
-            _isOptifine = _instanceData.OptifineVersion != null;
-            OnPropertyChanged(nameof(_isOptifine));
+            _isOptifine = !string.IsNullOrWhiteSpace(_instanceData.OptifineVersion);
+            OnPropertyChanged(nameof(IsOptifine));
             LoadInstanceDefaultExtension(ClientType);
+            UpdateSavedState();
             OnPropertyChanged(nameof(HasChanges));
         }
 
@@ -363,7 +369,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.InstanceProfile.Settings
             UpdateModloaderManager(_instanceData.Modloader, Version);
             UpdateOptimizationModManager(Version);
 
-            IsNWClientAvailable = NWClientSupportedVersions.FirstOrDefault(verStr => verStr == Version.Id) != null;
+            IsNWClientAvailable = Version != null && NWClientSupportedVersions.Contains(Version.Id);
             OnPropertyChanged(nameof(IsNWClientAvailable));
         }
 
@@ -373,18 +379,72 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.InstanceProfile.Settings
         /// <returns>True/False</returns>
         private bool HasIntermediateChanged()
         {
-            if (!_oldInstanceData.GameVersion.Equals(Version))
+            if (!Equals(_oldInstanceData.GameVersion, Version))
                 return true;
-            if (!_oldInstanceData.Modloader.Equals(ClientType))
+            if (!Equals(_oldInstanceData.Modloader, ClientType))
                 return true;
-            if (ModloaderVersion != null && !_oldInstanceData.ModloaderVersion.Equals(ModloaderVersion) && ClientType != ClientType.Vanilla)
+            if (HasModloaderVersionChanged())
                 return true;
-            if (_oldInstanceData.OptifineVersion != (IsOptifine ? OptifineVersion : null))
+            if (HasOptifineChanged())
                 return true;
             if (_oldInstanceData.IsNwClient != IsNWClientEnabled)
                 return true;
 
             return false;
+        }
+
+        private bool HasOptifineChanged()
+        {
+            var savedVersion = NormalizeVersion(_oldInstanceData.OptifineVersion);
+            var isSavedEnabled = !string.IsNullOrEmpty(savedVersion);
+
+            if (IsOptifine != isSavedEnabled)
+            {
+                return true;
+            }
+
+            return IsOptifine && savedVersion != NormalizeVersion(OptifineVersion);
+        }
+
+        private bool HasModloaderVersionChanged()
+        {
+            if (ClientType == ClientType.Vanilla)
+            {
+                return false;
+            }
+
+            var savedVersion = NormalizeVersion(_oldInstanceData.ModloaderVersion);
+            var currentVersion = NormalizeVersion(ModloaderVersion);
+
+            if (savedVersion == currentVersion)
+            {
+                return false;
+            }
+
+            return !string.IsNullOrEmpty(savedVersion) || !IsDefaultModloaderVersion(currentVersion);
+        }
+
+        private bool IsDefaultModloaderVersion(string modloaderVersion)
+        {
+            return !string.IsNullOrEmpty(modloaderVersion) &&
+                   ModloaderManager?.CurrentMinecraftExtension?.Versions?.FirstOrDefault() == modloaderVersion;
+        }
+
+        private void UpdateSavedState()
+        {
+            _oldInstanceData = new BaseInstanceData
+            {
+                GameVersion = Version,
+                Modloader = ClientType,
+                ModloaderVersion = ClientType == ClientType.Vanilla ? string.Empty : NormalizeVersion(ModloaderVersion),
+                OptifineVersion = IsOptifine ? NormalizeVersion(OptifineVersion) : null,
+                IsNwClient = IsNWClientEnabled
+            };
+        }
+
+        private static string NormalizeVersion(string version)
+        {
+            return string.IsNullOrWhiteSpace(version) ? string.Empty : version;
         }
 
         /// <summary>

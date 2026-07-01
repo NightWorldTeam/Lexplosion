@@ -466,72 +466,55 @@ namespace Lexplosion.UI.WPF
         }
 
 
-        private static ResourceDictionary CurrentLangDict;
-        internal const string LangPath = AssetsPath + "langs/";
+		internal const string LangPath = AssetsPath + "langs/";
 
-        public static void LoadCurrentLanguage()
-        {
-            var selectedLangId = GlobalData.GeneralSettings.LanguageId;
+        // Не интерфейс, так как нужно переключать язык в рантайме
+        internal static WpfLocalizationService _wpfLocalizationService;
 
-            if (string.IsNullOrWhiteSpace(selectedLangId))
+		/// <summary>
+		/// Создаёт <see cref="WpfLocalizationService"/>, загружает язык и регистрирует сервис
+		/// в <see cref="Runtime.ServicesContainer"/>.
+		/// </summary>
+		public static void LoadCurrentLanguage()
+		{
+			_wpfLocalizationService = new WpfLocalizationService(
+				Runtime.ServicesContainer.DataFilesService);
+
+			Runtime.ServicesContainer.SetLocalizationService(_wpfLocalizationService);
+		}
+
+		private static void ResourcesDictionariesRegister()
+		{
+            _app.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
-                try
-                {
-                    if (GlobalData.GeneralSettings.LanguageId.Length == 0)
-                    {
-                        var currentCultureName = Thread.CurrentThread.CurrentCulture.ToString();
-                        //switch () тут код для стран cis
-                        CurrentLangDict.Source = new Uri(LangPath + currentCultureName + ".xaml");
-                        GlobalData.GeneralSettings.LanguageId = currentCultureName;
-                        Runtime.ServicesContainer.DataFilesService.SaveSettings(GlobalData.GeneralSettings);
-                    }
-                    else
-                    {
-                        CurrentLangDict.Source = new Uri(LangPath + GlobalData.GeneralSettings.LanguageId + ".xaml");
-                    }
-                }
-                catch
-                {
-                    CurrentLangDict.Source = new Uri(LangPath + "ru-RU.xaml");
-                    GlobalData.GeneralSettings.LanguageId = "ru-RU";
-                    Runtime.ServicesContainer.DataFilesService.SaveSettings(GlobalData.GeneralSettings);
-                }
-            }
-            else
-            {
-
-            }
-
-            App.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
-            {
-                Source = new Uri("pack://application:,,,/Assets/langs/" + selectedLangId + ".xaml")
+                Source = new Uri("pack://application:,,,/MarkdownWPF;component/Themes/MarkdownDefaultTheme.xaml")
             });
-        }
-
-        private static void ResourcesDictionariesRegister()
-        {
+            _app.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            {
+                Source = new Uri(ResourcePath + "MarkdownStyles.xaml")
+            });
             // Languages //
             _app.Resources.MergedDictionaries.Add(new ResourceDictionary()
-            {
-                Source = new Uri(AssetsPath + "LanguagesRegister.xaml")
-            });
-            // TODO: Избавить Control от зависимости от цветов тем.
-            // Controls //
-            _app.Resources.MergedDictionaries.Add(new ResourceDictionary()
-            {
-                Source = new Uri(ControlsPath + "Controls.xaml")
-            });
-            // Resources //
-            _app.Resources.MergedDictionaries.Add(new ResourceDictionary()
-            {
-                Source = new Uri(ResourcePath + "ResourcesRegister.xaml")
-            });
-            // DataTemplates //
-            _app.Resources.MergedDictionaries.Add(new ResourceDictionary()
-            {
-                Source = new Uri("pack://application:,,,/DataTemplates.xaml")
-            });
-        }
+			{
+				Source = new Uri(AssetsPath + "LanguagesRegister.xaml")
+			});
+			// TODO: Избавить Control от зависимости от цветов тем.
+			// Controls //
+			_app.Resources.MergedDictionaries.Add(new ResourceDictionary()
+			{
+				Source = new Uri(ControlsPath + "Controls.xaml")
+			});
+			// Resources //
+			_app.Resources.MergedDictionaries.Add(new ResourceDictionary()
+			{
+				Source = new Uri(ResourcePath + "ResourcesRegister.xaml")
+			});
+			// DataTemplates //
+			_app.Resources.MergedDictionaries.Add(new ResourceDictionary()
+			{
+				Source = new Uri("pack://application:,,,/DataTemplates.xaml")
+			});
+		}
 
         public static void TrayMenuElementClickExecute()
         {
@@ -588,10 +571,55 @@ namespace Lexplosion.UI.WPF
                 return Assembly.Load(UnzipBytesArray(Resources.VirtualizingWrapPanel));
             }
 
-            if (args.Name.Contains("System.IO.Compression"))
-            {
-                return Assembly.Load(Resources.Compression);
-            }
+			if (args.Name.Contains("HtmlAgilityPack"))
+			{
+				return Assembly.Load(UnzipBytesArray(Resources.HtmlAgilityPack));
+			}
+
+			if (args.Name.Contains("Markdig"))
+			{
+				return Assembly.Load(UnzipBytesArray(Resources.Markdig));
+			}
+
+			if (args.Name.Contains("MarkdownWPF.Html"))
+			{
+				return Assembly.Load(UnzipBytesArray(Resources.MarkdownWPFHtml));
+			}
+
+			if (args.Name.Contains("MarkdownWPF"))
+			{
+				return Assembly.Load(UnzipBytesArray(Resources.MarkdownWPF));
+			}
+
+			if (args.Name.Contains("System.Linq.Dynamic.Core"))
+			{
+				return Assembly.Load(UnzipBytesArray(Resources.SystemLinqDynamicCore));
+			}
+
+			if (args.Name.Contains("System.Memory"))
+			{
+				return Assembly.Load(UnzipBytesArray(Resources.SystemMemory));
+			}
+
+			if (args.Name.Contains("System.Numerics.Vectors"))
+			{
+				return Assembly.Load(UnzipBytesArray(Resources.SystemNumericsVectors));
+			}
+
+			if (args.Name.Contains("System.Runtime.CompilerServices.Unsafe"))
+			{
+				return Assembly.Load(UnzipBytesArray(Resources.SystemRuntimeCompilerServicesUnsafe));
+			}
+
+			if (args.Name.Contains("System.Buffers"))
+			{
+				return Assembly.Load(UnzipBytesArray(Resources.SystemBuffers));
+			}
+
+			if (args.Name.Contains("System.IO.Compression"))
+			{
+				return Assembly.Load(Resources.Compression);
+			}
 
             return null;
         }

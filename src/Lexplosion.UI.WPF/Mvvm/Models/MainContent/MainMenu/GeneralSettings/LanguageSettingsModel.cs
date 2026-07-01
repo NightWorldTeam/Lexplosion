@@ -1,10 +1,8 @@
 ﻿using Lexplosion.Global;
 using Lexplosion.UI.WPF.Core;
 using Lexplosion.UI.WPF.Core.Objects;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Windows;
 
 namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.Content.GeneralSettings
 {
@@ -46,14 +44,12 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.Content.GeneralSettings
 
         public void ChangeLangauge(string cultureId)
         {
-            App.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
-            {
-                Source = new Uri("pack://application:,,,/Assets/langs/" + cultureId + ".xaml")
-            });
+            RuntimeApp._wpfLocalizationService.SetLanguage(cultureId);
         }
 
         private void OnLanguageModelChanged(LanguageModel langModel, string cultureId)
         {
+            if (_selectedLang == langModel) return;
             _selectedLang.IsSelected = false;
             _selectedLang = langModel;
             ChangeLangauge(cultureId);

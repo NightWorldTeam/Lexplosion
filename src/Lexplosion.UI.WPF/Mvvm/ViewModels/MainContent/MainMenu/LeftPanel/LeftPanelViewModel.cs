@@ -4,6 +4,7 @@ using Lexplosion.Logic.Objects.Nightworld;
 using Lexplosion.UI.WPF.Commands;
 using Lexplosion.UI.WPF.Core;
 using Lexplosion.UI.WPF.Core.Objects;
+using Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.NewsHub;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
 
         //TODO: вынести header в отдельный компонетн.
 
-        public NwUserBanner ProfileBanner { get; private set; }
+        public NwUserBanner? ProfileBanner { get; private set; }
 
         private string _userLogin = "Unknown";
         public string UserLogin
@@ -98,6 +99,8 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
         public ICommand ViewProfileCommand { get; }
         public ICommand ViewProfileSettingsCommand { get; }
         public ICommand ViewFriendsCommand { get; }
+        public ICommand ToNewsHubCommand { get; }
+
 
         #endregion Commands
 
@@ -105,7 +108,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
         #region Constructors
 
 
-        public LeftPanelViewModel(AppCore appCore, ICommand toProfile, ICommand toProfileSettingsCommand, ICommand viewFriendsCommand)
+        public LeftPanelViewModel(AppCore appCore, ICommand toMainMenuCommand, ICommand toProfile, ICommand toProfileSettingsCommand, ICommand viewFriendsCommand)
         {
             _appCore = appCore;
 
@@ -120,6 +123,8 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
                     ProfileBanner = value ? Account.ActiveAccount.ProfileBanner : null;
                     OnPropertyChanged(nameof(ProfileBanner));
                 };
+
+            ToNewsHubCommand = new NavigateCommand<ViewModelBase>(appCore.NavigationStore, () => new NewsHubViewModel(appCore, toMainMenuCommand));
 
             SetUserDataToHeader();
         }

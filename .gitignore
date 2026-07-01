@@ -3,7 +3,7 @@
 
 /Lexplosion.Core/Lexplosion.Core.csproj.user
 /src/DLL
-/src/Lexplosion.UI.WPF/Resources/Libraries
+/src/Lexplosion.UI.WPF/Resources/Libraries/Lexplosion.Core.zip
 
 #for jetbrains rider
 .idea/

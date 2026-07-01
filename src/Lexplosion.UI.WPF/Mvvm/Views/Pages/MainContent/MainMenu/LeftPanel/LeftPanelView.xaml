@@ -94,6 +94,68 @@
             </ControlTemplate.Triggers>
         </ControlTemplate>
 
+        <ControlTemplate x:Key="HelpButtonContentTemplate" TargetType="{x:Type ToggleButton}">
+
+            <Border
+                x:Name="HelpButtonBorder"
+                Background="Transparent"
+                CornerRadius="100">
+
+                <Viewbox
+                    Width="16"
+                    Height="16"
+                    Stretch="Fill">
+                    <Path
+                        extensions:PathExtensions.StringKeyData="Help"
+                        Fill="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                        Stretch="Fill" />
+                </Viewbox>
+            </Border>
+
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter TargetName="HelpButtonBorder" Property="Background">
+                        <Setter.Value>
+                            <SolidColorBrush Opacity="0.2" Color="{DynamicResource ActivityColor}" />
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter TargetName="HelpButtonBorder" Property="Background">
+                        <Setter.Value>
+                            <SolidColorBrush Opacity="0.2" Color="Black" />
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+
+        <ControlTemplate x:Key="NewsButtonContentTemplate" TargetType="{x:Type Button}">
+            <Border
+                x:Name="NewsButtonBorder"
+                Background="Transparent"
+                CornerRadius="100">
+
+                <Viewbox Height="16" Stretch="Uniform">
+                    <Path
+                        x:Name="NewsButtonPath"
+                        extensions:PathExtensions.StringKeyData="Newsmode"
+                        Fill="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                        Stretch="Fill" />
+                </Viewbox>
+            </Border>
+
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter TargetName="NewsButtonBorder" Property="Background">
+                        <Setter.Value>
+                            <SolidColorBrush Opacity="0.2" Color="{DynamicResource ActivityColor}" />
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
     </UserControl.Resources>
 
     <Grid>
@@ -121,53 +183,31 @@
                     ItemsSource="{Binding Items}"
                     KeyboardNavigation.IsTabStop="False" />
 
-                <ToggleButton
-                    x:Name="HelpButton"
+                <!--  Footer buttons  -->
+
+
+                <StackPanel
                     Grid.Row="2"
-                    Width="32"
-                    Height="32"
                     HorizontalAlignment="Right"
-                    Background="Transparent"
-                    Cursor="Hand">
-                    <ToggleButton.Template>
-                        <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    Orientation="Horizontal">
 
-                            <Border
-                                x:Name="HelpButtonBorder"
-                                Background="Transparent"
-                                CornerRadius="100">
+                    <Button
+                        Width="32"
+                        Height="32"
+                        Command="{Binding ToNewsHubCommand}"
+                        Cursor="Hand"
+                        Template="{StaticResource NewsButtonContentTemplate}" />
 
-                                <Viewbox
-                                    Width="16"
-                                    Height="16"
-                                    Stretch="Fill">
-                                    <Path
-                                        extensions:PathExtensions.StringKeyData="Help"
-                                        Fill="{DynamicResource SecondaryForegroundSolidColorBrush}"
-                                        Stretch="Fill" />
-                                </Viewbox>
-                            </Border>
-
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter TargetName="HelpButtonBorder" Property="Background">
-                                        <Setter.Value>
-                                            <SolidColorBrush Opacity="0.1" Color="Black" />
-                                        </Setter.Value>
-                                    </Setter>
-                                </Trigger>
-
-                                <Trigger Property="IsChecked" Value="True">
-                                    <Setter TargetName="HelpButtonBorder" Property="Background">
-                                        <Setter.Value>
-                                            <SolidColorBrush Opacity="0.2" Color="Black" />
-                                        </Setter.Value>
-                                    </Setter>
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </ToggleButton.Template>
-                </ToggleButton>
+                    <ToggleButton
+                        x:Name="HelpButton"
+                        Grid.Column="1"
+                        Width="32"
+                        Height="32"
+                        HorizontalAlignment="Right"
+                        Background="Transparent"
+                        Cursor="Hand"
+                        Template="{StaticResource HelpButtonContentTemplate}" />
+                </StackPanel>
 
                 <Popup
                     AllowsTransparency="True"

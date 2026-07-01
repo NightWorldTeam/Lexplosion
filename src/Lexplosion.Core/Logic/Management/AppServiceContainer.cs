@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.FileSystem.Services;
+using Lexplosion.Logic.Management.Localization;
 using Lexplosion.Logic.Management.Notifications;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Network.Services;
@@ -27,6 +28,26 @@ namespace Lexplosion.Logic.Management
 
         public CategoriesManager CategoriesService { get; }
         public NotificationsManager NotificationsService { get; internal set; }
+
+        private ILocalizationService _localizationService = NullLocalizationService.Instance;
+        private bool _localizationServiceSet = false;
+
+        public ILocalizationService LocalizationService
+        {
+            get => _localizationService;
+            internal set
+            {
+                if (_localizationServiceSet) return;
+                if (value == null) return;
+                _localizationService = value;
+                _localizationServiceSet = true;
+            }
+        }
+
+        public void SetLocalizationService(ILocalizationService localizationService)
+        {
+            LocalizationService = localizationService;
+        }
 
         public AppServiceContainer(ToServer webService, MinecraftInfoService minecraftService, WithDirectory directoryService, DataFilesManager dataFilesService, CurseforgeApi cfApi, ModrinthApi mdApi, NightWorldApi nwApi, MojangApi mjApi, CategoriesManager categoriesService, NotificationsManager notificationsService)
         {

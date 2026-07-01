@@ -6,7 +6,7 @@ namespace Lexplosion.UI.WPF.Commands
     public class RelayCommand : ICommand
     {
         private readonly Action<object> _execute;
-        private readonly Func<object, bool> _canExecute;
+        private readonly Func<object, bool>? _canExecute;
 
         public event EventHandler CanExecuteChanged
         {
@@ -14,7 +14,7 @@ namespace Lexplosion.UI.WPF.Commands
             remove { CommandManager.RequerySuggested -= value; }
         }
 
-        public RelayCommand(Action<object> execute, Func<object, bool> canExecute = null)
+        public RelayCommand(Action<object> execute, Func<object, bool>? canExecute = null)
         {
             _execute = execute;
             _canExecute = canExecute;
@@ -30,17 +30,17 @@ namespace Lexplosion.UI.WPF.Commands
             _execute(parameter);
         }
 
-        public static ICommand GetCommand(ref RelayCommand variable, Action action, Func<object, bool> canExecute = null)
+        public static ICommand GetCommand(ref RelayCommand variable, Action action, Func<object, bool>? canExecute = null)
         {
             return GetCommand(ref variable, (obj) => action(), canExecute);
         }
 
-        public static ICommand GetCommand(ref RelayCommand variable, Action<object> action, Func<object, bool> canExecute = null)
+        public static ICommand GetCommand(ref RelayCommand variable, Action<object> action, Func<object, bool>? canExecute = null)
         {
             return variable ?? (variable = new RelayCommand(action, canExecute));
         }
 
-        public static ICommand GetCommand<T>(ref RelayCommand variable, Action<T> action, Func<object, bool> canExecute = null)
+        public static ICommand GetCommand<T>(ref RelayCommand variable, Action<T> action, Func<object, bool>? canExecute = null)
         {
             return variable ?? (variable = new RelayCommand((obj) =>
             {

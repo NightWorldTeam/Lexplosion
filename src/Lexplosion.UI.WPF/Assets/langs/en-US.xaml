@@ -1043,6 +1043,15 @@
     <s:String x:Key="InstanceDistributionIsCancelled">The modpack download was canceled by the user.</s:String>
     <s:String x:Key="InstanceDistributionUnknownError">An unknown error occurred in the modpack distribution system.</s:String>
 
+    <!--  News  -->
+    <s:String x:Key="NewsTitle">News</s:String>
+    <s:String x:Key="CloseArticleButtonTooltip">Close the article</s:String>
+
+    <!--  Core Localization Keys  -->
+    <s:String x:Key="NoDescription">No description, but we hope it will appear.</s:String>
+    <s:String x:Key="UnknownName">Unknown name</s:String>
+    <s:String x:Key="UnknownAuthor">Unknown author</s:String>
+    <s:String x:Key="LaunchingGame">Launching game...</s:String>
 
     <s:String x:Key="Scaling">Scaling</s:String>
     <s:String x:Key="ZoomLevel">Zoom level</s:String>

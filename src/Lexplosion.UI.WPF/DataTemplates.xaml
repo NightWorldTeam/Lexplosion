@@ -17,6 +17,8 @@
     xmlns:mainmenuvm="clr-namespace:Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu"
     xmlns:modalviews="clr-namespace:Lexplosion.UI.WPF.Mvvm.Views.Modal"
     xmlns:modalvm="clr-namespace:Lexplosion.UI.WPF.Mvvm.ViewModels.Modal"
+    xmlns:newshub="clr-namespace:Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.NewsHub"
+    xmlns:newshubview="clr-namespace:Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.NewsHub"
     xmlns:pages="clr-namespace:Lexplosion.UI.WPF.Mvvm.Views.Pages"
     xmlns:profile="clr-namespace:Lexplosion.UI.WPF.Mvvm.ViewModels.Profile"
     xmlns:profile1="clr-namespace:Lexplosion.UI.WPF.Mvvm.Views.Pages.Profile"
@@ -285,6 +287,17 @@
     </DataTemplate>
     <DataTemplate DataType="{x:Type serverprofile:ServerProfileOverviewGalleryViewModel}">
         <serverprofileview:InstanceProfileOverviewGalleryView />
+    </DataTemplate>
+
+
+    <!--    -->
+    <!--  News Hub  -->
+    <!--    -->
+    <DataTemplate DataType="{x:Type newshub:NewsHubViewModel}">
+        <newshubview:NewsHubView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type newshub:NewsArticleViewModel}">
+        <newshubview:NewsArticleView />
     </DataTemplate>
 
 

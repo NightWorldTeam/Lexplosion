@@ -813,4 +813,10 @@
     <s:String x:Key="RestartLauncherButtonAction">
         Так, я хочу зараз перезапустити лаунчер
     </s:String>
+
+    <!--  Core Localization Keys  -->
+    <s:String x:Key="NoDescription">Опису немає, але ми сподіваємося, що він з'явиться.</s:String>
+    <s:String x:Key="UnknownName">Невідома назва</s:String>
+    <s:String x:Key="UnknownAuthor">Невідомий автор</s:String>
+    <s:String x:Key="LaunchingGame">Запуск гри...</s:String>
 </ResourceDictionary>

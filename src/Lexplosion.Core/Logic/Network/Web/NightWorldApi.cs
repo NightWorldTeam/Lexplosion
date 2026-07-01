@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Threading;
-using Newtonsoft.Json;
-using Lexplosion.Global;
+﻿using Lexplosion.Global;
+using Lexplosion.Logic.DTO;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Objects.Nightworld;
-using Lexplosion.Logic.DTO;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace Lexplosion.Logic.Network
 {
@@ -410,17 +411,76 @@ namespace Lexplosion.Logic.Network
 
 		public List<NewsModel> GetUnseenNews(long lastViewedNewsId)
 		{
-			var data = _toServer.HttpGet(LaunсherSettings.URL.Base + "api/news/getUnseenNews");
+			return GetNewsGeneral($"{LaunсherSettings.URL.Base}api/news/getUnseenNews?lastViewedNewsId={lastViewedNewsId}&onlyForLauncher=1");
+		}
+
+		public List<NewsModel> GetNews()
+		{
+			return GetNewsGeneral($"{LaunсherSettings.URL.Base}api/news/getNews?onlyForLauncher=1");
+		}
+
+		private List<NewsModel> GetNewsGeneral(string url)
+		{
+			var data = _toServer.HttpGet(url);
 			if (data == null) return new();
 
 			try
 			{
-				return JsonConvert.DeserializeObject<List<NewsModel>>(data);
+				var newsList = JsonConvert.DeserializeObject<List<NewsModel>>(data);
+				if (newsList == null) return new();
+				FixMarkdownImagePaths(newsList);
+
+				return newsList;
 			}
 			catch
 			{
 				return new();
 			}
+		}
+
+		private static void FixMarkdownImagePaths(List<NewsModel> newsList)
+		{
+			foreach (var item in newsList)
+			{
+				if (string.IsNullOrWhiteSpace(item.Content)) continue;
+
+				if (item.BannerUrl != null && !item.BannerUrl.StartsWith("http"))
+				{
+					string baseUrl = LaunсherSettings.URL.Base;
+					if (item.BannerUrl.StartsWith("/"))
+					{
+						item.BannerUrl = $"{baseUrl.Remove(baseUrl.Length - 1)}{item.BannerUrl}";
+					}
+					else
+					{
+						item.BannerUrl = $"{baseUrl}{item.BannerUrl}";
+					}
+				}
+
+				item.Content = FixMarkdownImagePaths(item.Content, LaunсherSettings.URL.Base);
+			}
+		}
+
+		private static string FixMarkdownImagePaths(string text, string baseUrl)
+		{
+			// Регулярное выражение то же самое, но теперь мы будем умнее заменять путь
+			string pattern = @"(!\[.*?\])\(\s*(/[^)]+)\)";
+
+			// Используем MatchEvaluator для кастомной замены каждого совпадения
+			string updatedText = Regex.Replace(text, pattern, match =>
+			{
+				string imageTag = match.Groups[1].Value; // Например: ![]
+				string relativePath = match.Groups[2].Value; // Например: /assets/img/...
+
+				// Создаем правильный абсолютный URI (он сам уберет лишний слэш на стыке)
+				Uri baseUri = new Uri(baseUrl);
+				// TrimStart('/') нужен, чтобы Uri соединил их корректно без дублирования слэшей
+				Uri absoluteUri = new Uri(baseUri, relativePath.TrimStart('/'));
+
+				return $"{imageTag}({absoluteUri.AbsoluteUri})";
+			});
+
+			return updatedText;
 		}
 
 	}

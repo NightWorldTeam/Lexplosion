@@ -1,4 +1,4 @@
-﻿<UserControl
+<UserControl
     x:Class="Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.MainMenu.LanguageSettingsView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -18,7 +18,6 @@
         <DataTemplate DataType="{x:Type objects:LanguageModel}">
             <RadioButton
                 Margin="0,8,0,0"
-                GroupName="Language"
                 IsChecked="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"
                 Style="{StaticResource LanguageSelectorButton}">
                 <Grid ShowGridLines="False">

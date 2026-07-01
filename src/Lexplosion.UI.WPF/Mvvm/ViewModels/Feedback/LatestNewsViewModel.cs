@@ -17,7 +17,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels
 
         public LatestNewsModel()
         {
-            LatestUnseenNews = NotificationsManager.GetUnseenNews().FirstOrDefault();
+            LatestUnseenNews = NotificationsManager.GetLastUnseenNews();
         }
 
         public void MarkAsViewed()
@@ -31,12 +31,32 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels
     {
         public LatestNewsModel Model { get; }
 
+        private bool _isFullScreen;
+        public bool IsFullScreen
+        {
+            get => _isFullScreen;
+            set
+            {
+                _isFullScreen = value;
+                OnPropertyChanged();
+            }
+        }
+
         private RelayCommand _closeCommand;
         public ICommand CloseCommand
         {
             get => RelayCommand.GetCommand(ref _closeCommand, () =>
             {
                 Model.MarkAsViewed();
+            });
+        }
+
+        private RelayCommand _toggleFullScreenCommand;
+        public ICommand ToggleFullScreenCommand
+        {
+            get => RelayCommand.GetCommand(ref _toggleFullScreenCommand, () =>
+            {
+                IsFullScreen = !IsFullScreen;
             });
         }
 

@@ -14,6 +14,7 @@ using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Tools;
 using NightWorld.Tools.Minecraft.NBT.StorageFiles;
 using Newtonsoft.Json;
+using Lexplosion.Logic.Management.Localization;
 
 namespace Lexplosion.Logic.Management.Instances
 {
@@ -32,9 +33,6 @@ namespace Lexplosion.Logic.Management.Instances
 		private LaunchGame _gameManager = null;
 
 		private const string LogoFileName = "logo.png";
-		private const string UnknownName = "Unknown name";
-		private const string UnknownAuthor = "Unknown author";
-		private const string NoDescription = "Описания нет, но мы надеемся что оно будет.";
 
 		public static Func<byte[]> LogoGenerator { set; private get; }
 
@@ -109,7 +107,9 @@ namespace Lexplosion.Logic.Management.Instances
 		private string _description;
 		public string Description
 		{
-			get => _description;
+			get => string.IsNullOrEmpty(_description)
+				? _services.LocalizationService.GetNoDescription()
+				: _description;
 			private set
 			{
 				_description = value;
@@ -172,7 +172,9 @@ namespace Lexplosion.Logic.Management.Instances
 		private string _summary;
 		public string Summary
 		{
-			get => _summary;
+			get => string.IsNullOrEmpty(_summary)
+				? _services.LocalizationService.GetNoDescription()
+				: _summary;
 			private set
 			{
 				_summary = value;
@@ -330,8 +332,8 @@ namespace Lexplosion.Logic.Management.Instances
 		{
 			CreatedLocally = true;
 			Author = Account.AnyFuckingLogin;
-			Description = NoDescription;
-			Summary = NoDescription;
+			Description = null;
+			Summary = null;
 
 			if (modloaderVersion == null) modloader = ClientType.Vanilla;
 
@@ -446,12 +448,14 @@ namespace Lexplosion.Logic.Management.Instances
 				catch { }
 			}
 
+			var localizationService = _services.LocalizationService;
+
 			if (assetsData != null)
 			{
-				Name = name ?? UnknownName;
-				Summary = assetsData.Summary ?? NoDescription;
-				Author = assetsData.Author ?? UnknownAuthor;
-				Description = assetsData.Description ?? NoDescription;
+				Name = name ?? localizationService.GetUnknownName();
+				Summary = NormalizePlaceholderText(assetsData.Summary, LocalizationKeys.NoDescription);
+				Author = assetsData.Author ?? localizationService.GetUnknownAuthor();
+				Description = NormalizePlaceholderText(assetsData.Description, LocalizationKeys.NoDescription);
 				Categories = assetsData.Categories;
 				GameVersion = gameVersion;
 				Logo = logo;
@@ -459,10 +463,10 @@ namespace Lexplosion.Logic.Management.Instances
 			}
 			else
 			{
-				Name = name ?? UnknownName;
-				Summary = NoDescription;
-				Author = UnknownAuthor;
-				Description = NoDescription;
+				Name = name ?? localizationService.GetUnknownName();
+				Summary = null;
+				Author = localizationService.GetUnknownAuthor();
+				Description = null;
 				GameVersion = gameVersion;
 				Logo = logo;
 				_profileVersion = instanceVersion;
@@ -479,25 +483,27 @@ namespace Lexplosion.Logic.Management.Instances
 
 		internal void UpdateInfo(string name, MinecraftVersion gameVersion, IEnumerable<CategoryBase> categories, string summary, string description, string author, string websiteUrl)
 		{
+			var localizationService = _services.LocalizationService;
+
 			if (!string.IsNullOrEmpty(name))
 				Name = name;
 			else if (string.IsNullOrEmpty(Name))
-				Name = UnknownName;
+				Name = localizationService.GetUnknownName();
 
 			if (!string.IsNullOrEmpty(summary))
 				Summary = summary;
-			else if (string.IsNullOrEmpty(Summary))
-				Summary = NoDescription;
+			else if (string.IsNullOrEmpty(_summary))
+				Summary = null;
 
 			if (!string.IsNullOrEmpty(description))
 				Description = description;
-			else if (string.IsNullOrEmpty(Description))
-				Description = NoDescription;
+			else if (string.IsNullOrEmpty(_description))
+				Description = null;
 
 			if (!string.IsNullOrEmpty(author))
 				Author = author;
 			else if (string.IsNullOrEmpty(Author))
-				Author = UnknownAuthor;
+				Author = localizationService.GetUnknownAuthor();
 
 			if (categories != null)
 				Categories = categories;
@@ -511,7 +517,7 @@ namespace Lexplosion.Logic.Management.Instances
 		{
 			Name = tempName;
 			IsFictitious = true;
-			Author = UnknownAuthor;
+			Author = _services.LocalizationService.GetUnknownAuthor();
 			Summary = string.Empty;
 			IsComplete = false;
 		}
@@ -560,7 +566,7 @@ namespace Lexplosion.Logic.Management.Instances
 					Categories = Categories,
 					Description = Description,
 					Name = _name,
-					Summary = _summary,
+					Summary = Summary,
 					ModloaderVersion = modloaderVersion,
 					Modloader = clientType,
 					OptifineVersion = optifineVersion,
@@ -582,10 +588,12 @@ namespace Lexplosion.Logic.Management.Instances
 				return null;
 			}
 
+			var localizationService = _services.LocalizationService;
+
 			if (fullInfo.Description == null)
-				fullInfo.Description = NoDescription;
+				fullInfo.Description = localizationService.GetNoDescription();
 			if (fullInfo.Summary == null)
-				fullInfo.Summary = NoDescription;
+				fullInfo.Summary = localizationService.GetNoDescription();
 
 			return fullInfo;
 		}
@@ -829,12 +837,25 @@ namespace Lexplosion.Logic.Management.Instances
 			{
 				Author = Author,
 				Categories = categories_,
-				Description = Description,
+				Description = NormalizePlaceholderText(_description, LocalizationKeys.NoDescription),
 				Images = (assetsData_ != null) ? assetsData_.Images : null,
-				Summary = Summary
+				Summary = NormalizePlaceholderText(_summary, LocalizationKeys.NoDescription)
 			};
 
 			_services.DataFilesService.SaveFile(file, JsonConvert.SerializeObject(assetsData));
+		}
+
+        /// <summary>
+        /// Если мы имеем дело с пустой строкой или строкой которая является плейсхолдером, то возвращает null. Иначе возвращает переданное значение.
+		/// Чтобы при отсутствии описания или при его плейсхолдере в файле ассетов сохранялось null, а не плейсхолдер или пустая строка. 
+		/// И при получении данных из файла ассетов не нужно было проверять на плейсхолдер и пустую строку, а просто проверять на null.
+        /// </summary>
+        private string NormalizePlaceholderText(string value, string placeholderKey)
+		{
+			if (string.IsNullOrWhiteSpace(value)) return null;
+
+			var placeholder = _services.LocalizationService.GetString(placeholderKey);
+			return value == placeholder ? null : value;
 		}
 
 		/// <summary>
@@ -1074,13 +1095,13 @@ namespace Lexplosion.Logic.Management.Instances
 			var parameters = new ArchivedClientData
 			{
 				Author = Author,
-				Description = Description,
+				Description = NormalizePlaceholderText(_description, LocalizationKeys.NoDescription),
 				GameVersionInfo = instanceManifest?.version?.GameVersionInfo,
 				ModloaderType = instanceManifest?.version?.ModloaderType ?? ClientType.Vanilla,
 				ModloaderVersion = instanceManifest?.version?.ModloaderVersion,
 				Name = name ?? Name,
 				//Categories = Categories,
-				Summary = Summary,
+				Summary = NormalizePlaceholderText(_summary, LocalizationKeys.NoDescription),
 				LogoFileName = (logoPath != null ? LogoFileName : null),
 				AdditionalInstallerType = instanceManifest?.version?.AdditionalInstaller?.type,
 				AdditionalInstallerVersion = instanceManifest?.version?.AdditionalInstaller?.installerVersion,
