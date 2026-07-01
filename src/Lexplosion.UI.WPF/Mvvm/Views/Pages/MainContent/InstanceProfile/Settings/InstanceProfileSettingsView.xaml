@@ -497,7 +497,7 @@
                             Height="32"
                             Margin="16,0,0,0"
                             HorizontalAlignment="Right"
-                            Text="{Binding Model.JVMArgs}" />
+                            Text="{Binding Model.JVMArgs, UpdateSourceTrigger=PropertyChanged}" />
                     </Grid>
                 </Border>
             </StackPanel>

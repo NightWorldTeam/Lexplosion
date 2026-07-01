@@ -74,7 +74,7 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 CornerRadius="5"
-                IsActive="{Binding Model.Items, Converter={converters:IsCollectionEmptyConverter}}" />
+                IsActive="{Binding Model.IsLoading, UpdateSourceTrigger=PropertyChanged}" />
 
             <ScrollViewer ScrollChanged="ScrollViewer_ScrollChanged">
                 <ItemsControl Padding="30,0,0,0" ItemsSource="{Binding Model.Items}">

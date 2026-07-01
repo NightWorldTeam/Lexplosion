@@ -635,7 +635,10 @@
                             </StackPanel>
 
                             <!--  Content  -->
-                            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                            <StackPanel
+                                Grid.Column="1"
+                                HorizontalAlignment="Right"
+                                Orientation="Horizontal">
                                 <controls:AdvancedTextBox
                                     Width="270"
                                     Height="32"
@@ -643,7 +646,7 @@
                                     Cursor="Hand"
                                     IsReadOnly="True"
                                     PreviewMouseDown="JvmArgsTextBox_PreviewMouseDown"
-                                    Text="{Binding Model.JVMArgs}" />
+                                    Text="{Binding Model.JVMArgs, UpdateSourceTrigger=PropertyChanged}" />
                             </StackPanel>
                         </Grid>
                     </Border>

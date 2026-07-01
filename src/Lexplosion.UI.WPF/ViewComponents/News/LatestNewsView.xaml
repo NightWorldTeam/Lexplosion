@@ -23,12 +23,21 @@
 
         <Border
             Grid.Column="1"
-            Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={converters:WindowWidthToXProcentWidth}, ConverterParameter=45}"
             Margin="0,32"
             Padding="16,12,16,0"
             HorizontalAlignment="Center"
             Background="{DynamicResource PrimarySolidColorBrush}"
             CornerRadius="5">
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Setter Property="Width" Value="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={converters:WindowWidthToXProcentWidth}, ConverterParameter=45}" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsFullScreen}" Value="True">
+                            <Setter Property="Width" Value="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={converters:WindowWidthToXProcentWidth}, ConverterParameter=92}" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
             <Grid>
 
                 <Grid.RowDefinitions>
@@ -57,50 +66,92 @@
                             Text="{Binding Model.LatestUnseenNews.CreationDate, StringFormat='dd MMMM yyyy'}" />
                     </StackPanel>
 
-                    <!--  Close Button  -->
-                    <Button
+                    <StackPanel
                         Grid.Column="1"
-                        Width="24"
-                        Height="24"
-                        Margin="10,0,0,10"
                         HorizontalAlignment="Right"
-                        VerticalAlignment="Center"
-                        Panel.ZIndex="10000"
-                        Command="{Binding CloseCommand}"
-                        IsCancel="True">
+                        Orientation="Horizontal">
 
-                        <Button.Template>
-                            <ControlTemplate>
-                                <Border
-                                    x:Name="border"
-                                    Padding="6"
-                                    Background="Transparent"
-                                    CornerRadius="100">
+                        <!--  Fullscreen Button  -->
+                        <ToggleButton
+                            Width="24"
+                            Height="24"
+                            Margin="10,0,0,10"
+                            VerticalAlignment="Center"
+                            Panel.ZIndex="10000"
+                            Command="{Binding ToggleFullScreenCommand}">
+                            <ToggleButton.Template>
+                                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                                    <Border
+                                        x:Name="fullscreenBorder"
+                                        Padding="6"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Background="Transparent"
+                                        CornerRadius="100">
+                                        <Viewbox Height="16">
+                                            <Path
+                                                x:Name="FullscreenIcon"
+                                                extensions:PathExtensions.StringKeyData="OpenInFull"
+                                                Fill="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                                Stretch="Fill" />
+                                        </Viewbox>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="fullscreenBorder" Property="Background" Value="{DynamicResource SecondarySolidColorBrush}" />
+                                        </Trigger>
+                                        <Trigger Property="IsChecked" Value="True">
+                                            <Setter TargetName="FullscreenIcon" Property="extensions:PathExtensions.StringKeyData" Value="CloseFullscreen" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </ToggleButton.Template>
+                        </ToggleButton>
 
-                                    <Viewbox Height="16">
-                                        <Path
-                                            x:Name="CloseIcon"
-                                            extensions:PathExtensions.StringKeyData="Close"
-                                            Fill="{DynamicResource SecondaryForegroundSolidColorBrush}"
-                                            Stretch="Fill" />
-                                    </Viewbox>
+                        <!--  Close Button  -->
+                        <Button
+                            Width="24"
+                            Height="24"
+                            Margin="10,0,0,10"
+                            VerticalAlignment="Center"
+                            Panel.ZIndex="10000"
+                            Command="{Binding CloseCommand}"
+                            IsCancel="True">
 
-                                </Border>
+                            <Button.Template>
+                                <ControlTemplate>
+                                    <Border
+                                        x:Name="border"
+                                        Padding="6"
+                                        Background="Transparent"
+                                        CornerRadius="100">
 
-                                <ControlTemplate.Triggers>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter TargetName="border" Property="Background" Value="{DynamicResource SecondarySolidColorBrush}" />
-                                    </Trigger>
-                                </ControlTemplate.Triggers>
-                            </ControlTemplate>
-                        </Button.Template>
-                    </Button>
+                                        <Viewbox Height="16">
+                                            <Path
+                                                x:Name="CloseIcon"
+                                                extensions:PathExtensions.StringKeyData="Close"
+                                                Fill="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                                Stretch="Fill" />
+                                        </Viewbox>
+
+                                    </Border>
+
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="border" Property="Background" Value="{DynamicResource SecondarySolidColorBrush}" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </StackPanel>
                 </Grid>
 
                 <!--  Content  -->
-                <ScrollViewer Grid.Row="1" Margin="0,0,0,8">
+                <ScrollViewer Grid.Row="1" Margin="0,0,-12,8">
                     <md:MarkdownViewer
-                        Margin="0,0,0,16"
+                        Margin="0,0,0,0"
+                        HorizontalAlignment="Center"
                         IsScrollViewerEnabled="False"
                         Markdown="{Binding Model.LatestUnseenNews.Content, UpdateSourceTrigger=PropertyChanged}"
                         StyleResourceMode="Dynamic" />

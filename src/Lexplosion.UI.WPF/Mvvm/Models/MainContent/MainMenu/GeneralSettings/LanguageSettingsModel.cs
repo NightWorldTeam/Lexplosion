@@ -49,6 +49,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.Content.GeneralSettings
 
         private void OnLanguageModelChanged(LanguageModel langModel, string cultureId)
         {
+            if (_selectedLang == langModel) return;
             _selectedLang.IsSelected = false;
             _selectedLang = langModel;
             ChangeLangauge(cultureId);
