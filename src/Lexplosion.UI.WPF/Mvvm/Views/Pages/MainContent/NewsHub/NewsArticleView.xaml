@@ -55,6 +55,7 @@
                 VerticalScrollBarVisibility="Auto">
                 <md:MarkdownViewer
                     Margin="0,0,0,16"
+                    HorizontalAlignment="Center"
                     IsScrollViewerEnabled="False"
                     Markdown="{Binding Model.Context, UpdateSourceTrigger=PropertyChanged}"
                     Pipeline="{Binding Model.HtmlPipeline}"
