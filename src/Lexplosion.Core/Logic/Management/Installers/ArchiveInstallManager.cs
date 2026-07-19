@@ -109,9 +109,11 @@ namespace Lexplosion.Logic.Management.Installers
         protected abstract bool ProfectInfoIsValid { get; }
         protected abstract string ArchiveFileName { get; }
 
-        protected virtual InstanceFileGetterResult DownloadArchive(string tempDir, Func<string, TaskArgs> taskArgsGetter)
+		protected abstract IReadOnlyDictionary<string, string> SpecificArchiveDownloadHeaders { get; }
+
+		protected virtual InstanceFileGetterResult DownloadArchive(string tempDir, Func<string, TaskArgs> taskArgsGetter)
         {
-            var res = _withDirectory.DownloadFile(GetArchiveDownloadUrl(), ArchiveFileName, tempDir, taskArgsGetter(ArchiveFileName));
+            var res = _withDirectory.DownloadFile(GetArchiveDownloadUrl(), ArchiveFileName, tempDir, taskArgsGetter(ArchiveFileName), SpecificArchiveDownloadHeaders);
             if (!res.IsSucces && res.State == RequestResultState.NetworkError)
             {
                 var reserveUrl = GetReserveArchiveDownloadUrl();

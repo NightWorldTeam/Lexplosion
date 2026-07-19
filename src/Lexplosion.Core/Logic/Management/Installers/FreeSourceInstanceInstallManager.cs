@@ -1,13 +1,15 @@
-﻿using System;
-using System.IO;
-using System.Threading;
-using Newtonsoft.Json;
-using Lexplosion.Logic.FileSystem;
-using Lexplosion.Logic.Network;
-using Lexplosion.Logic.Objects.FreeSource;
-using Lexplosion.Logic.Network.Services;
+﻿using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.FileSystem.Installers;
 using Lexplosion.Logic.FileSystem.Services;
+using Lexplosion.Logic.Network;
+using Lexplosion.Logic.Network.Services;
+using Lexplosion.Logic.Network.Web;
+using Lexplosion.Logic.Objects.FreeSource;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading;
 
 namespace Lexplosion.Logic.Management.Installers
 {
@@ -15,6 +17,8 @@ namespace Lexplosion.Logic.Management.Installers
 	{
 		private SourceMap _urlsMap;
 		private ToServer _toServer;
+
+		protected override IReadOnlyDictionary<string, string> SpecificArchiveDownloadHeaders => null;
 
 		public FreeSourceInstanceInstallManager(SourceMap urlsMap, string instanceid, bool onlyBase, IAllFileServicesContainer services, CancellationToken cancelToken) : base(new FreeSourceInstanceInstaller(instanceid, services), instanceid, onlyBase, services, cancelToken)
 		{

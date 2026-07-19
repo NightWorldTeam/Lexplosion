@@ -14,6 +14,8 @@ namespace Lexplosion.Logic.Management.Installers
 	{
 		private ModrinthApi _modrinthApi;
 
+		protected override IReadOnlyDictionary<string, string> SpecificArchiveDownloadHeaders => null;
+
 		public ModrinthInstallManager(string instanceid, bool onlyBase, IModrinthFileServicesContainer services, CancellationToken cancelToken) : base(new ModrinthInstaller(instanceid, services), instanceid, onlyBase, services, cancelToken)
 		{
 			_modrinthApi = services.MdApi;

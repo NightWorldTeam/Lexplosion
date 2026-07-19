@@ -205,12 +205,12 @@ namespace Lexplosion.Logic.Network
             }
         }
 
-        public string HttpPost(string url, IDictionary<string, string> data = null, IDictionary<string, string> headers = null, int timeout = 0)
+        public string HttpPost(string url, IDictionary<string, string> data = null, IReadOnlyDictionary<string, string> headers = null, int timeout = 0)
         {
             return HttpPostAsync(url, data, headers, timeout).Result;
         }
 
-        public async Task<string> HttpPostAsync(string url, IDictionary<string, string> data = null, IDictionary<string, string> headers = null, int timeout = 0)
+        public async Task<string> HttpPostAsync(string url, IDictionary<string, string> data = null, IReadOnlyDictionary<string, string> headers = null, int timeout = 0)
         {
             Runtime.DebugWrite($"Request url: {url}");
 
@@ -260,14 +260,14 @@ namespace Lexplosion.Logic.Network
             return task.Result.Content;
         }
 
-        public RequestResult HttpGetWithFullResult(string url, Dictionary<string, string> headers = null, int timeout = 0)
+        public RequestResult HttpGetWithFullResult(string url, IReadOnlyDictionary<string, string> headers = null, int timeout = 0)
         {
             var task = Task.Run(() => HttpGetAsync(url, headers, timeout));
             task.Wait();
             return task.Result;
         }
 
-        public async Task<RequestResult> HttpGetAsync(string url, IDictionary<string, string> headers = null, int timeout = 0)
+        public async Task<RequestResult> HttpGetAsync(string url, IReadOnlyDictionary<string, string> headers = null, int timeout = 0)
         {
             Runtime.DebugWrite($"Request url: {url}");
 
@@ -314,12 +314,12 @@ namespace Lexplosion.Logic.Network
             return (request.GetResponse().ContentType.StartsWith("text/html"));
         }
 
-        public RequestResult HttpPostJson(string url, string data, IDictionary<string, string> headers = null)
+        public RequestResult HttpPostJson(string url, string data, IReadOnlyDictionary<string, string> headers = null)
         {
             return HttpPostJsonAsync(url, data, headers).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
-        public async Task<RequestResult> HttpPostJsonAsync(string url, string data, IDictionary<string, string> headers = null)
+        public async Task<RequestResult> HttpPostJsonAsync(string url, string data, IReadOnlyDictionary<string, string> headers = null)
         {
             Runtime.DebugWrite($"Request url: {url}");
             HttpStatusCode? httpStatus = null;
@@ -409,12 +409,19 @@ namespace Lexplosion.Logic.Network
             }
         }
 
-        public async Task<HttpResponseMessage> GetResponse(string url, HttpCompletionOption completionOption, CancellationToken token)
-        {
-            return await _httpClient.GetAsync(url, completionOption, token);
-        }
+		public async Task<HttpResponseMessage> GetResponse(string url, HttpCompletionOption completionOption, CancellationToken token, IReadOnlyDictionary<string, string> headers = null)
+		{
+			var request = new HttpRequestMessage(HttpMethod.Get, url);
 
-        private void AddHeaders(HttpRequestMessage request, IDictionary<string, string> headers)
+			if (headers != null)
+			{
+				AddHeaders(request, headers);
+			}
+
+			return await _httpClient.SendAsync(request, completionOption, token);
+		}
+
+		private void AddHeaders(HttpRequestMessage request, IReadOnlyDictionary<string, string> headers)
         {
             if (headers != null)
             {

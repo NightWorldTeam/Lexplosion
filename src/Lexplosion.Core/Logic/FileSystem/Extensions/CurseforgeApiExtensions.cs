@@ -1,13 +1,15 @@
-﻿using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System;
+﻿using Lexplosion.Logic.FileSystem.Models;
 using Lexplosion.Logic.FileSystem.Services;
 using Lexplosion.Logic.Network.Web;
-using Lexplosion.Logic.Objects.Curseforge;
 using Lexplosion.Logic.Objects;
+using Lexplosion.Logic.Objects.Curseforge;
 using Lexplosion.Tools;
-using Lexplosion.Logic.FileSystem.Models;
+using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace Lexplosion.Logic.FileSystem.Extensions
 {
@@ -21,9 +23,9 @@ namespace Lexplosion.Logic.FileSystem.Extensions
                 api.TryTranslateUrlToMirror(ref fileUrl);
             }
 
-            if (addonType != AddonType.Maps)
+			if (addonType != AddonType.Maps)
             {
-                var result = withDirecory.InstallFile(fileUrl, fileName, path + folderName, taskArgs);
+                var result = withDirecory.InstallFile(fileUrl, fileName, path + folderName, taskArgs, CurseforgeApi.Headers);
                 if (!result.IsSucces)
                 {
                     if (!api.MirrorTranlationsEnabled && result.State == RequestResultState.NetworkError)
@@ -50,13 +52,13 @@ namespace Lexplosion.Logic.FileSystem.Extensions
             }
             else
             {
-                var result = withDirecory.InstallZipContent(fileUrl, fileName, path + folderName, taskArgs);
+				var result = withDirecory.InstallZipContent(fileUrl, fileName, path + folderName, taskArgs, CurseforgeApi.Headers);
                 if (!result.IsSucces)
                 {
                     if (!api.MirrorTranlationsEnabled && result.State == RequestResultState.NetworkError)
                     {
                         api.TryTranslateUrlToMirror(ref fileUrl);
-                        if (!withDirecory.InstallZipContent(fileUrl, fileName, path + folderName, taskArgs).IsSucces)
+                        if (!withDirecory.InstallZipContent(fileUrl, fileName, path + folderName, taskArgs, CurseforgeApi.Headers).IsSucces)
                         {
                             return new SetValues<InstalledAddonInfo, DownloadAddonRes>
                             {
