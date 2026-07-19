@@ -8,21 +8,24 @@
     xmlns:extensions="clr-namespace:Lexplosion.UI.WPF.Extensions"
     xmlns:local="clr-namespace:Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.ServerProfile"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:md="clr-namespace:MarkdownWPF;assembly=MarkdownWPF"
     xmlns:serverprofile="clr-namespace:Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.ServerProfile"
     d:DataContext="{d:DesignInstance Type=serverprofile:ServerProfileOverviewViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
 
-    <Border Padding="45,16,45,0" Background="{DynamicResource SecondarySolidColorBrush}">
+    <Border Padding="45,0,45,0" Background="{DynamicResource SecondarySolidColorBrush}">
         <Grid>
-            <ScrollViewer Margin="0,0,-45,0">
-                <TextBox
-                    Margin="0,0,45,16"
-                    FontSize="14"
-                    Style="{StaticResource TextBlockMode}"
-                    Text="{Binding Model.ServerModel.Description, Mode=OneWay}"
-                    TextWrapping="WrapWithOverflow" />
+            <ScrollViewer
+                Margin="0,0,-45,0"
+                Background="Transparent"
+                VerticalScrollBarVisibility="Auto">
+                <md:MarkdownViewer
+                    Margin="0,16,0,16"
+                    IsScrollViewerEnabled="False"
+                    Markdown="{Binding Model.ServerModel.Description, UpdateSourceTrigger=PropertyChanged}"
+                    StyleResourceMode="Dynamic" />
             </ScrollViewer>
         </Grid>
     </Border>
