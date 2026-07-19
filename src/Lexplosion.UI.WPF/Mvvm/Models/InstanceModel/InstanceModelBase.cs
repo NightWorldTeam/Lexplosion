@@ -922,6 +922,11 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.Mvvm.InstanceModel
                 OnPropertyChanged(nameof(DownloadingData));
             }
 
+			if (progressHandlerArguments.TotalFilesCount == 0) 
+			{
+				return;
+			} 
+
             DownloadingData.Stage = State;
             DownloadingData.CurrentStage = progressHandlerArguments.Stage;
             DownloadingData.TotalStages = progressHandlerArguments.StagesCount;
