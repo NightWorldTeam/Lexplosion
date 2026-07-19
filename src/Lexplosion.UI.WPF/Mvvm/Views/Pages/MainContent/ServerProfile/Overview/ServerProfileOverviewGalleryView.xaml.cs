@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.ServerProfile;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -30,5 +31,14 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.ServerProfile
             var button = sender as Button;
             button.Command.Execute(button.CommandParameter);
         }
+
+		private void UserControl_Loaded(object sender, RoutedEventArgs e)
+		{
+			if (DataContext is ServerProfileOverviewGalleryViewModel vm)
+			{
+				// Call a safe, parameterless void method on your ViewModel
+				vm.Model.Initialize();
+			}
+		}
     }
 }

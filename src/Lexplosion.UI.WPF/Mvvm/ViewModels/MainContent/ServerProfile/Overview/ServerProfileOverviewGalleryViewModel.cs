@@ -2,18 +2,17 @@
 using Lexplosion.UI.WPF.Commands;
 using Lexplosion.UI.WPF.Core;
 using Lexplosion.UI.WPF.Core.ViewModel;
-using System;
 using System.Collections.ObjectModel;
-using System.Windows.Forms;
 using System.Windows.Input;
 
 namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.ServerProfile
 {
     public sealed class ServerProfileOverviewGalleryModel : ObservableObject
-    {
-        private readonly AppCore _appCore;
+	{
+		private readonly AppCore _appCore;
+		private readonly MinecraftServerInstance _minecraftServerInstance;
 
-        public ObservableCollection<byte[]> Images { get; private set; } = new();
+		public ObservableCollection<byte[]> Images { get; private set; } = new();
 
         private bool _isLoading;
         public bool IsLoading
@@ -29,21 +28,26 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.ServerProfile
         {
             IsLoading = true;
             _appCore = appCore;
-            Runtime.TaskRun(() =>
-            {
-                var images = minecraftServerInstance.GetImages();
-                App.Current.Dispatcher.Invoke(() =>
-                {
-                    foreach (var i in images)
-                    {
-                        Images.Add(i);
-                    }
-                    IsLoading = false;
-                });
-            });
-        }
+			_minecraftServerInstance = minecraftServerInstance;
+		}
 
-        public void OpenImage(object value)
+		public void Initialize()
+		{
+			Runtime.TaskRun(() =>
+			{
+				var images = _minecraftServerInstance.GetImages();
+				App.Current.Dispatcher.BeginInvoke(() =>
+				{
+					foreach (var i in images)
+					{
+						Images.Add(i);
+					}
+					IsLoading = false;
+				});
+			});
+		}
+
+		public void OpenImage(object value)
         {
             _appCore.GalleryManager.ChangeContext(Images);
             _appCore.GalleryManager.SelectImage(value);
