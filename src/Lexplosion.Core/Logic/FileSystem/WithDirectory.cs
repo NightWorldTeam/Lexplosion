@@ -1,22 +1,23 @@
-﻿using System;
+﻿using Lexplosion.Global;
+using Lexplosion.Logic.FileSystem.Models;
+using Lexplosion.Logic.Network;
+using Lexplosion.Logic.Network.Web;
+using Lexplosion.Logic.Network.Web.Models;
+using Lexplosion.Logic.Objects;
+using Lexplosion.Tools;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Net.Http;
-using System.Text.RegularExpressions;
 using System.Net;
-using Newtonsoft.Json;
-using Lexplosion.Global;
-using Lexplosion.Tools;
-using Lexplosion.Logic.Objects;
-using Lexplosion.Logic.Network.Web;
-using System.Threading;
+using System.Net.Http;
 using System.Runtime.CompilerServices;
-using Lexplosion.Logic.Network.Web.Models;
-using Lexplosion.Logic.Network;
-using Lexplosion.Logic.FileSystem.Models;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Lexplosion.Logic.FileSystem
 {
@@ -159,12 +160,12 @@ namespace Lexplosion.Logic.FileSystem
 			}
 		}
 
-		public DownloadFileResult InstallZipContent(string url, string fileName, string path, TaskArgs taskArgs)
+		public DownloadFileResult InstallZipContent(string url, string fileName, string path, TaskArgs taskArgs, IReadOnlyDictionary<string, string> headers)
 		{
             path = DirectoryPath + "/" + path;
 			string tempDir = CreateTempDir();
 
-			var result = DownloadFile(url, fileName, tempDir, taskArgs);
+			var result = DownloadFile(url, fileName, tempDir, taskArgs, headers);
             if (!result.IsSucces)
 			{
 				return result;
@@ -205,7 +206,7 @@ namespace Lexplosion.Logic.FileSystem
 			return result;
 		}
 
-		public DownloadFileResult InstallFile(string url, string fileName, string path, TaskArgs taskArgs)
+		public DownloadFileResult InstallFile(string url, string fileName, string path, TaskArgs taskArgs, IReadOnlyDictionary<string, string> headers = null)
 		{
 			Runtime.DebugWrite("INSTALL " + url);
 
@@ -218,7 +219,7 @@ namespace Lexplosion.Logic.FileSystem
 					Directory.CreateDirectory(DirectoryPath + "/" + path);
 				}
 
-				var result = DownloadFile(url, fileName, tempDir, taskArgs);
+				var result = DownloadFile(url, fileName, tempDir, taskArgs, headers);
                 if (result.IsSucces)
 				{
 					DelFile(DirectoryPath + "/" + path + "/" + fileName);
@@ -247,13 +248,13 @@ namespace Lexplosion.Logic.FileSystem
 			}
 		}
 
-		public async Task<DownloadFileResult> DownloadFileAsync(string url, string savePath, TaskArgs taskArgs)
+		public async Task<DownloadFileResult> DownloadFileAsync(string url, string savePath, TaskArgs taskArgs, IReadOnlyDictionary<string, string>? headers)
 		{
 			Runtime.DebugWrite($"Start Download url: {url}, savePath: {savePath}");
 
 			try
 			{
-				using (HttpResponseMessage response = await ServerManager.GetResponse(url, HttpCompletionOption.ResponseHeadersRead, taskArgs.CancelToken))
+				using (HttpResponseMessage response = await ServerManager.GetResponse(url, HttpCompletionOption.ResponseHeadersRead, taskArgs.CancelToken, headers))
 				{
 					response.EnsureSuccessStatusCode();
 
@@ -332,10 +333,10 @@ namespace Lexplosion.Logic.FileSystem
             }
 		}
 
-		public DownloadFileResult DownloadFile(string url, string fileName, string tempDir, TaskArgs taskArgs)
+		public DownloadFileResult DownloadFile(string url, string fileName, string tempDir, TaskArgs taskArgs, IReadOnlyDictionary<string, string> headers = null)
 		{
 			DelFile(tempDir + fileName);
-			return DownloadFileAsync(url, tempDir + fileName, taskArgs).Result;
+			return DownloadFileAsync(url, tempDir + fileName, taskArgs, headers).Result;
 		}
 
 		/// <summary>

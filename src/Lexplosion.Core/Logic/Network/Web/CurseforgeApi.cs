@@ -13,346 +13,346 @@ using Newtonsoft.Json;
 
 namespace Lexplosion.Logic.Network.Web
 {
-    public class CurseforgeApi
-    {
-        private const string TOKEN = "$2a$10$Ky9zG9R9.ha.kf5BRrvwU..OGSvC0I2Wp56hgXI/4aRtGbizrm3we";
-        private const string API_URL_BASE = "https://api.curseforge.com/";
-        private const string MIRROR_API_URL_BASE = $"{Global.LaunсherSettings.URL.MirrorUrl}api.curseforge.com/";
+	public class CurseforgeApi
+	{
+		public const string TOKEN = "$2a$10$Ky9zG9R9.ha.kf5BRrvwU..OGSvC0I2Wp56hgXI/4aRtGbizrm3we";
+		private const string API_URL_BASE = "https://api.curseforge.com/";
+		private const string MIRROR_API_URL_BASE = $"{Global.LaunсherSettings.URL.MirrorUrl}api.curseforge.com/";
 
-        private readonly ToServer _toServer;
-        private bool _isMirorModeToMainUrl = false;
+		public static readonly IReadOnlyDictionary<string, string> Headers = new Dictionary<string, string>()
+		{
+			["x-api-key"] = TOKEN
+		};
 
-        private string[] _mirrorAvalableDomains = new string[]
-        {
-            "curseforge.com",
-            "forgecdn.net"
-        };
+		private readonly ToServer _toServer;
+		private bool _isMirorModeToMainUrl = false;
 
-        private Dictionary<string, string> _mirrorTranslations = new Dictionary<string, string>();
-        public bool MirrorTranlationsEnabled { get; private set; } = false;
+		private string[] _mirrorAvalableDomains = new string[]
+		{
+			"curseforge.com",
+			"forgecdn.net"
+		};
 
-        private class DataContainer<T>
-        {
-            [JsonProperty("data")]
-            public T Data;
-            [JsonProperty("pagination")]
-            public Pagination Paginator { get; set; }
-        }
+		private Dictionary<string, string> _mirrorTranslations = new Dictionary<string, string>();
+		public bool MirrorTranlationsEnabled { get; private set; } = false;
 
-        private class Pagination
-        {
-            [JsonProperty("index")]
-            public int Index { get; set; }
-            [JsonProperty("pageSize")]
-            public int PageSize { get; set; }
-            [JsonProperty("resultCount")]
-            public int ResultCount { get; set; }
-            [JsonProperty("totalCount")]
-            public int TotalCount { get; set; }
-        }
+		private class DataContainer<T>
+		{
+			[JsonProperty("data")]
+			public T Data;
+			[JsonProperty("pagination")]
+			public Pagination Paginator { get; set; }
+		}
 
-        public class FingerprintSearchAnswer
-        {
-            public class SearchedFiles
-            {
-                public int id;
-                public CurseforgeFileInfo file;
-            }
+		private class Pagination
+		{
+			[JsonProperty("index")]
+			public int Index { get; set; }
+			[JsonProperty("pageSize")]
+			public int PageSize { get; set; }
+			[JsonProperty("resultCount")]
+			public int ResultCount { get; set; }
+			[JsonProperty("totalCount")]
+			public int TotalCount { get; set; }
+		}
 
-            public List<SearchedFiles> exactMatches;
-        }
+		public class FingerprintSearchAnswer
+		{
+			public class SearchedFiles
+			{
+				public int id;
+				public CurseforgeFileInfo file;
+			}
 
-        public CurseforgeApi(ToServer toServer)
-        {
-            _toServer = toServer;
-        }
+			public List<SearchedFiles> exactMatches;
+		}
 
-        public bool TryTranslateUrlToMirror(ref string url)
-        {
-            var uri = new Uri(url);
-            var baseUrl = $"{uri.Scheme}://{uri.Host}";
+		public CurseforgeApi(ToServer toServer)
+		{
+			_toServer = toServer;
+		}
 
-            if (_mirrorTranslations.TryGetValue(baseUrl, out string toMirrorUrl))
-            {
-                url = url.Replace(baseUrl, toMirrorUrl);
-                return true;
-            }
+		public bool TryTranslateUrlToMirror(ref string url)
+		{
+			var uri = new Uri(url);
+			var baseUrl = $"{uri.Scheme}://{uri.Host}";
 
-            foreach (var domain in _mirrorAvalableDomains)
-            {
-                if (uri.Host.EndsWith(domain))
-                {
-                    var mirrorUrl = $"{Global.LaunсherSettings.URL.MirrorUrl}{uri.Host}";
+			if (_mirrorTranslations.TryGetValue(baseUrl, out string toMirrorUrl))
+			{
+				url = url.Replace(baseUrl, toMirrorUrl);
+				return true;
+			}
 
-                    _mirrorTranslations[baseUrl] = mirrorUrl;
-                    MirrorTranlationsEnabled = true;
-                    url = url.Replace(baseUrl, mirrorUrl);
+			foreach (var domain in _mirrorAvalableDomains)
+			{
+				if (uri.Host.EndsWith(domain))
+				{
+					var mirrorUrl = $"{Global.LaunсherSettings.URL.MirrorUrl}{uri.Host}";
 
-                    Runtime.DebugWrite($"Use mirror. From {baseUrl} to {mirrorUrl}");
-                    return true;
-                }
-            }
+					_mirrorTranslations[baseUrl] = mirrorUrl;
+					MirrorTranlationsEnabled = true;
+					url = url.Replace(baseUrl, mirrorUrl);
 
-            return false;
-        }
+					Runtime.DebugWrite($"Use mirror. From {baseUrl} to {mirrorUrl}");
+					return true;
+				}
+			}
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private T GetApiData<T>(string url, out Pagination pagination, Func<string, Dictionary<string, string>, RequestResult> reuestMethod) 
-            where T : new()
-        {
-            pagination = null;
+			return false;
+		}
 
-            try
-            {
-                var headers = new Dictionary<string, string>()
-                {
-                    ["x-api-key"] = TOKEN
-                };
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private T GetApiData<T>(string url, out Pagination pagination, Func<string, IReadOnlyDictionary<string, string>, RequestResult> reuestMethod)
+			where T : new()
+		{
+			pagination = null;
 
-                var result = reuestMethod((_isMirorModeToMainUrl ? MIRROR_API_URL_BASE : API_URL_BASE) + url, headers);
-                if (!result.IsSucces && !_isMirorModeToMainUrl && result.State == RequestResultState.NetworkError)
-                {
-                    result = _toServer.HttpGetWithFullResult(MIRROR_API_URL_BASE + url, headers);
-                    if (!result.IsSucces) return new T();
+			try
+			{
+				var result = reuestMethod((_isMirorModeToMainUrl ? MIRROR_API_URL_BASE : API_URL_BASE) + url, Headers);
+				if (!result.IsSucces && !_isMirorModeToMainUrl && result.State == RequestResultState.NetworkError)
+				{
+					result = _toServer.HttpGetWithFullResult(MIRROR_API_URL_BASE + url, Headers);
+					if (!result.IsSucces) return new T();
 
-                    _isMirorModeToMainUrl = true;
-                }
+					_isMirorModeToMainUrl = true;
+				}
 
-                if (result.IsSucces && result.Content != null)
-                {
-                    var data = JsonConvert.DeserializeObject<DataContainer<T>>(result.Content);
-                    if (data == null) return new T();
+				if (result.IsSucces && result.Content != null)
+				{
+					var data = JsonConvert.DeserializeObject<DataContainer<T>>(result.Content);
+					if (data == null) return new T();
 
-                    pagination = data.Paginator;
-                    return data.Data ?? new T();
-                }
+					pagination = data.Paginator;
+					return data.Data ?? new T();
+				}
 
-                return new T();
-            }
-            catch
-            {
-                return new T();
-            }
-        }
+				return new T();
+			}
+			catch
+			{
+				return new T();
+			}
+		}
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private T GetApiData<T>(string url, out Pagination pagination) where T : new()
-        {
-            return GetApiData<T>(url, out pagination, (string fullUrl, Dictionary<string, string> headers) =>
-            {
-                return _toServer.HttpGetWithFullResult(fullUrl, headers);
-            });
-        }
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private T GetApiData<T>(string url, out Pagination pagination) where T : new()
+		{
+			return GetApiData<T>(url, out pagination, (string fullUrl, IReadOnlyDictionary<string, string> headers) =>
+			{
+				return _toServer.HttpGetWithFullResult(fullUrl, headers);
+			});
+		}
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private T GetApiData<T>(string url, string jsonInputData, out Pagination pagination) where T : new()
-        {
-            return GetApiData<T>(url, out pagination, (string fullUrl, Dictionary<string, string> headers) =>
-            {
-                return _toServer.HttpPostJson(fullUrl, jsonInputData, headers);
-            });
-        }
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private T GetApiData<T>(string url, string jsonInputData, out Pagination pagination) where T : new()
+		{
+			return GetApiData<T>(url, out pagination, (string fullUrl, IReadOnlyDictionary<string, string> headers) =>
+			{
+				return _toServer.HttpPostJson(fullUrl, jsonInputData, headers);
+			});
+		}
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private T GetApiData<T>(string url, string jsonInputData) where T : new() => GetApiData<T>(url, jsonInputData, out _);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private T GetApiData<T>(string url, string jsonInputData) where T : new() => GetApiData<T>(url, jsonInputData, out _);
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private T GetApiData<T>(string url) where T : new() => GetApiData<T>(url, out _);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private T GetApiData<T>(string url) where T : new() => GetApiData<T>(url, out _);
 
-        public CatalogResult<CurseforgeInstanceInfo> GetInstances(CurseforgeSearchParams searchParams)
-        {
-            var queryBuilder = new QueryApiBuilder("v1/mods/search");
+		public CatalogResult<CurseforgeInstanceInfo> GetInstances(CurseforgeSearchParams searchParams)
+		{
+			var queryBuilder = new QueryApiBuilder("v1/mods/search");
 
-            queryBuilder.Add("gameId", "432");
-            queryBuilder.Add("classId", "4471");
-            queryBuilder.Add("sortOrder", "desc");
-            queryBuilder.Add("pageSize", searchParams.PageSize);
-            queryBuilder.Add("index", searchParams.PageSize * searchParams.PageIndex);
+			queryBuilder.Add("gameId", "432");
+			queryBuilder.Add("classId", "4471");
+			queryBuilder.Add("sortOrder", "desc");
+			queryBuilder.Add("pageSize", searchParams.PageSize);
+			queryBuilder.Add("index", searchParams.PageSize * searchParams.PageIndex);
 
-            if (!string.IsNullOrWhiteSpace(searchParams.SearchFilter))
-                queryBuilder.Add("searchFilter", WebUtility.UrlEncode(searchParams.SearchFilter));
+			if (!string.IsNullOrWhiteSpace(searchParams.SearchFilter))
+				queryBuilder.Add("searchFilter", WebUtility.UrlEncode(searchParams.SearchFilter));
 
-            if (!string.IsNullOrWhiteSpace(searchParams.GameVersion))
-                queryBuilder.Add("gameVersion", searchParams.GameVersion);
+			if (!string.IsNullOrWhiteSpace(searchParams.GameVersion))
+				queryBuilder.Add("gameVersion", searchParams.GameVersion);
 
-            queryBuilder.Add("categoryIds", BuildCategoriesToQuery(searchParams.Categories));
-            queryBuilder.Add("sortField", (int)searchParams.SortField);
+			queryBuilder.Add("categoryIds", BuildCategoriesToQuery(searchParams.Categories));
+			queryBuilder.Add("sortField", (int)searchParams.SortField);
 
-            var url = queryBuilder.Build();
+			var url = queryBuilder.Build();
 
-            Runtime.DebugWrite(url, color: ConsoleColor.Cyan);
+			Runtime.DebugWrite(url, color: ConsoleColor.Cyan);
 
-            var result = GetApiData<List<CurseforgeInstanceInfo>>(url, out Pagination paginator);
-            return new(result, paginator?.TotalCount ?? 1);
-        }
+			var result = GetApiData<List<CurseforgeInstanceInfo>>(url, out Pagination paginator);
+			return new(result, paginator?.TotalCount ?? 1);
+		}
 
-        private string BuildCategoriesToQuery(IEnumerable<IProjectCategory> categories)
-        {
-            string ctrs = string.Join(",", categories.Where(x => x.Id != "-1").Select(x => x.Id));
-            return $"[{ctrs}]";
-        }
+		private string BuildCategoriesToQuery(IEnumerable<IProjectCategory> categories)
+		{
+			string ctrs = string.Join(",", categories.Where(x => x.Id != "-1").Select(x => x.Id));
+			return $"[{ctrs}]";
+		}
 
-        public CatalogResult<CurseforgeAddonInfo> GetAddonsList(AddonType type, CurseforgeSearchParams searchParams)
-        {
-            /*
+		public CatalogResult<CurseforgeAddonInfo> GetAddonsList(AddonType type, CurseforgeSearchParams searchParams)
+		{
+			/*
              https://api.curseforge.com/v1/mods/search?gameId=432&classId=12&sortOrder=desc&pageSize=10&index=0&gameVersion=1.20.1&categoryIds=%5B%5D&sortField=0&searchFilter=
              https://api.curseforge.com/v1/mods/search?gameId=432&classId=12&sortOrder=desc&pageSize=10&index=0&gameVersion=1.20.1&categoryIds=&sortField=0
              */
 
-            var queryBuilder = new QueryApiBuilder("v1/mods/search");
+			var queryBuilder = new QueryApiBuilder("v1/mods/search");
 
-            queryBuilder.Add("gameId", "432");
-            queryBuilder.Add("classId", (int)type);
-            queryBuilder.Add("sortOrder", "desc");
-            queryBuilder.Add("pageSize", searchParams.PageSize);
-            queryBuilder.Add("index", searchParams.PageIndex * searchParams.PageSize);
+			queryBuilder.Add("gameId", "432");
+			queryBuilder.Add("classId", (int)type);
+			queryBuilder.Add("sortOrder", "desc");
+			queryBuilder.Add("pageSize", searchParams.PageSize);
+			queryBuilder.Add("index", searchParams.PageIndex * searchParams.PageSize);
 
-            if (!string.IsNullOrWhiteSpace(searchParams.SearchFilter))
-                queryBuilder.Add("searchFilter", WebUtility.UrlEncode(searchParams.SearchFilter));
+			if (!string.IsNullOrWhiteSpace(searchParams.SearchFilter))
+				queryBuilder.Add("searchFilter", WebUtility.UrlEncode(searchParams.SearchFilter));
 
-            if (!string.IsNullOrWhiteSpace(searchParams.GameVersion))
-                queryBuilder.Add("gameVersion", searchParams.GameVersion);
+			if (!string.IsNullOrWhiteSpace(searchParams.GameVersion))
+				queryBuilder.Add("gameVersion", searchParams.GameVersion);
 
-            if (searchParams.Categories.Count() > 0)
-                queryBuilder.Add("categoryIds", BuildCategoriesToQuery(searchParams.Categories));
+			if (searchParams.Categories.Count() > 0)
+				queryBuilder.Add("categoryIds", BuildCategoriesToQuery(searchParams.Categories));
 
-            queryBuilder.Add("sortField", (int)searchParams.SortField);
+			queryBuilder.Add("sortField", (int)searchParams.SortField);
 
-            if (type == AddonType.Mods)
-            {
-                queryBuilder.Add("modLoaderTypes", WebUtility.UrlEncode("[" + string.Join(",", searchParams.Modloaders) + "]"));
-            }
+			if (type == AddonType.Mods)
+			{
+				queryBuilder.Add("modLoaderTypes", WebUtility.UrlEncode("[" + string.Join(",", searchParams.Modloaders) + "]"));
+			}
 
-            var url = queryBuilder.Build();
+			var url = queryBuilder.Build();
 
-            Runtime.DebugWrite(url);
+			Runtime.DebugWrite(url);
 
-            var result = GetApiData<List<CurseforgeAddonInfo>>(url, out Pagination paginator);
-            return new(result, paginator?.TotalCount ?? 1);
-        }
+			var result = GetApiData<List<CurseforgeAddonInfo>>(url, out Pagination paginator);
+			return new(result, paginator?.TotalCount ?? 1);
+		}
 
-        /// <summary>
-        /// Возвращает файлы проекта
-        /// </summary>
-        /// <param name="projectId">id проекта</param>
-        /// <param name="gameVersion">Версия игры</param>
-        /// <param name="modloader">Модлоадер. Если его не нужно учитывать, то null</param>
-        /// <returns></returns>
-        public List<CurseforgeFileInfo> GetProjectFiles(string projectId, string gameVersion, Modloader? modloader)
-        {
-            string modloaderStr = "";
-            if (modloader != null)
-            {
-                modloaderStr = "&modLoaderType=" + ((int)modloader);
-            }
+		/// <summary>
+		/// Возвращает файлы проекта
+		/// </summary>
+		/// <param name="projectId">id проекта</param>
+		/// <param name="gameVersion">Версия игры</param>
+		/// <param name="modloader">Модлоадер. Если его не нужно учитывать, то null</param>
+		/// <returns></returns>
+		public List<CurseforgeFileInfo> GetProjectFiles(string projectId, string gameVersion, Modloader? modloader)
+		{
+			string modloaderStr = "";
+			if (modloader != null)
+			{
+				modloaderStr = "&modLoaderType=" + ((int)modloader);
+			}
 
-            // TODO: у курсфорджа ограничения на 50 файлов, поэтому нужный нам файл иногда может просто не найтись
-            return GetApiData<List<CurseforgeFileInfo>>("v1/mods/" + projectId + "/files?gameVersion=" + gameVersion + modloaderStr);
-        }
+			// TODO: у курсфорджа ограничения на 50 файлов, поэтому нужный нам файл иногда может просто не найтись
+			return GetApiData<List<CurseforgeFileInfo>>("v1/mods/" + projectId + "/files?gameVersion=" + gameVersion + modloaderStr);
+		}
 
-        public List<CurseforgeFileInfo> GetProjectFiles(string projectId, string gameVersion, IEnumerable<Modloader> modloaders)
-        {
-            string modloaderStr = "";
-            if (modloaders != null)
-            {
-                modloaderStr = "&modLoaderTypes=" + WebUtility.UrlEncode($"[\"{string.Join(",", modloaders.Select(x => (int)x))}\"]");
-            }
+		public List<CurseforgeFileInfo> GetProjectFiles(string projectId, string gameVersion, IEnumerable<Modloader> modloaders)
+		{
+			string modloaderStr = "";
+			if (modloaders != null)
+			{
+				modloaderStr = "&modLoaderTypes=" + WebUtility.UrlEncode($"[\"{string.Join(",", modloaders.Select(x => (int)x))}\"]");
+			}
 
-            // TODO: у курсфорджа ограничения на 50 файлов, поэтому нужный нам файл иногда может просто не найтись
-            return GetApiData<List<CurseforgeFileInfo>>("v1/mods/" + projectId + "/files?gameVersion=" + gameVersion + modloaderStr);
-        }
+			// TODO: у курсфорджа ограничения на 50 файлов, поэтому нужный нам файл иногда может просто не найтись
+			return GetApiData<List<CurseforgeFileInfo>>("v1/mods/" + projectId + "/files?gameVersion=" + gameVersion + modloaderStr);
+		}
 
-        public List<CurseforgeFileInfo> GetFilesFromFingerprints(List<string> fingerprint)
-        {
-            var jsonContent = "{\"fingerprints\": [" + string.Join(",", fingerprint) + "]}";
+		public List<CurseforgeFileInfo> GetFilesFromFingerprints(List<string> fingerprint)
+		{
+			var jsonContent = "{\"fingerprints\": [" + string.Join(",", fingerprint) + "]}";
 
-            var data = GetApiData<FingerprintSearchAnswer>("v1/fingerprints/432", jsonContent);
-            var result = new List<CurseforgeFileInfo>();
-            if (data?.exactMatches != null)
-            {
-                foreach (var item in data?.exactMatches)
-                {
-                    result.Add(item.file);
-                }
-            }
+			var data = GetApiData<FingerprintSearchAnswer>("v1/fingerprints/432", jsonContent);
+			var result = new List<CurseforgeFileInfo>();
+			if (data?.exactMatches != null)
+			{
+				foreach (var item in data?.exactMatches)
+				{
+					result.Add(item.file);
+				}
+			}
 
-            return result;
-        }
+			return result;
+		}
 
-        public List<CurseforgeFileInfo> GetProjectFiles(string projectId)
-        {
-            return GetApiData<List<CurseforgeFileInfo>>("v1/mods/" + projectId + "/files");
-        }
+		public List<CurseforgeFileInfo> GetProjectFiles(string projectId)
+		{
+			return GetApiData<List<CurseforgeFileInfo>>("v1/mods/" + projectId + "/files");
+		}
 
-        public CurseforgeFileInfo GetProjectFile(string projecrId, string fileId)
-        {
-            return GetApiData<CurseforgeFileInfo>("v1/mods/" + projecrId + "/files/" + fileId);
-        }
+		public CurseforgeFileInfo GetProjectFile(string projecrId, string fileId)
+		{
+			return GetApiData<CurseforgeFileInfo>("v1/mods/" + projecrId + "/files/" + fileId);
+		}
 
-        public CurseforgeAddonInfo GetAddonInfo(string id)
-        {
-            return GetApiData<CurseforgeAddonInfo>("v1/mods/" + id + "/");
-        }
+		public CurseforgeAddonInfo GetAddonInfo(string id)
+		{
+			return GetApiData<CurseforgeAddonInfo>("v1/mods/" + id + "/");
+		}
 
-        public List<CurseforgeAddonInfo> GetAddonsInfo(string[] ids)
-        {
-            string jsonContent = "{\"modIds\": [" + string.Join(",", ids) + "]}";
+		public List<CurseforgeAddonInfo> GetAddonsInfo(string[] ids)
+		{
+			string jsonContent = "{\"modIds\": [" + string.Join(",", ids) + "]}";
 
-            var data = GetApiData<List<CurseforgeAddonInfo>>("v1/mods", jsonContent);
-            return data ?? new List<CurseforgeAddonInfo>();
-        }
+			var data = GetApiData<List<CurseforgeAddonInfo>>("v1/mods", jsonContent);
+			return data ?? new List<CurseforgeAddonInfo>();
+		}
 
-        public CurseforgeInstanceInfo GetInstance(string id)
-        {
-            try
-            {
-                return GetApiData<CurseforgeInstanceInfo>("v1/mods/" + id + "/");
-            }
-            catch
-            {
-                return new CurseforgeInstanceInfo();
-            }
-        }
+		public CurseforgeInstanceInfo GetInstance(string id)
+		{
+			try
+			{
+				return GetApiData<CurseforgeInstanceInfo>("v1/mods/" + id + "/");
+			}
+			catch
+			{
+				return new CurseforgeInstanceInfo();
+			}
+		}
 
-        public string GetProjectChangelog(string projectID, string fileID)
-        {
-            //return ToServer.HttpGet("https://api.curseforge.com/v1/mods/" + projectID + "/files/" + fileID + "/changelog");
-            // TODO: придумать как эту хуйню красиво сделать
-            return "";
-        }
+		public string GetProjectChangelog(string projectID, string fileID)
+		{
+			//return ToServer.HttpGet("https://api.curseforge.com/v1/mods/" + projectID + "/files/" + fileID + "/changelog");
+			// TODO: придумать как эту хуйню красиво сделать
+			return "";
+		}
 
-        public string GetProjectDescription(string projectId)
-        {
-            try
-            {
-                string result = _toServer.HttpGet($"v1/mods/{projectId}/description", new Dictionary<string, string>()
-                {
-                    ["x-api-key"] = TOKEN
-                });
+		public string GetProjectDescription(string projectId)
+		{
+			try
+			{
+				string result = _toServer.HttpGet($"v1/mods/{projectId}/description", new Dictionary<string, string>()
+				{
+					["x-api-key"] = TOKEN
+				});
 
-                if (result == null) return string.Empty;
+				if (result == null) return string.Empty;
 
-                var data = JsonConvert.DeserializeObject<DataContainer<string>>(result);
-                return data?.Data ?? string.Empty;
-            }
-            catch
-            {
-                return string.Empty;
-            }
-        }
+				var data = JsonConvert.DeserializeObject<DataContainer<string>>(result);
+				return data?.Data ?? string.Empty;
+			}
+			catch
+			{
+				return string.Empty;
+			}
+		}
 
-        public List<CurseforgeCategory> GetCategories(CfProjectType type)
-        {
-            List<CurseforgeCategory> categories = GetApiData<List<CurseforgeCategory>>("v1/categories?gameId=432&classId=" + (int)type);
-            categories.Insert(0, new CurseforgeCategory
-            {
-                Id = "-1",
-                Name = "All",
-                ClassId = ((int)type).ToString(),
-                ParentCategoryId = ((int)type).ToString()
-            });
+		public List<CurseforgeCategory> GetCategories(CfProjectType type)
+		{
+			List<CurseforgeCategory> categories = GetApiData<List<CurseforgeCategory>>("v1/categories?gameId=432&classId=" + (int)type);
+			categories.Insert(0, new CurseforgeCategory
+			{
+				Id = "-1",
+				Name = "All",
+				ClassId = ((int)type).ToString(),
+				ParentCategoryId = ((int)type).ToString()
+			});
 
-            return categories;
-        }
-    }
+			return categories;
+		}
+	}
 }
