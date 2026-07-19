@@ -38,7 +38,6 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.Mvvm.InstanceModel
             {
                 _currentStage = value;
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(StageFormatted));
             }
         }
         /// <summary>
@@ -51,7 +50,8 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.Mvvm.InstanceModel
             {
                 _totalFiles = value;
                 OnPropertyChanged();
-            }
+				OnPropertyChanged(nameof(StageFormatted));
+			}
         }
         /// <summary>
         /// Текущие количество скаченных файлов
@@ -63,27 +63,28 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.Mvvm.InstanceModel
             {
                 _filesCounts = value;
                 OnPropertyChanged();
-            }
+				OnPropertyChanged(nameof(StageFormatted));
+			}
         }
         /// <summary>
         /// Процент скачивания
         /// </summary>
-        private int _persentages;
+        private int _percentages;
         public int Percentages
         {
-            get => _persentages; set
+            get => _percentages; set
             {
-                _persentages = value;
+				_percentages = value;
                 OnPropertyChanged();
             }
         }
 
 
-        public string StageFormatted { get; }
+		public string StageFormatted => $"{FilesCounts}/{TotalFiles}";
 
-        public DownloadingData()
+
+		public DownloadingData()
         {
-            StageFormatted = $"{FilesCounts}/{TotalFiles}";
             OnPropertyChanged(string.Empty);
         }
     }
