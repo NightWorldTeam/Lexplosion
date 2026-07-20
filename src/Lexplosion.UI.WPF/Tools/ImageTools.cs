@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Drawing;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Windows;
 
 using System.Windows.Media.Imaging;
@@ -12,6 +14,11 @@ namespace Lexplosion.UI.WPF.Core.Tools
 		const string pathToDefaultImage = "pack://Application:,,,/Assets/images/icons/non_image.png";
 		public static readonly BitmapImage defaultBitmapImage = new BitmapImage(new Uri(pathToDefaultImage));
 		public static readonly BitmapImage defaultBitmapImageTemplate = new BitmapImage(new Uri("pack://Application:,,,/Assets/images/icons/non_image_template.png"));
+
+		// Cache for viewer-size decoded images keyed by source byte[].
+		// ConditionalWeakTable ensures entries are collected when the source byte[] is GC'd.
+		private static readonly ConditionalWeakTable<byte[], BitmapImage> _viewerImageCache = new();
+		private static readonly ConcurrentDictionary<string, BitmapImage> _viewerUrlCache = new();
 
 		/// <summary>
 		/// Приводит массив байт в bitmapimage.
@@ -45,6 +52,81 @@ namespace Lexplosion.UI.WPF.Core.Tools
 					image.Freeze();
 					return image;
 				}
+			}
+			catch
+			{
+				return defaultBitmapImage;
+			}
+		}
+
+		/// <summary>
+		/// Decodes an image from bytes at a capped resolution to reduce memory usage.
+		/// Suitable for the full-size image viewer where the image is displayed
+		/// within a bounded viewport (e.g. 1920px wide).
+		/// Results are cached so reopening the same image skips re-decoding.
+		/// </summary>
+		public static BitmapImage ToImageWithMaxWidth(byte[] bytes, int maxWidth = 1920)
+		{
+			if (bytes == null || bytes.Length == 0)
+				return defaultBitmapImage;
+
+			if (_viewerImageCache.TryGetValue(bytes, out var cached))
+				return cached;
+
+			try
+			{
+				BitmapImage image;
+				using (var stream = new System.IO.MemoryStream(bytes))
+				{
+					image = new BitmapImage();
+					image.BeginInit();
+					image.DecodePixelWidth = maxWidth;
+					image.CacheOption = BitmapCacheOption.OnLoad;
+					image.StreamSource = stream;
+					image.EndInit();
+					image.Freeze();
+				}
+
+				try
+				{
+					_viewerImageCache.Add(bytes, image);
+				}
+				catch (ArgumentException)
+				{
+					_viewerImageCache.TryGetValue(bytes, out cached);
+					return cached ?? image;
+				}
+
+				return image;
+			}
+			catch
+			{
+				return defaultBitmapImage;
+			}
+		}
+
+		/// <summary>
+		/// Decodes an image from a URL at a capped resolution with caching.
+		/// </summary>
+		public static BitmapImage ToImageFromUrlWithMaxWidth(string url, int maxWidth = 1920)
+		{
+			if (string.IsNullOrEmpty(url))
+				return defaultBitmapImage;
+
+			if (_viewerUrlCache.TryGetValue(url, out var cached))
+				return cached;
+
+			try
+			{
+				var image = new BitmapImage();
+				image.BeginInit();
+				image.DecodePixelWidth = maxWidth;
+				image.CacheOption = BitmapCacheOption.OnLoad;
+				image.UriSource = new Uri(url);
+				image.EndInit();
+				image.Freeze();
+				_viewerUrlCache[url] = image;
+				return image;
 			}
 			catch
 			{

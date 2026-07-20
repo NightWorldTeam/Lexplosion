@@ -12,7 +12,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.ServerProfile
 		private readonly AppCore _appCore;
 		private readonly MinecraftServerInstance _minecraftServerInstance;
 
-		public ObservableCollection<byte[]> Images { get; private set; } = new();
+        public ObservableCollection<byte[]> Images { get; private set; } = new();
 
         private bool _isLoading;
         public bool IsLoading
@@ -24,33 +24,65 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.ServerProfile
             }
         }
 
+		private bool _hasImages;
+		public bool HasImages
+		{
+			get => _hasImages;
+			private set
+			{
+				_hasImages = value;
+				OnPropertyChanged();
+			}
+		}
+
+		private bool _isInitializing;
+
         public ServerProfileOverviewGalleryModel(AppCore appCore, MinecraftServerInstance minecraftServerInstance)
         {
             IsLoading = true;
             _appCore = appCore;
 			_minecraftServerInstance = minecraftServerInstance;
+			Images.CollectionChanged += (_, _) => HasImages = Images.Count > 0;
 		}
 
 		public void Initialize()
 		{
+			if (_isInitializing) return;
+			if (Images.Count > 0) return;
+
+			_isInitializing = true;
+			IsLoading = true;
+
 			Runtime.TaskRun(() =>
 			{
-				var images = _minecraftServerInstance.GetImages();
-				App.Current.Dispatcher.BeginInvoke(() =>
+				try
 				{
-					foreach (var i in images)
+					var images = _minecraftServerInstance.GetImages();
+					App.Current.Dispatcher.BeginInvoke(() =>
 					{
-						Images.Add(i);
-					}
-					IsLoading = false;
-				});
+						if (images != null)
+						{
+							foreach (var i in images)
+							{
+								Images.Add(i);
+							}
+						}
+					});
+				}
+				finally
+				{
+					App.Current.Dispatcher.BeginInvoke(() =>
+					{
+						_isInitializing = false;
+						IsLoading = false;
+					});
+				}
 			});
 		}
 
 		public void OpenImage(object value)
         {
-            _appCore.GalleryManager.ChangeContext(Images);
-            _appCore.GalleryManager.SelectImage(value);
+            _appCore.GalleryManager.ChangeContext(Images, value);
         }
     }
 

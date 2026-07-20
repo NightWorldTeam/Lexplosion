@@ -132,30 +132,9 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Windows
             ImageViewer.Visibility = _gallery.HasSelectedImage ? Visibility.Visible : Visibility.Collapsed;
 
             _gallery.StateChanged += OnGalleryStateChanged;
-
             CloseImage.Click += OnCloseImageClicked;
-            //NextImage.Click += OnNextImageClicked;
-            //PrevImage.Click += OnPrevImageClicked;
-
-            //// Создаем привязку
-            //Binding hasPrevBinding = new Binding("HasPrev")
-            //{
-            //    Source = _gallery, // Источник данных
-            //    Mode = BindingMode.OneWay, // Режим привязки (двусторонний)
-            //    UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged // Обновление источника при изменении текста
-            //};
-
-            //// Создаем привязку
-            //Binding hasNextBinding = new Binding("HasNext")
-            //{
-            //    Source = _gallery, // Источник данных
-            //    Mode = BindingMode.OneWay, // Режим привязки (двусторонний)
-            //    UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged // Обновление источника при изменении текста
-            //};
-
-            //// Устанавливаем привязку для свойства Text
-            //PrevImage.SetBinding(FrameworkElement.IsEnabledProperty, hasPrevBinding);
-            //NextImage.SetBinding(FrameworkElement.IsEnabledProperty, hasNextBinding);
+            PrevImage.Click += OnPrevImageClicked;
+            NextImage.Click += OnNextImageClicked;
         }
 
         private void OnGalleryStateChanged()
@@ -163,29 +142,29 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Windows
             ImageViewer.Visibility = _gallery.HasSelectedImage ? Visibility.Visible : Visibility.Collapsed;
 
             if (!_gallery.HasSelectedImage)
-                Image.ImageSource = null;
-            if (Image.ImageSource == null || Image.ImageSource.ToString() == "pack://Application:,,,/Assets/images/icons/non_image.png")
             {
-                BitmapImage image = null;
-
-                Runtime.TaskRun(() =>
-                {
-                    if (_gallery.SelectedImageSource is byte[] byteImage)
-                    {
-                        image = ImageTools.ToImage(byteImage) ?? image;
-                    }
-                    else if (_gallery.SelectedImageSource is string stringImage)
-                    {
-                        image = new BitmapImage(new Uri(stringImage)) ?? image;
-                    }
-
-                    App.Current.Dispatcher.Invoke(() =>
-                    {
-                        Image.ImageSource = image;
-                    });
-                });
-
+                Image.ImageSource = null;
+                return;
             }
+
+            Runtime.TaskRun(() =>
+            {
+                BitmapImage? image = null;
+
+                if (_gallery.SelectedImageSource is byte[] byteImage)
+                {
+                    image = ImageTools.ToImageWithMaxWidth(byteImage);
+                }
+                else if (_gallery.SelectedImageSource is string stringImage)
+                {
+                    image = ImageTools.ToImageFromUrlWithMaxWidth(stringImage);
+                }
+
+                App.Current.Dispatcher.BeginInvoke(() =>
+                {
+                    Image.ImageSource = image;
+                });
+            });
         }
 
         #region Image Viewer
@@ -193,12 +172,12 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Windows
 
         private void OnPrevImageClicked(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+			_gallery.Prev();
         }
 
         private void OnNextImageClicked(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+			_gallery.Next();
         }
 
         private void OnCloseImageClicked(object sender, RoutedEventArgs e)
@@ -395,7 +374,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Windows
         private void ChangeTheme_MouseDown(object sender, MouseButtonEventArgs e)
         {
             var themeService = _appCore.Settings.ThemeService;
-            Theme selectedTheme = null;
+            Theme? selectedTheme = null;
             //if (themeService.SelectedTheme.Name == "Open Space")
             //{
             //    var resourceLoader = new ResourcesLoader();

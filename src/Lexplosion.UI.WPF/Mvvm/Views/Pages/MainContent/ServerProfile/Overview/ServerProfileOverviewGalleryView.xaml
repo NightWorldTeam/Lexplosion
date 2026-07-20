@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:Lexplosion.UI.WPF.Controls"
     xmlns:controls1="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
-    xmlns:converters="clr-namespace:Lexplosion.UI.WPF.Core.Converters"
     xmlns:core="clr-namespace:Lexplosion.UI.WPF.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.ServerProfile"
@@ -22,8 +21,8 @@
 
     <Grid>
 
-        <core:If x:Name="ContainerIf" Condition="{Binding Model.Images, UpdateSourceTrigger=PropertyChanged, Converter={converters:IsCollectionEmptyConverter}}">
-            <core:If.False>
+        <core:If x:Name="ContainerIf" Condition="{Binding Model.HasImages}">
+            <core:If.True>
                 <ListBox
                     x:Name="ImageList"
                     Margin="35,0,0,0"
@@ -88,11 +87,11 @@
                         </ItemsPanelTemplate>
                     </ListBox.ItemsPanel>
                 </ListBox>
-            </core:If.False>
-
-            <core:If.True>
-                <controls:Empty Description="{DynamicResource ThereAreNotImages}" IsContentLoading="{Binding Model.IsLoading}" />
             </core:If.True>
+
+            <core:If.False>
+                <controls:Empty Description="{DynamicResource ThereAreNotImages}" IsContentLoading="{Binding Model.IsLoading}" />
+            </core:If.False>
         </core:If>
 
         <controls:LoadingBoard

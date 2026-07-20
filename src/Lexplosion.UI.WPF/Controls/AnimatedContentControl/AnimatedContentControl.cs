@@ -89,8 +89,22 @@ namespace Lexplosion.UI.WPF.Controls
                 throw new ArgumentNullException("v");
             _dpi = System.Windows.Media.VisualTreeHelper.GetDpi(this);
 
-            var target = new RenderTargetBitmap((int)(this.ActualWidth * _dpi.DpiScaleX), (int)(this.ActualHeight * _dpi.DpiScaleY),
-                                                _dpi.PixelsPerInchX, _dpi.PixelsPerInchY, PixelFormats.Default);
+            // Cap snapshot resolution to avoid blocking the UI thread.
+            // At full 4K DPI, RenderTargetBitmap.Render() on the entire visual tree
+            // can freeze the UI for 0.5-1s. A ~1280px-wide snapshot is more than
+            // enough for the 0.55s slide transition where it's only briefly visible.
+            const int maxSnapshotWidth = 1280;
+            int fullWidth = (int)(this.ActualWidth * _dpi.DpiScaleX);
+            int fullHeight = (int)(this.ActualHeight * _dpi.DpiScaleY);
+            double scale = fullHeight > 0 ? (double)maxSnapshotWidth / fullWidth : 1.0;
+            if (scale > 1.0) scale = 1.0;
+
+            int snapshotWidth = (int)(fullWidth * scale);
+            int snapshotHeight = (int)(fullHeight * scale);
+
+            var target = new RenderTargetBitmap(
+                snapshotWidth, snapshotHeight,
+                _dpi.PixelsPerInchX, _dpi.PixelsPerInchY, PixelFormats.Default);
             target.Render(v);
             var brush = new ImageBrush(target);
             brush.Freeze();

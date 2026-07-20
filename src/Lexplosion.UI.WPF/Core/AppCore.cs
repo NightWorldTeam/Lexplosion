@@ -3,127 +3,12 @@ using Lexplosion.UI.WPF.Commands;
 using Lexplosion.UI.WPF.Controls.Message.Core;
 using Lexplosion.UI.WPF.Core.Notifications;
 using Lexplosion.UI.WPF.Core.Services;
-using Lexplosion.UI.WPF.Core.ViewModel;
 using Lexplosion.UI.WPF.Stores;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Input;
 
 namespace Lexplosion.UI.WPF.Core
 {
-    public class Gallery : ObservableObject
-    {
-        public event Action StateChanged;
-
-
-        private int _imageSourceIndex;
-
-        /// <summary>
-        /// ImageSources требуется для возможности листать избражения.
-        /// Image Sources не будет иметь возможно изменяться из вне в обход метода ChangeContext.
-        /// </summary>
-        private List<object> _imageSources = [];
-        public IReadOnlyCollection<object> ImageSources { get => _imageSources; }
-
-        public object? SelectedImageSource { get; private set; }
-        /// <summary>
-        /// Наличие следующего изображения.
-        /// </summary>
-        public bool HasNext { get => _imageSourceIndex < _imageSources.Count - 1; }
-        /// <summary>
-        /// Наличие предыдущего изображения.
-        /// </summary>
-        public bool HasPrev { get => _imageSourceIndex > 0; }
-        /// <summary>
-        /// Наличие выбранного изображения
-        /// </summary>
-        public bool HasSelectedImage { get => SelectedImageSource != null; }
-
-        /// <summary>
-        /// Закрывает изображение и очищает ImageSources
-        /// </summary>
-        public void CloseImage() 
-        {
-			_imageSources.Clear();
-			_imageSourceIndex = -1;
-			SelectedImageSource = null;
-			UpdateState();
-		}
-
-		/// <summary>
-		/// Заменяет контекст
-		/// </summary>
-		public void ChangeContext(IEnumerable<object> imageSources)
-		{
-			_imageSources = new(imageSources);
-			// Reset index
-			_imageSourceIndex = -1;      
-			// Reset selected image
-			SelectedImageSource = null;   
-			// Replaces OnPropertyChanged(null) and notifies subscribers
-			UpdateState();                
-		}
-
-		/// <summary>
-		/// Пытается найти изображение в ресурсах заданных при контексте. Сохраняет индекс.
-		/// Если изображение не найдено в ресурсах, отрисовывает изображение.
-		/// </summary>
-		public void SelectImage(object imageSource)
-		{
-			_imageSourceIndex = FindImageIndex(imageSource);
-			SelectedImageSource = imageSource;
-			UpdateState();
-		}
-
-		public void Next()
-		{
-			if (!HasNext) return;
-
-			_imageSourceIndex++;
-			SelectedImageSource = _imageSources[_imageSourceIndex];
-			UpdateState();
-		}
-
-		public void Prev()
-		{
-			if (!HasPrev) return;
-
-			_imageSourceIndex--;
-			SelectedImageSource = _imageSources[_imageSourceIndex];
-			UpdateState();
-		}
-
-
-		private void UpdateState() 
-        {
-            OnPropertyChanged(null);
-            StateChanged?.Invoke();
-        }
-
-		private int FindImageIndex(object target)
-		{
-			if (target is string strTarget)
-			{
-				return _imageSources.FindIndex(i => i is string s && s == strTarget);
-			}
-
-			if (target is byte[] byteArrayTarget)
-			{
-				IEqualityComparer comparer = StructuralComparisons.StructuralEqualityComparer;
-				return _imageSources.FindIndex(i => i is byte[] arr && comparer.Equals(arr, byteArrayTarget));
-			}
-
-			if (target is IEnumerable<byte> bytesTarget)
-			{
-				return _imageSources.FindIndex(i => i is IEnumerable<byte> currentBytes && currentBytes.SequenceEqual(bytesTarget));
-			}
-
-			return _imageSources.FindIndex(i => object.Equals(i, target));
-		}
-	}
-
     public sealed class AppCore
     {
         public event Action<GlobalLoadingArgs> GlobalLoadingStarted;
