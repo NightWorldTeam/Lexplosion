@@ -6,6 +6,7 @@ using Lexplosion.UI.WPF.Core.Services;
 using Lexplosion.UI.WPF.Core.ViewModel;
 using Lexplosion.UI.WPF.Stores;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
@@ -26,7 +27,7 @@ namespace Lexplosion.UI.WPF.Core
         private List<object> _imageSources = [];
         public IReadOnlyCollection<object> ImageSources { get => _imageSources; }
 
-        public object SelectedImageSource { get; private set; }
+        public object? SelectedImageSource { get; private set; }
         /// <summary>
         /// Наличие следующего изображения.
         /// </summary>
@@ -40,74 +41,88 @@ namespace Lexplosion.UI.WPF.Core
         /// </summary>
         public bool HasSelectedImage { get => SelectedImageSource != null; }
 
-
-        public Gallery()
-        {
-            
-        }
-
         /// <summary>
         /// Закрывает изображение и очищает ImageSources
         /// </summary>
         public void CloseImage() 
         {
-            _imageSources.Clear();
-            SelectedImageSource = null;
-            UpdateState();
-        }
-        
-        /// <summary>
-        /// Заменяет контекст
-        /// </summary>
-        public void ChangeContext(IEnumerable<object> imageSources) 
-        {
-            _imageSources.Clear();
-            _imageSources = new(imageSources);
-            OnPropertyChanged(null);
-        }
+			_imageSources.Clear();
+			_imageSourceIndex = -1;
+			SelectedImageSource = null;
+			UpdateState();
+		}
 
-        /// <summary>
-        /// Пытается найти изображение в ресурсах заданных при контексте. Сохраняет индекс.
-        /// Если изображение не найдено в ресурсах, отрисовывает изображение.
-        /// </summary>
-        public void SelectImage(object imageSource) 
-        {
-            _imageSourceIndex = -1;
+		/// <summary>
+		/// Заменяет контекст
+		/// </summary>
+		public void ChangeContext(IEnumerable<object> imageSources)
+		{
+			_imageSources = new(imageSources);
+			// Reset index
+			_imageSourceIndex = -1;      
+			// Reset selected image
+			SelectedImageSource = null;   
+			// Replaces OnPropertyChanged(null) and notifies subscribers
+			UpdateState();                
+		}
 
-            if (imageSource is string) 
-            {
-                _imageSourceIndex = _imageSources.FindIndex(i => i == imageSource);
-            }
-            else
-            {
-                if (imageSource is IEnumerable<byte> bytes) 
-                {
-                    _imageSourceIndex = _imageSources.FindIndex(i => i is IEnumerable<byte> && (i as IEnumerable<byte>).SequenceEqual(bytes));
-                }
-            }
+		/// <summary>
+		/// Пытается найти изображение в ресурсах заданных при контексте. Сохраняет индекс.
+		/// Если изображение не найдено в ресурсах, отрисовывает изображение.
+		/// </summary>
+		public void SelectImage(object imageSource)
+		{
+			_imageSourceIndex = FindImageIndex(imageSource);
+			SelectedImageSource = imageSource;
+			UpdateState();
+		}
+
+		public void Next()
+		{
+			if (!HasNext) return;
+
+			_imageSourceIndex++;
+			SelectedImageSource = _imageSources[_imageSourceIndex];
+			UpdateState();
+		}
+
+		public void Prev()
+		{
+			if (!HasPrev) return;
+
+			_imageSourceIndex--;
+			SelectedImageSource = _imageSources[_imageSourceIndex];
+			UpdateState();
+		}
 
 
-            SelectedImageSource = imageSource;
-
-            UpdateState();
-        }
-
-        public void Next() 
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Prev()
-        {
-            throw new NotImplementedException();
-        }
-
-        private void UpdateState() 
+		private void UpdateState() 
         {
             OnPropertyChanged(null);
             StateChanged?.Invoke();
         }
-    }
+
+		private int FindImageIndex(object target)
+		{
+			if (target is string strTarget)
+			{
+				return _imageSources.FindIndex(i => i is string s && s == strTarget);
+			}
+
+			if (target is byte[] byteArrayTarget)
+			{
+				IEqualityComparer comparer = StructuralComparisons.StructuralEqualityComparer;
+				return _imageSources.FindIndex(i => i is byte[] arr && comparer.Equals(arr, byteArrayTarget));
+			}
+
+			if (target is IEnumerable<byte> bytesTarget)
+			{
+				return _imageSources.FindIndex(i => i is IEnumerable<byte> currentBytes && currentBytes.SequenceEqual(bytesTarget));
+			}
+
+			return _imageSources.FindIndex(i => object.Equals(i, target));
+		}
+	}
 
     public sealed class AppCore
     {
