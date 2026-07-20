@@ -16,7 +16,9 @@ namespace Lexplosion.Logic.Management.Installers
         private CurseforgeApi _curseforgeApi;
         private bool _mirrorIsUsed = false;
 
-        public CurseforgeInstallManager(string instanceid, bool onlyBase, ICurseforgeFileServicesContainer services, CancellationToken cancelToken) : base(new CurseforgeInstaller(instanceid, services), instanceid, onlyBase, services, cancelToken)
+		protected override IReadOnlyDictionary<string, string> SpecificArchiveDownloadHeaders => CurseforgeApi.Headers;
+
+		public CurseforgeInstallManager(string instanceid, bool onlyBase, ICurseforgeFileServicesContainer services, CancellationToken cancelToken) : base(new CurseforgeInstaller(instanceid, services), instanceid, onlyBase, services, cancelToken)
         {
             _curseforgeApi = services.CfApi;
         }
@@ -141,5 +143,5 @@ namespace Lexplosion.Logic.Management.Installers
         {
             get => projectInfo.fileName;
         }
-    }
+	}
 }
