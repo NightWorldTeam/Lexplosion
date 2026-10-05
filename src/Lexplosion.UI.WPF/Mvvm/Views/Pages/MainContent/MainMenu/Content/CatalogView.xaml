@@ -14,7 +14,6 @@
     xmlns:objects="clr-namespace:Lexplosion.Logic.Objects;assembly=Lexplosion.Core"
     xmlns:oldinstanceform="clr-namespace:Lexplosion.UI.WPF.Controls.OldInstanceForm"
     xmlns:translatable="clr-namespace:Lexplosion.UI.WPF.Core.Objects.TranslatableObjects"
-    xmlns:virtualization="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
     d:DataContext="{d:DesignInstance Type=mainmenu:CatalogViewModel}"
     d:DesignHeight="528"
     d:DesignWidth="694"
@@ -66,6 +65,7 @@
         </DataTemplate>
     </UserControl.Resources>
 
+    <!-- CompactCatalogResizeOptimized: fixed-size hot path for cheap live resize. -->
     <Border Padding="0,40,0,0" Focusable="True">
         <Grid>
 
@@ -73,6 +73,8 @@
 
                 <ScrollViewer
                     x:Name="ContainerPage_ScrollViewer"
+                    HorizontalScrollBarVisibility="Disabled"
+                    VerticalScrollBarVisibility="Auto"
                     IsTabStop="False"
                     KeyboardNavigation.IsTabStop="False"
                     KeyboardNavigation.TabNavigation="None">
@@ -105,8 +107,11 @@
                                 VerticalAlignment="Top"
                                 Orientation="Horizontal">
 
+                                <!-- Fixed header width on the compact Catalog is intentional.
+                                     The wide responsive page takes over before this layout needs to grow.
+                                     This removes a Window.ActualWidth binding that fired on every live-resize pixel. -->
                                 <controls:SearchBox
-                                    Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Converter={converters:WindowWidthToXProcentWidth}, ConverterParameter=40}"
+                                    Width="500"
                                     Placeholder="{DynamicResource Search}"
                                     SearchCommand="{Binding SearchCommand}"
                                     Text="{Binding Model.SearchFilter, UpdateSourceTrigger=PropertyChanged}" />
@@ -386,13 +391,20 @@
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
 
+                                    <!-- Catalog pages contain at most 10 items. The old third-party
+                                         VirtualizingWrapPanel was nested inside this page ScrollViewer, so
+                                         it could not provide useful viewport virtualization and rebuilt its
+                                         layout/cache continuously while the window was being resized.
+                                         A fixed-width StackPanel is cheaper and visually identical in the
+                                         compact layout (Home takes over before two 597px forms can fit). -->
                                     <ItemsControl
                                         x:Name="InstanceList"
-                                        ItemsSource="{Binding Model.Instances}"
-                                        ScrollViewer.CanContentScroll="True">
+                                        Width="597"
+                                        HorizontalAlignment="Center"
+                                        ItemsSource="{Binding Model.Instances}">
                                         <ItemsControl.ItemsPanel>
                                             <ItemsPanelTemplate>
-                                                <virtualization:VirtualizingWrapPanel Margin="0,0,0,0" IsItemsHost="True" />
+                                                <StackPanel IsItemsHost="True" />
                                             </ItemsPanelTemplate>
                                         </ItemsControl.ItemsPanel>
                                     </ItemsControl>

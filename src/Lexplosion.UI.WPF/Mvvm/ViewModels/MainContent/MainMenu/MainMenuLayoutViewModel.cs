@@ -16,6 +16,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
         private readonly ViewModelBase _multiplayerLayoutViewModel;
         private readonly ViewModelBase _friendsLayoutViewModel;
         private readonly ViewModelBase _generalSettingsLayoutViewModel;
+        private readonly HomeViewModel _homeViewModel;
 
 
         #region Properties
@@ -32,6 +33,20 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
         }
 
         public ViewModelBase Content { get; private set; }
+
+        public HomeViewModel Home => _homeViewModel;
+
+        private bool _isHomeSelected = true;
+        public bool IsHomeSelected
+        {
+            get => _isHomeSelected;
+            private set
+            {
+                if (_isHomeSelected == value) return;
+                _isHomeSelected = value;
+                OnPropertyChanged();
+            }
+        }
 
 
         public Action<InstanceModelBase> ToInstanceProfile { get; }
@@ -56,6 +71,8 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
             // Library Section
             _libraryViewModel = new LibraryViewModel(appCore, mainModel.StartImport, clientsManager, ToMainMenuLayoutCommand, mainModel.LibraryController, OpenCatalog);
             var toLibraryCommand = new NavigateCommand<ViewModelBase>(appCore.NavigationStore, () => _libraryViewModel);
+
+            _homeViewModel = new HomeViewModel((CatalogViewModel)_catalogViewModel, (LibraryViewModel)_libraryViewModel);
 
             // Multiplayer Section
             var selectInstanceForServerArgs = new SelectInstanceForServerArgs(() => mainModel.LibraryController.Instances, (ic) => 
@@ -104,6 +121,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
         private void OnLeftPanelSelectedItemChanged(ViewModelBase content)
         {
             Content = content;
+            IsHomeSelected = ReferenceEquals(content, _catalogViewModel);
             OnPropertyChanged(nameof(Content));
         }
 
