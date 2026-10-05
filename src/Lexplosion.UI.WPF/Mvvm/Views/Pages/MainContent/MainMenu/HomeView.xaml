@@ -1,4 +1,4 @@
-﻿<UserControl
+<UserControl
     x:Class="Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.MainMenu.HomeView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -157,8 +157,8 @@
                             Background="Transparent"
                             CornerRadius="6">
                             <Viewbox
-                                Width="20"
-                                Height="20"
+                                Width="17"
+                                Height="17"
                                 Stretch="Uniform">
                                 <Path
                                     x:Name="PART_Path"
@@ -199,7 +199,9 @@
                 Background="{DynamicResource PrimarySolidColorBrush}"
                 BorderBrush="{DynamicResource InstanceFormBorderSolidColorBrush}"
                 BorderThickness="1"
-                CornerRadius="8">
+                CornerRadius="8"
+                Cursor="Hand"
+                MouseLeftButtonUp="RecommendationCard_MouseLeftButtonUp">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="74" />
@@ -231,8 +233,11 @@
                                 Margin="0,4,0,0"
                                 FontSize="11"
                                 Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
-                                Text="{Binding Author, StringFormat=by {0}}"
-                                TextTrimming="CharacterEllipsis" />
+                                TextTrimming="CharacterEllipsis">
+                                <Run Text="{DynamicResource ByAuthor}" />
+                                <Run Text=" " />
+                                <Run Text="{Binding Author, Mode=OneWay}" />
+                            </TextBlock>
                         </StackPanel>
                     </Grid>
 
@@ -330,6 +335,38 @@
             </Border>
         </DataTemplate>
 
+        <!--
+            Smooth state transition while CatalogModel is waiting for a remote source.
+            No blur/effects are used here, so this stays cheap during resize.
+        -->
+        <Style x:Key="HomeCatalogLoadingFadeStyle" TargetType="{x:Type FrameworkElement}">
+            <Setter Property="Opacity" Value="1" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Catalog.Model.IsLoading}" Value="True">
+                    <DataTrigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation
+                                    Storyboard.TargetProperty="Opacity"
+                                    To="0.42"
+                                    Duration="0:0:0.14" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </DataTrigger.EnterActions>
+                    <DataTrigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation
+                                    Storyboard.TargetProperty="Opacity"
+                                    To="1"
+                                    Duration="0:0:0.24" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </DataTrigger.ExitActions>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
         <Style x:Key="SideFeatureButton" TargetType="Button">
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="BorderThickness" Value="0" />
@@ -409,7 +446,7 @@
                     <StackPanel Margin="0,0,30,0">
                         <Button
                             Height="24"
-                            Content="Главная"
+                            Content="{DynamicResource Home}"
                             Foreground="#238BFF"
                             Style="{StaticResource HomeNavButton}" />
                         <Border
@@ -420,11 +457,11 @@
                     <Button
                         Height="24"
                         Margin="0,0,30,0"
-                        Content="Новости"
+                        Content="{DynamicResource NewsTitle}"
                         Style="{StaticResource HomeNavButton}" />
                     <Button
                         Height="24"
-                        Content="Еще че-то"
+                        Content="{DynamicResource More}"
                         Style="{StaticResource HomeNavButton}" />
                 </StackPanel>
 
@@ -434,7 +471,8 @@
                     Grid.Row="1"
                     Margin="0,8,0,16"
                     MouseEnter="FeatureStrip_MouseEnter"
-                    MouseLeave="FeatureStrip_MouseLeave">
+                    MouseLeave="FeatureStrip_MouseLeave"
+                    Style="{StaticResource HomeCatalogLoadingFadeStyle}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="2.2*" />
                         <ColumnDefinition Width="0.67*" />
@@ -695,7 +733,8 @@
                     Grid.Row="2"
                     Height="190"
                     ClipToBounds="True"
-                    ItemTemplate="{StaticResource RecommendationCardTemplate}">
+                    ItemTemplate="{StaticResource RecommendationCardTemplate}"
+                    Style="{StaticResource HomeCatalogLoadingFadeStyle}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <UniformGrid Columns="4" Rows="1" />
@@ -764,7 +803,7 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
                                 <StackPanel
-                                    Margin="0,0,0,0"
+                                    Margin="16,0,0,0"
                                     VerticalAlignment="Center"
                                     Orientation="Horizontal">
                                     <Viewbox
@@ -779,19 +818,19 @@
                                     <TextBlock
                                         FontSize="13"
                                         Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                        Text="Filters" />
+                                        Text="{DynamicResource Filters}" />
                                 </StackPanel>
                                 <StackPanel Grid.Column="1" Orientation="Horizontal">
                                     <Button
                                         Command="{Binding RefreshCatalogCommand}"
                                         Content="Update"
                                         Style="{StaticResource HomeIconButton}"
-                                        ToolTip="Refresh" />
+                                        ToolTip="{DynamicResource RefreshCatalog}" />
                                     <Button
                                         Command="{Binding ToggleFilterPanelCommand}"
                                         Content="Close"
                                         Style="{StaticResource HomeIconButton}"
-                                        ToolTip="Close filters" />
+                                        ToolTip="{DynamicResource CloseFilters}" />
                                 </StackPanel>
                             </Grid>
 
@@ -810,7 +849,7 @@
                                     FontSize="11.5"
                                     FontWeight="SemiBold"
                                     Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
-                                    Text="SOURCE" />
+                                    Text="{DynamicResource Source}" />
                                 <TextBlock
                                     Grid.Column="1"
                                     extensions:TextBlockExtensions.TextByKey="{Binding Catalog.Model.FilterPanel.SelectedSource.TranslateKey}"
@@ -854,7 +893,7 @@
                                         FontSize="11.5"
                                         FontWeight="SemiBold"
                                         Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
-                                        Text="SORTING" />
+                                        Text="{DynamicResource Sorting}" />
                                     <TextBlock
                                         Grid.Column="1"
                                         extensions:TextBlockExtensions.TextByKey="{Binding Catalog.Model.FilterPanel.SelectedSortByParam.TranslateKey}"
@@ -894,7 +933,7 @@
                                     FontSize="11.5"
                                     FontWeight="SemiBold"
                                     Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
-                                    Text="VERSION" />
+                                    Text="{DynamicResource Version}" />
                                 <ComboBox
                                     Margin="0,7,0,0"
                                     ItemsSource="{Binding Catalog.Model.FilterPanel.VersionCollectionViewSource.View}"
@@ -907,7 +946,7 @@
                                     FontSize="11.5"
                                     FontWeight="SemiBold"
                                     Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
-                                    Text="CATEGORIES" />
+                                    Text="{DynamicResource Categories}" />
                                 <core:If Margin="0,4,0,0" Condition="{Binding Catalog.Model.FilterPanel.IsCategoryLoading}">
                                     <core:If.False>
                                         <Grid Height="96">
@@ -955,41 +994,135 @@
                             Margin="0,0,0,12"
                             HorizontalAlignment="Right"
                             Command="{Binding ToggleFilterPanelCommand}"
-                            Content="Filters"
+                            Content="{DynamicResource Filters}"
                             Visibility="{Binding IsFilterPanelVisible, Converter={converters:NegativeBooleanToVisibilityConverter}}" />
 
-                        <core:If Grid.Row="1" Condition="{Binding Catalog.Model.Instances, Converter={converters:IsCollectionEmptyConverter}}">
-                            <core:If.True>
-                                <controls:Empty
-                                    Height="220"
-                                    VerticalAlignment="Stretch"
-                                    Description="Каталог оказался пуст" />
-                            </core:If.True>
-                            <core:If.False>
-                                <StackPanel>
-                                    <ItemsControl
-                                        x:Name="CatalogInstanceList"
-                                        HorizontalAlignment="Stretch"
-                                        ItemTemplate="{StaticResource CatalogInstanceTemplate}"
-                                        ItemsSource="{Binding Catalog.Model.Instances}"
-                                        ScrollViewer.CanContentScroll="True">
-                                        <ItemsControl.ItemContainerStyle>
-                                            <Style TargetType="ContentPresenter">
-                                                <Setter Property="HorizontalAlignment" Value="Stretch" />
-                                            </Style>
-                                        </ItemsControl.ItemContainerStyle>
-                                    </ItemsControl>
+                        <!--
+                            Keep the list area stable while the remote source is changing.
+                            The old cards fade down, the lightweight overlay fades in, and the
+                            new source fades back in after CatalogModel.IsLoading becomes false.
+                        -->
+                        <Grid Grid.Row="1" MinHeight="390">
+                            <Grid x:Name="CatalogDataHost">
+                                <Grid.Style>
+                                    <Style TargetType="Grid">
+                                        <Setter Property="Opacity" Value="1" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Catalog.Model.IsLoading}" Value="True">
+                                                <DataTrigger.EnterActions>
+                                                    <BeginStoryboard>
+                                                        <Storyboard>
+                                                            <DoubleAnimation
+                                                                Storyboard.TargetProperty="Opacity"
+                                                                To="0.16"
+                                                                Duration="0:0:0.12" />
+                                                        </Storyboard>
+                                                    </BeginStoryboard>
+                                                </DataTrigger.EnterActions>
+                                                <DataTrigger.ExitActions>
+                                                    <BeginStoryboard>
+                                                        <Storyboard>
+                                                            <DoubleAnimation
+                                                                Storyboard.TargetProperty="Opacity"
+                                                                To="1"
+                                                                Duration="0:0:0.24" />
+                                                        </Storyboard>
+                                                    </BeginStoryboard>
+                                                </DataTrigger.ExitActions>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Grid.Style>
 
-                                    <controls:Paginator
-                                        Margin="0,0,0,24"
-                                        CurrentPageIndex="{Binding Catalog.Model.CurrentPageIndex, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                        NextCommand="{Binding Catalog.NextPageCommand}"
-                                        PageCount="{Binding Catalog.Model.PageCount, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                        PrevCommand="{Binding Catalog.PrevPageCommand}"
-                                        ToCommand="{Binding Catalog.ToCurrentPageIndexCommand}" />
+                                <core:If Condition="{Binding Catalog.Model.Instances, Converter={converters:IsCollectionEmptyConverter}}">
+                                    <core:If.True>
+                                        <controls:Empty
+                                            Height="220"
+                                            VerticalAlignment="Stretch"
+                                            Description="{DynamicResource CatalogEmpty}" />
+                                    </core:If.True>
+                                    <core:If.False>
+                                        <StackPanel>
+                                            <ItemsControl
+                                                x:Name="CatalogInstanceList"
+                                                HorizontalAlignment="Stretch"
+                                                ItemTemplate="{StaticResource CatalogInstanceTemplate}"
+                                                ItemsSource="{Binding Catalog.Model.Instances}"
+                                                ScrollViewer.CanContentScroll="True">
+                                                <ItemsControl.ItemContainerStyle>
+                                                    <Style TargetType="ContentPresenter">
+                                                        <Setter Property="HorizontalAlignment" Value="Stretch" />
+                                                    </Style>
+                                                </ItemsControl.ItemContainerStyle>
+                                            </ItemsControl>
+
+                                            <controls:Paginator
+                                                Margin="0,0,0,24"
+                                                CurrentPageIndex="{Binding Catalog.Model.CurrentPageIndex, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                NextCommand="{Binding Catalog.NextPageCommand}"
+                                                PageCount="{Binding Catalog.Model.PageCount, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                PrevCommand="{Binding Catalog.PrevPageCommand}"
+                                                ToCommand="{Binding Catalog.ToCurrentPageIndexCommand}" />
+                                        </StackPanel>
+                                    </core:If.False>
+                                </core:If>
+                            </Grid>
+
+                            <Grid
+                                x:Name="CatalogLoadingOverlay"
+                                Panel.ZIndex="30"
+                                IsHitTestVisible="{Binding Catalog.Model.IsLoading}">
+                                <Grid.Style>
+                                    <Style TargetType="Grid">
+                                        <Setter Property="Opacity" Value="0" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Catalog.Model.IsLoading}" Value="True">
+                                                <DataTrigger.EnterActions>
+                                                    <BeginStoryboard>
+                                                        <Storyboard>
+                                                            <DoubleAnimation
+                                                                Storyboard.TargetProperty="Opacity"
+                                                                To="1"
+                                                                Duration="0:0:0.16" />
+                                                        </Storyboard>
+                                                    </BeginStoryboard>
+                                                </DataTrigger.EnterActions>
+                                                <DataTrigger.ExitActions>
+                                                    <BeginStoryboard>
+                                                        <Storyboard>
+                                                            <DoubleAnimation
+                                                                Storyboard.TargetProperty="Opacity"
+                                                                To="0"
+                                                                Duration="0:0:0.20" />
+                                                        </Storyboard>
+                                                    </BeginStoryboard>
+                                                </DataTrigger.ExitActions>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Grid.Style>
+
+                                <Border
+                                    Background="{DynamicResource PageSolidColorBrush}"
+                                    CornerRadius="8"
+                                    Opacity="0.88" />
+
+                                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <controls:CircleLoader
+                                        Width="34"
+                                        Height="34"
+                                        HorizontalAlignment="Center"
+                                        IsActive="{Binding Catalog.Model.IsLoading}" />
+                                    <TextBlock
+                                        Margin="0,14,0,0"
+                                        HorizontalAlignment="Center"
+                                        FontSize="13"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                        Text="{DynamicResource CatalogLoading}" />
                                 </StackPanel>
-                            </core:If.False>
-                        </core:If>
+                            </Grid>
+                        </Grid>
                     </Grid>
                 </Grid>
             </Grid>

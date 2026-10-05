@@ -1,4 +1,4 @@
-﻿<ResourceDictionary
+<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:s="clr-namespace:System;assembly=mscorlib">
@@ -1046,9 +1046,12 @@
     <s:String x:Key="NewsTitle">Новости</s:String>
     <s:String x:Key="CloseArticleButtonTooltip">Закрыть статью</s:String>
 
-    <!--  Core Localization Keys  -->
-    <s:String x:Key="NoDescription">Описания нет, но мы надеемся что оно будет.</s:String>
-    <s:String x:Key="UnknownName">Неизвестное название</s:String>
-    <s:String x:Key="UnknownAuthor">Неизвестный автор</s:String>
-    <s:String x:Key="LaunchingGame">Запуск игры...</s:String>
+
+    <!--  Responsive Home  -->
+    <s:String x:Key="Home">Главная</s:String>
+    <s:String x:Key="Filters">Фильтры</s:String>
+    <s:String x:Key="CatalogEmpty">Каталог оказался пуст</s:String>
+    <s:String x:Key="ByAuthor">от</s:String>
+    <s:String x:Key="RefreshCatalog">Обновить каталог</s:String>
+    <s:String x:Key="CloseFilters">Закрыть фильтры</s:String>
 </ResourceDictionary>

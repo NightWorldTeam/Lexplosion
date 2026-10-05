@@ -1,4 +1,4 @@
-﻿using Lexplosion.UI.WPF.Mvvm.Models.Mvvm.InstanceModel;
+using Lexplosion.UI.WPF.Mvvm.Models.Mvvm.InstanceModel;
 using Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu;
 using System;
 using System.Collections.Generic;
@@ -505,6 +505,26 @@ public partial class HomeView : UserControl
 		if (viewModel.Catalog.OpenInstanceProfileMenu.CanExecute(instance))
 			viewModel.Catalog.OpenInstanceProfileMenu.Execute(instance);
 	}
+
+	private void RecommendationCard_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+	{
+		var card = sender as Border;
+		var instance = card?.DataContext as InstanceModelBase;
+		var viewModel = ViewModel;
+
+		if (instance == null || viewModel?.Catalog?.OpenInstanceProfileMenu == null)
+			return;
+
+		// The Update button inside the card handles its own mouse click, so this
+		// bubbling handler is reached only when the user clicks the card surface.
+		var command = viewModel.Catalog.OpenInstanceProfileMenu;
+		if (!command.CanExecute(instance))
+			return;
+
+		command.Execute(instance);
+		e.Handled = true;
+	}
+
 
 	private void FeatureStrip_MouseEnter(object sender, MouseEventArgs e)
 	{
