@@ -325,7 +325,7 @@ namespace Lexplosion.Logic.Network.Web
 		{
 			try
 			{
-				string result = _toServer.HttpGet($"v1/mods/{projectId}/description", new Dictionary<string, string>()
+				string result = _toServer.HttpGet($"{API_URL_BASE}v1/mods/{projectId}/description", new Dictionary<string, string>()
 				{
 					["x-api-key"] = TOKEN
 				});

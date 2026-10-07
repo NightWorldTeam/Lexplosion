@@ -92,6 +92,9 @@ namespace Lexplosion.Logic.Objects.Modrinth
 		[JsonProperty("description")]
 		public string Summary;
 
+		[JsonProperty("body")]
+		public string FullDescription;
+
 		[JsonProperty("downloads")]
 		public int Downloads;
 

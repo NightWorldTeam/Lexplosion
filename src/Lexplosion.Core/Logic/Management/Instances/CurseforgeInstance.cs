@@ -105,7 +105,7 @@ namespace Lexplosion.Logic.Management.Instances
 			{
 				Source = InstanceSource.Curseforge,
 				Categories = data.categories,
-				Description = data.summary,
+				Description = _services.CfApi.GetProjectDescription(externalId),
 				Summary = data.summary,
 				TotalDownloads = (long)data.downloadCount,
 				GameVersion = (data.latestFilesIndexes != null && data.latestFilesIndexes.Count > 0) ? data.latestFilesIndexes[0].gameVersion : "",

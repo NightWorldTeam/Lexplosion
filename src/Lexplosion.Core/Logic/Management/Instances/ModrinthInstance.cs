@@ -122,7 +122,7 @@ namespace Lexplosion.Logic.Management.Instances
 			{
 				Source = InstanceSource.Modrinth,
 				Categories = categories,
-				Description = data.Summary,
+				Description = data.FullDescription,
 				Summary = data.Summary,
 				TotalDownloads = data.Downloads,
 				GameVersion = gameVer,
