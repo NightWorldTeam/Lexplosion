@@ -22,12 +22,43 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.AddonsRepositories
 
         public bool IsLoading { get; private set; }
 
+        // The details screen reuses the same catalog InstanceAddon and install commands.
+        private InstanceAddon _selectedAddon;
+        public InstanceAddon SelectedAddon
+        {
+            get => _selectedAddon;
+            private set
+            {
+                if (ReferenceEquals(_selectedAddon, value)) return;
+                _selectedAddon = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(IsAddonDetailsOpen));
+            }
+        }
+
+        public bool IsAddonDetailsOpen => SelectedAddon != null;
+
+        public void OpenAddonDetails(InstanceAddon addon)
+        {
+            if (addon != null) SelectedAddon = addon;
+        }
+
+        public void CloseAddonDetails() => SelectedAddon = null;
+
+        public void InstallSelectedAddonVersion(object version)
+        {
+            if (SelectedAddon != null && version != null && Model != null)
+                Model.InstallAddon(SelectedAddon, version);
+        }
+
+
 
         private int _selectedAddonsRepositoryIndex;
         public int SelectedAddonsRepositoryIndex
         {
             get => _selectedAddonsRepositoryIndex; set
             {
+                CloseAddonDetails();
                 _selectedAddonsRepositoryIndex = value;
 
                 if (Model != null)
@@ -50,6 +81,18 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.AddonsRepositories
 
 
         public ICommand BackToInstanceProfileCommand { get; }
+
+        private RelayCommand _openAddonDetailsCommand;
+        public ICommand OpenAddonDetailsCommand
+        {
+            get => RelayCommand.GetCommand<InstanceAddon>(ref _openAddonDetailsCommand, OpenAddonDetails);
+        }
+
+        private RelayCommand _closeAddonDetailsCommand;
+        public ICommand CloseAddonDetailsCommand
+        {
+            get => RelayCommand.GetCommand(ref _closeAddonDetailsCommand, CloseAddonDetails);
+        }
 
         // paginator
         private RelayCommand _nextPageCommand;
@@ -205,11 +248,6 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.AddonsRepositories
             PrevPageCommand = new RelayCommand((obj) => Model.Paginate((uint)obj));
         }
 
-
-        private void OpenAddonModpack() 
-        {
-            
-        }
 
 
         #endregion Private Methods

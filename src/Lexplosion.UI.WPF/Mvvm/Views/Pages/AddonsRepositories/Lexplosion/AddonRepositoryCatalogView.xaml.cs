@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Controls;
 
-namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.AddonsRepositories.Lexplosion
+namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.AddonCatalog
 {
     /// <summary>
     /// Interaction logic for AddonRepositoryCatalogView.xaml

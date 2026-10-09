@@ -1,4 +1,4 @@
-﻿<UserControl
+<UserControl
     x:Class="Lexplosion.UI.WPF.Mvvm.Views.Pages.AddonsRepositories.LexplosionAddonsRepository"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -10,7 +10,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="clr-namespace:Lexplosion.UI.WPF.Extensions"
     xmlns:groups="clr-namespace:Lexplosion.UI.WPF.Mvvm.Models.AddonsRepositories.Groups"
-    xmlns:lexplosion="clr-namespace:Lexplosion.UI.WPF.Mvvm.Views.Pages.AddonsRepositories.Lexplosion"
+    xmlns:lexplosion="clr-namespace:Lexplosion.UI.WPF.Mvvm.Views.Pages.AddonCatalog"
+    xmlns:addonDetails="clr-namespace:Lexplosion.UI.WPF.Mvvm.Views.Pages.AddonDetails"
     xmlns:local="clr-namespace:Lexplosion.UI.WPF.Mvvm.Views.Pages.AddonsRepositories"
     xmlns:logicObjects="clr-namespace:Lexplosion.Logic.Objects;assembly=Lexplosion.Core"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -255,6 +256,9 @@
                                     FontWeight="Medium"
                                     Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
                                     Text="{Binding Name}"
+                                    Cursor="Hand"
+                                    ToolTip="Открыть страницу дополнения"
+                                    MouseLeftButtonUp="AddonTitle_MouseLeftButtonUp"
                                     TextTrimming="CharacterEllipsis" />
 
                                 <TextBlock
@@ -283,6 +287,14 @@
                         <Grid Grid.RowSpan="2" Grid.Column="2">
                             <StackPanel Background="Transparent">
                                 <WrapPanel>
+                                    <controls:AdvancedButton
+                                        Margin="0,0,8,0"
+                                        Padding="12,8"
+                                        Command="{Binding Data.OpenAddonDetailsCommand, Source={StaticResource ViewModel}}"
+                                        CommandParameter="{Binding}"
+                                        Content="Подробнее"
+                                        FontSize="12"
+                                        Style="{StaticResource sm-default}" />
                                     <Grid>
                                         <controls:AdvancedButton
                                             x:Name="InstallButton"
@@ -506,12 +518,13 @@
     </UserControl.Resources>
 
     <Grid
+        x:Name="RepositoryRoot"
         Background="{DynamicResource PageSolidColorBrush}"
         Loaded="Grid_Loaded"
         ShowGridLines="False">
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="250" />
+            <ColumnDefinition x:Name="FiltersColumn" Width="250" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
@@ -520,6 +533,7 @@
         <!--    -->
 
         <Border
+            x:Name="FiltersPanel"
             Background="{DynamicResource LeftPanelSolidColorBrush}"
             BorderBrush="{DynamicResource LeftPanelOutsideBorderSolidColorBrush}"
             BorderThickness="0,0,1,0">
@@ -608,7 +622,7 @@
         <!--    -->
 
         <Grid Grid.Column="1" Margin="0,4,0,0">
-            <TabControl Background="Transparent" BorderThickness="0">
+            <TabControl x:Name="RepositoryTabs" Background="Transparent" BorderThickness="0">
                 <TabItem Margin="16,0,-16,0" Header="{DynamicResource Catalog}">
                     <Grid>
 
@@ -651,10 +665,17 @@
                     <lexplosion:InstalledAddonsRepositoryView DataContext="{Binding _modsViewModel}" />
                 </TabItem>
             </TabControl>
+
+            <!-- Full project details replace the catalog without navigating away from
+                 the repository or recreating its filters / download state. -->
+            <addonDetails:AddonDetailsView
+                Addon="{Binding SelectedAddon}"
+                Visibility="{Binding IsAddonDetailsOpen, Converter={converters:BooleanToVisibilityConverter}}" />
         </Grid>
 
         <!--  Apply Categories  -->
         <controls:AdvancedButton
+            x:Name="ApplyCategoriesButton"
             Margin="16,0,16,16"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Bottom"
