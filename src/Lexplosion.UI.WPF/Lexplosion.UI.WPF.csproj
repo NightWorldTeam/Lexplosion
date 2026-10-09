@@ -53,6 +53,7 @@
     <PackageReference Include="Hardcodet.NotifyIcon.Wpf" />
     <PackageReference Include="MarkdownWPF" />
     <PackageReference Include="MarkdownWPF.Html" />
+    <PackageReference Include="Microsoft.Web.WebView2" />
     <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="System.Linq.Dynamic.Core" />
     <PackageReference Include="VirtualizingWrapPanel" />
