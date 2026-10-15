@@ -17,6 +17,7 @@ using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Tools;
 using Newtonsoft.Json;
+using FileInfo = System.IO.FileInfo;
 
 namespace Lexplosion.Logic.FileSystem.Installers
 {
@@ -36,6 +37,7 @@ namespace Lexplosion.Logic.FileSystem.Installers
         private bool _minecraftJar;
         private bool _assetsIndexes;
         private Assets _assets;
+        private Assets _allAssets; // Full index, including already downloaded objects.
         private int _updatesCount = 0;
 
         public InstanceInstaller(string instanceID, IFileServicesContainer services)
@@ -53,6 +55,12 @@ namespace Lexplosion.Logic.FileSystem.Installers
             {
                 public string hash;
             }
+
+            [JsonProperty("virtual")]
+            public bool Virtual;
+
+            [JsonProperty("map_to_resources")]
+            public bool MapToResources;
 
             public Dictionary<string, AssetFile> objects;
         }
@@ -82,6 +90,7 @@ namespace Lexplosion.Logic.FileSystem.Installers
             _minecraftJar = false;
             _assetsIndexes = false;
             _assets.objects = null;
+            _allAssets = new Assets();
             _updatesCount = 0;
         }
 
@@ -275,16 +284,21 @@ namespace Lexplosion.Logic.FileSystem.Installers
                     _assetsIndexes = true; //устанавливаем флаг что нужно скачать json файл
                     _updatesCount++;
 
-                    if (!File.Exists(withDirectory.DirectoryPath + "/assets/indexes/" + manifest.version.AssetsVersion + ".json"))
+                    try
                     {
-                        try
+                        // Always retry: a corrupt local index may already exist.
+                        string json = webService.HttpGet(manifest.version.AssetsIndexes);
+                        asstes = JsonConvert.DeserializeObject<Assets>(json);
+                        if (asstes.objects != null)
                         {
-                            // Получем асетсы с сервера
-                            asstes = JsonConvert.DeserializeObject<Assets>(webService.HttpGet(manifest.version.AssetsIndexes));
+                            dataFilesManager.SaveFile(withDirectory.DirectoryPath + "/assets/indexes/" +
+                                manifest.version.AssetsVersion + ".json", json);
                         }
-                        catch { }
                     }
+                    catch (Exception ex) { Runtime.DebugWrite("Asset index download failed: " + ex); }
                 }
+
+                _allAssets = asstes; // Keep the full list for legacy directory restoration.
 
                 if (asstes.objects != null) // проверяем не возникла ли ошибка
                 {
@@ -293,7 +307,7 @@ namespace Lexplosion.Logic.FileSystem.Installers
                     foreach (string asset in asstes.objects.Keys)
                     {
                         string assetHash = asstes.objects[asset].hash;
-                        if (assetHash != null)
+                        if (assetHash != null && Regex.IsMatch(assetHash, @"\A[0-9a-fA-F]{40}\z"))
                         {
                             // проверяем существует ли файл. Если нет - отправляем на обновление
                             string assetPath = "/" + assetHash.Substring(0, 2);
@@ -644,7 +658,7 @@ namespace Lexplosion.Logic.FileSystem.Installers
                     perfomer.ExecuteTask(delegate ()
                     {
                         string assetHash = _assets.objects[asset].hash;
-                        if (assetHash != null)
+                        if (assetHash != null && Regex.IsMatch(assetHash, @"\A[0-9a-fA-F]{40}\z"))
                         {
                             string assetPath = assetHash.Substring(0, 2);
                             string filePath = $"{withDirectory.DirectoryPath}/assets/objects/{assetPath}/";
@@ -715,6 +729,58 @@ namespace Lexplosion.Logic.FileSystem.Installers
 
                     CallFileDownloadEvent(filename, 100, DownloadFileProgress.Successful);
                     // TODO: я на ошибки тут не проверяю то ли потому что мне лень было, толи просто не хотел делать так, чтобы от одного этого файла клиент не запускался
+                }
+            }
+
+            // Some older Minecraft versions read assets by their original file names.
+            if (_allAssets.objects != null && !cancelToken.IsCancellationRequested)
+            {
+                bool virtualAssets = _allAssets.Virtual || string.Equals(manifest.version.AssetsVersion, "legacy", StringComparison.OrdinalIgnoreCase);
+                bool resourcesAssets = _allAssets.MapToResources || string.Equals(manifest.version.AssetsVersion, "pre-1.6", StringComparison.OrdinalIgnoreCase);
+                var roots = new List<string>();
+                if (virtualAssets) roots.Add(Path.Combine(withDirectory.DirectoryPath, "assets", "virtual", "legacy"));
+                if (resourcesAssets) roots.Add(Path.Combine(withDirectory.GetInstancePath(instanceId), "resources"));
+
+                foreach (var asset in _allAssets.objects)
+                {
+                    if (cancelToken.IsCancellationRequested) break;
+                    string hash = asset.Value.hash;
+                    if (roots.Count == 0) break;
+                    if (hash == null || !Regex.IsMatch(hash, @"\A[0-9a-fA-F]{40}\z"))
+                    {
+                        errors.Add("assets: invalid hash " + asset.Key);
+                        continue;
+                    }
+
+                    string source = Path.Combine(withDirectory.DirectoryPath, "assets", "objects", hash.Substring(0, 2), hash);
+                    if (!File.Exists(source))
+                    {
+                        errors.Add("assets: missing " + asset.Key);
+                        continue;
+                    }
+
+                    foreach (string root in roots)
+                    {
+                        try
+                        {
+                            string relative = asset.Key.Replace('/', Path.DirectorySeparatorChar)
+                                .Replace('\\', Path.DirectorySeparatorChar);
+                            if (Path.IsPathRooted(relative) || relative.Contains(":"))
+                                throw new InvalidDataException("Invalid asset path");
+                            string prefix = Path.GetFullPath(root).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
+                            string target = Path.GetFullPath(Path.Combine(prefix, relative));
+                            if (!target.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+                                throw new InvalidDataException("Asset path escapes resources directory");
+                            if (File.Exists(target) && new FileInfo(target).Length == new FileInfo(source).Length)
+                                continue;
+                            Directory.CreateDirectory(Path.GetDirectoryName(target));
+                            File.Copy(source, target, true);
+                        }
+                        catch (Exception ex)
+                        {
+                            errors.Add("assets: " + asset.Key + " (" + ex.Message + ")");
+                        }
+                    }
                 }
             }
 
