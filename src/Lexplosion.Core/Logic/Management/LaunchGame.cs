@@ -450,13 +450,16 @@ namespace Lexplosion.Logic.Management
 				builder.AddJvmArgs("-Xmx" + _settings.Xmx + "M -Xms" + _settings.Xms + "M");
 				builder.AddGameArgs("--username " + _launchAccount.Login + " --version " + data.VersionFile.GameVersion);
 				builder.AddGameArgs("--gameDir \"" + gamePath + "instances/" + _instanceId + "\"");
-				builder.AddGameArgs("--assetsDir \"" + gamePath + "assets" + "\"");
+				builder.AddGameArgs("--assetsDir \"" + gamePath + (string.Equals(data.VersionFile.AssetsVersion, "legacy", StringComparison.OrdinalIgnoreCase) ? "assets/virtual/legacy" : "assets") + "\"");
 				builder.AddGameArgs("--assetIndex " + data.VersionFile.AssetsVersion);
 				builder.AddGameArgs("--uuid " + _launchAccount.UUID + " --accessToken " + _launchAccount.AccessToken + " --userProperties [] --userType mojang");
 				builder.AddGameArgs("--width " + _settings.WindowWidth + " --height " + _settings.WindowHeight);
 
 				command = builder.Build(mainClass);
 			}
+
+			// Legacy Minecraft arguments may reference the old virtual assets directory.
+			command = command.Replace("${game_assets}", "\"" + gamePath + "assets/virtual/legacy\"");
 
 			if (nwClientComplexArguments != null)
 			{
