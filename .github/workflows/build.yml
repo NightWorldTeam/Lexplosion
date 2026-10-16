@@ -38,3 +38,9 @@ jobs:
 
       - name: Build WPF launcher
         run: dotnet build src/Lexplosion.UI.WPF/Lexplosion.UI.WPF.csproj -c Release "-p:SolutionDir=$env:GITHUB_WORKSPACE/src/"
+
+      - name: Build NUnit tests
+        run: dotnet build src/Lexplosion.Tests/Lexplosion.Tests.csproj -c Release "-p:SolutionDir=$env:GITHUB_WORKSPACE/src/"
+
+      - name: Run NUnit tests
+        run: dotnet test src/Lexplosion.Tests/Lexplosion.Tests.csproj -c Release --no-build --logger "console;verbosity=normal"
