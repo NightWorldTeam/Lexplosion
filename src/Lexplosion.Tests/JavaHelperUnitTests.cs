@@ -1,9 +1,8 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Lexplosion.Core.Tools;
 
 namespace Lexplosion.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class JavaPathTests
     {
         [TestCase("C:\\Program Files\\Java\\jdk-17.0.1\\bin", "C:/Program Files/Java/jdk-17.0.1/bin/javaw.exe")]
