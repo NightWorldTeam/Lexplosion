@@ -275,10 +275,13 @@ namespace Lexplosion.Logic.FileSystem.Installers
 
                 // Проверяем assets
 
-                // Пытаемся получить список всех асетсов из json файла
+                // Сначала пробуем локальный индекс: он хранит соответствие оригинальных имён
+                // ресурсов и SHA-1 объектов в assets/objects. При валидном индексе HTTP не нужен.
+                // Без индекса восстановить пути вроде sounds/random/click.ogg из одних хешей нельзя.
                 Assets asstes = dataFilesManager.GetFile<Assets>(withDirectory.DirectoryPath + "/assets/indexes/" + manifest.version.AssetsVersion + ".json");
 
-                // Файла нет, или он битый. Получаем асетсы с сервера
+                // Только если индекс отсутствует или повреждён, пробуем запросить его с сервера.
+                // В офлайне эта попытка не восстановит отсутствующий JSON-индекс.
                 if (asstes.objects == null)
                 {
                     _assetsIndexes = true; //устанавливаем флаг что нужно скачать json файл
@@ -732,9 +735,14 @@ namespace Lexplosion.Logic.FileSystem.Installers
                 }
             }
 
-            // Some older Minecraft versions read assets by their original file names.
+            // Старые версии Minecraft ищут ресурсы не только по SHA-1 в assets/objects,
+            // но и по исходным путям (например sounds/random/click.ogg).
+            // Это ЛОКАЛЬНОЕ восстановление структуры каталогов, не HTTP-загрузка.
+            // _allAssets содержит полный индекс, а _assets -- только отсутствующие объекты.
             if (_allAssets.objects != null && !cancelToken.IsCancellationRequested)
             {
+                // virtual=true / индекс legacy => assets/virtual/legacy/<оригинальное имя>.
+                // map_to_resources=true / pre-1.6 => instances/<id>/resources/<имя>.
                 bool virtualAssets = _allAssets.Virtual || string.Equals(manifest.version.AssetsVersion, "legacy", StringComparison.OrdinalIgnoreCase);
                 bool resourcesAssets = _allAssets.MapToResources || string.Equals(manifest.version.AssetsVersion, "pre-1.6", StringComparison.OrdinalIgnoreCase);
                 var roots = new List<string>();
@@ -752,6 +760,7 @@ namespace Lexplosion.Logic.FileSystem.Installers
                         continue;
                     }
 
+                    // Где уже лежит скачанный объект: assets/objects/ab/abcdef... (по SHA-1).
                     string source = Path.Combine(withDirectory.DirectoryPath, "assets", "objects", hash.Substring(0, 2), hash);
                     if (!File.Exists(source))
                     {
@@ -763,6 +772,8 @@ namespace Lexplosion.Logic.FileSystem.Installers
                     {
                         try
                         {
+                            // Имя из индекса может содержать ../ или абсолютный путь.
+                            // Не даём индексу записать файл за пределами целевой папки.
                             string relative = asset.Key.Replace('/', Path.DirectorySeparatorChar)
                                 .Replace('\\', Path.DirectorySeparatorChar);
                             if (Path.IsPathRooted(relative) || relative.Contains(":"))
@@ -771,8 +782,12 @@ namespace Lexplosion.Logic.FileSystem.Installers
                             string target = Path.GetFullPath(Path.Combine(prefix, relative));
                             if (!target.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
                                 throw new InvalidDataException("Asset path escapes resources directory");
+                            // Оптимизация: файл с тем же размером не копируем повторно.
+                            // ВАЖНО: совпадение длины НЕ гарантирует одинаковое содержимое.
                             if (File.Exists(target) && new FileInfo(target).Length == new FileInfo(source).Length)
                                 continue;
+                            // Разворачиваем кешированный объект под его оригинальным именем.
+                            // true позволяет перезаписать существующую копию, если её размер отличается.
                             Directory.CreateDirectory(Path.GetDirectoryName(target));
                             File.Copy(source, target, true);
                         }
