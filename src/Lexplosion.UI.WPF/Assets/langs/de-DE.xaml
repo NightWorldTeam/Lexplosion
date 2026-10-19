@@ -120,6 +120,21 @@
     <!--  JVM Arguments  -->
     <s:String x:Key="JVMArguments">JVM-Argumente</s:String>
     <s:String x:Key="JVMArgumentsDescription">Argumente der Java Virtual Machine.</s:String>
+    <!--  JVM Arguments Editor  -->
+    <s:String x:Key="JVMArgsEditor">JVM-Argument-Editor</s:String>
+    <s:String x:Key="JVMArgsEditorSearchPlaceholder">Argumente suchen...</s:String>
+    <s:String x:Key="JVMArgsEditorKeyColumn">Schlüssel</s:String>
+    <s:String x:Key="JVMArgsEditorValueColumn">Wert</s:String>
+    <s:String x:Key="JVMArgsEditorTypeColumn">Typ</s:String>
+    <s:String x:Key="JVMArgsEditorBulkPaste">Massen einfügen</s:String>
+    <s:String x:Key="JVMArgsEditorPasteAndMerge">Einfügen &amp; Zusammenführen</s:String>
+    <s:String x:Key="JVMArgsEditorSave">Speichern</s:String>
+    <s:String x:Key="JVMArgsEditorCancel">Abbrechen</s:String>
+    <s:String x:Key="JVMArgsEditorAdd">Hinzufügen</s:String>
+    <s:String x:Key="JVMArgsEditorRemove">Entfernen</s:String>
+    <s:String x:Key="JVMArgsEditorEmpty">Keine JVM-Argumente</s:String>
+    <s:String x:Key="JVMArgsEditorNoInput">Keine Eingabe zum Einfügen.</s:String>
+    <s:String x:Key="JVMArgsEditorMergeSuccess">Erfolgreich zusammengeführt. Insgesamt: {0} Einträge.</s:String>
 
     <!--  Launcher Properties  -->
     <!--  Console  -->

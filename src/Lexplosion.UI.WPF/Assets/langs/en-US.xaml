@@ -127,6 +127,21 @@
     <!--  JVM Arguments  -->
     <s:String x:Key="JVMArguments">JVM Arguments</s:String>
     <s:String x:Key="JVMArgumentsDescription">Arguments for Java Virtual Machine.</s:String>
+    <!--  JVM Arguments Editor  -->
+    <s:String x:Key="JVMArgsEditor">JVM Arguments Editor</s:String>
+    <s:String x:Key="JVMArgsEditorSearchPlaceholder">Search arguments...</s:String>
+    <s:String x:Key="JVMArgsEditorKeyColumn">Key</s:String>
+    <s:String x:Key="JVMArgsEditorValueColumn">Value</s:String>
+    <s:String x:Key="JVMArgsEditorTypeColumn">Type</s:String>
+    <s:String x:Key="JVMArgsEditorBulkPaste">Bulk Paste</s:String>
+    <s:String x:Key="JVMArgsEditorPasteAndMerge">Paste &amp; Merge</s:String>
+    <s:String x:Key="JVMArgsEditorSave">Save</s:String>
+    <s:String x:Key="JVMArgsEditorCancel">Cancel</s:String>
+    <s:String x:Key="JVMArgsEditorAdd">Add</s:String>
+    <s:String x:Key="JVMArgsEditorRemove">Remove</s:String>
+    <s:String x:Key="JVMArgsEditorEmpty">No JVM arguments</s:String>
+    <s:String x:Key="JVMArgsEditorNoInput">No input to paste.</s:String>
+    <s:String x:Key="JVMArgsEditorMergeSuccess">Merged successfully. Total: {0} entries.</s:String>
 
     <!--  Network Properties  -->
     <s:String x:Key="NetworkProperties">Network Properties</s:String>
