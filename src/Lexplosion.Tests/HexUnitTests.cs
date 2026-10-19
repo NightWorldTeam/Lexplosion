@@ -1,12 +1,10 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Lexplosion.Core.Extensions;
+﻿using Lexplosion.Core.Extensions;
 
 namespace Lexplosion.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class HexUnitTests
     {
-        [Theory]
         [TestCase("#fff", true)]          // Короткий формат, допустимые символы
         [TestCase("#1a2", true)]          // Короткий формат, допустимые символы
         [TestCase("#FFFFFF", true)]       // Длинный формат, допустимые символы

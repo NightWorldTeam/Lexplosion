@@ -1,62 +1,117 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Lexplosion.Core.Tools;
 
 namespace Lexplosion.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class JavaPathTests
     {
-        [TestCase("C:\\Program Files\\Java\\jdk-17.0.1\\bin", "C:/Program Files/Java/jdk-17.0.1/bin/javaw.exe")]
-        [TestCase("C:\\Program Files\\Java\\jdk-17.0.1\\bin\\javaw.exe", "C:/Program Files/Java/jdk-17.0.1/bin/javaw.exe")]
-        [TestCase("C:\\Program Files\\Java\\jdk-17.0.1\\bin\\java.exe", "C:/Program Files/Java/jdk-17.0.1/bin/java.exe")]
-        [TestCase("C:\\Program Files\\Java\\jdk-17.0.1\\bin\\javaw.exe\\", "C:/Program Files/Java/jdk-17.0.1/bin/javaw.exe")]
-        [TestCase("C:\\Program Files\\Java\\jdk-17.0.1\\bin\\java.exe\\", "C:/Program Files/Java/jdk-17.0.1/bin/java.exe")]
-        [TestCase("C:\\\\Program Files\\\\Java\\\\jdk-17.0.1\\\\bin\\\\java.exe\\", "C:/Program Files/Java/jdk-17.0.1/bin/java.exe")]
-        public void SuccessPathReformat(string exceptedPath, string exceptedCurrentPath)
+        private string _root = string.Empty;
+        private string _javaHome = string.Empty;
+        private string _binDirectory = string.Empty;
+
+        [SetUp]
+        public void SetUp()
         {
-            JavaHelper.TryValidateJavaPath(exceptedPath, out string result);
-            NUnit.Framework.Assert.AreEqual(exceptedCurrentPath, result);
+            // No dependency on locally installed Java or the developer's drive letters.
+            _root = Path.Combine(Path.GetTempPath(), "Lexplosion-JavaPathTests-" + Guid.NewGuid().ToString("N"));
+            _javaHome = Path.Combine(_root, "Java with spaces", "jdk-17.0.1");
+            _binDirectory = Path.Combine(_javaHome, "bin");
+
+            Directory.CreateDirectory(_binDirectory);
+            File.WriteAllText(Path.Combine(_binDirectory, "java.exe"), string.Empty);
+            File.WriteAllText(Path.Combine(_binDirectory, "javaw.exe"), string.Empty);
         }
 
-        [TestCase("C:\\Program Files\\Java\\jdk-17.0.1\\bin", JavaHelper.JavaPathCheckResult.Success)]
-        [TestCase("C:\\Program Files\\Java\\jdk-17.0.1\\bin\\javaw.exe", JavaHelper.JavaPathCheckResult.Success)]
-        [TestCase("C:\\Program Files\\Java\\jdk-17.0.1\\bin\\java.exe", JavaHelper.JavaPathCheckResult.Success)]
-        [TestCase("C:\\Program Files\\Java\\jdk-17.0.1\\bin\\javaw.exe\\", JavaHelper.JavaPathCheckResult.Success)]
-        [TestCase("C:\\Program Files\\Java\\jdk-17.0.1\\bin\\java.exe\\", JavaHelper.JavaPathCheckResult.Success)]
-        public void SuccessJavaPath(string exceptedPath, JavaHelper.JavaPathCheckResult exceptedCurrentPath) 
+        [TearDown]
+        public void TearDown()
         {
-            var result = JavaHelper.TryValidateJavaPath(exceptedPath, out var s);
-            NUnit.Framework.Assert.AreEqual(JavaHelper.JavaPathCheckResult.Success, result);
+            if (Directory.Exists(_root))
+            {
+                Directory.Delete(_root, recursive: true);
+            }
         }
 
-        [TestCase("", JavaHelper.JavaPathCheckResult.EmptyOrNull)]
-        [TestCase(null, JavaHelper.JavaPathCheckResult.EmptyOrNull)]
-        [TestCase("       ", JavaHelper.JavaPathCheckResult.EmptyOrNull)]
-        public void EmptyOrNullJavaPath(string exceptedPath, JavaHelper.JavaPathCheckResult exceptedCurrentPath)
+        [TestCase("", "javaw.exe")]
+        [TestCase("bin", "javaw.exe")]
+        [TestCase("bin/javaw.exe", "javaw.exe")]
+        [TestCase("bin/java.exe", "java.exe")]
+        [TestCase("bin/javaw.exe/", "javaw.exe")]
+        [TestCase("bin/java.exe/", "java.exe")]
+        [TestCase("bin//java.exe/", "java.exe")]
+        public void ExistingJavaPathIsAcceptedAndNormalized(string relativePath, string expectedExecutable)
         {
-            var result = JavaHelper.TryValidateJavaPath(exceptedPath, out var s);
-            NUnit.Framework.Assert.AreEqual(exceptedCurrentPath, result);
+            string input = string.IsNullOrEmpty(relativePath)
+                ? _javaHome
+                : _javaHome + "\\" + relativePath.Replace('/', '\\');
+
+            var status = JavaHelper.TryValidateJavaPath(input, out string normalized);
+
+            Assert.That(status, Is.EqualTo(JavaHelper.JavaPathCheckResult.Success));
+            Assert.That(normalized, Is.EqualTo(
+                Path.Combine(_binDirectory, expectedExecutable).Replace('\\', '/')));
         }
 
-        [TestCase("N:\\Lexplosion\\Lexplosion.WPF.NewInterface\\bin\\Debug\\Lexplosion.WPF.NewInterface.exe", JavaHelper.JavaPathCheckResult.WrongExe)]
-        public void WrongExeJavaPath(string exceptedPath, JavaHelper.JavaPathCheckResult exceptedCurrentPath)
+        [Test]
+        public void RepeatedBackslashesAreNormalized()
         {
-            var result = JavaHelper.TryValidateJavaPath(exceptedPath, out var s);
-            NUnit.Framework.Assert.AreEqual(JavaHelper.JavaPathCheckResult.WrongExe, result);
+            string input = _javaHome.Replace("\\", "\\\\") + "\\\\bin\\\\javaw.exe\\";
+
+            var status = JavaHelper.TryValidateJavaPath(input, out string normalized);
+
+            Assert.That(status, Is.EqualTo(JavaHelper.JavaPathCheckResult.Success));
+            Assert.That(normalized, Is.EqualTo(Path.Combine(_binDirectory, "javaw.exe").Replace('\\', '/')));
         }
 
-        [TestCase("N:\\Lexplosion\\Lexplosion.WPF.NewInterface\\bin\\Debug\\", JavaHelper.JavaPathCheckResult.JaveExeDoesNotExists)]
-        public void JaveExeDoesNotExistsJavaPath(string exceptedPath, JavaHelper.JavaPathCheckResult exceptedCurrentPath)
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase("   ")]
+        public void EmptyOrNullJavaPathIsRejected(string path)
         {
-            var result = JavaHelper.TryValidateJavaPath(exceptedPath, out var s);
-            NUnit.Framework.Assert.AreEqual(JavaHelper.JavaPathCheckResult.JaveExeDoesNotExists, result);
+            var status = JavaHelper.TryValidateJavaPath(path, out string normalized);
+
+            Assert.That(status, Is.EqualTo(JavaHelper.JavaPathCheckResult.EmptyOrNull));
+            Assert.That(normalized, Is.Empty);
         }
 
-        [TestCase("N:\\Lexplosion\\Lexplosion.WPF.NewInterfaceasdjansd\\asdnnasdbin\\Debug\\", JavaHelper.JavaPathCheckResult.PathDoesNotExists)]
-        public void PathDoesNotExistsJavaPath(string exceptedPath, JavaHelper.JavaPathCheckResult exceptedCurrentPath)
+        [Test]
+        public void WrongExecutableNameIsRejected()
         {
-            var result = JavaHelper.TryValidateJavaPath(exceptedPath, out var s);
-            NUnit.Framework.Assert.AreEqual(JavaHelper.JavaPathCheckResult.PathDoesNotExists, result);
+            string invalidExecutable = Path.Combine(_binDirectory, "launcher.exe");
+            File.WriteAllText(invalidExecutable, string.Empty);
+
+            var status = JavaHelper.TryValidateJavaPath(invalidExecutable, out _);
+
+            Assert.That(status, Is.EqualTo(JavaHelper.JavaPathCheckResult.WrongExe));
+        }
+
+        [Test]
+        public void MissingJavaExecutableIsRejected()
+        {
+            File.Delete(Path.Combine(_binDirectory, "javaw.exe"));
+
+            var status = JavaHelper.TryValidateJavaPath(_binDirectory, out _);
+
+            Assert.That(status, Is.EqualTo(JavaHelper.JavaPathCheckResult.JaveExeDoesNotExists));
+        }
+
+        [Test]
+        public void MissingJavaExeIsRejected()
+        {
+            File.Delete(Path.Combine(_binDirectory, "java.exe"));
+
+            var status = JavaHelper.TryValidateJavaPath(Path.Combine(_binDirectory, "java.exe"), out _);
+
+            Assert.That(status, Is.EqualTo(JavaHelper.JavaPathCheckResult.JaveExeDoesNotExists));
+        }
+
+        [Test]
+        public void NonexistentDirectoryIsRejected()
+        {
+            string nonexistentPath = Path.Combine(_root, "does-not-exist", "bin");
+
+            var status = JavaHelper.TryValidateJavaPath(nonexistentPath, out _);
+
+            Assert.That(status, Is.EqualTo(JavaHelper.JavaPathCheckResult.PathDoesNotExists));
         }
     }
 }
