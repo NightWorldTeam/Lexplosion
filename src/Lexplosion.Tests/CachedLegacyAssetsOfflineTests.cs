@@ -47,7 +47,6 @@ namespace Lexplosion.Tests
                 Directory.Delete(_root, true);
         }
 
-        [Test]
         [TestCase("legacy", false, false, true, false)]
         [TestCase("pre-1.6", false, false, false, true)]
         [TestCase("custom", true, true, true, true)]
