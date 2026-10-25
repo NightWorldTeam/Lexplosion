@@ -165,7 +165,9 @@ namespace Lexplosion.UI.WPF.Controls
             var oldPresenter = _current;
             var newPresenter = _next;
             var duration = TransitionDuration;
-            var easing = new CubicEase { EasingMode = EasingMode.EaseInOut };
+            IEasingFunction easing = AnimationType == ContentControlAnimation.SoftReveal
+                ? new SineEase { EasingMode = EasingMode.EaseInOut }
+                : new CubicEase { EasingMode = EasingMode.EaseInOut };
 
             double distance = AnimationType == ContentControlAnimation.SlideToTop ||
                               AnimationType == ContentControlAnimation.SlideToBottom
