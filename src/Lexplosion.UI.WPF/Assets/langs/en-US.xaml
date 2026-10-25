@@ -1085,4 +1085,6 @@
     <s:String x:Key="AddonDetailsDescriptionLoading">Loading description…</s:String>
     <s:String x:Key="AddonDetailsGalleryLoading">Loading gallery…</s:String>
     <s:String x:Key="AddonDetailsNoDescription">No description available.</s:String>
+    <s:String x:Key="InterfaceAnimations">Interface animations</s:String>
+    <s:String x:Key="InterfaceAnimationsDescription">Smooth transitions between pages and menu items.</s:String>
 </ResourceDictionary>
