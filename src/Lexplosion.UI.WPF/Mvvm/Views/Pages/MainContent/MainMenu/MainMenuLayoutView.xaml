@@ -24,8 +24,9 @@
 
         <ContentControl Content="{Binding LeftPanel}" KeyboardNavigation.IsTabStop="False" />
 
-        <ContentControl
+        <controls:AnimatedContentControl
             Grid.Column="1"
+            AnimationType="SlideToTop"
             Content="{Binding Content}"
             KeyboardNavigation.IsTabStop="False"
             KeyboardNavigation.TabNavigation="None" />
