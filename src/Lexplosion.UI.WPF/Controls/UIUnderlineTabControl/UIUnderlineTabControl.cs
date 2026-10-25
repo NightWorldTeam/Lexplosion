@@ -2,6 +2,7 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
 
@@ -16,6 +17,7 @@ namespace Lexplosion.UI.WPF.Controls
 
         private Border _line;
         private Border _header;
+        private AnimatedContentControl _animatedContent;
 
         private TabItem _selectedTabItem;
         private bool _underlineUpdatePending;
@@ -118,6 +120,7 @@ namespace Lexplosion.UI.WPF.Controls
 
             _line = Template.FindName(PART_LINE_NAME, this) as Border;
             _header = Template.FindName(PART_HEADER_NAME, this) as Border;
+            _animatedContent = Template.FindName("PART_AnimatedContent", this) as AnimatedContentControl;
             if (_header != null)
                 _header.Padding = TabPanelPadding;
 
@@ -140,6 +143,29 @@ namespace Lexplosion.UI.WPF.Controls
             base.OnSelectionChanged(e);
             // Selection can change while ItemContainerGenerator is still generating.
             QueueUnderlineUpdate();
+        }
+
+        protected override void OnPreviewKeyDown(KeyEventArgs e)
+        {
+            // Hit testing locks pointer navigation in XAML. Keyboard navigation
+            // needs the same guard, without blocking keys used by page content.
+            if (_animatedContent?.IsTransitioning == true)
+            {
+                bool inHeader = _header?.IsKeyboardFocusWithin == true;
+                bool directional = e.Key == Key.Left || e.Key == Key.Right ||
+                                   e.Key == Key.Up || e.Key == Key.Down ||
+                                   e.Key == Key.Home || e.Key == Key.End;
+                bool controlNavigation = (Keyboard.Modifiers & ModifierKeys.Control) != 0 &&
+                    (e.Key == Key.Tab || e.Key == Key.PageUp || e.Key == Key.PageDown);
+
+                if ((inHeader && directional) || controlNavigation)
+                {
+                    e.Handled = true;
+                    return;
+                }
+            }
+
+            base.OnPreviewKeyDown(e);
         }
 
         private void UpdateContentDirection(bool backwards)
