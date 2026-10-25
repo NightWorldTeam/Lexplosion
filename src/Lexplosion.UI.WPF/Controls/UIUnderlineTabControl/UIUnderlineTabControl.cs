@@ -19,6 +19,7 @@ namespace Lexplosion.UI.WPF.Controls
 
         private TabItem _selectedTabItem;
         private bool _underlineUpdatePending;
+        private int _previousSelectedIndex = -1;
 
         #region Dependency Properties
 
@@ -38,13 +39,27 @@ namespace Lexplosion.UI.WPF.Controls
         public static readonly DependencyProperty ContentAnimationProperty =
             DependencyProperty.Register(nameof(ContentAnimation), typeof(ContentControlAnimation),
                 typeof(UIUnderlineTabControl),
-                new FrameworkPropertyMetadata(ContentControlAnimation.SlideToLeft));
+                new FrameworkPropertyMetadata(ContentControlAnimation.SlideToLeft,
+                    (d, e) => ((UIUnderlineTabControl)d).UpdateContentDirection(false)));
 
         public ContentControlAnimation ContentAnimation
         {
             get => (ContentControlAnimation)GetValue(ContentAnimationProperty);
             set => SetValue(ContentAnimationProperty, value);
         }
+
+        // The XAML template uses the resolved direction, leaving ContentAnimation
+        // as the caller's preferred forward direction.
+        private static readonly DependencyPropertyKey EffectiveContentAnimationPropertyKey =
+            DependencyProperty.RegisterReadOnly(nameof(EffectiveContentAnimation),
+                typeof(ContentControlAnimation), typeof(UIUnderlineTabControl),
+                new FrameworkPropertyMetadata(ContentControlAnimation.SlideToLeft));
+
+        public static readonly DependencyProperty EffectiveContentAnimationProperty =
+            EffectiveContentAnimationPropertyKey.DependencyProperty;
+
+        public ContentControlAnimation EffectiveContentAnimation =>
+            (ContentControlAnimation)GetValue(EffectiveContentAnimationProperty);
 
         public static readonly DependencyProperty TabPanelPaddingProperty
             = DependencyProperty.Register("TabPanelPadding", typeof(Thickness), typeof(UIUnderlineTabControl),
@@ -112,9 +127,44 @@ namespace Lexplosion.UI.WPF.Controls
 
         protected override void OnSelectionChanged(SelectionChangedEventArgs e)
         {
+            // Update BEFORE base: TabControl synchronizes SelectedContent in base,
+            // so AnimatedContentControl must see the new direction before its content changes.
+            if (ReferenceEquals(e.OriginalSource, this) &&
+                SelectedIndex >= 0 && SelectedIndex != _previousSelectedIndex)
+            {
+                bool backwards = _previousSelectedIndex >= 0 && SelectedIndex < _previousSelectedIndex;
+                UpdateContentDirection(backwards);
+                _previousSelectedIndex = SelectedIndex;
+            }
+
             base.OnSelectionChanged(e);
             // Selection can change while ItemContainerGenerator is still generating.
             QueueUnderlineUpdate();
+        }
+
+        private void UpdateContentDirection(bool backwards)
+        {
+            var direction = ContentAnimation;
+            if (backwards)
+            {
+                switch (direction)
+                {
+                    case ContentControlAnimation.SlideToLeft:
+                        direction = ContentControlAnimation.SlideToRight;
+                        break;
+                    case ContentControlAnimation.SlideToRight:
+                        direction = ContentControlAnimation.SlideToLeft;
+                        break;
+                    case ContentControlAnimation.SlideToTop:
+                        direction = ContentControlAnimation.SlideToBottom;
+                        break;
+                    case ContentControlAnimation.SlideToBottom:
+                        direction = ContentControlAnimation.SlideToTop;
+                        break;
+                }
+            }
+
+            SetValue(EffectiveContentAnimationPropertyKey, direction);
         }
 
         private void QueueUnderlineUpdate()
