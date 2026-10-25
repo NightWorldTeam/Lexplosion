@@ -155,11 +155,20 @@ namespace Lexplosion.UI.WPF.Controls
                 double outgoing = -sign * distance * 0.28;
                 newTransform.SetValue(property, incoming);
 
+                // TranslateTransform runs on the composition path. Avoid opacity
+                // animations on two full-page surfaces during a slide.
+                var arrive = Motion(incoming, 0, duration, easing);
+                arrive.Completed += (sender, args) =>
+                {
+                    if (version == _transitionVersion)
+                        FinishTransition();
+                };
+
                 oldTransform.BeginAnimation(property, Motion(0, outgoing, duration, easing));
-                newTransform.BeginAnimation(property, Motion(incoming, 0, duration, easing));
+                newTransform.BeginAnimation(property, arrive);
             }
 
-            // The old page is still rendered while the incoming page moves over it.
+            // The old page remains rendered while the next one moves over it.
             // No bitmap snapshots or animations of Margin/Width/layout.
             Panel.SetZIndex(oldPresenter, 0);
             Panel.SetZIndex(newPresenter, 1);
@@ -167,14 +176,17 @@ namespace Lexplosion.UI.WPF.Controls
             oldPresenter.IsHitTestVisible = false;
             newPresenter.IsHitTestVisible = true;
 
-            oldPresenter.BeginAnimation(OpacityProperty, Motion(1, swipe ? 0.72 : 0, duration, easing));
-            var reveal = Motion(swipe ? 0.95 : 0, 1, duration, easing);
-            reveal.Completed += (sender, args) =>
+            if (!swipe)
             {
-                if (version == _transitionVersion)
-                    FinishTransition();
-            };
-            newPresenter.BeginAnimation(OpacityProperty, reveal);
+                oldPresenter.BeginAnimation(OpacityProperty, Motion(1, 0, duration, easing));
+                var reveal = Motion(0, 1, duration, easing);
+                reveal.Completed += (sender, args) =>
+                {
+                    if (version == _transitionVersion)
+                        FinishTransition();
+                };
+                newPresenter.BeginAnimation(OpacityProperty, reveal);
+            }
         }
 
         private static DoubleAnimation Motion(double from, double to, Duration duration, IEasingFunction easing)
