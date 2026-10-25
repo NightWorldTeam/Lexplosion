@@ -22,5 +22,17 @@ namespace Lexplosion.UI.WPF.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool EnableAnimations {
+            get {
+                return ((bool)(this["EnableAnimations"]));
+            }
+            set {
+                this["EnableAnimations"] = value;
+            }
+        }
     }
 }
