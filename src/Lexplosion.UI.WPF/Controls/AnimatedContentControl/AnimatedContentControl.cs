@@ -127,7 +127,8 @@ namespace Lexplosion.UI.WPF.Controls
             if (AnimationType == ContentControlAnimation.SoftReveal && IsLoaded &&
                 oldContent != null && newContent != null &&
                 SystemParameters.ClientAreaAnimation &&
-                TransitionDuration.HasTimeSpan && TransitionDuration.TimeSpan > TimeSpan.Zero)
+                TransitionDuration.HasTimeSpan && TransitionDuration.TimeSpan > TimeSpan.Zero &&
+                !ContainsNativeWindow(_current))
             {
                 RevealContent(newContent);
                 return;
@@ -236,43 +237,46 @@ namespace Lexplosion.UI.WPF.Controls
 
         private void RevealContent(object content)
         {
-            // Replace the old view immediately: transparent pages never overlap.
-            // Repeated navigation cancels the previous reveal instead of queuing it.
-            ShowImmediately(content);
-            int version = _transitionVersion;
-            _current.Opacity = 0;
+            // Prepare the first frame BEFORE replacing the content. Delaying the
+            // animations until DispatcherPriority.Loaded caused a visible flash.
+            var presenter = _current;
+            int version = ++_transitionVersion;
+            Reset(presenter);
 
-            Dispatcher.BeginInvoke(new Action(() =>
+            var scale = new ScaleTransform(0.992, 0.992);
+            presenter.RenderTransformOrigin = new Point(0.5, 0.5);
+            presenter.RenderTransform = scale;
+            presenter.Opacity = 0;
+            presenter.Visibility = Visibility.Visible;
+            presenter.IsHitTestVisible = true;
+            presenter.Content = content;
+
+            Reset(_next);
+            _next.Content = null;
+            _next.Visibility = Visibility.Collapsed;
+            _next.IsHitTestVisible = false;
+
+            // A native HWND cannot participate in WPF opacity/scale transitions.
+            if (ContainsNativeWindow(presenter))
             {
-                if (version != _transitionVersion || !IsLoaded || _current == null)
-                    return;
+                Reset(presenter);
+                return;
+            }
 
-                // HwndHost/WebView2 cannot be transformed by the WPF compositor.
-                if (ContainsNativeWindow(_current))
-                {
-                    Reset(_current);
-                    return;
-                }
+            var opacityEasing = new QuadraticEase { EasingMode = EasingMode.EaseInOut };
+            var scaleEasing = new CubicEase { EasingMode = EasingMode.EaseOut };
+            scale.BeginAnimation(ScaleTransform.ScaleXProperty,
+                Motion(0.992, 1, TransitionDuration, scaleEasing));
+            scale.BeginAnimation(ScaleTransform.ScaleYProperty,
+                Motion(0.992, 1, TransitionDuration, scaleEasing));
 
-                var presenter = _current;
-                var easing = new CubicEase { EasingMode = EasingMode.EaseOut };
-                var scale = new ScaleTransform(0.992, 0.992);
-
-                presenter.RenderTransformOrigin = new Point(0.5, 0.5);
-                presenter.RenderTransform = scale;
-                scale.BeginAnimation(ScaleTransform.ScaleXProperty,
-                    Motion(0.992, 1, TransitionDuration, easing));
-                scale.BeginAnimation(ScaleTransform.ScaleYProperty,
-                    Motion(0.992, 1, TransitionDuration, easing));
-
-                var reveal = Motion(0, 1, TransitionDuration, easing);
-                reveal.Completed += (sender, args) =>
-                {
-                    if (version == _transitionVersion && ReferenceEquals(_current, presenter))
-                        Reset(presenter);
-                };
-                presenter.BeginAnimation(OpacityProperty, reveal);
-            }), DispatcherPriority.Loaded);
+            var reveal = Motion(0, 1, TransitionDuration, opacityEasing);
+            reveal.Completed += (sender, args) =>
+            {
+                if (version == _transitionVersion && ReferenceEquals(_current, presenter))
+                    Reset(presenter);
+            };
+            presenter.BeginAnimation(OpacityProperty, reveal);
         }
 
         private static DoubleAnimation Motion(double from, double to, Duration duration, IEasingFunction easing)
