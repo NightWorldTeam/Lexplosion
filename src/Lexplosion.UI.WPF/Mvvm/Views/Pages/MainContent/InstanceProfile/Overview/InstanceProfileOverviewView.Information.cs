@@ -1,3 +1,4 @@
+using Lexplosion.UI.WPF.Services.Descriptions;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -59,7 +60,6 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.InstanceProfile
 				CloseInformationDrawer();
 				return;
 			}
-			UpdateMetadata();
 			InformationDrawer.Visibility = Visibility.Visible;
 			UpdateInformationLayout();
 			OverviewDiagnostics.Info("Information drawer opened");
@@ -70,8 +70,6 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.InstanceProfile
 			if (InformationDrawer.Visibility == Visibility.Visible)
 				CloseInformationDrawer();
 		}
-
-
 
 		private void CloseInformationDrawer()
 		{
