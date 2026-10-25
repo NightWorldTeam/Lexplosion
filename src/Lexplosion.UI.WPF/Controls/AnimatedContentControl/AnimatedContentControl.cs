@@ -43,7 +43,7 @@ namespace Lexplosion.UI.WPF.Controls
         public static readonly DependencyProperty AnimationTypeProperty =
             DependencyProperty.Register(nameof(AnimationType), typeof(ContentControlAnimation),
                 typeof(AnimatedContentControl),
-                new FrameworkPropertyMetadata(ContentControlAnimation.SlideToLeft));
+                new FrameworkPropertyMetadata(ContentControlAnimation.None));
 
         public ContentControlAnimation AnimationType
         {
