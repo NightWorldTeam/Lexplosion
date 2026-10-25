@@ -27,6 +27,17 @@ namespace Lexplosion.UI.WPF.Controls
         private bool _transitionPending;
         private int _transitionVersion;
 
+        // The transition state is exposed to the hosting TabControl, so tab input
+        // can be locked for the actual animation lifetime (no hard-coded timers).
+        private static readonly DependencyPropertyKey IsTransitioningPropertyKey =
+            DependencyProperty.RegisterReadOnly(nameof(IsTransitioning), typeof(bool),
+                typeof(AnimatedContentControl), new PropertyMetadata(false));
+
+        public static readonly DependencyProperty IsTransitioningProperty =
+            IsTransitioningPropertyKey.DependencyProperty;
+
+        public bool IsTransitioning => (bool)GetValue(IsTransitioningProperty);
+
         public static readonly DependencyProperty AnimationTypeProperty =
             DependencyProperty.Register(nameof(AnimationType), typeof(ContentControlAnimation),
                 typeof(AnimatedContentControl),
@@ -62,6 +73,7 @@ namespace Lexplosion.UI.WPF.Controls
             _current = GetTemplateChild("PART_FirstContent") as ContentPresenter;
             _next = GetTemplateChild("PART_SecondContent") as ContentPresenter;
             _transitionPending = false;
+            SetValue(IsTransitioningPropertyKey, false);
 
             if (_current == null || _next == null)
                 return;
@@ -104,6 +116,7 @@ namespace Lexplosion.UI.WPF.Controls
             _next.Visibility = Visibility.Hidden; // Measure without showing a misplaced frame.
             _next.IsHitTestVisible = false;
             _transitionPending = true;
+            SetValue(IsTransitioningPropertyKey, true);
             int version = ++_transitionVersion;
 
             // Let the new DataTemplate materialize and layout finish before moving it.
@@ -199,9 +212,13 @@ namespace Lexplosion.UI.WPF.Controls
         {
             ++_transitionVersion;
             if (_current == null || _next == null || !_transitionPending)
+            {
+                SetValue(IsTransitioningPropertyKey, false);
                 return;
+            }
 
             _transitionPending = false;
+            SetValue(IsTransitioningPropertyKey, false);
             var previous = _current;
             _current = _next;
             _next = previous;
@@ -220,6 +237,7 @@ namespace Lexplosion.UI.WPF.Controls
         private void ShowImmediately(object content)
         {
             ++_transitionVersion;
+            SetValue(IsTransitioningPropertyKey, false);
             _current.Content = content;
             _current.Visibility = Visibility.Visible;
             _current.IsHitTestVisible = true;
