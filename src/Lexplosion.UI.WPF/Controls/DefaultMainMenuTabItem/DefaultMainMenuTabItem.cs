@@ -81,7 +81,7 @@ namespace Lexplosion.UI.WPF.Controls
                 return;
             }
 
-            var animation = new DoubleAnimation(opacity, target, TimeSpan.FromMilliseconds(220))
+            var animation = new DoubleAnimation(opacity, target, new Duration(TimeSpan.FromMilliseconds(220)))
             {
                 EasingFunction = new SineEase { EasingMode = EasingMode.EaseInOut }
             };
