@@ -98,7 +98,7 @@
                             KeyboardNavigation.TabIndex="2"
                             KeyboardNavigation.TabNavigation="Local">
                             <local:AnimatedContentControl x:Name="PART_AnimatedContent"
-                                                          AnimationType="{TemplateBinding ContentAnimation}"
+                                                          AnimationType="{TemplateBinding EffectiveContentAnimation}"
                                                           Content="{TemplateBinding SelectedContent}" />
                         </Border>
                     </Grid>
