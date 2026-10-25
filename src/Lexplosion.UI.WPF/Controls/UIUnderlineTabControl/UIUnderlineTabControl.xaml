@@ -106,6 +106,10 @@
                         <Trigger Property="EnableAnimations" Value="False">
                             <Setter TargetName="PART_AnimatedContent" Property="AnimationType" Value="None" />
                         </Trigger>
+                        <!-- Ignore extra header clicks until both page layers finish moving. -->
+                        <Trigger SourceName="PART_AnimatedContent" Property="IsTransitioning" Value="True">
+                            <Setter TargetName="HeaderPanel" Property="IsHitTestVisible" Value="False" />
+                        </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
