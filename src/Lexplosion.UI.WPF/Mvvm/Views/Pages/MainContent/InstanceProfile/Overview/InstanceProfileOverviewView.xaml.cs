@@ -63,7 +63,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.InstanceProfile
 			if (_model != null)
 			{
 				_model.PropertyChanged += OnModelPropertyChanged;
-					OverviewDiagnostics.Info("Model attached: source=" + _model.DescriptionSource +
+				OverviewDiagnostics.Info("Model attached: source=" + _model.DescriptionSource +
 					", ready=" + _model.IsDescriptionReady +
 					", length=" + (_model.OverviewDescription?.Length ?? 0));
 			}
@@ -80,7 +80,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.InstanceProfile
 				return;
 			if (!Dispatcher.CheckAccess())
 			{
-				Dispatcher.BeginInvoke(new Action(() => { RequestRender(); }));
+				Dispatcher.BeginInvoke(new Action(RequestRender));
 				return;
 			}
 			RequestRender();
