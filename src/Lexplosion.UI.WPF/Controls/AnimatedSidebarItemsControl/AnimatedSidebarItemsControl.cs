@@ -43,7 +43,7 @@ namespace Lexplosion.UI.WPF.Controls
             if (_position?.IsFrozen == true)
             {
                 // Templates may freeze their inline transforms when sealed.
-                _position = _position.CloneCurrentValue();
+                _position = (TranslateTransform)_position.CloneCurrentValue();
                 _caret.RenderTransform = _position;
             }
             _positionInitialized = false;
