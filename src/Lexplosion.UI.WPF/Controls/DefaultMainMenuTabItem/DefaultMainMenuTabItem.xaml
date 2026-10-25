@@ -15,70 +15,38 @@
                         Padding="16,8"
                         Background="Transparent">
                         <Grid>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
 
-                                <Viewbox Width="{TemplateBinding IconWidth}" Height="{TemplateBinding IconHeight}">
-                                    <Path
-                                        extensions:PathExtensions.StringKeyData="{TemplateBinding IconKey}"
-                                        Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                        Stretch="Fill" />
-                                </Viewbox>
+                            <Viewbox Width="{TemplateBinding IconWidth}" Height="{TemplateBinding IconHeight}">
+                                <Path
+                                    x:Name="Icon"
+                                    extensions:PathExtensions.StringKeyData="{TemplateBinding IconKey}"
+                                    Fill="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                    Stretch="Fill" />
+                            </Viewbox>
 
-                                <TextBlock
-                                    Grid.Column="1"
-                                    Margin="10,0,0,0"
-                                    HorizontalAlignment="Center"
-                                    extensions:TextBlockExtensions.TextByKey="{TemplateBinding TextKey}"
-                                    FontSize="16"
-                                    FontWeight="SemiBold"
-                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
-                            </Grid>
-
-                            <!-- Selected colors and caret fade together, without layout animation. -->
-                            <Grid
-                                x:Name="PART_SelectedLayer"
-                                Opacity="0"
-                                IsHitTestVisible="False">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-
-                                <Border
-                                    Width="5"
-                                    Height="40"
-                                    Margin="-32,-10,0,-10"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Top"
-                                    Background="{DynamicResource ActivitySolidColorBrush}"
-                                    CornerRadius="0,5,5,0" />
-
-                                <Viewbox Width="{TemplateBinding IconWidth}" Height="{TemplateBinding IconHeight}">
-                                    <Path
-                                        extensions:PathExtensions.StringKeyData="{TemplateBinding IconKey}"
-                                        Fill="{DynamicResource ActivitySolidColorBrush}"
-                                        Stretch="Fill" />
-                                </Viewbox>
-
-                                <TextBlock
-                                    Grid.Column="1"
-                                    Margin="10,0,0,0"
-                                    HorizontalAlignment="Center"
-                                    extensions:TextBlockExtensions.TextByKey="{TemplateBinding TextKey}"
-                                    FontSize="16"
-                                    FontWeight="SemiBold"
-                                    Foreground="{DynamicResource ActivitySolidColorBrush}" />
-                            </Grid>
+                            <TextBlock
+                                x:Name="Text"
+                                Grid.Column="1"
+                                Margin="10,0,0,0"
+                                HorizontalAlignment="Center"
+                                extensions:TextBlockExtensions.TextByKey="{TemplateBinding TextKey}"
+                                FontSize="16"
+                                FontWeight="SemiBold"
+                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
                         </Grid>
                     </Border>
 
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter Property="Opacity" Value="0.9" />
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Icon" Property="Fill" Value="{DynamicResource ActivitySolidColorBrush}" />
+                            <Setter TargetName="Text" Property="Foreground" Value="{DynamicResource ActivitySolidColorBrush}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
