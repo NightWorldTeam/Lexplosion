@@ -206,20 +206,19 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <!--  Logo  -->
+                    <!--  Logo opens details, as in the instance catalog.  -->
                     <Grid
                         Width="90"
                         Height="90"
-                        VerticalAlignment="Top">
+                        VerticalAlignment="Top"
+                        Background="Transparent"
+                        Cursor="Hand"
+                        MouseLeftButtonUp="AddonTitle_MouseLeftButtonUp">
 
                         <Border
                             x:Name="LogoBorder"
-                            Width="90"
-                            Height="90"
                             Background="{Binding Logo, Converter={converters:ImageSourceNullValidateConverter}}"
-                            CornerRadius="5">
-                            <!--  Loader  -->
-                        </Border>
+                            CornerRadius="5" />
 
                         <controls:CircleLoader
                             Width="45"
@@ -229,6 +228,44 @@
                             BlurTarget="{Binding ElementName=LogoBorder}"
                             CornerRadius="5"
                             IsActive="{Binding Logo, Converter={converters:IsValueNullConverter}}" />
+
+                        <Grid IsHitTestVisible="False">
+                            <Border CornerRadius="5">
+                                <Border.Background>
+                                    <SolidColorBrush Color="Black" Opacity="0.5" />
+                                </Border.Background>
+                            </Border>
+                            <TextBlock
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontSize="18"
+                                FontWeight="Bold"
+                                Foreground="{DynamicResource CheckBoxMarkSolidColorBrush}"
+                                Text="{DynamicResource More}" />
+                            <Grid.Style>
+                                <Style TargetType="{x:Type Grid}">
+                                    <Setter Property="Opacity" Value="0" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType={x:Type Grid}, AncestorLevel=2}}" Value="True">
+                                            <DataTrigger.EnterActions>
+                                                <BeginStoryboard>
+                                                    <Storyboard>
+                                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.2" />
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </DataTrigger.EnterActions>
+                                            <DataTrigger.ExitActions>
+                                                <BeginStoryboard>
+                                                    <Storyboard>
+                                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.2" />
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </DataTrigger.ExitActions>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Grid.Style>
+                        </Grid>
                     </Grid>
 
                     <!--  Content  -->
@@ -287,14 +324,6 @@
                         <Grid Grid.RowSpan="2" Grid.Column="2">
                             <StackPanel Background="Transparent">
                                 <WrapPanel>
-                                    <controls:AdvancedButton
-                                        Margin="0,0,8,0"
-                                        Padding="12,8"
-                                        Command="{Binding Data.OpenAddonDetailsCommand, Source={StaticResource ViewModel}}"
-                                        CommandParameter="{Binding}"
-                                        Content="Подробнее"
-                                        FontSize="12"
-                                        Style="{StaticResource sm-default}" />
                                     <Grid>
                                         <controls:AdvancedButton
                                             x:Name="InstallButton"
