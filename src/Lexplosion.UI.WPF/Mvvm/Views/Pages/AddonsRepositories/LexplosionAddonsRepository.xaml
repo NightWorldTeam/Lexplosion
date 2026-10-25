@@ -238,7 +238,7 @@
                             <TextBlock
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
-                                FontSize="18"
+                                FontSize="14"
                                 FontWeight="Bold"
                                 Foreground="{DynamicResource CheckBoxMarkSolidColorBrush}"
                                 Text="{DynamicResource More}" />
