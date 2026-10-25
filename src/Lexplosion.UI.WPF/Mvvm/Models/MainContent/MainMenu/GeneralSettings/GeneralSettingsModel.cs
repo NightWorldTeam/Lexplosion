@@ -168,6 +168,18 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.Content.GeneralSettings
 			}
 		}
 
+        public bool EnableAnimations
+        {
+            get => Properties.Settings.Default.EnableAnimations;
+            set
+            {
+                if (Properties.Settings.Default.EnableAnimations == value) return;
+                Properties.Settings.Default.EnableAnimations = value;
+                Properties.Settings.Default.Save();
+                OnPropertyChanged();
+            }
+        }
+
 		public bool? IsHiddenMode
 		{
 			get => GlobalData.GeneralSettings.IsHiddenMode; set
