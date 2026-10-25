@@ -114,8 +114,7 @@
 
             <!--  Content  -->
             <!--  IsEnabled="{Binding IsModalOpen, Converter={converters:NegativeBooleanValueConverter}, Source={StaticResource MainViewModel}}"  -->
-            <controls:AnimatedContentControl
-                AnimationType="SlideToLeft"
+            <ContentControl
                 Content="{Binding CurrentViewModel, Source={StaticResource MainViewModel}}"
                 KeyboardNavigation.IsTabStop="False" />
 
