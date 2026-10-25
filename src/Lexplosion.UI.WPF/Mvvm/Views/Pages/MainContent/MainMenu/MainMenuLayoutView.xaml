@@ -14,7 +14,7 @@
     mc:Ignorable="d">
     <Grid
         Background="{DynamicResource PageSolidColorBrush}"
-        Loaded="Grid_Loaded"
+        
         MouseDown="Grid_MouseDown">
 
         <Grid.ColumnDefinitions>
