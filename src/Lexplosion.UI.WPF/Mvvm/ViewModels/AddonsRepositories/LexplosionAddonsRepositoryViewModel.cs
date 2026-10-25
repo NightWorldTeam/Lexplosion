@@ -71,6 +71,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.AddonsRepositories
                 UpdateCommands();
                 OnPropertyChanged(nameof(Model));
                 OnPropertyChanged();
+                CommandManager.InvalidateRequerySuggested();
             }
         }
 
@@ -111,7 +112,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.AddonsRepositories
         private RelayCommand _clearFiltersCommand;
         public ICommand ClearFiltersCommand
         {
-            get => RelayCommand.GetCommand(ref _clearFiltersCommand, Model.ClearFilters);
+            get => RelayCommand.GetCommand(ref _clearFiltersCommand, () => Model?.ClearFilters(), _ => Model != null);
         }
 
         private RelayCommand _searchCommand;
@@ -130,13 +131,13 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.AddonsRepositories
         private RelayCommand _installAddonCommand;
         public ICommand InstallAddonCommand
         {
-            get => RelayCommand.GetCommand<InstanceAddon>(ref _installAddonCommand, Model.InstallAddonCurrentVersion);
+            get => RelayCommand.GetCommand<InstanceAddon>(ref _installAddonCommand, addon => Model?.InstallAddonCurrentVersion(addon), _ => Model != null);
         }
 
         private RelayCommand _uninstallAddonCommand;
         public ICommand UninstallAddonCommand
         {
-            get => RelayCommand.GetCommand<InstanceAddon>(ref _uninstallAddonCommand, Model.RemoveAddon);
+            get => RelayCommand.GetCommand<InstanceAddon>(ref _uninstallAddonCommand, addon => Model?.RemoveAddon(addon), _ => Model != null);
         }
 
         private RelayCommand _applySelectedCategoriesCommand;
@@ -145,25 +146,25 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.AddonsRepositories
         private RelayCommand _selectCategoryCommand;
         public ICommand SelectCategoryCommand
         {
-            get => RelayCommand.GetCommand<IProjectCategory>(ref _selectCategoryCommand, Model.SelectCategory);
+            get => RelayCommand.GetCommand<IProjectCategory>(ref _selectCategoryCommand, category => Model?.SelectCategory(category), _ => Model != null);
         }
 
         private RelayCommand _enableAddonCommand;
         public ICommand EnableAddonCommand
         {
-            get => RelayCommand.GetCommand<InstanceAddon>(ref _enableAddonCommand, Model.EnableAddon);
+            get => RelayCommand.GetCommand<InstanceAddon>(ref _enableAddonCommand, addon => Model?.EnableAddon(addon), _ => Model != null);
         }
 
         private RelayCommand _disableAddonCommand;
         public ICommand DisableAddonCommand
         {
-            get => RelayCommand.GetCommand<InstanceAddon>(ref _disableAddonCommand, Model.DisableAddon);
+            get => RelayCommand.GetCommand<InstanceAddon>(ref _disableAddonCommand, addon => Model?.DisableAddon(addon), _ => Model != null);
         }
 
         private RelayCommand _openExternalResourceCommand;
         public ICommand OpenExternalResourceCommand
         {
-            get => RelayCommand.GetCommand<InstanceAddon>(ref _openExternalResourceCommand, Model.OpenWebsite);
+            get => RelayCommand.GetCommand<InstanceAddon>(ref _openExternalResourceCommand, addon => Model?.OpenWebsite(addon), _ => Model != null);
         }
 
 
@@ -220,16 +221,14 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.AddonsRepositories
 
                     SelectedAddonsRepositoryIndex = 0;
                     UpdateCommands();
-
+                    IsLoading = false;
+                    OnPropertyChanged(nameof(IsLoading));
                     OnPropertyChanged(nameof(ApplySelectedCategoriesCommand));
                 });
             });
 
 
             _modsViewModel = new InstanceAddonsContainerViewModel(appCore, addonType, instanceModelBase);
-
-
-            IsLoading = false;
         }
 
 
