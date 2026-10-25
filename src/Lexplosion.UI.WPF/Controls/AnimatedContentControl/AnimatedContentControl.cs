@@ -15,7 +15,8 @@ namespace Lexplosion.UI.WPF.Controls
         SlideToLeft,
         SlideToRight,
         SlideToTop,
-        SlideToBottom
+        SlideToBottom,
+        SoftReveal
     }
 
     [TemplatePart(Name = "PART_FirstContent", Type = typeof(ContentPresenter))]
@@ -64,7 +65,11 @@ namespace Lexplosion.UI.WPF.Controls
 
         public AnimatedContentControl()
         {
-            Unloaded += (sender, args) => FinishTransition();
+            Unloaded += (sender, args) =>
+            {
+                FinishTransition();
+                Reset(_current);
+            };
         }
 
         public override void OnApplyTemplate()
@@ -116,6 +121,17 @@ namespace Lexplosion.UI.WPF.Controls
             var oldContent = _current.Content;
             if (ReferenceEquals(oldContent, newContent))
                 return;
+
+            // Navigation between independent pages needs only the incoming view.
+            // Do not retain two full pages, unlike horizontal tab swipes.
+            if (AnimationType == ContentControlAnimation.SoftReveal && IsLoaded &&
+                oldContent != null && newContent != null &&
+                SystemParameters.ClientAreaAnimation &&
+                TransitionDuration.HasTimeSpan && TransitionDuration.TimeSpan > TimeSpan.Zero)
+            {
+                RevealContent(newContent);
+                return;
+            }
 
             if (!IsLoaded || oldContent == null || newContent == null ||
                 AnimationType == ContentControlAnimation.None ||
@@ -216,6 +232,47 @@ namespace Lexplosion.UI.WPF.Controls
                 };
                 newPresenter.BeginAnimation(OpacityProperty, reveal);
             }
+        }
+
+        private void RevealContent(object content)
+        {
+            // Replace the old view immediately: transparent pages never overlap.
+            // Repeated navigation cancels the previous reveal instead of queuing it.
+            ShowImmediately(content);
+            int version = _transitionVersion;
+            _current.Opacity = 0;
+
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                if (version != _transitionVersion || !IsLoaded || _current == null)
+                    return;
+
+                // HwndHost/WebView2 cannot be transformed by the WPF compositor.
+                if (ContainsNativeWindow(_current))
+                {
+                    Reset(_current);
+                    return;
+                }
+
+                var presenter = _current;
+                var easing = new CubicEase { EasingMode = EasingMode.EaseOut };
+                var scale = new ScaleTransform(0.992, 0.992);
+
+                presenter.RenderTransformOrigin = new Point(0.5, 0.5);
+                presenter.RenderTransform = scale;
+                scale.BeginAnimation(ScaleTransform.ScaleXProperty,
+                    Motion(0.992, 1, TransitionDuration, easing));
+                scale.BeginAnimation(ScaleTransform.ScaleYProperty,
+                    Motion(0.992, 1, TransitionDuration, easing));
+
+                var reveal = Motion(0, 1, TransitionDuration, easing);
+                reveal.Completed += (sender, args) =>
+                {
+                    if (version == _transitionVersion && ReferenceEquals(_current, presenter))
+                        Reset(presenter);
+                };
+                presenter.BeginAnimation(OpacityProperty, reveal);
+            }), DispatcherPriority.Loaded);
         }
 
         private static DoubleAnimation Motion(double from, double to, Duration duration, IEasingFunction easing)
