@@ -11,12 +11,14 @@
                         <!-- The active page stays alive while the next one slides over it. -->
                         <ContentPresenter
                             x:Name="PART_FirstContent"
+                            ClipToBounds="True"
                             ContentTemplate="{TemplateBinding ContentTemplate}"
                             ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}"
                             ContentStringFormat="{TemplateBinding ContentStringFormat}" />
 
                         <ContentPresenter
                             x:Name="PART_SecondContent"
+                            ClipToBounds="True"
                             ContentTemplate="{TemplateBinding ContentTemplate}"
                             ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}"
                             ContentStringFormat="{TemplateBinding ContentStringFormat}"
