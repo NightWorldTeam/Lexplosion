@@ -113,7 +113,12 @@ namespace Lexplosion.UI.WPF.Controls
             {
                 _underlineUpdatePending = false;
                 if (IsLoaded && ItemContainerGenerator.Status == GeneratorStatus.ContainersGenerated)
+                {
+                    if (SelectedIndex < 0 && Items.Count > 0)
+                        SelectedIndex = 0;
+
                     UpdateUnderline();
+                }
             }), DispatcherPriority.Loaded);
         }
 
