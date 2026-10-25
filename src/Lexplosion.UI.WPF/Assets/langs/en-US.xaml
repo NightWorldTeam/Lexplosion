@@ -1046,9 +1046,43 @@
     <s:String x:Key="NewsTitle">News</s:String>
     <s:String x:Key="CloseArticleButtonTooltip">Close the article</s:String>
 
-    <!--  Core Localization Keys  -->
+    <!-- Core localization additions from the referenced branch -->
     <s:String x:Key="NoDescription">No description, but we hope it will appear.</s:String>
     <s:String x:Key="UnknownName">Unknown name</s:String>
     <s:String x:Key="UnknownAuthor">Unknown author</s:String>
     <s:String x:Key="LaunchingGame">Launching game...</s:String>
+
+    <!-- Addon details -->
+    <s:String x:Key="AddonDetailsBack">Back to catalog</s:String>
+    <s:String x:Key="AddonDetailsAbout">About this add-on</s:String>
+    <s:String x:Key="AddonDetailsDownloads">downloads</s:String>
+    <s:String x:Key="AddonDetailsInstall">Install</s:String>
+    <s:String x:Key="AddonDetailsInstalled">Installed</s:String>
+    <s:String x:Key="AddonDetailsUpdate">Update</s:String>
+    <s:String x:Key="AddonDetailsDelete">Delete</s:String>
+    <s:String x:Key="AddonDetailsRemove">Remove add-on</s:String>
+    <s:String x:Key="AddonDetailsDescription">Description</s:String>
+    <s:String x:Key="AddonDetailsGallery">Gallery</s:String>
+    <s:String x:Key="AddonDetailsVersions">Versions</s:String>
+    <s:String x:Key="AddonDetailsVersionsHint">Select this tab to load available versions.</s:String>
+    <s:String x:Key="AddonDetailsInstallVersion">Install selected version</s:String>
+    <s:String x:Key="AddonDetailsMinecraftVersions">Minecraft versions</s:String>
+    <s:String x:Key="AddonDetailsLoaders">Loaders</s:String>
+    <s:String x:Key="AddonDetailsAuthor">Author</s:String>
+    <s:String x:Key="AddonDetailsUpdated">Updated</s:String>
+    <s:String x:Key="AddonDetailsCategories">Categories</s:String>
+    <s:String x:Key="AddonDetailsSource">Source</s:String>
+    <s:String x:Key="AddonDetailsOpenWebsite">Open in browser</s:String>
+    <s:String x:Key="AddonDetailsVisitModrinth">Open on Modrinth</s:String>
+    <s:String x:Key="AddonDetailsVisitCurseForge">Open on CurseForge</s:String>
+    <s:String x:Key="AddonDetailsGalleryEmpty">No images available for this project.</s:String>
+    <s:String x:Key="AddonDetailsVersionsLoading">Loading versions…</s:String>
+    <s:String x:Key="AddonDetailsVersionsEmpty">No files found for this Minecraft version.</s:String>
+    <s:String x:Key="AddonDetailsVersionsSelect">Select a version and click Install.</s:String>
+    <s:String x:Key="AddonDetailsVersionsError">Failed to load versions: {0}</s:String>
+    <s:String x:Key="AddonDetailsDescriptionError">Failed to load description: {0}</s:String>
+    <s:String x:Key="AddonDetailsWebViewError">Failed to display description: {0}</s:String>
+    <s:String x:Key="AddonDetailsDescriptionLoading">Loading description…</s:String>
+    <s:String x:Key="AddonDetailsGalleryLoading">Loading gallery…</s:String>
+    <s:String x:Key="AddonDetailsNoDescription">No description available.</s:String>
 </ResourceDictionary>

@@ -1046,9 +1046,43 @@
     <s:String x:Key="NewsTitle">Новости</s:String>
     <s:String x:Key="CloseArticleButtonTooltip">Закрыть статью</s:String>
 
-    <!--  Core Localization Keys  -->
+    <!-- Core localization additions from the referenced branch -->
     <s:String x:Key="NoDescription">Описания нет, но мы надеемся что оно будет.</s:String>
     <s:String x:Key="UnknownName">Неизвестное название</s:String>
     <s:String x:Key="UnknownAuthor">Неизвестный автор</s:String>
     <s:String x:Key="LaunchingGame">Запуск игры...</s:String>
+
+    <!-- Addon details -->
+    <s:String x:Key="AddonDetailsBack">Назад к каталогу</s:String>
+    <s:String x:Key="AddonDetailsAbout">О дополнении</s:String>
+    <s:String x:Key="AddonDetailsDownloads">загрузок</s:String>
+    <s:String x:Key="AddonDetailsInstall">Установить</s:String>
+    <s:String x:Key="AddonDetailsInstalled">Установлено</s:String>
+    <s:String x:Key="AddonDetailsUpdate">Обновить</s:String>
+    <s:String x:Key="AddonDetailsDelete">Удалить</s:String>
+    <s:String x:Key="AddonDetailsRemove">Удалить дополнение</s:String>
+    <s:String x:Key="AddonDetailsDescription">Описание</s:String>
+    <s:String x:Key="AddonDetailsGallery">Галерея</s:String>
+    <s:String x:Key="AddonDetailsVersions">Версии</s:String>
+    <s:String x:Key="AddonDetailsVersionsHint">Выберите вкладку для загрузки версий.</s:String>
+    <s:String x:Key="AddonDetailsInstallVersion">Установить выбранную версию</s:String>
+    <s:String x:Key="AddonDetailsMinecraftVersions">Версии Minecraft</s:String>
+    <s:String x:Key="AddonDetailsLoaders">Загрузчики</s:String>
+    <s:String x:Key="AddonDetailsAuthor">Автор</s:String>
+    <s:String x:Key="AddonDetailsUpdated">Обновлено</s:String>
+    <s:String x:Key="AddonDetailsCategories">Категории</s:String>
+    <s:String x:Key="AddonDetailsSource">Источник</s:String>
+    <s:String x:Key="AddonDetailsOpenWebsite">Открыть в браузере</s:String>
+    <s:String x:Key="AddonDetailsVisitModrinth">Перейти на Modrinth</s:String>
+    <s:String x:Key="AddonDetailsVisitCurseForge">Перейти на CurseForge</s:String>
+    <s:String x:Key="AddonDetailsGalleryEmpty">У проекта нет доступных изображений.</s:String>
+    <s:String x:Key="AddonDetailsVersionsLoading">Загрузка версий…</s:String>
+    <s:String x:Key="AddonDetailsVersionsEmpty">Для этой версии Minecraft файлы не найдены.</s:String>
+    <s:String x:Key="AddonDetailsVersionsSelect">Выберите версию и нажмите кнопку установки.</s:String>
+    <s:String x:Key="AddonDetailsVersionsError">Ошибка загрузки версий: {0}</s:String>
+    <s:String x:Key="AddonDetailsDescriptionError">Не удалось загрузить описание: {0}</s:String>
+    <s:String x:Key="AddonDetailsWebViewError">Не удалось отобразить описание: {0}</s:String>
+    <s:String x:Key="AddonDetailsDescriptionLoading">Загрузка описания…</s:String>
+    <s:String x:Key="AddonDetailsGalleryLoading">Загрузка галереи…</s:String>
+    <s:String x:Key="AddonDetailsNoDescription">Описание отсутствует.</s:String>
 </ResourceDictionary>

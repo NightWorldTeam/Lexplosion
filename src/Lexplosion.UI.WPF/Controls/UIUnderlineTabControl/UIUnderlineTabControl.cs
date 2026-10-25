@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Threading;
 
 namespace Lexplosion.UI.WPF.Controls
 {
@@ -16,16 +15,24 @@ namespace Lexplosion.UI.WPF.Controls
         private const string PART_HEADER_NAME = "PART_Header";
 
         private Border _line;
-        private TabPanel _tabPanel;
         private Border _header;
-        private ContentPresenter _contentPresenter;
 
         private TabItem _selectedTabItem;
-
-        private Thickness _loadedTabPanelPadding = new Thickness();
+        private bool _underlineUpdatePending;
 
         #region Dependency Properties
 
+        // Set to false for pages hosting HWND controls (for example WebView2).
+        // Existing uses retain their animated underline and content by default.
+        public static readonly DependencyProperty EnableAnimationsProperty =
+            DependencyProperty.Register(nameof(EnableAnimations), typeof(bool), typeof(UIUnderlineTabControl),
+                new FrameworkPropertyMetadata(true));
+
+        public bool EnableAnimations
+        {
+            get => (bool)GetValue(EnableAnimationsProperty);
+            set => SetValue(EnableAnimationsProperty, value);
+        }
 
         public static readonly DependencyProperty TabPanelPaddingProperty
             = DependencyProperty.Register("TabPanelPadding", typeof(Thickness), typeof(UIUnderlineTabControl),
@@ -52,6 +59,16 @@ namespace Lexplosion.UI.WPF.Controls
             DefaultStyleKeyProperty.OverrideMetadata(typeof(UIUnderlineTabControl), new FrameworkPropertyMetadata(typeof(UIUnderlineTabControl)));
         }
 
+        public UIUnderlineTabControl()
+        {
+            Loaded += (sender, e) => QueueUnderlineUpdate();
+            ItemContainerGenerator.StatusChanged += (sender, e) =>
+            {
+                if (ItemContainerGenerator.Status == GeneratorStatus.ContainersGenerated)
+                    QueueUnderlineUpdate();
+            };
+        }
+
 
         #endregion Constructors
 
@@ -67,69 +84,54 @@ namespace Lexplosion.UI.WPF.Controls
 
         public override void OnApplyTemplate()
         {
-            SelectedIndex = 0;
-
-            _line = Template.FindName(PART_LINE_NAME, this) as Border;
-            _tabPanel = Template.FindName("HeaderPanel", this) as TabPanel;
-            _header = Template.FindName(PART_HEADER_NAME, this) as Border;
-            _selectedTabItem = ItemContainerGenerator.ContainerFromItem(SelectedValue) as TabItem;
-            
-            if (_header != null)
-            {
-                //Runtime.DebugWrite(_header);
-                _header.Padding = _loadedTabPanelPadding;
-            }
-
-            if (_line != null)
-            {
-            }
+            if (_selectedTabItem != null)
+                _selectedTabItem.SizeChanged -= OnTabItemSizeChanged;
 
             base.OnApplyTemplate();
-        }
 
-        //override 
+            _line = Template.FindName(PART_LINE_NAME, this) as Border;
+            _header = Template.FindName(PART_HEADER_NAME, this) as Border;
+            if (_header != null)
+                _header.Padding = TabPanelPadding;
+
+            // TabItem widths become valid after the template's initial layout pass.
+            QueueUnderlineUpdate();
+        }
 
         protected override void OnSelectionChanged(SelectionChangedEventArgs e)
         {
-            try
-            {
-                // отписываемся, чтобы не вызывать метод, когда TabItem больше не выбран.
-                if (_selectedTabItem != null)
-                    _selectedTabItem.SizeChanged -= OnTabItemSizeChanged;
-
-                _selectedTabItem = ItemContainerGenerator.ContainerFromItem(SelectedValue) as TabItem;
-
-                var selectedTabPadding = GetTemplateBorderPadding(_selectedTabItem);
-
-                if (_selectedTabItem == null)
-                {
-                    return;
-                }
-
-                SmoothChangeWidth(_line, _selectedTabItem.ActualWidth - (selectedTabPadding.Left + selectedTabPadding.Right));
-
-                // Подписываемся на изменение размера TabItem, для того,
-                // чтобы изменять размер underline, когда был изменен размер контента или язык.
-                _selectedTabItem.SizeChanged += OnTabItemSizeChanged;
-
-                MoveLine(selectedTabPadding.Left);
-
-                var dp = new DoubleAnimation()
-                {
-                    From = 0.4,
-                    To = 1,
-                    Duration = TimeSpan.FromSeconds(0.5)
-                };
-                //_contentPresenter.BeginAnimation(OpacityProperty, dp);
-            }
-            catch
-            {
-                new Exception("Underline border doesn't exists.");
-            }
-
             base.OnSelectionChanged(e);
+            // Selection can change while ItemContainerGenerator is still generating.
+            QueueUnderlineUpdate();
         }
 
+        private void QueueUnderlineUpdate()
+        {
+            if (_underlineUpdatePending) return;
+            _underlineUpdatePending = true;
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                _underlineUpdatePending = false;
+                if (IsLoaded && ItemContainerGenerator.Status == GeneratorStatus.ContainersGenerated)
+                    UpdateUnderline();
+            }), DispatcherPriority.Loaded);
+        }
+
+        private void UpdateUnderline()
+        {
+            if (_selectedTabItem != null)
+                _selectedTabItem.SizeChanged -= OnTabItemSizeChanged;
+
+            _selectedTabItem = ItemContainerGenerator.ContainerFromIndex(SelectedIndex) as TabItem
+                               ?? SelectedItem as TabItem;
+            if (_selectedTabItem == null || _line == null)
+                return;
+
+            _selectedTabItem.SizeChanged += OnTabItemSizeChanged;
+            var padding = GetTemplateBorderPadding(_selectedTabItem);
+            SetUnderlineWidth(Math.Max(0, _selectedTabItem.ActualWidth - padding.Left - padding.Right));
+            MoveLine(padding.Left);
+        }
 
         #endregion Public & Protected Methods
 
@@ -142,12 +144,7 @@ namespace Lexplosion.UI.WPF.Controls
         /// </summary>
         private void OnTabItemSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            var tabItem = sender as TabItem;
-            var tabItemPadding = GetTemplateBorderPadding(tabItem);
-
-            SmoothChangeWidth(_line, tabItem.ActualWidth - (tabItemPadding.Left + tabItemPadding.Right));
-            // перемещаем линию
-            MoveLine(tabItemPadding.Left);
+            QueueUnderlineUpdate();
         }
 
 
@@ -175,11 +172,11 @@ namespace Lexplosion.UI.WPF.Controls
                     break;
                 }
 
-                sumWidth += element.ActualWidth;
+                if (element != null) sumWidth += element.ActualWidth;
                 iterCount++;
             }
 
-            SmoothMoveLine(_line, sumWidth);
+            SetUnderlineOffset(sumWidth);
         }
 
         private static void OnTabPanelPadding(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -187,13 +184,8 @@ namespace Lexplosion.UI.WPF.Controls
             if (e.NewValue == e.OldValue) return;
 
             var instance = (UIUnderlineTabControl)d;
-            if (instance._header == null)
-            {
-                instance._loadedTabPanelPadding = (Thickness)e.NewValue;
-                return;
-            }
-
-            instance._header.Padding = (Thickness)e.NewValue;
+            if (instance._header != null)
+                instance._header.Padding = (Thickness)e.NewValue;
         }
 
         private static Thickness GetTemplateBorderPadding(FrameworkElement element)
@@ -201,7 +193,7 @@ namespace Lexplosion.UI.WPF.Controls
             if (element is TabItem)
             {
                 var tabItem = element as TabItem;
-                var border = tabItem.Template.FindName("Border", tabItem) as Border;
+                var border = tabItem.Template?.FindName("Border", tabItem) as Border;
 
                 if (border != null)
                 {
@@ -215,47 +207,39 @@ namespace Lexplosion.UI.WPF.Controls
             return new Thickness(0);
         }
 
-        private static void SmoothMoveLine(FrameworkElement target, double to)
+        private void SetUnderlineOffset(double left)
         {
-            var moveTranslate = new ThicknessAnimation()
+            if (_line == null) return;
+            var margin = new Thickness(left, 0, 0, 0);
+            if (!EnableAnimations)
             {
-                To = new Thickness(to, 0, 0, 0),
-                Duration = new TimeSpan(0, 0, 0, 0, 200),
-            };
-            target.BeginAnimation(MarginProperty, moveTranslate);
-
-        }
-
-        private static void SmoothChangeWidth(FrameworkElement target, double to)
-        {
-            if (to == 0) return;
-
-            //Runtime.DebugWrite(to);
-            var changeWidthTranslate = new DoubleAnimation()
-            {
-                From = target.ActualWidth,
-                To = to,
-                Duration = new TimeSpan(0, 0, 0, 0, 200)
-            };
-            target.BeginAnimation(WidthProperty, changeWidthTranslate);
-        }
-
-        private static IEnumerable<T> FindVisualChildren<T>(DependencyObject dependencyObject) where T : DependencyObject
-        {
-            if (dependencyObject == null)
-                yield break;
-
-            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(dependencyObject); i++)
-            {
-                var child = VisualTreeHelper.GetChild(dependencyObject, i);
-                if (child != null && child is T t)
-                    yield return t;
-
-                foreach (var childOfChild in FindVisualChildren<T>(child))
-                    yield return childOfChild;
+                _line.BeginAnimation(MarginProperty, null);
+                _line.Margin = margin;
+                return;
             }
+            _line.BeginAnimation(MarginProperty, new ThicknessAnimation
+            {
+                To = margin,
+                Duration = TimeSpan.FromMilliseconds(200)
+            });
         }
 
+        private void SetUnderlineWidth(double width)
+        {
+            if (_line == null) return;
+            if (!EnableAnimations)
+            {
+                _line.BeginAnimation(WidthProperty, null);
+                _line.Width = width;
+                return;
+            }
+            if (width <= 0) return;
+            _line.BeginAnimation(WidthProperty, new DoubleAnimation
+            {
+                To = width,
+                Duration = TimeSpan.FromMilliseconds(200)
+            });
+        }
 
         #endregion Private Methods
     }

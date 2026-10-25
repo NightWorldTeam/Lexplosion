@@ -1,10 +1,11 @@
-﻿using System;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace Lexplosion.UI.WPF.Controls
 {
@@ -23,6 +24,7 @@ namespace Lexplosion.UI.WPF.Controls
         private Shape _paintArea;
         private ContentPresenter _contentPresenter;
         private DpiScale _dpi;
+        private int _contentChangeVersion;
 
 
         public static readonly DependencyProperty AnimationTypeProperty
@@ -55,27 +57,42 @@ namespace Lexplosion.UI.WPF.Controls
         /// <param name="newContent">The new content that is displayed</param>
         protected override void OnContentChanged(object oldContent, object newContent)
         {
-            if (_paintArea != null && _contentPresenter != null)
+            base.OnContentChanged(oldContent, newContent);
+            var version = ++_contentChangeVersion;
+            if (_paintArea != null)
             {
-                _paintArea.Fill = CreateBrushFromVisual(_contentPresenter);
-
+                _paintArea.Visibility = Visibility.Collapsed;
+                _paintArea.Fill = null;
+            }
+            // Rendering a snapshot here can re-enter layout during container generation.
+            // Animate only the incoming content, after the current layout has finished.
+            if (oldContent == null || newContent == null || AnimationType == ContentControlAnimation.None)
+                return;
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                if (version != _contentChangeVersion || !IsLoaded || _contentPresenter == null)
+                    return;
+                var transform = new TranslateTransform();
+                _contentPresenter.RenderTransform = transform;
                 switch (AnimationType)
                 {
                     case ContentControlAnimation.SlideToLeft:
-                        BeginXAnimateContentReplacement();
+                        transform.BeginAnimation(TranslateTransform.XProperty, CreateSlideAnimation(ActualWidth, 0));
+                        break;
+                    case ContentControlAnimation.SlideToRight:
+                        transform.BeginAnimation(TranslateTransform.XProperty, CreateSlideAnimation(-ActualWidth, 0));
                         break;
                     case ContentControlAnimation.SlideToTop:
-                        BeginYAnimateContentReplacement();
+                        transform.BeginAnimation(TranslateTransform.YProperty, CreateSlideAnimation(ActualHeight, 0));
+                        break;
+                    case ContentControlAnimation.SlideToBottom:
+                        transform.BeginAnimation(TranslateTransform.YProperty, CreateSlideAnimation(-ActualHeight, 0));
                         break;
                     case ContentControlAnimation.Fade:
-                        BeginFadeAnimationContentReplacement();
-                        break;
-                    default:
+                        _contentPresenter.BeginAnimation(OpacityProperty, CreateOpacityAnimation(0, 1));
                         break;
                 }
-
-            }
-            base.OnContentChanged(oldContent, newContent);
+            }), DispatcherPriority.Loaded);
         }
 
         /// <summary>
