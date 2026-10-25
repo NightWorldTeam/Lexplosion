@@ -8,7 +8,6 @@
                 <ControlTemplate TargetType="{x:Type local:AnimatedContentControl}">
                     <Grid ClipToBounds="True">
                         <ContentPresenter x:Name="PART_MainContent" Content="{TemplateBinding Content}" />
-                        <Rectangle x:Name="PART_PaintArea" Visibility="Collapsed" IsHitTestVisible="False" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
