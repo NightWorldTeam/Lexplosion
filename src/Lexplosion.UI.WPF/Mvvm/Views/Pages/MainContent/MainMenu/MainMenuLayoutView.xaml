@@ -2,7 +2,6 @@
     x:Class="Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.MainMenu.MainMenuLayoutView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="clr-namespace:Lexplosion.UI.WPF.Controls"
     xmlns:converters="clr-namespace:Lexplosion.UI.WPF.Core.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu"
@@ -24,9 +23,8 @@
 
         <ContentControl Content="{Binding LeftPanel}" KeyboardNavigation.IsTabStop="False" />
 
-        <controls:AnimatedContentControl
+        <ContentControl
             Grid.Column="1"
-            AnimationType="SlideToLeft"
             Content="{Binding Content}"
             KeyboardNavigation.IsTabStop="False"
             KeyboardNavigation.TabNavigation="None" />
