@@ -5,6 +5,7 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
+using Lexplosion.UI.WPF.Core;
 
 namespace Lexplosion.UI.WPF.Controls
 {
@@ -124,7 +125,7 @@ namespace Lexplosion.UI.WPF.Controls
 
             if (!IsLoaded || oldContent == null || newContent == null ||
                 AnimationType == ContentControlAnimation.None ||
-                !SystemParameters.ClientAreaAnimation ||
+                !AnimationPreferences.Enabled ||
                 !TransitionDuration.HasTimeSpan || TransitionDuration.TimeSpan <= TimeSpan.Zero ||
                 ContainsNativeWindow(_current))
             {
