@@ -40,6 +40,9 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.InstanceProfile
 
         private async Task<InstanceData> LoadAdditionalDataAsync()
         {
+            // Avoid raising PropertyChanged recursively inside Lazy.Value's factory
+            // when the shared data task has already completed.
+            await Task.Yield();
             try
             {
                 var data = await InstanceModel.GetFullInfoAsync();
