@@ -1,8 +1,5 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media.Animation;
-using Lexplosion.UI.WPF.Core;
 
 namespace Lexplosion.UI.WPF.Controls
 {
@@ -28,7 +25,7 @@ namespace Lexplosion.UI.WPF.Controls
 
         public string TextKey
         {
-            get => (string)GetValue(IconKeyProperty);
+            get => (string)GetValue(TextKeyProperty);
             set => SetValue(TextKeyProperty, value);
         }
 
@@ -42,58 +39,6 @@ namespace Lexplosion.UI.WPF.Controls
         {
             get => (double)GetValue(IconHeightProperty);
             set => SetValue(IconHeightProperty, value);
-        }
-
-        private FrameworkElement _selectedLayer;
-        private int _selectionAnimationVersion;
-
-        public DefaultMainMenuTabItem()
-        {
-            Checked += (sender, args) => UpdateSelectedAppearance(true);
-            Unchecked += (sender, args) => UpdateSelectedAppearance(false);
-        }
-
-        public override void OnApplyTemplate()
-        {
-            ++_selectionAnimationVersion;
-            base.OnApplyTemplate();
-            _selectedLayer = GetTemplateChild("PART_SelectedLayer") as FrameworkElement;
-            if (_selectedLayer != null)
-                _selectedLayer.Opacity = IsChecked == true ? 1 : 0;
-        }
-
-        private void UpdateSelectedAppearance(bool selected)
-        {
-            if (_selectedLayer == null)
-                return;
-
-            var layer = _selectedLayer;
-            double opacity = layer.Opacity;
-            double target = selected ? 1 : 0;
-            int version = ++_selectionAnimationVersion;
-
-            layer.BeginAnimation(OpacityProperty, null);
-            layer.Opacity = opacity;
-
-            if (!IsLoaded || !AnimationPreferences.Enabled)
-            {
-                layer.Opacity = target;
-                return;
-            }
-
-            var animation = new DoubleAnimation(opacity, target, new Duration(TimeSpan.FromMilliseconds(220)))
-            {
-                EasingFunction = new SineEase { EasingMode = EasingMode.EaseInOut }
-            };
-            animation.Completed += (sender, args) =>
-            {
-                if (version != _selectionAnimationVersion || !ReferenceEquals(_selectedLayer, layer))
-                    return;
-
-                layer.BeginAnimation(OpacityProperty, null);
-                layer.Opacity = target;
-            };
-            layer.BeginAnimation(OpacityProperty, animation);
         }
 
         static DefaultMainMenuTabItem()
