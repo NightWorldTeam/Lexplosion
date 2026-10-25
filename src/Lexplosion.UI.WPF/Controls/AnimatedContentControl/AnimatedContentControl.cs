@@ -122,18 +122,6 @@ namespace Lexplosion.UI.WPF.Controls
             if (ReferenceEquals(oldContent, newContent))
                 return;
 
-            // Navigation between independent pages needs only the incoming view.
-            // Do not retain two full pages, unlike horizontal tab swipes.
-            if (AnimationType == ContentControlAnimation.SoftReveal && IsLoaded &&
-                oldContent != null && newContent != null &&
-                SystemParameters.ClientAreaAnimation &&
-                TransitionDuration.HasTimeSpan && TransitionDuration.TimeSpan > TimeSpan.Zero &&
-                !ContainsNativeWindow(_current))
-            {
-                RevealContent(newContent);
-                return;
-            }
-
             if (!IsLoaded || oldContent == null || newContent == null ||
                 AnimationType == ContentControlAnimation.None ||
                 !SystemParameters.ClientAreaAnimation ||
@@ -144,8 +132,12 @@ namespace Lexplosion.UI.WPF.Controls
                 return;
             }
 
+            // Stage the incoming visual tree before starting the dissolve.
+            // It must complete DataTemplate creation and layout while invisible.
+            if (AnimationType == ContentControlAnimation.SoftReveal)
+                _next.Opacity = 0;
             _next.Content = newContent;
-            _next.Visibility = Visibility.Hidden; // Measure without showing a misplaced frame.
+            _next.Visibility = Visibility.Hidden;
             _next.IsHitTestVisible = false;
             _transitionPending = true;
             SetValue(IsTransitioningPropertyKey, true);
@@ -184,7 +176,8 @@ namespace Lexplosion.UI.WPF.Controls
 
             bool vertical = AnimationType == ContentControlAnimation.SlideToTop ||
                             AnimationType == ContentControlAnimation.SlideToBottom;
-            bool swipe = AnimationType != ContentControlAnimation.Fade;
+            bool swipe = AnimationType != ContentControlAnimation.Fade &&
+                         AnimationType != ContentControlAnimation.SoftReveal;
 
             // Both pages travel the same distance, with no overlapping regions.
             // Parallax kept the old page under the new one and leaked stale controls
@@ -233,50 +226,6 @@ namespace Lexplosion.UI.WPF.Controls
                 };
                 newPresenter.BeginAnimation(OpacityProperty, reveal);
             }
-        }
-
-        private void RevealContent(object content)
-        {
-            // Prepare the first frame BEFORE replacing the content. Delaying the
-            // animations until DispatcherPriority.Loaded caused a visible flash.
-            var presenter = _current;
-            int version = ++_transitionVersion;
-            Reset(presenter);
-
-            var scale = new ScaleTransform(0.992, 0.992);
-            presenter.RenderTransformOrigin = new Point(0.5, 0.5);
-            presenter.RenderTransform = scale;
-            presenter.Opacity = 0;
-            presenter.Visibility = Visibility.Visible;
-            presenter.IsHitTestVisible = true;
-            presenter.Content = content;
-
-            Reset(_next);
-            _next.Content = null;
-            _next.Visibility = Visibility.Collapsed;
-            _next.IsHitTestVisible = false;
-
-            // A native HWND cannot participate in WPF opacity/scale transitions.
-            if (ContainsNativeWindow(presenter))
-            {
-                Reset(presenter);
-                return;
-            }
-
-            var opacityEasing = new QuadraticEase { EasingMode = EasingMode.EaseInOut };
-            var scaleEasing = new CubicEase { EasingMode = EasingMode.EaseOut };
-            scale.BeginAnimation(ScaleTransform.ScaleXProperty,
-                Motion(0.992, 1, TransitionDuration, scaleEasing));
-            scale.BeginAnimation(ScaleTransform.ScaleYProperty,
-                Motion(0.992, 1, TransitionDuration, scaleEasing));
-
-            var reveal = Motion(0, 1, TransitionDuration, opacityEasing);
-            reveal.Completed += (sender, args) =>
-            {
-                if (version == _transitionVersion && ReferenceEquals(_current, presenter))
-                    Reset(presenter);
-            };
-            presenter.BeginAnimation(OpacityProperty, reveal);
         }
 
         private static DoubleAnimation Motion(double from, double to, Duration duration, IEasingFunction easing)
