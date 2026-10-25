@@ -26,7 +26,7 @@
 
         <controls:AnimatedContentControl
             Grid.Column="1"
-            AnimationType="SlideToTop"
+            AnimationType="Fade"
             Content="{Binding Content}"
             KeyboardNavigation.IsTabStop="False"
             KeyboardNavigation.TabNavigation="None" />
