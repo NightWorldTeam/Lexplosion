@@ -139,7 +139,7 @@ namespace Lexplosion.UI.WPF.Controls
                 return;
             }
 
-            var motion = animation.Clone();
+            var motion = (DoubleAnimation)animation.Clone();
             motion.To = target;
             var position = _position;
             int version = ++_animationVersion;
