@@ -93,7 +93,8 @@ namespace Lexplosion.UI.WPF.Controls
             if (!IsLoaded || oldContent == null || newContent == null ||
                 AnimationType == ContentControlAnimation.None ||
                 !SystemParameters.ClientAreaAnimation ||
-                !TransitionDuration.HasTimeSpan || TransitionDuration.TimeSpan <= TimeSpan.Zero)
+                !TransitionDuration.HasTimeSpan || TransitionDuration.TimeSpan <= TimeSpan.Zero ||
+                ContainsNativeWindow(_current))
             {
                 ShowImmediately(newContent);
                 return;
