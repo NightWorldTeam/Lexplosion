@@ -86,7 +86,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.InstanceProfile
 			instanceModel.DataChanged += OnDataChanged;
 			if (IsLocal)
 			{
-				SetDescription(SelectDescription(null), "local");
+				SetDescription(SelectDescription(), "local");
 				_changeLoadingStatus?.Invoke(false);
 			}
 			else
@@ -109,12 +109,12 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.InstanceProfile
 				OnPropertyChanged(nameof(AdditionalData));
 				OnPropertyChanged(nameof(InstanceData));
 				NotifyMetadataChanged();
-				SetDescription(SelectDescription(_fullData), "full-data/fallback");
+				SetDescription(SelectDescription(), "full-data/fallback");
 			}
 			catch (Exception ex)
 			{
 				OverviewDiagnostics.Error("Full data request", ex);
-				SetDescription(SelectDescription(null), "error-fallback");
+				SetDescription(SelectDescription(), "error-fallback");
 			}
 			finally
 			{
@@ -123,7 +123,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.InstanceProfile
 			}
 		}
 
-		private string SelectDescription(InstanceData fullData)
+		private string SelectDescription()
 		{
 			// PRIMARY: the backend's full response. Do not render the short Summary
 			// while this response is still loading.
@@ -153,11 +153,11 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.InstanceProfile
 			OverviewDiagnostics.Info("Instance DataChanged; local=" + IsLocal +
 				"; pageDescriptionLength=" + (InstanceModel.PageData?.Description?.Length ?? 0));
 			if (IsLocal)
-				SetDescription(SelectDescription(null), "local-edited");
+				SetDescription(SelectDescription(), "local-edited");
 			// In case details arrived later through PageData, upgrade a summary-only fallback.
 			else if (_isDescriptionReady && _fullData?.Description == null &&
 					 !string.IsNullOrWhiteSpace(InstanceModel.PageData?.Description))
-				SetDescription(SelectDescription(null), "late-page-data");
+				SetDescription(SelectDescription(), "late-page-data");
 		}
 	}
 
