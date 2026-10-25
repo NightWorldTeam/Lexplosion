@@ -122,6 +122,11 @@ namespace Lexplosion.UI.WPF.Controls
             if (_selectedTabItem != null)
                 _selectedTabItem.SizeChanged -= OnTabItemSizeChanged;
 
+            // During initialization or a collection reset there may be no selected tab.
+            // ContainerFromIndex(-1) can throw inside WPF's RealizedItemBlock.ContainerAt.
+            if (SelectedIndex < 0 || SelectedIndex >= Items.Count)
+                return;
+
             _selectedTabItem = ItemContainerGenerator.ContainerFromIndex(SelectedIndex) as TabItem
                                ?? SelectedItem as TabItem;
             if (_selectedTabItem == null || _line == null)
