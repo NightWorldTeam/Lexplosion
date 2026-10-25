@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
+using Lexplosion.UI.WPF.Core;
 
 namespace Lexplosion.UI.WPF.Controls
 {
@@ -283,7 +284,7 @@ namespace Lexplosion.UI.WPF.Controls
         {
             if (_line == null) return;
             var margin = new Thickness(left, 0, 0, 0);
-            if (!EnableAnimations)
+            if (!EnableAnimations || !AnimationPreferences.Enabled)
             {
                 _line.BeginAnimation(MarginProperty, null);
                 _line.Margin = margin;
@@ -299,7 +300,7 @@ namespace Lexplosion.UI.WPF.Controls
         private void SetUnderlineWidth(double width)
         {
             if (_line == null) return;
-            if (!EnableAnimations)
+            if (!EnableAnimations || !AnimationPreferences.Enabled)
             {
                 _line.BeginAnimation(WidthProperty, null);
                 _line.Width = width;
