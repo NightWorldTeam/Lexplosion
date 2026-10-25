@@ -141,8 +141,9 @@ namespace Lexplosion.UI.WPF.Controls
                             AnimationType == ContentControlAnimation.SlideToBottom;
             bool swipe = AnimationType != ContentControlAnimation.Fade;
 
-            // The new page travels a full viewport. The previous page moves only
-            // 28% of it, giving the depth/parallax of a mobile navigation stack.
+            // Both pages travel the same distance, with no overlapping regions.
+            // Parallax kept the old page under the new one and leaked stale controls
+            // through transparent views (e.g. Friends tabs).
             if (swipe)
             {
                 var oldTransform = new TranslateTransform();
@@ -152,7 +153,7 @@ namespace Lexplosion.UI.WPF.Controls
 
                 var property = vertical ? TranslateTransform.YProperty : TranslateTransform.XProperty;
                 double incoming = sign * distance;
-                double outgoing = -sign * distance * 0.28;
+                double outgoing = -sign * distance;
                 newTransform.SetValue(property, incoming);
 
                 // TranslateTransform runs on the composition path. Avoid opacity
@@ -168,8 +169,8 @@ namespace Lexplosion.UI.WPF.Controls
                 newTransform.BeginAnimation(property, arrive);
             }
 
-            // The old page remains rendered while the next one moves over it.
-            // No bitmap snapshots or animations of Margin/Width/layout.
+            // Adjacent pages move as one strip: the outgoing page never paints
+            // underneath the incoming page. No snapshots or layout animations.
             Panel.SetZIndex(oldPresenter, 0);
             Panel.SetZIndex(newPresenter, 1);
             newPresenter.Visibility = Visibility.Visible;
