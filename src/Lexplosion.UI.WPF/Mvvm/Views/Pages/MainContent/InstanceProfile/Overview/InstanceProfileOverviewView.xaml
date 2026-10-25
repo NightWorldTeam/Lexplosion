@@ -6,12 +6,12 @@
           SizeChanged="OnOverviewSizeChanged">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition x:Name="DrawerColumn" Width="0"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
 
         <!-- WebView2 is a native HWND. Reserve a real column for the WPF drawer,
              never draw the drawer over the browser's airspace. -->
-        <Grid x:Name="ContentHost" Grid.Column="0" ClipToBounds="True"
+        <Grid Grid.Column="0" ClipToBounds="True"
               Background="{DynamicResource PageSolidColorBrush}">
             <Grid x:Name="BrowserHost" ClipToBounds="True"
                   Background="{DynamicResource PageSolidColorBrush}"/>
@@ -53,7 +53,7 @@
         </Grid>
 
         <!-- Non-modal right drawer. Scrolls separately; no Popup/HwndHost collision. -->
-        <Border x:Name="InformationDrawer" Grid.Column="1"
+        <Border x:Name="InformationDrawer" Grid.Column="1" Width="360"
                 Visibility="Collapsed" ClipToBounds="True"
                 Background="{DynamicResource LayoutTabSolidColorBrush}"
                 BorderBrush="{DynamicResource LayoutTabBorderSolidColorBrush}" BorderThickness="1,0,0,0">
@@ -62,36 +62,29 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <Grid Margin="20,16,16,14">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Text="Информация о сборке" FontSize="17"
-                               FontWeight="SemiBold" VerticalAlignment="Center"
-                               Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"/>
-                    <!-- Compact drawer closes with the very same button in the tab
-                         header that opened it (i -> ×); no displaced second X. -->
-                </Grid>
+                <TextBlock Margin="20,16,16,14"
+                           FontSize="17" FontWeight="SemiBold"
+                           Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                           Text="{DynamicResource Information}" />
                 <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto"
                               HorizontalScrollBarVisibility="Disabled" Padding="20,2,14,20">
                     <StackPanel>
-                        <TextBlock Text="Автор" FontSize="12"
+                        <TextBlock Text="{DynamicResource Author}" FontSize="12"
                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"/>
-                        <TextBlock x:Name="DrawerAuthorText" FontSize="15" FontWeight="SemiBold"
+                        <TextBlock Text="{Binding Model.Author}" FontSize="15" FontWeight="SemiBold"
                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
                                    TextWrapping="Wrap" Margin="0,5,0,14"/>
                         <Separator Background="{DynamicResource LayoutTabBorderSolidColorBrush}" Margin="0,0,0,14"/>
-                        <TextBlock Text="Обновлено" FontSize="12"
+                        <TextBlock Text="{DynamicResource Updated}" FontSize="12"
                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"/>
-                        <TextBlock x:Name="DrawerUpdatedText" FontSize="15" FontWeight="SemiBold"
+                        <TextBlock Text="{Binding Model.Updated}" FontSize="15" FontWeight="SemiBold"
                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
                                    TextWrapping="Wrap" Margin="0,5,0,14"/>
                         <Separator Background="{DynamicResource LayoutTabBorderSolidColorBrush}" Margin="0,0,0,14"/>
-                        <TextBlock Text="Категории" FontSize="12"
+                        <TextBlock Text="{DynamicResource Categories}" FontSize="12"
                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
                                    Margin="0,0,0,10"/>
-                        <ItemsControl x:Name="DrawerCategories">
+                        <ItemsControl ItemsSource="{Binding Model.Categories}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
