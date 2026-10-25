@@ -26,6 +26,8 @@ namespace Lexplosion.UI.WPF.Controls
         private ContentPresenter _next;
         private bool _transitionPending;
         private int _transitionVersion;
+        private bool _hasQueuedContent;
+        private object _queuedContent;
 
         // The transition state is exposed to the hosting TabControl, so tab input
         // can be locked for the actual animation lifetime (no hard-coded timers).
@@ -73,6 +75,8 @@ namespace Lexplosion.UI.WPF.Controls
             _current = GetTemplateChild("PART_FirstContent") as ContentPresenter;
             _next = GetTemplateChild("PART_SecondContent") as ContentPresenter;
             _transitionPending = false;
+            _hasQueuedContent = false;
+            _queuedContent = null;
             SetValue(IsTransitioningPropertyKey, false);
 
             if (_current == null || _next == null)
@@ -95,10 +99,21 @@ namespace Lexplosion.UI.WPF.Controls
             if (_current == null || _next == null)
                 return;
 
-            // Always keep only two views alive, including during rapid navigation.
-            // A superseded animation is completed before the next transition.
-            FinishTransition();
+            // Do not interrupt a running animation. Only the latest requested
+            // destination is kept; intermediate navigation requests are discarded.
+            if (_transitionPending)
+            {
+                _queuedContent = newContent;
+                _hasQueuedContent = true;
+                return;
+            }
 
+            ShowContent(newContent);
+        }
+
+        private void ShowContent(object newContent)
+        {
+            var oldContent = _current.Content;
             if (ReferenceEquals(oldContent, newContent))
                 return;
 
@@ -232,6 +247,14 @@ namespace Lexplosion.UI.WPF.Controls
             _next.Visibility = Visibility.Collapsed;
             _next.IsHitTestVisible = false;
             _next.Content = null;
+
+            if (_hasQueuedContent)
+            {
+                var queuedContent = _queuedContent;
+                _hasQueuedContent = false;
+                _queuedContent = null;
+                ShowContent(queuedContent);
+            }
         }
 
         private void ShowImmediately(object content)
