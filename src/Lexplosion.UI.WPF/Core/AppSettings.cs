@@ -21,6 +21,14 @@ namespace Lexplosion.UI.WPF.Core
         }
     }
 
+    // UI-only animation preference; kept out of Lexplosion.Core.
+    public static class AnimationPreferences
+    {
+        public static bool Enabled =>
+            Properties.Settings.Default.EnableAnimations &&
+            System.Windows.SystemParameters.ClientAreaAnimation;
+    }
+
     public class LanguageService 
     {
         public void Add() { }
