@@ -34,6 +34,18 @@ namespace Lexplosion.UI.WPF.Controls
             set => SetValue(EnableAnimationsProperty, value);
         }
 
+        // Allows disabling only the content slide while preserving the underline motion.
+        public static readonly DependencyProperty ContentAnimationProperty =
+            DependencyProperty.Register(nameof(ContentAnimation), typeof(ContentControlAnimation),
+                typeof(UIUnderlineTabControl),
+                new FrameworkPropertyMetadata(ContentControlAnimation.SlideToLeft));
+
+        public ContentControlAnimation ContentAnimation
+        {
+            get => (ContentControlAnimation)GetValue(ContentAnimationProperty);
+            set => SetValue(ContentAnimationProperty, value);
+        }
+
         public static readonly DependencyProperty TabPanelPaddingProperty
             = DependencyProperty.Register("TabPanelPadding", typeof(Thickness), typeof(UIUnderlineTabControl),
                 new FrameworkPropertyMetadata(
