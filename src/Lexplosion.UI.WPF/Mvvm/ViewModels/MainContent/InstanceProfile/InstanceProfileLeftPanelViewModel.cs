@@ -192,7 +192,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.InstanceProfile
                     _additionalInfo.Add(new InstanceFieldInfo<long>("DownloadCount:", () =>
                     {
                         additionalInfo = _instanceModel.AdditionalData;
-                        return additionalInfo.TotalDownloads.LongToString();
+                        return additionalInfo == null ? "—" : additionalInfo.TotalDownloads.LongToString();
                     }));
                 }
             });
