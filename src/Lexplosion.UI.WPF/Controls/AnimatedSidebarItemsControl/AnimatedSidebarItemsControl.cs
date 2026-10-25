@@ -40,6 +40,12 @@ namespace Lexplosion.UI.WPF.Controls
             base.OnApplyTemplate();
             _caret = GetTemplateChild("PART_SelectionCaret") as Border;
             _position = _caret?.RenderTransform as TranslateTransform;
+            if (_position?.IsFrozen == true)
+            {
+                // Templates may freeze their inline transforms when sealed.
+                _position = _position.CloneCurrentValue();
+                _caret.RenderTransform = _position;
+            }
             _positionInitialized = false;
             ++_animationVersion;
             QueuePositionUpdate();
