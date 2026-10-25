@@ -66,7 +66,7 @@ namespace Lexplosion.UI.WPF.Controls
                 return;
 
             var presenter = _presenter;
-            var duration = TimeSpan.FromMilliseconds(240);
+            var duration = new Duration(TimeSpan.FromMilliseconds(240));
             var easing = new CubicEase { EasingMode = EasingMode.EaseOut };
 
             // Keep the movement small. A full-width slide is distracting and
