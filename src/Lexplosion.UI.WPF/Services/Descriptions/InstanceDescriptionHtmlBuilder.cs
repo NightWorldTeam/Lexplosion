@@ -110,7 +110,7 @@ namespace Lexplosion.UI.WPF.Services.Descriptions
               html{width:100%;min-height:100%;background:var(--bg);overflow-x:hidden;overflow-y:auto;
                    scrollbar-gutter:stable;scrollbar-color:var(--scroll) var(--bg);scrollbar-width:thin}
               body{margin:0;min-height:100vh;width:100%;background:var(--bg);color:var(--fg);
-                   padding:22px clamp(16px,1.35vw,28px) 46px 24px;
+                   padding:22px clamp(16px,1.35vw,28px) 46px 45px;
                    font:14px/1.65 'Segoe UI',Arial,system-ui,sans-serif;overflow-wrap:anywhere;overflow-x:clip}
               ::-webkit-scrollbar{width:9px;height:9px}
               ::-webkit-scrollbar-track{background:var(--bg)}
@@ -121,9 +121,9 @@ namespace Lexplosion.UI.WPF.Services.Descriptions
                    grid-template-columns:minmax(0,1fr) 282px;
                    justify-content:stretch;align-items:start;gap:20px;
                    transition:none!important;animation:none!important;transform:none!important}
-              /* The reading COLUMN is centered, not its paragraphs. Keep a stable
-                 readable measure even if the provider's HTML centers its contents. */
-              article.description-content{min-width:0;width:100%;max-width:980px;margin:0 auto;
+              /* Align the reading column with the WPF tab header (45px inset).
+                 Keep its readable width instead of centering it in the grid track. */
+              article.description-content{min-width:0;width:100%;max-width:980px;margin:0;
                    text-align:left;transition:none!important;animation:none!important;
                    transform:none!important}
               /* CurseForge/Modrinth descriptions often wrap all their prose in a
