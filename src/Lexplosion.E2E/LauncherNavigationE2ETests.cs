@@ -211,6 +211,115 @@ namespace Lexplosion.E2E
                 _session.Record("coverage.skip", "stress.tabs.unavailable", 0, "SKIP");
         }
 
+        [Test]
+        public void OpenReachableInstanceAndServerProfiles()
+        {
+            var failures = new List<string>();
+            int visited = 0;
+
+            // Only explicitly tagged safe entry points are allowed here.
+            foreach (var route in new[]
+            {
+                new { Sidebar = "nav.sidebar.Library", Entry = "nav.open.instance",
+                    Back = "nav.back.instance", Name = "instance.library" },
+                new { Sidebar = "nav.sidebar.Catalog", Entry = "nav.open.instance",
+                    Back = "nav.back.instance", Name = "instance.catalog" },
+                new { Sidebar = "nav.sidebar.Multiplayer", Entry = "nav.open.server",
+                    Back = "nav.back.server", Name = "server.multiplayer" }
+            })
+            {
+                try
+                {
+                    var window = _session.WaitForMainWindow();
+                    var sidebar = FindSidebar(window, route.Sidebar);
+                    if (sidebar == null || !Visible(sidebar))
+                    {
+                        _session.Record("coverage.skip", route.Name, 0, "SKIP.no-sidebar");
+                        continue;
+                    }
+
+                    sidebar.AsRadioButton().IsChecked = true;
+                    if (!WaitSelected(() => FindSidebar(_session.WaitForMainWindow(), route.Sidebar),
+                        e => e.AsRadioButton().IsChecked, TimeSpan.FromSeconds(8)))
+                        throw new TimeoutException("Unable to reach " + route.Sidebar);
+
+                    Thread.Sleep(450);
+                    if (route.Entry == "nav.open.server")
+                    {
+                        var tab = FindTab("nav.group.multiplayer", "nav.tab.PartnerServers");
+                        if (tab == null)
+                        {
+                            _session.Record("coverage.skip", route.Name, 0, "SKIP.no-server-tab");
+                            continue;
+                        }
+                        tab.AsTabItem().Select();
+                        Thread.Sleep(450);
+                    }
+
+                    var entry = _session.WaitForMainWindow().FindFirstDescendant(cf =>
+                        cf.ByAutomationId(route.Entry));
+                    if (entry == null || !Visible(entry))
+                    {
+                        _session.Record("coverage.skip", route.Name, 0, "SKIP.no-cards");
+                        continue;
+                    }
+
+                    var watch = Stopwatch.StartNew();
+                    // For instances this is the logo Grid with a MouseDown handler;
+                    // for servers this is a Button with OpenServerPageCommand.
+                    entry.Click();
+                    var back = Retry.WhileNull(() =>
+                        _session.WaitForMainWindow().FindFirstDescendant(cf =>
+                            cf.ByAutomationId(route.Back)),
+                        timeout: TimeSpan.FromSeconds(10),
+                        interval: TimeSpan.FromMilliseconds(150),
+                        ignoreException: true).Result;
+                    if (back == null || !Visible(back))
+                        throw new TimeoutException("Profile did not open: " + route.Name);
+
+                    Thread.Sleep(450);
+                    AssertVisibleWindow();
+                    watch.Stop();
+                    _session.Record("navigation.profile", route.Name, watch.ElapsedMilliseconds, "PASS");
+                    _session.CaptureState("profile-" + route.Name, true);
+
+                    int tabs = 0;
+                    int actions = 0;
+                    TraverseTabGroups(NavigationMode.Normal,
+                        new HashSet<string>(StringComparer.Ordinal), failures,
+                        ref tabs, ref actions, 0);
+                    visited++;
+                }
+                catch (Exception ex)
+                {
+                    failures.Add(route.Name + ": " + ex.Message);
+                    _session.Record("navigation.profile", route.Name, 0,
+                        "FAIL." + ex.GetType().Name);
+                }
+                finally
+                {
+                    // Return only through explicitly tagged Back controls.
+                    var current = _session.FindMainWindow();
+                    var back = current?.FindFirstDescendant(cf =>
+                        cf.ByAutomationId(route.Back));
+                    if (back != null && Visible(back))
+                    {
+                        try { back.AsButton().Invoke(); }
+                        catch (Exception ex)
+                        {
+                            failures.Add(route.Name + ".back: " + ex.Message);
+                        }
+                    }
+                }
+            }
+
+            _session.Record("coverage", "profile", visited, "visited");
+            if (visited == 0 && failures.Count == 0)
+                Assert.Ignore("No safely openable instance/server profiles in current fixture.");
+
+            Assert.That(failures, Is.Empty, string.Join(Environment.NewLine, failures));
+        }
+
         private bool TrySelectSidebar(string id, NavigationMode mode, List<string> failures)
         {
             try
