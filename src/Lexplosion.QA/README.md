@@ -14,7 +14,7 @@ $env:LEXPLOSION_QA = "1"
 
 После запуска/переключений смотреть:
 
-`%LOCALAPPDATA%\Lexplosion\Diagnostics\ui-performance.log`
+`%APPDATA%\lexplosion-data\Diagnostics\ui-performance.log`
 
 В лог попадают только заранее заданные имена операций, длительности, UTC-время и ID потока. Никаких URL, имён игроков, токенов и параметров сборок. Запись через ограниченную очередь (не более 512 событий) в фоновом потоке. Файл ротируется после 2 МБ (одна копия `.old`).
 
@@ -36,3 +36,49 @@ $env:LEXPLOSION_QA = "1"
 5. Проверить лог на `ui.dispatcher.stall` и сопоставить временные метки с `navigation.*`.
 
 Измерение показывает *где и когда* UI-поток блокируется. Детальное профилирование CPU/памяти дальше выполняется через Visual Studio Profiler / PerfView. Исключения и персональные данные специально не записываются.
+
+## E2E: FlaUI.UIA3 + NUnit
+
+Тесты используют FlaUI 5.0 (UIA3), а NUnit остаётся тестовым раннером.
+Только Lexplosion.Tests теперь собирается под .NET Framework 4.8;
+сам Lexplosion и Lexplosion.Core по-прежнему используют net472.
+
+### Запуск
+
+Проводить только в интерактивном сеансе Windows с разблокированным рабочим столом.
+Для проверки навигации нужна ранее сохранённая авторизация.
+
+~~~powershell
+$env:LEXPLOSION_E2E = "1"
+dotnet test src/Lexplosion.Tests/Lexplosion.Tests.csproj -c Debug --filter "FullyQualifiedName~LauncherNavigationE2ETests" --logger 'console;verbosity=detailed'
+~~~
+
+FlaUI подключится к уже запущенному Lexplosion (не закрывая его),
+либо самостоятельно запустит собранный Lexplosion.exe, включив LEXPLOSION_QA=1.
+После своих тестов он закроет только процесс, который запустил сам.
+Путь к EXE можно указать через LEXPLOSION_E2E_EXE.
+
+### Покрытие
+
+- InventoryVisibleInteractiveControls: подсчёт всех видимых интерактивных элементов.
+- TraverseNavigationAndTabsWithoutSideEffects: автоматический обход nav.sidebar.*
+  и nav.tab.* с FlaUI Retry и повторным поиском после перерисовки.
+- Кнопки установки, удаления, оплаты, входа, запуска игры и прочие
+  неизвестные действия не вызываются автоматически.
+- Виртуализованные и закрытые страницы тестируются отдельными сценариями.
+
+### Результаты
+
+Каталог: %APPDATA%\lexplosion-data\Diagnostics\E2E\<run-id>\
+
+- navigation.tsv — идентификатор перехода, длительность и статус.
+- <TestName>.png — скриншот окна при провале теста.
+- Артефакты прикрепляются к NUnit через TestContext.AddTestAttachment.
+- QA-лог по-прежнему находится в Diagnostics\ui-performance.log.
+
+Все файлы создаются локально, в сеть ничего не отправляется.
+Скриншот может содержать личные данные из открытого окна — проверяйте перед публикацией.
+
+Без LEXPLOSION_E2E=1 сценарии игнорируются и не запускают приложение в CI.
+FlaUI требует интерактивную desktop-сессию Windows; обычный runner GitHub Actions
+не подходит для этих E2E-тестов.

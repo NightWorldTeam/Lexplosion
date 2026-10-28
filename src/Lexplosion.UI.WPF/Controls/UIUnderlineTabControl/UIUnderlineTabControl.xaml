@@ -5,6 +5,7 @@
     xmlns:local="clr-namespace:Lexplosion.UI.WPF.Controls">
 
     <Style x:Key="UITabItem" TargetType="{x:Type TabItem}">
+        <Setter Property="AutomationProperties.AutomationId" Value="{Binding RelativeSource={RelativeSource Self}, Path=Header, StringFormat='nav.tab.{0}'}" />
         <Setter Property="TextBlock.Foreground" Value="{DynamicResource PrimaryForegroundSolidColorBrush}" />
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="FontSize" Value="14" />

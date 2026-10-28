@@ -17,6 +17,7 @@
     xmlns:runtime="clr-namespace:Lexplosion.UI.WPF"
     xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
     xmlns:viewmodels="clr-namespace:Lexplosion.UI.WPF.Mvvm.ViewModels"
+    AutomationProperties.AutomationId="Lexplosion.MainWindow"
     Title="Lexplosion"
     Width="944"
     Height="528"

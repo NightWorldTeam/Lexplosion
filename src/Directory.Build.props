@@ -3,6 +3,8 @@
     <LangVersion>latest</LangVersion>
     <Deterministic>true</Deterministic>
     <Nullable>enable</Nullable>
+    <!-- Shared archive path works for a solution build and direct project builds. -->
+    <LexplosionArchiveDirectory>$(MSBuildThisFileDirectory)DLL\</LexplosionArchiveDirectory>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(MSBuildProjectName)' != 'Lexplosion.Tests'">
