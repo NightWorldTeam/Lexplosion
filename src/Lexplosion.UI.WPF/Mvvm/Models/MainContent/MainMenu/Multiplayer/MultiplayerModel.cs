@@ -120,7 +120,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.MainMenu
         /// <param name="player"></param>
         private void LaunchGame_UserDisconnected(Player player)
         {
-            App.Current.Dispatcher.Invoke(() =>
+            _appCore.UiDispatcher.Invoke(() =>
             {
                 if (player != null)
                 {
@@ -142,7 +142,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.MainMenu
         /// <param name="player"></param>
         private void LaunchGame_UserConnected(Player player)
         {
-            App.Current.Dispatcher.Invoke(delegate ()
+            _appCore.UiDispatcher.Invoke(delegate ()
             {
                 if (player != null)
                 {
@@ -164,7 +164,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.MainMenu
         /// <param name="arg2"></param>
         private void LaunchGame_StateChanged(OnlineGameStatus status, string arg2)
         {
-            App.Current.Dispatcher.Invoke(() =>
+            _appCore.UiDispatcher.Invoke(() =>
             {
                 GameStatus = status;
                 if (GameStatus == OnlineGameStatus.None)
