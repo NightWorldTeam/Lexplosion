@@ -5,6 +5,8 @@
   <ItemGroup>
     <PackageVersion Include="coverlet.collector" Version="3.1.2" />
     <PackageVersion Include="DiscordRichPresence" Version="1.2.1.24" />
+    <PackageVersion Include="FlaUI.Core" Version="5.0.0" />
+    <PackageVersion Include="FlaUI.UIA3" Version="5.0.0" />
     <PackageVersion Include="Hardcodet.NotifyIcon.Wpf" Version="1.0.5" />
     <PackageVersion Include="LumiSoft.Net" Version="2.0.4492.11923" />
     <PackageVersion Include="MarkdownWPF" Version="1.1.4" />

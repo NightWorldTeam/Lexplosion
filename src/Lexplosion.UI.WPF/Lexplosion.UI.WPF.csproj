@@ -79,7 +79,8 @@
     </EmbeddedResource>
   </ItemGroup>
 
-  <Target Name="CopyCoreZip" BeforeTargets="PreBuildEvent">
-    <Copy SourceFiles="$(SolutionDir)DLL\Lexplosion.Core.zip" DestinationFolder="$(ProjectDir)Resources\Libraries" SkipUnchangedFiles="true" />
+  <!-- Project references must build Core (and create the ZIP) before this copy. -->
+  <Target Name="CopyCoreZip" AfterTargets="ResolveProjectReferences" Condition="'$(DesignTimeBuild)' != 'true'">
+    <Copy SourceFiles="$(LexplosionArchiveDirectory)Lexplosion.Core.zip" DestinationFolder="$(MSBuildProjectDirectory)\Resources\Libraries" SkipUnchangedFiles="true" />
   </Target>
 </Project>
