@@ -136,6 +136,8 @@ namespace Lexplosion.UI.WPF.Controls
                 return;
             }
 
+            if (PerformanceTelemetry.Enabled)
+                PerformanceTelemetry.Record("navigation.page." + newContent.GetType().Name, 0);
             _preparationStartedTick = PerformanceTelemetry.Enabled ? Stopwatch.GetTimestamp() : 0;
 
             // Stage the incoming visual tree before starting the dissolve.
