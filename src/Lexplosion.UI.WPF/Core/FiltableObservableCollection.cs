@@ -68,27 +68,27 @@ namespace Lexplosion.UI.WPF.Core
             {
                 using (PerformanceTelemetry.Measure("collection.filter.rebuild", 20))
                 {
-                _filteredCollection.Clear();
+                    _filteredCollection.Clear();
 
-                foreach (var newItem in Source)
-                {
-                    if (Filter == null)
+                    foreach (var newItem in Source)
                     {
-                        _filteredCollection.Add(newItem);
-                        continue;
-                    }
+                        if (Filter == null)
+                        {
+                            _filteredCollection.Add(newItem);
+                            continue;
+                        }
 
-                    if (Filter(newItem))
-                    {
-                        _filteredCollection.Add(newItem);
+                        if (Filter(newItem))
+                        {
+                            _filteredCollection.Add(newItem);
+                        }
                     }
-                }
-                CollectionChanged?.Invoke(
-                    this,
-                    new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset)
-                );
+                    CollectionChanged?.Invoke(
+                        this,
+                        new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset)
+                    );
 
-                OnPropertyChanged(nameof(Count));
+                    OnPropertyChanged(nameof(Count));
                 }
             });
         }
