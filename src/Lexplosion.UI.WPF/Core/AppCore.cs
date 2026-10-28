@@ -119,9 +119,13 @@ namespace Lexplosion.UI.WPF.Core
 
 
         /// <summary>
-        /// Метод для выполнения кода в потоке приложения.
-        /// Требуется для возможности работать с разными MVVM фремворками
-        /// без четкой зависимости на них.
+        /// Независимый от UI-фреймворка диспетчер.
+        /// WPF и Avalonia предоставляют собственные реализации IUiDispatcher.
+        /// </summary>
+        public IUiDispatcher UiDispatcher { get; }
+
+        /// <summary>
+        /// Старый синхронный API. Используйте UiDispatcher для новых вызовов.
         /// </summary>
         public readonly Action<Action> UIThread;
         /// <summary>
@@ -158,11 +162,15 @@ namespace Lexplosion.UI.WPF.Core
         #endregion Properties
 
 
-        public AppCore(Action<Action> uiThread, Func<object, object> getResource, Action restartApp)
+        public AppCore(IUiDispatcher uiDispatcher, Func<object, object> getResource, Action restartApp)
         {
-            _restartApp = restartApp;
-            Resources = getResource;
-            UIThread = uiThread;
+            UiDispatcher = uiDispatcher ?? throw new ArgumentNullException(nameof(uiDispatcher));
+            _restartApp = restartApp ?? throw new ArgumentNullException(nameof(restartApp));
+            Resources = getResource ?? throw new ArgumentNullException(nameof(getResource));
+
+            // Preserve existing consumers while they migrate to the interface.
+            UIThread = UiDispatcher.Invoke;
+
             MessageService = new MessageService();
             NotificationService = new NotificationService();
         }
