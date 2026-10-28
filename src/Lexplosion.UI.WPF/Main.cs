@@ -72,7 +72,7 @@ namespace Lexplosion.UI.WPF
 			// Подписываемся на эвент для загрузки всех строенных dll'ников
 			AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
 
-			_appCore = new AppCore(App.Current.Dispatcher.Invoke, (key) => App.Current.Resources[key], RestartApp);
+			_appCore = new AppCore(new WpfUiDispatcher(App.Current.Dispatcher), (key) => App.Current.Resources[key], RestartApp);
 
 			_app.Resources.MergedDictionaries.Add(new ResourceDictionary()
 			{
