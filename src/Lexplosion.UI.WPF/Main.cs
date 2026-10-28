@@ -78,8 +78,7 @@ namespace Lexplosion.UI.WPF
             // Local, opt-in QA telemetry. Never transmits data.
             bool qaEnabled = Environment.GetEnvironmentVariable("LEXPLOSION_QA") == "1";
             string qaPath = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                "Lexplosion", "Diagnostics", "ui-performance.log");
+                LaunсherSettings.LauncherDataPath, "Diagnostics", "ui-performance.log");
             PerformanceTelemetry.Configure(qaEnabled, qaPath);
             _uiStallMonitor = UiStallMonitor.Start(App.Current.Dispatcher);
 
