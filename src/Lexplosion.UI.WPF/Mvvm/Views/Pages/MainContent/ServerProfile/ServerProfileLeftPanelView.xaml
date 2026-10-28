@@ -22,6 +22,7 @@
         <DataTemplate DataType="{x:Type objects:LeftPanelMenuItem}">
             <Border>
                 <controls:DefaultMainMenuTabItem
+                    AutomationProperties.AutomationId="{Binding TextKey, StringFormat=nav.sidebar.{0}}"
                     GroupName="LeftPanelInstanceProfileItem"
                     IconHeight="{Binding IconHeight}"
                     IconKey="{Binding Icon}"
