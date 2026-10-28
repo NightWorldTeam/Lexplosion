@@ -49,6 +49,7 @@ namespace Lexplosion.UI.WPF
 
 		private static App _app = new App();
         private static UiStallMonitor _uiStallMonitor;
+        private static UiInputLatencyMonitor _uiInputLatencyMonitor;
 
 		private static double _leftPos;
 		private static double _topPos;
@@ -80,7 +81,10 @@ namespace Lexplosion.UI.WPF
             string qaPath = Path.Combine(
                 LaunсherSettings.LauncherDataPath, "Diagnostics", "ui-performance.log");
             PerformanceTelemetry.Configure(qaEnabled, qaPath);
+            if (qaEnabled)
+                PerformanceTelemetry.Record("qa.launcher.start", 0);
             _uiStallMonitor = UiStallMonitor.Start(App.Current.Dispatcher);
+            _uiInputLatencyMonitor = UiInputLatencyMonitor.Start(App.Current.Dispatcher);
 
 			_appCore = new AppCore(new WpfUiDispatcher(App.Current.Dispatcher), (key) => App.Current.Resources[key], RestartApp);
 

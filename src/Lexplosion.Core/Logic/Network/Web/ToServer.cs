@@ -24,6 +24,16 @@ namespace Lexplosion.Logic.Network
 {
     public class ToServer
     {
+        // Never log request query values, fragments, credentials or paths:
+        // sessionToken and other credentials can be passed in URL parameters.
+        private static string SafeRequestHost(string url)
+        {
+            if (Uri.TryCreate(url, UriKind.Absolute, out var uri))
+                return uri.Scheme + "://" + uri.Host + (uri.IsDefaultPort ? "" : ":" + uri.Port);
+
+            return "[invalid URL]";
+        }
+
         private HttpClient _httpClient;
 
         private const string USER_AGENT = "Mozilla/5.0 Lexplosion/1.0.2.4";
@@ -92,7 +102,7 @@ namespace Lexplosion.Logic.Network
 
                 try
                 {
-                    Runtime.DebugWrite(url);
+                    Runtime.DebugWrite("Request host: " + SafeRequestHost(url));
                     string answer = HttpPost(url, data, timeout: timeout);
 
                     if (answer != null && answer != "")
@@ -118,7 +128,7 @@ namespace Lexplosion.Logic.Network
                 }
                 catch (Exception ex)
                 {
-                    Runtime.DebugWrite(ex);
+                    Runtime.DebugWrite("Protected request failed: " + ex.GetType().Name);
                     return default;
                 }
             }
@@ -166,7 +176,7 @@ namespace Lexplosion.Logic.Network
                 try
                 {
                     answer = HttpPost(url, fullData);
-                    Runtime.DebugWrite(answer);
+                    Runtime.DebugWrite("Protected request response received");
 
                     if (answer == null)
                     {
@@ -212,7 +222,7 @@ namespace Lexplosion.Logic.Network
 
         public async Task<string> HttpPostAsync(string url, IDictionary<string, string> data = null, IReadOnlyDictionary<string, string> headers = null, int timeout = 0)
         {
-            Runtime.DebugWrite($"Request url: {url}");
+            Runtime.DebugWrite("Request host: " + SafeRequestHost(url));
 
             var httpClient = _httpClient;
             HttpResponseMessage response;
@@ -248,7 +258,7 @@ namespace Lexplosion.Logic.Network
             }
             catch (Exception ex)
             {
-                Runtime.DebugWrite($"url: {url}, Exception: {ex}, stack trace: {new System.Diagnostics.StackTrace()}");
+                Runtime.DebugWrite("Request failed: " + SafeRequestHost(url) + ", error: " + ex.GetType().Name);
                 return null;
             }
         }
@@ -269,7 +279,7 @@ namespace Lexplosion.Logic.Network
 
         public async Task<RequestResult> HttpGetAsync(string url, IReadOnlyDictionary<string, string> headers = null, int timeout = 0)
         {
-            Runtime.DebugWrite($"Request url: {url}");
+            Runtime.DebugWrite("Request host: " + SafeRequestHost(url));
 
             var httpClient = _httpClient;
             try
@@ -292,7 +302,7 @@ namespace Lexplosion.Logic.Network
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    Runtime.DebugWrite($"url: {url}, Error Status Code {response.StatusCode}, stack trace: {new System.Diagnostics.StackTrace()}");
+                    Runtime.DebugWrite("Request returned " + response.StatusCode + " from " + SafeRequestHost(url));
                     return RequestResult.Error(response.StatusCode);
                 }
 
@@ -301,7 +311,7 @@ namespace Lexplosion.Logic.Network
             }
             catch (Exception ex)
             {
-                Runtime.DebugWrite($"url: {url}, Exception: {ex}, stack trace: {new System.Diagnostics.StackTrace()}");
+                Runtime.DebugWrite("Request failed: " + SafeRequestHost(url) + ", error: " + ex.GetType().Name);
                 return RequestResult.Error();
             }
         }
@@ -321,7 +331,7 @@ namespace Lexplosion.Logic.Network
 
         public async Task<RequestResult> HttpPostJsonAsync(string url, string data, IReadOnlyDictionary<string, string> headers = null)
         {
-            Runtime.DebugWrite($"Request url: {url}");
+            Runtime.DebugWrite("Request host: " + SafeRequestHost(url));
             HttpStatusCode? httpStatus = null;
 
             var httpClient = _httpClient;
@@ -359,7 +369,7 @@ namespace Lexplosion.Logic.Network
             }
             catch (Exception ex)
             {
-                Runtime.DebugWrite($"url: {url}, Exception: {ex}, stack trace: {new System.Diagnostics.StackTrace()}");
+                Runtime.DebugWrite("Request failed: " + SafeRequestHost(url) + ", error: " + ex.GetType().Name);
             }
 
             return RequestResult.Error(httpStatus);
@@ -374,7 +384,7 @@ namespace Lexplosion.Logic.Network
 
         public async Task<byte[]> LoadCertificateAsync(string url)
         {
-            Runtime.DebugWrite($"Load certificate for {url}");
+            Runtime.DebugWrite("Load certificate from " + SafeRequestHost(url));
 
             try
             {

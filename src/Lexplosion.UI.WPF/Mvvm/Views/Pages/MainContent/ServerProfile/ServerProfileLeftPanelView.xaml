@@ -118,6 +118,7 @@
                     </Grid.ColumnDefinitions>
 
                     <Button
+                        AutomationProperties.AutomationId="nav.back.server"
                         Command="{Binding BackCommand}"
                         Content="{DynamicResource Back}"
                         IsCancel="True"

@@ -92,7 +92,7 @@
                 </Grid.ColumnDefinitions>
 
                 <!--  Left Block  -->
-                <Grid x:Name="PART_LogoBlock" MouseDown="PART_LogoBlock_MouseDown">
+                <Grid x:Name="PART_LogoBlock" AutomationProperties.AutomationId="nav.open.instance" MouseDown="PART_LogoBlock_MouseDown">
                     <!--  Avatar  -->
                     <!--  Circle loader here>???  -->
                     <Border
