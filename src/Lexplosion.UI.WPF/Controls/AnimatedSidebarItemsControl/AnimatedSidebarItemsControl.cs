@@ -103,6 +103,10 @@ namespace Lexplosion.UI.WPF.Controls
             Dispatcher.BeginInvoke(new Action(() =>
             {
                 if (IsLoaded && ReferenceEquals(model, _navigationModel))
+                    if (PerformanceTelemetry.Enabled && item.Content != null)
+                        PerformanceTelemetry.Record("navigation.sidebar." +
+                            item.Content.GetType().Name, 0);
+
                     using (PerformanceTelemetry.Measure("navigation.sidebar.commit", 8))
                         model?.CommitSelection(item);
             }), DispatcherPriority.Background);
