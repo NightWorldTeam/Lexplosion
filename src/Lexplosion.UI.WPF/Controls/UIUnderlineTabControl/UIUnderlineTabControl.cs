@@ -383,6 +383,8 @@ namespace Lexplosion.UI.WPF.Controls
             double current = _linePosition.X;
             if (Math.Abs(current - left) < 0.5)
             {
+                _linePosition.BeginAnimation(TranslateTransform.XProperty, null);
+                _linePosition.X = left;
                 CommitContentNavigation(true);
                 return;
             }
