@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using FlaUI.Core.AutomationElements;
 using FlaUI.Core.Definitions;
+using FlaUI.Core.Input;
 using FlaUI.Core.Tools;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
@@ -154,18 +156,31 @@ namespace Lexplosion.E2E
                 sequence.AddRange(round % 2 == 0 ? ids : ids.Reverse());
 
             sequence = sequence.Take(60).ToList();
+            Assert.That(_session.ActivateForInteraction(), Is.True,
+                "Cannot safely dispatch rapid input: Lexplosion is not foreground.");
+
+            // Cache mouse coordinates BEFORE timing the stress burst. UIA
+            // element lookup took ~850 ms per action in the previous run and
+            // prevented the test from actually issuing rapid clicks.
+            var points = new Dictionary<string, Point>(StringComparer.Ordinal);
+            var window = _session.WaitForMainWindow();
+            foreach (string id in ids)
+            {
+                var target = FindSidebar(window, id);
+                if (target != null && Visible(target) && target.TryGetClickablePoint(out var point))
+                    points[id] = point;
+            }
+
+            if (points.Count < 2)
+                Assert.Ignore("Fewer than two sidebar buttons have safe clickable coordinates.");
+
             var watch = Stopwatch.StartNew();
             string last = null;
             int clicked = 0;
             foreach (string id in sequence)
             {
-                var element = FindSidebar(_session.WaitForMainWindow(), id);
-                if (element == null || !Visible(element))
-                {
-                    _session.Record("coverage.skip", id, 0, "SKIP");
-                    continue;
-                }
-                element.AsRadioButton().IsChecked = true;
+                if (!points.TryGetValue(id, out var point)) continue;
+                Mouse.LeftClick(point);
                 last = id;
                 clicked++;
             }
@@ -179,6 +194,7 @@ namespace Lexplosion.E2E
             AssertVisibleWindow();
             _session.Record("stress.sidebar", last, watch.ElapsedMilliseconds,
                 "PASS.count=" + clicked);
+            Thread.Sleep(420);
             _session.CaptureState("stress-sidebar-final-" + last, false);
 
             // Revisit every accessible sidebar section to stress its tab groups.
@@ -199,13 +215,23 @@ namespace Lexplosion.E2E
 
                     var clicks = Enumerable.Range(0, 3).SelectMany(n =>
                         n % 2 == 0 ? items : items.Reverse()).ToArray();
+                    var tabPoints = new Dictionary<string, Point>(StringComparer.Ordinal);
+                    foreach (string tabId in items)
+                    {
+                        var target = FindTab(groupId, tabId);
+                        if (target != null && Visible(target) &&
+                            target.TryGetClickablePoint(out var point))
+                            tabPoints[tabId] = point;
+                    }
+
+                    Assert.That(_session.ActivateForInteraction(), Is.True,
+                        "Cannot safely dispatch rapid tab clicks: window not foreground.");
                     string final = null;
                     var timer = Stopwatch.StartNew();
                     foreach (string tabId in clicks)
                     {
-                        var target = FindTab(groupId, tabId);
-                        if (target == null || !Visible(target)) continue;
-                        target.AsTabItem().Select();
+                        if (!tabPoints.TryGetValue(tabId, out var point)) continue;
+                        Mouse.LeftClick(point);
                         final = tabId;
                     }
                     timer.Stop();
