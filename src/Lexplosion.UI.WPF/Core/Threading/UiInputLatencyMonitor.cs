@@ -22,6 +22,7 @@ namespace Lexplosion.UI.WPF.Core.Threading
         private readonly Dispatcher _dispatcher;
         private readonly Timer _timer;
         private int _pending;
+        private int _samples;
 
         private UiInputLatencyMonitor(Dispatcher dispatcher)
         {
@@ -58,6 +59,8 @@ namespace Lexplosion.UI.WPF.Core.Threading
                         var milliseconds = (Stopwatch.GetTimestamp() - queuedAt) *
                             1000.0 / Stopwatch.Frequency;
                         PerformanceTelemetry.Record("ui.input.lag", milliseconds, 150);
+                        if (Interlocked.Increment(ref _samples) % 100 == 0)
+                            PerformanceTelemetry.Record("qa.input.monitor.heartbeat", 0);
                     }
                     finally
                     {
