@@ -103,6 +103,7 @@
                             KeyboardNavigation.TabIndex="2"
                             KeyboardNavigation.TabNavigation="Local">
                             <local:AnimatedContentControl x:Name="PART_AnimatedContent"
+                                                          AutomationProperties.AutomationId="qa.content.tab"
                                                           AnimationType="{TemplateBinding EffectiveContentAnimation}"
                                                           Content="{TemplateBinding DisplayedContent}" />
                         </Border>
