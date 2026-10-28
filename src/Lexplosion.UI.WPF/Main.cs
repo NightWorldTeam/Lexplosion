@@ -74,6 +74,14 @@ namespace Lexplosion.UI.WPF
 			// Подписываемся на эвент для загрузки всех строенных dll'ников
 			AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
 
+            // Local, opt-in QA telemetry. Never transmits data.
+            bool qaEnabled = Environment.GetEnvironmentVariable("LEXPLOSION_QA") == "1";
+            string qaPath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "Lexplosion", "Diagnostics", "ui-performance.log");
+            PerformanceTelemetry.Configure(qaEnabled, qaPath);
+            UiStallMonitor.Start(App.Current.Dispatcher);
+
 			_appCore = new AppCore(new WpfUiDispatcher(App.Current.Dispatcher), (key) => App.Current.Resources[key], RestartApp);
 
 			_app.Resources.MergedDictionaries.Add(new ResourceDictionary()
