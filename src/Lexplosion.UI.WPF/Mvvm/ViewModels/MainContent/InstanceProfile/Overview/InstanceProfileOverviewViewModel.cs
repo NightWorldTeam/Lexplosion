@@ -15,7 +15,6 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.InstanceProfile
 	public sealed class InstanceProfileOverviewModel : ViewModelBase
 	{
 		private readonly Action<bool> _changeLoadingStatus;
-		private readonly Lazy<Task<InstanceData>> _fullDataTask;
 		private InstanceData _fullData;
 		private string _overviewDescription = string.Empty;
 		private bool _isDescriptionReady;
@@ -77,7 +76,6 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.InstanceProfile
 			InstanceModel = instanceModel ?? throw new ArgumentNullException(nameof(instanceModel));
 			_changeLoadingStatus = changeLoadingStatus;
 			IsLocal = instanceModel.IsLocal || instanceModel.Source == InstanceSource.Nightworld;
-			_fullDataTask = new Lazy<Task<InstanceData>>(() => Task.Run(() => InstanceModel.AdditionalData));
 
 			OverviewDiagnostics.Info("Model created; source=" + DescriptionSource +
 				"; local=" + IsLocal + "; pageData=" + (instanceModel.PageData != null) +
@@ -97,11 +95,11 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.InstanceProfile
 
 		private async Task LoadDescriptionAsync()
 		{
-			OverviewDiagnostics.Info("Full data request started via InstanceModel.AdditionalData");
+			OverviewDiagnostics.Info("Full data request started via InstanceModel.GetFullInfoAsync");
 			try
 			{
-				_fullData = await _fullDataTask.Value;
-				OverviewDiagnostics.Info("_fullData fetched via InstanceModel.AdditionalData: null=" +
+				_fullData = await InstanceModel.GetFullInfoAsync();
+				OverviewDiagnostics.Info("_fullData fetched via InstanceModel.GetFullInfoAsync: null=" +
 					(_fullData == null) + "; Description length=" +
 					(_fullData?.Description?.Length ?? 0) +
 					"; PageData.Description length=" +

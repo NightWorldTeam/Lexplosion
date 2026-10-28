@@ -233,7 +233,7 @@
                 </Border>
 
                 <!--  Tabs  -->
-                <ItemsControl
+                <controls:AnimatedSidebarItemsControl
                     Grid.Row="4"
                     Margin="16,32,0,0"
                     AlternationCount="2"

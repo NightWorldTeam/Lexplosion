@@ -20,19 +20,6 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <!--  State Caret  -->
-                            <Border
-                                x:Name="StateCaret"
-                                Width="5"
-                                Height="40"
-                                Margin="-32,-10,0,-10"
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Top"
-                                Background="{DynamicResource ActivitySolidColorBrush}"
-                                CornerRadius="0,5,5,0"
-                                Visibility="Collapsed" />
-
-                            <!--  Icon  -->
                             <Viewbox Width="{TemplateBinding IconWidth}" Height="{TemplateBinding IconHeight}">
                                 <Path
                                     x:Name="Icon"
@@ -60,7 +47,6 @@
                         <Trigger Property="IsChecked" Value="True">
                             <Setter TargetName="Icon" Property="Fill" Value="{DynamicResource ActivitySolidColorBrush}" />
                             <Setter TargetName="Text" Property="Foreground" Value="{DynamicResource ActivitySolidColorBrush}" />
-                            <Setter TargetName="StateCaret" Property="Visibility" Value="Visible" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

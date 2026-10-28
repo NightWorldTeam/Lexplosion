@@ -14,7 +14,7 @@
     mc:Ignorable="d">
     <Grid
         Background="{DynamicResource PageSolidColorBrush}"
-        Loaded="Grid_Loaded"
+        
         MouseDown="Grid_MouseDown">
 
         <Grid.ColumnDefinitions>
@@ -24,8 +24,10 @@
 
         <ContentControl Content="{Binding LeftPanel}" KeyboardNavigation.IsTabStop="False" />
 
-        <ContentControl
+        <controls:AnimatedContentControl
             Grid.Column="1"
+            AnimationType="SoftReveal"
+            TransitionDuration="0:0:0.28"
             Content="{Binding Content}"
             KeyboardNavigation.IsTabStop="False"
             KeyboardNavigation.TabNavigation="None" />

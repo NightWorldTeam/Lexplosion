@@ -1,11 +1,11 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.Windows.Threading;
+using Lexplosion.UI.WPF.Core;
 
 namespace Lexplosion.UI.WPF.Controls
 {
@@ -17,20 +17,35 @@ namespace Lexplosion.UI.WPF.Controls
         SlideToRight,
         SlideToTop,
         SlideToBottom,
+        SoftReveal
     }
 
+    [TemplatePart(Name = "PART_FirstContent", Type = typeof(ContentPresenter))]
+    [TemplatePart(Name = "PART_SecondContent", Type = typeof(ContentPresenter))]
     public class AnimatedContentControl : ContentControl
     {
-        private Shape _paintArea;
-        private ContentPresenter _contentPresenter;
-        private DpiScale _dpi;
-        private int _contentChangeVersion;
+        private ContentPresenter _current;
+        private ContentPresenter _next;
+        private bool _transitionPending;
+        private int _transitionVersion;
+        private bool _hasQueuedContent;
+        private object _queuedContent;
 
+        // The transition state is exposed to the hosting TabControl, so tab input
+        // can be locked for the actual animation lifetime (no hard-coded timers).
+        private static readonly DependencyPropertyKey IsTransitioningPropertyKey =
+            DependencyProperty.RegisterReadOnly(nameof(IsTransitioning), typeof(bool),
+                typeof(AnimatedContentControl), new PropertyMetadata(false));
 
-        public static readonly DependencyProperty AnimationTypeProperty
-            = DependencyProperty.Register(nameof(AnimationType), typeof(ContentControlAnimation), typeof(AnimatedContentControl),
-                new FrameworkPropertyMetadata(defaultValue: ContentControlAnimation.SlideToLeft));
+        public static readonly DependencyProperty IsTransitioningProperty =
+            IsTransitioningPropertyKey.DependencyProperty;
 
+        public bool IsTransitioning => (bool)GetValue(IsTransitioningProperty);
+
+        public static readonly DependencyProperty AnimationTypeProperty =
+            DependencyProperty.Register(nameof(AnimationType), typeof(ContentControlAnimation),
+                typeof(AnimatedContentControl),
+                new FrameworkPropertyMetadata(ContentControlAnimation.None));
 
         public ContentControlAnimation AnimationType
         {
@@ -38,199 +53,256 @@ namespace Lexplosion.UI.WPF.Controls
             set => SetValue(AnimationTypeProperty, value);
         }
 
+        public static readonly DependencyProperty TransitionDurationProperty =
+            DependencyProperty.Register(nameof(TransitionDuration), typeof(Duration),
+                typeof(AnimatedContentControl),
+                new FrameworkPropertyMetadata(new Duration(TimeSpan.FromMilliseconds(380))));
 
-        /// <summary>
-        /// This gets called when the template has been applied and we have our visual tree
-        /// </summary>
-        public override void OnApplyTemplate()
+        public Duration TransitionDuration
         {
-            _paintArea = Template.FindName("PART_PaintArea", this) as Shape;
-            _contentPresenter = Template.FindName("PART_MainContent", this) as ContentPresenter;
-
-            base.OnApplyTemplate();
+            get => (Duration)GetValue(TransitionDurationProperty);
+            set => SetValue(TransitionDurationProperty, value);
         }
 
-        /// <summary>
-        /// This gets called when the content we're displaying has changed
-        /// </summary>
-        /// <param name="oldContent">The content that was previously displayed</param>
-        /// <param name="newContent">The new content that is displayed</param>
+        public AnimatedContentControl()
+        {
+            Unloaded += (sender, args) =>
+            {
+                FinishTransition();
+                Reset(_current);
+            };
+        }
+
+        public override void OnApplyTemplate()
+        {
+            ++_transitionVersion;
+            base.OnApplyTemplate();
+
+            _current = GetTemplateChild("PART_FirstContent") as ContentPresenter;
+            _next = GetTemplateChild("PART_SecondContent") as ContentPresenter;
+            _transitionPending = false;
+            _hasQueuedContent = false;
+            _queuedContent = null;
+            SetValue(IsTransitioningPropertyKey, false);
+
+            if (_current == null || _next == null)
+                return;
+
+            Reset(_current);
+            Reset(_next);
+            _current.Content = Content;
+            _current.Visibility = Visibility.Visible;
+            _current.IsHitTestVisible = true;
+            _next.Content = null;
+            _next.Visibility = Visibility.Collapsed;
+            _next.IsHitTestVisible = false;
+        }
+
         protected override void OnContentChanged(object oldContent, object newContent)
         {
             base.OnContentChanged(oldContent, newContent);
-            var version = ++_contentChangeVersion;
-            if (_paintArea != null)
-            {
-                _paintArea.Visibility = Visibility.Collapsed;
-                _paintArea.Fill = null;
-            }
-            // Rendering a snapshot here can re-enter layout during container generation.
-            // Animate only the incoming content, after the current layout has finished.
-            if (oldContent == null || newContent == null || AnimationType == ContentControlAnimation.None)
+
+            if (_current == null || _next == null)
                 return;
-            Dispatcher.BeginInvoke(new Action(() =>
+
+            // Do not interrupt a running animation. Only the latest requested
+            // destination is kept; intermediate navigation requests are discarded.
+            if (_transitionPending)
             {
-                if (version != _contentChangeVersion || !IsLoaded || _contentPresenter == null)
-                    return;
-                var transform = new TranslateTransform();
-                _contentPresenter.RenderTransform = transform;
-                switch (AnimationType)
+                _queuedContent = newContent;
+                _hasQueuedContent = true;
+                return;
+            }
+
+            ShowContent(newContent);
+        }
+
+        private void ShowContent(object newContent)
+        {
+            var oldContent = _current.Content;
+            if (ReferenceEquals(oldContent, newContent))
+                return;
+
+            if (!IsLoaded || oldContent == null || newContent == null ||
+                AnimationType == ContentControlAnimation.None ||
+                !AnimationPreferences.Enabled ||
+                !TransitionDuration.HasTimeSpan || TransitionDuration.TimeSpan <= TimeSpan.Zero ||
+                ContainsNativeWindow(_current))
+            {
+                ShowImmediately(newContent);
+                return;
+            }
+
+            // Stage the incoming visual tree before starting the dissolve.
+            // It must complete DataTemplate creation and layout while invisible.
+            if (AnimationType == ContentControlAnimation.SoftReveal)
+                _next.Opacity = 0;
+            _next.Content = newContent;
+            _next.Visibility = Visibility.Hidden;
+            _next.IsHitTestVisible = false;
+            _transitionPending = true;
+            SetValue(IsTransitioningPropertyKey, true);
+            int version = ++_transitionVersion;
+
+            // Let the new DataTemplate materialize and layout finish before moving it.
+            Dispatcher.BeginInvoke(new Action(() => BeginTransition(version)), DispatcherPriority.Loaded);
+        }
+
+        private void BeginTransition(int version)
+        {
+            if (version != _transitionVersion || !_transitionPending ||
+                !IsLoaded || _current == null || _next == null)
+                return;
+
+            if (ActualWidth <= 0 || ActualHeight <= 0 ||
+                ContainsNativeWindow(_current) || ContainsNativeWindow(_next))
+            {
+                // A WebView2/HwndHost paints in its own HWND, outside WPF's compositor.
+                // Never slide two native windows or attempt to capture them.
+                FinishTransition();
+                return;
+            }
+
+            var oldPresenter = _current;
+            var newPresenter = _next;
+            var duration = TransitionDuration;
+            IEasingFunction easing = AnimationType == ContentControlAnimation.SoftReveal
+                ? new SineEase { EasingMode = EasingMode.EaseInOut }
+                : new CubicEase { EasingMode = EasingMode.EaseInOut };
+
+            double distance = AnimationType == ContentControlAnimation.SlideToTop ||
+                              AnimationType == ContentControlAnimation.SlideToBottom
+                ? ActualHeight : ActualWidth;
+
+            double sign = AnimationType == ContentControlAnimation.SlideToRight ||
+                          AnimationType == ContentControlAnimation.SlideToBottom ? -1 : 1;
+
+            bool vertical = AnimationType == ContentControlAnimation.SlideToTop ||
+                            AnimationType == ContentControlAnimation.SlideToBottom;
+            bool swipe = AnimationType != ContentControlAnimation.Fade &&
+                         AnimationType != ContentControlAnimation.SoftReveal;
+
+            // Both pages travel the same distance, with no overlapping regions.
+            // Parallax kept the old page under the new one and leaked stale controls
+            // through transparent views (e.g. Friends tabs).
+            if (swipe)
+            {
+                var oldTransform = new TranslateTransform();
+                var newTransform = new TranslateTransform();
+                oldPresenter.RenderTransform = oldTransform;
+                newPresenter.RenderTransform = newTransform;
+
+                var property = vertical ? TranslateTransform.YProperty : TranslateTransform.XProperty;
+                double incoming = sign * distance;
+                double outgoing = -sign * distance;
+                newTransform.SetValue(property, incoming);
+
+                // TranslateTransform runs on the composition path. Avoid opacity
+                // animations on two full-page surfaces during a slide.
+                var arrive = Motion(incoming, 0, duration, easing);
+                arrive.Completed += (sender, args) =>
                 {
-                    case ContentControlAnimation.SlideToLeft:
-                        transform.BeginAnimation(TranslateTransform.XProperty, CreateSlideAnimation(ActualWidth, 0));
-                        break;
-                    case ContentControlAnimation.SlideToRight:
-                        transform.BeginAnimation(TranslateTransform.XProperty, CreateSlideAnimation(-ActualWidth, 0));
-                        break;
-                    case ContentControlAnimation.SlideToTop:
-                        transform.BeginAnimation(TranslateTransform.YProperty, CreateSlideAnimation(ActualHeight, 0));
-                        break;
-                    case ContentControlAnimation.SlideToBottom:
-                        transform.BeginAnimation(TranslateTransform.YProperty, CreateSlideAnimation(-ActualHeight, 0));
-                        break;
-                    case ContentControlAnimation.Fade:
-                        _contentPresenter.BeginAnimation(OpacityProperty, CreateOpacityAnimation(0, 1));
-                        break;
-                }
-            }), DispatcherPriority.Loaded);
-        }
+                    if (version == _transitionVersion)
+                        FinishTransition();
+                };
 
-        /// <summary>
-        /// Creates a brush based on the current appearance of a visual element. 
-        /// The brush is an ImageBrush and once created, won't update its look
-        /// </summary>
-        /// <param name="v">The visual element to take a snapshot of</param>
-        private Brush CreateBrushFromVisual(Visual v)
-        {
-            if (v == null)
-                throw new ArgumentNullException("v");
-            _dpi = System.Windows.Media.VisualTreeHelper.GetDpi(this);
+                oldTransform.BeginAnimation(property, Motion(0, outgoing, duration, easing));
+                newTransform.BeginAnimation(property, arrive);
+            }
 
-            var target = new RenderTargetBitmap((int)(this.ActualWidth * _dpi.DpiScaleX), (int)(this.ActualHeight * _dpi.DpiScaleY),
-                                                _dpi.PixelsPerInchX, _dpi.PixelsPerInchY, PixelFormats.Default);
-            target.Render(v);
-            var brush = new ImageBrush(target);
-            brush.Freeze();
-            return brush;
-        }
+            // Adjacent pages move as one strip: the outgoing page never paints
+            // underneath the incoming page. No snapshots or layout animations.
+            Panel.SetZIndex(oldPresenter, 0);
+            Panel.SetZIndex(newPresenter, 1);
+            newPresenter.Visibility = Visibility.Visible;
+            oldPresenter.IsHitTestVisible = false;
+            newPresenter.IsHitTestVisible = true;
 
-        private void BeginFadeAnimationContentReplacement()
-        {
-            _paintArea.Visibility = Visibility.Visible;
-            _contentPresenter.Opacity = 0;
-
-            var opacityAnimation = new DoubleAnimation()
+            if (!swipe)
             {
-                To = 0,
-                Duration = TimeSpan.FromSeconds(3)
-            };
-
-            opacityAnimation.Completed += OpacityAnimation_Completed; //(s, e) => _paintArea.Visibility = Visibility.Hidden;
-
-            _paintArea.BeginAnimation(OpacityProperty, opacityAnimation);
+                oldPresenter.BeginAnimation(OpacityProperty, Motion(1, 0, duration, easing));
+                var reveal = Motion(0, 1, duration, easing);
+                reveal.Completed += (sender, args) =>
+                {
+                    if (version == _transitionVersion)
+                        FinishTransition();
+                };
+                newPresenter.BeginAnimation(OpacityProperty, reveal);
+            }
         }
 
-        private void OpacityAnimation_Completed(object sender, EventArgs e)
+        private static DoubleAnimation Motion(double from, double to, Duration duration, IEasingFunction easing)
         {
-            _paintArea.Visibility = Visibility.Hidden;
-            _paintArea.Opacity = 1;
-            var opacityAnimation1 = new DoubleAnimation()
+            return new DoubleAnimation(from, to, duration) { EasingFunction = easing };
+        }
+
+        private void FinishTransition()
+        {
+            ++_transitionVersion;
+            if (_current == null || _next == null || !_transitionPending)
             {
-                From = 0,
-                To = 1,
-                Duration = TimeSpan.FromSeconds(0.35)
-            };
-            _contentPresenter.BeginAnimation(OpacityProperty, opacityAnimation1);
-        }
+                SetValue(IsTransitioningPropertyKey, false);
+                return;
+            }
 
-        private void BeginYAnimateContentReplacement()
-        {
-            var newContentTransform = new TranslateTransform();
-            var oldContentTransform = new TranslateTransform();
+            _transitionPending = false;
+            SetValue(IsTransitioningPropertyKey, false);
+            var previous = _current;
+            _current = _next;
+            _next = previous;
 
-            _paintArea.RenderTransform = oldContentTransform;
-            _contentPresenter.RenderTransform = newContentTransform;
+            // Clear the outgoing visual tree only once the transition has finished.
+            Reset(_current);
+            _current.Visibility = Visibility.Visible;
+            _current.IsHitTestVisible = true;
 
-            _paintArea.Visibility = Visibility.Visible;
+            Reset(_next);
+            _next.Visibility = Visibility.Collapsed;
+            _next.IsHitTestVisible = false;
+            _next.Content = null;
 
-            newContentTransform.BeginAnimation(
-                TranslateTransform.YProperty,
-                CreateSlideAnimation(this.ActualHeight, 0));
-
-            oldContentTransform.BeginAnimation(
-                TranslateTransform.YProperty,
-                CreateSlideAnimation(0, -this.ActualHeight, (s, e) => _paintArea.Visibility = Visibility.Hidden));
-
-            _paintArea.BeginAnimation(
-                OpacityProperty,
-                CreateOpacityAnimation(1, 0, (s, e) => _paintArea.Opacity = 1));
-
-            _contentPresenter.BeginAnimation(
-                OpacityProperty,
-                CreateOpacityAnimation(0, 1));
-        }
-
-
-        private void BeginXAnimateContentReplacement()
-        {
-            var newContentTransform = new TranslateTransform();
-            var oldContentTransform = new TranslateTransform();
-
-            _paintArea.RenderTransform = oldContentTransform;
-            _contentPresenter.RenderTransform = newContentTransform;
-
-            _paintArea.Visibility = Visibility.Visible;
-
-            newContentTransform.BeginAnimation(
-                TranslateTransform.XProperty,
-                CreateSlideAnimation(this.ActualWidth, 0));
-
-            oldContentTransform.BeginAnimation(
-                TranslateTransform.XProperty,
-                CreateSlideAnimation(0, -this.ActualWidth, (s, e) => _paintArea.Visibility = Visibility.Hidden));
-
-            _paintArea.BeginAnimation(
-                OpacityProperty,
-                CreateOpacityAnimation(1, 0, (s, e) => _paintArea.Opacity = 1));
-            _contentPresenter.BeginAnimation(
-                OpacityProperty,
-                CreateOpacityAnimation(0, 1));
-        }
-
-        private AnimationTimeline CreateSlideAnimation(double from, double to, EventHandler whenDone = null)
-        {
-            var duration = new Duration(TimeSpan.FromSeconds(0.55));
-            var anim = new DoubleAnimation(from, to, duration);
-            //anim.EasingFunction = new TestAnim();
-            anim.EasingFunction = new CircleEase()
+            if (_hasQueuedContent)
             {
-                EasingMode = EasingMode.EaseInOut
-            };
-            if (whenDone != null)
-                anim.Completed += whenDone;
-            anim.Freeze();
-            return anim;
+                var queuedContent = _queuedContent;
+                _hasQueuedContent = false;
+                _queuedContent = null;
+                ShowContent(queuedContent);
+            }
         }
 
-        private AnimationTimeline CreateOpacityAnimation(double from, double to, EventHandler whenDone = null)
+        private void ShowImmediately(object content)
         {
-            var duration = new Duration(TimeSpan.FromSeconds(0.35));
-            var anim = new DoubleAnimation(from, to, duration);
-            if (whenDone != null)
-                anim.Completed += whenDone;
-            anim.Freeze();
-            return anim;
+            ++_transitionVersion;
+            SetValue(IsTransitioningPropertyKey, false);
+            _current.Content = content;
+            _current.Visibility = Visibility.Visible;
+            _current.IsHitTestVisible = true;
+            Reset(_current);
+            _next.Content = null;
+            _next.Visibility = Visibility.Collapsed;
+            _next.IsHitTestVisible = false;
+            Reset(_next);
         }
-    }
 
-    public class TestAnim : IEasingFunction
-    {
-        public double Ease(double normalizedTime)
+        private static void Reset(ContentPresenter presenter)
         {
-            //Runtime.DebugWrite(normalizedTime);
-            //return Math.Sqrt(Math.Sin(normalizedTime * (Math.PI / 2.2)));
-            //return Math.Sqrt(Math.Log10((normalizedTime + 1) * (normalizedTime + 1))) / 0.78;
-            return 1;
+            presenter.BeginAnimation(OpacityProperty, null);
+            presenter.Opacity = 1;
+            presenter.RenderTransform = null;
+        }
+
+        private static bool ContainsNativeWindow(DependencyObject element)
+        {
+            if (element is HwndHost)
+                return true;
+
+            int count = VisualTreeHelper.GetChildrenCount(element);
+            for (int i = 0; i < count; i++)
+            {
+                if (ContainsNativeWindow(VisualTreeHelper.GetChild(element, i)))
+                    return true;
+            }
+            return false;
         }
     }
 }

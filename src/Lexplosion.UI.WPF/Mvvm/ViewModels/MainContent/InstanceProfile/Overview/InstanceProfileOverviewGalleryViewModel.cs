@@ -4,7 +4,6 @@ using Lexplosion.UI.WPF.Core;
 using Lexplosion.UI.WPF.Core.ViewModel;
 using Lexplosion.UI.WPF.Mvvm.Models.Mvvm.InstanceModel;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -26,28 +25,38 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.InstanceProfile
             }
         }
 
-        public Lazy<Task<InstanceData>> AdditionalDataLazy
-        {
-            get => new Lazy<Task<InstanceData>>(() => Task.Run(() => InstanceModel.AdditionalData));
-        }
-
+        private readonly Lazy<Task<InstanceData>> _additionalDataTask;
         private InstanceData _additionalData;
+
         public InstanceData AdditionalData
         {
             get
             {
-                if (_additionalData == null)
-                {
-                    App.Current.Dispatcher.InvokeAsync(async () => AdditionalData = await AdditionalDataLazy.Value);
-                }
+                // Start once on first binding access; no repeated dispatcher callbacks.
+                _ = _additionalDataTask.Value;
                 return _additionalData;
             }
+        }
 
-            private set
+        private async Task<InstanceData> LoadAdditionalDataAsync()
+        {
+            // Avoid raising PropertyChanged recursively inside Lazy.Value's factory
+            // when the shared data task has already completed.
+            await Task.Yield();
+            try
             {
-                _additionalData = value;
-                OnPropertyChanged(nameof(AdditionalData.Images));
-                OnPropertyChanged();
+                var data = await InstanceModel.GetFullInfoAsync();
+                _additionalData = data;
+                OnPropertyChanged(nameof(AdditionalData));
+                return data;
+            }
+            catch (Exception ex)
+            {
+                Runtime.DebugWrite("Gallery full info failed: " + ex);
+                return null;
+            }
+            finally
+            {
                 IsLoading = false;
             }
         }
@@ -56,12 +65,17 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.InstanceProfile
         {
             _appCore = appCore;
             InstanceModel = instanceModelBase;
+            _additionalDataTask = new Lazy<Task<InstanceData>>(LoadAdditionalDataAsync);
             IsLoading = true;
         }
 
-        public void OpenImage(object value)
+        public async void OpenImage(object value)
         {
-            _appCore.GalleryManager.ChangeContext(InstanceModel.AdditionalData.Images);
+            var data = await _additionalDataTask.Value;
+            if (data?.Images == null)
+                return;
+
+            _appCore.GalleryManager.ChangeContext(data.Images);
             _appCore.GalleryManager.SelectImage(value);
         }
     }

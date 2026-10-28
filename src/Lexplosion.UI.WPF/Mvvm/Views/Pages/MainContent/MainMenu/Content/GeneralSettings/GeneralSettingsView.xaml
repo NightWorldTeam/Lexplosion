@@ -768,6 +768,33 @@
                     </Border>
 
 
+                    <!--  Interface animations  -->
+                    <Border
+                        Padding="0,16,0,8"
+                        BorderBrush="{DynamicResource PageItemSeparatorSolidColorBrush}"
+                        BorderThickness="0,0,0,1">
+                        <Grid>
+                            <StackPanel>
+                                <TextBlock
+                                    extensions:TextBlockExtensions.TextByKey="InterfaceAnimations"
+                                    FontSize="14"
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+                                <TextBlock
+                                    extensions:TextBlockExtensions.TextByKey="InterfaceAnimationsDescription"
+                                    FontSize="14"
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                            </StackPanel>
+
+                            <ToggleButton
+                                HorizontalAlignment="Right"
+                                IsChecked="{Binding Model.EnableAnimations}"
+                                Style="{StaticResource SwitchButton}" />
+                        </Grid>
+                    </Border>
+
+
                     <!--  Is Hidden Mode  -->
 
                     <Border

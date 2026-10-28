@@ -25,7 +25,7 @@ namespace Lexplosion.UI.WPF.Controls
 
         public string TextKey
         {
-            get => (string)GetValue(IconKeyProperty);
+            get => (string)GetValue(TextKeyProperty);
             set => SetValue(TextKeyProperty, value);
         }
 

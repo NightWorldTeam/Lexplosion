@@ -31,18 +31,46 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
 
 
         private LeftPanelMenuItem _selectedItem;
+        private LeftPanelMenuItem _publishedItem;
+        private bool _deferContentNavigation;
+
         public LeftPanelMenuItem SelectedItem
         {
-            get => _selectedItem; set
+            get => _selectedItem;
+            set
             {
-                if (_selectedItem != null && _selectedItem != value) 
-                {
+                if (ReferenceEquals(_selectedItem, value)) return;
+
+                if (_selectedItem != null)
                     _selectedItem.IsSelected = false;
-                }
+
                 _selectedItem = value;
-                SelectedItemChanged?.Invoke(value.Content);
                 OnPropertyChanged();
+
+                // Let the sidebar finish moving before a heavy page is created.
+                // The first selection (before the sidebar is loaded) is immediate.
+                if (!_deferContentNavigation)
+                    CommitSelection(value);
             }
+        }
+
+        // The view controls the deferral lifetime, not a hard-coded timer.
+        public void SetContentNavigationDeferred(bool deferred)
+        {
+            _deferContentNavigation = deferred;
+            if (!deferred)
+                CommitSelection(_selectedItem);
+        }
+
+        public void CommitSelection(LeftPanelMenuItem item)
+        {
+            // A quick second click supersedes the previous destination.
+            if (item == null || !ReferenceEquals(item, _selectedItem) ||
+                ReferenceEquals(item, _publishedItem))
+                return;
+
+            _publishedItem = item;
+            SelectedItemChanged?.Invoke(item.Content);
         }
 
 

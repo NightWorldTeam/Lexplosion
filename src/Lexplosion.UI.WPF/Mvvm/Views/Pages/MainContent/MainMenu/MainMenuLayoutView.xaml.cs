@@ -1,6 +1,4 @@
-﻿using System;
-using System.Windows.Controls;
-using System.Windows.Media.Animation;
+﻿using System.Windows.Controls;
 
 namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.MainMenu
 {
@@ -28,17 +26,5 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.MainMenu
             }
         }
 
-        private void Grid_Loaded(object sender, System.Windows.RoutedEventArgs e)
-        {
-            var grid = sender as Grid;
-            var da = new DoubleAnimation()
-            {
-                From = 0,
-                To = 1,
-                Duration = TimeSpan.FromSeconds(0.5)
-            };
-
-            grid.BeginAnimation(OpacityProperty, da);
-        }
     }
 }

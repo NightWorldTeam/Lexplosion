@@ -11,6 +11,7 @@ using Lexplosion.UI.WPF.Mvvm.ViewModels.Modal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Lexplosion.UI.WPF.Mvvm.Models.Mvvm.InstanceModel
 {
@@ -207,14 +208,28 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.Mvvm.InstanceModel
             get => _instanceClient.GetBaseData;
         }
 
-        private InstanceData _addionalData;
-        public InstanceData AdditionalData
+        private readonly object _fullInfoLock = new object();
+        private Task<InstanceData> _fullInfoTask;
+
+        // Share the in-flight request, not just its completed result.
+        // A failed or empty response can be retried on the next request.
+        public Task<InstanceData> GetFullInfoAsync()
         {
-            get
+            lock (_fullInfoLock)
             {
-                return _addionalData ?? (_addionalData = _instanceClient.GetFullInfo());
+                if (_fullInfoTask == null || _fullInfoTask.IsFaulted ||
+                    _fullInfoTask.IsCanceled ||
+                    (_fullInfoTask.Status == TaskStatus.RanToCompletion && _fullInfoTask.Result == null))
+                {
+                    _fullInfoTask = Task.Run(() => _instanceClient.GetFullInfo());
+                }
+
+                return _fullInfoTask;
             }
         }
+
+        // Preserve the existing synchronous API for background consumers.
+        public InstanceData AdditionalData => GetFullInfoAsync().GetAwaiter().GetResult();
 
 
         #region Processes
@@ -826,9 +841,12 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.Mvvm.InstanceModel
         {
             Runtime.TaskRun(() =>
             {
-                PageData = _instanceClient.GetFullInfo();
-                PageData.TotalDownloads.ToString();
-                OnPropertyChanged(nameof(TotalDownloads));
+                PageData = AdditionalData;
+                if (PageData != null)
+                {
+                    OnPropertyChanged(nameof(PageData));
+                    OnPropertyChanged(nameof(TotalDownloads));
+                }
             });
         }
 
