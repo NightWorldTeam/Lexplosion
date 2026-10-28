@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
@@ -33,6 +34,7 @@ namespace Lexplosion.UI.WPF.Controls
         private bool _hasQueuedContent;
         private object _queuedContent;
         private long _preparationStartedTick;
+        private readonly HashSet<ScrollBar> _hiddenScrollbars = new HashSet<ScrollBar>();
 
         // The transition state is exposed to the hosting TabControl, so tab input
         // can be locked for the actual animation lifetime (no hard-coded timers).
@@ -78,6 +80,7 @@ namespace Lexplosion.UI.WPF.Controls
 
         public override void OnApplyTemplate()
         {
+            RestoreScrollbars();
             ++_transitionVersion;
             base.OnApplyTemplate();
 
@@ -201,6 +204,11 @@ namespace Lexplosion.UI.WPF.Controls
             // through transparent views (e.g. Friends tabs).
             if (swipe)
             {
+                // Hide scroll thumbs only while both tab pages are sliding.
+                // Holding Opacity at zero preserves layout and scroll position.
+                HideScrollbars(oldPresenter);
+                HideScrollbars(newPresenter);
+
                 var oldTransform = new TranslateTransform();
                 var newTransform = new TranslateTransform();
                 oldPresenter.RenderTransform = oldTransform;
@@ -252,6 +260,7 @@ namespace Lexplosion.UI.WPF.Controls
 
         private void FinishTransition()
         {
+            RestoreScrollbars();
             ++_transitionVersion;
             if (_current == null || _next == null || !_transitionPending)
             {
@@ -286,6 +295,7 @@ namespace Lexplosion.UI.WPF.Controls
 
         private void ShowImmediately(object content)
         {
+            RestoreScrollbars();
             ++_transitionVersion;
             SetValue(IsTransitioningPropertyKey, false);
             _current.Content = content;
@@ -296,6 +306,32 @@ namespace Lexplosion.UI.WPF.Controls
             _next.Visibility = Visibility.Collapsed;
             _next.IsHitTestVisible = false;
             Reset(_next);
+        }
+
+        private void HideScrollbars(DependencyObject root)
+        {
+            if (root is ScrollBar scrollBar && _hiddenScrollbars.Add(scrollBar))
+            {
+                // An animation clock temporarily overrides the opacity source
+                // without replacing a Style, binding, or local opacity value.
+                scrollBar.BeginAnimation(OpacityProperty, new DoubleAnimation
+                {
+                    From = 0,
+                    To = 0,
+                    Duration = new Duration(TimeSpan.Zero),
+                    FillBehavior = FillBehavior.HoldEnd
+                });
+            }
+
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(root); i++)
+                HideScrollbars(VisualTreeHelper.GetChild(root, i));
+        }
+
+        private void RestoreScrollbars()
+        {
+            foreach (var scrollBar in _hiddenScrollbars)
+                scrollBar.BeginAnimation(OpacityProperty, null);
+            _hiddenScrollbars.Clear();
         }
 
         private static void Reset(ContentPresenter presenter)
