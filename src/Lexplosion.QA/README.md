@@ -72,4 +72,4 @@ dotnet test src/Lexplosion.Tests/Lexplosion.Tests.csproj -c Debug --filter "Full
 
 **Ограничение:** Windows UI Automation и WPF должны быть доступны в
 интерактивной desktop-сессии; на фоновом GitHub Actions runner тест
-не выполняется и остаётся `[Explicit]`.
+не выполняется (проверка `LEXPLOSION_E2E` помечает тест как ignored).
