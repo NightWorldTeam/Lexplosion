@@ -237,6 +237,9 @@ namespace Lexplosion.E2E
                 string summary = Path.Combine(_artifactsDirectory, "performance-summary.txt");
                 var stalls = events.Where(e => e.Item2 == "ui.dispatcher.stall")
                     .Select(e => e.Item3).OrderBy(x => x).ToArray();
+                var inputLag = events.Where(e => e.Item2 == "ui.input.lag")
+                    .Select(e => e.Item3).OrderBy(x => x).ToArray();
+                bool monitorStarted = events.Any(e => e.Item2 == "qa.input.monitor.start");
                 var prepare = events.Where(e => e.Item2 == "navigation.page.prepare")
                     .Select(e => e.Item3).OrderBy(x => x).ToArray();
                 File.WriteAllLines(summary, new[]
@@ -248,9 +251,14 @@ namespace Lexplosion.E2E
                     "UI stalls > threshold: " + stalls.Length,
                     "UI stall max ms: " + (stalls.Length == 0 ? "n/a" : stalls.Last().ToString("F1", CultureInfo.InvariantCulture)),
                     "UI stall p95 ms: " + Percentile(stalls, 0.95),
+                    "Input probe status: " + (monitorStarted ? "ACTIVE" : "NOT DETECTED"),
+                    "UI input lag count: " + inputLag.Length,
+                    "UI input lag max ms: " + (inputLag.Length == 0 ? "n/a" :
+                        inputLag.Last().ToString("F1", CultureInfo.InvariantCulture)),
+                    "UI input lag p95 ms: " + Percentile(inputLag, 0.95),
                     "Page prepare count: " + prepare.Length,
                     "Page prepare p95 ms: " + Percentile(prepare, 0.95),
-                    "The log tracks dispatcher starvation, not GPU frame times."
+                    "Input lag is input-priority queue delay; legacy stall is Background timer lateness; neither is GPU frame time."
                 });
                 NUnit.Framework.TestContext.AddTestAttachment(summary, "E2E performance summary");
                 if (File.Exists(destination))
