@@ -59,7 +59,7 @@ namespace Lexplosion.E2E
         [OneTimeTearDown]
         public void TearDown() => _session?.Dispose();
 
-        [Test]
+        [Test, Order(0)]
         public void InventoryAllVisibleControlsAndNavigation()
         {
             Window window = _session.WaitForMainWindow();
@@ -85,9 +85,9 @@ namespace Lexplosion.E2E
                 ". Unmarked buttons were inventoried, NOT clicked.");
         }
 
-        [TestCase(NavigationMode.Normal)]
-        [TestCase(NavigationMode.Reverse)]
-        [TestCase(NavigationMode.Shuffle)]
+        [TestCase(NavigationMode.Normal, Order = 20)]
+        [TestCase(NavigationMode.Reverse, Order = 30)]
+        [TestCase(NavigationMode.Shuffle, Order = 40)]
         public void TraverseAvailableNavigationAndVerifyRenderedState(NavigationMode mode)
         {
             var window = _session.WaitForMainWindow();
@@ -126,7 +126,7 @@ namespace Lexplosion.E2E
             Assert.That(failures, Is.Empty, string.Join(Environment.NewLine, failures));
         }
 
-        [Test]
+        [Test, Order(50)]
         public void RapidSwitchingPreservesTheFinalSelection()
         {
             var ids = SidebarIds(_session.WaitForMainWindow());
@@ -213,7 +213,7 @@ namespace Lexplosion.E2E
                 _session.Record("coverage.skip", "stress.tabs.unavailable", 0, "SKIP");
         }
 
-        [Test, Order(100)]
+        [Test, Order(1000)]
         public void DispatcherPerformanceDoesNotExceedQaBudget()
         {
             // An actual profiler is still needed to attribute CPU stacks.
@@ -249,7 +249,7 @@ namespace Lexplosion.E2E
                 out double value) && value >= 0 ? value : fallback;
         }
 
-        [Test]
+        [Test, Order(10)]
         public void OpenReachableInstanceAndServerProfiles()
         {
             var failures = new List<string>();
@@ -374,11 +374,12 @@ namespace Lexplosion.E2E
                 bool selected = WaitSelected(() => FindSidebar(_session.WaitForMainWindow(), id),
                     e => e.AsRadioButton().IsChecked, TimeSpan.FromSeconds(8));
                 if (!selected) throw new TimeoutException("Sidebar not selected: " + id);
-                Stabilize(mode);
-                AssertVisibleWindow();
                 watch.Stop();
-
+                // The selection measurement excludes UIA tree inspection and
+                // the deliberate animation-settle delay.
                 _session.Record("navigation.sidebar", id, watch.ElapsedMilliseconds, "PASS");
+                Stabilize(mode);
+                AssertVisibleWindow(mode == NavigationMode.Normal);
                 if (mode == NavigationMode.Normal)
                     _session.CaptureState("sidebar-" + id, true);
                 return true;
@@ -424,12 +425,11 @@ namespace Lexplosion.E2E
                         bool selected = WaitSelected(() => FindTab(groupId, id),
                             e => e.AsTabItem().IsSelected, TimeSpan.FromSeconds(8));
                         if (!selected) throw new TimeoutException("Tab not selected: " + groupId + "." + id);
-                        Stabilize(mode);
-                        AssertVisibleWindow();
                         watch.Stop();
-
                         _session.Record("navigation.tab", groupId + "." + id,
                             watch.ElapsedMilliseconds, "PASS");
+                        Stabilize(mode);
+                        AssertVisibleWindow(mode == NavigationMode.Normal);
                         tabs++;
                         actions++;
                         if (mode == NavigationMode.Normal)
@@ -476,13 +476,17 @@ namespace Lexplosion.E2E
                 ignoreException: true).Result != null;
         }
 
-        private void AssertVisibleWindow()
+        private void AssertVisibleWindow(bool inspectAccessibility = false)
         {
             var window = _session.WaitForMainWindow();
             var bounds = window.BoundingRectangle;
             Assert.That(bounds.Width, Is.GreaterThan(500), "Window width collapsed.");
             Assert.That(bounds.Height, Is.GreaterThan(300), "Window height collapsed.");
             Assert.That(window.IsOffscreen, Is.False, "Main window became offscreen.");
+            // Full UIA traversal is expensive and can itself delay the
+            // Dispatcher. Run it only in the standard (non-stress) scenario.
+            if (!inspectAccessibility) return;
+
             // Structural checks are not pixel-perfect proof of layout quality.
             var descendants = window.FindAllDescendants();
             Assert.That(descendants.Count(Visible), Is.GreaterThan(5),
