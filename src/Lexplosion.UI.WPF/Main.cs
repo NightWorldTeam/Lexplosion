@@ -48,6 +48,7 @@ namespace Lexplosion.UI.WPF
 		internal static event Action MainWindowShowed;
 
 		private static App _app = new App();
+        private static UiStallMonitor _uiStallMonitor;
 
 		private static double _leftPos;
 		private static double _topPos;
@@ -80,7 +81,7 @@ namespace Lexplosion.UI.WPF
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                 "Lexplosion", "Diagnostics", "ui-performance.log");
             PerformanceTelemetry.Configure(qaEnabled, qaPath);
-            UiStallMonitor.Start(App.Current.Dispatcher);
+            _uiStallMonitor = UiStallMonitor.Start(App.Current.Dispatcher);
 
 			_appCore = new AppCore(new WpfUiDispatcher(App.Current.Dispatcher), (key) => App.Current.Resources[key], RestartApp);
 
