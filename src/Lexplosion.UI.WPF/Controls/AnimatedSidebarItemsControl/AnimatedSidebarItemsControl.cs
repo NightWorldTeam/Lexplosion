@@ -96,7 +96,8 @@ namespace Lexplosion.UI.WPF.Controls
         {
             if (!(selected.DataContext is LeftPanelMenuItem item)) return;
 
-            // Run heavy page creation after the final indicator frame is rendered.
+            // Queue page creation below render/input priority once movement starts.
+            // Waiting for Completed added 260 ms of dead time before content appeared.
             var model = _navigationModel;
             Dispatcher.BeginInvoke(new Action(() =>
             {
@@ -204,9 +205,9 @@ namespace Lexplosion.UI.WPF.Controls
 
                 position.BeginAnimation(TranslateTransform.YProperty, null);
                 position.Y = target;
-                CommitSelectedContent(selected);
             };
             _position.BeginAnimation(TranslateTransform.YProperty, motion);
+            CommitSelectedContent(selected);
         }
     }
 }
