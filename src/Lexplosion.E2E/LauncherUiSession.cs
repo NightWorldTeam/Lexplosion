@@ -223,6 +223,12 @@ namespace Lexplosion.E2E
                     }
                 }
 
+                if (!File.Exists(destination))
+                    File.WriteAllText(destination,
+                        "# No QA telemetry recorded in this E2E run. " +
+                        "If attaching to an existing launcher, set LEXPLOSION_QA=1 before starting it." +
+                        Environment.NewLine);
+
                 string summary = Path.Combine(_artifactsDirectory, "performance-summary.txt");
                 var stalls = events.Where(e => e.Item2 == "ui.dispatcher.stall")
                     .Select(e => e.Item3).OrderBy(x => x).ToArray();
@@ -232,6 +238,7 @@ namespace Lexplosion.E2E
                 {
                     "Source: " + source,
                     "E2E started UTC: " + _startedUtc.ToString("O"),
+                    "Telemetry status: " + (events.Count == 0 ? "NO DATA" : "AVAILABLE"),
                     "Telemetry records: " + events.Count,
                     "UI stalls > threshold: " + stalls.Length,
                     "UI stall max ms: " + (stalls.Length == 0 ? "n/a" : stalls.Last().ToString("F1", CultureInfo.InvariantCulture)),
