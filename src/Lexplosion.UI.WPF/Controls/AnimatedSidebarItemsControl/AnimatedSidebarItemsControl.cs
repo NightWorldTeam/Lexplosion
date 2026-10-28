@@ -6,6 +6,8 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using Lexplosion.UI.WPF.Core;
+using Lexplosion.UI.WPF.Core.Objects;
+using Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu;
 
 namespace Lexplosion.UI.WPF.Controls
 {
@@ -17,6 +19,7 @@ namespace Lexplosion.UI.WPF.Controls
         private bool _positionInitialized;
         private bool _updatePending;
         private int _animationVersion;
+        private LeftPanelViewModel _navigationModel;
 
         static AnimatedSidebarItemsControl()
         {
@@ -27,7 +30,17 @@ namespace Lexplosion.UI.WPF.Controls
         public AnimatedSidebarItemsControl()
         {
             AddHandler(ToggleButton.CheckedEvent, new RoutedEventHandler(OnItemChecked));
-            Loaded += (sender, args) => QueuePositionUpdate();
+            Loaded += (sender, args) =>
+            {
+                AttachNavigationModel(DataContext as LeftPanelViewModel);
+                QueuePositionUpdate();
+            };
+            Unloaded += (sender, args) => AttachNavigationModel(null);
+            DataContextChanged += (sender, args) =>
+            {
+                if (IsLoaded)
+                    AttachNavigationModel(args.NewValue as LeftPanelViewModel);
+            };
             ItemContainerGenerator.StatusChanged += (sender, args) =>
             {
                 if (ItemContainerGenerator.Status == GeneratorStatus.ContainersGenerated)
@@ -51,17 +64,45 @@ namespace Lexplosion.UI.WPF.Controls
             QueuePositionUpdate();
         }
 
+        private void AttachNavigationModel(LeftPanelViewModel model)
+        {
+            if (ReferenceEquals(_navigationModel, model)) return;
+
+            _navigationModel?.SetContentNavigationDeferred(false);
+            _navigationModel = model;
+            _navigationModel?.SetContentNavigationDeferred(true);
+        }
+
         private void OnItemChecked(object sender, RoutedEventArgs e)
         {
-            if (e.OriginalSource is DefaultMainMenuTabItem selected && selected.IsChecked == true)
+            if (!(e.OriginalSource is DefaultMainMenuTabItem selected) ||
+                selected.IsChecked != true)
+                return;
+
+            // The binding to LeftPanelMenuItem.IsSelected may not have updated
+            // its source yet when the Checked routed event is raised.
+            Dispatcher.BeginInvoke(new Action(() =>
             {
-                // The item is already laid out on normal clicks. Preserve current
-                // motion when switching rapidly instead of restarting from zero.
-                if (selected.IsLoaded && selected.ActualHeight > 0 && _position != null)
+                if (!IsLoaded || selected.IsChecked != true) return;
+
+                if (selected.ActualHeight > 0 && _position != null)
                     MoveCaret(selected, true);
                 else
                     QueuePositionUpdate();
-            }
+            }), DispatcherPriority.Loaded);
+        }
+
+        private void CommitSelectedContent(DefaultMainMenuTabItem selected)
+        {
+            if (!(selected.DataContext is LeftPanelMenuItem item)) return;
+
+            // Run heavy page creation after the final indicator frame is rendered.
+            var model = _navigationModel;
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                if (IsLoaded && ReferenceEquals(model, _navigationModel))
+                    model?.CommitSelection(item);
+            }), DispatcherPriority.Background);
         }
 
         private void QueuePositionUpdate()
@@ -129,19 +170,25 @@ namespace Lexplosion.UI.WPF.Controls
                 _position.BeginAnimation(TranslateTransform.YProperty, null);
                 _position.Y = target;
                 _positionInitialized = true;
+                CommitSelectedContent(selected);
                 return;
             }
 
             double current = _position.Y;
             _position.BeginAnimation(TranslateTransform.YProperty, null);
             _position.Y = current;
-            if (Math.Abs(current - target) < 0.5) return;
+            if (Math.Abs(current - target) < 0.5)
+            {
+                CommitSelectedContent(selected);
+                return;
+            }
 
             // Duration/easing are defined by the external ControlTemplate in XAML.
             var animation = Template.Resources["SelectionMotion"] as DoubleAnimation;
             if (animation == null)
             {
                 _position.Y = target;
+                CommitSelectedContent(selected);
                 return;
             }
 
@@ -157,6 +204,7 @@ namespace Lexplosion.UI.WPF.Controls
 
                 position.BeginAnimation(TranslateTransform.YProperty, null);
                 position.Y = target;
+                CommitSelectedContent(selected);
             };
             _position.BeginAnimation(TranslateTransform.YProperty, motion);
         }
