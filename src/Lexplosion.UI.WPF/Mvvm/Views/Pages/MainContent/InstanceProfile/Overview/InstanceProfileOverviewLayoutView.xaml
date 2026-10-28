@@ -25,6 +25,7 @@
         </Grid>
 
         <controls:UIUnderlineTabControl
+            AutomationProperties.AutomationId="nav.group.instance.overview"
             x:Name="Tabs" Grid.Row="1"
             Loaded="OnOverviewTabsLoadedForInfo"
             SizeChanged="OnOverviewTabsSizeChangedForInfo"

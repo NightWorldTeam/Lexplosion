@@ -69,3 +69,7 @@ jobs:
 
       - name: Run NUnit tests
         run: dotnet test src/Lexplosion.Tests/Lexplosion.Tests.csproj -c Release --no-build --logger "console;verbosity=normal"
+
+      # Build-check FlaUI scenarios without driving a headless Windows runner.
+      - name: Compile E2E tests (do not execute without interactive desktop)
+        run: dotnet build src/Lexplosion.E2E/Lexplosion.E2E.csproj -c Release

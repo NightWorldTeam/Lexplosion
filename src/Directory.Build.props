@@ -7,7 +7,7 @@
     <LexplosionArchiveDirectory>$(MSBuildThisFileDirectory)DLL\</LexplosionArchiveDirectory>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(MSBuildProjectName)' != 'Lexplosion.Tests'">
+  <PropertyGroup Condition="'$(MSBuildProjectName)' != 'Lexplosion.Tests' And '$(MSBuildProjectName)' != 'Lexplosion.E2E'">
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 

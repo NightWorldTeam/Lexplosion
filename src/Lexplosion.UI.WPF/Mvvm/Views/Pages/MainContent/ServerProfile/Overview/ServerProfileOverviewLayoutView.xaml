@@ -13,6 +13,7 @@
     mc:Ignorable="d">
     <Grid Background="{DynamicResource PageSolidColorBrush}">
         <controls:UIUnderlineTabControl
+            AutomationProperties.AutomationId="nav.group.server.overview"
             Grid.Row="1"
             Background="{DynamicResource LayoutTabSolidColorBrush}"
             BorderBrush="{DynamicResource LayoutTabBorderSolidColorBrush}"
