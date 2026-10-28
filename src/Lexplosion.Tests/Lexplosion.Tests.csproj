@@ -1,13 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>net472</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FlaUI.Core" />
-    <PackageReference Include="FlaUI.UIA3" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="coverlet.collector" />
     <PackageReference Include="NUnit" />
@@ -17,6 +15,5 @@
   <ItemGroup>
     <ProjectReference Include="..\Lexplosion.Core\Lexplosion.Core.csproj" />
     <ProjectReference Include="..\Lexplosion.QA\Lexplosion.QA.csproj" />
-    <ProjectReference Include="..\Lexplosion.UI.WPF\Lexplosion.UI.WPF.csproj" />
   </ItemGroup>
 </Project>
