@@ -17,7 +17,7 @@ namespace Lexplosion.Tests
     [TestFixture]
     [Apartment(ApartmentState.STA)]
     [NonParallelizable]
-    [Explicit("Requires an interactive Windows desktop with Lexplosion already open.")]
+    [Category("E2E")]
     public sealed class LauncherNavigationE2ETests
     {
         private const int SettleMilliseconds = 320;
