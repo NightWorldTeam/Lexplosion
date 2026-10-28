@@ -21,9 +21,11 @@ $env:LEXPLOSION_QA = "1"
 ## Что смотреть
 
 - `ui.dispatcher.stall`: насколько дольше обычного интервала 100 мс ждал таймер UI-потока; регистрируется при задержке сверх нормы более 150 мс. Не является точным FPS/GPU-трекером.
+- `navigation.sidebar.<ViewModelType>`, `navigation.tabs.<ViewModelType>`, `navigation.page.<ViewModelType>`: момент начала смены страницы и тип ViewModel (только имена .NET-типов, не пользовательские данные).
 - `navigation.sidebar.commit`: время применения выбранного ViewModel в боковом меню.
 - `navigation.tabs.commit`: время подключения выбранного содержимого вкладки.
 - `navigation.page.prepare`: время между постановкой нового содержимого и началом WPF-перехода после layout.
+- `collection.filter.rebuild`: перестроение фильтрованной коллекции на UI-потоке дольше 20 мс.
 
 ## QA-сценарий
 
