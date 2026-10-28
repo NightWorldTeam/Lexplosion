@@ -80,6 +80,8 @@ namespace Lexplosion.UI.WPF
             string qaPath = Path.Combine(
                 LaunсherSettings.LauncherDataPath, "Diagnostics", "ui-performance.log");
             PerformanceTelemetry.Configure(qaEnabled, qaPath);
+            if (qaEnabled)
+                PerformanceTelemetry.Record("qa.launcher.start", 0);
             _uiStallMonitor = UiStallMonitor.Start(App.Current.Dispatcher);
 
 			_appCore = new AppCore(new WpfUiDispatcher(App.Current.Dispatcher), (key) => App.Current.Resources[key], RestartApp);
