@@ -29,6 +29,7 @@
         </Grid>
 
         <controls:UIUnderlineTabControl
+            AutomationProperties.AutomationId="nav.group.instance.settings"
             Grid.Row="1"
             Background="{DynamicResource LayoutTabSolidColorBrush}"
             BorderBrush="{DynamicResource LayoutTabBorderSolidColorBrush}"
