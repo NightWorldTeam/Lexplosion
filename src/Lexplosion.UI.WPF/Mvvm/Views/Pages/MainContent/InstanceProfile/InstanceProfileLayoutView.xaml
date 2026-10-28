@@ -21,6 +21,7 @@
         <ContentControl Content="{Binding LeftPanel}" KeyboardNavigation.IsTabStop="False" />
 
         <ContentControl
+            AutomationProperties.AutomationId="qa.content.instance"
             Grid.Column="1"
             Content="{Binding Content}"
             KeyboardNavigation.IsTabStop="False"
