@@ -106,7 +106,14 @@ namespace Lexplosion.UI.WPF.Controls
 
         public UIUnderlineTabControl()
         {
-            Loaded += (sender, e) => QueueUnderlineUpdate();
+            Loaded += (sender, e) =>
+            {
+                // A preselected item may have received its content after
+                // OnApplyTemplate without raising another selection event.
+                if (DisplayedContent == null)
+                    SetValue(DisplayedContentPropertyKey, SelectedContent);
+                QueueUnderlineUpdate();
+            };
             ItemContainerGenerator.StatusChanged += (sender, e) =>
             {
                 if (ItemContainerGenerator.Status == GeneratorStatus.ContainersGenerated)
