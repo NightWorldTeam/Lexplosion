@@ -9,6 +9,7 @@
     <File Path="../.github/workflows/build.yml" />
   </Folder>
   <Project Path="Lexplosion.Core/Lexplosion.Core.csproj" />
+  <Project Path="Lexplosion.QA/Lexplosion.QA.csproj" />
   <Project Path="Lexplosion.Tests/Lexplosion.Tests.csproj" />
   <Project Path="Lexplosion.UI.WPF/Lexplosion.UI.WPF.csproj" />
 </Solution>
