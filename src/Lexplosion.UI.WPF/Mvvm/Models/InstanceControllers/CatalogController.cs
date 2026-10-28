@@ -59,7 +59,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.InstanceControllers
         public void Add(InstanceModelBase instanceModelBase, [CallerMemberName] string member = "")
         {
             Runtime.DebugWrite($"{member} {instanceModelBase.Name}");
-            App.Current.Dispatcher.Invoke(() =>
+            _appCore.UiDispatcher.Invoke(() =>
             {
                 _instances.Add(instanceModelBase);
             });
@@ -69,7 +69,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.InstanceControllers
         {
             InstanceModelBase? instanceModelBase = _getInstanceModelByInstanceClient(instanceClient);
 
-            App.Current.Dispatcher.Invoke(() =>
+            _appCore.UiDispatcher.Invoke(() =>
             {
                 if (instanceModelBase == null) 
                 {
@@ -95,7 +95,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.InstanceControllers
             {
                 // задержка, чтобы успела анимация проиграть, так или иначе сборка удалена, далее только "визуальная часть".
                 Thread.Sleep(320);
-                App.Current.Dispatcher.Invoke(() =>
+                _appCore.UiDispatcher.Invoke(() =>
                 {
                     if (_instances.Contains(instanceModelBase))
                     {
@@ -107,7 +107,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.InstanceControllers
 
         public void Clear()
         {
-            App.Current.Dispatcher.Invoke(() => { 
+            _appCore.UiDispatcher.Invoke(() => { 
                 _instances.Clear();
             });
         }
