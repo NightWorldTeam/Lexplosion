@@ -6,6 +6,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using Lexplosion.UI.WPF.Core;
+using Lexplosion.QA;
 using Lexplosion.UI.WPF.Core.Objects;
 using Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu;
 
@@ -102,7 +103,8 @@ namespace Lexplosion.UI.WPF.Controls
             Dispatcher.BeginInvoke(new Action(() =>
             {
                 if (IsLoaded && ReferenceEquals(model, _navigationModel))
-                    model?.CommitSelection(item);
+                    using (PerformanceTelemetry.Measure("navigation.sidebar.commit", 8))
+                        model?.CommitSelection(item);
             }), DispatcherPriority.Background);
         }
 
