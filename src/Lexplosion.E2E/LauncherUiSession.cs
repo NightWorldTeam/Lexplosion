@@ -239,7 +239,8 @@ namespace Lexplosion.E2E
                     .Select(e => e.Item3).OrderBy(x => x).ToArray();
                 var inputLag = events.Where(e => e.Item2 == "ui.input.lag")
                     .Select(e => e.Item3).OrderBy(x => x).ToArray();
-                bool monitorStarted = events.Any(e => e.Item2 == "qa.input.monitor.start");
+                bool monitorStarted = events.Any(e => e.Item2 == "qa.input.monitor.start" ||
+                    e.Item2 == "qa.input.monitor.heartbeat" || e.Item2 == "ui.input.lag");
                 var prepare = events.Where(e => e.Item2 == "navigation.page.prepare")
                     .Select(e => e.Item3).OrderBy(x => x).ToArray();
                 File.WriteAllLines(summary, new[]
