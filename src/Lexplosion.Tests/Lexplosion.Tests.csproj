@@ -13,6 +13,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="UIAutomationClient" />
+    <Reference Include="UIAutomationTypes" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Lexplosion.Core\Lexplosion.Core.csproj" />
     <ProjectReference Include="..\Lexplosion.QA\Lexplosion.QA.csproj" />
     <ProjectReference Include="..\Lexplosion.UI.WPF\Lexplosion.UI.WPF.csproj" />
