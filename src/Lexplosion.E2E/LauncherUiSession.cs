@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Globalization;
+using System.Runtime.InteropServices;
 using System.Collections.Generic;
 using System.Threading;
 using FlaUI.Core.AutomationElements;
@@ -272,7 +273,11 @@ namespace Lexplosion.E2E
             // FlaUI captures screen pixels: activate the real window and
             // wait for its bounds to settle, otherwise other windows can leak
             // into screenshots during startup, resize and rapid navigation.
-            PrepareWindowCapture(window);
+            if (!PrepareWindowCapture(window))
+            {
+                MarkUnverifiedCapture(route);
+                return;
+            }
             string file = (++_captureIndex).ToString("D3") + "-" +
                 SafeText(route) + ".png";
             string path = Path.Combine(_artifactsDirectory, file);
@@ -289,7 +294,11 @@ namespace Lexplosion.E2E
             {
                 Window window = FindMainWindow();
                 if (window == null) return;
-                PrepareWindowCapture(window);
+                if (!PrepareWindowCapture(window))
+                {
+                    MarkUnverifiedCapture("failure-" + testName);
+                    return;
+                }
 
                 string path = Path.Combine(_artifactsDirectory, SafeText(testName) + ".png");
                 Capture.Element(window).ToFile(path);
@@ -303,18 +312,39 @@ namespace Lexplosion.E2E
             }
         }
 
-        private static void PrepareWindowCapture(Window window)
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetForegroundWindow();
+
+        private bool PrepareWindowCapture(Window window)
         {
-            window.Focus();
-            for (int attempt = 0; attempt < 8; attempt++)
+            var expected = window.Properties.NativeWindowHandle.ValueOrDefault;
+            if (expected == IntPtr.Zero) return false;
+
+            for (int attempt = 0; attempt < 10; attempt++)
             {
+                // FlaUI's capture is a screen rectangle, not a WPF render.
+                // Focus alone may not bring the window in front on Windows.
+                window.SetForeground();
                 var before = window.BoundingRectangle;
-                Thread.Sleep(120);
-                if (window.BoundingRectangle.Equals(before))
-                    return;
+                Thread.Sleep(150);
+                if (GetForegroundWindow() == expected &&
+                    window.BoundingRectangle.Equals(before) &&
+                    before.Width >= 500 && before.Height >= 300)
+                    return true;
             }
-            NUnit.Framework.TestContext.Progress.WriteLine(
-                "FlaUI screenshot warning: window bounds did not stabilize.");
+
+            return false;
+        }
+
+        private void MarkUnverifiedCapture(string route)
+        {
+            string message = "Window not foreground/stable; visual snapshot skipped: " + route;
+            NUnit.Framework.TestContext.Progress.WriteLine(message);
+            File.AppendAllText(Path.Combine(_artifactsDirectory, "visual-results.tsv"),
+                SafeText(route) + "\tUNVERIFIED\twindow-not-foreground-or-unstable" +
+                Environment.NewLine);
+            if (Environment.GetEnvironmentVariable("LEXPLOSION_E2E_STRICT_VISUAL") == "1")
+                NUnit.Framework.Assert.Fail(message);
         }
 
         private static string SafeText(string value)
