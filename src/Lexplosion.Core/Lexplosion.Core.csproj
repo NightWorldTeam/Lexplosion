@@ -28,6 +28,6 @@
   </ItemGroup>
 
   <Target Name="ArchiveCore" AfterTargets="Build">
-    <Exec Command="powershell -Command &quot;New-Item -ItemType Directory -Force -Path '$(SolutionDir)DLL'; Compress-Archive -Path '$(TargetPath)' -DestinationPath '$(SolutionDir)DLL\Lexplosion.Core.zip' -Force&quot;" />
+    <Exec Command="powershell -Command &quot;New-Item -ItemType Directory -Force -Path '$(LexplosionArchiveDirectory)'; Compress-Archive -Path '$(TargetPath)' -DestinationPath '$(LexplosionArchiveDirectory)Lexplosion.Core.zip' -Force&quot;" />
   </Target>
 </Project>
