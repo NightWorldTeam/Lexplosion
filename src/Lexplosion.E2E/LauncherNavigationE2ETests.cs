@@ -484,8 +484,22 @@ namespace Lexplosion.E2E
             Assert.That(bounds.Height, Is.GreaterThan(300), "Window height collapsed.");
             Assert.That(window.IsOffscreen, Is.False, "Main window became offscreen.");
             // Structural checks are not pixel-perfect proof of layout quality.
-            var visible = window.FindAllDescendants().Count(Visible);
-            Assert.That(visible, Is.GreaterThan(5), "New page has almost no accessible visuals.");
+            var descendants = window.FindAllDescendants();
+            Assert.That(descendants.Count(Visible), Is.GreaterThan(5),
+                "New page has almost no accessible visuals.");
+
+            var hosts = descendants.Where(e => e.AutomationId != null &&
+                e.AutomationId.StartsWith("qa.content.", StringComparison.Ordinal)).ToArray();
+            if (hosts.Length == 0)
+            {
+                _session.Record("render.content", "uia-hosts", 0, "UNVERIFIED.no-peers");
+                return;
+            }
+
+            Assert.That(hosts.Any(h => Visible(h) &&
+                h.BoundingRectangle.Width > 40 && h.BoundingRectangle.Height > 40),
+                Is.True, "Content host collapsed or is no longer visible.");
+            _session.Record("render.content", "uia-hosts", 0, "PASS");
         }
 
         private static string[] SidebarIds(Window window)
