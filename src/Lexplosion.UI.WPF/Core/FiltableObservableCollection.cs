@@ -1,4 +1,5 @@
 ﻿using Lexplosion.UI.WPF.Core.ViewModel;
+using Lexplosion.QA;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -65,27 +66,30 @@ namespace Lexplosion.UI.WPF.Core
             // TODO: Перевести на делегат, чтобы можно было использовать в любом MVVM проекте (пригодиться в avalonia)
             App.Current.Dispatcher.Invoke(() =>
             {
-                _filteredCollection.Clear();
-
-                foreach (var newItem in Source)
+                using (PerformanceTelemetry.Measure("collection.filter.rebuild", 20))
                 {
-                    if (Filter == null)
-                    {
-                        _filteredCollection.Add(newItem);
-                        continue;
-                    }
+                    _filteredCollection.Clear();
 
-                    if (Filter(newItem))
+                    foreach (var newItem in Source)
                     {
-                        _filteredCollection.Add(newItem);
+                        if (Filter == null)
+                        {
+                            _filteredCollection.Add(newItem);
+                            continue;
+                        }
+
+                        if (Filter(newItem))
+                        {
+                            _filteredCollection.Add(newItem);
+                        }
                     }
+                    CollectionChanged?.Invoke(
+                        this,
+                        new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset)
+                    );
+
+                    OnPropertyChanged(nameof(Count));
                 }
-                CollectionChanged?.Invoke(
-                    this,
-                    new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset)
-                );
-
-                OnPropertyChanged(nameof(Count));
             });
         }
 

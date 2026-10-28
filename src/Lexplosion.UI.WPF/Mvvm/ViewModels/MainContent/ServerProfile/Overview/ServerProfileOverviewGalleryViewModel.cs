@@ -4,7 +4,6 @@ using Lexplosion.UI.WPF.Core;
 using Lexplosion.UI.WPF.Core.ViewModel;
 using System;
 using System.Collections.ObjectModel;
-using System.Windows.Forms;
 using System.Windows.Input;
 
 namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.ServerProfile
@@ -32,7 +31,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.ServerProfile
             Runtime.TaskRun(() =>
             {
                 var images = minecraftServerInstance.GetImages();
-                App.Current.Dispatcher.Invoke(() =>
+                _appCore.UiDispatcher.Invoke(() =>
                 {
                     foreach (var i in images)
                     {

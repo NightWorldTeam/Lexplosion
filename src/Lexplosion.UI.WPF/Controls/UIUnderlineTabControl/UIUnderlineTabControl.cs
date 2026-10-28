@@ -6,6 +6,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using Lexplosion.UI.WPF.Core;
+using Lexplosion.QA;
 
 namespace Lexplosion.UI.WPF.Controls
 {
@@ -231,7 +232,7 @@ namespace Lexplosion.UI.WPF.Controls
 
             if (!afterAnimation)
             {
-                SetValue(DisplayedContentPropertyKey, content);
+                ApplyDisplayedContent(content);
                 return;
             }
 
@@ -240,8 +241,16 @@ namespace Lexplosion.UI.WPF.Controls
             Dispatcher.BeginInvoke(new Action(() =>
             {
                 if (version == _selectionVersion)
-                    SetValue(DisplayedContentPropertyKey, content);
+                    ApplyDisplayedContent(content);
             }), DispatcherPriority.Background);
+        }
+
+        private void ApplyDisplayedContent(object content)
+        {
+            if (PerformanceTelemetry.Enabled && content != null)
+                PerformanceTelemetry.Record("navigation.tabs." + content.GetType().Name, 0);
+            using (PerformanceTelemetry.Measure("navigation.tabs.commit", 8))
+                SetValue(DisplayedContentPropertyKey, content);
         }
 
         private void QueueUnderlineUpdate()
@@ -402,9 +411,11 @@ namespace Lexplosion.UI.WPF.Controls
 
                 position.BeginAnimation(TranslateTransform.XProperty, null);
                 position.X = left;
-                CommitContentNavigation(true);
             };
             position.BeginAnimation(TranslateTransform.XProperty, motion);
+            // Start page preparation after the next render opportunity,
+            // not after the full 200 ms underline animation.
+            CommitContentNavigation(true);
         }
 
         private void SetUnderlineWidth(double width)
