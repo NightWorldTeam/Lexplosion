@@ -269,6 +269,10 @@ namespace Lexplosion.E2E
         public void CaptureState(string route, bool compareBaseline)
         {
             Window window = WaitForMainWindow();
+            // FlaUI captures screen pixels: activate the real window and
+            // wait for its bounds to settle, otherwise other windows can leak
+            // into screenshots during startup, resize and rapid navigation.
+            PrepareWindowCapture(window);
             string file = (++_captureIndex).ToString("D3") + "-" +
                 SafeText(route) + ".png";
             string path = Path.Combine(_artifactsDirectory, file);
@@ -285,6 +289,7 @@ namespace Lexplosion.E2E
             {
                 Window window = FindMainWindow();
                 if (window == null) return;
+                PrepareWindowCapture(window);
 
                 string path = Path.Combine(_artifactsDirectory, SafeText(testName) + ".png");
                 Capture.Element(window).ToFile(path);
@@ -296,6 +301,20 @@ namespace Lexplosion.E2E
                 NUnit.Framework.TestContext.Progress.WriteLine(
                     "FlaUI could not capture screenshot: " + e.GetType().Name);
             }
+        }
+
+        private static void PrepareWindowCapture(Window window)
+        {
+            window.Focus();
+            for (int attempt = 0; attempt < 8; attempt++)
+            {
+                var before = window.BoundingRectangle;
+                Thread.Sleep(120);
+                if (window.BoundingRectangle.Equals(before))
+                    return;
+            }
+            NUnit.Framework.TestContext.Progress.WriteLine(
+                "FlaUI screenshot warning: window bounds did not stabilize.");
         }
 
         private static string SafeText(string value)
