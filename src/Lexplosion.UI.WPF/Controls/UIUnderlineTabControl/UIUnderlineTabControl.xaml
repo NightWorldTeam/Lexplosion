@@ -75,7 +75,11 @@
                                     VerticalAlignment="Bottom"
                                     Panel.ZIndex="100"
                                     Background="{DynamicResource ActivitySolidColorBrush}"
-                                    CornerRadius="5,5,0,0" />
+                                    CornerRadius="5,5,0,0">
+                                    <Border.RenderTransform>
+                                        <TranslateTransform X="0" />
+                                    </Border.RenderTransform>
+                                </Border>
 
                                 <TabPanel
                                     x:Name="HeaderPanel"
@@ -99,7 +103,7 @@
                             KeyboardNavigation.TabNavigation="Local">
                             <local:AnimatedContentControl x:Name="PART_AnimatedContent"
                                                           AnimationType="{TemplateBinding EffectiveContentAnimation}"
-                                                          Content="{TemplateBinding SelectedContent}" />
+                                                          Content="{TemplateBinding DisplayedContent}" />
                         </Border>
                     </Grid>
                     <ControlTemplate.Triggers>
