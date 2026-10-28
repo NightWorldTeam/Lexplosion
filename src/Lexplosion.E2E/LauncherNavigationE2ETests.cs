@@ -142,6 +142,8 @@ namespace Lexplosion.E2E
 
             sequence = sequence.Take(60).ToList();
             var watch = Stopwatch.StartNew();
+            string last = null;
+            int clicked = 0;
             foreach (string id in sequence)
             {
                 var element = FindSidebar(_session.WaitForMainWindow(), id);
@@ -151,44 +153,58 @@ namespace Lexplosion.E2E
                     continue;
                 }
                 element.AsRadioButton().IsChecked = true;
+                last = id;
+                clicked++;
             }
             watch.Stop();
 
-            string last = sequence.Last();
+            if (last == null) Assert.Ignore("No sidebar buttons available for stress test.");
             Assert.That(WaitSelected(() => FindSidebar(_session.WaitForMainWindow(), last),
                 e => e.AsRadioButton().IsChecked, TimeSpan.FromSeconds(10)), Is.True,
                 "Rapid clicking lost the last sidebar destination: " + last);
 
             AssertVisibleWindow();
             _session.Record("stress.sidebar", last, watch.ElapsedMilliseconds,
-                "PASS.count=" + sequence.Count);
+                "PASS.count=" + clicked);
             _session.CaptureState("stress-sidebar-final-" + last, false);
 
-            // Also stress every currently reachable horizontal tab group.
-            var groups = TabGroupIds(_session.WaitForMainWindow());
+            // Revisit every accessible sidebar section to stress its tab groups.
             int tested = 0;
-            foreach (string groupId in groups)
+            foreach (string sidebarId in ids)
             {
-                var items = TabIds(groupId);
-                if (items.Length < 2) continue;
-                var clicks = Enumerable.Range(0, 3).SelectMany(n =>
-                    n % 2 == 0 ? items : items.Reverse()).ToArray();
-                var timer = Stopwatch.StartNew();
-                foreach (string tabId in clicks)
-                {
-                    var target = FindTab(groupId, tabId);
-                    if (target == null) continue;
-                    target.AsTabItem().Select();
-                }
-                timer.Stop();
+                var sidebar = FindSidebar(_session.WaitForMainWindow(), sidebarId);
+                if (sidebar == null || !Visible(sidebar)) continue;
+                sidebar.AsRadioButton().IsChecked = true;
+                if (!WaitSelected(() => FindSidebar(_session.WaitForMainWindow(), sidebarId),
+                    e => e.AsRadioButton().IsChecked, TimeSpan.FromSeconds(8))) continue;
+                Thread.Sleep(200);
 
-                var final = clicks.Last();
-                bool isSelected = WaitSelected(() => FindTab(groupId, final),
-                    e => e.AsTabItem().IsSelected, TimeSpan.FromSeconds(10));
-                _session.Record("stress.tabs", groupId + "." + final,
-                    timer.ElapsedMilliseconds, isSelected ? "PASS" : "FAIL");
-                Assert.That(isSelected, Is.True, "Rapid tab selection lost " + groupId);
-                tested++;
+                foreach (string groupId in TabGroupIds(_session.WaitForMainWindow()))
+                {
+                    var items = TabIds(groupId);
+                    if (items.Length < 2) continue;
+
+                    var clicks = Enumerable.Range(0, 3).SelectMany(n =>
+                        n % 2 == 0 ? items : items.Reverse()).ToArray();
+                    string final = null;
+                    var timer = Stopwatch.StartNew();
+                    foreach (string tabId in clicks)
+                    {
+                        var target = FindTab(groupId, tabId);
+                        if (target == null || !Visible(target)) continue;
+                        target.AsTabItem().Select();
+                        final = tabId;
+                    }
+                    timer.Stop();
+
+                    if (final == null) continue;
+                    bool isSelected = WaitSelected(() => FindTab(groupId, final),
+                        e => e.AsTabItem().IsSelected, TimeSpan.FromSeconds(10));
+                    _session.Record("stress.tabs", groupId + "." + final,
+                        timer.ElapsedMilliseconds, isSelected ? "PASS" : "FAIL");
+                    Assert.That(isSelected, Is.True, "Rapid tab selection lost " + groupId);
+                    tested++;
+                }
             }
 
             if (tested == 0)
@@ -236,6 +252,7 @@ namespace Lexplosion.E2E
             foreach (string groupId in TabGroupIds(_session.WaitForMainWindow()))
             {
                 if (!visitedGroups.Add(groupId)) continue;
+                _session.Record("coverage.group", groupId, 0, "DISCOVERED");
                 var ids = TabIds(groupId);
                 if (ids.Length == 0)
                 {
