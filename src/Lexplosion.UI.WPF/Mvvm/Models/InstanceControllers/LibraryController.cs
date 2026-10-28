@@ -92,7 +92,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.InstanceControllers
 
         public void Add(InstanceModelBase instanceModelBase, [CallerMemberName] string member = "")
         {
-            App.Current.Dispatcher.Invoke(() =>
+            _appCore.UiDispatcher.Invoke(() =>
             {
                 Runtime.DebugWrite(instanceModelBase.Id, color: ConsoleColor.Red);
                 _instances.Add(instanceModelBase);
@@ -115,7 +115,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.InstanceControllers
                 instanceModelBase.UpdateInstancesGroup(SelectedGroup);
             }
 
-            App.Current.Dispatcher.Invoke(() =>
+            _appCore.UiDispatcher.Invoke(() =>
             {
                 if (instanceModelBase == null)
                 {
@@ -136,7 +136,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.InstanceControllers
         public InstanceModelBase? Add(InstanceClient instanceClient, InstanceDistribution instanceDistribution, [CallerMemberName] string member = "")
         {
             InstanceModelBase? instanceModelBase = null;
-            App.Current.Dispatcher.Invoke(() =>
+            _appCore.UiDispatcher.Invoke(() =>
             {
                 var args = new InstanceModelArgs(_appCore, instanceClient, _exportFunc, _setRunningGame, instanceDistribution, addToLibrary: (ic, id) => Add(ic, id), group: SelectedGroup);
                 instanceModelBase = new InstanceModelBase(args);
@@ -153,7 +153,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.InstanceControllers
         public InstanceModelBase? Add(InstanceClient instanceClient, ImportData? importData)
         {
             InstanceModelBase? instanceModelBase = null;
-            App.Current.Dispatcher.Invoke(() =>
+            _appCore.UiDispatcher.Invoke(() =>
             {
                 var args = new InstanceModelArgs(_appCore, instanceClient, _exportFunc, _setRunningGame, addToLibrary: (ic, id) => Add(ic, id), importData: importData, group: SelectedGroup);
                 instanceModelBase = new InstanceModelBase(args);
@@ -175,7 +175,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.InstanceControllers
             {
                 // задержка, чтобы успела анимация проиграть, так или иначе сборка удалена, далее только "визуальная часть".
                 Thread.Sleep(320);
-                App.Current.Dispatcher.Invoke(() =>
+                _appCore.UiDispatcher.Invoke(() =>
                 {
                     if (_instances.Contains(instanceModelBase))
                     {

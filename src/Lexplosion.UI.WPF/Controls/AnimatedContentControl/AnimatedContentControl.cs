@@ -6,6 +6,8 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using Lexplosion.UI.WPF.Core;
+using Lexplosion.QA;
+using System.Diagnostics;
 
 namespace Lexplosion.UI.WPF.Controls
 {
@@ -30,6 +32,7 @@ namespace Lexplosion.UI.WPF.Controls
         private int _transitionVersion;
         private bool _hasQueuedContent;
         private object _queuedContent;
+        private long _preparationStartedTick;
 
         // The transition state is exposed to the hosting TabControl, so tab input
         // can be locked for the actual animation lifetime (no hard-coded timers).
@@ -133,6 +136,10 @@ namespace Lexplosion.UI.WPF.Controls
                 return;
             }
 
+            if (PerformanceTelemetry.Enabled)
+                PerformanceTelemetry.Record("navigation.page." + newContent.GetType().Name, 0);
+            _preparationStartedTick = PerformanceTelemetry.Enabled ? Stopwatch.GetTimestamp() : 0;
+
             // Stage the incoming visual tree before starting the dissolve.
             // It must complete DataTemplate creation and layout while invisible.
             if (AnimationType == ContentControlAnimation.SoftReveal)
@@ -161,6 +168,13 @@ namespace Lexplosion.UI.WPF.Controls
                 // Never slide two native windows or attempt to capture them.
                 FinishTransition();
                 return;
+            }
+
+            if (_preparationStartedTick != 0)
+            {
+                PerformanceTelemetry.Record("navigation.page.prepare",
+                    (Stopwatch.GetTimestamp() - _preparationStartedTick) * 1000.0 / Stopwatch.Frequency, 20);
+                _preparationStartedTick = 0;
             }
 
             var oldPresenter = _current;

@@ -6,6 +6,7 @@ using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.UI.WPF.Core;
 using Lexplosion.UI.WPF.Core.Threading;
+using Lexplosion.QA;
 using Lexplosion.UI.WPF.Core.Notifications;
 using Lexplosion.UI.WPF.Core.Tools;
 using Lexplosion.UI.WPF.Extensions;
@@ -47,6 +48,7 @@ namespace Lexplosion.UI.WPF
 		internal static event Action MainWindowShowed;
 
 		private static App _app = new App();
+        private static UiStallMonitor _uiStallMonitor;
 
 		private static double _leftPos;
 		private static double _topPos;
@@ -72,6 +74,14 @@ namespace Lexplosion.UI.WPF
 			//return;
 			// Подписываемся на эвент для загрузки всех строенных dll'ников
 			AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
+
+            // Local, opt-in QA telemetry. Never transmits data.
+            bool qaEnabled = Environment.GetEnvironmentVariable("LEXPLOSION_QA") == "1";
+            string qaPath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "Lexplosion", "Diagnostics", "ui-performance.log");
+            PerformanceTelemetry.Configure(qaEnabled, qaPath);
+            _uiStallMonitor = UiStallMonitor.Start(App.Current.Dispatcher);
 
 			_appCore = new AppCore(new WpfUiDispatcher(App.Current.Dispatcher), (key) => App.Current.Resources[key], RestartApp);
 

@@ -6,6 +6,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using Lexplosion.UI.WPF.Core;
+using Lexplosion.QA;
 using Lexplosion.UI.WPF.Core.Objects;
 using Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu;
 
@@ -96,12 +97,18 @@ namespace Lexplosion.UI.WPF.Controls
         {
             if (!(selected.DataContext is LeftPanelMenuItem item)) return;
 
-            // Run heavy page creation after the final indicator frame is rendered.
+            // Queue page creation below render/input priority once movement starts.
+            // Waiting for Completed added 260 ms of dead time before content appeared.
             var model = _navigationModel;
             Dispatcher.BeginInvoke(new Action(() =>
             {
                 if (IsLoaded && ReferenceEquals(model, _navigationModel))
-                    model?.CommitSelection(item);
+                    if (PerformanceTelemetry.Enabled && item.Content != null)
+                        PerformanceTelemetry.Record("navigation.sidebar." +
+                            item.Content.GetType().Name, 0);
+
+                    using (PerformanceTelemetry.Measure("navigation.sidebar.commit", 8))
+                        model?.CommitSelection(item);
             }), DispatcherPriority.Background);
         }
 
@@ -204,9 +211,9 @@ namespace Lexplosion.UI.WPF.Controls
 
                 position.BeginAnimation(TranslateTransform.YProperty, null);
                 position.Y = target;
-                CommitSelectedContent(selected);
             };
             _position.BeginAnimation(TranslateTransform.YProperty, motion);
+            CommitSelectedContent(selected);
         }
     }
 }

@@ -230,7 +230,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.InstanceProfile
 
         private void OnStateChanged()
         {
-            App.Current.Dispatcher.Invoke(() =>
+            _appCore.UiDispatcher.Invoke(() =>
             {
                 GenerateAdditionalInfo();
             });

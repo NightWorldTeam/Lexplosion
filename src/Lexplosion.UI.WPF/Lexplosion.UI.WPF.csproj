@@ -61,6 +61,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Lexplosion.Core\Lexplosion.Core.csproj" />
+    <ProjectReference Include="..\Lexplosion.QA\Lexplosion.QA.csproj" />
   </ItemGroup>
 
   <ItemGroup>
