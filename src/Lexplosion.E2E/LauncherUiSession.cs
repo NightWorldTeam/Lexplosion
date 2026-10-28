@@ -46,6 +46,10 @@ namespace Lexplosion.E2E
         public string ArtifactsDirectory => _artifactsDirectory;
         public bool OwnsProcess => _ownsProcess;
 
+        // Raw input stress tests need the intended window on top before
+        // dispatching physical mouse events to cached screen coordinates.
+        public bool ActivateForInteraction() => PrepareWindowCapture(WaitForMainWindow());
+
         public static LauncherUiSession Start()
         {
             // Do not kill or restart a launcher owned by the user.
