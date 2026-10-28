@@ -113,7 +113,12 @@ namespace Lexplosion.UI.WPF.Controls
             {
                 _underlineUpdatePending = false;
                 if (IsLoaded && ItemContainerGenerator.Status == GeneratorStatus.ContainersGenerated)
+                {
+                    if (SelectedIndex < 0 && Items.Count > 0)
+                        SelectedIndex = 0;
+
                     UpdateUnderline();
+                }
             }), DispatcherPriority.Loaded);
         }
 
@@ -121,6 +126,11 @@ namespace Lexplosion.UI.WPF.Controls
         {
             if (_selectedTabItem != null)
                 _selectedTabItem.SizeChanged -= OnTabItemSizeChanged;
+
+            // During initialization or a collection reset there may be no selected tab.
+            // ContainerFromIndex(-1) can throw inside WPF's RealizedItemBlock.ContainerAt.
+            if (SelectedIndex < 0 || SelectedIndex >= Items.Count)
+                return;
 
             _selectedTabItem = ItemContainerGenerator.ContainerFromIndex(SelectedIndex) as TabItem
                                ?? SelectedItem as TabItem;

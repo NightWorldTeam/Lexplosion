@@ -1,107 +1,172 @@
-<UserControl x:Class="Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.InstanceProfile.InstanceProfileOverviewView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Grid x:Name="OverviewRoot" ClipToBounds="True"
-          Background="{DynamicResource PageSolidColorBrush}"
-          SizeChanged="OnOverviewSizeChanged">
+<UserControl
+    x:Class="Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.InstanceProfile.InstanceProfileOverviewView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:instanceprofile="clr-namespace:Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.InstanceProfile"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DataContext="{d:DesignInstance Type=instanceprofile:InstanceProfileOverviewViewModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+
+    <Grid
+        x:Name="OverviewRoot"
+        Background="{DynamicResource PageSolidColorBrush}"
+        ClipToBounds="True"
+        SizeChanged="OnOverviewSizeChanged">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition x:Name="DrawerColumn" Width="0"/>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <!-- WebView2 is a native HWND. Reserve a real column for the WPF drawer,
-             never draw the drawer over the browser's airspace. -->
-        <Grid x:Name="ContentHost" Grid.Column="0" ClipToBounds="True"
-              Background="{DynamicResource PageSolidColorBrush}">
-            <Grid x:Name="BrowserHost" ClipToBounds="True"
-                  Background="{DynamicResource PageSolidColorBrush}"/>
+        <!-- Description. WebView2 is created in code because it needs an HWND. -->
+        <Grid
+            Grid.Column="0"
+            Background="{DynamicResource PageSolidColorBrush}"
+            ClipToBounds="True">
+            <Grid
+                x:Name="BrowserHost"
+                Background="{DynamicResource PageSolidColorBrush}"
+                ClipToBounds="True" />
 
-            <!-- In-place loader: no Popup, no CircleLoader template (which rendered
-                 the oversized white rotating square on some themes). -->
-            <Grid x:Name="LoadingOverlay" Panel.ZIndex="1"
-                  Background="{DynamicResource PageSolidColorBrush}"
-                  IsHitTestVisible="False" Visibility="Visible">
-                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
-                            Margin="20" MaxWidth="320">
-                    <Grid x:Name="DescriptionLoader" Width="36" Height="36"
-                          HorizontalAlignment="Center">
-                        <Path Data="M 18,3 A 15,15 0 0 1 33,18"
-                              Stroke="{DynamicResource ActivitySolidColorBrush}" StrokeThickness="3.4"
-                              StrokeStartLineCap="Round" StrokeEndLineCap="Round">
-                            <Path.RenderTransform>
-                                <RotateTransform CenterX="18" CenterY="18"/>
-                            </Path.RenderTransform>
-                            <Path.Triggers>
-                                <EventTrigger RoutedEvent="Loaded">
-                                    <BeginStoryboard>
-                                        <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)"
-                                                             From="0" To="360" Duration="0:0:0.85"
-                                                             RepeatBehavior="Forever"/>
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </EventTrigger>
-                            </Path.Triggers>
-                        </Path>
-                    </Grid>
-                    <TextBlock x:Name="BrowserStatus" Text="Загрузка полного описания…"
-                               Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
-                               HorizontalAlignment="Center" TextAlignment="Center"
-                               TextWrapping="Wrap" Margin="0,14,0,0" FontSize="13"/>
+            <Grid
+                x:Name="LoadingOverlay"
+                Panel.ZIndex="1"
+                Background="{DynamicResource PageSolidColorBrush}"
+                IsHitTestVisible="False">
+                <StackPanel
+                    MaxWidth="320"
+                    Margin="20"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+                    <Path
+                        x:Name="DescriptionLoader"
+                        Width="36"
+                        Height="36"
+                        HorizontalAlignment="Center"
+                        Data="M 18,3 A 15,15 0 0 1 33,18"
+                        Stroke="{DynamicResource ActivitySolidColorBrush}"
+                        StrokeThickness="3.4"
+                        StrokeStartLineCap="Round"
+                        StrokeEndLineCap="Round">
+                        <Path.RenderTransform>
+                            <RotateTransform CenterX="18" CenterY="18" />
+                        </Path.RenderTransform>
+                        <Path.Triggers>
+                            <EventTrigger RoutedEvent="Loaded">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation
+                                            Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)"
+                                            From="0"
+                                            To="360"
+                                            Duration="0:0:0.85"
+                                            RepeatBehavior="Forever" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </Path.Triggers>
+                    </Path>
+
+                    <TextBlock
+                        x:Name="BrowserStatus"
+                        Margin="0,14,0,0"
+                        HorizontalAlignment="Center"
+                        FontSize="13"
+                        Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                        Text="Загрузка полного описания…"
+                        TextAlignment="Center"
+                        TextWrapping="Wrap" />
                 </StackPanel>
             </Grid>
         </Grid>
 
-        <!-- Non-modal right drawer. Scrolls separately; no Popup/HwndHost collision. -->
-        <Border x:Name="InformationDrawer" Grid.Column="1"
-                Visibility="Collapsed" ClipToBounds="True"
-                Background="{DynamicResource LayoutTabSolidColorBrush}"
-                BorderBrush="{DynamicResource LayoutTabBorderSolidColorBrush}" BorderThickness="1,0,0,0">
+        <!-- Compact information panel; Auto column reserves space beside WebView2. -->
+        <Border
+            x:Name="InformationDrawer"
+            Grid.Column="1"
+            Width="360"
+            Background="{DynamicResource LayoutTabSolidColorBrush}"
+            BorderBrush="{DynamicResource LayoutTabBorderSolidColorBrush}"
+            BorderThickness="1,0,0,0"
+            ClipToBounds="True"
+            Visibility="Collapsed">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <Grid Margin="20,16,16,14">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Text="Информация о сборке" FontSize="17"
-                               FontWeight="SemiBold" VerticalAlignment="Center"
-                               Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"/>
-                    <!-- Compact drawer closes with the very same button in the tab
-                         header that opened it (i -> ×); no displaced second X. -->
-                </Grid>
-                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto"
-                              HorizontalScrollBarVisibility="Disabled" Padding="20,2,14,20">
+
+                <TextBlock
+                    Margin="20,16,16,14"
+                    FontSize="17"
+                    FontWeight="SemiBold"
+                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                    Text="{DynamicResource Information}" />
+
+                <ScrollViewer
+                    Grid.Row="1"
+                    Padding="20,2,14,20"
+                    HorizontalScrollBarVisibility="Disabled"
+                    VerticalScrollBarVisibility="Auto">
                     <StackPanel>
-                        <TextBlock Text="Автор" FontSize="12"
-                                   Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"/>
-                        <TextBlock x:Name="DrawerAuthorText" FontSize="15" FontWeight="SemiBold"
-                                   Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                   TextWrapping="Wrap" Margin="0,5,0,14"/>
-                        <Separator Background="{DynamicResource LayoutTabBorderSolidColorBrush}" Margin="0,0,0,14"/>
-                        <TextBlock Text="Обновлено" FontSize="12"
-                                   Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"/>
-                        <TextBlock x:Name="DrawerUpdatedText" FontSize="15" FontWeight="SemiBold"
-                                   Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                   TextWrapping="Wrap" Margin="0,5,0,14"/>
-                        <Separator Background="{DynamicResource LayoutTabBorderSolidColorBrush}" Margin="0,0,0,14"/>
-                        <TextBlock Text="Категории" FontSize="12"
-                                   Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
-                                   Margin="0,0,0,10"/>
-                        <ItemsControl x:Name="DrawerCategories">
+                        <TextBlock
+                            FontSize="12"
+                            Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                            Text="{DynamicResource Author}" />
+                        <TextBlock
+                            Margin="0,5,0,14"
+                            FontSize="15"
+                            FontWeight="SemiBold"
+                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                            Text="{Binding Model.Author}"
+                            TextWrapping="Wrap" />
+
+                        <Separator
+                            Margin="0,0,0,14"
+                            Background="{DynamicResource LayoutTabBorderSolidColorBrush}" />
+
+                        <TextBlock
+                            FontSize="12"
+                            Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                            Text="{DynamicResource Updated}" />
+                        <TextBlock
+                            Margin="0,5,0,14"
+                            FontSize="15"
+                            FontWeight="SemiBold"
+                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                            Text="{Binding Model.Updated}"
+                            TextWrapping="Wrap" />
+
+                        <Separator
+                            Margin="0,0,0,14"
+                            Background="{DynamicResource LayoutTabBorderSolidColorBrush}" />
+
+                        <TextBlock
+                            Margin="0,0,0,10"
+                            FontSize="12"
+                            Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                            Text="{DynamicResource Categories}" />
+                        <ItemsControl ItemsSource="{Binding Model.Categories}">
                             <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel />
+                                </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border BorderBrush="{DynamicResource LayoutTabBorderSolidColorBrush}" BorderThickness="1"
-                                            Background="{DynamicResource LayoutTabSolidColorBrush}" CornerRadius="5"
-                                            Padding="9,5" Margin="0,0,6,7">
-                                        <TextBlock Text="{Binding}" FontSize="12"
-                                                   Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"/>
+                                    <Border
+                                        Margin="0,0,6,7"
+                                        Padding="9,5"
+                                        Background="{DynamicResource LayoutTabSolidColorBrush}"
+                                        BorderBrush="{DynamicResource LayoutTabBorderSolidColorBrush}"
+                                        BorderThickness="1"
+                                        CornerRadius="5">
+                                        <TextBlock
+                                            FontSize="12"
+                                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                            Text="{Binding}" />
                                     </Border>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
