@@ -266,17 +266,29 @@ namespace Lexplosion.E2E
             Assert.That(status, Is.EqualTo("Telemetry status: AVAILABLE"),
                 "No QA data collected. Launch Lexplosion with LEXPLOSION_QA=1.");
 
-            double threshold = ReadBudget("LEXPLOSION_E2E_MAX_STALL_MS", 700);
-            string worst = lines.FirstOrDefault(l => l.StartsWith("UI stall max ms: "));
-            var raw = (worst ?? "").Replace("UI stall max ms: ", "");
-            if (raw == "n/a") return; // No threshold-exceeding UI stalls at all.
+            string probe = lines.FirstOrDefault(l => l.StartsWith("Input probe status: "));
+            Assert.That(probe, Is.EqualTo("Input probe status: ACTIVE"),
+                "UI input latency monitor did not run. Update/restart the launcher with LEXPLOSION_QA=1.");
+
+            // Input-priority scheduling delay is the budget metric. Background
+            // DispatcherTimer lateness is still reported for comparison but
+            // can be inflated by test inspection and normal rendering traffic.
+            double threshold = ReadBudget("LEXPLOSION_E2E_MAX_INPUT_LAG_MS", 700);
+            string worst = lines.FirstOrDefault(l => l.StartsWith("UI input lag max ms: "));
+            var raw = (worst ?? "").Replace("UI input lag max ms: ", "");
+            if (raw == "n/a")
+            {
+                _session.Record("performance.budget", "ui.input.lag", 0, "PASS.no-delays-above-150ms");
+                return;
+            }
 
             Assert.That(double.TryParse(raw, NumberStyles.Float,
-                CultureInfo.InvariantCulture, out double maxStall), Is.True);
-            _session.Record("performance.budget", "ui.dispatcher.stall",
-                (long)Math.Ceiling(maxStall), maxStall <= threshold ? "PASS" : "FAIL");
-            Assert.That(maxStall, Is.LessThanOrEqualTo(threshold),
-                "UI Dispatcher exceeded " + threshold + " ms. Check attached ui-performance.log.");
+                CultureInfo.InvariantCulture, out double maxLag), Is.True);
+            _session.Record("performance.budget", "ui.input.lag",
+                (long)Math.Ceiling(maxLag), maxLag <= threshold ? "PASS" : "FAIL");
+            Assert.That(maxLag, Is.LessThanOrEqualTo(threshold),
+                "UI input-priority queue latency exceeded " + threshold +
+                " ms. Check attached ui-performance.log and performance-summary.txt.");
         }
 
         private static double ReadBudget(string envKey, double fallback)
