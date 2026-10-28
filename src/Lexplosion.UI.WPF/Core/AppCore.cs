@@ -1,5 +1,5 @@
 ﻿
-using Lexplosion.UI.Abstractions;
+using Lexplosion.UI.Core.Threading;
 using Lexplosion.UI.WPF.Commands;
 using Lexplosion.UI.WPF.Controls.Message.Core;
 using Lexplosion.UI.WPF.Core.Notifications;
