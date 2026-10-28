@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using FlaUI.Core.AutomationElements;
@@ -209,6 +211,42 @@ namespace Lexplosion.E2E
 
             if (tested == 0)
                 _session.Record("coverage.skip", "stress.tabs.unavailable", 0, "SKIP");
+        }
+
+        [Test, Order(100)]
+        public void DispatcherPerformanceDoesNotExceedQaBudget()
+        {
+            // An actual profiler is still needed to attribute CPU stacks.
+            // This test makes missing QA data and severe UI starvation visible
+            // as failures, not just interesting numbers in an attachment.
+            Thread.Sleep(200);
+            _session.CapturePerformanceLog();
+            string report = Path.Combine(_session.ArtifactsDirectory, "performance-summary.txt");
+            Assert.That(File.Exists(report), Is.True, "Missing performance report.");
+
+            var lines = File.ReadAllLines(report);
+            string status = lines.FirstOrDefault(l => l.StartsWith("Telemetry status: "));
+            Assert.That(status, Is.EqualTo("Telemetry status: AVAILABLE"),
+                "No QA data collected. Launch Lexplosion with LEXPLOSION_QA=1.");
+
+            double threshold = ReadBudget("LEXPLOSION_E2E_MAX_STALL_MS", 700);
+            string worst = lines.FirstOrDefault(l => l.StartsWith("UI stall max ms: "));
+            var raw = (worst ?? "").Replace("UI stall max ms: ", "");
+            if (raw == "n/a") return; // No threshold-exceeding UI stalls at all.
+
+            Assert.That(double.TryParse(raw, NumberStyles.Float,
+                CultureInfo.InvariantCulture, out double maxStall), Is.True);
+            _session.Record("performance.budget", "ui.dispatcher.stall",
+                (long)Math.Ceiling(maxStall), maxStall <= threshold ? "PASS" : "FAIL");
+            Assert.That(maxStall, Is.LessThanOrEqualTo(threshold),
+                "UI Dispatcher exceeded " + threshold + " ms. Check attached ui-performance.log.");
+        }
+
+        private static double ReadBudget(string envKey, double fallback)
+        {
+            string raw = Environment.GetEnvironmentVariable(envKey);
+            return double.TryParse(raw, NumberStyles.Float, CultureInfo.InvariantCulture,
+                out double value) && value >= 0 ? value : fallback;
         }
 
         [Test]
