@@ -247,6 +247,8 @@ namespace Lexplosion.UI.WPF.Controls
 
         private void ApplyDisplayedContent(object content)
         {
+            if (PerformanceTelemetry.Enabled && content != null)
+                PerformanceTelemetry.Record("navigation.tabs." + content.GetType().Name, 0);
             using (PerformanceTelemetry.Measure("navigation.tabs.commit", 8))
                 SetValue(DisplayedContentPropertyKey, content);
         }
