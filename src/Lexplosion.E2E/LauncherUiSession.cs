@@ -142,6 +142,49 @@ namespace Lexplosion.E2E
         {
             if (File.Exists(_reportFile))
                 NUnit.Framework.TestContext.AddTestAttachment(_reportFile, "FlaUI navigation timings");
+
+            var visual = Path.Combine(_artifactsDirectory, "visual-results.tsv");
+            if (File.Exists(visual))
+                NUnit.Framework.TestContext.AddTestAttachment(visual, "Visual baseline checks");
+
+            WriteCoverageSummary();
+        }
+
+        private void WriteCoverageSummary()
+        {
+            if (!File.Exists(_reportFile)) return;
+
+            var lines = File.ReadAllLines(_reportFile);
+            var passed = lines.Count(line => line.Contains("\tPASS"));
+            var failed = lines.Count(line => line.Contains("\tFAIL"));
+            var skipped = lines.Count(line => line.Contains("\tSKIP"));
+            var groups = new[]
+            {
+                "nav.group.settings", "nav.group.friends", "nav.group.multiplayer",
+                "nav.group.instance.overview", "nav.group.instance.settings",
+                "nav.group.instance.addons", "nav.group.server.overview",
+                "nav.group.instance.share"
+            };
+            string report = Path.Combine(_artifactsDirectory, "coverage-summary.txt");
+            var output = new List<string>
+            {
+                "Lexplosion dynamic navigation E2E",
+                "E2E start UTC: " + _startedUtc.ToString("O"),
+                "Passing navigation events: " + passed,
+                "Failing navigation events: " + failed,
+                "Skipped navigation events: " + skipped,
+                "Note: profiles and modals require safe fixture data to become accessible."
+            };
+            foreach (var group in groups)
+            {
+                bool discovered = lines.Any(line => line.Contains("\t" + group + "\t") &&
+                    line.Contains("\tDISCOVERED")) ||
+                    lines.Any(line => line.Contains("\t" + group + "."));
+                output.Add(group + ": " + (discovered ? "REACHED" : "NOT COVERED"));
+            }
+
+            File.WriteAllLines(report, output);
+            NUnit.Framework.TestContext.AddTestAttachment(report, "E2E navigation coverage");
         }
 
         public void CapturePerformanceLog()
