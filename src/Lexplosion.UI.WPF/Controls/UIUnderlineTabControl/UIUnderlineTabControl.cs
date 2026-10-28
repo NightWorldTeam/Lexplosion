@@ -171,7 +171,8 @@ namespace Lexplosion.UI.WPF.Controls
                 _previousSelectedIndex = SelectedIndex;
             }
 
-            base.OnSelectionChanged(e);
+            using (PerformanceTelemetry.Measure("navigation.tabs.selection", 10))
+                base.OnSelectionChanged(e);
 
             if (ReferenceEquals(e.OriginalSource, this))
                 QueueContentNavigation();
@@ -272,6 +273,8 @@ namespace Lexplosion.UI.WPF.Controls
 
         private void UpdateUnderline()
         {
+            using (PerformanceTelemetry.Measure("navigation.tabs.underline", 10))
+            {
             if (_selectedTabItem != null)
                 _selectedTabItem.SizeChanged -= OnTabItemSizeChanged;
 
@@ -295,6 +298,7 @@ namespace Lexplosion.UI.WPF.Controls
             var padding = GetTemplateBorderPadding(_selectedTabItem);
             SetUnderlineWidth(Math.Max(0, _selectedTabItem.ActualWidth - padding.Left - padding.Right));
             MoveLine(padding.Left);
+            }
         }
 
         #endregion Public & Protected Methods

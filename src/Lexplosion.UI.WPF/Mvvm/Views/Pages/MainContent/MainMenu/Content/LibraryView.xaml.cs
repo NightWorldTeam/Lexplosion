@@ -18,6 +18,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.MainMenu
 		LibraryViewModel _viewModel;
 		static int posIndex = 0;
 		bool _isFilterHidden = false;
+        private INotifyCollectionChanged _observedInstances;
 
 		public LibraryView()
 		{
@@ -31,7 +32,15 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.MainMenu
 		{
 			Runtime.DebugWrite("OnDataContextChanged");
 
-			_viewModel = (LibraryViewModel)DataContext;
+            if (_viewModel != null)
+            {
+                if (_observedInstances != null)
+                    _observedInstances.CollectionChanged -= OnInstanceListChanged;
+                _viewModel.InstanceProfileOpened -= OnInstanceProfileOpened;
+                _observedInstances = null;
+            }
+
+			_viewModel = DataContext as LibraryViewModel;
 
 			if (_viewModel == null)
 			{
@@ -40,16 +49,16 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.MainMenu
 				return;
 			}
 
-            (_viewModel.Model.InstanceController.Instances as INotifyCollectionChanged).CollectionChanged += OnInstanceListChanged;
-
-
-            _viewModel.InstanceProfileOpened += (instanceModel) =>
-			{
-				posIndex = GetFirstVisibleItemIndex();
-			};
-
-			InstanceModelBase.GlobalDeletedEvent += InstanceModelBase_GlobalDeletedEvent;
+            _observedInstances = _viewModel.Model.InstanceController.Instances as INotifyCollectionChanged;
+            if (_observedInstances != null)
+                _observedInstances.CollectionChanged += OnInstanceListChanged;
+            _viewModel.InstanceProfileOpened += OnInstanceProfileOpened;
 		}
+
+        private void OnInstanceProfileOpened(InstanceModelBase model)
+        {
+            posIndex = GetFirstVisibleItemIndex();
+        }
 
         private void OnInstanceListChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
@@ -63,18 +72,11 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.MainMenu
             }
         }
 
-        private void InstanceModelBase_GlobalDeletedEvent(InstanceModelBase obj)
-		{
-			//if (_viewModel.Model.InstancesCollectionViewSource.Count == 1)
-			//{
-			//	Runtime.DebugWrite("Clear VirtualizingWrapPanel cache");
-			//	var panel = InstanceList.FindVisualDescendant<VirtualizingWrapPanel>();
-			//	panel.ClearItemSizeCache();
-			//}
-		}
 
 		private int GetFirstVisibleItemIndex()
 		{
+            using (Lexplosion.QA.PerformanceTelemetry.Measure("library.visible-index.scan", 10))
+            {
 			var scrollViewer = InstanceList.FindVisualDescendant<ScrollViewer>();
 			if (scrollViewer == null) return -1;
 
@@ -89,6 +91,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.MainMenu
 			}
 
 			return -1; // Если ничего не найдено
+            }
 		}
 
 		private void OnInstanceListLoaded(object sender, System.Windows.RoutedEventArgs e)
@@ -108,7 +111,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.MainMenu
 
 				if (posIndex > 0 && posIndex < InstanceList.Items.Count)
 				{
-					var item = InstanceList.Items[posIndex + 2];
+					var item = InstanceList.Items[Math.Min(posIndex + 2, InstanceList.Items.Count - 1)];
 					InstanceList.ScrollIntoView(item);
 
 					// Ожидание рендеринга элемента

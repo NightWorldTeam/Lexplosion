@@ -243,6 +243,30 @@ namespace Lexplosion.E2E
                     e.Item2 == "qa.input.monitor.heartbeat" || e.Item2 == "ui.input.lag");
                 var prepare = events.Where(e => e.Item2 == "navigation.page.prepare")
                     .Select(e => e.Item3).OrderBy(x => x).ToArray();
+                var work = events.Where(e => e.Item2.StartsWith("ui.dispatcher.work.",
+                    StringComparison.Ordinal)).Select(e => e.Item3).OrderBy(x => x).ToArray();
+                var hotspots = events.Where(e =>
+                    e.Item2.StartsWith("ui.dispatcher.work.", StringComparison.Ordinal) ||
+                    e.Item2.StartsWith("navigation.page.", StringComparison.Ordinal) ||
+                    e.Item2.StartsWith("navigation.tabs.", StringComparison.Ordinal) ||
+                    e.Item2.StartsWith("navigation.sidebar.", StringComparison.Ordinal) ||
+                    e.Item2.StartsWith("library.", StringComparison.Ordinal) ||
+                    e.Item2 == "collection.filter.rebuild")
+                    .GroupBy(e => e.Item2)
+                    .Select(group => new
+                    {
+                        Name = group.Key,
+                        Values = group.Select(e => e.Item3).OrderBy(x => x).ToArray()
+                    })
+                    .OrderByDescending(item => item.Values.Last())
+                    .ToArray();
+                string hotspotFile = Path.Combine(_artifactsDirectory, "performance-hotspots.tsv");
+                File.WriteAllLines(hotspotFile, new[] { "operation\tcount\tmax_ms\tp95_ms" }
+                    .Concat(hotspots.Select(item =>
+                        item.Name + "\t" + item.Values.Length + "\t" +
+                        item.Values.Last().ToString("F1", CultureInfo.InvariantCulture) +
+                        "\t" + Percentile(item.Values, 0.95))));
+                NUnit.Framework.TestContext.AddTestAttachment(hotspotFile, "QA slow-operation hotspots");
                 File.WriteAllLines(summary, new[]
                 {
                     "Source: " + source,
@@ -257,6 +281,9 @@ namespace Lexplosion.E2E
                     "UI input lag max ms: " + (inputLag.Length == 0 ? "n/a" :
                         inputLag.Last().ToString("F1", CultureInfo.InvariantCulture)),
                     "UI input lag p95 ms: " + Percentile(inputLag, 0.95),
+                    "Long Dispatcher operations >40ms: " + work.Length,
+                    "Long Dispatcher operation max ms: " + (work.Length == 0 ? "n/a" :
+                        work.Last().ToString("F1", CultureInfo.InvariantCulture)),
                     "Page prepare count: " + prepare.Length,
                     "Page prepare p95 ms: " + Percentile(prepare, 0.95),
                     "Input lag is input-priority queue delay; legacy stall is Background timer lateness; neither is GPU frame time."

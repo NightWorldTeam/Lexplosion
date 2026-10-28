@@ -21,6 +21,8 @@ $env:LEXPLOSION_QA = "1"
 ## Что смотреть
 
 - `ui.dispatcher.stall`: насколько дольше обычного интервала 100 мс ждал таймер UI-потока; регистрируется при задержке сверх нормы более 150 мс. Не является точным FPS/GPU-трекером.
+- `ui.dispatcher.work.<Priority>`: продолжительность задания Dispatcher при >=40 мс. Показывает занятость UI-потока, но не стек вызовов.
+- `navigation.page.stage-content`, `navigation.page.native-scan`, `navigation.page.scrollbar-scan`, `navigation.tabs.selection`, `navigation.tabs.underline`, `navigation.sidebar.caret`, `library.visible-index.scan`: конкретные участки переходов при >=10 мс.
 - `ui.input.lag`: задержка обработки задания приоритета Input в очереди Dispatcher (замер ставится из фонового таймера). Записываются задержки от 150 мс; это ближе к отзывчивости ввода, но не является FPS или CPU stack trace.
 - `qa.input.monitor.start` и `qa.input.monitor.heartbeat`: подтверждение, что замер Input действительно работает, в том числе при подключении E2E к существующему экземпляру.
 - `navigation.sidebar.<ViewModelType>`, `navigation.tabs.<ViewModelType>`, `navigation.page.<ViewModelType>`: момент начала смены страницы и тип ViewModel (только имена .NET-типов, не пользовательские данные).
@@ -126,6 +128,7 @@ $env:LEXPLOSION_E2E_RECORD_BASELINES = "1" # только при подгото�
 - `coverage-summary.txt`: пройденные/непокрытые группы вкладок.
 - `ui-performance.log`: копия записей **только текущего E2E запуска**,
   прочитанная из `%APPDATA%\lexplosion-data\Diagnostics\ui-performance.log`.
+- `performance-hotspots.tsv`: дорогие операции Dispatcher и переходов (count, max, p95).
 - `performance-summary.txt`: число зависаний Dispatcher, max/p95 в мс,
   статистика подготовки страниц и отметка наличия телеметрии.
 - `visual-results.tsv`: PASS/FAIL/UNVERIFIED для сравнений скриншотов.
@@ -156,3 +159,10 @@ HTTP-статус и тип исключения. Старые логи след
 Для установления настоящей причины длительной задержки Input/Background
 потребуется профилирование стека UI-потока (Visual Studio Performance
 Profiler, PerfView), а не только счётчик таймерных отклонений.
+
+### Сравнение ручной навигации и FlaUI
+
+Запустите Lexplosion с `LEXPLOSION_QA=1` и повторите вручную маршруты E2E,
+не включая FlaUI. Сопоставьте `ui.input.lag` и `ui.dispatcher.work.*` с E2E-архивом.
+В предыдущем E2E 114 из 256 задержек ввода приходились на интервал в две
+секунды около переходов. Это корреляция, а не доказательство причины.

@@ -156,6 +156,8 @@ namespace Lexplosion.UI.WPF.Controls
 
         private void MoveCaret(DefaultMainMenuTabItem selected, bool animate)
         {
+            using (PerformanceTelemetry.Measure("navigation.sidebar.caret", 10))
+            {
             if (_caret == null || _position == null || !IsLoaded)
                 return;
 
@@ -216,6 +218,7 @@ namespace Lexplosion.UI.WPF.Controls
             };
             _position.BeginAnimation(TranslateTransform.YProperty, motion);
             CommitSelectedContent(selected);
+            }
         }
     }
 }

@@ -134,7 +134,7 @@ namespace Lexplosion.UI.WPF.Controls
                 AnimationType == ContentControlAnimation.None ||
                 !AnimationPreferences.Enabled ||
                 !TransitionDuration.HasTimeSpan || TransitionDuration.TimeSpan <= TimeSpan.Zero ||
-                ContainsNativeWindow(_current))
+                HasNativeWindow(_current))
             {
                 ShowImmediately(newContent);
                 return;
@@ -148,7 +148,8 @@ namespace Lexplosion.UI.WPF.Controls
             // It must complete DataTemplate creation and layout while invisible.
             if (AnimationType == ContentControlAnimation.SoftReveal)
                 _next.Opacity = 0;
-            _next.Content = newContent;
+            using (PerformanceTelemetry.Measure("navigation.page.stage-content", 10))
+                _next.Content = newContent;
             _next.Visibility = Visibility.Hidden;
             _next.IsHitTestVisible = false;
             _transitionPending = true;
@@ -166,7 +167,7 @@ namespace Lexplosion.UI.WPF.Controls
                 return;
 
             if (ActualWidth <= 0 || ActualHeight <= 0 ||
-                ContainsNativeWindow(_current) || ContainsNativeWindow(_next))
+                HasNativeWindow(_current) || HasNativeWindow(_next))
             {
                 // A WebView2/HwndHost paints in its own HWND, outside WPF's compositor.
                 // Never slide two native windows or attempt to capture them.
@@ -207,8 +208,8 @@ namespace Lexplosion.UI.WPF.Controls
             {
                 // Hide scroll thumbs only while both tab pages are sliding.
                 // Holding Opacity at zero preserves layout and scroll position.
-                HideScrollbars(oldPresenter);
-                HideScrollbars(newPresenter);
+                HidePageScrollbars(oldPresenter);
+                HidePageScrollbars(newPresenter);
 
                 var oldTransform = new TranslateTransform();
                 var newTransform = new TranslateTransform();
@@ -307,6 +308,18 @@ namespace Lexplosion.UI.WPF.Controls
             _next.Visibility = Visibility.Collapsed;
             _next.IsHitTestVisible = false;
             Reset(_next);
+        }
+
+        private static bool HasNativeWindow(DependencyObject root)
+        {
+            using (PerformanceTelemetry.Measure("navigation.page.native-scan", 10))
+                return ContainsNativeWindow(root);
+        }
+
+        private void HidePageScrollbars(DependencyObject root)
+        {
+            using (PerformanceTelemetry.Measure("navigation.page.scrollbar-scan", 10))
+                HideScrollbars(root);
         }
 
         private void HideScrollbars(DependencyObject root)
