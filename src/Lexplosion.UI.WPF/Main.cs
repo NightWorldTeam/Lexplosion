@@ -5,6 +5,7 @@ using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.UI.WPF.Core;
+using Lexplosion.UI.WPF.Core.Threading;
 using Lexplosion.UI.WPF.Core.Notifications;
 using Lexplosion.UI.WPF.Core.Tools;
 using Lexplosion.UI.WPF.Extensions;
@@ -72,7 +73,7 @@ namespace Lexplosion.UI.WPF
 			// Подписываемся на эвент для загрузки всех строенных dll'ников
 			AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
 
-			_appCore = new AppCore(App.Current.Dispatcher.Invoke, (key) => App.Current.Resources[key], RestartApp);
+			_appCore = new AppCore(new WpfUiDispatcher(App.Current.Dispatcher), (key) => App.Current.Resources[key], RestartApp);
 
 			_app.Resources.MergedDictionaries.Add(new ResourceDictionary()
 			{
