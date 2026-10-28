@@ -6,6 +6,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using Lexplosion.UI.WPF.Core;
+using Lexplosion.QA;
 
 namespace Lexplosion.UI.WPF.Controls
 {
@@ -231,7 +232,7 @@ namespace Lexplosion.UI.WPF.Controls
 
             if (!afterAnimation)
             {
-                SetValue(DisplayedContentPropertyKey, content);
+                ApplyDisplayedContent(content);
                 return;
             }
 
@@ -240,8 +241,14 @@ namespace Lexplosion.UI.WPF.Controls
             Dispatcher.BeginInvoke(new Action(() =>
             {
                 if (version == _selectionVersion)
-                    SetValue(DisplayedContentPropertyKey, content);
+                    ApplyDisplayedContent(content);
             }), DispatcherPriority.Background);
+        }
+
+        private void ApplyDisplayedContent(object content)
+        {
+            using (PerformanceTelemetry.Measure("navigation.tabs.commit", 8))
+                SetValue(DisplayedContentPropertyKey, content);
         }
 
         private void QueueUnderlineUpdate()
