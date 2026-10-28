@@ -2,6 +2,7 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using Lexplosion.UI.WPF.Core;
@@ -17,6 +18,10 @@ namespace Lexplosion.UI.WPF.Controls
 
         private Border _line;
         private Border _header;
+        private TranslateTransform _linePosition;
+        private object _requestedContent;
+        private bool _contentPending;
+        private int _selectionVersion;
 
         private TabItem _selectedTabItem;
         private bool _underlineUpdatePending;
@@ -61,6 +66,18 @@ namespace Lexplosion.UI.WPF.Controls
 
         public ContentControlAnimation EffectiveContentAnimation =>
             (ContentControlAnimation)GetValue(EffectiveContentAnimationProperty);
+
+        // SelectedContent is updated by TabControl during selection. Keep the
+        // displayed page separate so the header can finish moving before heavy
+        // content is materialized on the WPF UI thread.
+        private static readonly DependencyPropertyKey DisplayedContentPropertyKey =
+            DependencyProperty.RegisterReadOnly(nameof(DisplayedContent), typeof(object),
+                typeof(UIUnderlineTabControl), new FrameworkPropertyMetadata(null));
+
+        public static readonly DependencyProperty DisplayedContentProperty =
+            DisplayedContentPropertyKey.DependencyProperty;
+
+        public object DisplayedContent => GetValue(DisplayedContentProperty);
 
         public static readonly DependencyProperty TabPanelPaddingProperty
             = DependencyProperty.Register("TabPanelPadding", typeof(Thickness), typeof(UIUnderlineTabControl),
@@ -118,11 +135,19 @@ namespace Lexplosion.UI.WPF.Controls
             base.OnApplyTemplate();
 
             _line = Template.FindName(PART_LINE_NAME, this) as Border;
+            _linePosition = _line?.RenderTransform as TranslateTransform;
+            if (_linePosition?.IsFrozen == true)
+            {
+                _linePosition = (TranslateTransform)_linePosition.CloneCurrentValue();
+                _line.RenderTransform = _linePosition;
+            }
             _header = Template.FindName(PART_HEADER_NAME, this) as Border;
             if (_header != null)
                 _header.Padding = TabPanelPadding;
 
             // TabItem widths become valid after the template's initial layout pass.
+            if (DisplayedContent == null)
+                SetValue(DisplayedContentPropertyKey, SelectedContent);
             QueueUnderlineUpdate();
         }
 
@@ -139,6 +164,10 @@ namespace Lexplosion.UI.WPF.Controls
             }
 
             base.OnSelectionChanged(e);
+
+            if (ReferenceEquals(e.OriginalSource, this))
+                QueueContentNavigation();
+
             // Selection can change while ItemContainerGenerator is still generating.
             QueueUnderlineUpdate();
         }
@@ -168,6 +197,46 @@ namespace Lexplosion.UI.WPF.Controls
             SetValue(EffectiveContentAnimationPropertyKey, direction);
         }
 
+        private void QueueContentNavigation()
+        {
+            _requestedContent = SelectedContent;
+            ++_selectionVersion;
+
+            if (ReferenceEquals(DisplayedContent, _requestedContent))
+            {
+                _contentPending = false;
+                return;
+            }
+
+            _contentPending = true;
+            if (!IsLoaded || _linePosition == null || !EnableAnimations ||
+                !AnimationPreferences.Enabled || DisplayedContent == null)
+                CommitContentNavigation(false);
+        }
+
+        private void CommitContentNavigation(bool afterAnimation)
+        {
+            if (!_contentPending) return;
+
+            int version = _selectionVersion;
+            var content = _requestedContent;
+            _contentPending = false;
+
+            if (!afterAnimation)
+            {
+                SetValue(DisplayedContentPropertyKey, content);
+                return;
+            }
+
+            // The underline's final frame is rendered before the incoming
+            // DataTemplate starts its potentially expensive construction.
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                if (version == _selectionVersion)
+                    SetValue(DisplayedContentPropertyKey, content);
+            }), DispatcherPriority.Background);
+        }
+
         private void QueueUnderlineUpdate()
         {
             if (_underlineUpdatePending) return;
@@ -193,12 +262,18 @@ namespace Lexplosion.UI.WPF.Controls
             // During initialization or a collection reset there may be no selected tab.
             // ContainerFromIndex(-1) can throw inside WPF's RealizedItemBlock.ContainerAt.
             if (SelectedIndex < 0 || SelectedIndex >= Items.Count)
+            {
+                CommitContentNavigation(false);
                 return;
+            }
 
             _selectedTabItem = ItemContainerGenerator.ContainerFromIndex(SelectedIndex) as TabItem
                                ?? SelectedItem as TabItem;
             if (_selectedTabItem == null || _line == null)
+            {
+                CommitContentNavigation(false);
                 return;
+            }
 
             _selectedTabItem.SizeChanged += OnTabItemSizeChanged;
             var padding = GetTemplateBorderPadding(_selectedTabItem);
@@ -282,19 +357,45 @@ namespace Lexplosion.UI.WPF.Controls
 
         private void SetUnderlineOffset(double left)
         {
-            if (_line == null) return;
-            var margin = new Thickness(left, 0, 0, 0);
-            if (!EnableAnimations || !AnimationPreferences.Enabled)
+            if (_linePosition == null)
             {
-                _line.BeginAnimation(MarginProperty, null);
-                _line.Margin = margin;
+                CommitContentNavigation(false);
                 return;
             }
-            _line.BeginAnimation(MarginProperty, new ThicknessAnimation
+
+            if (!EnableAnimations || !AnimationPreferences.Enabled || !IsLoaded)
             {
-                To = margin,
-                Duration = TimeSpan.FromMilliseconds(200)
-            });
+                _linePosition.BeginAnimation(TranslateTransform.XProperty, null);
+                _linePosition.X = left;
+                CommitContentNavigation(false);
+                return;
+            }
+
+            // RenderTransform is compositor-friendly; animating Margin forces
+            // a layout pass every frame and competes with page construction.
+            double current = _linePosition.X;
+            if (Math.Abs(current - left) < 0.5)
+            {
+                CommitContentNavigation(true);
+                return;
+            }
+
+            int version = _selectionVersion;
+            var position = _linePosition;
+            var motion = new DoubleAnimation(current, left, TimeSpan.FromMilliseconds(200))
+            {
+                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseInOut }
+            };
+            motion.Completed += (sender, args) =>
+            {
+                if (version != _selectionVersion || !ReferenceEquals(_linePosition, position))
+                    return;
+
+                position.BeginAnimation(TranslateTransform.XProperty, null);
+                position.X = left;
+                CommitContentNavigation(true);
+            };
+            position.BeginAnimation(TranslateTransform.XProperty, motion);
         }
 
         private void SetUnderlineWidth(double width)
