@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Automation;
@@ -9,10 +10,9 @@ using NUnit.Framework;
 namespace Lexplosion.Tests
 {
     /// <summary>
-    /// Safe E2E smoke test for a *running, authenticated* launcher.
-    /// It audits every visible interactive control, but activates navigation
-    /// items only. Never clicks install, launch, delete, login or payment buttons.
-    /// Run explicitly with LEXPLOSION_E2E=1 in the same Windows desktop session.
+    /// Safe, opt-in E2E smoke test. Attaches to an existing launcher or launches
+    /// its WPF executable automatically, then waits for its main window.
+    /// It never performs destructive or authenticated actions.
     /// </summary>
     [TestFixture]
     [Apartment(ApartmentState.STA)]
@@ -21,6 +21,119 @@ namespace Lexplosion.Tests
     public sealed class LauncherNavigationE2ETests
     {
         private const int SettleMilliseconds = 320;
+        private static Process _launcher;
+        private static bool _ownsLauncher;
+
+        [OneTimeSetUp]
+        public void StartLauncher()
+        {
+            if (Environment.GetEnvironmentVariable("LEXPLOSION_E2E") != "1")
+                Assert.Ignore("Opt-in required: set LEXPLOSION_E2E=1.");
+
+            var existing = Process.GetProcessesByName("Lexplosion");
+            try
+            {
+                // Attach without terminating a user's already running launcher.
+                _launcher = existing.FirstOrDefault(p =>
+                {
+                    try { return !p.HasExited && p.MainWindowHandle != IntPtr.Zero; }
+                    catch (InvalidOperationException) { return false; }
+                });
+
+                if (_launcher == null)
+                {
+                    string executable = ResolveExecutable();
+                    var startInfo = new ProcessStartInfo(executable)
+                    {
+                        WorkingDirectory = Path.GetDirectoryName(executable),
+                        UseShellExecute = false
+                    };
+                    // Always capture startup stalls when E2E owns the process.
+                    startInfo.EnvironmentVariables["LEXPLOSION_QA"] = "1";
+                    _launcher = Process.Start(startInfo);
+                    _ownsLauncher = true;
+                    TestContext.Progress.WriteLine("E2E launched: " + executable);
+                }
+                else
+                {
+                    TestContext.Progress.WriteLine("E2E attached to existing Lexplosion process");
+                }
+            }
+            finally
+            {
+                foreach (var process in existing)
+                    if (!ReferenceEquals(process, _launcher)) process.Dispose();
+            }
+        }
+
+        [OneTimeTearDown]
+        public void StopLauncher()
+        {
+            if (_launcher == null) return;
+
+            try
+            {
+                if (_ownsLauncher && !_launcher.HasExited)
+                {
+                    _launcher.CloseMainWindow();
+                    if (!_launcher.WaitForExit(3000))
+                        _launcher.Kill();
+                }
+            }
+            catch (InvalidOperationException) { }
+            finally
+            {
+                _launcher.Dispose();
+                _launcher = null;
+                _ownsLauncher = false;
+            }
+        }
+
+        private static string ResolveExecutable()
+        {
+            string explicitPath = Environment.GetEnvironmentVariable("LEXPLOSION_E2E_EXE");
+            if (!string.IsNullOrWhiteSpace(explicitPath))
+            {
+                if (File.Exists(explicitPath))
+                    return Path.GetFullPath(explicitPath);
+
+                Assert.Fail("LEXPLOSION_E2E_EXE points to a missing file: " + explicitPath);
+            }
+
+            // Prefer the actual WPF project output, with all its bundled assets,
+            // over a copied test-output EXE that might lack runtime content.
+            var directory = new DirectoryInfo(TestContext.CurrentContext.TestDirectory);
+            while (directory != null)
+            {
+                string src = Directory.Exists(Path.Combine(directory.FullName, "Lexplosion.UI.WPF"))
+                    ? directory.FullName
+                    : Path.Combine(directory.FullName, "src");
+
+                if (Directory.Exists(Path.Combine(src, "Lexplosion.UI.WPF")))
+                {
+                    foreach (string configuration in new[] { "Debug", "Release" })
+                    {
+                        foreach (string relativeOutput in new[]
+                        {
+                            Path.Combine("net472", "win-x86"),
+                            "net472",
+                            "win-x86",
+                            ""
+                        })
+                        {
+                            string candidate = Path.Combine(src, "Lexplosion.UI.WPF",
+                                "bin", configuration, relativeOutput, "Lexplosion.exe");
+                            if (File.Exists(candidate))
+                                return candidate;
+                        }
+                    }
+                }
+                directory = directory.Parent;
+            }
+
+            Assert.Fail("Lexplosion.exe not found. Build the WPF project or set LEXPLOSION_E2E_EXE.");
+            return null;
+        }
 
         [Test]
         public void InventoryAllVisibleInteractiveControls()
@@ -83,26 +196,38 @@ namespace Lexplosion.Tests
 
         private static AutomationElement FindMainWindow()
         {
-            if (Environment.GetEnvironmentVariable("LEXPLOSION_E2E") != "1")
-                Assert.Ignore("Opt-in required: set LEXPLOSION_E2E=1.");
+            if (_launcher == null)
+                Assert.Fail("E2E launcher was not initialized.");
 
-            foreach (var process in Process.GetProcessesByName("Lexplosion"))
+            // Lexplosion starts with a SplashWindow. MainWindowHandle can
+            // point at that splash even after the real window appears.
+            var timeout = Stopwatch.StartNew();
+            while (timeout.Elapsed < TimeSpan.FromSeconds(90))
             {
                 try
                 {
-                    if (process.MainWindowHandle == IntPtr.Zero) continue;
-                    var window = AutomationElement.FromHandle(process.MainWindowHandle);
-                    if (window != null &&
-                        window.Current.ControlType == ControlType.Window &&
-                        window.Current.Name.IndexOf("Lexplosion", StringComparison.OrdinalIgnoreCase) >= 0)
-                        return window;
+                    if (_launcher.HasExited)
+                        Assert.Fail("Lexplosion exited before its main window was ready.");
+
+                    var windows = AutomationElement.RootElement.FindAll(TreeScope.Children,
+                        new PropertyCondition(AutomationElement.ProcessIdProperty, _launcher.Id));
+
+                    foreach (AutomationElement window in windows)
+                    {
+                        if (window.Current.ControlType == ControlType.Window &&
+                            window.Current.Name.Equals("Lexplosion", StringComparison.OrdinalIgnoreCase))
+                            return window;
+                    }
                 }
-                catch (ElementNotAvailableException) { }
-                catch (InvalidOperationException) { }
-                finally { process.Dispose(); }
+                catch (ElementNotAvailableException)
+                {
+                    // The splash can close while the Automation tree is queried.
+                }
+
+                Thread.Sleep(250);
             }
 
-            Assert.Ignore("Start Lexplosion and open its main window before running E2E.");
+            Assert.Fail("No Lexplosion main window after 90 s. Check startup logs or authentication.");
             return null;
         }
 
