@@ -61,6 +61,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Lexplosion.Core\Lexplosion.Core.csproj" />
+    <ProjectReference Include="..\Lexplosion.UI.Abstractions\Lexplosion.UI.Abstractions.csproj" />
   </ItemGroup>
 
   <ItemGroup>
