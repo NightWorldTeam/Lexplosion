@@ -85,10 +85,21 @@ namespace Lexplosion.E2E
                 ". Unmarked buttons were inventoried, NOT clicked.");
         }
 
-        [TestCase(NavigationMode.Normal, Order = 20)]
-        [TestCase(NavigationMode.Reverse, Order = 30)]
-        [TestCase(NavigationMode.Shuffle, Order = 40)]
-        public void TraverseAvailableNavigationAndVerifyRenderedState(NavigationMode mode)
+        // Separate ordered NUnit cases ensure the performance budget runs
+        // after every navigation mode, even across NUnit adapter versions.
+        [Test, Order(20)]
+        public void TraverseNormalNavigation() =>
+            TraverseAvailableNavigationAndVerifyRenderedState(NavigationMode.Normal);
+
+        [Test, Order(30)]
+        public void TraverseReverseNavigation() =>
+            TraverseAvailableNavigationAndVerifyRenderedState(NavigationMode.Reverse);
+
+        [Test, Order(40)]
+        public void TraverseShuffledNavigation() =>
+            TraverseAvailableNavigationAndVerifyRenderedState(NavigationMode.Shuffle);
+
+        private void TraverseAvailableNavigationAndVerifyRenderedState(NavigationMode mode)
         {
             var window = _session.WaitForMainWindow();
             var initial = SidebarIds(window);
