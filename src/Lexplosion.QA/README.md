@@ -50,7 +50,7 @@ $env:LEXPLOSION_QA = "1"
 
 ~~~powershell
 $env:LEXPLOSION_E2E = "1"
-dotnet test src/Lexplosion.Tests/Lexplosion.Tests.csproj -c Debug --filter 'Category=E2E' --logger 'console;verbosity=detailed'
+dotnet test src/Lexplosion.Tests/Lexplosion.Tests.csproj -c Debug --filter "FullyQualifiedName~LauncherNavigationE2ETests" --logger 'console;verbosity=detailed'
 ~~~
 
 FlaUI подключится к уже запущенному Lexplosion (не закрывая его),
