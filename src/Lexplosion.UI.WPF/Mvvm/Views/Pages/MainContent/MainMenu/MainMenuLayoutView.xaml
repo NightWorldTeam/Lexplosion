@@ -25,6 +25,7 @@
         <ContentControl Content="{Binding LeftPanel}" KeyboardNavigation.IsTabStop="False" />
 
         <controls:AnimatedContentControl
+            AutomationProperties.AutomationId="qa.content.main"
             Grid.Column="1"
             AnimationType="SoftReveal"
             TransitionDuration="0:0:0.28"
