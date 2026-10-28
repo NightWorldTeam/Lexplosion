@@ -30,6 +30,7 @@
         </Grid>
 
         <controls:UIUnderlineTabControl
+            AutomationProperties.AutomationId="nav.group.multiplayer"
             Grid.Row="1"
             Background="{DynamicResource LayoutTabSolidColorBrush}"
             BorderBrush="{DynamicResource LayoutTabBorderSolidColorBrush}"
