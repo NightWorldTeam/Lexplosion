@@ -27,7 +27,8 @@
         <controls:AnimatedContentControl
             AutomationProperties.AutomationId="qa.content.main"
             Grid.Column="1"
-            AnimationType="None"
+            AnimationType="SoftReveal"
+            TransitionDuration="0:0:0.28"
             Content="{Binding Content}"
             KeyboardNavigation.IsTabStop="False"
             KeyboardNavigation.TabNavigation="None" />
