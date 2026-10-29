@@ -32,6 +32,8 @@ $env:LEXPLOSION_QA = "1"
 - `ui.dispatcher.hotspot.<Priority>.<section>`: самый долгий **размеченный конечный участок** внутри одной Dispatcher-операции. Значение времени относится именно к этому участку, не ко всей операции.
 - `ui.dispatcher.unattributed.<Priority>`: операция дольше 40 мс, но внутри не было ни одного измеренного участка. Это указание расширить диагностику или использовать sampling profiler, **не** доказательство проблемы с анимациями.
 - `ui.route.<ViewModelType>`: последнее запрошенное содержимое (только имя .NET-типа).
+
+- `ui.work.gallery.thumbnail.decode`: стоимость первой WIC-декодировки конкретной миниатюры. Повторные привязки к тому же массиву байтов используют слабый кэш и декодирование не повторяют. Появляется только в Debug при `LEXPLOSION_QA=1`.
 - `ui.frame.interval.<ViewModelType>`: интервал между WPF `Rendering` событиями >=75 мс в течение 3 секунд после навигации. **Не** время работы рендерера или GPU, в простое не измеряется.
 - `navigation.page.stage-content`, `navigation.page.native-scan`, `navigation.page.scrollbar-scan`, `navigation.tabs.selection`, `navigation.tabs.underline`, `navigation.sidebar.caret`, `library.visible-index.scan`: конкретные участки переходов при >=10 мс.
 - `ui.input.lag`: задержка обработки задания приоритета Input в очереди Dispatcher (замер ставится из фонового таймера). Записываются задержки от 150 мс; это ближе к отзывчивости ввода, но не является FPS или CPU stack trace.

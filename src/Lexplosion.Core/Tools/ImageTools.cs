@@ -17,36 +17,36 @@ namespace Lexplosion.Tools
 			if (imageBytes.Length == 0)
 				return imageBytes;
 
-			Image image;
-			using (var ms = new MemoryStream(imageBytes))
+			// GDI+ requires the source stream to remain open for the Image lifetime.
+			// Dispose both images to avoid leaking GDI handles between gallery visits.
+			using (var stream = new MemoryStream(imageBytes))
+			using (var image = Image.FromStream(stream))
+			using (var destImage = new Bitmap(width, height))
 			{
-				image = Image.FromStream(ms);
-			}
+				destImage.SetResolution(image.HorizontalResolution, image.VerticalResolution);
+				var destRect = new Rectangle(0, 0, width, height);
 
-			var destRect = new Rectangle(0, 0, width, height);
-			var destImage = new Bitmap(width, height);
-
-			destImage.SetResolution(image.HorizontalResolution, image.VerticalResolution);
-
-			using (var graphics = Graphics.FromImage(destImage))
-			{
-				graphics.CompositingMode = CompositingMode.SourceCopy;
-				graphics.CompositingQuality = CompositingQuality.HighQuality;
-				graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-				graphics.SmoothingMode = SmoothingMode.HighQuality;
-				graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
-
-				using (var wrapMode = new ImageAttributes())
+				using (var graphics = Graphics.FromImage(destImage))
 				{
-					wrapMode.SetWrapMode(WrapMode.TileFlipXY);
-					graphics.DrawImage(image, destRect, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, wrapMode);
-				}
-			}
+					graphics.CompositingMode = CompositingMode.SourceCopy;
+					graphics.CompositingQuality = CompositingQuality.HighQuality;
+					graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+					graphics.SmoothingMode = SmoothingMode.HighQuality;
+					graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
-			using (MemoryStream stream = new MemoryStream())
-			{
-				destImage.Save(stream, System.Drawing.Imaging.ImageFormat.Bmp);
-				return stream.ToArray();
+					using (var wrapMode = new ImageAttributes())
+					{
+						wrapMode.SetWrapMode(WrapMode.TileFlipXY);
+						graphics.DrawImage(image, destRect, 0, 0, image.Width, image.Height,
+							GraphicsUnit.Pixel, wrapMode);
+					}
+				}
+
+				using (var output = new MemoryStream())
+				{
+					destImage.Save(output, ImageFormat.Bmp);
+					return output.ToArray();
+				}
 			}
 		}
 
