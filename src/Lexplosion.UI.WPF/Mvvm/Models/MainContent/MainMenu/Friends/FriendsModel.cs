@@ -80,9 +80,16 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.MainMenu.Friends
                     var account = Account.ActiveAccount;
                     if (account == null)
                         throw new InvalidOperationException("No active account");
-                    account.WaitAuth();
-                    var friends = Runtime.ServicesContainer.NwApi.GetFriends(
-                        account.UUID, account.SessionToken, account.Login);
+#if DEBUG
+                    using (UiDebugTrace.Measure("friends.wait-auth", 5))
+#endif
+                        account.WaitAuth();
+                    List<NwUser> friends;
+#if DEBUG
+                    using (UiDebugTrace.Measure("friends.api-get", 5))
+#endif
+                        friends = Runtime.ServicesContainer.NwApi.GetFriends(
+                            account.UUID, account.SessionToken, account.Login);
                     Application.Current?.Dispatcher.BeginInvoke(new Action(() =>
                     {
                         if (version != Volatile.Read(ref _requestVersion)) return;
@@ -106,6 +113,9 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.MainMenu.Friends
 
         private void UpdateFriends(IEnumerable<NwUser> friends)
         {
+#if DEBUG
+            using var trace = UiDebugTrace.Measure("friends.update-collection", 3);
+#endif
             foreach (var friend in _allFriends)
                 friend.Unfriended -= FriendObj_Unfriended;
             _allFriends.Clear();

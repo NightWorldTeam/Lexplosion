@@ -1,3 +1,4 @@
+#if DEBUG
 using System;
 using System.Diagnostics;
 using System.Threading;
@@ -75,3 +76,5 @@ namespace Lexplosion.UI.WPF.Core.Threading
         }
     }
 }
+
+#endif

@@ -6,7 +6,9 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using Lexplosion.UI.WPF.Core;
+#if DEBUG
 using Lexplosion.QA;
+#endif
 
 namespace Lexplosion.UI.WPF.Controls
 {
@@ -137,6 +139,9 @@ namespace Lexplosion.UI.WPF.Controls
 
         public override void OnApplyTemplate()
         {
+#if DEBUG
+            using var trace = UiDebugTrace.Measure("tabs.apply-template", 3);
+#endif
             if (_selectedTabItem != null)
                 _selectedTabItem.SizeChanged -= OnTabItemSizeChanged;
 
@@ -171,7 +176,9 @@ namespace Lexplosion.UI.WPF.Controls
                 _previousSelectedIndex = SelectedIndex;
             }
 
-            using (PerformanceTelemetry.Measure("navigation.tabs.selection", 10))
+#if DEBUG
+            using (UiDebugTrace.Measure("tabs.selection", 3))
+#endif
                 base.OnSelectionChanged(e);
 
             if (ReferenceEquals(e.OriginalSource, this))
@@ -248,9 +255,12 @@ namespace Lexplosion.UI.WPF.Controls
 
         private void ApplyDisplayedContent(object content)
         {
+#if DEBUG
+            UiDebugTrace.Navigate(content);
             if (PerformanceTelemetry.Enabled && content != null)
                 PerformanceTelemetry.Record("navigation.tabs." + content.GetType().Name, 0);
-            using (PerformanceTelemetry.Measure("navigation.tabs.commit", 8))
+            using (UiDebugTrace.Measure("tabs.commit", 3))
+#endif
                 SetValue(DisplayedContentPropertyKey, content);
         }
 
@@ -273,7 +283,9 @@ namespace Lexplosion.UI.WPF.Controls
 
         private void UpdateUnderline()
         {
-            using (PerformanceTelemetry.Measure("navigation.tabs.underline", 10))
+#if DEBUG
+            using (UiDebugTrace.Measure("tabs.underline", 3))
+#endif
             {
             if (_selectedTabItem != null)
                 _selectedTabItem.SizeChanged -= OnTabItemSizeChanged;

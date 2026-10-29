@@ -6,7 +6,9 @@ using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.UI.WPF.Core;
 using Lexplosion.UI.WPF.Core.Threading;
+#if DEBUG
 using Lexplosion.QA;
+#endif
 using Lexplosion.UI.WPF.Core.Notifications;
 using Lexplosion.UI.WPF.Core.Tools;
 using Lexplosion.UI.WPF.Extensions;
@@ -48,9 +50,12 @@ namespace Lexplosion.UI.WPF
 		internal static event Action MainWindowShowed;
 
 		private static App _app = new App();
+#if DEBUG
         private static UiStallMonitor _uiStallMonitor;
         private static UiInputLatencyMonitor _uiInputLatencyMonitor;
         private static UiDispatcherWorkMonitor _uiDispatcherWorkMonitor;
+        private static UiFrameProbe _uiFrameProbe;
+#endif
 
 		private static double _leftPos;
 		private static double _topPos;
@@ -77,6 +82,8 @@ namespace Lexplosion.UI.WPF
 			// Подписываемся на эвент для загрузки всех строенных dll'ников
 			AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
 
+#if DEBUG
+            // Debug-only local telemetry; no code path starts probes in Release.
             // Local, opt-in QA telemetry. Never transmits data.
             bool qaEnabled = Environment.GetEnvironmentVariable("LEXPLOSION_QA") == "1";
             string qaPath = Path.Combine(
@@ -87,6 +94,8 @@ namespace Lexplosion.UI.WPF
             _uiStallMonitor = UiStallMonitor.Start(App.Current.Dispatcher);
             _uiInputLatencyMonitor = UiInputLatencyMonitor.Start(App.Current.Dispatcher);
             _uiDispatcherWorkMonitor = UiDispatcherWorkMonitor.Start(App.Current.Dispatcher);
+            _uiFrameProbe = UiFrameProbe.Start();
+#endif
 
 			_appCore = new AppCore(new WpfUiDispatcher(App.Current.Dispatcher), (key) => App.Current.Resources[key], RestartApp);
 

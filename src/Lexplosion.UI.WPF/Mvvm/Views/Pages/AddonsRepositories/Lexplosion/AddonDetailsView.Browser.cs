@@ -3,6 +3,9 @@ using Lexplosion.Logic.Management.Instances;
 using Lexplosion.UI.WPF.Mvvm.ViewModels.AddonsRepositories;
 using Lexplosion.UI.WPF.Services.Addons;
 using Lexplosion.UI.WPF.Services.Descriptions;
+#if DEBUG
+using Lexplosion.UI.WPF.Core;
+#endif
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.Wpf;
 using System;
@@ -94,7 +97,13 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.AddonDetails
             };
             _browser = browser;
             BrowserHost.Children.Add(browser);
+#if DEBUG
+            long browserInitTick = Stopwatch.GetTimestamp();
+#endif
             await browser.EnsureCoreWebView2Async();
+#if DEBUG
+            RecordElapsed("addon.webview.initialize", browserInitTick);
+#endif
             if (!IsLoaded || !ReferenceEquals(browser, _browser)) return;
 
             var settings = browser.CoreWebView2.Settings;
@@ -116,7 +125,13 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.AddonDetails
             ShowLoading(L("AddonDetailsDescriptionLoading"));
             try
             {
-                Task<AddonPageData> dataTask = Task.Run(() => AddonDetailsDataLoader.FetchPage(addon));
+                Task<AddonPageData> dataTask = Task.Run(() =>
+                {
+#if DEBUG
+                    using var trace = UiDebugTrace.Measure("addon.data.fetch", 10);
+#endif
+                    return AddonDetailsDataLoader.FetchPage(addon);
+                });
                 await EnsureBrowserAsync();
                 AddonPageData data = await dataTask;
                 if (generation != _generation || !IsLoaded || !IsVisible || !ReferenceEquals(Addon, addon)) return;
@@ -133,13 +148,23 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.AddonDetails
                     ? L("AddonDetailsGalleryEmpty") : string.Empty;
                 GalleryEmptyText.Visibility = data.Images.Length == 0 ? Visibility.Visible : Visibility.Collapsed;
 
-                var document = AddonDescriptionDocumentBuilder.Build(data.Description, addon.Source, ReadTheme(), L("AddonDetailsNoDescription"));
+                string document;
+#if DEBUG
+                using (UiDebugTrace.Measure("addon.html.build", 5))
+#endif
+                    document = AddonDescriptionDocumentBuilder.Build(data.Description, addon.Source, ReadTheme(), L("AddonDetailsNoDescription"));
                 string filename = "addon-" + Guid.NewGuid().ToString("N") + ".html";
                 string fullPath = Path.Combine(HtmlFolder, filename);
-                File.WriteAllText(fullPath, document, new UTF8Encoding(false));
+#if DEBUG
+                using (UiDebugTrace.Measure("addon.html.write-file", 5))
+#endif
+                    File.WriteAllText(fullPath, document, new UTF8Encoding(false));
                 _temporaryDocuments.Add(fullPath);
                 _pendingDocumentGeneration = generation;
-                _browser.CoreWebView2.Navigate("https://" + VirtualHost + "/" + filename);
+#if DEBUG
+                using (UiDebugTrace.Measure("addon.webview.navigate", 5))
+#endif
+                    _browser.CoreWebView2.Navigate("https://" + VirtualHost + "/" + filename);
             }
             catch (Exception ex)
             {
@@ -163,6 +188,9 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.AddonDetails
 
         private void OnNavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e)
         {
+#if DEBUG
+            using var trace = UiDebugTrace.Measure("addon.webview.completed", 3);
+#endif
             if (e.NavigationId != _currentNavigationId ||
                 _pendingDocumentGeneration != _generation) return;
             if (!IsLoaded || !IsVisible || Addon == null) return;
@@ -190,6 +218,14 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.AddonDetails
             if (e.TryGetWebMessageAsString() == "lexplosion-overview-escape")
                 (DataContext as LexplosionAddonsRepositoryViewModel)?.CloseAddonDetails();
         }
+
+#if DEBUG
+        private static void RecordElapsed(string operation, long start)
+        {
+            Lexplosion.QA.PerformanceTelemetry.Record(operation,
+                (Stopwatch.GetTimestamp() - start) * 1000.0 / Stopwatch.Frequency, 5);
+        }
+#endif
 
         private static void OpenExternalUrl(string url)
         {

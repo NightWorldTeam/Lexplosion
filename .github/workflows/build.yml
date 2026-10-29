@@ -39,6 +39,10 @@ jobs:
       - name: Build WPF launcher
         run: dotnet build src/Lexplosion.UI.WPF/Lexplosion.UI.WPF.csproj -c Release "-p:SolutionDir=$env:GITHUB_WORKSPACE/src/"
 
+      # Debug contains opt-in UI diagnostics, excluded from Release.
+      - name: Compile Debug UI telemetry
+        run: dotnet build src/Lexplosion.UI.WPF/Lexplosion.UI.WPF.csproj -c Debug "-p:SolutionDir=$env:GITHUB_WORKSPACE/src/"
+
   tests:
     name: NUnit tests
     runs-on: windows-2022

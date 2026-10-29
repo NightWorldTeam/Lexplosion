@@ -6,7 +6,9 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using Lexplosion.UI.WPF.Core;
+#if DEBUG
 using Lexplosion.QA;
+#endif
 using Lexplosion.UI.WPF.Core.Objects;
 using Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu;
 
@@ -105,11 +107,13 @@ namespace Lexplosion.UI.WPF.Controls
                 if (!IsLoaded || !ReferenceEquals(model, _navigationModel))
                     return;
 
+#if DEBUG
+                UiDebugTrace.Navigate(item.Content);
                 if (PerformanceTelemetry.Enabled && item.Content != null)
                     PerformanceTelemetry.Record("navigation.sidebar." +
                         item.Content.GetType().Name, 0);
-
-                using (PerformanceTelemetry.Measure("navigation.sidebar.commit", 8))
+                using (UiDebugTrace.Measure("sidebar.commit", 3))
+#endif
                     model?.CommitSelection(item);
             }), DispatcherPriority.Background);
         }
@@ -156,7 +160,9 @@ namespace Lexplosion.UI.WPF.Controls
 
         private void MoveCaret(DefaultMainMenuTabItem selected, bool animate)
         {
-            using (PerformanceTelemetry.Measure("navigation.sidebar.caret", 10))
+#if DEBUG
+            using (UiDebugTrace.Measure("sidebar.caret", 3))
+#endif
             {
             if (_caret == null || _position == null || !IsLoaded)
                 return;

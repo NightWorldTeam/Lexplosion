@@ -61,7 +61,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Lexplosion.Core\Lexplosion.Core.csproj" />
-    <ProjectReference Include="..\Lexplosion.QA\Lexplosion.QA.csproj" />
+    <ProjectReference Include="..\Lexplosion.QA\Lexplosion.QA.csproj" Condition="'$(Configuration)' == 'Debug'" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,6 +1,9 @@
 using Lexplosion.Logic.Management.Addons;
 using Lexplosion.UI.WPF.Controls;
+#if DEBUG
 using Lexplosion.QA;
+using Lexplosion.UI.WPF.Core;
+#endif
 using Lexplosion.UI.WPF.Mvvm.ViewModels.AddonsRepositories;
 using System;
 using System.Linq;
@@ -56,6 +59,9 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.AddonDetails
 
         private static void OnAddonPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
+#if DEBUG
+            using var trace = UiDebugTrace.Measure("addon.property-changed", 3);
+#endif
             var view = (AddonDetailsView)sender;
             view._generation++;
             view.IsInformationOpen = false;
@@ -114,6 +120,9 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.AddonDetails
 
         private void UpdateMetadataLabels()
         {
+#if DEBUG
+            using var trace = UiDebugTrace.Measure("addon.metadata.rebuild", 3);
+#endif
             SetMetadataLabels(MinecraftVersionsItems, MoreMinecraftVersionsButton,
                 _minecraftVersions, 7, _showAllVersions);
             SetMetadataLabels(ModloadersItems, MoreModloadersButton,
@@ -133,7 +142,9 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.AddonDetails
 
         private void OnMoreMetadataClick(object sender, RoutedEventArgs e)
         {
+#if DEBUG
             PerformanceTelemetry.Record("addon.details.more.click", 0);
+#endif
             if (ReferenceEquals(sender, MoreMinecraftVersionsButton))
                 _showAllVersions = !_showAllVersions;
             else if (ReferenceEquals(sender, MoreModloadersButton))

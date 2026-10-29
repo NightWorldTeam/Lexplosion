@@ -1,6 +1,12 @@
 # Lexplosion QA — локальная диагностика производительности
 
-Модуль **не отправляет данные в сеть** и **не включён по умолчанию**.
+Модуль **не отправляет данные в сеть**. В WPF диагностические мониторы
+и точки измерения включаются только в Debug (`#if DEBUG`).
+Release не содержит этих мониторов и не ссылается на `Lexplosion.QA`.
+В Debug диагностика тоже отключена по умолчанию.
+
+**Запускать лаунчер для телеметрии нужно в Debug:** переменная
+`LEXPLOSION_QA=1` в Release ничего не делает и файл не создаёт.
 
 ## Как включить
 
@@ -21,7 +27,12 @@ $env:LEXPLOSION_QA = "1"
 ## Что смотреть
 
 - `ui.dispatcher.stall`: насколько дольше обычного интервала 100 мс ждал таймер UI-потока; регистрируется при задержке сверх нормы более 150 мс. Не является точным FPS/GPU-трекером.
-- `ui.dispatcher.work.<Priority>`: продолжительность задания Dispatcher при >=40 мс. Показывает занятость UI-потока, но не стек вызовов.
+- `ui.dispatcher.work.<Priority>`: продолжительность работы Dispatcher при >=40 мс.
+- `ui.work.<section>`: время конкретного синхронного участка кода, например `page.native-scan`, `collection.filter.rebuild`, `friends.update-collection`, `addon.html.build`.
+- `ui.dispatcher.hotspot.<Priority>.<section>`: самый долгий **размеченный конечный участок** внутри одной Dispatcher-операции. Значение времени относится именно к этому участку, не ко всей операции.
+- `ui.dispatcher.unattributed.<Priority>`: операция дольше 40 мс, но внутри не было ни одного измеренного участка. Это указание расширить диагностику или использовать sampling profiler, **не** доказательство проблемы с анимациями.
+- `ui.route.<ViewModelType>`: последнее запрошенное содержимое (только имя .NET-типа).
+- `ui.frame.interval.<ViewModelType>`: интервал между WPF `Rendering` событиями >=75 мс в течение 3 секунд после навигации. **Не** время работы рендерера или GPU, в простое не измеряется.
 - `navigation.page.stage-content`, `navigation.page.native-scan`, `navigation.page.scrollbar-scan`, `navigation.tabs.selection`, `navigation.tabs.underline`, `navigation.sidebar.caret`, `library.visible-index.scan`: конкретные участки переходов при >=10 мс.
 - `ui.input.lag`: задержка обработки задания приоритета Input в очереди Dispatcher (замер ставится из фонового таймера). Записываются задержки от 150 мс; это ближе к отзывчивости ввода, но не является FPS или CPU stack trace.
 - `qa.input.monitor.start` и `qa.input.monitor.heartbeat`: подтверждение, что замер Input действительно работает, в том числе при подключении E2E к существующему экземпляру.

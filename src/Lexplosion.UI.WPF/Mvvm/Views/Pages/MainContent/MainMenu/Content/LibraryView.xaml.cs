@@ -7,6 +7,9 @@ using System.Windows.Threading;
 using Lexplosion.UI.WPF.Mvvm.Models.Mvvm.InstanceModel;
 using System.Windows.Media;
 using System.Collections.Specialized;
+#if DEBUG
+using Lexplosion.UI.WPF.Core;
+#endif
 
 namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.MainMenu
 {
@@ -30,6 +33,9 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.MainMenu
 
 		private void OnDataContextChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
 		{
+#if DEBUG
+            using var trace = UiDebugTrace.Measure("library.data-context", 3);
+#endif
 			Runtime.DebugWrite("OnDataContextChanged");
 
             if (_viewModel != null)
@@ -75,7 +81,9 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.MainMenu
 
 		private int GetFirstVisibleItemIndex()
 		{
-            using (Lexplosion.QA.PerformanceTelemetry.Measure("library.visible-index.scan", 10))
+#if DEBUG
+            using (UiDebugTrace.Measure("library.visible-index.scan", 3))
+#endif
             {
 			var scrollViewer = InstanceList.FindVisualDescendant<ScrollViewer>();
 			if (scrollViewer == null) return -1;
@@ -96,6 +104,9 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.MainMenu
 
 		private void OnInstanceListLoaded(object sender, System.Windows.RoutedEventArgs e)
 		{
+#if DEBUG
+            using var trace = UiDebugTrace.Measure("library.items-loaded", 3);
+#endif
 			Runtime.DebugWrite($"OnInstanceListLoaded", color: System.ConsoleColor.Red);
 			if (InstanceList.Items.Count > 0)
 			{

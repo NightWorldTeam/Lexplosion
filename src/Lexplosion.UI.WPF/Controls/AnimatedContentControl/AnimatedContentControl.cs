@@ -8,7 +8,9 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using Lexplosion.UI.WPF.Core;
+#if DEBUG
 using Lexplosion.QA;
+#endif
 using System.Diagnostics;
 
 namespace Lexplosion.UI.WPF.Controls
@@ -34,7 +36,9 @@ namespace Lexplosion.UI.WPF.Controls
         private int _transitionVersion;
         private bool _hasQueuedContent;
         private object _queuedContent;
+#if DEBUG
         private long _preparationStartedTick;
+#endif
         private readonly HashSet<ScrollBar> _hiddenScrollbars = new HashSet<ScrollBar>();
 
         // The transition state is exposed to the hosting TabControl, so tab input
@@ -81,6 +85,9 @@ namespace Lexplosion.UI.WPF.Controls
 
         public override void OnApplyTemplate()
         {
+#if DEBUG
+            using var trace = UiDebugTrace.Measure("page.apply-template", 3);
+#endif
             RestoreScrollbars();
             ++_transitionVersion;
             base.OnApplyTemplate();
@@ -140,15 +147,20 @@ namespace Lexplosion.UI.WPF.Controls
                 return;
             }
 
+#if DEBUG
+            UiDebugTrace.Navigate(newContent);
             if (PerformanceTelemetry.Enabled)
                 PerformanceTelemetry.Record("navigation.page." + newContent.GetType().Name, 0);
             _preparationStartedTick = PerformanceTelemetry.Enabled ? Stopwatch.GetTimestamp() : 0;
+#endif
 
             // Stage the incoming visual tree before starting the dissolve.
             // It must complete DataTemplate creation and layout while invisible.
             if (AnimationType == ContentControlAnimation.SoftReveal)
                 _next.Opacity = 0;
-            using (PerformanceTelemetry.Measure("navigation.page.stage-content", 10))
+#if DEBUG
+            using (UiDebugTrace.Measure("page.stage-content", 3))
+#endif
                 _next.Content = newContent;
             _next.Visibility = Visibility.Hidden;
             _next.IsHitTestVisible = false;
@@ -175,12 +187,15 @@ namespace Lexplosion.UI.WPF.Controls
                 return;
             }
 
+#if DEBUG
             if (_preparationStartedTick != 0)
             {
                 PerformanceTelemetry.Record("navigation.page.prepare",
-                    (Stopwatch.GetTimestamp() - _preparationStartedTick) * 1000.0 / Stopwatch.Frequency, 20);
+                    (Stopwatch.GetTimestamp() - _preparationStartedTick) * 1000.0 / Stopwatch.Frequency, 15);
                 _preparationStartedTick = 0;
             }
+            using var trace = UiDebugTrace.Measure("page.begin-transition", 3);
+#endif
 
             var oldPresenter = _current;
             var newPresenter = _next;
@@ -262,6 +277,9 @@ namespace Lexplosion.UI.WPF.Controls
 
         private void FinishTransition()
         {
+#if DEBUG
+            using var trace = UiDebugTrace.Measure("page.finish-transition", 3);
+#endif
             RestoreScrollbars();
             ++_transitionVersion;
             if (_current == null || _next == null || !_transitionPending)
@@ -297,6 +315,10 @@ namespace Lexplosion.UI.WPF.Controls
 
         private void ShowImmediately(object content)
         {
+#if DEBUG
+            using var trace = UiDebugTrace.Measure("page.show-immediately", 3);
+            UiDebugTrace.Navigate(content);
+#endif
             RestoreScrollbars();
             ++_transitionVersion;
             SetValue(IsTransitioningPropertyKey, false);
@@ -312,13 +334,17 @@ namespace Lexplosion.UI.WPF.Controls
 
         private static bool HasNativeWindow(DependencyObject root)
         {
-            using (PerformanceTelemetry.Measure("navigation.page.native-scan", 10))
+#if DEBUG
+            using (UiDebugTrace.Measure("page.native-scan", 3))
+#endif
                 return ContainsNativeWindow(root);
         }
 
         private void HidePageScrollbars(DependencyObject root)
         {
-            using (PerformanceTelemetry.Measure("navigation.page.scrollbar-scan", 10))
+#if DEBUG
+            using (UiDebugTrace.Measure("page.scrollbar-scan", 3))
+#endif
                 HideScrollbars(root);
         }
 

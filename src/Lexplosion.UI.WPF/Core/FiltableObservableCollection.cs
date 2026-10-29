@@ -1,5 +1,7 @@
 ﻿using Lexplosion.UI.WPF.Core.ViewModel;
+#if DEBUG
 using Lexplosion.QA;
+#endif
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -66,7 +68,9 @@ namespace Lexplosion.UI.WPF.Core
             // TODO: Перевести на делегат, чтобы можно было использовать в любом MVVM проекте (пригодиться в avalonia)
             App.Current.Dispatcher.Invoke(() =>
             {
-                using (PerformanceTelemetry.Measure("collection.filter.rebuild", 20))
+#if DEBUG
+                using (UiDebugTrace.Measure("collection.filter.rebuild", 3))
+#endif
                 {
                     _filteredCollection.Clear();
 
