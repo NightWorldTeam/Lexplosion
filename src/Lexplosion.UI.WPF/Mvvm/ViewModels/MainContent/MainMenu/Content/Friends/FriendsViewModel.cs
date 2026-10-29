@@ -15,6 +15,10 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
         #region Commands
 
 
+        private RelayCommand _refreshCommand;
+        public ICommand RefreshCommand =>
+            RelayCommand.GetCommand(ref _refreshCommand, () => Model.UpdateRequestsData());
+
         private RelayCommand _viewProfileCommand;
         public ICommand ViewProfileCommand
         {

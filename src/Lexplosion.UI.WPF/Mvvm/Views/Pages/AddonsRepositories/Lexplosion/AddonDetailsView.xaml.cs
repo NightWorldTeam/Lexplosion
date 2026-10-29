@@ -1,4 +1,5 @@
 using Lexplosion.Logic.Management.Addons;
+using Lexplosion.UI.WPF.Controls;
 using Lexplosion.UI.WPF.Mvvm.ViewModels.AddonsRepositories;
 using System;
 using System.Linq;
@@ -35,6 +36,12 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.AddonDetails
             set => SetValue(IsInformationOpenProperty, value);
         }
 
+        private string[] _minecraftVersions = Array.Empty<string>();
+        private string[] _modloaders = Array.Empty<string>();
+        private string[] _categories = Array.Empty<string>();
+        private bool _showAllVersions;
+        private bool _showAllLoaders;
+        private bool _showAllCategories;
         private int _generation;
         private int _versionsLoadedForGeneration = -1;
 
@@ -56,14 +63,15 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.AddonDetails
             view.VersionsStatus.Text = view.L("AddonDetailsVersionsHint");
             view.GalleryItems.ItemsSource = null;
             // Show only grounded metadata. The full Modrinth response can fill these later.
-            view.MinecraftVersionsItems.ItemsSource = Labels(
-                string.IsNullOrWhiteSpace(view.Addon?.GameVersion)
-                    ? Array.Empty<string>() : new[] { view.Addon.GameVersion }, 8);
-            view.ModloadersItems.ItemsSource = Labels(view.Addon?.DisplayModloaders, 6);
+            view._showAllVersions = view._showAllLoaders = view._showAllCategories = false;
+            view._minecraftVersions = Labels(string.IsNullOrWhiteSpace(view.Addon?.GameVersion)
+                ? Array.Empty<string>() : new[] { view.Addon.GameVersion });
+            view._modloaders = Labels(view.Addon?.DisplayModloaders);
+            view.UpdateMetadataLabels();
             view.GalleryEmptyText.Text = view.L("AddonDetailsGalleryLoading");
             view.GalleryEmptyText.Visibility = Visibility.Visible;
-            view.CategoryItems.ItemsSource = Labels(
-                view.Addon?.Categories?.Select(category => category.Name), 10);
+            view._categories = Labels(view.Addon?.Categories?.Select(category => category.Name));
+            view.UpdateMetadataLabels();
             view.DetailsTabs.SelectedIndex = 0;
             if (view.IsLoaded && view.IsVisible && view.Addon != null)
                 _ = view.RenderAddonAsync(view.Addon, view._generation);
@@ -93,16 +101,44 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.AddonDetails
             CleanupBrowser();
         }
 
-        private static string[] Labels(IEnumerable<string> values, int maxItems)
+        private static string[] Labels(IEnumerable<string> values)
         {
-            var list = (values ?? Enumerable.Empty<string>())
+            var labels = (values ?? Enumerable.Empty<string>())
                 .Where(x => !string.IsNullOrWhiteSpace(x))
                 .Select(x => x.Trim())
                 .Distinct(StringComparer.OrdinalIgnoreCase)
                 .ToArray();
-            if (list.Length == 0) return new[] { "—" };
-            if (list.Length <= maxItems) return list;
-            return list.Take(maxItems).Concat(new[] { "+" + (list.Length - maxItems) }).ToArray();
+            return labels.Length == 0 ? new[] { "—" } : labels;
+        }
+
+        private void UpdateMetadataLabels()
+        {
+            SetMetadataLabels(MinecraftVersionsItems, MoreMinecraftVersionsButton,
+                _minecraftVersions, 7, _showAllVersions);
+            SetMetadataLabels(ModloadersItems, MoreModloadersButton,
+                _modloaders, 6, _showAllLoaders);
+            SetMetadataLabels(CategoryItems, MoreCategoriesButton,
+                _categories, 10, _showAllCategories);
+        }
+
+        private void SetMetadataLabels(ItemsControl list, AdvancedButton more,
+            string[] values, int limit, bool expanded)
+        {
+            list.ItemsSource = expanded ? values : values.Take(limit).ToArray();
+            more.Visibility = values.Length > limit ? Visibility.Visible : Visibility.Collapsed;
+            more.Text = expanded ? L("ShowLess") :
+                L("More") + " (+" + (values.Length - limit) + ")";
+        }
+
+        private void OnMoreMetadataClick(object sender, RoutedEventArgs e)
+        {
+            if (ReferenceEquals(sender, MoreMinecraftVersionsButton))
+                _showAllVersions = !_showAllVersions;
+            else if (ReferenceEquals(sender, MoreModloadersButton))
+                _showAllLoaders = !_showAllLoaders;
+            else if (ReferenceEquals(sender, MoreCategoriesButton))
+                _showAllCategories = !_showAllCategories;
+            UpdateMetadataLabels();
         }
 
         // Use the launcher's active language dictionary, including runtime language changes.
@@ -112,10 +148,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.AddonDetails
         {
             if (!ReferenceEquals(e.OriginalSource, DetailsTabs)) return;
             // A native HWND must not cover the WPF gallery or version list.
-            if (_browser != null)
-                _browser.Visibility = DetailsTabs.SelectedIndex == 0 &&
-                    LoadingOverlay.Visibility == Visibility.Collapsed
-                    ? Visibility.Visible : Visibility.Hidden;
+            UpdateBrowserHitTesting();
             if (DetailsTabs.SelectedIndex != 2) return;
             var addon = Addon;
             int generation = _generation;
@@ -169,14 +202,25 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.AddonDetails
         }
 
 
+        private void UpdateBrowserHitTesting()
+        {
+            // WebView2 is an HWND and otherwise covers the compact WPF drawer.
+            if (_browser != null)
+                _browser.Visibility = !IsInformationOpen && DetailsTabs.SelectedIndex == 0 &&
+                    LoadingOverlay.Visibility == Visibility.Collapsed
+                    ? Visibility.Visible : Visibility.Hidden;
+        }
+
         private void OnInformationClick(object sender, RoutedEventArgs e)
         {
             IsInformationOpen = !IsInformationOpen;
+            UpdateBrowserHitTesting();
         }
 
         private void OnInformationScrimClick(object sender, MouseButtonEventArgs e)
         {
             IsInformationOpen = false;
+            UpdateBrowserHitTesting();
             e.Handled = true;
         }
 

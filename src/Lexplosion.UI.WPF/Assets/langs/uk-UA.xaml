@@ -179,6 +179,10 @@
 
     <!--  Logo  -->
     <s:String x:Key="More">Більше</s:String>
+    <s:String x:Key="FriendsLoadFailed">Не вдалося завантажити друзів.</s:String>
+    <s:String x:Key="FriendsEmpty">У вас поки немає друзів.</s:String>
+    <s:String x:Key="FriendsRetry">Повторити</s:String>
+    <s:String x:Key="ShowLess">Згорнути</s:String>
 
     <!--  Upper Buttons  -->
     <s:String x:Key="Play">Грати</s:String>

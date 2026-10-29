@@ -295,19 +295,18 @@ namespace Lexplosion.Logic.Network
 				["UUID"] = UUID,
 				["sessionToken"] = sessionToken
 			});
-
-			List<NwUser> result = null;
-
-			if (data != null)
+			// An invalid server response is not an empty friends list.
+			if (string.IsNullOrWhiteSpace(data))
+				throw new InvalidOperationException("Friends endpoint returned no data.");
+			try
 			{
-				try
-				{
-					result = JsonConvert.DeserializeObject<List<NwUser>>(data);
-				}
-				catch { }
+				return JsonConvert.DeserializeObject<List<NwUser>>(data)
+					?? throw new InvalidOperationException("Friends endpoint returned null.");
 			}
-
-			return result ?? new List<NwUser>();
+			catch (JsonException error)
+			{
+				throw new InvalidOperationException("Invalid friends response.", error);
+			}
 		}
 
 		/// <summary>

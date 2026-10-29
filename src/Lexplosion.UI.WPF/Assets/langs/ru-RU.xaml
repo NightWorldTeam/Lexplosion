@@ -198,6 +198,10 @@
 
     <!--  Logo  -->
     <s:String x:Key="More">Больше</s:String>
+    <s:String x:Key="FriendsLoadFailed">Не удалось загрузить друзей.</s:String>
+    <s:String x:Key="FriendsEmpty">У вас пока нет друзей.</s:String>
+    <s:String x:Key="FriendsRetry">Повторить</s:String>
+    <s:String x:Key="ShowLess">Свернуть</s:String>
 
     <!--  Upper Buttons  -->
     <s:String x:Key="Play">Играть</s:String>

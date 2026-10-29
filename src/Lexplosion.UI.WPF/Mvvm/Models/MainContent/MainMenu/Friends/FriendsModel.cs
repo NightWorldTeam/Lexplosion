@@ -1,10 +1,13 @@
-﻿using Lexplosion.Logic.Management.Accounts;
+using Lexplosion.Logic.Management.Accounts;
 using Lexplosion.Logic.Objects.Nightworld;
 using Lexplosion.UI.WPF.Core;
 using Lexplosion.UI.WPF.Core.Objects.Users;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Threading;
+using System.Windows;
 
 namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.MainMenu.Friends
 {
@@ -12,33 +15,52 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.MainMenu.Friends
     {
         public event Action<Friend> Unfriended;
 
-        private readonly ObservableCollection<Friend> _allFriends = [];
-        public FiltableObservableCollection AllFriends { get; set; } = new();
-
-
-        #region Properties
-
-
+        private readonly ObservableCollection<Friend> _allFriends = new ObservableCollection<Friend>();
+        private int _requestVersion;
+        private bool _isLoading;
+        private bool _hasLoadError;
         private string _searchBoxText;
-        public string SearchBoxText
+
+        public FiltableObservableCollection AllFriends { get; } = new FiltableObservableCollection();
+        public bool HasFriends => AllFriends.Count > 0;
+        public bool IsEmpty => !IsLoading && !HasLoadError && _allFriends.Count == 0;
+
+        public bool IsLoading
         {
-            get => _searchBoxText; set
+            get => _isLoading;
+            private set
             {
-                _searchBoxText = value;
-                OnSearchBoxTextChanged(value);
+                if (_isLoading == value) return;
+                _isLoading = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(IsEmpty));
             }
         }
 
+        public bool HasLoadError
+        {
+            get => _hasLoadError;
+            private set
+            {
+                if (_hasLoadError == value) return;
+                _hasLoadError = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(IsEmpty));
+            }
+        }
 
-        public bool HasFriends { get => AllFriends.Count > 0; }
-
-
-        #endregion Properties
-
-
-        #region Constructors
-
+        public string SearchBoxText
+        {
+            get => _searchBoxText;
+            set
+            {
+                _searchBoxText = value;
+                var search = value ?? string.Empty;
+                AllFriends.Filter = obj => ((Friend)obj).Login.IndexOf(
+                    search, StringComparison.InvariantCultureIgnoreCase) >= 0;
+                OnPropertyChanged();
+            }
+        }
 
         public FriendsModel()
         {
@@ -46,67 +68,61 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.MainMenu.Friends
             UpdateRequestsData();
         }
 
-
-        #endregion Constructors
-
-
-        #region Public Methods
-
-
         public void UpdateRequestsData()
         {
+            int version = Interlocked.Increment(ref _requestVersion);
+            IsLoading = true;
+            HasLoadError = false;
             Runtime.TaskRun(() =>
             {
-                var activeAccount = Account.ActiveAccount;
-                activeAccount.WaitAuth();
-                var friends = Runtime.ServicesContainer.NwApi.GetFriends(activeAccount.UUID, activeAccount.SessionToken, activeAccount.Login);
-                App.Current.Dispatcher.Invoke(() => UpdateFriends(friends));
+                try
+                {
+                    var account = Account.ActiveAccount;
+                    if (account == null)
+                        throw new InvalidOperationException("No active account");
+                    account.WaitAuth();
+                    var friends = Runtime.ServicesContainer.NwApi.GetFriends(
+                        account.UUID, account.SessionToken, account.Login);
+                    Application.Current?.Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        if (version != Volatile.Read(ref _requestVersion)) return;
+                        UpdateFriends(friends);
+                        HasLoadError = false;
+                        IsLoading = false;
+                    }));
+                }
+                catch (Exception error)
+                {
+                    Trace.WriteLine("Friends loading failed: " + error.GetType().Name);
+                    Application.Current?.Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        if (version != Volatile.Read(ref _requestVersion)) return;
+                        HasLoadError = true;
+                        IsLoading = false;
+                    }));
+                }
             });
         }
-
-        #endregion Public Methods
-
-
-        #region Private Methods
-
 
         private void UpdateFriends(IEnumerable<NwUser> friends)
         {
-            App.Current.Dispatcher.Invoke(() =>
+            foreach (var friend in _allFriends)
+                friend.Unfriended -= FriendObj_Unfriended;
+            _allFriends.Clear();
+            foreach (var friend in friends)
             {
-                _allFriends.Clear();
-
-                var i = 0;
-                foreach (var friend in friends)
-                {
-                    var friendObj = new Friend(friend);
-                    friendObj.Unfriended += FriendObj_Unfriended;
-                    _allFriends.Add(friendObj);
-                    i++;
-                }
-
-                OnPropertyChanged(nameof(HasFriends));
-            });
+                var item = new Friend(friend);
+                item.Unfriended += FriendObj_Unfriended;
+                _allFriends.Add(item);
+            }
+            OnPropertyChanged(nameof(HasFriends));
+            OnPropertyChanged(nameof(IsEmpty));
         }
 
-        private void OnSearchBoxTextChanged(string value)
+        private void FriendObj_Unfriended(Friend friend)
         {
-            value ??= string.Empty;
-            AllFriends.Filter = (obj => (obj as Friend).Login.IndexOf(value, System.StringComparison.InvariantCultureIgnoreCase) > -1);
+            Unfriended?.Invoke(friend);
+            friend.Unfriended -= FriendObj_Unfriended;
         }
-
-        /// <summary>
-        /// Вызывает эвент удаления из друзей
-        /// </summary>
-        /// <param name="obj">Удаленный друг</param>
-        private void FriendObj_Unfriended(Friend obj)
-        {
-            Unfriended?.Invoke(obj);
-            obj.Unfriended -= FriendObj_Unfriended;
-        }
-
-
-        #endregion Private Methods
     }
-
 }

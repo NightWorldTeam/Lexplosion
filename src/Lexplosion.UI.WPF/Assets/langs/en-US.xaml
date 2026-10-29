@@ -198,6 +198,10 @@
 
     <!--  Logo  -->
     <s:String x:Key="More">More</s:String>
+    <s:String x:Key="FriendsLoadFailed">Could not load friends.</s:String>
+    <s:String x:Key="FriendsEmpty">You have no friends yet.</s:String>
+    <s:String x:Key="FriendsRetry">Retry</s:String>
+    <s:String x:Key="ShowLess">Show less</s:String>
 
     <!--  Upper Buttons  -->
     <s:String x:Key="Play">Play</s:String>

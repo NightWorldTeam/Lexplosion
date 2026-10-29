@@ -180,6 +180,10 @@
 
     <!--  Logo  -->
     <s:String x:Key="More">Mehr</s:String>
+    <s:String x:Key="FriendsLoadFailed">Freunde konnten nicht geladen werden.</s:String>
+    <s:String x:Key="FriendsEmpty">Du hast noch keine Freunde.</s:String>
+    <s:String x:Key="FriendsRetry">Erneut versuchen</s:String>
+    <s:String x:Key="ShowLess">Weniger anzeigen</s:String>
 
     <!--  Upper Buttons  -->
     <s:String x:Key="Play">Spielen</s:String>

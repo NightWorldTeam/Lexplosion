@@ -316,16 +316,28 @@
                             <ItemsControl x:Name="MinecraftVersionsItems" ItemTemplate="{StaticResource InfoChip}">
                                 <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
                             </ItemsControl>
+                            <controls:AdvancedButton x:Name="MoreMinecraftVersionsButton" Height="28" Margin="0,4,0,0"
+                                HorizontalAlignment="Left" Style="{StaticResource TransparentAdvancedButton}"
+                                Foreground="{DynamicResource ActivitySolidColorBrush}"
+                                Visibility="Collapsed" Click="OnMoreMetadataClick" />
                             <Border Style="{StaticResource InfoSeparator}" />
                             <TextBlock Style="{StaticResource InfoCaption}" Text="{DynamicResource AddonDetailsLoaders}" />
                             <ItemsControl x:Name="ModloadersItems" ItemTemplate="{StaticResource InfoChip}">
                                 <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
                             </ItemsControl>
+                            <controls:AdvancedButton x:Name="MoreModloadersButton" Height="28" Margin="0,4,0,0"
+                                HorizontalAlignment="Left" Style="{StaticResource TransparentAdvancedButton}"
+                                Foreground="{DynamicResource ActivitySolidColorBrush}"
+                                Visibility="Collapsed" Click="OnMoreMetadataClick" />
                             <Border Style="{StaticResource InfoSeparator}" />
                             <TextBlock Style="{StaticResource InfoCaption}" Text="{DynamicResource AddonDetailsCategories}" />
                             <ItemsControl x:Name="CategoryItems" ItemTemplate="{StaticResource InfoChip}">
                                 <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
                             </ItemsControl>
+                            <controls:AdvancedButton x:Name="MoreCategoriesButton" Height="28" Margin="0,4,0,0"
+                                HorizontalAlignment="Left" Style="{StaticResource TransparentAdvancedButton}"
+                                Foreground="{DynamicResource ActivitySolidColorBrush}"
+                                Visibility="Collapsed" Click="OnMoreMetadataClick" />
                             <Border Style="{StaticResource InfoSeparator}" />
                             <TextBlock Style="{StaticResource InfoCaption}" Text="{DynamicResource AddonDetailsSource}" />
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,10">

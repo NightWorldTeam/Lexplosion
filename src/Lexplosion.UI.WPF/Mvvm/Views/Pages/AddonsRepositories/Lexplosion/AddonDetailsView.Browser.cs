@@ -125,9 +125,10 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.AddonDetails
                 // stable releases first rather than a wall of old snapshots.
                 var stableVersions = data.MinecraftVersions.Where(version =>
                     Regex.IsMatch(version ?? string.Empty, @"^\d+\.\d+(?:\.\d+)?$")).ToArray();
-                MinecraftVersionsItems.ItemsSource = Labels(
-                    Enumerable.Reverse(stableVersions.Length > 0 ? stableVersions : data.MinecraftVersions), 7);
-                ModloadersItems.ItemsSource = Labels(data.Modloaders, 6);
+                _minecraftVersions = Labels(Enumerable.Reverse(
+                    stableVersions.Length > 0 ? stableVersions : data.MinecraftVersions));
+                _modloaders = Labels(data.Modloaders);
+                UpdateMetadataLabels();
                 GalleryEmptyText.Text = data.Images.Length == 0
                     ? L("AddonDetailsGalleryEmpty") : string.Empty;
                 GalleryEmptyText.Visibility = data.Images.Length == 0 ? Visibility.Visible : Visibility.Collapsed;
@@ -173,9 +174,8 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.AddonDetails
             }
             if (_browser != null)
             {
-                _browser.Visibility = DetailsTabs.SelectedIndex == 0
-                    ? Visibility.Visible : Visibility.Hidden;
                 LoadingOverlay.Visibility = Visibility.Collapsed;
+                UpdateBrowserHitTesting();
             }
         }
 

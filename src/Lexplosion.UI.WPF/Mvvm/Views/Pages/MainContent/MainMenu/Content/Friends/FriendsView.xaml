@@ -100,5 +100,22 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
+        <controls:CircleLoader Grid.Row="1" Width="36" Height="36"
+            HorizontalAlignment="Center" VerticalAlignment="Center"
+            IsActive="{Binding Model.IsLoading}" />
+
+        <TextBlock Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"
+            Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+            Text="{DynamicResource FriendsEmpty}"
+            Visibility="{Binding Model.IsEmpty, Converter={converters:BooleanToVisibilityConverter}}" />
+
+        <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"
+            Visibility="{Binding Model.HasLoadError, Converter={converters:BooleanToVisibilityConverter}}">
+            <TextBlock Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                Text="{DynamicResource FriendsLoadFailed}" TextAlignment="Center" />
+            <controls:AdvancedButton Height="32" Margin="0,16,0,0"
+                HorizontalAlignment="Center" Style="{StaticResource sm-default}"
+                Text="{DynamicResource FriendsRetry}" Command="{Binding RefreshCommand}" />
+        </StackPanel>
     </Grid>
 </UserControl>
