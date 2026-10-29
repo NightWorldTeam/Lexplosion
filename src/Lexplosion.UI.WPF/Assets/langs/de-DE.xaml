@@ -824,4 +824,7 @@
     <s:String x:Key="LaunchingGame">Spiel wird gestartet...</s:String>
     <s:String x:Key="InterfaceAnimations">Oberflächenanimationen</s:String>
     <s:String x:Key="InterfaceAnimationsDescription">Sanfte Übergänge zwischen Seiten und Menüpunkten.</s:String>
+    <s:String x:Key="PartnerServersEmpty">Derzeit sind keine Partnerserver verfügbar.</s:String>
+    <s:String x:Key="PartnerServersLoadFailed">Partnerserver konnten nicht geladen werden.</s:String>
+    <s:String x:Key="PartnerServersRetry">Erneut versuchen</s:String>
 </ResourceDictionary>

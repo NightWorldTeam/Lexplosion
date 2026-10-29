@@ -25,6 +25,7 @@ namespace Lexplosion.UI.WPF.Controls
         private object _requestedContent;
         private bool _contentPending;
         private int _selectionVersion;
+        private int _scheduledContentVersion = -1;
 
         private TabItem _selectedTabItem;
         private bool _underlineUpdatePending;
@@ -188,6 +189,19 @@ namespace Lexplosion.UI.WPF.Controls
             QueueUnderlineUpdate();
         }
 
+        protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
+        {
+            base.OnPropertyChanged(e);
+
+            // The old template bound directly to SelectedContent. Since the
+            // delayed-content refactor, a change after OnSelectionChanged
+            // (e.g. late item content or template realization) could be lost.
+            // Observe the actual DP as well as the tab selection.
+            if (e.Property == SelectedContentProperty &&
+                !ReferenceEquals(e.OldValue, e.NewValue))
+                QueueContentNavigation();
+        }
+
         private void UpdateContentDirection(bool backwards)
         {
             var direction = ContentAnimation;
@@ -236,20 +250,27 @@ namespace Lexplosion.UI.WPF.Controls
 
             int version = _selectionVersion;
             var content = _requestedContent;
-            _contentPending = false;
 
             if (!afterAnimation)
             {
+                _contentPending = false;
                 ApplyDisplayedContent(content);
                 return;
             }
 
-            // The underline's final frame is rendered before the incoming
-            // DataTemplate starts its potentially expensive construction.
+            // Keep the request pending until it actually reaches the display.
+            // A superseded Dispatcher callback must not silently consume it.
+            if (_scheduledContentVersion == version) return;
+            _scheduledContentVersion = version;
             Dispatcher.BeginInvoke(new Action(() =>
             {
-                if (version == _selectionVersion)
-                    ApplyDisplayedContent(content);
+                if (_scheduledContentVersion == version)
+                    _scheduledContentVersion = -1;
+                if (version != _selectionVersion || !_contentPending)
+                    return;
+
+                _contentPending = false;
+                ApplyDisplayedContent(content);
             }), DispatcherPriority.Background);
         }
 
@@ -262,6 +283,11 @@ namespace Lexplosion.UI.WPF.Controls
             using (UiDebugTrace.Measure("tabs.commit", 3))
 #endif
                 SetValue(DisplayedContentPropertyKey, content);
+
+#if DEBUG
+            if (PerformanceTelemetry.Enabled && !ReferenceEquals(DisplayedContent, SelectedContent))
+                PerformanceTelemetry.Record("navigation.tabs.content-mismatch", 0);
+#endif
         }
 
         private void QueueUnderlineUpdate()

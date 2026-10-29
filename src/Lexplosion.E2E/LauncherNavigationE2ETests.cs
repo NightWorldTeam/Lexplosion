@@ -250,6 +250,61 @@ namespace Lexplosion.E2E
                 _session.Record("coverage.skip", "stress.tabs.unavailable", 0, "SKIP");
         }
 
+        [Test, Order(12)]
+        public void PartnerServersAlwaysShowContentOrExplicitLoadState()
+        {
+            var window = _session.WaitForMainWindow();
+            var sidebar = FindSidebar(window, "nav.sidebar.Multiplayer");
+            if (sidebar == null || !Visible(sidebar))
+                Assert.Ignore("Multiplayer sidebar is unavailable in this fixture.");
+
+            sidebar.AsRadioButton().IsChecked = true;
+            var group = Retry.WhileNull(() =>
+                _session.WaitForMainWindow().FindFirstDescendant(cf =>
+                    cf.ByAutomationId("nav.group.multiplayer")),
+                timeout: TimeSpan.FromSeconds(8),
+                interval: TimeSpan.FromMilliseconds(150),
+                ignoreException: true).Result;
+            if (group == null || !Visible(group))
+                Assert.Ignore("Multiplayer tabs are restricted for this account.");
+
+            var tab = FindTab("nav.group.multiplayer", "nav.tab.PartnerServers");
+            Assert.That(tab, Is.Not.Null, "Partner servers tab is missing.");
+            tab.AsTabItem().Select();
+
+            var content = Retry.WhileNull(() =>
+                _session.WaitForMainWindow().FindFirstDescendant(cf =>
+                    cf.ByAutomationId("nav.content.partner-servers")),
+                timeout: TimeSpan.FromSeconds(8),
+                interval: TimeSpan.FromMilliseconds(150),
+                ignoreException: true).Result;
+            Assert.That(content != null && Visible(content), Is.True,
+                "PartnerServers tab is selected, but its content was not rendered.");
+
+            var watch = Stopwatch.StartNew();
+            while (watch.Elapsed < TimeSpan.FromSeconds(15))
+            {
+                window = _session.WaitForMainWindow();
+                foreach (var stateId in new[]
+                {
+                    "nav.open.server",
+                    "nav.status.partner-servers.empty",
+                    "nav.status.partner-servers.error"
+                })
+                {
+                    var state = window.FindFirstDescendant(cf => cf.ByAutomationId(stateId));
+                    if (state != null && Visible(state))
+                    {
+                        _session.Record("partner-servers", stateId, watch.ElapsedMilliseconds, "PASS");
+                        return;
+                    }
+                }
+                Thread.Sleep(150);
+            }
+
+            Assert.Fail("PartnerServers displayed no cards, empty state or error after 15s.");
+        }
+
         [Test, Order(1000)]
         public void DispatcherPerformanceDoesNotExceedQaBudget()
         {

@@ -33,6 +33,9 @@ $env:LEXPLOSION_QA = "1"
 - `ui.dispatcher.unattributed.<Priority>`: операция дольше 40 мс, но внутри не было ни одного измеренного участка. Это указание расширить диагностику или использовать sampling profiler, **не** доказательство проблемы с анимациями.
 - `ui.route.<ViewModelType>`: последнее запрошенное содержимое (только имя .NET-типа).
 
+- `servers.api-get`: длительность запроса списка партнёрских серверов (фоновый поток).
+- `servers.load.success`, `servers.load.empty`, `servers.load.failed`: результат запроса, который теперь различается в UI.
+- `navigation.tabs.content-mismatch`: событие Debug, когда отрисованное содержимое не совпадает с выбранным после установки `DisplayedContent`.
 - `ui.work.gallery.thumbnail.decode`: стоимость первой WIC-декодировки конкретной миниатюры. Повторные привязки к тому же массиву байтов используют слабый кэш и декодирование не повторяют. Появляется только в Debug при `LEXPLOSION_QA=1`.
 - `ui.frame.interval.<ViewModelType>`: интервал между WPF `Rendering` событиями >=75 мс в течение 3 секунд после навигации. **Не** время работы рендерера или GPU, в простое не измеряется.
 - `navigation.page.stage-content`, `navigation.page.native-scan`, `navigation.page.scrollbar-scan`, `navigation.tabs.selection`, `navigation.tabs.underline`, `navigation.sidebar.caret`, `library.visible-index.scan`: конкретные участки переходов при >=10 мс.

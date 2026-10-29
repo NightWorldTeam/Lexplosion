@@ -1091,4 +1091,7 @@
     <s:String x:Key="AddonDetailsNoDescription">Описание отсутствует.</s:String>
     <s:String x:Key="InterfaceAnimations">Анимации интерфейса</s:String>
     <s:String x:Key="InterfaceAnimationsDescription">Плавные переходы между страницами и пунктами меню.</s:String>
+    <s:String x:Key="PartnerServersEmpty">Серверы партнёров пока отсутствуют.</s:String>
+    <s:String x:Key="PartnerServersLoadFailed">Не удалось загрузить серверы партнёров.</s:String>
+    <s:String x:Key="PartnerServersRetry">Повторить</s:String>
 </ResourceDictionary>

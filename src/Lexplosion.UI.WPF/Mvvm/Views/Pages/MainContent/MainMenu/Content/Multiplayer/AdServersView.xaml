@@ -1,5 +1,6 @@
 ﻿<UserControl
     x:Class="Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.MainMenu.AdServersView"
+    AutomationProperties.AutomationId="nav.content.partner-servers"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:Lexplosion.UI.WPF.Controls"
@@ -245,5 +246,39 @@
                 </ListBox.ItemsPanel>
             </ListBox>
         </Border>
+        <controls:CircleLoader
+            AutomationProperties.AutomationId="nav.status.partner-servers.loading"
+            Width="36"
+            Height="36"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            IsActive="{Binding Model.IsLoading}" />
+
+        <TextBlock
+            AutomationProperties.AutomationId="nav.status.partner-servers.empty"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+            Text="{DynamicResource PartnerServersEmpty}"
+            Visibility="{Binding Model.IsEmpty, Converter={converters:BooleanToVisibilityConverter}}" />
+
+        <StackPanel
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Visibility="{Binding Model.HasLoadError, Converter={converters:BooleanToVisibilityConverter}}">
+            <TextBlock
+                AutomationProperties.AutomationId="nav.status.partner-servers.error"
+                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                TextAlignment="Center"
+                Text="{DynamicResource PartnerServersLoadFailed}" />
+            <controls:AdvancedButton
+                AutomationProperties.AutomationId="nav.retry.partner-servers"
+                Height="32"
+                Margin="0,16,0,0"
+                HorizontalAlignment="Center"
+                Style="{StaticResource sm-default}"
+                Command="{Binding ReloadCommand}"
+                Text="{DynamicResource PartnerServersRetry}" />
+        </StackPanel>
     </Grid>
 </UserControl>

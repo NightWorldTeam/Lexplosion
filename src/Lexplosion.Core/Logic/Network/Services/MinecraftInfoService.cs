@@ -166,27 +166,38 @@ namespace Lexplosion.Logic.Network.Services
 
 		public List<MinecraftServerInstance> GetMinecraftServersList()
 		{
-			string result = _toServer.HttpGet(LaunсherSettings.URL.Base + "api/minecraftServers/list");
+			TryGetMinecraftServersList(out var servers);
+			return servers;
+		}
 
-			if (result == null) return new List<MinecraftServerInstance>();
-
+		/// <summary>
+		/// False means the request failed; true with an empty list means the
+		/// server replied successfully but provided no valid entries.
+		/// Retained the original list-returning method for existing callers.
+		/// </summary>
+		public bool TryGetMinecraftServersList(out List<MinecraftServerInstance> servers)
+		{
+			servers = new List<MinecraftServerInstance>();
 			try
 			{
+				string result = _toServer.HttpGet(LaunсherSettings.URL.Base + "api/minecraftServers/list");
+				if (result == null)
+					return false;
+
 				var data = JsonConvert.DeserializeObject<List<MinecraftServerInstance>>(result);
+				if (data == null)
+					return false;
 
-				for (int i = 0; i < data.Count; i++)
-				{
-					MinecraftServerInstance element = data[i];
-					if (!element.IsValid()) data.Remove(element);
-				}
-
-				Random rand = new Random();
-				rand.Shuffle(data);
-				return data;
+				// The old forward Remove loop skipped adjacent invalid entries.
+				data.RemoveAll(server => server == null || !server.IsValid());
+				new Random().Shuffle(data);
+				servers = data;
+				return true;
 			}
-			catch
+			catch (Exception ex)
 			{
-				return new List<MinecraftServerInstance>();
+				Runtime.DebugWrite("[MinecraftServers] List request failed: " + ex.GetType().Name);
+				return false;
 			}
 		}
 

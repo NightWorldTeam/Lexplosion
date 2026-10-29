@@ -1091,4 +1091,7 @@
     <s:String x:Key="AddonDetailsNoDescription">No description available.</s:String>
     <s:String x:Key="InterfaceAnimations">Interface animations</s:String>
     <s:String x:Key="InterfaceAnimationsDescription">Smooth transitions between pages and menu items.</s:String>
+    <s:String x:Key="PartnerServersEmpty">There are no partner servers yet.</s:String>
+    <s:String x:Key="PartnerServersLoadFailed">Failed to load partner servers.</s:String>
+    <s:String x:Key="PartnerServersRetry">Retry</s:String>
 </ResourceDictionary>

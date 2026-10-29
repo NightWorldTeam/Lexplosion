@@ -825,4 +825,7 @@
     <s:String x:Key="LaunchingGame">Запуск гри...</s:String>
     <s:String x:Key="InterfaceAnimations">Анімації інтерфейсу</s:String>
     <s:String x:Key="InterfaceAnimationsDescription">Плавні переходи між сторінками та пунктами меню.</s:String>
+    <s:String x:Key="PartnerServersEmpty">Партнерські сервери поки відсутні.</s:String>
+    <s:String x:Key="PartnerServersLoadFailed">Не вдалося завантажити партнерські сервери.</s:String>
+    <s:String x:Key="PartnerServersRetry">Повторити</s:String>
 </ResourceDictionary>

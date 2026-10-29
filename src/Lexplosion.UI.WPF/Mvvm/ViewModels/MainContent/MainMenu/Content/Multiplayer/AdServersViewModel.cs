@@ -14,6 +14,11 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
 
         #region Commands
 
+        private RelayCommand _reloadCommand;
+        public ICommand ReloadCommand =>
+            RelayCommand.GetCommand(ref _reloadCommand, Model.ReloadServers);
+
+
 
         private RelayCommand _openServerPageCommand;
         public ICommand OpenServerPageCommand

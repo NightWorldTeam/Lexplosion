@@ -498,4 +498,7 @@
     <s:String x:Key="LaunchingGame">正在启动游戏...</s:String>
     <s:String x:Key="InterfaceAnimations">界面动画</s:String>
     <s:String x:Key="InterfaceAnimationsDescription">页面和菜单项目之间的平滑过渡。</s:String>
+    <s:String x:Key="PartnerServersEmpty">暂无合作伙伴服务器。</s:String>
+    <s:String x:Key="PartnerServersLoadFailed">无法加载合作伙伴服务器。</s:String>
+    <s:String x:Key="PartnerServersRetry">重试</s:String>
 </ResourceDictionary>
