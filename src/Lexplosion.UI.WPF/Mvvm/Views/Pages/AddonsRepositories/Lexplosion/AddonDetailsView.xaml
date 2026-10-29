@@ -316,7 +316,7 @@
                             <ItemsControl x:Name="MinecraftVersionsItems" ItemTemplate="{StaticResource InfoChip}">
                                 <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
                             </ItemsControl>
-                            <controls:AdvancedButton x:Name="MoreMinecraftVersionsButton" Height="28" Margin="0,4,0,0"
+                            <controls:AdvancedButton x:Name="MoreMinecraftVersionsButton" AutomationProperties.AutomationId="addon.details.more.minecraft-versions" Height="28" Margin="0,4,0,0"
                                 HorizontalAlignment="Left" Style="{StaticResource TransparentAdvancedButton}"
                                 Foreground="{DynamicResource ActivitySolidColorBrush}"
                                 Visibility="Collapsed" Click="OnMoreMetadataClick" />
@@ -325,7 +325,7 @@
                             <ItemsControl x:Name="ModloadersItems" ItemTemplate="{StaticResource InfoChip}">
                                 <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
                             </ItemsControl>
-                            <controls:AdvancedButton x:Name="MoreModloadersButton" Height="28" Margin="0,4,0,0"
+                            <controls:AdvancedButton x:Name="MoreModloadersButton" AutomationProperties.AutomationId="addon.details.more.modloaders" Height="28" Margin="0,4,0,0"
                                 HorizontalAlignment="Left" Style="{StaticResource TransparentAdvancedButton}"
                                 Foreground="{DynamicResource ActivitySolidColorBrush}"
                                 Visibility="Collapsed" Click="OnMoreMetadataClick" />
@@ -334,7 +334,7 @@
                             <ItemsControl x:Name="CategoryItems" ItemTemplate="{StaticResource InfoChip}">
                                 <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
                             </ItemsControl>
-                            <controls:AdvancedButton x:Name="MoreCategoriesButton" Height="28" Margin="0,4,0,0"
+                            <controls:AdvancedButton x:Name="MoreCategoriesButton" AutomationProperties.AutomationId="addon.details.more.categories" Height="28" Margin="0,4,0,0"
                                 HorizontalAlignment="Left" Style="{StaticResource TransparentAdvancedButton}"
                                 Foreground="{DynamicResource ActivitySolidColorBrush}"
                                 Visibility="Collapsed" Click="OnMoreMetadataClick" />

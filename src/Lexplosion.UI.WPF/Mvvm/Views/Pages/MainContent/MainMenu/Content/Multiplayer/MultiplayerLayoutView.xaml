@@ -36,6 +36,7 @@
             BorderBrush="{DynamicResource LayoutTabBorderSolidColorBrush}"
             BorderThickness="0,0,0,1"
             ItemsSource="{Binding Tabs}"
+            ContentAnimation="None"
             TabPanelPadding="45,16,45,0">
             <controls:UIUnderlineTabControl.ItemContainerStyle>
                 <Style BasedOn="{StaticResource UITabItem}" TargetType="TabItem">

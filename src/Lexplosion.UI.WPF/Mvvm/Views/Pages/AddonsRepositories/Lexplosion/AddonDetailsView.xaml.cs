@@ -1,5 +1,6 @@
 using Lexplosion.Logic.Management.Addons;
 using Lexplosion.UI.WPF.Controls;
+using Lexplosion.QA;
 using Lexplosion.UI.WPF.Mvvm.ViewModels.AddonsRepositories;
 using System;
 using System.Linq;
@@ -132,6 +133,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.AddonDetails
 
         private void OnMoreMetadataClick(object sender, RoutedEventArgs e)
         {
+            PerformanceTelemetry.Record("addon.details.more.click", 0);
             if (ReferenceEquals(sender, MoreMinecraftVersionsButton))
                 _showAllVersions = !_showAllVersions;
             else if (ReferenceEquals(sender, MoreModloadersButton))

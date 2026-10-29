@@ -241,6 +241,8 @@ namespace Lexplosion.UI.WPF.Controls
             if (_textBlock != null)
             {
                 _textBlock.Text = Text;
+                _textBlock.Visibility = Content == null && !string.IsNullOrWhiteSpace(Text)
+                    ? Visibility.Visible : Visibility.Collapsed;
             }
 
             HasIcon = IconData != null;
@@ -336,14 +338,12 @@ namespace Lexplosion.UI.WPF.Controls
                     return;
                 }
 
-                if (string.IsNullOrWhiteSpace(_this._textBlock.Text))
-                {
-                    _this._textBlock.Visibility = Visibility.Collapsed;
-                    return;
-                }
-
-                _this._textBlock.Visibility = Visibility.Visible;
+                // Text is often assigned after the template has been applied
+                // (for example, expandable addon metadata). Test the NEW value.
                 _this._textBlock.Text = _this.Text;
+                _this._textBlock.Visibility =
+                    _this.Content == null && !string.IsNullOrWhiteSpace(_this.Text)
+                        ? Visibility.Visible : Visibility.Collapsed;
             }
         }
 
