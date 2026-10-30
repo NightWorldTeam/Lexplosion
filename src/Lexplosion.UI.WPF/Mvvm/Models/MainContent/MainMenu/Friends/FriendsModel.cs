@@ -15,7 +15,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.MainMenu.Friends
     {
         public event Action<Friend> Unfriended;
 
-        private readonly ObservableCollection<Friend> _allFriends = new ObservableCollection<Friend>();
+        private readonly BulkObservableCollection<Friend> _allFriends = new BulkObservableCollection<Friend>();
         private int _requestVersion;
         private bool _isLoading;
         private bool _hasLoadError;
@@ -116,15 +116,19 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.MainMenu.Friends
 #if DEBUG
             using var trace = UiDebugTrace.Measure("friends.update-collection", 3);
 #endif
-            foreach (var friend in _allFriends)
-                friend.Unfriended -= FriendObj_Unfriended;
-            _allFriends.Clear();
+            // Build the next snapshot before notifying any WPF bindings.
+            // The filtered collection can then refresh exactly once.
+            var items = new List<Friend>();
             foreach (var friend in friends)
             {
                 var item = new Friend(friend);
                 item.Unfriended += FriendObj_Unfriended;
-                _allFriends.Add(item);
+                items.Add(item);
             }
+
+            foreach (var previous in _allFriends)
+                previous.Unfriended -= FriendObj_Unfriended;
+            _allFriends.ReplaceAll(items);
             OnPropertyChanged(nameof(HasFriends));
             OnPropertyChanged(nameof(IsEmpty));
         }

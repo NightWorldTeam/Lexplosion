@@ -21,7 +21,7 @@ namespace Lexplosion.UI.WPF.Core
         #region Properties
 
 
-        private readonly ObservableCollection<object> _filteredCollection = new ObservableCollection<object>();
+        private readonly BulkObservableCollection<object> _filteredCollection = new BulkObservableCollection<object>();
         public ICollection Filtered { get => _filteredCollection; }
 
 
@@ -72,21 +72,19 @@ namespace Lexplosion.UI.WPF.Core
                 using (UiDebugTrace.Measure("collection.filter.rebuild", 3))
 #endif
                 {
-                    _filteredCollection.Clear();
-
-                    foreach (var newItem in Source)
+                    var matches = new List<object>();
+                    if (Source != null)
                     {
-                        if (Filter == null)
+                        foreach (var item in Source)
                         {
-                            _filteredCollection.Add(newItem);
-                            continue;
-                        }
-
-                        if (Filter(newItem))
-                        {
-                            _filteredCollection.Add(newItem);
+                            if (Filter == null || Filter(item))
+                                matches.Add(item);
                         }
                     }
+
+                    // WPF sees one Reset, rather than Clear + N incremental
+                    // changes (and the parent collection's own Reset).
+                    _filteredCollection.ReplaceAll(matches);
                     CollectionChanged?.Invoke(
                         this,
                         new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset)

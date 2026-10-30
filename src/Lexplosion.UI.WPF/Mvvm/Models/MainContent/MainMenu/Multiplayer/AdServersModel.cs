@@ -28,8 +28,10 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
         private bool _isLoading;
         private bool _hasLoadError;
 
-        public ObservableCollection<MinecraftServerInstance> Servers { get; } =
-            new ObservableCollection<MinecraftServerInstance>();
+        private readonly BulkObservableCollection<MinecraftServerInstance> _servers =
+            new BulkObservableCollection<MinecraftServerInstance>();
+
+        public ObservableCollection<MinecraftServerInstance> Servers => _servers;
 
         public bool IsLoading
         {
@@ -69,9 +71,9 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
         public void ReloadServers()
         {
             int version = Interlocked.Increment(ref _loadVersion);
-            Servers.Clear();
-            HasLoadError = false;
             IsLoading = true;
+            HasLoadError = false;
+            _servers.ReplaceAll(Array.Empty<MinecraftServerInstance>());
 
             Runtime.TaskRun(() =>
             {
@@ -96,13 +98,17 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
                 {
                     if (version != Volatile.Read(ref _loadVersion)) return;
 
+                    // Publishing one snapshot avoids a WPF layout pass for
+                    // every server card while the user navigates elsewhere.
+#if DEBUG
+                    using (UiDebugTrace.Measure("servers.update-collection", 3))
+#endif
+                        _servers.ReplaceAll(success ? servers : Array.Empty<MinecraftServerInstance>());
+
                     if (success)
                     {
                         foreach (var server in servers)
-                        {
-                            Servers.Add(server);
                             SetOnlineInfoToServer(server);
-                        }
                     }
                     HasLoadError = !success;
                     IsLoading = false;

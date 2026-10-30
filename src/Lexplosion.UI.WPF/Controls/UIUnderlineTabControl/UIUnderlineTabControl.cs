@@ -199,7 +199,12 @@ namespace Lexplosion.UI.WPF.Controls
             // Observe the actual DP as well as the tab selection.
             if (e.Property == SelectedContentProperty &&
                 !ReferenceEquals(e.OldValue, e.NewValue))
+            {
                 QueueContentNavigation();
+                // Late-arriving SelectedContent must also reach the existing
+                // Loaded-priority underline/commit path, even without a new click.
+                QueueUnderlineUpdate();
+            }
         }
 
         private void UpdateContentDirection(bool backwards)
@@ -229,15 +234,26 @@ namespace Lexplosion.UI.WPF.Controls
 
         private void QueueContentNavigation()
         {
-            _requestedContent = SelectedContent;
-            ++_selectionVersion;
+            var requested = SelectedContent;
 
-            if (ReferenceEquals(DisplayedContent, _requestedContent))
+            if (ReferenceEquals(DisplayedContent, requested))
             {
+                // Cancel a queued destination when the user returns to what
+                // is already visible, without unnecessarily rebuilding a page.
+                if (_contentPending)
+                    ++_selectionVersion;
                 _contentPending = false;
+                _requestedContent = requested;
                 return;
             }
 
+            // OnPropertyChanged(SelectedContent) and OnSelectionChanged often
+            // report the same selection. Only the first may schedule a commit.
+            if (_contentPending && ReferenceEquals(_requestedContent, requested))
+                return;
+
+            _requestedContent = requested;
+            ++_selectionVersion;
             _contentPending = true;
             if (!IsLoaded || _linePosition == null || !EnableAnimations ||
                 !AnimationPreferences.Enabled || DisplayedContent == null)
