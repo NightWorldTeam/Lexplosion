@@ -7,11 +7,14 @@ using Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.InstanceProfile;
 using System.Windows.Input;
 using Lexplosion.UI.WPF.Mvvm.Models.InstanceControllers;
 using Lexplosion.Logic.Objects;
+using Lexplosion.Logic.Lifecycle;
+using System.Threading;
+using System.Threading.Tasks;
 using Lexplosion.UI.WPF.Core.Notifications;
 
 namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
 {
-    public sealed class CatalogViewModel : ViewModelBase
+    public sealed class CatalogViewModel : ViewModelBase, IAsyncLoadable
     {
         private readonly AppCore _appCore;
         private readonly INavigationStore _navigationStore;
@@ -124,5 +127,15 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
 
 
         #endregion Consturctors
+
+        public Task EnsureLoadedAsync(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return Model.EnsureLoadedAsync(cancellationToken);
+        }
+
+        public Task RefreshAsync(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return Model.RefreshAsync(cancellationToken);
+        }
     }
 }

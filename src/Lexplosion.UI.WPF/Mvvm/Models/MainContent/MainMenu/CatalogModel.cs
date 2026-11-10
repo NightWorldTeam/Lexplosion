@@ -1,16 +1,20 @@
 ﻿using Lexplosion.Logic.Management;
+using Lexplosion.Logic.Lifecycle;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Objects;
 using Lexplosion.UI.WPF.Core;
 using Lexplosion.UI.WPF.Mvvm.Models.InstanceControllers;
 using Lexplosion.UI.WPF.Mvvm.Models.MainContent.MainMenu.FIlterPanel;
 using Lexplosion.UI.WPF.Mvvm.Models.Mvvm.InstanceModel;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent
 {
-	public sealed class CatalogModel : VMBase
+	public sealed class CatalogModel : VMBase, IAsyncLoadable
     {
         private static readonly SimpleCategory AllCategory = new SimpleCategory()
         {
@@ -24,7 +28,12 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent
         private readonly IInstanceController _instanceController;
 
 
-        private readonly ManualResetEvent _resetEvent = new ManualResetEvent(false);
+        private readonly SemaphoreSlim _loadLock = new SemaphoreSlim(1, 1);
+        private CancellationTokenSource _loadCancellation;
+        private Task _loadTask;
+        private int _requestVersion;
+        private bool _activated;
+        private bool _loaded;
 		private readonly ClientsManager _clientsManager = Runtime.ClientsManager;
 
 
@@ -98,7 +107,6 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent
         {
             _instanceController = instanceController;
             FilterPanel = new CatalogFilterPanel(appCore, () => OnFilterChanged());
-            _resetEvent.Set();
         }
 
 
@@ -108,40 +116,113 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent
         #region Public & Properties Methods
         
 
-        private void OnFilterChanged(bool paginatorChanged = false) 
+        public Task EnsureLoadedAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
+            if (_loaded)
+                return Task.CompletedTask;
+
+            if (_loadTask != null && !_loadTask.IsCompleted)
+                return _loadTask;
+
+            return RefreshAsync(cancellationToken);
+        }
+
+        public Task RefreshAsync(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            _activated = true;
+            _loaded = false;
+            int version = Interlocked.Increment(ref _requestVersion);
+
+            // Snapshot the UI filters before the request leaves the Dispatcher.
+            var searchFilter = SearchFilter;
+            int pageIndex = (int)CurrentPageIndex;
+            var source = FilterPanel.SelectedSource.Value;
+            var categories = FilterPanel.SelectedCategories.Count == 0
+                ? new IProjectCategory[] { AllCategory }
+                : FilterPanel.SelectedCategories.Cast<IProjectCategory>().ToArray();
+            int sortBy = FilterPanel.SelectedSortByParam.Value;
+            var gameVersion = FilterPanel.SelectedVersion;
+
+            if (_loadCancellation != null)
+                _loadCancellation.Cancel();
+
+            _loadCancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            _loadTask = LoadAsync(version, searchFilter, pageIndex, source, categories, sortBy,
+                gameVersion, _loadCancellation);
+            return _loadTask;
+        }
+
+        private async Task LoadAsync(int version, string searchFilter, int pageIndex,
+            InstanceSource source, IProjectCategory[] categories, int sortBy,
+            MinecraftVersion gameVersion, CancellationTokenSource cancellation)
+        {
+            var token = cancellation.Token;
             IsLoading = true;
-            _instanceController.Clear();
 
-            if (!paginatorChanged) 
+            try
             {
-                CurrentPageIndex = 0;            
-            }
+                // The list of available game versions may arrive after the view.
+                // Its existing FilterChanged event will request a new load.
+                if (gameVersion == null)
+                    return;
 
-            Runtime.TaskRun(() =>
-            {
-                _resetEvent.WaitOne();
-                var catalogResult = GetInstanceClients(
-                    SearchFilter, 
-                    (int)CurrentPageIndex,
-                    FilterPanel.SelectedSource.Value, 
-                    FilterPanel.SelectedCategories.Count == 0 ? new IProjectCategory[] { AllCategory } : FilterPanel.SelectedCategories, 
-                    FilterPanel.SelectedSortByParam.Value,
-                    FilterPanel.SelectedVersion, 
-                    false);
+                await _loadLock.WaitAsync(token);
+                CatalogResult<InstanceClient> result;
+                try
+                {
+                    token.ThrowIfCancellationRequested();
+                    // GetOutsideInstances is still synchronous (including logo I/O).
+                    // Serialize calls without blocking WPF or starting a new Thread.
+                    result = await Task.Run(() => GetInstanceClients(
+                        searchFilter, pageIndex, source, categories, sortBy, gameVersion), token);
+                }
+                finally
+                {
+                    _loadLock.Release();
+                }
 
-                IsEmptyPage = catalogResult.Count == 0;
+                token.ThrowIfCancellationRequested();
+                if (version != Volatile.Read(ref _requestVersion))
+                    return;
 
-                if (PageCount != catalogResult.TotalCount)
-                    PageCount = (uint)(catalogResult.TotalCount > 10 ? (catalogResult.TotalCount / ItemsPerPage) : catalogResult.TotalCount);
+                IsEmptyPage = result.Count == 0;
+                PageCount = (uint)(result.TotalCount > 10
+                    ? result.TotalCount / ItemsPerPage : result.TotalCount);
 
                 _instanceController.Clear();
+                foreach (var instance in result)
+                    _instanceController.Add(instance);
 
-                foreach (var i in catalogResult)
-                    _instanceController.Add(i);
                 OnPropertyChanged(nameof(Instances));
-                IsLoading = false;
-            });
+                _loaded = true;
+            }
+            catch (OperationCanceledException) when (token.IsCancellationRequested)
+            {
+                // Only the latest request may publish a result.
+            }
+            catch (Exception error)
+            {
+                Runtime.DebugWrite("Catalog loading failed: " + error.GetType().Name);
+            }
+            finally
+            {
+                if (version == Volatile.Read(ref _requestVersion))
+                {
+                    _loadCancellation = null;
+                    IsLoading = false;
+                }
+                cancellation.Dispose();
+            }
+        }
+
+        private void OnFilterChanged(bool paginatorChanged = false)
+        {
+            if (!paginatorChanged)
+                CurrentPageIndex = 0;
+
+            _loaded = false;
+            if (_activated)
+                _ = RefreshAsync();
         }
 
         
@@ -178,15 +259,15 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent
             switch(source) 
             {
                 case InstanceSource.Modrinth:
-                    searchParams = new ModrinthSearchParams(searchInput, gameVersion.Id, selectedCategories, (int)ItemsPerPage, (int)CurrentPageIndex, (ModrinthSortField)sortBy);
+                    searchParams = new ModrinthSearchParams(searchInput, gameVersion.Id, selectedCategories, (int)ItemsPerPage, scrollTo, (ModrinthSortField)sortBy);
                     break;
                 case InstanceSource.Curseforge:
                     var version = gameVersion.Id;
                     version = version == "All" ? string.Empty : version;
-                    searchParams = new CurseforgeSearchParams(searchInput, version, selectedCategories, (int)ItemsPerPage, (int)CurrentPageIndex, (CfSortField)sortBy);
+                    searchParams = new CurseforgeSearchParams(searchInput, version, selectedCategories, (int)ItemsPerPage, scrollTo, (CfSortField)sortBy);
                     break;
                 case InstanceSource.Nightworld:
-                    searchParams = new NightWorldSearchParams((int)ItemsPerPage, (int)CurrentPageIndex);
+                    searchParams = new NightWorldSearchParams((int)ItemsPerPage, scrollTo);
                     break;
             }
 
