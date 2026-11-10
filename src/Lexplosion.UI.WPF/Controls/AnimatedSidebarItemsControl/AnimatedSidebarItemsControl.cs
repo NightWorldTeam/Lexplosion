@@ -25,6 +25,7 @@ namespace Lexplosion.UI.WPF.Controls
         private int _animationVersion;
         private readonly WpfMotionTimeline _caretMotion = new WpfMotionTimeline();
         private int _pendingCaretVersion;
+        private int _coordinatedSelectionVersion;
         private double _pendingCaretTarget;
         private TranslateTransform _pendingCaretTransform;
         private DefaultMainMenuTabItem _pendingCaretItem;
@@ -60,6 +61,7 @@ namespace Lexplosion.UI.WPF.Controls
         private void OnUnloaded(object sender, RoutedEventArgs e)
         {
             _caretMotion.Cancel();
+            CompleteCoordinatedSelection();
             AttachNavigationModel(null);
         }
 
@@ -95,6 +97,20 @@ namespace Lexplosion.UI.WPF.Controls
                 selected.IsChecked != true)
                 return;
 
+            // Content and indicator are coordinated only by the WPF visual
+            // layer; changing the selected ViewModel never waits for motion.
+            var coordinator = NavigationTransitionCoordinator.GetCurrent(this);
+            if (coordinator != null)
+            {
+                TimeSpan duration = TimeSpan.Zero;
+                var motion = Template?.Resources["SelectionMotion"] as DoubleAnimation;
+                if (IsLoaded && _positionInitialized && AnimationPreferences.Enabled &&
+                    motion != null && motion.Duration.HasTimeSpan)
+                    duration = motion.Duration.TimeSpan;
+
+                _coordinatedSelectionVersion = coordinator.BeginSelection(duration);
+            }
+
             // The binding to LeftPanelMenuItem.IsSelected may not have updated
             // its source yet when the Checked routed event is raised.
             Dispatcher.BeginInvoke(new Action(() =>
@@ -110,6 +126,11 @@ namespace Lexplosion.UI.WPF.Controls
 
         private void CommitSelectedContent(DefaultMainMenuTabItem selected)
         {
+            // Main-menu content is now published immediately by the selection
+            // model; the WPF coordinator handles when it appears on screen.
+            if (NavigationTransitionCoordinator.GetCurrent(this) != null)
+                return;
+
             if (!(selected.DataContext is LeftPanelMenuItem item)) return;
 
             // Queue page creation below render/input priority once movement starts.
@@ -201,6 +222,7 @@ namespace Lexplosion.UI.WPF.Controls
                 _position.BeginAnimation(TranslateTransform.YProperty, null);
                 _position.Y = target;
                 _positionInitialized = true;
+                CompleteCoordinatedSelection();
                 CommitSelectedContent(selected);
                 return;
             }
@@ -211,6 +233,7 @@ namespace Lexplosion.UI.WPF.Controls
             _position.Y = current;
             if (Math.Abs(current - target) < 0.5)
             {
+                CompleteCoordinatedSelection();
                 CommitSelectedContent(selected);
                 return;
             }
@@ -220,6 +243,7 @@ namespace Lexplosion.UI.WPF.Controls
             if (animation == null)
             {
                 _position.Y = target;
+                CompleteCoordinatedSelection();
                 CommitSelectedContent(selected);
                 return;
             }
@@ -248,7 +272,15 @@ namespace Lexplosion.UI.WPF.Controls
             if (PerformanceTelemetry.Enabled)
                 PerformanceTelemetry.Record("navigation.sidebar.motion.completed", 0);
 #endif
+            CompleteCoordinatedSelection();
             CommitSelectedContent(_pendingCaretItem);
+        }
+
+        private void CompleteCoordinatedSelection()
+        {
+            var coordinator = NavigationTransitionCoordinator.GetCurrent(this);
+            if (coordinator != null)
+                coordinator.CompleteSelection(_coordinatedSelectionVersion);
         }
     }
 }

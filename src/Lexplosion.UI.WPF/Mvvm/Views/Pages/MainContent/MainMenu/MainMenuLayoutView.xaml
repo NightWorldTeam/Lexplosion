@@ -1,4 +1,5 @@
 ﻿<UserControl
+    x:Name="Root"
     x:Class="Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.MainMenu.MainMenuLayoutView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -29,7 +30,7 @@
             Grid.Column="1"
             AnimationType="SoftReveal"
             TransitionDuration="0:0:0.28"
-            Content="{Binding Content}"
+            Content="{Binding DisplayedContent, ElementName=Root}"
             KeyboardNavigation.IsTabStop="False"
             KeyboardNavigation.TabNavigation="None" />
 
