@@ -118,6 +118,9 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent
 
         public Task EnsureLoadedAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
+            // The filter panel is data-driven; start its first fetch only when visible.
+            _ = FilterPanel.EnsureCategoriesLoadedAsync(cancellationToken);
+
             if (_loaded)
                 return Task.CompletedTask;
 

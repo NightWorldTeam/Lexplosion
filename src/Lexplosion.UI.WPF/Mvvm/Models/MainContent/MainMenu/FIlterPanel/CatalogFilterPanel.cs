@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Data;
 
 namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.MainMenu.FIlterPanel
@@ -20,6 +22,11 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.MainMenu.FIlterPanel
 
         private readonly AppCore _appCore;
         private readonly bool _isInitialized;
+        private Task _categoriesTask;
+        private CancellationTokenSource _categoriesCancellation;
+        private InstanceSource _requestedCategorySource;
+        private InstanceSource? _loadedCategorySource;
+        private int _categoryRequestVersion;
 
 
         #region Properties
@@ -128,7 +135,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.MainMenu.FIlterPanel
         {
             get => _isCategoryLoading; set
             {
-                _isCategoryLoading = true;
+                _isCategoryLoading = value;
                 OnPropertyChanged();
             }
         }
@@ -148,7 +155,6 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.MainMenu.FIlterPanel
             Sources.Add(new InstanceSourceObject("Modrinth", InstanceSource.Modrinth));
             Sources.Add(new InstanceSourceObject("NightWorld", InstanceSource.Nightworld));
 
-            UpdateCategories(Sources[0].Value);
             SelectedSource = Sources[0];
 
             FilterChanged += filterChange;
@@ -181,24 +187,79 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent.MainMenu.FIlterPanel
         #endregion Constructors
 
 
-        private void UpdateCategories(InstanceSource instanceSource)
+        public Task EnsureCategoriesLoadedAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
-            IsCategoryLoading = true;
-            AvailableCategories.Clear();
-            Runtime.TaskRun(() =>
-            {
-                var cats = Runtime.ServicesContainer.CategoriesService.GetModpackCategories(EnumManager.InstanceSourceToProjectSource(instanceSource)) ?? new List<CategoryBase>();
-                _appCore.UIThread(() =>
-                {
-                    foreach (var cat in cats.Where(mc => mc.Id != "-1"))
-                    {
-                        AvailableCategories.Add(cat);
-                    }
-                    IsCategoryLoading = false;
-                });
-            });
+            var source = SelectedSource.Value;
+            if (_loadedCategorySource == source)
+                return Task.CompletedTask;
+
+            if (_categoriesTask != null && !_categoriesTask.IsCompleted && _requestedCategorySource == source)
+                return _categoriesTask;
+
+            return LoadCategoriesAsync(source, cancellationToken);
         }
 
+        private void UpdateCategories(InstanceSource instanceSource)
+        {
+            _ = LoadCategoriesAsync(instanceSource, CancellationToken.None);
+        }
+
+        private Task LoadCategoriesAsync(InstanceSource instanceSource, CancellationToken cancellationToken)
+        {
+            int version = Interlocked.Increment(ref _categoryRequestVersion);
+            _requestedCategorySource = instanceSource;
+            _loadedCategorySource = null;
+
+            if (_categoriesCancellation != null)
+                _categoriesCancellation.Cancel();
+
+            _categoriesCancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            IsCategoryLoading = true;
+            AvailableCategories.Clear();
+
+            _categoriesTask = LoadCategoriesCoreAsync(version, instanceSource, _categoriesCancellation);
+            return _categoriesTask;
+        }
+
+        private async Task LoadCategoriesCoreAsync(int version, InstanceSource instanceSource, CancellationTokenSource cancellation)
+        {
+            var token = cancellation.Token;
+            try
+            {
+                var categories = await Runtime.ServicesContainer.CategoriesService.GetModpackCategoriesAsync(
+                    EnumManager.InstanceSourceToProjectSource(instanceSource), token);
+
+                token.ThrowIfCancellationRequested();
+                if (version != Volatile.Read(ref _categoryRequestVersion) || SelectedSource.Value != instanceSource)
+                    return;
+
+                if (categories != null)
+                {
+                    foreach (var category in categories.Where(item => item.Id != "-1"))
+                        AvailableCategories.Add(category);
+                }
+
+                _loadedCategorySource = instanceSource;
+            }
+            catch (OperationCanceledException) when (token.IsCancellationRequested)
+            {
+                // A newer source selection has superseded this request.
+            }
+            catch (Exception error)
+            {
+                Runtime.DebugWrite("Catalog categories loading failed: " + error.GetType().Name);
+            }
+            finally
+            {
+                if (version == Volatile.Read(ref _categoryRequestVersion))
+                {
+                    _categoriesCancellation = null;
+                    IsCategoryLoading = false;
+                }
+
+                cancellation.Dispose();
+            }
+        }
 
         #region Public Methods
 
