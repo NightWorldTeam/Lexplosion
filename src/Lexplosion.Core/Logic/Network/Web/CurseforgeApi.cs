@@ -374,11 +374,11 @@ namespace Lexplosion.Logic.Network.Web
                 }
 
                 cancellationToken.ThrowIfCancellationRequested();
-                if (request.IsSucces && request.Content != null)
-                {
-                    var data = JsonConvert.DeserializeObject<DataContainer<List<CurseforgeCategory>>>(request.Content);
-                    result = data?.Data ?? result;
-                }
+                if (!request.IsSucces || request.Content == null)
+                    throw new InvalidOperationException("Curseforge categories request failed.");
+
+                var data = JsonConvert.DeserializeObject<DataContainer<List<CurseforgeCategory>>>(request.Content);
+                result = data?.Data ?? throw new InvalidOperationException("Invalid Curseforge categories response.");
             }
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
             {
@@ -387,6 +387,7 @@ namespace Lexplosion.Logic.Network.Web
             catch (Exception error)
             {
                 Runtime.DebugWrite("Curseforge categories request failed: " + error.GetType().Name);
+                throw;
             }
 
             result.Insert(0, new CurseforgeCategory

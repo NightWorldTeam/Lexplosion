@@ -315,7 +315,7 @@
                                         </Grid>
 
                                         <core:If Grid.Row="1" Condition="{Binding Model.FilterPanel.IsCategoryLoading}">
-                                            <core:If.False>
+                                            <core:If.True>
                                                 <Grid Height="180">
                                                     <controls:CircleLoader
                                                         Width="24"
@@ -324,8 +324,8 @@
                                                         VerticalAlignment="Center"
                                                         IsActive="{Binding Model.FilterPanel.IsCategoryLoading}" />
                                                 </Grid>
-                                            </core:If.False>
-                                            <core:If.True>
+                                            </core:If.True>
+                                            <core:If.False>
                                                 <Grid Grid.Row="1">
 
                                                     <Grid.RowDefinitions>
@@ -354,7 +354,7 @@
                                                         </ItemsControl.ItemTemplate>
                                                     </ItemsControl>
                                                 </Grid>
-                                            </core:If.True>
+                                            </core:If.False>
                                         </core:If>
                                     </Grid>
                                 </Grid>

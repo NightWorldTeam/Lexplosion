@@ -184,11 +184,11 @@ namespace Lexplosion.Logic.Network.Web
                     .ConfigureAwait(false);
                 cancellationToken.ThrowIfCancellationRequested();
 
-                if (response.Content == null)
-                    return new List<ModrinthCategory>();
+                if (!response.IsSucces || response.Content == null)
+                    throw new InvalidOperationException("Modrinth categories request failed.");
 
                 return JsonConvert.DeserializeObject<List<ModrinthCategory>>(response.Content)
-                    ?? new List<ModrinthCategory>();
+                    ?? throw new InvalidOperationException("Invalid Modrinth categories response.");
             }
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
             {
@@ -197,7 +197,7 @@ namespace Lexplosion.Logic.Network.Web
             catch (Exception error)
             {
                 Runtime.DebugWrite("Modrinth categories request failed: " + error.GetType().Name);
-                return new List<ModrinthCategory>();
+                throw;
             }
         }
 
