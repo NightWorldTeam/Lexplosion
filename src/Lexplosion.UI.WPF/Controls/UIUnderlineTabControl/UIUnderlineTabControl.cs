@@ -469,11 +469,15 @@ namespace Lexplosion.UI.WPF.Controls
 
                 position.BeginAnimation(TranslateTransform.XProperty, null);
                 position.X = left;
+#if DEBUG
+                if (PerformanceTelemetry.Enabled)
+                    PerformanceTelemetry.Record("navigation.tabs.motion.completed", 0);
+#endif
+                // Restore the sequencing from the last smooth version: do
+                // not materialize a heavy DataTemplate while the indicator moves.
+                CommitContentNavigation(true);
             };
             position.BeginAnimation(TranslateTransform.XProperty, motion);
-            // Start page preparation after the next render opportunity,
-            // not after the full 200 ms underline animation.
-            CommitContentNavigation(true);
         }
 
         private void SetUnderlineWidth(double width)

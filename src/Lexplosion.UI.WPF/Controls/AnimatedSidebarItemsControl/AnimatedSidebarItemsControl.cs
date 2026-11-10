@@ -221,9 +221,13 @@ namespace Lexplosion.UI.WPF.Controls
 
                 position.BeginAnimation(TranslateTransform.YProperty, null);
                 position.Y = target;
+#if DEBUG
+                if (PerformanceTelemetry.Enabled)
+                    PerformanceTelemetry.Record("navigation.sidebar.motion.completed", 0);
+#endif
+                CommitSelectedContent(selected);
             };
             _position.BeginAnimation(TranslateTransform.YProperty, motion);
-            CommitSelectedContent(selected);
             }
         }
     }
