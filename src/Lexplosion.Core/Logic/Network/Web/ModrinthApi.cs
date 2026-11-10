@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.Modrinth;
@@ -173,6 +174,32 @@ namespace Lexplosion.Logic.Network.Web
 		{
 			return GetApiData<List<ModrinthCategory>>("https://api.modrinth.com/v2/tag/category");
 		}
+
+
+        public async Task<List<ModrinthCategory>> GetCategoriesAsync(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            try
+            {
+                var response = await _toServer.HttpGetAsync("https://api.modrinth.com/v2/tag/category", cancellationToken)
+                    .ConfigureAwait(false);
+                cancellationToken.ThrowIfCancellationRequested();
+
+                if (response.Content == null)
+                    return new List<ModrinthCategory>();
+
+                return JsonConvert.DeserializeObject<List<ModrinthCategory>>(response.Content)
+                    ?? new List<ModrinthCategory>();
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                throw;
+            }
+            catch (Exception error)
+            {
+                Runtime.DebugWrite("Modrinth categories request failed: " + error.GetType().Name);
+                return new List<ModrinthCategory>();
+            }
+        }
 
 		public ModrinthProjectInfo GetProject(string projectId)
 		{

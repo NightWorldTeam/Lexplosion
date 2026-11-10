@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.FileSystem.Models;
 using Lexplosion.Logic.Objects;
@@ -354,5 +356,47 @@ namespace Lexplosion.Logic.Network.Web
 
 			return categories;
 		}
+        public async Task<List<CurseforgeCategory>> GetCategoriesAsync(CfProjectType type, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var url = "v1/categories?gameId=432&classId=" + (int)type;
+            var result = new List<CurseforgeCategory>();
+
+            try
+            {
+                var request = await _toServer.HttpGetAsync((_isMirorModeToMainUrl ? MIRROR_API_URL_BASE : API_URL_BASE) + url,
+                    cancellationToken, Headers).ConfigureAwait(false);
+
+                if (!request.IsSucces && !_isMirorModeToMainUrl && request.State == RequestResultState.NetworkError)
+                {
+                    request = await _toServer.HttpGetAsync(MIRROR_API_URL_BASE + url, cancellationToken, Headers).ConfigureAwait(false);
+                    if (request.IsSucces)
+                        _isMirorModeToMainUrl = true;
+                }
+
+                cancellationToken.ThrowIfCancellationRequested();
+                if (request.IsSucces && request.Content != null)
+                {
+                    var data = JsonConvert.DeserializeObject<DataContainer<List<CurseforgeCategory>>>(request.Content);
+                    result = data?.Data ?? result;
+                }
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                throw;
+            }
+            catch (Exception error)
+            {
+                Runtime.DebugWrite("Curseforge categories request failed: " + error.GetType().Name);
+            }
+
+            result.Insert(0, new CurseforgeCategory
+            {
+                Id = "-1",
+                Name = "All",
+                ClassId = ((int)type).ToString(),
+                ParentCategoryId = ((int)type).ToString()
+            });
+            return result;
+        }
 	}
 }

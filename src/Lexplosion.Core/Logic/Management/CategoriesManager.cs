@@ -2,6 +2,8 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Lexplosion.Logic.FileSystem.Services;
 using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects;
@@ -64,6 +66,50 @@ namespace Lexplosion.Logic.Management
 					return null;
 			}
 		}
+
+        public async Task<IEnumerable<CategoryBase>> GetModpackCategoriesAsync(ProjectSource source, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            if (_modpacksCategoriesChache.TryGetValue(source, out var cached))
+                return cached;
+
+            switch (source)
+            {
+                case ProjectSource.Curseforge:
+                {
+                    var result = await _curseforgeApi.GetCategoriesAsync(CfProjectType.Modpacks, cancellationToken).ConfigureAwait(false);
+                    cancellationToken.ThrowIfCancellationRequested();
+                    _modpacksCategoriesChache[source] = result;
+                    return result;
+                }
+                case ProjectSource.Modrinth:
+                {
+                    var categories = await _modrinthApi.GetCategoriesAsync(cancellationToken).ConfigureAwait(false);
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                    var result = new List<CategoryBase>
+                    {
+                        new SimpleCategory
+                        {
+                            Id = "-1",
+                            Name = "All",
+                            ClassId = "",
+                            ParentCategoryId = ""
+                        }
+                    };
+
+                    foreach (ModrinthCategory category in categories)
+                    {
+                        if (category.ClassId == "modpack")
+                            result.Add(category);
+                    }
+
+                    _modpacksCategoriesChache[source] = result;
+                    return result;
+                }
+                default:
+                    return null;
+            }
+        }
 
 		public IEnumerable<CategoryBase> GetAddonsCategories(ProjectSource source, AddonType addonType)
 		{
