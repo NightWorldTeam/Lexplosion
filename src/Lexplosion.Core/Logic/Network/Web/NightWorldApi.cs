@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Lexplosion.Logic.Network
 {
@@ -288,6 +289,7 @@ namespace Lexplosion.Logic.Network
 		/// Если нужно получить список своих друзей, то нужно передать свой ник.
 		/// </param>
 		/// <returns></returns>
+		[Obsolete("Use GetFriendsAsync for UI data loading.")]
 		public List<NwUser> GetFriends(string UUID, string sessionToken, string userLogin)
 		{
 			string data = _toServer.HttpPost(LaunсherSettings.URL.UserApi + "getFreinds?login=" + userLogin, new Dictionary<string, string>
@@ -298,6 +300,29 @@ namespace Lexplosion.Logic.Network
 			// An invalid server response is not an empty friends list.
 			if (string.IsNullOrWhiteSpace(data))
 				throw new InvalidOperationException("Friends endpoint returned no data.");
+			try
+			{
+				return JsonConvert.DeserializeObject<List<NwUser>>(data)
+					?? throw new InvalidOperationException("Friends endpoint returned null.");
+			}
+			catch (JsonException error)
+			{
+				throw new InvalidOperationException("Invalid friends response.", error);
+			}
+		}
+
+		public async Task<List<NwUser>> GetFriendsAsync(string UUID, string sessionToken, string userLogin, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			string data = await _toServer.HttpPostAsync(LaunсherSettings.URL.UserApi + "getFreinds?login=" + userLogin, cancellationToken, new Dictionary<string, string>
+			{
+				["UUID"] = UUID,
+				["sessionToken"] = sessionToken
+			}).ConfigureAwait(false);
+
+			cancellationToken.ThrowIfCancellationRequested();
+			if (string.IsNullOrWhiteSpace(data))
+				throw new InvalidOperationException("Friends endpoint returned no data.");
+
 			try
 			{
 				return JsonConvert.DeserializeObject<List<NwUser>>(data)

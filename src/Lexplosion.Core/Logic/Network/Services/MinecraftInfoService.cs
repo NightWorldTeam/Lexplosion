@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Net;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
@@ -164,6 +165,7 @@ namespace Lexplosion.Logic.Network.Services
 			return count;
 		}
 
+		[Obsolete("Use GetMinecraftServersListAsync for UI data loading.")]
 		public List<MinecraftServerInstance> GetMinecraftServersList()
 		{
 			TryGetMinecraftServersList(out var servers);
@@ -199,6 +201,23 @@ namespace Lexplosion.Logic.Network.Services
 				Runtime.DebugWrite("[MinecraftServers] List request failed: " + ex.GetType().Name);
 				return false;
 			}
+		}
+
+		public async Task<List<MinecraftServerInstance>> GetMinecraftServersListAsync(CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var response = await _toServer.HttpGetAsync(LaunсherSettings.URL.Base + "api/minecraftServers/list", cancellationToken).ConfigureAwait(false);
+			cancellationToken.ThrowIfCancellationRequested();
+
+			if (response.Content == null)
+				throw new InvalidOperationException("Minecraft servers endpoint returned no data.");
+
+			var data = JsonConvert.DeserializeObject<List<MinecraftServerInstance>>(response.Content);
+			if (data == null)
+				throw new InvalidOperationException("Minecraft servers endpoint returned null.");
+
+			data.RemoveAll(server => server == null || !server.IsValid());
+			new Random().Shuffle(data);
+			return data;
 		}
 
 		public List<string> GetOptifineVersions(string gameVersion)

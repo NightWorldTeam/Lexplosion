@@ -263,6 +263,44 @@ namespace Lexplosion.Logic.Network
             }
         }
 
+        public async Task<string> HttpPostAsync(string url, CancellationToken cancellationToken, IDictionary<string, string> data = null, IReadOnlyDictionary<string, string> headers = null, int timeout = 0)
+        {
+            Runtime.DebugWrite("Request host: " + SafeRequestHost(url));
+            var httpClient = _httpClient;
+
+            try
+            {
+                using (var request = new HttpRequestMessage(HttpMethod.Post, url))
+                using (var timeoutCancellation = timeout > 0 ? CancellationTokenSource.CreateLinkedTokenSource(cancellationToken) : null)
+                {
+                    request.Content = data != null ? new FormUrlEncodedContent(data) : new FormUrlEncodedContent(Enumerable.Empty<KeyValuePair<string, string>>());
+                    request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
+                    AddHeaders(request, headers);
+
+                    if (timeoutCancellation != null)
+                        timeoutCancellation.CancelAfter(TimeSpan.FromMilliseconds(timeout));
+
+                    var token = timeoutCancellation != null ? timeoutCancellation.Token : cancellationToken;
+                    using (var response = await httpClient.SendAsync(request, token).ConfigureAwait(false))
+                    {
+                        if (!response.IsSuccessStatusCode)
+                            return null;
+
+                        return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                    }
+                }
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Runtime.DebugWrite("Request failed: " + SafeRequestHost(url) + ", error: " + ex.GetType().Name);
+                return null;
+            }
+        }
+
         public string HttpGet(string url, Dictionary<string, string> headers = null, int timeout = 0)
         {
             var task = Task.Run(() => HttpGetAsync(url, headers, timeout));
@@ -308,6 +346,46 @@ namespace Lexplosion.Logic.Network
 
                 var result = await response.Content.ReadAsStringAsync();
                 return RequestResult.Success(result, response.StatusCode);
+            }
+            catch (Exception ex)
+            {
+                Runtime.DebugWrite("Request failed: " + SafeRequestHost(url) + ", error: " + ex.GetType().Name);
+                return RequestResult.Error();
+            }
+        }
+
+        public async Task<RequestResult> HttpGetAsync(string url, CancellationToken cancellationToken, IReadOnlyDictionary<string, string> headers = null, int timeout = 0)
+        {
+            Runtime.DebugWrite("Request host: " + SafeRequestHost(url));
+            var httpClient = _httpClient;
+
+            try
+            {
+                using (var request = new HttpRequestMessage(HttpMethod.Get, url))
+                using (var timeoutCancellation = timeout > 0 ? CancellationTokenSource.CreateLinkedTokenSource(cancellationToken) : null)
+                {
+                    AddHeaders(request, headers);
+
+                    if (timeoutCancellation != null)
+                        timeoutCancellation.CancelAfter(TimeSpan.FromMilliseconds(timeout));
+
+                    var token = timeoutCancellation != null ? timeoutCancellation.Token : cancellationToken;
+                    using (var response = await httpClient.SendAsync(request, token).ConfigureAwait(false))
+                    {
+                        if (!response.IsSuccessStatusCode)
+                        {
+                            Runtime.DebugWrite("Request returned " + response.StatusCode + " from " + SafeRequestHost(url));
+                            return RequestResult.Error(response.StatusCode);
+                        }
+
+                        var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                        return RequestResult.Success(result, response.StatusCode);
+                    }
+                }
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                throw;
             }
             catch (Exception ex)
             {
