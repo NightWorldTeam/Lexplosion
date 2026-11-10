@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
+using Lexplosion.Logic.Lifecycle;
 using Lexplosion.Logic.FileSystem;
 using Newtonsoft.Json;
 using Lexplosion.Logic.Objects;
@@ -486,6 +488,11 @@ namespace Lexplosion.Logic.Management.Accounts
 		{
 			_authWait.WaitOne();
 		}
+
+        public Task WaitAuthAsync(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return AsyncWaitHandle.WaitAsync(_authWait, cancellationToken);
+        }
 
 		private string _gameClientName = "";
 		private bool _nwServicesIsInit = false;
