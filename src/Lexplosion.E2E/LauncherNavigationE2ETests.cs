@@ -250,6 +250,46 @@ namespace Lexplosion.E2E
                 _session.Record("coverage.skip", "stress.tabs.unavailable", 0, "SKIP");
         }
 
+        [Test, Order(55)]
+        public void CatalogAndLibraryPublishTheSelectedPageOnEverySwitch()
+        {
+            var routes = new[]
+            {
+                new { Id = "nav.sidebar.Catalog", Page = "CatalogViewModel" },
+                new { Id = "nav.sidebar.Library", Page = "LibraryViewModel" }
+            };
+
+            foreach (var route in routes)
+            {
+                if (FindSidebar(_session.WaitForMainWindow(), route.Id) == null)
+                    Assert.Ignore("Catalog and Library must both be available.");
+            }
+
+            for (int i = 0; i < 8; i++)
+            {
+                var route = routes[i % routes.Length];
+                var sidebar = FindSidebar(_session.WaitForMainWindow(), route.Id);
+                Assert.That(sidebar, Is.Not.Null);
+                sidebar.AsRadioButton().IsChecked = true;
+
+                Assert.That(WaitSelected(() => FindSidebar(_session.WaitForMainWindow(), route.Id),
+                    e => e.AsRadioButton().IsChecked, TimeSpan.FromSeconds(5)), Is.True,
+                    "Selected sidebar item did not update: " + route.Id);
+
+                var rendered = Retry.WhileNull(() =>
+                {
+                    var content = _session.WaitForMainWindow().FindFirstDescendant(cf =>
+                        cf.ByAutomationId("qa.content.main"));
+                    return content != null && string.Equals(content.Name, route.Page,
+                        StringComparison.Ordinal) ? content : null;
+                }, timeout: TimeSpan.FromSeconds(8),
+                    interval: TimeSpan.FromMilliseconds(100), ignoreException: true).Result;
+
+                Assert.That(rendered, Is.Not.Null,
+                    "Sidebar selected " + route.Id + " but content did not reach " + route.Page);
+            }
+        }
+
         [Test, Order(12)]
         public void PartnerServersAlwaysShowContentOrExplicitLoadState()
         {

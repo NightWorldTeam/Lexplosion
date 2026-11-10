@@ -3,6 +3,7 @@ using Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu;
 using System;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Automation;
 using System.Windows.Controls;
 
 namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.MainMenu
@@ -83,6 +84,9 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.MainMenu
         private void PublishContent(object content)
         {
             DisplayedContent = content;
+            // Expose the committed page to UI automation; radio selection
+            // alone cannot prove that the corresponding view was displayed.
+            AutomationProperties.SetName(MainContent, content?.GetType().Name ?? string.Empty);
         }
 
         private void Grid_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
