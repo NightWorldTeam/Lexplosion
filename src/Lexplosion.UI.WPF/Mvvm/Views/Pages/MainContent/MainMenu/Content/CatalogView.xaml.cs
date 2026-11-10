@@ -4,7 +4,7 @@ using System;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
 using Lexplosion.UI.WPF.Extensions;
-using System.Threading;
+using System.Windows.Threading;
 
 namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.MainMenu
 {
@@ -45,14 +45,13 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.MainMenu
 
 		private void OnFilterPanelSourceClicked(object sender, System.Windows.Input.MouseButtonEventArgs e)
 		{
-			ThreadPool.QueueUserWorkItem((object _) =>
-			{
-				Thread.Sleep(10);
-				App.Current.Dispatcher.Invoke(() =>
-				{
-					FiltersButton.IsChecked = false;
-				});
-			});
+            // Let the ListView finish selecting the source before closing its panel.
+            Dispatcher.BeginInvoke(new Action(CloseFilterPanel), DispatcherPriority.Background);
 		}
+
+        private void CloseFilterPanel()
+        {
+            FiltersButton.IsChecked = false;
+        }
 	}
 }

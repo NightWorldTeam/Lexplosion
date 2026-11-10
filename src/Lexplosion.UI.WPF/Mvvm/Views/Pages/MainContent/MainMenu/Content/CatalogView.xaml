@@ -136,6 +136,16 @@
                                             Style="{StaticResource FilterIconToggleButton}" />
                                     </core:If.False>
                                 </core:If>
+
+                                <Grid Width="36" Height="40" Margin="12,0,0,0">
+                                    <controls:CircleLoader
+                                        Width="24"
+                                        Height="24"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        IsActive="{Binding Model.IsLoading}"
+                                        IsHitTestVisible="False" />
+                                </Grid>
                             </StackPanel>
 
                             <!--  Filter Panel  -->
@@ -377,7 +387,11 @@
                             Grid.Column="1"
                             Condition="{Binding Model.Instances, Converter={converters:IsCollectionEmptyConverter}}">
                             <core:If.True>
-                                <controls:Empty VerticalAlignment="Stretch" Description="Каталог оказался пуст" />
+                                <core:If Condition="{Binding Model.IsLoading}">
+                                    <core:If.False>
+                                        <controls:Empty VerticalAlignment="Stretch" Description="Каталог оказался пуст" />
+                                    </core:If.False>
+                                </core:If>
                             </core:If.True>
                             <core:If.False>
                                 <!--  Instance Clients List  -->
@@ -424,14 +438,6 @@
                 </Border>
             </Grid>
 
-            <!--  TODO: 1.0.1.0 Translate  -->
-            <controls:LoadingBoard
-                Margin="0,-40,0,0"
-                Background="Black"
-                BackgroundOpacity="0.3"
-                BlurTarget="{Binding ElementName=Context}"
-                IsActive="{Binding Model.IsLoading}"
-                Placeholder="{DynamicResource CatalogLoading}" />
         </Grid>
     </Border>
 </UserControl>
