@@ -5,6 +5,7 @@
     xmlns:controls="clr-namespace:Lexplosion.UI.WPF.Controls"
     xmlns:converters="clr-namespace:Lexplosion.UI.WPF.Core.Converters"
     xmlns:core="clr-namespace:Lexplosion.UI.WPF.Core"
+    xmlns:lifecycle="clr-namespace:Lexplosion.UI.WPF.Core.Lifecycle"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="clr-namespace:Lexplosion.UI.WPF.Extensions"
     xmlns:local="clr-namespace:Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.MainMenu"
@@ -13,7 +14,8 @@
     xmlns:userComponents="clr-namespace:Lexplosion.UI.WPF.ViewComponents.Users"
     xmlns:users="clr-namespace:Lexplosion.UI.WPF.Core.Objects.Users"
     d:DataContext="{d:DesignInstance Type=mainmenu:FriendsViewModel}"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    lifecycle:AsyncLoadOnVisible.Enabled="True">
 
     <UserControl.Resources>
         <CollectionViewSource

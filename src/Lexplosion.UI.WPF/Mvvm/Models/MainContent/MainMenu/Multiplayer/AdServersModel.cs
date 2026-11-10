@@ -9,6 +9,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading;
+using System.Threading.Tasks;
+using Lexplosion.Logic.Lifecycle;
 using System.Windows;
 using System.Windows.Input;
 #if DEBUG
@@ -18,13 +20,15 @@ using Lexplosion.UI.WPF.Core;
 
 namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
 {
-    public class AdServersModel : ObservableObject
+    public class AdServersModel : ObservableObject, IAsyncLoadable
     {
         private readonly AppCore _appCore;
         private readonly ICommand _backCommand;
         private readonly SelectInstanceForServerArgs _selectInstanceForServerArgs;
         private readonly ClientsManager _clientsManager = Runtime.ClientsManager;
         private int _loadVersion;
+        private Task _loadTask;
+        private bool _loaded;
         private bool _isLoading;
         private bool _hasLoadError;
 
@@ -65,62 +69,85 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
             _appCore = appCore;
             _selectInstanceForServerArgs = selectInstanceForServerArgs;
             _backCommand = backCommand;
-            ReloadServers();
         }
 
+        public Task EnsureLoadedAsync(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            if (_loaded) return Task.CompletedTask;
+            if (_loadTask != null && !_loadTask.IsCompleted) return _loadTask;
+            return RefreshAsync(cancellationToken);
+        }
+
+        // Keep the existing retry command intact.
         public void ReloadServers()
         {
+            _ = RefreshAsync();
+        }
+
+        public Task RefreshAsync(CancellationToken cancellationToken = default(CancellationToken))
+        {
             int version = Interlocked.Increment(ref _loadVersion);
+            _loaded = false;
+            _loadTask = LoadCoreAsync(version, cancellationToken);
+            return _loadTask;
+        }
+
+        private async Task LoadCoreAsync(int version, CancellationToken cancellationToken)
+        {
             IsLoading = true;
             HasLoadError = false;
-            _servers.ReplaceAll(Array.Empty<MinecraftServerInstance>());
-
-            Runtime.TaskRun(() =>
+            try
             {
-                bool success;
                 List<MinecraftServerInstance> servers;
-                try
-                {
 #if DEBUG
-                    using (UiDebugTrace.Measure("servers.api-get", 5))
+                using (UiDebugTrace.Measure("servers.api-get", 5))
 #endif
-                        success = Runtime.ServicesContainer.MinecraftService
-                            .TryGetMinecraftServersList(out servers);
-                }
-                catch (Exception ex)
-                {
-                    Runtime.DebugWrite("[MinecraftServers] Load failed: " + ex.GetType().Name);
-                    success = false;
-                    servers = new List<MinecraftServerInstance>();
-                }
+                    servers = await Runtime.ServicesContainer.MinecraftService
+                        .GetMinecraftServersListAsync(cancellationToken);
 
-                _appCore.UIThread(() =>
-                {
-                    if (version != Volatile.Read(ref _loadVersion)) return;
+                cancellationToken.ThrowIfCancellationRequested();
+                if (version != Volatile.Read(ref _loadVersion)) return;
 
-                    // Publishing one snapshot avoids a WPF layout pass for
-                    // every server card while the user navigates elsewhere.
+                // Publishing one snapshot avoids a WPF layout pass for
+                // every server card while the user navigates elsewhere.
 #if DEBUG
-                    using (UiDebugTrace.Measure("servers.update-collection", 3))
+                using (UiDebugTrace.Measure("servers.update-collection", 3))
 #endif
-                        _servers.ReplaceAll(success ? servers : Array.Empty<MinecraftServerInstance>());
+                    _servers.ReplaceAll(servers);
 
-                    if (success)
-                    {
-                        foreach (var server in servers)
-                            SetOnlineInfoToServer(server);
-                    }
-                    HasLoadError = !success;
-                    IsLoading = false;
-                    OnPropertyChanged(nameof(IsEmpty));
+                _loaded = true;
+                foreach (var server in servers)
+                    SetOnlineInfoToServer(server);
+#if DEBUG
+                if (PerformanceTelemetry.Enabled)
+                    PerformanceTelemetry.Record(servers.Count == 0
+                        ? "servers.load.empty" : "servers.load.success", 0);
+#endif
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                // Allow a subsequent activation to retry.
+            }
+            catch (Exception ex)
+            {
+                Runtime.DebugWrite("[MinecraftServers] Load failed: " + ex.GetType().Name);
+                if (version == Volatile.Read(ref _loadVersion))
+                {
+                    HasLoadError = true;
 #if DEBUG
                     if (PerformanceTelemetry.Enabled)
-                        PerformanceTelemetry.Record(!success
-                            ? "servers.load.failed"
-                            : Servers.Count == 0 ? "servers.load.empty" : "servers.load.success", 0);
+                        PerformanceTelemetry.Record("servers.load.failed", 0);
 #endif
-                });
-            });
+                }
+            }
+            finally
+            {
+                if (version == Volatile.Read(ref _loadVersion))
+                {
+                    IsLoading = false;
+                    OnPropertyChanged(nameof(IsEmpty));
+                }
+            }
         }
 
         public void CopyServerIpAddress(MinecraftServerInstance server)

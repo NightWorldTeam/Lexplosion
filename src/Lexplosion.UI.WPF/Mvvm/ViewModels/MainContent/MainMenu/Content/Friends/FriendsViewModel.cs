@@ -4,10 +4,13 @@ using Lexplosion.UI.WPF.Core.Objects.Users;
 using Lexplosion.UI.WPF.Mvvm.Models.MainContent.MainMenu.Friends;
 using System.Diagnostics;
 using System.Windows.Input;
+using System.Threading;
+using System.Threading.Tasks;
+using Lexplosion.Logic.Lifecycle;
 
 namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
 {
-    public sealed class FriendsViewModel : ViewModelBase, IRefreshable
+    public sealed class FriendsViewModel : ViewModelBase, IRefreshable, IAsyncLoadable
     {
         public FriendsModel Model { get; private set; }
 
@@ -48,6 +51,16 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
             App.Current.Dispatcher.Invoke(() => {
                 Model = new FriendsModel();
             });
+        }
+
+        public Task EnsureLoadedAsync(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return Model.EnsureLoadedAsync(cancellationToken);
+        }
+
+        public Task RefreshAsync(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return Model.RefreshAsync(cancellationToken);
         }
 
         public void Refresh()
