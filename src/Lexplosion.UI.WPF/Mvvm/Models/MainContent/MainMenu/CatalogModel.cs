@@ -174,10 +174,10 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent
                 try
                 {
                     token.ThrowIfCancellationRequested();
-                    // GetOutsideInstances is still synchronous (including logo I/O).
-                    // Serialize calls without blocking WPF or starting a new Thread.
-                    result = await Task.Run(() => GetInstanceClients(
-                        searchFilter, pageIndex, source, categories, sortBy, gameVersion), token);
+                    // Network search is asynchronous; synchronous logo processing
+                    // remains off the WPF thread in ClientsManager.
+                    result = await GetInstanceClientsAsync(
+                        searchFilter, pageIndex, source, categories, sortBy, gameVersion, token);
                 }
                 finally
                 {
@@ -277,6 +277,37 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent
             return _clientsManager.GetOutsideInstances(source, searchParams);
         }
 
+
+        private async Task<CatalogResult<InstanceClient>> GetInstanceClientsAsync(string searchInput, int scrollTo,
+            InstanceSource source, IEnumerable<IProjectCategory> selectedCategories, int sortBy,
+            MinecraftVersion gameVersion, CancellationToken cancellationToken)
+        {
+            if (gameVersion == null)
+                return new CatalogResult<InstanceClient>();
+
+            ISearchParams searchParams = null;
+            switch (source)
+            {
+                case InstanceSource.Modrinth:
+                    searchParams = new ModrinthSearchParams(searchInput, gameVersion.Id, selectedCategories,
+                        (int)ItemsPerPage, scrollTo, (ModrinthSortField)sortBy);
+                    break;
+                case InstanceSource.Curseforge:
+                    var version = gameVersion.Id;
+                    version = version == "All" ? string.Empty : version;
+                    searchParams = new CurseforgeSearchParams(searchInput, version, selectedCategories,
+                        (int)ItemsPerPage, scrollTo, (CfSortField)sortBy);
+                    break;
+                case InstanceSource.Nightworld:
+                    searchParams = new NightWorldSearchParams((int)ItemsPerPage, scrollTo);
+                    break;
+            }
+
+            if (searchParams == null)
+                return new CatalogResult<InstanceClient>();
+
+            return await _clientsManager.GetOutsideInstancesAsync(source, searchParams, cancellationToken);
+        }
 
         #endregion Public & Properties Methods
     }
