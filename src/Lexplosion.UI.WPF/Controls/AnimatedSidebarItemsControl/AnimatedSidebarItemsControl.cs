@@ -84,9 +84,9 @@ namespace Lexplosion.UI.WPF.Controls
         {
             if (ReferenceEquals(_navigationModel, model)) return;
 
-            _navigationModel?.SetContentNavigationDeferred(false);
+            // The selected ViewModel is published immediately. Only the WPF
+            // visual transition is deferred; cancellation must not lose a click.
             _navigationModel = model;
-            _navigationModel?.SetContentNavigationDeferred(true);
         }
 
         private void OnItemChecked(object sender, RoutedEventArgs e)

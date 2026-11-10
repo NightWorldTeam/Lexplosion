@@ -32,7 +32,6 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
 
         private LeftPanelMenuItem _selectedItem;
         private LeftPanelMenuItem _publishedItem;
-        private bool _deferContentNavigation;
 
         public LeftPanelMenuItem SelectedItem
         {
@@ -47,17 +46,17 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
                 _selectedItem = value;
                 OnPropertyChanged();
 
-                // Let the sidebar finish moving before a heavy page is created.
-                // The first selection (before the sidebar is loaded) is immediate.
-                if (!_deferContentNavigation)
-                    CommitSelection(value);
+                // Selection is application state and must never depend on a WPF
+                // animation clock completing (or on the sidebar being visible).
+                CommitSelection(value);
             }
         }
 
-        // The view controls the deferral lifetime, not a hard-coded timer.
+        // Kept for existing consumers; the WPF NavigationTransitionCoordinator
+        // now decides when a selected page is materialized in the visual tree.
+        [Obsolete("Visual transition timing belongs to the WPF NavigationTransitionCoordinator.")]
         public void SetContentNavigationDeferred(bool deferred)
         {
-            _deferContentNavigation = deferred;
             if (!deferred)
                 CommitSelection(_selectedItem);
         }
