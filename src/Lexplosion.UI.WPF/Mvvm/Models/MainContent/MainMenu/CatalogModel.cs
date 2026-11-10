@@ -192,9 +192,16 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent
                 PageCount = (uint)(result.TotalCount > 10
                     ? result.TotalCount / ItemsPerPage : result.TotalCount);
 
-                _instanceController.Clear();
-                foreach (var instance in result)
-                    _instanceController.Add(instance);
+                if (_instanceController is CatalogController catalogController)
+                {
+                    catalogController.ReplaceAll(result);
+                }
+                else
+                {
+                    _instanceController.Clear();
+                    foreach (var instance in result)
+                        _instanceController.Add(instance);
+                }
 
                 OnPropertyChanged(nameof(Instances));
                 _loaded = true;

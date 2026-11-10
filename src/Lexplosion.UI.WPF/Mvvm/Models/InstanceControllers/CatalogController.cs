@@ -20,7 +20,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.InstanceControllers
         private readonly Action<InstanceModelBase> _setRunningGame;
         private readonly Func<InstanceClient, InstanceModelBase> _getInstanceModelByInstanceClient;
         private readonly Action<InstanceModelBase> _addInstanceModel;
-        private ObservableCollection<InstanceModelBase> _instances = new ObservableCollection<InstanceModelBase>();
+        private BulkObservableCollection<InstanceModelBase> _instances = new BulkObservableCollection<InstanceModelBase>();
 
 
         #region Properties
@@ -81,6 +81,30 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.InstanceControllers
             });
 
             return instanceModelBase;
+        }
+
+        public void ReplaceAll(IEnumerable<InstanceClient> clients)
+        {
+            if (!_appCore.UiDispatcher.CheckAccess())
+                throw new InvalidOperationException("Catalog collection must be updated on the UI thread.");
+
+            var models = new List<InstanceModelBase>();
+            foreach (var instanceClient in clients)
+            {
+                var model = _getInstanceModelByInstanceClient(instanceClient);
+                if (model == null)
+                {
+                    var args = new InstanceModelArgs(_appCore, instanceClient, _exportFunc,
+                        _setRunningGame, group: null, instanceLocation: InstanceLocation.Catalog);
+                    model = new InstanceModelBase(args);
+                    _addInstanceModel(model);
+                }
+
+                models.Add(model);
+            }
+
+            // One Reset replaces a Clear followed by an Add for each result.
+            _instances.ReplaceAll(models);
         }
 
         public void Remove(InstanceClient instanceClient)

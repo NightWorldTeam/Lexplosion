@@ -4,6 +4,7 @@ using Lexplosion.Logic.Management.Import;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Objects;
 using Lexplosion.UI.WPF.Core;
+using Lexplosion.UI.Core.Threading;
 using Lexplosion.UI.WPF.Core.Notifications;
 using Lexplosion.UI.WPF.Core.Objects;
 using Lexplosion.UI.WPF.Extensions;
@@ -966,6 +967,14 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.Mvvm.InstanceModel
 
         private void OnLogoChanged()
         {
+            if (!_appCore.UiDispatcher.CheckAccess())
+            {
+                // Image download/resize completes on a worker; WPF bindings
+                // must receive model notifications on the UI Dispatcher.
+                _appCore.UiDispatcher.Post(OnLogoChanged, UiDispatchPriority.Background);
+                return;
+            }
+
             Logo = _instanceClient.Logo;
             OnPropertyChanged(nameof(Logo));
             LogoChanged?.Invoke();
