@@ -141,7 +141,10 @@ namespace Lexplosion.Logic.Management.Instances
 				{
 					if (value != null)
 					{
-						_logo = ImageTools.ResizeImage(value, 120, 120);
+                        // GDI+ does not support newer logo formats such as WebP.
+                        // Keep their original bytes for the WPF image decoder.
+                        if (ImageTools.CanResizeImage(value))
+                            _logo = ImageTools.ResizeImage(value, 120, 120);
 					}
 					else
 					{
@@ -150,7 +153,8 @@ namespace Lexplosion.Logic.Management.Instances
 				}
 				catch (Exception ex)
 				{
-					Runtime.DebugWrite("[Error] Image resize failed", color: ConsoleColor.DarkGray);
+                    Runtime.DebugWrite("[Error] Image resize failed: " + ex.GetType().Name +
+                        ", bytes: " + value.Length, color: ConsoleColor.DarkGray);
 					_logo = value;
 				}
 
@@ -820,6 +824,15 @@ namespace Lexplosion.Logic.Management.Instances
                     .ConfigureAwait(false))
                 {
                     response.EnsureSuccessStatusCode();
+                    var mediaType = response.Content.Headers.ContentType?.MediaType;
+                    if (!string.IsNullOrWhiteSpace(mediaType) &&
+                        !mediaType.StartsWith("image/", StringComparison.OrdinalIgnoreCase) &&
+                        !string.Equals(mediaType, "application/octet-stream", StringComparison.OrdinalIgnoreCase))
+                    {
+                        Runtime.DebugWrite("Logo endpoint returned non-image content: " + mediaType);
+                        return;
+                    }
+
                     byte[] image = await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
                     cancellationToken.ThrowIfCancellationRequested();
 

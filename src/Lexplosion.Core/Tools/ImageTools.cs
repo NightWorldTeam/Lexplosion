@@ -12,6 +12,42 @@ namespace Lexplosion.Tools
 	{
 		private static Random _random = new Random();
 
+        /// <summary>
+        /// GDI+ can resize these raster formats. WebP, AVIF and other formats
+        /// must be passed through to the UI decoder instead of throwing.
+        /// </summary>
+        public static bool CanResizeImage(byte[] imageBytes)
+        {
+            if (imageBytes == null || imageBytes.Length < 4)
+                return false;
+
+            if (imageBytes.Length >= 8 &&
+                imageBytes[0] == 0x89 && imageBytes[1] == 0x50 &&
+                imageBytes[2] == 0x4E && imageBytes[3] == 0x47 &&
+                imageBytes[4] == 0x0D && imageBytes[5] == 0x0A &&
+                imageBytes[6] == 0x1A && imageBytes[7] == 0x0A)
+                return true;
+
+            if (imageBytes[0] == 0xFF && imageBytes[1] == 0xD8 &&
+                imageBytes[2] == 0xFF)
+                return true;
+
+            if (imageBytes[0] == 0x47 && imageBytes[1] == 0x49 &&
+                imageBytes[2] == 0x46 && imageBytes[3] == 0x38)
+                return true;
+
+            if (imageBytes[0] == 0x42 && imageBytes[1] == 0x4D)
+                return true;
+
+            if ((imageBytes[0] == 0x49 && imageBytes[1] == 0x49 &&
+                 imageBytes[2] == 0x2A && imageBytes[3] == 0x00) ||
+                (imageBytes[0] == 0x4D && imageBytes[1] == 0x4D &&
+                 imageBytes[2] == 0x00 && imageBytes[3] == 0x2A))
+                return true;
+
+            return false;
+        }
+
 		public static byte[] ResizeImage(byte[] imageBytes, int width, int height)
 		{
 			if (imageBytes.Length == 0)
@@ -23,7 +59,10 @@ namespace Lexplosion.Tools
 			using (var image = Image.FromStream(stream))
 			using (var destImage = new Bitmap(width, height))
 			{
-				destImage.SetResolution(image.HorizontalResolution, image.VerticalResolution);
+                // Some valid images provide 0 DPI metadata. GDI+ rejects that
+                // value even though it can decode and resize the pixels.
+                if (image.HorizontalResolution > 0 && image.VerticalResolution > 0)
+                    destImage.SetResolution(image.HorizontalResolution, image.VerticalResolution);
 				var destRect = new Rectangle(0, 0, width, height);
 
 				using (var graphics = Graphics.FromImage(destImage))
