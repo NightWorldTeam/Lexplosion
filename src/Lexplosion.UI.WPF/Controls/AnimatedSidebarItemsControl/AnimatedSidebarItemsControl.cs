@@ -6,6 +6,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using Lexplosion.UI.WPF.Core;
+using Lexplosion.UI.WPF.Core.Animations;
 #if DEBUG
 using Lexplosion.QA;
 #endif
@@ -22,6 +23,11 @@ namespace Lexplosion.UI.WPF.Controls
         private bool _positionInitialized;
         private bool _updatePending;
         private int _animationVersion;
+        private readonly WpfMotionTimeline _caretMotion = new WpfMotionTimeline();
+        private int _pendingCaretVersion;
+        private double _pendingCaretTarget;
+        private TranslateTransform _pendingCaretTransform;
+        private DefaultMainMenuTabItem _pendingCaretItem;
         private LeftPanelViewModel _navigationModel;
 
         static AnimatedSidebarItemsControl()
@@ -38,7 +44,7 @@ namespace Lexplosion.UI.WPF.Controls
                 AttachNavigationModel(DataContext as LeftPanelViewModel);
                 QueuePositionUpdate();
             };
-            Unloaded += (sender, args) => AttachNavigationModel(null);
+            Unloaded += OnUnloaded;
             DataContextChanged += (sender, args) =>
             {
                 if (IsLoaded)
@@ -51,8 +57,15 @@ namespace Lexplosion.UI.WPF.Controls
             };
         }
 
+        private void OnUnloaded(object sender, RoutedEventArgs e)
+        {
+            _caretMotion.Cancel();
+            AttachNavigationModel(null);
+        }
+
         public override void OnApplyTemplate()
         {
+            _caretMotion.Cancel();
             base.OnApplyTemplate();
             _caret = GetTemplateChild("PART_SelectionCaret") as Border;
             _position = _caret?.RenderTransform as TranslateTransform;
@@ -183,6 +196,7 @@ namespace Lexplosion.UI.WPF.Controls
             // No motion on first render, layout refreshes or when disabled.
             if (!_positionInitialized || !animate || !AnimationPreferences.Enabled)
             {
+                _caretMotion.Cancel();
                 ++_animationVersion;
                 _position.BeginAnimation(TranslateTransform.YProperty, null);
                 _position.Y = target;
@@ -192,6 +206,7 @@ namespace Lexplosion.UI.WPF.Controls
             }
 
             double current = _position.Y;
+            _caretMotion.Cancel();
             _position.BeginAnimation(TranslateTransform.YProperty, null);
             _position.Y = current;
             if (Math.Abs(current - target) < 0.5)
@@ -211,24 +226,29 @@ namespace Lexplosion.UI.WPF.Controls
 
             var motion = (DoubleAnimation)animation.Clone();
             motion.To = target;
-            var position = _position;
-            int version = ++_animationVersion;
-            motion.Completed += (sender, args) =>
-            {
-                // Cancelled animations don't get to override newer selections.
-                if (_position == null || !ReferenceEquals(_position, position) ||
-                    version != _animationVersion) return;
-
-                position.BeginAnimation(TranslateTransform.YProperty, null);
-                position.Y = target;
-#if DEBUG
-                if (PerformanceTelemetry.Enabled)
-                    PerformanceTelemetry.Record("navigation.sidebar.motion.completed", 0);
-#endif
-                CommitSelectedContent(selected);
-            };
-            _position.BeginAnimation(TranslateTransform.YProperty, motion);
+            _pendingCaretTransform = _position;
+            _pendingCaretTarget = target;
+            _pendingCaretItem = selected;
+            _pendingCaretVersion = ++_animationVersion;
+            _caretMotion.Add(_position, TranslateTransform.YProperty, motion);
+            _caretMotion.Begin(this, OnCaretMotionCompleted);
             }
+        }
+
+        private void OnCaretMotionCompleted()
+        {
+            // Cancelled animations don't get to override newer selections.
+            if (_position == null || !ReferenceEquals(_position, _pendingCaretTransform) ||
+                _pendingCaretVersion != _animationVersion)
+                return;
+
+            _position.BeginAnimation(TranslateTransform.YProperty, null);
+            _position.Y = _pendingCaretTarget;
+#if DEBUG
+            if (PerformanceTelemetry.Enabled)
+                PerformanceTelemetry.Record("navigation.sidebar.motion.completed", 0);
+#endif
+            CommitSelectedContent(_pendingCaretItem);
         }
     }
 }
