@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
 using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Management.Accounts;
@@ -35,6 +37,17 @@ namespace Lexplosion.Logic.Management.Instances
 		private const string LogoFileName = "logo.png";
 
 		public static Func<byte[]> LogoGenerator { set; private get; }
+
+        // Bound concurrent logo downloads and image resizes for catalog results.
+        // Existing synchronous/ThreadPool consumers keep their current API.
+        private static readonly SemaphoreSlim LogoDownloadSlots = new SemaphoreSlim(3, 3);
+        private static readonly HttpClient LogoHttpClient = new HttpClient(new HttpClientHandler
+        {
+            UseProxy = false
+        })
+        {
+            Timeout = TimeSpan.FromSeconds(15)
+        };
 
 		#region events
 		/// <summary>
@@ -789,6 +802,48 @@ namespace Lexplosion.Logic.Management.Instances
 				catch { }
 			});
 		}
+
+        internal async Task DownloadLogoAsync(string url, Action callback,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            if (string.IsNullOrWhiteSpace(url))
+                return;
+
+            bool acquired = false;
+            try
+            {
+                await LogoDownloadSlots.WaitAsync(cancellationToken).ConfigureAwait(false);
+                acquired = true;
+
+                using (var request = new HttpRequestMessage(HttpMethod.Get, url))
+                using (var response = await LogoHttpClient.SendAsync(request, cancellationToken)
+                    .ConfigureAwait(false))
+                {
+                    response.EnsureSuccessStatusCode();
+                    byte[] image = await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                    // The existing resize in Logo is synchronous and runs
+                    // off the UI thread, with a bounded number of workers.
+                    Logo = image;
+                    if (callback != null)
+                        callback();
+                }
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                // A newer catalog request superseded this one.
+            }
+            catch (Exception error)
+            {
+                Runtime.DebugWrite("Logo loading failed: " + error.GetType().Name);
+            }
+            finally
+            {
+                if (acquired)
+                    LogoDownloadSlots.Release();
+            }
+        }
 
 		internal void SetLogo(string logoFilePath)
 		{

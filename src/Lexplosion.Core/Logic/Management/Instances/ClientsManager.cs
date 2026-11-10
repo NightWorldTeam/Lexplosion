@@ -301,7 +301,7 @@ namespace Lexplosion.Logic.Management.Instances
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            // InstanceClient creation and logo handling remain synchronous.
+            // InstanceClient creation remains synchronous; logo requests are bounded async I/O.
             return await Task.Run(delegate
             {
                 var instances = new List<InstanceClient>();
@@ -317,14 +317,14 @@ namespace Lexplosion.Logic.Management.Instances
                         instanceClient = _installedInstances[_idsPairs[instance.ExternalId]];
                         instanceClient.CheckUpdates();
                         instanceClient.UpdateInfo(instance.Name, null, instance.Categories, instance.Summary, instance.Description, instance.Author, instance.WebsiteUrl);
-                        instanceClient.DownloadLogo(instance.LogoUrl, instanceClient.SaveAssets);
+                        _ = instanceClient.DownloadLogoAsync(instance.LogoUrl, instanceClient.SaveAssets, cancellationToken);
                     }
                     else
                     {
                         instanceClient = new InstanceClient(instance.Name, source, _services, SaveInstalledInstancesList,
                             instance.GameVersion, instance.ExternalId, null);
                         instanceClient.UpdateInfo(instance.Name, null, instance.Categories, instance.Summary, instance.Description, instance.Author, instance.WebsiteUrl);
-                        instanceClient.DownloadLogo(instance.LogoUrl, delegate { });
+                        _ = instanceClient.DownloadLogoAsync(instance.LogoUrl, null, cancellationToken);
                     }
 
                     instances.Add(instanceClient);
