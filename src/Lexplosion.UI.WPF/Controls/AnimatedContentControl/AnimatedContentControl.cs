@@ -8,6 +8,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using Lexplosion.UI.WPF.Core;
+using Lexplosion.UI.WPF.Core.Animations;
 #if DEBUG
 using Lexplosion.QA;
 #endif
@@ -40,6 +41,7 @@ namespace Lexplosion.UI.WPF.Controls
         private long _preparationStartedTick;
 #endif
         private readonly HashSet<ScrollBar> _hiddenScrollbars = new HashSet<ScrollBar>();
+        private readonly WpfMotionTimeline _motionTimeline = new WpfMotionTimeline();
 
         // The transition state is exposed to the hosting TabControl, so tab input
         // can be locked for the actual animation lifetime (no hard-coded timers).
@@ -88,6 +90,7 @@ namespace Lexplosion.UI.WPF.Controls
 #if DEBUG
             using var trace = UiDebugTrace.Measure("page.apply-template", 3);
 #endif
+            _motionTimeline.Cancel();
             RestoreScrollbars();
             ++_transitionVersion;
             base.OnApplyTemplate();
@@ -238,15 +241,8 @@ namespace Lexplosion.UI.WPF.Controls
 
                 // TranslateTransform runs on the composition path. Avoid opacity
                 // animations on two full-page surfaces during a slide.
-                var arrive = Motion(incoming, 0, duration, easing);
-                arrive.Completed += (sender, args) =>
-                {
-                    if (version == _transitionVersion)
-                        FinishTransition();
-                };
-
-                oldTransform.BeginAnimation(property, Motion(0, outgoing, duration, easing));
-                newTransform.BeginAnimation(property, arrive);
+                _motionTimeline.Add(oldTransform, property, Motion(0, outgoing, duration, easing));
+                _motionTimeline.Add(newTransform, property, Motion(incoming, 0, duration, easing));
             }
 
             // Adjacent pages move as one strip: the outgoing page never paints
@@ -259,15 +255,18 @@ namespace Lexplosion.UI.WPF.Controls
 
             if (!swipe)
             {
-                oldPresenter.BeginAnimation(OpacityProperty, Motion(1, 0, duration, easing));
-                var reveal = Motion(0, 1, duration, easing);
-                reveal.Completed += (sender, args) =>
-                {
-                    if (version == _transitionVersion)
-                        FinishTransition();
-                };
-                newPresenter.BeginAnimation(OpacityProperty, reveal);
+                _motionTimeline.Add(oldPresenter, OpacityProperty, Motion(1, 0, duration, easing));
+                _motionTimeline.Add(newPresenter, OpacityProperty, Motion(0, 1, duration, easing));
             }
+
+            // One clock starts both presenters together and completes once.
+            _motionTimeline.Begin(this, OnMotionCompleted);
+        }
+
+        private void OnMotionCompleted()
+        {
+            if (_transitionPending)
+                FinishTransition();
         }
 
         private static DoubleAnimation Motion(double from, double to, Duration duration, IEasingFunction easing)
@@ -277,6 +276,7 @@ namespace Lexplosion.UI.WPF.Controls
 
         private void FinishTransition()
         {
+            _motionTimeline.Cancel();
 #if DEBUG
             using var trace = UiDebugTrace.Measure("page.finish-transition", 3);
 #endif
@@ -315,6 +315,7 @@ namespace Lexplosion.UI.WPF.Controls
 
         private void ShowImmediately(object content)
         {
+            _motionTimeline.Cancel();
 #if DEBUG
             using var trace = UiDebugTrace.Measure("page.show-immediately", 3);
             UiDebugTrace.Navigate(content);
