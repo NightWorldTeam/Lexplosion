@@ -8,10 +8,11 @@ using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Objects.Modrinth;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Lexplosion.Logic.Management.Sources
 {
-	class ModrinthSource : IInstanceSource
+	class ModrinthSource : IInstanceSource, IAsyncInstanceSource
 	{
 		private readonly IModrinthFileServicesContainer _services;
 
@@ -83,6 +84,38 @@ namespace Lexplosion.Logic.Management.Sources
 
 			return new(result, catalogResult.TotalCount);
 		}
+
+        public async Task<CatalogResult<InstanceInfo>> GetCatalogAsync(InstanceSource type, ISearchParams searchParams,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var parameters = searchParams is ModrinthSearchParams
+                ? (ModrinthSearchParams)searchParams : new ModrinthSearchParams();
+            var catalog = await _services.MdApi.GetInstancesAsync(parameters.PageSize, parameters.PageIndex,
+                parameters.Categories, parameters.SortFieldString, parameters.SearchFilter,
+                parameters.GameVersion, cancellationToken).ConfigureAwait(false);
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var result = new List<InstanceInfo>(parameters.PageSize);
+            foreach (var instance in catalog.Collection)
+            {
+                var categories = ParseCategories(instance.Categories);
+                result.Add(new InstanceInfo()
+                {
+                    Name = instance.Title,
+                    Author = instance.Author,
+                    Categories = categories,
+                    Summary = instance.Summary,
+                    Description = instance.Summary,
+                    GameVersion = new MinecraftVersion(instance.GameVersions[instance.GameVersions.Count - 1]),
+                    WebsiteUrl = "https://modrinth.com/modpack/" + instance.Slug,
+                    LogoUrl = instance.LogoUrl,
+                    ExternalId = instance.ProjectId,
+                    DownloadCounts = instance.Downloads
+                });
+            }
+
+            return new CatalogResult<InstanceInfo>(result, catalog.TotalCount);
+        }
 
 		public InstancePlatformData CreateInstancePlatformData(string externalId, string localId, string instanceVersion)
 		{

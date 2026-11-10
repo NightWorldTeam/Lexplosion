@@ -305,6 +305,7 @@ namespace Lexplosion.Logic.Network.Web
 			return MultipleGetRequest<ModrinthProjectInfo>("https://api.modrinth.com/v2/projects?ids=", ids);
 		}
 
+		[Obsolete("Use GetInstancesAsync for asynchronous catalog data loading.")]
 		public CatalogResult<ModrinthCtalogUnit> GetInstances(int pageSize, int index, IEnumerable<IProjectCategory> categories, string sortField, string searchFilter, string gameVersion)
 		{
 			var queryBuilder = new QueryApiBuilder("https://api.modrinth.com/v2/search");
@@ -333,6 +334,40 @@ namespace Lexplosion.Logic.Network.Web
 		/// <summary>
 		/// Возвращает строку формата ,["categories: ..."]
 		/// </summary>
+        public async Task<CatalogResult<ModrinthCtalogUnit>> GetInstancesAsync(int pageSize, int index,
+            IEnumerable<IProjectCategory> categories, string sortField, string searchFilter, string gameVersion,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var queryBuilder = new QueryApiBuilder("https://api.modrinth.com/v2/search");
+            queryBuilder.Add("offset", index * pageSize);
+            queryBuilder.Add("limit", pageSize);
+
+            if (!string.IsNullOrWhiteSpace(sortField))
+                queryBuilder.Add("index", sortField);
+
+            if (!string.IsNullOrWhiteSpace(searchFilter))
+                queryBuilder.Add("query", WebUtility.UrlEncode(searchFilter));
+
+            var categoriesQuery = BuildCategoriesToQuery(categories);
+            queryBuilder.Add("facets", $"[[%22project_type:modpack%22]{categoriesQuery}]");
+
+            var url = queryBuilder.Build();
+            Runtime.DebugWrite(url, color: ConsoleColor.Cyan);
+
+            var response = await _toServer.HttpGetAsync(url, cancellationToken).ConfigureAwait(false);
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (!response.IsSucces || response.Content == null)
+                throw new InvalidOperationException("Modrinth catalog request failed.");
+
+            var catalog = JsonConvert.DeserializeObject<CatalogContainer>(response.Content);
+            if (catalog == null)
+                throw new InvalidOperationException("Invalid Modrinth catalog response.");
+
+            return new CatalogResult<ModrinthCtalogUnit>(catalog.hits ?? new List<ModrinthCtalogUnit>(),
+                catalog.TotalHits);
+        }
+
 		private string BuildCategoriesToQuery(IEnumerable<IProjectCategory> categories)
 		{
 			var result = string.Empty;

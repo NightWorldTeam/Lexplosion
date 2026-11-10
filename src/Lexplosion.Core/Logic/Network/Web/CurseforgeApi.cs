@@ -161,7 +161,8 @@ namespace Lexplosion.Logic.Network.Web
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		private T GetApiData<T>(string url) where T : new() => GetApiData<T>(url, out _);
 
-		public CatalogResult<CurseforgeInstanceInfo> GetInstances(CurseforgeSearchParams searchParams)
+		[Obsolete("Use GetInstancesAsync for asynchronous catalog data loading.")]
+        public CatalogResult<CurseforgeInstanceInfo> GetInstances(CurseforgeSearchParams searchParams)
 		{
 			var queryBuilder = new QueryApiBuilder("v1/mods/search");
 
@@ -187,6 +188,51 @@ namespace Lexplosion.Logic.Network.Web
 			var result = GetApiData<List<CurseforgeInstanceInfo>>(url, out Pagination paginator);
 			return new(result, paginator?.TotalCount ?? 1);
 		}
+
+        public async Task<CatalogResult<CurseforgeInstanceInfo>> GetInstancesAsync(CurseforgeSearchParams searchParams,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var queryBuilder = new QueryApiBuilder("v1/mods/search");
+            queryBuilder.Add("gameId", "432");
+            queryBuilder.Add("classId", "4471");
+            queryBuilder.Add("sortOrder", "desc");
+            queryBuilder.Add("pageSize", searchParams.PageSize);
+            queryBuilder.Add("index", searchParams.PageSize * searchParams.PageIndex);
+
+            if (!string.IsNullOrWhiteSpace(searchParams.SearchFilter))
+                queryBuilder.Add("searchFilter", WebUtility.UrlEncode(searchParams.SearchFilter));
+
+            if (!string.IsNullOrWhiteSpace(searchParams.GameVersion))
+                queryBuilder.Add("gameVersion", searchParams.GameVersion);
+
+            queryBuilder.Add("categoryIds", BuildCategoriesToQuery(searchParams.Categories));
+            queryBuilder.Add("sortField", (int)searchParams.SortField);
+
+            var url = queryBuilder.Build();
+            Runtime.DebugWrite(url, color: ConsoleColor.Cyan);
+
+            var response = await _toServer.HttpGetAsync((_isMirorModeToMainUrl ? MIRROR_API_URL_BASE : API_URL_BASE) + url,
+                cancellationToken, Headers).ConfigureAwait(false);
+
+            if (!response.IsSucces && !_isMirorModeToMainUrl && response.State == RequestResultState.NetworkError)
+            {
+                response = await _toServer.HttpGetAsync(MIRROR_API_URL_BASE + url,
+                    cancellationToken, Headers).ConfigureAwait(false);
+                if (response.IsSucces)
+                    _isMirorModeToMainUrl = true;
+            }
+
+            cancellationToken.ThrowIfCancellationRequested();
+            if (!response.IsSucces || response.Content == null)
+                throw new InvalidOperationException("Curseforge catalog request failed.");
+
+            var data = JsonConvert.DeserializeObject<DataContainer<List<CurseforgeInstanceInfo>>>(response.Content);
+            if (data == null)
+                throw new InvalidOperationException("Invalid Curseforge catalog response.");
+
+            return new CatalogResult<CurseforgeInstanceInfo>(data.Data ?? new List<CurseforgeInstanceInfo>(),
+                data.Paginator?.TotalCount ?? 1);
+        }
 
 		private string BuildCategoriesToQuery(IEnumerable<IProjectCategory> categories)
 		{

@@ -16,6 +16,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Lexplosion.Logic.Management.Instances
 {
@@ -240,6 +241,7 @@ namespace Lexplosion.Logic.Management.Instances
 		/// Возвращает список модпаков для каталога.
 		/// </summary>
 		/// <returns>Список внешних модпаков.</returns>
+		[Obsolete("Use GetOutsideInstancesAsync for asynchronous catalog data loading.")]
 		public CatalogResult<InstanceClient> GetOutsideInstances(InstanceSource type, ISearchParams searchParams)
 		{
 			Runtime.DebugWrite("UploadInstances " + searchParams.PageIndex);
@@ -275,6 +277,63 @@ namespace Lexplosion.Logic.Management.Instances
 
 			return new(instances, catalog.TotalCount);
 		}
+
+        public async Task<CatalogResult<InstanceClient>> GetOutsideInstancesAsync(InstanceSource type, ISearchParams searchParams,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            Runtime.DebugWrite("UploadInstances async " + searchParams.PageIndex);
+            cancellationToken.ThrowIfCancellationRequested();
+
+            IInstanceSource source = CreateSourceFactory(type);
+            CatalogResult<InstanceInfo> catalog;
+            if (source is IAsyncInstanceSource asyncSource)
+            {
+                catalog = await asyncSource.GetCatalogAsync(type, searchParams, cancellationToken).ConfigureAwait(false);
+            }
+            else
+            {
+                // The NightWorld source still uses a synchronous catalog endpoint.
+                catalog = await Task.Run(delegate
+                {
+                    return source.GetCatalog(type, searchParams);
+                }, cancellationToken).ConfigureAwait(false);
+            }
+
+            cancellationToken.ThrowIfCancellationRequested();
+
+            // InstanceClient creation and logo handling remain synchronous.
+            return await Task.Run(delegate
+            {
+                var instances = new List<InstanceClient>();
+                foreach (var instance in catalog)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    if (string.IsNullOrWhiteSpace(instance.ExternalId))
+                        continue;
+
+                    InstanceClient instanceClient;
+                    if (_idsPairs.ContainsKey(instance.ExternalId))
+                    {
+                        instanceClient = _installedInstances[_idsPairs[instance.ExternalId]];
+                        instanceClient.CheckUpdates();
+                        instanceClient.UpdateInfo(instance.Name, null, instance.Categories, instance.Summary, instance.Description, instance.Author, instance.WebsiteUrl);
+                        instanceClient.DownloadLogo(instance.LogoUrl, instanceClient.SaveAssets);
+                    }
+                    else
+                    {
+                        instanceClient = new InstanceClient(instance.Name, source, _services, SaveInstalledInstancesList,
+                            instance.GameVersion, instance.ExternalId, null);
+                        instanceClient.UpdateInfo(instance.Name, null, instance.Categories, instance.Summary, instance.Description, instance.Author, instance.WebsiteUrl);
+                        instanceClient.DownloadLogo(instance.LogoUrl, delegate { });
+                    }
+
+                    instances.Add(instanceClient);
+                    instanceClient.DownloadCounts = instance.DownloadCounts;
+                }
+
+                return new CatalogResult<InstanceClient>(instances, catalog.TotalCount);
+            }, cancellationToken).ConfigureAwait(false);
+        }
 
 		/// <summary>
 		/// Получает внешнюю сборку по id

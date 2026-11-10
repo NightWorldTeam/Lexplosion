@@ -7,10 +7,11 @@ using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Lexplosion.Logic.Management.Sources
 {
-	class CurseforgeSource : IInstanceSource
+	class CurseforgeSource : IInstanceSource, IAsyncInstanceSource
 	{
 		// чтобы не создавать объект каждый вызов метода GetCatalog 
 		private readonly IProjectCategory _modpacksAllCategory = new SimpleCategory()
@@ -90,6 +91,43 @@ namespace Lexplosion.Logic.Management.Sources
 
 			return new(result, catalogResult.TotalCount);
 		}
+
+        public async Task<CatalogResult<InstanceInfo>> GetCatalogAsync(InstanceSource type, ISearchParams searchParams,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var parameters = searchParams is CurseforgeSearchParams
+                ? (CurseforgeSearchParams)searchParams : new CurseforgeSearchParams();
+            var catalog = await _services.CfApi.GetInstancesAsync(parameters, cancellationToken).ConfigureAwait(false);
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var result = new List<InstanceInfo>();
+            foreach (var instance in catalog.Collection)
+            {
+                if (instance.latestFilesIndexes == null || instance.latestFilesIndexes.Count == 0 ||
+                    instance.latestFilesIndexes[0].gameVersion == null)
+                    continue;
+
+                string author = null;
+                if (instance.authors != null && instance.authors.Count > 0)
+                    author = instance.authors[0].name;
+
+                result.Add(new InstanceInfo()
+                {
+                    Name = instance.name,
+                    Author = author,
+                    Categories = instance.categories,
+                    Summary = instance.summary,
+                    Description = instance.summary,
+                    GameVersion = new MinecraftVersion(instance.latestFilesIndexes[0].gameVersion),
+                    WebsiteUrl = instance.links?.websiteUrl,
+                    LogoUrl = instance.logo?.url,
+                    ExternalId = instance.id,
+                    DownloadCounts = (int)instance.downloadCount
+                });
+            }
+
+            return new CatalogResult<InstanceInfo>(result, catalog.TotalCount);
+        }
 
 		public InstancePlatformData CreateInstancePlatformData(string externalId, string localId, string instanceVersion)
 		{
