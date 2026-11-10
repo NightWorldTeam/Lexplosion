@@ -6,6 +6,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using Lexplosion.UI.WPF.Core;
+using Lexplosion.UI.WPF.Core.Animations;
 #if DEBUG
 using Lexplosion.QA;
 #endif
@@ -26,6 +27,10 @@ namespace Lexplosion.UI.WPF.Controls
         private bool _contentPending;
         private int _selectionVersion;
         private int _scheduledContentVersion = -1;
+        private readonly WpfMotionTimeline _underlineMotion = new WpfMotionTimeline();
+        private TranslateTransform _pendingLinePosition;
+        private double _pendingLineOffset;
+        private int _pendingLineVersion;
 
         private TabItem _selectedTabItem;
         private bool _underlineUpdatePending;
@@ -123,6 +128,12 @@ namespace Lexplosion.UI.WPF.Controls
                 if (ItemContainerGenerator.Status == GeneratorStatus.ContainersGenerated)
                     QueueUnderlineUpdate();
             };
+            Unloaded += OnUnloaded;
+        }
+
+        private void OnUnloaded(object sender, RoutedEventArgs e)
+        {
+            _underlineMotion.Cancel();
         }
 
 
@@ -143,6 +154,7 @@ namespace Lexplosion.UI.WPF.Controls
 #if DEBUG
             using var trace = UiDebugTrace.Measure("tabs.apply-template", 3);
 #endif
+            _underlineMotion.Cancel();
             if (_selectedTabItem != null)
                 _selectedTabItem.SizeChanged -= OnTabItemSizeChanged;
 
@@ -433,12 +445,14 @@ namespace Lexplosion.UI.WPF.Controls
         {
             if (_linePosition == null)
             {
+                _underlineMotion.Cancel();
                 CommitContentNavigation(false);
                 return;
             }
 
             if (!EnableAnimations || !AnimationPreferences.Enabled || !IsLoaded)
             {
+                _underlineMotion.Cancel();
                 _linePosition.BeginAnimation(TranslateTransform.XProperty, null);
                 _linePosition.X = left;
                 CommitContentNavigation(false);
@@ -450,34 +464,40 @@ namespace Lexplosion.UI.WPF.Controls
             double current = _linePosition.X;
             if (Math.Abs(current - left) < 0.5)
             {
+                _underlineMotion.Cancel();
                 _linePosition.BeginAnimation(TranslateTransform.XProperty, null);
                 _linePosition.X = left;
                 CommitContentNavigation(true);
                 return;
             }
 
-            int version = _selectionVersion;
-            var position = _linePosition;
             var motion = new DoubleAnimation(current, left, TimeSpan.FromMilliseconds(200))
             {
                 EasingFunction = new CubicEase { EasingMode = EasingMode.EaseInOut }
             };
-            motion.Completed += (sender, args) =>
-            {
-                if (version != _selectionVersion || !ReferenceEquals(_linePosition, position))
-                    return;
 
-                position.BeginAnimation(TranslateTransform.XProperty, null);
-                position.X = left;
+            _pendingLineVersion = _selectionVersion;
+            _pendingLinePosition = _linePosition;
+            _pendingLineOffset = left;
+            _underlineMotion.Add(_linePosition, TranslateTransform.XProperty, motion);
+            _underlineMotion.Begin(this, OnUnderlineMotionCompleted);
+        }
+
+        private void OnUnderlineMotionCompleted()
+        {
+            if (_pendingLineVersion != _selectionVersion ||
+                !ReferenceEquals(_linePosition, _pendingLinePosition))
+                return;
+
+            _linePosition.BeginAnimation(TranslateTransform.XProperty, null);
+            _linePosition.X = _pendingLineOffset;
 #if DEBUG
-                if (PerformanceTelemetry.Enabled)
-                    PerformanceTelemetry.Record("navigation.tabs.motion.completed", 0);
+            if (PerformanceTelemetry.Enabled)
+                PerformanceTelemetry.Record("navigation.tabs.motion.completed", 0);
 #endif
-                // Restore the sequencing from the last smooth version: do
-                // not materialize a heavy DataTemplate while the indicator moves.
-                CommitContentNavigation(true);
-            };
-            position.BeginAnimation(TranslateTransform.XProperty, motion);
+            // Restore the sequencing from the last smooth version: do
+            // not materialize a heavy DataTemplate while the indicator moves.
+            CommitContentNavigation(true);
         }
 
         private void SetUnderlineWidth(double width)
