@@ -1,5 +1,7 @@
 using System;
+using System.Diagnostics;
 using System.Windows;
+using System.Windows.Media;
 using System.Windows.Media.Animation;
 
 namespace Lexplosion.UI.WPF.Core.Animations
@@ -15,6 +17,8 @@ namespace Lexplosion.UI.WPF.Core.Animations
         private Storyboard _running;
         private FrameworkElement _owner;
         private Action _completed;
+        private bool _renderingSubscribed;
+        private long _completionDeadline;
 
         public void Add(DependencyObject target, DependencyProperty property, DoubleAnimation animation)
         {
@@ -52,6 +56,23 @@ namespace Lexplosion.UI.WPF.Core.Animations
             _running = storyboard;
             storyboard.Completed += OnCompleted;
             storyboard.Begin(owner, true);
+
+            // WPF can drop Completed when a control/template is replaced during
+            // rapid navigation. Do not leave the next destination queued forever.
+            TimeSpan duration = TimeSpan.Zero;
+            foreach (Timeline track in storyboard.Children)
+            {
+                if (track.Duration.HasTimeSpan && track.Duration.TimeSpan > duration)
+                    duration = track.Duration.TimeSpan;
+            }
+
+            if (ReferenceEquals(_running, storyboard) && duration > TimeSpan.Zero)
+            {
+                _completionDeadline = Stopwatch.GetTimestamp() +
+                    (long)(duration.TotalSeconds * Stopwatch.Frequency);
+                CompositionTarget.Rendering += OnRendering;
+                _renderingSubscribed = true;
+            }
         }
 
         public void Cancel()
@@ -62,6 +83,20 @@ namespace Lexplosion.UI.WPF.Core.Animations
 
         private void OnCompleted(object sender, EventArgs e)
         {
+            CompleteActive();
+        }
+
+        private void OnRendering(object sender, EventArgs e)
+        {
+            if (_running != null && Stopwatch.GetTimestamp() >= _completionDeadline)
+                CompleteActive();
+        }
+
+        private void CompleteActive()
+        {
+            if (_running == null)
+                return;
+
             var completed = _completed;
             StopActive();
             if (completed != null)
@@ -70,6 +105,12 @@ namespace Lexplosion.UI.WPF.Core.Animations
 
         private void StopActive()
         {
+            if (_renderingSubscribed)
+            {
+                CompositionTarget.Rendering -= OnRendering;
+                _renderingSubscribed = false;
+            }
+
             var running = _running;
             var owner = _owner;
 
