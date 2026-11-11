@@ -97,31 +97,26 @@ namespace Lexplosion.UI.WPF.Controls
                 selected.IsChecked != true)
                 return;
 
-            // Content and indicator are coordinated only by the WPF visual
-            // layer; changing the selected ViewModel never waits for motion.
+            // RadioButton.Checked is raised before its TwoWay binding finishes
+            // updating the selected ViewModel. Start the caret on this input
+            // event instead of queuing it behind page layout and DataTemplates.
+            bool canMoveNow = IsLoaded && selected.ActualHeight > 0 && _position != null;
             var coordinator = NavigationTransitionCoordinator.GetCurrent(this);
             if (coordinator != null)
             {
                 TimeSpan duration = TimeSpan.Zero;
                 var motion = Template?.Resources["SelectionMotion"] as DoubleAnimation;
-                if (IsLoaded && _positionInitialized && AnimationPreferences.Enabled &&
+                if (canMoveNow && _positionInitialized && AnimationPreferences.Enabled &&
                     motion != null && motion.Duration.HasTimeSpan)
                     duration = motion.Duration.TimeSpan;
 
                 _coordinatedSelectionVersion = coordinator.BeginSelection(duration);
             }
 
-            // The binding to LeftPanelMenuItem.IsSelected may not have updated
-            // its source yet when the Checked routed event is raised.
-            Dispatcher.BeginInvoke(new Action(() =>
-            {
-                if (!IsLoaded || selected.IsChecked != true) return;
-
-                if (selected.ActualHeight > 0 && _position != null)
-                    MoveCaret(selected, true);
-                else
-                    QueuePositionUpdate();
-            }), DispatcherPriority.Loaded);
+            if (canMoveNow)
+                MoveCaret(selected, true);
+            else
+                QueuePositionUpdate();
         }
 
         private void CommitSelectedContent(DefaultMainMenuTabItem selected)
