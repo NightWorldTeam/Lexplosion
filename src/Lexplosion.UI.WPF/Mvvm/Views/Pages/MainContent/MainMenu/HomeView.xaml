@@ -229,7 +229,7 @@
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                 <Viewbox Width="14" Height="14" Margin="0,0,6,0">
                                     <Path
-                                        extensions:PathExtensions.StringKeyData="PDUpdate"
+                                        extensions:PathExtensions.StringKeyData="Update"
                                         Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type controls:AdvancedButton}}}"
                                         Stretch="Uniform" />
                                 </Viewbox>
@@ -355,29 +355,28 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <!--  Local home navigation only. Existing LeftPanel is outside this view and remains untouched.  -->
-                <StackPanel VerticalAlignment="Top" Orientation="Horizontal">
-                    <StackPanel Margin="0,0,30,0">
-                        <controls:AdvancedButton
-                            Height="24"
-                            Text="{DynamicResource Home}"
-                            Foreground="{DynamicResource ActivitySolidColorBrush}"
-                            Style="{StaticResource TransparentAdvancedButton}" />
-                        <Border
-                            Height="2"
-                            Margin="0,2,0,0"
-                            Background="{DynamicResource ActivitySolidColorBrush}" />
-                    </StackPanel>
-                    <controls:AdvancedButton
-                        Height="24"
-                        Margin="0,0,30,0"
-                        Text="{DynamicResource NewsTitle}"
-                        Style="{StaticResource TransparentAdvancedButton}" />
-                    <controls:AdvancedButton
-                        Height="24"
-                        Text="{DynamicResource More}"
-                        Style="{StaticResource TransparentAdvancedButton}" />
-                </StackPanel>
+                <!-- Shared tab header, matching the Friends page. Other sections are not implemented yet. -->
+                <controls:UIUnderlineTabControl
+                    Height="34"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Background="Transparent"
+                    BorderBrush="Transparent"
+                    BorderThickness="0"
+                    SelectedIndex="0"
+                    TabPanelPadding="0">
+                    <TabItem
+                        Header="Home"
+                        Style="{StaticResource UITabItem}" />
+                    <TabItem
+                        Header="NewsTitle"
+                        IsEnabled="False"
+                        Style="{StaticResource UITabItem}" />
+                    <TabItem
+                        Header="More"
+                        IsEnabled="False"
+                        Style="{StaticResource UITabItem}" />
+                </controls:UIUnderlineTabControl>
 
                 <!--  Microsoft Store style rotating feature strip. DataContexts are assigned from Catalog.Model.Instances in code-behind.  -->
                 <Grid
@@ -986,7 +985,7 @@
                                                         HorizontalAlignment="Center"
                                                         VerticalAlignment="Center">
                                                         <Path
-                                                            extensions:PathExtensions.StringKeyData="PDCatalog"
+                                                            extensions:PathExtensions.StringKeyData="Catalog"
                                                             Fill="{DynamicResource ActivitySolidColorBrush}"
                                                             Stretch="Uniform" />
                                                     </Viewbox>
