@@ -170,7 +170,7 @@
                                 Text="{Binding Name}"
                                 TextTrimming="CharacterEllipsis" />
                             <TextBlock
-                                Margin="0,4,0,0"
+                                Margin="0,0,0,0"
                                 FontSize="11"
                                 Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
                                 TextTrimming="CharacterEllipsis">
@@ -224,10 +224,20 @@
                             FontSize="12.5"
                             Command="{Binding DataContext.UpdateInstanceCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
                             CommandParameter="{Binding}"
-                            IconData="{DynamicResource PDUpdate}"
-                            Text="{DynamicResource Update}"
                             Style="{StaticResource sm-default}"
-                            Visibility="{Binding InstanceClient.UpdateAvailable, Converter={converters:BooleanToVisibilityConverter}}" />
+                            Visibility="{Binding InstanceClient.UpdateAvailable, Converter={converters:BooleanToVisibilityConverter}}">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <Viewbox Width="14" Height="14" Margin="0,0,6,0">
+                                    <Path
+                                        extensions:PathExtensions.StringKeyData="PDUpdate"
+                                        Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type controls:AdvancedButton}}}"
+                                        Stretch="Uniform" />
+                                </Viewbox>
+                                <TextBlock
+                                    VerticalAlignment="Center"
+                                    Text="{DynamicResource Update}" />
+                            </StackPanel>
+                        </controls:AdvancedButton>
                     </Grid>
                 </Grid>
             </Border>
@@ -351,12 +361,12 @@
                         <controls:AdvancedButton
                             Height="24"
                             Text="{DynamicResource Home}"
-                            Foreground="#238BFF"
+                            Foreground="{DynamicResource ActivitySolidColorBrush}"
                             Style="{StaticResource TransparentAdvancedButton}" />
                         <Border
                             Height="2"
                             Margin="0,2,0,0"
-                            Background="#238BFF" />
+                            Background="{DynamicResource ActivitySolidColorBrush}" />
                     </StackPanel>
                     <controls:AdvancedButton
                         Height="24"
