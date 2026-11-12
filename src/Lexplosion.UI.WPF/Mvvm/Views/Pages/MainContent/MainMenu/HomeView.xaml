@@ -24,69 +24,9 @@
     mc:Ignorable="d">
 
     <UserControl.Resources>
-        <Style x:Key="HomeNavButton" TargetType="Button">
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="Foreground" Value="{DynamicResource SecondaryForegroundSolidColorBrush}" />
-            <Setter Property="FontSize" Value="14" />
-            <Setter Property="Padding" Value="0" />
-            <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Foreground" Value="{DynamicResource PrimaryForegroundSolidColorBrush}" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>
+        
 
-        <Style x:Key="HomeIconButton" TargetType="Button">
-            <Setter Property="Width" Value="28" />
-            <Setter Property="Height" Value="28" />
-            <Setter Property="Padding" Value="0" />
-            <Setter Property="Margin" Value="4,0,0,0" />
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="BorderBrush" Value="{DynamicResource SeparateSolidColorBrush}" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="Foreground" Value="{DynamicResource PrimaryForegroundSolidColorBrush}" />
-            <Setter Property="FontSize" Value="15" />
-            <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border
-                            x:Name="PART_Border"
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="5">
-                            <Viewbox
-                                Width="11"
-                                Height="11"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center">
-                                <Path
-                                    extensions:PathExtensions.StringKeyData="{TemplateBinding Content}"
-                                    Fill="{TemplateBinding Foreground}"
-                                    Stretch="Uniform" />
-                            </Viewbox>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="PART_Border" Property="Background" Value="{DynamicResource SecondarySolidColorBrush}" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
+        
 
         <Style x:Key="HomeTagBorder" TargetType="Border">
             <Setter Property="Margin" Value="0,0,6,0" />
@@ -272,7 +212,7 @@
                                     Text="{Binding Source}" />
                             </Border>
                         </StackPanel>
-                        <Button
+                        <controls:AdvancedButton
                             Grid.Column="1"
                             Height="34"
                             MinWidth="108"
@@ -280,56 +220,14 @@
                             Background="{DynamicResource SecondarySolidColorBrush}"
                             BorderBrush="{DynamicResource SeparateSolidColorBrush}"
                             BorderThickness="1"
+                            CornerRadius="7"
+                            FontSize="12.5"
                             Command="{Binding DataContext.UpdateInstanceCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
                             CommandParameter="{Binding}"
-                            Cursor="Hand"
-                            Visibility="{Binding InstanceClient.UpdateAvailable, Converter={converters:BooleanToVisibilityConverter}}">
-                            <Button.Template>
-                                <ControlTemplate TargetType="Button">
-                                    <Border
-                                        x:Name="PART_UpdateBorder"
-                                        Padding="{TemplateBinding Padding}"
-                                        Background="{TemplateBinding Background}"
-                                        BorderBrush="{TemplateBinding BorderBrush}"
-                                        BorderThickness="{TemplateBinding BorderThickness}"
-                                        CornerRadius="7">
-                                        <StackPanel
-                                            HorizontalAlignment="Center"
-                                            VerticalAlignment="Center"
-                                            Orientation="Horizontal">
-                                            <Viewbox
-                                                Width="14"
-                                                Height="14"
-                                                Margin="0,0,8,0">
-                                                <Path
-                                                    x:Name="PART_UpdateGlyph"
-                                                    extensions:PathExtensions.StringKeyData="Update"
-                                                    Fill="{DynamicResource SecondaryForegroundSolidColorBrush}"
-                                                    Stretch="Uniform" />
-                                            </Viewbox>
-                                            <TextBlock
-                                                x:Name="PART_UpdateText"
-                                                FontSize="12.5"
-                                                FontWeight="SemiBold"
-                                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                                Text="{DynamicResource Update}" />
-                                        </StackPanel>
-                                    </Border>
-                                    <ControlTemplate.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="PART_UpdateBorder" Property="Background" Value="{DynamicResource PrimarySolidColorBrush}" />
-                                            <Setter TargetName="PART_UpdateBorder" Property="BorderBrush" Value="{DynamicResource ActivitySolidColorBrush}" />
-                                            <Setter TargetName="PART_UpdateGlyph" Property="Fill" Value="{DynamicResource PrimaryForegroundSolidColorBrush}" />
-                                        </Trigger>
-                                        <Trigger Property="IsPressed" Value="True">
-                                            <Setter TargetName="PART_UpdateBorder" Property="Background" Value="{DynamicResource ActivitySolidColorBrush}" />
-                                            <Setter TargetName="PART_UpdateText" Property="Foreground" Value="{DynamicResource DefaultButtonForegroundColorBrush}" />
-                                            <Setter TargetName="PART_UpdateGlyph" Property="Fill" Value="{DynamicResource DefaultButtonForegroundColorBrush}" />
-                                        </Trigger>
-                                    </ControlTemplate.Triggers>
-                                </ControlTemplate>
-                            </Button.Template>
-                        </Button>
+                            IconData="{DynamicResource PDUpdate}"
+                            Text="{DynamicResource Update}"
+                            Style="{StaticResource sm-default}"
+                            Visibility="{Binding InstanceClient.UpdateAvailable, Converter={converters:BooleanToVisibilityConverter}}" />
                     </Grid>
                 </Grid>
             </Border>
@@ -363,6 +261,12 @@
                             </Storyboard>
                         </BeginStoryboard>
                     </DataTrigger.ExitActions>
+                </DataTrigger>
+                <!-- No featured cards on an empty result set. -->
+                <DataTrigger
+                    Binding="{Binding Catalog.Model.Instances, Converter={converters:IsCollectionEmptyConverter}}"
+                    Value="True">
+                    <Setter Property="Visibility" Value="Collapsed" />
                 </DataTrigger>
             </Style.Triggers>
         </Style>
@@ -436,39 +340,40 @@
             <Grid Margin="44,26,44,40">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="34" />
-                    <RowDefinition Height="370" />
-                    <RowDefinition Height="190" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
                 <!--  Local home navigation only. Existing LeftPanel is outside this view and remains untouched.  -->
                 <StackPanel VerticalAlignment="Top" Orientation="Horizontal">
                     <StackPanel Margin="0,0,30,0">
-                        <Button
+                        <controls:AdvancedButton
                             Height="24"
-                            Content="{DynamicResource Home}"
+                            Text="{DynamicResource Home}"
                             Foreground="#238BFF"
-                            Style="{StaticResource HomeNavButton}" />
+                            Style="{StaticResource TransparentAdvancedButton}" />
                         <Border
                             Height="2"
                             Margin="0,2,0,0"
                             Background="#238BFF" />
                     </StackPanel>
-                    <Button
+                    <controls:AdvancedButton
                         Height="24"
                         Margin="0,0,30,0"
-                        Content="{DynamicResource NewsTitle}"
-                        Style="{StaticResource HomeNavButton}" />
-                    <Button
+                        Text="{DynamicResource NewsTitle}"
+                        Style="{StaticResource TransparentAdvancedButton}" />
+                    <controls:AdvancedButton
                         Height="24"
-                        Content="{DynamicResource More}"
-                        Style="{StaticResource HomeNavButton}" />
+                        Text="{DynamicResource More}"
+                        Style="{StaticResource TransparentAdvancedButton}" />
                 </StackPanel>
 
                 <!--  Microsoft Store style rotating feature strip. DataContexts are assigned from Catalog.Model.Instances in code-behind.  -->
                 <Grid
                     x:Name="FeatureStrip"
                     Grid.Row="1"
+                    Height="346"
                     Margin="0,8,0,16"
                     MouseEnter="FeatureStrip_MouseEnter"
                     MouseLeave="FeatureStrip_MouseLeave"
@@ -821,15 +726,23 @@
                                         Text="{DynamicResource Filters}" />
                                 </StackPanel>
                                 <StackPanel Grid.Column="1" Orientation="Horizontal">
-                                    <Button
+                                    <controls:AdvancedButton
+                                        Width="28"
+                                        Height="28"
+                                        Margin="4,0,0,0"
+                                        FontSize="11"
                                         Command="{Binding RefreshCatalogCommand}"
-                                        Content="Update"
-                                        Style="{StaticResource HomeIconButton}"
+                                        IconData="{DynamicResource PDReload}"
+                                        Style="{StaticResource sm-icon-button}"
                                         ToolTip="{DynamicResource RefreshCatalog}" />
-                                    <Button
+                                    <controls:AdvancedButton
+                                        Width="28"
+                                        Height="28"
+                                        Margin="4,0,0,0"
+                                        FontSize="11"
                                         Command="{Binding ToggleFilterPanelCommand}"
-                                        Content="Close"
-                                        Style="{StaticResource HomeIconButton}"
+                                        IconData="{DynamicResource PDClose}"
+                                        Style="{StaticResource sm-icon-button}"
                                         ToolTip="{DynamicResource CloseFilters}" />
                                 </StackPanel>
                             </Grid>
@@ -988,13 +901,14 @@
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
-                        <Button
+                        <controls:AdvancedButton
                             Width="92"
                             Height="32"
                             Margin="0,0,0,12"
                             HorizontalAlignment="Right"
                             Command="{Binding ToggleFilterPanelCommand}"
-                            Content="{DynamicResource Filters}"
+                            Text="{DynamicResource Filters}"
+                            Style="{StaticResource sm-default}"
                             Visibility="{Binding IsFilterPanelVisible, Converter={converters:NegativeBooleanToVisibilityConverter}}" />
 
                         <!--
@@ -1036,10 +950,63 @@
 
                                 <core:If Condition="{Binding Catalog.Model.Instances, Converter={converters:IsCollectionEmptyConverter}}">
                                     <core:If.True>
-                                        <controls:Empty
-                                            Height="220"
-                                            VerticalAlignment="Stretch"
-                                            Description="{DynamicResource CatalogEmpty}" />
+                                        <!-- Reuse the existing PageCurtains composition without introducing another control. -->
+                                        <Border
+                                            MinHeight="340"
+                                            Margin="0,0,0,20"
+                                            Padding="32,40"
+                                            Background="{DynamicResource PrimarySolidColorBrush}"
+                                            BorderBrush="{DynamicResource InstancesFilterBorderSolidColorBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="10"
+                                            Visibility="{Binding Catalog.Model.IsLoading, Converter={converters:NegativeBooleanToVisibilityConverter}}">
+                                            <StackPanel
+                                                MaxWidth="480"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center">
+                                                <Border
+                                                    Width="76"
+                                                    Height="76"
+                                                    HorizontalAlignment="Center"
+                                                    Background="{DynamicResource SecondarySolidColorBrush}"
+                                                    CornerRadius="16">
+                                                    <Viewbox
+                                                        Width="36"
+                                                        Height="36"
+                                                        HorizontalAlignment="Center"
+                                                        VerticalAlignment="Center">
+                                                        <Path
+                                                            extensions:PathExtensions.StringKeyData="PDCatalog"
+                                                            Fill="{DynamicResource ActivitySolidColorBrush}"
+                                                            Stretch="Uniform" />
+                                                    </Viewbox>
+                                                </Border>
+                                                <TextBlock
+                                                    Margin="0,22,0,0"
+                                                    HorizontalAlignment="Center"
+                                                    FontSize="22"
+                                                    FontWeight="SemiBold"
+                                                    Foreground="{DynamicResource ActivitySolidColorBrush}"
+                                                    Text="{DynamicResource CatalogEmptyTitle}"
+                                                    TextAlignment="Center" />
+                                                <TextBlock
+                                                    Margin="0,10,0,0"
+                                                    FontSize="14"
+                                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                                    Text="{DynamicResource CatalogEmptyDescription}"
+                                                    TextAlignment="Center"
+                                                    TextWrapping="Wrap" />
+                                                <controls:AdvancedButton
+                                                    Height="36"
+                                                    MinWidth="175"
+                                                    Margin="0,24,0,0"
+                                                    HorizontalAlignment="Center"
+                                                    Command="{Binding RefreshCatalogCommand}"
+                                                    IconData="{DynamicResource PDReload}"
+                                                    Text="{DynamicResource RefreshCatalog}"
+                                                    Style="{StaticResource sm-default}" />
+                                            </StackPanel>
+                                        </Border>
                                     </core:If.True>
                                     <core:If.False>
                                         <StackPanel>
