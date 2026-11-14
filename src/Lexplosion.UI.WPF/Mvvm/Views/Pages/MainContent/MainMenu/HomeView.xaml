@@ -134,7 +134,6 @@
 
         <DataTemplate x:Key="RecommendationCardTemplate" DataType="{x:Type instanceModel:InstanceModelBase}">
             <Border
-                Margin="0,0,8,0"
                 Padding="12"
                 Background="{DynamicResource PrimarySolidColorBrush}"
                 BorderBrush="{DynamicResource InstanceFormBorderSolidColorBrush}"
@@ -243,39 +242,19 @@
             </Border>
         </DataTemplate>
 
-        <!--
-            Smooth state transition while CatalogModel is waiting for a remote source.
-            No blur/effects are used here, so this stays cheap during resize.
-        -->
-        <Style x:Key="HomeCatalogLoadingFadeStyle" TargetType="{x:Type FrameworkElement}">
-            <Setter Property="Opacity" Value="1" />
+        <!-- Featured data is independent from the paginated catalog.
+             Loading another page must not dim, clear or rebuild the hero. -->
+        <Style x:Key="HomeFeaturedVisibilityStyle" TargetType="{x:Type FrameworkElement}">
             <Style.Triggers>
-                <DataTrigger Binding="{Binding Catalog.Model.IsLoading}" Value="True">
-                    <DataTrigger.EnterActions>
-                        <BeginStoryboard>
-                            <Storyboard>
-                                <DoubleAnimation
-                                    Storyboard.TargetProperty="Opacity"
-                                    To="0.42"
-                                    Duration="0:0:0.14" />
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </DataTrigger.EnterActions>
-                    <DataTrigger.ExitActions>
-                        <BeginStoryboard>
-                            <Storyboard>
-                                <DoubleAnimation
-                                    Storyboard.TargetProperty="Opacity"
-                                    To="1"
-                                    Duration="0:0:0.24" />
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </DataTrigger.ExitActions>
-                </DataTrigger>
-                <!-- No featured cards on an empty result set. -->
                 <DataTrigger
-                    Binding="{Binding Catalog.Model.Instances, Converter={converters:IsCollectionEmptyConverter}}"
+                    Binding="{Binding FeaturedInstances, Converter={converters:IsCollectionEmptyConverter}}"
                     Value="True">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding ElementName=HomeTabs, Path=SelectedIndex}" Value="1">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding ElementName=HomeTabs, Path=SelectedIndex}" Value="2">
                     <Setter Property="Visibility" Value="Collapsed" />
                 </DataTrigger>
             </Style.Triggers>
@@ -344,10 +323,52 @@
         -->
         <ScrollViewer
             x:Name="PageScrollViewer"
+            Margin="0,0,4,0"
             HorizontalScrollBarVisibility="Disabled"
             ScrollChanged="PageScrollViewer_ScrollChanged"
             VerticalScrollBarVisibility="Auto">
-            <Grid Margin="44,26,44,40">
+            <ScrollViewer.Resources>
+                <!-- Home-only scrollbar. The compact Catalog and the shared theme are unchanged. -->
+                <ControlTemplate x:Key="HomeScrollThumbTemplate" TargetType="{x:Type Thumb}">
+                    <Grid Width="14" Background="Transparent">
+                        <Border
+                            x:Name="ThumbBar"
+                            Width="6"
+                            HorizontalAlignment="Center"
+                            Background="{DynamicResource ScrollBarThumbSolidColorBrush}"
+                            CornerRadius="3" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="ThumbBar" Property="Width" Value="9" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+                <ControlTemplate x:Key="HomeVerticalScrollBarTemplate" TargetType="{x:Type ScrollBar}">
+                    <Grid Width="14" Background="Transparent">
+                        <Track x:Name="PART_Track" IsDirectionReversed="True">
+                            <Track.Thumb>
+                                <Thumb Template="{StaticResource HomeScrollThumbTemplate}" />
+                            </Track.Thumb>
+                        </Track>
+                    </Grid>
+                </ControlTemplate>
+                <Style TargetType="{x:Type ScrollBar}" BasedOn="{StaticResource {x:Type ScrollBar}}">
+                    <Setter Property="Opacity" Value="0.8" />
+                    <Style.Triggers>
+                        <Trigger Property="Orientation" Value="Vertical">
+                            <Setter Property="Template" Value="{StaticResource HomeVerticalScrollBarTemplate}" />
+                            <Setter Property="Margin" Value="0,40,0,0" />
+                        </Trigger>
+                        <DataTrigger
+                            Binding="{Binding IsMouseOver, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ScrollViewer}}}"
+                            Value="True">
+                            <Setter Property="Opacity" Value="1" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ScrollViewer.Resources>
+            <Grid Margin="32,20,32,16">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="34" />
                     <RowDefinition Height="Auto" />
@@ -355,8 +376,9 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <!-- Shared tab header, matching the Friends page. Other sections are not implemented yet. -->
+                <!-- The same underline tabs used on Friends/Settings; no additional page is created. -->
                 <controls:UIUnderlineTabControl
+                    x:Name="HomeTabs"
                     Height="34"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Top"
@@ -365,20 +387,23 @@
                     BorderThickness="0"
                     SelectedIndex="0"
                     TabPanelPadding="0">
-                    <TabItem
-                        Header="Home"
-                        Style="{StaticResource UITabItem}" />
-                    <TabItem
-                        Header="NewsTitle"
-                        IsEnabled="False"
-                        Style="{StaticResource UITabItem}" />
-                    <TabItem
-                        Header="More"
-                        IsEnabled="False"
-                        Style="{StaticResource UITabItem}" />
+                    <TabItem Header="Home" Style="{StaticResource UITabItem}" />
+                    <TabItem Header="NewsTitle" Style="{StaticResource UITabItem}" />
+                    <TabItem Header="More" Style="{StaticResource UITabItem}" />
                 </controls:UIUnderlineTabControl>
 
-                <!--  Microsoft Store style rotating feature strip. DataContexts are assigned from Catalog.Model.Instances in code-behind.  -->
+                <!-- Keep the loading state visible when pagination scrolls back to the top. -->
+                <controls:CircleLoader
+                    Grid.Row="0"
+                    Width="20"
+                    Height="20"
+                    Margin="0,7,0,0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    IsActive="{Binding Catalog.Model.IsLoading}"
+                    Visibility="{Binding Catalog.Model.IsLoading, Converter={converters:BooleanToVisibilityConverter}}" />
+
+                <!-- Rotating popular modpacks cached independently of the catalog page. -->
                 <Grid
                     x:Name="FeatureStrip"
                     Grid.Row="1"
@@ -386,7 +411,7 @@
                     Margin="0,8,0,16"
                     MouseEnter="FeatureStrip_MouseEnter"
                     MouseLeave="FeatureStrip_MouseLeave"
-                    Style="{StaticResource HomeCatalogLoadingFadeStyle}">
+                    Style="{StaticResource HomeFeaturedVisibilityStyle}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="2.2*" />
                         <ColumnDefinition Width="0.67*" />
@@ -646,9 +671,10 @@
                     x:Name="RecommendationCards"
                     Grid.Row="2"
                     Height="190"
+                    AlternationCount="4"
                     ClipToBounds="True"
                     ItemTemplate="{StaticResource RecommendationCardTemplate}"
-                    Style="{StaticResource HomeCatalogLoadingFadeStyle}">
+                    Style="{StaticResource HomeFeaturedVisibilityStyle}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <UniformGrid Columns="4" Rows="1" />
@@ -658,6 +684,12 @@
                         <Style TargetType="ContentPresenter">
                             <Setter Property="HorizontalAlignment" Value="Stretch" />
                             <Setter Property="VerticalAlignment" Value="Stretch" />
+                            <Setter Property="Margin" Value="0,0,8,0" />
+                            <Style.Triggers>
+                                <Trigger Property="ItemsControl.AlternationIndex" Value="3">
+                                    <Setter Property="Margin" Value="0" />
+                                </Trigger>
+                            </Style.Triggers>
                         </Style>
                     </ItemsControl.ItemContainerStyle>
                 </ItemsControl>
@@ -668,6 +700,18 @@
                     Grid.Row="3"
                     Margin="0,38,0,0"
                     SizeChanged="CatalogBlock_SizeChanged">
+                    <Grid.Style>
+                        <Style TargetType="Grid">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=HomeTabs, Path=SelectedIndex}" Value="1">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding ElementName=HomeTabs, Path=SelectedIndex}" Value="2">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Style>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="326" />
@@ -927,37 +971,7 @@
                         -->
                         <Grid Grid.Row="1" MinHeight="390">
                             <Grid x:Name="CatalogDataHost">
-                                <Grid.Style>
-                                    <Style TargetType="Grid">
-                                        <Setter Property="Opacity" Value="1" />
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Catalog.Model.IsLoading}" Value="True">
-                                                <DataTrigger.EnterActions>
-                                                    <BeginStoryboard>
-                                                        <Storyboard>
-                                                            <DoubleAnimation
-                                                                Storyboard.TargetProperty="Opacity"
-                                                                To="0.16"
-                                                                Duration="0:0:0.12" />
-                                                        </Storyboard>
-                                                    </BeginStoryboard>
-                                                </DataTrigger.EnterActions>
-                                                <DataTrigger.ExitActions>
-                                                    <BeginStoryboard>
-                                                        <Storyboard>
-                                                            <DoubleAnimation
-                                                                Storyboard.TargetProperty="Opacity"
-                                                                To="1"
-                                                                Duration="0:0:0.24" />
-                                                        </Storyboard>
-                                                    </BeginStoryboard>
-                                                </DataTrigger.ExitActions>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Grid.Style>
-
-                                <core:If Condition="{Binding Catalog.Model.Instances, Converter={converters:IsCollectionEmptyConverter}}">
+                                <core:If Condition="{Binding DisplayedCatalogInstances, Converter={converters:IsCollectionEmptyConverter}}">
                                     <core:If.True>
                                         <!-- Reuse the existing PageCurtains composition without introducing another control. -->
                                         <Border
@@ -1023,7 +1037,7 @@
                                                 x:Name="CatalogInstanceList"
                                                 HorizontalAlignment="Stretch"
                                                 ItemTemplate="{StaticResource CatalogInstanceTemplate}"
-                                                ItemsSource="{Binding Catalog.Model.Instances}"
+                                                ItemsSource="{Binding DisplayedCatalogInstances}"
                                                 ScrollViewer.CanContentScroll="True">
                                                 <ItemsControl.ItemContainerStyle>
                                                     <Style TargetType="ContentPresenter">
@@ -1033,75 +1047,135 @@
                                             </ItemsControl>
 
                                             <controls:Paginator
-                                                Margin="0,0,0,24"
+                                                x:Name="HomePaginator"
+                                                Margin="0"
+                                                PageChanged="HomePaginator_PageChanged"
                                                 CurrentPageIndex="{Binding Catalog.Model.CurrentPageIndex, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                                NextCommand="{Binding Catalog.NextPageCommand}"
-                                                PageCount="{Binding Catalog.Model.PageCount, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                                PrevCommand="{Binding Catalog.PrevPageCommand}"
-                                                ToCommand="{Binding Catalog.ToCurrentPageIndexCommand}" />
+                                                PageCount="{Binding Catalog.Model.PageCount, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                                         </StackPanel>
                                     </core:If.False>
                                 </core:If>
                             </Grid>
 
-                            <Grid
+                            <!-- Compact feedback, without hiding the previous page or
+                                 changing the height of the scrollable list. -->
+                            <Border
                                 x:Name="CatalogLoadingOverlay"
                                 Panel.ZIndex="30"
-                                IsHitTestVisible="{Binding Catalog.Model.IsLoading}">
-                                <Grid.Style>
-                                    <Style TargetType="Grid">
-                                        <Setter Property="Opacity" Value="0" />
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Catalog.Model.IsLoading}" Value="True">
-                                                <DataTrigger.EnterActions>
-                                                    <BeginStoryboard>
-                                                        <Storyboard>
-                                                            <DoubleAnimation
-                                                                Storyboard.TargetProperty="Opacity"
-                                                                To="1"
-                                                                Duration="0:0:0.16" />
-                                                        </Storyboard>
-                                                    </BeginStoryboard>
-                                                </DataTrigger.EnterActions>
-                                                <DataTrigger.ExitActions>
-                                                    <BeginStoryboard>
-                                                        <Storyboard>
-                                                            <DoubleAnimation
-                                                                Storyboard.TargetProperty="Opacity"
-                                                                To="0"
-                                                                Duration="0:0:0.20" />
-                                                        </Storyboard>
-                                                    </BeginStoryboard>
-                                                </DataTrigger.ExitActions>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Grid.Style>
-
-                                <Border
-                                    Background="{DynamicResource PageSolidColorBrush}"
-                                    CornerRadius="8"
-                                    Opacity="0.88" />
-
-                                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                Width="212"
+                                Height="42"
+                                Margin="0,8,0,0"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Top"
+                                IsHitTestVisible="False"
+                                Background="{DynamicResource PrimarySolidColorBrush}"
+                                BorderBrush="{DynamicResource InstanceFormBorderSolidColorBrush}"
+                                BorderThickness="1"
+                                CornerRadius="7"
+                                Visibility="{Binding Catalog.Model.IsLoading, Converter={converters:BooleanToVisibilityConverter}}">
+                                <StackPanel
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Orientation="Horizontal">
                                     <controls:CircleLoader
-                                        Width="34"
-                                        Height="34"
-                                        HorizontalAlignment="Center"
+                                        Width="20"
+                                        Height="20"
                                         IsActive="{Binding Catalog.Model.IsLoading}" />
                                     <TextBlock
-                                        Margin="0,14,0,0"
-                                        HorizontalAlignment="Center"
-                                        FontSize="13"
-                                        FontWeight="Medium"
-                                        Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                                        Margin="10,0,0,0"
+                                        VerticalAlignment="Center"
+                                        FontSize="12"
+                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
                                         Text="{DynamicResource CatalogLoading}" />
                                 </StackPanel>
-                            </Grid>
+                            </Border>
                         </Grid>
                     </Grid>
                 </Grid>
+
+                <!-- Local placeholders: tabs switch content without navigating away from Home. -->
+                <Border
+                    Grid.Row="1"
+                    Grid.RowSpan="3"
+                    MinHeight="420"
+                    Margin="0,18,0,0"
+                    Padding="32,56"
+                    Background="{DynamicResource PrimarySolidColorBrush}"
+                    BorderBrush="{DynamicResource InstancesFilterBorderSolidColorBrush}"
+                    BorderThickness="1"
+                    CornerRadius="10">
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=HomeTabs, Path=SelectedIndex}" Value="1">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding ElementName=HomeTabs, Path=SelectedIndex}" Value="2">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                    <StackPanel MaxWidth="460" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Border
+                            Width="76"
+                            Height="76"
+                            HorizontalAlignment="Center"
+                            Background="{DynamicResource SecondarySolidColorBrush}"
+                            CornerRadius="16">
+                            <Viewbox Width="36" Height="36" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <Path
+                                    extensions:PathExtensions.StringKeyData="Clock"
+                                    Fill="{DynamicResource ActivitySolidColorBrush}"
+                                    Stretch="Uniform" />
+                            </Viewbox>
+                        </Border>
+                        <TextBlock
+                            Margin="0,22,0,0"
+                            HorizontalAlignment="Center"
+                            FontSize="22"
+                            FontWeight="SemiBold"
+                            Foreground="{DynamicResource ActivitySolidColorBrush}"
+                            extensions:TextBlockExtensions.TextByKey="{Binding ElementName=HomeTabs, Path=SelectedItem.Header}"
+                            TextAlignment="Center" />
+                        <TextBlock
+                            Margin="0,10,0,0"
+                            FontSize="14"
+                            Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
+                            Text="{DynamicResource HomeSectionComingSoonDescription}"
+                            TextAlignment="Center"
+                            TextWrapping="Wrap" />
+                    </StackPanel>
+                </Border>
             </Grid>
         </ScrollViewer>
+        <!-- Fade only the catalog's left column. The sticky filter column must stay clear.
+             These grid columns mirror CatalogBlock (star + 326px filter) inside Home margins. -->
+        <Grid
+            Margin="32,0,36,0"
+            VerticalAlignment="Top"
+            Panel.ZIndex="10"
+            IsHitTestVisible="False">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="326" />
+            </Grid.ColumnDefinitions>
+            <Border
+                x:Name="HomeScrollFade"
+                Grid.Column="0"
+                Height="56"
+                VerticalAlignment="Top"
+                Background="{DynamicResource PageSolidColorBrush}"
+                Opacity="0">
+                <Border.OpacityMask>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#FF000000" Offset="0" />
+                        <GradientStop Color="#E0000000" Offset="0.4" />
+                        <GradientStop Color="#00000000" Offset="1" />
+                    </LinearGradientBrush>
+                </Border.OpacityMask>
+            </Border>
+        </Grid>
     </Grid>
 </UserControl>

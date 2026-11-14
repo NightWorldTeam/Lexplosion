@@ -72,7 +72,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu
             _libraryViewModel = new LibraryViewModel(appCore, mainModel.StartImport, clientsManager, ToMainMenuLayoutCommand, mainModel.LibraryController, OpenCatalog);
             var toLibraryCommand = new NavigateCommand<ViewModelBase>(appCore.NavigationStore, () => _libraryViewModel);
 
-            _homeViewModel = new HomeViewModel((CatalogViewModel)_catalogViewModel, (LibraryViewModel)_libraryViewModel);
+            _homeViewModel = new HomeViewModel((CatalogViewModel)_catalogViewModel, (LibraryViewModel)_libraryViewModel, mainModel.FeaturedCatalogController);
 
             // Multiplayer Section
             var selectInstanceForServerArgs = new SelectInstanceForServerArgs(() => mainModel.LibraryController.Instances, (ic) => 

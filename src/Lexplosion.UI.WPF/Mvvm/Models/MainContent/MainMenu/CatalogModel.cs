@@ -111,7 +111,10 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.MainContent
         private void OnFilterChanged(bool paginatorChanged = false) 
         {
             IsLoading = true;
-            _instanceController.Clear();
+            // Keep the previous page visible until the next page has arrived.
+            // Search/filter changes retain their existing immediate-clear behavior.
+            if (!paginatorChanged)
+                _instanceController.Clear();
 
             if (!paginatorChanged) 
             {

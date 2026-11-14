@@ -67,10 +67,13 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.InstanceControllers
 
         public InstanceModelBase? Add(InstanceClient instanceClient, [CallerMemberName] string member = "")
         {
-            InstanceModelBase? instanceModelBase = _getInstanceModelByInstanceClient(instanceClient);
+            InstanceModelBase? instanceModelBase = null;
 
             App.Current.Dispatcher.Invoke(() =>
             {
+                // Both controllers can receive the same cached instance. Resolve
+                // and create on the UI thread to avoid duplicate model registration.
+                instanceModelBase = _getInstanceModelByInstanceClient(instanceClient);
                 if (instanceModelBase == null) 
                 {
                     var args = new InstanceModelArgs(_appCore, instanceClient, _exportFunc, _setRunningGame, group: null, instanceLocation: InstanceLocation.Catalog);
