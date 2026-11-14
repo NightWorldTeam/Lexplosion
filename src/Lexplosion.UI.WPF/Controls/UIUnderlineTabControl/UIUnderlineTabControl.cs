@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -52,6 +53,50 @@ namespace Lexplosion.UI.WPF.Controls
             DefaultStyleKeyProperty.OverrideMetadata(typeof(UIUnderlineTabControl), new FrameworkPropertyMetadata(typeof(UIUnderlineTabControl)));
         }
 
+        public UIUnderlineTabControl()
+        {
+            Loaded += UIUnderlineTabControl_Loaded;
+        }
+
+        private void UIUnderlineTabControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            // Data-bound tabs, such as Friends, need a default selection.
+            EnsureSelection();
+            if (_line == null || SelectedIndex < 0)
+                return;
+
+            var selected = ItemContainerGenerator.ContainerFromItem(SelectedItem) as TabItem
+                ?? SelectedItem as TabItem;
+            if (_selectedTabItem != null)
+                _selectedTabItem.SizeChanged -= OnTabItemSizeChanged;
+
+            _selectedTabItem = selected;
+            if (_selectedTabItem == null)
+                return;
+
+            // Subscribe even if the item has not been measured yet.
+            _selectedTabItem.SizeChanged += OnTabItemSizeChanged;
+            if (selected.ActualWidth <= 0)
+                return;
+
+            // The first selection occurs before PART_Line is measured. Initialize it
+            // after layout, with no animation or Dispatcher queue.
+            var padding = GetTemplateBorderPadding(selected);
+            _line.BeginAnimation(WidthProperty, null);
+            _line.Width = Math.Max(0, selected.ActualWidth - padding.Left - padding.Right);
+
+            var offset = padding.Left;
+            for (int i = 0; i < SelectedIndex; i++)
+            {
+                var item = ItemContainerGenerator.ContainerFromIndex(i) as FrameworkElement
+                    ?? Items[i] as FrameworkElement;
+                offset += item?.ActualWidth ?? 0;
+            }
+
+            _line.BeginAnimation(MarginProperty, null);
+            _line.Margin = new Thickness(offset, 0, 0, 0);
+        }
+
 
         #endregion Constructors
 
@@ -61,18 +106,28 @@ namespace Lexplosion.UI.WPF.Controls
 
         protected override void OnInitialized(EventArgs e)
         {
-            //Runtime.DebugWrite(nameof(OnInitialized));
             base.OnInitialized(e);
+        }
+
+        protected override void OnItemsChanged(NotifyCollectionChangedEventArgs e)
+        {
+            base.OnItemsChanged(e);
+            if (IsLoaded)
+                EnsureSelection();
+        }
+
+        private void EnsureSelection()
+        {
+            if (SelectedIndex < 0 && Items.Count > 0)
+                SelectedIndex = 0;
         }
 
         public override void OnApplyTemplate()
         {
-            SelectedIndex = 0;
-
             _line = Template.FindName(PART_LINE_NAME, this) as Border;
             _tabPanel = Template.FindName("HeaderPanel", this) as TabPanel;
             _header = Template.FindName(PART_HEADER_NAME, this) as Border;
-            _selectedTabItem = ItemContainerGenerator.ContainerFromItem(SelectedValue) as TabItem;
+            _selectedTabItem = ItemContainerGenerator.ContainerFromItem(SelectedItem) as TabItem ?? SelectedItem as TabItem;
             
             if (_header != null)
             {
@@ -85,46 +140,31 @@ namespace Lexplosion.UI.WPF.Controls
             }
 
             base.OnApplyTemplate();
+            EnsureSelection();
         }
 
         //override 
 
         protected override void OnSelectionChanged(SelectionChangedEventArgs e)
         {
-            try
+            if (_selectedTabItem != null)
+                _selectedTabItem.SizeChanged -= OnTabItemSizeChanged;
+
+            _selectedTabItem = ItemContainerGenerator.ContainerFromItem(SelectedItem) as TabItem
+                ?? SelectedItem as TabItem;
+
+            if (_selectedTabItem != null)
             {
-                // отписываемся, чтобы не вызывать метод, когда TabItem больше не выбран.
-                if (_selectedTabItem != null)
-                    _selectedTabItem.SizeChanged -= OnTabItemSizeChanged;
-
-                _selectedTabItem = ItemContainerGenerator.ContainerFromItem(SelectedValue) as TabItem;
-
-                var selectedTabPadding = GetTemplateBorderPadding(_selectedTabItem);
-
-                if (_selectedTabItem == null)
-                {
-                    return;
-                }
-
-                SmoothChangeWidth(_line, _selectedTabItem.ActualWidth - (selectedTabPadding.Left + selectedTabPadding.Right));
-
-                // Подписываемся на изменение размера TabItem, для того,
-                // чтобы изменять размер underline, когда был изменен размер контента или язык.
                 _selectedTabItem.SizeChanged += OnTabItemSizeChanged;
 
-                MoveLine(selectedTabPadding.Left);
-
-                var dp = new DoubleAnimation()
+                // Selection can change before OnApplyTemplate creates PART_Line.
+                // Loaded and SizeChanged position it when the layout is ready.
+                if (_line != null && _selectedTabItem.ActualWidth > 0)
                 {
-                    From = 0.4,
-                    To = 1,
-                    Duration = TimeSpan.FromSeconds(0.5)
-                };
-                //_contentPresenter.BeginAnimation(OpacityProperty, dp);
-            }
-            catch
-            {
-                new Exception("Underline border doesn't exists.");
+                    var padding = GetTemplateBorderPadding(_selectedTabItem);
+                    SmoothChangeWidth(_line, _selectedTabItem.ActualWidth - padding.Left - padding.Right);
+                    MoveLine(padding.Left);
+                }
             }
 
             base.OnSelectionChanged(e);
@@ -142,11 +182,12 @@ namespace Lexplosion.UI.WPF.Controls
         /// </summary>
         private void OnTabItemSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            var tabItem = sender as TabItem;
-            var tabItemPadding = GetTemplateBorderPadding(tabItem);
+            if (_line == null || !ReferenceEquals(sender, _selectedTabItem))
+                return;
 
-            SmoothChangeWidth(_line, tabItem.ActualWidth - (tabItemPadding.Left + tabItemPadding.Right));
-            // перемещаем линию
+            var tabItem = (TabItem)sender;
+            var tabItemPadding = GetTemplateBorderPadding(tabItem);
+            SmoothChangeWidth(_line, tabItem.ActualWidth - tabItemPadding.Left - tabItemPadding.Right);
             MoveLine(tabItemPadding.Left);
         }
 
@@ -156,6 +197,9 @@ namespace Lexplosion.UI.WPF.Controls
         /// </summary>
         private void MoveLine(double tabPaddingLeft)
         {
+            if (_line == null || SelectedIndex < 0)
+                return;
+
             var sumWidth = tabPaddingLeft;
             var iterCount = 0;
             foreach (var obj in ItemContainerGenerator.Items)
@@ -175,7 +219,7 @@ namespace Lexplosion.UI.WPF.Controls
                     break;
                 }
 
-                sumWidth += element.ActualWidth;
+                sumWidth += element?.ActualWidth ?? 0;
                 iterCount++;
             }
 
@@ -201,7 +245,7 @@ namespace Lexplosion.UI.WPF.Controls
             if (element is TabItem)
             {
                 var tabItem = element as TabItem;
-                var border = tabItem.Template.FindName("Border", tabItem) as Border;
+                var border = tabItem.Template?.FindName("Border", tabItem) as Border;
 
                 if (border != null)
                 {
@@ -217,6 +261,8 @@ namespace Lexplosion.UI.WPF.Controls
 
         private static void SmoothMoveLine(FrameworkElement target, double to)
         {
+            if (target == null) return;
+
             var moveTranslate = new ThicknessAnimation()
             {
                 To = new Thickness(to, 0, 0, 0),
@@ -228,7 +274,7 @@ namespace Lexplosion.UI.WPF.Controls
 
         private static void SmoothChangeWidth(FrameworkElement target, double to)
         {
-            if (to == 0) return;
+            if (target == null || to <= 0) return;
 
             //Runtime.DebugWrite(to);
             var changeWidthTranslate = new DoubleAnimation()
