@@ -1,3 +1,4 @@
+using Lexplosion.UI.WPF.Extensions;
 using Lexplosion.UI.WPF.Mvvm.Models.Mvvm.InstanceModel;
 using Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.MainMenu;
 using System;
@@ -24,7 +25,8 @@ public partial class HomeView : UserControl
 	private bool _isTransitionRunning;
 	private bool _isActive;
 	private bool _stickyUpdatePending;
-	private INotifyPropertyChanged? _catalogModelNotifier;
+	private bool _pageTransitionInProgress;
+	private INotifyPropertyChanged? _featuredNotifier;
 
 
 	private HomeViewModel ViewModel
@@ -37,8 +39,7 @@ public partial class HomeView : UserControl
 	{
 		InitializeComponent();
 
-		// The slider ticks only at its actual rotation cadence. Catalog refreshes are
-		// observed through PropertyChanged, so there is no 1-second polling/allocation loop.
+		// Slider rotation is independent from catalog pagination and filter refreshes.
 		_sliderTimer = new DispatcherTimer(DispatcherPriority.Background)
 		{
 			Interval = TimeSpan.FromSeconds(6)
@@ -84,10 +85,10 @@ public partial class HomeView : UserControl
 			return;
 
 		_isActive = true;
-		AttachCatalogModelNotifier();
+		AttachFeaturedNotifier();
+		ViewModel?.EnsureFeaturedLoaded();
 
-		// A cached Home may already contain the exact four current catalog items.
-		// Avoid force-rebinding every ImageBrush exactly when it becomes visible.
+		// Never rebind the four images merely because the catalog page changed.
 		RefreshFeaturedItems(force: _featuredItems.Count == 0);
 		_lastSlideAt = DateTime.Now;
 		_sliderTimer.Start();
@@ -97,8 +98,11 @@ public partial class HomeView : UserControl
 	private void DeactivateHome(bool clearVisuals)
 	{
 		_isActive = false;
+		_pageTransitionInProgress = false;
+		if (HomePaginator != null)
+			HomePaginator.IsEnabled = true;
 		_sliderTimer.Stop();
-		DetachCatalogModelNotifier();
+		DetachFeaturedNotifier();
 		StopFeatureAnimations();
 
 		if (!clearVisuals)
@@ -111,13 +115,14 @@ public partial class HomeView : UserControl
 
 	private void HomeView_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
 	{
-		DetachCatalogModelNotifier();
+		DetachFeaturedNotifier();
 		_selectedFeatureIndex = 0;
 		_featuredItems.Clear();
 
 		if (_isActive)
 		{
-			AttachCatalogModelNotifier();
+			AttachFeaturedNotifier();
+			ViewModel?.EnsureFeaturedLoaded();
 			RefreshFeaturedItems(force: true);
 		}
 		else
@@ -128,47 +133,107 @@ public partial class HomeView : UserControl
 		QueueStickyFilterUpdate();
 	}
 
-	private void AttachCatalogModelNotifier()
+	private void AttachFeaturedNotifier()
 	{
-		var notifier = ViewModel?.Catalog?.Model as INotifyPropertyChanged;
-		if (ReferenceEquals(_catalogModelNotifier, notifier))
+		var notifier = ViewModel as INotifyPropertyChanged;
+		if (ReferenceEquals(_featuredNotifier, notifier))
 			return;
 
-		DetachCatalogModelNotifier();
-		_catalogModelNotifier = notifier;
-		if (_catalogModelNotifier != null)
+		DetachFeaturedNotifier();
+		_featuredNotifier = notifier;
+		if (_featuredNotifier != null)
+			_featuredNotifier.PropertyChanged += Featured_PropertyChanged;
+	}
+
+	private void DetachFeaturedNotifier()
+	{
+		if (_featuredNotifier != null)
+			_featuredNotifier.PropertyChanged -= Featured_PropertyChanged;
+		_featuredNotifier = null;
+	}
+
+	private void Featured_PropertyChanged(object sender, PropertyChangedEventArgs e)
+	{
+		if (!_isActive)
+			return;
+
+		if (e.PropertyName == nameof(HomeViewModel.FeaturedInstances))
 		{
-			_catalogModelNotifier.PropertyChanged += CatalogModel_PropertyChanged;
+			if (RefreshFeaturedItems(force: true))
+				_lastSlideAt = DateTime.Now;
+		}
+		else if (e.PropertyName == nameof(HomeViewModel.DisplayedCatalogInstances)
+			&& _pageTransitionInProgress)
+		{
+			// Wait for the new cards to be measured before restoring the viewport.
+			Dispatcher.BeginInvoke(new Action(CompleteHomePageTransition), DispatcherPriority.Loaded);
 		}
 	}
 
-	private void DetachCatalogModelNotifier()
+	private void CompleteHomePageTransition()
 	{
-		if (_catalogModelNotifier != null)
-			_catalogModelNotifier.PropertyChanged -= CatalogModel_PropertyChanged;
-		_catalogModelNotifier = null;
-	}
-
-	private void CatalogModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
-	{
-		if (!_isActive || (!string.IsNullOrEmpty(e.PropertyName) && e.PropertyName != "Instances"))
+		if (!_pageTransitionInProgress)
 			return;
 
-		// CatalogModel can complete a request on a worker thread. Marshal the small
-		// featured-card refresh back to the UI thread once, after the page data changed.
-		Dispatcher.BeginInvoke(new Action(() =>
+		if (_isActive && IsVisible && CatalogInstanceList.IsVisible)
 		{
-			if (_isActive)
-			{
-				RefreshFeaturedItems(force: true);
-				_lastSlideAt = DateTime.Now;
-			}
-		}), DispatcherPriority.DataBind);
+			const double topClearance = 64.0;
+			var listPoint = CatalogInstanceList.TranslatePoint(new Point(0, 0), PageScrollViewer);
+			var destination = Math.Max(0, Math.Min(PageScrollViewer.ScrollableHeight,
+				PageScrollViewer.VerticalOffset + listPoint.Y - topClearance));
+			PageScrollViewer.ScrollToVerticalOffset(destination);
+		}
+
+		_pageTransitionInProgress = false;
+		HomePaginator.IsEnabled = true;
+	}
+
+	private void HomePaginator_PageChanged(uint pageIndex)
+	{
+		if (!_isActive || !IsVisible || ViewModel?.Catalog?.Model == null || _pageTransitionInProgress)
+			return;
+
+		var catalog = ViewModel.Catalog.Model;
+		if (catalog.IsLoading)
+			return;
+
+		_pageTransitionInProgress = true;
+		HomePaginator.IsEnabled = false;
+
+		// The first modpack card, not the Home header, is the page target.
+		// Resolve its content offset before animation while the old list is visible.
+		const double topClearance = 64.0; // Below the floating caption and fade.
+		var listPosition = CatalogInstanceList.TranslatePoint(new Point(0, 0), PageScrollViewer);
+		var destination = Math.Max(0, Math.Min(PageScrollViewer.ScrollableHeight,
+			PageScrollViewer.VerticalOffset + listPosition.Y - topClearance));
+
+		// Begin loading only after the old cards have scrolled into position.
+		if (Math.Abs(PageScrollViewer.VerticalOffset - destination) < 2)
+		{
+			catalog.Paginate(pageIndex);
+			return;
+		}
+
+		ScrollViewerExtensions.ScroollToPosAnimated(PageScrollViewer, destination, () =>
+		{
+			// Remove the completed attached-property animation before replacing
+			// page content; its held clock otherwise fights scroll extent changes.
+			PageScrollViewer.SetCurrentValue(ScrollViewerExtensions.VerticalOffsetProperty, destination);
+			PageScrollViewer.BeginAnimation(ScrollViewerExtensions.VerticalOffsetProperty, null);
+			PageScrollViewer.ScrollToVerticalOffset(destination);
+			catalog.Paginate(pageIndex);
+		}, TimeSpan.FromMilliseconds(650));
 	}
 
 	private void PageScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
 	{
-		QueueStickyFilterUpdate();
+		// Follow the scroll offset directly to avoid repeatedly restarting an opacity
+		// animation when the viewer settles around the top boundary.
+		if (HomeScrollFade != null)
+			HomeScrollFade.Opacity = Math.Min(1.0, Math.Max(0.0, PageScrollViewer.VerticalOffset / 56.0));
+
+		// Keep the sticky filter in the same scroll frame rather than one render later.
+		UpdateStickyFilter();
 	}
 
 	private void CatalogBlock_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -206,7 +271,8 @@ public partial class HomeView : UserControl
 
 		try
 		{
-			const double stickyTop = 16.0;
+			// Align with the left profile card: 16px panel padding + 32px header margin.
+			const double stickyTop = 48.0;
 			var anchorPoint = FilterStickyAnchor.TranslatePoint(new Point(0, 0), PageScrollViewer);
 			var wantedTranslation = Math.Max(0, stickyTop - anchorPoint.Y);
 			var maxTranslation = Math.Max(0, CatalogBlock.ActualHeight - FilterPanel.ActualHeight);
@@ -269,18 +335,17 @@ public partial class HomeView : UserControl
 	/// </summary>
 	public void PrewarmForResponsiveSwitch()
 	{
+		ViewModel?.EnsureFeaturedLoaded();
 		RefreshFeaturedItems(force: _featuredItems.Count == 0, allowInactive: true);
 	}
 
 	private bool RefreshFeaturedItems(bool force, bool allowInactive = false)
 	{
 		var viewModel = ViewModel;
-		if ((!_isActive && !allowInactive) || viewModel == null || viewModel.Catalog == null || viewModel.Catalog.Model == null)
+		if ((!_isActive && !allowInactive) || viewModel == null)
 			return false;
 
-		var latest = viewModel.Catalog.Model.Instances == null
-			? new List<InstanceModelBase>()
-			: viewModel.Catalog.Model.Instances.Take(4).ToList();
+		var latest = viewModel.FeaturedInstances.Take(4).ToList();
 
 		var changed = force || latest.Count != _featuredItems.Count;
 		if (!changed)

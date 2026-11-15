@@ -75,16 +75,20 @@ namespace Lexplosion.UI.WPF.Extensions
             }
         }
 
-        public static void ScroollToPosAnimated(System.Windows.Controls.ScrollViewer control, double toValue)
+        public static void ScroollToPosAnimated(System.Windows.Controls.ScrollViewer control, double toValue, Action onCompleted = null, TimeSpan? duration = null)
         {
-            var duration = TimeSpan.FromSeconds(0.2);
+            var animationDuration = duration ?? TimeSpan.FromSeconds(0.2);
 
             DoubleAnimation animation = new DoubleAnimation()
             {
                 From = control.VerticalOffset,
                 To = toValue,
-                Duration = new Duration(duration)
+                Duration = new Duration(animationDuration),
+                EasingFunction = duration.HasValue ? new CubicEase { EasingMode = EasingMode.EaseInOut } : null
             };
+
+            if (onCompleted != null)
+                animation.Completed += (sender, args) => onCompleted();
 
             control.BeginAnimation(VerticalOffsetProperty, animation);
         }

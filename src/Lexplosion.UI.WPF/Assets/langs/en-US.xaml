@@ -1053,6 +1053,7 @@
     <s:String x:Key="CatalogEmpty">The catalog is empty</s:String>
     <s:String x:Key="CatalogEmptyTitle">No modpacks found</s:String>
     <s:String x:Key="CatalogEmptyDescription">No modpacks match your current filters. Try adjusting the filters or refreshing the catalog.</s:String>
+    <s:String x:Key="HomeSectionComingSoonDescription">This section is under development. New content will appear here in a future update.</s:String>
     <s:String x:Key="ByAuthor">by</s:String>
     <s:String x:Key="RefreshCatalog">Refresh catalog</s:String>
     <s:String x:Key="CloseFilters">Close filters</s:String>

@@ -41,6 +41,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models
         private HashSet<object> ExportingInstances { get; } = new HashSet<object>();
 
         public IInstanceController CatalogController { get; }
+        public IInstanceController FeaturedCatalogController { get; }
         public ILibraryInstanceController LibraryController { get; }
         public InstanceSharesController InstanceSharesController { get; }
 
@@ -53,6 +54,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models
             _appCore = appCore;
             LibraryController = new LibraryController(appCore, clientsManager, Export, SetRunningGame, GetInstanceModelByInstanceClient, AddInstanceModelByInstanceClient);
             CatalogController = new CatalogController(appCore, Export, SetRunningGame, GetInstanceModelByInstanceClient, AddInstanceModelByInstanceClient);
+            FeaturedCatalogController = new CatalogController(appCore, Export, SetRunningGame, GetInstanceModelByInstanceClient, AddInstanceModelByInstanceClient);
             InstanceSharesController = new InstanceSharesController();
 
             OnPropertyChanged(nameof(NotificationService));

@@ -1053,6 +1053,7 @@
     <s:String x:Key="CatalogEmpty">Каталог оказался пуст</s:String>
     <s:String x:Key="CatalogEmptyTitle">Сборки не найдены</s:String>
     <s:String x:Key="CatalogEmptyDescription">Не удалось найти сборки по выбранным параметрам. Попробуйте изменить фильтры или обновить каталог.</s:String>
+    <s:String x:Key="HomeSectionComingSoonDescription">Этот раздел пока в разработке. Здесь появится новое содержимое в одном из следующих обновлений.</s:String>
     <s:String x:Key="ByAuthor">от</s:String>
     <s:String x:Key="RefreshCatalog">Обновить каталог</s:String>
     <s:String x:Key="CloseFilters">Закрыть фильтры</s:String>
