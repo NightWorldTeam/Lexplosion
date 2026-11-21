@@ -697,9 +697,15 @@
 
             <!-- Full project details replace the catalog without navigating away from
                  the repository or recreating its filters / download state. -->
-            <addonDetails:AddonDetailsView
-                Addon="{Binding SelectedAddon}"
-                Visibility="{Binding IsAddonDetailsOpen, Converter={converters:BooleanToVisibilityConverter}}" />
+            <ContentControl Content="{Binding SelectedAddonDetails}"
+                            Visibility="{Binding IsAddonDetailsOpen, Converter={converters:BooleanToVisibilityConverter}}"
+                            HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+                <ContentControl.ContentTemplate>
+                    <DataTemplate>
+                        <addonDetails:AddonDetailsView />
+                    </DataTemplate>
+                </ContentControl.ContentTemplate>
+            </ContentControl>
         </Grid>
 
         <!--  Apply Categories  -->

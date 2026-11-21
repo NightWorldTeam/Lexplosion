@@ -121,7 +121,13 @@ namespace Lexplosion.Logic.Objects.Modrinth
 
 		public string WebsiteUrl
 		{
-			get => "https://modrinth.com/modpack/" + Slug;
+			get => "https://modrinth.com/" + (Type switch
+			{
+				"mod" => "mod",
+				"resourcepack" => "resourcepack",
+				"shader" => "shader",
+				_ => "modpack"
+			}) + "/" + Slug;
 		}
 
 		public ModrinthProjectInfo() { }

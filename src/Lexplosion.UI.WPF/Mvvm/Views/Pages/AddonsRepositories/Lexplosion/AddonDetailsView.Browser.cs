@@ -1,5 +1,5 @@
-using Lexplosion.Logic.Management.Addons;
 using Lexplosion.Logic.Management.Instances;
+using Lexplosion.UI.WPF.Mvvm.Models.AddonsRepositories;
 using Lexplosion.UI.WPF.Mvvm.ViewModels.AddonsRepositories;
 using Lexplosion.UI.WPF.Services.Addons;
 using Lexplosion.UI.WPF.Services.Descriptions;
@@ -10,14 +10,14 @@ using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.Wpf;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.AddonDetails
@@ -34,6 +34,57 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.AddonDetails
         private readonly List<string> _temporaryDocuments = new List<string>();
         private ulong _currentNavigationId;
         private int _pendingDocumentGeneration = -1;
+        private int _generation;
+        private AddonDetailsModel _model;
+
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            _model = (DataContext as AddonDetailsViewModel)?.Model;
+            if (_model == null)
+            {
+                return;
+            }
+
+            _model.PropertyChanged += OnModelPropertyChanged;
+            _ = RenderAddonAsync(_model, ++_generation);
+        }
+
+        private void OnUnloaded(object sender, RoutedEventArgs e)
+        {
+            _generation++;
+            if (_model != null)
+            {
+                _model.PropertyChanged -= OnModelPropertyChanged;
+                _model = null;
+            }
+
+            CleanupBrowser();
+        }
+
+        private void OnModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(AddonDetailsModel.IsInformationOpen) || e.PropertyName == nameof(AddonDetailsModel.SelectedTabIndex))
+            {
+                UpdateBrowserHitTesting();
+            }
+        }
+
+        private void UpdateBrowserHitTesting()
+        {
+            if (_browser == null)
+            {
+                return;
+            }
+
+            _browser.Visibility = _model != null && !_model.IsInformationOpen && _model.SelectedTabIndex == 0 &&
+                LoadingOverlay.Visibility == Visibility.Collapsed ? Visibility.Visible : Visibility.Hidden;
+        }
+
+        private void OnInformationScrimClick(object sender, MouseButtonEventArgs e)
+        {
+            _model?.CloseInformation();
+            e.Handled = true;
+        }
 
         private void CleanupBrowser()
         {
@@ -62,9 +113,8 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.AddonDetails
             _temporaryDocuments.Clear();
         }
 
-        private void ShowLoading(string text)
+        private void ShowLoading()
         {
-            LoadingText.Text = text;
             LoadingBar.Visibility = Visibility.Visible;
             LoadingOverlay.Visibility = Visibility.Visible;
             if (_browser != null) _browser.Visibility = Visibility.Hidden;
@@ -119,46 +169,33 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.AddonDetails
             browser.CoreWebView2.WebMessageReceived += OnWebMessageReceived;
         }
 
-        private async Task RenderAddonAsync(InstanceAddon addon, int generation)
+        private async Task RenderAddonAsync(AddonDetailsModel model, int generation)
         {
-            if (addon == null || !IsLoaded || !IsVisible) return;
-            ShowLoading(L("AddonDetailsDescriptionLoading"));
+            ShowLoading();
             try
             {
-                Task<AddonPageData> dataTask = Task.Run(() =>
-                {
-#if DEBUG
-                    using var trace = UiDebugTrace.Measure("addon.data.fetch", 10);
-#endif
-                    return AddonDetailsDataLoader.FetchPage(addon);
-                });
+                Task dataTask = model.LoadPageAsync();
                 await EnsureBrowserAsync();
-                AddonPageData data = await dataTask;
-                if (generation != _generation || !IsLoaded || !IsVisible || !ReferenceEquals(Addon, addon)) return;
-                GalleryItems.ItemsSource = data.Images;
-                // Modrinth sends game versions oldest-first. Present the recent
-                // stable releases first rather than a wall of old snapshots.
-                var stableVersions = data.MinecraftVersions.Where(version =>
-                    Regex.IsMatch(version ?? string.Empty, @"^\d+\.\d+(?:\.\d+)?$")).ToArray();
-                _minecraftVersions = Labels(Enumerable.Reverse(
-                    stableVersions.Length > 0 ? stableVersions : data.MinecraftVersions));
-                _modloaders = Labels(data.Modloaders);
-                UpdateMetadataLabels();
-                GalleryEmptyText.Text = data.Images.Length == 0
-                    ? L("AddonDetailsGalleryEmpty") : string.Empty;
-                GalleryEmptyText.Visibility = data.Images.Length == 0 ? Visibility.Visible : Visibility.Collapsed;
+                await dataTask;
+                if (generation != _generation || !IsLoaded || !ReferenceEquals(model, _model))
+                {
+                    return;
+                }
 
+                AddonPageData data = model.PageData;
                 string document;
 #if DEBUG
                 using (UiDebugTrace.Measure("addon.html.build", 5))
 #endif
-                    document = AddonDescriptionDocumentBuilder.Build(data.Description, addon.Source, ReadTheme(), L("AddonDetailsNoDescription"));
+                    document = AddonDescriptionDocumentBuilder.Build(data.Description, model.Addon.Source, ReadTheme(), ResourceText("AddonDetailsNoDescription"));
+
                 string filename = "addon-" + Guid.NewGuid().ToString("N") + ".html";
                 string fullPath = Path.Combine(HtmlFolder, filename);
 #if DEBUG
                 using (UiDebugTrace.Measure("addon.html.write-file", 5))
 #endif
                     File.WriteAllText(fullPath, document, new UTF8Encoding(false));
+
                 _temporaryDocuments.Add(fullPath);
                 _pendingDocumentGeneration = generation;
 #if DEBUG
@@ -168,8 +205,10 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.AddonDetails
             }
             catch (Exception ex)
             {
-                if (generation == _generation && IsLoaded && IsVisible)
-                    ShowError(string.Format(L("AddonDetailsDescriptionError"), ex.Message));
+                if (generation == _generation && IsLoaded && ReferenceEquals(model, _model))
+                {
+                    ShowError(string.Format(ResourceText("AddonDetailsDescriptionError"), ex.Message));
+                }
             }
         }
 
@@ -193,11 +232,11 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.AddonDetails
 #endif
             if (e.NavigationId != _currentNavigationId ||
                 _pendingDocumentGeneration != _generation) return;
-            if (!IsLoaded || !IsVisible || Addon == null) return;
+            if (!IsLoaded || _model == null) return;
             if (!e.IsSuccess)
             {
                 if (e.WebErrorStatus != CoreWebView2WebErrorStatus.OperationCanceled)
-                    ShowError(string.Format(L("AddonDetailsWebViewError"), e.WebErrorStatus));
+                    ShowError(string.Format(ResourceText("AddonDetailsWebViewError"), e.WebErrorStatus));
                 return;
             }
             if (_browser != null)
@@ -216,7 +255,9 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.AddonDetails
         private void OnWebMessageReceived(object sender, CoreWebView2WebMessageReceivedEventArgs e)
         {
             if (e.TryGetWebMessageAsString() == "lexplosion-overview-escape")
-                (DataContext as LexplosionAddonsRepositoryViewModel)?.CloseAddonDetails();
+            {
+                (DataContext as AddonDetailsViewModel)?.CloseAddonDetailsCommand.Execute(null);
+            }
         }
 
 #if DEBUG
@@ -234,6 +275,8 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.AddonDetails
             try { Process.Start(new ProcessStartInfo(uri.AbsoluteUri) { UseShellExecute = true }); }
             catch (Exception) { /* Opening external links is optional. */ }
         }
+
+        private string ResourceText(string key) => TryFindResource(key) as string ?? key;
 
         private string BrushHex(string key, string fallback)
         {

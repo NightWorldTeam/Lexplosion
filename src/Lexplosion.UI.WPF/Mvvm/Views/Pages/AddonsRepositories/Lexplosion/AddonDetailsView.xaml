@@ -7,7 +7,9 @@
              xmlns:extensions="clr-namespace:Lexplosion.UI.WPF.Extensions"
              xmlns:lexplosion="clr-namespace:Lexplosion;assembly=Lexplosion.Core"
              xmlns:details="clr-namespace:Lexplosion.UI.WPF.Mvvm.Views.Pages.AddonDetails"
-             Background="{DynamicResource PageSolidColorBrush}" ClipToBounds="True">
+             xmlns:addonModels="clr-namespace:Lexplosion.UI.WPF.Mvvm.Models.AddonsRepositories"
+             Background="{DynamicResource PageSolidColorBrush}" ClipToBounds="True"
+             Loaded="OnLoaded" Unloaded="OnUnloaded">
 
     <UserControl.Resources>
         <converters:AddonDetailsBreakpointConverter x:Key="Breakpoint" />
@@ -89,10 +91,41 @@
                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
             </Border>
         </DataTemplate>
+        <Style x:Key="MetadataToggle" TargetType="ToggleButton">
+            <Setter Property="Height" Value="28" />
+            <Setter Property="Margin" Value="0,4,0,0" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{DynamicResource ActivitySolidColorBrush}" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Border Background="{TemplateBinding Background}" Padding="0,4">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock x:Name="Label" Text="{DynamicResource More}" FontSize="14"
+                                           Foreground="{TemplateBinding Foreground}" />
+                                <TextBlock x:Name="Count" FontSize="14" Foreground="{TemplateBinding Foreground}"
+                                           Text="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}, StringFormat=' (+{0})'}" />
+                            </StackPanel>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Label" Property="Text" Value="{DynamicResource ShowLess}" />
+                                <Setter TargetName="Count" Property="Visibility" Value="Collapsed" />
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" Value="{DynamicResource DefaultButtonHoverBackgroundColorBrush}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
         <Style x:Key="SidebarPanel" TargetType="Border">
             <Setter Property="Visibility" Value="Collapsed" />
             <Style.Triggers>
-                <DataTrigger Binding="{Binding IsInformationOpen, ElementName=AddonDetailsRoot}" Value="True">
+                <DataTrigger Binding="{Binding Model.IsInformationOpen}" Value="True">
                     <Setter Property="Visibility" Value="Visible" />
                 </DataTrigger>
                 <DataTrigger Binding="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type details:AddonDetailsView}}, Converter={StaticResource Breakpoint}, ConverterParameter=Wide}" Value="True">
@@ -103,7 +136,7 @@
         <Style x:Key="SidebarScrim" TargetType="Border">
             <Setter Property="Visibility" Value="Collapsed" />
             <Style.Triggers>
-                <DataTrigger Binding="{Binding IsInformationOpen, ElementName=AddonDetailsRoot}" Value="True">
+                <DataTrigger Binding="{Binding Model.IsInformationOpen}" Value="True">
                     <Setter Property="Visibility" Value="Visible" />
                 </DataTrigger>
                 <DataTrigger Binding="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type details:AddonDetailsView}}, Converter={StaticResource Breakpoint}, ConverterParameter=Wide}" Value="True">
@@ -152,22 +185,22 @@
                                          Style="{StaticResource sm-button-icon}" Background="Transparent"
                                          Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
                                          FontSize="19" IconData="{StaticResource PDLeftBackArrow}"
-                                         ToolTip="{DynamicResource AddonDetailsBack}" Click="OnBackClick" />
+                                         ToolTip="{DynamicResource AddonDetailsBack}" Command="{Binding CloseAddonDetailsCommand}" />
                 <Border Grid.Column="1" Style="{StaticResource HeaderLogo}" CornerRadius="11"
-                        Background="{Binding SelectedAddon.Logo, Converter={converters:ImageSourceNullValidateConverter}}" />
+                        Background="{Binding Model.Addon.Logo, Converter={converters:ImageSourceNullValidateConverter}}" />
                 <StackPanel Grid.Column="2" Margin="0,0,18,0" VerticalAlignment="Center">
-                    <TextBlock Text="{Binding SelectedAddon.Name}" ToolTip="{Binding SelectedAddon.Name}"
+                    <TextBlock Text="{Binding Model.Addon.Name}" ToolTip="{Binding Model.Addon.Name}"
                                Style="{StaticResource HeaderTitle}" FontWeight="SemiBold"
                                Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
                                TextTrimming="CharacterEllipsis" />
-                    <TextBlock Text="{Binding SelectedAddon.Description}" ToolTip="{Binding SelectedAddon.Description}"
+                    <TextBlock Text="{Binding Model.Addon.Description}" ToolTip="{Binding Model.Addon.Description}"
                                Margin="0,4,0,0" FontSize="12" TextTrimming="CharacterEllipsis"
                                Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
                     <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
-                        <TextBlock Text="{Binding SelectedAddon.Author}" FontSize="12"
+                        <TextBlock Text="{Binding Model.Addon.Author}" FontSize="12"
                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
                         <TextBlock Text=" · " FontSize="12" Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
-                        <TextBlock Text="{Binding SelectedAddon.DownloadCount, StringFormat='{}{0:N0}'}" FontSize="12"
+                        <TextBlock Text="{Binding Model.Addon.DownloadCount, StringFormat='{}{0:N0}'}" FontSize="12"
                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
                         <TextBlock Text="{DynamicResource AddonDetailsDownloads}" Margin="4,0,0,0" FontSize="12"
                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
@@ -175,20 +208,20 @@
                 </StackPanel>
                 <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
                     <controls:AdvancedButton Height="32" MinWidth="110" Margin="0,0,8,0"
-                                             Command="{Binding InstallAddonCommand}" CommandParameter="{Binding SelectedAddon}">
+                                             Command="{Binding InstallAddonCommand}" CommandParameter="{Binding Model.Addon}">
                         <controls:AdvancedButton.Style>
                             <Style TargetType="controls:AdvancedButton" BasedOn="{StaticResource sm-default}">
                                 <Setter Property="Content" Value="{DynamicResource AddonDetailsInstall}" />
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding SelectedAddon.IsInstalled}" Value="True">
+                                    <DataTrigger Binding="{Binding Model.Addon.IsInstalled}" Value="True">
                                         <Setter Property="Content" Value="{DynamicResource AddonDetailsInstalled}" />
                                         <Setter Property="IsEnabled" Value="False" />
                                     </DataTrigger>
-                                    <DataTrigger Binding="{Binding SelectedAddon.UpdateAvailable}" Value="True">
+                                    <DataTrigger Binding="{Binding Model.Addon.UpdateAvailable}" Value="True">
                                         <Setter Property="Content" Value="{DynamicResource AddonDetailsUpdate}" />
                                         <Setter Property="IsEnabled" Value="True" />
                                     </DataTrigger>
-                                    <DataTrigger Binding="{Binding SelectedAddon.IsLoading}" Value="True">
+                                    <DataTrigger Binding="{Binding Model.Addon.IsLoading}" Value="True">
                                         <Setter Property="IsEnabled" Value="False" />
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -198,11 +231,11 @@
                     <controls:AdvancedButton Style="{StaticResource sm-ghost}" Margin="0,0,8,0"
                                              IconData="{StaticResource PDDelete}" Text="{DynamicResource AddonDetailsDelete}"
                                              ToolTip="{DynamicResource AddonDetailsRemove}"
-                                             Command="{Binding UninstallAddonCommand}" CommandParameter="{Binding SelectedAddon}"
-                                             Visibility="{Binding SelectedAddon.IsInstalled, Converter={converters:BooleanToVisibilityConverter}}" />
+                                             Command="{Binding UninstallAddonCommand}" CommandParameter="{Binding Model.Addon}"
+                                             Visibility="{Binding Model.Addon.IsInstalled, Converter={converters:BooleanToVisibilityConverter}}" />
                     <controls:AdvancedButton Width="32" Height="32" Content="i" FontSize="16" FontWeight="Bold"
                                              Style="{StaticResource SidebarToggle}" ToolTip="{DynamicResource AddonDetailsAbout}"
-                                             Click="OnInformationClick" />
+                                             Command="{Binding ToggleInformationCommand}" />
                 </StackPanel>
             </Grid>
         </Border>
@@ -215,7 +248,7 @@
                     <ColumnDefinition.Width>
                         <MultiBinding Converter="{StaticResource SidebarWidth}">
                             <Binding ElementName="AddonDetailsRoot" Path="ActualWidth" />
-                            <Binding ElementName="AddonDetailsRoot" Path="IsInformationOpen" />
+                            <Binding Path="DataContext.Model.IsInformationOpen" ElementName="AddonDetailsRoot" />
                         </MultiBinding>
                     </ColumnDefinition.Width>
                 </ColumnDefinition>
@@ -227,8 +260,8 @@
                         EnableAnimations="False"
                         ItemContainerStyle="{StaticResource UITabItem}"
                         TabPanelPadding="{Binding ActualWidth, ElementName=AddonDetailsRoot, Converter={StaticResource ContentInset}}"
-                        SelectionChanged="OnTabSelectionChanged">
-                <TabItem Header="AddonDetailsDescription">
+                        SelectedIndex="{Binding Model.SelectedTabIndex, Mode=TwoWay}">
+                <TabItem Header="{DynamicResource AddonDetailsDescription}">
                     <Grid x:Name="DescriptionHost" Background="{DynamicResource PageSolidColorBrush}" ClipToBounds="True">
                         <Grid x:Name="BrowserHost" Background="{DynamicResource PageSolidColorBrush}"
                               Margin="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type details:AddonDetailsView}}, Converter={StaticResource ContentInset}, ConverterParameter=Browser}" />
@@ -242,14 +275,28 @@
                         </Grid>
                     </Grid>
                 </TabItem>
-                <TabItem Header="AddonDetailsGallery">
+                <TabItem Header="{DynamicResource AddonDetailsGallery}">
                     <ScrollViewer Background="{DynamicResource PageSolidColorBrush}"
                                   HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
                         <StackPanel Margin="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type details:AddonDetailsView}}, Converter={StaticResource ContentInset}, ConverterParameter=Gallery}"
                                     MaxWidth="1140">
-                            <TextBlock x:Name="GalleryEmptyText" Text="{DynamicResource AddonDetailsGalleryLoading}" Margin="0,14"
-                                       TextAlignment="Center" Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
-                            <ItemsControl x:Name="GalleryItems">
+                            <TextBlock x:Name="GalleryEmptyText" Margin="0,14" TextAlignment="Center"
+                                       Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Text" Value="{DynamicResource AddonDetailsGalleryLoading}" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Model.IsPageLoaded}" Value="True">
+                                                <Setter Property="Text" Value="{DynamicResource AddonDetailsGalleryEmpty}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Model.HasGallery}" Value="True">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                            <ItemsControl x:Name="GalleryItems" ItemsSource="{Binding Model.PageData.Images}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <Border Background="{DynamicResource LayoutTabSolidColorBrush}"
@@ -263,23 +310,46 @@
                         </StackPanel>
                     </ScrollViewer>
                 </TabItem>
-                <TabItem Header="AddonDetailsVersions">
+                <TabItem Header="{DynamicResource AddonDetailsVersions}">
                     <Grid Margin="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type details:AddonDetailsView}}, Converter={StaticResource ContentInset}, ConverterParameter=Versions}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="*" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <TextBlock x:Name="VersionsStatus" Text="{DynamicResource AddonDetailsVersionsHint}"
-                                   Margin="0,0,0,14" Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                        <TextBlock x:Name="VersionsStatus" Margin="0,0,0,14"
+                                   Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Text" Value="{DynamicResource AddonDetailsVersionsHint}" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Model.VersionsState}" Value="{x:Static addonModels:AddonVersionsState.Loading}">
+                                            <Setter Property="Text" Value="{DynamicResource AddonDetailsVersionsLoading}" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Model.VersionsState}" Value="{x:Static addonModels:AddonVersionsState.Ready}">
+                                            <Setter Property="Text" Value="{DynamicResource AddonDetailsVersionsSelect}" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Model.VersionsState}" Value="{x:Static addonModels:AddonVersionsState.Empty}">
+                                            <Setter Property="Text" Value="{DynamicResource AddonDetailsVersionsEmpty}" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Model.VersionsState}" Value="{x:Static addonModels:AddonVersionsState.Error}">
+                                            <Setter Property="Text" Value="{Binding Model.VersionsError}" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
                         <ListBox x:Name="VersionsList" Grid.Row="1" FontSize="14" Padding="6"
+                                  ItemsSource="{Binding Model.Versions}"
+                                  SelectedItem="{Binding Model.SelectedVersion, Mode=TwoWay}"
                                  Background="{DynamicResource LayoutTabSolidColorBrush}"
                                  BorderBrush="{DynamicResource SeparateSolidColorBrush}" BorderThickness="1" />
                         <controls:AdvancedButton x:Name="InstallVersionButton" Grid.Row="2" Height="32" MinWidth="208"
                                                  Margin="0,16,0,0" HorizontalAlignment="Right"
                                                  Content="{DynamicResource AddonDetailsInstallVersion}"
-                                                 Style="{StaticResource sm-default}" Click="OnInstallVersionClick"
-                                                 IsEnabled="{Binding HasItems, ElementName=VersionsList}" />
+                                                 Style="{StaticResource sm-default}" Command="{Binding InstallSelectedAddonVersionCommand}"
+                                                  
+                                                 IsEnabled="{Binding Model.CanInstallSelectedVersion}" />
                     </Grid>
                 </TabItem>
             </controls:UIUnderlineTabControl>
@@ -300,44 +370,53 @@
                     <DockPanel Margin="24,16,18,14">
                         <controls:AdvancedButton DockPanel.Dock="Right" Width="32" Height="32"
                                                  Style="{StaticResource SidebarClose}" IconData="{StaticResource PDClose}"
-                                                 ToolTip="{DynamicResource Close}" Click="OnInformationClick" />
+                                                 ToolTip="{DynamicResource Close}" Command="{Binding CloseInformationCommand}" />
                         <TextBlock Text="{DynamicResource AddonDetailsAbout}" FontSize="18" FontWeight="SemiBold"
                                    VerticalAlignment="Center" Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}" />
                     </DockPanel>
                     <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                         <StackPanel Margin="24,6,22,30">
                             <TextBlock Style="{StaticResource InfoCaption}" Text="{DynamicResource AddonDetailsAuthor}" />
-                            <TextBlock Style="{StaticResource InfoValue}" Text="{Binding SelectedAddon.Author}" />
+                            <TextBlock Style="{StaticResource InfoValue}" Text="{Binding Model.Addon.Author}" />
                             <Border Style="{StaticResource InfoSeparator}" />
                             <TextBlock Style="{StaticResource InfoCaption}" Text="{DynamicResource AddonDetailsUpdated}" />
-                            <TextBlock Style="{StaticResource InfoValue}" Text="{Binding SelectedAddon.LastUpdated, TargetNullValue=—, FallbackValue=—}" />
+                            <TextBlock Style="{StaticResource InfoValue}" Text="{Binding Model.Addon.LastUpdated, TargetNullValue=—, FallbackValue=—}" />
                             <Border Style="{StaticResource InfoSeparator}" />
                             <TextBlock Style="{StaticResource InfoCaption}" Text="{DynamicResource AddonDetailsMinecraftVersions}" />
-                            <ItemsControl x:Name="MinecraftVersionsItems" ItemTemplate="{StaticResource InfoChip}">
+                            <ItemsControl x:Name="MinecraftVersionsItems" ItemTemplate="{StaticResource InfoChip}" ItemsSource="{Binding Model.PageData.VisibleMinecraftVersions}">
                                 <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
                             </ItemsControl>
-                            <controls:AdvancedButton x:Name="MoreMinecraftVersionsButton" AutomationProperties.AutomationId="addon.details.more.minecraft-versions" Height="28" Margin="0,4,0,0"
-                                HorizontalAlignment="Left" Style="{StaticResource TransparentAdvancedButton}"
-                                Foreground="{DynamicResource ActivitySolidColorBrush}"
-                                Visibility="Collapsed" Click="OnMoreMetadataClick" />
+                            <ItemsControl x:Name="MinecraftVersionsOverflow" ItemTemplate="{StaticResource InfoChip}" ItemsSource="{Binding Model.PageData.MoreMinecraftVersions}"
+                                          Visibility="{Binding IsChecked, ElementName=MoreMinecraftVersionsButton, Converter={converters:BooleanToVisibilityConverter}}">
+                                <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                            <ToggleButton x:Name="MoreMinecraftVersionsButton" AutomationProperties.AutomationId="addon.details.more.minecraft-versions"
+                                          Style="{StaticResource MetadataToggle}" Tag="{Binding Items.Count, ElementName=MinecraftVersionsOverflow}"
+                                          Visibility="{Binding HasItems, ElementName=MinecraftVersionsOverflow, Converter={converters:BooleanToVisibilityConverter}}" />
                             <Border Style="{StaticResource InfoSeparator}" />
                             <TextBlock Style="{StaticResource InfoCaption}" Text="{DynamicResource AddonDetailsLoaders}" />
-                            <ItemsControl x:Name="ModloadersItems" ItemTemplate="{StaticResource InfoChip}">
+                            <ItemsControl x:Name="ModloadersItems" ItemTemplate="{StaticResource InfoChip}" ItemsSource="{Binding Model.PageData.VisibleModloaders}">
                                 <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
                             </ItemsControl>
-                            <controls:AdvancedButton x:Name="MoreModloadersButton" AutomationProperties.AutomationId="addon.details.more.modloaders" Height="28" Margin="0,4,0,0"
-                                HorizontalAlignment="Left" Style="{StaticResource TransparentAdvancedButton}"
-                                Foreground="{DynamicResource ActivitySolidColorBrush}"
-                                Visibility="Collapsed" Click="OnMoreMetadataClick" />
+                            <ItemsControl x:Name="ModloadersOverflow" ItemTemplate="{StaticResource InfoChip}" ItemsSource="{Binding Model.PageData.MoreModloaders}"
+                                          Visibility="{Binding IsChecked, ElementName=MoreModloadersButton, Converter={converters:BooleanToVisibilityConverter}}">
+                                <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                            <ToggleButton x:Name="MoreModloadersButton" AutomationProperties.AutomationId="addon.details.more.modloaders"
+                                          Style="{StaticResource MetadataToggle}" Tag="{Binding Items.Count, ElementName=ModloadersOverflow}"
+                                          Visibility="{Binding HasItems, ElementName=ModloadersOverflow, Converter={converters:BooleanToVisibilityConverter}}" />
                             <Border Style="{StaticResource InfoSeparator}" />
                             <TextBlock Style="{StaticResource InfoCaption}" Text="{DynamicResource AddonDetailsCategories}" />
-                            <ItemsControl x:Name="CategoryItems" ItemTemplate="{StaticResource InfoChip}">
+                            <ItemsControl x:Name="CategoryItems" ItemTemplate="{StaticResource InfoChip}" ItemsSource="{Binding Model.PageData.VisibleCategories}">
                                 <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
                             </ItemsControl>
-                            <controls:AdvancedButton x:Name="MoreCategoriesButton" AutomationProperties.AutomationId="addon.details.more.categories" Height="28" Margin="0,4,0,0"
-                                HorizontalAlignment="Left" Style="{StaticResource TransparentAdvancedButton}"
-                                Foreground="{DynamicResource ActivitySolidColorBrush}"
-                                Visibility="Collapsed" Click="OnMoreMetadataClick" />
+                            <ItemsControl x:Name="CategoriesOverflow" ItemTemplate="{StaticResource InfoChip}" ItemsSource="{Binding Model.PageData.MoreCategories}"
+                                          Visibility="{Binding IsChecked, ElementName=MoreCategoriesButton, Converter={converters:BooleanToVisibilityConverter}}">
+                                <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                            <ToggleButton x:Name="MoreCategoriesButton" AutomationProperties.AutomationId="addon.details.more.categories"
+                                          Style="{StaticResource MetadataToggle}" Tag="{Binding Items.Count, ElementName=CategoriesOverflow}"
+                                          Visibility="{Binding HasItems, ElementName=CategoriesOverflow, Converter={converters:BooleanToVisibilityConverter}}" />
                             <Border Style="{StaticResource InfoSeparator}" />
                             <TextBlock Style="{StaticResource InfoCaption}" Text="{DynamicResource AddonDetailsSource}" />
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
@@ -347,7 +426,7 @@
                                             <Setter Property="extensions:PathExtensions.StringData" Value="{StaticResource PDModrinth}" />
                                             <Setter Property="Fill" Value="#1BD96A" />
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding SelectedAddon.Source}" Value="{x:Static lexplosion:ProjectSource.Curseforge}">
+                                                <DataTrigger Binding="{Binding Model.Addon.Source}" Value="{x:Static lexplosion:ProjectSource.Curseforge}">
                                                     <Setter Property="extensions:PathExtensions.StringData" Value="{StaticResource PDCurseforge}" />
                                                     <Setter Property="Fill" Value="#F16436" />
                                                 </DataTrigger>
@@ -360,7 +439,7 @@
                                         <Style TargetType="TextBlock" BasedOn="{StaticResource InfoValue}">
                                             <Setter Property="Text" Value="Modrinth" />
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding SelectedAddon.Source}" Value="{x:Static lexplosion:ProjectSource.Curseforge}">
+                                                <DataTrigger Binding="{Binding Model.Addon.Source}" Value="{x:Static lexplosion:ProjectSource.Curseforge}">
                                                     <Setter Property="Text" Value="CurseForge" />
                                                 </DataTrigger>
                                             </Style.Triggers>
@@ -370,13 +449,14 @@
                             </StackPanel>
                             <controls:AdvancedButton x:Name="ProjectWebsiteButton" Height="32"
                                                      HorizontalAlignment="Left" Foreground="{DynamicResource ActivitySolidColorBrush}"
-                                                     Click="OnOpenWebsiteClick" ToolTip="{DynamicResource AddonDetailsOpenWebsite}">
+                                                     Command="{Binding OpenExternalResourceCommand}" CommandParameter="{Binding Model.Addon}"
+                                                     ToolTip="{DynamicResource AddonDetailsOpenWebsite}">
                                 <controls:AdvancedButton.Style>
                                     <Style TargetType="controls:AdvancedButton" BasedOn="{StaticResource TransparentAdvancedButton}">
                                         <Setter Property="IconData" Value="{StaticResource PDModrinth}" />
                                         <Setter Property="Text" Value="{DynamicResource AddonDetailsVisitModrinth}" />
                                         <Style.Triggers>
-                                            <DataTrigger Binding="{Binding SelectedAddon.Source}" Value="{x:Static lexplosion:ProjectSource.Curseforge}">
+                                            <DataTrigger Binding="{Binding Model.Addon.Source}" Value="{x:Static lexplosion:ProjectSource.Curseforge}">
                                                 <Setter Property="IconData" Value="{StaticResource PDCurseforge}" />
                                                 <Setter Property="Text" Value="{DynamicResource AddonDetailsVisitCurseForge}" />
                                             </DataTrigger>
@@ -387,8 +467,8 @@
                             <controls:AdvancedButton Margin="0,6,0,0" Height="32" HorizontalAlignment="Left"
                                                      Style="{StaticResource TransparentAdvancedButton}" Foreground="#F26D6D"
                                                      IconData="{StaticResource PDDelete}" Text="{DynamicResource AddonDetailsRemove}"
-                                                     Command="{Binding UninstallAddonCommand}" CommandParameter="{Binding SelectedAddon}"
-                                                     Visibility="{Binding SelectedAddon.IsInstalled, Converter={converters:BooleanToVisibilityConverter}}" />
+                                                     Command="{Binding UninstallAddonCommand}" CommandParameter="{Binding Model.Addon}"
+                                                     Visibility="{Binding Model.Addon.IsInstalled, Converter={converters:BooleanToVisibilityConverter}}" />
                         </StackPanel>
                     </ScrollViewer>
                 </Grid>

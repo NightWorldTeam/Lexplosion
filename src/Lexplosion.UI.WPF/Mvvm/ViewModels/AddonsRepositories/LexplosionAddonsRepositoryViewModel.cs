@@ -22,33 +22,48 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.AddonsRepositories
 
         public bool IsLoading { get; private set; }
 
-        // The details screen reuses the same catalog InstanceAddon and install commands.
-        private InstanceAddon _selectedAddon;
-        public InstanceAddon SelectedAddon
+        private AddonDetailsViewModel _selectedAddonDetails;
+        public AddonDetailsViewModel SelectedAddonDetails
         {
-            get => _selectedAddon;
+            get => _selectedAddonDetails;
             private set
             {
-                if (ReferenceEquals(_selectedAddon, value)) return;
-                _selectedAddon = value;
+                if (ReferenceEquals(_selectedAddonDetails, value))
+                {
+                    return;
+                }
+
+                _selectedAddonDetails = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(IsAddonDetailsOpen));
+                OnPropertyChanged(nameof(SelectedAddon));
             }
         }
 
-        public bool IsAddonDetailsOpen => SelectedAddon != null;
+        public InstanceAddon SelectedAddon => SelectedAddonDetails?.Model.Addon;
+        public bool IsAddonDetailsOpen => SelectedAddonDetails != null;
 
         public void OpenAddonDetails(InstanceAddon addon)
         {
-            if (addon != null) SelectedAddon = addon;
+            if (addon == null)
+            {
+                return;
+            }
+
+            SelectedAddonDetails = new AddonDetailsViewModel(addon, InstallSelectedAddonVersion, InstallAddonCommand, UninstallAddonCommand, OpenExternalResourceCommand, CloseAddonDetailsCommand);
         }
 
-        public void CloseAddonDetails() => SelectedAddon = null;
+        public void CloseAddonDetails()
+        {
+            SelectedAddonDetails = null;
+        }
 
         public void InstallSelectedAddonVersion(object version)
         {
             if (SelectedAddon != null && version != null && Model != null)
+            {
                 Model.InstallAddon(SelectedAddon, version);
+            }
         }
 
 
