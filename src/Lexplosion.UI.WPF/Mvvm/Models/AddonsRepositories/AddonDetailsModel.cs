@@ -1,4 +1,5 @@
 using Lexplosion.Logic.Management.Addons;
+using Lexplosion.UI.WPF.Core;
 using Lexplosion.UI.WPF.Core.ViewModel;
 using Lexplosion.UI.WPF.Services.Addons;
 using System;
@@ -20,6 +21,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.AddonsRepositories
     public sealed class AddonDetailsModel : ObservableObject
     {
         private readonly Action<object> _installVersion;
+        private readonly Gallery _gallery;
         private readonly Task _pageDataTask;
         private IReadOnlyList<object> _versions = Array.Empty<object>();
         private object _selectedVersion;
@@ -107,10 +109,11 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.AddonsRepositories
             }
         }
 
-        public AddonDetailsModel(InstanceAddon addon, Action<object> installVersion)
+        public AddonDetailsModel(InstanceAddon addon, Action<object> installVersion, Gallery gallery)
         {
             Addon = addon ?? throw new ArgumentNullException(nameof(addon));
             _installVersion = installVersion;
+            _gallery = gallery;
             PageData = AddonPageData.FromAddon(addon);
             _pageDataTask = LoadPageCoreAsync();
         }
@@ -167,6 +170,12 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.AddonsRepositories
                 VersionsError = ex.Message;
                 VersionsState = AddonVersionsState.Error;
             }
+        }
+
+        public void OpenImage(object image)
+        {
+            _gallery.ChangeContext(PageData.Images);
+            _gallery.SelectImage(image);
         }
 
         public void InstallSelectedVersion()

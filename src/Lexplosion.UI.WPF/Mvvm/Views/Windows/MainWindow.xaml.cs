@@ -161,30 +161,38 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Windows
         private void OnGalleryStateChanged()
         {
             ImageViewer.Visibility = _gallery.HasSelectedImage ? Visibility.Visible : Visibility.Collapsed;
+            var selectedImage = _gallery.SelectedImageSource;
+            Image.ImageSource = null;
 
-            if (!_gallery.HasSelectedImage)
-                Image.ImageSource = null;
-            if (Image.ImageSource == null || Image.ImageSource.ToString() == "pack://Application:,,,/Assets/images/icons/non_image.png")
+            if (selectedImage is string url)
             {
-                BitmapImage image = null;
+                if (Uri.TryCreate(url, UriKind.Absolute, out var uri))
+                {
+                    try
+                    {
+                        Image.ImageSource = new BitmapImage(uri);
+                    }
+                    catch (Exception error)
+                    {
+                        Runtime.DebugWrite("Gallery image load failed: " + error.GetType().Name);
+                    }
+                }
+                return;
+            }
 
+            if (selectedImage is byte[] bytes)
+            {
                 Runtime.TaskRun(() =>
                 {
-                    if (_gallery.SelectedImageSource is byte[] byteImage)
-                    {
-                        image = ImageTools.ToImage(byteImage) ?? image;
-                    }
-                    else if (_gallery.SelectedImageSource is string stringImage)
-                    {
-                        image = new BitmapImage(new Uri(stringImage)) ?? image;
-                    }
-
+                    var image = ImageTools.ToImage(bytes);
                     App.Current.Dispatcher.Invoke(() =>
                     {
-                        Image.ImageSource = image;
+                        if (ReferenceEquals(_gallery.SelectedImageSource, selectedImage))
+                        {
+                            Image.ImageSource = image;
+                        }
                     });
                 });
-
             }
         }
 

@@ -35,6 +35,29 @@ namespace Lexplosion.UI.WPF.Core.Converters
                 sizes[0] <= 0 || sizes[1] <= 0)
                 throw new ArgumentException("Parameter must contain two positive thumbnail dimensions.");
 
+            if (value is string url)
+            {
+                if (!Uri.TryCreate(url, UriKind.Absolute, out var uri) || uri.Scheme != Uri.UriSchemeHttps)
+                {
+                    return null;
+                }
+
+                try
+                {
+                    var thumbnail = new BitmapImage();
+                    thumbnail.BeginInit();
+                    thumbnail.DecodePixelWidth = (int)sizes[0];
+                    thumbnail.UriSource = uri;
+                    thumbnail.EndInit();
+                    return thumbnail;
+                }
+                catch (Exception error)
+                {
+                    Runtime.DebugWrite("[Error] Thumbnail load failed: " + error.GetType().Name, color: ConsoleColor.DarkGray);
+                    return null;
+                }
+            }
+
             if (!(value is byte[] bytes) || bytes.Length == 0)
                 return null;
 

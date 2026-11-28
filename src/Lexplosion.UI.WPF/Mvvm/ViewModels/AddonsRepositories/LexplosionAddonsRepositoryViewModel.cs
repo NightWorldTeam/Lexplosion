@@ -14,6 +14,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.AddonsRepositories
     public sealed class LexplosionAddonsRepositoryViewModel : ViewModelBase
     {
         private readonly INavigationStore _navigationStore;
+        private readonly Gallery _gallery;
 
 
         public LexplosionAddonsRepositoryModel Model { get; private set; }
@@ -50,7 +51,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.AddonsRepositories
                 return;
             }
 
-            SelectedAddonDetails = new AddonDetailsViewModel(addon, InstallSelectedAddonVersion, InstallAddonCommand, UninstallAddonCommand, OpenExternalResourceCommand, CloseAddonDetailsCommand);
+            SelectedAddonDetails = new AddonDetailsViewModel(addon, InstallSelectedAddonVersion, InstallAddonCommand, UninstallAddonCommand, OpenExternalResourceCommand, CloseAddonDetailsCommand, _gallery);
         }
 
         public void CloseAddonDetails()
@@ -215,6 +216,7 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.AddonsRepositories
                 backCommand.Execute(null);
             });
             _navigationStore = navigationStore;
+            _gallery = appCore.GalleryManager;
 
             ProjectSources = [ProjectSource.Modrinth, ProjectSource.Curseforge];
 

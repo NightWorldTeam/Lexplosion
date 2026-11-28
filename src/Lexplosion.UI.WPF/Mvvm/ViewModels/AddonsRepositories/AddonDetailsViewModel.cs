@@ -34,9 +34,15 @@ namespace Lexplosion.UI.WPF.Mvvm.ViewModels.AddonsRepositories
             get => RelayCommand.GetCommand(ref _closeInformationCommand, Model.CloseInformation);
         }
 
-        public AddonDetailsViewModel(InstanceAddon addon, Action<object> installVersion, ICommand installAddonCommand, ICommand uninstallAddonCommand, ICommand openExternalResourceCommand, ICommand closeAddonDetailsCommand)
+        private RelayCommand _openImageCommand;
+        public ICommand OpenImageCommand
         {
-            Model = new AddonDetailsModel(addon, installVersion);
+            get => RelayCommand.GetCommand<object>(ref _openImageCommand, Model.OpenImage);
+        }
+
+        public AddonDetailsViewModel(InstanceAddon addon, Action<object> installVersion, ICommand installAddonCommand, ICommand uninstallAddonCommand, ICommand openExternalResourceCommand, ICommand closeAddonDetailsCommand, Gallery gallery)
+        {
+            Model = new AddonDetailsModel(addon, installVersion, gallery);
             InstallAddonCommand = installAddonCommand;
             UninstallAddonCommand = uninstallAddonCommand;
             OpenExternalResourceCommand = openExternalResourceCommand;

@@ -18,10 +18,10 @@
 
         <!-- The content and header tabs use the same 66/74 DIP horizontal inset. -->
         <Style x:Key="HeaderSurface" TargetType="Border">
-            <Setter Property="Padding" Value="24,12,24,12" />
+            <Setter Property="Padding" Value="24,2,24,8" />
             <Style.Triggers>
                 <DataTrigger Binding="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type details:AddonDetailsView}}, Converter={StaticResource Breakpoint}, ConverterParameter=Compact}" Value="True">
-                    <Setter Property="Padding" Value="18,10,18,11" />
+                    <Setter Property="Padding" Value="18,2,18,8" />
                 </DataTrigger>
             </Style.Triggers>
         </Style>
@@ -171,9 +171,7 @@
         </Grid.RowDefinitions>
 
         <!-- 1. Шапка: назад, иконка, название, установка / удаление -->
-        <Border Grid.Row="1" Background="{DynamicResource LayoutTabSolidColorBrush}"
-                BorderBrush="{DynamicResource LayoutTabBorderSolidColorBrush}" BorderThickness="0,0,0,1"
-                Style="{StaticResource HeaderSurface}">
+        <Border Grid.Row="1" Background="{DynamicResource PageSolidColorBrush}" Style="{StaticResource HeaderSurface}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -277,20 +275,9 @@
                 </TabItem>
                 <TabItem Header="AddonDetailsGallery">
                     <Grid>
-                        <ScrollViewer Background="{DynamicResource PageSolidColorBrush}" HorizontalScrollBarVisibility="Disabled"
-                                      VerticalScrollBarVisibility="Auto" Visibility="{Binding Model.HasGallery, Converter={converters:BooleanToVisibilityConverter}}">
-                            <ItemsControl Margin="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type details:AddonDetailsView}}, Converter={StaticResource ContentInset}, ConverterParameter=Gallery}"
-                                          MaxWidth="1140" ItemsSource="{Binding Model.PageData.Images}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <Border Background="{DynamicResource LayoutTabSolidColorBrush}" BorderBrush="{DynamicResource SeparateSolidColorBrush}"
-                                                BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,16">
-                                            <Image Source="{Binding}" Stretch="Uniform" MaxHeight="550" />
-                                        </Border>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </ScrollViewer>
+                        <controls:ImageGallery Margin="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type details:AddonDetailsView}}, Converter={StaticResource ContentInset}, ConverterParameter=Gallery}"
+                                               ItemsSource="{Binding Model.PageData.Images}" OpenImageCommand="{Binding OpenImageCommand}"
+                                               Visibility="{Binding Model.HasGallery, Converter={converters:BooleanToVisibilityConverter}}" />
                         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
                                     Visibility="{Binding Model.HasGallery, Converter={converters:NegativeBooleanToVisibilityConverter}}">
                             <controls:CircleLoader Width="36" Height="36" Background="Transparent">

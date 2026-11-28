@@ -2,7 +2,6 @@
     x:Class="Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.InstanceProfile.InstanceProfileOverviewGalleryView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
     xmlns:controls1="clr-namespace:Lexplosion.UI.WPF.Controls"
     xmlns:converters="clr-namespace:Lexplosion.UI.WPF.Core.Converters"
     xmlns:core="clr-namespace:Lexplosion.UI.WPF.Core"
@@ -10,87 +9,16 @@
     xmlns:instanceprofile="clr-namespace:Lexplosion.UI.WPF.Mvvm.ViewModels.MainContent.InstanceProfile"
     xmlns:local="clr-namespace:Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.InstanceProfile"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:sys="clr-namespace:System;assembly=mscorlib"
     d:DataContext="{d:DesignInstance Type=instanceprofile:InstanceProfileOverviewGalleryViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
 
-    <UserControl.Resources>
-        <core:BindingProxy x:Key="ViewModel" Data="{Binding}" />
-
-        <x:Array x:Key="ThumbnailSizes" Type="{x:Type sys:Double}">
-            <sys:Double>200</sys:Double>
-            <sys:Double>110</sys:Double>
-        </x:Array>
-    </UserControl.Resources>
-
     <Grid>
 
         <core:If x:Name="ContainerIf" Condition="{Binding Model.AdditionalData.Images, Converter={converters:IsCollectionEmptyConverter}}">
             <core:If.False>
-                <ListBox
-                    x:Name="ImageList"
-                    Margin="35,0,0,0"
-                    ItemsSource="{Binding Model.AdditionalData.Images}"
-                    Style="{StaticResource TransparentListBox}">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <Button
-                                Width="200"
-                                Height="110"
-                                Click="Button_Click"
-                                Command="{Binding Data.OpenImageCommand, Source={StaticResource ViewModel}}"
-                                CommandParameter="{Binding}"
-                                Focusable="True">
-                                <Button.Template>
-                                    <ControlTemplate TargetType="{x:Type Button}">
-
-                                        <Grid Margin="0,8,8,0">
-
-                                            <Border
-                                                Width="{Binding ActualWidth, ElementName=Border}"
-                                                Height="{Binding ActualHeight, ElementName=Border}"
-                                                Background="Black"
-                                                CornerRadius="5" />
-
-                                            <Border
-                                                x:Name="Border"
-                                                Width="200"
-                                                Height="110"
-                                                CornerRadius="5">
-
-                                                <Border.CacheMode>
-                                                    <BitmapCache />
-                                                </Border.CacheMode>
-
-                                                <Border.Background>
-                                                    <ImageBrush ImageSource="{Binding Converter={converters:ImageToThumbnailConverter}, ConverterParameter={StaticResource ThumbnailSizes}}" Stretch="UniformToFill" />
-                                                </Border.Background>
-
-                                            </Border>
-                                        </Grid>
-
-                                        <ControlTemplate.Triggers>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter TargetName="Border" Property="Opacity" Value="0.7" />
-                                            </Trigger>
-                                        </ControlTemplate.Triggers>
-                                    </ControlTemplate>
-                                </Button.Template>
-                            </Button>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                    <ListBox.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <controls:VirtualizingWrapPanel
-                                Margin="0,0,0,32"
-                                IsItemsHost="True"
-                                SpacingMode="None"
-                                StretchItems="False" />
-                        </ItemsPanelTemplate>
-                    </ListBox.ItemsPanel>
-                </ListBox>
+                <controls1:ImageGallery Margin="35,0,0,0" ItemsSource="{Binding Model.AdditionalData.Images}" OpenImageCommand="{Binding OpenImageCommand}" />
             </core:If.False>
 
             <core:If.True>

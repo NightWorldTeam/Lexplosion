@@ -1,6 +1,4 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 
 namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.InstanceProfile
 {
@@ -12,12 +10,6 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.MainContent.InstanceProfile
         public InstanceProfileOverviewGalleryView()
         {
             InitializeComponent();
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            var button = sender as Button;
-            button.Command.Execute(button.CommandParameter);
         }
     }
 }
