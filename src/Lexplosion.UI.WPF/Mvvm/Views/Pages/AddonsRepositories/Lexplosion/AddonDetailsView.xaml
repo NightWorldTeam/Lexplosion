@@ -164,8 +164,7 @@
 
     <Grid Background="{DynamicResource PageSolidColorBrush}">
         <Grid.RowDefinitions>
-            <!-- MainWindow's 40 DIP WindowHeaderContainer overlays pages. -->
-            <RowDefinition Height="40" />
+            <RowDefinition Height="34" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
