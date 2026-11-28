@@ -1,8 +1,6 @@
-﻿using Lexplosion.Logic.Management.Addons;
-using Lexplosion.UI.WPF.Mvvm.ViewModels.AddonsRepositories;
+﻿using Lexplosion.UI.WPF.Mvvm.ViewModels.AddonsRepositories;
 using System.ComponentModel;
 using System.Windows;
-using System.Windows.Input;
 using Lexplosion.UI.WPF.Controls;
 using Lexplosion.UI.WPF.Extensions;
 using System;
@@ -61,15 +59,6 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.AddonsRepositories
             // Keep the existing visibility binding for pending filter changes intact.
             ApplyCategoriesButton.Opacity = detail ? 0 : 1;
             ApplyCategoriesButton.IsHitTestVisible = !detail;
-        }
-
-        private void AddonTitle_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            if (sender is FrameworkElement element && element.DataContext is InstanceAddon addon)
-            {
-                _viewModel?.OpenAddonDetails(addon);
-                e.Handled = true;
-            }
         }
 
         private void DropdownMenuButtonItem_Click(object sender, System.Windows.RoutedEventArgs e)

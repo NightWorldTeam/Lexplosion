@@ -25,6 +25,23 @@
     <UserControl.Resources>
         <core:BindingProxy x:Key="ViewModel" Data="{Binding}" />
 
+        <Style x:Key="AddonDetailsLink" TargetType="{x:Type Button}" BasedOn="{StaticResource ButtonBasedStyle}">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="VerticalContentAlignment" Value="Stretch" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <Style x:Key="DownMenuItem" TargetType="{x:Type controls:AdvancedButton}">
             <Setter Property="Template">
                 <Setter.Value>
@@ -206,67 +223,70 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <!--  Logo opens details, as in the instance catalog.  -->
-                    <Grid
+                    <Button
                         Width="90"
                         Height="90"
                         VerticalAlignment="Top"
-                        Background="Transparent"
-                        Cursor="Hand"
-                        MouseLeftButtonUp="AddonTitle_MouseLeftButtonUp">
-
-                        <Border
-                            x:Name="LogoBorder"
-                            Background="{Binding Logo, Converter={converters:ImageSourceNullValidateConverter}}"
-                            CornerRadius="5" />
-
-                        <controls:CircleLoader
-                            Width="45"
-                            Height="45"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            BlurTarget="{Binding ElementName=LogoBorder}"
-                            CornerRadius="5"
-                            IsActive="{Binding Logo, Converter={converters:IsValueNullConverter}}" />
-
+                        AutomationProperties.AutomationId="addon.catalog.open-details"
+                        AutomationProperties.Name="{Binding Name}"
+                        Command="{Binding Data.OpenAddonDetailsCommand, Source={StaticResource ViewModel}}"
+                        CommandParameter="{Binding}"
+                        Style="{StaticResource AddonDetailsLink}">
                         <Grid IsHitTestVisible="False">
-                            <Border CornerRadius="5">
-                                <Border.Background>
-                                    <SolidColorBrush Color="Black" Opacity="0.5" />
-                                </Border.Background>
-                            </Border>
-                            <TextBlock
+
+                            <Border
+                                x:Name="LogoBorder"
+                                Background="{Binding Logo, Converter={converters:ImageSourceNullValidateConverter}}"
+                                CornerRadius="5" />
+
+                            <controls:CircleLoader
+                                Width="45"
+                                Height="45"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
-                                FontSize="14"
-                                FontWeight="Bold"
-                                Foreground="{DynamicResource CheckBoxMarkSolidColorBrush}"
-                                Text="{DynamicResource More}" />
-                            <Grid.Style>
-                                <Style TargetType="{x:Type Grid}">
-                                    <Setter Property="Opacity" Value="0" />
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType={x:Type Grid}}}" Value="True">
-                                            <DataTrigger.EnterActions>
-                                                <BeginStoryboard>
-                                                    <Storyboard>
-                                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.2" />
-                                                    </Storyboard>
-                                                </BeginStoryboard>
-                                            </DataTrigger.EnterActions>
-                                            <DataTrigger.ExitActions>
-                                                <BeginStoryboard>
-                                                    <Storyboard>
-                                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.2" />
-                                                    </Storyboard>
-                                                </BeginStoryboard>
-                                            </DataTrigger.ExitActions>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Grid.Style>
+                                BlurTarget="{Binding ElementName=LogoBorder}"
+                                CornerRadius="5"
+                                IsActive="{Binding Logo, Converter={converters:IsValueNullConverter}}" />
+
+                            <Grid IsHitTestVisible="False">
+                                <Border CornerRadius="5">
+                                    <Border.Background>
+                                        <SolidColorBrush Color="Black" Opacity="0.5" />
+                                    </Border.Background>
+                                </Border>
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontSize="14"
+                                    FontWeight="Bold"
+                                    Foreground="{DynamicResource CheckBoxMarkSolidColorBrush}"
+                                    Text="{DynamicResource More}" />
+                                <Grid.Style>
+                                    <Style TargetType="{x:Type Grid}">
+                                        <Setter Property="Opacity" Value="0" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" Value="True">
+                                                <DataTrigger.EnterActions>
+                                                    <BeginStoryboard>
+                                                        <Storyboard>
+                                                            <DoubleAnimation Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.2" />
+                                                        </Storyboard>
+                                                    </BeginStoryboard>
+                                                </DataTrigger.EnterActions>
+                                                <DataTrigger.ExitActions>
+                                                    <BeginStoryboard>
+                                                        <Storyboard>
+                                                            <DoubleAnimation Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.2" />
+                                                        </Storyboard>
+                                                    </BeginStoryboard>
+                                                </DataTrigger.ExitActions>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Grid.Style>
+                            </Grid>
                         </Grid>
-                    </Grid>
+                    </Button>
 
                     <!--  Content  -->
                     <Grid
@@ -287,16 +307,19 @@
                         <!--  Name & Author & Description  -->
                         <StackPanel>
                             <StackPanel Margin="0,0,0,8" Orientation="Horizontal">
-                                <TextBlock
-                                    MaxWidth="{Binding ActualWidth, ElementName=Border, Converter={converters:WindowWidthToXProcentWidth}, ConverterParameter=35}"
-                                    FontSize="16"
-                                    FontWeight="Medium"
-                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                    Text="{Binding Name}"
-                                    Cursor="Hand"
-                                    ToolTip="Открыть страницу дополнения"
-                                    MouseLeftButtonUp="AddonTitle_MouseLeftButtonUp"
-                                    TextTrimming="CharacterEllipsis" />
+                                <Button
+                                    Command="{Binding Data.OpenAddonDetailsCommand, Source={StaticResource ViewModel}}"
+                                    CommandParameter="{Binding}"
+                                    Style="{StaticResource AddonDetailsLink}"
+                                    ToolTip="{DynamicResource More}">
+                                    <TextBlock
+                                        MaxWidth="{Binding ActualWidth, ElementName=Border, Converter={converters:WindowWidthToXProcentWidth}, ConverterParameter=35}"
+                                        FontSize="16"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                        Text="{Binding Name}"
+                                        TextTrimming="CharacterEllipsis" />
+                                </Button>
 
                                 <TextBlock
                                     Margin="8,0"
