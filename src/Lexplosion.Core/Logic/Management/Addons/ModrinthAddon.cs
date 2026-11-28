@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System;
+using System.Threading.Tasks;
 using Lexplosion;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Management.Localization;
@@ -352,6 +353,11 @@ namespace Lexplosion.Logic.Management.Addons
 
 			var resutl = _categoriesGetter(_addonInfo.GetAddonType, _addonInfo.Categories);
 			return resutl ?? new List<CategoryBase>();
+		}
+
+		internal Task<ModrinthProjectInfo> GetProjectInfoAsync()
+		{
+			return _services.MdApi.GetProjectAsync(_projectId);
 		}
 
 		public string GetFullDescription()

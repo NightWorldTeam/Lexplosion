@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Threading;
+using System.Threading.Tasks;
+using Lexplosion.Logic.Objects.Modrinth;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Tools;
@@ -242,6 +244,13 @@ namespace Lexplosion.Logic.Management.Addons
 			_projectId = projectId;
 			_modpackInfo = modpackInfo;
 			_gameVersion = modpackInfo.GameVersion.Id;
+		}
+
+		public Task<ModrinthProjectInfo> GetModrinthProjectInfoAsync()
+		{
+			return _addonPrototype is ModrinthAddon addon
+				? addon.GetProjectInfoAsync()
+				: Task.FromResult<ModrinthProjectInfo>(null);
 		}
 
 		public string GetFullDescription()

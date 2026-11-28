@@ -179,6 +179,12 @@ namespace Lexplosion.Logic.Network.Web
 			return GetApiData<ModrinthProjectInfo>("https://api.modrinth.com/v2/project/" + projectId);
 		}
 
+		public async Task<ModrinthProjectInfo> GetProjectAsync(string projectId, int timeout = 15000)
+		{
+			string answer = (await _toServer.HttpGetAsync("https://api.modrinth.com/v2/project/" + Uri.EscapeDataString(projectId), timeout: timeout).ConfigureAwait(false)).Content;
+			return string.IsNullOrWhiteSpace(answer) ? null : JsonConvert.DeserializeObject<ModrinthProjectInfo>(answer);
+		}
+
 		public List<ModrinthProjectFile> GetProjectFiles(string projectId)
 		{
 			return GetApiData<List<ModrinthProjectFile>>("https://api.modrinth.com/v2/project/" + projectId + "/version");

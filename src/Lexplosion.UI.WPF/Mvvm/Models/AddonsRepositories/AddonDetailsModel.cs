@@ -20,32 +20,20 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.AddonsRepositories
     public sealed class AddonDetailsModel : ObservableObject
     {
         private readonly Action<object> _installVersion;
-        private readonly AddonPageData _initialPageData;
-        private readonly Task<AddonPageData> _pageDataTask;
+        private readonly Task _pageDataTask;
         private IReadOnlyList<object> _versions = Array.Empty<object>();
         private object _selectedVersion;
         private string _versionsError;
         private AddonVersionsState _versionsState;
-        private bool _isPageLoaded;
         private bool _isInformationOpen;
         private int _selectedTabIndex;
 
         public InstanceAddon Addon { get; }
 
-        public AddonPageData PageData => IsPageLoaded && _pageDataTask.Status == TaskStatus.RanToCompletion ? _pageDataTask.Result : _initialPageData;
+        public AddonPageData PageData { get; private set; }
         public bool HasGallery => PageData.Images.Count > 0;
-
-        public bool IsPageLoaded
-        {
-            get => _isPageLoaded;
-            private set
-            {
-                _isPageLoaded = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(PageData));
-                OnPropertyChanged(nameof(HasGallery));
-            }
-        }
+        public bool IsPageLoaded { get; private set; }
+        public bool IsPageLoadFailed { get; private set; }
 
         public bool IsInformationOpen
         {
@@ -123,22 +111,39 @@ namespace Lexplosion.UI.WPF.Mvvm.Models.AddonsRepositories
         {
             Addon = addon ?? throw new ArgumentNullException(nameof(addon));
             _installVersion = installVersion;
-            _initialPageData = AddonPageData.FromAddon(addon);
-            _pageDataTask = Task.Run(() => AddonDetailsDataLoader.FetchPage(addon));
+            PageData = AddonPageData.FromAddon(addon);
+            _pageDataTask = LoadPageCoreAsync();
         }
 
-        public async Task LoadPageAsync()
+        public Task LoadPageAsync()
         {
+            return _pageDataTask;
+        }
+
+        private async Task LoadPageCoreAsync()
+        {
+#if DEBUG
+            long started = System.Diagnostics.Stopwatch.GetTimestamp();
+#endif
             try
             {
-                await _pageDataTask;
+                PageData = await AddonDetailsDataLoader.FetchPageAsync(Addon);
+                OnPropertyChanged(nameof(PageData));
+                OnPropertyChanged(nameof(HasGallery));
+            }
+            catch (Exception ex)
+            {
+                Runtime.DebugWrite("Addon page load failed: " + ex.GetType().Name);
+                IsPageLoadFailed = true;
+                OnPropertyChanged(nameof(IsPageLoadFailed));
             }
             finally
             {
-                if (!IsPageLoaded)
-                {
-                    IsPageLoaded = true;
-                }
+                IsPageLoaded = true;
+                OnPropertyChanged(nameof(IsPageLoaded));
+#if DEBUG
+                Lexplosion.QA.PerformanceTelemetry.Record("addon.data.fetch", (System.Diagnostics.Stopwatch.GetTimestamp() - started) * 1000.0 / System.Diagnostics.Stopwatch.Frequency);
+#endif
             }
         }
 

@@ -261,27 +261,50 @@
                         ItemContainerStyle="{StaticResource UITabItem}"
                         TabPanelPadding="{Binding ActualWidth, ElementName=AddonDetailsRoot, Converter={StaticResource ContentInset}}"
                         SelectedIndex="{Binding Model.SelectedTabIndex, Mode=TwoWay}">
-                <TabItem Header="{DynamicResource AddonDetailsDescription}">
+                <TabItem Header="AddonDetailsDescription">
                     <Grid x:Name="DescriptionHost" Background="{DynamicResource PageSolidColorBrush}" ClipToBounds="True">
                         <Grid x:Name="BrowserHost" Background="{DynamicResource PageSolidColorBrush}"
                               Margin="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type details:AddonDetailsView}}, Converter={StaticResource ContentInset}, ConverterParameter=Browser}" />
                         <Grid x:Name="LoadingOverlay" Background="{DynamicResource PageSolidColorBrush}" IsHitTestVisible="False">
                             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <ProgressBar x:Name="LoadingBar" Width="110" Height="3" IsIndeterminate="True"
-                                             Foreground="{DynamicResource ActivitySolidColorBrush}" />
+                                <controls:CircleLoader x:Name="LoadingBar" Width="36" Height="36" Background="Transparent" IsActive="True" />
                                 <TextBlock x:Name="LoadingText" Text="{DynamicResource AddonDetailsDescriptionLoading}"
-                                           Margin="0,14,0,0" Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
+                                           Margin="0,14,0,0" HorizontalAlignment="Center" TextWrapping="Wrap"
+                                           Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}" />
                             </StackPanel>
                         </Grid>
                     </Grid>
                 </TabItem>
-                <TabItem Header="{DynamicResource AddonDetailsGallery}">
-                    <ScrollViewer Background="{DynamicResource PageSolidColorBrush}"
-                                  HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-                        <StackPanel Margin="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type details:AddonDetailsView}}, Converter={StaticResource ContentInset}, ConverterParameter=Gallery}"
-                                    MaxWidth="1140">
-                            <TextBlock x:Name="GalleryEmptyText" Margin="0,14" TextAlignment="Center"
-                                       Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}">
+                <TabItem Header="AddonDetailsGallery">
+                    <Grid>
+                        <ScrollViewer Background="{DynamicResource PageSolidColorBrush}" HorizontalScrollBarVisibility="Disabled"
+                                      VerticalScrollBarVisibility="Auto" Visibility="{Binding Model.HasGallery, Converter={converters:BooleanToVisibilityConverter}}">
+                            <ItemsControl Margin="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type details:AddonDetailsView}}, Converter={StaticResource ContentInset}, ConverterParameter=Gallery}"
+                                          MaxWidth="1140" ItemsSource="{Binding Model.PageData.Images}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Background="{DynamicResource LayoutTabSolidColorBrush}" BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                                                BorderThickness="1" CornerRadius="10" Padding="10" Margin="0,0,0,16">
+                                            <Image Source="{Binding}" Stretch="Uniform" MaxHeight="550" />
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
+                                    Visibility="{Binding Model.HasGallery, Converter={converters:NegativeBooleanToVisibilityConverter}}">
+                            <controls:CircleLoader Width="36" Height="36" Background="Transparent">
+                                <controls:CircleLoader.Style>
+                                    <Style TargetType="{x:Type controls:CircleLoader}" BasedOn="{StaticResource {x:Type controls:CircleLoader}}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Model.IsPageLoaded}" Value="False">
+                                                <Setter Property="IsActive" Value="True" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </controls:CircleLoader.Style>
+                            </controls:CircleLoader>
+                            <TextBlock Margin="0,14" TextAlignment="Center" Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}">
                                 <TextBlock.Style>
                                     <Style TargetType="TextBlock">
                                         <Setter Property="Text" Value="{DynamicResource AddonDetailsGalleryLoading}" />
@@ -289,28 +312,17 @@
                                             <DataTrigger Binding="{Binding Model.IsPageLoaded}" Value="True">
                                                 <Setter Property="Text" Value="{DynamicResource AddonDetailsGalleryEmpty}" />
                                             </DataTrigger>
-                                            <DataTrigger Binding="{Binding Model.HasGallery}" Value="True">
-                                                <Setter Property="Visibility" Value="Collapsed" />
+                                            <DataTrigger Binding="{Binding Model.IsPageLoadFailed}" Value="True">
+                                                <Setter Property="Text" Value="{DynamicResource AddonDetailsGalleryError}" />
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
                                 </TextBlock.Style>
                             </TextBlock>
-                            <ItemsControl x:Name="GalleryItems" ItemsSource="{Binding Model.PageData.Images}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <Border Background="{DynamicResource LayoutTabSolidColorBrush}"
-                                                BorderBrush="{DynamicResource SeparateSolidColorBrush}" BorderThickness="1"
-                                                CornerRadius="10" Padding="10" Margin="0,0,0,16">
-                                            <Image Source="{Binding}" Stretch="Uniform" MaxHeight="550" />
-                                        </Border>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
                         </StackPanel>
-                    </ScrollViewer>
+                    </Grid>
                 </TabItem>
-                <TabItem Header="{DynamicResource AddonDetailsVersions}">
+                <TabItem Header="AddonDetailsVersions">
                     <Grid Margin="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type details:AddonDetailsView}}, Converter={StaticResource ContentInset}, ConverterParameter=Versions}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -339,11 +351,35 @@
                                 </Style>
                             </TextBlock.Style>
                         </TextBlock>
-                        <ListBox x:Name="VersionsList" Grid.Row="1" FontSize="14" Padding="6"
-                                  ItemsSource="{Binding Model.Versions}"
-                                  SelectedItem="{Binding Model.SelectedVersion, Mode=TwoWay}"
-                                 Background="{DynamicResource LayoutTabSolidColorBrush}"
-                                 BorderBrush="{DynamicResource SeparateSolidColorBrush}" BorderThickness="1" />
+                        <ListBox x:Name="VersionsList" Grid.Row="1"
+                                 ItemsSource="{Binding Model.Versions}" SelectedItem="{Binding Model.SelectedVersion, Mode=TwoWay}"
+                                 Style="{StaticResource TransparentListBox}" VirtualizingPanel.ScrollUnit="Pixel">
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource DefaultListBoxItem}">
+                                    <Setter Property="Padding" Value="12,9" />
+                                    <Setter Property="BorderThickness" Value="1" />
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                </Style>
+                            </ListBox.ItemContainerStyle>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock FontSize="14" FontWeight="Medium" Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                               Text="{Binding Converter={converters:ToStringConverter}}" TextTrimming="CharacterEllipsis" />
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        <controls:CircleLoader Grid.Row="1" Width="36" Height="36" Background="Transparent"
+                                               HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <controls:CircleLoader.Style>
+                                <Style TargetType="{x:Type controls:CircleLoader}" BasedOn="{StaticResource {x:Type controls:CircleLoader}}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Model.VersionsState}" Value="{x:Static addonModels:AddonVersionsState.Loading}">
+                                            <Setter Property="IsActive" Value="True" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </controls:CircleLoader.Style>
+                        </controls:CircleLoader>
                         <controls:AdvancedButton x:Name="InstallVersionButton" Grid.Row="2" Height="32" MinWidth="208"
                                                  Margin="0,16,0,0" HorizontalAlignment="Right"
                                                  Content="{DynamicResource AddonDetailsInstallVersion}"

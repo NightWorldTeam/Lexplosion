@@ -96,6 +96,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.AddonDetails
                     {
                         _browser.CoreWebView2.NavigationStarting -= OnNavigationStarting;
                         _browser.CoreWebView2.NavigationCompleted -= OnNavigationCompleted;
+                        _browser.CoreWebView2.DOMContentLoaded -= OnDomContentLoaded;
                         _browser.CoreWebView2.NewWindowRequested -= OnNewWindowRequested;
                         _browser.CoreWebView2.WebMessageReceived -= OnWebMessageReceived;
                     }
@@ -115,7 +116,8 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.AddonDetails
 
         private void ShowLoading()
         {
-            LoadingBar.Visibility = Visibility.Visible;
+            LoadingText.SetResourceReference(TextBlock.TextProperty, "AddonDetailsDescriptionLoading");
+            LoadingBar.IsActive = true;
             LoadingOverlay.Visibility = Visibility.Visible;
             if (_browser != null) _browser.Visibility = Visibility.Hidden;
         }
@@ -123,7 +125,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.AddonDetails
         private void ShowError(string text)
         {
             LoadingText.Text = text;
-            LoadingBar.Visibility = Visibility.Collapsed;
+            LoadingBar.IsActive = false;
             LoadingOverlay.Visibility = Visibility.Visible;
             if (_browser != null) _browser.Visibility = Visibility.Hidden;
         }
@@ -165,6 +167,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.AddonDetails
                 VirtualHost, HtmlFolder, CoreWebView2HostResourceAccessKind.DenyCors);
             browser.CoreWebView2.NavigationStarting += OnNavigationStarting;
             browser.CoreWebView2.NavigationCompleted += OnNavigationCompleted;
+            browser.CoreWebView2.DOMContentLoaded += OnDomContentLoaded;
             browser.CoreWebView2.NewWindowRequested += OnNewWindowRequested;
             browser.CoreWebView2.WebMessageReceived += OnWebMessageReceived;
         }
@@ -174,27 +177,31 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.AddonDetails
             ShowLoading();
             try
             {
-                Task dataTask = model.LoadPageAsync();
-                await EnsureBrowserAsync();
-                await dataTask;
+                await Task.WhenAll(model.LoadPageAsync(), EnsureBrowserAsync());
                 if (generation != _generation || !IsLoaded || !ReferenceEquals(model, _model))
                 {
                     return;
                 }
 
-                AddonPageData data = model.PageData;
-                string document;
-#if DEBUG
-                using (UiDebugTrace.Measure("addon.html.build", 5))
-#endif
-                    document = AddonDescriptionDocumentBuilder.Build(data.Description, model.Addon.Source, ReadTheme(), ResourceText("AddonDetailsNoDescription"));
-
+                var data = model.PageData;
+                var theme = ReadTheme();
+                string noDescription = ResourceText("AddonDetailsNoDescription");
                 string filename = "addon-" + Guid.NewGuid().ToString("N") + ".html";
                 string fullPath = Path.Combine(HtmlFolder, filename);
+                await Task.Run(() =>
+                {
 #if DEBUG
-                using (UiDebugTrace.Measure("addon.html.write-file", 5))
+                    using var trace = UiDebugTrace.Measure("addon.html.build-write", 5);
 #endif
+                    string document = AddonDescriptionDocumentBuilder.Build(data.Description, model.Addon.Source, theme, noDescription);
                     File.WriteAllText(fullPath, document, new UTF8Encoding(false));
+                });
+
+                if (generation != _generation || !IsLoaded || !ReferenceEquals(model, _model))
+                {
+                    try { File.Delete(fullPath); } catch (IOException) { } catch (UnauthorizedAccessException) { }
+                    return;
+                }
 
                 _temporaryDocuments.Add(fullPath);
                 _pendingDocumentGeneration = generation;
@@ -225,6 +232,23 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.AddonDetails
             OpenExternalUrl(e.Uri);
         }
 
+        private void OnDomContentLoaded(object sender, CoreWebView2DOMContentLoadedEventArgs e)
+        {
+            RevealDocument(e.NavigationId);
+        }
+
+        private void RevealDocument(ulong navigationId)
+        {
+            if (navigationId != _currentNavigationId || _pendingDocumentGeneration != _generation || !IsLoaded || _model == null)
+            {
+                return;
+            }
+
+            LoadingBar.IsActive = false;
+            LoadingOverlay.Visibility = Visibility.Collapsed;
+            UpdateBrowserHitTesting();
+        }
+
         private void OnNavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e)
         {
 #if DEBUG
@@ -239,11 +263,7 @@ namespace Lexplosion.UI.WPF.Mvvm.Views.Pages.AddonDetails
                     ShowError(string.Format(ResourceText("AddonDetailsWebViewError"), e.WebErrorStatus));
                 return;
             }
-            if (_browser != null)
-            {
-                LoadingOverlay.Visibility = Visibility.Collapsed;
-                UpdateBrowserHitTesting();
-            }
+            RevealDocument(e.NavigationId);
         }
 
         private void OnNewWindowRequested(object sender, CoreWebView2NewWindowRequestedEventArgs e)
